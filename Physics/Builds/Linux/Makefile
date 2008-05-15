@@ -6,77 +6,77 @@ LIB_INCLUDE_DIR_NAME = Physics
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Physics:$(srcdir)/Physics/Actors:$(srcdir)/Physics/Integrations:$(srcdir)/Physics/Objects:$(srcdir)/Physics/Objects/Attributes:$(srcdir)/Physics/Systems:$(srcdir)/Physics/Systems/Forces:
+VPATH = $(srcdir)/:$(srcdir)/Physics:$(srcdir)/Physics/Objects:$(srcdir)/Physics/Objects/Attributes:$(srcdir)/Physics/Actors:$(srcdir)/Physics/Integrations:$(srcdir)/Physics/Systems:$(srcdir)/Physics/Systems/Forces:
 
 
 #.SUFFIX = .o .o
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGPhysicsActor.o \
-	OSGPhysicsActorBase.o \
-	OSGEulerIntegration.o \
-	OSGEulerIntegrationBase.o \
-	OSGImprovedEulerIntegration.o \
-	OSGImprovedEulerIntegrationBase.o \
-	OSGIntegration.o \
-	OSGIntegrationBase.o \
-	OSGRungeKuttaIntegration.o \
-	OSGRungeKuttaIntegrationBase.o \
-	OSGFluid.o \
-	OSGFluidBase.o \
+OBJECTS = OSGSurfaceBase.o \
 	OSGPhysicsCore.o \
-	OSGPhysicsCoreBase.o \
+	OSGFluid.o \
 	OSGSurface.o \
-	OSGSurfaceBase.o \
-	OSGCollidableAttribute.o \
-	OSGCollidableAttributeBase.o \
-	OSGDragGeometricAttribute.o \
-	OSGDragGeometricAttributeBase.o \
-	OSGImovableAttribute.o \
-	OSGImovableAttributeBase.o \
-	OSGInertiaAttribute.o \
-	OSGInertiaAttributeBase.o \
-	OSGLinearPositionalAttribute.o \
-	OSGLinearPositionalAttributeBase.o \
-	OSGMassAttribute.o \
+	OSGFluidBase.o \
+	OSGPhysicsCoreBase.o \
 	OSGMassAttributeBase.o \
 	OSGPhysicsObjectAttribute.o \
-	OSGPhysicsObjectAttributeBase.o \
-	OSGRotationalAttribute.o \
-	OSGRotationalAttributeBase.o \
-	OSGRotationalDragGeometricAttribute.o \
+	OSGLinearPositionalAttributeBase.o \
+	OSGImovableAttributeBase.o \
 	OSGRotationalDragGeometricAttributeBase.o \
-	OSGVolumeAttribute.o \
+	OSGCollidableAttributeBase.o \
+	OSGImovableAttribute.o \
+	OSGCollidableAttribute.o \
+	OSGDragGeometricAttribute.o \
+	OSGRotationalAttribute.o \
+	OSGInertiaAttribute.o \
+	OSGDragGeometricAttributeBase.o \
 	OSGVolumeAttributeBase.o \
-	OSGForceSystem.o \
+	OSGInertiaAttributeBase.o \
+	OSGVolumeAttribute.o \
+	OSGPhysicsObjectAttributeBase.o \
+	OSGRotationalDragGeometricAttribute.o \
+	OSGRotationalAttributeBase.o \
+	OSGLinearPositionalAttribute.o \
+	OSGMassAttribute.o \
+	OSGPhysicsActorBase.o \
+	OSGPhysicsActor.o \
+	OSGEulerIntegrationBase.o \
+	OSGImprovedEulerIntegration.o \
+	OSGRungeKuttaIntegrationBase.o \
+	OSGIntegration.o \
+	OSGIntegrationBase.o \
+	OSGImprovedEulerIntegrationBase.o \
+	OSGEulerIntegration.o \
+	OSGRungeKuttaIntegration.o \
 	OSGForceSystemBase.o \
+	OSGForceSystem.o \
 	OSGPhysicsSystem.o \
 	OSGPhysicsSystemBase.o \
-	OSGBoyancyForce.o \
+	OSGSimpleRotationalDragForce.o \
+	OSGSurfaceFrictionForceBase.o \
 	OSGBoyancyForceBase.o \
-	OSGDefinedForce.o \
-	OSGDefinedForceBase.o \
+	OSGSimpleRotationalDragForceBase.o \
 	OSGForce.o \
-	OSGForceBase.o \
+	OSGRocketForce.o \
+	OSGSurfaceFrictionForce.o \
+	OSGRocketForceBase.o \
+	OSGNormalForce.o \
+	OSGKineticSurfaceFrictionForceBase.o \
+	OSGStaticSurfaceFrictionForceBase.o \
+	OSGDefinedForce.o \
+	OSGSimpleDragForce.o \
 	OSGGravitationalForce.o \
 	OSGGravitationalForceBase.o \
-	OSGKineticSurfaceFrictionForce.o \
-	OSGKineticSurfaceFrictionForceBase.o \
-	OSGNormalForce.o \
-	OSGNormalForceBase.o \
-	OSGRocketForce.o \
-	OSGRocketForceBase.o \
-	OSGSimpleDragForce.o \
-	OSGSimpleDragForceBase.o \
-	OSGSimpleRotationalDragForce.o \
-	OSGSimpleRotationalDragForceBase.o \
-	OSGSpringForce.o \
-	OSGSpringForceBase.o \
 	OSGStaticSurfaceFrictionForce.o \
-	OSGStaticSurfaceFrictionForceBase.o \
-	OSGSurfaceFrictionForce.o \
-	OSGSurfaceFrictionForceBase.o
+	OSGSpringForceBase.o \
+	OSGBoyancyForce.o \
+	OSGSimpleDragForceBase.o \
+	OSGDefinedForceBase.o \
+	OSGSpringForce.o \
+	OSGKineticSurfaceFrictionForce.o \
+	OSGNormalForceBase.o \
+	OSGForceBase.o
         
         
 include $(commondir)/CommonMake.mk

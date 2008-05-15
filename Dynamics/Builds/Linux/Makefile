@@ -24,8 +24,10 @@ OBJECTS = OSGTriDistribution2D.o \
 	OSGDiscDistribution2DBase.o \
 	OSGQuadDistribution2D.o \
 	OSGBoxDistribution3DBase.o \
+	OSGGeoVolumeDistribution3DBase.o \
 	OSGDiscDistribution3DBase.o \
 	OSGCylinderDistribution3DBase.o \
+	OSGGeoVolumeDistribution3D.o \
 	OSGCylinderDistribution3D.o \
 	OSGLineDistribution3D.o \
 	OSGSphereDistribution3D.o \
@@ -35,8 +37,10 @@ OBJECTS = OSGTriDistribution2D.o \
 	OSGGaussianNormalDistribution3D.o \
 	OSGLineDistribution3DBase.o \
 	OSGDiscDistribution3D.o \
+	OSGGeoSurfaceDistribution3D.o \
 	OSGBoxDistribution3D.o \
 	OSGTriDistribution3DBase.o \
+	OSGGeoSurfaceDistribution3DBase.o \
 	OSGGaussianNormalDistribution1DBase.o \
 	OSGSegmentDistribution1D.o \
 	OSGSegmentSetDistribution1D.o \

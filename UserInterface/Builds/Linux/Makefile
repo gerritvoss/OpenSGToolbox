@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Layout/Spring:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Table/Editors:$(srcdir)/Component/Scroll:$(srcdir)/Component/Slider:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Models:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/ComboBox/ComponentGenerators:$(srcdir)/Component/Misc:$(srcdir)/Component/Tree:$(srcdir)/Component/Tree/Selection:$(srcdir)/Component/Tree/Editors:$(srcdir)/Component/Tree/Model:$(srcdir)/Component/Tree/ComponentGenerators:$(srcdir)/Component/Tree/ModelLayout:$(srcdir)/Component/Container:$(srcdir)/Component/Container/Window:$(srcdir)/Component/Container/Window/Dialog:$(srcdir)/Component/Container/ColorChooser:$(srcdir)/Component/Container/Toolbar:$(srcdir)/Component/List:$(srcdir)/Component/List/Models:$(srcdir)/Component/List/ComponentGenerators:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Text:$(srcdir)/UndoableEdit:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/ComponentGenerators:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
+VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Layout/Spring:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Table/Editors:$(srcdir)/Component/Scroll:$(srcdir)/Component/Slider:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Models:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/ComboBox/ComponentGenerators:$(srcdir)/Component/Misc:$(srcdir)/Component/Tree:$(srcdir)/Component/Tree/Selection:$(srcdir)/Component/Tree/Editors:$(srcdir)/Component/Tree/Model:$(srcdir)/Component/Tree/ComponentGenerators:$(srcdir)/Component/Tree/ModelLayout:$(srcdir)/Component/Container:$(srcdir)/Component/Container/Window:$(srcdir)/Component/Container/Window/Dialog:$(srcdir)/Component/Container/ColorChooser:$(srcdir)/Component/Container/Toolbar:$(srcdir)/Component/List:$(srcdir)/Component/List/Models:$(srcdir)/Component/List/ComponentGenerators:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Text:$(srcdir)/Models:$(srcdir)/Models/SelectionModels:$(srcdir)/UndoableEdit:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/ComponentGenerators:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
 
 
 #.SUFFIX = .o .o
@@ -149,20 +149,15 @@ OBJECTS = OSGShadowBorder.o \
 	OSGSpinnerListEditorBase.o \
 	OSGSpinnerNumberEditorBase.o \
 	OSGSpinnerListEditor.o \
-	OSGSeperatorMenuItem.o \
 	OSGMenuBase.o \
 	OSGMenuItemBase.o \
 	OSGPopupMenu.o \
 	OSGMenuBar.o \
 	OSGMenuBarBase.o \
-	OSGDefaultSingleSelectionModel.o \
-	OSGLabelMenuItem.o \
 	OSGMenuItem.o \
 	OSGListGeneratedPopupMenu.o \
 	OSGComponentMenuItemBase.o \
-	OSGLabelMenuItemBase.o \
 	OSGMenu.o \
-	OSGSeperatorMenuItemBase.o \
 	OSGComponentMenuItem.o \
 	OSGPopupMenuBase.o \
 	OSGListGeneratedPopupMenuBase.o \
@@ -225,9 +220,11 @@ OBJECTS = OSGShadowBorder.o \
 	OSGUIDrawObjectCanvasBase.o \
 	OSGToolTipBase.o \
 	OSGCanvas.o \
+	OSGSeparator.o \
 	OSGGLViewport.o \
 	OSGImageComponent.o \
 	OSGImageComponentBase.o \
+	OSGSeparatorBase.o \
 	OSGTreeRowMapper.o \
 	OSGTree.o \
 	OSGTreeBase.o \
@@ -322,6 +319,11 @@ OBJECTS = OSGShadowBorder.o \
 	OSGLabel.o \
 	OSGTextField.o \
 	OSGTextFieldBase.o \
+	OSGSelectionEvent.o \
+	OSGSingleSelectionModel.o \
+	OSGDefaultSingleSelectionModel.o \
+	OSGDefaultSingleSelectionModelBase.o \
+	OSGSingleSelectionModelBase.o \
 	OSGAbstractUndoableEdit.o \
 	OSGUndoManager.o \
 	OSGCommandFactory.o \
