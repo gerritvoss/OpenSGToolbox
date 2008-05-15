@@ -285,6 +285,12 @@ void TextField::mousePressed(const MouseEvent& e)
 		_TextSelectionEnd = getCaretPosition();
 		_TextSelectionStart = getCaretPosition();
 	}
+	if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+        getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseDownListener);
+        getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseDownListener);
+        getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseDownListener);
+    }
 	Inherited::mousePressed(e);
 }
 
@@ -300,7 +306,39 @@ void TextField::calculateTextBounds(const UInt32 StartIndex, const UInt32 EndInd
 	BottomRight = BottomRight + Vec2f(AlignmentOffset);
 }
 
-void TextField::mouseDragged(const MouseEvent& e)
+
+void TextField::produceActionPerformed(const ActionEvent& e)
+{
+   ActionListenerSet ListenerSet(_ActionListeners);
+   for(ActionListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+   {
+	   (*SetItor)->actionPerformed(e);
+   }
+}
+
+void TextField::focusGained(const FocusEvent& e)
+{
+	if( getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
+	}
+	Inherited::focusGained(e);
+}
+
+void TextField::focusLost(const FocusEvent& e)
+{
+	if( getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_CaretUpdateListener);
+	}
+	Inherited::focusLost(e);
+}
+
+void TextField::mouseDraggedAfterArming(const MouseEvent& e)
 {
 	Pnt2f TopLeftText, BottomRightText, TempPos;
 	Pnt2f TopLeftText1, BottomRightText1;
@@ -370,43 +408,7 @@ void TextField::mouseDragged(const MouseEvent& e)
 			}
 		}
 	}
-	
-
-	Inherited::mouseDragged(e);
 }
-
-
-void TextField::produceActionPerformed(const ActionEvent& e)
-{
-   ActionListenerSet ListenerSet(_ActionListeners);
-   for(ActionListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-   {
-	   (*SetItor)->actionPerformed(e);
-   }
-}
-
-void TextField::focusGained(const FocusEvent& e)
-{
-	if( getParentWindow() != NullFC &&
-		getParentWindow()->getDrawingSurface() != NullFC &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
-    {
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
-	}
-	Inherited::focusGained(e);
-}
-
-void TextField::focusLost(const FocusEvent& e)
-{
-	if( getParentWindow() != NullFC &&
-		getParentWindow()->getDrawingSurface() != NullFC &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
-    {
-		getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_CaretUpdateListener);
-	}
-	Inherited::focusLost(e);
-}
-
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -417,14 +419,16 @@ void TextField::focusLost(const FocusEvent& e)
 TextField::TextField(void) :
     Inherited(),
 		_CurrentCaretBlinkElps(0.0),
-	    _CaretUpdateListener(TextFieldPtr(this))
+	    _CaretUpdateListener(TextFieldPtr(this)),
+		_MouseDownListener(TextFieldPtr(this))
 {
 }
 
 TextField::TextField(const TextField &source) :
     Inherited(source),
 		_CurrentCaretBlinkElps(0.0),
-		_CaretUpdateListener(TextFieldPtr(this))
+		_CaretUpdateListener(TextFieldPtr(this)),
+		_MouseDownListener(TextFieldPtr(this))
 {
 }
 
@@ -462,6 +466,33 @@ void TextField::dump(      UInt32    ,
     SLOG << "Dump TextField NI" << std::endl;
 }
 
+void TextField::MouseDownListener::keyTyped(const KeyEvent& e)
+{
+    if(e.getKey() == KeyEvent::KEY_ESCAPE)
+    {
+	    if(_TextField->getParentWindow() != NullFC && _TextField->getParentWindow()->getDrawingSurface()!=NullFC&& _TextField->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	    {
+            _TextField->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+            _TextField->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+            _TextField->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+        }
+    }
+}
+
+void TextField::MouseDownListener::mouseReleased(const MouseEvent& e)
+{
+	if(_TextField->getParentWindow() != NullFC && _TextField->getParentWindow()->getDrawingSurface()!=NullFC&& _TextField->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+        _TextField->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+        _TextField->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+        _TextField->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    }
+}
+
+void TextField::MouseDownListener::mouseDragged(const MouseEvent& e)
+{
+    _TextField->mouseDraggedAfterArming(e);
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

@@ -202,6 +202,7 @@ int main(int argc, char **argv)
         ExampleTextArea->setSelectionStart(2);
         ExampleTextArea->setSelectionEnd(3);
         ExampleTextArea->setCaretPosition(2);
+        //ExampleTextArea->setLineWrap(false);
     endEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::MaxSizeFieldMask | TextArea::PreferredSizeFieldMask | TextArea::MinSizeFieldMask 
         | TextArea::TextColorFieldMask | TextArea::FontFieldMask 
         | TextArea::SelectionBoxColorFieldMask | TextArea::SelectionTextColorFieldMask);

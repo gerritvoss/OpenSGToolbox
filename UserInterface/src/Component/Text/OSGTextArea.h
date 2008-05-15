@@ -50,7 +50,9 @@
 #include <vector>
 #include <string>
 #include <OpenSG/Input/OSGWindowEventProducer.h>
-#include <OpenSG/Input/OSGUpdateListener.h>
+#include <OpenSG/Input/OSGMouseAdapter.h>
+#include <OpenSG/Input/OSGMouseMotionAdapter.h>
+#include <OpenSG/Input/OSGKeyAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -96,11 +98,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 	virtual void keyTyped(const KeyEvent& e);
 	virtual void mouseClicked(const MouseEvent& e);
 	virtual void mousePressed(const MouseEvent& e);
-	virtual void mouseDragged(const MouseEvent& e);
 	
 	virtual void focusGained(const FocusEvent& e);
 	virtual void focusLost(const FocusEvent& e);
 
+    //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
+    virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+
+    //Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
+    virtual bool getScrollableTracksViewportHeight(void);
+
+    //Return true if a viewport should always force the width of this Scrollable to match the width of the viewport.
+    virtual bool getScrollableTracksViewportWidth(void);
+
+    //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
+    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -137,6 +149,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 	friend class CarentUpdateListener;
 
 	CaretUpdateListener _CaretUpdateListener;
+
+	class MouseDownListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
+	{
+	public :
+		MouseDownListener(TextAreaPtr TheTextArea);
+		
+        virtual void keyTyped(const KeyEvent& e);
+
+        virtual void mouseReleased(const MouseEvent& e);
+        virtual void mouseDragged(const MouseEvent& e);
+	protected :
+		TextAreaPtr _TextArea;
+	};
+
+	friend class MouseDownListener;
+
+	MouseDownListener _MouseDownListener;
+
+    void mouseDraggedAfterArming(const MouseEvent& e);
     /*==========================  PRIVATE  ================================*/
   private:
 

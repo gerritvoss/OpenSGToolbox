@@ -52,6 +52,7 @@
 #include "Util/OSGUIDrawUtils.h"
 #include "Component/List/ComponentGenerators/OSGListComponentGenerator.h"
 #include "Component/List/Models/OSGListModel.h"
+#include "Component/Scroll/OSGScrollBar.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -600,7 +601,7 @@ Vec2f List::getPreferredScrollableViewportSize(void)
 Int32 List::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
-    if(orientation == List::VERTICAL_ORIENTATION)
+    if(orientation == ScrollBar::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }

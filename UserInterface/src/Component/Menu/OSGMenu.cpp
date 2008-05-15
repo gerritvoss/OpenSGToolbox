@@ -274,7 +274,7 @@ void Menu::changed(BitVector whichField, UInt32 origin)
     {
         if(getSelected())
         {
-            setPopupVisible(false);
+            //setPopupVisible(false);
             if(getParentWindow() != NullFC &&
             getParentWindow()->getDrawingSurface() != NullFC &&
             getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)

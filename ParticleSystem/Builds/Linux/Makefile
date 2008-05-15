@@ -6,46 +6,46 @@ LIB_INCLUDE_DIR_NAME = ParticleSystem
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/ParticleSystem:$(srcdir)/ParticleSystem/ParticleEffectors:$(srcdir)/ParticleSystem/MultiParticleSystemEffectors:$(srcdir)/ParticleSystem/ParticleSystemEffectors:$(srcdir)/ParticleSystem/ParticleGenerators:$(srcdir)/ParticleSystem/ParticleSystemDrawers:$(srcdir)/ParticleSystem/Events:$(srcdir)/ListType:
+VPATH = $(srcdir)/:$(srcdir)/ListType:$(srcdir)/ParticleSystem:$(srcdir)/ParticleSystem/Events:$(srcdir)/ParticleSystem/MultiParticleSystemEffectors:$(srcdir)/ParticleSystem/ParticleEffectors:$(srcdir)/ParticleSystem/ParticleGenerators:$(srcdir)/ParticleSystem/ParticleSystemDrawers:$(srcdir)/ParticleSystem/ParticleSystemEffectors:
 
 
 #.SUFFIX = .o .o
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGParticleSystemBase.o \
-	OSGParticleSystemCore.o \
+OBJECTS = OSGListTypes.o \
 	OSGParticleSystem.o \
+	OSGParticleSystemBase.o \
+	OSGParticleSystemCore.o \
 	OSGParticleSystemCoreBase.o \
-	OSGParticleEffectorBase.o \
-	OSGParticleEffector.o \
-	OSGMultiParticleSystemEffectorBase.o \
 	OSGMultiParticleSystemEffector.o \
-	OSGParticleSystemEffector.o \
-	OSGParticleSystemEffectorBase.o \
-	OSGParticleGeneratorBase.o \
+	OSGMultiParticleSystemEffectorBase.o \
+	OSGParticleEffector.o \
+	OSGParticleEffectorBase.o \
 	OSGParticleGenerator.o \
-	OSGShaderQuadParticleSystemDrawerBase.o \
+	OSGParticleGeneratorBase.o \
+	OSGBaseQuadParticleSystemDrawer.o \
 	OSGBaseQuadParticleSystemDrawerBase.o \
+	OSGLineParticleSystemDrawer.o \
+	OSGLineParticleSystemDrawerBase.o \
+	OSGNodeParticleSystemDrawer.o \
+	OSGNodeParticleSystemDrawerBase.o \
+	OSGParticleSystemDrawer.o \
 	OSGParticleSystemDrawerBase.o \
 	OSGPointParticleSystemDrawer.o \
-	OSGVelocityQuadParticleSystemDrawer.o \
-	OSGQuadParticleSystemDrawerBase.o \
-	OSGNodeParticleSystemDrawerBase.o \
-	OSGNodeParticleSystemDrawer.o \
+	OSGPointParticleSystemDrawerBase.o \
 	OSGQuadParticleSystemDrawer.o \
+	OSGQuadParticleSystemDrawerBase.o \
+	OSGShaderQuadParticleSystemDrawer.o \
+	OSGShaderQuadParticleSystemDrawerBase.o \
+	OSGVelocityQuadParticleSystemDrawer.o \
+	OSGVelocityQuadParticleSystemDrawerBase.o \
+	OSGViewDirQuadParticleSystemDrawer.o \
 	OSGViewDirQuadParticleSystemDrawerBase.o \
-	OSGParticleSystemDrawer.o \
 	OSGViewPosQuadParticleSystemDrawer.o \
 	OSGViewPosQuadParticleSystemDrawerBase.o \
-	OSGViewDirQuadParticleSystemDrawer.o \
-	OSGLineParticleSystemDrawerBase.o \
-	OSGShaderQuadParticleSystemDrawer.o \
-	OSGPointParticleSystemDrawerBase.o \
-	OSGBaseQuadParticleSystemDrawer.o \
-	OSGLineParticleSystemDrawer.o \
-	OSGVelocityQuadParticleSystemDrawerBase.o \
-	OSGListTypes.o
+	OSGParticleSystemEffector.o \
+	OSGParticleSystemEffectorBase.o
         
         
 include $(commondir)/CommonMake.mk

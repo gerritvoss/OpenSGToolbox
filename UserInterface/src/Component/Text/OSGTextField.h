@@ -48,7 +48,9 @@
 #include "OSGTextFieldBase.h"
 #include "Event/OSGActionListener.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
-#include <OpenSG/Input/OSGUpdateListener.h>
+#include <OpenSG/Input/OSGMouseAdapter.h>
+#include <OpenSG/Input/OSGMouseMotionAdapter.h>
+#include <OpenSG/Input/OSGKeyAdapter.h>
 
 
 OSG_BEGIN_NAMESPACE
@@ -89,7 +91,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
 	virtual void mouseClicked(const MouseEvent& e);
 	virtual void mousePressed(const MouseEvent& e);
-	virtual void mouseDragged(const MouseEvent& e);
 	
 	virtual void focusGained(const FocusEvent& e);
 	virtual void focusLost(const FocusEvent& e);
@@ -99,6 +100,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
 	virtual std::string getDrawnText(void) const;
 
+    
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -147,6 +149,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
 	CaretUpdateListener _CaretUpdateListener;
     
+	class MouseDownListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
+	{
+	public :
+		MouseDownListener(TextFieldPtr TheTextField);
+		
+        virtual void keyTyped(const KeyEvent& e);
+
+        virtual void mouseReleased(const MouseEvent& e);
+        virtual void mouseDragged(const MouseEvent& e);
+	protected :
+		TextFieldPtr _TextField;
+	};
+
+	friend class MouseDownListener;
+
+	MouseDownListener _MouseDownListener;
+
+    void mouseDraggedAfterArming(const MouseEvent& e);
     /*==========================  PRIVATE  ================================*/
   private:
 

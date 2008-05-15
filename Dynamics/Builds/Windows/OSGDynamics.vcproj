@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="OSGDynamics"
 	ProjectGUID="{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	RootNamespace="OSGAnimation"

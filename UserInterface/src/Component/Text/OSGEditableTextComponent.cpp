@@ -92,7 +92,7 @@ void EditableTextComponent::keyReleased(const KeyEvent& e)
 void EditableTextComponent::keyTyped(const KeyEvent& e)
 {
 	
-	if(getEnabled() && getEditable())
+    if(getEnabled() && getEditable() && !(e.getModifiers() &( KeyEvent::KEY_MODIFIER_ALT | KeyEvent::KEY_MODIFIER_CONTROL | KeyEvent::KEY_MODIFIER_META )))
 	{
 		if(e.getKeyChar()>31 && e.getKeyChar() < 127)
 		{

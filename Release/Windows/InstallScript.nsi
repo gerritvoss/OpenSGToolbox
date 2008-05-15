@@ -3,6 +3,7 @@
 !define SMPROGRAMSFolder $SMPROGRAMS\${ProjectName}
 !define OutFileName ${ProjectName}.exe
 !define InstallDirName ${ProjectName}
+!define ProjectRootDirName "..\.."
 !define InputDirName "..\..\Builds\Windows"
 !define UninstallFileName "Uninstall ${ProjectName}.exe"
 
@@ -13,8 +14,8 @@ outFile "${OutFileName}"
 installDir $PROGRAMFILES\${InstallDirName}
 
 Page license
-   LicenseText "GNU Library General Public License v. 2"
-   #LicenseData "C:\Documents and Settings\David\My Documents\Work\OpenSGToolbox\Release\Windows\License.txt"
+   LicenseText "GNU Lesser Library General Public License v. 3"
+   LicenseData "${ProjectRootDirName}\LICENSE"
    LicenseForceSelection checkbox
    
 Page components
@@ -46,9 +47,6 @@ section
    CreateDirectory "${SMPROGRAMSFolder}"
    createShortCut "${SMPROGRAMSFolder}\${ProjectName} Directory.lnk" "$INSTDIR"
    createShortCut "${SMPROGRAMSFolder}\Uninstall ${ProjectName}.lnk" "$INSTDIR\${UninstallFileName}"
-    
-   # create a popup box, with an OK button and the text "Hello world!"
-   messageBox MB_OK "Install ${ProjectName}"
 
 # default section end
 sectionEnd
