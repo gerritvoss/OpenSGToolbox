@@ -76,6 +76,24 @@ void DialogWindow::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+void DialogWindow::removeDialogListener(DialogListenerPtr Listener)
+{
+   DialogListenerSetItor EraseIter(_DialogListeners.find(Listener));
+   if(EraseIter != _DialogListeners.end())
+   {
+      _DialogListeners.erase(EraseIter);
+   }
+}
+
+void DialogWindow::produceDialogInput(const DialogEvent& e)
+{
+	DialogListenerSet Listeners(_DialogListeners);
+    for(DialogListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->dialogInput(e);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

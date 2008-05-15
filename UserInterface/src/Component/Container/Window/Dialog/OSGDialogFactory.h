@@ -37,7 +37,7 @@
 #include "Component/Container/OSGContainerFields.h"
 #include "OSGDialogWindowFields.h"
 
-#include "Component/Text/OSGLabel.h"
+#include "Component/Text/OSGTextAreaFields.h"
 #include "Event/OSGActionListener.h"
 
 #include <vector>
@@ -90,7 +90,7 @@ private:
 
     DialogFactory(void);
 
-	static LabelPtr createTransparentLabel(const std::string& Message);
+	static TextAreaPtr createTransparentTextArea(const std::string& Message);
 
     static DialogFactory* _the;
 

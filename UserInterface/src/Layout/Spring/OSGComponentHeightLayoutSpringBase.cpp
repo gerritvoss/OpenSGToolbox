@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  ComponentHeightLayoutSpringBase::ComponentFieldMask = 
     (TypeTraits<BitVector>::One << ComponentHeightLayoutSpringBase::ComponentFieldId);
 
+const OSG::BitVector  ComponentHeightLayoutSpringBase::SizeFieldFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentHeightLayoutSpringBase::SizeFieldFieldId);
+
 const OSG::BitVector ComponentHeightLayoutSpringBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector ComponentHeightLayoutSpringBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var ComponentPtr    ComponentHeightLayoutSpringBase::_sfComponent
+    
+*/
+/*! \var UInt32          ComponentHeightLayoutSpringBase::_sfSizeField
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *ComponentHeightLayoutSpringBase::_desc[] =
                      "Component", 
                      ComponentFieldId, ComponentFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentHeightLayoutSpringBase::getSFComponent)
+                     (FieldAccessMethod) &ComponentHeightLayoutSpringBase::getSFComponent),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "SizeField", 
+                     SizeFieldFieldId, SizeFieldFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentHeightLayoutSpringBase::getSFSizeField)
 };
 
 
@@ -163,6 +174,7 @@ void ComponentHeightLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspe
 
 ComponentHeightLayoutSpringBase::ComponentHeightLayoutSpringBase(void) :
     _sfComponent              (ComponentPtr(NullFC)), 
+    _sfSizeField              (UInt32(ComponentHeightLayoutSpring::PREFERRED_SIZE)), 
     Inherited() 
 {
 }
@@ -173,6 +185,7 @@ ComponentHeightLayoutSpringBase::ComponentHeightLayoutSpringBase(void) :
 
 ComponentHeightLayoutSpringBase::ComponentHeightLayoutSpringBase(const ComponentHeightLayoutSpringBase &source) :
     _sfComponent              (source._sfComponent              ), 
+    _sfSizeField              (source._sfSizeField              ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +207,11 @@ UInt32 ComponentHeightLayoutSpringBase::getBinSize(const BitVector &whichField)
         returnValue += _sfComponent.getBinSize();
     }
 
+    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
+    {
+        returnValue += _sfSizeField.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +224,11 @@ void ComponentHeightLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
     {
         _sfComponent.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
+    {
+        _sfSizeField.copyToBin(pMem);
     }
 
 
@@ -221,6 +244,11 @@ void ComponentHeightLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfComponent.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
+    {
+        _sfSizeField.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +262,9 @@ void ComponentHeightLayoutSpringBase::executeSyncImpl(      ComponentHeightLayou
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
         _sfComponent.syncWith(pOther->_sfComponent);
 
+    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
+        _sfSizeField.syncWith(pOther->_sfSizeField);
+
 
 }
 #else
@@ -246,6 +277,9 @@ void ComponentHeightLayoutSpringBase::executeSyncImpl(      ComponentHeightLayou
 
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
         _sfComponent.syncWith(pOther->_sfComponent);
+
+    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
+        _sfSizeField.syncWith(pOther->_sfSizeField);
 
 
 

@@ -68,6 +68,7 @@
 #include "OSGAbstractLayoutSpring.h" // Parent
 
 #include "Component/OSGComponentFields.h" // Component type
+#include <OpenSG/OSGUInt32Fields.h> // SizeField type
 
 #include "OSGComponentWidthLayoutSpringFields.h"
 
@@ -92,10 +93,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentWidthLayoutSpringBase : public Ab
     enum
     {
         ComponentFieldId = Inherited::NextFieldId,
-        NextFieldId      = ComponentFieldId + 1
+        SizeFieldFieldId = ComponentFieldId + 1,
+        NextFieldId      = SizeFieldFieldId + 1
     };
 
     static const OSG::BitVector ComponentFieldMask;
+    static const OSG::BitVector SizeFieldFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +126,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentWidthLayoutSpringBase : public Ab
     /*! \{                                                                 */
 
            SFComponentPtr      *getSFComponent      (void);
+           SFUInt32            *getSFSizeField      (void);
 
            ComponentPtr        &getComponent      (void);
      const ComponentPtr        &getComponent      (void) const;
+           UInt32              &getSizeField      (void);
+     const UInt32              &getSizeField      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentWidthLayoutSpringBase : public Ab
     /*! \{                                                                 */
 
      void setComponent      ( const ComponentPtr &value );
+     void setSizeField      ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentWidthLayoutSpringBase : public Ab
     /*! \{                                                                 */
 
     SFComponentPtr      _sfComponent;
+    SFUInt32            _sfSizeField;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

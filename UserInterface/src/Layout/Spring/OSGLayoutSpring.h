@@ -126,6 +126,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutSpring : public LayoutSpringBase
     static LayoutSpringPtr width(ComponentPtr c);
 
     static LayoutSpringPtr height(ComponentPtr c);
+    static LayoutSpringPtr requestedWidth(ComponentPtr c);
+
+    static LayoutSpringPtr requestedHeight(ComponentPtr c);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

@@ -127,13 +127,13 @@ void Container::getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
    BottomRight[1] -= getBottomInset();
 }
 
-void Container::setAllInsets(UInt32 inset)
+void Container::setAllInsets(Real32 Inset)
 {
 	beginEditCP(ContainerPtr(this), Container::LeftInsetFieldMask | Container::RightInsetFieldMask | Container::TopInsetFieldMask | Container::BottomInsetFieldMask);
-		setLeftInset(inset);
-		setRightInset(inset);
-		setTopInset(inset);
-		setBottomInset(inset);
+		setLeftInset(Inset);
+		setRightInset(Inset);
+		setTopInset(Inset);
+		setBottomInset(Inset);
 	endEditCP(ContainerPtr(this), Container::LeftInsetFieldMask | Container::RightInsetFieldMask | Container::TopInsetFieldMask | Container::BottomInsetFieldMask);
 }
 

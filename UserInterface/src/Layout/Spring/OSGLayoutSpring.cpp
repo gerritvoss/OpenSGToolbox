@@ -158,6 +158,16 @@ LayoutSpringPtr LayoutSpring::height(ComponentPtr c)
     return ComponentHeightLayoutSpring::create(c);
 }
 
+LayoutSpringPtr LayoutSpring::requestedWidth(ComponentPtr c)
+{
+    return ComponentWidthLayoutSpring::create(c, ComponentWidthLayoutSpring::REQUESTED_SIZE);
+}
+
+LayoutSpringPtr LayoutSpring::requestedHeight(ComponentPtr c)
+{
+    return ComponentHeightLayoutSpring::create(c, ComponentWidthLayoutSpring::REQUESTED_SIZE);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

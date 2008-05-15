@@ -2454,6 +2454,13 @@ void WindowsLookAndFeel::init(void)
 		WindowsLightBlueCorneredBorder->setCornerRadius(2);
 	endEditCP(WindowsLightBlueCorneredBorder);
 
+	RoundedCornerLineBorderPtr WindowsDisabledCorneredBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsDisabledCorneredBorder);
+		WindowsDisabledCorneredBorder->setWidth(1);
+		WindowsDisabledCorneredBorder->setColor(Color4f(0.93,0.93,0.90,1.0));
+		WindowsDisabledCorneredBorder->setCornerRadius(2);
+	endEditCP(WindowsDisabledCorneredBorder);
+
     //Vertical Min Draw Object
 	PolygonUIDrawObjectPtr WindowsScrollBarVerticalMinButtonDrawObject1 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsScrollBarVerticalMinButtonDrawObject1);
@@ -2493,6 +2500,18 @@ void WindowsLookAndFeel::init(void)
 		WindowsScrollBarButtonBorder->setOuterBorder(WindowsScrollBarButtonOuterBorder);
 	endEditCP(WindowsScrollBarButtonBorder);
 
+	CompoundBorderPtr WindowsScrollBarButtonDisabledOuterBorder = CompoundBorder::create();
+	beginEditCP(WindowsScrollBarButtonDisabledOuterBorder);
+		WindowsScrollBarButtonDisabledOuterBorder->setInnerBorder(WindowsWhiteCorneredBorder);
+		WindowsScrollBarButtonDisabledOuterBorder->setOuterBorder(WindowsDisabledCorneredBorder);
+	endEditCP(WindowsScrollBarButtonDisabledOuterBorder);
+    
+	CompoundBorderPtr WindowsScrollBarDisabledButtonBorder = CompoundBorder::create();
+	beginEditCP(WindowsScrollBarDisabledButtonBorder);
+		WindowsScrollBarDisabledButtonBorder->setInnerBorder(WindowsDisabledCorneredBorder);
+		WindowsScrollBarDisabledButtonBorder->setOuterBorder(WindowsScrollBarButtonDisabledOuterBorder);
+	endEditCP(WindowsScrollBarDisabledButtonBorder);
+
     ColorUIBackgroundPtr WindowsScrollBarButtonBackground = ColorUIBackground::create();
 	beginEditCP(WindowsScrollBarButtonBackground);
 		WindowsScrollBarButtonBackground->setColor(Color4f(0.76,0.84,0.99,1.0));
@@ -2527,7 +2546,7 @@ void WindowsLookAndFeel::init(void)
 
         WindowsScrollBarVerticalMinButton->setBorder(WindowsScrollBarButtonBorder);
         WindowsScrollBarVerticalMinButton->setActiveBorder(WindowsScrollBarButtonBorder);
-        WindowsScrollBarVerticalMinButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMinButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
         WindowsScrollBarVerticalMinButton->setFocusedBorder(WindowsScrollBarButtonBorder);
         WindowsScrollBarVerticalMinButton->setRolloverBorder(WindowsScrollBarButtonBorder);
         
@@ -2580,7 +2599,7 @@ void WindowsLookAndFeel::init(void)
         
         WindowsScrollBarVerticalMaxButton->setBorder(WindowsScrollBarButtonBorder);
         WindowsScrollBarVerticalMaxButton->setActiveBorder(WindowsScrollBarButtonBorder);
-        WindowsScrollBarVerticalMaxButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMaxButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
         WindowsScrollBarVerticalMaxButton->setFocusedBorder(WindowsScrollBarButtonBorder);
         WindowsScrollBarVerticalMaxButton->setRolloverBorder(WindowsScrollBarButtonBorder);
         
@@ -3677,7 +3696,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsSpinnerNextButton->setBorder(WindowsScrollBarButtonBorder);
 		WindowsSpinnerNextButton->setRolloverBorder(WindowsScrollBarButtonBorder);
 		WindowsSpinnerNextButton->setFocusedBorder(WindowsScrollBarButtonBorder);
-		WindowsSpinnerNextButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+		WindowsSpinnerNextButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
 
 		//Background
         WindowsSpinnerNextButton->setBackground(WindowsScrollBarButtonBackground);
@@ -3731,7 +3750,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsSpinnerPreviousButton->setBorder(WindowsScrollBarButtonBorder);
 		WindowsSpinnerPreviousButton->setRolloverBorder(WindowsScrollBarButtonBorder);
 		WindowsSpinnerPreviousButton->setFocusedBorder(WindowsScrollBarButtonBorder);
-		WindowsSpinnerPreviousButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+		WindowsSpinnerPreviousButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
 
 		//Background
         WindowsSpinnerPreviousButton->setBackground(WindowsScrollBarButtonBackground);
@@ -4179,7 +4198,7 @@ void WindowsLookAndFeel::init(void)
 	
 	//************************** ComboBox *****************************
 
-    //Vertical Max Button
+    //Expand Button
 	ToggleButtonPtr WindowsComboBoxExpandButton = ToggleButton::create();
     beginEditCP(WindowsComboBoxExpandButton);
         WindowsComboBoxExpandButton->setPreferredSize(Vec2f(17,17));
@@ -4192,7 +4211,7 @@ void WindowsLookAndFeel::init(void)
         
         WindowsComboBoxExpandButton->setBorder(WindowsScrollBarButtonBorder);
         WindowsComboBoxExpandButton->setActiveBorder(WindowsScrollBarButtonBorder);
-        WindowsComboBoxExpandButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+        WindowsComboBoxExpandButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
         WindowsComboBoxExpandButton->setFocusedBorder(WindowsScrollBarButtonBorder);
         WindowsComboBoxExpandButton->setRolloverBorder(WindowsScrollBarButtonBorder);
         
@@ -4246,9 +4265,10 @@ void WindowsLookAndFeel::init(void)
 	
 	//************************** DefaultComboBoxComponentGenerator *****************************
 	LabelPtr WindowsDefaultComboBoxComponentGeneratorComponentPrototype = Label::create();
-	beginEditCP(WindowsDefaultComboBoxComponentGeneratorComponentPrototype, Label::BordersFieldMask);
+	beginEditCP(WindowsDefaultComboBoxComponentGeneratorComponentPrototype, Label::BordersFieldMask | Label::BackgroundsFieldMask);
 		WindowsDefaultComboBoxComponentGeneratorComponentPrototype->setBorders(WindowsEmptyBorder);
-	endEditCP(WindowsDefaultComboBoxComponentGeneratorComponentPrototype, Label::BordersFieldMask);
+		WindowsDefaultComboBoxComponentGeneratorComponentPrototype->setBackgrounds(WindowsEmptyBackground);
+	endEditCP(WindowsDefaultComboBoxComponentGeneratorComponentPrototype, Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
     ColorUIBackgroundPtr WindowsDefaultComboBoxComponentGeneratorSelectedBackground = ColorUIBackground::create();
 	beginEditCP(WindowsDefaultComboBoxComponentGeneratorSelectedBackground, ColorUIBackground::ColorFieldMask);
@@ -4641,8 +4661,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsColorChooser->setOpacity(1.0);
 
         //ColorChooser Values
-		//WindowsColorChooser->addChooserPanel(WindowsRGBColorChooserPanel);
-		//WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
+		WindowsColorChooser->addChooserPanel(WindowsRGBColorChooserPanel);
+		WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
 		WindowsColorChooser->setPreviewPanel(NullFC);
 	endEditCP(WindowsColorChooser);
 	

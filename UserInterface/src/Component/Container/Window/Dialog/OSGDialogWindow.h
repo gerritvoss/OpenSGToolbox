@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGDialogWindowBase.h"
+#include "Event/OSGDialogListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,6 +59,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
   private:
 
     typedef DialogWindowBase Inherited;
+    friend class DialogFactory;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -78,6 +80,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    void addDialogListener(DialogListenerPtr Listener);
+    void removeDialogListener(DialogListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -98,6 +103,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
     virtual ~DialogWindow(void); 
 
     /*! \}                                                                 */
+	typedef std::set<DialogListenerPtr> DialogListenerSet;
+    typedef DialogListenerSet::iterator DialogListenerSetItor;
+    typedef DialogListenerSet::const_iterator DialogListenerSetConstItor;
+	
+    DialogListenerSet       _DialogListeners;
+	
+    virtual void produceDialogInput(const DialogEvent& e);
     
     /*==========================  PRIVATE  ================================*/
   private:

@@ -22,4 +22,13 @@ A UI ComponentWidth LayoutSpring.
 		access="public"
 	>
    </Field>
+	<Field
+		name="SizeField"
+		type="UInt32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="ComponentWidthLayoutSpring::PREFERRED_SIZE"
+		access="public"
+	>
+   </Field>
 </FieldContainer>

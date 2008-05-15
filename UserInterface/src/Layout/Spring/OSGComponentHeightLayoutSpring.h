@@ -61,6 +61,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentHeightLayoutSpring : public Compo
 
     /*==========================  PUBLIC  =================================*/
   public:
+      enum SizeField{PREFERRED_SIZE=0, MINIMUM_SIZE, MAXIMUM_SIZE, REQUESTED_SIZE, SIZE};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -82,7 +83,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentHeightLayoutSpring : public Compo
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ComponentHeightLayoutSpringPtr      create          (ComponentPtr TheComponent); 
+    static  ComponentHeightLayoutSpringPtr      create          (ComponentPtr TheComponent, UInt32 SizeField = PREFERRED_SIZE); 
     
     /*! \}                                                                 */
 

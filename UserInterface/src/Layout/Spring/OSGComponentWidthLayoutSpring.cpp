@@ -72,13 +72,14 @@ void ComponentWidthLayoutSpring::initMethod (void)
 {
 }
 
-ComponentWidthLayoutSpringPtr ComponentWidthLayoutSpring::create (ComponentPtr TheComponent)
+ComponentWidthLayoutSpringPtr ComponentWidthLayoutSpring::create (ComponentPtr TheComponent, UInt32 SizeField)
 {
     ComponentWidthLayoutSpringPtr NewSpring = createEmpty();
 
-    beginEditCP(NewSpring, ComponentFieldMask);
+    beginEditCP(NewSpring, ComponentFieldMask | SizeFieldFieldMask);
         NewSpring->setComponent(TheComponent);
-    endEditCP(NewSpring, ComponentFieldMask);
+        NewSpring->setSizeField(SizeField);
+    endEditCP(NewSpring, ComponentFieldMask | SizeFieldFieldMask);
 
     return NewSpring;
 }
@@ -94,7 +95,25 @@ Real32 ComponentWidthLayoutSpring::getMinimumValue(void) const
 
 Real32 ComponentWidthLayoutSpring::getPreferredValue(void) const
 {
-    return getComponent()->getPreferredSize().x();
+    switch(getSizeField())
+    {
+    case ComponentWidthLayoutSpring::MINIMUM_SIZE:
+        return getComponent()->getMinSize().x();
+        break;
+    case ComponentWidthLayoutSpring::MAXIMUM_SIZE:
+        return getComponent()->getMaxSize().x();
+        break;
+    case ComponentWidthLayoutSpring::REQUESTED_SIZE:
+        return getComponent()->getRequestedSize().x();
+        break;
+    case ComponentWidthLayoutSpring::SIZE:
+        return getComponent()->getSize().x();
+        break;
+    case ComponentWidthLayoutSpring::PREFERRED_SIZE:
+    default:
+        return getComponent()->getPreferredSize().x();
+        break;
+    }
 }
 
 Real32 ComponentWidthLayoutSpring::getMaximumValue(void) const

@@ -5193,6 +5193,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGDialogEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDialogEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDialogEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDialogListener.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGFocusEvent.cpp"
 					>
 				</File>

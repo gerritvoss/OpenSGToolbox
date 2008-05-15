@@ -3,10 +3,13 @@
 //#include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Container/OSGContainer.h"
 #include "Component/Button/OSGButton.h"
-#include "Component/Container/OSGSplitPanel.h"
 #include "Component/Container/OSGPanel.h"
 #include "Layout/OSGFlowLayout.h"
-#include "Component/Text/OSGLabel.h"
+#include "Layout/Spring/OSGLayoutSpring.h"
+#include "Layout/OSGSpringLayout.h"
+#include "Layout/OSGSpringLayoutConstraints.h"
+#include "Component/Misc/OSGImageComponent.h"
+#include "Component/Text/OSGTextArea.h"
 #include "Border/OSGEmptyBorder.h"
 #include "Background/OSGEmptyUIBackground.h"
 #include "OSGDialogWindow.h"
@@ -64,19 +67,20 @@ DialogWindowPtr DialogFactory::createMessageDialog(const std::string& Title, con
 	return TheDialog;
 }
 
-LabelPtr DialogFactory::createTransparentLabel(const std::string& Message)
+TextAreaPtr DialogFactory::createTransparentTextArea(const std::string& Message)
 {
-	LabelPtr TransparentLabel = osg::Label::create();
-	EmptyUIBackgroundPtr TransparentLabelBackground = osg::EmptyUIBackground::create();
-	EmptyBorderPtr TransparentLabelBorder = osg::EmptyBorder::create();
+	TextAreaPtr TransparentTextArea = osg::TextArea::create();
+	EmptyUIBackgroundPtr TransparentTextAreaBackground = osg::EmptyUIBackground::create();
+	EmptyBorderPtr TransparentTextAreaBorder = osg::EmptyBorder::create();
 
-	beginEditCP(TransparentLabel, Label::BorderFieldMask | Label::BackgroundFieldMask | Label::TextFieldMask);
-		TransparentLabel->setBorder(TransparentLabelBorder);
-		TransparentLabel->setBackground(TransparentLabelBackground);
-		TransparentLabel->setText(Message);
-	endEditCP(TransparentLabel, Label::BorderFieldMask | Label::BackgroundFieldMask | Label::TextFieldMask);
+    beginEditCP(TransparentTextArea, TextArea::BordersFieldMask | TextArea::BackgroundsFieldMask | TextArea::TextFieldMask | TextArea::EditableFieldMask);
+		TransparentTextArea->setBorders(TransparentTextAreaBorder);
+		TransparentTextArea->setBackgrounds(TransparentTextAreaBackground);
+		TransparentTextArea->setText(Message);
+        TransparentTextArea->setEditable(false);
+	endEditCP(TransparentTextArea, TextArea::BordersFieldMask | TextArea::BackgroundsFieldMask | TextArea::TextFieldMask | TextArea::EditableFieldMask);
 
-	return TransparentLabel;
+	return TransparentTextArea;
 }
 
 void DialogFactory::addButtonActionListener(const ActionListener& Listener, const int index)
@@ -94,6 +98,13 @@ void DialogFactory::addButtonActionListener(const ActionListener& Listener, cons
 ContainerPtr DialogFactory::createMessagePanel(const std::string& Message, const std::string& ConfirmButtonText)
 {
 
+    //Icon
+    ImageComponentPtr TheIcon = ImageComponent::create();
+    beginEditCP(TheIcon, ImageComponent::PreferredSizeFieldMask);
+		TheIcon->setPreferredSize(Vec2f(45,45));
+	endEditCP(TheIcon, ImageComponent::PreferredSizeFieldMask);
+
+    //Confirm Button
 	ButtonPtr ConfirmationButton = osg::Button::create();
 
     beginEditCP(ConfirmationButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
@@ -102,37 +113,47 @@ ContainerPtr DialogFactory::createMessagePanel(const std::string& Message, const
 	endEditCP(ConfirmationButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
 
 	// Create Panel for top half of SplitPanel
-	PanelPtr MessagePanelTop = osg::Panel::create();
-	FlowLayoutPtr MessagePanelTopLayout = osg::FlowLayout::create();
-	LabelPtr MessagePanelText = osg::DialogFactory::createTransparentLabel(Message);
-
-	beginEditCP(MessagePanelTop, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-		MessagePanelTop->getChildren().push_back(MessagePanelText);
-		MessagePanelTop->setLayout(MessagePanelTopLayout);
-	endEditCP(MessagePanelTop, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+	TextAreaPtr MessagePanelText = createTransparentTextArea(Message);
 	
 	// Create Panel for bottom half of SplitPanel
-	PanelPtr MessagePanelBottom = osg::Panel::create();
+	PanelPtr MessageButtonPanel = osg::Panel::createEmpty();
 	FlowLayoutPtr MessagePanelBottomLayout = osg::FlowLayout::create();
-	beginEditCP(MessagePanelBottom, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-		MessagePanelBottom->getChildren().push_back(ConfirmationButton);
-		MessagePanelBottom->setLayout(MessagePanelBottomLayout);
-	endEditCP(MessagePanelBottom, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+	beginEditCP(MessageButtonPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+		MessageButtonPanel->getChildren().push_back(ConfirmationButton);
+		MessageButtonPanel->setLayout(MessagePanelBottomLayout);
+	endEditCP(MessageButtonPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 	 
 	// Create SplitPanel itself
-    SplitPanelPtr MessageSplitPanel = osg::SplitPanel::create();
-	beginEditCP(MessageSplitPanel, SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::DividerPositionFieldMask | SplitPanel::OrientationFieldMask |
-		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask);
-        MessageSplitPanel->setMinComponent(MessagePanelTop);
-        MessageSplitPanel->setMaxComponent(MessagePanelBottom);
-        MessageSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
-        MessageSplitPanel->setDividerPosition(.5); 
-        MessageSplitPanel->setDividerSize(0);
-        MessageSplitPanel->setExpandable(false);
-		endEditCP(MessageSplitPanel, SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::DividerPositionFieldMask | SplitPanel::OrientationFieldMask |
-		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask);
+    PanelPtr MessagePanel = osg::Panel::createEmpty();
+    SpringLayoutPtr MessagePanelLayout = SpringLayout::create();
+    beginEditCP(MessagePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+		MessagePanel->getChildren().push_back(MessagePanelText);
+		MessagePanel->getChildren().push_back(TheIcon);
+		MessagePanel->getChildren().push_back(MessageButtonPanel);
+        MessagePanel->setLayout(MessagePanelLayout);
+	endEditCP(MessagePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 
-	return MessageSplitPanel;
+
+    //MessagePanelLayout
+    //Icon
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheIcon, 10, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+	MessagePanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, TheIcon, LayoutSpring::width(TheIcon));
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheIcon, 10, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+	MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, TheIcon, LayoutSpring::height(TheIcon));
+
+    //Message
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 10, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -10, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 1, SpringLayoutConstraints::EAST_EDGE, TheIcon);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText, -1, SpringLayoutConstraints::NORTH_EDGE, MessageButtonPanel);
+
+    //Button Panel
+	MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, MessageButtonPanel, LayoutSpring::requestedHeight(MessageButtonPanel));
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::WEST_EDGE, TheIcon);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::EAST_EDGE, MessagePanelText);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, -10, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
+    
+	return MessagePanel;
 }
 
 //InternalWindowPtr DialogFactory::createOptionDialog(const std::string& Title, const std::string& Message, const std::vector<std::string>& ConfirmButtonsText)
@@ -185,7 +206,7 @@ ContainerPtr DialogFactory::createOptionPanel(const std::string& Message, const 
 	endEditCP(MessagePanelBottom, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 
 	// Create SplitPanel itself
-    SplitPanelPtr MessageSplitPanel = osg::SplitPanel::create();
+    /*SplitPanelPtr MessageSplitPanel = osg::SplitPanel::create();
 	beginEditCP(MessageSplitPanel, SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::DividerPositionFieldMask |
 		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask);
         MessageSplitPanel->setMinComponent(MessagePanelBottom);
@@ -194,9 +215,9 @@ ContainerPtr DialogFactory::createOptionPanel(const std::string& Message, const 
         MessageSplitPanel->setDividerSize(0);
         MessageSplitPanel->setExpandable(false);
     endEditCP(MessageSplitPanel, SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::DividerPositionFieldMask |
-		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask);
+		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask);*/
 
-	return MessageSplitPanel;
+	return NullFC;
 }
 
 

@@ -158,7 +158,7 @@ public:
     {
 		if(e.getSource()->getType().isDerivedFrom(Component::getClassType()))
 		{
-			DialogWindowPtr TheDialog = DialogFactory::createMessageDialog("This is a Message Dialog Window", "This is a message!");
+			DialogWindowPtr TheDialog = DialogFactory::createMessageDialog("This is a Message Dialog Window", "This is a message! That has text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text");
 
 			Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e.getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e.getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
 			beginEditCP(TheDialog, DialogWindow::PositionFieldMask);

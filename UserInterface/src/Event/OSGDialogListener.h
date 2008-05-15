@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dkabala@vrac.iastate.edu                                       *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * by the Free Software Foundation, version 3.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,32 +24,31 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGDIALOGLISTENER_H_
+#define _OSGDIALOGLISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+
+#include <OpenSG/Input/OSGEventListener.h>
+#include "OSGDialogEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-
-inline
-void DialogWindow::addDialogListener(DialogListenerPtr Listener)
+class OSG_USERINTERFACELIB_DLLMAPPING DialogListener : public EventListener
 {
-   _DialogListeners.insert(Listener);
-}
+   /*=========================  PUBLIC  ===============================*/
+public:
+
+   virtual void dialogInput(const DialogEvent& e) = 0;
+};
+
+typedef DialogListener* DialogListenerPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGDIALOGWINDOW_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-
+#endif /* _OSGDIALOGLISTENER_H_ */

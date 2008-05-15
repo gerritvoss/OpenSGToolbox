@@ -76,7 +76,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
 
     /*! \}                                                                 */
     virtual void getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-    virtual void setAllInsets(UInt32);
+    virtual void setAllInsets(Real32 Inset);
     virtual void updateLayout(void);
 	virtual Vec2f getContentRequestedSize(void) const;
 	virtual Vec2f getBorderingLength(void) const;

@@ -73,13 +73,14 @@ void ComponentHeightLayoutSpring::initMethod (void)
 }
 
 
-ComponentHeightLayoutSpringPtr ComponentHeightLayoutSpring::create (ComponentPtr TheComponent)
+ComponentHeightLayoutSpringPtr ComponentHeightLayoutSpring::create (ComponentPtr TheComponent, UInt32 SizeField)
 {
     ComponentHeightLayoutSpringPtr NewSpring = createEmpty();
 
-    beginEditCP(NewSpring, ComponentFieldMask);
+    beginEditCP(NewSpring, ComponentFieldMask | SizeFieldFieldMask);
         NewSpring->setComponent(TheComponent);
-    endEditCP(NewSpring, ComponentFieldMask);
+        NewSpring->setSizeField(SizeField);
+    endEditCP(NewSpring, ComponentFieldMask | SizeFieldFieldMask);
 
     return NewSpring;
 }
@@ -95,7 +96,25 @@ Real32 ComponentHeightLayoutSpring::getMinimumValue(void) const
 
 Real32 ComponentHeightLayoutSpring::getPreferredValue(void) const
 {
-    return getComponent()->getPreferredSize().y();
+    switch(getSizeField())
+    {
+    case ComponentHeightLayoutSpring::MINIMUM_SIZE:
+        return getComponent()->getMinSize().y();
+        break;
+    case ComponentHeightLayoutSpring::MAXIMUM_SIZE:
+        return getComponent()->getMaxSize().y();
+        break;
+    case ComponentHeightLayoutSpring::REQUESTED_SIZE:
+        return getComponent()->getRequestedSize().y();
+        break;
+    case ComponentHeightLayoutSpring::SIZE:
+        return getComponent()->getSize().y();
+        break;
+    case ComponentHeightLayoutSpring::PREFERRED_SIZE:
+    default:
+        return getComponent()->getPreferredSize().y();
+        break;
+    }
 }
 
 Real32 ComponentHeightLayoutSpring::getMaximumValue(void) const

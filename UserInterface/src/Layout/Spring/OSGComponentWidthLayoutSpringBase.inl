@@ -103,6 +103,13 @@ SFComponentPtr *ComponentWidthLayoutSpringBase::getSFComponent(void)
     return &_sfComponent;
 }
 
+//! Get the ComponentWidthLayoutSpring::_sfSizeField field.
+inline
+SFUInt32 *ComponentWidthLayoutSpringBase::getSFSizeField(void)
+{
+    return &_sfSizeField;
+}
+
 
 //! Get the value of the ComponentWidthLayoutSpring::_sfComponent field.
 inline
@@ -123,6 +130,27 @@ inline
 void ComponentWidthLayoutSpringBase::setComponent(const ComponentPtr &value)
 {
     _sfComponent.setValue(value);
+}
+
+//! Get the value of the ComponentWidthLayoutSpring::_sfSizeField field.
+inline
+UInt32 &ComponentWidthLayoutSpringBase::getSizeField(void)
+{
+    return _sfSizeField.getValue();
+}
+
+//! Get the value of the ComponentWidthLayoutSpring::_sfSizeField field.
+inline
+const UInt32 &ComponentWidthLayoutSpringBase::getSizeField(void) const
+{
+    return _sfSizeField.getValue();
+}
+
+//! Set the value of the ComponentWidthLayoutSpring::_sfSizeField field.
+inline
+void ComponentWidthLayoutSpringBase::setSizeField(const UInt32 &value)
+{
+    _sfSizeField.setValue(value);
 }
 
 

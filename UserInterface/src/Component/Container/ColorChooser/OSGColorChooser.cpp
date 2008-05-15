@@ -278,6 +278,8 @@ void ColorChooser::updateChildren(void)
 			_LayoutTabPanel->addTab(TabLabel, getInternalChooserPanels()[i]);
 		}
 
+        _LayoutTabPanel->setSelectedIndex(0);
+
 		beginEditCP(ColorChooserPtr(this), ColorChooser::ChildrenFieldMask);
 			getChildren().clear();
 			getChildren().push_back(_LayoutTabPanel);
