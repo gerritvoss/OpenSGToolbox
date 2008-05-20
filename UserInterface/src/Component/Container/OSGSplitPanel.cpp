@@ -215,14 +215,31 @@ void SplitPanel::setDividerDrawObject(const UIDrawObjectCanvasPtr &value)
 {
 	if (getDividerDrawObject() != NullFC)
 	{
-		getChildren().erase(getChildren().find(_sfDividerDrawObject.getValue()));
 		getDividerDrawObject()->removeMouseListener(&_DividerListener);
 	}
     _sfDividerDrawObject.setValue(value);
-	getChildren().push_back(value);
 	value->addMouseListener(&_DividerListener);
 }
 
+void SplitPanel::updateChildren(void)
+{
+    beginEditCP(SplitPanelPtr(this), SplitPanel::ChildrenFieldMask);
+        getChildren().clear();
+        if(getDividerDrawObject() != NullFC)
+        {
+	        getChildren().push_back(getDividerDrawObject());
+        }
+        if(getMinComponent() != NullFC)
+        {
+	        getChildren().push_back(getMinComponent());
+        }
+        if(getMaxComponent() != NullFC)
+        {
+	        getChildren().push_back(getMaxComponent());
+        }
+    endEditCP(SplitPanelPtr(this), SplitPanel::ChildrenFieldMask);
+
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -262,6 +279,14 @@ void SplitPanel::changed(BitVector whichField, UInt32 origin)
     {
 		updateLayout();
 	}
+
+    if( (whichField & DividerDrawObjectFieldMask) ||
+        (whichField & MinComponentFieldMask) ||
+        (whichField & MaxComponentFieldMask)
+        )
+    {
+        updateChildren();
+    }
 }
 
 void SplitPanel::dump(      UInt32    , 

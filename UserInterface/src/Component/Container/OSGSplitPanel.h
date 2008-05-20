@@ -127,6 +127,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
 
 	DividerDraggedListener _DividerDraggedListener;
 
+    void updateChildren(void);
+
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
