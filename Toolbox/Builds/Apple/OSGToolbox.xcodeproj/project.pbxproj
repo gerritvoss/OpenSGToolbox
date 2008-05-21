@@ -1,0 +1,987 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		D437832B0CF0B17E0062E3A4 /* OSGToolbox Aggregate */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D43783360CF0B2110062E3A4 /* Build configuration list for PBXAggregateTarget "OSGToolbox Aggregate" */;
+			buildPhases = (
+			);
+			dependencies = (
+				D437832D0CF0B1890062E3A4 /* PBXTargetDependency */,
+				D43783810CF0BF320062E3A4 /* PBXTargetDependency */,
+				D437838A0CF0C07C0062E3A4 /* PBXTargetDependency */,
+			);
+			name = "OSGToolbox Aggregate";
+			productName = "OSG Toolbox Aggregate";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		D42BABD80DE4A3B90052520E /* OSGBinFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = D42BABD00DE4A3B90052520E /* OSGBinFCFileType.h */; };
+		D42BABD90DE4A3B90052520E /* OSGFCFileHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = D42BABD20DE4A3B90052520E /* OSGFCFileHandler.h */; };
+		D42BABDA0DE4A3B90052520E /* OSGFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = D42BABD40DE4A3B90052520E /* OSGFCFileType.h */; };
+		D42BABDB0DE4A3B90052520E /* OSGXMLFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = D42BABD60DE4A3B90052520E /* OSGXMLFCFileType.h */; };
+		D42BABDC0DE4A3B90052520E /* OSGBinFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = D42BABD00DE4A3B90052520E /* OSGBinFCFileType.h */; };
+		D42BABDD0DE4A3B90052520E /* OSGFCFileHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = D42BABD20DE4A3B90052520E /* OSGFCFileHandler.h */; };
+		D42BABDE0DE4A3B90052520E /* OSGFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = D42BABD40DE4A3B90052520E /* OSGFCFileType.h */; };
+		D42BABDF0DE4A3B90052520E /* OSGXMLFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = D42BABD60DE4A3B90052520E /* OSGXMLFCFileType.h */; };
+		D42BABE20DE4A3D80052520E /* OSGFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BABE10DE4A3D80052520E /* OSGFCFileType.cpp */; };
+		D42BABE30DE4A3D80052520E /* OSGFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BABE10DE4A3D80052520E /* OSGFCFileType.cpp */; };
+		D42BABE80DE4A3FC0052520E /* OSGFCFileHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BABE70DE4A3FC0052520E /* OSGFCFileHandler.cpp */; };
+		D42BABE90DE4A3FC0052520E /* OSGFCFileHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BABE70DE4A3FC0052520E /* OSGFCFileHandler.cpp */; };
+		D42BABEC0DE4A41D0052520E /* OSGXMLFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BABEB0DE4A41D0052520E /* OSGXMLFCFileType.cpp */; };
+		D42BABED0DE4A41D0052520E /* OSGXMLFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BABEB0DE4A41D0052520E /* OSGXMLFCFileType.cpp */; };
+		D42BABF00DE4A4420052520E /* OSGBinFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BABEF0DE4A4420052520E /* OSGBinFCFileType.cpp */; };
+		D42BABF10DE4A4420052520E /* OSGBinFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BABEF0DE4A4420052520E /* OSGBinFCFileType.cpp */; };
+		D42BACE00DE4A6980052520E /* 02FCFileTypeIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BACDF0DE4A6980052520E /* 02FCFileTypeIO.cpp */; };
+		D487D1F70DE48702000A36D3 /* OSGCameraUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1ED0DE48702000A36D3 /* OSGCameraUtils.h */; };
+		D487D1F80DE48702000A36D3 /* OSGColorOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1EE0DE48702000A36D3 /* OSGColorOperations.h */; };
+		D487D1F90DE48702000A36D3 /* OSGGLenumUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1EF0DE48702000A36D3 /* OSGGLenumUtils.h */; };
+		D487D1FA0DE48702000A36D3 /* OSGIntrusivePtrImplBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F00DE48702000A36D3 /* OSGIntrusivePtrImplBase.h */; };
+		D487D1FB0DE48702000A36D3 /* OSGPntOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F20DE48702000A36D3 /* OSGPntOperations.h */; };
+		D487D1FC0DE48702000A36D3 /* OSGQuatOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F30DE48702000A36D3 /* OSGQuatOperations.h */; };
+		D487D1FD0DE48702000A36D3 /* OSGRandomPoolManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F40DE48702000A36D3 /* OSGRandomPoolManager.h */; };
+		D487D1FE0DE48702000A36D3 /* OSGSharedFieldPtr.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F60DE48702000A36D3 /* OSGSharedFieldPtr.h */; };
+		D487D1FF0DE48702000A36D3 /* OSGCameraUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1ED0DE48702000A36D3 /* OSGCameraUtils.h */; };
+		D487D2000DE48702000A36D3 /* OSGColorOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1EE0DE48702000A36D3 /* OSGColorOperations.h */; };
+		D487D2010DE48702000A36D3 /* OSGGLenumUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1EF0DE48702000A36D3 /* OSGGLenumUtils.h */; };
+		D487D2020DE48702000A36D3 /* OSGIntrusivePtrImplBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F00DE48702000A36D3 /* OSGIntrusivePtrImplBase.h */; };
+		D487D2030DE48702000A36D3 /* OSGPntOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F20DE48702000A36D3 /* OSGPntOperations.h */; };
+		D487D2040DE48702000A36D3 /* OSGQuatOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F30DE48702000A36D3 /* OSGQuatOperations.h */; };
+		D487D2050DE48702000A36D3 /* OSGRandomPoolManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F40DE48702000A36D3 /* OSGRandomPoolManager.h */; };
+		D487D2060DE48702000A36D3 /* OSGSharedFieldPtr.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D1F60DE48702000A36D3 /* OSGSharedFieldPtr.h */; };
+		D487D2450DE4878B000A36D3 /* OSGCameraUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2410DE4878B000A36D3 /* OSGCameraUtils.cpp */; };
+		D487D2460DE4878B000A36D3 /* OSGGLenumUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2420DE4878B000A36D3 /* OSGGLenumUtils.cpp */; };
+		D487D2470DE4878B000A36D3 /* OSGIntrusivePtrImplBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2430DE4878B000A36D3 /* OSGIntrusivePtrImplBase.cpp */; };
+		D487D2480DE4878B000A36D3 /* OSGRandomPoolManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2440DE4878B000A36D3 /* OSGRandomPoolManager.cpp */; };
+		D487D2490DE4878B000A36D3 /* OSGCameraUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2410DE4878B000A36D3 /* OSGCameraUtils.cpp */; };
+		D487D24A0DE4878B000A36D3 /* OSGGLenumUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2420DE4878B000A36D3 /* OSGGLenumUtils.cpp */; };
+		D487D24B0DE4878B000A36D3 /* OSGIntrusivePtrImplBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2430DE4878B000A36D3 /* OSGIntrusivePtrImplBase.cpp */; };
+		D487D24C0DE4878B000A36D3 /* OSGRandomPoolManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2440DE4878B000A36D3 /* OSGRandomPoolManager.cpp */; };
+		D487D2620DE487A7000A36D3 /* OSGAirplaneCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D24D0DE487A7000A36D3 /* OSGAirplaneCamera.cpp */; };
+		D487D2630DE487A7000A36D3 /* OSGAirplaneCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D24E0DE487A7000A36D3 /* OSGAirplaneCamera.h */; };
+		D487D2640DE487A7000A36D3 /* OSGAirplaneCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2500DE487A7000A36D3 /* OSGAirplaneCameraBase.cpp */; };
+		D487D2650DE487A7000A36D3 /* OSGAirplaneCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2510DE487A7000A36D3 /* OSGAirplaneCameraBase.h */; };
+		D487D2660DE487A7000A36D3 /* OSGAirplaneCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2530DE487A7000A36D3 /* OSGAirplaneCameraFields.h */; };
+		D487D2670DE487A7000A36D3 /* OSGMatrixBeaconCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2540DE487A7000A36D3 /* OSGMatrixBeaconCamera.cpp */; };
+		D487D2680DE487A7000A36D3 /* OSGMatrixBeaconCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2550DE487A7000A36D3 /* OSGMatrixBeaconCamera.h */; };
+		D487D2690DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2570DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.cpp */; };
+		D487D26A0DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2580DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.h */; };
+		D487D26B0DE487A7000A36D3 /* OSGMatrixBeaconCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D25A0DE487A7000A36D3 /* OSGMatrixBeaconCameraFields.h */; };
+		D487D26C0DE487A7000A36D3 /* OSGRubberBandCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D25B0DE487A7000A36D3 /* OSGRubberBandCamera.cpp */; };
+		D487D26D0DE487A7000A36D3 /* OSGRubberBandCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D25C0DE487A7000A36D3 /* OSGRubberBandCamera.h */; };
+		D487D26E0DE487A7000A36D3 /* OSGRubberBandCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D25E0DE487A7000A36D3 /* OSGRubberBandCameraBase.cpp */; };
+		D487D26F0DE487A7000A36D3 /* OSGRubberBandCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D25F0DE487A7000A36D3 /* OSGRubberBandCameraBase.h */; };
+		D487D2700DE487A7000A36D3 /* OSGRubberBandCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2610DE487A7000A36D3 /* OSGRubberBandCameraFields.h */; };
+		D487D2710DE487A7000A36D3 /* OSGAirplaneCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D24D0DE487A7000A36D3 /* OSGAirplaneCamera.cpp */; };
+		D487D2720DE487A7000A36D3 /* OSGAirplaneCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D24E0DE487A7000A36D3 /* OSGAirplaneCamera.h */; };
+		D487D2730DE487A7000A36D3 /* OSGAirplaneCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2500DE487A7000A36D3 /* OSGAirplaneCameraBase.cpp */; };
+		D487D2740DE487A7000A36D3 /* OSGAirplaneCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2510DE487A7000A36D3 /* OSGAirplaneCameraBase.h */; };
+		D487D2750DE487A7000A36D3 /* OSGAirplaneCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2530DE487A7000A36D3 /* OSGAirplaneCameraFields.h */; };
+		D487D2760DE487A7000A36D3 /* OSGMatrixBeaconCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2540DE487A7000A36D3 /* OSGMatrixBeaconCamera.cpp */; };
+		D487D2770DE487A7000A36D3 /* OSGMatrixBeaconCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2550DE487A7000A36D3 /* OSGMatrixBeaconCamera.h */; };
+		D487D2780DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2570DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.cpp */; };
+		D487D2790DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2580DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.h */; };
+		D487D27A0DE487A7000A36D3 /* OSGMatrixBeaconCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D25A0DE487A7000A36D3 /* OSGMatrixBeaconCameraFields.h */; };
+		D487D27B0DE487A7000A36D3 /* OSGRubberBandCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D25B0DE487A7000A36D3 /* OSGRubberBandCamera.cpp */; };
+		D487D27C0DE487A7000A36D3 /* OSGRubberBandCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D25C0DE487A7000A36D3 /* OSGRubberBandCamera.h */; };
+		D487D27D0DE487A7000A36D3 /* OSGRubberBandCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D25E0DE487A7000A36D3 /* OSGRubberBandCameraBase.cpp */; };
+		D487D27E0DE487A7000A36D3 /* OSGRubberBandCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D25F0DE487A7000A36D3 /* OSGRubberBandCameraBase.h */; };
+		D487D27F0DE487A7000A36D3 /* OSGRubberBandCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2610DE487A7000A36D3 /* OSGRubberBandCameraFields.h */; };
+		D487D2A20DE487D5000A36D3 /* OSGFieldContainerMapType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D29C0DE487D5000A36D3 /* OSGFieldContainerMapType.cpp */; };
+		D487D2A30DE487D5000A36D3 /* OSGFieldContainerMapType.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D29D0DE487D5000A36D3 /* OSGFieldContainerMapType.h */; };
+		D487D2A40DE487D5000A36D3 /* OSGPathType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D29E0DE487D5000A36D3 /* OSGPathType.cpp */; };
+		D487D2A50DE487D5000A36D3 /* OSGPathType.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D29F0DE487D5000A36D3 /* OSGPathType.h */; };
+		D487D2A60DE487D5000A36D3 /* OSGStringMapType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2A00DE487D5000A36D3 /* OSGStringMapType.cpp */; };
+		D487D2A70DE487D5000A36D3 /* OSGStringMapType.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2A10DE487D5000A36D3 /* OSGStringMapType.h */; };
+		D487D2A80DE487D5000A36D3 /* OSGFieldContainerMapType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D29C0DE487D5000A36D3 /* OSGFieldContainerMapType.cpp */; };
+		D487D2A90DE487D5000A36D3 /* OSGFieldContainerMapType.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D29D0DE487D5000A36D3 /* OSGFieldContainerMapType.h */; };
+		D487D2AA0DE487D5000A36D3 /* OSGPathType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D29E0DE487D5000A36D3 /* OSGPathType.cpp */; };
+		D487D2AB0DE487D5000A36D3 /* OSGPathType.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D29F0DE487D5000A36D3 /* OSGPathType.h */; };
+		D487D2AC0DE487D5000A36D3 /* OSGStringMapType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D487D2A00DE487D5000A36D3 /* OSGStringMapType.cpp */; };
+		D487D2AD0DE487D5000A36D3 /* OSGStringMapType.h in Headers */ = {isa = PBXBuildFile; fileRef = D487D2A10DE487D5000A36D3 /* OSGStringMapType.h */; };
+		D4BE41F10CF0E5BC0046BAE7 /* OSGToolboxDef.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BE41D40CF0E5BC0046BAE7 /* OSGToolboxDef.h */; };
+		D4BE420B0CF0E5BC0046BAE7 /* OSGToolboxDef.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BE41D40CF0E5BC0046BAE7 /* OSGToolboxDef.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D437832C0CF0B1890062E3A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC09C05546B4700DB518D;
+			remoteInfo = "Xcode OSGToolbox";
+		};
+		D43783800CF0BF320062E3A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D437835E0CF0BED30062E3A4;
+			remoteInfo = "OSGToolbox Static Library";
+		};
+		D43783890CF0C07C0062E3A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D43783460CF0B5090062E3A4;
+			remoteInfo = "OSGToolbox install Shell Script";
+		};
+		D487D1590DE48500000A36D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D437832B0CF0B17E0062E3A4;
+			remoteInfo = "OSGToolbox Aggregate";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D42BABAC0DE49FDF0052520E /* untitled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = untitled.h; sourceTree = "<group>"; };
+		D42BABAD0DE49FDF0052520E /* untitled.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = untitled.cpp; sourceTree = "<group>"; };
+		D42BABD00DE4A3B90052520E /* OSGBinFCFileType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGBinFCFileType.h; path = ../../src/FileIO/OSGBinFCFileType.h; sourceTree = SOURCE_ROOT; };
+		D42BABD10DE4A3B90052520E /* OSGBinFCFileType.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGBinFCFileType.inl; path = ../../src/FileIO/OSGBinFCFileType.inl; sourceTree = SOURCE_ROOT; };
+		D42BABD20DE4A3B90052520E /* OSGFCFileHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFCFileHandler.h; path = ../../src/FileIO/OSGFCFileHandler.h; sourceTree = SOURCE_ROOT; };
+		D42BABD30DE4A3B90052520E /* OSGFCFileHandler.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFCFileHandler.inl; path = ../../src/FileIO/OSGFCFileHandler.inl; sourceTree = SOURCE_ROOT; };
+		D42BABD40DE4A3B90052520E /* OSGFCFileType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFCFileType.h; path = ../../src/FileIO/OSGFCFileType.h; sourceTree = SOURCE_ROOT; };
+		D42BABD50DE4A3B90052520E /* OSGFCFileType.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFCFileType.inl; path = ../../src/FileIO/OSGFCFileType.inl; sourceTree = SOURCE_ROOT; };
+		D42BABD60DE4A3B90052520E /* OSGXMLFCFileType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGXMLFCFileType.h; path = ../../src/FileIO/OSGXMLFCFileType.h; sourceTree = SOURCE_ROOT; };
+		D42BABD70DE4A3B90052520E /* OSGXMLFCFileType.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGXMLFCFileType.inl; path = ../../src/FileIO/OSGXMLFCFileType.inl; sourceTree = SOURCE_ROOT; };
+		D42BABE10DE4A3D80052520E /* OSGFCFileType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFCFileType.cpp; path = ../../src/FileIO/OSGFCFileType.cpp; sourceTree = SOURCE_ROOT; };
+		D42BABE70DE4A3FC0052520E /* OSGFCFileHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFCFileHandler.cpp; path = ../../src/FileIO/OSGFCFileHandler.cpp; sourceTree = SOURCE_ROOT; };
+		D42BABEB0DE4A41D0052520E /* OSGXMLFCFileType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGXMLFCFileType.cpp; path = ../../src/FileIO/OSGXMLFCFileType.cpp; sourceTree = SOURCE_ROOT; };
+		D42BABEF0DE4A4420052520E /* OSGBinFCFileType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGBinFCFileType.cpp; path = ../../src/FileIO/OSGBinFCFileType.cpp; sourceTree = SOURCE_ROOT; };
+		D42BACDF0DE4A6980052520E /* 02FCFileTypeIO.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 02FCFileTypeIO.cpp; path = ../../Tutorials/02FCFileTypeIO.cpp; sourceTree = SOURCE_ROOT; };
+		D487D1520DE4848A000A36D3 /* 02FCFileTypeIO */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 02FCFileTypeIO; sourceTree = BUILT_PRODUCTS_DIR; };
+		D487D15B0DE48515000A36D3 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
+		D487D15D0DE4852D000A36D3 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		D487D15F0DE4853B000A36D3 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
+		D487D1ED0DE48702000A36D3 /* OSGCameraUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGCameraUtils.h; path = ../../src/Util/OSGCameraUtils.h; sourceTree = SOURCE_ROOT; };
+		D487D1EE0DE48702000A36D3 /* OSGColorOperations.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGColorOperations.h; path = ../../src/Util/OSGColorOperations.h; sourceTree = SOURCE_ROOT; };
+		D487D1EF0DE48702000A36D3 /* OSGGLenumUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGGLenumUtils.h; path = ../../src/Util/OSGGLenumUtils.h; sourceTree = SOURCE_ROOT; };
+		D487D1F00DE48702000A36D3 /* OSGIntrusivePtrImplBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGIntrusivePtrImplBase.h; path = ../../src/Util/OSGIntrusivePtrImplBase.h; sourceTree = SOURCE_ROOT; };
+		D487D1F10DE48702000A36D3 /* OSGIntrusivePtrImplBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGIntrusivePtrImplBase.inl; path = ../../src/Util/OSGIntrusivePtrImplBase.inl; sourceTree = SOURCE_ROOT; };
+		D487D1F20DE48702000A36D3 /* OSGPntOperations.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGPntOperations.h; path = ../../src/Util/OSGPntOperations.h; sourceTree = SOURCE_ROOT; };
+		D487D1F30DE48702000A36D3 /* OSGQuatOperations.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGQuatOperations.h; path = ../../src/Util/OSGQuatOperations.h; sourceTree = SOURCE_ROOT; };
+		D487D1F40DE48702000A36D3 /* OSGRandomPoolManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGRandomPoolManager.h; path = ../../src/Util/OSGRandomPoolManager.h; sourceTree = SOURCE_ROOT; };
+		D487D1F50DE48702000A36D3 /* OSGRandomPoolManager.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGRandomPoolManager.inl; path = ../../src/Util/OSGRandomPoolManager.inl; sourceTree = SOURCE_ROOT; };
+		D487D1F60DE48702000A36D3 /* OSGSharedFieldPtr.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGSharedFieldPtr.h; path = ../../src/Util/OSGSharedFieldPtr.h; sourceTree = SOURCE_ROOT; };
+		D487D2410DE4878B000A36D3 /* OSGCameraUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGCameraUtils.cpp; path = ../../src/Util/OSGCameraUtils.cpp; sourceTree = SOURCE_ROOT; };
+		D487D2420DE4878B000A36D3 /* OSGGLenumUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGGLenumUtils.cpp; path = ../../src/Util/OSGGLenumUtils.cpp; sourceTree = SOURCE_ROOT; };
+		D487D2430DE4878B000A36D3 /* OSGIntrusivePtrImplBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGIntrusivePtrImplBase.cpp; path = ../../src/Util/OSGIntrusivePtrImplBase.cpp; sourceTree = SOURCE_ROOT; };
+		D487D2440DE4878B000A36D3 /* OSGRandomPoolManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGRandomPoolManager.cpp; path = ../../src/Util/OSGRandomPoolManager.cpp; sourceTree = SOURCE_ROOT; };
+		D487D24D0DE487A7000A36D3 /* OSGAirplaneCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGAirplaneCamera.cpp; path = ../../src/Cameras/OSGAirplaneCamera.cpp; sourceTree = SOURCE_ROOT; };
+		D487D24E0DE487A7000A36D3 /* OSGAirplaneCamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGAirplaneCamera.h; path = ../../src/Cameras/OSGAirplaneCamera.h; sourceTree = SOURCE_ROOT; };
+		D487D24F0DE487A7000A36D3 /* OSGAirplaneCamera.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGAirplaneCamera.inl; path = ../../src/Cameras/OSGAirplaneCamera.inl; sourceTree = SOURCE_ROOT; };
+		D487D2500DE487A7000A36D3 /* OSGAirplaneCameraBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGAirplaneCameraBase.cpp; path = ../../src/Cameras/OSGAirplaneCameraBase.cpp; sourceTree = SOURCE_ROOT; };
+		D487D2510DE487A7000A36D3 /* OSGAirplaneCameraBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGAirplaneCameraBase.h; path = ../../src/Cameras/OSGAirplaneCameraBase.h; sourceTree = SOURCE_ROOT; };
+		D487D2520DE487A7000A36D3 /* OSGAirplaneCameraBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGAirplaneCameraBase.inl; path = ../../src/Cameras/OSGAirplaneCameraBase.inl; sourceTree = SOURCE_ROOT; };
+		D487D2530DE487A7000A36D3 /* OSGAirplaneCameraFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGAirplaneCameraFields.h; path = ../../src/Cameras/OSGAirplaneCameraFields.h; sourceTree = SOURCE_ROOT; };
+		D487D2540DE487A7000A36D3 /* OSGMatrixBeaconCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMatrixBeaconCamera.cpp; path = ../../src/Cameras/OSGMatrixBeaconCamera.cpp; sourceTree = SOURCE_ROOT; };
+		D487D2550DE487A7000A36D3 /* OSGMatrixBeaconCamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMatrixBeaconCamera.h; path = ../../src/Cameras/OSGMatrixBeaconCamera.h; sourceTree = SOURCE_ROOT; };
+		D487D2560DE487A7000A36D3 /* OSGMatrixBeaconCamera.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGMatrixBeaconCamera.inl; path = ../../src/Cameras/OSGMatrixBeaconCamera.inl; sourceTree = SOURCE_ROOT; };
+		D487D2570DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMatrixBeaconCameraBase.cpp; path = ../../src/Cameras/OSGMatrixBeaconCameraBase.cpp; sourceTree = SOURCE_ROOT; };
+		D487D2580DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMatrixBeaconCameraBase.h; path = ../../src/Cameras/OSGMatrixBeaconCameraBase.h; sourceTree = SOURCE_ROOT; };
+		D487D2590DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGMatrixBeaconCameraBase.inl; path = ../../src/Cameras/OSGMatrixBeaconCameraBase.inl; sourceTree = SOURCE_ROOT; };
+		D487D25A0DE487A7000A36D3 /* OSGMatrixBeaconCameraFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMatrixBeaconCameraFields.h; path = ../../src/Cameras/OSGMatrixBeaconCameraFields.h; sourceTree = SOURCE_ROOT; };
+		D487D25B0DE487A7000A36D3 /* OSGRubberBandCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGRubberBandCamera.cpp; path = ../../src/Cameras/OSGRubberBandCamera.cpp; sourceTree = SOURCE_ROOT; };
+		D487D25C0DE487A7000A36D3 /* OSGRubberBandCamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGRubberBandCamera.h; path = ../../src/Cameras/OSGRubberBandCamera.h; sourceTree = SOURCE_ROOT; };
+		D487D25D0DE487A7000A36D3 /* OSGRubberBandCamera.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGRubberBandCamera.inl; path = ../../src/Cameras/OSGRubberBandCamera.inl; sourceTree = SOURCE_ROOT; };
+		D487D25E0DE487A7000A36D3 /* OSGRubberBandCameraBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGRubberBandCameraBase.cpp; path = ../../src/Cameras/OSGRubberBandCameraBase.cpp; sourceTree = SOURCE_ROOT; };
+		D487D25F0DE487A7000A36D3 /* OSGRubberBandCameraBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGRubberBandCameraBase.h; path = ../../src/Cameras/OSGRubberBandCameraBase.h; sourceTree = SOURCE_ROOT; };
+		D487D2600DE487A7000A36D3 /* OSGRubberBandCameraBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGRubberBandCameraBase.inl; path = ../../src/Cameras/OSGRubberBandCameraBase.inl; sourceTree = SOURCE_ROOT; };
+		D487D2610DE487A7000A36D3 /* OSGRubberBandCameraFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGRubberBandCameraFields.h; path = ../../src/Cameras/OSGRubberBandCameraFields.h; sourceTree = SOURCE_ROOT; };
+		D487D29C0DE487D5000A36D3 /* OSGFieldContainerMapType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFieldContainerMapType.cpp; path = ../../src/Types/OSGFieldContainerMapType.cpp; sourceTree = SOURCE_ROOT; };
+		D487D29D0DE487D5000A36D3 /* OSGFieldContainerMapType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFieldContainerMapType.h; path = ../../src/Types/OSGFieldContainerMapType.h; sourceTree = SOURCE_ROOT; };
+		D487D29E0DE487D5000A36D3 /* OSGPathType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGPathType.cpp; path = ../../src/Types/OSGPathType.cpp; sourceTree = SOURCE_ROOT; };
+		D487D29F0DE487D5000A36D3 /* OSGPathType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGPathType.h; path = ../../src/Types/OSGPathType.h; sourceTree = SOURCE_ROOT; };
+		D487D2A00DE487D5000A36D3 /* OSGStringMapType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGStringMapType.cpp; path = ../../src/Types/OSGStringMapType.cpp; sourceTree = SOURCE_ROOT; };
+		D487D2A10DE487D5000A36D3 /* OSGStringMapType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGStringMapType.h; path = ../../src/Types/OSGStringMapType.h; sourceTree = SOURCE_ROOT; };
+		D4BE40040CF0D5930046BAE7 /* libOSGToolbox.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGToolbox.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4BE41D40CF0E5BC0046BAE7 /* OSGToolboxDef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGToolboxDef.h; path = ../../src/OSGToolboxDef.h; sourceTree = SOURCE_ROOT; };
+		D4DD00950CF0CC3900F00431 /* libOSGToolbox.a */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGToolbox.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC09B05546B4700DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D43783710CF0BED30062E3A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D487D1500DE4848A000A36D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DDFF38A45A11DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D4DD00950CF0CC3900F00431 /* libOSGToolbox.a */,
+				D4BE40040CF0D5930046BAE7 /* libOSGToolbox.dylib */,
+				D487D1520DE4848A000A36D3 /* 02FCFileTypeIO */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* OSGToolbox */ = {
+			isa = PBXGroup;
+			children = (
+				D487D15F0DE4853B000A36D3 /* QuickTime.framework */,
+				D487D15D0DE4852D000A36D3 /* Carbon.framework */,
+				D487D15B0DE48515000A36D3 /* AGL.framework */,
+				08FB77ACFE841707C02AAC07 /* Source */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DDFF38A45A11DB9C8B /* Products */,
+				D42BABAC0DE49FDF0052520E /* untitled.h */,
+				D42BABAD0DE49FDF0052520E /* untitled.cpp */,
+			);
+			name = OSGToolbox;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77ACFE841707C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				D487D1A30DE485F2000A36D3 /* 02FCFileTypeIO */,
+				D4BE3FA50CF0D4280046BAE7 /* Toolbox */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		D42BABCF0DE4A37F0052520E /* FileIO */ = {
+			isa = PBXGroup;
+			children = (
+				D42BABEF0DE4A4420052520E /* OSGBinFCFileType.cpp */,
+				D42BABEB0DE4A41D0052520E /* OSGXMLFCFileType.cpp */,
+				D42BABE70DE4A3FC0052520E /* OSGFCFileHandler.cpp */,
+				D42BABE10DE4A3D80052520E /* OSGFCFileType.cpp */,
+				D42BABD00DE4A3B90052520E /* OSGBinFCFileType.h */,
+				D42BABD10DE4A3B90052520E /* OSGBinFCFileType.inl */,
+				D42BABD20DE4A3B90052520E /* OSGFCFileHandler.h */,
+				D42BABD30DE4A3B90052520E /* OSGFCFileHandler.inl */,
+				D42BABD40DE4A3B90052520E /* OSGFCFileType.h */,
+				D42BABD50DE4A3B90052520E /* OSGFCFileType.inl */,
+				D42BABD60DE4A3B90052520E /* OSGXMLFCFileType.h */,
+				D42BABD70DE4A3B90052520E /* OSGXMLFCFileType.inl */,
+			);
+			name = FileIO;
+			sourceTree = "<group>";
+		};
+		D487D1A30DE485F2000A36D3 /* 02FCFileTypeIO */ = {
+			isa = PBXGroup;
+			children = (
+				D42BACDF0DE4A6980052520E /* 02FCFileTypeIO.cpp */,
+			);
+			name = 02FCFileTypeIO;
+			sourceTree = "<group>";
+		};
+		D487D23A0DE4872B000A36D3 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				D487D2410DE4878B000A36D3 /* OSGCameraUtils.cpp */,
+				D487D2420DE4878B000A36D3 /* OSGGLenumUtils.cpp */,
+				D487D2430DE4878B000A36D3 /* OSGIntrusivePtrImplBase.cpp */,
+				D487D2440DE4878B000A36D3 /* OSGRandomPoolManager.cpp */,
+				D487D1ED0DE48702000A36D3 /* OSGCameraUtils.h */,
+				D487D1EE0DE48702000A36D3 /* OSGColorOperations.h */,
+				D487D1EF0DE48702000A36D3 /* OSGGLenumUtils.h */,
+				D487D1F00DE48702000A36D3 /* OSGIntrusivePtrImplBase.h */,
+				D487D1F10DE48702000A36D3 /* OSGIntrusivePtrImplBase.inl */,
+				D487D1F20DE48702000A36D3 /* OSGPntOperations.h */,
+				D487D1F30DE48702000A36D3 /* OSGQuatOperations.h */,
+				D487D1F40DE48702000A36D3 /* OSGRandomPoolManager.h */,
+				D487D1F50DE48702000A36D3 /* OSGRandomPoolManager.inl */,
+				D487D1F60DE48702000A36D3 /* OSGSharedFieldPtr.h */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
+		D487D23B0DE48734000A36D3 /* Cameras */ = {
+			isa = PBXGroup;
+			children = (
+				D487D24D0DE487A7000A36D3 /* OSGAirplaneCamera.cpp */,
+				D487D24E0DE487A7000A36D3 /* OSGAirplaneCamera.h */,
+				D487D24F0DE487A7000A36D3 /* OSGAirplaneCamera.inl */,
+				D487D2500DE487A7000A36D3 /* OSGAirplaneCameraBase.cpp */,
+				D487D2510DE487A7000A36D3 /* OSGAirplaneCameraBase.h */,
+				D487D2520DE487A7000A36D3 /* OSGAirplaneCameraBase.inl */,
+				D487D2530DE487A7000A36D3 /* OSGAirplaneCameraFields.h */,
+				D487D2540DE487A7000A36D3 /* OSGMatrixBeaconCamera.cpp */,
+				D487D2550DE487A7000A36D3 /* OSGMatrixBeaconCamera.h */,
+				D487D2560DE487A7000A36D3 /* OSGMatrixBeaconCamera.inl */,
+				D487D2570DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.cpp */,
+				D487D2580DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.h */,
+				D487D2590DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.inl */,
+				D487D25A0DE487A7000A36D3 /* OSGMatrixBeaconCameraFields.h */,
+				D487D25B0DE487A7000A36D3 /* OSGRubberBandCamera.cpp */,
+				D487D25C0DE487A7000A36D3 /* OSGRubberBandCamera.h */,
+				D487D25D0DE487A7000A36D3 /* OSGRubberBandCamera.inl */,
+				D487D25E0DE487A7000A36D3 /* OSGRubberBandCameraBase.cpp */,
+				D487D25F0DE487A7000A36D3 /* OSGRubberBandCameraBase.h */,
+				D487D2600DE487A7000A36D3 /* OSGRubberBandCameraBase.inl */,
+				D487D2610DE487A7000A36D3 /* OSGRubberBandCameraFields.h */,
+			);
+			name = Cameras;
+			sourceTree = "<group>";
+		};
+		D487D2400DE4875D000A36D3 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				D487D29C0DE487D5000A36D3 /* OSGFieldContainerMapType.cpp */,
+				D487D29D0DE487D5000A36D3 /* OSGFieldContainerMapType.h */,
+				D487D29E0DE487D5000A36D3 /* OSGPathType.cpp */,
+				D487D29F0DE487D5000A36D3 /* OSGPathType.h */,
+				D487D2A00DE487D5000A36D3 /* OSGStringMapType.cpp */,
+				D487D2A10DE487D5000A36D3 /* OSGStringMapType.h */,
+			);
+			name = Types;
+			sourceTree = "<group>";
+		};
+		D4BE3FA50CF0D4280046BAE7 /* Toolbox */ = {
+			isa = PBXGroup;
+			children = (
+				D42BABCF0DE4A37F0052520E /* FileIO */,
+				D487D2400DE4875D000A36D3 /* Types */,
+				D487D23B0DE48734000A36D3 /* Cameras */,
+				D487D23A0DE4872B000A36D3 /* Util */,
+				D4BE41D40CF0E5BC0046BAE7 /* OSGToolboxDef.h */,
+			);
+			name = Toolbox;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC09905546B4700DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4BE41F10CF0E5BC0046BAE7 /* OSGToolboxDef.h in Headers */,
+				D487D1F70DE48702000A36D3 /* OSGCameraUtils.h in Headers */,
+				D487D1F80DE48702000A36D3 /* OSGColorOperations.h in Headers */,
+				D487D1F90DE48702000A36D3 /* OSGGLenumUtils.h in Headers */,
+				D487D1FA0DE48702000A36D3 /* OSGIntrusivePtrImplBase.h in Headers */,
+				D487D1FB0DE48702000A36D3 /* OSGPntOperations.h in Headers */,
+				D487D1FC0DE48702000A36D3 /* OSGQuatOperations.h in Headers */,
+				D487D1FD0DE48702000A36D3 /* OSGRandomPoolManager.h in Headers */,
+				D487D1FE0DE48702000A36D3 /* OSGSharedFieldPtr.h in Headers */,
+				D487D2630DE487A7000A36D3 /* OSGAirplaneCamera.h in Headers */,
+				D487D2650DE487A7000A36D3 /* OSGAirplaneCameraBase.h in Headers */,
+				D487D2660DE487A7000A36D3 /* OSGAirplaneCameraFields.h in Headers */,
+				D487D2680DE487A7000A36D3 /* OSGMatrixBeaconCamera.h in Headers */,
+				D487D26A0DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.h in Headers */,
+				D487D26B0DE487A7000A36D3 /* OSGMatrixBeaconCameraFields.h in Headers */,
+				D487D26D0DE487A7000A36D3 /* OSGRubberBandCamera.h in Headers */,
+				D487D26F0DE487A7000A36D3 /* OSGRubberBandCameraBase.h in Headers */,
+				D487D2700DE487A7000A36D3 /* OSGRubberBandCameraFields.h in Headers */,
+				D487D2A30DE487D5000A36D3 /* OSGFieldContainerMapType.h in Headers */,
+				D487D2A50DE487D5000A36D3 /* OSGPathType.h in Headers */,
+				D487D2A70DE487D5000A36D3 /* OSGStringMapType.h in Headers */,
+				D42BABDC0DE4A3B90052520E /* OSGBinFCFileType.h in Headers */,
+				D42BABDD0DE4A3B90052520E /* OSGFCFileHandler.h in Headers */,
+				D42BABDE0DE4A3B90052520E /* OSGFCFileType.h in Headers */,
+				D42BABDF0DE4A3B90052520E /* OSGXMLFCFileType.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D437835F0CF0BED30062E3A4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4BE420B0CF0E5BC0046BAE7 /* OSGToolboxDef.h in Headers */,
+				D487D1FF0DE48702000A36D3 /* OSGCameraUtils.h in Headers */,
+				D487D2000DE48702000A36D3 /* OSGColorOperations.h in Headers */,
+				D487D2010DE48702000A36D3 /* OSGGLenumUtils.h in Headers */,
+				D487D2020DE48702000A36D3 /* OSGIntrusivePtrImplBase.h in Headers */,
+				D487D2030DE48702000A36D3 /* OSGPntOperations.h in Headers */,
+				D487D2040DE48702000A36D3 /* OSGQuatOperations.h in Headers */,
+				D487D2050DE48702000A36D3 /* OSGRandomPoolManager.h in Headers */,
+				D487D2060DE48702000A36D3 /* OSGSharedFieldPtr.h in Headers */,
+				D487D2720DE487A7000A36D3 /* OSGAirplaneCamera.h in Headers */,
+				D487D2740DE487A7000A36D3 /* OSGAirplaneCameraBase.h in Headers */,
+				D487D2750DE487A7000A36D3 /* OSGAirplaneCameraFields.h in Headers */,
+				D487D2770DE487A7000A36D3 /* OSGMatrixBeaconCamera.h in Headers */,
+				D487D2790DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.h in Headers */,
+				D487D27A0DE487A7000A36D3 /* OSGMatrixBeaconCameraFields.h in Headers */,
+				D487D27C0DE487A7000A36D3 /* OSGRubberBandCamera.h in Headers */,
+				D487D27E0DE487A7000A36D3 /* OSGRubberBandCameraBase.h in Headers */,
+				D487D27F0DE487A7000A36D3 /* OSGRubberBandCameraFields.h in Headers */,
+				D487D2A90DE487D5000A36D3 /* OSGFieldContainerMapType.h in Headers */,
+				D487D2AB0DE487D5000A36D3 /* OSGPathType.h in Headers */,
+				D487D2AD0DE487D5000A36D3 /* OSGStringMapType.h in Headers */,
+				D42BABD80DE4A3B90052520E /* OSGBinFCFileType.h in Headers */,
+				D42BABD90DE4A3B90052520E /* OSGFCFileHandler.h in Headers */,
+				D42BABDA0DE4A3B90052520E /* OSGFCFileType.h in Headers */,
+				D42BABDB0DE4A3B90052520E /* OSGXMLFCFileType.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXLegacyTarget section */
+		D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/CopyIncludes.sh $(COMMON_DIR) $(SRC_DIR) $(INSTALL_DIR)/include/OpenSG/$(LIB_INCLUDE_DIR_NAME) ";
+			buildConfigurationList = D43783470CF0B5CE0062E3A4 /* Build configuration list for PBXLegacyTarget "OSGToolbox install Shell Script" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "OSGToolbox install Shell Script";
+			passBuildSettingsInEnvironment = 1;
+			productName = "OSGToolbox install Shell Script";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB916008733D950010E9CD /* Build configuration list for PBXNativeTarget "OSGToolbox Dynamic Library" */;
+			buildPhases = (
+				D2AAC09905546B4700DB518D /* Headers */,
+				D2AAC09B05546B4700DB518D /* Frameworks */,
+				D2AAC09A05546B4700DB518D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OSGToolbox Dynamic Library";
+			productName = libOSGToolbox;
+			productReference = D4BE40040CF0D5930046BAE7 /* libOSGToolbox.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		D437835E0CF0BED30062E3A4 /* OSGToolbox Static Library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D437837C0CF0BED30062E3A4 /* Build configuration list for PBXNativeTarget "OSGToolbox Static Library" */;
+			buildPhases = (
+				D437835F0CF0BED30062E3A4 /* Headers */,
+				D43783710CF0BED30062E3A4 /* Frameworks */,
+				D43783720CF0BED30062E3A4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OSGToolbox Static Library";
+			productName = libOSGToolbox;
+			productReference = D4DD00950CF0CC3900F00431 /* libOSGToolbox.a */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		D487D1510DE4848A000A36D3 /* 02FCFileTypeIO */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D487D1540DE484BA000A36D3 /* Build configuration list for PBXNativeTarget "02FCFileTypeIO" */;
+			buildPhases = (
+				D487D14F0DE4848A000A36D3 /* Sources */,
+				D487D1500DE4848A000A36D3 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D487D15A0DE48500000A36D3 /* PBXTargetDependency */,
+			);
+			name = 02FCFileTypeIO;
+			productName = Untitled;
+			productReference = D487D1520DE4848A000A36D3 /* 02FCFileTypeIO */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB916408733D950010E9CD /* Build configuration list for PBXProject "OSGToolbox" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* OSGToolbox */;
+			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
+			projectDirPath = "";
+			targets = (
+				D437832B0CF0B17E0062E3A4 /* OSGToolbox Aggregate */,
+				D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */,
+				D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */,
+				D437835E0CF0BED30062E3A4 /* OSGToolbox Static Library */,
+				D487D1510DE4848A000A36D3 /* 02FCFileTypeIO */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC09A05546B4700DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D487D2450DE4878B000A36D3 /* OSGCameraUtils.cpp in Sources */,
+				D487D2460DE4878B000A36D3 /* OSGGLenumUtils.cpp in Sources */,
+				D487D2470DE4878B000A36D3 /* OSGIntrusivePtrImplBase.cpp in Sources */,
+				D487D2480DE4878B000A36D3 /* OSGRandomPoolManager.cpp in Sources */,
+				D487D2620DE487A7000A36D3 /* OSGAirplaneCamera.cpp in Sources */,
+				D487D2640DE487A7000A36D3 /* OSGAirplaneCameraBase.cpp in Sources */,
+				D487D2670DE487A7000A36D3 /* OSGMatrixBeaconCamera.cpp in Sources */,
+				D487D2690DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.cpp in Sources */,
+				D487D26C0DE487A7000A36D3 /* OSGRubberBandCamera.cpp in Sources */,
+				D487D26E0DE487A7000A36D3 /* OSGRubberBandCameraBase.cpp in Sources */,
+				D487D2A20DE487D5000A36D3 /* OSGFieldContainerMapType.cpp in Sources */,
+				D487D2A40DE487D5000A36D3 /* OSGPathType.cpp in Sources */,
+				D487D2A60DE487D5000A36D3 /* OSGStringMapType.cpp in Sources */,
+				D42BABE30DE4A3D80052520E /* OSGFCFileType.cpp in Sources */,
+				D42BABE90DE4A3FC0052520E /* OSGFCFileHandler.cpp in Sources */,
+				D42BABED0DE4A41D0052520E /* OSGXMLFCFileType.cpp in Sources */,
+				D42BABF10DE4A4420052520E /* OSGBinFCFileType.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D43783720CF0BED30062E3A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D487D2490DE4878B000A36D3 /* OSGCameraUtils.cpp in Sources */,
+				D487D24A0DE4878B000A36D3 /* OSGGLenumUtils.cpp in Sources */,
+				D487D24B0DE4878B000A36D3 /* OSGIntrusivePtrImplBase.cpp in Sources */,
+				D487D24C0DE4878B000A36D3 /* OSGRandomPoolManager.cpp in Sources */,
+				D487D2710DE487A7000A36D3 /* OSGAirplaneCamera.cpp in Sources */,
+				D487D2730DE487A7000A36D3 /* OSGAirplaneCameraBase.cpp in Sources */,
+				D487D2760DE487A7000A36D3 /* OSGMatrixBeaconCamera.cpp in Sources */,
+				D487D2780DE487A7000A36D3 /* OSGMatrixBeaconCameraBase.cpp in Sources */,
+				D487D27B0DE487A7000A36D3 /* OSGRubberBandCamera.cpp in Sources */,
+				D487D27D0DE487A7000A36D3 /* OSGRubberBandCameraBase.cpp in Sources */,
+				D487D2A80DE487D5000A36D3 /* OSGFieldContainerMapType.cpp in Sources */,
+				D487D2AA0DE487D5000A36D3 /* OSGPathType.cpp in Sources */,
+				D487D2AC0DE487D5000A36D3 /* OSGStringMapType.cpp in Sources */,
+				D42BABE20DE4A3D80052520E /* OSGFCFileType.cpp in Sources */,
+				D42BABE80DE4A3FC0052520E /* OSGFCFileHandler.cpp in Sources */,
+				D42BABEC0DE4A41D0052520E /* OSGXMLFCFileType.cpp in Sources */,
+				D42BABF00DE4A4420052520E /* OSGBinFCFileType.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D487D14F0DE4848A000A36D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D42BACE00DE4A6980052520E /* 02FCFileTypeIO.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D437832D0CF0B1890062E3A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */;
+			targetProxy = D437832C0CF0B1890062E3A4 /* PBXContainerItemProxy */;
+		};
+		D43783810CF0BF320062E3A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D437835E0CF0BED30062E3A4 /* OSGToolbox Static Library */;
+			targetProxy = D43783800CF0BF320062E3A4 /* PBXContainerItemProxy */;
+		};
+		D437838A0CF0C07C0062E3A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */;
+			targetProxy = D43783890CF0C07C0062E3A4 /* PBXContainerItemProxy */;
+		};
+		D487D15A0DE48500000A36D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D437832B0CF0B17E0062E3A4 /* OSGToolbox Aggregate */;
+			targetProxy = D487D1590DE48500000A36D3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB916108733D950010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/dbg";
+				DEPLOYMENT_LOCATION = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/dbg",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				OBJROOT = ..;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lboost_filesystem-d-1_34",
+				);
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
+				PRELINK_LIBS = "";
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)D";
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Debug;
+		};
+		1DEB916208733D950010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/opt";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				OBJROOT = ..;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lboost_filesystem-1_34",
+				);
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = "non-global";
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Release;
+		};
+		1DEB916508733D950010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BOOST_BASE_DIR = "/Users/dkabala/Software/Boost_1_34_0-Install";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/dbg";
+				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)/dbg";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OSGROOT = "/Users/dkabala/Software/OpenSG-1.8-OS10.4";
+				OSG_TOOLBOX_DIR = /Users/dkabala/Work/OpenSGToolbox;
+				OSG_TOOLBOX_LIB_NAME = Toolbox;
+				SYMROOT = ..;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB916608733D950010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				BOOST_BASE_DIR = "/Users/dkabala/Software/Boost_1_34_0-Install";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/opt";
+				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)/opt";
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OSGROOT = "/Users/dkabala/Software/OpenSG-1.8-OS10.4";
+				OSG_TOOLBOX_DIR = /Users/dkabala/Work/OpenSGToolbox;
+				OSG_TOOLBOX_LIB_NAME = Toolbox;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SEPARATE_STRIP = YES;
+				SYMROOT = ..;
+			};
+			name = Release;
+		};
+		D43783370CF0B2110062E3A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "OSG Toolbox Aggregate";
+			};
+			name = Debug;
+		};
+		D43783380CF0B2110062E3A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "OSG Toolbox Aggregate";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		D43783480CF0B5CE0062E3A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				LIB_INCLUDE_DIR_NAME = "$(OSG_TOOLBOX_LIB_NAME)";
+				PRODUCT_NAME = Product;
+				SRC_DIR = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src";
+			};
+			name = Debug;
+		};
+		D43783490CF0B5CE0062E3A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				LIB_INCLUDE_DIR_NAME = "$(OSG_TOOLBOX_LIB_NAME)";
+				PRODUCT_NAME = Product;
+				SRC_DIR = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src";
+			};
+			name = Release;
+		};
+		D437837D0CF0BED30062E3A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/dbg";
+				DEPLOYMENT_LOCATION = NO;
+				EXECUTABLE_EXTENSION = a;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/dbg",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ..;
+				OTHER_LDFLAGS = "";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
+				PRELINK_LIBS = "";
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)D";
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Debug;
+		};
+		D437837E0CF0BED30062E3A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/opt";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				EXECUTABLE_EXTENSION = a;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ..;
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = "non-global";
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Release;
+		};
+		D487D1550DE484BA000A36D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/dbg",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/lib",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGToolboxD",
+					"-lboost_filesystem-d-1_34",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = 02FCFileTypeIOD;
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/Tutorials";
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		D487D1560DE484BA000A36D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/lib",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGToolbox",
+					"-lboost_filesystem-1_34",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = 02FCFileTypeIO;
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/Tutorials";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB916008733D950010E9CD /* Build configuration list for PBXNativeTarget "OSGToolbox Dynamic Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB916108733D950010E9CD /* Debug */,
+				1DEB916208733D950010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB916408733D950010E9CD /* Build configuration list for PBXProject "OSGToolbox" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB916508733D950010E9CD /* Debug */,
+				1DEB916608733D950010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D43783360CF0B2110062E3A4 /* Build configuration list for PBXAggregateTarget "OSGToolbox Aggregate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D43783370CF0B2110062E3A4 /* Debug */,
+				D43783380CF0B2110062E3A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D43783470CF0B5CE0062E3A4 /* Build configuration list for PBXLegacyTarget "OSGToolbox install Shell Script" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D43783480CF0B5CE0062E3A4 /* Debug */,
+				D43783490CF0B5CE0062E3A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D437837C0CF0BED30062E3A4 /* Build configuration list for PBXNativeTarget "OSGToolbox Static Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D437837D0CF0BED30062E3A4 /* Debug */,
+				D437837E0CF0BED30062E3A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D487D1540DE484BA000A36D3 /* Build configuration list for PBXNativeTarget "02FCFileTypeIO" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D487D1550DE484BA000A36D3 /* Debug */,
+				D487D1560DE484BA000A36D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
