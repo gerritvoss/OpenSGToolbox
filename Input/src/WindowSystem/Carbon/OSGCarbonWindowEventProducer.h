@@ -83,14 +83,14 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	
     struct WindowEventLoopThreadArguments
     {
-        WindowEventLoopThreadArguments(const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+        WindowEventLoopThreadArguments(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName,
                        CarbonWindowPtr TheWindow,
                        CarbonWindowEventProducerPtr TheEventProducer);
 
-        Pnt2s _ScreenPosition;
-        Vec2s _Size;
+        Pnt2f _ScreenPosition;
+        Vec2f _Size;
         std::string _WindowName;
         CarbonWindowPtr _Window;
         CarbonWindowEventProducerPtr _EventProducer;
@@ -120,15 +120,15 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	
 	
     //Set the Window Position
-    virtual void setPosition(Pnt2s Pos);
+    virtual void setPosition(Pnt2f Pos);
     //Set the Window Position
-    virtual Pnt2s getPosition(void) const;
+    virtual Pnt2f getPosition(void) const;
 
     //Set the Window size
     virtual void setSize(Vec2us Size);
 
     //Get the Window size
-    virtual Vec2s getSize(void) const;
+    virtual Vec2f getSize(void) const;
 
     //Focused
     //Set the Window Focus
@@ -182,15 +182,15 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 
 	virtual UInt32 getKeyModifiers(void) const;
     
-	virtual Pnt2s getMousePosition(void) const;
+	virtual Pnt2f getMousePosition(void) const;
 	
 
 	virtual std::string getClipboard(void) const;
 
 	virtual void putClipboard(const std::string Value);
 	
-    virtual void openWindow(const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+    virtual void openWindow(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName);
     
     virtual void closeWindow(void);

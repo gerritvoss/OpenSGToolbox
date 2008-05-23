@@ -65,14 +65,14 @@ OSG_BEGIN_NAMESPACE
 CarbonWindowEventProducer Class.  
 */
 
-#define KeyBackspace 	117
+#define KeyBackspace 	51
 #define KeyEnter 	76
 #define KeyHome 	115
 #define KeyEnd 	119
 #define KeyPageDown 	121
 #define KeyPageUp 	116
 #define KeyReturn 	36 	
-#define KeyDelete 	51
+#define KeyDelete 	117
 #define KeyTab 	48
 #define KeySpacebar 	49
 #define KeyShift 	56 	
@@ -180,6 +180,11 @@ CarbonWindowEventProducer::CarbonWindowToProducerMap CarbonWindowEventProducer::
 
 void CarbonWindowEventProducer::initMethod (void)
 {
+	// A magic method that allows applications to react to events even
+	// when they are not organized in a bundle
+	ProcessSerialNumber psn = { 0, kCurrentProcess };
+	TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+	SetFrontProcess(&psn);
 }
 
 OSStatus CarbonWindowEventProducer::eventHandler(EventHandlerCallRef nextHandler, EventRef event, void *userData)
@@ -209,11 +214,6 @@ UInt32 CarbonWindowEventProducer::getUndefinedWindowId(void)
 
 void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
 {
-	// A magic method that allows applications to react to events even
-	// when they are not organized in a bundle
-	ProcessSerialNumber psn = { 0, kCurrentProcess };
-	TransformProcessType(&psn, kProcessTransformToForegroundApplication);
-	SetFrontProcess(&psn);
     
     WindowEventLoopThreadArguments* Arguments(static_cast<WindowEventLoopThreadArguments*>(args));
     
@@ -295,6 +295,10 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
         }
         Arguments->_EventProducer->internalDraw();
     }
+    
+    aglDestroyContext(context);
+    DisposeWindow(window);
+    DisposeEventHandlerUPP(eventHandlerUPP);
     
     Arguments->_EventProducer->produceWindowClosed();
     
@@ -412,23 +416,23 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
     {
     // mouse button pressed
     case kEventMouseDown:
-		produceMousePressed(TheMouseButton, Pnt2s(location.h, location.v));
+		produceMousePressed(TheMouseButton, Pnt2f(location.h, location.v));
         break;
 
 	
     // mouse button released
     case kEventMouseUp:
-		produceMouseReleased(TheMouseButton, Pnt2s(location.h, location.v));
+		produceMouseReleased(TheMouseButton, Pnt2f(location.h, location.v));
         break;
 
 	//Mouse Moved
 	case kEventMouseMoved:
-		produceMouseMoved(Pnt2s(location.h, location.v));
+		produceMouseMoved(Pnt2f(location.h, location.v));
         break;
 		
     // mouse moved while a button is pressed
     case kEventMouseDragged:
-		produceMouseDragged(TheMouseButton, Pnt2s(location.h, location.v));
+		produceMouseDragged(TheMouseButton, Pnt2f(location.h, location.v));
         break;
 		
 	// mouse wheel moved
@@ -449,7 +453,7 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
 
             if ( axis == kEventMouseWheelAxisY )
             {
-				produceMouseWheelMoved(delta, Pnt2s(location.h, location.v));
+				produceMouseWheelMoved(delta, Pnt2f(location.h, location.v));
             }
 		}
 		break;
@@ -508,7 +512,7 @@ OSStatus CarbonWindowEventProducer::handleWindowEvent(EventHandlerCallRef nextHa
                 GLsizei width = bounds.right - bounds.left;
                 GLsizei height = bounds.bottom - bounds.top;
 				getWindow()->resize(width, height );
-				internalReshape(Vec2s(width, height));
+				internalReshape(Vec2f(width, height));
             }
 
             return noErr;
@@ -913,7 +917,7 @@ KeyEvent::Key CarbonWindowEventProducer::determineKey(::UInt32 key)
 	return OSGKey;
 }
 
-void CarbonWindowEventProducer::setPosition(Pnt2s Pos)
+void CarbonWindowEventProducer::setPosition(Pnt2f Pos)
 {
 	::Rect GlobalBounds;
 	GetWindowBounds(_WindowRef, kWindowStructureRgn, &GlobalBounds);
@@ -926,11 +930,11 @@ void CarbonWindowEventProducer::setPosition(Pnt2s Pos)
 	SetWindowBounds(_WindowRef,kWindowStructureRgn, &GlobalBounds);
 }
 
-Pnt2s CarbonWindowEventProducer::getPosition(void) const
+Pnt2f CarbonWindowEventProducer::getPosition(void) const
 {
 	::Rect GlobalBounds;
 	GetWindowBounds(_WindowRef, kWindowStructureRgn, &GlobalBounds);
-    return Pnt2s(GlobalBounds.left, GlobalBounds.top);
+    return Pnt2f(GlobalBounds.left, GlobalBounds.top);
 }
 
 
@@ -944,11 +948,11 @@ void CarbonWindowEventProducer::setSize(Vec2us Size)
 	SetWindowBounds(_WindowRef,kWindowStructureRgn, &GlobalBounds);
 }
 
-Vec2s CarbonWindowEventProducer::getSize(void) const
+Vec2f CarbonWindowEventProducer::getSize(void) const
 {
 	::Rect GlobalBounds;
 	GetWindowBounds(_WindowRef, kWindowStructureRgn, &GlobalBounds);
-    return Vec2s(GlobalBounds.right - GlobalBounds.left, GlobalBounds.bottom - GlobalBounds.top);
+    return Vec2f(GlobalBounds.right - GlobalBounds.left, GlobalBounds.bottom - GlobalBounds.top);
 }
 
 void CarbonWindowEventProducer::setFocused(bool Focused)
@@ -1097,7 +1101,7 @@ UInt32 CarbonWindowEventProducer::getKeyModifiers(void) const
     return determineKeyModifiers(GetCurrentEventKeyModifiers());
 }
 
-Pnt2s CarbonWindowEventProducer::getMousePosition(void) const
+Pnt2f CarbonWindowEventProducer::getMousePosition(void) const
 {
 	::Point MousePositioon;
 	GetGlobalMouse(&MousePositioon);
@@ -1106,7 +1110,7 @@ Pnt2s CarbonWindowEventProducer::getMousePosition(void) const
     SetPortWindowPort(_WindowRef);
     GlobalToLocal(&MousePositioon);
 	
-    return Pnt2s(MousePositioon.v, MousePositioon.h);
+    return Pnt2f(MousePositioon.v, MousePositioon.h);
 }
 
 
@@ -1123,8 +1127,8 @@ void CarbonWindowEventProducer::putClipboard(const std::string Value)
     assert(false && "Not Implemented");
 }
 
-void CarbonWindowEventProducer::openWindow(const Pnt2s& ScreenPosition,
-				   const Vec2s& Size,
+void CarbonWindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
+				   const Vec2f& Size,
 				   const std::string& WindowName)
 {
     if(_WindowEventLoopThread == NULL)
@@ -1149,14 +1153,47 @@ void CarbonWindowEventProducer::openWindow(const Pnt2s& ScreenPosition,
 
 void CarbonWindowEventProducer::closeWindow(void)
 {
-    //TODO: Implement
-    assert(false && "Not Implemented");
+    DisposeWindow(_WindowRef);
 }
 
 void CarbonWindowEventProducer::setCursor(void)
 {
-    //TODO: Implement
-    assert(false && "Not Implemented");
+	ThemeCursor c;
+	switch(getCursorType())
+	{
+        case CURSOR_HAND:
+            c = kThemePointingHandCursor;
+            break;
+        case CURSOR_I_BEAM:
+            c = kThemeIBeamCursor;
+            break;
+        case CURSOR_WAIT:
+            c = kThemeWatchCursor;
+            break;
+        case CURSOR_RESIZE_W_TO_E:
+            c = kThemeResizeLeftRightCursor;
+            break;
+        case CURSOR_RESIZE_N_TO_S:
+            c = kThemeResizeUpDownCursor;
+            break;
+        case CURSOR_RESIZE_NW_TO_SE:
+            c = kThemeResizeUpDownCursor;
+            break;
+        case CURSOR_RESIZE_SW_TO_NE:
+            c = kThemeResizeUpDownCursor;
+            break;
+        case CURSOR_RESIZE_ALL:
+            c = kThemeClosedHandCursor;
+            break;
+        case CURSOR_NONE:
+            c = kThemeArrowCursor;
+            break;
+        case CURSOR_POINTER:
+        default:
+            c = kThemeArrowCursor;
+            break;
+	}
+	SetThemeCursor(c);
 }
 
 WindowPtr CarbonWindowEventProducer::createWindow(void)
@@ -1198,8 +1235,8 @@ void CarbonWindowEventProducer::dump(      UInt32    ,
 }
 
 CarbonWindowEventProducer::WindowEventLoopThreadArguments::WindowEventLoopThreadArguments(
-                       const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+                       const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName,
                        CarbonWindowPtr TheWindow,
                        CarbonWindowEventProducerPtr TheEventProducer) :

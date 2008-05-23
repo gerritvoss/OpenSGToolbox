@@ -215,7 +215,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D437832B0CF0B17E0062E3A4 /* OSGInput Aggregate */;
+			remoteGlobalIDString = D437832B0CF0B17E0062E3A4;
 			remoteInfo = "OSGInput Aggregate";
 		};
 /* End PBXContainerItemProxy section */
