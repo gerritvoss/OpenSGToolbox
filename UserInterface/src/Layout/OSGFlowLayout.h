@@ -97,6 +97,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayout : public FlowLayoutBase
     virtual ~FlowLayout(void); 
 
     /*! \}                                                                 */
+
+    static Vec2f getAppropriateComponentSize(ComponentPtr TheComponent);
     
     /*==========================  PRIVATE  ================================*/
   private:

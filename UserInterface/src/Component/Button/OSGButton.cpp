@@ -119,6 +119,17 @@ UIDrawObjectCanvasPtr Button::createTexturedDrawObjectCanvas(TextureChunkPtr The
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+Vec2f Button::getContentRequestedSize(void) const
+{
+    Pnt2f TextTopLeft(0.0f,0.0f), TextBottomRight(0.0f,0.0f);
+    if(getFont() != NullFC)
+    {
+        getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+    }
+
+	return (TextBottomRight - TextTopLeft) + Vec2f(2.0,2.0);
+}
 BorderPtr Button::getDrawnBorder(void) const
 {
     if(getEnabled())
@@ -634,26 +645,14 @@ void Button::getTextBounds(Pnt2f& TextTopLeft, Pnt2f& TextBottomRight) const
       getFont()->getBounds(ButtonPtr(this)->getText(), TextTopLeft, TextBottomRight);
 }
 
-
-void Button::setPreferredSizeByContents(const Real32 Insets)
+void Button::removeActionListener(ActionListenerPtr Listener)
 {
-	  Pnt2f TextTopLeft, TextBottomRight;   
-	  // Get the Font bounds
-	  getFont()->getBounds(ButtonPtr(this)->getText(), TextTopLeft, TextBottomRight);
-	  Pnt2f TopLeft, BottomRight;
-	  // Returns boundary required for Border
-      getInsideBorderBounds(TopLeft, BottomRight);
-
-	  Real32 Left, Right, Top, Bottom;
-	  getDrawnBorder()->getInsets(Left, Right, Top, Bottom);
-
-	  // Uses these sizes and size Button
-	  Vec2f PreferredSize = (TextBottomRight - TextTopLeft) + Vec2f(Left+Right+Insets, Top+Bottom+Insets);
-	  beginEditCP(ButtonPtr(this), Button::PreferredSizeFieldMask);
-		setPreferredSize(PreferredSize);
-	  endEditCP(ButtonPtr(this), Button::PreferredSizeFieldMask);
-
-};
+   ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
+   if(EraseIter != _ActionListeners.end())
+   {
+      _ActionListeners.erase(EraseIter);
+   }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

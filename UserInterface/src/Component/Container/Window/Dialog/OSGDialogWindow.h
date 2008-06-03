@@ -47,6 +47,8 @@
 
 #include "OSGDialogWindowBase.h"
 #include "Event/OSGDialogListener.h"
+#include <set>
+#include <OpenSG/Input/OSGEventListener.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,6 +85,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
 
     void addDialogListener(DialogListenerPtr Listener);
     void removeDialogListener(DialogListenerPtr Listener);
+
+    void addEventListener(EventListenerPtr Listener);
+    void removeEventListener(EventListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -111,6 +116,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
 	
     virtual void produceDialogInput(const DialogEvent& e);
     
+	typedef std::set<EventListenerPtr> EventListenerSet;
+    typedef EventListenerSet::iterator EventListenerSetItor;
+    typedef EventListenerSet::const_iterator EventListenerSetConstItor;
+	
+    EventListenerSet       _EventListeners;
     /*==========================  PRIVATE  ================================*/
   private:
 

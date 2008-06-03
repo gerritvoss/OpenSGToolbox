@@ -55,16 +55,6 @@ void Button::addActionListener(ActionListenerPtr Listener)
 }
 
 inline
-void Button::removeActionListener(ActionListenerPtr Listener)
-{
-   ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
-   if(EraseIter != _ActionListeners.end())
-   {
-      _ActionListeners.erase(EraseIter);
-   }
-}
-
-inline
 void Button::addMousePressedActionListener(ActionListenerPtr Listener)
 {
    _MousePressedActionListeners.insert(Listener);

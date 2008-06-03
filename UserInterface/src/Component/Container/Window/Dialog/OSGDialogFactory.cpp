@@ -42,62 +42,6 @@ DialogFactory* DialogFactory::the(void)
 DialogWindowPtr DialogFactory::createMessageDialog(const std::string& Title, const std::string& Message, const std::string& ConfirmButtonText)
 {
 	//Internals Container
-	ContainerPtr InternalsContainer(createMessagePanel(Message, ConfirmButtonText));
-
-	//Internals Layout and constriants
-	BorderLayoutConstraintsPtr InternalsContainerConstraints = BorderLayoutConstraints::create();
-	beginEditCP(InternalsContainerConstraints, BorderLayoutConstraints::RegionFieldMask);
-		InternalsContainerConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
-	endEditCP(InternalsContainerConstraints, BorderLayoutConstraints::RegionFieldMask);
-
-	beginEditCP(InternalsContainer, Container::ConstraintsFieldMask);
-		InternalsContainer->setConstraints(InternalsContainerConstraints);
-	endEditCP(InternalsContainer, Container::ConstraintsFieldMask);
-
-	BorderLayoutPtr DialogLayout = BorderLayout::create();
-
-	//Create the Dialog box
-	DialogWindowPtr TheDialog = DialogWindow::create();
-	beginEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask);
-		TheDialog->setLayout(DialogLayout);
-		TheDialog->getChildren().push_back(InternalsContainer);
-		TheDialog->setTitle(Title);
-	endEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask);
-
-	return TheDialog;
-}
-
-TextAreaPtr DialogFactory::createTransparentTextArea(const std::string& Message)
-{
-	TextAreaPtr TransparentTextArea = osg::TextArea::create();
-	EmptyUIBackgroundPtr TransparentTextAreaBackground = osg::EmptyUIBackground::create();
-	EmptyBorderPtr TransparentTextAreaBorder = osg::EmptyBorder::create();
-
-    beginEditCP(TransparentTextArea, TextArea::BordersFieldMask | TextArea::BackgroundsFieldMask | TextArea::TextFieldMask | TextArea::EditableFieldMask);
-		TransparentTextArea->setBorders(TransparentTextAreaBorder);
-		TransparentTextArea->setBackgrounds(TransparentTextAreaBackground);
-		TransparentTextArea->setText(Message);
-        TransparentTextArea->setEditable(false);
-	endEditCP(TransparentTextArea, TextArea::BordersFieldMask | TextArea::BackgroundsFieldMask | TextArea::TextFieldMask | TextArea::EditableFieldMask);
-
-	return TransparentTextArea;
-}
-
-void DialogFactory::addButtonActionListener(const ActionListener& Listener, const int index)
-{
-    //TODO: Implement function to allow user to add actionlisteners 
-	//to the buttons in an option panel
-
-}
-//InternalWindowPtr DialogFactory::createMessageDialog(const std::string& Title, const std::string& Message, const std::string& ConfirmButtonText)
-//{
-//    //TODO: Implement
-//    return NullFC;
-//}
-
-ContainerPtr DialogFactory::createMessagePanel(const std::string& Message, const std::string& ConfirmButtonText)
-{
-
     //Icon
     ImageComponentPtr TheIcon = ImageComponent::create();
     beginEditCP(TheIcon, ImageComponent::PreferredSizeFieldMask);
@@ -107,10 +51,11 @@ ContainerPtr DialogFactory::createMessagePanel(const std::string& Message, const
     //Confirm Button
 	ButtonPtr ConfirmationButton = osg::Button::create();
 
-    beginEditCP(ConfirmationButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
+    beginEditCP(ConfirmationButton, Button::TextFieldMask | Button::PreferredSizeFieldMask | Button::MinSizeFieldMask);
 		ConfirmationButton->setText(ConfirmButtonText);
-		ConfirmationButton->setPreferredSizeByContents(0);
-	endEditCP(ConfirmationButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
+        ConfirmationButton->setMinSize(ConfirmationButton->getPreferredSize());
+        ConfirmationButton->setPreferredSize(ConfirmationButton->getRequestedSize());
+	endEditCP(ConfirmationButton, Button::TextFieldMask | Button::PreferredSizeFieldMask | Button::MinSizeFieldMask);
 
 	// Create Panel for top half of SplitPanel
 	TextAreaPtr MessagePanelText = createTransparentTextArea(Message);
@@ -153,8 +98,64 @@ ContainerPtr DialogFactory::createMessagePanel(const std::string& Message, const
     MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::EAST_EDGE, MessagePanelText);
     MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, -10, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
     
-	return MessagePanel;
+
+	//Internals Layout and constriants
+	BorderLayoutConstraintsPtr MessagePanelConstraints = BorderLayoutConstraints::create();
+	beginEditCP(MessagePanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+		MessagePanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	endEditCP(MessagePanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+
+	beginEditCP(MessagePanel, Container::ConstraintsFieldMask);
+		MessagePanel->setConstraints(MessagePanelConstraints);
+	endEditCP(MessagePanel, Container::ConstraintsFieldMask);
+
+	BorderLayoutPtr DialogLayout = BorderLayout::create();
+
+	//Create the Dialog box
+	DialogWindowPtr TheDialog = DialogWindow::create();
+	beginEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask);
+		TheDialog->setLayout(DialogLayout);
+		TheDialog->getChildren().push_back(MessagePanel);
+		TheDialog->setTitle(Title);
+	endEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask);
+
+    //Attach listener to the Confirm button
+    MessageBoxConfirmButtonListener* ConfirmListener = new MessageBoxConfirmButtonListener(TheDialog);
+    ConfirmationButton->addActionListener(ConfirmListener);
+    //Attach listener to the Window
+    MessageBoxWindowListener* CloseListener = new MessageBoxWindowListener(TheDialog);
+    TheDialog->addWindowListener(CloseListener);
+
+	return TheDialog;
 }
+
+TextAreaPtr DialogFactory::createTransparentTextArea(const std::string& Message)
+{
+	TextAreaPtr TransparentTextArea = osg::TextArea::create();
+	EmptyUIBackgroundPtr TransparentTextAreaBackground = osg::EmptyUIBackground::create();
+	EmptyBorderPtr TransparentTextAreaBorder = osg::EmptyBorder::create();
+
+    beginEditCP(TransparentTextArea, TextArea::BordersFieldMask | TextArea::BackgroundsFieldMask | TextArea::TextFieldMask | TextArea::EditableFieldMask);
+		TransparentTextArea->setBorders(TransparentTextAreaBorder);
+		TransparentTextArea->setBackgrounds(TransparentTextAreaBackground);
+		TransparentTextArea->setText(Message);
+        TransparentTextArea->setEditable(false);
+	endEditCP(TransparentTextArea, TextArea::BordersFieldMask | TextArea::BackgroundsFieldMask | TextArea::TextFieldMask | TextArea::EditableFieldMask);
+
+	return TransparentTextArea;
+}
+
+void DialogFactory::addButtonActionListener(const ActionListener& Listener, const int index)
+{
+    //TODO: Implement function to allow user to add actionlisteners 
+	//to the buttons in an option panel
+
+}
+//InternalWindowPtr DialogFactory::createMessageDialog(const std::string& Title, const std::string& Message, const std::string& ConfirmButtonText)
+//{
+//    //TODO: Implement
+//    return NullFC;
+//}
 
 //InternalWindowPtr DialogFactory::createOptionDialog(const std::string& Title, const std::string& Message, const std::vector<std::string>& ConfirmButtonsText)
 //{
@@ -188,7 +189,6 @@ ContainerPtr DialogFactory::createOptionPanel(const std::string& Message, const 
 			ButtonPtr OptionButton = osg::Button::create();
 			beginEditCP(OptionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
 				OptionButton->setText(OptionButtonsText[i]);
-				OptionButton->setPreferredSizeByContents(0);
 			endEditCP(OptionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
 
 			OptionButtons.push_back(OptionButton);
@@ -373,6 +373,26 @@ ContainerPtr DialogFactory::createColorPanel(const Color4f& TheColor, const std:
 	endEditCP(MainColorPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BordersFieldMask);
 
 	return MainColorPanel;
+}
+
+
+DialogFactory::MessageBoxConfirmButtonListener::MessageBoxConfirmButtonListener(DialogWindowPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+{
+    _DialogWindow->addEventListener(this);
+}
+
+void DialogFactory::MessageBoxConfirmButtonListener::actionPerformed(const ActionEvent& e)
+{
+    _DialogWindow->close();
+}
+
+DialogFactory::MessageBoxWindowListener::MessageBoxWindowListener(DialogWindowPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+{
+    _DialogWindow->addEventListener(this);
+}
+
+void DialogFactory::MessageBoxWindowListener::windowClosed(const WindowEvent& e)
+{
 }
 
 OSG_END_NAMESPACE

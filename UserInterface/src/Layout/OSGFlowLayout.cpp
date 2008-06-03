@@ -71,6 +71,23 @@ void FlowLayout::initMethod (void)
 {
 }
 
+Vec2f FlowLayout::getAppropriateComponentSize(ComponentPtr TheComponent)
+{
+    Vec2f ComponentSize(0.0f,0.0f);
+    if(TheComponent != NullFC)
+    {
+        ComponentSize = TheComponent->getPreferredSize();
+        if(ComponentSize.x() < TheComponent->getMinSize().x())
+        {
+            ComponentSize[0] = TheComponent->getMinSize()[0];
+        }
+        if(ComponentSize.y() < TheComponent->getMinSize().y())
+        {
+            ComponentSize[1] = TheComponent->getMinSize()[1];
+        }
+    }
+    return ComponentSize;
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -120,7 +137,7 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	{
 		// set the component to its preferred size
 		//beginEditCP(Components[i], Component::SizeFieldMask);
-			Components[i]->setSize(Components[i]->getPreferredSize());
+			Components[i]->setSize(getAppropriateComponentSize(Components[i]));
 		//endEditCP(Components[i], Component::SizeFieldMask);
 
 		// if there is only one so far, then it can't draw it using cumMajorAxis

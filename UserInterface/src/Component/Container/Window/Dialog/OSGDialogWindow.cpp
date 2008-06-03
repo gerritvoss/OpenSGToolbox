@@ -76,6 +76,19 @@ void DialogWindow::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void DialogWindow::addEventListener(EventListenerPtr Listener)
+{
+    _EventListeners.insert(Listener);
+}
+
+void DialogWindow::removeEventListener(EventListenerPtr Listener)
+{
+   EventListenerSetItor EraseIter(_EventListeners.find(Listener));
+   if(EraseIter != _EventListeners.end())
+   {
+      _EventListeners.erase(EraseIter);
+   }
+}
 
 void DialogWindow::removeDialogListener(DialogListenerPtr Listener)
 {

@@ -78,8 +78,11 @@ void Label::initMethod (void)
 
 Vec2f Label::getContentRequestedSize(void) const
 {
-    Pnt2f TextTopLeft, TextBottomRight;
-    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+    Pnt2f TextTopLeft(0.0f,0.0f), TextBottomRight(0.0f,0.0f);
+    if(getFont() != NullFC)
+    {
+        getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+    }
 
 	return (TextBottomRight - TextTopLeft) + Vec2f(2.0,2.0);
 }

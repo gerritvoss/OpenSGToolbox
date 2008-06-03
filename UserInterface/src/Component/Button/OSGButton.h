@@ -78,6 +78,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual Vec2f getContentRequestedSize(void) const;
 
 	virtual void mouseClicked(const MouseEvent& e);
     virtual void mouseEntered(const MouseEvent& e);
@@ -110,7 +111,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     void setDisabledImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
 	void getTextBounds(Pnt2f& TextTopLeft, Pnt2f& TextBottomRight) const;
-	void setPreferredSizeByContents(const Real32 Insets);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

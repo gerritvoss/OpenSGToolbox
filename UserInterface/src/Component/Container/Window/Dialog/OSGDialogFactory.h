@@ -39,6 +39,7 @@
 
 #include "Component/Text/OSGTextAreaFields.h"
 #include "Event/OSGActionListener.h"
+#include <OpenSG/Input/OSGWindowAdapter.h>
 
 #include <vector>
 #include <deque>
@@ -86,6 +87,26 @@ public:
     ContainerPtr createColorPanel(const Color4f& TheColor, const std::string& HistoryName);
 	
     static DialogFactory* the(void);
+protected:
+    
+	class MessageBoxConfirmButtonListener : public ActionListener
+	{
+	public :
+		MessageBoxConfirmButtonListener(DialogWindowPtr TheDialogWindow);
+        virtual void actionPerformed(const ActionEvent& e);
+	protected :
+		DialogWindowPtr _DialogWindow;
+	};
+    
+	class MessageBoxWindowListener : public WindowAdapter
+	{
+	public :
+		MessageBoxWindowListener(DialogWindowPtr TheDialogWindow);
+        virtual void windowClosed(const WindowEvent& e);
+	protected :
+		DialogWindowPtr _DialogWindow;
+	};
+
 private:
 
     DialogFactory(void);
