@@ -97,7 +97,7 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
     std::string LabelText("");
     if(Value->getType() == SFString::getClassType())
     {
-        LabelText = dynamic_cast<SFString*>(Value.get())->getValue();
+        LabelText = static_cast<SFString*>(Value.get())->getValue();
     }
     else
     {

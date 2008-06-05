@@ -83,7 +83,7 @@ ComponentPtr DefaultInt32TableCellRenderer::getTableCellRendererComponent(TableP
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 		std::string tempString;
-		dynamic_cast<SFInt32*>(value.get())->getValueByStr(tempString);
+		static_cast<SFInt32*>(value.get())->getValueByStr(tempString);
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);

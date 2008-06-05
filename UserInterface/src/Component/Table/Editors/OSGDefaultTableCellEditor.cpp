@@ -90,7 +90,7 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 		std::string tempString;
 		if(value->getType() == SFString::getClassType())
 		{
-			tempString = dynamic_cast<SFString*>(value.get())->getValue();
+			tempString = static_cast<SFString*>(value.get())->getValue();
 		}
 		else
 		{
@@ -167,7 +167,7 @@ bool DefaultTableCellEditor::isCellEditable(const Event& anEvent) const
 {
     if(/*anEvent.getType() != MouseEvent::getClassType() ||*/
        (anEvent.getType() == MouseEvent::getClassType() &&
-       dynamic_cast<const MouseEvent&>(anEvent).getClickCount() >= getClickCountToStart()))
+       static_cast<const MouseEvent&>(anEvent).getClickCount() >= getClickCountToStart()))
     {
         return AbstractCellEditor::isCellEditable(anEvent);
     }

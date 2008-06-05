@@ -57,7 +57,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGBoxLayout.h>
 #include <OpenSG/UserInterface/OSGCardLayout.h>
-#include <OpenSG/UserInterface/OSGUIDefines.h>
+//#include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGTabPanel.h>
 #include <OpenSG/UserInterface/OSGUIRectangle.h>

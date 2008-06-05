@@ -58,7 +58,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGBorderLayout.h>
 #include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGCardLayout.h>
-#include <OpenSG/UserInterface/OSGUIDefines.h>
+//#include <OpenSG/UserInterface/OSGUIDefines.h>
 
 class TutorialWindowListener : public WindowAdapter
 {

@@ -374,7 +374,7 @@ int main(int argc, char **argv)
 
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
                                         Vec2f(550,550),
-                                        "OpenSG 01Button Window");
+                                        "OpenSG 34 Tree Window");
 
     while(!ExitApp)
     {

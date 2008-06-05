@@ -109,6 +109,14 @@ void UIFont::initText(void)
             getTexture()->setEnvMode(GL_MODULATE);
       }
       endEditCP(getTexture());
+    // Increment reference counters
+    addRefP(_face);
+   }
+   else
+   {
+      beginEditCP(UIFontPtr(this), TextureFieldMask);
+         setTexture(TextureChunk::create());
+      endEditCP(UIFontPtr(this), TextureFieldMask);
    }
 
     // We failed to create the font - fallback to the default font
@@ -118,8 +126,6 @@ void UIFont::initText(void)
     //    getTexture() = getStatisticsDefaultFontTexture();
     //}
 
-    // Increment reference counters
-    addRefP(_face);
 }
 
 void UIFont::getBounds(const std::string& Text, Pnt2f& TopLeft, Pnt2f& BottomRight)
@@ -147,6 +153,35 @@ Vec2f UIFont::getBounds(const std::string& Text)
    return (BottomRight-TopLeft);
 }
 
+void UIFont::layout(const std::string &utf8Text, const TextLayoutParam &param, TextLayoutResult &result)
+{
+   if (_face == NULL)
+   {
+      initText();
+   }
+   
+   if (_face != NULL)
+   {
+	   _face->layout(utf8Text,param,result);
+   }
+}
+
+const TextTXFGlyph* UIFont::getTXFGlyph(TextGlyph::Index glyphIndex)
+{
+   if (_face == NULL)
+   {
+      initText();
+   }
+   
+   if (_face != NULL)
+   {
+	   return &(_face->getTXFGlyph(glyphIndex));
+   }
+   else
+   {
+       return NULL;
+   }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

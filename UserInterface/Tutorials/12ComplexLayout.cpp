@@ -63,7 +63,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGEmptyBorder.h>
 #include <OpenSG/UserInterface/OSGEtchedBorder.h>
-#include <OpenSG/UserInterface/OSGUIDefines.h>
+//#include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 #include <OpenSG/UserInterface/OSGGradientUIBackground.h>
 #include <OpenSG/UserInterface/OSGCompoundUIBackground.h>

@@ -72,7 +72,6 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGEmptyBorder.h>
 #include <OpenSG/UserInterface/OSGEtchedBorder.h>
-#include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGCheckboxButton.h>
@@ -382,6 +381,16 @@ int main(int argc, char **argv)
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
+    // Create the SimpleSceneManager helper
+    mgr = new SimpleSceneManager;
+
+    // Tell the Manager what to manage
+    mgr->setWindow(MainWindow);
+
+    // Set up Window
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
+                                        "OpenSG 21ExampleInterface Window");
     // Make Main Scene Node
     create3DObjects();
     scene = osg::Node::create();
@@ -554,20 +563,10 @@ int main(int argc, char **argv)
     endEditCP(scene, Node::ChildrenFieldMask);
 
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-    // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
     // Show the whole Scene
     mgr->showAll();
-
-    // Set up Window
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
-                                        "OpenSG 21ExampleInterface Window");
 
     while(!ExitApp)
     {
@@ -747,14 +746,14 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     // Create TextField
     TextFieldPtr LeftPanelTextField = osg::TextField::create();
     beginEditCP(LeftPanelTextField, Component::PreferredSizeFieldMask);
-        LeftPanelTextField->setPreferredSize(Vec2f(125, 22));
+        LeftPanelTextField->setPreferredSize(Vec2f(125.0f, 22.0f));
     endEditCP(LeftPanelTextField, Component::PreferredSizeFieldMask);
 
     
     // Create an edit Panel Background
     ColorUIBackgroundPtr LeftPanelRadioTextPanelBackground = osg::ColorUIBackground::create();
     beginEditCP(LeftPanelRadioTextPanelBackground, ColorUIBackground::ColorFieldMask);
-        LeftPanelRadioTextPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+        LeftPanelRadioTextPanelBackground->setColor(Color4f(0.93f,0.93f,0.93f,1.0f));
     endEditCP(LeftPanelRadioTextPanelBackground, ColorUIBackground::ColorFieldMask);
 
     // Create and edit Panel layouts
@@ -762,7 +761,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     FlowLayoutPtr LeftPanelRadioTextPanelRadioPanelLayout = osg::FlowLayout::create();
     FlowLayoutPtr LeftPanelRadioTextPanelTextPanelLayout = osg::FlowLayout::create();
     beginEditCP(LeftPanelRadioTextPanelLayout, FlowLayout::MinorAxisAlignmentFieldMask);
-        LeftPanelRadioTextPanelLayout->setMinorAxisAlignment(AXIS_MIN_ALIGNMENT);
+        LeftPanelRadioTextPanelLayout->setMinorAxisAlignment(0.0f);
     beginEditCP(LeftPanelRadioTextPanelLayout, FlowLayout::MinorAxisAlignmentFieldMask);
 
     // Create two Panels for this Panel

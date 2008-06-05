@@ -274,7 +274,7 @@ public:
         {
             std::string TempString;
             aValue->getValueByStr(TempString);
-            dynamic_cast<SFString*>(_CellValues[rowIndex*getColumnCount() + columnIndex].get())->setValue(dynamic_cast<SFString*>(aValue.get())->getValue());
+            static_cast<SFString*>(_CellValues[rowIndex*getColumnCount() + columnIndex].get())->setValue(static_cast<SFString*>(aValue.get())->getValue());
         }
     }
 

@@ -85,7 +85,7 @@ ComponentPtr DefaultGLenumTableCellRenderer::getTableCellRendererComponent(Table
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 		std::string tempString;
-		tempString = toString(dynamic_cast<SFGLenum*>(value.get())->getValue());
+		tempString = toString(static_cast<SFGLenum*>(value.get())->getValue());
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);

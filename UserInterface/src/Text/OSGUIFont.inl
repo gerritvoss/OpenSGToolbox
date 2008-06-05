@@ -42,26 +42,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void UIFont::layout(const std::string &utf8Text, const TextLayoutParam &param, TextLayoutResult &result)
-{
-   if (_face == NULL)
-   {
-      initText();
-   }
-   _face->layout(utf8Text,param,result);
-}
-
-inline
-const TextTXFGlyph& UIFont::getTXFGlyph(TextGlyph::Index glyphIndex)
-{
-   if (_face == NULL)
-   {
-      initText();
-   }
-   return _face->getTXFGlyph(glyphIndex);
-}
-
 OSG_END_NAMESPACE
 
 #define OSGUIFONT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

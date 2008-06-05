@@ -91,7 +91,7 @@ ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, Sha
 		std::string ValueString;
 		if(Value->getType() == SFString::getClassType())
 		{
-            ValueString = dynamic_cast<SFString*>(Value.get())->getValue();
+            ValueString = static_cast<SFString*>(Value.get())->getValue();
 		}
 		else
 		{

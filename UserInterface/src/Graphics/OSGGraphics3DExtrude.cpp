@@ -695,9 +695,9 @@ void Graphics3DExtrude::drawCharacters( const TextLayoutResult& layoutResult, co
     Real32 width, height;
     for(i = 0; i < numGlyphs; ++i)
     {
-        const TextTXFGlyph &glyph = TheFont->getTXFGlyph(layoutResult.indices[i]);
-        width = glyph.getWidth();
-        height = glyph.getHeight();
+        const TextTXFGlyph *glyph = TheFont->getTXFGlyph(layoutResult.indices[i]);
+        width = glyph->getWidth();
+        height = glyph->getHeight();
         // No need to draw invisible glyphs
         if ((width <= 0.f) || (height <= 0.f))
             continue;
@@ -708,10 +708,10 @@ void Graphics3DExtrude::drawCharacters( const TextLayoutResult& layoutResult, co
         Real32 posTop = -pos.y();
         Real32 posRight = pos.x() + width;
         Real32 posBottom = -pos.y() + height;
-        Real32 texCoordLeft = glyph.getTexCoord(TextTXFGlyph::COORD_LEFT);
-        Real32 texCoordTop = glyph.getTexCoord(TextTXFGlyph::COORD_TOP);
-        Real32 texCoordRight = glyph.getTexCoord(TextTXFGlyph::COORD_RIGHT);
-        Real32 texCoordBottom = glyph.getTexCoord(TextTXFGlyph::COORD_BOTTOM);
+        Real32 texCoordLeft = glyph->getTexCoord(TextTXFGlyph::COORD_LEFT);
+        Real32 texCoordTop = glyph->getTexCoord(TextTXFGlyph::COORD_TOP);
+        Real32 texCoordRight = glyph->getTexCoord(TextTXFGlyph::COORD_RIGHT);
+        Real32 texCoordBottom = glyph->getTexCoord(TextTXFGlyph::COORD_BOTTOM);
 
         // lower left corner
 		Real32 Offset(0.001);

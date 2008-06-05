@@ -329,7 +329,7 @@ ColorChooser::ColorChooser(void) :
 		_LayoutTabPanel(NullFC)
 {
 	_SelectionModel->addChangeListener(&_ColorSelectedChangeListener);
-	createDefaultPanel();
+	//createDefaultPanel();
 }
 
 ColorChooser::ColorChooser(const ColorChooser &source) :

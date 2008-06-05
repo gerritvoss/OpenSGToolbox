@@ -175,6 +175,16 @@ int main(int argc, char **argv)
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
+    // Create the SimpleSceneManager helper
+    mgr = new SimpleSceneManager;
+
+    // Tell the Manager what to manage
+    mgr->setWindow(MainWindow);
+	
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
+                                        "OpenSG 01Button Window");
+										
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
@@ -355,11 +365,6 @@ int main(int argc, char **argv)
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
     endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-    // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
@@ -371,9 +376,6 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
-                                        "OpenSG 01Button Window");
 
     while(!ExitApp)
     {

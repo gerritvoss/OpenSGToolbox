@@ -56,7 +56,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGGradientUIBackground.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGUIDefines.h>
+//#include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
 #include <OpenSG/OSGTextFaceFactory.h>
 #include <map>

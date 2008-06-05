@@ -83,7 +83,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFont : public UIFontBase
                       const BitVector  bvFlags  = 0) const;
 
     void layout(const std::string &utf8Text, const TextLayoutParam &param, TextLayoutResult &result);
-    const TextTXFGlyph& getTXFGlyph(TextGlyph::Index glyphIndex);
+    const TextTXFGlyph* getTXFGlyph(TextGlyph::Index glyphIndex);
 
 	void getBounds(const std::string& Text, Pnt2f& TopLeft, Pnt2f& BottomRight);
 	Vec2f getBounds(const std::string& Text);

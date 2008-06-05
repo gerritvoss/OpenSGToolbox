@@ -38,7 +38,7 @@
 #include <OpenSG/UserInterface/OSGGridBagLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGGradientUIBackground.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGUIDefines.h>
+//#include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/OSGTypeFactory.h>
 #include <OpenSG/OSGFieldFactory.h>
 #include <OpenSG/OSGFieldContainerFactory.h>

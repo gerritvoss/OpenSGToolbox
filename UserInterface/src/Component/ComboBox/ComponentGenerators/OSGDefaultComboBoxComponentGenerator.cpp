@@ -91,7 +91,7 @@ ComponentPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxPtr
 		std::string ValueString;
 		if(Value->getType() == SFString::getClassType())
 		{
-            ValueString = dynamic_cast<SFString*>(Value.get())->getValue();
+            ValueString = static_cast<SFString*>(Value.get())->getValue();
 		}
 		else
 		{

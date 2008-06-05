@@ -118,7 +118,7 @@ void DefaultComboBoxEditor::setItem(SharedFieldPtr anObject)
 	std::string TheText;
 	if(anObject->getType() == SFString::getClassType())
 	{
-        TheText = dynamic_cast<SFString*>(anObject.get())->getValue();
+        TheText = static_cast<SFString*>(anObject.get())->getValue();
 	}
 	else
 	{
