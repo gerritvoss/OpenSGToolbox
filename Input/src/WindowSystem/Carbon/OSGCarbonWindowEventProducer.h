@@ -50,6 +50,7 @@
 #include "OSGCarbonWindowEventProducerBase.h"
 #include <OpenSG/OSGCarbonWindow.h>
 #include <AGL/agl.h>
+#include <OpenSG/OSGConfig.h>
 
 #include <map>
 
@@ -97,6 +98,8 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
     };
 	
 	friend struct WindowEventLoopThreadArguments;
+	
+	Barrier *_MainThreadSyncBarrier;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -194,6 +197,10 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
                        const std::string& WindowName);
     
     virtual void closeWindow(void);
+	
+	virtual WindowPtr initWindow(void);
+	
+	
     /*=========================  PROTECTED  ===============================*/
   protected:
 

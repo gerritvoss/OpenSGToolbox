@@ -7,6 +7,23 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		C997E4D30DE7556C00509C0E /* Includes Install Aggregate */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C997E4D40DE7558B00509C0E /* Build configuration list for PBXAggregateTarget "Includes Install Aggregate" */;
+			buildPhases = (
+			);
+			dependencies = (
+				C9A468DF0DEC84A3008213FF /* PBXTargetDependency */,
+				C9A468FC0DEC851E008213FF /* PBXTargetDependency */,
+				C9A469090DEC8553008213FF /* PBXTargetDependency */,
+				C997E4D90DE755A500509C0E /* PBXTargetDependency */,
+				C9A469160DEC85A3008213FF /* PBXTargetDependency */,
+				C9A4691B0DEC85D4008213FF /* PBXTargetDependency */,
+				C997E4DB0DE755AA00509C0E /* PBXTargetDependency */,
+			);
+			name = "Includes Install Aggregate";
+			productName = "Includes Install Aggregate";
+		};
 		D437832B0CF0B17E0062E3A4 /* OSGToolbox Aggregate */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = D43783360CF0B2110062E3A4 /* Build configuration list for PBXAggregateTarget "OSGToolbox Aggregate" */;
@@ -111,6 +128,69 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C997E4D80DE755A500509C0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C997E4D70DE7558C00509C0E;
+			remoteInfo = "Make Toolbox Directory";
+		};
+		C997E4DA0DE755AA00509C0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D43783460CF0B5090062E3A4;
+			remoteInfo = "OSGToolbox install Shell Script";
+		};
+		C9A468DE0DEC84A3008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A468DA0DEC8470008213FF /* Make include Directory */;
+			remoteInfo = "Make include Directory";
+		};
+		C9A468FB0DEC851E008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A468F10DEC8502008213FF /* Make lib Directory */;
+			remoteInfo = "Make lib Directory";
+		};
+		C9A469080DEC8553008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A468FE0DEC8536008213FF /* Make OpenSG Directory */;
+			remoteInfo = "Make OpenSG Directory";
+		};
+		C9A469150DEC85A3008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A4690A0DEC8569008213FF /* Make Input Directory */;
+			remoteInfo = "Make Input Directory";
+		};
+		C9A4691A0DEC85D4008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A469180DEC85BB008213FF /* Build UserInterface Directory */;
+			remoteInfo = "Build UserInterface Directory";
+		};
+		C9A469520DEC8F33008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */;
+			remoteInfo = "OSGToolbox Dynamic Library";
+		};
+		C9A469540DEC8F3A008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C997E4D30DE7556C00509C0E /* Includes Install Aggregate */;
+			remoteInfo = "Includes Install Aggregate";
+		};
 		D437832C0CF0B1890062E3A4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -131,13 +211,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = D43783460CF0B5090062E3A4;
 			remoteInfo = "OSGToolbox install Shell Script";
-		};
-		D487D1590DE48500000A36D3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D437832B0CF0B17E0062E3A4;
-			remoteInfo = "OSGToolbox Aggregate";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -444,6 +517,104 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXLegacyTarget section */
+		C997E4D70DE7558C00509C0E /* Make Toolbox Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG/Toolbox";
+			buildConfigurationList = C997E4DF0DE755C800509C0E /* Build configuration list for PBXLegacyTarget "Make Toolbox Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make Toolbox Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make Toolbox Directory";
+		};
+		C9A468DA0DEC8470008213FF /* Make include Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include";
+			buildConfigurationList = C9A468E40DEC84AC008213FF /* Build configuration list for PBXLegacyTarget "Make include Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make include Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make include Directory";
+		};
+		C9A468E70DEC84D9008213FF /* Make Apple Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/";
+			buildConfigurationList = C9A468EE0DEC84F5008213FF /* Build configuration list for PBXLegacyTarget "Make Apple Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make Apple Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make Apple Directory";
+		};
+		C9A468F10DEC8502008213FF /* Make lib Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/lib";
+			buildConfigurationList = C9A468F70DEC8511008213FF /* Build configuration list for PBXLegacyTarget "Make lib Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make lib Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make lib Directory";
+		};
+		C9A468FE0DEC8536008213FF /* Make OpenSG Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG";
+			buildConfigurationList = C9A469040DEC853C008213FF /* Build configuration list for PBXLegacyTarget "Make OpenSG Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make OpenSG Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make OpenSG Directory";
+		};
+		C9A4690A0DEC8569008213FF /* Make Input Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG/Input";
+			buildConfigurationList = C9A469100DEC8570008213FF /* Build configuration list for PBXLegacyTarget "Make Input Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make Input Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make Input Directory";
+		};
+		C9A469180DEC85BB008213FF /* Build UserInterface Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG/UserInterface";
+			buildConfigurationList = C9A469210DEC85E0008213FF /* Build configuration list for PBXLegacyTarget "Build UserInterface Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Build UserInterface Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Build UserInterface Directory";
+		};
 		D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(COMMON_DIR)/CopyIncludes.sh $(COMMON_DIR) $(SRC_DIR) $(INSTALL_DIR)/include/OpenSG/$(LIB_INCLUDE_DIR_NAME) ";
@@ -505,7 +676,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				D487D15A0DE48500000A36D3 /* PBXTargetDependency */,
+				C9A469530DEC8F33008213FF /* PBXTargetDependency */,
+				C9A469550DEC8F3A008213FF /* PBXTargetDependency */,
 			);
 			name = 02FCFileTypeIO;
 			productName = Untitled;
@@ -528,6 +700,14 @@
 				D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */,
 				D437835E0CF0BED30062E3A4 /* OSGToolbox Static Library */,
 				D487D1510DE4848A000A36D3 /* 02FCFileTypeIO */,
+				C997E4D30DE7556C00509C0E /* Includes Install Aggregate */,
+				C997E4D70DE7558C00509C0E /* Make Toolbox Directory */,
+				C9A468DA0DEC8470008213FF /* Make include Directory */,
+				C9A468E70DEC84D9008213FF /* Make Apple Directory */,
+				C9A468F10DEC8502008213FF /* Make lib Directory */,
+				C9A468FE0DEC8536008213FF /* Make OpenSG Directory */,
+				C9A4690A0DEC8569008213FF /* Make Input Directory */,
+				C9A469180DEC85BB008213FF /* Build UserInterface Directory */,
 			);
 		};
 /* End PBXProject section */
@@ -592,6 +772,51 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C997E4D90DE755A500509C0E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C997E4D70DE7558C00509C0E /* Make Toolbox Directory */;
+			targetProxy = C997E4D80DE755A500509C0E /* PBXContainerItemProxy */;
+		};
+		C997E4DB0DE755AA00509C0E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */;
+			targetProxy = C997E4DA0DE755AA00509C0E /* PBXContainerItemProxy */;
+		};
+		C9A468DF0DEC84A3008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A468DA0DEC8470008213FF /* Make include Directory */;
+			targetProxy = C9A468DE0DEC84A3008213FF /* PBXContainerItemProxy */;
+		};
+		C9A468FC0DEC851E008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A468F10DEC8502008213FF /* Make lib Directory */;
+			targetProxy = C9A468FB0DEC851E008213FF /* PBXContainerItemProxy */;
+		};
+		C9A469090DEC8553008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A468FE0DEC8536008213FF /* Make OpenSG Directory */;
+			targetProxy = C9A469080DEC8553008213FF /* PBXContainerItemProxy */;
+		};
+		C9A469160DEC85A3008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A4690A0DEC8569008213FF /* Make Input Directory */;
+			targetProxy = C9A469150DEC85A3008213FF /* PBXContainerItemProxy */;
+		};
+		C9A4691B0DEC85D4008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A469180DEC85BB008213FF /* Build UserInterface Directory */;
+			targetProxy = C9A4691A0DEC85D4008213FF /* PBXContainerItemProxy */;
+		};
+		C9A469530DEC8F33008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */;
+			targetProxy = C9A469520DEC8F33008213FF /* PBXContainerItemProxy */;
+		};
+		C9A469550DEC8F3A008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C997E4D30DE7556C00509C0E /* Includes Install Aggregate */;
+			targetProxy = C9A469540DEC8F3A008213FF /* PBXContainerItemProxy */;
+		};
 		D437832D0CF0B1890062E3A4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */;
@@ -606,11 +831,6 @@
 			isa = PBXTargetDependency;
 			target = D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */;
 			targetProxy = D43783890CF0C07C0062E3A4 /* PBXContainerItemProxy */;
-		};
-		D487D15A0DE48500000A36D3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D437832B0CF0B17E0062E3A4 /* OSGToolbox Aggregate */;
-			targetProxy = D487D1590DE48500000A36D3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -643,7 +863,8 @@
 				OTHER_LDFLAGS = (
 					"-lOSGBase",
 					"-lOSGSystem",
-					"-lboost_filesystem-d-1_34",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
 				);
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRELINK_LIBS = "";
@@ -681,7 +902,8 @@
 				OTHER_LDFLAGS = (
 					"-lOSGBase",
 					"-lOSGSystem",
-					"-lboost_filesystem-1_34",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
 				);
 				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -693,15 +915,17 @@
 		1DEB916508733D950010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BOOST_BASE_DIR = "/Users/dkabala/Software/Boost_1_34_0-Install";
+				BOOST_BASE_DIR = "/Users/dtnaylor/Work/boost_1_35_0/Boost-1_35_0-InstallOSX";
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/dbg";
 				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)/dbg";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				OSGROOT = "/Users/dkabala/Software/OpenSG-1.8-OS10.4";
-				OSG_TOOLBOX_DIR = /Users/dkabala/Work/OpenSGToolbox;
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				OSGROOT = "/Users/dtnaylor/Work/OpenSG/OpenSG-1.8-OSX-Install";
+				OSG_TOOLBOX_DIR = /Users/dtnaylor/Work/OpenSGToolbox/OpenSGToolbox;
 				OSG_TOOLBOX_LIB_NAME = Toolbox;
 				SYMROOT = ..;
 				ZERO_LINK = YES;
@@ -715,17 +939,195 @@
 					ppc,
 					i386,
 				);
-				BOOST_BASE_DIR = "/Users/dkabala/Software/Boost_1_34_0-Install";
+				BOOST_BASE_DIR = "/Users/dtnaylor/Work/boost_1_35_0/Boost-1_35_0-InstallOSX";
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/opt";
 				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)/opt";
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				OSGROOT = "/Users/dkabala/Software/OpenSG-1.8-OS10.4";
-				OSG_TOOLBOX_DIR = /Users/dkabala/Work/OpenSGToolbox;
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				OSGROOT = "/Users/dtnaylor/Work/OpenSG/OpenSG-1.8-OSX-Install";
+				OSG_TOOLBOX_DIR = /Users/dtnaylor/Work/OpenSGToolbox/OpenSGToolbox;
 				OSG_TOOLBOX_LIB_NAME = Toolbox;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				SEPARATE_STRIP = YES;
 				SYMROOT = ..;
+			};
+			name = Release;
+		};
+		C997E4D50DE7558B00509C0E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Includes Install Aggregate";
+			};
+			name = Debug;
+		};
+		C997E4D60DE7558B00509C0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Includes Install Aggregate";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C997E4E00DE755C800509C0E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make Toolbox Directory";
+			};
+			name = Debug;
+		};
+		C997E4E10DE755C800509C0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make Toolbox Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A468E50DEC84AC008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make include Directory";
+			};
+			name = Debug;
+		};
+		C9A468E60DEC84AC008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make include Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A468EF0DEC84F5008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make Apple Directory";
+			};
+			name = Debug;
+		};
+		C9A468F00DEC84F5008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make Apple Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A468F80DEC8511008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make lib Directory";
+			};
+			name = Debug;
+		};
+		C9A468F90DEC8511008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make lib Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A469050DEC853C008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make OpenSG Directory";
+			};
+			name = Debug;
+		};
+		C9A469060DEC853C008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make OpenSG Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A469110DEC8570008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make Input Directory";
+			};
+			name = Debug;
+		};
+		C9A469120DEC8570008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make Input Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A469220DEC85E0008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Build UserInterface Directory";
+			};
+			name = Debug;
+		};
+		C9A469230DEC85E0008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Build UserInterface Directory";
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -875,7 +1277,8 @@
 					"-lOSGBase",
 					"-lOSGSystem",
 					"-lOSGToolboxD",
-					"-lboost_filesystem-d-1_34",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = 02FCFileTypeIOD;
@@ -915,7 +1318,8 @@
 					"-lOSGBase",
 					"-lOSGSystem",
 					"-lOSGToolbox",
-					"-lboost_filesystem-1_34",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = 02FCFileTypeIO;
@@ -941,6 +1345,78 @@
 			buildConfigurations = (
 				1DEB916508733D950010E9CD /* Debug */,
 				1DEB916608733D950010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C997E4D40DE7558B00509C0E /* Build configuration list for PBXAggregateTarget "Includes Install Aggregate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C997E4D50DE7558B00509C0E /* Debug */,
+				C997E4D60DE7558B00509C0E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C997E4DF0DE755C800509C0E /* Build configuration list for PBXLegacyTarget "Make Toolbox Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C997E4E00DE755C800509C0E /* Debug */,
+				C997E4E10DE755C800509C0E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A468E40DEC84AC008213FF /* Build configuration list for PBXLegacyTarget "Make include Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A468E50DEC84AC008213FF /* Debug */,
+				C9A468E60DEC84AC008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A468EE0DEC84F5008213FF /* Build configuration list for PBXLegacyTarget "Make Apple Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A468EF0DEC84F5008213FF /* Debug */,
+				C9A468F00DEC84F5008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A468F70DEC8511008213FF /* Build configuration list for PBXLegacyTarget "Make lib Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A468F80DEC8511008213FF /* Debug */,
+				C9A468F90DEC8511008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A469040DEC853C008213FF /* Build configuration list for PBXLegacyTarget "Make OpenSG Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A469050DEC853C008213FF /* Debug */,
+				C9A469060DEC853C008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A469100DEC8570008213FF /* Build configuration list for PBXLegacyTarget "Make Input Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A469110DEC8570008213FF /* Debug */,
+				C9A469120DEC8570008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A469210DEC85E0008213FF /* Build configuration list for PBXLegacyTarget "Build UserInterface Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A469220DEC85E0008213FF /* Debug */,
+				C9A469230DEC85E0008213FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

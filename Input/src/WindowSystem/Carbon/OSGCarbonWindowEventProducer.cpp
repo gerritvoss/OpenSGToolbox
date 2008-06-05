@@ -51,7 +51,7 @@
 
 #ifdef __APPLE__
 
-#include <Quicktime/Movies.h>
+//#include <Quicktime/Movies.h>
 //#include <CarbonEvents.h>
 
 
@@ -226,7 +226,7 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
         kWindowLiveResizeAttribute |
         kWindowStandardHandlerAttribute;
     Rect contentRect;
-    SetRect(&contentRect, Arguments->_ScreenPosition.x(),  Arguments->_ScreenPosition.y(), Arguments->_Size.x(), Arguments->_Size.y());
+    SetRect(&contentRect, Arguments->_ScreenPosition.x(),  Arguments->_ScreenPosition.y(), Arguments->_Size.x() + Arguments->_ScreenPosition.x(), Arguments->_Size.y() + Arguments->_ScreenPosition.y());
     
     CreateNewWindow(kDocumentWindowClass, windowAttrs, &contentRect, &window);
     SetWindowTitleWithCFString(window, CFStringCreateWithCString(NULL, Arguments->_WindowName.c_str(), Arguments->_WindowName.size()));
@@ -273,13 +273,16 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
     endEditCP(CarbonWindow::Ptr::dcast(Arguments->_EventProducer->getWindow()), CarbonWindow::ContextFieldMask);
 
         
-    Arguments->_EventProducer->getWindow()->resize( Arguments->_Size.x(), Arguments->_Size.y() );
+    //Arguments->_EventProducer->getWindow()->resize( Arguments->_Size.x(), Arguments->_Size.y() );
+	Arguments->_EventProducer->_MainThreadSyncBarrier->enter(2);
+    Arguments->_EventProducer->setSize( Vec2f(Arguments->_Size.x(), Arguments->_Size.y()) );
     Arguments->_EventProducer->getWindow()->init();
     Arguments->_EventProducer->getWindow()->deactivate();
     
     // Show window
     RepositionWindow(window, 0, kWindowCascadeOnMainScreen);
     ShowWindow(window);
+	
     
     // Main loop ( event dispatching )
     EventRef theEvent;    
@@ -309,6 +312,35 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+WindowPtr CarbonWindowEventProducer::initWindow(void)
+{
+	WindowPtr MyWindow = Inherited::initWindow();
+	std::string WindowName("Carbon");
+
+    if(_WindowEventLoopThread == NULL)
+    {
+        std::string ThreadName = WindowName + " Event Loop";
+        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
+    }
+    else
+    {
+    }
+    
+    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(  
+                    Pnt2f(0.0,0.0),
+                    Vec2f(600.0,600.0),
+                    WindowName,
+                    CarbonWindow::Ptr::dcast(getWindow()),
+                    CarbonWindowEventProducerPtr(this)  );
+    
+    //ChangeList::setReadWriteDefault();
+    std::string BarrierName = WindowName + " Event Loop";
+	_MainThreadSyncBarrier =  Barrier::get(BarrierName.c_str());
+    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
+	
+    return MyWindow;
+}
+
 
 OSStatus CarbonWindowEventProducer::internalEventHandler(EventHandlerCallRef nextHandler, EventRef event, void *userData)
 {
@@ -994,16 +1026,18 @@ bool CarbonWindowEventProducer::getIconify(void) const
 
 void CarbonWindowEventProducer::setFullscreen(bool Fullscreen)
 {
+    assert(false && "Not Implemented");
 	if(Fullscreen)
 	{
 		::Ptr      _OldScreenState;
 		std::cout << "Fullscreen" << std::endl;
-		BeginFullScreen(&_OldScreenState, NULL, 0, 0, &_WindowRef, NULL, 0);
+		//CGCaptureAllDisplays();
+		//BeginFullScreen(&_OldScreenState, NULL, 0, 0, &_WindowRef, NULL, 0);
 	}
 	else
 	{
 		std::cout << "NotFullscreen" << std::endl;
-		EndFullScreen(NULL, NULL);
+		//EndFullScreen(NULL, NULL);
 	}
 }
 
@@ -1032,15 +1066,24 @@ std::string CarbonWindowEventProducer::getTitle(void)
 
 void CarbonWindowEventProducer::setRisizable(bool IsResizable)
 {
+	//_WindowRef->kWindowResizableAttribute = (1L << 4);
+
+	
     //TODO: Implement
     assert(false && "Not Implemented");
+	
 }
 
 bool CarbonWindowEventProducer::getRisizable(void)
 {
+	WindowAttributes Attributes;
+	GetWindowAttributes(_WindowRef, &Attributes);
+	
     //TODO: Implement
-    assert(false && "Not Implemented");
-    return false;
+	
+    
+    return (Attributes & kWindowResizableAttribute);
+	
 }
 
 void CarbonWindowEventProducer::setDrawBorder(bool DrawBorder)
@@ -1131,24 +1174,8 @@ void CarbonWindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
 				   const Vec2f& Size,
 				   const std::string& WindowName)
 {
-    if(_WindowEventLoopThread == NULL)
-    {
-        std::string ThreadName = WindowName + " Event Loop";
-        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
-    }
-    else
-    {
-    }
-    
-    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(  
-                    ScreenPosition,
-                    Size,
-                    WindowName,
-                    CarbonWindow::Ptr::dcast(getWindow()),
-                    CarbonWindowEventProducerPtr(this)  );
-    
-    //ChangeList::setReadWriteDefault();
-    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
+	//Unblock the main
+	_MainThreadSyncBarrier->enter(2);
 }
 
 void CarbonWindowEventProducer::closeWindow(void)

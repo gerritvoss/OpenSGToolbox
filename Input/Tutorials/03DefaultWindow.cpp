@@ -169,7 +169,7 @@ class TutorialWindowListener : public WindowListener
     virtual void windowClosed(const WindowEvent& e)
     {
        std::cout << "Window Closed" << std::endl;
-       ExitMainLoop = true;
+	   ExitMainLoop = true;
     }
 
     virtual void windowIconified(const WindowEvent& e)
