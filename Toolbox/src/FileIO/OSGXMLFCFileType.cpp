@@ -76,6 +76,9 @@ A XMLFCFileType.
 
 XMLFCFileType*  XMLFCFileType::_the(new XMLFCFileType());
 
+std::string XMLFCFileType::NameAttachmentXMLToken = "nameAttachment";
+std::string XMLFCFileType::FileAttachmentXMLToken = "filePathAttachment";
+std::string XMLFCFileType::FieldContainerIDXMLToken = "fieldcontainerid";
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -133,10 +136,10 @@ std::string XMLFCFileType::getName(void) const
 				attr.clear();
 				attr = (*NodeListItor)->get_attrmap();
 				
-				SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring("fieldcontainerid"));
+				SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FieldContainerIDXMLToken));
 				if(SearchItor == (*NodeListItor)->get_attrmap().end())
 				{
-					SFATAL << FileNameOrExtension << ": Couldn't find fieldcontainerid attribute for '" << (*NodeListItor)->get_name() << "'!" << std::endl;
+					SFATAL << FileNameOrExtension << ": Couldn't find "+FieldContainerIDXMLToken+" attribute for '" << (*NodeListItor)->get_name() << "'!" << std::endl;
 				}
 				CurrentFieldContainerOldId = TypeTraits<UInt32>::getFromString(SearchItor->second.c_str());
 				FCInfoIter = TheIDLookupMap.find(CurrentFieldContainerOldId);
@@ -174,7 +177,7 @@ std::string XMLFCFileType::getName(void) const
 				NewFieldContainer = FCInfoIter->second._Ptr;
 				if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()))
 				{
-					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring("name"));
+					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(NameAttachmentXMLToken));
 					if(SearchItor != (*NodeListItor)->get_attrmap().end())
 					{
 						setName(AttachmentContainerPtr::dcast(NewFieldContainer),SearchItor->second.c_str());
@@ -302,10 +305,10 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(xmlpp::xmlnodeli
 			}
 			else
 			{
-				xmlpp::xmlattributes::const_iterator SearchItor((*NodeListItor)->get_attrmap().find(xmlpp::xmlstring("fieldcontainerid")));
+				xmlpp::xmlattributes::const_iterator SearchItor((*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FieldContainerIDXMLToken)));
 				if(SearchItor == (*NodeListItor)->get_attrmap().end())
 				{
-					SFATAL << FileNameOrExtension << ": Couldn't find fieldcontainerid attribute for '" << (*NodeListItor)->get_name() << "'!" << std::endl;
+					SFATAL << FileNameOrExtension << ": Couldn't find "+FieldContainerIDXMLToken+" attribute for '" << (*NodeListItor)->get_name() << "'!" << std::endl;
 				}
 				OldFCId = TypeTraits<UInt32>::getFromString(SearchItor->second.c_str());
 				NewFCInfo._NewId = NewFCInfo._Ptr.getFieldContainerId();
@@ -378,14 +381,14 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 	for(FCPtrStore::const_iterator FCItor(AllContainers.begin()) ; FCItor != AllContainers.end() ; ++FCItor)
 	{
 		OutputStream << "\t<" << (*FCItor)->getType().getCName() << std::endl;
-		OutputStream << "\t\tfieldcontainerid=\"" << TypeTraits<UInt32>::putToString(FieldContainerPtr(*FCItor).getFieldContainerId()) << "\"" << std::endl;
+		OutputStream << "\t\t"+FieldContainerIDXMLToken+"=\"" << TypeTraits<UInt32>::putToString(FieldContainerPtr(*FCItor).getFieldContainerId()) << "\"" << std::endl;
 
 		if((*FCItor)->getType().isDerivedFrom(AttachmentContainer::getClassType()))
 		{
 			const Char8* Name(osg::getName(AttachmentContainerPtr::dcast(*FCItor)));
 			if(Name != NULL)
 			{
-				OutputStream << "\t\tname=\"" << Name << "\"" << std::endl;
+				OutputStream << "\t\t" + NameAttachmentXMLToken + "=\"" << Name << "\"" << std::endl;
 			}
 		}
 
