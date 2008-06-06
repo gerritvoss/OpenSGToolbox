@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGGeoSurfaceDistribution3D.h"
+#include <OpenSG/OSGVecFieldDataType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,11 +75,39 @@ void GeoSurfaceDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+GeoSurfaceDistribution3D::FunctionIOTypeVector GeoSurfaceDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS));
+    return OutputTypes;
+}
+
+GeoSurfaceDistribution3D::FunctionIOTypeVector GeoSurfaceDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+{
+    FunctionIOTypeVector InputTypes;
+    return InputTypes;
+}
+
+GeoSurfaceDistribution3D::FunctionIOParameterVector GeoSurfaceDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != 0)
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS, generate()));
+
+    return ResultVector;
+}
+
 Pnt3f GeoSurfaceDistribution3D::generate(void)
 {
    //TODO:Implement
    return Pnt3f(0.0f,0.0f,0.0f);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

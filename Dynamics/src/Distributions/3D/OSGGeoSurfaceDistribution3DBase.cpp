@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -92,7 +92,7 @@ FieldDescription *GeoSurfaceDistribution3DBase::_desc[] =
 
 FieldContainerType GeoSurfaceDistribution3DBase::_type(
     "GeoSurfaceDistribution3D",
-    "Distribution3D",
+    "Function",
     NULL,
     (PrototypeCreateF) &GeoSurfaceDistribution3DBase::createEmpty,
     GeoSurfaceDistribution3D::initMethod,
@@ -270,7 +270,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GeoSurfaceDistribution3DPtr>::_type("GeoSurfaceDistribution3DPtr", "Distribution3DPtr");
+DataType FieldDataTraits<GeoSurfaceDistribution3DPtr>::_type("GeoSurfaceDistribution3DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(GeoSurfaceDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

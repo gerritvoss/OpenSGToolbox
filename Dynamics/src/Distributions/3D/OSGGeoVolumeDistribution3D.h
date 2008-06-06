@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,6 +48,13 @@
 
 OSG_BEGIN_NAMESPACE
 
+#define OSG_GEO_VOLUME_3D_DIST_OUTPUTPARAMETERS (1, \
+    (\
+      ("RandomPoint", Pnt3f) \
+    ))
+
+#define OSG_GEO_VOLUME_3D_DIST_INPUTPARAMETERS (0, ())
+
 class OSG_DYNAMICSLIB_DLLMAPPING GeoVolumeDistribution3D : public GeoVolumeDistribution3DBase
 {
   private:
@@ -73,7 +80,9 @@ class OSG_DYNAMICSLIB_DLLMAPPING GeoVolumeDistribution3D : public GeoVolumeDistr
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt3f generate(void);
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOTypeVector& InputTypes) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOTypeVector& OutputTypes) const;
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -94,6 +103,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING GeoVolumeDistribution3D : public GeoVolumeDistr
     virtual ~GeoVolumeDistribution3D(void); 
 
     /*! \}                                                                 */
+    virtual Pnt3f generate(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

@@ -68,7 +68,7 @@ CompoundFunction::FunctionIOTypeVector CompoundFunction::getOutputTypes(Function
     FunctionIOTypeVector OutputTypes(InputTypes);
 	for(UInt32 i(0) ; i<getFunctions().size() ; ++i)
 	{
-		OutputTypes = getFunctions().getValue(i)->getOutputTypes(OutputTypes);
+		OutputTypes = getFunctions()[i]->getOutputTypes(OutputTypes);
 	}
     return OutputTypes;
 }
@@ -78,7 +78,7 @@ CompoundFunction::FunctionIOTypeVector CompoundFunction::getInputTypes(FunctionI
     FunctionIOTypeVector InputTypes(OutputTypes);
 	for(UInt32 i(0) ; i<getFunctions().size() ; ++i)
 	{
-		InputTypes = getFunctions().getValue(i)->getInputTypes(InputTypes);
+		InputTypes = getFunctions()[i]->getInputTypes(InputTypes);
 	}
     return InputTypes;
 }
@@ -94,7 +94,7 @@ CompoundFunction::FunctionIOParameterVector CompoundFunction::evaluate(FunctionI
 
 	for(UInt32 i(0) ; i<getFunctions().size() ; ++i)
 	{
-		ResultVector = getFunctions().getValue(i)->evaluate(ResultVector);
+		ResultVector = getFunctions()[i]->evaluate(ResultVector);
 	}
 
     return ResultVector;
