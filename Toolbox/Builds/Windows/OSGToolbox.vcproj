@@ -443,6 +443,26 @@
 					RelativePath="..\..\src\Attachments\OSGFilePathAttachment.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Attachments\OSGFilePathAttachment.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentFields.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

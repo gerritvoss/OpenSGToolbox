@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FilePathAttachment"
+	parent="Attachment"
+	library="Toolbox"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="true"
+	useLocalIncludes="true"
+>
+A UI Component Interface.
+	<Field
+		name="Path"
+		type="Path"
+		cardinality="single"
+		visibility="internal"
+		defaultValue=""
+		access="public"
+		header="Types/OSGPathType.h"
+	>
+	</Field>
+</FieldContainer>

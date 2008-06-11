@@ -1,64 +1,100 @@
+/*---------------------------------------------------------------------------*\
+ *                        OpenSG ToolBox Toolbox                             *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                License                                    *
+ *                                                                           *
+ * This library is free software; you can redistribute it and/or modify it   *
+ * under the terms of the GNU Library General Public License as published    *
+ * by the Free Software Foundation, version 2.                               *
+ *                                                                           *
+ * This library is distributed in the hope that it will be useful, but       *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Library General Public License for more details.                          *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public         *
+ * License along with this library; if not, write to the Free Software       *
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
-// Source file for new Field type
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-// This define is only set in this source file. It switches the
-// Windows-specific declarations in the header for compiling the Field, 
-// not for using it.
-#define OSG_COMPILEFILEPATHATTACHMENTINST
+#include <stdlib.h>
+#include <stdio.h>
 
-// You need this in every OpenSG file
+#define OSG_COMPILETOOLBOXLIB
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
 
-// The new field type include
-#include <OpenSG/OSGAttachmentContainer.h>
 #include "OSGFilePathAttachment.h"
-
-OSG_USING_NAMESPACE
-
-FieldDescription *FilePathAttachmentDesc::_desc[] =
-{
-    new FieldDescription(
-        FieldTypeT::getClassType(), 
-        getFieldName(), 
-        OSG_FC_FIELD_IDM_DESC(
-            SimpleAttachment<FilePathAttachmentDesc>::SimpleField),
-        false,
-        (FieldAccessMethod) &SimpleAttachment<
-                                  FilePathAttachmentDesc>::getFieldPtr)
-};
 
 OSG_BEGIN_NAMESPACE
 
-OSG_FC_DLLEXPORT_DEF(SimpleAttachment,
-                     FilePathAttachmentDesc,
-                     OSG_TOOLBOXLIB_DLLTMPLMAPPING);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
+/*! \class osg::FilePathAttachment
+A UI Component Interface. 	
+*/
 
-const Path getFilePath(AttachmentContainerPtr container)
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void FilePathAttachment::initMethod (void)
+{
+}
+
+const Path FilePathAttachment::getFilePath(      AttachmentContainerPtr  container)
 {
     if(container == NullFC)
         return NULL;
    
     // Get attachment pointer
     AttachmentPtr att = 
-        container->findAttachment(FilePath::getClassType().getGroupId());
+        container->findAttachment(FilePathAttachment::getClassType().getGroupId());
 
     if(att == NullFC)
         return NULL;
    
     // Cast to name pointer                           
 
-    FilePathPtr PathAttachment = FilePathPtr::dcast(att);
+    FilePathAttachmentPtr PathAttachment = FilePathAttachmentPtr::dcast(att);
 
     if(PathAttachment == NullFC)
         return NULL;
    
-    return PathAttachment->getFieldPtr()->getValue();
+    return PathAttachment->getPath();
 }
 
-void setFilePath(      AttachmentContainerPtr  container, 
-             const Path            &ThePath)
+void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container, 
+                         const Path            &ThePath     )
 {
     if(container == NullFC)
     {
@@ -68,13 +104,13 @@ void setFilePath(      AttachmentContainerPtr  container,
    
     // Get attachment pointer
 
-    FilePathPtr PathAttachment = NullFC;
+    FilePathAttachmentPtr PathAttachment = NullFC;
     AttachmentPtr att  = 
-        container->findAttachment(FilePath::getClassType().getGroupId());
+        container->findAttachment(FilePathAttachment::getClassType().getGroupId());
     
     if(att == NullFC)
     {
-        PathAttachment = FilePath::create();
+        PathAttachment = FilePathAttachment::create();
         beginEditCP(container, AttachmentContainer::AttachmentsFieldMask);
         {
             container->addAttachment(PathAttachment);
@@ -83,7 +119,7 @@ void setFilePath(      AttachmentContainerPtr  container,
     }
     else
     {   
-        PathAttachment = FilePathPtr::dcast(att);
+        PathAttachment = FilePathAttachmentPtr::dcast(att);
 
         if(PathAttachment == NullFC)
         {
@@ -93,11 +129,74 @@ void setFilePath(      AttachmentContainerPtr  container,
     }
     
   
-    beginEditCP(PathAttachment);
+    beginEditCP(PathAttachment, FilePathAttachment::PathFieldMask);
     {
-        PathAttachment->getFieldPtr()->setValue(ThePath);   
+        PathAttachment->setPath(ThePath);   
     }
-    endEditCP(PathAttachment);
+    endEditCP(PathAttachment, FilePathAttachment::PathFieldMask);
 }
 
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+FilePathAttachment::FilePathAttachment(void) :
+    Inherited()
+{
+}
+
+FilePathAttachment::FilePathAttachment(const FilePathAttachment &source) :
+    Inherited(source)
+{
+}
+
+FilePathAttachment::~FilePathAttachment(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void FilePathAttachment::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void FilePathAttachment::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump FilePathAttachment NI" << std::endl;
+}
+
+
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGFILEPATHATTACHMENTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGFILEPATHATTACHMENTBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGFILEPATHATTACHMENTFIELDS_HEADER_CVSID;
+}
+
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
+
 OSG_END_NAMESPACE
+
