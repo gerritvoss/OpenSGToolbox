@@ -223,7 +223,7 @@ std::string XMLFCFileType::getName(void) const
 									!FieldValue.empty())
 								{
 									std::vector< std::string > SplitVec;
-									boost::algorithm::split( SplitVec, FieldValue, boost::algorithm::is_any_of(";") );
+                                    boost::algorithm::split( SplitVec, FieldValue, boost::algorithm::is_any_of(std::string(";")) );
 									for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
 									{
 										FCId = TypeTraits<UInt32>::getFromString(SplitVec[SplitIndex].c_str());
@@ -256,7 +256,7 @@ std::string XMLFCFileType::getName(void) const
 									!FieldValue.empty())
 								{
 									std::vector< std::string > SplitVec;
-									boost::algorithm::split( SplitVec, FieldValue, boost::algorithm::is_any_of(";") );
+									boost::algorithm::split( SplitVec, FieldValue, boost::algorithm::is_any_of(std::string(";")) );
 									for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
 									{
 										TheField->pushValueByStr(SplitVec[SplitIndex].c_str());
@@ -458,7 +458,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 				{
 					FieldValue.clear();
 					TheField->getValueByStr(FieldValue);
-					boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of("\""));
+					boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of(std::string("\"")));
 					OutputStream << "\t\t" << Desc->getCName() << "=\"" << FieldValue << "\"" << std::endl;
 				}
 				else if(TheField->getCardinality() == FieldType::MULTI_FIELD)
@@ -468,7 +468,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 					{
 						FieldValue.clear();
 						TheField->getValueByStr(FieldValue, Index);
-						boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of("\""));
+						boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of(std::string("\"")));
 						if(Index!=0)
 						{
 							OutputStream << ";";
