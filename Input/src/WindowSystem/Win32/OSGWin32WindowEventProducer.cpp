@@ -48,7 +48,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <windows.h>
+//#include <windows.h>
+#include <Windowsx.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -707,27 +708,27 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
     switch(uMsg)
     {       
         case WM_LBUTTONDOWN:
-            produceMousePressed(MouseEvent::BUTTON1, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+            produceMousePressed(MouseEvent::BUTTON1, Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
             SetCapture(hwnd);
             break;
         case WM_MBUTTONDOWN:
-            produceMousePressed(MouseEvent::BUTTON2, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+            produceMousePressed(MouseEvent::BUTTON2, Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
             SetCapture(hwnd);
             break;
         case WM_RBUTTONDOWN:
-            produceMousePressed(MouseEvent::BUTTON3, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+            produceMousePressed(MouseEvent::BUTTON3, Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
             SetCapture(hwnd);
             break;   
         case WM_LBUTTONUP:
-            produceMouseReleased(MouseEvent::BUTTON1, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+            produceMouseReleased(MouseEvent::BUTTON1, Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
             ReleaseCapture();
             break;              
         case WM_MBUTTONUP:
-            produceMouseReleased(MouseEvent::BUTTON2, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+            produceMouseReleased(MouseEvent::BUTTON2, Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
             ReleaseCapture();
             break;
         case WM_RBUTTONUP:
-            produceMouseReleased(MouseEvent::BUTTON3, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+            produceMouseReleased(MouseEvent::BUTTON3, Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
             ReleaseCapture();
             break;
         case WM_MOUSEWHEEL:
@@ -735,8 +736,8 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
 				//The lParam gives the Mouse location in screen space
 				//Convert it to client area space
 				LPPOINT ClientPoint = new POINT;
-				ClientPoint->x = LOWORD(lParam);
-				ClientPoint->y = HIWORD(lParam);
+				ClientPoint->x = GET_X_LPARAM(lParam);
+				ClientPoint->y = GET_Y_LPARAM(lParam);
 				if(ScreenToClient(hwnd, ClientPoint))
 				{
 					produceMouseWheelMoved(static_cast<short>(HIWORD(wParam))/WHEEL_DELTA, Pnt2f(ClientPoint->x,ClientPoint->y));
@@ -752,17 +753,17 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
             {
 			    if(wParam & MK_LBUTTON)
 			    {
-				    produceMouseDragged(MouseEvent::BUTTON1,Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+				    produceMouseDragged(MouseEvent::BUTTON1,Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 			    }
 			    if(wParam & MK_MBUTTON)
 			    {
-				    produceMouseDragged(MouseEvent::BUTTON2,Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+				    produceMouseDragged(MouseEvent::BUTTON2,Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 			    }
 			    if(wParam & MK_RBUTTON)
 			    {
-				    produceMouseDragged(MouseEvent::BUTTON3,Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+				    produceMouseDragged(MouseEvent::BUTTON3,Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 			    }
-			    produceMouseMoved(Pnt2f(LOWORD(lParam), HIWORD(lParam)));
+			    produceMouseMoved(Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
                 
                 /*POINT point;
                 RECT rect;
