@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,7 +67,6 @@
 
 #include <OpenSG/OSGGeometry.h> // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // BlendAmounts type
 #include <OpenSG/OSGGeoPositionsFields.h> // BasePositions type
 #include <OpenSG/OSGGeoNormalsFields.h> // BaseNormals type
 #include <OpenSG/OSGGeoColorsFields.h> // BaseColors type
@@ -84,6 +83,7 @@
 #include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord1DifferenceSets type
 #include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord2DifferenceSets type
 #include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord3DifferenceSets type
+#include <OpenSG/OSGReal32Fields.h> // BlendAmounts type
 
 #include "OSGBlendGeometryFields.h"
 
@@ -107,8 +107,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
 
     enum
     {
-        BlendAmountsFieldId                    = Inherited::NextFieldId,
-        BasePositionsFieldId                   = BlendAmountsFieldId                    + 1,
+        BasePositionsFieldId                   = Inherited::NextFieldId,
         BaseNormalsFieldId                     = BasePositionsFieldId                   + 1,
         BaseColorsFieldId                      = BaseNormalsFieldId                     + 1,
         BaseSecondaryColorsFieldId             = BaseColorsFieldId                      + 1,
@@ -124,10 +123,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
         GeoTexCoord1DifferenceSetsFieldId      = GeoTexCoordDifferenceSetsFieldId       + 1,
         GeoTexCoord2DifferenceSetsFieldId      = GeoTexCoord1DifferenceSetsFieldId      + 1,
         GeoTexCoord3DifferenceSetsFieldId      = GeoTexCoord2DifferenceSetsFieldId      + 1,
-        NextFieldId                            = GeoTexCoord3DifferenceSetsFieldId      + 1
+        BlendAmountsFieldId                    = GeoTexCoord3DifferenceSetsFieldId      + 1,
+        NextFieldId                            = BlendAmountsFieldId                    + 1
     };
 
-    static const OSG::BitVector BlendAmountsFieldMask;
     static const OSG::BitVector BasePositionsFieldMask;
     static const OSG::BitVector BaseNormalsFieldMask;
     static const OSG::BitVector BaseColorsFieldMask;
@@ -144,6 +143,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     static const OSG::BitVector GeoTexCoord1DifferenceSetsFieldMask;
     static const OSG::BitVector GeoTexCoord2DifferenceSetsFieldMask;
     static const OSG::BitVector GeoTexCoord3DifferenceSetsFieldMask;
+    static const OSG::BitVector BlendAmountsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -170,7 +170,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFReal32            *getMFBlendAmounts   (void);
            SFGeoPositionsPtr   *getSFBasePositions  (void);
            SFGeoNormalsPtr     *getSFBaseNormals    (void);
            SFGeoColorsPtr      *getSFBaseColors     (void);
@@ -187,6 +186,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
            MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord1DifferenceSets(void);
            MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord2DifferenceSets(void);
            MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord3DifferenceSets(void);
+           MFReal32            *getMFBlendAmounts   (void);
 
            GeoPositionsPtr     &getBasePositions  (void);
      const GeoPositionsPtr     &getBasePositions  (void) const;
@@ -204,9 +204,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
      const GeoTexCoordsPtr     &getBaseTexCoords2 (void) const;
            GeoTexCoordsPtr     &getBaseTexCoords3 (void);
      const GeoTexCoordsPtr     &getBaseTexCoords3 (void) const;
-           Real32              &getBlendAmounts   (const UInt32 index);
-           MFReal32            &getBlendAmounts   (void);
-     const MFReal32            &getBlendAmounts   (void) const;
            GeoPositionDifferenceSetPtr &getGeoPositionDifferenceSets(const UInt32 index);
            MFGeoPositionDifferenceSetPtr &getGeoPositionDifferenceSets(void);
      const MFGeoPositionDifferenceSetPtr &getGeoPositionDifferenceSets(void) const;
@@ -231,6 +228,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
            GeoTexCoordDifferenceSetPtr &getGeoTexCoord3DifferenceSets(const UInt32 index);
            MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord3DifferenceSets(void);
      const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord3DifferenceSets(void) const;
+           Real32              &getBlendAmounts   (const UInt32 index);
+           MFReal32            &getBlendAmounts   (void);
+     const MFReal32            &getBlendAmounts   (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -287,7 +287,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFReal32            _mfBlendAmounts;
     SFGeoPositionsPtr   _sfBasePositions;
     SFGeoNormalsPtr     _sfBaseNormals;
     SFGeoColorsPtr      _sfBaseColors;
@@ -304,6 +303,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord1DifferenceSets;
     MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord2DifferenceSets;
     MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord3DifferenceSets;
+    MFReal32            _mfBlendAmounts;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

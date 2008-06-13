@@ -196,7 +196,7 @@ void idle(void)
    TheGeometryPositionAnimation->update(TheAnimationAdvancer);
    TheGeometryNormalAnimation->update(TheAnimationAdvancer);
 
-   //std::cout << "Time: " << TheAnimation->getTime() << std::endl;
+   //std::cout << "Time: " << TheAnimationAdvancer->getValue() << std::endl;
    //std::cout << "Trans: " << Trans->getScale() << std::endl;
    glutPostRedisplay();
 }
@@ -320,8 +320,8 @@ void setupBlendGeometry(void)
    beginEditCP(TheBlendGeometry, osg::BlendGeometry::GeoPositionDifferenceSetsFieldMask |
                                  osg::BlendGeometry::GeoNormalDifferenceSetsFieldMask);
       TheBlendGeometry->getBlendAmounts().push_back(1.0);
-      TheBlendGeometry->getBlendAmounts().push_back(1.0);
-      TheBlendGeometry->getBlendAmounts().push_back(1.0);
+      TheBlendGeometry->getBlendAmounts().push_back(0.0);
+      TheBlendGeometry->getBlendAmounts().push_back(0.0);
 
       TheBlendGeometry->getGeoPositionDifferenceSets().push_back(XDeformGeometryDiffSet);
       TheBlendGeometry->getGeoPositionDifferenceSets().push_back(YDeformGeometryDiffSet);
@@ -340,7 +340,7 @@ void setupBlendGeometry(void)
    //Transformed Node
    osg::TransformPtr BlendGeometryTrans = osg::Transform::create();
    osg::Matrix BlendGeometryTransMatrix;
-   BlendGeometryTransMatrix.setTranslate(5.0,0.0,0.0);
+   BlendGeometryTransMatrix.setTranslate(5.0,5.0,0.0);
 
    beginEditCP(BlendGeometryTrans);
       BlendGeometryTrans->setMatrix(BlendGeometryTransMatrix);

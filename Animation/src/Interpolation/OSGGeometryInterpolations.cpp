@@ -61,6 +61,98 @@ bool  lerp(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
       {
          if( FirstDiffSet->getIndices()->getValue(FirstDiffSetIndex)== i )
          {
+            Pnt3f Result;
+            osg::lerp(BaseValues->getValue(i), FirstDiffSet->getPositions()->getValue(FirstDiffSetIndex), t, Result);
+            
+            Value->setValue(Result, i);
+            ++FirstDiffSetIndex;
+         }
+         else
+         {
+            Value->setValue(BaseValues->getValue(i), i);
+         }
+      }
+   }
+   else if(NextKeyframeIndex == 0)
+   {
+      //Interpolate between the Last Difference Set and the BaseValues
+      UInt32 LastDiffSetIndex = 0;
+      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
+      for(UInt32 i=0 ; i<Value->getSize() ; ++i)
+      {
+         if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
+         {
+            Pnt3f Result;
+            osg::lerp(LastDiffSet->getPositions()->getValue(LastDiffSetIndex), BaseValues->getValue(i), t, Result);
+            
+            Value->setValue(Result, i);
+            ++LastDiffSetIndex;
+         }
+         else
+         {
+            Value->setValue(BaseValues->getValue(i), i);
+         }
+      }
+   }
+   else
+   {
+      //Interpolate between two Difference Sets
+      UInt32 NextDiffSetIndex = 0;
+      GeoPositionDifferenceSetPtr NextDiffSet = DifferenceSets[NextKeyframeIndex-1];
+      UInt32 LastDiffSetIndex = 0;
+      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets[LastKeyframeIndex-1];
+      
+      for(UInt32 i=0 ; i<Value->getSize() ; ++i)
+      {
+         if( LastDiffSetIndex < LastDiffSet->getIndices()->getSize() &&  LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
+         {
+            if( NextDiffSetIndex < NextDiffSet->getIndices()->getSize() &&  NextDiffSet->getIndices()->getValue(NextDiffSetIndex)== i )
+            {
+               //Interpolate between the Last Diff set and the next Diff set
+               Pnt3f Result;
+               osg::lerp( LastDiffSet->getPositions()->getValue(LastDiffSetIndex), NextDiffSet->getPositions()->getValue(NextDiffSetIndex), t, Result);
+            
+               Value->setValue(Result, i);
+               ++NextDiffSetIndex;
+            }
+            else
+            {
+               //Interpolate between the Last Diff set and the BaseValues
+               Pnt3f Result;
+               osg::lerp( LastDiffSet->getPositions()->getValue(LastDiffSetIndex), BaseValues->getValue(i), t, Result);
+            
+               Value->setValue(Result, i);
+               
+            }
+            ++LastDiffSetIndex;
+         }
+         else
+         {
+            if( NextDiffSet->getIndices()->getValue(NextDiffSetIndex)== i )
+            {
+               //Interpolate between the BaseValues and the next difference Set
+               Pnt3f Result;
+               osg::lerp( BaseValues->getValue(i), NextDiffSet->getPositions()->getValue(NextDiffSetIndex), t, Result);
+            
+               Value->setValue(Result, i);
+               ++NextDiffSetIndex;
+            }
+            else
+            {
+               Value->setValue(BaseValues->getValue(i), i);
+            }
+         }
+      }
+   }
+   /*else if(LastKeyframeIndex == 0)
+   {
+      //Interpolate between BaseValues and the first Difference Set
+      UInt32 FirstDiffSetIndex = 0;
+      GeoPositionDifferenceSetPtr FirstDiffSet = DifferenceSets[0];
+      for(UInt32 i=0 ; i<Value->getSize() ; ++i)
+      {
+         if( FirstDiffSet->getIndices()->getValue(FirstDiffSetIndex)== i )
+         {
             //Get the difference set field
             DifferenceSets1Field = osg::getField(FirstDiffSet->getPositions());
 
@@ -108,9 +200,9 @@ bool  lerp(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
-         if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
+         if( LastDiffSetIndex < LastDiffSet->getIndices()->getSize() && LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i)
          {
-            if( NextDiffSet->getIndices()->getValue(NextDiffSetIndex)== i )
+            if( NextDiffSetIndex < NextDiffSet->getIndices()->getSize() && NextDiffSet->getIndices()->getValue(NextDiffSetIndex)== i)
             {
                //Interpolate between the Last Diff set and the next Diff set
                //Get the difference set field
@@ -152,7 +244,7 @@ bool  lerp(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
             }
          }
       }
-   }
+   }*/
    return true;
 }
 
@@ -229,9 +321,9 @@ bool  step(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
-         if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
+         if( LastDiffSetIndex < LastDiffSet->getIndices()->getSize() &&  LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
          {
-            if( NextDiffSet->getIndices()->getValue(NextDiffSetIndex)== i )
+            if( NextDiffSetIndex < NextDiffSet->getIndices()->getSize() &&  NextDiffSet->getIndices()->getValue(NextDiffSetIndex)== i )
             {
                //For Step interpolation this should be the Last Keyframe
                Value->setValue(LastDiffSet->getPositions()->getValue(LastDiffSetIndex), i);

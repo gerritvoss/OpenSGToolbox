@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -152,7 +152,7 @@ void BlendGeometry::recalculatePositions(void)
    }
 
    Real32 BlendAmount;
-   UInt32 Index;
+   UInt32 Index ;
    for(UInt32 i=0 ; i<NumPositions ; ++i)
    {
       //Set the Position to the base position
@@ -161,14 +161,18 @@ void BlendGeometry::recalculatePositions(void)
       {
          //Blend Each DiffSet that has a non-zero blending value
          BlendAmount = getBlendAmounts(j);
-         if(BlendAmount != 0.0)
+         if(BlendAmount != 0.0 && CurDiffSetIndicies[j] < getGeoPositionDifferenceSets()[j]->getIndices()->getSize())
          {
             //Blend each DiffSet that has an alternet Position
             Index = getGeoPositionDifferenceSets()[j]->getIndices()->getValue(CurDiffSetIndicies[j]);
+            //while(Index < i && )
+            //{
+            //    Index = getGeoPositionDifferenceSets()[j]->getIndices()->getValue(CurDiffSetIndicies[j]);
+            //} 
             if( Index == i )
             {
                Result = Result + ( BlendAmount * (getGeoPositionDifferenceSets()[j]->getPositions()->getValue(CurDiffSetIndicies[j]) - getBasePositions()->getValue(i)) );
-               ++CurDiffSetIndicies[j];
+                ++CurDiffSetIndicies[j];
             }
          }
       }
@@ -259,6 +263,7 @@ void BlendGeometry::recalculateTexCoords3(void)
 BlendGeometry::BlendGeometry(void) :
     Inherited()
 {
+    getBlendAmounts().clear();
 }
 
 BlendGeometry::BlendGeometry(const BlendGeometry &source) :

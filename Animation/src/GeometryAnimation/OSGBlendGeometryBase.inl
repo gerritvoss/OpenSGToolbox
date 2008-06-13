@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -95,13 +95,6 @@ BlendGeometryPtr BlendGeometryBase::createEmpty(void)
 
 
 /*------------------------------ get -----------------------------------*/
-
-//! Get the BlendGeometry::_mfBlendAmounts field.
-inline
-MFReal32 *BlendGeometryBase::getMFBlendAmounts(void)
-{
-    return &_mfBlendAmounts;
-}
 
 //! Get the BlendGeometry::_sfBasePositions field.
 inline
@@ -213,6 +206,13 @@ inline
 MFGeoTexCoordDifferenceSetPtr *BlendGeometryBase::getMFGeoTexCoord3DifferenceSets(void)
 {
     return &_mfGeoTexCoord3DifferenceSets;
+}
+
+//! Get the BlendGeometry::_mfBlendAmounts field.
+inline
+MFReal32 *BlendGeometryBase::getMFBlendAmounts(void)
+{
+    return &_mfBlendAmounts;
 }
 
 
@@ -385,27 +385,6 @@ void BlendGeometryBase::setBaseTexCoords3(const GeoTexCoordsPtr &value)
 }
 
 
-//! Get the value of the \a index element the BlendGeometry::_mfBlendAmounts field.
-inline
-Real32 &BlendGeometryBase::getBlendAmounts(const UInt32 index)
-{
-    return _mfBlendAmounts[index];
-}
-
-//! Get the BlendGeometry::_mfBlendAmounts field.
-inline
-MFReal32 &BlendGeometryBase::getBlendAmounts(void)
-{
-    return _mfBlendAmounts;
-}
-
-//! Get the BlendGeometry::_mfBlendAmounts field.
-inline
-const MFReal32 &BlendGeometryBase::getBlendAmounts(void) const
-{
-    return _mfBlendAmounts;
-}
-
 //! Get the value of the \a index element the BlendGeometry::_mfGeoPositionDifferenceSets field.
 inline
 GeoPositionDifferenceSetPtr &BlendGeometryBase::getGeoPositionDifferenceSets(const UInt32 index)
@@ -572,6 +551,27 @@ inline
 const MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord3DifferenceSets(void) const
 {
     return _mfGeoTexCoord3DifferenceSets;
+}
+
+//! Get the value of the \a index element the BlendGeometry::_mfBlendAmounts field.
+inline
+Real32 &BlendGeometryBase::getBlendAmounts(const UInt32 index)
+{
+    return _mfBlendAmounts[index];
+}
+
+//! Get the BlendGeometry::_mfBlendAmounts field.
+inline
+MFReal32 &BlendGeometryBase::getBlendAmounts(void)
+{
+    return _mfBlendAmounts;
+}
+
+//! Get the BlendGeometry::_mfBlendAmounts field.
+inline
+const MFReal32 &BlendGeometryBase::getBlendAmounts(void) const
+{
+    return _mfBlendAmounts;
 }
 
 OSG_END_NAMESPACE

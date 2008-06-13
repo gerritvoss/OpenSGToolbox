@@ -12,14 +12,6 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="BlendAmounts"
-		type="Real32"
-		cardinality="multi"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="BasePositions"
 		type="GeoPositionsPtr"
 		cardinality="single"
@@ -152,6 +144,14 @@
 		cardinality="multi"
 		visibility="external"
 		header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="BlendAmounts"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
 		access="public"
 	>
 	</Field>

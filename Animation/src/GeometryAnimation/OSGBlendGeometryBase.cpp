@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,9 +64,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BlendGeometryBase::BlendAmountsFieldMask = 
-    (TypeTraits<BitVector>::One << BlendGeometryBase::BlendAmountsFieldId);
-
 const OSG::BitVector  BlendGeometryBase::BasePositionsFieldMask = 
     (TypeTraits<BitVector>::One << BlendGeometryBase::BasePositionsFieldId);
 
@@ -115,6 +112,9 @@ const OSG::BitVector  BlendGeometryBase::GeoTexCoord2DifferenceSetsFieldMask =
 const OSG::BitVector  BlendGeometryBase::GeoTexCoord3DifferenceSetsFieldMask = 
     (TypeTraits<BitVector>::One << BlendGeometryBase::GeoTexCoord3DifferenceSetsFieldId);
 
+const OSG::BitVector  BlendGeometryBase::BlendAmountsFieldMask = 
+    (TypeTraits<BitVector>::One << BlendGeometryBase::BlendAmountsFieldId);
+
 const OSG::BitVector BlendGeometryBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -122,9 +122,6 @@ const OSG::BitVector BlendGeometryBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Real32          BlendGeometryBase::_mfBlendAmounts
-    
-*/
 /*! \var GeoPositionsPtr BlendGeometryBase::_sfBasePositions
     
 */
@@ -173,16 +170,14 @@ const OSG::BitVector BlendGeometryBase::MTInfluenceMask =
 /*! \var GeoTexCoordDifferenceSetPtr BlendGeometryBase::_mfGeoTexCoord3DifferenceSets
     
 */
+/*! \var Real32          BlendGeometryBase::_mfBlendAmounts
+    
+*/
 
 //! BlendGeometry description
 
 FieldDescription *BlendGeometryBase::_desc[] = 
 {
-    new FieldDescription(MFReal32::getClassType(), 
-                     "BlendAmounts", 
-                     BlendAmountsFieldId, BlendAmountsFieldMask,
-                     false,
-                     (FieldAccessMethod) &BlendGeometryBase::getMFBlendAmounts),
     new FieldDescription(SFGeoPositionsPtr::getClassType(), 
                      "BasePositions", 
                      BasePositionsFieldId, BasePositionsFieldMask,
@@ -262,7 +257,12 @@ FieldDescription *BlendGeometryBase::_desc[] =
                      "GeoTexCoord3DifferenceSets", 
                      GeoTexCoord3DifferenceSetsFieldId, GeoTexCoord3DifferenceSetsFieldMask,
                      false,
-                     (FieldAccessMethod) &BlendGeometryBase::getMFGeoTexCoord3DifferenceSets)
+                     (FieldAccessMethod) &BlendGeometryBase::getMFGeoTexCoord3DifferenceSets),
+    new FieldDescription(MFReal32::getClassType(), 
+                     "BlendAmounts", 
+                     BlendAmountsFieldId, BlendAmountsFieldMask,
+                     false,
+                     (FieldAccessMethod) &BlendGeometryBase::getMFBlendAmounts)
 };
 
 
@@ -328,7 +328,6 @@ void BlendGeometryBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfBlendAmounts.terminateShare(uiAspect, this->getContainerSize());
     _mfGeoPositionDifferenceSets.terminateShare(uiAspect, this->getContainerSize());
     _mfGeoNormalDifferenceSets.terminateShare(uiAspect, this->getContainerSize());
     _mfGeoColorDifferenceSets.terminateShare(uiAspect, this->getContainerSize());
@@ -337,6 +336,7 @@ void BlendGeometryBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     _mfGeoTexCoord1DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
     _mfGeoTexCoord2DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
     _mfGeoTexCoord3DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
+    _mfBlendAmounts.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -347,7 +347,6 @@ void BlendGeometryBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 BlendGeometryBase::BlendGeometryBase(void) :
-    _mfBlendAmounts           (), 
     _sfBasePositions          (), 
     _sfBaseNormals            (), 
     _sfBaseColors             (), 
@@ -364,6 +363,7 @@ BlendGeometryBase::BlendGeometryBase(void) :
     _mfGeoTexCoord1DifferenceSets(), 
     _mfGeoTexCoord2DifferenceSets(), 
     _mfGeoTexCoord3DifferenceSets(), 
+    _mfBlendAmounts           (), 
     Inherited() 
 {
 }
@@ -373,7 +373,6 @@ BlendGeometryBase::BlendGeometryBase(void) :
 #endif
 
 BlendGeometryBase::BlendGeometryBase(const BlendGeometryBase &source) :
-    _mfBlendAmounts           (source._mfBlendAmounts           ), 
     _sfBasePositions          (source._sfBasePositions          ), 
     _sfBaseNormals            (source._sfBaseNormals            ), 
     _sfBaseColors             (source._sfBaseColors             ), 
@@ -390,6 +389,7 @@ BlendGeometryBase::BlendGeometryBase(const BlendGeometryBase &source) :
     _mfGeoTexCoord1DifferenceSets(source._mfGeoTexCoord1DifferenceSets), 
     _mfGeoTexCoord2DifferenceSets(source._mfGeoTexCoord2DifferenceSets), 
     _mfGeoTexCoord3DifferenceSets(source._mfGeoTexCoord3DifferenceSets), 
+    _mfBlendAmounts           (source._mfBlendAmounts           ), 
     Inherited                 (source)
 {
 }
@@ -405,11 +405,6 @@ BlendGeometryBase::~BlendGeometryBase(void)
 UInt32 BlendGeometryBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
-
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-    {
-        returnValue += _mfBlendAmounts.getBinSize();
-    }
 
     if(FieldBits::NoField != (BasePositionsFieldMask & whichField))
     {
@@ -491,6 +486,11 @@ UInt32 BlendGeometryBase::getBinSize(const BitVector &whichField)
         returnValue += _mfGeoTexCoord3DifferenceSets.getBinSize();
     }
 
+    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
+    {
+        returnValue += _mfBlendAmounts.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -499,11 +499,6 @@ void BlendGeometryBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
-
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-    {
-        _mfBlendAmounts.copyToBin(pMem);
-    }
 
     if(FieldBits::NoField != (BasePositionsFieldMask & whichField))
     {
@@ -585,6 +580,11 @@ void BlendGeometryBase::copyToBin(      BinaryDataHandler &pMem,
         _mfGeoTexCoord3DifferenceSets.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
+    {
+        _mfBlendAmounts.copyToBin(pMem);
+    }
+
 
 }
 
@@ -592,11 +592,6 @@ void BlendGeometryBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-    {
-        _mfBlendAmounts.copyFromBin(pMem);
-    }
 
     if(FieldBits::NoField != (BasePositionsFieldMask & whichField))
     {
@@ -678,6 +673,11 @@ void BlendGeometryBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfGeoTexCoord3DifferenceSets.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
+    {
+        _mfBlendAmounts.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -687,9 +687,6 @@ void BlendGeometryBase::executeSyncImpl(      BlendGeometryBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts);
 
     if(FieldBits::NoField != (BasePositionsFieldMask & whichField))
         _sfBasePositions.syncWith(pOther->_sfBasePositions);
@@ -739,6 +736,9 @@ void BlendGeometryBase::executeSyncImpl(      BlendGeometryBase *pOther,
     if(FieldBits::NoField != (GeoTexCoord3DifferenceSetsFieldMask & whichField))
         _mfGeoTexCoord3DifferenceSets.syncWith(pOther->_mfGeoTexCoord3DifferenceSets);
 
+    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
+        _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts);
+
 
 }
 #else
@@ -774,9 +774,6 @@ void BlendGeometryBase::executeSyncImpl(      BlendGeometryBase *pOther,
         _sfBaseTexCoords3.syncWith(pOther->_sfBaseTexCoords3);
 
 
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts, sInfo);
-
     if(FieldBits::NoField != (GeoPositionDifferenceSetsFieldMask & whichField))
         _mfGeoPositionDifferenceSets.syncWith(pOther->_mfGeoPositionDifferenceSets, sInfo);
 
@@ -801,6 +798,9 @@ void BlendGeometryBase::executeSyncImpl(      BlendGeometryBase *pOther,
     if(FieldBits::NoField != (GeoTexCoord3DifferenceSetsFieldMask & whichField))
         _mfGeoTexCoord3DifferenceSets.syncWith(pOther->_mfGeoTexCoord3DifferenceSets, sInfo);
 
+    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
+        _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts, sInfo);
+
 
 }
 
@@ -809,9 +809,6 @@ void BlendGeometryBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.beginEdit(uiAspect, uiContainerSize);
 
     if(FieldBits::NoField != (GeoPositionDifferenceSetsFieldMask & whichField))
         _mfGeoPositionDifferenceSets.beginEdit(uiAspect, uiContainerSize);
@@ -836,6 +833,9 @@ void BlendGeometryBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (GeoTexCoord3DifferenceSetsFieldMask & whichField))
         _mfGeoTexCoord3DifferenceSets.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
+        _mfBlendAmounts.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
