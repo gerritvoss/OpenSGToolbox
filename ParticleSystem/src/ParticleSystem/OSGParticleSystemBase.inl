@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,81 +96,81 @@ ParticleSystemPtr ParticleSystemBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ParticleSystem::_sfPositions field.
+//! Get the ParticleSystem::_mfInternalPositions field.
 inline
-SFPnt3fList *ParticleSystemBase::getSFPositions(void)
+MFPnt3f *ParticleSystemBase::getMFInternalPositions(void)
 {
-    return &_sfPositions;
+    return &_mfInternalPositions;
 }
 
-//! Get the ParticleSystem::_sfSecPositions field.
+//! Get the ParticleSystem::_mfInternalSecPositions field.
 inline
-SFPnt3fList *ParticleSystemBase::getSFSecPositions(void)
+MFPnt3f *ParticleSystemBase::getMFInternalSecPositions(void)
 {
-    return &_sfSecPositions;
+    return &_mfInternalSecPositions;
 }
 
-//! Get the ParticleSystem::_sfNormals field.
+//! Get the ParticleSystem::_mfInternalNormals field.
 inline
-SFVec3fList *ParticleSystemBase::getSFNormals(void)
+MFVec3f *ParticleSystemBase::getMFInternalNormals(void)
 {
-    return &_sfNormals;
+    return &_mfInternalNormals;
 }
 
-//! Get the ParticleSystem::_sfColors field.
+//! Get the ParticleSystem::_mfInternalColors field.
 inline
-SFColor4fList *ParticleSystemBase::getSFColors(void)
+MFColor4f *ParticleSystemBase::getMFInternalColors(void)
 {
-    return &_sfColors;
+    return &_mfInternalColors;
 }
 
-//! Get the ParticleSystem::_sfSizes field.
+//! Get the ParticleSystem::_mfInternalSizes field.
 inline
-SFVec3fList *ParticleSystemBase::getSFSizes(void)
+MFVec3f *ParticleSystemBase::getMFInternalSizes(void)
 {
-    return &_sfSizes;
+    return &_mfInternalSizes;
 }
 
-//! Get the ParticleSystem::_sfLifespans field.
+//! Get the ParticleSystem::_mfInternalLifespans field.
 inline
-SFReal32List *ParticleSystemBase::getSFLifespans(void)
+MFReal32 *ParticleSystemBase::getMFInternalLifespans(void)
 {
-    return &_sfLifespans;
+    return &_mfInternalLifespans;
 }
 
-//! Get the ParticleSystem::_sfAges field.
+//! Get the ParticleSystem::_mfInternalAges field.
 inline
-SFReal32List *ParticleSystemBase::getSFAges(void)
+MFReal32 *ParticleSystemBase::getMFInternalAges(void)
 {
-    return &_sfAges;
+    return &_mfInternalAges;
 }
 
-//! Get the ParticleSystem::_sfVelocities field.
+//! Get the ParticleSystem::_mfInternalVelocities field.
 inline
-SFVec3fList *ParticleSystemBase::getSFVelocities(void)
+MFVec3f *ParticleSystemBase::getMFInternalVelocities(void)
 {
-    return &_sfVelocities;
+    return &_mfInternalVelocities;
 }
 
-//! Get the ParticleSystem::_sfSecVelocities field.
+//! Get the ParticleSystem::_mfInternalSecVelocities field.
 inline
-SFVec3fList *ParticleSystemBase::getSFSecVelocities(void)
+MFVec3f *ParticleSystemBase::getMFInternalSecVelocities(void)
 {
-    return &_sfSecVelocities;
+    return &_mfInternalSecVelocities;
 }
 
-//! Get the ParticleSystem::_sfAccelerations field.
+//! Get the ParticleSystem::_mfInternalAccelerations field.
 inline
-SFVec3fList *ParticleSystemBase::getSFAccelerations(void)
+MFVec3f *ParticleSystemBase::getMFInternalAccelerations(void)
 {
-    return &_sfAccelerations;
+    return &_mfInternalAccelerations;
 }
 
-//! Get the ParticleSystem::_sfProperties field.
+//! Get the ParticleSystem::_mfInternalProperties field.
 inline
-SFUInt64List *ParticleSystemBase::getSFProperties(void)
+MFUInt64 *ParticleSystemBase::getMFInternalProperties(void)
 {
-    return &_sfProperties;
+    return &_mfInternalProperties;
 }
 
 //! Get the ParticleSystem::_sfDynamic field.
@@ -202,237 +202,6 @@ MFParticleSystemEffectorPtr *ParticleSystemBase::getMFSystemEffectors(void)
 }
 
 
-//! Get the value of the ParticleSystem::_sfPositions field.
-inline
-Pnt3fList &ParticleSystemBase::getPositions(void)
-{
-    return _sfPositions.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfPositions field.
-inline
-const Pnt3fList &ParticleSystemBase::getPositions(void) const
-{
-    return _sfPositions.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfPositions field.
-inline
-void ParticleSystemBase::setPositions(const Pnt3fList &value)
-{
-    _sfPositions.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfSecPositions field.
-inline
-Pnt3fList &ParticleSystemBase::getSecPositions(void)
-{
-    return _sfSecPositions.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfSecPositions field.
-inline
-const Pnt3fList &ParticleSystemBase::getSecPositions(void) const
-{
-    return _sfSecPositions.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfSecPositions field.
-inline
-void ParticleSystemBase::setSecPositions(const Pnt3fList &value)
-{
-    _sfSecPositions.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfNormals field.
-inline
-Vec3fList &ParticleSystemBase::getNormals(void)
-{
-    return _sfNormals.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfNormals field.
-inline
-const Vec3fList &ParticleSystemBase::getNormals(void) const
-{
-    return _sfNormals.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfNormals field.
-inline
-void ParticleSystemBase::setNormals(const Vec3fList &value)
-{
-    _sfNormals.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfColors field.
-inline
-Color4fList &ParticleSystemBase::getColors(void)
-{
-    return _sfColors.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfColors field.
-inline
-const Color4fList &ParticleSystemBase::getColors(void) const
-{
-    return _sfColors.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfColors field.
-inline
-void ParticleSystemBase::setColors(const Color4fList &value)
-{
-    _sfColors.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfSizes field.
-inline
-Vec3fList &ParticleSystemBase::getSizes(void)
-{
-    return _sfSizes.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfSizes field.
-inline
-const Vec3fList &ParticleSystemBase::getSizes(void) const
-{
-    return _sfSizes.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfSizes field.
-inline
-void ParticleSystemBase::setSizes(const Vec3fList &value)
-{
-    _sfSizes.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfLifespans field.
-inline
-Real32List &ParticleSystemBase::getLifespans(void)
-{
-    return _sfLifespans.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfLifespans field.
-inline
-const Real32List &ParticleSystemBase::getLifespans(void) const
-{
-    return _sfLifespans.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfLifespans field.
-inline
-void ParticleSystemBase::setLifespans(const Real32List &value)
-{
-    _sfLifespans.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfAges field.
-inline
-Real32List &ParticleSystemBase::getAges(void)
-{
-    return _sfAges.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfAges field.
-inline
-const Real32List &ParticleSystemBase::getAges(void) const
-{
-    return _sfAges.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfAges field.
-inline
-void ParticleSystemBase::setAges(const Real32List &value)
-{
-    _sfAges.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfVelocities field.
-inline
-Vec3fList &ParticleSystemBase::getVelocities(void)
-{
-    return _sfVelocities.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfVelocities field.
-inline
-const Vec3fList &ParticleSystemBase::getVelocities(void) const
-{
-    return _sfVelocities.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfVelocities field.
-inline
-void ParticleSystemBase::setVelocities(const Vec3fList &value)
-{
-    _sfVelocities.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfSecVelocities field.
-inline
-Vec3fList &ParticleSystemBase::getSecVelocities(void)
-{
-    return _sfSecVelocities.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfSecVelocities field.
-inline
-const Vec3fList &ParticleSystemBase::getSecVelocities(void) const
-{
-    return _sfSecVelocities.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfSecVelocities field.
-inline
-void ParticleSystemBase::setSecVelocities(const Vec3fList &value)
-{
-    _sfSecVelocities.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfAccelerations field.
-inline
-Vec3fList &ParticleSystemBase::getAccelerations(void)
-{
-    return _sfAccelerations.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfAccelerations field.
-inline
-const Vec3fList &ParticleSystemBase::getAccelerations(void) const
-{
-    return _sfAccelerations.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfAccelerations field.
-inline
-void ParticleSystemBase::setAccelerations(const Vec3fList &value)
-{
-    _sfAccelerations.setValue(value);
-}
-
-//! Get the value of the ParticleSystem::_sfProperties field.
-inline
-UInt64List &ParticleSystemBase::getProperties(void)
-{
-    return _sfProperties.getValue();
-}
-
-//! Get the value of the ParticleSystem::_sfProperties field.
-inline
-const UInt64List &ParticleSystemBase::getProperties(void) const
-{
-    return _sfProperties.getValue();
-}
-
-//! Set the value of the ParticleSystem::_sfProperties field.
-inline
-void ParticleSystemBase::setProperties(const UInt64List &value)
-{
-    _sfProperties.setValue(value);
-}
-
 //! Get the value of the ParticleSystem::_sfDynamic field.
 inline
 bool &ParticleSystemBase::getDynamic(void)
@@ -454,6 +223,237 @@ void ParticleSystemBase::setDynamic(const bool &value)
     _sfDynamic.setValue(value);
 }
 
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalPositions field.
+inline
+Pnt3f &ParticleSystemBase::getInternalPositions(const UInt32 index)
+{
+    return _mfInternalPositions[index];
+}
+
+//! Get the ParticleSystem::_mfInternalPositions field.
+inline
+MFPnt3f &ParticleSystemBase::getInternalPositions(void)
+{
+    return _mfInternalPositions;
+}
+
+//! Get the ParticleSystem::_mfInternalPositions field.
+inline
+const MFPnt3f &ParticleSystemBase::getInternalPositions(void) const
+{
+    return _mfInternalPositions;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalSecPositions field.
+inline
+Pnt3f &ParticleSystemBase::getInternalSecPositions(const UInt32 index)
+{
+    return _mfInternalSecPositions[index];
+}
+
+//! Get the ParticleSystem::_mfInternalSecPositions field.
+inline
+MFPnt3f &ParticleSystemBase::getInternalSecPositions(void)
+{
+    return _mfInternalSecPositions;
+}
+
+//! Get the ParticleSystem::_mfInternalSecPositions field.
+inline
+const MFPnt3f &ParticleSystemBase::getInternalSecPositions(void) const
+{
+    return _mfInternalSecPositions;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalNormals field.
+inline
+Vec3f &ParticleSystemBase::getInternalNormals(const UInt32 index)
+{
+    return _mfInternalNormals[index];
+}
+
+//! Get the ParticleSystem::_mfInternalNormals field.
+inline
+MFVec3f &ParticleSystemBase::getInternalNormals(void)
+{
+    return _mfInternalNormals;
+}
+
+//! Get the ParticleSystem::_mfInternalNormals field.
+inline
+const MFVec3f &ParticleSystemBase::getInternalNormals(void) const
+{
+    return _mfInternalNormals;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalColors field.
+inline
+Color4f &ParticleSystemBase::getInternalColors(const UInt32 index)
+{
+    return _mfInternalColors[index];
+}
+
+//! Get the ParticleSystem::_mfInternalColors field.
+inline
+MFColor4f &ParticleSystemBase::getInternalColors(void)
+{
+    return _mfInternalColors;
+}
+
+//! Get the ParticleSystem::_mfInternalColors field.
+inline
+const MFColor4f &ParticleSystemBase::getInternalColors(void) const
+{
+    return _mfInternalColors;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalSizes field.
+inline
+Vec3f &ParticleSystemBase::getInternalSizes(const UInt32 index)
+{
+    return _mfInternalSizes[index];
+}
+
+//! Get the ParticleSystem::_mfInternalSizes field.
+inline
+MFVec3f &ParticleSystemBase::getInternalSizes(void)
+{
+    return _mfInternalSizes;
+}
+
+//! Get the ParticleSystem::_mfInternalSizes field.
+inline
+const MFVec3f &ParticleSystemBase::getInternalSizes(void) const
+{
+    return _mfInternalSizes;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalLifespans field.
+inline
+Real32 &ParticleSystemBase::getInternalLifespans(const UInt32 index)
+{
+    return _mfInternalLifespans[index];
+}
+
+//! Get the ParticleSystem::_mfInternalLifespans field.
+inline
+MFReal32 &ParticleSystemBase::getInternalLifespans(void)
+{
+    return _mfInternalLifespans;
+}
+
+//! Get the ParticleSystem::_mfInternalLifespans field.
+inline
+const MFReal32 &ParticleSystemBase::getInternalLifespans(void) const
+{
+    return _mfInternalLifespans;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalAges field.
+inline
+Real32 &ParticleSystemBase::getInternalAges(const UInt32 index)
+{
+    return _mfInternalAges[index];
+}
+
+//! Get the ParticleSystem::_mfInternalAges field.
+inline
+MFReal32 &ParticleSystemBase::getInternalAges(void)
+{
+    return _mfInternalAges;
+}
+
+//! Get the ParticleSystem::_mfInternalAges field.
+inline
+const MFReal32 &ParticleSystemBase::getInternalAges(void) const
+{
+    return _mfInternalAges;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalVelocities field.
+inline
+Vec3f &ParticleSystemBase::getInternalVelocities(const UInt32 index)
+{
+    return _mfInternalVelocities[index];
+}
+
+//! Get the ParticleSystem::_mfInternalVelocities field.
+inline
+MFVec3f &ParticleSystemBase::getInternalVelocities(void)
+{
+    return _mfInternalVelocities;
+}
+
+//! Get the ParticleSystem::_mfInternalVelocities field.
+inline
+const MFVec3f &ParticleSystemBase::getInternalVelocities(void) const
+{
+    return _mfInternalVelocities;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalSecVelocities field.
+inline
+Vec3f &ParticleSystemBase::getInternalSecVelocities(const UInt32 index)
+{
+    return _mfInternalSecVelocities[index];
+}
+
+//! Get the ParticleSystem::_mfInternalSecVelocities field.
+inline
+MFVec3f &ParticleSystemBase::getInternalSecVelocities(void)
+{
+    return _mfInternalSecVelocities;
+}
+
+//! Get the ParticleSystem::_mfInternalSecVelocities field.
+inline
+const MFVec3f &ParticleSystemBase::getInternalSecVelocities(void) const
+{
+    return _mfInternalSecVelocities;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalAccelerations field.
+inline
+Vec3f &ParticleSystemBase::getInternalAccelerations(const UInt32 index)
+{
+    return _mfInternalAccelerations[index];
+}
+
+//! Get the ParticleSystem::_mfInternalAccelerations field.
+inline
+MFVec3f &ParticleSystemBase::getInternalAccelerations(void)
+{
+    return _mfInternalAccelerations;
+}
+
+//! Get the ParticleSystem::_mfInternalAccelerations field.
+inline
+const MFVec3f &ParticleSystemBase::getInternalAccelerations(void) const
+{
+    return _mfInternalAccelerations;
+}
+
+//! Get the value of the \a index element the ParticleSystem::_mfInternalProperties field.
+inline
+UInt64 &ParticleSystemBase::getInternalProperties(const UInt32 index)
+{
+    return _mfInternalProperties[index];
+}
+
+//! Get the ParticleSystem::_mfInternalProperties field.
+inline
+MFUInt64 &ParticleSystemBase::getInternalProperties(void)
+{
+    return _mfInternalProperties;
+}
+
+//! Get the ParticleSystem::_mfInternalProperties field.
+inline
+const MFUInt64 &ParticleSystemBase::getInternalProperties(void) const
+{
+    return _mfInternalProperties;
+}
 
 //! Get the value of the \a index element the ParticleSystem::_mfGenerators field.
 inline

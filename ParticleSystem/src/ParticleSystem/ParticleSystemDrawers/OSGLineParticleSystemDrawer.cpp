@@ -76,6 +76,11 @@ void LineParticleSystemDrawer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
+{
+    return Action::Continue;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

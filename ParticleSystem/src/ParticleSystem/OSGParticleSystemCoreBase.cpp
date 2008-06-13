@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  ParticleSystemCoreBase::SortingModeFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemCoreBase::SortingModeFieldId);
 
+const OSG::BitVector  ParticleSystemCoreBase::SortFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemCoreBase::SortFieldId);
+
 const OSG::BitVector  ParticleSystemCoreBase::SystemFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemCoreBase::SystemFieldId);
 
@@ -81,7 +84,10 @@ const OSG::BitVector ParticleSystemCoreBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var UInt32          ParticleSystemCoreBase::_sfSortingMode
-    The method used to sort particles.    NONE - no particle sorting.    FRONT_TO_BACK - particles will be sorted from closest to the view point to the furthest.    BACK_TO_FRON - particles will be sorted from furthest to the view point to the closest.
+    The method used to sort particles.    NONE - no particle sorting.    FRONT_TO_BACK - particles will be sorted from closest to the view point to the furthest.    BACK_TO_FRONT - particles will be sorted from furthest to the view point to the closest.
+*/
+/*! \var UInt32          ParticleSystemCoreBase::_mfSort
+    
 */
 /*! \var ParticleSystemPtr ParticleSystemCoreBase::_sfSystem
     
@@ -99,6 +105,11 @@ FieldDescription *ParticleSystemCoreBase::_desc[] =
                      SortingModeFieldId, SortingModeFieldMask,
                      false,
                      (FieldAccessMethod) &ParticleSystemCoreBase::getSFSortingMode),
+    new FieldDescription(MFUInt32::getClassType(), 
+                     "Sort", 
+                     SortFieldId, SortFieldMask,
+                     false,
+                     (FieldAccessMethod) &ParticleSystemCoreBase::getMFSort),
     new FieldDescription(SFParticleSystemPtr::getClassType(), 
                      "System", 
                      SystemFieldId, SystemFieldMask,
@@ -174,6 +185,7 @@ void ParticleSystemCoreBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfSort.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -185,6 +197,7 @@ void ParticleSystemCoreBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ParticleSystemCoreBase::ParticleSystemCoreBase(void) :
     _sfSortingMode            (UInt32(ParticleSystemCore::NONE)), 
+    _mfSort                   (), 
     _sfSystem                 (ParticleSystemPtr(NullFC)), 
     _sfDrawer                 (ParticleSystemDrawerPtr(NullFC)), 
     Inherited() 
@@ -197,6 +210,7 @@ ParticleSystemCoreBase::ParticleSystemCoreBase(void) :
 
 ParticleSystemCoreBase::ParticleSystemCoreBase(const ParticleSystemCoreBase &source) :
     _sfSortingMode            (source._sfSortingMode            ), 
+    _mfSort                   (source._mfSort                   ), 
     _sfSystem                 (source._sfSystem                 ), 
     _sfDrawer                 (source._sfDrawer                 ), 
     Inherited                 (source)
@@ -218,6 +232,11 @@ UInt32 ParticleSystemCoreBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (SortingModeFieldMask & whichField))
     {
         returnValue += _sfSortingMode.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SortFieldMask & whichField))
+    {
+        returnValue += _mfSort.getBinSize();
     }
 
     if(FieldBits::NoField != (SystemFieldMask & whichField))
@@ -244,6 +263,11 @@ void ParticleSystemCoreBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSortingMode.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (SortFieldMask & whichField))
+    {
+        _mfSort.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (SystemFieldMask & whichField))
     {
         _sfSystem.copyToBin(pMem);
@@ -265,6 +289,11 @@ void ParticleSystemCoreBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SortingModeFieldMask & whichField))
     {
         _sfSortingMode.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SortFieldMask & whichField))
+    {
+        _mfSort.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SystemFieldMask & whichField))
@@ -289,6 +318,9 @@ void ParticleSystemCoreBase::executeSyncImpl(      ParticleSystemCoreBase *pOthe
 
     if(FieldBits::NoField != (SortingModeFieldMask & whichField))
         _sfSortingMode.syncWith(pOther->_sfSortingMode);
+
+    if(FieldBits::NoField != (SortFieldMask & whichField))
+        _mfSort.syncWith(pOther->_mfSort);
 
     if(FieldBits::NoField != (SystemFieldMask & whichField))
         _sfSystem.syncWith(pOther->_sfSystem);
@@ -316,6 +348,9 @@ void ParticleSystemCoreBase::executeSyncImpl(      ParticleSystemCoreBase *pOthe
         _sfDrawer.syncWith(pOther->_sfDrawer);
 
 
+    if(FieldBits::NoField != (SortFieldMask & whichField))
+        _mfSort.syncWith(pOther->_mfSort, sInfo);
+
 
 }
 
@@ -324,6 +359,9 @@ void ParticleSystemCoreBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (SortFieldMask & whichField))
+        _mfSort.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

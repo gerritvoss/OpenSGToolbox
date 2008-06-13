@@ -1,145 +1,207 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="OSGParticleSystem"
 	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	RootNamespace="OSGAnimation"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			CharacterSet="0">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Installing Includes"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; ParticleSystem&#x0D;&#x0A;"
+				Outputs="include"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEPARTICLESYSTEMLIB"
-				StringPooling="TRUE"
-				MinimalRebuild="TRUE"
+				StringPooling="true"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="FALSE"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(OutDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"
-				Description="Installing Includes"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; ParticleSystem
-"
-				Outputs="include"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			CharacterSet="0">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; ParticleSystem&#x0D;&#x0A;"
+				Outputs="include"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEUSERINTERFACELIB"
-				StringPooling="TRUE"
-				MinimalRebuild="FALSE"
+				StringPooling="true"
+				MinimalRebuild="false"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="FALSE"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; ParticleSystem
-"
-				Outputs="include"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
-				IgnoreAllDefaultLibraries="FALSE"
-				GenerateDebugInformation="FALSE"
+				IgnoreAllDefaultLibraries="false"
+				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -147,399 +209,529 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl">
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
+			>
 			<File
-				RelativePath="..\..\src\OSGParticleSystemDef.h">
+				RelativePath="..\..\src\OSGParticleSystemDef.h"
+				>
 			</File>
 			<Filter
 				Name="ListType"
-				Filter="">
+				>
 				<File
-					RelativePath="..\..\src\ListType\OSGBaseListTypes.h">
+					RelativePath="..\..\src\ListType\OSGBaseListTypes.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ListType\OSGListTypes.cpp">
+					RelativePath="..\..\src\ListType\OSGListTypes.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ListType\OSGListTypes.h">
+					RelativePath="..\..\src\ListType\OSGListTypes.h"
+					>
 				</File>
 			</Filter>
 			<Filter
 				Name="ParticleSystem"
-				Filter="">
+				>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystem.cpp">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystem.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystem.h">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystem.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystem.inl">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystem.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemBase.cpp">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemBase.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemBase.h">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemBase.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemBase.inl">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemBase.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCore.cpp">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCore.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCore.h">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCore.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCore.inl">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCore.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCoreBase.cpp">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCoreBase.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCoreBase.h">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCoreBase.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCoreBase.inl">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCoreBase.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCoreFields.h">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemCoreFields.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemFields.h">
+					RelativePath="..\..\src\ParticleSystem\OSGParticleSystemFields.h"
+					>
 				</File>
 				<Filter
 					Name="ParticleSystemDrawers"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGParticleSystemDrawerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGPointParticleSystemDrawerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGQuadParticleSystemDrawerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawer.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawer.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawer.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawer.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawer.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawer.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerFields.h"
+						>
 					</File>
 				</Filter>
 				<Filter
 					Name="ParticleGenerators"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGenerator.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGenerator.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGenerator.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGenerator.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGenerator.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGenerator.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorFields.h"
+						>
 					</File>
 				</Filter>
 				<Filter
 					Name="ParticleEffectors"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffector.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffector.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffector.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffector.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffector.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffector.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorFields.h"
+						>
 					</File>
 				</Filter>
 				<Filter
 					Name="ParticleSystemEffectors"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffector.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffector.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffector.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffector.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffector.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffector.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorBase.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorBase.inl">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorFields.h">
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorFields.h"
+						>
 					</File>
 				</Filter>
 				<Filter
 					Name="MultiParticleSystemEffectors"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffector.cpp">
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffector.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffector.h">
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffector.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffector.inl">
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffector.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorBase.cpp">
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorBase.h">
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorBase.inl">
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorFields.h">
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorFields.h"
+						>
 					</File>
 				</Filter>
 				<Filter
 					Name="Events"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEvent.h">
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEvent.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEvent.inl">
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEvent.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEvent.h">
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEvent.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEvent.inl">
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEvent.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemListener.h">
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemListener.h"
+						>
 					</File>
 				</Filter>
 			</Filter>

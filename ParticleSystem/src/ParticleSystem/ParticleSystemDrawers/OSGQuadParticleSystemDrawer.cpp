@@ -76,6 +76,10 @@ void QuadParticleSystemDrawer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Action::ResultE QuadParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
+{
+    return Action::Continue;
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

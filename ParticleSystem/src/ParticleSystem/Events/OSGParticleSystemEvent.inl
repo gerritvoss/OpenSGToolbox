@@ -2,10 +2,11 @@
 
 OSG_BEGIN_NAMESPACE
 
+
 inline
-ParticleSystemEvent::ParticleSystemEvent(FieldContainerPtr Source, Time TimeStamp) :
-   Event(Source, TimeStamp)
+const EventType &ParticleSystemEvent::getClassType(void)
 {
+    return _Type;
 }
 
 OSG_END_NAMESPACE

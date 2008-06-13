@@ -3,9 +3,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-ParticleEvent::ParticleEvent(FieldContainerPtr Source, Time TimeStamp) :
-   Event(Source, TimeStamp)
+const EventType &ParticleEvent::getClassType(void)
 {
+    return _Type;
 }
 
 OSG_END_NAMESPACE

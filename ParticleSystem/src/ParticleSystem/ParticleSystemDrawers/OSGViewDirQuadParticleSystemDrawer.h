@@ -78,6 +78,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ViewDirQuadParticleSystemDrawer : public 
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

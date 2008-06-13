@@ -46,6 +46,9 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGIntersectAction.h>
+#include <OpenSG/OSGRenderAction.h>
+#include <OpenSG/OSGSimpleGeometry.h>
 
 #include "OSGParticleSystemCore.h"
 
@@ -69,6 +72,17 @@ OSG_BEGIN_NAMESPACE
 
 void ParticleSystemCore::initMethod (void)
 {
+    DrawAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, ParticleSystemCorePtr,
+              CNodePtr, Action *>(&ParticleSystemCore::drawActionHandler));
+
+    IntersectAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, ParticleSystemCorePtr,
+              CNodePtr, Action *>(&ParticleSystemCore::intersect));
+
+    RenderAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, ParticleSystemCorePtr,
+              CNodePtr, Action *>(&ParticleSystemCore::renderActionHandler));
 }
 
 
@@ -82,7 +96,7 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
     //If I have a Drawer tell it to draw the particles
     if(getDrawer() != NullFC && getSystem() != NullFC)
     {
-        //getDrawer->draw(action, getSystem(), SortedParticleList);
+        getDrawer()->draw(action, getSystem(), getSort() );
     }
     else
     {
@@ -99,11 +113,74 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
     return Action::Continue;
 }
 
+Action::ResultE ParticleSystemCore::drawActionHandler( Action* action )
+{
+    DrawAction *a = dynamic_cast<DrawAction*>(action);
+    Material::DrawFunctor func;
+
+    func=osgTypedMethodFunctor1ObjPtr(&(*this), 
+                                      &ParticleSystemCore::drawPrimitives);
+
+    if(a->getMaterial() != NULL)
+    {
+        a->getMaterial()->draw(func, a);
+    }
+    else if ( getMaterial() != NullFC )
+    {
+        getMaterial()->draw( func, a );
+    }
+    else
+    {
+        getDefaultMaterial()->draw( func, a );
+        FWARNING(("MaterialDrawable::draw:: no material!\n"));;
+    }
+    return Action::Continue;
+}
+
+Action::ResultE ParticleSystemCore::renderActionHandler( Action* action )
+{
+    RenderAction *a = dynamic_cast<RenderAction *>(action);
+
+    Material::DrawFunctor func;
+    func = osgTypedMethodFunctor1ObjPtr(this, 
+                                        &ParticleSystemCore::drawPrimitives);
+
+    Material* m = a->getMaterial();
+
+    if(m == NULL)
+    {
+        if(getMaterial() != NullFC)
+        {
+            m = getMaterial().getCPtr();
+        }
+        else
+        {
+            m = getDefaultMaterial().getCPtr();
+            FNOTICE(("MaterialDrawable::render: no Material!?!\n"));
+        }
+    }
+
+    a->dropFunctor(func, m);
+
+    return Action::Continue;
+}
+
+Action::ResultE ParticleSystemCore::intersect( Action* action )
+{
+    return Action::Continue;
+}
+
 void ParticleSystemCore::adjustVolume(Volume & volume)
 {
     //TODO: Implement
     //The adjusted volume is dependent on the Particle System as well as the 
     //Particle Drawer
+	Inherited::adjustVolume(volume);
+
+    if(getDrawer() != NullFC && getSystem() != NullFC)
+    {
+        getDrawer()->adjustVolume(getSystem(), volume);
+    }
 }
 
 void ParticleSystemCore::sortParticles(void)

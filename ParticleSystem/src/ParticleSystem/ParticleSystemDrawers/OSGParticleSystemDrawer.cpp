@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGParticleSystemDrawer.h"
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,6 +76,16 @@ void ParticleSystemDrawer::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void ParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
+{
+	UInt32 NumParticles(System->getNumParticles());
+
+	for(UInt32 i(0) ;i < NumParticles ; ++i)
+	{
+		volume.extendBy(System->getPosition(i));
+	}
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

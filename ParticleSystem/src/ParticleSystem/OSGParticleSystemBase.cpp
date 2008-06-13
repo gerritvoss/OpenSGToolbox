@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,38 +64,38 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ParticleSystemBase::PositionsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::PositionsFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalPositionsFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalPositionsFieldId);
 
-const OSG::BitVector  ParticleSystemBase::SecPositionsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::SecPositionsFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalSecPositionsFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalSecPositionsFieldId);
 
-const OSG::BitVector  ParticleSystemBase::NormalsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::NormalsFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalNormalsFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalNormalsFieldId);
 
-const OSG::BitVector  ParticleSystemBase::ColorsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::ColorsFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalColorsFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalColorsFieldId);
 
-const OSG::BitVector  ParticleSystemBase::SizesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::SizesFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalSizesFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalSizesFieldId);
 
-const OSG::BitVector  ParticleSystemBase::LifespansFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::LifespansFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalLifespansFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalLifespansFieldId);
 
-const OSG::BitVector  ParticleSystemBase::AgesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::AgesFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalAgesFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalAgesFieldId);
 
-const OSG::BitVector  ParticleSystemBase::VelocitiesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::VelocitiesFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalVelocitiesFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalVelocitiesFieldId);
 
-const OSG::BitVector  ParticleSystemBase::SecVelocitiesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::SecVelocitiesFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalSecVelocitiesFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalSecVelocitiesFieldId);
 
-const OSG::BitVector  ParticleSystemBase::AccelerationsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::AccelerationsFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalAccelerationsFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalAccelerationsFieldId);
 
-const OSG::BitVector  ParticleSystemBase::PropertiesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::PropertiesFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalPropertiesFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalPropertiesFieldId);
 
 const OSG::BitVector  ParticleSystemBase::DynamicFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::DynamicFieldId);
@@ -116,37 +116,37 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt3fList       ParticleSystemBase::_sfPositions
+/*! \var Pnt3f           ParticleSystemBase::_mfInternalPositions
     The positions of the particles. This is the primary defining         information for a particle.
 */
-/*! \var Pnt3fList       ParticleSystemBase::_sfSecPositions
+/*! \var Pnt3f           ParticleSystemBase::_mfInternalSecPositions
     The secondary position of the particle. This information is only used         by a few rendering modes, e.g. the streak mode. Usually it represents         the particle's last position.
 */
-/*! \var Vec3fList       ParticleSystemBase::_sfNormals
+/*! \var Vec3f           ParticleSystemBase::_mfInternalNormals
     Most particles will be automatically aligned to the view         direction. If normals are set they will be used to define the         direction the particles are facing.
 */
-/*! \var Color4fList     ParticleSystemBase::_sfColors
+/*! \var Color4f         ParticleSystemBase::_mfInternalColors
     The particle colors (optional).
 */
-/*! \var Vec3fList       ParticleSystemBase::_sfSizes
+/*! \var Vec3f           ParticleSystemBase::_mfInternalSizes
     The particle sizes. If not set (1,1,1) will be used, if only one entry         is set, it will be used for all particles. If the number of sizes if         equal to the number of positions every particle will get its own size.         Most modes only use the X coordinate of the vector. Particles with size 0         are ignored.
 */
-/*! \var Real32List      ParticleSystemBase::_sfLifespans
+/*! \var Real32          ParticleSystemBase::_mfInternalLifespans
     The particle lifespan. If set to less than 0, then the particle is considered eternal.
 */
-/*! \var Real32List      ParticleSystemBase::_sfAges
+/*! \var Real32          ParticleSystemBase::_mfInternalAges
     The particle age.
 */
-/*! \var Vec3fList       ParticleSystemBase::_sfVelocities
+/*! \var Vec3f           ParticleSystemBase::_mfInternalVelocities
     The particle velocities. If not set (0,0,0) will be used, if only one entry         is set, it will be used for all particles. If the number of velocities is         equal to the number of positions every particle will get its own velocity.         If no velocities are present, then the position will not be updated regarding velocity.
 */
-/*! \var Vec3fList       ParticleSystemBase::_sfSecVelocities
+/*! \var Vec3f           ParticleSystemBase::_mfInternalSecVelocities
     The particle secVelocities. This is the velocity of the particle last update.  This is used         for the VelocityDirQuads draw mode.
 */
-/*! \var Vec3fList       ParticleSystemBase::_sfAccelerations
+/*! \var Vec3f           ParticleSystemBase::_mfInternalAccelerations
     The particle accelerations If not set (0,0,0) will be used, if only one entry         is set, it will be used for all particles. If the number of accelerations is         equal to the number of positions every particle will get its own acceleration.         If no accelerations are present, then the position will not be updated regarding acceleration.
 */
-/*! \var UInt64List      ParticleSystemBase::_sfProperties
+/*! \var UInt64          ParticleSystemBase::_mfInternalProperties
     
 */
 /*! \var bool            ParticleSystemBase::_sfDynamic
@@ -166,61 +166,61 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 
 FieldDescription *ParticleSystemBase::_desc[] = 
 {
-    new FieldDescription(SFPnt3fList::getClassType(), 
-                     "Positions", 
-                     PositionsFieldId, PositionsFieldMask,
+    new FieldDescription(MFPnt3f::getClassType(), 
+                     "InternalPositions", 
+                     InternalPositionsFieldId, InternalPositionsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFPositions),
-    new FieldDescription(SFPnt3fList::getClassType(), 
-                     "SecPositions", 
-                     SecPositionsFieldId, SecPositionsFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalPositions),
+    new FieldDescription(MFPnt3f::getClassType(), 
+                     "InternalSecPositions", 
+                     InternalSecPositionsFieldId, InternalSecPositionsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFSecPositions),
-    new FieldDescription(SFVec3fList::getClassType(), 
-                     "Normals", 
-                     NormalsFieldId, NormalsFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalSecPositions),
+    new FieldDescription(MFVec3f::getClassType(), 
+                     "InternalNormals", 
+                     InternalNormalsFieldId, InternalNormalsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFNormals),
-    new FieldDescription(SFColor4fList::getClassType(), 
-                     "Colors", 
-                     ColorsFieldId, ColorsFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalNormals),
+    new FieldDescription(MFColor4f::getClassType(), 
+                     "InternalColors", 
+                     InternalColorsFieldId, InternalColorsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFColors),
-    new FieldDescription(SFVec3fList::getClassType(), 
-                     "Sizes", 
-                     SizesFieldId, SizesFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalColors),
+    new FieldDescription(MFVec3f::getClassType(), 
+                     "InternalSizes", 
+                     InternalSizesFieldId, InternalSizesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFSizes),
-    new FieldDescription(SFReal32List::getClassType(), 
-                     "Lifespans", 
-                     LifespansFieldId, LifespansFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalSizes),
+    new FieldDescription(MFReal32::getClassType(), 
+                     "InternalLifespans", 
+                     InternalLifespansFieldId, InternalLifespansFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFLifespans),
-    new FieldDescription(SFReal32List::getClassType(), 
-                     "Ages", 
-                     AgesFieldId, AgesFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalLifespans),
+    new FieldDescription(MFReal32::getClassType(), 
+                     "InternalAges", 
+                     InternalAgesFieldId, InternalAgesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFAges),
-    new FieldDescription(SFVec3fList::getClassType(), 
-                     "Velocities", 
-                     VelocitiesFieldId, VelocitiesFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalAges),
+    new FieldDescription(MFVec3f::getClassType(), 
+                     "InternalVelocities", 
+                     InternalVelocitiesFieldId, InternalVelocitiesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFVelocities),
-    new FieldDescription(SFVec3fList::getClassType(), 
-                     "SecVelocities", 
-                     SecVelocitiesFieldId, SecVelocitiesFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalVelocities),
+    new FieldDescription(MFVec3f::getClassType(), 
+                     "InternalSecVelocities", 
+                     InternalSecVelocitiesFieldId, InternalSecVelocitiesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFSecVelocities),
-    new FieldDescription(SFVec3fList::getClassType(), 
-                     "Accelerations", 
-                     AccelerationsFieldId, AccelerationsFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalSecVelocities),
+    new FieldDescription(MFVec3f::getClassType(), 
+                     "InternalAccelerations", 
+                     InternalAccelerationsFieldId, InternalAccelerationsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFAccelerations),
-    new FieldDescription(SFUInt64List::getClassType(), 
-                     "Properties", 
-                     PropertiesFieldId, PropertiesFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalAccelerations),
+    new FieldDescription(MFUInt64::getClassType(), 
+                     "InternalProperties", 
+                     InternalPropertiesFieldId, InternalPropertiesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFProperties),
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalProperties),
     new FieldDescription(SFBool::getClassType(), 
                      "Dynamic", 
                      DynamicFieldId, DynamicFieldMask,
@@ -306,6 +306,17 @@ void ParticleSystemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfInternalPositions.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalSecPositions.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalNormals.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalColors.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalSizes.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalLifespans.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalAges.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalVelocities.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalSecVelocities.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalAccelerations.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalProperties.terminateShare(uiAspect, this->getContainerSize());
     _mfGenerators.terminateShare(uiAspect, this->getContainerSize());
     _mfEffectors.terminateShare(uiAspect, this->getContainerSize());
     _mfSystemEffectors.terminateShare(uiAspect, this->getContainerSize());
@@ -319,17 +330,17 @@ void ParticleSystemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ParticleSystemBase::ParticleSystemBase(void) :
-    _sfPositions              (), 
-    _sfSecPositions           (), 
-    _sfNormals                (), 
-    _sfColors                 (), 
-    _sfSizes                  (), 
-    _sfLifespans              (), 
-    _sfAges                   (), 
-    _sfVelocities             (), 
-    _sfSecVelocities          (), 
-    _sfAccelerations          (), 
-    _sfProperties             (), 
+    _mfInternalPositions      (), 
+    _mfInternalSecPositions   (), 
+    _mfInternalNormals        (), 
+    _mfInternalColors         (), 
+    _mfInternalSizes          (), 
+    _mfInternalLifespans      (), 
+    _mfInternalAges           (), 
+    _mfInternalVelocities     (), 
+    _mfInternalSecVelocities  (), 
+    _mfInternalAccelerations  (), 
+    _mfInternalProperties     (), 
     _sfDynamic                (bool(true)), 
     _mfGenerators             (), 
     _mfEffectors              (), 
@@ -343,17 +354,17 @@ ParticleSystemBase::ParticleSystemBase(void) :
 #endif
 
 ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
-    _sfPositions              (source._sfPositions              ), 
-    _sfSecPositions           (source._sfSecPositions           ), 
-    _sfNormals                (source._sfNormals                ), 
-    _sfColors                 (source._sfColors                 ), 
-    _sfSizes                  (source._sfSizes                  ), 
-    _sfLifespans              (source._sfLifespans              ), 
-    _sfAges                   (source._sfAges                   ), 
-    _sfVelocities             (source._sfVelocities             ), 
-    _sfSecVelocities          (source._sfSecVelocities          ), 
-    _sfAccelerations          (source._sfAccelerations          ), 
-    _sfProperties             (source._sfProperties             ), 
+    _mfInternalPositions      (source._mfInternalPositions      ), 
+    _mfInternalSecPositions   (source._mfInternalSecPositions   ), 
+    _mfInternalNormals        (source._mfInternalNormals        ), 
+    _mfInternalColors         (source._mfInternalColors         ), 
+    _mfInternalSizes          (source._mfInternalSizes          ), 
+    _mfInternalLifespans      (source._mfInternalLifespans      ), 
+    _mfInternalAges           (source._mfInternalAges           ), 
+    _mfInternalVelocities     (source._mfInternalVelocities     ), 
+    _mfInternalSecVelocities  (source._mfInternalSecVelocities  ), 
+    _mfInternalAccelerations  (source._mfInternalAccelerations  ), 
+    _mfInternalProperties     (source._mfInternalProperties     ), 
     _sfDynamic                (source._sfDynamic                ), 
     _mfGenerators             (source._mfGenerators             ), 
     _mfEffectors              (source._mfEffectors              ), 
@@ -374,59 +385,59 @@ UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
     {
-        returnValue += _sfPositions.getBinSize();
+        returnValue += _mfInternalPositions.getBinSize();
     }
 
-    if(FieldBits::NoField != (SecPositionsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
     {
-        returnValue += _sfSecPositions.getBinSize();
+        returnValue += _mfInternalSecPositions.getBinSize();
     }
 
-    if(FieldBits::NoField != (NormalsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
     {
-        returnValue += _sfNormals.getBinSize();
+        returnValue += _mfInternalNormals.getBinSize();
     }
 
-    if(FieldBits::NoField != (ColorsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
     {
-        returnValue += _sfColors.getBinSize();
+        returnValue += _mfInternalColors.getBinSize();
     }
 
-    if(FieldBits::NoField != (SizesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
     {
-        returnValue += _sfSizes.getBinSize();
+        returnValue += _mfInternalSizes.getBinSize();
     }
 
-    if(FieldBits::NoField != (LifespansFieldMask & whichField))
+    if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
     {
-        returnValue += _sfLifespans.getBinSize();
+        returnValue += _mfInternalLifespans.getBinSize();
     }
 
-    if(FieldBits::NoField != (AgesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
     {
-        returnValue += _sfAges.getBinSize();
+        returnValue += _mfInternalAges.getBinSize();
     }
 
-    if(FieldBits::NoField != (VelocitiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
     {
-        returnValue += _sfVelocities.getBinSize();
+        returnValue += _mfInternalVelocities.getBinSize();
     }
 
-    if(FieldBits::NoField != (SecVelocitiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
     {
-        returnValue += _sfSecVelocities.getBinSize();
+        returnValue += _mfInternalSecVelocities.getBinSize();
     }
 
-    if(FieldBits::NoField != (AccelerationsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
     {
-        returnValue += _sfAccelerations.getBinSize();
+        returnValue += _mfInternalAccelerations.getBinSize();
     }
 
-    if(FieldBits::NoField != (PropertiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
     {
-        returnValue += _sfProperties.getBinSize();
+        returnValue += _mfInternalProperties.getBinSize();
     }
 
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
@@ -458,59 +469,59 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
     {
-        _sfPositions.copyToBin(pMem);
+        _mfInternalPositions.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SecPositionsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
     {
-        _sfSecPositions.copyToBin(pMem);
+        _mfInternalSecPositions.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (NormalsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
     {
-        _sfNormals.copyToBin(pMem);
+        _mfInternalNormals.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ColorsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
     {
-        _sfColors.copyToBin(pMem);
+        _mfInternalColors.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SizesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
     {
-        _sfSizes.copyToBin(pMem);
+        _mfInternalSizes.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (LifespansFieldMask & whichField))
+    if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
     {
-        _sfLifespans.copyToBin(pMem);
+        _mfInternalLifespans.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AgesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
     {
-        _sfAges.copyToBin(pMem);
+        _mfInternalAges.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (VelocitiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
     {
-        _sfVelocities.copyToBin(pMem);
+        _mfInternalVelocities.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SecVelocitiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
     {
-        _sfSecVelocities.copyToBin(pMem);
+        _mfInternalSecVelocities.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AccelerationsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
     {
-        _sfAccelerations.copyToBin(pMem);
+        _mfInternalAccelerations.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (PropertiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
     {
-        _sfProperties.copyToBin(pMem);
+        _mfInternalProperties.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
@@ -541,59 +552,59 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
     {
-        _sfPositions.copyFromBin(pMem);
+        _mfInternalPositions.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SecPositionsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
     {
-        _sfSecPositions.copyFromBin(pMem);
+        _mfInternalSecPositions.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (NormalsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
     {
-        _sfNormals.copyFromBin(pMem);
+        _mfInternalNormals.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ColorsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
     {
-        _sfColors.copyFromBin(pMem);
+        _mfInternalColors.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SizesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
     {
-        _sfSizes.copyFromBin(pMem);
+        _mfInternalSizes.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (LifespansFieldMask & whichField))
+    if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
     {
-        _sfLifespans.copyFromBin(pMem);
+        _mfInternalLifespans.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AgesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
     {
-        _sfAges.copyFromBin(pMem);
+        _mfInternalAges.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (VelocitiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
     {
-        _sfVelocities.copyFromBin(pMem);
+        _mfInternalVelocities.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SecVelocitiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
     {
-        _sfSecVelocities.copyFromBin(pMem);
+        _mfInternalSecVelocities.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AccelerationsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
     {
-        _sfAccelerations.copyFromBin(pMem);
+        _mfInternalAccelerations.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (PropertiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
     {
-        _sfProperties.copyFromBin(pMem);
+        _mfInternalProperties.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
@@ -626,38 +637,38 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
-        _sfPositions.syncWith(pOther->_sfPositions);
+    if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
+        _mfInternalPositions.syncWith(pOther->_mfInternalPositions);
 
-    if(FieldBits::NoField != (SecPositionsFieldMask & whichField))
-        _sfSecPositions.syncWith(pOther->_sfSecPositions);
+    if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
+        _mfInternalSecPositions.syncWith(pOther->_mfInternalSecPositions);
 
-    if(FieldBits::NoField != (NormalsFieldMask & whichField))
-        _sfNormals.syncWith(pOther->_sfNormals);
+    if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
+        _mfInternalNormals.syncWith(pOther->_mfInternalNormals);
 
-    if(FieldBits::NoField != (ColorsFieldMask & whichField))
-        _sfColors.syncWith(pOther->_sfColors);
+    if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
+        _mfInternalColors.syncWith(pOther->_mfInternalColors);
 
-    if(FieldBits::NoField != (SizesFieldMask & whichField))
-        _sfSizes.syncWith(pOther->_sfSizes);
+    if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
+        _mfInternalSizes.syncWith(pOther->_mfInternalSizes);
 
-    if(FieldBits::NoField != (LifespansFieldMask & whichField))
-        _sfLifespans.syncWith(pOther->_sfLifespans);
+    if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
+        _mfInternalLifespans.syncWith(pOther->_mfInternalLifespans);
 
-    if(FieldBits::NoField != (AgesFieldMask & whichField))
-        _sfAges.syncWith(pOther->_sfAges);
+    if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
+        _mfInternalAges.syncWith(pOther->_mfInternalAges);
 
-    if(FieldBits::NoField != (VelocitiesFieldMask & whichField))
-        _sfVelocities.syncWith(pOther->_sfVelocities);
+    if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
+        _mfInternalVelocities.syncWith(pOther->_mfInternalVelocities);
 
-    if(FieldBits::NoField != (SecVelocitiesFieldMask & whichField))
-        _sfSecVelocities.syncWith(pOther->_sfSecVelocities);
+    if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
+        _mfInternalSecVelocities.syncWith(pOther->_mfInternalSecVelocities);
 
-    if(FieldBits::NoField != (AccelerationsFieldMask & whichField))
-        _sfAccelerations.syncWith(pOther->_sfAccelerations);
+    if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
+        _mfInternalAccelerations.syncWith(pOther->_mfInternalAccelerations);
 
-    if(FieldBits::NoField != (PropertiesFieldMask & whichField))
-        _sfProperties.syncWith(pOther->_sfProperties);
+    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
+        _mfInternalProperties.syncWith(pOther->_mfInternalProperties);
 
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
         _sfDynamic.syncWith(pOther->_sfDynamic);
@@ -681,42 +692,42 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
-        _sfPositions.syncWith(pOther->_sfPositions);
-
-    if(FieldBits::NoField != (SecPositionsFieldMask & whichField))
-        _sfSecPositions.syncWith(pOther->_sfSecPositions);
-
-    if(FieldBits::NoField != (NormalsFieldMask & whichField))
-        _sfNormals.syncWith(pOther->_sfNormals);
-
-    if(FieldBits::NoField != (ColorsFieldMask & whichField))
-        _sfColors.syncWith(pOther->_sfColors);
-
-    if(FieldBits::NoField != (SizesFieldMask & whichField))
-        _sfSizes.syncWith(pOther->_sfSizes);
-
-    if(FieldBits::NoField != (LifespansFieldMask & whichField))
-        _sfLifespans.syncWith(pOther->_sfLifespans);
-
-    if(FieldBits::NoField != (AgesFieldMask & whichField))
-        _sfAges.syncWith(pOther->_sfAges);
-
-    if(FieldBits::NoField != (VelocitiesFieldMask & whichField))
-        _sfVelocities.syncWith(pOther->_sfVelocities);
-
-    if(FieldBits::NoField != (SecVelocitiesFieldMask & whichField))
-        _sfSecVelocities.syncWith(pOther->_sfSecVelocities);
-
-    if(FieldBits::NoField != (AccelerationsFieldMask & whichField))
-        _sfAccelerations.syncWith(pOther->_sfAccelerations);
-
-    if(FieldBits::NoField != (PropertiesFieldMask & whichField))
-        _sfProperties.syncWith(pOther->_sfProperties);
-
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
         _sfDynamic.syncWith(pOther->_sfDynamic);
 
+
+    if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
+        _mfInternalPositions.syncWith(pOther->_mfInternalPositions, sInfo);
+
+    if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
+        _mfInternalSecPositions.syncWith(pOther->_mfInternalSecPositions, sInfo);
+
+    if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
+        _mfInternalNormals.syncWith(pOther->_mfInternalNormals, sInfo);
+
+    if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
+        _mfInternalColors.syncWith(pOther->_mfInternalColors, sInfo);
+
+    if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
+        _mfInternalSizes.syncWith(pOther->_mfInternalSizes, sInfo);
+
+    if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
+        _mfInternalLifespans.syncWith(pOther->_mfInternalLifespans, sInfo);
+
+    if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
+        _mfInternalAges.syncWith(pOther->_mfInternalAges, sInfo);
+
+    if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
+        _mfInternalVelocities.syncWith(pOther->_mfInternalVelocities, sInfo);
+
+    if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
+        _mfInternalSecVelocities.syncWith(pOther->_mfInternalSecVelocities, sInfo);
+
+    if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
+        _mfInternalAccelerations.syncWith(pOther->_mfInternalAccelerations, sInfo);
+
+    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
+        _mfInternalProperties.syncWith(pOther->_mfInternalProperties, sInfo);
 
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
         _mfGenerators.syncWith(pOther->_mfGenerators, sInfo);
@@ -735,6 +746,39 @@ void ParticleSystemBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
+        _mfInternalPositions.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
+        _mfInternalSecPositions.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
+        _mfInternalNormals.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
+        _mfInternalColors.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
+        _mfInternalSizes.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
+        _mfInternalLifespans.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
+        _mfInternalAges.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
+        _mfInternalVelocities.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
+        _mfInternalSecVelocities.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
+        _mfInternalAccelerations.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
+        _mfInternalProperties.beginEdit(uiAspect, uiContainerSize);
 
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
         _mfGenerators.beginEdit(uiAspect, uiContainerSize);

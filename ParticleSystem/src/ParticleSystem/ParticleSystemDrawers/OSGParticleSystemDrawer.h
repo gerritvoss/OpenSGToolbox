@@ -46,6 +46,10 @@
 #include "OSGParticleSystemDef.h"
 
 #include "OSGParticleSystemDrawerBase.h"
+#include "ParticleSystem/OSGParticleSystemFields.h"
+#include <OpenSG/OSGAction.h>
+#include <OpenSG/OSGDrawAction.h>
+#include <OpenSG/OSGUInt32Fields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +82,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemDrawer : public ParticleSys
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort) = 0;
+	virtual void adjustVolume(ParticleSystemPtr System, Volume & volume);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,6 +68,7 @@
 #include <OpenSG/OSGMaterialDrawable.h> // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // SortingMode type
+#include <OpenSG/OSGUInt32Fields.h> // Sort type
 #include "ParticleSystem/OSGParticleSystem.h" // System type
 #include "ParticleSystem/ParticleSystemDrawers/OSGParticleSystemDrawer.h" // Drawer type
 
@@ -94,12 +95,14 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCoreBase : public MaterialD
     enum
     {
         SortingModeFieldId = Inherited::NextFieldId,
-        SystemFieldId      = SortingModeFieldId + 1,
+        SortFieldId        = SortingModeFieldId + 1,
+        SystemFieldId      = SortFieldId        + 1,
         DrawerFieldId      = SystemFieldId      + 1,
         NextFieldId        = DrawerFieldId      + 1
     };
 
     static const OSG::BitVector SortingModeFieldMask;
+    static const OSG::BitVector SortFieldMask;
     static const OSG::BitVector SystemFieldMask;
     static const OSG::BitVector DrawerFieldMask;
 
@@ -190,6 +193,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCoreBase : public MaterialD
     /*! \{                                                                 */
 
     SFUInt32            _sfSortingMode;
+    MFUInt32            _mfSort;
     SFParticleSystemPtr   _sfSystem;
     SFParticleSystemDrawerPtr   _sfDrawer;
 
@@ -207,6 +211,23 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCoreBase : public MaterialD
     /*! \{                                                                 */
 
     virtual ~ParticleSystemCoreBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           MFUInt32            *getMFSort           (void);
+
+           UInt32              &getSort           (UInt32 index);
+           MFUInt32            &getSort           (void);
+     const MFUInt32            &getSort           (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

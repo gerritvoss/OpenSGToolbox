@@ -46,8 +46,10 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGGL.h>
 
 #include "OSGPointParticleSystemDrawer.h"
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,6 +78,53 @@ void PointParticleSystemDrawer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
+{
+	UInt32 NumParticles(System->getNumParticles());
+
+	bool SeparateColors(System->getNumColors() > 1);
+	bool SeparateSizes(System->getNumSizes() > 1);
+	bool SeparateNormals(System->getNumNormals() > 1);
+
+	glBegin(GL_POINTS);
+		if(!SeparateColors)
+		{
+			glColor4fv(System->getColor(0).getValuesRGBA());
+		}
+		//Sizes
+		if(!SeparateSizes)
+		{
+			//glColor4fv(System->getColor(0).getValuesRGBA());
+		}
+		//Normals
+		if(!SeparateNormals)
+		{
+			glNormal3fv(System->getNormal(0).getValues());
+		}
+		for(UInt32 i(0) ; i<NumParticles ; ++i)
+		{
+			//Colors
+			if(SeparateColors && i!=0)
+			{
+				glColor4fv(System->getColor(i).getValuesRGBA());
+			}
+			//Sizes
+			if(SeparateSizes && i!=0)
+			{
+				//glColor4fv(System->getColor(i).getValuesRGBA());
+			}
+			//Normals
+			if(SeparateNormals && i!=0)
+			{
+				glNormal3fv(System->getNormal(i).getValues());
+			}
+			//Positions
+			glVertex3fv(System->getPosition(i).getValues());
+		}
+	glEnd();
+
+    return Action::Continue;
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -22,7 +22,15 @@
    The method used to sort particles.
    NONE - no particle sorting.
    FRONT_TO_BACK - particles will be sorted from closest to the view point to the furthest.
-   BACK_TO_FRON - particles will be sorted from furthest to the view point to the closest.
+   BACK_TO_FRONT - particles will be sorted from furthest to the view point to the closest.
+	</Field>
+	<Field
+		name="Sort"
+		type="UInt32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
 	</Field>
 	<Field
 		name="System"

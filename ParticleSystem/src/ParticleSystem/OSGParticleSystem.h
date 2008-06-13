@@ -82,6 +82,30 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+	UInt32 getNumParticles(void) const;
+	const Pnt3f& getPosition(const UInt32& Index) const;
+	const Pnt3f& getSecPosition(const UInt32& Index) const;
+	const Vec3f& getNormal(const UInt32& Index) const;
+	const Color4f& getColor(const UInt32& Index) const;
+	const Vec3f& getSize(const UInt32& Index) const;
+	Real32 getLifespan(const UInt32& Index) const;
+	Real32 getAge(const UInt32& Index) const;
+	const Vec3f& getVelocity(const UInt32& Index) const;
+	const Vec3f& getSecVelocity(const UInt32& Index) const;
+	const Vec3f& getAcceleration(const UInt32& Index) const;
+	UInt64 getProperty(const UInt32& Index) const;
+
+	
+	UInt32 getNumNormals(void) const;
+	UInt32 getNumColors(void) const;
+	UInt32 getNumSizes(void) const;
+	UInt32 getNumLifespans(void) const;
+	UInt32 getNumAges(void) const;
+	UInt32 getNumVelocities(void) const;
+	UInt32 getNumSecVelocities(void) const;
+	UInt32 getNumAccelerations(void) const;
+	UInt32 getNumProperties(void) const;
     
     void addParticleSystemListener(ParticleSystemListenerPtr Listener);
     void removeParticleSystemListener(ParticleSystemListenerPtr Listener);
@@ -129,7 +153,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 
 	SystemUpdateListener _SystemUpdateListener;
     
-    void update(const Time& elps);
+    virtual void update(const Time& elps);
     /*==========================  PRIVATE  ================================*/
   private:
 

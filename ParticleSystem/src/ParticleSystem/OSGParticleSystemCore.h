@@ -84,6 +84,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
     /*! \{                                                                 */
 
     Action::ResultE drawPrimitives (DrawActionBase *action);
+    Action::ResultE drawActionHandler( Action* action );
+    Action::ResultE renderActionHandler( Action* action );
+    Action::ResultE intersect( Action* action );
     /*! \}                                                                 */
 
     /*=========================  PROTECTED  ===============================*/

@@ -12,57 +12,52 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="Positions"
-		type="Pnt3fList"
-		cardinality="single"
+		name="InternalPositions"
+		type="Pnt3f"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
         The positions of the particles. This is the primary defining
         information for a particle.
 	</Field>
 	<Field
-		name="SecPositions"
-		type="Pnt3fList"
-		cardinality="single"
+		name="InternalSecPositions"
+		type="Pnt3f"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
         The secondary position of the particle. This information is only used
         by a few rendering modes, e.g. the streak mode. Usually it represents
         the particle's last position.
 	</Field>
 	<Field
-		name="Normals"
-		type="Vec3fList"
-		cardinality="single"
+		name="InternalNormals"
+		type="Vec3f"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
         Most particles will be automatically aligned to the view
         direction. If normals are set they will be used to define the
         direction the particles are facing.
 	</Field>
 	<Field
-		name="Colors"
-		type="Color4fList"
-		cardinality="single"
+		name="InternalColors"
+		type="Color4f"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
 	The particle colors (optional).
 	</Field>
 	<Field
-		name="Sizes"
-		type="Vec3fList"
-		cardinality="single"
+		name="InternalSizes"
+		type="Vec3f"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
         The particle sizes. If not set (1,1,1) will be used, if only one entry
         is set, it will be used for all particles. If the number of sizes if
@@ -71,33 +66,30 @@
         are ignored.
 	</Field>
 	<Field
-		name="Lifespans"
-		type="Real32List"
-		cardinality="single"
+		name="InternalLifespans"
+		type="Real32"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
         The particle lifespan. If set to less than 0, then the particle is considered eternal.
 	</Field>
 	<Field
-		name="Ages"
-		type="Real32List"
-		cardinality="single"
+		name="InternalAges"
+		type="Real32"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
         The particle age.
 	</Field>
    
 	<Field
-		name="Velocities"
-		type="Vec3fList"
-		cardinality="single"
+		name="InternalVelocities"
+		type="Vec3f"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
         The particle velocities. If not set (0,0,0) will be used, if only one entry
         is set, it will be used for all particles. If the number of velocities is
@@ -105,24 +97,22 @@
         If no velocities are present, then the position will not be updated regarding velocity.
 	</Field>
 	<Field
-		name="SecVelocities"
-		type="Vec3fList"
-		cardinality="single"
+		name="InternalSecVelocities"
+		type="Vec3f"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
         The particle secVelocities. This is the velocity of the particle last update.  This is used
         for the VelocityDirQuads draw mode.
 	</Field>
    
 	<Field
-		name="Accelerations"
-		type="Vec3fList"
-		cardinality="single"
+		name="InternalAccelerations"
+		type="Vec3f"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
         The particle accelerations If not set (0,0,0) will be used, if only one entry
         is set, it will be used for all particles. If the number of accelerations is
@@ -130,12 +120,11 @@
         If no accelerations are present, then the position will not be updated regarding acceleration.
 	</Field>
 	<Field
-		name="Properties"
-		type="UInt64List"
-		cardinality="single"
+		name="InternalProperties"
+		type="UInt64"
+		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="ListType/OSGListTypes.h"
 	>
 	</Field>
    

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -103,6 +103,13 @@ SFUInt32 *ParticleSystemCoreBase::getSFSortingMode(void)
     return &_sfSortingMode;
 }
 
+//! Get the ParticleSystemCore::_mfSort field.
+inline
+MFUInt32 *ParticleSystemCoreBase::getMFSort(void)
+{
+    return &_mfSort;
+}
+
 //! Get the ParticleSystemCore::_sfSystem field.
 inline
 SFParticleSystemPtr *ParticleSystemCoreBase::getSFSystem(void)
@@ -181,6 +188,27 @@ void ParticleSystemCoreBase::setDrawer(const ParticleSystemDrawerPtr &value)
     _sfDrawer.setValue(value);
 }
 
+
+//! Get the value of the \a index element the ParticleSystemCore::_mfSort field.
+inline
+UInt32 &ParticleSystemCoreBase::getSort(const UInt32 index)
+{
+    return _mfSort[index];
+}
+
+//! Get the ParticleSystemCore::_mfSort field.
+inline
+MFUInt32 &ParticleSystemCoreBase::getSort(void)
+{
+    return _mfSort;
+}
+
+//! Get the ParticleSystemCore::_mfSort field.
+inline
+const MFUInt32 &ParticleSystemCoreBase::getSort(void) const
+{
+    return _mfSort;
+}
 
 OSG_END_NAMESPACE
 

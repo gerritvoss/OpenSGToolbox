@@ -79,6 +79,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawer : public LinePar
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

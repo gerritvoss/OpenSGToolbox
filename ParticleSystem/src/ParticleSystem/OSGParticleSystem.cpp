@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGParticleSystem.h"
+#include "ParticleSystem/Events/OSGParticleEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,6 +76,127 @@ void ParticleSystem::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+
+const Pnt3f& ParticleSystem::getSecPosition(const UInt32& Index) const
+{
+	if(Index < getInternalSecPositions().getSize())
+	{
+		return getInternalSecPositions()[Index];
+	}
+	else
+	{
+		getInternalSecPositions()[0];
+	}
+}
+
+const Vec3f& ParticleSystem::getNormal(const UInt32& Index) const
+{
+	if(Index < getInternalNormals().getSize())
+	{
+		return getInternalNormals()[Index];
+	}
+	else
+	{
+		getInternalNormals()[0];
+	}
+}
+
+const Color4f& ParticleSystem::getColor(const UInt32& Index) const
+{
+	if(Index < getInternalColors().getSize())
+	{
+		return getInternalColors()[Index];
+	}
+	else
+	{
+		getInternalColors()[0];
+	}
+}
+
+const Vec3f& ParticleSystem::getSize(const UInt32& Index) const
+{
+	if(Index < getInternalSizes().getSize())
+	{
+		return getInternalSizes()[Index];
+	}
+	else
+	{
+		getInternalSizes()[0];
+	}
+}
+
+Real32 ParticleSystem::getLifespan(const UInt32& Index) const
+{
+	if(Index < getInternalLifespans().getSize())
+	{
+		return getInternalLifespans()[Index];
+	}
+	else
+	{
+		getInternalLifespans()[0];
+	}
+}
+
+Real32 ParticleSystem::getAge(const UInt32& Index) const
+{
+	if(Index < getInternalAges().getSize())
+	{
+		return getInternalAges()[Index];
+	}
+	else
+	{
+		getInternalAges()[0];
+	}
+}
+
+const Vec3f& ParticleSystem::getVelocity(const UInt32& Index) const
+{
+	if(Index < getInternalVelocities().getSize())
+	{
+		return getInternalVelocities()[Index];
+	}
+	else
+	{
+		getInternalVelocities()[0];
+	}
+}
+
+const Vec3f& ParticleSystem::getSecVelocity(const UInt32& Index) const
+{
+	if(Index < getInternalSecVelocities().getSize())
+	{
+		return getInternalSecVelocities()[Index];
+	}
+	else
+	{
+		getInternalSecVelocities()[0];
+	}
+}
+
+const Vec3f& ParticleSystem::getAcceleration(const UInt32& Index) const
+{
+	if(Index < getInternalAccelerations().getSize())
+	{
+		return getInternalAccelerations()[Index];
+	}
+	else
+	{
+		getInternalAccelerations()[0];
+	}
+}
+
+UInt64 ParticleSystem::getProperty(const UInt32& Index) const
+{
+	if(Index < getInternalProperties().getSize())
+	{
+		return getInternalProperties()[Index];
+	}
+	else
+	{
+		getInternalProperties()[0];
+	}
+}
 
 void ParticleSystem::update(const Time& elps)
 {

@@ -43,6 +43,72 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const Pnt3f& ParticleSystem::getPosition(const UInt32& Index) const
+{
+	return getInternalPositions()[Index];
+}
+
+inline
+UInt32 ParticleSystem::getNumParticles(void) const
+{
+	return getInternalPositions().getSize();
+}
+
+inline
+UInt32 ParticleSystem::getNumNormals(void) const
+{
+	return getInternalNormals().getSize();
+}
+
+inline
+UInt32 ParticleSystem::getNumColors(void) const
+{
+	return getInternalColors().getSize();
+}
+
+inline
+UInt32 ParticleSystem::getNumSizes(void) const
+{
+	return getInternalSizes().getSize();
+}
+
+inline
+UInt32 ParticleSystem::getNumLifespans(void) const
+{
+	return getInternalLifespans().getSize();
+}
+
+inline
+UInt32 ParticleSystem::getNumAges(void) const
+{
+	return getInternalAges().getSize();
+}
+
+inline
+UInt32 ParticleSystem::getNumVelocities(void) const
+{
+	return getInternalVelocities().getSize();
+}
+
+inline
+UInt32 ParticleSystem::getNumSecVelocities(void) const
+{
+	return getInternalSecVelocities().getSize();
+}
+
+inline
+UInt32 ParticleSystem::getNumAccelerations(void) const
+{
+	return getInternalAccelerations().getSize();
+}
+
+inline
+UInt32 ParticleSystem::getNumProperties(void) const
+{
+	return getInternalProperties().getSize();
+}
+
+inline
 void ParticleSystem::addParticleSystemListener(ParticleSystemListenerPtr Listener)
 {
    _ParticleSystemListeners.insert(Listener);
@@ -58,6 +124,7 @@ void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr List
    }
 }
 
+inline
 ParticleSystem::SystemUpdateListener::SystemUpdateListener(ParticleSystem* TheSystem) : _System(TheSystem)
 {
 }

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,17 +67,17 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include "ListType/OSGListTypes.h" // Positions type
-#include "ListType/OSGListTypes.h" // SecPositions type
-#include "ListType/OSGListTypes.h" // Normals type
-#include "ListType/OSGListTypes.h" // Colors type
-#include "ListType/OSGListTypes.h" // Sizes type
-#include "ListType/OSGListTypes.h" // Lifespans type
-#include "ListType/OSGListTypes.h" // Ages type
-#include "ListType/OSGListTypes.h" // Velocities type
-#include "ListType/OSGListTypes.h" // SecVelocities type
-#include "ListType/OSGListTypes.h" // Accelerations type
-#include "ListType/OSGListTypes.h" // Properties type
+#include <OpenSG/OSGPnt3fFields.h> // InternalPositions type
+#include <OpenSG/OSGPnt3fFields.h> // InternalSecPositions type
+#include <OpenSG/OSGVec3fFields.h> // InternalNormals type
+#include <OpenSG/OSGColor4fFields.h> // InternalColors type
+#include <OpenSG/OSGVec3fFields.h> // InternalSizes type
+#include <OpenSG/OSGReal32Fields.h> // InternalLifespans type
+#include <OpenSG/OSGReal32Fields.h> // InternalAges type
+#include <OpenSG/OSGVec3fFields.h> // InternalVelocities type
+#include <OpenSG/OSGVec3fFields.h> // InternalSecVelocities type
+#include <OpenSG/OSGVec3fFields.h> // InternalAccelerations type
+#include <OpenSG/OSGUInt64Fields.h> // InternalProperties type
 #include <OpenSG/OSGBoolFields.h> // Dynamic type
 #include "ParticleSystem/ParticleGenerators/OSGParticleGenerator.h" // Generators type
 #include "ParticleSystem/ParticleEffectors/OSGParticleEffector.h" // Effectors type
@@ -105,35 +105,35 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
 
     enum
     {
-        PositionsFieldId       = Inherited::NextFieldId,
-        SecPositionsFieldId    = PositionsFieldId       + 1,
-        NormalsFieldId         = SecPositionsFieldId    + 1,
-        ColorsFieldId          = NormalsFieldId         + 1,
-        SizesFieldId           = ColorsFieldId          + 1,
-        LifespansFieldId       = SizesFieldId           + 1,
-        AgesFieldId            = LifespansFieldId       + 1,
-        VelocitiesFieldId      = AgesFieldId            + 1,
-        SecVelocitiesFieldId   = VelocitiesFieldId      + 1,
-        AccelerationsFieldId   = SecVelocitiesFieldId   + 1,
-        PropertiesFieldId      = AccelerationsFieldId   + 1,
-        DynamicFieldId         = PropertiesFieldId      + 1,
-        GeneratorsFieldId      = DynamicFieldId         + 1,
-        EffectorsFieldId       = GeneratorsFieldId      + 1,
-        SystemEffectorsFieldId = EffectorsFieldId       + 1,
-        NextFieldId            = SystemEffectorsFieldId + 1
+        InternalPositionsFieldId     = Inherited::NextFieldId,
+        InternalSecPositionsFieldId  = InternalPositionsFieldId     + 1,
+        InternalNormalsFieldId       = InternalSecPositionsFieldId  + 1,
+        InternalColorsFieldId        = InternalNormalsFieldId       + 1,
+        InternalSizesFieldId         = InternalColorsFieldId        + 1,
+        InternalLifespansFieldId     = InternalSizesFieldId         + 1,
+        InternalAgesFieldId          = InternalLifespansFieldId     + 1,
+        InternalVelocitiesFieldId    = InternalAgesFieldId          + 1,
+        InternalSecVelocitiesFieldId = InternalVelocitiesFieldId    + 1,
+        InternalAccelerationsFieldId = InternalSecVelocitiesFieldId + 1,
+        InternalPropertiesFieldId    = InternalAccelerationsFieldId + 1,
+        DynamicFieldId               = InternalPropertiesFieldId    + 1,
+        GeneratorsFieldId            = DynamicFieldId               + 1,
+        EffectorsFieldId             = GeneratorsFieldId            + 1,
+        SystemEffectorsFieldId       = EffectorsFieldId             + 1,
+        NextFieldId                  = SystemEffectorsFieldId       + 1
     };
 
-    static const OSG::BitVector PositionsFieldMask;
-    static const OSG::BitVector SecPositionsFieldMask;
-    static const OSG::BitVector NormalsFieldMask;
-    static const OSG::BitVector ColorsFieldMask;
-    static const OSG::BitVector SizesFieldMask;
-    static const OSG::BitVector LifespansFieldMask;
-    static const OSG::BitVector AgesFieldMask;
-    static const OSG::BitVector VelocitiesFieldMask;
-    static const OSG::BitVector SecVelocitiesFieldMask;
-    static const OSG::BitVector AccelerationsFieldMask;
-    static const OSG::BitVector PropertiesFieldMask;
+    static const OSG::BitVector InternalPositionsFieldMask;
+    static const OSG::BitVector InternalSecPositionsFieldMask;
+    static const OSG::BitVector InternalNormalsFieldMask;
+    static const OSG::BitVector InternalColorsFieldMask;
+    static const OSG::BitVector InternalSizesFieldMask;
+    static const OSG::BitVector InternalLifespansFieldMask;
+    static const OSG::BitVector InternalAgesFieldMask;
+    static const OSG::BitVector InternalVelocitiesFieldMask;
+    static const OSG::BitVector InternalSecVelocitiesFieldMask;
+    static const OSG::BitVector InternalAccelerationsFieldMask;
+    static const OSG::BitVector InternalPropertiesFieldMask;
     static const OSG::BitVector DynamicFieldMask;
     static const OSG::BitVector GeneratorsFieldMask;
     static const OSG::BitVector EffectorsFieldMask;
@@ -229,17 +229,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt3fList         _sfPositions;
-    SFPnt3fList         _sfSecPositions;
-    SFVec3fList         _sfNormals;
-    SFColor4fList       _sfColors;
-    SFVec3fList         _sfSizes;
-    SFReal32List        _sfLifespans;
-    SFReal32List        _sfAges;
-    SFVec3fList         _sfVelocities;
-    SFVec3fList         _sfSecVelocities;
-    SFVec3fList         _sfAccelerations;
-    SFUInt64List        _sfProperties;
+    MFPnt3f             _mfInternalPositions;
+    MFPnt3f             _mfInternalSecPositions;
+    MFVec3f             _mfInternalNormals;
+    MFColor4f           _mfInternalColors;
+    MFVec3f             _mfInternalSizes;
+    MFReal32            _mfInternalLifespans;
+    MFReal32            _mfInternalAges;
+    MFVec3f             _mfInternalVelocities;
+    MFVec3f             _mfInternalSecVelocities;
+    MFVec3f             _mfInternalAccelerations;
+    MFUInt64            _mfInternalProperties;
     SFBool              _sfDynamic;
     MFParticleGeneratorPtr   _mfGenerators;
     MFParticleEffectorPtr   _mfEffectors;
@@ -265,57 +265,57 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt3fList         *getSFPositions      (void);
-           SFPnt3fList         *getSFSecPositions   (void);
-           SFVec3fList         *getSFNormals        (void);
-           SFColor4fList       *getSFColors         (void);
-           SFVec3fList         *getSFSizes          (void);
-           SFReal32List        *getSFLifespans      (void);
-           SFReal32List        *getSFAges           (void);
-           SFVec3fList         *getSFVelocities     (void);
-           SFVec3fList         *getSFSecVelocities  (void);
-           SFVec3fList         *getSFAccelerations  (void);
-           SFUInt64List        *getSFProperties     (void);
+           MFPnt3f             *getMFInternalPositions(void);
+           MFPnt3f             *getMFInternalSecPositions(void);
+           MFVec3f             *getMFInternalNormals(void);
+           MFColor4f           *getMFInternalColors (void);
+           MFVec3f             *getMFInternalSizes  (void);
+           MFReal32            *getMFInternalLifespans(void);
+           MFReal32            *getMFInternalAges   (void);
+           MFVec3f             *getMFInternalVelocities(void);
+           MFVec3f             *getMFInternalSecVelocities(void);
+           MFVec3f             *getMFInternalAccelerations(void);
+           MFUInt64            *getMFInternalProperties(void);
 
-           Pnt3fList           &getPositions      (void);
-     const Pnt3fList           &getPositions      (void) const;
-           Pnt3fList           &getSecPositions   (void);
-     const Pnt3fList           &getSecPositions   (void) const;
-           Vec3fList           &getNormals        (void);
-     const Vec3fList           &getNormals        (void) const;
-           Color4fList         &getColors         (void);
-     const Color4fList         &getColors         (void) const;
-           Vec3fList           &getSizes          (void);
-     const Vec3fList           &getSizes          (void) const;
-           Real32List          &getLifespans      (void);
-     const Real32List          &getLifespans      (void) const;
-           Real32List          &getAges           (void);
-     const Real32List          &getAges           (void) const;
-           Vec3fList           &getVelocities     (void);
-     const Vec3fList           &getVelocities     (void) const;
-           Vec3fList           &getSecVelocities  (void);
-     const Vec3fList           &getSecVelocities  (void) const;
-           Vec3fList           &getAccelerations  (void);
-     const Vec3fList           &getAccelerations  (void) const;
-           UInt64List          &getProperties     (void);
-     const UInt64List          &getProperties     (void) const;
+           Pnt3f               &getInternalPositions(UInt32 index);
+           MFPnt3f             &getInternalPositions(void);
+     const MFPnt3f             &getInternalPositions(void) const;
+           Pnt3f               &getInternalSecPositions(UInt32 index);
+           MFPnt3f             &getInternalSecPositions(void);
+     const MFPnt3f             &getInternalSecPositions(void) const;
+           Vec3f               &getInternalNormals(UInt32 index);
+           MFVec3f             &getInternalNormals(void);
+     const MFVec3f             &getInternalNormals(void) const;
+           Color4f             &getInternalColors (UInt32 index);
+           MFColor4f           &getInternalColors (void);
+     const MFColor4f           &getInternalColors (void) const;
+           Vec3f               &getInternalSizes  (UInt32 index);
+           MFVec3f             &getInternalSizes  (void);
+     const MFVec3f             &getInternalSizes  (void) const;
+           Real32              &getInternalLifespans(UInt32 index);
+           MFReal32            &getInternalLifespans(void);
+     const MFReal32            &getInternalLifespans(void) const;
+           Real32              &getInternalAges   (UInt32 index);
+           MFReal32            &getInternalAges   (void);
+     const MFReal32            &getInternalAges   (void) const;
+           Vec3f               &getInternalVelocities(UInt32 index);
+           MFVec3f             &getInternalVelocities(void);
+     const MFVec3f             &getInternalVelocities(void) const;
+           Vec3f               &getInternalSecVelocities(UInt32 index);
+           MFVec3f             &getInternalSecVelocities(void);
+     const MFVec3f             &getInternalSecVelocities(void) const;
+           Vec3f               &getInternalAccelerations(UInt32 index);
+           MFVec3f             &getInternalAccelerations(void);
+     const MFVec3f             &getInternalAccelerations(void) const;
+           UInt64              &getInternalProperties(UInt32 index);
+           MFUInt64            &getInternalProperties(void);
+     const MFUInt64            &getInternalProperties(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPositions      (const Pnt3fList &value);
-     void setSecPositions   (const Pnt3fList &value);
-     void setNormals        (const Vec3fList &value);
-     void setColors         (const Color4fList &value);
-     void setSizes          (const Vec3fList &value);
-     void setLifespans      (const Real32List &value);
-     void setAges           (const Real32List &value);
-     void setVelocities     (const Vec3fList &value);
-     void setSecVelocities  (const Vec3fList &value);
-     void setAccelerations  (const Vec3fList &value);
-     void setProperties     (const UInt64List &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
