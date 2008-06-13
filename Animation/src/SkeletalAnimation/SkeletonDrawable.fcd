@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SkeletonDrawabke"
+	parent="MaterialDrawable"
+	library="Animation"
+	pointerfieldtypes="both"
+	structure="concreate"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="RootBones"
+		type="BonePtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="SkeletalAnimation/OSGBoneFields.h"
+	>
+	</Field>
+</FieldContainer>

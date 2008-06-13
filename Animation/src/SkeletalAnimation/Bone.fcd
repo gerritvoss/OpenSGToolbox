@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Bone"
+	parent="AttachmentContainer"
+	library="Animation"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Rotation"
+		type="Quaternionf"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Translation"
+		type="Pnt3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Length"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Children"
+		type="BonePtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="SkeletalAnimation/OSGBoneFields.h"
+	>
+	</Field>
+	<Field
+		name="Parent"
+		type="BonePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="SkeletalAnimation/OSGBoneFields.h"
+	>
+	</Field>
+</FieldContainer>
