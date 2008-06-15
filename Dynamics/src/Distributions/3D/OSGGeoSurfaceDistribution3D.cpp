@@ -75,20 +75,20 @@ void GeoSurfaceDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-GeoSurfaceDistribution3D::FunctionIOTypeVector GeoSurfaceDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector GeoSurfaceDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-GeoSurfaceDistribution3D::FunctionIOTypeVector GeoSurfaceDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector GeoSurfaceDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
 }
 
-GeoSurfaceDistribution3D::FunctionIOParameterVector GeoSurfaceDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector GeoSurfaceDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != 0)

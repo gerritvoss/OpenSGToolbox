@@ -1,38 +1,25 @@
-// OpenSG Tutorial Example: Creating a Button
-//
-// This tutorial explains how to edit the basic features of
-// a button created in the OSG User Interface library.
-// 
-// Includes: button size, button font and text, button color, button border,
-// and adding a button to a scene.
-
-
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
-
-// Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-#include <OpenSG/OSGParticles.h>
-#include <OpenSG/OSGSimpleMaterial.h>
+#include <OpenSG/Input/OSGWindowUtils.h>
 
-#include <OpenSG/OSGGeoPropertyBase.h>
+// Input
+#include <OpenSG/Input/OSGKeyListener.h>
+#include <OpenSG/Input/OSGWindowAdapter.h>
 
-// the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include <OpenSG/OSGBlendChunk.h>
+#include <OpenSG/OSGPointChunk.h>
+#include <OpenSG/OSGChunkMaterial.h>
+#include <OpenSG/OSGMaterialChunk.h>
+#include <OpenSG/ParticleSystem/OSGParticleSystem.h>
+#include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
+#include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 
-//Dynamics Distributions
 #include <OpenSG/Dynamics/OSGLineDistribution3D.h>
 #include <OpenSG/Dynamics/OSGBoxDistribution3D.h>
 #include <OpenSG/Dynamics/OSGDiscDistribution3D.h>
@@ -45,38 +32,126 @@
 #include <OpenSG/Dynamics/OSGDataCombiner.h>
 #include <OpenSG/Dynamics/OSGDataConverter.h>
 #include <OpenSG/Dynamics/OSGCompoundFunction.h>
-
 // Activate the OpenSG namespace
-// This is not strictly necessary, you can also prefix all OpenSG symbols
-// with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
-// forward declaration so we can have the interesting stuff upfront
-int setupGLUT( int *argc, char *argv[] );
-void display(void);
+bool ExitApp = false;
 
-// Initialize GLUT & OpenSG and set up the scene
+// Forward declaration so we can have the interesting stuff upfront
+void display(void);
+void reshape(Vec2f Size);
+
+// Create a class to allow for the use of the Ctrl+q
+class TutorialKeyListener : public KeyListener
+{
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+   {
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+           ExitApp = true;
+       }
+   }
+
+   virtual void keyReleased(const KeyEvent& e)
+   {
+   }
+
+   virtual void keyTyped(const KeyEvent& e)
+   {
+   }
+};
+
+class TutorialWindowListener : public WindowAdapter
+{
+public:
+    virtual void windowClosing(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+};
+
+class TutorialMouseListener : public MouseListener
+{
+  public:
+    virtual void mouseClicked(const MouseEvent& e)
+    {
+    }
+    virtual void mouseEntered(const MouseEvent& e)
+    {
+    }
+    virtual void mouseExited(const MouseEvent& e)
+    {
+    }
+    virtual void mousePressed(const MouseEvent& e)
+    {
+            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+    }
+    virtual void mouseReleased(const MouseEvent& e)
+    {
+           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+    }
+};
+
+class TutorialMouseMotionListener : public MouseMotionListener
+{
+  public:
+    virtual void mouseMoved(const MouseEvent& e)
+    {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+    }
+
+    virtual void mouseDragged(const MouseEvent& e)
+    {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+    }
+};
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
+    // Set up Window
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
 
-    // GLUT init
-    int winid = setupGLUT(&argc, argv);
+	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
+		TutorialWindowEventProducer->setUseCallbackForDraw(true);
+		TutorialWindowEventProducer->setUseCallbackForReshape(true);
+	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
-    // the connection between GLUT and OpenSG
-    GLUTWindowPtr gwin= GLUTWindow::create();
-    gwin->setId(winid);
-    gwin->init();
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
+    //Add Window Listener
+    TutorialWindowListener TheTutorialWindowListener;
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialMouseListener TheTutorialMouseListener;
+    TutorialMouseMotionListener TheTutorialMouseMotionListener;
+    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
 
-   // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    // Create the SimpleSceneManager helper
+    mgr = new SimpleSceneManager;
 
+    // Tell the Manager what to manage
+    mgr->setWindow(MainWindow);
+	
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
+                                        "OpenSG 01ParticleSystemDrawer Window");
+										
 
     //Make The Distribution
     //Line Distribution
@@ -186,180 +261,114 @@ int main(int argc, char **argv)
 		TheSizeDistribution->getFunctions().push_back(TheVec3fConverter);
 	endEditCP(TheSizeDistribution);
 
-    //Use the Distribution to generate Positions
-    GeoPositionsPtr ParticlePositions = GeoPositions3f::create();
-    GeoColorsPtr ParticleColors = GeoColors3f::create();
-    
-    //Create the particles Material
-    SimpleMaterialPtr ParticleMaterial = SimpleMaterial::create();
-    beginEditCP(ParticleMaterial);
-        ParticleMaterial->setLit(false);
-    endEditCP(ParticleMaterial);
+	//Particle System Material
+	PointChunkPtr PSPointChunk = PointChunk::create();
+	beginEditCP(PSPointChunk);
+		PSPointChunk->setSize(5.0f);
+		PSPointChunk->setSmooth(true);
+	endEditCP(PSPointChunk);
+	BlendChunkPtr PSBlendChunk = BlendChunk::create();
+	PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+	PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
 
-    //Create the ParticleCore and set up its properties
-    ParticlesPtr ParticlesCore = Particles::create();
-    GeoNormalsPtr ParticleNormals = GeoNormals3f::create();
-    beginEditCP(ParticlesCore);
-      //Positions
-      ParticlesCore->setPositions(ParticlePositions);
-      //SecPositions
-      ParticlesCore->setSecPositions(ParticlePositions);
-      //Color
-      ParticlesCore->setColors(ParticleColors);
-      //Normal
-      ParticlesCore->setNormals(ParticleNormals);
-      ParticleNormals->addValue(Vec3f(0.0,0.0,1.0));
-      //Sizes
-      //ParticlesCore->getSizes().addValue(Vec3f(2.0,2.0,2.0));
-      //Draw Mode
-      //ParticlesCore->setMode(Particles::Points);
-      //ParticlesCore->setMode(Particles::Lines);
-      ParticlesCore->setMode(Particles::ViewDirQuads);
-      //ParticlesCore->setMode(Particles::ViewerQuads);
-      //ParticlesCore->setMode(Particles::Arrows);
-      //ParticlesCore->setMode(Particles::ViewerArrows);
-      //ParticlesCore->setMode(Particles::Rectangles);
-      //ParticlesCore->setMode(Particles::ShaderQuads);
-      //ParticlesCore->setMode(Particles::ShaderStrips);
+	MaterialChunkPtr PSMaterialChunk = MaterialChunk::create();
+	beginEditCP(PSMaterialChunk);
+		PSMaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
+		PSMaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+		PSMaterialChunk->setLit(false);
+	endEditCP(PSMaterialChunk);
 
-      ParticlesCore->setMaterial(ParticleMaterial);
-    endEditCP(ParticlesCore);
+	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
+	beginEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
+		PSMaterial->addChunk(PSPointChunk);
+		PSMaterial->addChunk(PSMaterialChunk);
+		PSMaterial->addChunk(PSBlendChunk);
+	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
-	
-    UInt32 NumParticlesToGenerate(20000);
+	//Particle System
+    ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
+    UInt32 NumParticlesToGenerate(5000);
 	Color3f ColorReturnValue;
 	Vec3f SizeReturnValue;
-    beginEditCP(ParticlesCore);
-    Function::FunctionIOParameterVector EmptyParameters;
+	Pnt3f PositionReturnValue;
+    FunctionIOParameterVector EmptyParameters;
     for(UInt32 i(0) ; i< NumParticlesToGenerate ; ++i)
     {
-        ReturnValue = 
-            LineDistribution3D::Output0DataType::dcast(
+        PositionReturnValue = 
+            FunctionIOData<Pnt3f>::dcast(
             TheDistribution->evaluate(EmptyParameters).front().getDataPtr()
             )->getData();
-        ParticlePositions->addValue(ReturnValue);
 
 		
         ColorReturnValue = 
-			Function::FunctionIOData<Color3f>::dcast(
+			FunctionIOData<Color3f>::dcast(
             TheColorDistribution->evaluate(EmptyParameters).front().getDataPtr()
             )->getData();
-        ParticleColors->addValue(ColorReturnValue);
 
 		
         SizeReturnValue = 
-			Function::FunctionIOData<Vec3f>::dcast(
+			FunctionIOData<Vec3f>::dcast(
             TheSizeDistribution->evaluate(EmptyParameters).front().getDataPtr()
             )->getData();
-        ParticlesCore->getSizes().addValue(SizeReturnValue);
+
+		ExampleParticleSystem->addParticle(PositionReturnValue,Vec3f(0.0,0.0f,1.0f),Color4f(ColorReturnValue.red(),ColorReturnValue.green(),ColorReturnValue.blue(), 1.0), SizeReturnValue, -1.0f, Vec3f(0.0f,0.0f,0.0f),Vec3f(0.0f,0.0f,0.0f),0);
+	
     }
-    endEditCP(ParticlesCore);
 
-    // Make Particles Node
-    NodePtr ParticlesNode = Node::create();
-    beginEditCP(ParticlesNode, Node::CoreFieldMask);
-        ParticlesNode->setCore(ParticlesCore);
-    endEditCP(ParticlesNode, Node::CoreFieldMask);
+	//Particle System Drawer
+	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+
+	//Particle System Node
+    ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
+    beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+		ParticleNodeCore->setSystem(ExampleParticleSystem);
+		ParticleNodeCore->setDrawer(ExampleParticleSystemDrawer);
+		ParticleNodeCore->setMaterial(PSMaterial);
+    endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+    
+	NodePtr ParticleNode = osg::Node::create();
+    beginEditCP(ParticleNode, Node::CoreFieldMask);
+        ParticleNode->setCore(ParticleNodeCore);
+    endEditCP(ParticleNode, Node::CoreFieldMask);
 
 
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // add the torus as a child
-        //scene->addChild(TorusGeometryNode);
-        scene->addChild(ParticlesNode);
-    }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        scene->addChild(ParticleNode);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-    // create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+    mgr->setRoot(scene);
 
-    // tell the manager what to manage
-    mgr->setWindow(gwin);
-    mgr->setRoot  (scene);
-
-    // show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    // GLUT main loop
-    glutMainLoop();
+
+    while(!ExitApp)
+    {
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
+    }
+    osgExit();
 
     return 0;
 }
 
-//
-// GLUT callback functions
-//
 
-void idle(void)
-{
-   glutPostRedisplay();
-}
+// Callback functions
 
-// redraw the window
+
+// Redraw the window
 void display(void)
 {
     mgr->redraw();
 }
 
-// react to size changes
-void reshape(int w, int h)
+// React to size changes
+void reshape(Vec2f Size)
 {
-    mgr->resize(w, h);
-    glutPostRedisplay();
-}
-
-// react to mouse button presses
-void mouse(int button, int state, int x, int y)
-{
-    if (state)
-        mgr->mouseButtonRelease(button, x, y);
-    else
-        mgr->mouseButtonPress(button, x, y);
-        
-    glutPostRedisplay();
-}
-
-// react to mouse motions with pressed buttons
-void motion(int x, int y)
-{
-    mgr->mouseMove(x, y);
-    glutPostRedisplay();
-}
-
-// react to keys
-void keyboard(unsigned char k, int x, int y)
-{
-    switch(k)
-    {
-        case 27:        
-        {
-            OSG::osgExit();
-            exit(0);
-        }
-        break;
-    }
-}
-
-// setup the GLUT library which handles the windows for us
-int setupGLUT(int *argc, char *argv[])
-{
-    glutInit(argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-    
-    int winid = glutCreateWindow("OpenSG Dynamics Distributions");
-    
-    glutPositionWindow(50,50);
-    glutReshapeWindow(800,800);
-    glutReshapeFunc(reshape);
-    glutDisplayFunc(display);
-    glutMouseFunc(mouse);
-    glutMotionFunc(motion);
-    glutKeyboardFunc(keyboard);
-    glutIdleFunc(idle);
-
-    return winid;
+    mgr->resize(Size.x(), Size.y());
 }

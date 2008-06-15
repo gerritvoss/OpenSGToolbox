@@ -75,20 +75,20 @@ void GeoVolumeDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-GeoVolumeDistribution3D::FunctionIOTypeVector GeoVolumeDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector GeoVolumeDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_GEO_VOLUME_3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-GeoVolumeDistribution3D::FunctionIOTypeVector GeoVolumeDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector GeoVolumeDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
 }
 
-GeoVolumeDistribution3D::FunctionIOParameterVector GeoVolumeDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector GeoVolumeDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != 0)
