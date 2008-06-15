@@ -41,6 +41,7 @@ class OSG_INPUTLIB_DLLMAPPING EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
 };
+typedef EventListener* EventListenerPtr;
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,8 +64,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DataConverterBase::ToTypeIdFieldMask = 
-    (TypeTraits<BitVector>::One << DataConverterBase::ToTypeIdFieldId);
+const OSG::BitVector  DataConverterBase::ToTypeNameFieldMask = 
+    (TypeTraits<BitVector>::One << DataConverterBase::ToTypeNameFieldId);
 
 const OSG::BitVector DataConverterBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -74,7 +74,7 @@ const OSG::BitVector DataConverterBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          DataConverterBase::_sfToTypeId
+/*! \var std::string     DataConverterBase::_sfToTypeName
     
 */
 
@@ -82,11 +82,11 @@ const OSG::BitVector DataConverterBase::MTInfluenceMask =
 
 FieldDescription *DataConverterBase::_desc[] = 
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ToTypeId", 
-                     ToTypeIdFieldId, ToTypeIdFieldMask,
+    new FieldDescription(SFString::getClassType(), 
+                     "ToTypeName", 
+                     ToTypeNameFieldId, ToTypeNameFieldMask,
                      false,
-                     (FieldAccessMethod) &DataConverterBase::getSFToTypeId)
+                     (FieldAccessMethod) &DataConverterBase::getSFToTypeName)
 };
 
 
@@ -162,7 +162,7 @@ void DataConverterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 DataConverterBase::DataConverterBase(void) :
-    _sfToTypeId               (UInt32(0)), 
+    _sfToTypeName             (), 
     Inherited() 
 {
 }
@@ -172,7 +172,7 @@ DataConverterBase::DataConverterBase(void) :
 #endif
 
 DataConverterBase::DataConverterBase(const DataConverterBase &source) :
-    _sfToTypeId               (source._sfToTypeId               ), 
+    _sfToTypeName             (source._sfToTypeName             ), 
     Inherited                 (source)
 {
 }
@@ -189,9 +189,9 @@ UInt32 DataConverterBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
     {
-        returnValue += _sfToTypeId.getBinSize();
+        returnValue += _sfToTypeName.getBinSize();
     }
 
 
@@ -203,9 +203,9 @@ void DataConverterBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
     {
-        _sfToTypeId.copyToBin(pMem);
+        _sfToTypeName.copyToBin(pMem);
     }
 
 
@@ -216,9 +216,9 @@ void DataConverterBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
     {
-        _sfToTypeId.copyFromBin(pMem);
+        _sfToTypeName.copyFromBin(pMem);
     }
 
 
@@ -231,8 +231,8 @@ void DataConverterBase::executeSyncImpl(      DataConverterBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
-        _sfToTypeId.syncWith(pOther->_sfToTypeId);
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
+        _sfToTypeName.syncWith(pOther->_sfToTypeName);
 
 
 }
@@ -244,8 +244,8 @@ void DataConverterBase::executeSyncImpl(      DataConverterBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
-        _sfToTypeId.syncWith(pOther->_sfToTypeId);
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
+        _sfToTypeName.syncWith(pOther->_sfToTypeName);
 
 
 

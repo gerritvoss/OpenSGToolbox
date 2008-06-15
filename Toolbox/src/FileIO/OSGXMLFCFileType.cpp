@@ -53,6 +53,7 @@
 #include <OpenSG/OSGMFFieldContainerPtr.h>
 #include <OpenSG/OSGAttachmentContainer.h>
 #include <OpenSG/OSGSimpleAttachments.h>
+#include "Attachments/OSGFilePathAttachment.h"
 
 #include "OSGXMLFCFileType.h"
 
@@ -177,10 +178,30 @@ std::string XMLFCFileType::getName(void) const
 				NewFieldContainer = FCInfoIter->second._Ptr;
 				if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()))
 				{
+					//Search for name
 					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(NameAttachmentXMLToken));
 					if(SearchItor != (*NodeListItor)->get_attrmap().end())
 					{
 						setName(AttachmentContainerPtr::dcast(NewFieldContainer),SearchItor->second.c_str());
+					}
+					//Search for File
+					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
+					if(SearchItor != (*NodeListItor)->get_attrmap().end())
+					{
+						FilePathAttachment::setFilePath(AttachmentContainerPtr::dcast(NewFieldContainer),Path(SearchItor->second.c_str()));
+
+						if(FilePathAttachment::loadFromFilePath(AttachmentContainerPtr::dcast(NewFieldContainer)))
+						{
+							continue;
+						}
+						else
+						{
+							SWARNING <<
+								"ERROR in XMLFCFileType::read():" <<
+								"could not load type: " << NewFieldContainer->getType().getCName() <<
+								" from file " <<FilePathAttachment::getFilePath(AttachmentContainerPtr::dcast(NewFieldContainer)) <<
+								std::endl;
+						}
 					}
 				}
 
@@ -385,10 +406,19 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 
 		if((*FCItor)->getType().isDerivedFrom(AttachmentContainer::getClassType()))
 		{
+			//Output Name
 			const Char8* Name(osg::getName(AttachmentContainerPtr::dcast(*FCItor)));
 			if(Name != NULL)
 			{
 				OutputStream << "\t\t" + NameAttachmentXMLToken + "=\"" << Name << "\"" << std::endl;
+			}
+
+			//Output FilePath
+			const Path* FilePath(FilePathAttachment::getFilePath(AttachmentContainerPtr::dcast(*FCItor)));
+			if(FilePath != NULL)
+			{
+				OutputStream << "\t\t" + FileAttachmentXMLToken + "=\"" << FilePath->string() << "\"" << std::endl;
+				continue;
 			}
 		}
 

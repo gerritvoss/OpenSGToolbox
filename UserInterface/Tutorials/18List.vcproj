@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="18List"
 	ProjectGUID="{8480BA1C-DFFD-4719-A688-EE7C8BD02ADA}"
 	RootNamespace="05FlowLayout"

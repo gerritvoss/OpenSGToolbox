@@ -87,7 +87,7 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, Particle
 		bool SeparateColors(System->getNumColors() > 1);
 		bool SeparateSizes(System->getNumSizes() > 1);
 		bool SeparateNormals(System->getNumNormals() > 1);
-
+		//glPointSize(10.0f);
 		glBegin(GL_POINTS);
 			if(!SeparateColors)
 			{
@@ -106,17 +106,17 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, Particle
 			for(UInt32 i(0) ; i<NumParticles ; ++i)
 			{
 				//Colors
-				if(SeparateColors && i!=0)
+				if(SeparateColors)
 				{
 					glColor4fv(System->getColor(i).getValuesRGBA());
 				}
 				//Sizes
-				if(SeparateSizes && i!=0)
+				if(SeparateSizes)
 				{
 					//glColor4fv(System->getColor(i).getValuesRGBA());
 				}
 				//Normals
-				if(SeparateNormals && i!=0)
+				if(SeparateNormals)
 				{
 					glNormal3fv(System->getNormal(i).getValues());
 				}

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,33 +96,33 @@ DataConverterPtr DataConverterBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DataConverter::_sfToTypeId field.
+//! Get the DataConverter::_sfToTypeName field.
 inline
-SFUInt32 *DataConverterBase::getSFToTypeId(void)
+SFString *DataConverterBase::getSFToTypeName(void)
 {
-    return &_sfToTypeId;
+    return &_sfToTypeName;
 }
 
 
-//! Get the value of the DataConverter::_sfToTypeId field.
+//! Get the value of the DataConverter::_sfToTypeName field.
 inline
-UInt32 &DataConverterBase::getToTypeId(void)
+std::string &DataConverterBase::getToTypeName(void)
 {
-    return _sfToTypeId.getValue();
+    return _sfToTypeName.getValue();
 }
 
-//! Get the value of the DataConverter::_sfToTypeId field.
+//! Get the value of the DataConverter::_sfToTypeName field.
 inline
-const UInt32 &DataConverterBase::getToTypeId(void) const
+const std::string &DataConverterBase::getToTypeName(void) const
 {
-    return _sfToTypeId.getValue();
+    return _sfToTypeName.getValue();
 }
 
-//! Set the value of the DataConverter::_sfToTypeId field.
+//! Set the value of the DataConverter::_sfToTypeName field.
 inline
-void DataConverterBase::setToTypeId(const UInt32 &value)
+void DataConverterBase::setToTypeName(const std::string &value)
 {
-    _sfToTypeId.setValue(value);
+    _sfToTypeName.setValue(value);
 }
 
 

@@ -13,11 +13,11 @@
 >
 A Data Combiner.
 	<Field
-		name="ToTypeId"
-		type="UInt32"
+		name="ToTypeName"
+		type="std::string"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0"
+		defaultValue=""
 		access="public"
 	>
 	</Field>

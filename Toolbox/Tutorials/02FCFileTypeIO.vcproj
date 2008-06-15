@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="02FCFileTypeIO"
-	ProjectGUID="{D3723E7B-717E-4E11-9548-77565177B477}"
+	ProjectGUID="{676FF377-479C-4FE9-BF91-DCF801D6AA0D}"
 	RootNamespace="02GLUT"
 	Keyword="Win32Proj"
 	>

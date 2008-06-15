@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="35Graphics3DExtrude"
 	ProjectGUID="{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}"
 	Keyword="Win32Proj"

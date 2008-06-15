@@ -71,7 +71,7 @@ void FilePathAttachment::initMethod (void)
 {
 }
 
-const Path FilePathAttachment::getFilePath(      AttachmentContainerPtr  container)
+const Path* FilePathAttachment::getFilePath(      AttachmentContainerPtr  container)
 {
     if(container == NullFC)
         return NULL;
@@ -90,7 +90,7 @@ const Path FilePathAttachment::getFilePath(      AttachmentContainerPtr  contain
     if(PathAttachment == NullFC)
         return NULL;
    
-    return PathAttachment->getPath();
+    return &(PathAttachment->getPath());
 }
 
 void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container, 
@@ -134,6 +134,19 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container,
         PathAttachment->setPath(ThePath);   
     }
     endEditCP(PathAttachment, FilePathAttachment::PathFieldMask);
+}
+
+bool FilePathAttachment::loadFromFilePath(      AttachmentContainerPtr  container)
+{
+	const Path* LoadFilePath = FilePathAttachment::getFilePath(container);
+	if(LoadFilePath == NULL)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 /***************************************************************************\

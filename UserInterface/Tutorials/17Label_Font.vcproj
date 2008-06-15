@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="17Label_Font"
 	ProjectGUID="{E4289413-B11F-4480-B87F-E6AF81FACD12}"
 	RootNamespace="17Label"

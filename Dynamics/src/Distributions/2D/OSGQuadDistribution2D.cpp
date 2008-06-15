@@ -75,20 +75,20 @@ void QuadDistribution2D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-QuadDistribution2D::FunctionIOTypeVector QuadDistribution2D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector QuadDistribution2D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_QUAD2D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-QuadDistribution2D::FunctionIOTypeVector QuadDistribution2D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector QuadDistribution2D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
 }
 
-QuadDistribution2D::FunctionIOParameterVector QuadDistribution2D::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector QuadDistribution2D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_QUAD2D_DIST_INPUTPARAMETERS))

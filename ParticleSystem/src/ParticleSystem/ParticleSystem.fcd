@@ -127,6 +127,15 @@
 		access="protected"
 	>
 	</Field>
+	<Field
+		name="MaxParticles"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="4294967295"
+	>
+	</Field>
    
 	<Field
 		name="Dynamic"

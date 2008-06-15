@@ -64,6 +64,19 @@ OSG_BEGIN_NAMESPACE
  *                           Class variables                               *
 \***************************************************************************/
 
+const OSG::BitVector  ParticleSystem::InternalParticlesFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalPositionsFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalSecPositionsFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalNormalsFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalColorsFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalSizesFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalLifespansFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalAgesFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalVelocitiesFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalSecVelocitiesFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalAccelerationsFieldId) ||
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalPropertiesFieldId);
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -77,6 +90,313 @@ void ParticleSystem::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void ParticleSystem::addAndExpandSecPositions(const Pnt3f& SecPosition)
+{
+	if(getInternalSecPositions().size() == 0)
+	{
+		getInternalSecPositions().push_back(SecPosition);
+	}
+	else if(getInternalSecPositions().size() == 1)
+	{
+		if(getInternalSecPositions()[0] != SecPosition)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalSecPositions().push_back(getInternalSecPositions()[0]);
+			}
+
+			getInternalSecPositions().push_back(SecPosition);
+		}
+	}
+	else
+	{
+		getInternalSecPositions().push_back(SecPosition);
+	}
+}
+
+void ParticleSystem::addAndExpandNormals(const Vec3f& Normal)
+{
+	if(getInternalNormals().size() == 0)
+	{
+		getInternalNormals().push_back(Normal);
+	}
+	else if(getInternalNormals().size() == 1)
+	{
+		if(getInternalNormals()[0] != Normal)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalNormals().push_back(getInternalNormals()[0]);
+			}
+
+			getInternalNormals().push_back(Normal);
+		}
+	}
+	else
+	{
+		getInternalNormals().push_back(Normal);
+	}
+}
+
+void ParticleSystem::addAndExpandColors(const Color4f& Color)
+{
+	if(getInternalColors().size() == 0)
+	{
+		getInternalColors().push_back(Color);
+	}
+	else if(getInternalColors().size())
+	{
+		if(getInternalColors()[0] != Color)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalColors().push_back(getInternalColors()[0]);
+			}
+
+			getInternalColors().push_back(Color);
+		}
+	}
+	else
+	{
+		getInternalColors().push_back(Color);
+	}
+}
+
+void ParticleSystem::addAndExpandSizes(const Vec3f& Size)
+{
+	if(getInternalSizes().size() == 0)
+	{
+		getInternalSizes().push_back(Size);
+	}
+	else if(getInternalSizes().size() == 1)
+	{
+		if(getInternalSizes()[0] != Size)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalSizes().push_back(getInternalSizes()[0]);
+			}
+
+			getInternalSizes().push_back(Size);
+		}
+	}
+	else
+	{
+		getInternalSizes().push_back(Size);
+	}
+}
+
+void ParticleSystem::addAndExpandLifespans(Real32 Lifespan)
+{
+	if(getInternalLifespans().size() == 0)
+	{
+		getInternalLifespans().push_back(Lifespan);
+	}
+	else if(getInternalLifespans().size() == 1)
+	{
+		if(getInternalLifespans()[0] != Lifespan)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalLifespans().push_back(getInternalLifespans()[0]);
+			}
+
+			getInternalLifespans().push_back(Lifespan);
+		}
+	}
+	else
+	{
+		getInternalLifespans().push_back(Lifespan);
+	}
+}
+
+void ParticleSystem::addAndExpandAges(Real32 Age)
+{
+	if(getInternalAges().size() == 0)
+	{
+		getInternalAges().push_back(Age);
+	}
+	else if(getInternalAges().size() == 1)
+	{
+		if(getInternalAges()[0] != Age)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalAges().push_back(getInternalAges()[0]);
+			}
+
+			getInternalAges().push_back(Age);
+		}
+	}
+	else
+	{
+		getInternalAges().push_back(Age);
+	}
+}
+
+void ParticleSystem::addAndExpandVelocities(const Vec3f& Velocity)
+{
+	if(getInternalVelocities().size() == 0)
+	{
+		getInternalVelocities().push_back(Velocity);
+	}
+	else if(getInternalVelocities().size() == 1)
+	{
+		if(getInternalVelocities()[0] != Velocity)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalVelocities().push_back(getInternalVelocities()[0]);
+			}
+
+			getInternalVelocities().push_back(Velocity);
+		}
+	}
+	else
+	{
+		getInternalVelocities().push_back(Velocity);
+	}
+}
+
+void ParticleSystem::addAndExpandSecVelocities(const Vec3f& SecVelocity)
+{
+	if(getInternalSecVelocities().size() == 0)
+	{
+		getInternalSecVelocities().push_back(SecVelocity);
+	}
+	else if(getInternalSecVelocities().size() == 1)
+	{
+		if(getInternalSecVelocities()[0] != SecVelocity)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalSecVelocities().push_back(getInternalSecVelocities()[0]);
+			}
+
+			getInternalSecVelocities().push_back(SecVelocity);
+		}
+	}
+	else
+	{
+		getInternalSecVelocities().push_back(SecVelocity);
+	}
+}
+
+void ParticleSystem::addAndExpandAccelerations(const Vec3f& Acceleration)
+{
+	if(getInternalAccelerations().size() == 0)
+	{
+		getInternalAccelerations().push_back(Acceleration);
+	}
+	else if(getInternalAccelerations().size() == 1)
+	{
+		if(getInternalAccelerations()[0] != Acceleration)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalAccelerations().push_back(getInternalAccelerations()[0]);
+			}
+
+			getInternalAccelerations().push_back(Acceleration);
+		}
+	}
+	else
+	{
+		getInternalAccelerations().push_back(Acceleration);
+	}
+}
+
+void ParticleSystem::addAndExpandProperties(UInt64 Properties)
+{
+	if(getInternalProperties().size() == 0)
+	{
+		getInternalProperties().push_back(Properties);
+	}
+	else if(getInternalProperties().size() == 1)
+	{
+		if(getInternalProperties()[0] != Properties)
+		{
+			//Expand to Positions size-1
+			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			{
+				getInternalProperties().push_back(getInternalProperties()[0]);
+			}
+
+			getInternalProperties().push_back(Properties);
+		}
+	}
+	else
+	{
+		getInternalProperties().push_back(Properties);
+	}
+}
+
+
+bool ParticleSystem::addParticle(const Pnt3f& Position,
+		             const Pnt3f& SecPosition,
+					 const Vec3f& Normal,
+					 const Color4f& Color,
+					 const Vec3f& Size,
+					 Real32 Lifespan,
+					 Real32 Age,
+					 const Vec3f& Velocity,
+					 const Vec3f& SecVelocity,
+					 const Vec3f& Acceleration,
+					 UInt64 Properties)
+{
+	if(getNumParticles() >= getMaxParticles())
+	{
+		return false;
+	}
+
+	beginEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
+		getInternalPositions().push_back(Position);
+
+		addAndExpandSecPositions(SecPosition);
+		addAndExpandNormals(Normal);
+		addAndExpandColors(Color);
+		addAndExpandSizes(Size);
+		addAndExpandLifespans(Lifespan);
+		addAndExpandAges(Age);
+		addAndExpandVelocities(Velocity);
+		addAndExpandSecVelocities(SecVelocity);
+		addAndExpandAccelerations(Acceleration);
+		addAndExpandProperties(Properties);
+	endEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
+
+	return true;
+}
+
+bool ParticleSystem::addParticle(const Pnt3f& Position,
+					 const Vec3f& Normal,
+					 const Color4f& Color,
+					 const Vec3f& Size,
+					 Real32 Lifespan,
+					 const Vec3f& Velocity,
+					 const Vec3f& Acceleration,
+					 UInt64 Properties)
+{
+	return addParticle(Position,
+	             Position,
+				 Normal,
+				 Color,
+				 Size,
+				 Lifespan,
+				 0.0f,
+				 Velocity,
+				 Velocity,
+				 Acceleration,
+				 Properties);
+}
 
 const Pnt3f& ParticleSystem::getSecPosition(const UInt32& Index) const
 {

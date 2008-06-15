@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\Builds\Windows\OSGDynamics.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{82609F8B-FDBB-4A72-B925-A5B4007272B5} = {82609F8B-FDBB-4A72-B925-A5B4007272B5}
@@ -13,16 +11,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01RandomDistributions", "01
 		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02BooleanFunctions", "02BooleanFunctions.vcproj", "{746DB72D-9A34-457D-BD50-4DFB59E9409E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.Build.0 = Debug|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.ActiveCfg = Release|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.Build.0 = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.Build.0 = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.ActiveCfg = Release|Win32
@@ -31,6 +31,18 @@ Global
 		{235CA62B-484B-4314-8516-F0F73247AC76}.Debug|Win32.Build.0 = Debug|Win32
 		{235CA62B-484B-4314-8516-F0F73247AC76}.Release|Win32.ActiveCfg = Release|Win32
 		{235CA62B-484B-4314-8516-F0F73247AC76}.Release|Win32.Build.0 = Release|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.Build.0 = Debug|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.ActiveCfg = Release|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.Build.0 = Release|Win32
+		{746DB72D-9A34-457D-BD50-4DFB59E9409E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{746DB72D-9A34-457D-BD50-4DFB59E9409E}.Debug|Win32.Build.0 = Debug|Win32
+		{746DB72D-9A34-457D-BD50-4DFB59E9409E}.Release|Win32.ActiveCfg = Release|Win32
+		{746DB72D-9A34-457D-BD50-4DFB59E9409E}.Release|Win32.Build.0 = Release|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.Build.0 = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.ActiveCfg = Release|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

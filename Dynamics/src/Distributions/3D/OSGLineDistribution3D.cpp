@@ -75,14 +75,14 @@ void LineDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector LineDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_LINE3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector LineDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
@@ -93,7 +93,7 @@ Pnt3f LineDistribution3D::generate(void)
     return Pnt3f(getPoint1() + RandomPoolManager::getRandomReal32(0.0,1.0)*(getPoint2() - getPoint1()));
 }
 
-LineDistribution3D::FunctionIOParameterVector LineDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector LineDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != 0)

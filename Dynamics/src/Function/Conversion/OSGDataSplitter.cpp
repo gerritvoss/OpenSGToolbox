@@ -439,7 +439,7 @@ void DataSplitter::addSplitOutputData(FunctionIOParameterVector& OutputData, con
  *                           Instance methods                              *
 \***************************************************************************/
 
-DataSplitter::FunctionIOTypeVector DataSplitter::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector DataSplitter::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
 
@@ -451,13 +451,13 @@ DataSplitter::FunctionIOTypeVector DataSplitter::getOutputTypes(FunctionIOTypeVe
     return OutputTypes;
 }
 
-DataSplitter::FunctionIOTypeVector DataSplitter::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector DataSplitter::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
 }
 
-DataSplitter::FunctionIOParameterVector DataSplitter::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector DataSplitter::evaluate(FunctionIOParameterVector& InputParameters)
 {
     FunctionIOParameterVector ResultVector;
 

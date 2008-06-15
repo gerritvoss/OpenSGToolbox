@@ -173,6 +173,13 @@ MFUInt64 *ParticleSystemBase::getMFInternalProperties(void)
     return &_mfInternalProperties;
 }
 
+//! Get the ParticleSystem::_sfMaxParticles field.
+inline
+SFUInt32 *ParticleSystemBase::getSFMaxParticles(void)
+{
+    return &_sfMaxParticles;
+}
+
 //! Get the ParticleSystem::_sfDynamic field.
 inline
 SFBool *ParticleSystemBase::getSFDynamic(void)
@@ -201,6 +208,27 @@ MFParticleSystemEffectorPtr *ParticleSystemBase::getMFSystemEffectors(void)
     return &_mfSystemEffectors;
 }
 
+
+//! Get the value of the ParticleSystem::_sfMaxParticles field.
+inline
+UInt32 &ParticleSystemBase::getMaxParticles(void)
+{
+    return _sfMaxParticles.getValue();
+}
+
+//! Get the value of the ParticleSystem::_sfMaxParticles field.
+inline
+const UInt32 &ParticleSystemBase::getMaxParticles(void) const
+{
+    return _sfMaxParticles.getValue();
+}
+
+//! Set the value of the ParticleSystem::_sfMaxParticles field.
+inline
+void ParticleSystemBase::setMaxParticles(const UInt32 &value)
+{
+    _sfMaxParticles.setValue(value);
+}
 
 //! Get the value of the ParticleSystem::_sfDynamic field.
 inline

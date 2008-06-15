@@ -75,20 +75,20 @@ void TriDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-TriDistribution3D::FunctionIOTypeVector TriDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector TriDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_TRI3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-TriDistribution3D::FunctionIOTypeVector TriDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector TriDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
 }
 
-TriDistribution3D::FunctionIOParameterVector TriDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector TriDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_TRI3D_DIST_INPUTPARAMETERS))

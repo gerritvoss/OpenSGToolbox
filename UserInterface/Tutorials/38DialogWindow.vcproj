@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="38DialogWindow"
 	ProjectGUID="{A9A8D579-1C33-4338-AB34-906103237BF0}"
 	RootNamespace="36SpringLayout"

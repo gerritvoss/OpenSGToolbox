@@ -75,20 +75,20 @@ void GaussianNormalDistribution1D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-GaussianNormalDistribution1D::FunctionIOTypeVector GaussianNormalDistribution1D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector GaussianNormalDistribution1D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_GAUSSIANNORMAL_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-GaussianNormalDistribution1D::FunctionIOTypeVector GaussianNormalDistribution1D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector GaussianNormalDistribution1D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
 }
 
-GaussianNormalDistribution1D::FunctionIOParameterVector GaussianNormalDistribution1D::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector GaussianNormalDistribution1D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_GAUSSIANNORMAL_DIST_INPUTPARAMETERS))

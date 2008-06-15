@@ -78,6 +78,7 @@
 #include <OpenSG/OSGVec3fFields.h> // InternalSecVelocities type
 #include <OpenSG/OSGVec3fFields.h> // InternalAccelerations type
 #include <OpenSG/OSGUInt64Fields.h> // InternalProperties type
+#include <OpenSG/OSGUInt32Fields.h> // MaxParticles type
 #include <OpenSG/OSGBoolFields.h> // Dynamic type
 #include "ParticleSystem/ParticleGenerators/OSGParticleGenerator.h" // Generators type
 #include "ParticleSystem/ParticleEffectors/OSGParticleEffector.h" // Effectors type
@@ -116,7 +117,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
         InternalSecVelocitiesFieldId = InternalVelocitiesFieldId    + 1,
         InternalAccelerationsFieldId = InternalSecVelocitiesFieldId + 1,
         InternalPropertiesFieldId    = InternalAccelerationsFieldId + 1,
-        DynamicFieldId               = InternalPropertiesFieldId    + 1,
+        MaxParticlesFieldId          = InternalPropertiesFieldId    + 1,
+        DynamicFieldId               = MaxParticlesFieldId          + 1,
         GeneratorsFieldId            = DynamicFieldId               + 1,
         EffectorsFieldId             = GeneratorsFieldId            + 1,
         SystemEffectorsFieldId       = EffectorsFieldId             + 1,
@@ -134,6 +136,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     static const OSG::BitVector InternalSecVelocitiesFieldMask;
     static const OSG::BitVector InternalAccelerationsFieldMask;
     static const OSG::BitVector InternalPropertiesFieldMask;
+    static const OSG::BitVector MaxParticlesFieldMask;
     static const OSG::BitVector DynamicFieldMask;
     static const OSG::BitVector GeneratorsFieldMask;
     static const OSG::BitVector EffectorsFieldMask;
@@ -164,11 +167,14 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           SFUInt32            *getSFMaxParticles   (void);
            SFBool              *getSFDynamic        (void);
            MFParticleGeneratorPtr *getMFGenerators     (void);
            MFParticleEffectorPtr *getMFEffectors      (void);
            MFParticleSystemEffectorPtr *getMFSystemEffectors(void);
 
+           UInt32              &getMaxParticles   (void);
+     const UInt32              &getMaxParticles   (void) const;
            bool                &getDynamic        (void);
      const bool                &getDynamic        (void) const;
            ParticleGeneratorPtr &getGenerators     (const UInt32 index);
@@ -186,6 +192,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setMaxParticles   ( const UInt32 &value );
      void setDynamic        ( const bool &value );
 
     /*! \}                                                                 */
@@ -240,6 +247,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     MFVec3f             _mfInternalSecVelocities;
     MFVec3f             _mfInternalAccelerations;
     MFUInt64            _mfInternalProperties;
+    SFUInt32            _sfMaxParticles;
     SFBool              _sfDynamic;
     MFParticleGeneratorPtr   _mfGenerators;
     MFParticleEffectorPtr   _mfEffectors;

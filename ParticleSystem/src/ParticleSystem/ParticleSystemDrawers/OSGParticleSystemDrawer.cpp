@@ -85,6 +85,38 @@ void ParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volum
 	{
 		volume.extendBy(System->getPosition(i));
 	}
+
+    volume.setValid();
+    volume.setEmpty();
+
+    Vec3f p;
+    Real32 s;
+
+    for(UInt32 i = 0; i < NumParticles; i++)
+    {
+        p = System->getPosition(i);
+        // make the size bigger to accomodate rotations
+        s=System->getSize(i)[0]*Sqrt2;
+
+        p[0]+=s/2;
+        p[1]+=s/2;
+        p[2]+=s/2;
+        volume.extendBy(p);
+        p[0]-=s;
+        volume.extendBy(p);
+        p[1]-=s;
+        volume.extendBy(p);
+        p[0]+=s;
+        volume.extendBy(p);
+        p[2]-=s;
+        volume.extendBy(p);
+        p[0]-=s;
+        volume.extendBy(p);
+        p[1]+=s;
+        volume.extendBy(p);
+        p[0]+=s;
+        volume.extendBy(p);
+    }
 }
 
 /*-------------------------------------------------------------------------*\

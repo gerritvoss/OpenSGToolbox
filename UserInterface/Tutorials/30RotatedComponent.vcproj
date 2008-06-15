@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="30RotatedComponent"
 	ProjectGUID="{AD7E576B-5B6E-49C6-B622-FC49D19AB3AC}"
 	Keyword="Win32Proj"

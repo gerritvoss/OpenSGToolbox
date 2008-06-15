@@ -79,7 +79,7 @@ void DataConverter::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-DataConverter::FunctionIOTypeVector DataConverter::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector DataConverter::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
 
@@ -190,7 +190,7 @@ DataConverter::FunctionIOTypeVector DataConverter::getOutputTypes(FunctionIOType
     return OutputTypes;
 }
 
-DataConverter::FunctionIOTypeVector DataConverter::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector DataConverter::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
 	
@@ -317,7 +317,7 @@ DataConverter::FunctionIOTypeVector DataConverter::getInputTypes(FunctionIOTypeV
     return InputTypes;
 }
 
-DataConverter::FunctionIOParameterVector DataConverter::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector DataConverter::evaluate(FunctionIOParameterVector& InputParameters)
 {
     FunctionIOParameterVector ResultVector;
 

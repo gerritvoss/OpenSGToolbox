@@ -97,6 +97,9 @@ const OSG::BitVector  ParticleSystemBase::InternalAccelerationsFieldMask =
 const OSG::BitVector  ParticleSystemBase::InternalPropertiesFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::InternalPropertiesFieldId);
 
+const OSG::BitVector  ParticleSystemBase::MaxParticlesFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::MaxParticlesFieldId);
+
 const OSG::BitVector  ParticleSystemBase::DynamicFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::DynamicFieldId);
 
@@ -147,6 +150,9 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
     The particle accelerations If not set (0,0,0) will be used, if only one entry         is set, it will be used for all particles. If the number of accelerations is         equal to the number of positions every particle will get its own acceleration.         If no accelerations are present, then the position will not be updated regarding acceleration.
 */
 /*! \var UInt64          ParticleSystemBase::_mfInternalProperties
+    
+*/
+/*! \var UInt32          ParticleSystemBase::_sfMaxParticles
     
 */
 /*! \var bool            ParticleSystemBase::_sfDynamic
@@ -221,6 +227,11 @@ FieldDescription *ParticleSystemBase::_desc[] =
                      InternalPropertiesFieldId, InternalPropertiesFieldMask,
                      false,
                      (FieldAccessMethod) &ParticleSystemBase::getMFInternalProperties),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "MaxParticles", 
+                     MaxParticlesFieldId, MaxParticlesFieldMask,
+                     false,
+                     (FieldAccessMethod) &ParticleSystemBase::getSFMaxParticles),
     new FieldDescription(SFBool::getClassType(), 
                      "Dynamic", 
                      DynamicFieldId, DynamicFieldMask,
@@ -341,6 +352,7 @@ ParticleSystemBase::ParticleSystemBase(void) :
     _mfInternalSecVelocities  (), 
     _mfInternalAccelerations  (), 
     _mfInternalProperties     (), 
+    _sfMaxParticles           (UInt32(4294967295)), 
     _sfDynamic                (bool(true)), 
     _mfGenerators             (), 
     _mfEffectors              (), 
@@ -365,6 +377,7 @@ ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _mfInternalSecVelocities  (source._mfInternalSecVelocities  ), 
     _mfInternalAccelerations  (source._mfInternalAccelerations  ), 
     _mfInternalProperties     (source._mfInternalProperties     ), 
+    _sfMaxParticles           (source._sfMaxParticles           ), 
     _sfDynamic                (source._sfDynamic                ), 
     _mfGenerators             (source._mfGenerators             ), 
     _mfEffectors              (source._mfEffectors              ), 
@@ -438,6 +451,11 @@ UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
     {
         returnValue += _mfInternalProperties.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
+    {
+        returnValue += _sfMaxParticles.getBinSize();
     }
 
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
@@ -524,6 +542,11 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
         _mfInternalProperties.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
+    {
+        _sfMaxParticles.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
     {
         _sfDynamic.copyToBin(pMem);
@@ -607,6 +630,11 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfInternalProperties.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
+    {
+        _sfMaxParticles.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
     {
         _sfDynamic.copyFromBin(pMem);
@@ -670,6 +698,9 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
     if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
         _mfInternalProperties.syncWith(pOther->_mfInternalProperties);
 
+    if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
+        _sfMaxParticles.syncWith(pOther->_sfMaxParticles);
+
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
         _sfDynamic.syncWith(pOther->_sfDynamic);
 
@@ -691,6 +722,9 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
+        _sfMaxParticles.syncWith(pOther->_sfMaxParticles);
 
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
         _sfDynamic.syncWith(pOther->_sfDynamic);

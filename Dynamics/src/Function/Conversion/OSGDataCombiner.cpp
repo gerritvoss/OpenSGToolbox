@@ -80,7 +80,7 @@ void DataCombiner::initMethod (void)
 \***************************************************************************/
 
 
-DataCombiner::FunctionIOTypeVector DataCombiner::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector DataCombiner::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
 
@@ -201,7 +201,7 @@ DataCombiner::FunctionIOTypeVector DataCombiner::getOutputTypes(FunctionIOTypeVe
     return OutputTypes;
 }
 
-DataCombiner::FunctionIOTypeVector DataCombiner::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector DataCombiner::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
 	
@@ -359,7 +359,7 @@ DataCombiner::FunctionIOTypeVector DataCombiner::getInputTypes(FunctionIOTypeVec
     return InputTypes;
 }
 
-DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParameterVector& InputParameters)
 {
     FunctionIOParameterVector ResultVector;
 

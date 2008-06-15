@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,7 +67,7 @@
 
 #include "Function/OSGFunction.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // ToTypeId type
+#include <OpenSG/OSGStringFields.h> // ToTypeName type
 
 #include "OSGDataConverterFields.h"
 
@@ -91,11 +91,11 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataConverterBase : public Function
 
     enum
     {
-        ToTypeIdFieldId = Inherited::NextFieldId,
-        NextFieldId     = ToTypeIdFieldId + 1
+        ToTypeNameFieldId = Inherited::NextFieldId,
+        NextFieldId       = ToTypeNameFieldId + 1
     };
 
-    static const OSG::BitVector ToTypeIdFieldMask;
+    static const OSG::BitVector ToTypeNameFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +122,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataConverterBase : public Function
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFToTypeId       (void);
+           SFString            *getSFToTypeName     (void);
 
-           UInt32              &getToTypeId       (void);
-     const UInt32              &getToTypeId       (void) const;
+           std::string         &getToTypeName     (void);
+     const std::string         &getToTypeName     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setToTypeId       ( const UInt32 &value );
+     void setToTypeName     ( const std::string &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataConverterBase : public Function
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfToTypeId;
+    SFString            _sfToTypeName;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

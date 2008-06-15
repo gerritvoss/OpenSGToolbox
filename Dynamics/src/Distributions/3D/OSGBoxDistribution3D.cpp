@@ -75,20 +75,20 @@ void BoxDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-BoxDistribution3D::FunctionIOTypeVector BoxDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector BoxDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_BOX3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-BoxDistribution3D::FunctionIOTypeVector BoxDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector BoxDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
 }
 
-BoxDistribution3D::FunctionIOParameterVector BoxDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector BoxDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != 0)

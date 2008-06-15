@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="OSGDynamics"
-	ProjectGUID="{77623743-1948-4AC4-8227-7FF6072BD16F}"
+	ProjectGUID="{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
 	>
@@ -866,6 +866,38 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="BooleanOperations"
+				>
+				<File
+					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunction.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunction.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunction.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunctionBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunctionBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunctionBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunctionFields.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

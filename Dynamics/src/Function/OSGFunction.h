@@ -52,6 +52,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/preprocessor/array/elem.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
+#include <OpenSG/OSGTypeFactory.h>
 
 #define OSG_FUNC_IOPARAMETERARRAY_SIZE(parameterArray) BOOST_PP_ARRAY_SIZE(parameterArray)
 
@@ -59,11 +60,11 @@
 
 #define OSG_FUNC_IOPARAMETER_TYPE(index, parameterArray) FieldDataTraits<BOOST_PP_TUPLE_ELEM(2,1,BOOST_PP_ARRAY_ELEM(index, parameterArray))>::getType()
 
-#define OSG_FUNC_IOPARAMETER_DATA(index, parameterArray) osg::Function::FunctionIOData<BOOST_PP_TUPLE_ELEM(2,1,BOOST_PP_ARRAY_ELEM(index, parameterArray))>
+#define OSG_FUNC_IOPARAMETER_DATA(index, parameterArray) osg::FunctionIOData<BOOST_PP_TUPLE_ELEM(2,1,BOOST_PP_ARRAY_ELEM(index, parameterArray))>
 
-#define OSG_FUNC_INST_FUNCTIONIOTYPE(index, parameterArray) osg::Function::FunctionIOType(OSG_FUNC_IOPARAMETER_NAME(index,parameterArray), &OSG_FUNC_IOPARAMETER_TYPE(index,parameterArray))
+#define OSG_FUNC_INST_FUNCTIONIOTYPE(index, parameterArray) osg::FunctionIOType(OSG_FUNC_IOPARAMETER_NAME(index,parameterArray), &OSG_FUNC_IOPARAMETER_TYPE(index,parameterArray))
 
-#define OSG_FUNC_INST_FUNCTIONIOPARAMETER(index, parameterArray, value) osg::Function::FunctionIOParameter(OSG_FUNC_IOPARAMETER_NAME(index, parameterArray), new OSG_FUNC_IOPARAMETER_DATA(index, parameterArray)(value))
+#define OSG_FUNC_INST_FUNCTIONIOPARAMETER(index, parameterArray, value) osg::FunctionIOParameter(OSG_FUNC_IOPARAMETER_NAME(index, parameterArray), new OSG_FUNC_IOPARAMETER_DATA(index, parameterArray)(value))
 
 #define OSG_FUNC_IOPARAMETER_GET_DATA(index, parameterArray, parameterVector) FunctionIOData<BOOST_PP_TUPLE_ELEM(2,1,BOOST_PP_ARRAY_ELEM(index, parameterArray))>::dcast(parameterVector[index].getDataPtr())->getData()
 
@@ -83,6 +84,171 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionBadTypeException : public FunctionExcep
     virtual const char* what() const throw();
 };
 
+
+class FunctionIOType{
+private:
+    std::string _IOParameterName;
+    const TypeBase* _Type;
+public:
+    FunctionIOType(const std::string& name, const TypeBase* type) :
+       _IOParameterName(name),
+       _Type(type)
+    {
+    }
+
+    const TypeBase* getType(void) const;
+	std::string getParameterName(void) const;
+};
+
+class FunctionIODataBase
+{
+  public:
+    virtual const TypeBase* getType(void) const = 0;
+};
+
+template<class RawTypeT>
+class FunctionIOData : public FunctionIODataBase
+{
+  public:
+    typedef RawTypeT RawType;
+
+  protected:
+    typedef FunctionIODataBase Inherited;
+    RawType _Data;
+
+  public:
+
+    FunctionIOData(RawTypeT data) : _Data(data)
+    {
+    }
+
+    virtual const TypeBase* getType(void) const
+    {
+        return &FieldDataTraits<RawTypeT>::getType();
+    }
+
+    static FunctionIOData<RawTypeT>* dcast(FunctionIODataBase* Value)
+    {
+        return dynamic_cast< FunctionIOData<RawTypeT>* >(Value);
+    }
+
+    static const FunctionIOData<RawTypeT>* dcast(const FunctionIODataBase* Value)
+    {
+        return dynamic_cast< const FunctionIOData<RawTypeT>* >(Value);
+    }
+
+    const RawType& getData(void) const
+    {
+        return _Data;
+    }
+};
+
+template<>
+class FunctionIOData<bool> : public FunctionIODataBase
+{
+  public:
+    typedef bool RawType;
+
+  protected:
+    typedef FunctionIODataBase Inherited;
+    RawType _Data;
+
+  public:
+
+    FunctionIOData(RawType data) : _Data(data)
+    {
+    }
+
+    virtual const TypeBase* getType(void) const
+    {
+        return TypeFactory::the()->findType("bool");
+    }
+
+    static FunctionIOData<RawType>* dcast(FunctionIODataBase* Value)
+    {
+        return dynamic_cast< FunctionIOData<RawType>* >(Value);
+    }
+
+    static const FunctionIOData<RawType>* dcast(const FunctionIODataBase* Value)
+    {
+        return dynamic_cast< const FunctionIOData<RawType>* >(Value);
+    }
+
+    const RawType& getData(void) const
+    {
+        return _Data;
+    }
+};
+
+template<class RawFieldTypeT>
+class FunctionIOFieldData : public FunctionIODataBase
+{
+  public:
+    typedef RawFieldTypeT RawType;
+
+  protected:
+    typedef FunctionIODataBase Inherited;
+    RawFieldTypeT _Data;
+
+  public:
+
+    FunctionIOFieldData(RawFieldTypeT data) : _Data(data)
+    {
+    }
+
+    virtual const TypeBase* getType(void) const
+    {
+        return &RawFieldTypeT::getClassType();
+    }
+
+    static FunctionIOFieldData<RawFieldTypeT>* dcast(FunctionIODataBase* Value)
+    {
+        return dynamic_cast< FunctionIOData<RawFieldTypeT>* >(Value);
+    }
+
+    static const FunctionIOFieldData<RawFieldTypeT>* dcast(const FunctionIODataBase* Value)
+    {
+        return dynamic_cast< const FunctionIOData<RawFieldTypeT>* >(Value);
+    }
+
+    const RawFieldTypeT& getData(void) const
+    {
+        return _Data;
+    }
+};
+
+class FunctionIOParameter
+{
+  protected:
+    std::string _IOParameterName;
+    boost::shared_ptr<FunctionIODataBase> _DataPtr;
+  public:
+    FunctionIOParameter(const std::string& name, FunctionIODataBase* data) :
+       _IOParameterName(name),
+       _DataPtr(data)
+    {
+    }
+
+    FunctionIOParameter(const std::string& name, boost::shared_ptr<FunctionIODataBase> ptr) :
+       _IOParameterName(name),
+       _DataPtr(ptr)
+    {
+    }
+
+    const FunctionIODataBase* getDataPtr(void) const
+    {
+        return _DataPtr.get();
+    }
+
+    const boost::shared_ptr<FunctionIODataBase> getPtr(void) const
+    {
+        return _DataPtr;
+    }
+
+};
+typedef std::vector<FunctionIOType> FunctionIOTypeVector;
+typedef std::vector<FunctionIOParameter> FunctionIOParameterVector;
+
 class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
 {
   private:
@@ -90,132 +256,6 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-    class FunctionIOType{
-	private:
-        std::string _IOParameterName;
-        const TypeBase* _Type;
-	public:
-        FunctionIOType(const std::string& name, const TypeBase* type) :
-           _IOParameterName(name),
-           _Type(type)
-        {
-        }
-
-	    const TypeBase* getType(void) const;
-		std::string getParameterName(void) const;
-    };
-
-    class FunctionIODataBase
-    {
-      public:
-        virtual const TypeBase* getType(void) const = 0;
-    };
-
-    template<class RawTypeT>
-    class FunctionIOData : public FunctionIODataBase
-    {
-      public:
-        typedef RawTypeT RawType;
-
-      protected:
-        typedef FunctionIODataBase Inherited;
-        RawType _Data;
-
-      public:
-
-        FunctionIOData(RawTypeT data) : _Data(data)
-        {
-        }
-
-        virtual const TypeBase* getType(void) const
-        {
-            return &FieldDataTraits<RawTypeT>::getType();
-        }
-
-        static FunctionIOData<RawTypeT>* dcast(FunctionIODataBase* Value)
-        {
-            return dynamic_cast< FunctionIOData<RawTypeT>* >(Value);
-        }
-
-        static const FunctionIOData<RawTypeT>* dcast(const FunctionIODataBase* Value)
-        {
-            return dynamic_cast< const FunctionIOData<RawTypeT>* >(Value);
-        }
-
-        const RawType& getData(void) const
-        {
-            return _Data;
-        }
-    };
-	
-    template<class RawFieldTypeT>
-    class FunctionIOFieldData : public FunctionIODataBase
-    {
-      public:
-        typedef RawFieldTypeT RawType;
-
-      protected:
-        typedef FunctionIODataBase Inherited;
-        RawFieldTypeT _Data;
-
-      public:
-
-        FunctionIOFieldData(RawFieldTypeT data) : _Data(data)
-        {
-        }
-
-        virtual const TypeBase* getType(void) const
-        {
-            return &RawFieldTypeT::getClassType();
-        }
-
-        static FunctionIOFieldData<RawFieldTypeT>* dcast(FunctionIODataBase* Value)
-        {
-            return dynamic_cast< FunctionIOData<RawFieldTypeT>* >(Value);
-        }
-
-        static const FunctionIOFieldData<RawFieldTypeT>* dcast(const FunctionIODataBase* Value)
-        {
-            return dynamic_cast< const FunctionIOData<RawFieldTypeT>* >(Value);
-        }
-
-        const RawFieldTypeT& getData(void) const
-        {
-            return _Data;
-        }
-    };
-
-    class FunctionIOParameter
-    {
-      protected:
-        std::string _IOParameterName;
-        boost::shared_ptr<FunctionIODataBase> _DataPtr;
-      public:
-        FunctionIOParameter(const std::string& name, FunctionIODataBase* data) :
-           _IOParameterName(name),
-           _DataPtr(data)
-        {
-        }
-
-        FunctionIOParameter(const std::string& name, boost::shared_ptr<FunctionIODataBase> ptr) :
-           _IOParameterName(name),
-           _DataPtr(ptr)
-        {
-        }
-
-        const FunctionIODataBase* getDataPtr(void) const
-        {
-            return _DataPtr.get();
-        }
-
-        const boost::shared_ptr<FunctionIODataBase> getPtr(void) const
-        {
-            return _DataPtr;
-        }
-
-    };
-    typedef std::vector<FunctionIOType> FunctionIOTypeVector;
-    typedef std::vector<FunctionIOParameter> FunctionIOParameterVector;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

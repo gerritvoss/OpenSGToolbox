@@ -75,20 +75,20 @@ void SegmentSetDistribution1D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-SegmentSetDistribution1D::FunctionIOTypeVector SegmentSetDistribution1D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector SegmentSetDistribution1D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_SEGMENTSET_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-SegmentSetDistribution1D::FunctionIOTypeVector SegmentSetDistribution1D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector SegmentSetDistribution1D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
 }
 
-SegmentSetDistribution1D::FunctionIOParameterVector SegmentSetDistribution1D::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector SegmentSetDistribution1D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_SEGMENTSET_DIST_INPUTPARAMETERS))

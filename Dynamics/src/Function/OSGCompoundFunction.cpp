@@ -63,7 +63,7 @@ A Compound Function.
  *                           Class variables                               *
 \***************************************************************************/
 
-CompoundFunction::FunctionIOTypeVector CompoundFunction::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector CompoundFunction::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes(InputTypes);
 	for(UInt32 i(0) ; i<getFunctions().size() ; ++i)
@@ -73,7 +73,7 @@ CompoundFunction::FunctionIOTypeVector CompoundFunction::getOutputTypes(Function
     return OutputTypes;
 }
 
-CompoundFunction::FunctionIOTypeVector CompoundFunction::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector CompoundFunction::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes(OutputTypes);
 	for(UInt32 i(0) ; i<getFunctions().size() ; ++i)
@@ -83,7 +83,7 @@ CompoundFunction::FunctionIOTypeVector CompoundFunction::getInputTypes(FunctionI
     return InputTypes;
 }
 
-CompoundFunction::FunctionIOParameterVector CompoundFunction::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector CompoundFunction::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != 0)

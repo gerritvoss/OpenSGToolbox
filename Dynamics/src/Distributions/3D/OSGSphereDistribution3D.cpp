@@ -75,20 +75,20 @@ void SphereDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-SphereDistribution3D::FunctionIOTypeVector SphereDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+FunctionIOTypeVector SphereDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_SPHERE_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-SphereDistribution3D::FunctionIOTypeVector SphereDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+FunctionIOTypeVector SphereDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
 }
 
-SphereDistribution3D::FunctionIOParameterVector SphereDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+FunctionIOParameterVector SphereDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
     if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_SPHERE_DIST_INPUTPARAMETERS))

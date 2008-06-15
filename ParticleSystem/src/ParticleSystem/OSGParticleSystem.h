@@ -65,6 +65,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 
     /*==========================  PUBLIC  =================================*/
   public:
+    static const OSG::BitVector InternalParticlesFieldMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -109,6 +110,28 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
     
     void addParticleSystemListener(ParticleSystemListenerPtr Listener);
     void removeParticleSystemListener(ParticleSystemListenerPtr Listener);
+
+	bool addParticle(const Pnt3f& Position,
+		             const Pnt3f& SecPosition,
+					 const Vec3f& Normal,
+					 const Color4f& Color,
+					 const Vec3f& Size,
+					 Real32 Lifespan,
+					 Real32 Age,
+					 const Vec3f& Velocity,
+					 const Vec3f& SecVelocity,
+					 const Vec3f& Acceleration,
+					 UInt64 Properties);
+
+	bool addParticle(const Pnt3f& Position,
+					 const Vec3f& Normal,
+					 const Color4f& Color,
+					 const Vec3f& Size,
+					 Real32 Lifespan,
+					 const Vec3f& Velocity,
+					 const Vec3f& Acceleration,
+					 UInt64 Properties);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -154,6 +177,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	SystemUpdateListener _SystemUpdateListener;
     
     virtual void update(const Time& elps);
+
+	void addAndExpandSecPositions(const Pnt3f& SecPosition);
+	void addAndExpandNormals(const Vec3f& Normal);
+	void addAndExpandColors(const Color4f& Color);
+	void addAndExpandSizes(const Vec3f& Size);
+	void addAndExpandLifespans(Real32 Lifespan);
+	void addAndExpandAges(Real32 Age);
+	void addAndExpandVelocities(const Vec3f& Velocity);
+	void addAndExpandSecVelocities(const Vec3f& SecVelocity);
+	void addAndExpandAccelerations(const Vec3f& Acceleration);
+	void addAndExpandProperties(UInt64 Properties);
     /*==========================  PRIVATE  ================================*/
   private:
 

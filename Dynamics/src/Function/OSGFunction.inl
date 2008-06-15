@@ -43,13 +43,13 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-const TypeBase* Function::FunctionIOType::getType(void) const
+const TypeBase* FunctionIOType::getType(void) const
 {
 	return _Type;
 }
 
 inline
-std::string Function::FunctionIOType::getParameterName(void) const
+std::string FunctionIOType::getParameterName(void) const
 {
 	return _IOParameterName;
 }

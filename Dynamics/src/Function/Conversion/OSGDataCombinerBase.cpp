@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,8 +64,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DataCombinerBase::ToTypeIdFieldMask = 
-    (TypeTraits<BitVector>::One << DataCombinerBase::ToTypeIdFieldId);
+const OSG::BitVector  DataCombinerBase::ToTypeNameFieldMask = 
+    (TypeTraits<BitVector>::One << DataCombinerBase::ToTypeNameFieldId);
 
 const OSG::BitVector DataCombinerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -74,7 +74,7 @@ const OSG::BitVector DataCombinerBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          DataCombinerBase::_sfToTypeId
+/*! \var std::string     DataCombinerBase::_sfToTypeName
     
 */
 
@@ -82,11 +82,11 @@ const OSG::BitVector DataCombinerBase::MTInfluenceMask =
 
 FieldDescription *DataCombinerBase::_desc[] = 
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ToTypeId", 
-                     ToTypeIdFieldId, ToTypeIdFieldMask,
+    new FieldDescription(SFString::getClassType(), 
+                     "ToTypeName", 
+                     ToTypeNameFieldId, ToTypeNameFieldMask,
                      false,
-                     (FieldAccessMethod) &DataCombinerBase::getSFToTypeId)
+                     (FieldAccessMethod) &DataCombinerBase::getSFToTypeName)
 };
 
 
@@ -162,7 +162,7 @@ void DataCombinerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 DataCombinerBase::DataCombinerBase(void) :
-    _sfToTypeId               (UInt32(0)), 
+    _sfToTypeName             (), 
     Inherited() 
 {
 }
@@ -172,7 +172,7 @@ DataCombinerBase::DataCombinerBase(void) :
 #endif
 
 DataCombinerBase::DataCombinerBase(const DataCombinerBase &source) :
-    _sfToTypeId               (source._sfToTypeId               ), 
+    _sfToTypeName             (source._sfToTypeName             ), 
     Inherited                 (source)
 {
 }
@@ -189,9 +189,9 @@ UInt32 DataCombinerBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
     {
-        returnValue += _sfToTypeId.getBinSize();
+        returnValue += _sfToTypeName.getBinSize();
     }
 
 
@@ -203,9 +203,9 @@ void DataCombinerBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
     {
-        _sfToTypeId.copyToBin(pMem);
+        _sfToTypeName.copyToBin(pMem);
     }
 
 
@@ -216,9 +216,9 @@ void DataCombinerBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
     {
-        _sfToTypeId.copyFromBin(pMem);
+        _sfToTypeName.copyFromBin(pMem);
     }
 
 
@@ -231,8 +231,8 @@ void DataCombinerBase::executeSyncImpl(      DataCombinerBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
-        _sfToTypeId.syncWith(pOther->_sfToTypeId);
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
+        _sfToTypeName.syncWith(pOther->_sfToTypeName);
 
 
 }
@@ -244,8 +244,8 @@ void DataCombinerBase::executeSyncImpl(      DataCombinerBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ToTypeIdFieldMask & whichField))
-        _sfToTypeId.syncWith(pOther->_sfToTypeId);
+    if(FieldBits::NoField != (ToTypeNameFieldMask & whichField))
+        _sfToTypeName.syncWith(pOther->_sfToTypeName);
 
 
 

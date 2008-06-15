@@ -330,7 +330,8 @@ void setupBlendGeometry(void)
       TheBlendGeometry->getGeoNormalDifferenceSets().push_back(XDeformGeometryNormalDiffSet);
       TheBlendGeometry->getGeoNormalDifferenceSets().push_back(YDeformGeometryNormalDiffSet);
       TheBlendGeometry->getGeoNormalDifferenceSets().push_back(ZDeformGeometryNormalDiffSet);
-   endEditCP(TheBlendGeometry);
+   endEditCP(TheBlendGeometry, osg::BlendGeometry::GeoPositionDifferenceSetsFieldMask |
+                                 osg::BlendGeometry::GeoNormalDifferenceSetsFieldMask);
    
    NodePtr BlendGeometryNode = osg::Node::create();
    beginEditCP(BlendGeometryNode);

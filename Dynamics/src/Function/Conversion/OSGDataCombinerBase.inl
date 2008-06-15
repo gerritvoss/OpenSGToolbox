@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,33 +96,33 @@ DataCombinerPtr DataCombinerBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DataCombiner::_sfToTypeId field.
+//! Get the DataCombiner::_sfToTypeName field.
 inline
-SFUInt32 *DataCombinerBase::getSFToTypeId(void)
+SFString *DataCombinerBase::getSFToTypeName(void)
 {
-    return &_sfToTypeId;
+    return &_sfToTypeName;
 }
 
 
-//! Get the value of the DataCombiner::_sfToTypeId field.
+//! Get the value of the DataCombiner::_sfToTypeName field.
 inline
-UInt32 &DataCombinerBase::getToTypeId(void)
+std::string &DataCombinerBase::getToTypeName(void)
 {
-    return _sfToTypeId.getValue();
+    return _sfToTypeName.getValue();
 }
 
-//! Get the value of the DataCombiner::_sfToTypeId field.
+//! Get the value of the DataCombiner::_sfToTypeName field.
 inline
-const UInt32 &DataCombinerBase::getToTypeId(void) const
+const std::string &DataCombinerBase::getToTypeName(void) const
 {
-    return _sfToTypeId.getValue();
+    return _sfToTypeName.getValue();
 }
 
-//! Set the value of the DataCombiner::_sfToTypeId field.
+//! Set the value of the DataCombiner::_sfToTypeName field.
 inline
-void DataCombinerBase::setToTypeId(const UInt32 &value)
+void DataCombinerBase::setToTypeName(const std::string &value)
 {
-    _sfToTypeId.setValue(value);
+    _sfToTypeName.setValue(value);
 }
 
 

@@ -46,13 +46,13 @@ OSG_BEGIN_NAMESPACE
 inline
 void DataCombiner::setToType(const TypeBase* type)
 {
-	setToTypeId(type->getId());
+	setToTypeName(std::string(type->getCName()));
 }
 
 inline
 const TypeBase* DataCombiner::getToType(void) const
 {
-    return TypeFactory::the()->findType(getToTypeId());
+    return TypeFactory::the()->findType(getToTypeName().c_str());
 }
 
 OSG_END_NAMESPACE

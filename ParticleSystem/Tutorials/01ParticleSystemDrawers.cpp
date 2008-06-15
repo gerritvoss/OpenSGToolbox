@@ -12,6 +12,10 @@
 #include <OpenSG/Input/OSGKeyListener.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
+#include <OpenSG/OSGBlendChunk.h>
+#include <OpenSG/OSGPointChunk.h>
+#include <OpenSG/OSGChunkMaterial.h>
+#include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
@@ -64,6 +68,41 @@ public:
     }
 };
 
+class TutorialMouseListener : public MouseListener
+{
+  public:
+    virtual void mouseClicked(const MouseEvent& e)
+    {
+    }
+    virtual void mouseEntered(const MouseEvent& e)
+    {
+    }
+    virtual void mouseExited(const MouseEvent& e)
+    {
+    }
+    virtual void mousePressed(const MouseEvent& e)
+    {
+            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+    }
+    virtual void mouseReleased(const MouseEvent& e)
+    {
+           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+    }
+};
+
+class TutorialMouseMotionListener : public MouseMotionListener
+{
+  public:
+    virtual void mouseMoved(const MouseEvent& e)
+    {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+    }
+
+    virtual void mouseDragged(const MouseEvent& e)
+    {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+    }
+};
 int main(int argc, char **argv)
 {
     // OSG init
@@ -86,6 +125,10 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialMouseListener TheTutorialMouseListener;
+    TutorialMouseMotionListener TheTutorialMouseMotionListener;
+    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
@@ -98,18 +141,48 @@ int main(int argc, char **argv)
                                         "OpenSG 01ParticleSystemDrawer Window");
 										
 
+	//Particle System Material
+	PointChunkPtr PSPointChunk = PointChunk::create();
+	beginEditCP(PSPointChunk);
+		PSPointChunk->setSize(5.0f);
+		PSPointChunk->setSmooth(true);
+	endEditCP(PSPointChunk);
+	BlendChunkPtr PSBlendChunk = BlendChunk::create();
+	PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+	PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+
+	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
+	beginEditCP(PSMaterialChunkChunk);
+		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
+		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+	endEditCP(PSMaterialChunkChunk);
+
+	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
+	beginEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
+		PSMaterial->addChunk(PSPointChunk);
+		PSMaterial->addChunk(PSMaterialChunkChunk);
+		PSMaterial->addChunk(PSBlendChunk);
+	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
+
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
+	for(UInt32 i(0) ; i<50 ; ++i)
+	{
+		ExampleParticleSystem->addParticle(Pnt3f(i,i,i),Vec3f(0.0,0.0f,1.0f),Color4f(1.0,0.0,0.0,1.0), Vec3f(1.0,1.0,1.0), 100.0f, Vec3f(0.0f,0.0f,0.0f),Vec3f(0.0f,0.0f,0.0f),0);
+	}
 
 	//Particle System Drawer
 	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
 
 	//Particle System Node
     ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
-    beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask);
+    beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
 		ParticleNodeCore->setDrawer(ExampleParticleSystemDrawer);
-    endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask);
+		ParticleNodeCore->setMaterial(PSMaterial);
+    endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
     
 	NodePtr ParticleNode = osg::Node::create();
     beginEditCP(ParticleNode, Node::CoreFieldMask);
