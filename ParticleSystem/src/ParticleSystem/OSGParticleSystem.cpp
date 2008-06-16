@@ -398,6 +398,16 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 				 Properties);
 }
 
+const Vec3f& ParticleSystem::getPositionChange(const UInt32& Index) const
+{
+	return getPosition(Index) - getSecPosition(Index);
+}
+
+const Vec3f& ParticleSystem::getVelocityChange(const UInt32& Index) const
+{
+	return getVelocity(Index) - getSecVelocity(Index);
+}
+
 const Pnt3f& ParticleSystem::getSecPosition(const UInt32& Index) const
 {
 	if(Index < getInternalSecPositions().getSize())
