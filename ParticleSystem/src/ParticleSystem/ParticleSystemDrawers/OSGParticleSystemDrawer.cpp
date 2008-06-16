@@ -81,10 +81,10 @@ void ParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volum
 {
 	UInt32 NumParticles(System->getNumParticles());
 
-	for(UInt32 i(0) ;i < NumParticles ; ++i)
-	{
-		volume.extendBy(System->getPosition(i));
-	}
+	//for(UInt32 i(0) ;i < NumParticles ; ++i)
+	//{
+	//	volume.extendBy(System->getPosition(i));
+	//}
 
     volume.setValid();
     volume.setEmpty();

@@ -100,6 +100,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawer : public LinePar
 
     virtual ~LineParticleSystemDrawer(void); 
 
+	Pnt3f getLineEndpoint(ParticleSystemPtr System, UInt32 Index);
+
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

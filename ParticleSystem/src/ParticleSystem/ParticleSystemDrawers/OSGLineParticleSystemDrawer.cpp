@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGLineParticleSystemDrawer.h"
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,14 +80,108 @@ void LineParticleSystemDrawer::initMethod (void)
 Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
 {
     //TODO: Implement
+	UInt32 NumParticles(System->getNumParticles());
+
+	if(NumParticles != 0)
+	{
+
+		bool SeparateColors(System->getNumColors() > 1);
+		bool SeparateSizes(System->getNumSizes() > 1);
+		bool SeparateNormals(System->getNumNormals() > 1);
+
+		glBegin(GL_LINES);
+			if(!SeparateColors)
+			{
+				glColor4fv(System->getColor(0).getValuesRGBA());
+			}
+			//Sizes
+			if(!SeparateSizes)
+			{
+				//glColor4fv(System->getColor(0).getValuesRGBA());
+			}
+			//Normals
+			if(!SeparateNormals)
+			{
+				glNormal3fv(System->getNormal(0).getValues());
+			}
+			for(UInt32 i(0) ; i<NumParticles ; ++i)
+			{
+				//Colors
+				if(SeparateColors)
+				{
+					glColor4fv(System->getColor(i).getValuesRGBA());
+				}
+				//Sizes
+				if(SeparateSizes)
+				{
+					//glColor4fv(System->getColor(i).getValuesRGBA());
+				}
+				//Normals
+				if(SeparateNormals)
+				{
+					glNormal3fv(System->getNormal(i).getValues());
+				}
+				//Positions
+				glVertex3fv(System->getPosition(i).getValues());
+				glVertex3fv(getLineEndpoint(System, i).getValues());
+			}
+		glEnd();
+	}
+
     return Action::Continue;
 }
 
 void LineParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
 {
-    //TODO: Implement
+	UInt32 NumParticles(System->getNumParticles());
+
+    volume.setValid();
+    volume.setEmpty();
+
+    Vec3f p1, p2;
+    Real32 s;
+
+    for(UInt32 i = 0; i < NumParticles; i++)
+    {
+        p1 = System->getPosition(i);
+        p2 = getLineEndpoint(System,i);
+
+        volume.extendBy(p1);
+        volume.extendBy(p2);
+    }
 }
 
+Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemPtr System, UInt32 Index)
+{
+	Vec3f Direction;
+
+	//Calculate Direction
+	switch(getLineDirectionSource())
+	{
+	case POSITION_CHANGE:
+		Direction = System->getPositionChange(Index);
+		break;
+	case VELOCITY_CHANGE:
+		Direction = System->getVelocityChange(Index);
+		break;
+	case VELOCITY:
+		Direction = System->getVelocity(Index);
+		break;
+	case ACCELERATION:
+		Direction = System->getAcceleration(Index);
+		break;
+	case NORMAL:
+	default:
+		Direction = System->getNormal(Index);
+		break;
+	}
+
+	//Calculate Length
+	Real32 LineLength = 5.0f;
+
+	return System->getPosition(Index)+(LineLength*Direction);
+
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
