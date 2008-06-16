@@ -80,6 +80,11 @@ Action::ResultE QuadParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 {
     return Action::Continue;
 }
+
+void QuadParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
+{
+    //TODO: Implement
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

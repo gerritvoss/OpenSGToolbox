@@ -61,6 +61,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawer : public QuadPar
 
     /*==========================  PUBLIC  =================================*/
   public:
+      enum NormalSource {NORMAL_POSITION_CHANGE, NORMAL_VELOCITY_CHANGE, NORMAL_VELOCITY, NORMAL_ACCELERATION, NORMAL_PARTICLE_NORMAL, NORMAL_VIEW_DIRECTION, NORMAL_VIEW_POSITION, NORMAL_STATIC};
+      enum UpSource {UP_POSITION_CHANGE, UP_VELOCITY_CHANGE, UP_VELOCITY, UP_ACCELERATION, UP_PARTICLE_NORMAL, UP_VIEW_DIRECTION, UP_STATIC};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -79,6 +81,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawer : public QuadPar
 
     /*! \}                                                                 */
 	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort);
+	virtual void adjustVolume(ParticleSystemPtr System, Volume & volume);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

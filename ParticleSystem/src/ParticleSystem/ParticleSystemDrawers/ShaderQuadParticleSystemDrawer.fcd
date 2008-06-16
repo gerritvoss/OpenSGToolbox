@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="ShaderQuadParticleSystemDrawer"
-	parent="BaseQuadParticleSystemDrawer"
+	parent="QuadParticleSystemDrawer"
 	library="ParticleSystem"
 	pointerfieldtypes="both"
 	structure="concrete"

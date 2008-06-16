@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -72,7 +72,7 @@ const OSG::BitVector ShaderQuadParticleSystemDrawerBase::MTInfluenceMask =
 
 FieldContainerType ShaderQuadParticleSystemDrawerBase::_type(
     "ShaderQuadParticleSystemDrawer",
-    "BaseQuadParticleSystemDrawer",
+    "QuadParticleSystemDrawer",
     NULL,
     (PrototypeCreateF) &ShaderQuadParticleSystemDrawerBase::createEmpty,
     ShaderQuadParticleSystemDrawer::initMethod,
@@ -227,7 +227,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ShaderQuadParticleSystemDrawerPtr>::_type("ShaderQuadParticleSystemDrawerPtr", "BaseQuadParticleSystemDrawerPtr");
+DataType FieldDataTraits<ShaderQuadParticleSystemDrawerPtr>::_type("ShaderQuadParticleSystemDrawerPtr", "QuadParticleSystemDrawerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(ShaderQuadParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);

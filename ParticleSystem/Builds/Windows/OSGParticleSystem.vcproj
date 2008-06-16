@@ -294,34 +294,6 @@
 					Name="ParticleSystemDrawers"
 					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawer.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGBaseQuadParticleSystemDrawerFields.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawer.cpp"
 						>
 					</File>
@@ -487,90 +459,6 @@
 					</File>
 					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGShaderQuadParticleSystemDrawerFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawer.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGVelocityQuadParticleSystemDrawerFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawer.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewDirQuadParticleSystemDrawerFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawer.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGViewPosQuadParticleSystemDrawerFields.h"
 						>
 					</File>
 				</Filter>

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,9 +65,15 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGBaseQuadParticleSystemDrawer.h" // Parent
+#include "OSGParticleSystemDrawer.h" // Parent
 
+#include <OpenSG/OSGVec2fFields.h> // QuadSizeScaling type
+#include <OpenSG/OSGBoolFields.h> // UseImageSizeRatio type
+#include <OpenSG/OSGUInt32Fields.h> // NormalSource type
+#include <OpenSG/OSGVec3fFields.h> // Normal type
+#include <OpenSG/OSGUInt32Fields.h> // UpSource type
 #include <OpenSG/OSGVec3fFields.h> // Up type
+#include <OpenSG/OSGBoolFields.h> // UseNormalAsObjectSpaceRotation type
 
 #include "OSGQuadParticleSystemDrawerFields.h"
 
@@ -78,11 +84,11 @@ class BinaryDataHandler;
 
 //! \brief QuadParticleSystemDrawer Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public BaseQuadParticleSystemDrawer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public ParticleSystemDrawer
 {
   private:
 
-    typedef BaseQuadParticleSystemDrawer    Inherited;
+    typedef ParticleSystemDrawer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -91,11 +97,23 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Bas
 
     enum
     {
-        UpFieldId   = Inherited::NextFieldId,
-        NextFieldId = UpFieldId   + 1
+        QuadSizeScalingFieldId                = Inherited::NextFieldId,
+        UseImageSizeRatioFieldId              = QuadSizeScalingFieldId                + 1,
+        NormalSourceFieldId                   = UseImageSizeRatioFieldId              + 1,
+        NormalFieldId                         = NormalSourceFieldId                   + 1,
+        UpSourceFieldId                       = NormalFieldId                         + 1,
+        UpFieldId                             = UpSourceFieldId                       + 1,
+        UseNormalAsObjectSpaceRotationFieldId = UpFieldId                             + 1,
+        NextFieldId                           = UseNormalAsObjectSpaceRotationFieldId + 1
     };
 
+    static const OSG::BitVector QuadSizeScalingFieldMask;
+    static const OSG::BitVector UseImageSizeRatioFieldMask;
+    static const OSG::BitVector NormalSourceFieldMask;
+    static const OSG::BitVector NormalFieldMask;
+    static const OSG::BitVector UpSourceFieldMask;
     static const OSG::BitVector UpFieldMask;
+    static const OSG::BitVector UseNormalAsObjectSpaceRotationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +140,41 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Bas
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           SFVec2f             *getSFQuadSizeScaling(void);
+           SFBool              *getSFUseImageSizeRatio(void);
+           SFUInt32            *getSFNormalSource   (void);
+           SFVec3f             *getSFNormal         (void);
+           SFUInt32            *getSFUpSource       (void);
            SFVec3f             *getSFUp             (void);
+           SFBool              *getSFUseNormalAsObjectSpaceRotation(void);
 
+           Vec2f               &getQuadSizeScaling(void);
+     const Vec2f               &getQuadSizeScaling(void) const;
+           bool                &getUseImageSizeRatio(void);
+     const bool                &getUseImageSizeRatio(void) const;
+           UInt32              &getNormalSource   (void);
+     const UInt32              &getNormalSource   (void) const;
+           Vec3f               &getNormal         (void);
+     const Vec3f               &getNormal         (void) const;
+           UInt32              &getUpSource       (void);
+     const UInt32              &getUpSource       (void) const;
            Vec3f               &getUp             (void);
      const Vec3f               &getUp             (void) const;
+           bool                &getUseNormalAsObjectSpaceRotation(void);
+     const bool                &getUseNormalAsObjectSpaceRotation(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setQuadSizeScaling( const Vec2f &value );
+     void setUseImageSizeRatio( const bool &value );
+     void setNormalSource   ( const UInt32 &value );
+     void setNormal         ( const Vec3f &value );
+     void setUpSource       ( const UInt32 &value );
      void setUp             ( const Vec3f &value );
+     void setUseNormalAsObjectSpaceRotation( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,7 +217,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Bas
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFVec2f             _sfQuadSizeScaling;
+    SFBool              _sfUseImageSizeRatio;
+    SFUInt32            _sfNormalSource;
+    SFVec3f             _sfNormal;
+    SFUInt32            _sfUpSource;
     SFVec3f             _sfUp;
+    SFBool              _sfUseNormalAsObjectSpaceRotation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

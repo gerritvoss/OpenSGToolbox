@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\

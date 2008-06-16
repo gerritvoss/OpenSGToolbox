@@ -94,7 +94,7 @@ std::string Titlebar::getTitle(void) const
 {
 	if(getTitleLabel() != NullFC)
 	{
-		getTitleLabel()->getText();
+		return getTitleLabel()->getText();
 	}
 	else
 	{

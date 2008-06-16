@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGBaseQuadParticleSystemDrawer.h" // Parent
+#include "OSGQuadParticleSystemDrawer.h" // Parent
 
 
 #include "OSGShaderQuadParticleSystemDrawerFields.h"
@@ -77,11 +77,11 @@ class BinaryDataHandler;
 
 //! \brief ShaderQuadParticleSystemDrawer Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ShaderQuadParticleSystemDrawerBase : public BaseQuadParticleSystemDrawer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING ShaderQuadParticleSystemDrawerBase : public QuadParticleSystemDrawer
 {
   private:
 
-    typedef BaseQuadParticleSystemDrawer    Inherited;
+    typedef QuadParticleSystemDrawer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,6 +96,41 @@ QuadParticleSystemDrawerPtr QuadParticleSystemDrawerBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the QuadParticleSystemDrawer::_sfQuadSizeScaling field.
+inline
+SFVec2f *QuadParticleSystemDrawerBase::getSFQuadSizeScaling(void)
+{
+    return &_sfQuadSizeScaling;
+}
+
+//! Get the QuadParticleSystemDrawer::_sfUseImageSizeRatio field.
+inline
+SFBool *QuadParticleSystemDrawerBase::getSFUseImageSizeRatio(void)
+{
+    return &_sfUseImageSizeRatio;
+}
+
+//! Get the QuadParticleSystemDrawer::_sfNormalSource field.
+inline
+SFUInt32 *QuadParticleSystemDrawerBase::getSFNormalSource(void)
+{
+    return &_sfNormalSource;
+}
+
+//! Get the QuadParticleSystemDrawer::_sfNormal field.
+inline
+SFVec3f *QuadParticleSystemDrawerBase::getSFNormal(void)
+{
+    return &_sfNormal;
+}
+
+//! Get the QuadParticleSystemDrawer::_sfUpSource field.
+inline
+SFUInt32 *QuadParticleSystemDrawerBase::getSFUpSource(void)
+{
+    return &_sfUpSource;
+}
+
 //! Get the QuadParticleSystemDrawer::_sfUp field.
 inline
 SFVec3f *QuadParticleSystemDrawerBase::getSFUp(void)
@@ -103,6 +138,118 @@ SFVec3f *QuadParticleSystemDrawerBase::getSFUp(void)
     return &_sfUp;
 }
 
+//! Get the QuadParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
+inline
+SFBool *QuadParticleSystemDrawerBase::getSFUseNormalAsObjectSpaceRotation(void)
+{
+    return &_sfUseNormalAsObjectSpaceRotation;
+}
+
+
+//! Get the value of the QuadParticleSystemDrawer::_sfQuadSizeScaling field.
+inline
+Vec2f &QuadParticleSystemDrawerBase::getQuadSizeScaling(void)
+{
+    return _sfQuadSizeScaling.getValue();
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfQuadSizeScaling field.
+inline
+const Vec2f &QuadParticleSystemDrawerBase::getQuadSizeScaling(void) const
+{
+    return _sfQuadSizeScaling.getValue();
+}
+
+//! Set the value of the QuadParticleSystemDrawer::_sfQuadSizeScaling field.
+inline
+void QuadParticleSystemDrawerBase::setQuadSizeScaling(const Vec2f &value)
+{
+    _sfQuadSizeScaling.setValue(value);
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfUseImageSizeRatio field.
+inline
+bool &QuadParticleSystemDrawerBase::getUseImageSizeRatio(void)
+{
+    return _sfUseImageSizeRatio.getValue();
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfUseImageSizeRatio field.
+inline
+const bool &QuadParticleSystemDrawerBase::getUseImageSizeRatio(void) const
+{
+    return _sfUseImageSizeRatio.getValue();
+}
+
+//! Set the value of the QuadParticleSystemDrawer::_sfUseImageSizeRatio field.
+inline
+void QuadParticleSystemDrawerBase::setUseImageSizeRatio(const bool &value)
+{
+    _sfUseImageSizeRatio.setValue(value);
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfNormalSource field.
+inline
+UInt32 &QuadParticleSystemDrawerBase::getNormalSource(void)
+{
+    return _sfNormalSource.getValue();
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfNormalSource field.
+inline
+const UInt32 &QuadParticleSystemDrawerBase::getNormalSource(void) const
+{
+    return _sfNormalSource.getValue();
+}
+
+//! Set the value of the QuadParticleSystemDrawer::_sfNormalSource field.
+inline
+void QuadParticleSystemDrawerBase::setNormalSource(const UInt32 &value)
+{
+    _sfNormalSource.setValue(value);
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfNormal field.
+inline
+Vec3f &QuadParticleSystemDrawerBase::getNormal(void)
+{
+    return _sfNormal.getValue();
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfNormal field.
+inline
+const Vec3f &QuadParticleSystemDrawerBase::getNormal(void) const
+{
+    return _sfNormal.getValue();
+}
+
+//! Set the value of the QuadParticleSystemDrawer::_sfNormal field.
+inline
+void QuadParticleSystemDrawerBase::setNormal(const Vec3f &value)
+{
+    _sfNormal.setValue(value);
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfUpSource field.
+inline
+UInt32 &QuadParticleSystemDrawerBase::getUpSource(void)
+{
+    return _sfUpSource.getValue();
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfUpSource field.
+inline
+const UInt32 &QuadParticleSystemDrawerBase::getUpSource(void) const
+{
+    return _sfUpSource.getValue();
+}
+
+//! Set the value of the QuadParticleSystemDrawer::_sfUpSource field.
+inline
+void QuadParticleSystemDrawerBase::setUpSource(const UInt32 &value)
+{
+    _sfUpSource.setValue(value);
+}
 
 //! Get the value of the QuadParticleSystemDrawer::_sfUp field.
 inline
@@ -123,6 +270,27 @@ inline
 void QuadParticleSystemDrawerBase::setUp(const Vec3f &value)
 {
     _sfUp.setValue(value);
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
+inline
+bool &QuadParticleSystemDrawerBase::getUseNormalAsObjectSpaceRotation(void)
+{
+    return _sfUseNormalAsObjectSpaceRotation.getValue();
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
+inline
+const bool &QuadParticleSystemDrawerBase::getUseNormalAsObjectSpaceRotation(void) const
+{
+    return _sfUseNormalAsObjectSpaceRotation.getValue();
+}
+
+//! Set the value of the QuadParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
+inline
+void QuadParticleSystemDrawerBase::setUseNormalAsObjectSpaceRotation(const bool &value)
+{
+    _sfUseNormalAsObjectSpaceRotation.setValue(value);
 }
 
 

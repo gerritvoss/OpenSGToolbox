@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				AdditionalIncludeDirectories="$(BOOST_BASE_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0500;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEINPUTLIB"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -137,7 +137,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				AdditionalIncludeDirectories="$(BOOST_BASE_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\src"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0500;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEINPUTLIB"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -248,6 +248,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGEventListener.inl"
 					>
 				</File>
 				<File

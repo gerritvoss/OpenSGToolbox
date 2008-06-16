@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="QuadParticleSystemDrawer"
-	parent="BaseQuadParticleSystemDrawer"
+	parent="ParticleSystemDrawer"
 	library="ParticleSystem"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -12,6 +12,71 @@
 	useLocalIncludes="true"
 >
 	<Field
+		name="QuadSizeScaling"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,1.0"
+		access="public"
+	>
+	This value is used to scale the size of the particle and apply that size to the quad for that particle.
+	</Field>
+	<Field
+		name="UseImageSizeRatio"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+   If true the aspect ratio of the Image of the first TextureChunk is used to scale the width and length of the quads.
+	</Field>
+	<Field
+		name="NormalSource"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="QuadParticleSystemDrawer::NORMAL_VIEW_DIRECTION"
+		access="public"
+	>
+	This enum is used to determine what is used for the direction of the line.
+   NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.
+   NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.
+   NORMAL_VELOCITY uses the velocity.
+   NORMAL_ACCELERATION uses the acceleration.
+   NORMAL_PARTICLE_NORMAL uses the normal of the particle.
+   NORMAL_VIEW_DIRECTION uses the z axis of the view space.
+   NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.
+   NORMAL_STATIC uses the normal of this drawer.
+	</Field>
+   <Field
+		name="Normal"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,0.0,0.0"
+		access="public"
+	>
+   The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.
+	</Field>
+	<Field
+		name="UpSource"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="QuadParticleSystemDrawer::UP_VIEW_DIRECTION"
+		access="public"
+	>
+	This enum is used to determine what is used for the direction of the line.
+   UP_POSITION_CHANGE uses the diference between Position and SecPosition.
+   UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.
+   UP_VELOCITY uses the velocity.
+   UP_ACCELERATION uses the acceleration.
+   UP_PARTICLE_NORMAL uses the normal of the particle.
+   UP_VIEW_DIRECTION uses the y axis of the view space.
+   UP_STATIC uses the normal of this drawer.
+	</Field>
+   <Field
 		name="Up"
 		type="Vec3f"
 		cardinality="single"
@@ -19,6 +84,15 @@
 		defaultValue="0.0,1.0,0.0"
 		access="public"
 	>
-   The direction to use as Up when aligning particles.
+   The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.
+	</Field>
+	<Field
+		name="UseNormalAsObjectSpaceRotation"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
 	</Field>
 </FieldContainer>

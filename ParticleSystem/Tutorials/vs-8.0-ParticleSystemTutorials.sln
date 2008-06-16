@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XXTesting", "XXTesting.vcproj", "{101B4E61-3D86-4512-A4D8-1A0D2FF2BB9D}"
@@ -12,6 +12,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01ParticleSystemDrawers", "01ParticleSystemDrawers.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\..\Dynamics\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.Build.0 = Debug|Win32
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.ActiveCfg = Release|Win32
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.Build.0 = Release|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.Build.0 = Debug|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.ActiveCfg = Release|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

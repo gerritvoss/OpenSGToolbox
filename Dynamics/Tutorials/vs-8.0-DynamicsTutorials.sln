@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
 	ProjectSection(ProjectDependencies) = postProject
 		{82609F8B-FDBB-4A72-B925-A5B4007272B5} = {82609F8B-FDBB-4A72-B925-A5B4007272B5}

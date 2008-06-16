@@ -73,11 +73,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
@@ -164,11 +164,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib OSGWindowWIN32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGToolbox.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
@@ -871,19 +871,11 @@
 				Name="BooleanOperations"
 				>
 				<File
-					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunction.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunction.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunction.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunctionBase.cpp"
 					>
 				</File>
 				<File

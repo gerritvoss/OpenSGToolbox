@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGParticleSystemDef.h"
 
-#include "OSGBaseQuadParticleSystemDrawerFields.h"
+#include "OSGParticleSystemDrawerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class QuadParticleSystemDrawer;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! QuadParticleSystemDrawerPtr
 
-typedef FCPtr<BaseQuadParticleSystemDrawerPtr, QuadParticleSystemDrawer> QuadParticleSystemDrawerPtr;
+typedef FCPtr<ParticleSystemDrawerPtr, QuadParticleSystemDrawer> QuadParticleSystemDrawerPtr;
 
 #endif
 
