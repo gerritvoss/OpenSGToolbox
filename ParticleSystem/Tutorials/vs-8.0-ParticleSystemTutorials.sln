@@ -10,15 +10,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGParticleSystem", "..\Builds\Windows\OSGParticleSystem.vcproj", "{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01ParticleSystemDrawers", "01ParticleSystemDrawers.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
-		{61151B1E-8A6D-465E-8C71-7E1578BA2393} = {61151B1E-8A6D-465E-8C71-7E1578BA2393}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\..\Dynamics\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
-	ProjectSection(ProjectDependencies) = postProject
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5} = {82609F8B-FDBB-4A72-B925-A5B4007272B5}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
 EndProject
