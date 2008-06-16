@@ -44,13 +44,16 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEvent : public Event
   /*=========================  PUBLIC  ===============================*/
   public:
 
-   ParticleSystemEvent(FieldContainerPtr Source, Time TimeStamp);
+   ParticleSystemEvent(FieldContainerPtr Source, Time TimeStamp, bool VolumeChanged);
+   bool getVolumeChanged(void) const;
 
     virtual const EventType &getType(void) const;
     
     static const EventType &getClassType(void);
   private:
      static EventType _Type;
+
+     bool _VolumeChanged;
 };
 
 OSG_END_NAMESPACE

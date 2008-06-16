@@ -9,8 +9,9 @@ const EventType &ParticleSystemEvent::getType(void) const
     return _Type;
 }
 
-ParticleSystemEvent::ParticleSystemEvent(FieldContainerPtr Source, Time TimeStamp) :
-   Event(Source, TimeStamp)
+ParticleSystemEvent::ParticleSystemEvent(FieldContainerPtr Source, Time TimeStamp, bool VolumeChanged) :
+   Event(Source, TimeStamp),
+       _VolumeChanged(VolumeChanged)
 {
 }
 

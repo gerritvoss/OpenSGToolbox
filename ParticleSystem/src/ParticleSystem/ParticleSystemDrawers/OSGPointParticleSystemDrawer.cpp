@@ -85,18 +85,21 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, Particle
 	{
 
 		bool SeparateColors(System->getNumColors() > 1);
-		bool SeparateSizes(System->getNumSizes() > 1);
+		bool SeparateSizes(System->getNumSizes() > 1 && getForcePerParticleSizing());
 		bool SeparateNormals(System->getNumNormals() > 1);
-		//glPointSize(10.0f);
+
+        GLfloat PointSizeRange[2];
+        glGetFloatv(GL_POINT_SIZE_RANGE, PointSizeRange);
+
 		glBegin(GL_POINTS);
 			if(!SeparateColors)
 			{
 				glColor4fv(System->getColor(0).getValuesRGBA());
 			}
 			//Sizes
-			if(!SeparateSizes)
+			if(!SeparateSizes && getForcePerParticleSizing())
 			{
-				//glColor4fv(System->getColor(0).getValuesRGBA());
+                glPointSize(osgClamp<Real32>(PointSizeRange[0], System->getSize(0).x(), PointSizeRange[1]));
 			}
 			//Normals
 			if(!SeparateNormals)
@@ -113,7 +116,11 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, Particle
 				//Sizes
 				if(SeparateSizes)
 				{
-					//glColor4fv(System->getColor(i).getValuesRGBA());
+                    glEnd();
+		            
+                    glPointSize(osgClamp<Real32>(PointSizeRange[0], System->getSize(i).x(), PointSizeRange[1]));
+                    
+                    glBegin(GL_POINTS);
 				}
 				//Normals
 				if(SeparateNormals)

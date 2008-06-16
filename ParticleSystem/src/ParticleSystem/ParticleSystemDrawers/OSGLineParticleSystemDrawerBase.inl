@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -117,6 +117,27 @@ SFUInt32 *LineParticleSystemDrawerBase::getSFLineDirectionSource(void)
     return &_sfLineDirectionSource;
 }
 
+//! Get the LineParticleSystemDrawer::_sfLineDirection field.
+inline
+SFVec3f *LineParticleSystemDrawerBase::getSFLineDirection(void)
+{
+    return &_sfLineDirection;
+}
+
+//! Get the LineParticleSystemDrawer::_sfLineLengthSource field.
+inline
+SFUInt32 *LineParticleSystemDrawerBase::getSFLineLengthSource(void)
+{
+    return &_sfLineLengthSource;
+}
+
+//! Get the LineParticleSystemDrawer::_sfLineLength field.
+inline
+SFReal32 *LineParticleSystemDrawerBase::getSFLineLength(void)
+{
+    return &_sfLineLength;
+}
+
 
 //! Get the value of the LineParticleSystemDrawer::_sfLineWidthScaling field.
 inline
@@ -179,6 +200,69 @@ inline
 void LineParticleSystemDrawerBase::setLineDirectionSource(const UInt32 &value)
 {
     _sfLineDirectionSource.setValue(value);
+}
+
+//! Get the value of the LineParticleSystemDrawer::_sfLineDirection field.
+inline
+Vec3f &LineParticleSystemDrawerBase::getLineDirection(void)
+{
+    return _sfLineDirection.getValue();
+}
+
+//! Get the value of the LineParticleSystemDrawer::_sfLineDirection field.
+inline
+const Vec3f &LineParticleSystemDrawerBase::getLineDirection(void) const
+{
+    return _sfLineDirection.getValue();
+}
+
+//! Set the value of the LineParticleSystemDrawer::_sfLineDirection field.
+inline
+void LineParticleSystemDrawerBase::setLineDirection(const Vec3f &value)
+{
+    _sfLineDirection.setValue(value);
+}
+
+//! Get the value of the LineParticleSystemDrawer::_sfLineLengthSource field.
+inline
+UInt32 &LineParticleSystemDrawerBase::getLineLengthSource(void)
+{
+    return _sfLineLengthSource.getValue();
+}
+
+//! Get the value of the LineParticleSystemDrawer::_sfLineLengthSource field.
+inline
+const UInt32 &LineParticleSystemDrawerBase::getLineLengthSource(void) const
+{
+    return _sfLineLengthSource.getValue();
+}
+
+//! Set the value of the LineParticleSystemDrawer::_sfLineLengthSource field.
+inline
+void LineParticleSystemDrawerBase::setLineLengthSource(const UInt32 &value)
+{
+    _sfLineLengthSource.setValue(value);
+}
+
+//! Get the value of the LineParticleSystemDrawer::_sfLineLength field.
+inline
+Real32 &LineParticleSystemDrawerBase::getLineLength(void)
+{
+    return _sfLineLength.getValue();
+}
+
+//! Get the value of the LineParticleSystemDrawer::_sfLineLength field.
+inline
+const Real32 &LineParticleSystemDrawerBase::getLineLength(void) const
+{
+    return _sfLineLength.getValue();
+}
+
+//! Set the value of the LineParticleSystemDrawer::_sfLineLength field.
+inline
+void LineParticleSystemDrawerBase::setLineLength(const Real32 &value)
+{
+    _sfLineLength.setValue(value);
 }
 
 

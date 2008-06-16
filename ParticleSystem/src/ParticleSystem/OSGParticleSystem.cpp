@@ -49,6 +49,7 @@
 
 #include "OSGParticleSystem.h"
 #include "ParticleSystem/Events/OSGParticleEvent.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -531,8 +532,21 @@ UInt64 ParticleSystem::getProperty(const UInt32& Index) const
 void ParticleSystem::update(const Time& elps)
 {
     //TODO: Implement
+
+    //Loop through all of the particles
+    bool VolumeChanged(false);
+    UInt32 NumParticles(getNumParticles());
+    for(UInt32 i(0) ; i<NumParticles; ++i)
+    {
+        VolumeChanged = true;
+        setPosition(getPosition(i) + getVelocity(i)*elps, i);
+    }
+
+    //Update Position
+
+
     //Fire a Update Event
-    produceSystemUpdated();
+    produceSystemUpdated(VolumeChanged);
 }
 
 void ParticleSystem::produceParticleGenerated(void)
@@ -574,9 +588,9 @@ void ParticleSystem::produceParticleStolen(void)
    }
 }
 
-void ParticleSystem::produceSystemUpdated(void)
+void ParticleSystem::produceSystemUpdated(bool VolumeChanged)
 {
-   ParticleSystemEvent TheEvent( ParticleSystemPtr(this), getSystemTime() );
+   ParticleSystemEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), VolumeChanged );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -587,6 +601,25 @@ void ParticleSystem::produceSystemUpdated(void)
    }
 }
 
+bool ParticleSystem::attachUpdateListener(WindowEventProducerPtr UpdateProducer)
+{
+    if(UpdateProducer == NullFC)
+    {
+        return false;
+    }
+
+    UpdateProducer->addUpdateListener(&_SystemUpdateListener);
+
+    return true;
+}
+
+void ParticleSystem::dettachUpdateListener(WindowEventProducerPtr UpdateProducer)
+{
+    if(UpdateProducer != NullFC)
+    {
+        UpdateProducer->removeUpdateListener(&_SystemUpdateListener);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

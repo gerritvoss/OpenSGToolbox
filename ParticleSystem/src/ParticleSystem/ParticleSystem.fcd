@@ -149,6 +149,16 @@
         not. Is used to speed up sorting.
 	</Field>
 	<Field
+		name="LastElapsedTime"
+		type="Time"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0"
+		access="public"
+	>
+	This value holds the value of the last elapsed time.
+	</Field>
+	<Field
 		name="Generators"
 		type="ParticleGeneratorPtr"
 		cardinality="multi"

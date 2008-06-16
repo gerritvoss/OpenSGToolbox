@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,9 @@
 #include <OpenSG/OSGReal32Fields.h> // LineWidthScaling type
 #include <OpenSG/OSGReal32Fields.h> // LineLengthElpsScaling type
 #include <OpenSG/OSGUInt32Fields.h> // LineDirectionSource type
+#include <OpenSG/OSGVec3fFields.h> // LineDirection type
+#include <OpenSG/OSGUInt32Fields.h> // LineLengthSource type
+#include <OpenSG/OSGReal32Fields.h> // LineLength type
 
 #include "OSGLineParticleSystemDrawerFields.h"
 
@@ -96,12 +99,18 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
         LineWidthScalingFieldId      = Inherited::NextFieldId,
         LineLengthElpsScalingFieldId = LineWidthScalingFieldId      + 1,
         LineDirectionSourceFieldId   = LineLengthElpsScalingFieldId + 1,
-        NextFieldId                  = LineDirectionSourceFieldId   + 1
+        LineDirectionFieldId         = LineDirectionSourceFieldId   + 1,
+        LineLengthSourceFieldId      = LineDirectionFieldId         + 1,
+        LineLengthFieldId            = LineLengthSourceFieldId      + 1,
+        NextFieldId                  = LineLengthFieldId            + 1
     };
 
     static const OSG::BitVector LineWidthScalingFieldMask;
     static const OSG::BitVector LineLengthElpsScalingFieldMask;
     static const OSG::BitVector LineDirectionSourceFieldMask;
+    static const OSG::BitVector LineDirectionFieldMask;
+    static const OSG::BitVector LineLengthSourceFieldMask;
+    static const OSG::BitVector LineLengthFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,6 +140,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
            SFReal32            *getSFLineWidthScaling(void);
            SFReal32            *getSFLineLengthElpsScaling(void);
            SFUInt32            *getSFLineDirectionSource(void);
+           SFVec3f             *getSFLineDirection  (void);
+           SFUInt32            *getSFLineLengthSource(void);
+           SFReal32            *getSFLineLength     (void);
 
            Real32              &getLineWidthScaling(void);
      const Real32              &getLineWidthScaling(void) const;
@@ -138,6 +150,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
      const Real32              &getLineLengthElpsScaling(void) const;
            UInt32              &getLineDirectionSource(void);
      const UInt32              &getLineDirectionSource(void) const;
+           Vec3f               &getLineDirection  (void);
+     const Vec3f               &getLineDirection  (void) const;
+           UInt32              &getLineLengthSource(void);
+     const UInt32              &getLineLengthSource(void) const;
+           Real32              &getLineLength     (void);
+     const Real32              &getLineLength     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -147,6 +165,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
      void setLineWidthScaling( const Real32 &value );
      void setLineLengthElpsScaling( const Real32 &value );
      void setLineDirectionSource( const UInt32 &value );
+     void setLineDirection  ( const Vec3f &value );
+     void setLineLengthSource( const UInt32 &value );
+     void setLineLength     ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,6 +213,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
     SFReal32            _sfLineWidthScaling;
     SFReal32            _sfLineLengthElpsScaling;
     SFUInt32            _sfLineDirectionSource;
+    SFVec3f             _sfLineDirection;
+    SFUInt32            _sfLineLengthSource;
+    SFReal32            _sfLineLength;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

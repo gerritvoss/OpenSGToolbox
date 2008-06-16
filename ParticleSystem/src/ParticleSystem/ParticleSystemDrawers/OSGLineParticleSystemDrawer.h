@@ -61,7 +61,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawer : public LinePar
 
     /*==========================  PUBLIC  =================================*/
   public:
-      enum LineDirectionSource {POSITION_CHANGE, VELOCITY_CHANGE, VELOCITY, ACCELERATION, NORMAL};
+      enum LineDirectionSource {DIRECTION_POSITION_CHANGE, DIRECTION_VELOCITY_CHANGE, DIRECTION_VELOCITY, DIRECTION_ACCELERATION, DIRECTION_NORMAL, DIRECTION_STATIC};
+      enum LineLengthSource {LENGTH_SIZE_X, LENGTH_SIZE_Y, LENGTH_SIZE_Z, LENGTH_STATIC};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

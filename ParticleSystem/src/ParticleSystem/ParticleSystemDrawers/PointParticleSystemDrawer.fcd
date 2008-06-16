@@ -21,4 +21,14 @@
 	>
 	This value is used to scale the size of the particle and apply that size as the OpenGL point size.
 	</Field>
+	<Field
+		name="ForcePerParticleSizing"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+	This value is used to force changes to the OpenGL point size (via glPointSize) on a per particle basis.  This has the potential to REALLY slow things down because it requires a separate glBegin/glEnd for every particle.
+	</Field>
 </FieldContainer>

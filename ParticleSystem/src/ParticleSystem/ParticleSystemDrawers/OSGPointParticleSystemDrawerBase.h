@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,6 +68,7 @@
 #include "OSGParticleSystemDrawer.h" // Parent
 
 #include <OpenSG/OSGReal32Fields.h> // PointSizeScaling type
+#include <OpenSG/OSGBoolFields.h> // ForcePerParticleSizing type
 
 #include "OSGPointParticleSystemDrawerFields.h"
 
@@ -91,11 +92,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING PointParticleSystemDrawerBase : public Pa
 
     enum
     {
-        PointSizeScalingFieldId = Inherited::NextFieldId,
-        NextFieldId             = PointSizeScalingFieldId + 1
+        PointSizeScalingFieldId       = Inherited::NextFieldId,
+        ForcePerParticleSizingFieldId = PointSizeScalingFieldId       + 1,
+        NextFieldId                   = ForcePerParticleSizingFieldId + 1
     };
 
     static const OSG::BitVector PointSizeScalingFieldMask;
+    static const OSG::BitVector ForcePerParticleSizingFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +126,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING PointParticleSystemDrawerBase : public Pa
     /*! \{                                                                 */
 
            SFReal32            *getSFPointSizeScaling(void);
+           SFBool              *getSFForcePerParticleSizing(void);
 
            Real32              &getPointSizeScaling(void);
      const Real32              &getPointSizeScaling(void) const;
+           bool                &getForcePerParticleSizing(void);
+     const bool                &getForcePerParticleSizing(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +139,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING PointParticleSystemDrawerBase : public Pa
     /*! \{                                                                 */
 
      void setPointSizeScaling( const Real32 &value );
+     void setForcePerParticleSizing( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING PointParticleSystemDrawerBase : public Pa
     /*! \{                                                                 */
 
     SFReal32            _sfPointSizeScaling;
+    SFBool              _sfForcePerParticleSizing;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

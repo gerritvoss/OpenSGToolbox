@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -103,6 +103,13 @@ SFReal32 *PointParticleSystemDrawerBase::getSFPointSizeScaling(void)
     return &_sfPointSizeScaling;
 }
 
+//! Get the PointParticleSystemDrawer::_sfForcePerParticleSizing field.
+inline
+SFBool *PointParticleSystemDrawerBase::getSFForcePerParticleSizing(void)
+{
+    return &_sfForcePerParticleSizing;
+}
+
 
 //! Get the value of the PointParticleSystemDrawer::_sfPointSizeScaling field.
 inline
@@ -123,6 +130,27 @@ inline
 void PointParticleSystemDrawerBase::setPointSizeScaling(const Real32 &value)
 {
     _sfPointSizeScaling.setValue(value);
+}
+
+//! Get the value of the PointParticleSystemDrawer::_sfForcePerParticleSizing field.
+inline
+bool &PointParticleSystemDrawerBase::getForcePerParticleSizing(void)
+{
+    return _sfForcePerParticleSizing.getValue();
+}
+
+//! Get the value of the PointParticleSystemDrawer::_sfForcePerParticleSizing field.
+inline
+const bool &PointParticleSystemDrawerBase::getForcePerParticleSizing(void) const
+{
+    return _sfForcePerParticleSizing.getValue();
+}
+
+//! Set the value of the PointParticleSystemDrawer::_sfForcePerParticleSizing field.
+inline
+void PointParticleSystemDrawerBase::setForcePerParticleSizing(const bool &value)
+{
+    _sfForcePerParticleSizing.setValue(value);
 }
 
 

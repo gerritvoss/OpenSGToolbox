@@ -187,6 +187,13 @@ SFBool *ParticleSystemBase::getSFDynamic(void)
     return &_sfDynamic;
 }
 
+//! Get the ParticleSystem::_sfLastElapsedTime field.
+inline
+SFTime *ParticleSystemBase::getSFLastElapsedTime(void)
+{
+    return &_sfLastElapsedTime;
+}
+
 //! Get the ParticleSystem::_mfGenerators field.
 inline
 MFParticleGeneratorPtr *ParticleSystemBase::getMFGenerators(void)
@@ -249,6 +256,27 @@ inline
 void ParticleSystemBase::setDynamic(const bool &value)
 {
     _sfDynamic.setValue(value);
+}
+
+//! Get the value of the ParticleSystem::_sfLastElapsedTime field.
+inline
+Time &ParticleSystemBase::getLastElapsedTime(void)
+{
+    return _sfLastElapsedTime.getValue();
+}
+
+//! Get the value of the ParticleSystem::_sfLastElapsedTime field.
+inline
+const Time &ParticleSystemBase::getLastElapsedTime(void) const
+{
+    return _sfLastElapsedTime.getValue();
+}
+
+//! Set the value of the ParticleSystem::_sfLastElapsedTime field.
+inline
+void ParticleSystemBase::setLastElapsedTime(const Time &value)
+{
+    _sfLastElapsedTime.setValue(value);
 }
 
 

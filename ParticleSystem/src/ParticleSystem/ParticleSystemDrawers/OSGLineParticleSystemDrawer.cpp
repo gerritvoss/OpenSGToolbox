@@ -158,19 +158,22 @@ Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemPtr System, UInt32
 	//Calculate Direction
 	switch(getLineDirectionSource())
 	{
-	case POSITION_CHANGE:
+	case DIRECTION_POSITION_CHANGE:
 		Direction = System->getPositionChange(Index);
 		break;
-	case VELOCITY_CHANGE:
+	case DIRECTION_VELOCITY_CHANGE:
 		Direction = System->getVelocityChange(Index);
 		break;
-	case VELOCITY:
+	case DIRECTION_VELOCITY:
 		Direction = System->getVelocity(Index);
 		break;
-	case ACCELERATION:
+	case DIRECTION_ACCELERATION:
 		Direction = System->getAcceleration(Index);
 		break;
-	case NORMAL:
+	case DIRECTION_STATIC:
+		Direction = getLineDirection();
+		break;
+	case DIRECTION_NORMAL:
 	default:
 		Direction = System->getNormal(Index);
 		break;

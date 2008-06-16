@@ -29,21 +29,57 @@
 		defaultValue="1.0"
 		access="public"
 	>
-	This value is used to scale the line direction denoted by LineDirectionSource and the elapsed time, then apply that value as the length of the line.
+	This value is used to scale the line length denoted by LineLengthSource and the elapsed time, then apply that value as the length of the line.
 	</Field>
 	<Field
 		name="LineDirectionSource"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="LineParticleSystemDrawer::POSITION_CHANGE"
+		defaultValue="LineParticleSystemDrawer::DIRECTION_POSITION_CHANGE"
 		access="public"
 	>
 	This enum is used to determine what is used for the direction of the line.
-   POSITION_CHANGE uses the diference between Position and SecPosition.
-   VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.
-   VELOCITY uses the velocity.
-   ACCELERATION uses the acceleration.
-   NORMAL uses the normal.
+   DIRECTION_POSITION_CHANGE uses the diference between Position and SecPosition.
+   DIRECTION_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.
+   DIRECTION_VELOCITY uses the velocity.
+   DIRECTION_ACCELERATION uses the acceleration.
+   DIRECTION_NORMAL uses the particle normal.
+   DIRECTION_STATIC uses the static direction defined in the LineDirection field.
 	</Field>
+	<Field
+		name="LineDirection"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,1.0,0.0"
+		access="public"
+	>
+   The direction to draw the line in.  This is only used when LineDirectionSource is DIRECTION_STATIC.
+   </Field>
+	<Field
+		name="LineLengthSource"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="LineParticleSystemDrawer::LENGTH_SIZE_X"
+		access="public"
+	>
+	This enum is used to determine what is used for the direction of the line.
+   LENGTH_SIZE_X uses the x value of the particles size for the line length.
+   LENGTH_SIZE_Y uses the y value of the particles size for the line length.
+   LENGTH_SIZE_Z uses the a value of the particles size for the line length.
+   
+   LENGTH_STATIC uses the static legth defined in the LineLength field.
+	</Field>
+	<Field
+		name="LineLength"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0"
+		access="public"
+	>
+   The length to draw the line.  This is only used when LineLengthSource is LENGTH_STATIC.
+   </Field>
 </FieldContainer>

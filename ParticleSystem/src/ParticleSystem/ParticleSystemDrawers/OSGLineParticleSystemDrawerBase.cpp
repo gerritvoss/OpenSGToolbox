@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,15 @@ const OSG::BitVector  LineParticleSystemDrawerBase::LineLengthElpsScalingFieldMa
 const OSG::BitVector  LineParticleSystemDrawerBase::LineDirectionSourceFieldMask = 
     (TypeTraits<BitVector>::One << LineParticleSystemDrawerBase::LineDirectionSourceFieldId);
 
+const OSG::BitVector  LineParticleSystemDrawerBase::LineDirectionFieldMask = 
+    (TypeTraits<BitVector>::One << LineParticleSystemDrawerBase::LineDirectionFieldId);
+
+const OSG::BitVector  LineParticleSystemDrawerBase::LineLengthSourceFieldMask = 
+    (TypeTraits<BitVector>::One << LineParticleSystemDrawerBase::LineLengthSourceFieldId);
+
+const OSG::BitVector  LineParticleSystemDrawerBase::LineLengthFieldMask = 
+    (TypeTraits<BitVector>::One << LineParticleSystemDrawerBase::LineLengthFieldId);
+
 const OSG::BitVector LineParticleSystemDrawerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -84,10 +93,19 @@ const OSG::BitVector LineParticleSystemDrawerBase::MTInfluenceMask =
     This value is used to scale the size of the particle and apply that size as the OpenGL line width.
 */
 /*! \var Real32          LineParticleSystemDrawerBase::_sfLineLengthElpsScaling
-    This value is used to scale the line direction denoted by LineDirectionSource and the elapsed time, then apply that value as the length of the line.
+    This value is used to scale the line length denoted by LineLengthSource and the elapsed time, then apply that value as the length of the line.
 */
 /*! \var UInt32          LineParticleSystemDrawerBase::_sfLineDirectionSource
-    This enum is used to determine what is used for the direction of the line.    POSITION_CHANGE uses the diference between Position and SecPosition.    VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    VELOCITY uses the velocity.    ACCELERATION uses the acceleration.    NORMAL uses the normal.
+    This enum is used to determine what is used for the direction of the line.    DIRECTION_POSITION_CHANGE uses the diference between Position and SecPosition.    DIRECTION_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    DIRECTION_VELOCITY uses the velocity.    DIRECTION_ACCELERATION uses the acceleration.    DIRECTION_NORMAL uses the particle normal.    DIRECTION_STATIC uses the static direction defined in the LineDirection field.
+*/
+/*! \var Vec3f           LineParticleSystemDrawerBase::_sfLineDirection
+    The direction to draw the line in.  This is only used when LineDirectionSource is DIRECTION_STATIC.
+*/
+/*! \var UInt32          LineParticleSystemDrawerBase::_sfLineLengthSource
+    This enum is used to determine what is used for the direction of the line.    LENGTH_SIZE_X uses the x value of the particles size for the line length.    LENGTH_SIZE_Y uses the y value of the particles size for the line length.    LENGTH_SIZE_Z uses the a value of the particles size for the line length.        LENGTH_STATIC uses the static legth defined in the LineLength field.
+*/
+/*! \var Real32          LineParticleSystemDrawerBase::_sfLineLength
+    The length to draw the line.  This is only used when LineLengthSource is LENGTH_STATIC.
 */
 
 //! LineParticleSystemDrawer description
@@ -108,7 +126,22 @@ FieldDescription *LineParticleSystemDrawerBase::_desc[] =
                      "LineDirectionSource", 
                      LineDirectionSourceFieldId, LineDirectionSourceFieldMask,
                      false,
-                     (FieldAccessMethod) &LineParticleSystemDrawerBase::getSFLineDirectionSource)
+                     (FieldAccessMethod) &LineParticleSystemDrawerBase::getSFLineDirectionSource),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "LineDirection", 
+                     LineDirectionFieldId, LineDirectionFieldMask,
+                     false,
+                     (FieldAccessMethod) &LineParticleSystemDrawerBase::getSFLineDirection),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "LineLengthSource", 
+                     LineLengthSourceFieldId, LineLengthSourceFieldMask,
+                     false,
+                     (FieldAccessMethod) &LineParticleSystemDrawerBase::getSFLineLengthSource),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "LineLength", 
+                     LineLengthFieldId, LineLengthFieldMask,
+                     false,
+                     (FieldAccessMethod) &LineParticleSystemDrawerBase::getSFLineLength)
 };
 
 
@@ -186,7 +219,10 @@ void LineParticleSystemDrawerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 LineParticleSystemDrawerBase::LineParticleSystemDrawerBase(void) :
     _sfLineWidthScaling       (Real32(1.0)), 
     _sfLineLengthElpsScaling  (Real32(1.0)), 
-    _sfLineDirectionSource    (UInt32(LineParticleSystemDrawer::POSITION_CHANGE)), 
+    _sfLineDirectionSource    (UInt32(LineParticleSystemDrawer::DIRECTION_POSITION_CHANGE)), 
+    _sfLineDirection          (Vec3f(0.0,1.0,0.0)), 
+    _sfLineLengthSource       (UInt32(LineParticleSystemDrawer::LENGTH_SIZE_X)), 
+    _sfLineLength             (Real32(1.0)), 
     Inherited() 
 {
 }
@@ -199,6 +235,9 @@ LineParticleSystemDrawerBase::LineParticleSystemDrawerBase(const LineParticleSys
     _sfLineWidthScaling       (source._sfLineWidthScaling       ), 
     _sfLineLengthElpsScaling  (source._sfLineLengthElpsScaling  ), 
     _sfLineDirectionSource    (source._sfLineDirectionSource    ), 
+    _sfLineDirection          (source._sfLineDirection          ), 
+    _sfLineLengthSource       (source._sfLineLengthSource       ), 
+    _sfLineLength             (source._sfLineLength             ), 
     Inherited                 (source)
 {
 }
@@ -230,6 +269,21 @@ UInt32 LineParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfLineDirectionSource.getBinSize();
     }
 
+    if(FieldBits::NoField != (LineDirectionFieldMask & whichField))
+    {
+        returnValue += _sfLineDirection.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LineLengthSourceFieldMask & whichField))
+    {
+        returnValue += _sfLineLengthSource.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LineLengthFieldMask & whichField))
+    {
+        returnValue += _sfLineLength.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -252,6 +306,21 @@ void LineParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (LineDirectionSourceFieldMask & whichField))
     {
         _sfLineDirectionSource.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LineDirectionFieldMask & whichField))
+    {
+        _sfLineDirection.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LineLengthSourceFieldMask & whichField))
+    {
+        _sfLineLengthSource.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LineLengthFieldMask & whichField))
+    {
+        _sfLineLength.copyToBin(pMem);
     }
 
 
@@ -277,6 +346,21 @@ void LineParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfLineDirectionSource.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (LineDirectionFieldMask & whichField))
+    {
+        _sfLineDirection.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LineLengthSourceFieldMask & whichField))
+    {
+        _sfLineLengthSource.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LineLengthFieldMask & whichField))
+    {
+        _sfLineLength.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -296,6 +380,15 @@ void LineParticleSystemDrawerBase::executeSyncImpl(      LineParticleSystemDrawe
     if(FieldBits::NoField != (LineDirectionSourceFieldMask & whichField))
         _sfLineDirectionSource.syncWith(pOther->_sfLineDirectionSource);
 
+    if(FieldBits::NoField != (LineDirectionFieldMask & whichField))
+        _sfLineDirection.syncWith(pOther->_sfLineDirection);
+
+    if(FieldBits::NoField != (LineLengthSourceFieldMask & whichField))
+        _sfLineLengthSource.syncWith(pOther->_sfLineLengthSource);
+
+    if(FieldBits::NoField != (LineLengthFieldMask & whichField))
+        _sfLineLength.syncWith(pOther->_sfLineLength);
+
 
 }
 #else
@@ -314,6 +407,15 @@ void LineParticleSystemDrawerBase::executeSyncImpl(      LineParticleSystemDrawe
 
     if(FieldBits::NoField != (LineDirectionSourceFieldMask & whichField))
         _sfLineDirectionSource.syncWith(pOther->_sfLineDirectionSource);
+
+    if(FieldBits::NoField != (LineDirectionFieldMask & whichField))
+        _sfLineDirection.syncWith(pOther->_sfLineDirection);
+
+    if(FieldBits::NoField != (LineLengthSourceFieldMask & whichField))
+        _sfLineLengthSource.syncWith(pOther->_sfLineLengthSource);
+
+    if(FieldBits::NoField != (LineLengthFieldMask & whichField))
+        _sfLineLength.syncWith(pOther->_sfLineLength);
 
 
 

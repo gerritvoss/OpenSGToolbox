@@ -47,6 +47,7 @@
 
 #include "OSGParticleSystemBase.h"
 #include <OpenSG/Input/OSGUpdateListener.h>
+#include <OpenSG/Input/OSGWindowEventProducerFields.h>
 
 #include <set>
 #include "ParticleSystem/Events/OSGParticleSystemListener.h"
@@ -99,6 +100,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	const Vec3f& getAcceleration(const UInt32& Index) const;
 	UInt64 getProperty(const UInt32& Index) const;
 
+    
+	void setPosition(const Pnt3f& Pos, const UInt32& Index);
+
 	
 	UInt32 getNumNormals(void) const;
 	UInt32 getNumColors(void) const;
@@ -134,6 +138,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 					 const Vec3f& Acceleration,
 					 UInt64 Properties);
 
+    bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
+    void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -160,7 +167,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 
     ParticleSystemListenerSet       _ParticleSystemListeners;
 
-    void produceSystemUpdated(void);
+    void produceSystemUpdated(bool VolumeChanged);
     void produceParticleGenerated(void);
     void produceParticleKilled(void);
     void produceParticleStolen(void);

@@ -210,12 +210,14 @@ void ParticleSystemCore::sortParticles(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 ParticleSystemCore::ParticleSystemCore(void) :
-    Inherited()
+    Inherited(),
+    _SystemUpdateListener(ParticleSystemCorePtr(this))
 {
 }
 
 ParticleSystemCore::ParticleSystemCore(const ParticleSystemCore &source) :
-    Inherited(source)
+    Inherited(source),
+    _SystemUpdateListener(ParticleSystemCorePtr(this))
 {
 }
 
@@ -228,6 +230,21 @@ ParticleSystemCore::~ParticleSystemCore(void)
 void ParticleSystemCore::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & SystemFieldMask &&
+        getSystem() != NullFC)
+    {
+        getSystem()->addParticleSystemListener(&_SystemUpdateListener);
+    }
+
+    if(whichField & SystemFieldMask ||
+       whichField & DrawerFieldMask)
+    {
+         for(UInt32 i = 0; i < getParents().size(); i++)
+         {
+             getParents()[i]->invalidateVolume();
+         }
+    }
 }
 
 void ParticleSystemCore::dump(      UInt32    , 
@@ -236,6 +253,28 @@ void ParticleSystemCore::dump(      UInt32    ,
     SLOG << "Dump ParticleSystemCore NI" << std::endl;
 }
 
+void ParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEvent& e)
+{
+    if(e.getVolumeChanged())
+    {
+         for(UInt32 i = 0; i < _Core->getParents().size(); i++)
+         {
+             _Core->getParents()[i]->invalidateVolume();
+         }
+    }
+}
+
+void ParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEvent& e)
+{
+}
+
+void ParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEvent& e)
+{
+}
+
+void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEvent& e)
+{
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  PointParticleSystemDrawerBase::PointSizeScalingFieldMask = 
     (TypeTraits<BitVector>::One << PointParticleSystemDrawerBase::PointSizeScalingFieldId);
 
+const OSG::BitVector  PointParticleSystemDrawerBase::ForcePerParticleSizingFieldMask = 
+    (TypeTraits<BitVector>::One << PointParticleSystemDrawerBase::ForcePerParticleSizingFieldId);
+
 const OSG::BitVector PointParticleSystemDrawerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -77,6 +80,9 @@ const OSG::BitVector PointParticleSystemDrawerBase::MTInfluenceMask =
 /*! \var Real32          PointParticleSystemDrawerBase::_sfPointSizeScaling
     This value is used to scale the size of the particle and apply that size as the OpenGL point size.
 */
+/*! \var bool            PointParticleSystemDrawerBase::_sfForcePerParticleSizing
+    This value is used to force changes to the OpenGL point size (via glPointSize) on a per particle basis.  This has the potential to REALLY slow things down because it requires a separate glBegin/glEnd for every particle.
+*/
 
 //! PointParticleSystemDrawer description
 
@@ -86,7 +92,12 @@ FieldDescription *PointParticleSystemDrawerBase::_desc[] =
                      "PointSizeScaling", 
                      PointSizeScalingFieldId, PointSizeScalingFieldMask,
                      false,
-                     (FieldAccessMethod) &PointParticleSystemDrawerBase::getSFPointSizeScaling)
+                     (FieldAccessMethod) &PointParticleSystemDrawerBase::getSFPointSizeScaling),
+    new FieldDescription(SFBool::getClassType(), 
+                     "ForcePerParticleSizing", 
+                     ForcePerParticleSizingFieldId, ForcePerParticleSizingFieldMask,
+                     false,
+                     (FieldAccessMethod) &PointParticleSystemDrawerBase::getSFForcePerParticleSizing)
 };
 
 
@@ -163,6 +174,7 @@ void PointParticleSystemDrawerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect
 
 PointParticleSystemDrawerBase::PointParticleSystemDrawerBase(void) :
     _sfPointSizeScaling       (Real32(1.0)), 
+    _sfForcePerParticleSizing (bool(false)), 
     Inherited() 
 {
 }
@@ -173,6 +185,7 @@ PointParticleSystemDrawerBase::PointParticleSystemDrawerBase(void) :
 
 PointParticleSystemDrawerBase::PointParticleSystemDrawerBase(const PointParticleSystemDrawerBase &source) :
     _sfPointSizeScaling       (source._sfPointSizeScaling       ), 
+    _sfForcePerParticleSizing (source._sfForcePerParticleSizing ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +207,11 @@ UInt32 PointParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfPointSizeScaling.getBinSize();
     }
 
+    if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
+    {
+        returnValue += _sfForcePerParticleSizing.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +224,11 @@ void PointParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (PointSizeScalingFieldMask & whichField))
     {
         _sfPointSizeScaling.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
+    {
+        _sfForcePerParticleSizing.copyToBin(pMem);
     }
 
 
@@ -221,6 +244,11 @@ void PointParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfPointSizeScaling.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
+    {
+        _sfForcePerParticleSizing.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +262,9 @@ void PointParticleSystemDrawerBase::executeSyncImpl(      PointParticleSystemDra
     if(FieldBits::NoField != (PointSizeScalingFieldMask & whichField))
         _sfPointSizeScaling.syncWith(pOther->_sfPointSizeScaling);
 
+    if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
+        _sfForcePerParticleSizing.syncWith(pOther->_sfForcePerParticleSizing);
+
 
 }
 #else
@@ -246,6 +277,9 @@ void PointParticleSystemDrawerBase::executeSyncImpl(      PointParticleSystemDra
 
     if(FieldBits::NoField != (PointSizeScalingFieldMask & whichField))
         _sfPointSizeScaling.syncWith(pOther->_sfPointSizeScaling);
+
+    if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
+        _sfForcePerParticleSizing.syncWith(pOther->_sfForcePerParticleSizing);
 
 
 

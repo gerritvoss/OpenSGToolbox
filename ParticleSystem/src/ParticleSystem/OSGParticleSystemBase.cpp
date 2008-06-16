@@ -103,6 +103,9 @@ const OSG::BitVector  ParticleSystemBase::MaxParticlesFieldMask =
 const OSG::BitVector  ParticleSystemBase::DynamicFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::DynamicFieldId);
 
+const OSG::BitVector  ParticleSystemBase::LastElapsedTimeFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::LastElapsedTimeFieldId);
+
 const OSG::BitVector  ParticleSystemBase::GeneratorsFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::GeneratorsFieldId);
 
@@ -157,6 +160,9 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 */
 /*! \var bool            ParticleSystemBase::_sfDynamic
     Hint to tell the system whether particles are expected to change position or         not. Is used to speed up sorting.
+*/
+/*! \var Time            ParticleSystemBase::_sfLastElapsedTime
+    This value holds the value of the last elapsed time.
 */
 /*! \var ParticleGeneratorPtr ParticleSystemBase::_mfGenerators
     List of Particle Generators.
@@ -237,6 +243,11 @@ FieldDescription *ParticleSystemBase::_desc[] =
                      DynamicFieldId, DynamicFieldMask,
                      false,
                      (FieldAccessMethod) &ParticleSystemBase::getSFDynamic),
+    new FieldDescription(SFTime::getClassType(), 
+                     "LastElapsedTime", 
+                     LastElapsedTimeFieldId, LastElapsedTimeFieldMask,
+                     false,
+                     (FieldAccessMethod) &ParticleSystemBase::getSFLastElapsedTime),
     new FieldDescription(MFParticleGeneratorPtr::getClassType(), 
                      "Generators", 
                      GeneratorsFieldId, GeneratorsFieldMask,
@@ -354,6 +365,7 @@ ParticleSystemBase::ParticleSystemBase(void) :
     _mfInternalProperties     (), 
     _sfMaxParticles           (UInt32(4294967295)), 
     _sfDynamic                (bool(true)), 
+    _sfLastElapsedTime        (Time(0.0)), 
     _mfGenerators             (), 
     _mfEffectors              (), 
     _mfSystemEffectors        (), 
@@ -379,6 +391,7 @@ ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _mfInternalProperties     (source._mfInternalProperties     ), 
     _sfMaxParticles           (source._sfMaxParticles           ), 
     _sfDynamic                (source._sfDynamic                ), 
+    _sfLastElapsedTime        (source._sfLastElapsedTime        ), 
     _mfGenerators             (source._mfGenerators             ), 
     _mfEffectors              (source._mfEffectors              ), 
     _mfSystemEffectors        (source._mfSystemEffectors        ), 
@@ -461,6 +474,11 @@ UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
     {
         returnValue += _sfDynamic.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
+    {
+        returnValue += _sfLastElapsedTime.getBinSize();
     }
 
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
@@ -552,6 +570,11 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
         _sfDynamic.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
+    {
+        _sfLastElapsedTime.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
     {
         _mfGenerators.copyToBin(pMem);
@@ -640,6 +663,11 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDynamic.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
+    {
+        _sfLastElapsedTime.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
     {
         _mfGenerators.copyFromBin(pMem);
@@ -704,6 +732,9 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
         _sfDynamic.syncWith(pOther->_sfDynamic);
 
+    if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
+        _sfLastElapsedTime.syncWith(pOther->_sfLastElapsedTime);
+
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
         _mfGenerators.syncWith(pOther->_mfGenerators);
 
@@ -728,6 +759,9 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
 
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
         _sfDynamic.syncWith(pOther->_sfDynamic);
+
+    if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
+        _sfLastElapsedTime.syncWith(pOther->_sfLastElapsedTime);
 
 
     if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))

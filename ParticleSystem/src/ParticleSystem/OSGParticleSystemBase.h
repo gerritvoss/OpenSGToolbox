@@ -80,6 +80,7 @@
 #include <OpenSG/OSGUInt64Fields.h> // InternalProperties type
 #include <OpenSG/OSGUInt32Fields.h> // MaxParticles type
 #include <OpenSG/OSGBoolFields.h> // Dynamic type
+#include <OpenSG/OSGTimeFields.h> // LastElapsedTime type
 #include "ParticleSystem/ParticleGenerators/OSGParticleGenerator.h" // Generators type
 #include "ParticleSystem/ParticleEffectors/OSGParticleEffector.h" // Effectors type
 #include "ParticleSystem/ParticleSystemEffectors/OSGParticleSystemEffector.h" // SystemEffectors type
@@ -119,7 +120,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
         InternalPropertiesFieldId    = InternalAccelerationsFieldId + 1,
         MaxParticlesFieldId          = InternalPropertiesFieldId    + 1,
         DynamicFieldId               = MaxParticlesFieldId          + 1,
-        GeneratorsFieldId            = DynamicFieldId               + 1,
+        LastElapsedTimeFieldId       = DynamicFieldId               + 1,
+        GeneratorsFieldId            = LastElapsedTimeFieldId       + 1,
         EffectorsFieldId             = GeneratorsFieldId            + 1,
         SystemEffectorsFieldId       = EffectorsFieldId             + 1,
         NextFieldId                  = SystemEffectorsFieldId       + 1
@@ -138,6 +140,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     static const OSG::BitVector InternalPropertiesFieldMask;
     static const OSG::BitVector MaxParticlesFieldMask;
     static const OSG::BitVector DynamicFieldMask;
+    static const OSG::BitVector LastElapsedTimeFieldMask;
     static const OSG::BitVector GeneratorsFieldMask;
     static const OSG::BitVector EffectorsFieldMask;
     static const OSG::BitVector SystemEffectorsFieldMask;
@@ -169,6 +172,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
 
            SFUInt32            *getSFMaxParticles   (void);
            SFBool              *getSFDynamic        (void);
+           SFTime              *getSFLastElapsedTime(void);
            MFParticleGeneratorPtr *getMFGenerators     (void);
            MFParticleEffectorPtr *getMFEffectors      (void);
            MFParticleSystemEffectorPtr *getMFSystemEffectors(void);
@@ -177,6 +181,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
      const UInt32              &getMaxParticles   (void) const;
            bool                &getDynamic        (void);
      const bool                &getDynamic        (void) const;
+           Time                &getLastElapsedTime(void);
+     const Time                &getLastElapsedTime(void) const;
            ParticleGeneratorPtr &getGenerators     (const UInt32 index);
            MFParticleGeneratorPtr &getGenerators     (void);
      const MFParticleGeneratorPtr &getGenerators     (void) const;
@@ -194,6 +200,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
 
      void setMaxParticles   ( const UInt32 &value );
      void setDynamic        ( const bool &value );
+     void setLastElapsedTime( const Time &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -249,6 +256,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     MFUInt64            _mfInternalProperties;
     SFUInt32            _sfMaxParticles;
     SFBool              _sfDynamic;
+    SFTime              _sfLastElapsedTime;
     MFParticleGeneratorPtr   _mfGenerators;
     MFParticleEffectorPtr   _mfEffectors;
     MFParticleSystemEffectorPtr   _mfSystemEffectors;

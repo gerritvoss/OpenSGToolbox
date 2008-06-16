@@ -46,6 +46,7 @@
 #include "OSGParticleSystemDef.h"
 
 #include "OSGParticleSystemCoreBase.h"
+#include "ParticleSystem/Events/OSGParticleSystemListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -115,6 +116,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
     /*! \{                                                                 */
 
     void    adjustVolume(Volume & volume);
+
+	class SystemUpdateListener : public ParticleSystemListener
+	{
+	public:
+		SystemUpdateListener(ParticleSystemCorePtr TheCore);
+       virtual void systemUpdated(const ParticleSystemEvent& e);
+       virtual void particleGenerated(const ParticleEvent& e);
+       virtual void particleKilled(const ParticleEvent& e);
+       virtual void particleStolen(const ParticleEvent& e);
+	private:
+		ParticleSystemCorePtr _Core;
+	};
+
+	friend class SystemUpdateListener;
+
+	SystemUpdateListener _SystemUpdateListener;
 
     /*! \}                                                                 */
     
