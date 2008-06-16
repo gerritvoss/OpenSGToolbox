@@ -78,7 +78,13 @@ void LineParticleSystemDrawer::initMethod (void)
 
 Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
 {
+    //TODO: Implement
     return Action::Continue;
+}
+
+void LineParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
+{
+    //TODO: Implement
 }
 
 /*-------------------------------------------------------------------------*\

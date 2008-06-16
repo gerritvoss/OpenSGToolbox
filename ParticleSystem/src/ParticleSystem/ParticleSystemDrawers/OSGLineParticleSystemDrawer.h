@@ -80,6 +80,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawer : public LinePar
 
     /*! \}                                                                 */
 	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort);
+	virtual void adjustVolume(ParticleSystemPtr System, Volume & volume);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
