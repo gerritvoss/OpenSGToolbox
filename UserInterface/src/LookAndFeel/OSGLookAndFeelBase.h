@@ -183,7 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFComponentPtr      _mfPrototypes;
+    MFFieldContainerPtr   _mfPrototypes;
     SFTime              _sfTextCaretRate;
     SFTime              _sfToolTipPopupTime;
     SFTime              _sfSubMenuPopupTime;
@@ -209,11 +209,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFComponentPtr      *getMFPrototypes     (void);
+           MFFieldContainerPtr *getMFPrototypes     (void);
 
-           ComponentPtr        &getPrototypes     (UInt32 index);
-           MFComponentPtr      &getPrototypes     (void);
-     const MFComponentPtr      &getPrototypes     (void) const;
+           FieldContainerPtr   &getPrototypes     (UInt32 index);
+           MFFieldContainerPtr &getPrototypes     (void);
+     const MFFieldContainerPtr &getPrototypes     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

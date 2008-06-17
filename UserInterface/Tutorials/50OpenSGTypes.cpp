@@ -124,11 +124,80 @@ class TypeListListener: public MouseAdapter
 
 class OpenSGTypePanel
 {
+public:
+
+    // Setup a FontListener to change the label's font
+    // when a different item in the FontList is
+    // selected
+    class FCListListener: public ListSelectionListener
+    {
+      public:
+        virtual void selectionChanged(const ListSelectionEvent& e)
+        {
+            if(!_List->getSelectionModel()->isSelectionEmpty())
+            {
+                std::string ValueStr("");
+                SharedFieldPtr Value(_List->getValueAtIndex(_List->getSelectionModel()->getAnchorSelectionIndex()));
+                if(Value->getType() == SFString::getClassType())
+                {
+                    ValueStr = dynamic_cast<SFString*>(Value.get())->getValue();
+                }
+
+                FieldContainerType* TheFCType = FieldContainerFactory::the()->findType(ValueStr.c_str());
+
+                if(TheFCType != NULL)
+                {
+
+                    // Output selected font
+                    std::cout << "Field Container Type: " << TheFCType->getCName() << std::endl;
+                    std::cout << std::setw(25) << "Field Name" << " | " << std::setw(22) << "Type" << " | " << std::setw(11) << "Cardinality"  << " | " << std::setw(25) << "Default Value" << std::endl;
+                    for(UInt32 i(1) ; i<TheFCType->getNumFieldDescs()+1 ; ++i)
+                    {
+                        FieldDescription* Desc = TheFCType->getFieldDescription(i);
+                        if(!Desc->isInternal())
+                        {
+                            FieldType* TheField = FieldFactory::the().getFieldType(Desc->getTypeId());
+                            std::cout << std::setw(25) << Desc->getCName() << " | " ;
+                            std::cout << std::setw(22) << TheField->getContentType().getCName() << " | " ;
+                            if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
+                            {
+                                std::cout << std::setw(11) << "Single"  << " | " ;
+                            }
+                            else
+                            {
+                                std::cout << std::setw(11) << "Many"  << " | " ;
+                            }
+
+                                if(TheFCType->getPrototype() != NullFC &&
+                                    TheFCType->getPrototype()->getField(Desc->getFieldId()) != NULL)
+                                {
+                                    std::string Value;
+                                    TheFCType->getPrototype()->getField(Desc->getFieldId())->getValueByStr(Value, 0);
+                                    std::cout << std::setw(25) << Value;
+                                }
+
+                            std::cout   << std::endl;
+                        }
+                    }
+                    std::cout << std::endl << std::endl;
+                }
+            }
+        }
+
+        void setList(ListPtr TheList)
+        {
+             _List = TheList;
+        }
+    protected:
+        ListPtr _List;
+    };
+
 protected:
 	PanelPtr _MainPanel;
 	DefaultListModelPtr _TypeModel;
 	DefaultListModelPtr _FieldTypeModel;
 	DefaultListModelPtr _FieldContainerTypeModel;
+    FCListListener TheFCListListener;
 
 	PanelPtr createTypePanel(void)
 	{
@@ -376,6 +445,8 @@ protected:
 		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
 		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 		FieldContainerTypeList->setSelectionModel(FieldSelectionModel);
+        TheFCListListener.setList(FieldContainerTypeList);
+        FieldContainerTypeList->getSelectionModel()->addListSelectionListener(&TheFCListListener);
 		
 		GridBagLayoutConstraintsPtr FieldContainerTypeListScrollPanelConstraints = osg::GridBagLayoutConstraints::create();
 		beginEditCP(FieldContainerTypeListScrollPanelConstraints);
@@ -451,6 +522,8 @@ protected:
 			FieldContainerTypePanel->getChildren().push_back(NumFCTypesValueLabel);
 			FieldContainerTypePanel->setLayout(FieldContainerTypePanelLayout);
 		endEditCP(FieldContainerTypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+        
+
 		return FieldContainerTypePanel;
 	}
 public:
@@ -602,12 +675,12 @@ int main(int argc, char **argv)
 	
 	
 
-	OpenSGTypePanel TheOpenSGTypePanel;
 	BorderLayoutConstraintsPtr OpenSGTypePanelConstraints = osg::BorderLayoutConstraints::create();
 	beginEditCP(OpenSGTypePanelConstraints, BorderLayoutConstraints::RegionFieldMask);
 		OpenSGTypePanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 	endEditCP(OpenSGTypePanelConstraints, BorderLayoutConstraints::RegionFieldMask);
 	
+    OpenSGTypePanel TheOpenSGTypePanel;
 	beginEditCP(TheOpenSGTypePanel.getPanel(), Component::ConstraintsFieldMask);
 		TheOpenSGTypePanel.getPanel()->setConstraints(OpenSGTypePanelConstraints);
 	endEditCP(TheOpenSGTypePanel.getPanel(), Component::ConstraintsFieldMask);

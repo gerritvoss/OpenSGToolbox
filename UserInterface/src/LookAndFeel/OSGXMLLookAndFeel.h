@@ -45,6 +45,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGXMLLookAndFeelBase.h"
+#include <OpenSG/Toolbox/OSGPathType.h>
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING XMLLookAndFeel : public XMLLookAndFeelBase
 
 	virtual void init(void);
     /*! \}                                                                 */
+    static  XMLLookAndFeelPtr      create          (const Path& LoadFile);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -98,6 +101,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING XMLLookAndFeel : public XMLLookAndFeelBase
     virtual ~XMLLookAndFeel(void); 
 
     /*! \}                                                                 */
+	
     
     /*==========================  PRIVATE  ================================*/
   private:

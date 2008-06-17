@@ -80,6 +80,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGGridLayout.h>
 #include <OpenSG/UserInterface/OSGComboBox.h>
 #include <OpenSG/UserInterface/OSGDefaultMutableComboBoxModel.h>
+#include <OpenSG/UserInterface/OSGXMLLookAndFeel.h>
 
 RadioButtonGroup DeselectedRadioButtonGroup;
 RadioButtonGroup SelectedRadioButtonGroup;
@@ -220,7 +221,19 @@ int main(int argc, char **argv)
     GraphicsPtr graphics = osg::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
+    if(argc > 1)
+    {
+        Path XMLFile(argv[1]);
+        LookAndFeelPtr TheLookAndFeel = XMLLookAndFeel::create(XMLFile);
+
+        if(TheLookAndFeel != NullFC)
+        {
+            LookAndFeelManager::the()->setLookAndFeel(TheLookAndFeel);
+        }
+    }
+
     LookAndFeelManager::the()->getLookAndFeel()->init();
+
 
 
 

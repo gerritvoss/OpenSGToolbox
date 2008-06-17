@@ -86,7 +86,7 @@ const OSG::BitVector LookAndFeelBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var ComponentPtr    LookAndFeelBase::_mfPrototypes
+/*! \var FieldContainerPtr LookAndFeelBase::_mfPrototypes
     
 */
 /*! \var Time            LookAndFeelBase::_sfTextCaretRate
@@ -106,7 +106,7 @@ const OSG::BitVector LookAndFeelBase::MTInfluenceMask =
 
 FieldDescription *LookAndFeelBase::_desc[] = 
 {
-    new FieldDescription(MFComponentPtr::getClassType(), 
+    new FieldDescription(MFFieldContainerPtr::getClassType(), 
                      "Prototypes", 
                      PrototypesFieldId, PrototypesFieldMask,
                      false,
@@ -114,22 +114,22 @@ FieldDescription *LookAndFeelBase::_desc[] =
     new FieldDescription(SFTime::getClassType(), 
                      "TextCaretRate", 
                      TextCaretRateFieldId, TextCaretRateFieldMask,
-                     true,
+                     false,
                      (FieldAccessMethod) &LookAndFeelBase::getSFTextCaretRate),
     new FieldDescription(SFTime::getClassType(), 
                      "ToolTipPopupTime", 
                      ToolTipPopupTimeFieldId, ToolTipPopupTimeFieldMask,
-                     true,
+                     false,
                      (FieldAccessMethod) &LookAndFeelBase::getSFToolTipPopupTime),
     new FieldDescription(SFTime::getClassType(), 
                      "SubMenuPopupTime", 
                      SubMenuPopupTimeFieldId, SubMenuPopupTimeFieldMask,
-                     true,
+                     false,
                      (FieldAccessMethod) &LookAndFeelBase::getSFSubMenuPopupTime),
     new FieldDescription(SFTime::getClassType(), 
                      "KeyAcceleratorMenuFlashTime", 
                      KeyAcceleratorMenuFlashTimeFieldId, KeyAcceleratorMenuFlashTimeFieldMask,
-                     true,
+                     false,
                      (FieldAccessMethod) &LookAndFeelBase::getSFKeyAcceleratorMenuFlashTime)
 };
 

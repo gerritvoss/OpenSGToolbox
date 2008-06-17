@@ -146,56 +146,106 @@ void WindowsLookAndFeel::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-Time WindowsLookAndFeel::getTextCaretRate(void) const
-{
-	return _TextCaretRate;
-}
-
-
-Time WindowsLookAndFeel::getToolTipPopupTime(void) const
-{
-	return _ToolTipPopupTime;
-}
-
-
-Time WindowsLookAndFeel::getSubMenuPopupTime(void) const
-{
-	return _SubMenuPopupTime;
-}
-
-Time WindowsLookAndFeel::getKeyAcceleratorMenuFlashTime(void) const
-{
-	return _KeyAcceleratorMenuFlashTime;
-}
 void WindowsLookAndFeel::init(void)
 {
 
+	ButtonPtr WindowsButton = Button::create();
+	LabelPtr WindowsLabel = Label::create();
+	InternalWindowPtr WindowsInternalWindow = InternalWindow::create();
+	DialogWindowPtr WindowsDialogWindow = DialogWindow::create();
+	PanelPtr WindowsPanel = Panel::create();
+	ToolbarPtr WindowsToolbar = Toolbar::create();
+	SplitPanelPtr WindowsSplitPanel = SplitPanel::create();
+	TabPanelPtr WindowsTabPanel = TabPanel::create();
+	ImageComponentPtr WindowsImageComponent = ImageComponent::create();
+	CheckboxButtonPtr WindowsCheckboxButton = CheckboxButton::create();
+	RadioButtonPtr WindowsRadioButton = RadioButton::create();
+	ToggleButtonPtr WindowsToggleButton = ToggleButton::create();
+	TextFieldPtr WindowsTextField = TextField::create();
+	PasswordFieldPtr WindowsPasswordField = PasswordField::create();
+	TextAreaPtr WindowsTextArea = TextArea::create();
+	ToolTipPtr WindowsToolTip = ToolTip::create();
+	MenuItemPtr WindowsMenuItem = MenuItem::create();
+	ComponentMenuItemPtr WindowsComponentMenuItem = ComponentMenuItem::create();
+	MenuPtr WindowsMenu = Menu::create();
+	PopupMenuPtr WindowsPopupMenu = PopupMenu::create();
+	ListGeneratedPopupMenuPtr WindowsListGeneratedPopupMenu = ListGeneratedPopupMenu::create();
+	MenuBarPtr WindowsMenuBar = MenuBar::create();
+	ScrollBarPtr WindowsScrollBar = ScrollBar::create();
+	ScrollPanelPtr WindowsScrollPanel = ScrollPanel::create();
+	UIViewportPtr WindowsUIViewport = UIViewport::create();
+	RotatedComponentPtr WindowsRotatedComponent = RotatedComponent::create();
+    DefaultListComponentGeneratorPtr WindowsDefaultListComponentGenerator = DefaultListComponentGenerator::create();
+	ListPtr WindowsList = List::create();
+    SpinnerPtr WindowsSpinner = Spinner::create();
+    SpinnerDefaultEditorPtr WindowsSpinnerDefaultEditor = SpinnerDefaultEditor::create();
+    SpinnerNumberEditorPtr WindowsSpinnerNumberEditor = SpinnerNumberEditor::create();
+    SeparatorPtr WindowsSeparator = Separator::create();
+    ProgressBarPtr WindowsProgressBar = ProgressBar::create();
+    SliderPtr WindowsSlider = Slider::create();
+    DefaultComboBoxComponentGeneratorPtr WindowsDefaultComboBoxComponentGenerator = DefaultComboBoxComponentGenerator::create();
+    ComboBoxPtr WindowsComboBox = ComboBox::create();
+	TableHeaderPtr WindowsTableHeader = TableHeader::create();
+	TablePtr WindowsTable = Table::create();
+    DefaultTreeCellEditorPtr WindowsDefaultTreeCellEditor = DefaultTreeCellEditor::create();
+    DefaultTreeComponentGeneratorPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::create();
+	TreePtr WindowsTree = Tree::create();
+	ColorChooserPtr WindowsColorChooser = ColorChooser::create();
+
+	beginEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
+		getPrototypes().push_back(WindowsButton);
+		getPrototypes().push_back(WindowsLabel);
+		getPrototypes().push_back(WindowsInternalWindow);
+		getPrototypes().push_back(WindowsDialogWindow);
+		getPrototypes().push_back(WindowsPanel);
+		getPrototypes().push_back(WindowsToolbar);
+		getPrototypes().push_back(WindowsSplitPanel);
+		getPrototypes().push_back(WindowsTabPanel);
+		getPrototypes().push_back(WindowsImageComponent);
+		getPrototypes().push_back(WindowsCheckboxButton);
+		getPrototypes().push_back(WindowsRadioButton);
+		getPrototypes().push_back(WindowsToggleButton);
+		getPrototypes().push_back(WindowsTextField);
+		getPrototypes().push_back(WindowsPasswordField);
+		getPrototypes().push_back(WindowsTextArea);
+		getPrototypes().push_back(WindowsToolTip);
+		getPrototypes().push_back(WindowsMenuItem);
+		getPrototypes().push_back(WindowsComponentMenuItem);
+		getPrototypes().push_back(WindowsMenu);
+		getPrototypes().push_back(WindowsPopupMenu);
+		getPrototypes().push_back(WindowsListGeneratedPopupMenu);
+		getPrototypes().push_back(WindowsMenuBar);
+		getPrototypes().push_back(WindowsScrollBar);
+		getPrototypes().push_back(WindowsScrollPanel);
+		getPrototypes().push_back(WindowsUIViewport);
+		getPrototypes().push_back(WindowsRotatedComponent);
+		getPrototypes().push_back(WindowsDefaultListComponentGenerator);
+		getPrototypes().push_back(WindowsList);
+		getPrototypes().push_back(WindowsSpinner);
+		getPrototypes().push_back(WindowsSpinnerDefaultEditor);
+		getPrototypes().push_back(WindowsSpinnerNumberEditor);
+		getPrototypes().push_back(WindowsSeparator);
+		getPrototypes().push_back(WindowsProgressBar);
+		getPrototypes().push_back(WindowsSlider);
+		getPrototypes().push_back(WindowsDefaultComboBoxComponentGenerator);
+		getPrototypes().push_back(WindowsComboBox);
+		getPrototypes().push_back(WindowsTableHeader);
+		getPrototypes().push_back(WindowsTable);
+		getPrototypes().push_back(WindowsDefaultTreeCellEditor);
+		getPrototypes().push_back(WindowsDefaultTreeComponentGenerator);
+		getPrototypes().push_back(WindowsTree);
+		getPrototypes().push_back(WindowsColorChooser);
+	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
+
+    initPrototypes();
+
+	setTextCaretRate(1.0);
+	setToolTipPopupTime(1.5);
+	setToolTipPopupTime(0.25);
+	setKeyAcceleratorMenuFlashTime(0.15);
+
 	Color4f WindowsXPMainColor(1.0,1.0,1.0,1.0);
 
-	/*******Borders********/
-	/*******Line Border********/
-
-	LineBorderPtr WindowsLineBorder = LineBorder::create();
-	beginEditCP(WindowsLineBorder);
-		WindowsLineBorder->setWidth(1);
-		WindowsLineBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
-	endEditCP(WindowsLineBorder);
-
-	LineBorder::getClassType().setPrototype(WindowsLineBorder);
-
-	/********Etched Border********/
-
-	EtchedBorderPtr WindowsEtchedBorder = EtchedBorder::create();
-	beginEditCP(WindowsEtchedBorder);
-		WindowsEtchedBorder->setWidth(2);
-		WindowsEtchedBorder->setRaised(true);
-		WindowsEtchedBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsEtchedBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
-	endEditCP(WindowsEtchedBorder);
-
-	EtchedBorder::getClassType().setPrototype(WindowsEtchedBorder);
-	
 	/********Empty Border*********/
 	EmptyBorderPtr WindowsEmptyBorder = EmptyBorder::create();
 	beginEditCP(WindowsEmptyBorder);
@@ -205,87 +255,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsEmptyBorder->setLeftWidth(0);
 	endEditCP(WindowsEmptyBorder);
 
-	EmptyBorder::getClassType().setPrototype(WindowsEmptyBorder);
-
-
-	/********Bevel Border**********/
-
-	BevelBorderPtr WindowsBevelBorder = BevelBorder::create();
-	beginEditCP(WindowsBevelBorder);
-		WindowsBevelBorder->setRaised(true);
-		WindowsBevelBorder->setWidth(2);
-		WindowsBevelBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsBevelBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsBevelBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
-		WindowsBevelBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
-	endEditCP(WindowsBevelBorder);
-
-	BevelBorder::getClassType().setPrototype(WindowsBevelBorder);
-
-	/********Matte Border**********/
-
-	MatteBorderPtr WindowsMatteBorder = MatteBorder::create();
-	beginEditCP(WindowsMatteBorder);
-		WindowsMatteBorder->setRightWidth(1);
-		WindowsMatteBorder->setLeftWidth(1);
-		WindowsMatteBorder->setTopWidth(1);
-		WindowsMatteBorder->setBottomWidth(1);
-		WindowsMatteBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
-	endEditCP(WindowsMatteBorder);
-
-	MatteBorder::getClassType().setPrototype(WindowsMatteBorder);
-
-	/********Compound Border********/
-	CompoundBorderPtr WindowsCompoundBorder = CompoundBorder::create();
-	beginEditCP(WindowsCompoundBorder);
-		WindowsCompoundBorder->setInnerBorder(NullFC);
-		WindowsCompoundBorder->setOuterBorder(NullFC);
-	endEditCP(WindowsCompoundBorder);
-
-	CompoundBorder::getClassType().setPrototype(WindowsCompoundBorder);
-
-	/*********Backgounds***********/
 	/*********Empty Background**********/
 	EmptyUIBackgroundPtr WindowsEmptyBackground = EmptyUIBackground::create();
-
-	/*********Color Background**********/
-	ColorUIBackgroundPtr WindowsColorBackground = ColorUIBackground::create();
-	beginEditCP(WindowsColorBackground);
-		WindowsColorBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
-	endEditCP(WindowsColorBackground);
-
-	ColorUIBackground::getClassType().setPrototype(WindowsColorBackground);
-	
-	/**********Gradient Background***********/
-	GradientUIBackgroundPtr WindowsGradientBackground = GradientUIBackground::create();
-	beginEditCP(WindowsGradientBackground);
-		WindowsGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsGradientBackground->setColorEnd(Color4f(1.0, 1.0, 1.0, 1.0));
-        WindowsGradientBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
-	endEditCP(WindowsGradientBackground);
-
-	GradientUIBackground::getClassType().setPrototype(WindowsGradientBackground);
-
-	/**********Material Background***********/
-	MaterialUIBackgroundPtr WindowsMaterialBackground = MaterialUIBackground::create();
-	beginEditCP(WindowsMaterialBackground);
-		WindowsMaterialBackground->setMaterial(NullFC);
-	endEditCP(WindowsMaterialBackground);
-
-	MaterialUIBackground::getClassType().setPrototype(WindowsMaterialBackground);
-
-	/*********Texture Background********/
-	TextureUIBackgroundPtr WindowsTextureBackground = TextureUIBackground::create();
-	beginEditCP(WindowsTextureBackground);
-		WindowsTextureBackground->setTexture(NullFC);
-	endEditCP(WindowsTextureBackground);
-
-	TextureUIBackground::getClassType().setPrototype(WindowsTextureBackground);
-
-
-
-
-
 
 	//Windows Font
 	UIFontPtr WindowsFont = UIFont::create();
@@ -382,7 +353,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsRolloverButtonBackground);
 
 	//Windows Button
-	ButtonPtr WindowsButton = Button::create();
 	beginEditCP(WindowsButton);
 		WindowsButton->setEnabled(true);
 		WindowsButton->setVisible(true);
@@ -424,8 +394,6 @@ void WindowsLookAndFeel::init(void)
         WindowsButton->setActiveOffset(Vec2f(2,2));
 	endEditCP(WindowsButton);
 
-	Button::getClassType().setPrototype(WindowsButton);
-
 	//************************** Label*****************************
 	//Windows LabelBackground
 	ColorUIBackgroundPtr WindowsLabelBackground = ColorUIBackground::create();
@@ -434,7 +402,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsLabelBackground);
 
 	//Windows Label
-	LabelPtr WindowsLabel = Label::create();
 	beginEditCP(WindowsLabel);
 		WindowsLabel->setEnabled(true);
 		WindowsLabel->setVisible(true);
@@ -466,8 +433,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsLabel->setHorizontalAlignment(0.0);
 		WindowsLabel->setTextSelectable(false);
 	endEditCP(WindowsLabel);
-	
-    Label::getClassType().setPrototype(WindowsLabel);
 	
 	//************************** InternalWindow *****************************
 	//Windows InternalWindow 
@@ -891,7 +856,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsInternalWindowTitlebar);
 
 	//Windows InternalWindow
-	InternalWindowPtr WindowsInternalWindow = InternalWindow::create();
 	beginEditCP(WindowsInternalWindow);
 		WindowsInternalWindow->setEnabled(true);
 		WindowsInternalWindow->setVisible(true);
@@ -937,8 +901,6 @@ void WindowsLookAndFeel::init(void)
 
 	endEditCP(WindowsInternalWindow);
 	
-	InternalWindow::getClassType().setPrototype(WindowsInternalWindow);
-	
 	//************************** DialogWindow *****************************
 	//Titlebar
 	TitlebarPtr WindowsDialogWindowTitlebar = Titlebar::create();
@@ -980,7 +942,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsDialogWindowTitlebar);
 
 	//Windows DialogWindow
-	DialogWindowPtr WindowsDialogWindow = DialogWindow::create();
 	beginEditCP(WindowsDialogWindow);
 		WindowsDialogWindow->setEnabled(true);
 		WindowsDialogWindow->setVisible(true);
@@ -1025,8 +986,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsDialogWindow->setTitlebar(WindowsDialogWindowTitlebar);
 
 	endEditCP(WindowsDialogWindow);
-	
-	DialogWindow::getClassType().setPrototype(WindowsDialogWindow);
 
 	//************************** Panel *****************************
 	//Windows PanelBorder
@@ -1052,7 +1011,6 @@ void WindowsLookAndFeel::init(void)
 
 
 	//Windows Panel
-	PanelPtr WindowsPanel = Panel::create();
 	beginEditCP(WindowsPanel);
 		WindowsPanel->setEnabled(true);
 		WindowsPanel->setVisible(true);
@@ -1073,11 +1031,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsPanel->setOpacity(1.0);
 	endEditCP(WindowsPanel);
 	
-	Panel::getClassType().setPrototype(WindowsPanel);
-	
 	//************************** Toolbar *****************************
 	//Windows Toolbar
-	ToolbarPtr WindowsToolbar = Toolbar::create();
 	beginEditCP(WindowsToolbar);
 		WindowsToolbar->setEnabled(true);
 		WindowsToolbar->setVisible(true);
@@ -1097,8 +1052,6 @@ void WindowsLookAndFeel::init(void)
 		//Opacity
 		WindowsToolbar->setOpacity(1.0);
 	endEditCP(WindowsToolbar);
-	
-	Toolbar::getClassType().setPrototype(WindowsToolbar);
 	//************************** SplitPanel *****************************
 	//The only default value set will be the divider
 
@@ -1115,7 +1068,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsDividerDrawObject);
 
 	//Windows SplitPanel
-	SplitPanelPtr WindowsSplitPanel = SplitPanel::create();
 	beginEditCP(WindowsSplitPanel);
 		WindowsSplitPanel->setEnabled(true);
 		WindowsSplitPanel->setVisible(true);
@@ -1141,8 +1093,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsSplitPanel->setExpandable(true);
 		WindowsSplitPanel->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
 	endEditCP(WindowsSplitPanel);
-
-	SplitPanel::getClassType().setPrototype(WindowsSplitPanel);
 	
 	//************************** TabPanel *****************************
 	RoundedCornerLineBorderPtr WindowsTabPanelTabBorder = RoundedCornerLineBorder::create();
@@ -1185,7 +1135,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsTabPanelContentBorder->setColor(Color4f(0.57, 0.61, 0.61 ,1.0));
 	endEditCP(WindowsTabPanelContentBorder);
 	//Windows TabPanel
-	TabPanelPtr WindowsTabPanel = TabPanel::create();
 	beginEditCP(WindowsTabPanel);
 		WindowsTabPanel->setEnabled(true);
 		WindowsTabPanel->setVisible(true);
@@ -1233,8 +1182,6 @@ void WindowsLookAndFeel::init(void)
         WindowsTabPanel->setSelectionModel(DefaultSingleSelectionModel::create());
 	endEditCP(WindowsTabPanel);
 
-	TabPanel::getClassType().setPrototype(WindowsTabPanel);
-
 	//************************** ImageComponent *****************************
 	//Windows ImageComponentBorder
 	EmptyBorderPtr WindowsImageComponentBorder = EmptyBorder::create();
@@ -1243,7 +1190,6 @@ void WindowsLookAndFeel::init(void)
 	EmptyUIBackgroundPtr WindowsImageComponentBackground = EmptyUIBackground::create();
 
 	//Windows ImageComponent
-	ImageComponentPtr WindowsImageComponent = ImageComponent::create();
 	beginEditCP(WindowsImageComponent);
 		WindowsImageComponent->setEnabled(true);
 		WindowsImageComponent->setVisible(true);
@@ -1269,8 +1215,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsImageComponent->setVerticalAlignment(0.5);
 		WindowsImageComponent->setHorizontalAlignment(0.5);
 	endEditCP(WindowsImageComponent);
-	
-	ImageComponent::getClassType().setPrototype(WindowsImageComponent);
 
 	
 	//************************** Checkbox Button Component *****************************
@@ -1484,7 +1428,6 @@ void WindowsLookAndFeel::init(void)
     //Background
 	EmptyUIBackgroundPtr WindowsCheckboxButtonBackground = EmptyUIBackground::create();
 
-	CheckboxButtonPtr WindowsCheckboxButton = CheckboxButton::create();
 	beginEditCP(WindowsCheckboxButton);
 		WindowsCheckboxButton->setEnabled(true);
 		WindowsCheckboxButton->setVisible(true);
@@ -1536,8 +1479,6 @@ void WindowsLookAndFeel::init(void)
         
         WindowsCheckboxButton->setActiveOffset(Vec2f(0,0));
 	endEditCP(WindowsCheckboxButton);
-
-	CheckboxButton::getClassType().setPrototype(WindowsCheckboxButton);
 
 	//************************** Radio Button Component *****************************
 	UIDrawObjectCanvasPtr WindowsRadioDrawObject = UIDrawObjectCanvas::create();
@@ -1710,7 +1651,6 @@ void WindowsLookAndFeel::init(void)
 	EmptyUIBackgroundPtr WindowsRadioButtonBackground = EmptyUIBackground::create();
 	
 
-	RadioButtonPtr WindowsRadioButton = RadioButton::create();
 	beginEditCP(WindowsRadioButton);
 		WindowsRadioButton->setEnabled(true);
 		WindowsRadioButton->setVisible(true);
@@ -1763,12 +1703,9 @@ void WindowsLookAndFeel::init(void)
 
         WindowsRadioButton->setActiveOffset(Vec2f(0,0));
 	endEditCP(WindowsRadioButton);
-	
-	RadioButton::getClassType().setPrototype(WindowsRadioButton);
 
 	/********Toggle Button********/
 
-	ToggleButtonPtr WindowsToggleButton = ToggleButton::create();
 	beginEditCP(WindowsToggleButton);
 		WindowsToggleButton->setEnabled(true);
 		WindowsToggleButton->setVisible(true);
@@ -1810,8 +1747,6 @@ void WindowsLookAndFeel::init(void)
         WindowsToggleButton->setActiveOffset(Vec2f(2,2));
 	endEditCP(WindowsToggleButton);
 
-	ToggleButton::getClassType().setPrototype(WindowsToggleButton);
-
 	/********Text Field********/
 	ColorUIBackgroundPtr WindowsTextFieldBackground = ColorUIBackground::create();
 	beginEditCP(WindowsTextFieldBackground);
@@ -1830,7 +1765,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsTextFieldBorder);
 
 
-	TextFieldPtr WindowsTextField = TextField::create();
 	beginEditCP(WindowsTextField);
 		//size
 		WindowsTextField->setMinSize(Vec2f(0, 0));
@@ -1863,8 +1797,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsTextField->setHorizontalAlignment(0.0);
 		WindowsTextField->setVerticalAlignment(0.5);
 	endEditCP(WindowsTextField);
-
-	TextField::getClassType().setPrototype(WindowsTextField);
     
     
 	/********Password Field********/
@@ -1885,7 +1817,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsPasswordFieldBorder);
 
 
-	PasswordFieldPtr WindowsPasswordField = PasswordField::create();
 	beginEditCP(WindowsPasswordField);
 		//size
 		WindowsPasswordField->setMinSize(Vec2f(0, 0));
@@ -1917,8 +1848,6 @@ void WindowsLookAndFeel::init(void)
 
 	endEditCP(WindowsPasswordField);
 
-	PasswordField::getClassType().setPrototype(WindowsPasswordField);
-
 	/********Text Area********/
 	ColorUIBackgroundPtr WindowsTextAreaBackground = ColorUIBackground::create();
 	beginEditCP(WindowsTextAreaBackground);
@@ -1936,7 +1865,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsTextAreaBorder->setColor( Color4f(.498,.616,.725,1.0) );
 	endEditCP(WindowsTextAreaBorder);
 
-	TextAreaPtr WindowsTextArea = TextArea::create();
 	beginEditCP(WindowsTextArea);
 		//size
 		WindowsTextArea->setMinSize(Vec2f(0, 0));
@@ -1966,8 +1894,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsTextArea->setDisabledBorder(WindowsTextAreaBorder);
 
 	endEditCP(WindowsTextArea);
-
-	TextArea::getClassType().setPrototype(WindowsTextArea);
 
 	//************************** ToolTip*****************************
 	//Default ToolTipBorder
@@ -1999,7 +1925,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsToolTipBackground);
 
 	//Default ToolTip
-	ToolTipPtr WindowsToolTip = ToolTip::create();
 	beginEditCP(WindowsToolTip);
 		WindowsToolTip->setEnabled(true);
 		WindowsToolTip->setVisible(true);
@@ -2026,8 +1951,6 @@ void WindowsLookAndFeel::init(void)
         WindowsToolTip->setHorizontalAlignment(0.5);
 		WindowsToolTip->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 	endEditCP(WindowsToolTip);
-	
-    ToolTip::getClassType().setPrototype(WindowsToolTip);
 
 	//************************** MenuItem*****************************
 	//Windows MenuItemBorder
@@ -2049,7 +1972,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsMenuItemSelectedBackground);
 
 	//Windows MenuItem
-	MenuItemPtr WindowsMenuItem = MenuItem::create();
 	beginEditCP(WindowsMenuItem);
 		WindowsMenuItem->setEnabled(true);
 		WindowsMenuItem->setVisible(true);
@@ -2090,8 +2012,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsMenuItem->setHorizontalAlignment(0.0);
 		WindowsMenuItem->setActiveOffset(Vec2f(0.0f,0.0f));
 	endEditCP(WindowsMenuItem);
-	
-    MenuItem::getClassType().setPrototype(WindowsMenuItem);
     
 	//************************** ComponentMenuItem*****************************
 	//Windows ComponentMenuItemBorder
@@ -2113,7 +2033,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsComponentMenuItemSelectedBackground);
 
 	//Windows ComponentMenuItem
-	ComponentMenuItemPtr WindowsComponentMenuItem = ComponentMenuItem::create();
 	beginEditCP(WindowsComponentMenuItem);
 		WindowsComponentMenuItem->setEnabled(true);
 		WindowsComponentMenuItem->setVisible(true);
@@ -2154,8 +2073,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsComponentMenuItem->setHorizontalAlignment(0.0);
 		WindowsComponentMenuItem->setActiveOffset(Vec2f(0.0f,0.0f));
 	endEditCP(WindowsComponentMenuItem);
-	
-    ComponentMenuItem::getClassType().setPrototype(WindowsComponentMenuItem);
     
 	//************************** Menu*****************************
 	//Windows MenuBorder
@@ -2193,7 +2110,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(defaultMenuDrawObject);
 
 	//Windows Menu
-	MenuPtr WindowsMenu = Menu::create();
 	beginEditCP(WindowsMenu);
 		WindowsMenu->setEnabled(true);
 		WindowsMenu->setVisible(true);
@@ -2239,8 +2155,6 @@ void WindowsLookAndFeel::init(void)
         //Expanding Draw Object
         WindowsMenu->setExpandDrawObject(defaultMenuDrawObject);
 	endEditCP(WindowsMenu);
-	
-    Menu::getClassType().setPrototype(WindowsMenu);
     
 	//************************** PopupMenu*****************************
 	//Windows PopupMenuBorder
@@ -2278,7 +2192,6 @@ void WindowsLookAndFeel::init(void)
     endEditCP(WindowsPopupMenuDefaultSeparator, Separator::SeparatorSizeFieldMask | Separator::ColorFieldMask);
 
 	//Windows PopupMenu
-	PopupMenuPtr WindowsPopupMenu = PopupMenu::create();
 	beginEditCP(WindowsPopupMenu);
 		WindowsPopupMenu->setEnabled(true);
 		WindowsPopupMenu->setVisible(false);
@@ -2314,8 +2227,6 @@ void WindowsLookAndFeel::init(void)
         WindowsPopupMenu->setDefaultSeparator(WindowsPopupMenuDefaultSeparator);
         WindowsPopupMenu->setSelectionModel(DefaultSingleSelectionModel::create());
 	endEditCP(WindowsPopupMenu);
-	
-    PopupMenu::getClassType().setPrototype(WindowsPopupMenu);
     
 	//************************** ListGeneratedPopupMenu*****************************
 	//Windows ListGeneratedPopupMenuBorder
@@ -2345,7 +2256,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsListGeneratedPopupMenuBackground);
 
 	//Windows ListGeneratedPopupMenu
-	ListGeneratedPopupMenuPtr WindowsListGeneratedPopupMenu = ListGeneratedPopupMenu::create();
 	beginEditCP(WindowsListGeneratedPopupMenu);
 		WindowsListGeneratedPopupMenu->setEnabled(true);
 		WindowsListGeneratedPopupMenu->setVisible(false);
@@ -2379,8 +2289,6 @@ void WindowsLookAndFeel::init(void)
         WindowsListGeneratedPopupMenu->setAllInsets(2);
         WindowsListGeneratedPopupMenu->setSelectionModel(DefaultSingleSelectionModel::create());
 	endEditCP(WindowsListGeneratedPopupMenu);
-	
-    ListGeneratedPopupMenu::getClassType().setPrototype(WindowsListGeneratedPopupMenu);
 	//************************** MenuBar*****************************
 	//Windows MenuBarBorder
 	EmptyBorderPtr WindowsMenuBarBorder = EmptyBorder::create();
@@ -2392,7 +2300,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsMenuBarBackground);
 
 	//Windows MenuBar
-	MenuBarPtr WindowsMenuBar = MenuBar::create();
 	beginEditCP(WindowsMenuBar);
 		WindowsMenuBar->setEnabled(true);
 		WindowsMenuBar->setVisible(true);
@@ -2423,8 +2330,6 @@ void WindowsLookAndFeel::init(void)
         WindowsMenuBar->setMenuDelay(getSubMenuPopupTime());
         WindowsMenuBar->setSelectionModel(DefaultSingleSelectionModel::create());
 	endEditCP(WindowsMenuBar);
-	
-    MenuBar::getClassType().setPrototype(WindowsMenuBar);
     
 	//************************** ScrollBar*****************************
 	//Windows ScrollBarBorder
@@ -3399,7 +3304,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsHorizontalScrollBarDrawObject);
 
 	//Windows ScrollBar
-	ScrollBarPtr WindowsScrollBar = ScrollBar::create();
 	beginEditCP(WindowsScrollBar);
 		WindowsScrollBar->setEnabled(true);
 		WindowsScrollBar->setVisible(true);
@@ -3442,8 +3346,6 @@ void WindowsLookAndFeel::init(void)
         WindowsScrollBar->setHorizontalScrollBar(WindowsHorizontalScrollBarDrawObject);
         WindowsScrollBar->setScrollBarMinLength(20);
 	endEditCP(WindowsScrollBar);
-	
-    ScrollBar::getClassType().setPrototype(WindowsScrollBar);
 
 	//************************** ScrollPanel*****************************
 	//Windows ScrollPanelBorder
@@ -3468,7 +3370,6 @@ void WindowsLookAndFeel::init(void)
 
 
 	//Windows ScrollPanel
-	ScrollPanelPtr WindowsScrollPanel = ScrollPanel::create();
 	beginEditCP(WindowsScrollPanel);
 		WindowsScrollPanel->setEnabled(true);
 		WindowsScrollPanel->setVisible(true);
@@ -3502,8 +3403,6 @@ void WindowsLookAndFeel::init(void)
         WindowsScrollPanel->setHorizontalScrollBarDisplayPolicy(ScrollPanel::SCROLLBAR_AS_NEEDED);
         WindowsScrollPanel->setHorizontalScrollBar(WindowsScrollPanelHorizontalScrollBar);
 	endEditCP(WindowsScrollPanel);
-	
-    ScrollPanel::getClassType().setPrototype(WindowsScrollPanel);
 
 	//************************** UIViewport *****************************
 	//Windows UIViewportBorder
@@ -3519,7 +3418,6 @@ void WindowsLookAndFeel::init(void)
 	EmptyUIBackgroundPtr WindowsUIViewportBackground = EmptyUIBackground::create();
 
 	//Windows UIViewport
-	UIViewportPtr WindowsUIViewport = UIViewport::create();
 	beginEditCP(WindowsUIViewport);
 		WindowsUIViewport->setEnabled(true);
 		WindowsUIViewport->setVisible(true);
@@ -3540,8 +3438,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsUIViewport->setOpacity(1.0);
 	endEditCP(WindowsUIViewport);
 	
-	UIViewport::getClassType().setPrototype(WindowsUIViewport);
-	
 	//************************** RotatedComponent*****************************
 	//Windows RotatedComponentBorder
 	EmptyBorderPtr WindowsRotatedComponentBorder = EmptyBorder::create();
@@ -3550,7 +3446,6 @@ void WindowsLookAndFeel::init(void)
 	EmptyUIBackgroundPtr WindowsRotatedComponentBackground = EmptyUIBackground::create();
 
 	//Windows RotatedComponent
-	RotatedComponentPtr WindowsRotatedComponent = RotatedComponent::create();
 	beginEditCP(WindowsRotatedComponent);
 		WindowsRotatedComponent->setEnabled(true);
 		WindowsRotatedComponent->setVisible(true);
@@ -3574,8 +3469,6 @@ void WindowsLookAndFeel::init(void)
 
         WindowsRotatedComponent->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
 	endEditCP(WindowsRotatedComponent);
-	
-    RotatedComponent::getClassType().setPrototype(WindowsRotatedComponent);
 
     
 	//************************** List *****************************
@@ -3607,7 +3500,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsDefaultListComponentGeneratorFocusedBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
     
 	//DefaultListComponentGenerator
-    DefaultListComponentGeneratorPtr WindowsDefaultListComponentGenerator = DefaultListComponentGenerator::create();
     beginEditCP(WindowsDefaultListComponentGenerator);
 		WindowsDefaultListComponentGenerator->setDrawObjectPrototype(WindowsDefaultListComponentGeneratorComponentPrototype);
 		WindowsDefaultListComponentGenerator->setSelectedBackground(WindowsDefaultListComponentGeneratorSelectedBackground);
@@ -3620,11 +3512,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsDefaultListComponentGenerator->setFocusedBorderHasPriority(true);
 		WindowsDefaultListComponentGenerator->setFocusedTextColorHasPriority(false);
     endEditCP(WindowsDefaultListComponentGenerator);
-    
-    DefaultListComponentGenerator::getClassType().setPrototype(WindowsDefaultListComponentGenerator);
 
 	//Windows List
-	ListPtr WindowsList = List::create();
 	beginEditCP(WindowsList);
 		WindowsList->setEnabled(true);
 		WindowsList->setVisible(true);
@@ -3655,8 +3544,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsList->setAutoScrollToFocused(true);
 		
 	endEditCP(WindowsList);
-	
-    List::getClassType().setPrototype(WindowsList);
     
 	//************************** Spinner *****************************
 
@@ -3777,7 +3664,6 @@ void WindowsLookAndFeel::init(void)
 	//Windows SpinnerBackground
 	EmptyUIBackgroundPtr WindowsSpinnerBackground = EmptyUIBackground::create();
 
-    SpinnerPtr WindowsSpinner = Spinner::create();
     beginEditCP(WindowsSpinner);
 		WindowsSpinner->setConstraints(NullFC);
 		//Sizes
@@ -3805,8 +3691,6 @@ void WindowsLookAndFeel::init(void)
         WindowsSpinner->setPreviousButton(WindowsSpinnerPreviousButton);
 		WindowsSpinner->setEditorToButtonOffset(2);
     endEditCP(WindowsSpinner);
-    
-    Spinner::getClassType().setPrototype(WindowsSpinner);
 	
 	//************************** SpinnerDefaultEditor *****************************
 	//Windows SpinnerDefaultEditor TextField
@@ -3827,7 +3711,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsSpinnerDefaultEditorTextField->setDisabledBackground(WindowsEmptyBackground);
     endEditCP(WindowsSpinnerDefaultEditorTextField, TextField::HorizontalAlignmentFieldMask);
 
-    SpinnerDefaultEditorPtr WindowsSpinnerDefaultEditor = SpinnerDefaultEditor::create();
     beginEditCP(WindowsSpinnerDefaultEditor);
 		WindowsSpinnerDefaultEditor->setConstraints(NullFC);
 		//Sizes
@@ -3853,8 +3736,6 @@ void WindowsLookAndFeel::init(void)
         //WindowsSpinnerDefaultEditor
         WindowsSpinnerDefaultEditor->setTextField(WindowsSpinnerDefaultEditorTextField);
     endEditCP(WindowsSpinnerDefaultEditor);
-
-    SpinnerDefaultEditor::getClassType().setPrototype(WindowsSpinnerDefaultEditor);
 	
 	//************************** SpinnerNumberEditor *****************************
 	//Windows SpinnerNumberEditor TextField
@@ -3875,7 +3756,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsSpinnerNumberEditorTextField->setDisabledBackground(WindowsEmptyBackground);
     endEditCP(WindowsSpinnerNumberEditorTextField, TextField::HorizontalAlignmentFieldMask);
 
-    SpinnerNumberEditorPtr WindowsSpinnerNumberEditor = SpinnerNumberEditor::create();
     beginEditCP(WindowsSpinnerNumberEditor);
 		WindowsSpinnerNumberEditor->setConstraints(NullFC);
 		//Sizes
@@ -3901,17 +3781,14 @@ void WindowsLookAndFeel::init(void)
         //WindowsSpinnerNumberEditor
         WindowsSpinnerNumberEditor->setTextField(WindowsSpinnerNumberEditorTextField);
     endEditCP(WindowsSpinnerNumberEditor);
-
-    SpinnerNumberEditor::getClassType().setPrototype(WindowsSpinnerNumberEditor);
 	
 	//************************** Separator *****************************
 	//Windows SeparatorBorder
-	EmptyBorderPtr WindowsSeparatorBorder = EmptyBorder::create();
 
 	//Windows SeparatorBackground
+	EmptyBorderPtr WindowsSeparatorBorder = EmptyBorder::create();
 	EmptyUIBackgroundPtr WindowsSeparatorBackground = EmptyUIBackground::create();
 
-    SeparatorPtr WindowsSeparator = Separator::create();
     beginEditCP(WindowsSeparator);
 		WindowsSeparator->setConstraints(NullFC);
 		//Sizes
@@ -3933,8 +3810,6 @@ void WindowsLookAndFeel::init(void)
         WindowsSeparator->setSeparatorSize(2.0f);
         WindowsSeparator->setColor(Color4f(0.3,0.38,0.52,1.0));
     endEditCP(WindowsSeparator);
-    
-    Separator::getClassType().setPrototype(WindowsSeparator);
 
 	//************************** ProgressBar *****************************
 	//Windows ProgressBarBorder
@@ -3974,7 +3849,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsProgressBarCanvas);
 
 	//ProgressBar
-    ProgressBarPtr WindowsProgressBar = ProgressBar::create();
     beginEditCP(WindowsProgressBar);
 		WindowsProgressBar->setConstraints(NullFC);
 		//Sizes
@@ -4010,8 +3884,6 @@ void WindowsLookAndFeel::init(void)
         WindowsProgressBar->setTextColor(Color4f(0.0,0.0,0.0,1.0));
         WindowsProgressBar->setProgressBarDrawObject(WindowsProgressBarCanvas);
     endEditCP(WindowsProgressBar);
-    
-    ProgressBar::getClassType().setPrototype(WindowsProgressBar);
     
 	//************************** Slider *****************************
 	RoundedCornerLineBorderPtr WindowsSliderKnobButtonRoundedCornerBorder = RoundedCornerLineBorder::create();
@@ -4146,7 +4018,6 @@ void WindowsLookAndFeel::init(void)
 
 
 	//Slider
-    SliderPtr WindowsSlider = Slider::create();
     beginEditCP(WindowsSlider);
 		WindowsSlider->setConstraints(NullFC);
 		//Sizes
@@ -4193,8 +4064,6 @@ void WindowsLookAndFeel::init(void)
         WindowsSlider->getMinorTickDrawObjects().clear();
         WindowsSlider->getMinorTickDrawObjects().push_back(WindowsSliderMinorTickMarks);
     endEditCP(WindowsSlider);
-    
-    Slider::getClassType().setPrototype(WindowsSlider);
 	
 	//************************** ComboBox *****************************
 
@@ -4282,7 +4151,6 @@ void WindowsLookAndFeel::init(void)
     BorderPtr WindowsDefaultComboBoxComponentGeneratorFocusedBorder = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBorder();
     
 	//DefaultComboBoxComponentGenerator
-    DefaultComboBoxComponentGeneratorPtr WindowsDefaultComboBoxComponentGenerator = DefaultComboBoxComponentGenerator::create();
     beginEditCP(WindowsDefaultComboBoxComponentGenerator);
 		WindowsDefaultComboBoxComponentGenerator->setDrawObjectPrototype(WindowsDefaultComboBoxComponentGeneratorComponentPrototype);
 		WindowsDefaultComboBoxComponentGenerator->setSelectedBackground(WindowsDefaultComboBoxComponentGeneratorSelectedBackground);
@@ -4295,11 +4163,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsDefaultComboBoxComponentGenerator->setFocusedBorderHasPriority(true);
 		WindowsDefaultComboBoxComponentGenerator->setFocusedTextColorHasPriority(false);
     endEditCP(WindowsDefaultComboBoxComponentGenerator);
-    
-    DefaultComboBoxComponentGenerator::getClassType().setPrototype(WindowsDefaultComboBoxComponentGenerator);
 
 	//ComboBox
-    ComboBoxPtr WindowsComboBox = ComboBox::create();
     beginEditCP(WindowsComboBox);
 		WindowsComboBox->setConstraints(NullFC);
 		//Sizes
@@ -4329,8 +4194,6 @@ void WindowsLookAndFeel::init(void)
         WindowsComboBox->setMaxRowCount(5);
 		WindowsComboBox->setCellGenerator(WindowsDefaultComboBoxComponentGenerator);
     endEditCP(WindowsComboBox);
-    
-    ComboBox::getClassType().setPrototype(WindowsComboBox);
 
 	//************************** TableHeader *****************************
 	//Windows RotatedComponentBorder
@@ -4340,7 +4203,6 @@ void WindowsLookAndFeel::init(void)
 	EmptyUIBackgroundPtr WindowsTableHeaderBackground = EmptyUIBackground::create();
     
 	//Windows RotatedComponent
-	TableHeaderPtr WindowsTableHeader = TableHeader::create();
 	beginEditCP(WindowsTableHeader);
 		WindowsTableHeader->setEnabled(true);
 		WindowsTableHeader->setVisible(true);
@@ -4375,8 +4237,6 @@ void WindowsLookAndFeel::init(void)
         WindowsTableHeader->setResizingCursorDriftAllowance(1);
 		
 	endEditCP(WindowsTableHeader);
-	
-    TableHeader::getClassType().setPrototype(WindowsTableHeader);
     
 	
 	//************************** Table *****************************
@@ -4387,7 +4247,6 @@ void WindowsLookAndFeel::init(void)
 	EmptyUIBackgroundPtr WindowsTableBackground = EmptyUIBackground::create();
 
 	//Windows RotatedComponent
-	TablePtr WindowsTable = Table::create();
 	beginEditCP(WindowsTable);
 		WindowsTable->setEnabled(true);
 		WindowsTable->setVisible(true);
@@ -4432,20 +4291,15 @@ void WindowsLookAndFeel::init(void)
         WindowsTable->setDefaultRenderer(&SFReal32::getClassType(), TableCellRendererPtr(new DefaultReal32TableCellRenderer()));
 		
 	endEditCP(WindowsTable);
-	
-    Table::getClassType().setPrototype(WindowsTable);
     
 	//************************** DefaultTreeEditor *****************************
 
 	//DefaultTreeCellEditor
-    DefaultTreeCellEditorPtr WindowsDefaultTreeCellEditor = DefaultTreeCellEditor::create();
     beginEditCP(WindowsDefaultTreeCellEditor);
 		WindowsDefaultTreeCellEditor->setClickCountToStart(3);
 		WindowsDefaultTreeCellEditor->setDefaultEditor(WindowsTextField);
 		WindowsDefaultTreeCellEditor->setDefaultStringEditor(WindowsTextField);
     endEditCP(WindowsDefaultTreeCellEditor);
-    
-    DefaultTreeCellEditor::getClassType().setPrototype(WindowsDefaultTreeCellEditor);
     
 	//************************** DefaultTreeComponentGenerator *****************************
 
@@ -4485,7 +4339,6 @@ void WindowsLookAndFeel::init(void)
 
 
 	//DefaultTreeComponentGenerator
-    DefaultTreeComponentGeneratorPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::create();
     beginEditCP(WindowsDefaultTreeComponentGenerator);
 		WindowsDefaultTreeComponentGenerator->setExpandedDrawObjectPrototype(WindowsExpandedDrawObject);
 		WindowsDefaultTreeComponentGenerator->setNotExpandedDrawObjectPrototype(WindowsNotExpandedDrawObjectPrototype);
@@ -4500,8 +4353,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsDefaultTreeComponentGenerator->setNonSelectedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
 		WindowsDefaultTreeComponentGenerator->setNodePanelPrototype(WindowsDefaultTreeComponentGeneratorPanelPrototype);
     endEditCP(WindowsDefaultTreeComponentGenerator);
-    
-    DefaultTreeComponentGenerator::getClassType().setPrototype(WindowsDefaultTreeComponentGenerator);
 
     //DefaultTreeLayout
     TreeModelLayoutPtr WindowsDefaultTreeModelLayout = FixedHeightTreeModelLayout::create();
@@ -4525,7 +4376,6 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsTreeBackground);
 
 	//Windows WindowsTree
-	TreePtr WindowsTree = Tree::create();
 	beginEditCP(WindowsTree);
 		WindowsTree->setEnabled(true);
 		WindowsTree->setVisible(true);
@@ -4565,8 +4415,6 @@ void WindowsLookAndFeel::init(void)
         WindowsTree->setModelLayout(WindowsDefaultTreeModelLayout);
 		
 	endEditCP(WindowsTree);
-	
-    Tree::getClassType().setPrototype(WindowsTree);
 	
 	
 	//************************** RGBColorChooserPanel *****************************
@@ -4634,7 +4482,6 @@ void WindowsLookAndFeel::init(void)
 	//************************** ColorChooser *****************************
 
 	//Windows WindowsColorChooser
-	ColorChooserPtr WindowsColorChooser = ColorChooser::create();
 	beginEditCP(WindowsColorChooser);
 		WindowsColorChooser->setEnabled(true);
 		WindowsColorChooser->setVisible(true);
@@ -4665,42 +4512,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
 		WindowsColorChooser->setPreviewPanel(NullFC);
 	endEditCP(WindowsColorChooser);
-	
-    ColorChooser::getClassType().setPrototype(WindowsColorChooser);
-
-
-	beginEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
-		getPrototypes().push_back(WindowsButton);
-		getPrototypes().push_back(WindowsLabel);
-		getPrototypes().push_back(WindowsInternalWindow);
-		getPrototypes().push_back(WindowsDialogWindow);
-		getPrototypes().push_back(WindowsPanel);
-		getPrototypes().push_back(WindowsSplitPanel);
-		getPrototypes().push_back(WindowsImageComponent);
-		getPrototypes().push_back(WindowsCheckboxButton);
-		getPrototypes().push_back(WindowsRadioButton);
-		getPrototypes().push_back(WindowsToggleButton);
-		getPrototypes().push_back(WindowsTextField);
-		getPrototypes().push_back(WindowsPasswordField);
-		getPrototypes().push_back(WindowsToolTip);
-		getPrototypes().push_back(WindowsMenuItem);
-		getPrototypes().push_back(WindowsMenu);
-		getPrototypes().push_back(WindowsPopupMenu);
-		getPrototypes().push_back(WindowsMenuBar);
-		getPrototypes().push_back(WindowsRotatedComponent);
-		getPrototypes().push_back(WindowsScrollBar);
-		getPrototypes().push_back(WindowsScrollPanel);
-		getPrototypes().push_back(WindowsUIViewport);
-		getPrototypes().push_back(WindowsList);
-		getPrototypes().push_back(WindowsTableHeader);
-		getPrototypes().push_back(WindowsTable);
-		getPrototypes().push_back(WindowsSpinnerDefaultEditor);
-		getPrototypes().push_back(WindowsSpinnerNumberEditor);
-		getPrototypes().push_back(WindowsSlider);
-		getPrototypes().push_back(WindowsComboBox);
-		getPrototypes().push_back(WindowsTree);
-		getPrototypes().push_back(WindowsToolbar);
-	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -4709,20 +4520,12 @@ void WindowsLookAndFeel::init(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 WindowsLookAndFeel::WindowsLookAndFeel(void) :
-    Inherited(),
-		_TextCaretRate(1.0),
-		_ToolTipPopupTime(1.5),
-		_SubMenuPopupTime(0.25),
-        _KeyAcceleratorMenuFlashTime(0.15)
+    Inherited()
 {
 }
 
 WindowsLookAndFeel::WindowsLookAndFeel(const WindowsLookAndFeel &source) :
-    Inherited(source),
-		_TextCaretRate(source._TextCaretRate),
-		_ToolTipPopupTime(source._ToolTipPopupTime),
-		_SubMenuPopupTime(source._SubMenuPopupTime),
-        _KeyAcceleratorMenuFlashTime(source._KeyAcceleratorMenuFlashTime)
+    Inherited(source)
 {
 }
 

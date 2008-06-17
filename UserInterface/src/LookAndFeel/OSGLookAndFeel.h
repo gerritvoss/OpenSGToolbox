@@ -78,6 +78,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
 	virtual void init(void) = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
+      friend class XMLLookAndFeel;
 
     // Variables should all be in LookAndFeelBase.
 
@@ -94,6 +95,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
     /*! \{                                                                 */
 
     virtual ~LookAndFeel(void); 
+	virtual void initPrototypes(void);
 
     /*! \}                                                                 */
     

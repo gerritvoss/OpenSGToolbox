@@ -14,7 +14,7 @@
 UI LookAndFeel Interface.
 	<Field
 		name="Prototypes"
-		type="ComponentPtr"
+		type="FieldContainerPtr"
 		cardinality="multi"
 		visibility="external"
 		header="Component/OSGComponent.h"
@@ -25,7 +25,7 @@ UI LookAndFeel Interface.
 		name="TextCaretRate"
 		type="Time"
 		cardinality="single"
-		visibility="internal"
+		visibility="external"
 		defaultValue="1.0"
 		access="public"
 	>
@@ -34,7 +34,7 @@ UI LookAndFeel Interface.
 		name="ToolTipPopupTime"
 		type="Time"
 		cardinality="single"
-		visibility="internal"
+		visibility="external"
 		defaultValue="1.5"
 		access="public"
 	>
@@ -43,7 +43,7 @@ UI LookAndFeel Interface.
 		name="SubMenuPopupTime"
 		type="Time"
 		cardinality="single"
-		visibility="internal"
+		visibility="external"
 		defaultValue="0.25"
 		access="public"
 	>
@@ -52,7 +52,7 @@ UI LookAndFeel Interface.
 		name="KeyAcceleratorMenuFlashTime"
 		type="Time"
 		cardinality="single"
-		visibility="internal"
+		visibility="external"
 		defaultValue="0.15"
 		access="public"
 	>

@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGXMLLookAndFeel.h"
+#include <boost/filesystem/operations.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,6 +72,27 @@ void XMLLookAndFeel::initMethod (void)
 {
 }
 
+XMLLookAndFeelPtr XMLLookAndFeel::create(const Path& LoadFile)
+{
+    XMLLookAndFeelPtr Result = NullFC;
+    if(boost::filesystem::exists(LoadFile))
+    {
+        FCFileType::FCPtrStore Containers;
+	    Containers = FCFileHandler::the()->read(LoadFile);
+
+        FCFileType::FCPtrStore::iterator ContainerItor;
+        for(ContainerItor = Containers.begin(); ContainerItor != Containers.end(); ++ContainerItor)
+        {
+            if((*ContainerItor)->getType() == XMLLookAndFeel::getClassType())
+            {
+                Result = XMLLookAndFeel::Ptr::dcast((*ContainerItor));
+                break;
+            }
+        }
+    }
+
+    return Result;
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -78,6 +100,14 @@ void XMLLookAndFeel::initMethod (void)
 
 void XMLLookAndFeel::init(void)
 {
+    //Get All of the prototypes of the Base Look and feel
+    if(getBaseLookAndFeel() != NullFC)
+    {
+        getBaseLookAndFeel()->init();
+    }
+
+    //Setup my prototypes
+    initPrototypes();
 }
 
 /*-------------------------------------------------------------------------*\

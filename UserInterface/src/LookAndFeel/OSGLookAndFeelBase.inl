@@ -72,7 +72,7 @@ OSG::UInt32 LookAndFeelBase::getClassTypeId(void)
 
 //! Get the LookAndFeel::_mfPrototypes field.
 inline
-MFComponentPtr *LookAndFeelBase::getMFPrototypes(void)
+MFFieldContainerPtr *LookAndFeelBase::getMFPrototypes(void)
 {
     return &_mfPrototypes;
 }
@@ -193,21 +193,21 @@ void LookAndFeelBase::setKeyAcceleratorMenuFlashTime(const Time &value)
 
 //! Get the value of the \a index element the LookAndFeel::_mfPrototypes field.
 inline
-ComponentPtr &LookAndFeelBase::getPrototypes(const UInt32 index)
+FieldContainerPtr &LookAndFeelBase::getPrototypes(const UInt32 index)
 {
     return _mfPrototypes[index];
 }
 
 //! Get the LookAndFeel::_mfPrototypes field.
 inline
-MFComponentPtr &LookAndFeelBase::getPrototypes(void)
+MFFieldContainerPtr &LookAndFeelBase::getPrototypes(void)
 {
     return _mfPrototypes;
 }
 
 //! Get the LookAndFeel::_mfPrototypes field.
 inline
-const MFComponentPtr &LookAndFeelBase::getPrototypes(void) const
+const MFFieldContainerPtr &LookAndFeelBase::getPrototypes(void) const
 {
     return _mfPrototypes;
 }

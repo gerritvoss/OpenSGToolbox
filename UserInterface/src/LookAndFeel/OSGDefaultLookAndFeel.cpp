@@ -117,6 +117,8 @@ void DefaultLookAndFeel::initMethod (void)
 
 void DefaultLookAndFeel::init(void)
 {
+
+    assert(false && "Needs to be implemented!");
 	setTextCaretRate(1.0);
 	setToolTipPopupTime(1.5);
 	setToolTipPopupTime(0.25);

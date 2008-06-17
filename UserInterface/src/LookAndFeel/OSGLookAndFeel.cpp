@@ -74,6 +74,16 @@ void LookAndFeel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void LookAndFeel::initPrototypes(void)
+{
+    //Loop through all of my prototypes
+    for(UInt32 i(0) ; i<getPrototypes().size(); ++i)
+    {
+        //Set them as their class prototypes
+	    getPrototypes()[i]->getType().setPrototype(getPrototypes()[i]);
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
