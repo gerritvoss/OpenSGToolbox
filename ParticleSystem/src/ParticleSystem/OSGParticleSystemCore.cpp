@@ -96,6 +96,7 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
     //If I have a Drawer tell it to draw the particles
     if(getDrawer() != NullFC && getSystem() != NullFC)
     {
+		sortParticles();
         getDrawer()->draw(action, getSystem(), getSort() );
     }
     else

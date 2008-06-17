@@ -80,7 +80,16 @@ void PointParticleSystemDrawer::initMethod (void)
 
 Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
 {
-	UInt32 NumParticles(System->getNumParticles());
+	bool isSorted(Sort.getSize() > 0);
+	UInt32 NumParticles;
+	if(isSorted)
+	{
+		NumParticles = Sort.getSize();
+	}
+	else
+	{
+		NumParticles = System->getNumParticles();
+	}
 	if(NumParticles != 0)
 	{
 
@@ -91,44 +100,62 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, Particle
         GLfloat PointSizeRange[2];
         glGetFloatv(GL_POINT_SIZE_RANGE, PointSizeRange);
 
+		UInt32 Index;
 		glBegin(GL_POINTS);
+			if(isSorted)
+			{
+				Index = Sort[0];
+			}
+			else
+			{
+				Index = 0;
+			}
+
 			if(!SeparateColors)
 			{
-				glColor4fv(System->getColor(0).getValuesRGBA());
+				glColor4fv(System->getColor(Index).getValuesRGBA());
 			}
 			//Sizes
 			if(!SeparateSizes && getForcePerParticleSizing())
 			{
-                glPointSize(osgClamp<Real32>(PointSizeRange[0], System->getSize(0).x(), PointSizeRange[1]));
+                glPointSize(osgClamp<Real32>(PointSizeRange[0], System->getSize(Index).x(), PointSizeRange[1]));
 			}
 			//Normals
 			if(!SeparateNormals)
 			{
-				glNormal3fv(System->getNormal(0).getValues());
+				glNormal3fv(System->getNormal(Index).getValues());
 			}
 			for(UInt32 i(0) ; i<NumParticles ; ++i)
 			{
+				if(isSorted)
+				{
+					Index = Sort[i];
+				}
+				else
+				{
+					Index = i;
+				}
 				//Colors
 				if(SeparateColors)
 				{
-					glColor4fv(System->getColor(i).getValuesRGBA());
+					glColor4fv(System->getColor(Index).getValuesRGBA());
 				}
 				//Sizes
 				if(SeparateSizes)
 				{
                     glEnd();
 		            
-                    glPointSize(osgClamp<Real32>(PointSizeRange[0], System->getSize(i).x(), PointSizeRange[1]));
+                    glPointSize(osgClamp<Real32>(PointSizeRange[0], System->getSize(Index).x(), PointSizeRange[1]));
                     
                     glBegin(GL_POINTS);
 				}
 				//Normals
 				if(SeparateNormals)
 				{
-					glNormal3fv(System->getNormal(i).getValues());
+					glNormal3fv(System->getNormal(Index).getValues());
 				}
 				//Positions
-				glVertex3fv(System->getPosition(i).getValues());
+				glVertex3fv(System->getPosition(Index).getValues());
 			}
 		glEnd();
 	}

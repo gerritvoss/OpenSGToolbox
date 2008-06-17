@@ -67,7 +67,7 @@
 	</Field>
 	<Field
 		name="InternalLifespans"
-		type="Real32"
+		type="Time"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -76,7 +76,7 @@
 	</Field>
 	<Field
 		name="InternalAges"
-		type="Real32"
+		type="Time"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
