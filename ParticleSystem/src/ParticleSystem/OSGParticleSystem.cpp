@@ -691,20 +691,100 @@ UInt64 ParticleSystem::getProperty(const UInt32& Index) const
 	}
 }
 
+void ParticleSystem::setVelocity(const Vec3f& V, const UInt32& Index)
+{
+	if(getNumVelocities() > 1)
+	{
+		getInternalVelocities()[Index] = V;
+	}
+	else if(getNumVelocities() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalVelocities()[0] != V)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalVelocities().push_back(getInternalVelocities()[0]);
+				}
+				getInternalVelocities()[Index] = V;
+			}
+		}
+		else
+		{
+			getInternalVelocities()[Index] = V;
+		}
+	}
+}
+void ParticleSystem::setAge(const Time& T, const UInt32& Index)
+{
+	if(getNumAges() > 1)
+	{
+		getInternalAges()[Index] = T;
+	}
+	else if(getNumAges() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalAges()[0] != T)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalAges().push_back(getInternalAges()[0]);
+				}
+				getInternalAges()[Index] = T;
+			}
+		}
+		else
+		{
+			getInternalAges()[Index] = T;
+		}
+	}
+}
+
 void ParticleSystem::update(const Time& elps)
 {
     //TODO: Implement
+	//Remember the Old Postions and velocities
+
+	//Generate Particles with Generators
+
+	//Effect Particles with Effectors
+
+	//Effect Particle Systems
 
     //Loop through all of the particles
     bool VolumeChanged(false);
     UInt32 NumParticles(getNumParticles());
-    for(UInt32 i(0) ; i<NumParticles; ++i)
+	bool AdvanceIterator(true);
+    for(UInt32 i(0) ; i<NumParticles;)
     {
         VolumeChanged = true;
-        setPosition(getPosition(i) + getVelocity(i)*elps, i);
-    }
 
-    //Update Position
+		//Apply Acceleration and Velocity
+        setPosition(getPosition(i) + getVelocity(i)*elps + getAcceleration(i)*elps*elps, i);
+
+		setVelocity(getVelocity(i) + getAcceleration(i)*elps,i);
+
+		//Kill Particles that have ages > lifespans
+		setAge(getAge(i) + elps,i);
+		if(getAge(i)>getLifespan(i))
+		{
+			if(killParticle(i))
+			{
+				AdvanceIterator = false;
+				--NumParticles;
+			}
+		}
+
+		if(AdvanceIterator)
+		{
+			 ++i;
+		}
+		AdvanceIterator = true;
+    }
 
 
     //Fire a Update Event

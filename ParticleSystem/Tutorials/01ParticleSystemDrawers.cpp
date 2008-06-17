@@ -170,7 +170,14 @@ int main(int argc, char **argv)
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
 	for(UInt32 i(0) ; i<50 ; ++i)
 	{
-		ExampleParticleSystem->addParticle(Pnt3f(i,i,i),Vec3f(0.0,0.0f,1.0f),Color4f(1.0,0.0,0.0,1.0), Vec3f(1.0,1.0,1.0), 100.0f, Vec3f(0.0f,static_cast<Real32>(i)/10.0f,0.0f),Vec3f(0.0f,0.0f,0.0f),0);
+		ExampleParticleSystem->addParticle(Pnt3f(i,i,i),
+			Vec3f(0.0,0.0f,1.0f),
+			Color4f(1.0,0.0,0.0,1.0), 
+			Vec3f(1.0,1.0,1.0), 
+			i, 
+			Vec3f(0.0f,0.0f,0.0f), //Velocity
+			Vec3f(0.0f,5.0f,0.0f)
+			,0);
 	}
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 

@@ -179,6 +179,9 @@ Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemPtr System, UInt32
 		break;
 	}
 
+	Vec3f Temp;
+	Temp.x();
+
 	//Calculate Length
 	Real32 LineLength = 5.0f;
 
