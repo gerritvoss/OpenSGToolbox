@@ -61,6 +61,12 @@ UInt32 ParticleSystem::getNumParticles(void) const
 }
 
 inline
+UInt32 ParticleSystem::getNumSecPositions(void) const
+{
+	return getInternalSecPositions().getSize();
+}
+
+inline
 UInt32 ParticleSystem::getNumNormals(void) const
 {
 	return getInternalNormals().getSize();

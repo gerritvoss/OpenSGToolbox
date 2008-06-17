@@ -104,6 +104,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	void setPosition(const Pnt3f& Pos, const UInt32& Index);
 
 	
+	UInt32 getNumSecPositions(void) const;
 	UInt32 getNumNormals(void) const;
 	UInt32 getNumColors(void) const;
 	UInt32 getNumSizes(void) const;
@@ -137,6 +138,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 					 const Vec3f& Velocity,
 					 const Vec3f& Acceleration,
 					 UInt64 Properties);
+
+    
+	bool killParticle(UInt32 Index);
 
     bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
     void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
@@ -197,6 +201,18 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	void addAndExpandSecVelocities(const Vec3f& SecVelocity);
 	void addAndExpandAccelerations(const Vec3f& Acceleration);
 	void addAndExpandProperties(UInt64 Properties);
+
+	void removePosition(UInt32 Index);
+	void removeSecPosition(UInt32 Index);
+	void removeNormal(UInt32 Index);
+	void removeColor(UInt32 Index);
+	void removeSize(UInt32 Index);
+	void removeLifespan(UInt32 Index);
+	void removeAge(UInt32 Index);
+	void removeVelocity(UInt32 Index);
+	void removeSecVelocity(UInt32 Index);
+	void removeAcceleration(UInt32 Index);
+	void removeProperty(UInt32 Index);
     /*==========================  PRIVATE  ================================*/
   private:
 

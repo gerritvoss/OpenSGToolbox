@@ -341,6 +341,166 @@ void ParticleSystem::addAndExpandProperties(UInt64 Properties)
 	}
 }
 
+bool ParticleSystem::killParticle(UInt32 Index)
+{
+    if(Index >= getNumParticles())
+    {
+        return false;
+    }
+
+    removePosition(Index);
+    removeSecPosition(Index);
+    removeNormal(Index);
+    removeColor(Index);
+    removeSize(Index);
+    removeLifespan(Index);
+    removeAge(Index);
+    removeVelocity(Index);
+    removeSecVelocity(Index);
+    removeAcceleration(Index);
+    removeProperty(Index);
+
+    produceParticleKilled();
+
+    return true;
+}
+
+void ParticleSystem::removePosition(UInt32 Index)
+{
+    getInternalPositions()[Index] = getInternalPositions().back();
+    getInternalPositions().resize(getInternalPositions().size()-1);
+}
+
+void ParticleSystem::removeSecPosition(UInt32 Index)
+{
+    if(getNumSecPositions() > 1)
+    {
+        getInternalSecPositions()[Index] = getInternalSecPositions().back();
+        getInternalSecPositions().resize(getInternalSecPositions().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalSecPositions().clear();
+    }
+}
+
+void ParticleSystem::removeNormal(UInt32 Index)
+{
+    if(getNumNormals() > 1)
+    {
+        getInternalNormals()[Index] = getInternalNormals().back();
+        getInternalNormals().resize(getInternalNormals().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalNormals().clear();
+    }
+}
+
+void ParticleSystem::removeColor(UInt32 Index)
+{
+    if(getNumColors() > 1)
+    {
+        getInternalColors()[Index] = getInternalColors().back();
+        getInternalColors().resize(getInternalColors().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalColors().clear();
+    }
+}
+
+void ParticleSystem::removeSize(UInt32 Index)
+{
+    if(getNumSizes() > 1)
+    {
+        getInternalSizes()[Index] = getInternalSizes().back();
+        getInternalSizes().resize(getInternalSizes().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalSizes().clear();
+    }
+}
+
+void ParticleSystem::removeLifespan(UInt32 Index)
+{
+    if(getNumLifespans() > 1)
+    {
+        getInternalLifespans()[Index] = getInternalLifespans().back();
+        getInternalLifespans().resize(getInternalLifespans().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalLifespans().clear();
+    }
+}
+
+void ParticleSystem::removeAge(UInt32 Index)
+{
+    if(getNumAges() > 1)
+    {
+        getInternalAges()[Index] = getInternalAges().back();
+        getInternalAges().resize(getInternalAges().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalAges().clear();
+    }
+}
+
+void ParticleSystem::removeVelocity(UInt32 Index)
+{
+    if(getNumVelocities() > 1)
+    {
+        getInternalVelocities()[Index] = getInternalVelocities().back();
+        getInternalVelocities().resize(getInternalVelocities().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalVelocities().clear();
+    }
+}
+
+void ParticleSystem::removeSecVelocity(UInt32 Index)
+{
+    if(getNumSecVelocities() > 1)
+    {
+        getInternalSecVelocities()[Index] = getInternalSecVelocities().back();
+        getInternalSecVelocities().resize(getInternalSecVelocities().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalSecVelocities().clear();
+    }
+}
+
+void ParticleSystem::removeAcceleration(UInt32 Index)
+{
+    if(getNumAccelerations() > 1)
+    {
+        getInternalAccelerations()[Index] = getInternalAccelerations().back();
+        getInternalAccelerations().resize(getInternalAccelerations().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalAccelerations().clear();
+    }
+}
+
+void ParticleSystem::removeProperty(UInt32 Index)
+{
+    if(getNumProperties() > 1)
+    {
+        getInternalProperties()[Index] = getInternalProperties().back();
+        getInternalProperties().resize(getInternalProperties().size()-1);
+    }
+    else if(getNumParticles() == 0)
+    {
+        getInternalProperties().clear();
+    }
+}
+
 
 bool ParticleSystem::addParticle(const Pnt3f& Position,
 		             const Pnt3f& SecPosition,
@@ -373,6 +533,8 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 		addAndExpandAccelerations(Acceleration);
 		addAndExpandProperties(Properties);
 	endEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
+
+    produceParticleGenerated();
 
 	return true;
 }
