@@ -136,8 +136,8 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
+                                        Vec2f(1280,1024),
                                         "OpenSG 01ParticleSystemDrawer Window");
 										
 

@@ -690,56 +690,270 @@ UInt64 ParticleSystem::getProperty(const UInt32& Index) const
 		getInternalProperties()[0];
 	}
 }
-
-void ParticleSystem::setVelocity(const Vec3f& V, const UInt32& Index)
+void ParticleSystem::setSecPosition(const Pnt3f& SecPosition, const UInt32& Index)
 {
-	if(getNumVelocities() > 1)
+	if(getNumSecPositions() > 1)
 	{
-		getInternalVelocities()[Index] = V;
+		getInternalSecPositions()[Index] = SecPosition;
 	}
-	else if(getNumVelocities() == 1)
+	else if(getNumSecPositions() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalVelocities()[0] != V)
+			if(getInternalSecPositions()[0] != SecPosition)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalVelocities().push_back(getInternalVelocities()[0]);
+					getInternalSecPositions().push_back(getInternalSecPositions()[0]);
 				}
-				getInternalVelocities()[Index] = V;
+				getInternalSecPositions()[Index] = SecPosition;
 			}
 		}
 		else
 		{
-			getInternalVelocities()[Index] = V;
+			getInternalSecPositions()[Index] = SecPosition;
 		}
 	}
 }
-void ParticleSystem::setAge(const Time& T, const UInt32& Index)
+
+void ParticleSystem::setNormal(const Vec3f& Normal, const UInt32& Index)
+{
+	if(getNumNormals() > 1)
+	{
+		getInternalNormals()[Index] = Normal;
+	}
+	else if(getNumNormals() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalNormals()[0] != Normal)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalNormals().push_back(getInternalNormals()[0]);
+				}
+				getInternalNormals()[Index] = Normal;
+			}
+		}
+		else
+		{
+			getInternalNormals()[Index] = Normal;
+		}
+	}
+}
+void ParticleSystem::setColor(const Color4f& Color, const UInt32& Index)
+{
+	if(getNumColors() > 1)
+	{
+		getInternalColors()[Index] = Color;
+	}
+	else if(getNumColors() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalColors()[0] != Color)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalColors().push_back(getInternalColors()[0]);
+				}
+				getInternalColors()[Index] = Color;
+			}
+		}
+		else
+		{
+			getInternalColors()[Index] = Color;
+		}
+	}
+}
+
+
+void ParticleSystem::setSize(const Vec3f& Size, const UInt32& Index)
+{
+	if(getNumSizes() > 1)
+	{
+		getInternalSizes()[Index] = Size;
+	}
+	else if(getNumSizes() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalSizes()[0] != Size)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalSizes().push_back(getInternalSizes()[0]);
+				}
+				getInternalSizes()[Index] = Size;
+			}
+		}
+		else
+		{
+			getInternalSizes()[Index] = Size;
+		}
+	}
+}
+void ParticleSystem::setLifespan(const Time& Lifespan, const UInt32& Index)
+{
+	if(getNumLifespans() > 1)
+	{
+		getInternalLifespans()[Index] = Lifespan;
+	}
+	else if(getNumLifespans() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalLifespans()[0] != Lifespan)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalLifespans().push_back(getInternalLifespans()[0]);
+				}
+				getInternalLifespans()[Index] = Lifespan;
+			}
+		}
+		else
+		{
+			getInternalLifespans()[Index] = Lifespan;
+		}
+	}
+}
+
+void ParticleSystem::setAge(const Time& Age, const UInt32& Index)
 {
 	if(getNumAges() > 1)
 	{
-		getInternalAges()[Index] = T;
+		getInternalAges()[Index] = Age;
 	}
 	else if(getNumAges() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalAges()[0] != T)
+			if(getInternalAges()[0] != Age)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
 					getInternalAges().push_back(getInternalAges()[0]);
 				}
-				getInternalAges()[Index] = T;
+				getInternalAges()[Index] = Age;
 			}
 		}
 		else
 		{
-			getInternalAges()[Index] = T;
+			getInternalAges()[Index] = Age;
+		}
+	}
+}
+
+void ParticleSystem::setVelocity(const Vec3f& Velocity, const UInt32& Index)
+{
+	if(getNumVelocities() > 1)
+	{
+		getInternalVelocities()[Index] = Velocity;
+	}
+	else if(getNumVelocities() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalVelocities()[0] != Velocity)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalVelocities().push_back(getInternalVelocities()[0]);
+				}
+				getInternalVelocities()[Index] = Velocity;
+			}
+		}
+		else
+		{
+			getInternalVelocities()[Index] = Velocity;
+		}
+	}
+}
+
+void ParticleSystem::setSecVelocity(const Vec3f& SecVelocity, const UInt32& Index)
+{
+	if(getNumSecVelocities() > 1)
+	{
+		getInternalSecVelocities()[Index] = SecVelocity;
+	}
+	else if(getNumSecVelocities() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalSecVelocities()[0] != SecVelocity)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalSecVelocities().push_back(getInternalSecVelocities()[0]);
+				}
+				getInternalSecVelocities()[Index] = SecVelocity;
+			}
+		}
+		else
+		{
+			getInternalSecVelocities()[Index] = SecVelocity;
+		}
+	}
+}
+
+void ParticleSystem::setAcceleration(const Vec3f& Acceleration, const UInt32& Index)
+{
+	if(getNumAccelerations() > 1)
+	{
+		getInternalAccelerations()[Index] = Acceleration;
+	}
+	else if(getNumAccelerations() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalAccelerations()[0] != Acceleration)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalAccelerations().push_back(getInternalAccelerations()[0]);
+				}
+				getInternalAccelerations()[Index] = Acceleration;
+			}
+		}
+		else
+		{
+			getInternalAccelerations()[Index] = Acceleration;
+		}
+	}
+}
+void ParticleSystem::setProperty(const UInt64& Property, const UInt32& Index)
+{
+	if(getNumProperties() > 1)
+	{
+		getInternalProperties()[Index] = Property;
+	}
+	else if(getNumProperties() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalProperties()[0] != Property)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalProperties().push_back(getInternalProperties()[0]);
+				}
+				getInternalProperties()[Index] = Property;
+			}
+		}
+		else
+		{
+			getInternalProperties()[Index] = Property;
 		}
 	}
 }

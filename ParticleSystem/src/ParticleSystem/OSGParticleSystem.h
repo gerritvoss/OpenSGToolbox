@@ -102,8 +102,16 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 
     
 	void setPosition(const Pnt3f& Pos, const UInt32& Index);
-	void setVelocity(const Vec3f& V, const UInt32& Index);
-	void setAge(const Time& T, const UInt32& Index);
+	void setSecPosition(const Pnt3f& SecPosition, const UInt32& Index);
+	void setNormal(const Vec3f& Normal, const UInt32& Index);
+	void setColor(const Color4f& Color, const UInt32& Index);
+	void setSize(const Vec3f& Size, const UInt32& Index);
+	void setLifespan(const Time& Lifespan, const UInt32& Index);
+	void setAge(const Time& Age, const UInt32& Index);
+	void setVelocity(const Vec3f& Velocity, const UInt32& Index);
+	void setSecVelocity(const Vec3f& SecVelocity, const UInt32& Index);
+	void setAcceleration(const Vec3f& Acceleration, const UInt32& Index);
+	void setProperty(const UInt64& Property, const UInt32& Index);
 
 	
 	UInt32 getNumSecPositions(void) const;
