@@ -115,28 +115,13 @@ void DefaultLookAndFeel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Time DefaultLookAndFeel::getTextCaretRate(void) const
-{
-	return _TextCaretRate;
-}
-
-Time DefaultLookAndFeel::getToolTipPopupTime(void) const
-{
-	return _ToolTipPopupTime;
-}
-
-Time DefaultLookAndFeel::getSubMenuPopupTime(void) const
-{
-	return _SubMenuPopupTime;
-}
-
-Time DefaultLookAndFeel::getKeyAcceleratorMenuFlashTime(void) const
-{
-	return _KeyAcceleratorMenuFlashTime;
-}
-
 void DefaultLookAndFeel::init(void)
 {
+	setTextCaretRate(1.0);
+	setToolTipPopupTime(1.5);
+	setToolTipPopupTime(0.25);
+	setKeyAcceleratorMenuFlashTime(0.15);
+
 	//Default Font
 	UIFontPtr DefaultFont = UIFont::create();
 	beginEditCP(DefaultFont);
@@ -1934,21 +1919,13 @@ void DefaultLookAndFeel::init(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 DefaultLookAndFeel::DefaultLookAndFeel(void) :
-    Inherited(),
-		_TextCaretRate(1.0),
-		_ToolTipPopupTime(1.5),
-		_SubMenuPopupTime(0.25),
-        _KeyAcceleratorMenuFlashTime(0.15)
+    Inherited()
 {
 
 }
 
 DefaultLookAndFeel::DefaultLookAndFeel(const DefaultLookAndFeel &source) :
-    Inherited(source),
-		_TextCaretRate(source._TextCaretRate),
-		_ToolTipPopupTime(source._ToolTipPopupTime),
-		_SubMenuPopupTime(source._SubMenuPopupTime),
-        _KeyAcceleratorMenuFlashTime(source._KeyAcceleratorMenuFlashTime)
+    Inherited(source)
 {
 }
 

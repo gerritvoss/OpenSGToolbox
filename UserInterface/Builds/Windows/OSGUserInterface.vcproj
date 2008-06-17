@@ -4824,6 +4824,34 @@
 					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeelFields.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\LookAndFeel\OSGXMLLookAndFeel.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\LookAndFeel\OSGXMLLookAndFeel.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\LookAndFeel\OSGXMLLookAndFeel.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\LookAndFeel\OSGXMLLookAndFeelBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\LookAndFeel\OSGXMLLookAndFeelBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\LookAndFeel\OSGXMLLookAndFeelBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\LookAndFeel\OSGXMLLookAndFeelFields.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Util"

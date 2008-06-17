@@ -36,87 +36,107 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLOOKANDFEEL_H_
-#define _OSGLOOKANDFEEL_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGLookAndFeelBase.h"
+#include "OSGXMLLookAndFeel.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::XMLLookAndFeel
+UI XML LookAndFeel. 	
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void XMLLookAndFeel::initMethod (void)
 {
-  private:
+}
 
-    typedef LookAndFeelBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
-  public:
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
+void XMLLookAndFeel::init(void)
+{
+}
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
+/*----------------------- constructors & destructors ----------------------*/
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
+XMLLookAndFeel::XMLLookAndFeel(void) :
+    Inherited()
+{
+}
 
-    /*! \}                                                                 */
+XMLLookAndFeel::XMLLookAndFeel(const XMLLookAndFeel &source) :
+    Inherited(source)
+{
+}
 
-	virtual void init(void) = 0;
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+XMLLookAndFeel::~XMLLookAndFeel(void)
+{
+}
 
-    // Variables should all be in LookAndFeelBase.
+/*----------------------------- class specific ----------------------------*/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
+void XMLLookAndFeel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    LookAndFeel(void);
-    LookAndFeel(const LookAndFeel &source);
+void XMLLookAndFeel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump XMLLookAndFeel NI" << std::endl;
+}
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
 
-    virtual ~LookAndFeel(void); 
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    friend class FieldContainer;
-    friend class LookAndFeelBase;
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-    static void initMethod(void);
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGXMLLOOKANDFEELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGXMLLOOKANDFEELBASE_INLINE_CVSID;
 
-    // prohibit default functions (move to 'public' if you need one)
+    static Char8 cvsid_fields_hpp[] = OSGXMLLOOKANDFEELFIELDS_HEADER_CVSID;
+}
 
-    void operator =(const LookAndFeel &source);
-};
-
-typedef LookAndFeel *LookAndFeelP;
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#include "OSGLookAndFeelBase.inl"
-#include "OSGLookAndFeel.inl"
-
-#define OSGLOOKANDFEEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGLOOKANDFEEL_H_ */

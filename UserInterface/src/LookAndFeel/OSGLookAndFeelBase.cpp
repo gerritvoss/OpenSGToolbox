@@ -67,6 +67,18 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  LookAndFeelBase::PrototypesFieldMask = 
     (TypeTraits<BitVector>::One << LookAndFeelBase::PrototypesFieldId);
 
+const OSG::BitVector  LookAndFeelBase::TextCaretRateFieldMask = 
+    (TypeTraits<BitVector>::One << LookAndFeelBase::TextCaretRateFieldId);
+
+const OSG::BitVector  LookAndFeelBase::ToolTipPopupTimeFieldMask = 
+    (TypeTraits<BitVector>::One << LookAndFeelBase::ToolTipPopupTimeFieldId);
+
+const OSG::BitVector  LookAndFeelBase::SubMenuPopupTimeFieldMask = 
+    (TypeTraits<BitVector>::One << LookAndFeelBase::SubMenuPopupTimeFieldId);
+
+const OSG::BitVector  LookAndFeelBase::KeyAcceleratorMenuFlashTimeFieldMask = 
+    (TypeTraits<BitVector>::One << LookAndFeelBase::KeyAcceleratorMenuFlashTimeFieldId);
+
 const OSG::BitVector LookAndFeelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +87,18 @@ const OSG::BitVector LookAndFeelBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var ComponentPtr    LookAndFeelBase::_mfPrototypes
+    
+*/
+/*! \var Time            LookAndFeelBase::_sfTextCaretRate
+    
+*/
+/*! \var Time            LookAndFeelBase::_sfToolTipPopupTime
+    
+*/
+/*! \var Time            LookAndFeelBase::_sfSubMenuPopupTime
+    
+*/
+/*! \var Time            LookAndFeelBase::_sfKeyAcceleratorMenuFlashTime
     
 */
 
@@ -86,7 +110,27 @@ FieldDescription *LookAndFeelBase::_desc[] =
                      "Prototypes", 
                      PrototypesFieldId, PrototypesFieldMask,
                      false,
-                     (FieldAccessMethod) &LookAndFeelBase::getMFPrototypes)
+                     (FieldAccessMethod) &LookAndFeelBase::getMFPrototypes),
+    new FieldDescription(SFTime::getClassType(), 
+                     "TextCaretRate", 
+                     TextCaretRateFieldId, TextCaretRateFieldMask,
+                     true,
+                     (FieldAccessMethod) &LookAndFeelBase::getSFTextCaretRate),
+    new FieldDescription(SFTime::getClassType(), 
+                     "ToolTipPopupTime", 
+                     ToolTipPopupTimeFieldId, ToolTipPopupTimeFieldMask,
+                     true,
+                     (FieldAccessMethod) &LookAndFeelBase::getSFToolTipPopupTime),
+    new FieldDescription(SFTime::getClassType(), 
+                     "SubMenuPopupTime", 
+                     SubMenuPopupTimeFieldId, SubMenuPopupTimeFieldMask,
+                     true,
+                     (FieldAccessMethod) &LookAndFeelBase::getSFSubMenuPopupTime),
+    new FieldDescription(SFTime::getClassType(), 
+                     "KeyAcceleratorMenuFlashTime", 
+                     KeyAcceleratorMenuFlashTimeFieldId, KeyAcceleratorMenuFlashTimeFieldMask,
+                     true,
+                     (FieldAccessMethod) &LookAndFeelBase::getSFKeyAcceleratorMenuFlashTime)
 };
 
 
@@ -155,6 +199,10 @@ void LookAndFeelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 LookAndFeelBase::LookAndFeelBase(void) :
     _mfPrototypes             (), 
+    _sfTextCaretRate          (Time(1.0)), 
+    _sfToolTipPopupTime       (Time(1.5)), 
+    _sfSubMenuPopupTime       (Time(0.25)), 
+    _sfKeyAcceleratorMenuFlashTime(Time(0.15)), 
     Inherited() 
 {
 }
@@ -165,6 +213,10 @@ LookAndFeelBase::LookAndFeelBase(void) :
 
 LookAndFeelBase::LookAndFeelBase(const LookAndFeelBase &source) :
     _mfPrototypes             (source._mfPrototypes             ), 
+    _sfTextCaretRate          (source._sfTextCaretRate          ), 
+    _sfToolTipPopupTime       (source._sfToolTipPopupTime       ), 
+    _sfSubMenuPopupTime       (source._sfSubMenuPopupTime       ), 
+    _sfKeyAcceleratorMenuFlashTime(source._sfKeyAcceleratorMenuFlashTime), 
     Inherited                 (source)
 {
 }
@@ -186,6 +238,26 @@ UInt32 LookAndFeelBase::getBinSize(const BitVector &whichField)
         returnValue += _mfPrototypes.getBinSize();
     }
 
+    if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
+    {
+        returnValue += _sfTextCaretRate.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
+    {
+        returnValue += _sfToolTipPopupTime.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
+    {
+        returnValue += _sfSubMenuPopupTime.getBinSize();
+    }
+
+    if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
+    {
+        returnValue += _sfKeyAcceleratorMenuFlashTime.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -198,6 +270,26 @@ void LookAndFeelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (PrototypesFieldMask & whichField))
     {
         _mfPrototypes.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
+    {
+        _sfTextCaretRate.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
+    {
+        _sfToolTipPopupTime.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
+    {
+        _sfSubMenuPopupTime.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
+    {
+        _sfKeyAcceleratorMenuFlashTime.copyToBin(pMem);
     }
 
 
@@ -213,6 +305,26 @@ void LookAndFeelBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfPrototypes.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
+    {
+        _sfTextCaretRate.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
+    {
+        _sfToolTipPopupTime.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
+    {
+        _sfSubMenuPopupTime.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
+    {
+        _sfKeyAcceleratorMenuFlashTime.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -226,6 +338,18 @@ void LookAndFeelBase::executeSyncImpl(      LookAndFeelBase *pOther,
     if(FieldBits::NoField != (PrototypesFieldMask & whichField))
         _mfPrototypes.syncWith(pOther->_mfPrototypes);
 
+    if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
+        _sfTextCaretRate.syncWith(pOther->_sfTextCaretRate);
+
+    if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
+        _sfToolTipPopupTime.syncWith(pOther->_sfToolTipPopupTime);
+
+    if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
+        _sfSubMenuPopupTime.syncWith(pOther->_sfSubMenuPopupTime);
+
+    if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
+        _sfKeyAcceleratorMenuFlashTime.syncWith(pOther->_sfKeyAcceleratorMenuFlashTime);
+
 
 }
 #else
@@ -235,6 +359,18 @@ void LookAndFeelBase::executeSyncImpl(      LookAndFeelBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
+        _sfTextCaretRate.syncWith(pOther->_sfTextCaretRate);
+
+    if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
+        _sfToolTipPopupTime.syncWith(pOther->_sfToolTipPopupTime);
+
+    if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
+        _sfSubMenuPopupTime.syncWith(pOther->_sfSubMenuPopupTime);
+
+    if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
+        _sfKeyAcceleratorMenuFlashTime.syncWith(pOther->_sfKeyAcceleratorMenuFlashTime);
 
 
     if(FieldBits::NoField != (PrototypesFieldMask & whichField))

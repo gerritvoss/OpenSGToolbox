@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="XMLLookAndFeel"
+	parent="LookAndFeel"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+UI XML LookAndFeel.
+	<Field
+		name="BaseLookAndFeel"
+		type="LookAndFeelPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="LookAndFeel/OSGLookAndFeelFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+</FieldContainer>

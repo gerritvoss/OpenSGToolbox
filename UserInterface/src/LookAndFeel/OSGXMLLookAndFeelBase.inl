@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class LookAndFeel!
+ **     class XMLLookAndFeel!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,164 +55,78 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &LookAndFeelBase::getClassType(void)
+OSG::FieldContainerType &XMLLookAndFeelBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LookAndFeelBase::getClassTypeId(void) 
+OSG::UInt32 XMLLookAndFeelBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+XMLLookAndFeelPtr XMLLookAndFeelBase::create(void) 
+{
+    XMLLookAndFeelPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = XMLLookAndFeelPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+XMLLookAndFeelPtr XMLLookAndFeelBase::createEmpty(void) 
+{ 
+    XMLLookAndFeelPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the LookAndFeel::_mfPrototypes field.
+//! Get the XMLLookAndFeel::_sfBaseLookAndFeel field.
 inline
-MFComponentPtr *LookAndFeelBase::getMFPrototypes(void)
+SFLookAndFeelPtr *XMLLookAndFeelBase::getSFBaseLookAndFeel(void)
 {
-    return &_mfPrototypes;
-}
-
-//! Get the LookAndFeel::_sfTextCaretRate field.
-inline
-SFTime *LookAndFeelBase::getSFTextCaretRate(void)
-{
-    return &_sfTextCaretRate;
-}
-
-//! Get the LookAndFeel::_sfToolTipPopupTime field.
-inline
-SFTime *LookAndFeelBase::getSFToolTipPopupTime(void)
-{
-    return &_sfToolTipPopupTime;
-}
-
-//! Get the LookAndFeel::_sfSubMenuPopupTime field.
-inline
-SFTime *LookAndFeelBase::getSFSubMenuPopupTime(void)
-{
-    return &_sfSubMenuPopupTime;
-}
-
-//! Get the LookAndFeel::_sfKeyAcceleratorMenuFlashTime field.
-inline
-SFTime *LookAndFeelBase::getSFKeyAcceleratorMenuFlashTime(void)
-{
-    return &_sfKeyAcceleratorMenuFlashTime;
+    return &_sfBaseLookAndFeel;
 }
 
 
-//! Get the value of the LookAndFeel::_sfTextCaretRate field.
+//! Get the value of the XMLLookAndFeel::_sfBaseLookAndFeel field.
 inline
-Time &LookAndFeelBase::getTextCaretRate(void)
+LookAndFeelPtr &XMLLookAndFeelBase::getBaseLookAndFeel(void)
 {
-    return _sfTextCaretRate.getValue();
+    return _sfBaseLookAndFeel.getValue();
 }
 
-//! Get the value of the LookAndFeel::_sfTextCaretRate field.
+//! Get the value of the XMLLookAndFeel::_sfBaseLookAndFeel field.
 inline
-const Time &LookAndFeelBase::getTextCaretRate(void) const
+const LookAndFeelPtr &XMLLookAndFeelBase::getBaseLookAndFeel(void) const
 {
-    return _sfTextCaretRate.getValue();
+    return _sfBaseLookAndFeel.getValue();
 }
 
-//! Set the value of the LookAndFeel::_sfTextCaretRate field.
+//! Set the value of the XMLLookAndFeel::_sfBaseLookAndFeel field.
 inline
-void LookAndFeelBase::setTextCaretRate(const Time &value)
+void XMLLookAndFeelBase::setBaseLookAndFeel(const LookAndFeelPtr &value)
 {
-    _sfTextCaretRate.setValue(value);
+    _sfBaseLookAndFeel.setValue(value);
 }
 
-//! Get the value of the LookAndFeel::_sfToolTipPopupTime field.
-inline
-Time &LookAndFeelBase::getToolTipPopupTime(void)
-{
-    return _sfToolTipPopupTime.getValue();
-}
-
-//! Get the value of the LookAndFeel::_sfToolTipPopupTime field.
-inline
-const Time &LookAndFeelBase::getToolTipPopupTime(void) const
-{
-    return _sfToolTipPopupTime.getValue();
-}
-
-//! Set the value of the LookAndFeel::_sfToolTipPopupTime field.
-inline
-void LookAndFeelBase::setToolTipPopupTime(const Time &value)
-{
-    _sfToolTipPopupTime.setValue(value);
-}
-
-//! Get the value of the LookAndFeel::_sfSubMenuPopupTime field.
-inline
-Time &LookAndFeelBase::getSubMenuPopupTime(void)
-{
-    return _sfSubMenuPopupTime.getValue();
-}
-
-//! Get the value of the LookAndFeel::_sfSubMenuPopupTime field.
-inline
-const Time &LookAndFeelBase::getSubMenuPopupTime(void) const
-{
-    return _sfSubMenuPopupTime.getValue();
-}
-
-//! Set the value of the LookAndFeel::_sfSubMenuPopupTime field.
-inline
-void LookAndFeelBase::setSubMenuPopupTime(const Time &value)
-{
-    _sfSubMenuPopupTime.setValue(value);
-}
-
-//! Get the value of the LookAndFeel::_sfKeyAcceleratorMenuFlashTime field.
-inline
-Time &LookAndFeelBase::getKeyAcceleratorMenuFlashTime(void)
-{
-    return _sfKeyAcceleratorMenuFlashTime.getValue();
-}
-
-//! Get the value of the LookAndFeel::_sfKeyAcceleratorMenuFlashTime field.
-inline
-const Time &LookAndFeelBase::getKeyAcceleratorMenuFlashTime(void) const
-{
-    return _sfKeyAcceleratorMenuFlashTime.getValue();
-}
-
-//! Set the value of the LookAndFeel::_sfKeyAcceleratorMenuFlashTime field.
-inline
-void LookAndFeelBase::setKeyAcceleratorMenuFlashTime(const Time &value)
-{
-    _sfKeyAcceleratorMenuFlashTime.setValue(value);
-}
-
-
-//! Get the value of the \a index element the LookAndFeel::_mfPrototypes field.
-inline
-ComponentPtr &LookAndFeelBase::getPrototypes(const UInt32 index)
-{
-    return _mfPrototypes[index];
-}
-
-//! Get the LookAndFeel::_mfPrototypes field.
-inline
-MFComponentPtr &LookAndFeelBase::getPrototypes(void)
-{
-    return _mfPrototypes;
-}
-
-//! Get the LookAndFeel::_mfPrototypes field.
-inline
-const MFComponentPtr &LookAndFeelBase::getPrototypes(void) const
-{
-    return _mfPrototypes;
-}
 
 OSG_END_NAMESPACE
 
-#define OSGLOOKANDFEELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGXMLLOOKANDFEELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

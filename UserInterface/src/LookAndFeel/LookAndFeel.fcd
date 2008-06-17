@@ -21,4 +21,40 @@ UI LookAndFeel Interface.
 		access="protected"
 	>
 	</Field>
+	<Field
+		name="TextCaretRate"
+		type="Time"
+		cardinality="single"
+		visibility="internal"
+		defaultValue="1.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ToolTipPopupTime"
+		type="Time"
+		cardinality="single"
+		visibility="internal"
+		defaultValue="1.5"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="SubMenuPopupTime"
+		type="Time"
+		cardinality="single"
+		visibility="internal"
+		defaultValue="0.25"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="KeyAcceleratorMenuFlashTime"
+		type="Time"
+		cardinality="single"
+		visibility="internal"
+		defaultValue="0.15"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

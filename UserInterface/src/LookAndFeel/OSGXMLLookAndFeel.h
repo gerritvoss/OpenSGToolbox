@@ -36,24 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLOOKANDFEEL_H_
-#define _OSGLOOKANDFEEL_H_
+#ifndef _OSGXMLLOOKANDFEEL_H_
+#define _OSGXMLLOOKANDFEEL_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGLookAndFeelBase.h"
+#include "OSGXMLLookAndFeelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
+/*! \brief XMLLookAndFeel class. See \ref 
+           PageUserInterfaceXMLLookAndFeel for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING XMLLookAndFeel : public XMLLookAndFeelBase
 {
   private:
 
-    typedef LookAndFeelBase Inherited;
+    typedef XMLLookAndFeelBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -73,27 +76,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+	virtual void init(void);
     /*! \}                                                                 */
-
-	virtual void init(void) = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in LookAndFeelBase.
+    // Variables should all be in XMLLookAndFeelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    LookAndFeel(void);
-    LookAndFeel(const LookAndFeel &source);
+    XMLLookAndFeel(void);
+    XMLLookAndFeel(const XMLLookAndFeel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LookAndFeel(void); 
+    virtual ~XMLLookAndFeel(void); 
 
     /*! \}                                                                 */
     
@@ -101,22 +103,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
   private:
 
     friend class FieldContainer;
-    friend class LookAndFeelBase;
+    friend class XMLLookAndFeelBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const LookAndFeel &source);
+    void operator =(const XMLLookAndFeel &source);
 };
 
-typedef LookAndFeel *LookAndFeelP;
+typedef XMLLookAndFeel *XMLLookAndFeelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGLookAndFeelBase.inl"
-#include "OSGLookAndFeel.inl"
+#include "OSGXMLLookAndFeelBase.inl"
+#include "OSGXMLLookAndFeel.inl"
 
-#define OSGLOOKANDFEEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGXMLLOOKANDFEEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGLOOKANDFEEL_H_ */
+#endif /* _OSGXMLLOOKANDFEEL_H_ */

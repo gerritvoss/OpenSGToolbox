@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class LookAndFeel
+ **     class XMLLookAndFeel
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGLOOKANDFEELBASE_H_
-#define _OSGLOOKANDFEELBASE_H_
+#ifndef _OSGXMLLOOKANDFEELBASE_H_
+#define _OSGXMLLOOKANDFEELBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,49 +65,37 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include "OSGLookAndFeel.h" // Parent
 
-#include "Component/OSGComponent.h" // Prototypes type
-#include <OpenSG/OSGTimeFields.h> // TextCaretRate type
-#include <OpenSG/OSGTimeFields.h> // ToolTipPopupTime type
-#include <OpenSG/OSGTimeFields.h> // SubMenuPopupTime type
-#include <OpenSG/OSGTimeFields.h> // KeyAcceleratorMenuFlashTime type
+#include "LookAndFeel/OSGLookAndFeelFields.h" // BaseLookAndFeel type
 
-#include "OSGLookAndFeelFields.h"
+#include "OSGXMLLookAndFeelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class LookAndFeel;
+class XMLLookAndFeel;
 class BinaryDataHandler;
 
-//! \brief LookAndFeel Base Class.
+//! \brief XMLLookAndFeel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING XMLLookAndFeelBase : public LookAndFeel
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef LookAndFeel    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef LookAndFeelPtr  Ptr;
+    typedef XMLLookAndFeelPtr  Ptr;
 
     enum
     {
-        PrototypesFieldId                  = Inherited::NextFieldId,
-        TextCaretRateFieldId               = PrototypesFieldId                  + 1,
-        ToolTipPopupTimeFieldId            = TextCaretRateFieldId               + 1,
-        SubMenuPopupTimeFieldId            = ToolTipPopupTimeFieldId            + 1,
-        KeyAcceleratorMenuFlashTimeFieldId = SubMenuPopupTimeFieldId            + 1,
-        NextFieldId                        = KeyAcceleratorMenuFlashTimeFieldId + 1
+        BaseLookAndFeelFieldId = Inherited::NextFieldId,
+        NextFieldId            = BaseLookAndFeelFieldId + 1
     };
 
-    static const OSG::BitVector PrototypesFieldMask;
-    static const OSG::BitVector TextCaretRateFieldMask;
-    static const OSG::BitVector ToolTipPopupTimeFieldMask;
-    static const OSG::BitVector SubMenuPopupTimeFieldMask;
-    static const OSG::BitVector KeyAcceleratorMenuFlashTimeFieldMask;
+    static const OSG::BitVector BaseLookAndFeelFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,29 +122,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFTime              *getSFTextCaretRate  (void);
-           SFTime              *getSFToolTipPopupTime(void);
-           SFTime              *getSFSubMenuPopupTime(void);
-           SFTime              *getSFKeyAcceleratorMenuFlashTime(void);
+           SFLookAndFeelPtr    *getSFBaseLookAndFeel(void);
 
-           Time                &getTextCaretRate  (void);
-     const Time                &getTextCaretRate  (void) const;
-           Time                &getToolTipPopupTime(void);
-     const Time                &getToolTipPopupTime(void) const;
-           Time                &getSubMenuPopupTime(void);
-     const Time                &getSubMenuPopupTime(void) const;
-           Time                &getKeyAcceleratorMenuFlashTime(void);
-     const Time                &getKeyAcceleratorMenuFlashTime(void) const;
+           LookAndFeelPtr      &getBaseLookAndFeel(void);
+     const LookAndFeelPtr      &getBaseLookAndFeel(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTextCaretRate  ( const Time &value );
-     void setToolTipPopupTime( const Time &value );
-     void setSubMenuPopupTime( const Time &value );
-     void setKeyAcceleratorMenuFlashTime( const Time &value );
+     void setBaseLookAndFeel( const LookAndFeelPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +152,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  XMLLookAndFeelPtr      create          (void); 
+    static  XMLLookAndFeelPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -183,43 +175,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFComponentPtr      _mfPrototypes;
-    SFTime              _sfTextCaretRate;
-    SFTime              _sfToolTipPopupTime;
-    SFTime              _sfSubMenuPopupTime;
-    SFTime              _sfKeyAcceleratorMenuFlashTime;
+    SFLookAndFeelPtr    _sfBaseLookAndFeel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    LookAndFeelBase(void);
-    LookAndFeelBase(const LookAndFeelBase &source);
+    XMLLookAndFeelBase(void);
+    XMLLookAndFeelBase(const XMLLookAndFeelBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LookAndFeelBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           MFComponentPtr      *getMFPrototypes     (void);
-
-           ComponentPtr        &getPrototypes     (UInt32 index);
-           MFComponentPtr      &getPrototypes     (void);
-     const MFComponentPtr      &getPrototypes     (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
+    virtual ~XMLLookAndFeelBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -227,13 +198,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      LookAndFeelBase *pOther,
+    void executeSyncImpl(      XMLLookAndFeelBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      LookAndFeelBase *pOther,
+    void executeSyncImpl(      XMLLookAndFeelBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -263,7 +234,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const LookAndFeelBase &source);
+    void operator =(const XMLLookAndFeelBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -271,17 +242,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
 //---------------------------------------------------------------------------
 
 
-typedef LookAndFeelBase *LookAndFeelBaseP;
+typedef XMLLookAndFeelBase *XMLLookAndFeelBaseP;
 
-typedef osgIF<LookAndFeelBase::isNodeCore,
-              CoredNodePtr<LookAndFeel>,
+typedef osgIF<XMLLookAndFeelBase::isNodeCore,
+              CoredNodePtr<XMLLookAndFeel>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet LookAndFeelNodePtr;
+              >::_IRet XMLLookAndFeelNodePtr;
 
-typedef RefPtr<LookAndFeelPtr> LookAndFeelRefPtr;
+typedef RefPtr<XMLLookAndFeelPtr> XMLLookAndFeelRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGLOOKANDFEELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGXMLLOOKANDFEELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGLOOKANDFEELBASE_H_ */
+#endif /* _OSGXMLLOOKANDFEELBASE_H_ */
