@@ -179,11 +179,28 @@ Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemPtr System, UInt32
 		break;
 	}
 
-	Vec3f Temp;
-	Temp.x();
 
 	//Calculate Length
-	Real32 LineLength = 5.0f;
+	Real32 LineLength;
+
+	switch(getLineLengthSource())
+	{
+	case LENGTH_SIZE_X:
+		LineLength = System->getSize(Index).x();
+		break;
+	case LENGTH_SIZE_Y:
+		LineLength = System->getSize(Index).y();
+		break;
+	case LENGTH_SIZE_Z:
+		LineLength = System->getSize(Index).z();
+		break;
+	case LENGTH_STATIC:
+		default:
+		LineLength = getLineLength();   ///could not find anything, line length field
+		break;
+		}
+		
+
 
 	return System->getPosition(Index)+(LineLength*Direction);
 
