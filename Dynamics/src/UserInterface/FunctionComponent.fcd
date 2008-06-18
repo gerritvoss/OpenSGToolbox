@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FunctionComponent"
+	parent="Component"
+	library="Dynamics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A User Interface Component that represents a function.
+	<Field
+		name="Function"
+		type="FunctionPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Function/OSGFunctionFields.h"
+	>
+	</Field>
+	<Field
+		name="Font"
+		type="UIFontPtr"
+		cardinality="single"
+		visibility="external"
+		header="OpenSG/UserInterface/OSGUIFont.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FocusedTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="RolloverTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DisabledTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

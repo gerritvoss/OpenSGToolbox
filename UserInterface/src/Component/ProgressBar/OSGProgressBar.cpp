@@ -84,7 +84,7 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
 	//Draw The ProgressBar
 	getProgressBarDrawObject()->draw(Graphics);
 	
-	if(getEnableProgressString())
+	if(getEnableProgressString() && getFont() != NullFC)
 	{
 		Pnt2f TopLeft, BottomRight;
 		getInsideBorderBounds(TopLeft, BottomRight);

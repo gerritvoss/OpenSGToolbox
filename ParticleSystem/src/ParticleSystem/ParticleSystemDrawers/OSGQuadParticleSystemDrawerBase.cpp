@@ -96,7 +96,7 @@ const OSG::BitVector QuadParticleSystemDrawerBase::MTInfluenceMask =
     This value is used to scale the size of the particle and apply that size to the quad for that particle.
 */
 /*! \var bool            QuadParticleSystemDrawerBase::_sfUseImageSizeRatio
-    If true the aspect ratio of the Image of the first TextureChunk is used to scale the width and length of the quads.
+    If true the aspect ratio of the Image of the first TextureChunk is used to set the aspect ratio of the quad.  The width is not scaled, but the height is scaled to ensure the quad has the correct aspect ratio.  This may override QuadSizeScaling.
 */
 /*! \var UInt32          QuadParticleSystemDrawerBase::_sfNormalSource
     This enum is used to determine what is used for the direction of the line.    NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.    NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    NORMAL_VELOCITY uses the velocity.    NORMAL_ACCELERATION uses the acceleration.    NORMAL_PARTICLE_NORMAL uses the normal of the particle.    NORMAL_VIEW_DIRECTION uses the z axis of the view space.    NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.    NORMAL_STATIC uses the normal of this drawer.

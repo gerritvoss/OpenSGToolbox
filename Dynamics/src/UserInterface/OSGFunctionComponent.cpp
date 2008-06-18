@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,12 +43,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEUSERINTERFACELIB
+#define OSG_COMPILEDYNAMICSLIB
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGToolTip.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGFunctionComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::ToolTip
-A UI Tooltip. 	
+/*! \class osg::FunctionComponent
+A User Interface Component that represents a function. 	
 */
 
 /***************************************************************************\
@@ -68,7 +67,7 @@ A UI Tooltip.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ToolTip::initMethod (void)
+void FunctionComponent::initMethod (void)
 {
 }
 
@@ -77,37 +76,14 @@ void ToolTip::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ToolTip::drawInternal(const GraphicsPtr TheGraphics) const
+void FunctionComponent::drawInternal(const GraphicsPtr Graphics) const
 {
-    if(getText() != "" && getFont() != NullFC)
-    {
-        Pnt2f TopLeft, BottomRight;
-        getInsideBorderBounds(TopLeft, BottomRight);
-
-        Pnt2f TextTopLeft, TextBottomRight;
-        getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-        TheGraphics->drawText(
-           calculateAlignment(TopLeft, BottomRight-TopLeft, (TextBottomRight-TextTopLeft), getVerticalAlignment(), getHorizontalAlignment())
-   , getText(), getFont(), getTextColor(), getOpacity());
-    }
+    //TODO: Implement
 }
 
-Vec2f ToolTip::calculatePreferredSize(void) const
+Vec2f FunctionComponent::getContentRequestedSize(void) const
 {
-    if(getFont() == NullFC)
-    {
-        return getPreferredSize();
-    }
-
-    Real32 Top(0),Bottom(0),Left(0),Right(0);
-    if(getDrawnBorder() != NullFC)
-    {
-        getDrawnBorder()->getInsets(Left, Right, Top, Bottom);
-    }
-
-    Pnt2f TextTopLeft, TextBottomRight;
-    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-    return TextBottomRight - TextTopLeft + Vec2f(Left+Right+2, Top+Bottom+2);
+    return Inherited::getContentRequestedSize();
 }
 
 /*-------------------------------------------------------------------------*\
@@ -116,39 +92,31 @@ Vec2f ToolTip::calculatePreferredSize(void) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
-ToolTip::ToolTip(void) :
+FunctionComponent::FunctionComponent(void) :
     Inherited()
 {
 }
 
-ToolTip::ToolTip(const ToolTip &source) :
+FunctionComponent::FunctionComponent(const FunctionComponent &source) :
     Inherited(source)
 {
 }
 
-ToolTip::~ToolTip(void)
+FunctionComponent::~FunctionComponent(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void ToolTip::changed(BitVector whichField, UInt32 origin)
+void FunctionComponent::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-
-    if(whichField & TextFieldMask)
-    {
-        beginEditCP(ToolTipPtr(this), PreferredSizeFieldMask | SizeFieldMask);
-            setPreferredSize(calculatePreferredSize());
-            setSize(getPreferredSize());
-        endEditCP(ToolTipPtr(this), PreferredSizeFieldMask | SizeFieldMask);
-    }
 }
 
-void ToolTip::dump(      UInt32    , 
+void FunctionComponent::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump ToolTip NI" << std::endl;
+    SLOG << "Dump FunctionComponent NI" << std::endl;
 }
 
 
@@ -166,10 +134,10 @@ void ToolTip::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTOOLTIPBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTOOLTIPBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGFUNCTIONCOMPONENTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGFUNCTIONCOMPONENTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGTOOLTIPFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGFUNCTIONCOMPONENTFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

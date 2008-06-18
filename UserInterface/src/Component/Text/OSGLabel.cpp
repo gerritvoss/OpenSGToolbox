@@ -89,15 +89,15 @@ Vec2f Label::getContentRequestedSize(void) const
 
 void Label::drawInternal(const GraphicsPtr TheGraphics) const
 {
-    Pnt2f TopLeft, BottomRight;
-    Pnt2f TempPos;
-    getInsideBorderBounds(TopLeft, BottomRight);
-    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), getHorizontalAlignment());
-    
-    //Text Color
-    Color4f TextColor = getDrawnTextColor();
     if(getText() != "" && getFont() != NullFC)
     {
+        Pnt2f TopLeft, BottomRight;
+        Pnt2f TempPos;
+        getInsideBorderBounds(TopLeft, BottomRight);
+        TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), getHorizontalAlignment());
+        
+        //Text Color
+        Color4f TextColor = getDrawnTextColor();
 
 	    if(_TextSelectionStart >= _TextSelectionEnd)
 	    {

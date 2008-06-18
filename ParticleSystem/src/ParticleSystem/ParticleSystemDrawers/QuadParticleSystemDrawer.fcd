@@ -29,7 +29,7 @@
 		defaultValue="false"
 		access="public"
 	>
-   If true the aspect ratio of the Image of the first TextureChunk is used to scale the width and length of the quads.
+   If true the aspect ratio of the Image of the first TextureChunk is used to set the aspect ratio of the quad.  The width is not scaled, but the height is scaled to ensure the quad has the correct aspect ratio.  This may override QuadSizeScaling.
 	</Field>
 	<Field
 		name="NormalSource"

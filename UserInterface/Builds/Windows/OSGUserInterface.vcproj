@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="OSGUserInterface"
-	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
+	ProjectGUID="{A1522E75-3430-4B6C-883C-935732C315D3}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
 	>

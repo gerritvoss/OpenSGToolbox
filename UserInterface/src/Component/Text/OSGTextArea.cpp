@@ -86,44 +86,47 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
     Color4f TextColor = getDrawnTextColor();
 	for(Int32 i = 0; i < _LineContents.size(); i++)//draw each line seperately
 	{	
-		//draw like normal if not selected
-		if(_LineContents[i]._StartPosition >= _TextSelectionEnd || _LineContents[i]._EndPosition <= _TextSelectionStart || _TextSelectionStart >= _TextSelectionEnd)
-		{
+        if(getFont() != NullFC)
+        {
+		    //draw like normal if not selected
+		    if(_LineContents[i]._StartPosition >= _TextSelectionEnd || _LineContents[i]._EndPosition <= _TextSelectionStart || _TextSelectionStart >= _TextSelectionEnd)
+		    {
 
-			TheGraphics->drawText(Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset), _LineContents[i]._Contents, getFont(), TextColor, getOpacity());
-		}
+			    TheGraphics->drawText(Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset), _LineContents[i]._Contents, getFont(), TextColor, getOpacity());
+		    }
 
 
-		else if(_TextSelectionStart < _TextSelectionEnd) //if text is only on this line
-		{
-			Int32 StartSelection = 0;
-			Int32 EndSelection = _LineContents[i]._Contents.size();
-			if(_TextSelectionStart > _LineContents[i]._StartPosition)
-			{
-				StartSelection = _TextSelectionStart-_LineContents[i]._StartPosition;
-			}
-			if(_TextSelectionEnd <= _LineContents[i]._EndPosition)
-			{
-				if(_TextSelectionEnd-_LineContents[i]._StartPosition > 0)
-				{
-				EndSelection = _TextSelectionEnd-_LineContents[i]._StartPosition;
-				}
-				else
-				{
-					EndSelection = 0;
-				}
-			}
-			std::string drawnText = _LineContents[i]._Contents;
-			Pnt2f offset = Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
-			TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), TextColor, getOpacity());//draw before selection text
-			TheGraphics->drawRect(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selection rect
-				getFont()->getBounds(drawnText.substr(0, EndSelection))+Vec2f(offset),
-				getSelectionBoxColor(), getOpacity());
-			TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selected text
-				drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity());
-			TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, EndSelection)).x(), 0), //draw after selection text
-				drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), TextColor, getOpacity());
-		}
+		    else if(_TextSelectionStart < _TextSelectionEnd) //if text is only on this line
+		    {
+			    Int32 StartSelection = 0;
+			    Int32 EndSelection = _LineContents[i]._Contents.size();
+			    if(_TextSelectionStart > _LineContents[i]._StartPosition)
+			    {
+				    StartSelection = _TextSelectionStart-_LineContents[i]._StartPosition;
+			    }
+			    if(_TextSelectionEnd <= _LineContents[i]._EndPosition)
+			    {
+				    if(_TextSelectionEnd-_LineContents[i]._StartPosition > 0)
+				    {
+				    EndSelection = _TextSelectionEnd-_LineContents[i]._StartPosition;
+				    }
+				    else
+				    {
+					    EndSelection = 0;
+				    }
+			    }
+			    std::string drawnText = _LineContents[i]._Contents;
+			    Pnt2f offset = Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
+			    TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), TextColor, getOpacity());//draw before selection text
+			    TheGraphics->drawRect(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selection rect
+				    getFont()->getBounds(drawnText.substr(0, EndSelection))+Vec2f(offset),
+				    getSelectionBoxColor(), getOpacity());
+			    TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selected text
+				    drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity());
+			    TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, EndSelection)).x(), 0), //draw after selection text
+				    drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), TextColor, getOpacity());
+		    }
+        }
 
 		//draw Caret
 		if(getEnabled() && getEditable() && ((getCaretPosition() > _LineContents[i]._StartPosition && getCaretPosition() <= _LineContents[i]._EndPosition )||( getCaretPosition() == 0 && i == 0)) && _TextSelectionStart >= _TextSelectionEnd &&
