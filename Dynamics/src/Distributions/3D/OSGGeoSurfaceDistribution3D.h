@@ -103,6 +103,11 @@ class OSG_DYNAMICSLIB_DLLMAPPING GeoSurfaceDistribution3D : public GeoSurfaceDis
 
     virtual Pnt3f generate(void);
     /*! \}                                                                 */
+	
+	void updateSurfaceArea(void);
+	
+	
+	std::vector<Real32> mAreaVector;
     
     /*==========================  PRIVATE  ================================*/
   private:

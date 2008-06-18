@@ -295,9 +295,9 @@
 		D4BE3F7A0CF0D0DE0046BAE7 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		D4BE3F830CF0D12B0046BAE7 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		D4BE40010CF0D56B0046BAE7 /* 03DefaultWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 03DefaultWindow.cpp; path = ../../Tutorials/03DefaultWindow.cpp; sourceTree = SOURCE_ROOT; };
-		D4BE40040CF0D5930046BAE7 /* libOSGInputD.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInputD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4BE41080CF0D7A50046BAE7 /* 03DefaultWindowD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 03DefaultWindowD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4DD00950CF0CC3900F00431 /* libOSGInputD.a */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInputD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4BE40040CF0D5930046BAE7 /* libOSGInput.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInput.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4BE41080CF0D7A50046BAE7 /* 03DefaultWindow */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 03DefaultWindow; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4DD00950CF0CC3900F00431 /* libOSGInput.a */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInput.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4DDFF7E0CF0CB6B00F00431 /* OSGEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGEvent.h; sourceTree = "<group>"; };
 		D4DDFF7F0CF0CB6B00F00431 /* OSGEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGEvent.inl; sourceTree = "<group>"; };
 		D4DDFF800CF0CB6B00F00431 /* OSGEventFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGEventFactory.cpp; sourceTree = "<group>"; };
@@ -441,9 +441,9 @@
 		034768DDFF38A45A11DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D4DD00950CF0CC3900F00431 /* libOSGInputD.a */,
-				D4BE40040CF0D5930046BAE7 /* libOSGInputD.dylib */,
-				D4BE41080CF0D7A50046BAE7 /* 03DefaultWindowD */,
+				D4DD00950CF0CC3900F00431 /* libOSGInput.a */,
+				D4BE40040CF0D5930046BAE7 /* libOSGInput.dylib */,
+				D4BE41080CF0D7A50046BAE7 /* 03DefaultWindow */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -930,7 +930,7 @@
 			);
 			name = "OSGInput Dynamic Library";
 			productName = libOSGToolbox;
-			productReference = D4BE40040CF0D5930046BAE7 /* libOSGInputD.dylib */;
+			productReference = D4BE40040CF0D5930046BAE7 /* libOSGInput.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		D437835E0CF0BED30062E3A4 /* OSGInput Static Library */ = {
@@ -947,7 +947,7 @@
 			);
 			name = "OSGInput Static Library";
 			productName = libOSGToolbox;
-			productReference = D4DD00950CF0CC3900F00431 /* libOSGInputD.a */;
+			productReference = D4DD00950CF0CC3900F00431 /* libOSGInput.a */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		D4BE41070CF0D7A50046BAE7 /* 03DefaultWindow */ = {
@@ -964,7 +964,7 @@
 			);
 			name = 03DefaultWindow;
 			productName = 03DefaultWindow2;
-			productReference = D4BE41080CF0D7A50046BAE7 /* 03DefaultWindowD */;
+			productReference = D4BE41080CF0D7A50046BAE7 /* 03DefaultWindow */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */

@@ -104,6 +104,11 @@ class OSG_DYNAMICSLIB_DLLMAPPING GeoVolumeDistribution3D : public GeoVolumeDistr
 
     /*! \}                                                                 */
     virtual Pnt3f generate(void);
+	
+	void updateVolume(void);
+	std::vector<Real32> mVolumeVector;
+	Pnt3f Centroid;
+	
     
     /*==========================  PRIVATE  ================================*/
   private:

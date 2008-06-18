@@ -47,6 +47,11 @@
 
 #include "OSGGeoSurfaceDistribution3D.h"
 #include <OpenSG/OSGVecFieldDataType.h>
+#include <OpenSG/OSGTriangleIterator.h>
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "Utils/OSGDynamicsUtils.h"
+
+#include <algorithm>
 
 OSG_BEGIN_NAMESPACE
 
@@ -104,10 +109,75 @@ FunctionIOParameterVector GeoSurfaceDistribution3D::evaluate(FunctionIOParameter
 
 Pnt3f GeoSurfaceDistribution3D::generate(void)
 {
-   //TODO:Implement
-   return Pnt3f(0.0f,0.0f,0.0f);
+
+	if(getSurface() != NullFC && mAreaVector.size() > 0)
+	{
+	    Real32 Area( RandomPoolManager::getRandomReal32(0.0f, mAreaVector.back()) );
+	   
+	    UInt32 index = stlLowerBound(mAreaVector, 0, mAreaVector.size() - 1, Area);//std::lower_bound(&mAreaVector.front(), &mAreaVector.back(), Area);
+	   
+	    TriangleIterator ti(getSurface());
+	    ti.seek(index);
+	    Pnt3f p1 = ti.getPosition(0);
+	    Pnt3f p2 = ti.getPosition(1);
+		Pnt3f p3 = ti.getPosition(2);
+		
+		Real32 s(RandomPoolManager::getRandomReal32(0.0,1.0)),
+			   t(RandomPoolManager::getRandomReal32(0.0,1.0));
+
+		if(s+t > 1.0)
+		{
+			s = 1.0f - s;
+			t = 1.0f - t;
+		}
+
+		Pnt3f Result = p1
+			     	+ s*(p2 - p1)
+					+ t*(p3 - p1);
+		
+        return Pnt3f(Result);
+	}
+	else
+	{
+        return Pnt3f(0.0f,0.0f,0.0f);
+	}
 }
 
+void GeoSurfaceDistribution3D::updateSurfaceArea(void)
+{
+	mAreaVector.clear();
+	
+	if(getSurface() != NullFC)
+	{
+		TriangleIterator ti(getSurface());
+
+		while(!ti.isAtEnd())
+		{
+			//Calculate Area and add to previous Area
+			Pnt3f p1 = ti.getPosition(0);
+			Pnt3f p2 = ti.getPosition(1);
+			Pnt3f p3 = ti.getPosition(2);
+			
+			//Find lengths of sides
+			Real32 sideA = p1.dist(p2);//  osgsqrt((p1.x() - p2.x())*(p1.x() - p2.x()) + (p1.y() - p2.y())*(p1.y() - p2.y()) + (p1.z() - p2.z())*(p1.z() - p2.z()));
+			Real32 sideB =  p2.dist(p3); //osgsqrt((p2.x() - p3.x())*(p2.x() - p3.x()) + (p2.y() - p3.y())*(p2.y() - p3.y()) + (p2.z() - p3.z())*(p2.z() - p3.z()));
+			Real32 sideC =  p3.dist(p1); //osgsqrt((p3.x() - p1.x())*(p3.x() - p1.x()) + (p3.y() - p1.y())*(p3.y() - p1.y()) + (p3.z() - p1.z())*(p3.z() - p1.z()));
+			
+			//Heron's formula
+			Real32 area = (osgsqrt((sideA + sideB + sideC)*(sideA + sideB - sideC)*(sideB + sideC - sideA)*(sideC + sideA - sideB)))/4.0;
+			
+			if(mAreaVector.size() ==0)
+			{
+				mAreaVector.push_back(area);
+			}
+			else
+			{
+				mAreaVector.push_back(mAreaVector.back() + area);
+			}
+			++ti;
+		}
+	}
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -133,6 +203,12 @@ GeoSurfaceDistribution3D::~GeoSurfaceDistribution3D(void)
 void GeoSurfaceDistribution3D::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	
+	if(whichField & SurfaceFieldMask)
+	{
+		//Update Surface Area Vector
+		updateSurfaceArea();
+	}
 }
 
 void GeoSurfaceDistribution3D::dump(      UInt32    , 
@@ -167,4 +243,3 @@ namespace
 #endif
 
 OSG_END_NAMESPACE
-

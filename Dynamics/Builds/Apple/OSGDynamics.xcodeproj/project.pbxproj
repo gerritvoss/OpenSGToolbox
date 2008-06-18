@@ -1,0 +1,1501 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		C9882F310DF9B60C00777F25 /* Includes Install Aggregate */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C9882F3A0DF9B63700777F25 /* Build configuration list for PBXAggregateTarget "Includes Install Aggregate" */;
+			buildPhases = (
+			);
+			dependencies = (
+				C9882F560DF9B75800777F25 /* PBXTargetDependency */,
+				C9882F5F0DF9B7A800777F25 /* PBXTargetDependency */,
+				C9882F610DF9B7BD00777F25 /* PBXTargetDependency */,
+				C9882F700DF9B81600777F25 /* PBXTargetDependency */,
+				C9882F770DF9B84D00777F25 /* PBXTargetDependency */,
+				C9882F820DF9B92200777F25 /* PBXTargetDependency */,
+			);
+			name = "Includes Install Aggregate";
+			productName = "Includes Install Aggregate";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		C9D76A0D0DF880A9005100D3 /* OSGGaussianNormalDistribution1D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769840DF880A9005100D3 /* OSGGaussianNormalDistribution1D.cpp */; };
+		C9D76A0E0DF880A9005100D3 /* OSGGaussianNormalDistribution1D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769850DF880A9005100D3 /* OSGGaussianNormalDistribution1D.h */; };
+		C9D76A0F0DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769870DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.cpp */; };
+		C9D76A100DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769880DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.h */; };
+		C9D76A110DF880A9005100D3 /* OSGGaussianNormalDistribution1DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D7698A0DF880A9005100D3 /* OSGGaussianNormalDistribution1DFields.h */; };
+		C9D76A120DF880A9005100D3 /* OSGSegmentDistribution1D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D7698B0DF880A9005100D3 /* OSGSegmentDistribution1D.cpp */; };
+		C9D76A130DF880A9005100D3 /* OSGSegmentDistribution1D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D7698C0DF880A9005100D3 /* OSGSegmentDistribution1D.h */; };
+		C9D76A140DF880A9005100D3 /* OSGSegmentDistribution1DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D7698E0DF880A9005100D3 /* OSGSegmentDistribution1DBase.cpp */; };
+		C9D76A150DF880A9005100D3 /* OSGSegmentDistribution1DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D7698F0DF880A9005100D3 /* OSGSegmentDistribution1DBase.h */; };
+		C9D76A160DF880A9005100D3 /* OSGSegmentDistribution1DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769910DF880A9005100D3 /* OSGSegmentDistribution1DFields.h */; };
+		C9D76A170DF880A9005100D3 /* OSGSegmentSetDistribution1D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769920DF880A9005100D3 /* OSGSegmentSetDistribution1D.cpp */; };
+		C9D76A180DF880A9005100D3 /* OSGSegmentSetDistribution1D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769930DF880A9005100D3 /* OSGSegmentSetDistribution1D.h */; };
+		C9D76A190DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769950DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.cpp */; };
+		C9D76A1A0DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769960DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.h */; };
+		C9D76A1B0DF880A9005100D3 /* OSGSegmentSetDistribution1DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769980DF880A9005100D3 /* OSGSegmentSetDistribution1DFields.h */; };
+		C9D76A1C0DF880A9005100D3 /* OSGDiscDistribution2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D7699F0DF880A9005100D3 /* OSGDiscDistribution2D.cpp */; };
+		C9D76A1D0DF880A9005100D3 /* OSGDiscDistribution2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769A00DF880A9005100D3 /* OSGDiscDistribution2D.h */; };
+		C9D76A1E0DF880A9005100D3 /* OSGDiscDistribution2DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769A20DF880A9005100D3 /* OSGDiscDistribution2DBase.cpp */; };
+		C9D76A1F0DF880A9005100D3 /* OSGDiscDistribution2DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769A30DF880A9005100D3 /* OSGDiscDistribution2DBase.h */; };
+		C9D76A200DF880A9005100D3 /* OSGDiscDistribution2DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769A50DF880A9005100D3 /* OSGDiscDistribution2DFields.h */; };
+		C9D76A210DF880A9005100D3 /* OSGGaussianNormalDistribution2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769A60DF880A9005100D3 /* OSGGaussianNormalDistribution2D.cpp */; };
+		C9D76A220DF880A9005100D3 /* OSGGaussianNormalDistribution2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769A70DF880A9005100D3 /* OSGGaussianNormalDistribution2D.h */; };
+		C9D76A230DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769A90DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.cpp */; };
+		C9D76A240DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769AA0DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.h */; };
+		C9D76A250DF880A9005100D3 /* OSGGaussianNormalDistribution2DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769AC0DF880A9005100D3 /* OSGGaussianNormalDistribution2DFields.h */; };
+		C9D76A260DF880A9005100D3 /* OSGLineDistribution2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769AD0DF880A9005100D3 /* OSGLineDistribution2D.cpp */; };
+		C9D76A270DF880A9005100D3 /* OSGLineDistribution2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769AE0DF880A9005100D3 /* OSGLineDistribution2D.h */; };
+		C9D76A280DF880A9005100D3 /* OSGLineDistribution2DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769B00DF880A9005100D3 /* OSGLineDistribution2DBase.cpp */; };
+		C9D76A290DF880A9005100D3 /* OSGLineDistribution2DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769B10DF880A9005100D3 /* OSGLineDistribution2DBase.h */; };
+		C9D76A2A0DF880A9005100D3 /* OSGLineDistribution2DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769B30DF880A9005100D3 /* OSGLineDistribution2DFields.h */; };
+		C9D76A2B0DF880A9005100D3 /* OSGQuadDistribution2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769B40DF880A9005100D3 /* OSGQuadDistribution2D.cpp */; };
+		C9D76A2C0DF880A9005100D3 /* OSGQuadDistribution2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769B50DF880A9005100D3 /* OSGQuadDistribution2D.h */; };
+		C9D76A2D0DF880A9005100D3 /* OSGQuadDistribution2DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769B70DF880A9005100D3 /* OSGQuadDistribution2DBase.cpp */; };
+		C9D76A2E0DF880A9005100D3 /* OSGQuadDistribution2DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769B80DF880A9005100D3 /* OSGQuadDistribution2DBase.h */; };
+		C9D76A2F0DF880A9005100D3 /* OSGQuadDistribution2DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769BA0DF880A9005100D3 /* OSGQuadDistribution2DFields.h */; };
+		C9D76A300DF880A9005100D3 /* OSGTriDistribution2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769BB0DF880A9005100D3 /* OSGTriDistribution2D.cpp */; };
+		C9D76A310DF880A9005100D3 /* OSGTriDistribution2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769BC0DF880A9005100D3 /* OSGTriDistribution2D.h */; };
+		C9D76A320DF880A9005100D3 /* OSGTriDistribution2DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769BE0DF880A9005100D3 /* OSGTriDistribution2DBase.cpp */; };
+		C9D76A330DF880A9005100D3 /* OSGTriDistribution2DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769BF0DF880A9005100D3 /* OSGTriDistribution2DBase.h */; };
+		C9D76A340DF880A9005100D3 /* OSGTriDistribution2DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769C10DF880A9005100D3 /* OSGTriDistribution2DFields.h */; };
+		C9D76A350DF880A9005100D3 /* OSGBoxDistribution3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769CC0DF880A9005100D3 /* OSGBoxDistribution3D.cpp */; };
+		C9D76A360DF880A9005100D3 /* OSGBoxDistribution3D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769CD0DF880A9005100D3 /* OSGBoxDistribution3D.h */; };
+		C9D76A370DF880A9005100D3 /* OSGBoxDistribution3DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769CF0DF880A9005100D3 /* OSGBoxDistribution3DBase.cpp */; };
+		C9D76A380DF880A9005100D3 /* OSGBoxDistribution3DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769D00DF880A9005100D3 /* OSGBoxDistribution3DBase.h */; };
+		C9D76A390DF880A9005100D3 /* OSGBoxDistribution3DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769D20DF880A9005100D3 /* OSGBoxDistribution3DFields.h */; };
+		C9D76A3A0DF880A9005100D3 /* OSGCylinderDistribution3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769D30DF880A9005100D3 /* OSGCylinderDistribution3D.cpp */; };
+		C9D76A3B0DF880A9005100D3 /* OSGCylinderDistribution3D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769D40DF880A9005100D3 /* OSGCylinderDistribution3D.h */; };
+		C9D76A3C0DF880A9005100D3 /* OSGCylinderDistribution3DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769D60DF880A9005100D3 /* OSGCylinderDistribution3DBase.cpp */; };
+		C9D76A3D0DF880A9005100D3 /* OSGCylinderDistribution3DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769D70DF880A9005100D3 /* OSGCylinderDistribution3DBase.h */; };
+		C9D76A3E0DF880A9005100D3 /* OSGCylinderDistribution3DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769D90DF880A9005100D3 /* OSGCylinderDistribution3DFields.h */; };
+		C9D76A3F0DF880A9005100D3 /* OSGDiscDistribution3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769DA0DF880A9005100D3 /* OSGDiscDistribution3D.cpp */; };
+		C9D76A400DF880A9005100D3 /* OSGDiscDistribution3D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769DB0DF880A9005100D3 /* OSGDiscDistribution3D.h */; };
+		C9D76A410DF880A9005100D3 /* OSGDiscDistribution3DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769DD0DF880A9005100D3 /* OSGDiscDistribution3DBase.cpp */; };
+		C9D76A420DF880A9005100D3 /* OSGDiscDistribution3DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769DE0DF880A9005100D3 /* OSGDiscDistribution3DBase.h */; };
+		C9D76A430DF880A9005100D3 /* OSGDiscDistribution3DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769E00DF880A9005100D3 /* OSGDiscDistribution3DFields.h */; };
+		C9D76A440DF880A9005100D3 /* OSGGaussianNormalDistribution3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769E10DF880A9005100D3 /* OSGGaussianNormalDistribution3D.cpp */; };
+		C9D76A450DF880A9005100D3 /* OSGGaussianNormalDistribution3D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769E20DF880A9005100D3 /* OSGGaussianNormalDistribution3D.h */; };
+		C9D76A460DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769E40DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.cpp */; };
+		C9D76A470DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769E50DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.h */; };
+		C9D76A480DF880A9005100D3 /* OSGGaussianNormalDistribution3DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769E70DF880A9005100D3 /* OSGGaussianNormalDistribution3DFields.h */; };
+		C9D76A490DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769E80DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.cpp */; };
+		C9D76A4A0DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769E90DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.h */; };
+		C9D76A4B0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769EB0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.cpp */; };
+		C9D76A4C0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769EC0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.h */; };
+		C9D76A4D0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769EE0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DFields.h */; };
+		C9D76A4E0DF880A9005100D3 /* OSGGeoVolumeDistribution3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769EF0DF880A9005100D3 /* OSGGeoVolumeDistribution3D.cpp */; };
+		C9D76A4F0DF880A9005100D3 /* OSGGeoVolumeDistribution3D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769F00DF880A9005100D3 /* OSGGeoVolumeDistribution3D.h */; };
+		C9D76A500DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769F20DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.cpp */; };
+		C9D76A510DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769F30DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.h */; };
+		C9D76A520DF880A9005100D3 /* OSGGeoVolumeDistribution3DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769F50DF880A9005100D3 /* OSGGeoVolumeDistribution3DFields.h */; };
+		C9D76A530DF880A9005100D3 /* OSGLineDistribution3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769F60DF880A9005100D3 /* OSGLineDistribution3D.cpp */; };
+		C9D76A540DF880A9005100D3 /* OSGLineDistribution3D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769F70DF880A9005100D3 /* OSGLineDistribution3D.h */; };
+		C9D76A550DF880A9005100D3 /* OSGLineDistribution3DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769F90DF880A9005100D3 /* OSGLineDistribution3DBase.cpp */; };
+		C9D76A560DF880A9005100D3 /* OSGLineDistribution3DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769FA0DF880A9005100D3 /* OSGLineDistribution3DBase.h */; };
+		C9D76A570DF880A9005100D3 /* OSGLineDistribution3DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769FC0DF880A9005100D3 /* OSGLineDistribution3DFields.h */; };
+		C9D76A580DF880A9005100D3 /* OSGSphereDistribution3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D769FD0DF880A9005100D3 /* OSGSphereDistribution3D.cpp */; };
+		C9D76A590DF880A9005100D3 /* OSGSphereDistribution3D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D769FE0DF880A9005100D3 /* OSGSphereDistribution3D.h */; };
+		C9D76A5A0DF880A9005100D3 /* OSGSphereDistribution3DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A000DF880A9005100D3 /* OSGSphereDistribution3DBase.cpp */; };
+		C9D76A5B0DF880A9005100D3 /* OSGSphereDistribution3DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A010DF880A9005100D3 /* OSGSphereDistribution3DBase.h */; };
+		C9D76A5C0DF880A9005100D3 /* OSGSphereDistribution3DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A030DF880A9005100D3 /* OSGSphereDistribution3DFields.h */; };
+		C9D76A5D0DF880A9005100D3 /* OSGTriDistribution3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A040DF880A9005100D3 /* OSGTriDistribution3D.cpp */; };
+		C9D76A5E0DF880A9005100D3 /* OSGTriDistribution3D.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A050DF880A9005100D3 /* OSGTriDistribution3D.h */; };
+		C9D76A5F0DF880A9005100D3 /* OSGTriDistribution3DBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A070DF880A9005100D3 /* OSGTriDistribution3DBase.cpp */; };
+		C9D76A600DF880A9005100D3 /* OSGTriDistribution3DBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A080DF880A9005100D3 /* OSGTriDistribution3DBase.h */; };
+		C9D76A610DF880A9005100D3 /* OSGTriDistribution3DFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A0A0DF880A9005100D3 /* OSGTriDistribution3DFields.h */; };
+		C9D76A8F0DF880C7005100D3 /* OSGDataCombiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A680DF880C7005100D3 /* OSGDataCombiner.cpp */; };
+		C9D76A900DF880C7005100D3 /* OSGDataCombiner.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A690DF880C7005100D3 /* OSGDataCombiner.h */; };
+		C9D76A910DF880C7005100D3 /* OSGDataCombinerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A6B0DF880C7005100D3 /* OSGDataCombinerBase.cpp */; };
+		C9D76A920DF880C7005100D3 /* OSGDataCombinerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A6C0DF880C7005100D3 /* OSGDataCombinerBase.h */; };
+		C9D76A930DF880C7005100D3 /* OSGDataCombinerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A6E0DF880C7005100D3 /* OSGDataCombinerFields.h */; };
+		C9D76A940DF880C7005100D3 /* OSGDataConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A6F0DF880C7005100D3 /* OSGDataConverter.cpp */; };
+		C9D76A950DF880C7005100D3 /* OSGDataConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A700DF880C7005100D3 /* OSGDataConverter.h */; };
+		C9D76A960DF880C7005100D3 /* OSGDataConverterBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A720DF880C7005100D3 /* OSGDataConverterBase.cpp */; };
+		C9D76A970DF880C7005100D3 /* OSGDataConverterBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A730DF880C7005100D3 /* OSGDataConverterBase.h */; };
+		C9D76A980DF880C7005100D3 /* OSGDataConverterFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A750DF880C7005100D3 /* OSGDataConverterFields.h */; };
+		C9D76A990DF880C7005100D3 /* OSGDataSplitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A760DF880C7005100D3 /* OSGDataSplitter.cpp */; };
+		C9D76A9A0DF880C7005100D3 /* OSGDataSplitter.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A770DF880C7005100D3 /* OSGDataSplitter.h */; };
+		C9D76A9B0DF880C7005100D3 /* OSGDataSplitterBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A790DF880C7005100D3 /* OSGDataSplitterBase.cpp */; };
+		C9D76A9C0DF880C7005100D3 /* OSGDataSplitterBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A7A0DF880C7005100D3 /* OSGDataSplitterBase.h */; };
+		C9D76A9D0DF880C7005100D3 /* OSGDataSplitterFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A7C0DF880C7005100D3 /* OSGDataSplitterFields.h */; };
+		C9D76A9E0DF880C7005100D3 /* OSGCompoundFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A7E0DF880C7005100D3 /* OSGCompoundFunction.cpp */; };
+		C9D76A9F0DF880C7005100D3 /* OSGCompoundFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A7F0DF880C7005100D3 /* OSGCompoundFunction.h */; };
+		C9D76AA00DF880C7005100D3 /* OSGCompoundFunctionBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A810DF880C7005100D3 /* OSGCompoundFunctionBase.cpp */; };
+		C9D76AA10DF880C7005100D3 /* OSGCompoundFunctionBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A820DF880C7005100D3 /* OSGCompoundFunctionBase.h */; };
+		C9D76AA20DF880C7005100D3 /* OSGCompoundFunctionFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A840DF880C7005100D3 /* OSGCompoundFunctionFields.h */; };
+		C9D76AA30DF880C7005100D3 /* OSGFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A850DF880C7005100D3 /* OSGFunction.cpp */; };
+		C9D76AA40DF880C7005100D3 /* OSGFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A860DF880C7005100D3 /* OSGFunction.h */; };
+		C9D76AA50DF880C7005100D3 /* OSGFunctionBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A880DF880C7005100D3 /* OSGFunctionBase.cpp */; };
+		C9D76AA60DF880C7005100D3 /* OSGFunctionBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A890DF880C7005100D3 /* OSGFunctionBase.h */; };
+		C9D76AA70DF880C7005100D3 /* OSGFunctionFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76A8B0DF880C7005100D3 /* OSGFunctionFactory.cpp */; };
+		C9D76AA80DF880C7005100D3 /* OSGFunctionFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A8C0DF880C7005100D3 /* OSGFunctionFactory.h */; };
+		C9D76AA90DF880C7005100D3 /* OSGFunctionFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76A8E0DF880C7005100D3 /* OSGFunctionFields.h */; };
+		C9D76AAB0DF880DB005100D3 /* OSGDynamicsDef.h in Headers */ = {isa = PBXBuildFile; fileRef = C9D76AAA0DF880DB005100D3 /* OSGDynamicsDef.h */; };
+		C9D76ACB0DF883D1005100D3 /* 01RandomDistributions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9D76ACA0DF883D1005100D3 /* 01RandomDistributions.cpp */; };
+		C9FD0C190E06FB8200E035BB /* OSGDynamicsUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9FD0C170E06FB8200E035BB /* OSGDynamicsUtils.cpp */; };
+		C9FD0C1A0E06FB8200E035BB /* OSGDynamicsUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C9FD0C180E06FB8200E035BB /* OSGDynamicsUtils.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C9882F550DF9B75800777F25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9882F540DF9B72600777F25;
+			remoteInfo = "Make Apple Directory";
+		};
+		C9882F5E0DF9B7A800777F25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9882F5A0DF9B77B00777F25;
+			remoteInfo = "Make include Directory";
+		};
+		C9882F600DF9B7BD00777F25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9882F5D0DF9B7A400777F25;
+			remoteInfo = "Make lib Directory";
+		};
+		C9882F6F0DF9B81600777F25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9882F6A0DF9B7FD00777F25;
+			remoteInfo = "Make OpenSG Directory";
+		};
+		C9882F760DF9B84D00777F25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9882F710DF9B82900777F25;
+			remoteInfo = "Make Dynamics Directory";
+		};
+		C9882F810DF9B92200777F25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9882F7E0DF9B88000777F25;
+			remoteInfo = "OSGDynamics install Shell Script";
+		};
+		C9882F880DF9B95200777F25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9882F310DF9B60C00777F25;
+			remoteInfo = "Includes Install Aggregate";
+		};
+		C9D76B070DF888C9005100D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC09C05546B4700DB518D;
+			remoteInfo = "OSGDynamics Dynamic Library";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C9D769830DF880A9005100D3 /* GaussianNormalDistribution1D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = GaussianNormalDistribution1D.fcd; sourceTree = "<group>"; };
+		C9D769840DF880A9005100D3 /* OSGGaussianNormalDistribution1D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGaussianNormalDistribution1D.cpp; sourceTree = "<group>"; };
+		C9D769850DF880A9005100D3 /* OSGGaussianNormalDistribution1D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGaussianNormalDistribution1D.h; sourceTree = "<group>"; };
+		C9D769860DF880A9005100D3 /* OSGGaussianNormalDistribution1D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGaussianNormalDistribution1D.inl; sourceTree = "<group>"; };
+		C9D769870DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGaussianNormalDistribution1DBase.cpp; sourceTree = "<group>"; };
+		C9D769880DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGaussianNormalDistribution1DBase.h; sourceTree = "<group>"; };
+		C9D769890DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGaussianNormalDistribution1DBase.inl; sourceTree = "<group>"; };
+		C9D7698A0DF880A9005100D3 /* OSGGaussianNormalDistribution1DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGaussianNormalDistribution1DFields.h; sourceTree = "<group>"; };
+		C9D7698B0DF880A9005100D3 /* OSGSegmentDistribution1D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGSegmentDistribution1D.cpp; sourceTree = "<group>"; };
+		C9D7698C0DF880A9005100D3 /* OSGSegmentDistribution1D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGSegmentDistribution1D.h; sourceTree = "<group>"; };
+		C9D7698D0DF880A9005100D3 /* OSGSegmentDistribution1D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGSegmentDistribution1D.inl; sourceTree = "<group>"; };
+		C9D7698E0DF880A9005100D3 /* OSGSegmentDistribution1DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGSegmentDistribution1DBase.cpp; sourceTree = "<group>"; };
+		C9D7698F0DF880A9005100D3 /* OSGSegmentDistribution1DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGSegmentDistribution1DBase.h; sourceTree = "<group>"; };
+		C9D769900DF880A9005100D3 /* OSGSegmentDistribution1DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGSegmentDistribution1DBase.inl; sourceTree = "<group>"; };
+		C9D769910DF880A9005100D3 /* OSGSegmentDistribution1DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGSegmentDistribution1DFields.h; sourceTree = "<group>"; };
+		C9D769920DF880A9005100D3 /* OSGSegmentSetDistribution1D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGSegmentSetDistribution1D.cpp; sourceTree = "<group>"; };
+		C9D769930DF880A9005100D3 /* OSGSegmentSetDistribution1D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGSegmentSetDistribution1D.h; sourceTree = "<group>"; };
+		C9D769940DF880A9005100D3 /* OSGSegmentSetDistribution1D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGSegmentSetDistribution1D.inl; sourceTree = "<group>"; };
+		C9D769950DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGSegmentSetDistribution1DBase.cpp; sourceTree = "<group>"; };
+		C9D769960DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGSegmentSetDistribution1DBase.h; sourceTree = "<group>"; };
+		C9D769970DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGSegmentSetDistribution1DBase.inl; sourceTree = "<group>"; };
+		C9D769980DF880A9005100D3 /* OSGSegmentSetDistribution1DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGSegmentSetDistribution1DFields.h; sourceTree = "<group>"; };
+		C9D769990DF880A9005100D3 /* SegmentDistribution1D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = SegmentDistribution1D.fcd; sourceTree = "<group>"; };
+		C9D7699A0DF880A9005100D3 /* SegmentSetDistribution1D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = SegmentSetDistribution1D.fcd; sourceTree = "<group>"; };
+		C9D7699C0DF880A9005100D3 /* DiscDistribution2D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = DiscDistribution2D.fcd; sourceTree = "<group>"; };
+		C9D7699D0DF880A9005100D3 /* GaussianNormalDistribution2D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = GaussianNormalDistribution2D.fcd; sourceTree = "<group>"; };
+		C9D7699E0DF880A9005100D3 /* LineDistribution2D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = LineDistribution2D.fcd; sourceTree = "<group>"; };
+		C9D7699F0DF880A9005100D3 /* OSGDiscDistribution2D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDiscDistribution2D.cpp; sourceTree = "<group>"; };
+		C9D769A00DF880A9005100D3 /* OSGDiscDistribution2D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDiscDistribution2D.h; sourceTree = "<group>"; };
+		C9D769A10DF880A9005100D3 /* OSGDiscDistribution2D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDiscDistribution2D.inl; sourceTree = "<group>"; };
+		C9D769A20DF880A9005100D3 /* OSGDiscDistribution2DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDiscDistribution2DBase.cpp; sourceTree = "<group>"; };
+		C9D769A30DF880A9005100D3 /* OSGDiscDistribution2DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDiscDistribution2DBase.h; sourceTree = "<group>"; };
+		C9D769A40DF880A9005100D3 /* OSGDiscDistribution2DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDiscDistribution2DBase.inl; sourceTree = "<group>"; };
+		C9D769A50DF880A9005100D3 /* OSGDiscDistribution2DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDiscDistribution2DFields.h; sourceTree = "<group>"; };
+		C9D769A60DF880A9005100D3 /* OSGGaussianNormalDistribution2D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGaussianNormalDistribution2D.cpp; sourceTree = "<group>"; };
+		C9D769A70DF880A9005100D3 /* OSGGaussianNormalDistribution2D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGaussianNormalDistribution2D.h; sourceTree = "<group>"; };
+		C9D769A80DF880A9005100D3 /* OSGGaussianNormalDistribution2D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGaussianNormalDistribution2D.inl; sourceTree = "<group>"; };
+		C9D769A90DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGaussianNormalDistribution2DBase.cpp; sourceTree = "<group>"; };
+		C9D769AA0DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGaussianNormalDistribution2DBase.h; sourceTree = "<group>"; };
+		C9D769AB0DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGaussianNormalDistribution2DBase.inl; sourceTree = "<group>"; };
+		C9D769AC0DF880A9005100D3 /* OSGGaussianNormalDistribution2DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGaussianNormalDistribution2DFields.h; sourceTree = "<group>"; };
+		C9D769AD0DF880A9005100D3 /* OSGLineDistribution2D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGLineDistribution2D.cpp; sourceTree = "<group>"; };
+		C9D769AE0DF880A9005100D3 /* OSGLineDistribution2D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGLineDistribution2D.h; sourceTree = "<group>"; };
+		C9D769AF0DF880A9005100D3 /* OSGLineDistribution2D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGLineDistribution2D.inl; sourceTree = "<group>"; };
+		C9D769B00DF880A9005100D3 /* OSGLineDistribution2DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGLineDistribution2DBase.cpp; sourceTree = "<group>"; };
+		C9D769B10DF880A9005100D3 /* OSGLineDistribution2DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGLineDistribution2DBase.h; sourceTree = "<group>"; };
+		C9D769B20DF880A9005100D3 /* OSGLineDistribution2DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGLineDistribution2DBase.inl; sourceTree = "<group>"; };
+		C9D769B30DF880A9005100D3 /* OSGLineDistribution2DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGLineDistribution2DFields.h; sourceTree = "<group>"; };
+		C9D769B40DF880A9005100D3 /* OSGQuadDistribution2D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGQuadDistribution2D.cpp; sourceTree = "<group>"; };
+		C9D769B50DF880A9005100D3 /* OSGQuadDistribution2D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGQuadDistribution2D.h; sourceTree = "<group>"; };
+		C9D769B60DF880A9005100D3 /* OSGQuadDistribution2D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGQuadDistribution2D.inl; sourceTree = "<group>"; };
+		C9D769B70DF880A9005100D3 /* OSGQuadDistribution2DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGQuadDistribution2DBase.cpp; sourceTree = "<group>"; };
+		C9D769B80DF880A9005100D3 /* OSGQuadDistribution2DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGQuadDistribution2DBase.h; sourceTree = "<group>"; };
+		C9D769B90DF880A9005100D3 /* OSGQuadDistribution2DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGQuadDistribution2DBase.inl; sourceTree = "<group>"; };
+		C9D769BA0DF880A9005100D3 /* OSGQuadDistribution2DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGQuadDistribution2DFields.h; sourceTree = "<group>"; };
+		C9D769BB0DF880A9005100D3 /* OSGTriDistribution2D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGTriDistribution2D.cpp; sourceTree = "<group>"; };
+		C9D769BC0DF880A9005100D3 /* OSGTriDistribution2D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGTriDistribution2D.h; sourceTree = "<group>"; };
+		C9D769BD0DF880A9005100D3 /* OSGTriDistribution2D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGTriDistribution2D.inl; sourceTree = "<group>"; };
+		C9D769BE0DF880A9005100D3 /* OSGTriDistribution2DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGTriDistribution2DBase.cpp; sourceTree = "<group>"; };
+		C9D769BF0DF880A9005100D3 /* OSGTriDistribution2DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGTriDistribution2DBase.h; sourceTree = "<group>"; };
+		C9D769C00DF880A9005100D3 /* OSGTriDistribution2DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGTriDistribution2DBase.inl; sourceTree = "<group>"; };
+		C9D769C10DF880A9005100D3 /* OSGTriDistribution2DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGTriDistribution2DFields.h; sourceTree = "<group>"; };
+		C9D769C20DF880A9005100D3 /* QuadDistribution2D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = QuadDistribution2D.fcd; sourceTree = "<group>"; };
+		C9D769C30DF880A9005100D3 /* TriDistribution2D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = TriDistribution2D.fcd; sourceTree = "<group>"; };
+		C9D769C50DF880A9005100D3 /* BoxDistribution3D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = BoxDistribution3D.fcd; sourceTree = "<group>"; };
+		C9D769C60DF880A9005100D3 /* CylinderDistribution3D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = CylinderDistribution3D.fcd; sourceTree = "<group>"; };
+		C9D769C70DF880A9005100D3 /* DiscDistribution3D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = DiscDistribution3D.fcd; sourceTree = "<group>"; };
+		C9D769C80DF880A9005100D3 /* GaussianNormalDistribution3D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = GaussianNormalDistribution3D.fcd; sourceTree = "<group>"; };
+		C9D769C90DF880A9005100D3 /* GeoSurfaceDistribution3D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = GeoSurfaceDistribution3D.fcd; sourceTree = "<group>"; };
+		C9D769CA0DF880A9005100D3 /* GeoVolumeDistribution3D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = GeoVolumeDistribution3D.fcd; sourceTree = "<group>"; };
+		C9D769CB0DF880A9005100D3 /* LineDistribution3D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = LineDistribution3D.fcd; sourceTree = "<group>"; };
+		C9D769CC0DF880A9005100D3 /* OSGBoxDistribution3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGBoxDistribution3D.cpp; sourceTree = "<group>"; };
+		C9D769CD0DF880A9005100D3 /* OSGBoxDistribution3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGBoxDistribution3D.h; sourceTree = "<group>"; };
+		C9D769CE0DF880A9005100D3 /* OSGBoxDistribution3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGBoxDistribution3D.inl; sourceTree = "<group>"; };
+		C9D769CF0DF880A9005100D3 /* OSGBoxDistribution3DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGBoxDistribution3DBase.cpp; sourceTree = "<group>"; };
+		C9D769D00DF880A9005100D3 /* OSGBoxDistribution3DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGBoxDistribution3DBase.h; sourceTree = "<group>"; };
+		C9D769D10DF880A9005100D3 /* OSGBoxDistribution3DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGBoxDistribution3DBase.inl; sourceTree = "<group>"; };
+		C9D769D20DF880A9005100D3 /* OSGBoxDistribution3DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGBoxDistribution3DFields.h; sourceTree = "<group>"; };
+		C9D769D30DF880A9005100D3 /* OSGCylinderDistribution3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGCylinderDistribution3D.cpp; sourceTree = "<group>"; };
+		C9D769D40DF880A9005100D3 /* OSGCylinderDistribution3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGCylinderDistribution3D.h; sourceTree = "<group>"; };
+		C9D769D50DF880A9005100D3 /* OSGCylinderDistribution3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGCylinderDistribution3D.inl; sourceTree = "<group>"; };
+		C9D769D60DF880A9005100D3 /* OSGCylinderDistribution3DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGCylinderDistribution3DBase.cpp; sourceTree = "<group>"; };
+		C9D769D70DF880A9005100D3 /* OSGCylinderDistribution3DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGCylinderDistribution3DBase.h; sourceTree = "<group>"; };
+		C9D769D80DF880A9005100D3 /* OSGCylinderDistribution3DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGCylinderDistribution3DBase.inl; sourceTree = "<group>"; };
+		C9D769D90DF880A9005100D3 /* OSGCylinderDistribution3DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGCylinderDistribution3DFields.h; sourceTree = "<group>"; };
+		C9D769DA0DF880A9005100D3 /* OSGDiscDistribution3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDiscDistribution3D.cpp; sourceTree = "<group>"; };
+		C9D769DB0DF880A9005100D3 /* OSGDiscDistribution3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDiscDistribution3D.h; sourceTree = "<group>"; };
+		C9D769DC0DF880A9005100D3 /* OSGDiscDistribution3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDiscDistribution3D.inl; sourceTree = "<group>"; };
+		C9D769DD0DF880A9005100D3 /* OSGDiscDistribution3DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDiscDistribution3DBase.cpp; sourceTree = "<group>"; };
+		C9D769DE0DF880A9005100D3 /* OSGDiscDistribution3DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDiscDistribution3DBase.h; sourceTree = "<group>"; };
+		C9D769DF0DF880A9005100D3 /* OSGDiscDistribution3DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDiscDistribution3DBase.inl; sourceTree = "<group>"; };
+		C9D769E00DF880A9005100D3 /* OSGDiscDistribution3DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDiscDistribution3DFields.h; sourceTree = "<group>"; };
+		C9D769E10DF880A9005100D3 /* OSGGaussianNormalDistribution3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGaussianNormalDistribution3D.cpp; sourceTree = "<group>"; };
+		C9D769E20DF880A9005100D3 /* OSGGaussianNormalDistribution3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGaussianNormalDistribution3D.h; sourceTree = "<group>"; };
+		C9D769E30DF880A9005100D3 /* OSGGaussianNormalDistribution3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGaussianNormalDistribution3D.inl; sourceTree = "<group>"; };
+		C9D769E40DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGaussianNormalDistribution3DBase.cpp; sourceTree = "<group>"; };
+		C9D769E50DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGaussianNormalDistribution3DBase.h; sourceTree = "<group>"; };
+		C9D769E60DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGaussianNormalDistribution3DBase.inl; sourceTree = "<group>"; };
+		C9D769E70DF880A9005100D3 /* OSGGaussianNormalDistribution3DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGaussianNormalDistribution3DFields.h; sourceTree = "<group>"; };
+		C9D769E80DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGeoSurfaceDistribution3D.cpp; sourceTree = "<group>"; };
+		C9D769E90DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGeoSurfaceDistribution3D.h; sourceTree = "<group>"; };
+		C9D769EA0DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGeoSurfaceDistribution3D.inl; sourceTree = "<group>"; };
+		C9D769EB0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGeoSurfaceDistribution3DBase.cpp; sourceTree = "<group>"; };
+		C9D769EC0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGeoSurfaceDistribution3DBase.h; sourceTree = "<group>"; };
+		C9D769ED0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGeoSurfaceDistribution3DBase.inl; sourceTree = "<group>"; };
+		C9D769EE0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGeoSurfaceDistribution3DFields.h; sourceTree = "<group>"; };
+		C9D769EF0DF880A9005100D3 /* OSGGeoVolumeDistribution3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGeoVolumeDistribution3D.cpp; sourceTree = "<group>"; };
+		C9D769F00DF880A9005100D3 /* OSGGeoVolumeDistribution3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGeoVolumeDistribution3D.h; sourceTree = "<group>"; };
+		C9D769F10DF880A9005100D3 /* OSGGeoVolumeDistribution3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGeoVolumeDistribution3D.inl; sourceTree = "<group>"; };
+		C9D769F20DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGeoVolumeDistribution3DBase.cpp; sourceTree = "<group>"; };
+		C9D769F30DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGeoVolumeDistribution3DBase.h; sourceTree = "<group>"; };
+		C9D769F40DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGeoVolumeDistribution3DBase.inl; sourceTree = "<group>"; };
+		C9D769F50DF880A9005100D3 /* OSGGeoVolumeDistribution3DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGeoVolumeDistribution3DFields.h; sourceTree = "<group>"; };
+		C9D769F60DF880A9005100D3 /* OSGLineDistribution3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGLineDistribution3D.cpp; sourceTree = "<group>"; };
+		C9D769F70DF880A9005100D3 /* OSGLineDistribution3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGLineDistribution3D.h; sourceTree = "<group>"; };
+		C9D769F80DF880A9005100D3 /* OSGLineDistribution3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGLineDistribution3D.inl; sourceTree = "<group>"; };
+		C9D769F90DF880A9005100D3 /* OSGLineDistribution3DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGLineDistribution3DBase.cpp; sourceTree = "<group>"; };
+		C9D769FA0DF880A9005100D3 /* OSGLineDistribution3DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGLineDistribution3DBase.h; sourceTree = "<group>"; };
+		C9D769FB0DF880A9005100D3 /* OSGLineDistribution3DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGLineDistribution3DBase.inl; sourceTree = "<group>"; };
+		C9D769FC0DF880A9005100D3 /* OSGLineDistribution3DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGLineDistribution3DFields.h; sourceTree = "<group>"; };
+		C9D769FD0DF880A9005100D3 /* OSGSphereDistribution3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGSphereDistribution3D.cpp; sourceTree = "<group>"; };
+		C9D769FE0DF880A9005100D3 /* OSGSphereDistribution3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGSphereDistribution3D.h; sourceTree = "<group>"; };
+		C9D769FF0DF880A9005100D3 /* OSGSphereDistribution3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGSphereDistribution3D.inl; sourceTree = "<group>"; };
+		C9D76A000DF880A9005100D3 /* OSGSphereDistribution3DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGSphereDistribution3DBase.cpp; sourceTree = "<group>"; };
+		C9D76A010DF880A9005100D3 /* OSGSphereDistribution3DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGSphereDistribution3DBase.h; sourceTree = "<group>"; };
+		C9D76A020DF880A9005100D3 /* OSGSphereDistribution3DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGSphereDistribution3DBase.inl; sourceTree = "<group>"; };
+		C9D76A030DF880A9005100D3 /* OSGSphereDistribution3DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGSphereDistribution3DFields.h; sourceTree = "<group>"; };
+		C9D76A040DF880A9005100D3 /* OSGTriDistribution3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGTriDistribution3D.cpp; sourceTree = "<group>"; };
+		C9D76A050DF880A9005100D3 /* OSGTriDistribution3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGTriDistribution3D.h; sourceTree = "<group>"; };
+		C9D76A060DF880A9005100D3 /* OSGTriDistribution3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGTriDistribution3D.inl; sourceTree = "<group>"; };
+		C9D76A070DF880A9005100D3 /* OSGTriDistribution3DBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGTriDistribution3DBase.cpp; sourceTree = "<group>"; };
+		C9D76A080DF880A9005100D3 /* OSGTriDistribution3DBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGTriDistribution3DBase.h; sourceTree = "<group>"; };
+		C9D76A090DF880A9005100D3 /* OSGTriDistribution3DBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGTriDistribution3DBase.inl; sourceTree = "<group>"; };
+		C9D76A0A0DF880A9005100D3 /* OSGTriDistribution3DFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGTriDistribution3DFields.h; sourceTree = "<group>"; };
+		C9D76A0B0DF880A9005100D3 /* SphereDistribution3D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = SphereDistribution3D.fcd; sourceTree = "<group>"; };
+		C9D76A0C0DF880A9005100D3 /* TriDistribution3D.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = TriDistribution3D.fcd; sourceTree = "<group>"; };
+		C9D76A630DF880C7005100D3 /* CompoundFunction.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = CompoundFunction.fcd; sourceTree = "<group>"; };
+		C9D76A650DF880C7005100D3 /* DataCombiner.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = DataCombiner.fcd; sourceTree = "<group>"; };
+		C9D76A660DF880C7005100D3 /* DataConverter.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = DataConverter.fcd; sourceTree = "<group>"; };
+		C9D76A670DF880C7005100D3 /* DataSplitter.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = DataSplitter.fcd; sourceTree = "<group>"; };
+		C9D76A680DF880C7005100D3 /* OSGDataCombiner.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDataCombiner.cpp; sourceTree = "<group>"; };
+		C9D76A690DF880C7005100D3 /* OSGDataCombiner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDataCombiner.h; sourceTree = "<group>"; };
+		C9D76A6A0DF880C7005100D3 /* OSGDataCombiner.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDataCombiner.inl; sourceTree = "<group>"; };
+		C9D76A6B0DF880C7005100D3 /* OSGDataCombinerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDataCombinerBase.cpp; sourceTree = "<group>"; };
+		C9D76A6C0DF880C7005100D3 /* OSGDataCombinerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDataCombinerBase.h; sourceTree = "<group>"; };
+		C9D76A6D0DF880C7005100D3 /* OSGDataCombinerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDataCombinerBase.inl; sourceTree = "<group>"; };
+		C9D76A6E0DF880C7005100D3 /* OSGDataCombinerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDataCombinerFields.h; sourceTree = "<group>"; };
+		C9D76A6F0DF880C7005100D3 /* OSGDataConverter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDataConverter.cpp; sourceTree = "<group>"; };
+		C9D76A700DF880C7005100D3 /* OSGDataConverter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDataConverter.h; sourceTree = "<group>"; };
+		C9D76A710DF880C7005100D3 /* OSGDataConverter.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDataConverter.inl; sourceTree = "<group>"; };
+		C9D76A720DF880C7005100D3 /* OSGDataConverterBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDataConverterBase.cpp; sourceTree = "<group>"; };
+		C9D76A730DF880C7005100D3 /* OSGDataConverterBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDataConverterBase.h; sourceTree = "<group>"; };
+		C9D76A740DF880C7005100D3 /* OSGDataConverterBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDataConverterBase.inl; sourceTree = "<group>"; };
+		C9D76A750DF880C7005100D3 /* OSGDataConverterFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDataConverterFields.h; sourceTree = "<group>"; };
+		C9D76A760DF880C7005100D3 /* OSGDataSplitter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDataSplitter.cpp; sourceTree = "<group>"; };
+		C9D76A770DF880C7005100D3 /* OSGDataSplitter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDataSplitter.h; sourceTree = "<group>"; };
+		C9D76A780DF880C7005100D3 /* OSGDataSplitter.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDataSplitter.inl; sourceTree = "<group>"; };
+		C9D76A790DF880C7005100D3 /* OSGDataSplitterBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGDataSplitterBase.cpp; sourceTree = "<group>"; };
+		C9D76A7A0DF880C7005100D3 /* OSGDataSplitterBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDataSplitterBase.h; sourceTree = "<group>"; };
+		C9D76A7B0DF880C7005100D3 /* OSGDataSplitterBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGDataSplitterBase.inl; sourceTree = "<group>"; };
+		C9D76A7C0DF880C7005100D3 /* OSGDataSplitterFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGDataSplitterFields.h; sourceTree = "<group>"; };
+		C9D76A7D0DF880C7005100D3 /* Function.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = Function.fcd; sourceTree = "<group>"; };
+		C9D76A7E0DF880C7005100D3 /* OSGCompoundFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGCompoundFunction.cpp; sourceTree = "<group>"; };
+		C9D76A7F0DF880C7005100D3 /* OSGCompoundFunction.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGCompoundFunction.h; sourceTree = "<group>"; };
+		C9D76A800DF880C7005100D3 /* OSGCompoundFunction.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGCompoundFunction.inl; sourceTree = "<group>"; };
+		C9D76A810DF880C7005100D3 /* OSGCompoundFunctionBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGCompoundFunctionBase.cpp; sourceTree = "<group>"; };
+		C9D76A820DF880C7005100D3 /* OSGCompoundFunctionBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGCompoundFunctionBase.h; sourceTree = "<group>"; };
+		C9D76A830DF880C7005100D3 /* OSGCompoundFunctionBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGCompoundFunctionBase.inl; sourceTree = "<group>"; };
+		C9D76A840DF880C7005100D3 /* OSGCompoundFunctionFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGCompoundFunctionFields.h; sourceTree = "<group>"; };
+		C9D76A850DF880C7005100D3 /* OSGFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGFunction.cpp; sourceTree = "<group>"; };
+		C9D76A860DF880C7005100D3 /* OSGFunction.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGFunction.h; sourceTree = "<group>"; };
+		C9D76A870DF880C7005100D3 /* OSGFunction.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGFunction.inl; sourceTree = "<group>"; };
+		C9D76A880DF880C7005100D3 /* OSGFunctionBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGFunctionBase.cpp; sourceTree = "<group>"; };
+		C9D76A890DF880C7005100D3 /* OSGFunctionBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGFunctionBase.h; sourceTree = "<group>"; };
+		C9D76A8A0DF880C7005100D3 /* OSGFunctionBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGFunctionBase.inl; sourceTree = "<group>"; };
+		C9D76A8B0DF880C7005100D3 /* OSGFunctionFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGFunctionFactory.cpp; sourceTree = "<group>"; };
+		C9D76A8C0DF880C7005100D3 /* OSGFunctionFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGFunctionFactory.h; sourceTree = "<group>"; };
+		C9D76A8D0DF880C7005100D3 /* OSGFunctionFactory.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGFunctionFactory.inl; sourceTree = "<group>"; };
+		C9D76A8E0DF880C7005100D3 /* OSGFunctionFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGFunctionFields.h; sourceTree = "<group>"; };
+		C9D76AAA0DF880DB005100D3 /* OSGDynamicsDef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGDynamicsDef.h; path = ../../../src/OSGDynamicsDef.h; sourceTree = SOURCE_ROOT; };
+		C9D76AC30DF883B2005100D3 /* 01RandomDistribution */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 01RandomDistribution; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9D76ACA0DF883D1005100D3 /* 01RandomDistributions.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = 01RandomDistributions.cpp; sourceTree = "<group>"; };
+		C9FD0C170E06FB8200E035BB /* OSGDynamicsUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGDynamicsUtils.cpp; path = ../../../src/Utils/OSGDynamicsUtils.cpp; sourceTree = SOURCE_ROOT; };
+		C9FD0C180E06FB8200E035BB /* OSGDynamicsUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGDynamicsUtils.h; path = ../../../src/Utils/OSGDynamicsUtils.h; sourceTree = SOURCE_ROOT; };
+		D2AAC09D05546B4700DB518D /* libOSGDynamics.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGDynamics.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C9D76AC10DF883B2005100D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC09B05546B4700DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DDFF38A45A11DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC09D05546B4700DB518D /* libOSGDynamics.dylib */,
+				C9D76AC30DF883B2005100D3 /* 01RandomDistribution */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* OSGDynamics */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77ACFE841707C02AAC07 /* Source */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DDFF38A45A11DB9C8B /* Products */,
+			);
+			name = OSGDynamics;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77ACFE841707C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				C9D76AAC0DF8811A005100D3 /* Tutorials */,
+				C9D76AAA0DF880DB005100D3 /* OSGDynamicsDef.h */,
+				C9D76A620DF880C7005100D3 /* Function */,
+				C9D769810DF880A9005100D3 /* Distributions */,
+				C9FD0C1D0E06FB9F00E035BB /* Utils */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		C9D769810DF880A9005100D3 /* Distributions */ = {
+			isa = PBXGroup;
+			children = (
+				C9D769820DF880A9005100D3 /* 1D */,
+				C9D7699B0DF880A9005100D3 /* 2D */,
+				C9D769C40DF880A9005100D3 /* 3D */,
+			);
+			name = Distributions;
+			path = ../../../src/Distributions;
+			sourceTree = SOURCE_ROOT;
+		};
+		C9D769820DF880A9005100D3 /* 1D */ = {
+			isa = PBXGroup;
+			children = (
+				C9D769830DF880A9005100D3 /* GaussianNormalDistribution1D.fcd */,
+				C9D769840DF880A9005100D3 /* OSGGaussianNormalDistribution1D.cpp */,
+				C9D769850DF880A9005100D3 /* OSGGaussianNormalDistribution1D.h */,
+				C9D769860DF880A9005100D3 /* OSGGaussianNormalDistribution1D.inl */,
+				C9D769870DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.cpp */,
+				C9D769880DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.h */,
+				C9D769890DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.inl */,
+				C9D7698A0DF880A9005100D3 /* OSGGaussianNormalDistribution1DFields.h */,
+				C9D7698B0DF880A9005100D3 /* OSGSegmentDistribution1D.cpp */,
+				C9D7698C0DF880A9005100D3 /* OSGSegmentDistribution1D.h */,
+				C9D7698D0DF880A9005100D3 /* OSGSegmentDistribution1D.inl */,
+				C9D7698E0DF880A9005100D3 /* OSGSegmentDistribution1DBase.cpp */,
+				C9D7698F0DF880A9005100D3 /* OSGSegmentDistribution1DBase.h */,
+				C9D769900DF880A9005100D3 /* OSGSegmentDistribution1DBase.inl */,
+				C9D769910DF880A9005100D3 /* OSGSegmentDistribution1DFields.h */,
+				C9D769920DF880A9005100D3 /* OSGSegmentSetDistribution1D.cpp */,
+				C9D769930DF880A9005100D3 /* OSGSegmentSetDistribution1D.h */,
+				C9D769940DF880A9005100D3 /* OSGSegmentSetDistribution1D.inl */,
+				C9D769950DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.cpp */,
+				C9D769960DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.h */,
+				C9D769970DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.inl */,
+				C9D769980DF880A9005100D3 /* OSGSegmentSetDistribution1DFields.h */,
+				C9D769990DF880A9005100D3 /* SegmentDistribution1D.fcd */,
+				C9D7699A0DF880A9005100D3 /* SegmentSetDistribution1D.fcd */,
+			);
+			path = 1D;
+			sourceTree = "<group>";
+		};
+		C9D7699B0DF880A9005100D3 /* 2D */ = {
+			isa = PBXGroup;
+			children = (
+				C9D7699C0DF880A9005100D3 /* DiscDistribution2D.fcd */,
+				C9D7699D0DF880A9005100D3 /* GaussianNormalDistribution2D.fcd */,
+				C9D7699E0DF880A9005100D3 /* LineDistribution2D.fcd */,
+				C9D7699F0DF880A9005100D3 /* OSGDiscDistribution2D.cpp */,
+				C9D769A00DF880A9005100D3 /* OSGDiscDistribution2D.h */,
+				C9D769A10DF880A9005100D3 /* OSGDiscDistribution2D.inl */,
+				C9D769A20DF880A9005100D3 /* OSGDiscDistribution2DBase.cpp */,
+				C9D769A30DF880A9005100D3 /* OSGDiscDistribution2DBase.h */,
+				C9D769A40DF880A9005100D3 /* OSGDiscDistribution2DBase.inl */,
+				C9D769A50DF880A9005100D3 /* OSGDiscDistribution2DFields.h */,
+				C9D769A60DF880A9005100D3 /* OSGGaussianNormalDistribution2D.cpp */,
+				C9D769A70DF880A9005100D3 /* OSGGaussianNormalDistribution2D.h */,
+				C9D769A80DF880A9005100D3 /* OSGGaussianNormalDistribution2D.inl */,
+				C9D769A90DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.cpp */,
+				C9D769AA0DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.h */,
+				C9D769AB0DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.inl */,
+				C9D769AC0DF880A9005100D3 /* OSGGaussianNormalDistribution2DFields.h */,
+				C9D769AD0DF880A9005100D3 /* OSGLineDistribution2D.cpp */,
+				C9D769AE0DF880A9005100D3 /* OSGLineDistribution2D.h */,
+				C9D769AF0DF880A9005100D3 /* OSGLineDistribution2D.inl */,
+				C9D769B00DF880A9005100D3 /* OSGLineDistribution2DBase.cpp */,
+				C9D769B10DF880A9005100D3 /* OSGLineDistribution2DBase.h */,
+				C9D769B20DF880A9005100D3 /* OSGLineDistribution2DBase.inl */,
+				C9D769B30DF880A9005100D3 /* OSGLineDistribution2DFields.h */,
+				C9D769B40DF880A9005100D3 /* OSGQuadDistribution2D.cpp */,
+				C9D769B50DF880A9005100D3 /* OSGQuadDistribution2D.h */,
+				C9D769B60DF880A9005100D3 /* OSGQuadDistribution2D.inl */,
+				C9D769B70DF880A9005100D3 /* OSGQuadDistribution2DBase.cpp */,
+				C9D769B80DF880A9005100D3 /* OSGQuadDistribution2DBase.h */,
+				C9D769B90DF880A9005100D3 /* OSGQuadDistribution2DBase.inl */,
+				C9D769BA0DF880A9005100D3 /* OSGQuadDistribution2DFields.h */,
+				C9D769BB0DF880A9005100D3 /* OSGTriDistribution2D.cpp */,
+				C9D769BC0DF880A9005100D3 /* OSGTriDistribution2D.h */,
+				C9D769BD0DF880A9005100D3 /* OSGTriDistribution2D.inl */,
+				C9D769BE0DF880A9005100D3 /* OSGTriDistribution2DBase.cpp */,
+				C9D769BF0DF880A9005100D3 /* OSGTriDistribution2DBase.h */,
+				C9D769C00DF880A9005100D3 /* OSGTriDistribution2DBase.inl */,
+				C9D769C10DF880A9005100D3 /* OSGTriDistribution2DFields.h */,
+				C9D769C20DF880A9005100D3 /* QuadDistribution2D.fcd */,
+				C9D769C30DF880A9005100D3 /* TriDistribution2D.fcd */,
+			);
+			path = 2D;
+			sourceTree = "<group>";
+		};
+		C9D769C40DF880A9005100D3 /* 3D */ = {
+			isa = PBXGroup;
+			children = (
+				C9D769C50DF880A9005100D3 /* BoxDistribution3D.fcd */,
+				C9D769C60DF880A9005100D3 /* CylinderDistribution3D.fcd */,
+				C9D769C70DF880A9005100D3 /* DiscDistribution3D.fcd */,
+				C9D769C80DF880A9005100D3 /* GaussianNormalDistribution3D.fcd */,
+				C9D769C90DF880A9005100D3 /* GeoSurfaceDistribution3D.fcd */,
+				C9D769CA0DF880A9005100D3 /* GeoVolumeDistribution3D.fcd */,
+				C9D769CB0DF880A9005100D3 /* LineDistribution3D.fcd */,
+				C9D769CC0DF880A9005100D3 /* OSGBoxDistribution3D.cpp */,
+				C9D769CD0DF880A9005100D3 /* OSGBoxDistribution3D.h */,
+				C9D769CE0DF880A9005100D3 /* OSGBoxDistribution3D.inl */,
+				C9D769CF0DF880A9005100D3 /* OSGBoxDistribution3DBase.cpp */,
+				C9D769D00DF880A9005100D3 /* OSGBoxDistribution3DBase.h */,
+				C9D769D10DF880A9005100D3 /* OSGBoxDistribution3DBase.inl */,
+				C9D769D20DF880A9005100D3 /* OSGBoxDistribution3DFields.h */,
+				C9D769D30DF880A9005100D3 /* OSGCylinderDistribution3D.cpp */,
+				C9D769D40DF880A9005100D3 /* OSGCylinderDistribution3D.h */,
+				C9D769D50DF880A9005100D3 /* OSGCylinderDistribution3D.inl */,
+				C9D769D60DF880A9005100D3 /* OSGCylinderDistribution3DBase.cpp */,
+				C9D769D70DF880A9005100D3 /* OSGCylinderDistribution3DBase.h */,
+				C9D769D80DF880A9005100D3 /* OSGCylinderDistribution3DBase.inl */,
+				C9D769D90DF880A9005100D3 /* OSGCylinderDistribution3DFields.h */,
+				C9D769DA0DF880A9005100D3 /* OSGDiscDistribution3D.cpp */,
+				C9D769DB0DF880A9005100D3 /* OSGDiscDistribution3D.h */,
+				C9D769DC0DF880A9005100D3 /* OSGDiscDistribution3D.inl */,
+				C9D769DD0DF880A9005100D3 /* OSGDiscDistribution3DBase.cpp */,
+				C9D769DE0DF880A9005100D3 /* OSGDiscDistribution3DBase.h */,
+				C9D769DF0DF880A9005100D3 /* OSGDiscDistribution3DBase.inl */,
+				C9D769E00DF880A9005100D3 /* OSGDiscDistribution3DFields.h */,
+				C9D769E10DF880A9005100D3 /* OSGGaussianNormalDistribution3D.cpp */,
+				C9D769E20DF880A9005100D3 /* OSGGaussianNormalDistribution3D.h */,
+				C9D769E30DF880A9005100D3 /* OSGGaussianNormalDistribution3D.inl */,
+				C9D769E40DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.cpp */,
+				C9D769E50DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.h */,
+				C9D769E60DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.inl */,
+				C9D769E70DF880A9005100D3 /* OSGGaussianNormalDistribution3DFields.h */,
+				C9D769E80DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.cpp */,
+				C9D769E90DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.h */,
+				C9D769EA0DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.inl */,
+				C9D769EB0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.cpp */,
+				C9D769EC0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.h */,
+				C9D769ED0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.inl */,
+				C9D769EE0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DFields.h */,
+				C9D769EF0DF880A9005100D3 /* OSGGeoVolumeDistribution3D.cpp */,
+				C9D769F00DF880A9005100D3 /* OSGGeoVolumeDistribution3D.h */,
+				C9D769F10DF880A9005100D3 /* OSGGeoVolumeDistribution3D.inl */,
+				C9D769F20DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.cpp */,
+				C9D769F30DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.h */,
+				C9D769F40DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.inl */,
+				C9D769F50DF880A9005100D3 /* OSGGeoVolumeDistribution3DFields.h */,
+				C9D769F60DF880A9005100D3 /* OSGLineDistribution3D.cpp */,
+				C9D769F70DF880A9005100D3 /* OSGLineDistribution3D.h */,
+				C9D769F80DF880A9005100D3 /* OSGLineDistribution3D.inl */,
+				C9D769F90DF880A9005100D3 /* OSGLineDistribution3DBase.cpp */,
+				C9D769FA0DF880A9005100D3 /* OSGLineDistribution3DBase.h */,
+				C9D769FB0DF880A9005100D3 /* OSGLineDistribution3DBase.inl */,
+				C9D769FC0DF880A9005100D3 /* OSGLineDistribution3DFields.h */,
+				C9D769FD0DF880A9005100D3 /* OSGSphereDistribution3D.cpp */,
+				C9D769FE0DF880A9005100D3 /* OSGSphereDistribution3D.h */,
+				C9D769FF0DF880A9005100D3 /* OSGSphereDistribution3D.inl */,
+				C9D76A000DF880A9005100D3 /* OSGSphereDistribution3DBase.cpp */,
+				C9D76A010DF880A9005100D3 /* OSGSphereDistribution3DBase.h */,
+				C9D76A020DF880A9005100D3 /* OSGSphereDistribution3DBase.inl */,
+				C9D76A030DF880A9005100D3 /* OSGSphereDistribution3DFields.h */,
+				C9D76A040DF880A9005100D3 /* OSGTriDistribution3D.cpp */,
+				C9D76A050DF880A9005100D3 /* OSGTriDistribution3D.h */,
+				C9D76A060DF880A9005100D3 /* OSGTriDistribution3D.inl */,
+				C9D76A070DF880A9005100D3 /* OSGTriDistribution3DBase.cpp */,
+				C9D76A080DF880A9005100D3 /* OSGTriDistribution3DBase.h */,
+				C9D76A090DF880A9005100D3 /* OSGTriDistribution3DBase.inl */,
+				C9D76A0A0DF880A9005100D3 /* OSGTriDistribution3DFields.h */,
+				C9D76A0B0DF880A9005100D3 /* SphereDistribution3D.fcd */,
+				C9D76A0C0DF880A9005100D3 /* TriDistribution3D.fcd */,
+			);
+			path = 3D;
+			sourceTree = "<group>";
+		};
+		C9D76A620DF880C7005100D3 /* Function */ = {
+			isa = PBXGroup;
+			children = (
+				C9D76A630DF880C7005100D3 /* CompoundFunction.fcd */,
+				C9D76A640DF880C7005100D3 /* Conversion */,
+				C9D76A7D0DF880C7005100D3 /* Function.fcd */,
+				C9D76A7E0DF880C7005100D3 /* OSGCompoundFunction.cpp */,
+				C9D76A7F0DF880C7005100D3 /* OSGCompoundFunction.h */,
+				C9D76A800DF880C7005100D3 /* OSGCompoundFunction.inl */,
+				C9D76A810DF880C7005100D3 /* OSGCompoundFunctionBase.cpp */,
+				C9D76A820DF880C7005100D3 /* OSGCompoundFunctionBase.h */,
+				C9D76A830DF880C7005100D3 /* OSGCompoundFunctionBase.inl */,
+				C9D76A840DF880C7005100D3 /* OSGCompoundFunctionFields.h */,
+				C9D76A850DF880C7005100D3 /* OSGFunction.cpp */,
+				C9D76A860DF880C7005100D3 /* OSGFunction.h */,
+				C9D76A870DF880C7005100D3 /* OSGFunction.inl */,
+				C9D76A880DF880C7005100D3 /* OSGFunctionBase.cpp */,
+				C9D76A890DF880C7005100D3 /* OSGFunctionBase.h */,
+				C9D76A8A0DF880C7005100D3 /* OSGFunctionBase.inl */,
+				C9D76A8B0DF880C7005100D3 /* OSGFunctionFactory.cpp */,
+				C9D76A8C0DF880C7005100D3 /* OSGFunctionFactory.h */,
+				C9D76A8D0DF880C7005100D3 /* OSGFunctionFactory.inl */,
+				C9D76A8E0DF880C7005100D3 /* OSGFunctionFields.h */,
+			);
+			name = Function;
+			path = ../../../src/Function;
+			sourceTree = SOURCE_ROOT;
+		};
+		C9D76A640DF880C7005100D3 /* Conversion */ = {
+			isa = PBXGroup;
+			children = (
+				C9D76A650DF880C7005100D3 /* DataCombiner.fcd */,
+				C9D76A660DF880C7005100D3 /* DataConverter.fcd */,
+				C9D76A670DF880C7005100D3 /* DataSplitter.fcd */,
+				C9D76A680DF880C7005100D3 /* OSGDataCombiner.cpp */,
+				C9D76A690DF880C7005100D3 /* OSGDataCombiner.h */,
+				C9D76A6A0DF880C7005100D3 /* OSGDataCombiner.inl */,
+				C9D76A6B0DF880C7005100D3 /* OSGDataCombinerBase.cpp */,
+				C9D76A6C0DF880C7005100D3 /* OSGDataCombinerBase.h */,
+				C9D76A6D0DF880C7005100D3 /* OSGDataCombinerBase.inl */,
+				C9D76A6E0DF880C7005100D3 /* OSGDataCombinerFields.h */,
+				C9D76A6F0DF880C7005100D3 /* OSGDataConverter.cpp */,
+				C9D76A700DF880C7005100D3 /* OSGDataConverter.h */,
+				C9D76A710DF880C7005100D3 /* OSGDataConverter.inl */,
+				C9D76A720DF880C7005100D3 /* OSGDataConverterBase.cpp */,
+				C9D76A730DF880C7005100D3 /* OSGDataConverterBase.h */,
+				C9D76A740DF880C7005100D3 /* OSGDataConverterBase.inl */,
+				C9D76A750DF880C7005100D3 /* OSGDataConverterFields.h */,
+				C9D76A760DF880C7005100D3 /* OSGDataSplitter.cpp */,
+				C9D76A770DF880C7005100D3 /* OSGDataSplitter.h */,
+				C9D76A780DF880C7005100D3 /* OSGDataSplitter.inl */,
+				C9D76A790DF880C7005100D3 /* OSGDataSplitterBase.cpp */,
+				C9D76A7A0DF880C7005100D3 /* OSGDataSplitterBase.h */,
+				C9D76A7B0DF880C7005100D3 /* OSGDataSplitterBase.inl */,
+				C9D76A7C0DF880C7005100D3 /* OSGDataSplitterFields.h */,
+			);
+			path = Conversion;
+			sourceTree = "<group>";
+		};
+		C9D76AAC0DF8811A005100D3 /* Tutorials */ = {
+			isa = PBXGroup;
+			children = (
+				C9D76ACA0DF883D1005100D3 /* 01RandomDistributions.cpp */,
+			);
+			name = Tutorials;
+			path = ../../../Tutorials;
+			sourceTree = SOURCE_ROOT;
+		};
+		C9FD0C1D0E06FB9F00E035BB /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				C9FD0C170E06FB8200E035BB /* OSGDynamicsUtils.cpp */,
+				C9FD0C180E06FB8200E035BB /* OSGDynamicsUtils.h */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC09905546B4700DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9D76A0E0DF880A9005100D3 /* OSGGaussianNormalDistribution1D.h in Headers */,
+				C9D76A100DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.h in Headers */,
+				C9D76A110DF880A9005100D3 /* OSGGaussianNormalDistribution1DFields.h in Headers */,
+				C9D76A130DF880A9005100D3 /* OSGSegmentDistribution1D.h in Headers */,
+				C9D76A150DF880A9005100D3 /* OSGSegmentDistribution1DBase.h in Headers */,
+				C9D76A160DF880A9005100D3 /* OSGSegmentDistribution1DFields.h in Headers */,
+				C9D76A180DF880A9005100D3 /* OSGSegmentSetDistribution1D.h in Headers */,
+				C9D76A1A0DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.h in Headers */,
+				C9D76A1B0DF880A9005100D3 /* OSGSegmentSetDistribution1DFields.h in Headers */,
+				C9D76A1D0DF880A9005100D3 /* OSGDiscDistribution2D.h in Headers */,
+				C9D76A1F0DF880A9005100D3 /* OSGDiscDistribution2DBase.h in Headers */,
+				C9D76A200DF880A9005100D3 /* OSGDiscDistribution2DFields.h in Headers */,
+				C9D76A220DF880A9005100D3 /* OSGGaussianNormalDistribution2D.h in Headers */,
+				C9D76A240DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.h in Headers */,
+				C9D76A250DF880A9005100D3 /* OSGGaussianNormalDistribution2DFields.h in Headers */,
+				C9D76A270DF880A9005100D3 /* OSGLineDistribution2D.h in Headers */,
+				C9D76A290DF880A9005100D3 /* OSGLineDistribution2DBase.h in Headers */,
+				C9D76A2A0DF880A9005100D3 /* OSGLineDistribution2DFields.h in Headers */,
+				C9D76A2C0DF880A9005100D3 /* OSGQuadDistribution2D.h in Headers */,
+				C9D76A2E0DF880A9005100D3 /* OSGQuadDistribution2DBase.h in Headers */,
+				C9D76A2F0DF880A9005100D3 /* OSGQuadDistribution2DFields.h in Headers */,
+				C9D76A310DF880A9005100D3 /* OSGTriDistribution2D.h in Headers */,
+				C9D76A330DF880A9005100D3 /* OSGTriDistribution2DBase.h in Headers */,
+				C9D76A340DF880A9005100D3 /* OSGTriDistribution2DFields.h in Headers */,
+				C9D76A360DF880A9005100D3 /* OSGBoxDistribution3D.h in Headers */,
+				C9D76A380DF880A9005100D3 /* OSGBoxDistribution3DBase.h in Headers */,
+				C9D76A390DF880A9005100D3 /* OSGBoxDistribution3DFields.h in Headers */,
+				C9D76A3B0DF880A9005100D3 /* OSGCylinderDistribution3D.h in Headers */,
+				C9D76A3D0DF880A9005100D3 /* OSGCylinderDistribution3DBase.h in Headers */,
+				C9D76A3E0DF880A9005100D3 /* OSGCylinderDistribution3DFields.h in Headers */,
+				C9D76A400DF880A9005100D3 /* OSGDiscDistribution3D.h in Headers */,
+				C9D76A420DF880A9005100D3 /* OSGDiscDistribution3DBase.h in Headers */,
+				C9D76A430DF880A9005100D3 /* OSGDiscDistribution3DFields.h in Headers */,
+				C9D76A450DF880A9005100D3 /* OSGGaussianNormalDistribution3D.h in Headers */,
+				C9D76A470DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.h in Headers */,
+				C9D76A480DF880A9005100D3 /* OSGGaussianNormalDistribution3DFields.h in Headers */,
+				C9D76A4A0DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.h in Headers */,
+				C9D76A4C0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.h in Headers */,
+				C9D76A4D0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DFields.h in Headers */,
+				C9D76A4F0DF880A9005100D3 /* OSGGeoVolumeDistribution3D.h in Headers */,
+				C9D76A510DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.h in Headers */,
+				C9D76A520DF880A9005100D3 /* OSGGeoVolumeDistribution3DFields.h in Headers */,
+				C9D76A540DF880A9005100D3 /* OSGLineDistribution3D.h in Headers */,
+				C9D76A560DF880A9005100D3 /* OSGLineDistribution3DBase.h in Headers */,
+				C9D76A570DF880A9005100D3 /* OSGLineDistribution3DFields.h in Headers */,
+				C9D76A590DF880A9005100D3 /* OSGSphereDistribution3D.h in Headers */,
+				C9D76A5B0DF880A9005100D3 /* OSGSphereDistribution3DBase.h in Headers */,
+				C9D76A5C0DF880A9005100D3 /* OSGSphereDistribution3DFields.h in Headers */,
+				C9D76A5E0DF880A9005100D3 /* OSGTriDistribution3D.h in Headers */,
+				C9D76A600DF880A9005100D3 /* OSGTriDistribution3DBase.h in Headers */,
+				C9D76A610DF880A9005100D3 /* OSGTriDistribution3DFields.h in Headers */,
+				C9D76A900DF880C7005100D3 /* OSGDataCombiner.h in Headers */,
+				C9D76A920DF880C7005100D3 /* OSGDataCombinerBase.h in Headers */,
+				C9D76A930DF880C7005100D3 /* OSGDataCombinerFields.h in Headers */,
+				C9D76A950DF880C7005100D3 /* OSGDataConverter.h in Headers */,
+				C9D76A970DF880C7005100D3 /* OSGDataConverterBase.h in Headers */,
+				C9D76A980DF880C7005100D3 /* OSGDataConverterFields.h in Headers */,
+				C9D76A9A0DF880C7005100D3 /* OSGDataSplitter.h in Headers */,
+				C9D76A9C0DF880C7005100D3 /* OSGDataSplitterBase.h in Headers */,
+				C9D76A9D0DF880C7005100D3 /* OSGDataSplitterFields.h in Headers */,
+				C9D76A9F0DF880C7005100D3 /* OSGCompoundFunction.h in Headers */,
+				C9D76AA10DF880C7005100D3 /* OSGCompoundFunctionBase.h in Headers */,
+				C9D76AA20DF880C7005100D3 /* OSGCompoundFunctionFields.h in Headers */,
+				C9D76AA40DF880C7005100D3 /* OSGFunction.h in Headers */,
+				C9D76AA60DF880C7005100D3 /* OSGFunctionBase.h in Headers */,
+				C9D76AA80DF880C7005100D3 /* OSGFunctionFactory.h in Headers */,
+				C9D76AA90DF880C7005100D3 /* OSGFunctionFields.h in Headers */,
+				C9D76AAB0DF880DB005100D3 /* OSGDynamicsDef.h in Headers */,
+				C9FD0C1A0E06FB8200E035BB /* OSGDynamicsUtils.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXLegacyTarget section */
+		C9882F540DF9B72600777F25 /* Make Apple Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)";
+			buildConfigurationList = C9882F570DF9B77600777F25 /* Build configuration list for PBXLegacyTarget "Make Apple Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make Apple Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make Apple Directory";
+		};
+		C9882F5A0DF9B77B00777F25 /* Make include Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include";
+			buildConfigurationList = C9882F620DF9B7DB00777F25 /* Build configuration list for PBXLegacyTarget "Make include Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make include Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make include Directory";
+		};
+		C9882F5D0DF9B7A400777F25 /* Make lib Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/lib";
+			buildConfigurationList = C9882F650DF9B7DB00777F25 /* Build configuration list for PBXLegacyTarget "Make lib Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make lib Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make lib Directory";
+		};
+		C9882F6A0DF9B7FD00777F25 /* Make OpenSG Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG";
+			buildConfigurationList = C9882F780DF9B86C00777F25 /* Build configuration list for PBXLegacyTarget "Make OpenSG Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make OpenSG Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make OpenSG Directory";
+		};
+		C9882F710DF9B82900777F25 /* Make Dynamics Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG/Dynamics";
+			buildConfigurationList = C9882F7B0DF9B86C00777F25 /* Build configuration list for PBXLegacyTarget "Make Dynamics Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make Dynamics Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make Dynamics Directory";
+		};
+		C9882F7E0DF9B88000777F25 /* OSGDynamics install Shell Script */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/CopyIncludes.sh $(COMMON_DIR) $(SRC_DIR) $(INSTALL_DIR)/include/OpenSG/$(LIB_INCLUDE_DIR_NAME) ";
+			buildConfigurationList = C9882F850DF9B95200777F25 /* Build configuration list for PBXLegacyTarget "OSGDynamics install Shell Script" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "OSGDynamics install Shell Script";
+			passBuildSettingsInEnvironment = 1;
+			productName = "OSGDynamics install Shell Script";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXNativeTarget section */
+		C9D76AC20DF883B2005100D3 /* 01RandomDistribution */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C9D76AC70DF883C7005100D3 /* Build configuration list for PBXNativeTarget "01RandomDistribution" */;
+			buildPhases = (
+				C9D76AC00DF883B2005100D3 /* Sources */,
+				C9D76AC10DF883B2005100D3 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C9882F890DF9B95200777F25 /* PBXTargetDependency */,
+				C9D76B080DF888C9005100D3 /* PBXTargetDependency */,
+			);
+			name = 01RandomDistribution;
+			productName = 01RandomDistribution;
+			productReference = C9D76AC30DF883B2005100D3 /* 01RandomDistribution */;
+			productType = "com.apple.product-type.tool";
+		};
+		D2AAC09C05546B4700DB518D /* OSGDynamics Dynamic Library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB916008733D950010E9CD /* Build configuration list for PBXNativeTarget "OSGDynamics Dynamic Library" */;
+			buildPhases = (
+				D2AAC09905546B4700DB518D /* Headers */,
+				D2AAC09B05546B4700DB518D /* Frameworks */,
+				D2AAC09A05546B4700DB518D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OSGDynamics Dynamic Library";
+			productName = libOSGDynamics;
+			productReference = D2AAC09D05546B4700DB518D /* libOSGDynamics.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB916408733D950010E9CD /* Build configuration list for PBXProject "OSGDynamics" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* OSGDynamics */;
+			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
+			projectDirPath = "";
+			targets = (
+				D2AAC09C05546B4700DB518D /* OSGDynamics Dynamic Library */,
+				C9D76AC20DF883B2005100D3 /* 01RandomDistribution */,
+				C9882F310DF9B60C00777F25 /* Includes Install Aggregate */,
+				C9882F540DF9B72600777F25 /* Make Apple Directory */,
+				C9882F5A0DF9B77B00777F25 /* Make include Directory */,
+				C9882F5D0DF9B7A400777F25 /* Make lib Directory */,
+				C9882F6A0DF9B7FD00777F25 /* Make OpenSG Directory */,
+				C9882F710DF9B82900777F25 /* Make Dynamics Directory */,
+				C9882F7E0DF9B88000777F25 /* OSGDynamics install Shell Script */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C9D76AC00DF883B2005100D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9D76ACB0DF883D1005100D3 /* 01RandomDistributions.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC09A05546B4700DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9D76A0D0DF880A9005100D3 /* OSGGaussianNormalDistribution1D.cpp in Sources */,
+				C9D76A0F0DF880A9005100D3 /* OSGGaussianNormalDistribution1DBase.cpp in Sources */,
+				C9D76A120DF880A9005100D3 /* OSGSegmentDistribution1D.cpp in Sources */,
+				C9D76A140DF880A9005100D3 /* OSGSegmentDistribution1DBase.cpp in Sources */,
+				C9D76A170DF880A9005100D3 /* OSGSegmentSetDistribution1D.cpp in Sources */,
+				C9D76A190DF880A9005100D3 /* OSGSegmentSetDistribution1DBase.cpp in Sources */,
+				C9D76A1C0DF880A9005100D3 /* OSGDiscDistribution2D.cpp in Sources */,
+				C9D76A1E0DF880A9005100D3 /* OSGDiscDistribution2DBase.cpp in Sources */,
+				C9D76A210DF880A9005100D3 /* OSGGaussianNormalDistribution2D.cpp in Sources */,
+				C9D76A230DF880A9005100D3 /* OSGGaussianNormalDistribution2DBase.cpp in Sources */,
+				C9D76A260DF880A9005100D3 /* OSGLineDistribution2D.cpp in Sources */,
+				C9D76A280DF880A9005100D3 /* OSGLineDistribution2DBase.cpp in Sources */,
+				C9D76A2B0DF880A9005100D3 /* OSGQuadDistribution2D.cpp in Sources */,
+				C9D76A2D0DF880A9005100D3 /* OSGQuadDistribution2DBase.cpp in Sources */,
+				C9D76A300DF880A9005100D3 /* OSGTriDistribution2D.cpp in Sources */,
+				C9D76A320DF880A9005100D3 /* OSGTriDistribution2DBase.cpp in Sources */,
+				C9D76A350DF880A9005100D3 /* OSGBoxDistribution3D.cpp in Sources */,
+				C9D76A370DF880A9005100D3 /* OSGBoxDistribution3DBase.cpp in Sources */,
+				C9D76A3A0DF880A9005100D3 /* OSGCylinderDistribution3D.cpp in Sources */,
+				C9D76A3C0DF880A9005100D3 /* OSGCylinderDistribution3DBase.cpp in Sources */,
+				C9D76A3F0DF880A9005100D3 /* OSGDiscDistribution3D.cpp in Sources */,
+				C9D76A410DF880A9005100D3 /* OSGDiscDistribution3DBase.cpp in Sources */,
+				C9D76A440DF880A9005100D3 /* OSGGaussianNormalDistribution3D.cpp in Sources */,
+				C9D76A460DF880A9005100D3 /* OSGGaussianNormalDistribution3DBase.cpp in Sources */,
+				C9D76A490DF880A9005100D3 /* OSGGeoSurfaceDistribution3D.cpp in Sources */,
+				C9D76A4B0DF880A9005100D3 /* OSGGeoSurfaceDistribution3DBase.cpp in Sources */,
+				C9D76A4E0DF880A9005100D3 /* OSGGeoVolumeDistribution3D.cpp in Sources */,
+				C9D76A500DF880A9005100D3 /* OSGGeoVolumeDistribution3DBase.cpp in Sources */,
+				C9D76A530DF880A9005100D3 /* OSGLineDistribution3D.cpp in Sources */,
+				C9D76A550DF880A9005100D3 /* OSGLineDistribution3DBase.cpp in Sources */,
+				C9D76A580DF880A9005100D3 /* OSGSphereDistribution3D.cpp in Sources */,
+				C9D76A5A0DF880A9005100D3 /* OSGSphereDistribution3DBase.cpp in Sources */,
+				C9D76A5D0DF880A9005100D3 /* OSGTriDistribution3D.cpp in Sources */,
+				C9D76A5F0DF880A9005100D3 /* OSGTriDistribution3DBase.cpp in Sources */,
+				C9D76A8F0DF880C7005100D3 /* OSGDataCombiner.cpp in Sources */,
+				C9D76A910DF880C7005100D3 /* OSGDataCombinerBase.cpp in Sources */,
+				C9D76A940DF880C7005100D3 /* OSGDataConverter.cpp in Sources */,
+				C9D76A960DF880C7005100D3 /* OSGDataConverterBase.cpp in Sources */,
+				C9D76A990DF880C7005100D3 /* OSGDataSplitter.cpp in Sources */,
+				C9D76A9B0DF880C7005100D3 /* OSGDataSplitterBase.cpp in Sources */,
+				C9D76A9E0DF880C7005100D3 /* OSGCompoundFunction.cpp in Sources */,
+				C9D76AA00DF880C7005100D3 /* OSGCompoundFunctionBase.cpp in Sources */,
+				C9D76AA30DF880C7005100D3 /* OSGFunction.cpp in Sources */,
+				C9D76AA50DF880C7005100D3 /* OSGFunctionBase.cpp in Sources */,
+				C9D76AA70DF880C7005100D3 /* OSGFunctionFactory.cpp in Sources */,
+				C9FD0C190E06FB8200E035BB /* OSGDynamicsUtils.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C9882F560DF9B75800777F25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9882F540DF9B72600777F25 /* Make Apple Directory */;
+			targetProxy = C9882F550DF9B75800777F25 /* PBXContainerItemProxy */;
+		};
+		C9882F5F0DF9B7A800777F25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9882F5A0DF9B77B00777F25 /* Make include Directory */;
+			targetProxy = C9882F5E0DF9B7A800777F25 /* PBXContainerItemProxy */;
+		};
+		C9882F610DF9B7BD00777F25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9882F5D0DF9B7A400777F25 /* Make lib Directory */;
+			targetProxy = C9882F600DF9B7BD00777F25 /* PBXContainerItemProxy */;
+		};
+		C9882F700DF9B81600777F25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9882F6A0DF9B7FD00777F25 /* Make OpenSG Directory */;
+			targetProxy = C9882F6F0DF9B81600777F25 /* PBXContainerItemProxy */;
+		};
+		C9882F770DF9B84D00777F25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9882F710DF9B82900777F25 /* Make Dynamics Directory */;
+			targetProxy = C9882F760DF9B84D00777F25 /* PBXContainerItemProxy */;
+		};
+		C9882F820DF9B92200777F25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9882F7E0DF9B88000777F25 /* OSGDynamics install Shell Script */;
+			targetProxy = C9882F810DF9B92200777F25 /* PBXContainerItemProxy */;
+		};
+		C9882F890DF9B95200777F25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9882F310DF9B60C00777F25 /* Includes Install Aggregate */;
+			targetProxy = C9882F880DF9B95200777F25 /* PBXContainerItemProxy */;
+		};
+		C9D76B080DF888C9005100D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC09C05546B4700DB518D /* OSGDynamics Dynamic Library */;
+			targetProxy = C9D76B070DF888C9005100D3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB916108733D950010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/dbg";
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_MODEL_TUNING = G4;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/dbg",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				OBJROOT = ..;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGToolboxD",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PREBINDING = YES;
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)D";
+				SKIP_INSTALL = YES;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Debug;
+		};
+		1DEB916208733D950010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/opt";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_MODEL_TUNING = G4;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				OBJROOT = ..;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGToolbox",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)";
+				SKIP_INSTALL = YES;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = "non-global";
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Release;
+		};
+		1DEB916508733D950010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BOOST_BASE_DIR = "/Users/dtnaylor/Work/boost_1_35_0/Boost-1_35_0-InstallOSX";
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				OSGROOT = "/Users/dtnaylor/Work/OpenSG/OpenSG-1.8-OSX-Install";
+				OSG_TOOLBOX_DIR = /Users/dtnaylor/Work/OpenSGToolbox/OpenSGToolbox;
+				OSG_TOOLBOX_LIB_NAME = Dynamics;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB916608733D950010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				BOOST_BASE_DIR = "/Users/dtnaylor/Work/boost_1_35_0/Boost-1_35_0-InstallOSX";
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				OSGROOT = "/Users/dtnaylor/Work/OpenSG/OpenSG-1.8-OSX-Install";
+				OSG_TOOLBOX_DIR = /Users/dtnaylor/Work/OpenSGToolbox/OpenSGToolbox;
+				OSG_TOOLBOX_LIB_NAME = Dynamics;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SEPARATE_STRIP = YES;
+			};
+			name = Release;
+		};
+		C9882F3B0DF9B63700777F25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Includes Install Aggregate";
+			};
+			name = Debug;
+		};
+		C9882F3C0DF9B63700777F25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Includes Install Aggregate";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9882F580DF9B77600777F25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make Apple Directory";
+			};
+			name = Debug;
+		};
+		C9882F590DF9B77600777F25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make Apple Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9882F630DF9B7DB00777F25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make include Directory";
+			};
+			name = Debug;
+		};
+		C9882F640DF9B7DB00777F25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make include Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9882F660DF9B7DB00777F25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make lib Directory";
+			};
+			name = Debug;
+		};
+		C9882F670DF9B7DB00777F25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make lib Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9882F790DF9B86C00777F25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make OpenSG Directory";
+			};
+			name = Debug;
+		};
+		C9882F7A0DF9B86C00777F25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make OpenSG Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9882F7C0DF9B86C00777F25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make Dynamics Directory";
+			};
+			name = Debug;
+		};
+		C9882F7D0DF9B86C00777F25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make Dynamics Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9882F860DF9B95200777F25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				LIB_INCLUDE_DIR_NAME = "$(OSG_TOOLBOX_LIB_NAME)";
+				PRODUCT_NAME = "OSGDynamics install Shell Script";
+				SRC_DIR = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src";
+			};
+			name = Debug;
+		};
+		C9882F870DF9B95200777F25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				LIB_INCLUDE_DIR_NAME = "$(OSG_TOOLBOX_LIB_NAME)";
+				PRODUCT_NAME = "OSGDynamics install Shell Script";
+				SRC_DIR = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9D76AC80DF883C7005100D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = OSG_WITH_GLUT;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+				);
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/dbg",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/lib",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGWindowCarbon",
+					"-lOSG$(OSG_TOOLBOX_LIB_NAME)D",
+					"-lOSGToolboxD",
+					"-lOSGParticleSystemD",
+					"-lOSGInputD",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = 01RandomDistributionD;
+				SYMROOT = /Users/dtnaylor/Work/OpenSGToolbox/OpenSGToolbox/Dynamics/Tutorials;
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		C9D76AC90DF883C7005100D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+				);
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = OSG_WITH_GLUT;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+				);
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/lib",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGWindowCarbon",
+					"-lOSG$(OSG_TOOLBOX_LIB_NAME)",
+					"-lOSGToolbox",
+					"-lOSGParticleSystem",
+					"-lOSGInput",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = 01RandomDistribution;
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/Tutorials";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB916008733D950010E9CD /* Build configuration list for PBXNativeTarget "OSGDynamics Dynamic Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB916108733D950010E9CD /* Debug */,
+				1DEB916208733D950010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB916408733D950010E9CD /* Build configuration list for PBXProject "OSGDynamics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB916508733D950010E9CD /* Debug */,
+				1DEB916608733D950010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9882F3A0DF9B63700777F25 /* Build configuration list for PBXAggregateTarget "Includes Install Aggregate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9882F3B0DF9B63700777F25 /* Debug */,
+				C9882F3C0DF9B63700777F25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9882F570DF9B77600777F25 /* Build configuration list for PBXLegacyTarget "Make Apple Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9882F580DF9B77600777F25 /* Debug */,
+				C9882F590DF9B77600777F25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9882F620DF9B7DB00777F25 /* Build configuration list for PBXLegacyTarget "Make include Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9882F630DF9B7DB00777F25 /* Debug */,
+				C9882F640DF9B7DB00777F25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9882F650DF9B7DB00777F25 /* Build configuration list for PBXLegacyTarget "Make lib Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9882F660DF9B7DB00777F25 /* Debug */,
+				C9882F670DF9B7DB00777F25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9882F780DF9B86C00777F25 /* Build configuration list for PBXLegacyTarget "Make OpenSG Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9882F790DF9B86C00777F25 /* Debug */,
+				C9882F7A0DF9B86C00777F25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9882F7B0DF9B86C00777F25 /* Build configuration list for PBXLegacyTarget "Make Dynamics Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9882F7C0DF9B86C00777F25 /* Debug */,
+				C9882F7D0DF9B86C00777F25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9882F850DF9B95200777F25 /* Build configuration list for PBXLegacyTarget "OSGDynamics install Shell Script" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9882F860DF9B95200777F25 /* Debug */,
+				C9882F870DF9B95200777F25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9D76AC70DF883C7005100D3 /* Build configuration list for PBXNativeTarget "01RandomDistribution" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9D76AC80DF883C7005100D3 /* Debug */,
+				C9D76AC90DF883C7005100D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

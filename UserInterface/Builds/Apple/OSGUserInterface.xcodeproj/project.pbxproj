@@ -2726,12 +2726,12 @@
 
 /* Begin PBXFileReference section */
 		C95EDEB20DEDE3A100A6784B /* 41GLViewportComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 41GLViewportComponent.cpp; path = ../../Tutorials/41GLViewportComponent.cpp; sourceTree = SOURCE_ROOT; };
-		C95EDEBD0DEDE40F00A6784B /* 41GLViewportComponentD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 41GLViewportComponentD; sourceTree = BUILT_PRODUCTS_DIR; };
-		C95EDF1B0DEDEA9900A6784B /* 32SliderD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 32SliderD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C95EDEBD0DEDE40F00A6784B /* 41GLViewportComponent */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 41GLViewportComponent; sourceTree = BUILT_PRODUCTS_DIR; };
+		C95EDF1B0DEDEA9900A6784B /* 32Slider */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 32Slider; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95EDFEC0DEDEAF200A6784B /* 32Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 32Slider.cpp; path = ../../Tutorials/32Slider.cpp; sourceTree = SOURCE_ROOT; };
-		C95EE08B0DEDF59D00A6784B /* 33ComboBoxD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 33ComboBoxD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C95EE08B0DEDF59D00A6784B /* 33ComboBox */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 33ComboBox; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95EE0970DEDF61C00A6784B /* 33ComboBox.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 33ComboBox.cpp; path = ../../Tutorials/33ComboBox.cpp; sourceTree = SOURCE_ROOT; };
-		C9803B760DEF28D600DE5B1D /* 34TreeD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 34TreeD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9803B760DEF28D600DE5B1D /* 34Tree */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 34Tree; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9803C450DEF294300DE5B1D /* 34Tree.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 34Tree.cpp; path = ../../Tutorials/34Tree.cpp; sourceTree = SOURCE_ROOT; };
 		C997D72D0DE74A6500509C0E /* ColorUIBackground.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = ColorUIBackground.fcd; sourceTree = "<group>"; };
 		C997D72E0DE74A6500509C0E /* CompoundUIBackground.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = CompoundUIBackground.fcd; sourceTree = "<group>"; };
@@ -4193,54 +4193,54 @@
 		C997DD0E0DE74A6F00509C0E /* OSGLineUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGLineUtils.h; sourceTree = "<group>"; };
 		C997DD0F0DE74A6F00509C0E /* OSGUIDrawUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGUIDrawUtils.cpp; sourceTree = "<group>"; };
 		C997DD100DE74A6F00509C0E /* OSGUIDrawUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGUIDrawUtils.h; sourceTree = "<group>"; };
-		C9E2FD880DEF2F8C001832D1 /* 35Graphics3DExtrudeD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 35Graphics3DExtrudeD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E2FD880DEF2F8C001832D1 /* 35Graphics3DExtrude */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 35Graphics3DExtrude; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E2FE590DEF3044001832D1 /* 35Graphics3DExtrude.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 35Graphics3DExtrude.cpp; path = ../../Tutorials/35Graphics3DExtrude.cpp; sourceTree = SOURCE_ROOT; };
-		C9E2FE7B0DEF3123001832D1 /* 36SpringLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 36SpringLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E2FE7B0DEF3123001832D1 /* 36SpringLayout */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 36SpringLayout; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E2FE800DEF31A2001832D1 /* 36SpringLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 36SpringLayout.cpp; path = ../../Tutorials/36SpringLayout.cpp; sourceTree = SOURCE_ROOT; };
-		C9E2FE9B0DEF32B1001832D1 /* 37InternalWindowD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 37InternalWindowD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E2FE9B0DEF32B1001832D1 /* 37InternalWindow */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 37InternalWindow; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E2FEA00DEF3328001832D1 /* 37InternalWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 37InternalWindow.cpp; path = ../../Tutorials/37InternalWindow.cpp; sourceTree = SOURCE_ROOT; };
-		C9E2FEBB0DEF33C2001832D1 /* 38DialogWindowD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 38DialogWindowD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E2FEBB0DEF33C2001832D1 /* 38DialogWindow */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 38DialogWindow; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E2FEC40DEF343A001832D1 /* 38DialogWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 38DialogWindow.cpp; path = ../../Tutorials/38DialogWindow.cpp; sourceTree = SOURCE_ROOT; };
-		C9E2FED90DEF34AF001832D1 /* 39ColorChooserD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 39ColorChooserD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E2FED90DEF34AF001832D1 /* 39ColorChooser */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 39ColorChooser; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E2FEE10DEF3524001832D1 /* 39ColorChooser.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 39ColorChooser.cpp; path = ../../Tutorials/39ColorChooser.cpp; sourceTree = SOURCE_ROOT; };
-		C9E2FEF90DEF35DB001832D1 /* 40UndoableCommandD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 40UndoableCommandD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E2FEF90DEF35DB001832D1 /* 40UndoableCommand */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 40UndoableCommand; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E2FF030DEF3657001832D1 /* 40UndoableCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 40UndoableCommand.cpp; path = ../../Tutorials/40UndoableCommand.cpp; sourceTree = SOURCE_ROOT; };
-		C9E2FF1F0DEF370B001832D1 /* 49LookAndFeelD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 49LookAndFeelD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E2FF1F0DEF370B001832D1 /* 49LookAndFeel */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 49LookAndFeel; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E2FF280DEF3783001832D1 /* 49LookAndFeel.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 49LookAndFeel.cpp; path = ../../Tutorials/49LookAndFeel.cpp; sourceTree = SOURCE_ROOT; };
-		C9E2FF4B0DEF384D001832D1 /* 50OpenSGTypesD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 50OpenSGTypesD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E2FF4B0DEF384D001832D1 /* 50OpenSGTypes */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 50OpenSGTypes; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E2FF540DEF38CB001832D1 /* 50OpenSGTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 50OpenSGTypes.cpp; path = ../../Tutorials/50OpenSGTypes.cpp; sourceTree = SOURCE_ROOT; };
 		D439025E0CF1E9680016D3D6 /* 17Label_Font.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 17Label_Font.cpp; path = ../../Tutorials/17Label_Font.cpp; sourceTree = SOURCE_ROOT; };
-		D43904640CF22B470016D3D6 /* 03BorderD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 03BorderD; sourceTree = BUILT_PRODUCTS_DIR; };
+		D43904640CF22B470016D3D6 /* 03Border */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 03Border; sourceTree = BUILT_PRODUCTS_DIR; };
 		D43904660CF22B880016D3D6 /* 03Border.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 03Border.cpp; path = ../../Tutorials/03Border.cpp; sourceTree = SOURCE_ROOT; };
 		D49D14850CF72E81003B2A13 /* 02AbsoluteLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 02AbsoluteLayout.cpp; path = ../../Tutorials/02AbsoluteLayout.cpp; sourceTree = SOURCE_ROOT; };
-		D49D14940CF72F86003B2A13 /* 02AbsoluteLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 02AbsoluteLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D14B30CF730C7003B2A13 /* 04BackgroundD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 04BackgroundD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D14C30CF730E7003B2A13 /* 05FlowLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 05FlowLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D14D30CF730EC003B2A13 /* 06BoxLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 06BoxLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D14E30CF730EF003B2A13 /* 07GridLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 07GridLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D14F30CF730F3003B2A13 /* 08OverlayLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 08OverlayLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15030CF730F6003B2A13 /* 09BorderLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 09BorderLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15130CF730F9003B2A13 /* 10ContainerD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 10ContainerD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15230CF730FF003B2A13 /* 11CardLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 11CardLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15330CF73103003B2A13 /* 12ComplexLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 12ComplexLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15430CF73107003B2A13 /* 13CheckboxButtonD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 13CheckboxButtonD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15530CF7316A003B2A13 /* 14RadioButtonD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 14RadioButtonD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15630CF7316D003B2A13 /* 15TabPanelD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 15TabPanelD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15730CF73171003B2A13 /* 16TextFieldD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 16TextFieldD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15830CF73174003B2A13 /* 18ListD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 18ListD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15930CF73178003B2A13 /* 19GridBagLayoutD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 19GridBagLayoutD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15A30CF7317C003B2A13 /* 20UIRectangleD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 20UIRectangleD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15B30CF73180003B2A13 /* 21ExampleInterfaceD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 21ExampleInterfaceD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15C30CF73188003B2A13 /* 22TextAreaD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 22TextAreaD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15D30CF7318C003B2A13 /* 23SplitPanelD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 23SplitPanelD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15E30CF7318F003B2A13 /* 24PasswordFieldD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 24PasswordFieldD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D15F30CF73193003B2A13 /* 25PopupMenuD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 25PopupMenuD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D16030CF73196003B2A13 /* 26MenuBarD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 26MenuBarD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D162F0CF732C9003B2A13 /* 27ScrollPanelD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 27ScrollPanelD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D163F0CF732CE003B2A13 /* 28TableD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 28TableD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D164F0CF732D2003B2A13 /* 29SpinnerD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 29SpinnerD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D165F0CF732D6003B2A13 /* 30RotatedComponentD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 30RotatedComponentD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49D166F0CF732DA003B2A13 /* 31ProgressBarD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 31ProgressBarD; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D14940CF72F86003B2A13 /* 02AbsoluteLayout */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = 02AbsoluteLayout; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D14B30CF730C7003B2A13 /* 04Background */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 04Background; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D14C30CF730E7003B2A13 /* 05FlowLayout */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 05FlowLayout; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D14D30CF730EC003B2A13 /* 06BoxLayout */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 06BoxLayout; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D14E30CF730EF003B2A13 /* 07GridLayout */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 07GridLayout; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D14F30CF730F3003B2A13 /* 08OverlayLayout */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 08OverlayLayout; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15030CF730F6003B2A13 /* 09BorderLayout */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 09BorderLayout; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15130CF730F9003B2A13 /* 10Container */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 10Container; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15230CF730FF003B2A13 /* 11CardLayout */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 11CardLayout; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15330CF73103003B2A13 /* 12ComplexLayout */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 12ComplexLayout; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15430CF73107003B2A13 /* 13CheckboxButton */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 13CheckboxButton; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15530CF7316A003B2A13 /* 14RadioButton */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 14RadioButton; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15630CF7316D003B2A13 /* 15TabPanel */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 15TabPanel; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15730CF73171003B2A13 /* 16TextField */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 16TextField; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15830CF73174003B2A13 /* 18List */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 18List; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15930CF73178003B2A13 /* 19GridBagLayout */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 19GridBagLayout; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15A30CF7317C003B2A13 /* 20UIRectangle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 20UIRectangle; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15B30CF73180003B2A13 /* 21ExampleInterface */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 21ExampleInterface; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15C30CF73188003B2A13 /* 22TextArea */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 22TextArea; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15D30CF7318C003B2A13 /* 23SplitPanel */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 23SplitPanel; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15E30CF7318F003B2A13 /* 24PasswordField */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 24PasswordField; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D15F30CF73193003B2A13 /* 25PopupMenu */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 25PopupMenu; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D16030CF73196003B2A13 /* 26MenuBar */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 26MenuBar; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D162F0CF732C9003B2A13 /* 27ScrollPanel */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 27ScrollPanel; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D163F0CF732CE003B2A13 /* 28Table */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 28Table; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D164F0CF732D2003B2A13 /* 29Spinner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 29Spinner; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D165F0CF732D6003B2A13 /* 30RotatedComponent */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 30RotatedComponent; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D166F0CF732DA003B2A13 /* 31ProgressBar */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 31ProgressBar; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49D16780CF73350003B2A13 /* 04Background.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 04Background.cpp; path = ../../Tutorials/04Background.cpp; sourceTree = SOURCE_ROOT; };
 		D49D167A0CF73362003B2A13 /* 05FlowLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 05FlowLayout.cpp; path = ../../Tutorials/05FlowLayout.cpp; sourceTree = SOURCE_ROOT; };
 		D49D167C0CF73376003B2A13 /* 06BoxLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 06BoxLayout.cpp; path = ../../Tutorials/06BoxLayout.cpp; sourceTree = SOURCE_ROOT; };
@@ -4269,12 +4269,12 @@
 		D49D16AA0CF73537003B2A13 /* 30RotatedComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 30RotatedComponent.cpp; path = ../../Tutorials/30RotatedComponent.cpp; sourceTree = SOURCE_ROOT; };
 		D4BE3F7A0CF0D0DE0046BAE7 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		D4BE3F830CF0D12B0046BAE7 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
-		D4BE40040CF0D5930046BAE7 /* libOSGUserInterfaceD.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGUserInterfaceD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4BE41080CF0D7A50046BAE7 /* 01ButtonD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 01ButtonD; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4BE40040CF0D5930046BAE7 /* libOSGUserInterface.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGUserInterface.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4BE41080CF0D7A50046BAE7 /* 01Button */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 01Button; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4D7C33C0CF0F8470032F1C6 /* 01Button.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 01Button.cpp; path = ../../Tutorials/01Button.cpp; sourceTree = SOURCE_ROOT; };
 		D4D7C3460CF0FC250032F1C6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
-		D4D7C3F20CF109680032F1C6 /* 17LabelFontD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 17LabelFontD; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4DD00950CF0CC3900F00431 /* libOSGUserInterfaceD.a */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGUserInterfaceD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4D7C3F20CF109680032F1C6 /* 17LabelFont */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 17LabelFont; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4DD00950CF0CC3900F00431 /* libOSGUserInterface.a */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGUserInterface.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4698,51 +4698,51 @@
 		034768DDFF38A45A11DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D4DD00950CF0CC3900F00431 /* libOSGUserInterfaceD.a */,
-				D4BE40040CF0D5930046BAE7 /* libOSGUserInterfaceD.dylib */,
-				D4BE41080CF0D7A50046BAE7 /* 01ButtonD */,
-				D4D7C3F20CF109680032F1C6 /* 17LabelFontD */,
-				D43904640CF22B470016D3D6 /* 03BorderD */,
-				D49D14940CF72F86003B2A13 /* 02AbsoluteLayoutD */,
-				D49D14B30CF730C7003B2A13 /* 04BackgroundD */,
-				D49D14C30CF730E7003B2A13 /* 05FlowLayoutD */,
-				D49D14D30CF730EC003B2A13 /* 06BoxLayoutD */,
-				D49D14E30CF730EF003B2A13 /* 07GridLayoutD */,
-				D49D14F30CF730F3003B2A13 /* 08OverlayLayoutD */,
-				D49D15030CF730F6003B2A13 /* 09BorderLayoutD */,
-				D49D15130CF730F9003B2A13 /* 10ContainerD */,
-				D49D15230CF730FF003B2A13 /* 11CardLayoutD */,
-				D49D15330CF73103003B2A13 /* 12ComplexLayoutD */,
-				D49D15430CF73107003B2A13 /* 13CheckboxButtonD */,
-				D49D15530CF7316A003B2A13 /* 14RadioButtonD */,
-				D49D15630CF7316D003B2A13 /* 15TabPanelD */,
-				D49D15730CF73171003B2A13 /* 16TextFieldD */,
-				D49D15830CF73174003B2A13 /* 18ListD */,
-				D49D15930CF73178003B2A13 /* 19GridBagLayoutD */,
-				D49D15A30CF7317C003B2A13 /* 20UIRectangleD */,
-				D49D15B30CF73180003B2A13 /* 21ExampleInterfaceD */,
-				D49D15C30CF73188003B2A13 /* 22TextAreaD */,
-				D49D15D30CF7318C003B2A13 /* 23SplitPanelD */,
-				D49D15E30CF7318F003B2A13 /* 24PasswordFieldD */,
-				D49D15F30CF73193003B2A13 /* 25PopupMenuD */,
-				D49D16030CF73196003B2A13 /* 26MenuBarD */,
-				D49D162F0CF732C9003B2A13 /* 27ScrollPanelD */,
-				D49D163F0CF732CE003B2A13 /* 28TableD */,
-				D49D164F0CF732D2003B2A13 /* 29SpinnerD */,
-				D49D165F0CF732D6003B2A13 /* 30RotatedComponentD */,
-				D49D166F0CF732DA003B2A13 /* 31ProgressBarD */,
-				C95EDEBD0DEDE40F00A6784B /* 41GLViewportComponentD */,
-				C95EDF1B0DEDEA9900A6784B /* 32SliderD */,
-				C95EE08B0DEDF59D00A6784B /* 33ComboBoxD */,
-				C9803B760DEF28D600DE5B1D /* 34TreeD */,
-				C9E2FD880DEF2F8C001832D1 /* 35Graphics3DExtrudeD */,
-				C9E2FE7B0DEF3123001832D1 /* 36SpringLayoutD */,
-				C9E2FE9B0DEF32B1001832D1 /* 37InternalWindowD */,
-				C9E2FEBB0DEF33C2001832D1 /* 38DialogWindowD */,
-				C9E2FED90DEF34AF001832D1 /* 39ColorChooserD */,
-				C9E2FEF90DEF35DB001832D1 /* 40UndoableCommandD */,
-				C9E2FF1F0DEF370B001832D1 /* 49LookAndFeelD */,
-				C9E2FF4B0DEF384D001832D1 /* 50OpenSGTypesD */,
+				D4DD00950CF0CC3900F00431 /* libOSGUserInterface.a */,
+				D4BE40040CF0D5930046BAE7 /* libOSGUserInterface.dylib */,
+				D4BE41080CF0D7A50046BAE7 /* 01Button */,
+				D4D7C3F20CF109680032F1C6 /* 17LabelFont */,
+				D43904640CF22B470016D3D6 /* 03Border */,
+				D49D14940CF72F86003B2A13 /* 02AbsoluteLayout */,
+				D49D14B30CF730C7003B2A13 /* 04Background */,
+				D49D14C30CF730E7003B2A13 /* 05FlowLayout */,
+				D49D14D30CF730EC003B2A13 /* 06BoxLayout */,
+				D49D14E30CF730EF003B2A13 /* 07GridLayout */,
+				D49D14F30CF730F3003B2A13 /* 08OverlayLayout */,
+				D49D15030CF730F6003B2A13 /* 09BorderLayout */,
+				D49D15130CF730F9003B2A13 /* 10Container */,
+				D49D15230CF730FF003B2A13 /* 11CardLayout */,
+				D49D15330CF73103003B2A13 /* 12ComplexLayout */,
+				D49D15430CF73107003B2A13 /* 13CheckboxButton */,
+				D49D15530CF7316A003B2A13 /* 14RadioButton */,
+				D49D15630CF7316D003B2A13 /* 15TabPanel */,
+				D49D15730CF73171003B2A13 /* 16TextField */,
+				D49D15830CF73174003B2A13 /* 18List */,
+				D49D15930CF73178003B2A13 /* 19GridBagLayout */,
+				D49D15A30CF7317C003B2A13 /* 20UIRectangle */,
+				D49D15B30CF73180003B2A13 /* 21ExampleInterface */,
+				D49D15C30CF73188003B2A13 /* 22TextArea */,
+				D49D15D30CF7318C003B2A13 /* 23SplitPanel */,
+				D49D15E30CF7318F003B2A13 /* 24PasswordField */,
+				D49D15F30CF73193003B2A13 /* 25PopupMenu */,
+				D49D16030CF73196003B2A13 /* 26MenuBar */,
+				D49D162F0CF732C9003B2A13 /* 27ScrollPanel */,
+				D49D163F0CF732CE003B2A13 /* 28Table */,
+				D49D164F0CF732D2003B2A13 /* 29Spinner */,
+				D49D165F0CF732D6003B2A13 /* 30RotatedComponent */,
+				D49D166F0CF732DA003B2A13 /* 31ProgressBar */,
+				C95EDEBD0DEDE40F00A6784B /* 41GLViewportComponent */,
+				C95EDF1B0DEDEA9900A6784B /* 32Slider */,
+				C95EE08B0DEDF59D00A6784B /* 33ComboBox */,
+				C9803B760DEF28D600DE5B1D /* 34Tree */,
+				C9E2FD880DEF2F8C001832D1 /* 35Graphics3DExtrude */,
+				C9E2FE7B0DEF3123001832D1 /* 36SpringLayout */,
+				C9E2FE9B0DEF32B1001832D1 /* 37InternalWindow */,
+				C9E2FEBB0DEF33C2001832D1 /* 38DialogWindow */,
+				C9E2FED90DEF34AF001832D1 /* 39ColorChooser */,
+				C9E2FEF90DEF35DB001832D1 /* 40UndoableCommand */,
+				C9E2FF1F0DEF370B001832D1 /* 49LookAndFeel */,
+				C9E2FF4B0DEF384D001832D1 /* 50OpenSGTypes */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -8294,7 +8294,7 @@
 			);
 			name = 41GLViewportComponent;
 			productName = 41GLViewportComponent;
-			productReference = C95EDEBD0DEDE40F00A6784B /* 41GLViewportComponentD */;
+			productReference = C95EDEBD0DEDE40F00A6784B /* 41GLViewportComponent */;
 			productType = "com.apple.product-type.tool";
 		};
 		C95EDF0C0DEDEA9900A6784B /* 32Slider */ = {
@@ -8312,7 +8312,7 @@
 			);
 			name = 32Slider;
 			productName = 03DefaultWindow2;
-			productReference = C95EDF1B0DEDEA9900A6784B /* 32SliderD */;
+			productReference = C95EDF1B0DEDEA9900A6784B /* 32Slider */;
 			productType = "com.apple.product-type.tool";
 		};
 		C95EE07C0DEDF59D00A6784B /* 33ComboBox */ = {
@@ -8330,7 +8330,7 @@
 			);
 			name = 33ComboBox;
 			productName = 03DefaultWindow2;
-			productReference = C95EE08B0DEDF59D00A6784B /* 33ComboBoxD */;
+			productReference = C95EE08B0DEDF59D00A6784B /* 33ComboBox */;
 			productType = "com.apple.product-type.tool";
 		};
 		C9803B670DEF28D600DE5B1D /* 34Tree */ = {
@@ -8348,7 +8348,7 @@
 			);
 			name = 34Tree;
 			productName = 03DefaultWindow2;
-			productReference = C9803B760DEF28D600DE5B1D /* 34TreeD */;
+			productReference = C9803B760DEF28D600DE5B1D /* 34Tree */;
 			productType = "com.apple.product-type.tool";
 		};
 		C9E2FD790DEF2F8C001832D1 /* 35Graphics3DExtrude */ = {
@@ -8366,7 +8366,7 @@
 			);
 			name = 35Graphics3DExtrude;
 			productName = 03DefaultWindow2;
-			productReference = C9E2FD880DEF2F8C001832D1 /* 35Graphics3DExtrudeD */;
+			productReference = C9E2FD880DEF2F8C001832D1 /* 35Graphics3DExtrude */;
 			productType = "com.apple.product-type.tool";
 		};
 		C9E2FE6C0DEF3123001832D1 /* 36SpringLayout */ = {
@@ -8384,7 +8384,7 @@
 			);
 			name = 36SpringLayout;
 			productName = 03DefaultWindow2;
-			productReference = C9E2FE7B0DEF3123001832D1 /* 36SpringLayoutD */;
+			productReference = C9E2FE7B0DEF3123001832D1 /* 36SpringLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		C9E2FE8C0DEF32B1001832D1 /* 37InternalWindow */ = {
@@ -8402,7 +8402,7 @@
 			);
 			name = 37InternalWindow;
 			productName = 03DefaultWindow2;
-			productReference = C9E2FE9B0DEF32B1001832D1 /* 37InternalWindowD */;
+			productReference = C9E2FE9B0DEF32B1001832D1 /* 37InternalWindow */;
 			productType = "com.apple.product-type.tool";
 		};
 		C9E2FEAC0DEF33C2001832D1 /* 38DialogWindow */ = {
@@ -8420,7 +8420,7 @@
 			);
 			name = 38DialogWindow;
 			productName = 03DefaultWindow2;
-			productReference = C9E2FEBB0DEF33C2001832D1 /* 38DialogWindowD */;
+			productReference = C9E2FEBB0DEF33C2001832D1 /* 38DialogWindow */;
 			productType = "com.apple.product-type.tool";
 		};
 		C9E2FECA0DEF34AF001832D1 /* 39ColorChooser */ = {
@@ -8438,7 +8438,7 @@
 			);
 			name = 39ColorChooser;
 			productName = 03DefaultWindow2;
-			productReference = C9E2FED90DEF34AF001832D1 /* 39ColorChooserD */;
+			productReference = C9E2FED90DEF34AF001832D1 /* 39ColorChooser */;
 			productType = "com.apple.product-type.tool";
 		};
 		C9E2FEEA0DEF35DB001832D1 /* 40UndoableCommand */ = {
@@ -8456,7 +8456,7 @@
 			);
 			name = 40UndoableCommand;
 			productName = 03DefaultWindow2;
-			productReference = C9E2FEF90DEF35DB001832D1 /* 40UndoableCommandD */;
+			productReference = C9E2FEF90DEF35DB001832D1 /* 40UndoableCommand */;
 			productType = "com.apple.product-type.tool";
 		};
 		C9E2FF100DEF370B001832D1 /* 49LookAndFeel */ = {
@@ -8474,7 +8474,7 @@
 			);
 			name = 49LookAndFeel;
 			productName = 03DefaultWindow2;
-			productReference = C9E2FF1F0DEF370B001832D1 /* 49LookAndFeelD */;
+			productReference = C9E2FF1F0DEF370B001832D1 /* 49LookAndFeel */;
 			productType = "com.apple.product-type.tool";
 		};
 		C9E2FF3C0DEF384D001832D1 /* 50OpenSGTypes */ = {
@@ -8492,7 +8492,7 @@
 			);
 			name = 50OpenSGTypes;
 			productName = 03DefaultWindow2;
-			productReference = C9E2FF4B0DEF384D001832D1 /* 50OpenSGTypesD */;
+			productReference = C9E2FF4B0DEF384D001832D1 /* 50OpenSGTypes */;
 			productType = "com.apple.product-type.tool";
 		};
 		D2AAC09C05546B4700DB518D /* OSGUserInterface Dynamic Library */ = {
@@ -8509,7 +8509,7 @@
 			);
 			name = "OSGUserInterface Dynamic Library";
 			productName = libOSGToolbox;
-			productReference = D4BE40040CF0D5930046BAE7 /* libOSGUserInterfaceD.dylib */;
+			productReference = D4BE40040CF0D5930046BAE7 /* libOSGUserInterface.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		D437835E0CF0BED30062E3A4 /* OSGUserInterface Static Library */ = {
@@ -8526,7 +8526,7 @@
 			);
 			name = "OSGUserInterface Static Library";
 			productName = libOSGToolbox;
-			productReference = D4DD00950CF0CC3900F00431 /* libOSGUserInterfaceD.a */;
+			productReference = D4DD00950CF0CC3900F00431 /* libOSGUserInterface.a */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		D43904550CF22B470016D3D6 /* 03Border */ = {
@@ -8544,7 +8544,7 @@
 			);
 			name = 03Border;
 			productName = 03DefaultWindow2;
-			productReference = D43904640CF22B470016D3D6 /* 03BorderD */;
+			productReference = D43904640CF22B470016D3D6 /* 03Border */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D14730CF72DEE003B2A13 /* 02AbsoluteLayout */ = {
@@ -8562,7 +8562,7 @@
 			);
 			name = 02AbsoluteLayout;
 			productName = 03DefaultWindow2;
-			productReference = D49D14940CF72F86003B2A13 /* 02AbsoluteLayoutD */;
+			productReference = D49D14940CF72F86003B2A13 /* 02AbsoluteLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D14A40CF730C7003B2A13 /* 04Background */ = {
@@ -8580,7 +8580,7 @@
 			);
 			name = 04Background;
 			productName = 03DefaultWindow2;
-			productReference = D49D14B30CF730C7003B2A13 /* 04BackgroundD */;
+			productReference = D49D14B30CF730C7003B2A13 /* 04Background */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D14B50CF730E7003B2A13 /* 05FlowLayout */ = {
@@ -8598,7 +8598,7 @@
 			);
 			name = 05FlowLayout;
 			productName = 03DefaultWindow2;
-			productReference = D49D14C30CF730E7003B2A13 /* 05FlowLayoutD */;
+			productReference = D49D14C30CF730E7003B2A13 /* 05FlowLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D14C50CF730EC003B2A13 /* 06BoxLayout */ = {
@@ -8616,7 +8616,7 @@
 			);
 			name = 06BoxLayout;
 			productName = 03DefaultWindow2;
-			productReference = D49D14D30CF730EC003B2A13 /* 06BoxLayoutD */;
+			productReference = D49D14D30CF730EC003B2A13 /* 06BoxLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D14D50CF730EF003B2A13 /* 07GridLayout */ = {
@@ -8634,7 +8634,7 @@
 			);
 			name = 07GridLayout;
 			productName = 03DefaultWindow2;
-			productReference = D49D14E30CF730EF003B2A13 /* 07GridLayoutD */;
+			productReference = D49D14E30CF730EF003B2A13 /* 07GridLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D14E50CF730F3003B2A13 /* 08OverlayLayout */ = {
@@ -8652,7 +8652,7 @@
 			);
 			name = 08OverlayLayout;
 			productName = 03DefaultWindow2;
-			productReference = D49D14F30CF730F3003B2A13 /* 08OverlayLayoutD */;
+			productReference = D49D14F30CF730F3003B2A13 /* 08OverlayLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D14F50CF730F6003B2A13 /* 09BorderLayout */ = {
@@ -8670,7 +8670,7 @@
 			);
 			name = 09BorderLayout;
 			productName = 03DefaultWindow2;
-			productReference = D49D15030CF730F6003B2A13 /* 09BorderLayoutD */;
+			productReference = D49D15030CF730F6003B2A13 /* 09BorderLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15050CF730F9003B2A13 /* 10Container */ = {
@@ -8688,7 +8688,7 @@
 			);
 			name = 10Container;
 			productName = 03DefaultWindow2;
-			productReference = D49D15130CF730F9003B2A13 /* 10ContainerD */;
+			productReference = D49D15130CF730F9003B2A13 /* 10Container */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15150CF730FF003B2A13 /* 11CardLayout */ = {
@@ -8706,7 +8706,7 @@
 			);
 			name = 11CardLayout;
 			productName = 03DefaultWindow2;
-			productReference = D49D15230CF730FF003B2A13 /* 11CardLayoutD */;
+			productReference = D49D15230CF730FF003B2A13 /* 11CardLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15250CF73103003B2A13 /* 12ComplexLayout */ = {
@@ -8724,7 +8724,7 @@
 			);
 			name = 12ComplexLayout;
 			productName = 03DefaultWindow2;
-			productReference = D49D15330CF73103003B2A13 /* 12ComplexLayoutD */;
+			productReference = D49D15330CF73103003B2A13 /* 12ComplexLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15350CF73107003B2A13 /* 13CheckboxButton */ = {
@@ -8742,7 +8742,7 @@
 			);
 			name = 13CheckboxButton;
 			productName = 03DefaultWindow2;
-			productReference = D49D15430CF73107003B2A13 /* 13CheckboxButtonD */;
+			productReference = D49D15430CF73107003B2A13 /* 13CheckboxButton */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15450CF7316A003B2A13 /* 14RadioButton */ = {
@@ -8760,7 +8760,7 @@
 			);
 			name = 14RadioButton;
 			productName = 03DefaultWindow2;
-			productReference = D49D15530CF7316A003B2A13 /* 14RadioButtonD */;
+			productReference = D49D15530CF7316A003B2A13 /* 14RadioButton */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15550CF7316D003B2A13 /* 15TabPanel */ = {
@@ -8778,7 +8778,7 @@
 			);
 			name = 15TabPanel;
 			productName = 03DefaultWindow2;
-			productReference = D49D15630CF7316D003B2A13 /* 15TabPanelD */;
+			productReference = D49D15630CF7316D003B2A13 /* 15TabPanel */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15650CF73171003B2A13 /* 16TextField */ = {
@@ -8796,7 +8796,7 @@
 			);
 			name = 16TextField;
 			productName = 03DefaultWindow2;
-			productReference = D49D15730CF73171003B2A13 /* 16TextFieldD */;
+			productReference = D49D15730CF73171003B2A13 /* 16TextField */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15750CF73174003B2A13 /* 18List */ = {
@@ -8814,7 +8814,7 @@
 			);
 			name = 18List;
 			productName = 03DefaultWindow2;
-			productReference = D49D15830CF73174003B2A13 /* 18ListD */;
+			productReference = D49D15830CF73174003B2A13 /* 18List */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15850CF73178003B2A13 /* 19GridBagLayout */ = {
@@ -8832,7 +8832,7 @@
 			);
 			name = 19GridBagLayout;
 			productName = 03DefaultWindow2;
-			productReference = D49D15930CF73178003B2A13 /* 19GridBagLayoutD */;
+			productReference = D49D15930CF73178003B2A13 /* 19GridBagLayout */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15950CF7317C003B2A13 /* 20UIRectangle */ = {
@@ -8850,7 +8850,7 @@
 			);
 			name = 20UIRectangle;
 			productName = 03DefaultWindow2;
-			productReference = D49D15A30CF7317C003B2A13 /* 20UIRectangleD */;
+			productReference = D49D15A30CF7317C003B2A13 /* 20UIRectangle */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15A50CF73180003B2A13 /* 21ExampleInterface */ = {
@@ -8868,7 +8868,7 @@
 			);
 			name = 21ExampleInterface;
 			productName = 03DefaultWindow2;
-			productReference = D49D15B30CF73180003B2A13 /* 21ExampleInterfaceD */;
+			productReference = D49D15B30CF73180003B2A13 /* 21ExampleInterface */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15B50CF73188003B2A13 /* 22TextArea */ = {
@@ -8886,7 +8886,7 @@
 			);
 			name = 22TextArea;
 			productName = 03DefaultWindow2;
-			productReference = D49D15C30CF73188003B2A13 /* 22TextAreaD */;
+			productReference = D49D15C30CF73188003B2A13 /* 22TextArea */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15C50CF7318C003B2A13 /* 23SplitPanel */ = {
@@ -8904,7 +8904,7 @@
 			);
 			name = 23SplitPanel;
 			productName = 03DefaultWindow2;
-			productReference = D49D15D30CF7318C003B2A13 /* 23SplitPanelD */;
+			productReference = D49D15D30CF7318C003B2A13 /* 23SplitPanel */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15D50CF7318F003B2A13 /* 24PasswordField */ = {
@@ -8922,7 +8922,7 @@
 			);
 			name = 24PasswordField;
 			productName = 03DefaultWindow2;
-			productReference = D49D15E30CF7318F003B2A13 /* 24PasswordFieldD */;
+			productReference = D49D15E30CF7318F003B2A13 /* 24PasswordField */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15E50CF73193003B2A13 /* 25PopupMenu */ = {
@@ -8940,7 +8940,7 @@
 			);
 			name = 25PopupMenu;
 			productName = 03DefaultWindow2;
-			productReference = D49D15F30CF73193003B2A13 /* 25PopupMenuD */;
+			productReference = D49D15F30CF73193003B2A13 /* 25PopupMenu */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D15F50CF73196003B2A13 /* 26MenuBar */ = {
@@ -8958,7 +8958,7 @@
 			);
 			name = 26MenuBar;
 			productName = 03DefaultWindow2;
-			productReference = D49D16030CF73196003B2A13 /* 26MenuBarD */;
+			productReference = D49D16030CF73196003B2A13 /* 26MenuBar */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D16210CF732C9003B2A13 /* 27ScrollPanel */ = {
@@ -8976,7 +8976,7 @@
 			);
 			name = 27ScrollPanel;
 			productName = 03DefaultWindow2;
-			productReference = D49D162F0CF732C9003B2A13 /* 27ScrollPanelD */;
+			productReference = D49D162F0CF732C9003B2A13 /* 27ScrollPanel */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D16310CF732CE003B2A13 /* 28Table */ = {
@@ -8994,7 +8994,7 @@
 			);
 			name = 28Table;
 			productName = 03DefaultWindow2;
-			productReference = D49D163F0CF732CE003B2A13 /* 28TableD */;
+			productReference = D49D163F0CF732CE003B2A13 /* 28Table */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D16410CF732D2003B2A13 /* 29Spinner */ = {
@@ -9012,7 +9012,7 @@
 			);
 			name = 29Spinner;
 			productName = 03DefaultWindow2;
-			productReference = D49D164F0CF732D2003B2A13 /* 29SpinnerD */;
+			productReference = D49D164F0CF732D2003B2A13 /* 29Spinner */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D16510CF732D6003B2A13 /* 30RotatedComponent */ = {
@@ -9030,7 +9030,7 @@
 			);
 			name = 30RotatedComponent;
 			productName = 03DefaultWindow2;
-			productReference = D49D165F0CF732D6003B2A13 /* 30RotatedComponentD */;
+			productReference = D49D165F0CF732D6003B2A13 /* 30RotatedComponent */;
 			productType = "com.apple.product-type.tool";
 		};
 		D49D16610CF732DA003B2A13 /* 31ProgressBar */ = {
@@ -9048,7 +9048,7 @@
 			);
 			name = 31ProgressBar;
 			productName = 03DefaultWindow2;
-			productReference = D49D166F0CF732DA003B2A13 /* 31ProgressBarD */;
+			productReference = D49D166F0CF732DA003B2A13 /* 31ProgressBar */;
 			productType = "com.apple.product-type.tool";
 		};
 		D4BE41070CF0D7A50046BAE7 /* 01Button */ = {
@@ -9066,7 +9066,7 @@
 			);
 			name = 01Button;
 			productName = 03DefaultWindow2;
-			productReference = D4BE41080CF0D7A50046BAE7 /* 01ButtonD */;
+			productReference = D4BE41080CF0D7A50046BAE7 /* 01Button */;
 			productType = "com.apple.product-type.tool";
 		};
 		D4D7C3E30CF109680032F1C6 /* 17LabelFont */ = {
@@ -9084,7 +9084,7 @@
 			);
 			name = 17LabelFont;
 			productName = 03DefaultWindow2;
-			productReference = D4D7C3F20CF109680032F1C6 /* 17LabelFontD */;
+			productReference = D4D7C3F20CF109680032F1C6 /* 17LabelFont */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -10749,6 +10749,7 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(OSGROOT)/include",
 					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
@@ -10794,13 +10795,17 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(OSGROOT)/include",
 					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
 					"$(BOOST_BASE_DIR)/include",
 					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
 				);
-				LIBRARY_SEARCH_PATHS = "$(OSGROOT)/lib/opt";
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(BOOST_BASE_DIR)/lib",
+				);
 				OBJROOT = ..;
 				OTHER_LDFLAGS = (
 					"-lOSGBase",
@@ -10808,6 +10813,8 @@
 					"-lOSGWindowCarbon",
 					"-lOSGToolbox",
 					"-lOSGInput",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
 				);
 				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -10839,10 +10846,7 @@
 		1DEB916608733D950010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = ppc;
 				BOOST_BASE_DIR = "/Users/dtnaylor/Work/boost_1_35_0/Boost-1_35_0-InstallOSX";
 				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/opt";
