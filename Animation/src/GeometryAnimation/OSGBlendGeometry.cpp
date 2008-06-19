@@ -73,31 +73,17 @@ OSG_USING_NAMESPACE
 
 void BlendGeometry::initMethod (void)
 {
-   DrawAction::registerEnterDefault(getClassType(),
-      osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
-            CNodePtr, Action *>(&MaterialDrawable::drawActionEnterHandler));
-   DrawAction::registerLeaveDefault(getClassType(),
-      osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
-            CNodePtr, Action *>(&MaterialDrawable::drawActionLeaveHandler));
+    DrawAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
+              CNodePtr, Action *>(&BlendGeometry::drawActionHandler));
 
-   IntersectAction::registerEnterDefault(getClassType(),
-      osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, GeometryPtr,
-            CNodePtr, Action *>(&Geometry::intersect));
+    IntersectAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
+              CNodePtr, Action *>(&BlendGeometry::intersect));
 
-   IntersectActor::regClassEnter(
-      osgTypedMethodFunctor2BaseCPtr<
-            NewActionTypes::ResultE,
-            GeometryPtr,
-            NodeCorePtr,
-            ActorBase::FunctorArgumentType &>(&Geometry::intersectActor),
-      getClassType());
-
-   RenderAction::registerEnterDefault(getClassType(),
-      osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
-            CNodePtr, Action *>(&MaterialDrawable::renderActionEnterHandler));
-   RenderAction::registerLeaveDefault(getClassType(),
-      osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
-            CNodePtr, Action *>(&MaterialDrawable::renderActionLeaveHandler));
+    RenderAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
+              CNodePtr, Action *>(&BlendGeometry::renderActionHandler));
 }
 
 BlendGeometryPtr BlendGeometry::create (const GeometryPtr Geo)

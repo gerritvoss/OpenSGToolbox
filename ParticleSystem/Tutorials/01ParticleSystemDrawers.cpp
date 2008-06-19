@@ -184,7 +184,7 @@ int main(int argc, char **argv)
 			Vec3f(1.0,1.0,1.0), 
 			i, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
-			Vec3f(0.0f,0.0f,0.0f)
+			Vec3f(0.0f,1.0f,0.0f)
 			,0);
 	}
 
