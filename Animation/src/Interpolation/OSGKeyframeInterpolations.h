@@ -11,7 +11,7 @@
 #include <OpenSG/OSGMFBaseTypes.h>
 #include <OpenSG/OSGMFMathTypes.h>
 
-#include "OSGInterpolations.h"
+#include <OpenSG/Toolbox/OSGInterpolations.h>
 
 OSG_BEGIN_NAMESPACE
 

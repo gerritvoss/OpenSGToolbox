@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,37 +36,32 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMEANIMATOR_H_
-#define _OSGKEYFRAMEANIMATOR_H_
+#ifndef _OSGSKELETON_H_
+#define _OSGSKELETON_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include <map>
-
 #include <OpenSG/OSGConfig.h>
 #include "OSGAnimationDef.h"
 
-#include "OSGKeyframeAnimatorBase.h"
-#include <OpenSG/Toolbox/OSGInterpolations.h>
-#include "KeyframeSequence/OSGKeyframeSequence.h"
+#include "OSGSkeletonBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief KeyframeAnimator class. See \ref 
-           PageSystemKeyframeAnimator for a description.
+/*! \brief Skeleton class. See \ref 
+           PageAnimationSkeleton for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
+class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
 {
   private:
 
-    typedef KeyframeAnimatorBase Inherited;
+    typedef SkeletonBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-  
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -83,61 +78,47 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
-    bool animate(const osg::InterpolationType& InterpType,
-                 const osg::ValueReplacementPolicy& ReplacementPolicy,
-                 const osg::UInt32& Cycling,
-                 const osg::Real32& Time,
-                 const osg::Real32& PrevTime,
-                 osg::Field& Result);
-    
-    virtual UInt32 numCyclesCompleted(const Real32& Time) const;
-    
-    virtual Real32 getLength(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in KeyframeAnimatorBase.
+    // Variables should all be in SkeletonBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    KeyframeAnimator(void);
-    KeyframeAnimator(const KeyframeAnimator &source);
+    Skeleton(void);
+    Skeleton(const Skeleton &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~KeyframeAnimator(void); 
+    virtual ~Skeleton(void); 
 
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
-    
-    
-    
   private:
 
     friend class FieldContainer;
-    friend class KeyframeAnimatorBase;
+    friend class SkeletonBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const KeyframeAnimator &source);
+    void operator =(const Skeleton &source);
 };
 
-typedef KeyframeAnimator *KeyframeAnimatorP;
+typedef Skeleton *SkeletonP;
 
 OSG_END_NAMESPACE
 
-#include "OSGKeyframeAnimatorBase.inl"
-#include "OSGKeyframeAnimator.inl"
+#include "OSGSkeletonBase.inl"
+#include "OSGSkeleton.inl"
 
-#define OSGKEYFRAMEANIMATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGSKELETON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGKEYFRAMEANIMATOR_H_ */
+#endif /* _OSGSKELETON_H_ */

@@ -1,6 +1,6 @@
 #include "OSGGeometryInterpolations.h"
 
-#include "OSGInterpolations.h"
+#include <OpenSG/Toolbox/OSGInterpolations.h>
 #include "OSGInterpolationFactory.h"
 #include "OSGKeyframeInterpolations.h"
 #include "OSGMFieldInterpolations.h"

@@ -46,7 +46,7 @@
 #include <OpenSG/OSGMFSysTypes.h>
 #include <OpenSG/OSGGeoPositionsFields.h> // BaseValues type
 
-#include "Interpolation/OSGInterpolations.h"
+#include <OpenSG/Toolbox/OSGInterpolations.h>
 #include "KeyframeSequence/OSGKeyframeSequence.h"
 
 #include <map>

@@ -240,6 +240,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Util\OSGInterpolations.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.cpp"
 					>
 				</File>

@@ -18,6 +18,7 @@ A User Interface Component that represents a function.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="NullFC"
 		header="Function/OSGFunctionFields.h"
 	>
 	</Field>
@@ -28,6 +29,7 @@ A User Interface Component that represents a function.
 		visibility="external"
 		header="OpenSG/UserInterface/OSGUIFont.h"
 		access="public"
+		defaultValue="NullFC"
 	>
 	</Field>
 	<Field
@@ -36,6 +38,7 @@ A User Interface Component that represents a function.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f,1.0f"
 	>
 	</Field>
 	<Field
@@ -44,6 +47,7 @@ A User Interface Component that represents a function.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f,1.0f"
 	>
 	</Field>
 	<Field
@@ -52,6 +56,7 @@ A User Interface Component that represents a function.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f,1.0f"
 	>
 	</Field>
 	<Field
@@ -60,6 +65,7 @@ A User Interface Component that represents a function.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f,1.0f"
 	>
 	</Field>
 </FieldContainer>

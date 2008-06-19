@@ -13,7 +13,7 @@
 >
 	<Field
 		name="Rotation"
-		type="Quaternionf"
+		type="Quaternion"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -36,20 +36,20 @@
 	>
 	</Field>
 	<Field
-		name="Children"
+		name="InternalChildren"
 		type="BonePtr"
 		cardinality="multi"
 		visibility="external"
-		access="public"
+		access="protected"
 		header="SkeletalAnimation/OSGBoneFields.h"
 	>
 	</Field>
 	<Field
-		name="Parent"
+		name="InternalParent"
 		type="BonePtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 		header="SkeletalAnimation/OSGBoneFields.h"
 	>
 	</Field>

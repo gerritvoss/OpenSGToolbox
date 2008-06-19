@@ -1027,10 +1027,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Interpolation\OSGInterpolations.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Interpolation\OSGKeyframeInterpolations.cpp"
 					>
 				</File>
@@ -1520,6 +1516,94 @@
 				</File>
 				<File
 					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSetFields.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="SkeletalAnimation"
+				>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGBone.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGBone.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGBone.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGBoneBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGBoneBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGBoneBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGBoneFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeleton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeleton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeleton.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonDrawable.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonDrawable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonDrawable.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonDrawableBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonDrawableBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonDrawableBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonDrawableFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonFields.h"
 					>
 				</File>
 			</Filter>

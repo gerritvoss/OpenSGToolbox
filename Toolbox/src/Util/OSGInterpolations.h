@@ -1,7 +1,7 @@
 #ifndef _OPENSG_INTERPOLATIONS_H_
 #define _OPENSG_INTERPOLATIONS_H_
 
-#include "OSGAnimationDef.h"
+#include "OSGToolboxDef.h"
 
 #include <vector>
 
@@ -11,9 +11,9 @@
 #include <OpenSG/OSGColor.h>
 #include <OpenSG/OSGQuaternion.h>
 
-#include <OpenSG/Toolbox/OSGQuatOperations.h>
-#include <OpenSG/Toolbox/OSGColorOperations.h>
-#include <OpenSG/Toolbox/OSGPntOperations.h>
+#include "OSGQuatOperations.h"
+#include "OSGColorOperations.h"
+#include "OSGPntOperations.h"
 
 OSG_BEGIN_NAMESPACE
 

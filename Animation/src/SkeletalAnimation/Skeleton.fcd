@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="SkeletonDrawable"
-	parent="MaterialDrawable"
+	name="Skeleton"
+	parent="AttachmentContainer"
 	library="Animation"
 	pointerfieldtypes="both"
 	structure="concreate"
@@ -12,12 +12,12 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="Skeleton"
-		type="SkeletonPtr"
-		cardinality="single"
+		name="RootBones"
+		type="BonePtr"
+		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="SkeletalAnimation/OSGSkeletonFields.h"
+		header="SkeletalAnimation/OSGBoneFields.h"
 	>
 	</Field>
 </FieldContainer>
