@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMultiParticleSystemEffector.h"
+#include "OSGMultiParticleSystemAffector.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::MultiParticleSystemEffector
+/*! \class osg::MultiParticleSystemAffector
 
 */
 
@@ -67,7 +67,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MultiParticleSystemEffector::initMethod (void)
+void MultiParticleSystemAffector::initMethod (void)
 {
 }
 
@@ -82,31 +82,31 @@ void MultiParticleSystemEffector::initMethod (void)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-MultiParticleSystemEffector::MultiParticleSystemEffector(void) :
+MultiParticleSystemAffector::MultiParticleSystemAffector(void) :
     Inherited()
 {
 }
 
-MultiParticleSystemEffector::MultiParticleSystemEffector(const MultiParticleSystemEffector &source) :
+MultiParticleSystemAffector::MultiParticleSystemAffector(const MultiParticleSystemAffector &source) :
     Inherited(source)
 {
 }
 
-MultiParticleSystemEffector::~MultiParticleSystemEffector(void)
+MultiParticleSystemAffector::~MultiParticleSystemAffector(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void MultiParticleSystemEffector::changed(BitVector whichField, UInt32 origin)
+void MultiParticleSystemAffector::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void MultiParticleSystemEffector::dump(      UInt32    , 
+void MultiParticleSystemAffector::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump MultiParticleSystemEffector NI" << std::endl;
+    SLOG << "Dump MultiParticleSystemAffector NI" << std::endl;
 }
 
 
@@ -124,10 +124,10 @@ void MultiParticleSystemEffector::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMULTIPARTICLESYSTEMEFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMULTIPARTICLESYSTEMEFFECTORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGMULTIPARTICLESYSTEMAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGMULTIPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGMULTIPARTICLESYSTEMEFFECTORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGMULTIPARTICLESYSTEMAFFECTORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

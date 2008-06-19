@@ -965,9 +965,9 @@ void ParticleSystem::update(const Time& elps)
 
 	//Generate Particles with Generators
 
-	//Effect Particles with Effectors
+	//Affect Particles with Affectors
 
-	//Effect Particle Systems
+	//Affect Particle Systems
 
     //Loop through all of the particles
     bool VolumeChanged(false);

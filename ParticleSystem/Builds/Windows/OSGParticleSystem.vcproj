@@ -495,98 +495,98 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="ParticleEffectors"
+					Name="ParticleAffectors"
 					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffector.cpp"
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffector.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffector.h"
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffector.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffector.inl"
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffector.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorBase.cpp"
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffectorBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorBase.h"
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffectorBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorBase.inl"
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffectorBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleEffectors\OSGParticleEffectorFields.h"
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffectorFields.h"
 						>
 					</File>
 				</Filter>
 				<Filter
-					Name="ParticleSystemEffectors"
+					Name="ParticleSystemAffectors"
 					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffector.cpp"
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGParticleSystemAffector.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffector.h"
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGParticleSystemAffector.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffector.inl"
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGParticleSystemAffector.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorBase.cpp"
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGParticleSystemAffectorBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorBase.h"
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGParticleSystemAffectorBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorBase.inl"
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGParticleSystemAffectorBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemEffectors\OSGParticleSystemEffectorFields.h"
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGParticleSystemAffectorFields.h"
 						>
 					</File>
 				</Filter>
 				<Filter
-					Name="MultiParticleSystemEffectors"
+					Name="MultiParticleSystemAffectors"
 					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffector.cpp"
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemAffectors\OSGMultiParticleSystemAffector.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffector.h"
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemAffectors\OSGMultiParticleSystemAffector.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffector.inl"
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemAffectors\OSGMultiParticleSystemAffector.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorBase.cpp"
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemAffectors\OSGMultiParticleSystemAffectorBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorBase.h"
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemAffectors\OSGMultiParticleSystemAffectorBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorBase.inl"
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemAffectors\OSGMultiParticleSystemAffectorBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemEffectors\OSGMultiParticleSystemEffectorFields.h"
+						RelativePath="..\..\src\ParticleSystem\MultiParticleSystemAffectors\OSGMultiParticleSystemAffectorFields.h"
 						>
 					</File>
 				</Filter>

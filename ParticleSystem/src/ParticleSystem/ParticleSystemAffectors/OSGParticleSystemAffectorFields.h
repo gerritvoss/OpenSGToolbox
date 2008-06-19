@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,37 +44,88 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
- **     Do not change this file, changes should be done in the derived      **
- **     class ParticleSystemEffector!
- **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
+
+#ifndef _OSGPARTICLESYSTEMAFFECTORFIELDS_H_
+#define _OSGPARTICLESYSTEMAFFECTORFIELDS_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGParticleSystemDef.h"
+
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
+class ParticleSystemAffector;
 
-//! access the type of the class
-inline
-OSG::FieldContainerType &ParticleSystemEffectorBase::getClassType(void)
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//! ParticleSystemAffectorPtr
+
+typedef FCPtr<AttachmentContainerPtr, ParticleSystemAffector> ParticleSystemAffectorPtr;
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpParticleSystemFieldTraits
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldDataTraits<ParticleSystemAffectorPtr> : 
+    public FieldTraitsRecurseMapper<ParticleSystemAffectorPtr, true>
 {
-    return _type; 
-} 
+    static DataType             _type;                       
 
-//! access the numerical type of the class
-inline
-OSG::UInt32 ParticleSystemEffectorBase::getClassTypeId(void) 
-{
-    return _type.getId(); 
-} 
+    enum                        { StringConvertable = 0x00 };
+    enum                        { bHasParent        = 0x01 };
+
+    static DataType   &getType (void) { return _type;        }
+
+    static const char *getSName(void) { return "SFParticleSystemAffectorPtr"; }
+    static const char *getMName(void) { return "MFParticleSystemAffectorPtr"; }
+};
+
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \class  FieldTraitsRecurseMapper<ParticleSystemAffectorPtr, true>
+    \hideinhierarchy
+ */
+#endif
+
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 
-/*------------------------------ get -----------------------------------*/
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpParticleSystemFieldSingle */
 
+typedef SField<ParticleSystemAffectorPtr> SFParticleSystemAffectorPtr;
+#endif
 
+#ifndef OSG_COMPILEPARTICLESYSTEMAFFECTORINST
+OSG_DLLEXPORT_DECL1(SField, ParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#endif
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpParticleSystemFieldMulti */
+
+typedef MField<ParticleSystemAffectorPtr> MFParticleSystemAffectorPtr;
+#endif
+
+#ifndef OSG_COMPILEPARTICLESYSTEMAFFECTORINST
+OSG_DLLEXPORT_DECL1(MField, ParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#endif
 
 OSG_END_NAMESPACE
 
-#define OSGPARTICLESYSTEMEFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGPARTICLESYSTEMAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
+#endif /* _OSGPARTICLESYSTEMAFFECTORFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGPARTICLEEFFECTORFIELDS_H_
-#define _OSGPARTICLEEFFECTORFIELDS_H_
+#ifndef _OSGPARTICLEAFFECTORFIELDS_H_
+#define _OSGPARTICLEAFFECTORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,12 +64,12 @@
 
 OSG_BEGIN_NAMESPACE
 
-class ParticleEffector;
+class ParticleAffector;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ParticleEffectorPtr
+//! ParticleAffectorPtr
 
-typedef FCPtr<AttachmentContainerPtr, ParticleEffector> ParticleEffectorPtr;
+typedef FCPtr<AttachmentContainerPtr, ParticleAffector> ParticleAffectorPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<AttachmentContainerPtr, ParticleEffector> ParticleEffectorPtr;
 #endif
 
 template <>
-struct FieldDataTraits<ParticleEffectorPtr> : 
-    public FieldTraitsRecurseMapper<ParticleEffectorPtr, true>
+struct FieldDataTraits<ParticleAffectorPtr> : 
+    public FieldTraitsRecurseMapper<ParticleAffectorPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<ParticleEffectorPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFParticleEffectorPtr"; }
-    static const char *getMName(void) { return "MFParticleEffectorPtr"; }
+    static const char *getSName(void) { return "SFParticleAffectorPtr"; }
+    static const char *getMName(void) { return "MFParticleAffectorPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ParticleEffectorPtr, true>
+/*! \class  FieldTraitsRecurseMapper<ParticleAffectorPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<ParticleEffectorPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpParticleSystemFieldSingle */
 
-typedef SField<ParticleEffectorPtr> SFParticleEffectorPtr;
+typedef SField<ParticleAffectorPtr> SFParticleAffectorPtr;
 #endif
 
-#ifndef OSG_COMPILEPARTICLEEFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, ParticleEffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEPARTICLEAFFECTORINST
+OSG_DLLEXPORT_DECL1(SField, ParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<ParticleEffectorPtr> MFParticleEffectorPtr;
+typedef MField<ParticleAffectorPtr> MFParticleAffectorPtr;
 #endif
 
-#ifndef OSG_COMPILEPARTICLEEFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, ParticleEffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEPARTICLEAFFECTORINST
+OSG_DLLEXPORT_DECL1(MField, ParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGPARTICLEEFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGPARTICLEAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGPARTICLEEFFECTORFIELDS_H_ */
+#endif /* _OSGPARTICLEAFFECTORFIELDS_H_ */

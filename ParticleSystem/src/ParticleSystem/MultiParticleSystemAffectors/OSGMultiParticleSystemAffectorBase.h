@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ParticleEffector
+ **     class MultiParticleSystemAffector
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPARTICLEEFFECTORBASE_H_
-#define _OSGPARTICLEEFFECTORBASE_H_
+#ifndef _OSGMULTIPARTICLESYSTEMAFFECTORBASE_H_
+#define _OSGMULTIPARTICLESYSTEMAFFECTORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -67,17 +67,18 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+#include "ParticleSystem/OSGParticleSystemFields.h" // Systems type
 
-#include "OSGParticleEffectorFields.h"
+#include "OSGMultiParticleSystemAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ParticleEffector;
+class MultiParticleSystemAffector;
 class BinaryDataHandler;
 
-//! \brief ParticleEffector Base Class.
+//! \brief MultiParticleSystemAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEffectorBase : public AttachmentContainer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING MultiParticleSystemAffectorBase : public AttachmentContainer
 {
   private:
 
@@ -86,7 +87,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEffectorBase : public AttachmentC
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ParticleEffectorPtr  Ptr;
+    typedef MultiParticleSystemAffectorPtr  Ptr;
+
+    enum
+    {
+        SystemsFieldId = Inherited::NextFieldId,
+        NextFieldId    = SystemsFieldId + 1
+    };
+
+    static const OSG::BitVector SystemsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +119,23 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEffectorBase : public AttachmentC
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           MFParticleSystemPtr *getMFSystems        (void);
+
+           ParticleSystemPtr   &getSystems        (const UInt32 index);
+           MFParticleSystemPtr &getSystems        (void);
+     const MFParticleSystemPtr &getSystems        (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -130,18 +156,25 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEffectorBase : public AttachmentC
   protected:
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    MFParticleSystemPtr   _mfSystems;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ParticleEffectorBase(void);
-    ParticleEffectorBase(const ParticleEffectorBase &source);
+    MultiParticleSystemAffectorBase(void);
+    MultiParticleSystemAffectorBase(const MultiParticleSystemAffectorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleEffectorBase(void); 
+    virtual ~MultiParticleSystemAffectorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -149,13 +182,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEffectorBase : public AttachmentC
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ParticleEffectorBase *pOther,
+    void executeSyncImpl(      MultiParticleSystemAffectorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ParticleEffectorBase *pOther,
+    void executeSyncImpl(      MultiParticleSystemAffectorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -180,11 +213,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEffectorBase : public AttachmentC
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ParticleEffectorBase &source);
+    void operator =(const MultiParticleSystemAffectorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -192,17 +226,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEffectorBase : public AttachmentC
 //---------------------------------------------------------------------------
 
 
-typedef ParticleEffectorBase *ParticleEffectorBaseP;
+typedef MultiParticleSystemAffectorBase *MultiParticleSystemAffectorBaseP;
 
-typedef osgIF<ParticleEffectorBase::isNodeCore,
-              CoredNodePtr<ParticleEffector>,
+typedef osgIF<MultiParticleSystemAffectorBase::isNodeCore,
+              CoredNodePtr<MultiParticleSystemAffector>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ParticleEffectorNodePtr;
+              >::_IRet MultiParticleSystemAffectorNodePtr;
 
-typedef RefPtr<ParticleEffectorPtr> ParticleEffectorRefPtr;
+typedef RefPtr<MultiParticleSystemAffectorPtr> MultiParticleSystemAffectorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPARTICLEEFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGMULTIPARTICLESYSTEMAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGPARTICLEEFFECTORBASE_H_ */
+#endif /* _OSGMULTIPARTICLESYSTEMAFFECTORBASE_H_ */

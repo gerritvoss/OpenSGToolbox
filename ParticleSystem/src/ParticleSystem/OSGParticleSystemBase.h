@@ -72,8 +72,8 @@
 #include <OpenSG/OSGVec3fFields.h> // InternalNormals type
 #include <OpenSG/OSGColor4fFields.h> // InternalColors type
 #include <OpenSG/OSGVec3fFields.h> // InternalSizes type
-#include <OpenSG/OSGReal32Fields.h> // InternalLifespans type
-#include <OpenSG/OSGReal32Fields.h> // InternalAges type
+#include <OpenSG/OSGTimeFields.h> // InternalLifespans type
+#include <OpenSG/OSGTimeFields.h> // InternalAges type
 #include <OpenSG/OSGVec3fFields.h> // InternalVelocities type
 #include <OpenSG/OSGVec3fFields.h> // InternalSecVelocities type
 #include <OpenSG/OSGVec3fFields.h> // InternalAccelerations type
@@ -81,9 +81,9 @@
 #include <OpenSG/OSGUInt32Fields.h> // MaxParticles type
 #include <OpenSG/OSGBoolFields.h> // Dynamic type
 #include <OpenSG/OSGTimeFields.h> // LastElapsedTime type
-#include "ParticleSystem/ParticleGenerators/OSGParticleGenerator.h" // Generators type
-#include "ParticleSystem/ParticleEffectors/OSGParticleEffector.h" // Effectors type
-#include "ParticleSystem/ParticleSystemEffectors/OSGParticleSystemEffector.h" // SystemEffectors type
+#include "ParticleSystem/ParticleGenerators/OSGParticleGeneratorFields.h" // Generators type
+#include "ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h" // Affectors type
+#include "ParticleSystem/ParticleSystemAffectors/OSGParticleSystemAffectorFields.h" // SystemAffectors type
 
 #include "OSGParticleSystemFields.h"
 
@@ -122,9 +122,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
         DynamicFieldId               = MaxParticlesFieldId          + 1,
         LastElapsedTimeFieldId       = DynamicFieldId               + 1,
         GeneratorsFieldId            = LastElapsedTimeFieldId       + 1,
-        EffectorsFieldId             = GeneratorsFieldId            + 1,
-        SystemEffectorsFieldId       = EffectorsFieldId             + 1,
-        NextFieldId                  = SystemEffectorsFieldId       + 1
+        AffectorsFieldId             = GeneratorsFieldId            + 1,
+        SystemAffectorsFieldId       = AffectorsFieldId             + 1,
+        NextFieldId                  = SystemAffectorsFieldId       + 1
     };
 
     static const OSG::BitVector InternalPositionsFieldMask;
@@ -142,8 +142,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     static const OSG::BitVector DynamicFieldMask;
     static const OSG::BitVector LastElapsedTimeFieldMask;
     static const OSG::BitVector GeneratorsFieldMask;
-    static const OSG::BitVector EffectorsFieldMask;
-    static const OSG::BitVector SystemEffectorsFieldMask;
+    static const OSG::BitVector AffectorsFieldMask;
+    static const OSG::BitVector SystemAffectorsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -174,8 +174,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            SFBool              *getSFDynamic        (void);
            SFTime              *getSFLastElapsedTime(void);
            MFParticleGeneratorPtr *getMFGenerators     (void);
-           MFParticleEffectorPtr *getMFEffectors      (void);
-           MFParticleSystemEffectorPtr *getMFSystemEffectors(void);
+           MFParticleAffectorPtr *getMFAffectors      (void);
+           MFParticleSystemAffectorPtr *getMFSystemAffectors(void);
 
            UInt32              &getMaxParticles   (void);
      const UInt32              &getMaxParticles   (void) const;
@@ -186,12 +186,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            ParticleGeneratorPtr &getGenerators     (const UInt32 index);
            MFParticleGeneratorPtr &getGenerators     (void);
      const MFParticleGeneratorPtr &getGenerators     (void) const;
-           ParticleEffectorPtr &getEffectors      (const UInt32 index);
-           MFParticleEffectorPtr &getEffectors      (void);
-     const MFParticleEffectorPtr &getEffectors      (void) const;
-           ParticleSystemEffectorPtr &getSystemEffectors(const UInt32 index);
-           MFParticleSystemEffectorPtr &getSystemEffectors(void);
-     const MFParticleSystemEffectorPtr &getSystemEffectors(void) const;
+           ParticleAffectorPtr &getAffectors      (const UInt32 index);
+           MFParticleAffectorPtr &getAffectors      (void);
+     const MFParticleAffectorPtr &getAffectors      (void) const;
+           ParticleSystemAffectorPtr &getSystemAffectors(const UInt32 index);
+           MFParticleSystemAffectorPtr &getSystemAffectors(void);
+     const MFParticleSystemAffectorPtr &getSystemAffectors(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -248,8 +248,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     MFVec3f             _mfInternalNormals;
     MFColor4f           _mfInternalColors;
     MFVec3f             _mfInternalSizes;
-    MFReal32            _mfInternalLifespans;
-    MFReal32            _mfInternalAges;
+    MFTime              _mfInternalLifespans;
+    MFTime              _mfInternalAges;
     MFVec3f             _mfInternalVelocities;
     MFVec3f             _mfInternalSecVelocities;
     MFVec3f             _mfInternalAccelerations;
@@ -258,8 +258,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     SFBool              _sfDynamic;
     SFTime              _sfLastElapsedTime;
     MFParticleGeneratorPtr   _mfGenerators;
-    MFParticleEffectorPtr   _mfEffectors;
-    MFParticleSystemEffectorPtr   _mfSystemEffectors;
+    MFParticleAffectorPtr   _mfAffectors;
+    MFParticleSystemAffectorPtr   _mfSystemAffectors;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -286,8 +286,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            MFVec3f             *getMFInternalNormals(void);
            MFColor4f           *getMFInternalColors (void);
            MFVec3f             *getMFInternalSizes  (void);
-           MFReal32            *getMFInternalLifespans(void);
-           MFReal32            *getMFInternalAges   (void);
+           MFTime              *getMFInternalLifespans(void);
+           MFTime              *getMFInternalAges   (void);
            MFVec3f             *getMFInternalVelocities(void);
            MFVec3f             *getMFInternalSecVelocities(void);
            MFVec3f             *getMFInternalAccelerations(void);
@@ -308,12 +308,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            Vec3f               &getInternalSizes  (UInt32 index);
            MFVec3f             &getInternalSizes  (void);
      const MFVec3f             &getInternalSizes  (void) const;
-           Real32              &getInternalLifespans(UInt32 index);
-           MFReal32            &getInternalLifespans(void);
-     const MFReal32            &getInternalLifespans(void) const;
-           Real32              &getInternalAges   (UInt32 index);
-           MFReal32            &getInternalAges   (void);
-     const MFReal32            &getInternalAges   (void) const;
+           Time                &getInternalLifespans(UInt32 index);
+           MFTime              &getInternalLifespans(void);
+     const MFTime              &getInternalLifespans(void) const;
+           Time                &getInternalAges   (UInt32 index);
+           MFTime              &getInternalAges   (void);
+     const MFTime              &getInternalAges   (void) const;
            Vec3f               &getInternalVelocities(UInt32 index);
            MFVec3f             &getInternalVelocities(void);
      const MFVec3f             &getInternalVelocities(void) const;

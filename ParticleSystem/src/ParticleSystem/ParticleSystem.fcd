@@ -164,29 +164,29 @@
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/ParticleGenerators/OSGParticleGenerator.h"
+		header="ParticleSystem/ParticleGenerators/OSGParticleGeneratorFields.h"
 	>
    List of Particle Generators.
 	</Field>
 	<Field
-		name="Effectors"
-		type="ParticleEffectorPtr"
+		name="Affectors"
+		type="ParticleAffectorPtr"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/ParticleEffectors/OSGParticleEffector.h"
+		header="ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h"
 	>
-   List of Particle Effectors.  These are applied on a per particle basis.
+   List of Particle Affectors.  These are applied on a per particle basis.
 	</Field>
 	<Field
-		name="SystemEffectors"
-		type="ParticleSystemEffectorPtr"
+		name="SystemAffectors"
+		type="ParticleSystemAffectorPtr"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/ParticleSystemEffectors/OSGParticleSystemEffector.h"
+		header="ParticleSystem/ParticleSystemAffectors/OSGParticleSystemAffectorFields.h"
 	>
-   List of Particle System Effectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
+   List of Particle System Affectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
 	</Field>
    
 </FieldContainer>

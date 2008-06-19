@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class MultiParticleSystemEffector!
+ **     class ParticleSystemAffector!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,14 +55,14 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &MultiParticleSystemEffectorBase::getClassType(void)
+OSG::FieldContainerType &ParticleSystemAffectorBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 MultiParticleSystemEffectorBase::getClassTypeId(void) 
+OSG::UInt32 ParticleSystemAffectorBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
@@ -74,5 +74,5 @@ OSG::UInt32 MultiParticleSystemEffectorBase::getClassTypeId(void)
 
 OSG_END_NAMESPACE
 
-#define OSGMULTIPARTICLESYSTEMEFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

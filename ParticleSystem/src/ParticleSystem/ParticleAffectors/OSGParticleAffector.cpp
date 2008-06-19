@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGParticleEffector.h"
+#include "OSGParticleAffector.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::ParticleEffector
+/*! \class osg::ParticleAffector
 
 */
 
@@ -67,7 +67,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleEffector::initMethod (void)
+void ParticleAffector::initMethod (void)
 {
 }
 
@@ -82,31 +82,31 @@ void ParticleEffector::initMethod (void)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-ParticleEffector::ParticleEffector(void) :
+ParticleAffector::ParticleAffector(void) :
     Inherited()
 {
 }
 
-ParticleEffector::ParticleEffector(const ParticleEffector &source) :
+ParticleAffector::ParticleAffector(const ParticleAffector &source) :
     Inherited(source)
 {
 }
 
-ParticleEffector::~ParticleEffector(void)
+ParticleAffector::~ParticleAffector(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleEffector::changed(BitVector whichField, UInt32 origin)
+void ParticleAffector::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void ParticleEffector::dump(      UInt32    , 
+void ParticleAffector::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump ParticleEffector NI" << std::endl;
+    SLOG << "Dump ParticleAffector NI" << std::endl;
 }
 
 
@@ -124,10 +124,10 @@ void ParticleEffector::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLEEFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLEEFFECTORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGPARTICLEAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGPARTICLEAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLEEFFECTORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGPARTICLEAFFECTORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

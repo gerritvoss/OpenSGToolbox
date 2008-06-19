@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,28 +36,28 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGMULTIPARTICLESYSTEMEFFECTOR_H_
-#define _OSGMULTIPARTICLESYSTEMEFFECTOR_H_
+#ifndef _OSGMULTIPARTICLESYSTEMAFFECTOR_H_
+#define _OSGMULTIPARTICLESYSTEMAFFECTOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
 
-#include "OSGMultiParticleSystemEffectorBase.h"
+#include "OSGMultiParticleSystemAffectorBase.h"
+#include "ParticleSystem/OSGParticleSystemFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MultiParticleSystemEffector class. See \ref 
-           PageParticleSystemMultiParticleSystemEffector for a description.
+/*! \brief MultiParticleSystemAffector class. See \ref 
+           PageParticleSystemMultiParticleSystemAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING MultiParticleSystemEffector : public MultiParticleSystemEffectorBase
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING MultiParticleSystemAffector : public MultiParticleSystemAffectorBase
 {
   private:
 
-    typedef MultiParticleSystemEffectorBase Inherited;
+    typedef MultiParticleSystemAffectorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -78,24 +78,26 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING MultiParticleSystemEffector : public Mult
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual void affect(const Time& elps) = 0;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in MultiParticleSystemEffectorBase.
+    // Variables should all be in MultiParticleSystemAffectorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    MultiParticleSystemEffector(void);
-    MultiParticleSystemEffector(const MultiParticleSystemEffector &source);
+    MultiParticleSystemAffector(void);
+    MultiParticleSystemAffector(const MultiParticleSystemAffector &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MultiParticleSystemEffector(void); 
+    virtual ~MultiParticleSystemAffector(void); 
 
     /*! \}                                                                 */
     
@@ -103,22 +105,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING MultiParticleSystemEffector : public Mult
   private:
 
     friend class FieldContainer;
-    friend class MultiParticleSystemEffectorBase;
+    friend class MultiParticleSystemAffectorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const MultiParticleSystemEffector &source);
+    void operator =(const MultiParticleSystemAffector &source);
 };
 
-typedef MultiParticleSystemEffector *MultiParticleSystemEffectorP;
+typedef MultiParticleSystemAffector *MultiParticleSystemAffectorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGMultiParticleSystemEffectorBase.inl"
-#include "OSGMultiParticleSystemEffector.inl"
+#include "OSGMultiParticleSystemAffectorBase.inl"
+#include "OSGMultiParticleSystemAffector.inl"
 
-#define OSGMULTIPARTICLESYSTEMEFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGMULTIPARTICLESYSTEMAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGMULTIPARTICLESYSTEMEFFECTOR_H_ */
+#endif /* _OSGMULTIPARTICLESYSTEMAFFECTOR_H_ */

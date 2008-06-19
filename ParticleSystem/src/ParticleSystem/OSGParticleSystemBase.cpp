@@ -109,11 +109,11 @@ const OSG::BitVector  ParticleSystemBase::LastElapsedTimeFieldMask =
 const OSG::BitVector  ParticleSystemBase::GeneratorsFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::GeneratorsFieldId);
 
-const OSG::BitVector  ParticleSystemBase::EffectorsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::EffectorsFieldId);
+const OSG::BitVector  ParticleSystemBase::AffectorsFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::AffectorsFieldId);
 
-const OSG::BitVector  ParticleSystemBase::SystemEffectorsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::SystemEffectorsFieldId);
+const OSG::BitVector  ParticleSystemBase::SystemAffectorsFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::SystemAffectorsFieldId);
 
 const OSG::BitVector ParticleSystemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -137,10 +137,10 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 /*! \var Vec3f           ParticleSystemBase::_mfInternalSizes
     The particle sizes. If not set (1,1,1) will be used, if only one entry         is set, it will be used for all particles. If the number of sizes if         equal to the number of positions every particle will get its own size.         Most modes only use the X coordinate of the vector. Particles with size 0         are ignored.
 */
-/*! \var Real32          ParticleSystemBase::_mfInternalLifespans
+/*! \var Time            ParticleSystemBase::_mfInternalLifespans
     The particle lifespan. If set to less than 0, then the particle is considered eternal.
 */
-/*! \var Real32          ParticleSystemBase::_mfInternalAges
+/*! \var Time            ParticleSystemBase::_mfInternalAges
     The particle age.
 */
 /*! \var Vec3f           ParticleSystemBase::_mfInternalVelocities
@@ -167,11 +167,11 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 /*! \var ParticleGeneratorPtr ParticleSystemBase::_mfGenerators
     List of Particle Generators.
 */
-/*! \var ParticleEffectorPtr ParticleSystemBase::_mfEffectors
-    List of Particle Effectors.  These are applied on a per particle basis.
+/*! \var ParticleAffectorPtr ParticleSystemBase::_mfAffectors
+    List of Particle Affectors.  These are applied on a per particle basis.
 */
-/*! \var ParticleSystemEffectorPtr ParticleSystemBase::_mfSystemEffectors
-    List of Particle System Effectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
+/*! \var ParticleSystemAffectorPtr ParticleSystemBase::_mfSystemAffectors
+    List of Particle System Affectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
 */
 
 //! ParticleSystem description
@@ -203,12 +203,12 @@ FieldDescription *ParticleSystemBase::_desc[] =
                      InternalSizesFieldId, InternalSizesFieldMask,
                      false,
                      (FieldAccessMethod) &ParticleSystemBase::getMFInternalSizes),
-    new FieldDescription(MFReal32::getClassType(), 
+    new FieldDescription(MFTime::getClassType(), 
                      "InternalLifespans", 
                      InternalLifespansFieldId, InternalLifespansFieldMask,
                      false,
                      (FieldAccessMethod) &ParticleSystemBase::getMFInternalLifespans),
-    new FieldDescription(MFReal32::getClassType(), 
+    new FieldDescription(MFTime::getClassType(), 
                      "InternalAges", 
                      InternalAgesFieldId, InternalAgesFieldMask,
                      false,
@@ -253,16 +253,16 @@ FieldDescription *ParticleSystemBase::_desc[] =
                      GeneratorsFieldId, GeneratorsFieldMask,
                      false,
                      (FieldAccessMethod) &ParticleSystemBase::getMFGenerators),
-    new FieldDescription(MFParticleEffectorPtr::getClassType(), 
-                     "Effectors", 
-                     EffectorsFieldId, EffectorsFieldMask,
+    new FieldDescription(MFParticleAffectorPtr::getClassType(), 
+                     "Affectors", 
+                     AffectorsFieldId, AffectorsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFEffectors),
-    new FieldDescription(MFParticleSystemEffectorPtr::getClassType(), 
-                     "SystemEffectors", 
-                     SystemEffectorsFieldId, SystemEffectorsFieldMask,
+                     (FieldAccessMethod) &ParticleSystemBase::getMFAffectors),
+    new FieldDescription(MFParticleSystemAffectorPtr::getClassType(), 
+                     "SystemAffectors", 
+                     SystemAffectorsFieldId, SystemAffectorsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFSystemEffectors)
+                     (FieldAccessMethod) &ParticleSystemBase::getMFSystemAffectors)
 };
 
 
@@ -340,8 +340,8 @@ void ParticleSystemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     _mfInternalAccelerations.terminateShare(uiAspect, this->getContainerSize());
     _mfInternalProperties.terminateShare(uiAspect, this->getContainerSize());
     _mfGenerators.terminateShare(uiAspect, this->getContainerSize());
-    _mfEffectors.terminateShare(uiAspect, this->getContainerSize());
-    _mfSystemEffectors.terminateShare(uiAspect, this->getContainerSize());
+    _mfAffectors.terminateShare(uiAspect, this->getContainerSize());
+    _mfSystemAffectors.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -367,8 +367,8 @@ ParticleSystemBase::ParticleSystemBase(void) :
     _sfDynamic                (bool(true)), 
     _sfLastElapsedTime        (Time(0.0)), 
     _mfGenerators             (), 
-    _mfEffectors              (), 
-    _mfSystemEffectors        (), 
+    _mfAffectors              (), 
+    _mfSystemAffectors        (), 
     Inherited() 
 {
 }
@@ -393,8 +393,8 @@ ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _sfDynamic                (source._sfDynamic                ), 
     _sfLastElapsedTime        (source._sfLastElapsedTime        ), 
     _mfGenerators             (source._mfGenerators             ), 
-    _mfEffectors              (source._mfEffectors              ), 
-    _mfSystemEffectors        (source._mfSystemEffectors        ), 
+    _mfAffectors              (source._mfAffectors              ), 
+    _mfSystemAffectors        (source._mfSystemAffectors        ), 
     Inherited                 (source)
 {
 }
@@ -486,14 +486,14 @@ UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
         returnValue += _mfGenerators.getBinSize();
     }
 
-    if(FieldBits::NoField != (EffectorsFieldMask & whichField))
+    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
     {
-        returnValue += _mfEffectors.getBinSize();
+        returnValue += _mfAffectors.getBinSize();
     }
 
-    if(FieldBits::NoField != (SystemEffectorsFieldMask & whichField))
+    if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
     {
-        returnValue += _mfSystemEffectors.getBinSize();
+        returnValue += _mfSystemAffectors.getBinSize();
     }
 
 
@@ -580,14 +580,14 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
         _mfGenerators.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (EffectorsFieldMask & whichField))
+    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
     {
-        _mfEffectors.copyToBin(pMem);
+        _mfAffectors.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SystemEffectorsFieldMask & whichField))
+    if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
     {
-        _mfSystemEffectors.copyToBin(pMem);
+        _mfSystemAffectors.copyToBin(pMem);
     }
 
 
@@ -673,14 +673,14 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfGenerators.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (EffectorsFieldMask & whichField))
+    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
     {
-        _mfEffectors.copyFromBin(pMem);
+        _mfAffectors.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SystemEffectorsFieldMask & whichField))
+    if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
     {
-        _mfSystemEffectors.copyFromBin(pMem);
+        _mfSystemAffectors.copyFromBin(pMem);
     }
 
 
@@ -738,11 +738,11 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
         _mfGenerators.syncWith(pOther->_mfGenerators);
 
-    if(FieldBits::NoField != (EffectorsFieldMask & whichField))
-        _mfEffectors.syncWith(pOther->_mfEffectors);
+    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
+        _mfAffectors.syncWith(pOther->_mfAffectors);
 
-    if(FieldBits::NoField != (SystemEffectorsFieldMask & whichField))
-        _mfSystemEffectors.syncWith(pOther->_mfSystemEffectors);
+    if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
+        _mfSystemAffectors.syncWith(pOther->_mfSystemAffectors);
 
 
 }
@@ -800,11 +800,11 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
         _mfGenerators.syncWith(pOther->_mfGenerators, sInfo);
 
-    if(FieldBits::NoField != (EffectorsFieldMask & whichField))
-        _mfEffectors.syncWith(pOther->_mfEffectors, sInfo);
+    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
+        _mfAffectors.syncWith(pOther->_mfAffectors, sInfo);
 
-    if(FieldBits::NoField != (SystemEffectorsFieldMask & whichField))
-        _mfSystemEffectors.syncWith(pOther->_mfSystemEffectors, sInfo);
+    if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
+        _mfSystemAffectors.syncWith(pOther->_mfSystemAffectors, sInfo);
 
 
 }
@@ -851,11 +851,11 @@ void ParticleSystemBase::execBeginEditImpl (const BitVector &whichField,
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
         _mfGenerators.beginEdit(uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (EffectorsFieldMask & whichField))
-        _mfEffectors.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
+        _mfAffectors.beginEdit(uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (SystemEffectorsFieldMask & whichField))
-        _mfSystemEffectors.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
+        _mfSystemAffectors.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

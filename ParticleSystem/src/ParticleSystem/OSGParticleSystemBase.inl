@@ -133,14 +133,14 @@ MFVec3f *ParticleSystemBase::getMFInternalSizes(void)
 
 //! Get the ParticleSystem::_mfInternalLifespans field.
 inline
-MFReal32 *ParticleSystemBase::getMFInternalLifespans(void)
+MFTime *ParticleSystemBase::getMFInternalLifespans(void)
 {
     return &_mfInternalLifespans;
 }
 
 //! Get the ParticleSystem::_mfInternalAges field.
 inline
-MFReal32 *ParticleSystemBase::getMFInternalAges(void)
+MFTime *ParticleSystemBase::getMFInternalAges(void)
 {
     return &_mfInternalAges;
 }
@@ -201,18 +201,18 @@ MFParticleGeneratorPtr *ParticleSystemBase::getMFGenerators(void)
     return &_mfGenerators;
 }
 
-//! Get the ParticleSystem::_mfEffectors field.
+//! Get the ParticleSystem::_mfAffectors field.
 inline
-MFParticleEffectorPtr *ParticleSystemBase::getMFEffectors(void)
+MFParticleAffectorPtr *ParticleSystemBase::getMFAffectors(void)
 {
-    return &_mfEffectors;
+    return &_mfAffectors;
 }
 
-//! Get the ParticleSystem::_mfSystemEffectors field.
+//! Get the ParticleSystem::_mfSystemAffectors field.
 inline
-MFParticleSystemEffectorPtr *ParticleSystemBase::getMFSystemEffectors(void)
+MFParticleSystemAffectorPtr *ParticleSystemBase::getMFSystemAffectors(void)
 {
-    return &_mfSystemEffectors;
+    return &_mfSystemAffectors;
 }
 
 
@@ -387,42 +387,42 @@ const MFVec3f &ParticleSystemBase::getInternalSizes(void) const
 
 //! Get the value of the \a index element the ParticleSystem::_mfInternalLifespans field.
 inline
-Real32 &ParticleSystemBase::getInternalLifespans(const UInt32 index)
+Time &ParticleSystemBase::getInternalLifespans(const UInt32 index)
 {
     return _mfInternalLifespans[index];
 }
 
 //! Get the ParticleSystem::_mfInternalLifespans field.
 inline
-MFReal32 &ParticleSystemBase::getInternalLifespans(void)
+MFTime &ParticleSystemBase::getInternalLifespans(void)
 {
     return _mfInternalLifespans;
 }
 
 //! Get the ParticleSystem::_mfInternalLifespans field.
 inline
-const MFReal32 &ParticleSystemBase::getInternalLifespans(void) const
+const MFTime &ParticleSystemBase::getInternalLifespans(void) const
 {
     return _mfInternalLifespans;
 }
 
 //! Get the value of the \a index element the ParticleSystem::_mfInternalAges field.
 inline
-Real32 &ParticleSystemBase::getInternalAges(const UInt32 index)
+Time &ParticleSystemBase::getInternalAges(const UInt32 index)
 {
     return _mfInternalAges[index];
 }
 
 //! Get the ParticleSystem::_mfInternalAges field.
 inline
-MFReal32 &ParticleSystemBase::getInternalAges(void)
+MFTime &ParticleSystemBase::getInternalAges(void)
 {
     return _mfInternalAges;
 }
 
 //! Get the ParticleSystem::_mfInternalAges field.
 inline
-const MFReal32 &ParticleSystemBase::getInternalAges(void) const
+const MFTime &ParticleSystemBase::getInternalAges(void) const
 {
     return _mfInternalAges;
 }
@@ -532,46 +532,46 @@ const MFParticleGeneratorPtr &ParticleSystemBase::getGenerators(void) const
     return _mfGenerators;
 }
 
-//! Get the value of the \a index element the ParticleSystem::_mfEffectors field.
+//! Get the value of the \a index element the ParticleSystem::_mfAffectors field.
 inline
-ParticleEffectorPtr &ParticleSystemBase::getEffectors(const UInt32 index)
+ParticleAffectorPtr &ParticleSystemBase::getAffectors(const UInt32 index)
 {
-    return _mfEffectors[index];
+    return _mfAffectors[index];
 }
 
-//! Get the ParticleSystem::_mfEffectors field.
+//! Get the ParticleSystem::_mfAffectors field.
 inline
-MFParticleEffectorPtr &ParticleSystemBase::getEffectors(void)
+MFParticleAffectorPtr &ParticleSystemBase::getAffectors(void)
 {
-    return _mfEffectors;
+    return _mfAffectors;
 }
 
-//! Get the ParticleSystem::_mfEffectors field.
+//! Get the ParticleSystem::_mfAffectors field.
 inline
-const MFParticleEffectorPtr &ParticleSystemBase::getEffectors(void) const
+const MFParticleAffectorPtr &ParticleSystemBase::getAffectors(void) const
 {
-    return _mfEffectors;
+    return _mfAffectors;
 }
 
-//! Get the value of the \a index element the ParticleSystem::_mfSystemEffectors field.
+//! Get the value of the \a index element the ParticleSystem::_mfSystemAffectors field.
 inline
-ParticleSystemEffectorPtr &ParticleSystemBase::getSystemEffectors(const UInt32 index)
+ParticleSystemAffectorPtr &ParticleSystemBase::getSystemAffectors(const UInt32 index)
 {
-    return _mfSystemEffectors[index];
+    return _mfSystemAffectors[index];
 }
 
-//! Get the ParticleSystem::_mfSystemEffectors field.
+//! Get the ParticleSystem::_mfSystemAffectors field.
 inline
-MFParticleSystemEffectorPtr &ParticleSystemBase::getSystemEffectors(void)
+MFParticleSystemAffectorPtr &ParticleSystemBase::getSystemAffectors(void)
 {
-    return _mfSystemEffectors;
+    return _mfSystemAffectors;
 }
 
-//! Get the ParticleSystem::_mfSystemEffectors field.
+//! Get the ParticleSystem::_mfSystemAffectors field.
 inline
-const MFParticleSystemEffectorPtr &ParticleSystemBase::getSystemEffectors(void) const
+const MFParticleSystemAffectorPtr &ParticleSystemBase::getSystemAffectors(void) const
 {
-    return _mfSystemEffectors;
+    return _mfSystemAffectors;
 }
 
 OSG_END_NAMESPACE

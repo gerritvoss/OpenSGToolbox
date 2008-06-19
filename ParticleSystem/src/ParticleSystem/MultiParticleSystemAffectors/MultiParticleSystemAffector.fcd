@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="MultiParticleSystemEffector"
+	name="MultiParticleSystemAffector"
 	parent="AttachmentContainer"
 	library="ParticleSystem"
 	pointerfieldtypes="both"
@@ -11,4 +11,13 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
+	<Field
+		name="Systems"
+		type="ParticleSystemPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="ParticleSystem/OSGParticleSystemFields.h"
+	>
+	</Field>
 </FieldContainer>

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ParticleSystemEffector
+ **     class ParticleAffector
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPARTICLESYSTEMEFFECTORBASE_H_
-#define _OSGPARTICLESYSTEMEFFECTORBASE_H_
+#ifndef _OSGPARTICLEAFFECTORBASE_H_
+#define _OSGPARTICLEAFFECTORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -68,16 +68,16 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 
-#include "OSGParticleSystemEffectorFields.h"
+#include "OSGParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ParticleSystemEffector;
+class ParticleAffector;
 class BinaryDataHandler;
 
-//! \brief ParticleSystemEffector Base Class.
+//! \brief ParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEffectorBase : public AttachmentContainer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleAffectorBase : public AttachmentContainer
 {
   private:
 
@@ -86,7 +86,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEffectorBase : public Attac
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ParticleSystemEffectorPtr  Ptr;
+    typedef ParticleAffectorPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -133,15 +133,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEffectorBase : public Attac
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ParticleSystemEffectorBase(void);
-    ParticleSystemEffectorBase(const ParticleSystemEffectorBase &source);
+    ParticleAffectorBase(void);
+    ParticleAffectorBase(const ParticleAffectorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleSystemEffectorBase(void); 
+    virtual ~ParticleAffectorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -149,13 +149,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEffectorBase : public Attac
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ParticleSystemEffectorBase *pOther,
+    void executeSyncImpl(      ParticleAffectorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ParticleSystemEffectorBase *pOther,
+    void executeSyncImpl(      ParticleAffectorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -184,7 +184,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEffectorBase : public Attac
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ParticleSystemEffectorBase &source);
+    void operator =(const ParticleAffectorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -192,17 +192,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEffectorBase : public Attac
 //---------------------------------------------------------------------------
 
 
-typedef ParticleSystemEffectorBase *ParticleSystemEffectorBaseP;
+typedef ParticleAffectorBase *ParticleAffectorBaseP;
 
-typedef osgIF<ParticleSystemEffectorBase::isNodeCore,
-              CoredNodePtr<ParticleSystemEffector>,
+typedef osgIF<ParticleAffectorBase::isNodeCore,
+              CoredNodePtr<ParticleAffector>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ParticleSystemEffectorNodePtr;
+              >::_IRet ParticleAffectorNodePtr;
 
-typedef RefPtr<ParticleSystemEffectorPtr> ParticleSystemEffectorRefPtr;
+typedef RefPtr<ParticleAffectorPtr> ParticleAffectorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPARTICLESYSTEMEFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGPARTICLESYSTEMEFFECTORBASE_H_ */
+#endif /* _OSGPARTICLEAFFECTORBASE_H_ */

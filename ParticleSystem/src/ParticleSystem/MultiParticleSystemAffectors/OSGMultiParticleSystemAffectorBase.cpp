@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,84 +45,105 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ParticleEffector!
+ **     class MultiParticleSystemAffector!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEPARTICLEEFFECTORINST
+#define OSG_COMPILEMULTIPARTICLESYSTEMAFFECTORINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGParticleEffectorBase.h"
-#include "OSGParticleEffector.h"
+#include "OSGMultiParticleSystemAffectorBase.h"
+#include "OSGMultiParticleSystemAffector.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector ParticleEffectorBase::MTInfluenceMask = 
+const OSG::BitVector  MultiParticleSystemAffectorBase::SystemsFieldMask = 
+    (TypeTraits<BitVector>::One << MultiParticleSystemAffectorBase::SystemsFieldId);
+
+const OSG::BitVector MultiParticleSystemAffectorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
+// Field descriptions
 
-FieldContainerType ParticleEffectorBase::_type(
-    "ParticleEffector",
+/*! \var ParticleSystemPtr MultiParticleSystemAffectorBase::_mfSystems
+    
+*/
+
+//! MultiParticleSystemAffector description
+
+FieldDescription *MultiParticleSystemAffectorBase::_desc[] = 
+{
+    new FieldDescription(MFParticleSystemPtr::getClassType(), 
+                     "Systems", 
+                     SystemsFieldId, SystemsFieldMask,
+                     false,
+                     (FieldAccessMethod) &MultiParticleSystemAffectorBase::getMFSystems)
+};
+
+
+FieldContainerType MultiParticleSystemAffectorBase::_type(
+    "MultiParticleSystemAffector",
     "AttachmentContainer",
     NULL,
     NULL, 
-    ParticleEffector::initMethod,
-    NULL,
-    0);
+    MultiParticleSystemAffector::initMethod,
+    _desc,
+    sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(ParticleEffectorBase, ParticleEffectorPtr)
+//OSG_FIELD_CONTAINER_DEF(MultiParticleSystemAffectorBase, MultiParticleSystemAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ParticleEffectorBase::getType(void) 
+FieldContainerType &MultiParticleSystemAffectorBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &ParticleEffectorBase::getType(void) const 
+const FieldContainerType &MultiParticleSystemAffectorBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 ParticleEffectorBase::getContainerSize(void) const 
+UInt32 MultiParticleSystemAffectorBase::getContainerSize(void) const 
 { 
-    return sizeof(ParticleEffector); 
+    return sizeof(MultiParticleSystemAffector); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleEffectorBase::executeSync(      FieldContainer &other,
+void MultiParticleSystemAffectorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ParticleEffectorBase *) &other, whichField);
+    this->executeSyncImpl((MultiParticleSystemAffectorBase *) &other, whichField);
 }
 #else
-void ParticleEffectorBase::executeSync(      FieldContainer &other,
+void MultiParticleSystemAffectorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((ParticleEffectorBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((MultiParticleSystemAffectorBase *) &other, whichField, sInfo);
 }
-void ParticleEffectorBase::execBeginEdit(const BitVector &whichField, 
+void MultiParticleSystemAffectorBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void ParticleEffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void MultiParticleSystemAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfSystems.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -132,7 +153,8 @@ void ParticleEffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-ParticleEffectorBase::ParticleEffectorBase(void) :
+MultiParticleSystemAffectorBase::MultiParticleSystemAffectorBase(void) :
+    _mfSystems                (), 
     Inherited() 
 {
 }
@@ -141,54 +163,73 @@ ParticleEffectorBase::ParticleEffectorBase(void) :
 #pragma warning (default : 383)
 #endif
 
-ParticleEffectorBase::ParticleEffectorBase(const ParticleEffectorBase &source) :
+MultiParticleSystemAffectorBase::MultiParticleSystemAffectorBase(const MultiParticleSystemAffectorBase &source) :
+    _mfSystems                (source._mfSystems                ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-ParticleEffectorBase::~ParticleEffectorBase(void)
+MultiParticleSystemAffectorBase::~MultiParticleSystemAffectorBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ParticleEffectorBase::getBinSize(const BitVector &whichField)
+UInt32 MultiParticleSystemAffectorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (SystemsFieldMask & whichField))
+    {
+        returnValue += _mfSystems.getBinSize();
+    }
 
 
     return returnValue;
 }
 
-void ParticleEffectorBase::copyToBin(      BinaryDataHandler &pMem,
+void MultiParticleSystemAffectorBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (SystemsFieldMask & whichField))
+    {
+        _mfSystems.copyToBin(pMem);
+    }
+
 
 }
 
-void ParticleEffectorBase::copyFromBin(      BinaryDataHandler &pMem,
+void MultiParticleSystemAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (SystemsFieldMask & whichField))
+    {
+        _mfSystems.copyFromBin(pMem);
+    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleEffectorBase::executeSyncImpl(      ParticleEffectorBase *pOther,
+void MultiParticleSystemAffectorBase::executeSyncImpl(      MultiParticleSystemAffectorBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (SystemsFieldMask & whichField))
+        _mfSystems.syncWith(pOther->_mfSystems);
+
 
 }
 #else
-void ParticleEffectorBase::executeSyncImpl(      ParticleEffectorBase *pOther,
+void MultiParticleSystemAffectorBase::executeSyncImpl(      MultiParticleSystemAffectorBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -196,14 +237,20 @@ void ParticleEffectorBase::executeSyncImpl(      ParticleEffectorBase *pOther,
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
 
+    if(FieldBits::NoField != (SystemsFieldMask & whichField))
+        _mfSystems.syncWith(pOther->_mfSystems, sInfo);
+
 
 }
 
-void ParticleEffectorBase::execBeginEditImpl (const BitVector &whichField, 
+void MultiParticleSystemAffectorBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (SystemsFieldMask & whichField))
+        _mfSystems.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -218,11 +265,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ParticleEffectorPtr>::_type("ParticleEffectorPtr", "AttachmentContainerPtr");
+DataType FieldDataTraits<MultiParticleSystemAffectorPtr>::_type("MultiParticleSystemAffectorPtr", "AttachmentContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ParticleEffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ParticleEffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(MultiParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(MultiParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -239,10 +286,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(ParticleEffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPP
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLEEFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLEEFFECTORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGMULTIPARTICLESYSTEMAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGMULTIPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLEEFFECTORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGMULTIPARTICLESYSTEMAFFECTORFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

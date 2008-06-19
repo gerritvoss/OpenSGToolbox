@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGMULTIPARTICLESYSTEMEFFECTORFIELDS_H_
-#define _OSGMULTIPARTICLESYSTEMEFFECTORFIELDS_H_
+#ifndef _OSGMULTIPARTICLESYSTEMAFFECTORFIELDS_H_
+#define _OSGMULTIPARTICLESYSTEMAFFECTORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,12 +64,12 @@
 
 OSG_BEGIN_NAMESPACE
 
-class MultiParticleSystemEffector;
+class MultiParticleSystemAffector;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MultiParticleSystemEffectorPtr
+//! MultiParticleSystemAffectorPtr
 
-typedef FCPtr<AttachmentContainerPtr, MultiParticleSystemEffector> MultiParticleSystemEffectorPtr;
+typedef FCPtr<AttachmentContainerPtr, MultiParticleSystemAffector> MultiParticleSystemAffectorPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<AttachmentContainerPtr, MultiParticleSystemEffector> MultiParticle
 #endif
 
 template <>
-struct FieldDataTraits<MultiParticleSystemEffectorPtr> : 
-    public FieldTraitsRecurseMapper<MultiParticleSystemEffectorPtr, true>
+struct FieldDataTraits<MultiParticleSystemAffectorPtr> : 
+    public FieldTraitsRecurseMapper<MultiParticleSystemAffectorPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<MultiParticleSystemEffectorPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFMultiParticleSystemEffectorPtr"; }
-    static const char *getMName(void) { return "MFMultiParticleSystemEffectorPtr"; }
+    static const char *getSName(void) { return "SFMultiParticleSystemAffectorPtr"; }
+    static const char *getMName(void) { return "MFMultiParticleSystemAffectorPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MultiParticleSystemEffectorPtr, true>
+/*! \class  FieldTraitsRecurseMapper<MultiParticleSystemAffectorPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<MultiParticleSystemEffectorPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpParticleSystemFieldSingle */
 
-typedef SField<MultiParticleSystemEffectorPtr> SFMultiParticleSystemEffectorPtr;
+typedef SField<MultiParticleSystemAffectorPtr> SFMultiParticleSystemAffectorPtr;
 #endif
 
-#ifndef OSG_COMPILEMULTIPARTICLESYSTEMEFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, MultiParticleSystemEffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMULTIPARTICLESYSTEMAFFECTORINST
+OSG_DLLEXPORT_DECL1(SField, MultiParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<MultiParticleSystemEffectorPtr> MFMultiParticleSystemEffectorPtr;
+typedef MField<MultiParticleSystemAffectorPtr> MFMultiParticleSystemAffectorPtr;
 #endif
 
-#ifndef OSG_COMPILEMULTIPARTICLESYSTEMEFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, MultiParticleSystemEffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMULTIPARTICLESYSTEMAFFECTORINST
+OSG_DLLEXPORT_DECL1(MField, MultiParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGMULTIPARTICLESYSTEMEFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGMULTIPARTICLESYSTEMAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGMULTIPARTICLESYSTEMEFFECTORFIELDS_H_ */
+#endif /* _OSGMULTIPARTICLESYSTEMAFFECTORFIELDS_H_ */
