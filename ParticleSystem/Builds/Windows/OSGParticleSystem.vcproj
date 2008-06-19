@@ -498,6 +498,34 @@
 					Name="ParticleAffectors"
 					>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGAgeFadeParticleAffector.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGAgeFadeParticleAffector.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGAgeFadeParticleAffector.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGAgeFadeParticleAffectorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGAgeFadeParticleAffectorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGAgeFadeParticleAffectorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGAgeFadeParticleAffectorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffector.cpp"
 						>
 					</File>
