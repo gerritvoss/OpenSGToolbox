@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="BooleanFunction"
+	parent="Function"
+	library="Dynamics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Boolean Function.
+	<Field
+		name="Operation"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="BooleanFunction::BOOLEAN_AND"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
