@@ -60,6 +60,7 @@ void reshape(Vec2f Size);
 //#include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
+#include <OpenSG/UserInterface/OSGSeparator.h>
 #include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGGridBagLayout.h>
 #include <OpenSG/UserInterface/OSGTabPanel.h>
@@ -243,12 +244,12 @@ int main(int argc, char **argv)
             TabPanel and specify their characteristics
 
     ******************************************************/
-    ButtonPtr StateTabPanelTab = osg::Button::create();
+    LabelPtr StateTabPanelTab = osg::Label::create();
 
 
-    beginEditCP(StateTabPanelTab, Button::TextFieldMask);
-        StateTabPanelTab->setText("State");
-    endEditCP(StateTabPanelTab, Button::TextFieldMask);
+    beginEditCP(StateTabPanelTab, Label::TextFieldMask);
+        StateTabPanelTab->setText("Basic Components");
+    endEditCP(StateTabPanelTab, Label::TextFieldMask);
    
     /******************************************************
 
@@ -344,7 +345,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
 
     GridBagLayoutPtr statePanelLayout = osg::GridBagLayout::create();
     beginEditCP(statePanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask  | Component::ConstraintsFieldMask);
-        statePanelLayout->setRows(10);
+        statePanelLayout->setRows(12);
         statePanelLayout->setColumns(5);
     endEditCP(statePanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask  | Component::ConstraintsFieldMask);
     
@@ -718,11 +719,63 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         Constraint0410->setGridX(4);
         Constraint0410->setGridY(10);
     endEditCP(Constraint0410, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    /******************************************************
+                            Row11 
+    ******************************************************/
+    GridBagLayoutConstraintsPtr Constraint0011 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0111 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0211 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0311 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0411 = osg::GridBagLayoutConstraints::create();
+            
+    beginEditCP(Constraint0011, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0011->setGridX(0);
+        Constraint0011->setGridY(11);
+    endEditCP(Constraint0011, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0111, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0111->setGridX(1);
+        Constraint0111->setGridY(11);
+    endEditCP(Constraint0111, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0211, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0211->setGridX(2);
+        Constraint0211->setGridY(11);
+    endEditCP(Constraint0211, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 
+    beginEditCP(Constraint0311, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0311->setGridX(3);
+        Constraint0311->setGridY(11);
+    endEditCP(Constraint0311, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+
+    beginEditCP(Constraint0411, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0411->setGridX(4);
+        Constraint0411->setGridY(11);
+    endEditCP(Constraint0411, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+   
     /******************************************************
 
             Create Components to add to Panel
 
+    /******************************************************
+                        Labels
+    ******************************************************/
+    LabelPtr normalLabel = osg::Label::create();
+    LabelPtr theDisabledLabel = osg::Label::create();
+
+	beginEditCP(normalLabel, Label::TextFieldMask | Label::ConstraintsFieldMask| Label::MaxSizeFieldMask);
+        normalLabel->setText("Normal");
+        normalLabel->setConstraints(Constraint0110);
+        normalLabel->setMaxSize(Vec2f(75, 23));
+    endEditCP(normalLabel, Label::TextFieldMask | Label::ConstraintsFieldMask| Label::MaxSizeFieldMask);
+
+	beginEditCP(theDisabledLabel, Label::EnabledFieldMask | Label::TextFieldMask | Label::ConstraintsFieldMask| Label::MaxSizeFieldMask);
+        theDisabledLabel->setText("Disabled");
+        theDisabledLabel->setConstraints(Constraint0310);
+        theDisabledLabel->setMaxSize(Vec2f(75, 23));
+        theDisabledLabel->setEnabled(false);
+    endEditCP(theDisabledLabel, Label::EnabledFieldMask | Label::TextFieldMask | Label::ConstraintsFieldMask| Label::MaxSizeFieldMask);
+    /******************************************************
                         Buttons
     ******************************************************/
     ButtonPtr inactiveButton = osg::Button::create();
@@ -1108,8 +1161,27 @@ PanelPtr StatePanelCreator::createStatePanel(void)
 	disabledNoneditableComboBox->setSelectedIndex(0);
 
     /******************************************************
+                        Separators
+    ******************************************************/
+    SeparatorPtr normalSeparator = osg::Separator::create();
+    SeparatorPtr disabledSeparator = osg::Separator::create();
+
+	beginEditCP(normalSeparator, Separator::OrientationFieldMask | Separator::ConstraintsFieldMask| Separator::MaxSizeFieldMask);
+        normalSeparator->setConstraints(Constraint0111);
+        normalSeparator->setMaxSize(Vec2f(75, 23));
+		normalSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+    endEditCP(normalSeparator,  Separator::OrientationFieldMask | Separator::ConstraintsFieldMask| Separator::MaxSizeFieldMask);
+
+	beginEditCP(disabledSeparator, Separator::EnabledFieldMask | Separator::OrientationFieldMask | Separator::ConstraintsFieldMask| Separator::MaxSizeFieldMask);
+        disabledSeparator->setConstraints(Constraint0311);
+        disabledSeparator->setMaxSize(Vec2f(75, 23));
+		disabledSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+        disabledSeparator->setEnabled(false);
+    endEditCP(disabledSeparator,  Separator::EnabledFieldMask | Separator::OrientationFieldMask | Separator::ConstraintsFieldMask| Separator::MaxSizeFieldMask);
+    /******************************************************
                         Labels
     ******************************************************/
+    LabelPtr labelLabel = osg::Label::create();
     LabelPtr buttonLabel = osg::Label::create();
     LabelPtr toggleButtonLabel = osg::Label::create();
     LabelPtr radioButtonLabel = osg::Label::create();
@@ -1119,10 +1191,18 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     LabelPtr passwordFieldLabel = osg::Label::create();
     LabelPtr spinnerLabel = osg::Label::create();
 	LabelPtr comboboxLabel = osg::Label::create();
+    LabelPtr separatorLabel = osg::Label::create();
     LabelPtr enabledLabel = osg::Label::create();
     LabelPtr disabledLabel = osg::Label::create();
     EmptyUIBackgroundPtr labelBackground = osg::EmptyUIBackground::create();
     EmptyBorderPtr labelBorder = osg::EmptyBorder::create();
+    beginEditCP(labelLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+        labelLabel->setText("Labels");
+        labelLabel->setConstraints(Constraint0010);
+        labelLabel->setBackground(labelBackground);
+        labelLabel->setBorder(labelBorder);
+    endEditCP(labelLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+
     beginEditCP(buttonLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
         buttonLabel->setText("Buttons");
         buttonLabel->setConstraints(Constraint0001);
@@ -1185,6 +1265,12 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         comboboxLabel->setBackground(labelBackground);
         comboboxLabel->setBorder(labelBorder);
     endEditCP(comboboxLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    beginEditCP(separatorLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+        separatorLabel->setText("Separators");
+        separatorLabel->setConstraints(Constraint0011);
+        separatorLabel->setBackground(labelBackground);
+        separatorLabel->setBorder(labelBorder);
+    endEditCP(separatorLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
 
     beginEditCP(enabledLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
         enabledLabel->setText("Enabled");
@@ -1248,6 +1334,12 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         statePanel->getChildren().push_back(noneditableComboBox);
         statePanel->getChildren().push_back(disabledEditableComboBox);
         statePanel->getChildren().push_back(disabledNoneditableComboBox);
+        statePanel->getChildren().push_back(normalLabel);
+        statePanel->getChildren().push_back(labelLabel);
+        statePanel->getChildren().push_back(theDisabledLabel);
+        statePanel->getChildren().push_back(normalSeparator);
+        statePanel->getChildren().push_back(separatorLabel);
+        statePanel->getChildren().push_back(disabledSeparator);
         statePanel->setLayout(statePanelLayout);
         statePanel->setPreferredSize(Vec2f(500,800));
     beginEditCP(statePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask  | Panel::PreferredSizeFieldMask);

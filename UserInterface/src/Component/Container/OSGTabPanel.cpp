@@ -461,10 +461,10 @@ void TabPanel::updateLayout(void)
 	// on the first sweep, get the maximum size and cumLength
 	for (UInt32 i=0; i < getTabs().size(); ++i)
 	{
-		cumMajorAxis += getTabs()[i]->getPreferredSize()[AxisIndex];
-		if (getTabs()[i]->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
+		cumMajorAxis += getTabs()[i]->getRequestedSize()[AxisIndex];
+		if (getTabs()[i]->getRequestedSize()[(AxisIndex+1)%2] > largestMinorAxis)
 		{
-			largestMinorAxis = getTabs()[i]->getPreferredSize()[(AxisIndex+1)%2];
+			largestMinorAxis = getTabs()[i]->getRequestedSize()[(AxisIndex+1)%2];
 		}
 	}
 	cumMajorAxis += static_cast<Real32>(getTabs().size()) * (TabBorderTopLeftWidth[AxisIndex] + TabBorderBottomRightWidth[AxisIndex]);
@@ -497,7 +497,7 @@ void TabPanel::updateLayout(void)
 	{
 		offset[AxisIndex] += TabBorderTopLeftWidth[AxisIndex];
 		beginEditCP(getTabs()[i], Component::SizeFieldMask|Component::PositionFieldMask);
-			getTabs()[i]->setSize(getTabs()[i]->getPreferredSize());
+			getTabs()[i]->setSize(getTabs()[i]->getRequestedSize());
 			getTabs()[i]->setPosition(alignOffset + offset);
 		endEditCP(getTabs()[i], Component::SizeFieldMask|Component::PositionFieldMask);
 		offset[AxisIndex] += getTabs()[i]->getSize()[AxisIndex] + TabBorderBottomRightWidth[AxisIndex];
