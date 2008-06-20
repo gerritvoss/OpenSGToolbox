@@ -6,43 +6,39 @@ LIB_INCLUDE_DIR_NAME = Input
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/WindowSystem:$(srcdir)/WindowSystem/GLUT:$(srcdir)/WindowSystem/Cocoa:$(srcdir)/WindowSystem/QT:$(srcdir)/WindowSystem/CoreGL:$(srcdir)/WindowSystem/Win32:$(srcdir)/WindowSystem/X:$(srcdir)/WindowSystem/Carbon:$(srcdir)/WindowSystem/QT4:$(srcdir)/Event:$(srcdir)/Utils:
+VPATH = $(srcdir)/:$(srcdir)/Utils:$(srcdir)/Event:$(srcdir)/WindowSystem:$(srcdir)/WindowSystem/Cocoa:$(srcdir)/WindowSystem/QT:$(srcdir)/WindowSystem/Win32:$(srcdir)/WindowSystem/Carbon:$(srcdir)/WindowSystem/X:$(srcdir)/WindowSystem/QT4:$(srcdir)/WindowSystem/GLUT:$(srcdir)/WindowSystem/CoreGL:
 
 
 #.SUFFIX = .o .o
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGWindowEventProducer.o \
-	OSGWindowEventProducerBase.o \
-	OSGWindowUtils.o \
-	OSGWindowEventProducerFactory.o \
-	OSGGLUTWindowEventProducer.o \
-	OSGGLUTWindowEventProducerBase.o \
-	OSGWin32WindowEventProducer.o \
-	OSGWin32WindowEventProducerBase.o \
-	OSGXWindowEventProducer.o \
-	OSGXWindowEventProducerBase.o \
-	OSGCarbonWindowEventProducerBase.o \
-	OSGCarbonWindowEventProducer.o \
+OBJECTS = OSGStringUtils.o \
+	OSGMouseAdapter.o \
+	OSGKeyAdapter.o \
+	OSGMouseEventProducer.o \
+	OSGKeyEventProducer.o \
 	OSGWindowEvent.o \
+	OSGMouseWheelEvent.o \
+	OSGMouseEvent.o \
+	OSGKeyEvent.o \
+	OSGFieldChangeEvent.o \
+	OSGFieldChangeListener.o \
+	OSGWindowAdapter.o \
+	OSGEventFactory.o \
+	OSGMouseMotionAdapter.o \
+	OSGEventType.o \
 	OSGMouseWheelEventProducer.o \
 	OSGMouseMotionEventProducer.o \
-	OSGWindowAdapter.o \
-	OSGFieldChangeEvent.o \
-	OSGMouseEvent.o \
-	OSGMouseEventProducer.o \
-	OSGEventFactory.o \
-	OSGKeyAdapter.o \
-	OSGMouseMotionAdapter.o \
 	OSGUpdateEvent.o \
-	OSGFieldChangeListener.o \
-	OSGMouseAdapter.o \
-	OSGKeyEvent.o \
-	OSGKeyEventProducer.o \
-	OSGMouseWheelEvent.o \
-	OSGEventType.o \
-	OSGStringUtils.o \
+	OSGWindowUtils.o \
+	OSGWindowEventProducerFactory.o \
+	OSGWindowEventProducer.o \
+	OSGWindowEventProducerBase.o \
+	OSGXWindowEventProducer.o \
+	OSGXWindowEventProducerBase.o \
+	OSGGLUTWindowEventProducer.o \
+	OSGGLUTWindowEventProducerBase.o \
 	OSGInputSettings.o
         
         

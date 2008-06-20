@@ -1,8 +1,8 @@
 # trivial makefile for OpenSG tutorials
 
 # use debug or opt libs?
-LIBTYPE ?= opt
-OSGANIMATIONROOT ?= ../../Builds/Linux
+LIBTYPE ?= dbg
+OSGTOOLBOXROOT ?= ../../Builds/Linux
 
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D
@@ -30,6 +30,10 @@ OSGPOOL ?= ..
 # than one system is configured from one dir. Just for the 1.0
 
 OSGINSTALLPREFIX := notset
+
+OPENSG_BASE_DIR ?= /usr
+
+OSGINSTALLPREFIX := $(OPENSG_BASE_DIR)
 
 PREFIXSUFFIX := $(shell $(OSGPOOL)/CommonConf/config.guess)
 -include .prefix.$(PREFIXSUFFIX)
@@ -131,9 +135,9 @@ else
 CC = $(shell $(OSGCONFIG) --compiler) 
 endif
 
-CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGANIMATIONROOT)/include
+CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGTOOLBOXROOT)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGANIMATIONROOT)/lib -lOSGAnimation$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT)
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGTOOLBOXROOT)/lib -lOSGToolbox$(DGB_OPT_EXT) -lboost_filesystem
 
 
 # all tutorials in this directory
@@ -160,6 +164,7 @@ clean:
 	rm -f *.pdb
 	rm -f *.ilk
 	rm -f *.idb
+	rm -f $(PROGS)
 
 Clean: clean
 	rm -f $(PROGS) 

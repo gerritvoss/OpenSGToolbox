@@ -2,7 +2,7 @@
 
 # use debug or opt libs?
 LIBTYPE ?= dbg
-OSGUSERINTERFACEROOT ?= ../../Builds/Linux
+OSGPARTICLESYSTEMROOT ?= ../../Builds/Linux
 
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D
@@ -131,9 +131,9 @@ else
 CC = $(shell $(OSGCONFIG) --compiler) 
 endif
 
-CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGUSERINTERFACEROOT)/include
+CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGPARTICLESYSTEMROOT)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGUSERINTERFACEROOT)/lib -lOSGUserInterface$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT)
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGPARTICLESYSTEMROOT)/lib -lOSGParticleSystem$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT)
 
 
 # all tutorials in this directory

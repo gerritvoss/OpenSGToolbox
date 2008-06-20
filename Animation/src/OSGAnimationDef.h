@@ -22,3 +22,4 @@
 #endif
 
 #endif /* _OSGANIMATIONDEF_H_ */
+

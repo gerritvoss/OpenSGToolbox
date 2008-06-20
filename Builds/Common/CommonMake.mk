@@ -16,6 +16,10 @@ OSGPOOL ?= ..
 
 OSGINSTALLPREFIX := notset
 
+OPENSG_BASE_DIR ?= /usr
+
+OSGINSTALLPREFIX := $(OPENSG_BASE_DIR)
+
 #PREFIXSUFFIX := $(shell $(OSGPOOL)/CommonConf/config.guess)
 #-include .prefix.$(PREFIXSUFFIX)
 
