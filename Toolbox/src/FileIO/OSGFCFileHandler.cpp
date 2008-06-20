@@ -63,14 +63,21 @@ A FCFileHandler.
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
-FCFileHandler * FCFileHandler::_the = new FCFileHandler();
+FCFileHandler * FCFileHandler::_the = FCFileHandler::the();
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
 FCFileHandler* FCFileHandler::the(void)
 {
-	return _the;
+	if(_the == NULL)
+	{
+		_the = new FCFileHandler();
+	}
+	else
+	{
+		return _the;
+	}
 }
 
 bool FCFileHandler::addFCFileType(FCFileTypeP FileType)

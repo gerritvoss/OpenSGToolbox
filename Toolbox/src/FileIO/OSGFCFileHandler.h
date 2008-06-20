@@ -94,8 +94,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileHandler
             FileTypeMap       _SuffixTypeMap;
  
  
-     static bool addFCFileType(FCFileTypeP FileType);
-     static bool subFCFileType(FCFileTypeP FileType);
+     bool addFCFileType(FCFileTypeP FileType);
+     bool subFCFileType(FCFileTypeP FileType);
      
      /*---------------------------------------------------------------------*/
      FCFileHandler(void);

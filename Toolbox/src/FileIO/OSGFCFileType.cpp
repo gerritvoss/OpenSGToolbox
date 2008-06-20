@@ -99,7 +99,7 @@ FCFileType::FCFileType(const ExtensionVector  suffixArray,
 {
 	SINFO << "Init " << _SuffixList.front() << " Field Container File Type " << std::endl;
 
-	FCFileHandler::addFCFileType(FCFileTypeP(this));
+	FCFileHandler::the()->addFCFileType(FCFileTypeP(this));
 }
 
 FCFileType::FCFileType(const FCFileType &obj)
@@ -109,7 +109,7 @@ FCFileType::FCFileType(const FCFileType &obj)
 
 FCFileType::~FCFileType(void)
 {
-	FCFileHandler::subFCFileType(FCFileTypeP(this));
+	FCFileHandler::the()->subFCFileType(FCFileTypeP(this));
 }
 
 /*----------------------------- class specific ----------------------------*/
