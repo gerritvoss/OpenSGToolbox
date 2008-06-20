@@ -5,7 +5,7 @@
 	parent="AttachmentContainer"
 	library="Animation"
 	pointerfieldtypes="both"
-	structure="abstract"
+	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
@@ -51,6 +51,14 @@
 		visibility="external"
 		access="protected"
 		header="SkeletalAnimation/OSGBoneFields.h"
+	>
+	</Field>
+	<Field
+		name="InternalTransformation"
+		type="Matrix"
+		cardinality="single"
+		visibility="external"
+		access="protected"
 	>
 	</Field>
 </FieldContainer>

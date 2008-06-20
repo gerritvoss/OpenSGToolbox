@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Bone
+ **     class HingedBone
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGBONEBASE_H_
-#define _OSGBONEBASE_H_
+#ifndef _OSGHINGEDBONEBASE_H_
+#define _OSGHINGEDBONEBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,52 +65,43 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGBone.h" // Parent
 
-#include <OpenSG/OSGQuaternionFields.h> // Rotation type
-#include <OpenSG/OSGPnt3fFields.h> // Translation type
-#include <OpenSG/OSGReal32Fields.h> // Length type
-#include "SkeletalAnimation/OSGBoneFields.h" // InternalChildren type
-#include "SkeletalAnimation/OSGBoneFields.h" // InternalParent type
-#include <OpenSG/OSGMatrixFields.h> // InternalTransformation type
+#include <OpenSG/OSGReal32Fields.h> // HingeAngle type
+#include <OpenSG/OSGReal32Fields.h> // Min type
+#include <OpenSG/OSGReal32Fields.h> // Max type
 
-#include "OSGBoneFields.h"
+#include "OSGHingedBoneFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Bone;
+class HingedBone;
 class BinaryDataHandler;
 
-//! \brief Bone Base Class.
+//! \brief HingedBone Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
+class OSG_ANIMATIONLIB_DLLMAPPING HingedBoneBase : public Bone
 {
   private:
 
-    typedef AttachmentContainer    Inherited;
+    typedef Bone    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef BonePtr  Ptr;
+    typedef HingedBonePtr  Ptr;
 
     enum
     {
-        RotationFieldId               = Inherited::NextFieldId,
-        TranslationFieldId            = RotationFieldId               + 1,
-        LengthFieldId                 = TranslationFieldId            + 1,
-        InternalChildrenFieldId       = LengthFieldId                 + 1,
-        InternalParentFieldId         = InternalChildrenFieldId       + 1,
-        InternalTransformationFieldId = InternalParentFieldId         + 1,
-        NextFieldId                   = InternalTransformationFieldId + 1
+        HingeAngleFieldId = Inherited::NextFieldId,
+        MinFieldId        = HingeAngleFieldId + 1,
+        MaxFieldId        = MinFieldId        + 1,
+        NextFieldId       = MaxFieldId        + 1
     };
 
-    static const OSG::BitVector RotationFieldMask;
-    static const OSG::BitVector TranslationFieldMask;
-    static const OSG::BitVector LengthFieldMask;
-    static const OSG::BitVector InternalChildrenFieldMask;
-    static const OSG::BitVector InternalParentFieldMask;
-    static const OSG::BitVector InternalTransformationFieldMask;
+    static const OSG::BitVector HingeAngleFieldMask;
+    static const OSG::BitVector MinFieldMask;
+    static const OSG::BitVector MaxFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -137,25 +128,25 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFQuaternion        *getSFRotation       (void);
-           SFPnt3f             *getSFTranslation    (void);
-           SFReal32            *getSFLength         (void);
+           SFReal32            *getSFHingeAngle     (void);
+           SFReal32            *getSFMin            (void);
+           SFReal32            *getSFMax            (void);
 
-           Quaternion          &getRotation       (void);
-     const Quaternion          &getRotation       (void) const;
-           Pnt3f               &getTranslation    (void);
-     const Pnt3f               &getTranslation    (void) const;
-           Real32              &getLength         (void);
-     const Real32              &getLength         (void) const;
+           Real32              &getHingeAngle     (void);
+     const Real32              &getHingeAngle     (void) const;
+           Real32              &getMin            (void);
+     const Real32              &getMin            (void) const;
+           Real32              &getMax            (void);
+     const Real32              &getMax            (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRotation       ( const Quaternion &value );
-     void setTranslation    ( const Pnt3f &value );
-     void setLength         ( const Real32 &value );
+     void setHingeAngle     ( const Real32 &value );
+     void setMin            ( const Real32 &value );
+     void setMax            ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -179,8 +170,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  BonePtr      create          (void); 
-    static  BonePtr      createEmpty     (void); 
+    static  HingedBonePtr      create          (void); 
+    static  HingedBonePtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -198,52 +189,24 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFQuaternion        _sfRotation;
-    SFPnt3f             _sfTranslation;
-    SFReal32            _sfLength;
-    MFBonePtr           _mfInternalChildren;
-    SFBonePtr           _sfInternalParent;
-    SFMatrix            _sfInternalTransformation;
+    SFReal32            _sfHingeAngle;
+    SFReal32            _sfMin;
+    SFReal32            _sfMax;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    BoneBase(void);
-    BoneBase(const BoneBase &source);
+    HingedBoneBase(void);
+    HingedBoneBase(const HingedBoneBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~BoneBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           MFBonePtr           *getMFInternalChildren(void);
-           SFBonePtr           *getSFInternalParent (void);
-           SFMatrix            *getSFInternalTransformation(void);
-
-           BonePtr             &getInternalParent (void);
-     const BonePtr             &getInternalParent (void) const;
-           Matrix              &getInternalTransformation(void);
-     const Matrix              &getInternalTransformation(void) const;
-           BonePtr             &getInternalChildren(UInt32 index);
-           MFBonePtr           &getInternalChildren(void);
-     const MFBonePtr           &getInternalChildren(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setInternalParent (const BonePtr &value);
-     void setInternalTransformation(const Matrix &value);
+    virtual ~HingedBoneBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -251,13 +214,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      BoneBase *pOther,
+    void executeSyncImpl(      HingedBoneBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      BoneBase *pOther,
+    void executeSyncImpl(      HingedBoneBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -287,7 +250,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const BoneBase &source);
+    void operator =(const HingedBoneBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -295,17 +258,17 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
 //---------------------------------------------------------------------------
 
 
-typedef BoneBase *BoneBaseP;
+typedef HingedBoneBase *HingedBoneBaseP;
 
-typedef osgIF<BoneBase::isNodeCore,
-              CoredNodePtr<Bone>,
+typedef osgIF<HingedBoneBase::isNodeCore,
+              CoredNodePtr<HingedBone>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet BoneNodePtr;
+              >::_IRet HingedBoneNodePtr;
 
-typedef RefPtr<BonePtr> BoneRefPtr;
+typedef RefPtr<HingedBonePtr> HingedBoneRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGBONEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGHINGEDBONEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGBONEBASE_H_ */
+#endif /* _OSGHINGEDBONEBASE_H_ */

@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Bone!
+ **     class HingedBone!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &BoneBase::getClassType(void)
+OSG::FieldContainerType &HingedBoneBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 BoneBase::getClassTypeId(void) 
+OSG::UInt32 HingedBoneBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-BonePtr BoneBase::create(void) 
+HingedBonePtr HingedBoneBase::create(void) 
 {
-    BonePtr fc; 
+    HingedBonePtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = BonePtr::dcast(
+        fc = HingedBonePtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ BonePtr BoneBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-BonePtr BoneBase::createEmpty(void) 
+HingedBonePtr HingedBoneBase::createEmpty(void) 
 { 
-    BonePtr returnValue; 
+    HingedBonePtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,177 +96,93 @@ BonePtr BoneBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Bone::_sfRotation field.
+//! Get the HingedBone::_sfHingeAngle field.
 inline
-SFQuaternion *BoneBase::getSFRotation(void)
+SFReal32 *HingedBoneBase::getSFHingeAngle(void)
 {
-    return &_sfRotation;
+    return &_sfHingeAngle;
 }
 
-//! Get the Bone::_sfTranslation field.
+//! Get the HingedBone::_sfMin field.
 inline
-SFPnt3f *BoneBase::getSFTranslation(void)
+SFReal32 *HingedBoneBase::getSFMin(void)
 {
-    return &_sfTranslation;
+    return &_sfMin;
 }
 
-//! Get the Bone::_sfLength field.
+//! Get the HingedBone::_sfMax field.
 inline
-SFReal32 *BoneBase::getSFLength(void)
+SFReal32 *HingedBoneBase::getSFMax(void)
 {
-    return &_sfLength;
-}
-
-//! Get the Bone::_mfInternalChildren field.
-inline
-MFBonePtr *BoneBase::getMFInternalChildren(void)
-{
-    return &_mfInternalChildren;
-}
-
-//! Get the Bone::_sfInternalParent field.
-inline
-SFBonePtr *BoneBase::getSFInternalParent(void)
-{
-    return &_sfInternalParent;
-}
-
-//! Get the Bone::_sfInternalTransformation field.
-inline
-SFMatrix *BoneBase::getSFInternalTransformation(void)
-{
-    return &_sfInternalTransformation;
+    return &_sfMax;
 }
 
 
-//! Get the value of the Bone::_sfRotation field.
+//! Get the value of the HingedBone::_sfHingeAngle field.
 inline
-Quaternion &BoneBase::getRotation(void)
+Real32 &HingedBoneBase::getHingeAngle(void)
 {
-    return _sfRotation.getValue();
+    return _sfHingeAngle.getValue();
 }
 
-//! Get the value of the Bone::_sfRotation field.
+//! Get the value of the HingedBone::_sfHingeAngle field.
 inline
-const Quaternion &BoneBase::getRotation(void) const
+const Real32 &HingedBoneBase::getHingeAngle(void) const
 {
-    return _sfRotation.getValue();
+    return _sfHingeAngle.getValue();
 }
 
-//! Set the value of the Bone::_sfRotation field.
+//! Set the value of the HingedBone::_sfHingeAngle field.
 inline
-void BoneBase::setRotation(const Quaternion &value)
+void HingedBoneBase::setHingeAngle(const Real32 &value)
 {
-    _sfRotation.setValue(value);
+    _sfHingeAngle.setValue(value);
 }
 
-//! Get the value of the Bone::_sfTranslation field.
+//! Get the value of the HingedBone::_sfMin field.
 inline
-Pnt3f &BoneBase::getTranslation(void)
+Real32 &HingedBoneBase::getMin(void)
 {
-    return _sfTranslation.getValue();
+    return _sfMin.getValue();
 }
 
-//! Get the value of the Bone::_sfTranslation field.
+//! Get the value of the HingedBone::_sfMin field.
 inline
-const Pnt3f &BoneBase::getTranslation(void) const
+const Real32 &HingedBoneBase::getMin(void) const
 {
-    return _sfTranslation.getValue();
+    return _sfMin.getValue();
 }
 
-//! Set the value of the Bone::_sfTranslation field.
+//! Set the value of the HingedBone::_sfMin field.
 inline
-void BoneBase::setTranslation(const Pnt3f &value)
+void HingedBoneBase::setMin(const Real32 &value)
 {
-    _sfTranslation.setValue(value);
+    _sfMin.setValue(value);
 }
 
-//! Get the value of the Bone::_sfLength field.
+//! Get the value of the HingedBone::_sfMax field.
 inline
-Real32 &BoneBase::getLength(void)
+Real32 &HingedBoneBase::getMax(void)
 {
-    return _sfLength.getValue();
+    return _sfMax.getValue();
 }
 
-//! Get the value of the Bone::_sfLength field.
+//! Get the value of the HingedBone::_sfMax field.
 inline
-const Real32 &BoneBase::getLength(void) const
+const Real32 &HingedBoneBase::getMax(void) const
 {
-    return _sfLength.getValue();
+    return _sfMax.getValue();
 }
 
-//! Set the value of the Bone::_sfLength field.
+//! Set the value of the HingedBone::_sfMax field.
 inline
-void BoneBase::setLength(const Real32 &value)
+void HingedBoneBase::setMax(const Real32 &value)
 {
-    _sfLength.setValue(value);
+    _sfMax.setValue(value);
 }
 
-//! Get the value of the Bone::_sfInternalParent field.
-inline
-BonePtr &BoneBase::getInternalParent(void)
-{
-    return _sfInternalParent.getValue();
-}
-
-//! Get the value of the Bone::_sfInternalParent field.
-inline
-const BonePtr &BoneBase::getInternalParent(void) const
-{
-    return _sfInternalParent.getValue();
-}
-
-//! Set the value of the Bone::_sfInternalParent field.
-inline
-void BoneBase::setInternalParent(const BonePtr &value)
-{
-    _sfInternalParent.setValue(value);
-}
-
-//! Get the value of the Bone::_sfInternalTransformation field.
-inline
-Matrix &BoneBase::getInternalTransformation(void)
-{
-    return _sfInternalTransformation.getValue();
-}
-
-//! Get the value of the Bone::_sfInternalTransformation field.
-inline
-const Matrix &BoneBase::getInternalTransformation(void) const
-{
-    return _sfInternalTransformation.getValue();
-}
-
-//! Set the value of the Bone::_sfInternalTransformation field.
-inline
-void BoneBase::setInternalTransformation(const Matrix &value)
-{
-    _sfInternalTransformation.setValue(value);
-}
-
-
-//! Get the value of the \a index element the Bone::_mfInternalChildren field.
-inline
-BonePtr &BoneBase::getInternalChildren(const UInt32 index)
-{
-    return _mfInternalChildren[index];
-}
-
-//! Get the Bone::_mfInternalChildren field.
-inline
-MFBonePtr &BoneBase::getInternalChildren(void)
-{
-    return _mfInternalChildren;
-}
-
-//! Get the Bone::_mfInternalChildren field.
-inline
-const MFBonePtr &BoneBase::getInternalChildren(void) const
-{
-    return _mfInternalChildren;
-}
 
 OSG_END_NAMESPACE
 
-#define OSGBONEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGHINGEDBONEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

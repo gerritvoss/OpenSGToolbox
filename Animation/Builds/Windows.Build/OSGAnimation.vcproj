@@ -1553,6 +1553,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBone.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBone.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBone.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBoneBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBoneBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBoneBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBoneFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\SkeletalAnimation\OSGSkeleton.cpp"
 					>
 				</File>
