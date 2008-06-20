@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DynamicsParticleGenerator"
+	parent="ParticleGenerator"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Position"
+		type="FunctionPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+		header="OpenSG/Dynamics/OSGFunctionFields.h"
+	>
+	</Field>
+</FieldContainer>
