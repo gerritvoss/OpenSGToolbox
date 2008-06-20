@@ -57,6 +57,8 @@
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGTextArea.h>
+#include <OpenSG/UserInterface/OSGCellEditor.h>
+#include <OpenSG/UserInterface/OSGComponentGenerator.h>
 
 #include <OpenSG/UserInterface/OSGLayoutSpring.h>
 #include <OpenSG/UserInterface/OSGSpringLayout.h>
@@ -215,10 +217,23 @@ protected:
 		{
 			FieldContainerType* TheType;
 			TheType = FieldContainerFactory::the()->findType(i);
+
+            std::vector<FieldContainerType*> AllowedTypes;
+            AllowedTypes.push_back(&Component::getClassType());
+            AllowedTypes.push_back(&Border::getClassType());
+            AllowedTypes.push_back(&UIBackground::getClassType());
+            AllowedTypes.push_back(&UIFont::getClassType());
+            AllowedTypes.push_back(&CellEditor::getClassType());
+            AllowedTypes.push_back(&ComponentGenerator::getClassType());
 			if(TheType != NULL)
 			{
-				// Add all available Fonts to it
-				_FieldContainerTypeModel->pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
+                for(std::vector<FieldContainerType*>::iterator Itor(AllowedTypes.begin()) ; Itor != AllowedTypes.end(); ++Itor)
+                {
+                    if(TheType->isDerivedFrom(*(*Itor)) )
+                    {
+				        _FieldContainerTypeModel->pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
+                    }
+                }
 				++NumTypesFound;
 			}
 		}
@@ -261,7 +276,7 @@ protected:
 		//Number of FieldContainerTypes Value Label
 		LabelPtr NumFCTypesValueLabel = Label::create();
 		std::stringstream TempSStream;
-		TempSStream << FieldContainerFactory::the()->getNumTypes();
+        TempSStream << _FieldContainerTypeModel->getSize();
 		beginEditCP(NumFCTypesValueLabel, Label::TextFieldMask);
 			NumFCTypesValueLabel->setText(TempSStream.str());
 		endEditCP(NumFCTypesValueLabel, Label::TextFieldMask);
