@@ -36,31 +36,31 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFUNCTIONCOMPONENT_H_
-#define _OSGFUNCTIONCOMPONENT_H_
+#ifndef _OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATOR_H_
+#define _OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGFunctionComponentBase.h"
+#include "OSGDefaultFunctionComponentIOTabComponentGeneratorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FunctionComponent class. See \ref 
-           PageDynamicsFunctionComponent for a description.
+/*! \brief DefaultFunctionComponentIOTabComponentGenerator class. See \ref 
+           PageDynamicsDefaultFunctionComponentIOTabComponentGenerator for a description.
 */
 
-class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponent : public FunctionComponentBase
+class OSG_DYNAMICSLIB_DLLMAPPING DefaultFunctionComponentIOTabComponentGenerator : public DefaultFunctionComponentIOTabComponentGeneratorBase
 {
   private:
 
-    typedef FunctionComponentBase Inherited;
+    typedef DefaultFunctionComponentIOTabComponentGeneratorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-      enum Orientation {HORIZONTAL_ORIENTATION = 0, VERTICAL_ORIENTATION};
+      enum TextSource {TEXT_SOURCE_TYPE_NAME};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -78,49 +78,49 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponent : public FunctionComponentBas
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual Vec2f getContentRequestedSize(void) const;
+    virtual ComponentPtr getIOTabComponent(FunctionComponentPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in FunctionComponentBase.
+    // Variables should all be in DefaultFunctionComponentIOTabComponentGeneratorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    FunctionComponent(void);
-    FunctionComponent(const FunctionComponent &source);
+    DefaultFunctionComponentIOTabComponentGenerator(void);
+    DefaultFunctionComponentIOTabComponentGenerator(const DefaultFunctionComponentIOTabComponentGenerator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FunctionComponent(void); 
+    virtual ~DefaultFunctionComponentIOTabComponentGenerator(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class FunctionComponentBase;
+    friend class DefaultFunctionComponentIOTabComponentGeneratorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const FunctionComponent &source);
+    void operator =(const DefaultFunctionComponentIOTabComponentGenerator &source);
 };
 
-typedef FunctionComponent *FunctionComponentP;
+typedef DefaultFunctionComponentIOTabComponentGenerator *DefaultFunctionComponentIOTabComponentGeneratorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFunctionComponentBase.inl"
-#include "OSGFunctionComponent.inl"
+#include "OSGDefaultFunctionComponentIOTabComponentGeneratorBase.inl"
+#include "OSGDefaultFunctionComponentIOTabComponentGenerator.inl"
 
-#define OSGFUNCTIONCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGFUNCTIONCOMPONENT_H_ */
+#endif /* _OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATOR_H_ */

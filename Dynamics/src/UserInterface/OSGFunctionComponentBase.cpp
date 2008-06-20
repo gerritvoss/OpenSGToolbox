@@ -70,6 +70,36 @@ const OSG::BitVector  FunctionComponentBase::FunctionFieldMask =
 const OSG::BitVector  FunctionComponentBase::FontFieldMask = 
     (TypeTraits<BitVector>::One << FunctionComponentBase::FontFieldId);
 
+const OSG::BitVector  FunctionComponentBase::InputTabOrientationFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabOrientationFieldId);
+
+const OSG::BitVector  FunctionComponentBase::OutputTabOrientationFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::OutputTabOrientationFieldId);
+
+const OSG::BitVector  FunctionComponentBase::InputTabVerticalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabVerticalAlignmentFieldId);
+
+const OSG::BitVector  FunctionComponentBase::InputTabHorizontalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabHorizontalAlignmentFieldId);
+
+const OSG::BitVector  FunctionComponentBase::OutputTabVerticalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::OutputTabVerticalAlignmentFieldId);
+
+const OSG::BitVector  FunctionComponentBase::OutputTabHorizontalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::OutputTabHorizontalAlignmentFieldId);
+
+const OSG::BitVector  FunctionComponentBase::InputTabComponentGeneratorFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabComponentGeneratorFieldId);
+
+const OSG::BitVector  FunctionComponentBase::OutputTabComponentGeneratorFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::OutputTabComponentGeneratorFieldId);
+
+const OSG::BitVector  FunctionComponentBase::InputTabsFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabsFieldId);
+
+const OSG::BitVector  FunctionComponentBase::OutputTabsFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::OutputTabsFieldId);
+
 const OSG::BitVector  FunctionComponentBase::FocusedTextColorFieldMask = 
     (TypeTraits<BitVector>::One << FunctionComponentBase::FocusedTextColorFieldId);
 
@@ -93,6 +123,36 @@ const OSG::BitVector FunctionComponentBase::MTInfluenceMask =
     
 */
 /*! \var UIFontPtr       FunctionComponentBase::_sfFont
+    
+*/
+/*! \var UInt32          FunctionComponentBase::_sfInputTabOrientation
+    
+*/
+/*! \var UInt32          FunctionComponentBase::_sfOutputTabOrientation
+    
+*/
+/*! \var Real32          FunctionComponentBase::_sfInputTabVerticalAlignment
+    
+*/
+/*! \var Real32          FunctionComponentBase::_sfInputTabHorizontalAlignment
+    
+*/
+/*! \var Real32          FunctionComponentBase::_sfOutputTabVerticalAlignment
+    
+*/
+/*! \var Real32          FunctionComponentBase::_sfOutputTabHorizontalAlignment
+    
+*/
+/*! \var ComponentGeneratorPtr FunctionComponentBase::_sfInputTabComponentGenerator
+    
+*/
+/*! \var ComponentGeneratorPtr FunctionComponentBase::_sfOutputTabComponentGenerator
+    
+*/
+/*! \var ComponentPtr    FunctionComponentBase::_mfInputTabs
+    
+*/
+/*! \var ComponentPtr    FunctionComponentBase::_mfOutputTabs
     
 */
 /*! \var Color4f         FunctionComponentBase::_sfFocusedTextColor
@@ -122,6 +182,56 @@ FieldDescription *FunctionComponentBase::_desc[] =
                      FontFieldId, FontFieldMask,
                      false,
                      (FieldAccessMethod) &FunctionComponentBase::getSFFont),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "InputTabOrientation", 
+                     InputTabOrientationFieldId, InputTabOrientationFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFInputTabOrientation),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "OutputTabOrientation", 
+                     OutputTabOrientationFieldId, OutputTabOrientationFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFOutputTabOrientation),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "InputTabVerticalAlignment", 
+                     InputTabVerticalAlignmentFieldId, InputTabVerticalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFInputTabVerticalAlignment),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "InputTabHorizontalAlignment", 
+                     InputTabHorizontalAlignmentFieldId, InputTabHorizontalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFInputTabHorizontalAlignment),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "OutputTabVerticalAlignment", 
+                     OutputTabVerticalAlignmentFieldId, OutputTabVerticalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFOutputTabVerticalAlignment),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "OutputTabHorizontalAlignment", 
+                     OutputTabHorizontalAlignmentFieldId, OutputTabHorizontalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFOutputTabHorizontalAlignment),
+    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
+                     "InputTabComponentGenerator", 
+                     InputTabComponentGeneratorFieldId, InputTabComponentGeneratorFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFInputTabComponentGenerator),
+    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
+                     "OutputTabComponentGenerator", 
+                     OutputTabComponentGeneratorFieldId, OutputTabComponentGeneratorFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFOutputTabComponentGenerator),
+    new FieldDescription(MFComponentPtr::getClassType(), 
+                     "InputTabs", 
+                     InputTabsFieldId, InputTabsFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getMFInputTabs),
+    new FieldDescription(MFComponentPtr::getClassType(), 
+                     "OutputTabs", 
+                     OutputTabsFieldId, OutputTabsFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getMFOutputTabs),
     new FieldDescription(SFColor4f::getClassType(), 
                      "FocusedTextColor", 
                      FocusedTextColorFieldId, FocusedTextColorFieldMask,
@@ -147,7 +257,7 @@ FieldDescription *FunctionComponentBase::_desc[] =
 
 FieldContainerType FunctionComponentBase::_type(
     "FunctionComponent",
-    "Component",
+    "Container",
     NULL,
     (PrototypeCreateF) &FunctionComponentBase::createEmpty,
     FunctionComponent::initMethod,
@@ -207,6 +317,8 @@ void FunctionComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfInputTabs.terminateShare(uiAspect, this->getContainerSize());
+    _mfOutputTabs.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -217,12 +329,22 @@ void FunctionComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 FunctionComponentBase::FunctionComponentBase(void) :
-    _sfFunction               (), 
-    _sfFont                   (), 
-    _sfFocusedTextColor       (), 
-    _sfRolloverTextColor      (), 
-    _sfDisabledTextColor      (), 
-    _sfTextColor              (), 
+    _sfFunction               (FunctionPtr(NullFC)), 
+    _sfFont                   (UIFontPtr(NullFC)), 
+    _sfInputTabOrientation    (UInt32(FunctionComponent::VERTICAL_ORIENTATION)), 
+    _sfOutputTabOrientation   (UInt32(FunctionComponent::VERTICAL_ORIENTATION)), 
+    _sfInputTabVerticalAlignment(Real32(0.5f)), 
+    _sfInputTabHorizontalAlignment(Real32(0.0f)), 
+    _sfOutputTabVerticalAlignment(Real32(0.5f)), 
+    _sfOutputTabHorizontalAlignment(Real32(1.0f)), 
+    _sfInputTabComponentGenerator(ComponentGeneratorPtr(NullFC)), 
+    _sfOutputTabComponentGenerator(ComponentGeneratorPtr(NullFC)), 
+    _mfInputTabs              (), 
+    _mfOutputTabs             (), 
+    _sfFocusedTextColor       (Color4f(0.0f,0.0f,0.0f,1.0f)), 
+    _sfRolloverTextColor      (Color4f(0.0f,0.0f,0.0f,1.0f)), 
+    _sfDisabledTextColor      (Color4f(0.0f,0.0f,0.0f,1.0f)), 
+    _sfTextColor              (Color4f(0.0f,0.0f,0.0f,1.0f)), 
     Inherited() 
 {
 }
@@ -234,6 +356,16 @@ FunctionComponentBase::FunctionComponentBase(void) :
 FunctionComponentBase::FunctionComponentBase(const FunctionComponentBase &source) :
     _sfFunction               (source._sfFunction               ), 
     _sfFont                   (source._sfFont                   ), 
+    _sfInputTabOrientation    (source._sfInputTabOrientation    ), 
+    _sfOutputTabOrientation   (source._sfOutputTabOrientation   ), 
+    _sfInputTabVerticalAlignment(source._sfInputTabVerticalAlignment), 
+    _sfInputTabHorizontalAlignment(source._sfInputTabHorizontalAlignment), 
+    _sfOutputTabVerticalAlignment(source._sfOutputTabVerticalAlignment), 
+    _sfOutputTabHorizontalAlignment(source._sfOutputTabHorizontalAlignment), 
+    _sfInputTabComponentGenerator(source._sfInputTabComponentGenerator), 
+    _sfOutputTabComponentGenerator(source._sfOutputTabComponentGenerator), 
+    _mfInputTabs              (source._mfInputTabs              ), 
+    _mfOutputTabs             (source._mfOutputTabs             ), 
     _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
     _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
     _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
@@ -262,6 +394,56 @@ UInt32 FunctionComponentBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (FontFieldMask & whichField))
     {
         returnValue += _sfFont.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
+    {
+        returnValue += _sfInputTabOrientation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OutputTabOrientationFieldMask & whichField))
+    {
+        returnValue += _sfOutputTabOrientation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfInputTabVerticalAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfInputTabHorizontalAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfOutputTabVerticalAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfOutputTabHorizontalAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InputTabComponentGeneratorFieldMask & whichField))
+    {
+        returnValue += _sfInputTabComponentGenerator.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OutputTabComponentGeneratorFieldMask & whichField))
+    {
+        returnValue += _sfOutputTabComponentGenerator.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InputTabsFieldMask & whichField))
+    {
+        returnValue += _mfInputTabs.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OutputTabsFieldMask & whichField))
+    {
+        returnValue += _mfOutputTabs.getBinSize();
     }
 
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
@@ -303,6 +485,56 @@ void FunctionComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFont.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
+    {
+        _sfInputTabOrientation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabOrientationFieldMask & whichField))
+    {
+        _sfOutputTabOrientation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
+    {
+        _sfInputTabVerticalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
+    {
+        _sfInputTabHorizontalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
+    {
+        _sfOutputTabVerticalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
+    {
+        _sfOutputTabHorizontalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputTabComponentGeneratorFieldMask & whichField))
+    {
+        _sfInputTabComponentGenerator.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabComponentGeneratorFieldMask & whichField))
+    {
+        _sfOutputTabComponentGenerator.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputTabsFieldMask & whichField))
+    {
+        _mfInputTabs.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabsFieldMask & whichField))
+    {
+        _mfOutputTabs.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         _sfFocusedTextColor.copyToBin(pMem);
@@ -341,6 +573,56 @@ void FunctionComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFont.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
+    {
+        _sfInputTabOrientation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabOrientationFieldMask & whichField))
+    {
+        _sfOutputTabOrientation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
+    {
+        _sfInputTabVerticalAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
+    {
+        _sfInputTabHorizontalAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
+    {
+        _sfOutputTabVerticalAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
+    {
+        _sfOutputTabHorizontalAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputTabComponentGeneratorFieldMask & whichField))
+    {
+        _sfInputTabComponentGenerator.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabComponentGeneratorFieldMask & whichField))
+    {
+        _sfOutputTabComponentGenerator.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputTabsFieldMask & whichField))
+    {
+        _mfInputTabs.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputTabsFieldMask & whichField))
+    {
+        _mfOutputTabs.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         _sfFocusedTextColor.copyFromBin(pMem);
@@ -377,6 +659,36 @@ void FunctionComponentBase::executeSyncImpl(      FunctionComponentBase *pOther,
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
 
+    if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
+        _sfInputTabOrientation.syncWith(pOther->_sfInputTabOrientation);
+
+    if(FieldBits::NoField != (OutputTabOrientationFieldMask & whichField))
+        _sfOutputTabOrientation.syncWith(pOther->_sfOutputTabOrientation);
+
+    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
+        _sfInputTabVerticalAlignment.syncWith(pOther->_sfInputTabVerticalAlignment);
+
+    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
+        _sfInputTabHorizontalAlignment.syncWith(pOther->_sfInputTabHorizontalAlignment);
+
+    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
+        _sfOutputTabVerticalAlignment.syncWith(pOther->_sfOutputTabVerticalAlignment);
+
+    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
+        _sfOutputTabHorizontalAlignment.syncWith(pOther->_sfOutputTabHorizontalAlignment);
+
+    if(FieldBits::NoField != (InputTabComponentGeneratorFieldMask & whichField))
+        _sfInputTabComponentGenerator.syncWith(pOther->_sfInputTabComponentGenerator);
+
+    if(FieldBits::NoField != (OutputTabComponentGeneratorFieldMask & whichField))
+        _sfOutputTabComponentGenerator.syncWith(pOther->_sfOutputTabComponentGenerator);
+
+    if(FieldBits::NoField != (InputTabsFieldMask & whichField))
+        _mfInputTabs.syncWith(pOther->_mfInputTabs);
+
+    if(FieldBits::NoField != (OutputTabsFieldMask & whichField))
+        _mfOutputTabs.syncWith(pOther->_mfOutputTabs);
+
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
         _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
 
@@ -405,6 +717,30 @@ void FunctionComponentBase::executeSyncImpl(      FunctionComponentBase *pOther,
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
 
+    if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
+        _sfInputTabOrientation.syncWith(pOther->_sfInputTabOrientation);
+
+    if(FieldBits::NoField != (OutputTabOrientationFieldMask & whichField))
+        _sfOutputTabOrientation.syncWith(pOther->_sfOutputTabOrientation);
+
+    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
+        _sfInputTabVerticalAlignment.syncWith(pOther->_sfInputTabVerticalAlignment);
+
+    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
+        _sfInputTabHorizontalAlignment.syncWith(pOther->_sfInputTabHorizontalAlignment);
+
+    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
+        _sfOutputTabVerticalAlignment.syncWith(pOther->_sfOutputTabVerticalAlignment);
+
+    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
+        _sfOutputTabHorizontalAlignment.syncWith(pOther->_sfOutputTabHorizontalAlignment);
+
+    if(FieldBits::NoField != (InputTabComponentGeneratorFieldMask & whichField))
+        _sfInputTabComponentGenerator.syncWith(pOther->_sfInputTabComponentGenerator);
+
+    if(FieldBits::NoField != (OutputTabComponentGeneratorFieldMask & whichField))
+        _sfOutputTabComponentGenerator.syncWith(pOther->_sfOutputTabComponentGenerator);
+
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
         _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
 
@@ -418,6 +754,12 @@ void FunctionComponentBase::executeSyncImpl(      FunctionComponentBase *pOther,
         _sfTextColor.syncWith(pOther->_sfTextColor);
 
 
+    if(FieldBits::NoField != (InputTabsFieldMask & whichField))
+        _mfInputTabs.syncWith(pOther->_mfInputTabs, sInfo);
+
+    if(FieldBits::NoField != (OutputTabsFieldMask & whichField))
+        _mfOutputTabs.syncWith(pOther->_mfOutputTabs, sInfo);
+
 
 }
 
@@ -426,6 +768,12 @@ void FunctionComponentBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InputTabsFieldMask & whichField))
+        _mfInputTabs.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (OutputTabsFieldMask & whichField))
+        _mfOutputTabs.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -440,7 +788,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<FunctionComponentPtr>::_type("FunctionComponentPtr", "ComponentPtr");
+DataType FieldDataTraits<FunctionComponentPtr>::_type("FunctionComponentPtr", "ContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(FunctionComponentPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

@@ -110,6 +110,76 @@ SFUIFontPtr *FunctionComponentBase::getSFFont(void)
     return &_sfFont;
 }
 
+//! Get the FunctionComponent::_sfInputTabOrientation field.
+inline
+SFUInt32 *FunctionComponentBase::getSFInputTabOrientation(void)
+{
+    return &_sfInputTabOrientation;
+}
+
+//! Get the FunctionComponent::_sfOutputTabOrientation field.
+inline
+SFUInt32 *FunctionComponentBase::getSFOutputTabOrientation(void)
+{
+    return &_sfOutputTabOrientation;
+}
+
+//! Get the FunctionComponent::_sfInputTabVerticalAlignment field.
+inline
+SFReal32 *FunctionComponentBase::getSFInputTabVerticalAlignment(void)
+{
+    return &_sfInputTabVerticalAlignment;
+}
+
+//! Get the FunctionComponent::_sfInputTabHorizontalAlignment field.
+inline
+SFReal32 *FunctionComponentBase::getSFInputTabHorizontalAlignment(void)
+{
+    return &_sfInputTabHorizontalAlignment;
+}
+
+//! Get the FunctionComponent::_sfOutputTabVerticalAlignment field.
+inline
+SFReal32 *FunctionComponentBase::getSFOutputTabVerticalAlignment(void)
+{
+    return &_sfOutputTabVerticalAlignment;
+}
+
+//! Get the FunctionComponent::_sfOutputTabHorizontalAlignment field.
+inline
+SFReal32 *FunctionComponentBase::getSFOutputTabHorizontalAlignment(void)
+{
+    return &_sfOutputTabHorizontalAlignment;
+}
+
+//! Get the FunctionComponent::_sfInputTabComponentGenerator field.
+inline
+SFComponentGeneratorPtr *FunctionComponentBase::getSFInputTabComponentGenerator(void)
+{
+    return &_sfInputTabComponentGenerator;
+}
+
+//! Get the FunctionComponent::_sfOutputTabComponentGenerator field.
+inline
+SFComponentGeneratorPtr *FunctionComponentBase::getSFOutputTabComponentGenerator(void)
+{
+    return &_sfOutputTabComponentGenerator;
+}
+
+//! Get the FunctionComponent::_mfInputTabs field.
+inline
+MFComponentPtr *FunctionComponentBase::getMFInputTabs(void)
+{
+    return &_mfInputTabs;
+}
+
+//! Get the FunctionComponent::_mfOutputTabs field.
+inline
+MFComponentPtr *FunctionComponentBase::getMFOutputTabs(void)
+{
+    return &_mfOutputTabs;
+}
+
 //! Get the FunctionComponent::_sfFocusedTextColor field.
 inline
 SFColor4f *FunctionComponentBase::getSFFocusedTextColor(void)
@@ -179,6 +249,174 @@ inline
 void FunctionComponentBase::setFont(const UIFontPtr &value)
 {
     _sfFont.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabOrientation field.
+inline
+UInt32 &FunctionComponentBase::getInputTabOrientation(void)
+{
+    return _sfInputTabOrientation.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabOrientation field.
+inline
+const UInt32 &FunctionComponentBase::getInputTabOrientation(void) const
+{
+    return _sfInputTabOrientation.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfInputTabOrientation field.
+inline
+void FunctionComponentBase::setInputTabOrientation(const UInt32 &value)
+{
+    _sfInputTabOrientation.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabOrientation field.
+inline
+UInt32 &FunctionComponentBase::getOutputTabOrientation(void)
+{
+    return _sfOutputTabOrientation.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabOrientation field.
+inline
+const UInt32 &FunctionComponentBase::getOutputTabOrientation(void) const
+{
+    return _sfOutputTabOrientation.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfOutputTabOrientation field.
+inline
+void FunctionComponentBase::setOutputTabOrientation(const UInt32 &value)
+{
+    _sfOutputTabOrientation.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabVerticalAlignment field.
+inline
+Real32 &FunctionComponentBase::getInputTabVerticalAlignment(void)
+{
+    return _sfInputTabVerticalAlignment.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabVerticalAlignment field.
+inline
+const Real32 &FunctionComponentBase::getInputTabVerticalAlignment(void) const
+{
+    return _sfInputTabVerticalAlignment.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfInputTabVerticalAlignment field.
+inline
+void FunctionComponentBase::setInputTabVerticalAlignment(const Real32 &value)
+{
+    _sfInputTabVerticalAlignment.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabHorizontalAlignment field.
+inline
+Real32 &FunctionComponentBase::getInputTabHorizontalAlignment(void)
+{
+    return _sfInputTabHorizontalAlignment.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabHorizontalAlignment field.
+inline
+const Real32 &FunctionComponentBase::getInputTabHorizontalAlignment(void) const
+{
+    return _sfInputTabHorizontalAlignment.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfInputTabHorizontalAlignment field.
+inline
+void FunctionComponentBase::setInputTabHorizontalAlignment(const Real32 &value)
+{
+    _sfInputTabHorizontalAlignment.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabVerticalAlignment field.
+inline
+Real32 &FunctionComponentBase::getOutputTabVerticalAlignment(void)
+{
+    return _sfOutputTabVerticalAlignment.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabVerticalAlignment field.
+inline
+const Real32 &FunctionComponentBase::getOutputTabVerticalAlignment(void) const
+{
+    return _sfOutputTabVerticalAlignment.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfOutputTabVerticalAlignment field.
+inline
+void FunctionComponentBase::setOutputTabVerticalAlignment(const Real32 &value)
+{
+    _sfOutputTabVerticalAlignment.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabHorizontalAlignment field.
+inline
+Real32 &FunctionComponentBase::getOutputTabHorizontalAlignment(void)
+{
+    return _sfOutputTabHorizontalAlignment.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabHorizontalAlignment field.
+inline
+const Real32 &FunctionComponentBase::getOutputTabHorizontalAlignment(void) const
+{
+    return _sfOutputTabHorizontalAlignment.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfOutputTabHorizontalAlignment field.
+inline
+void FunctionComponentBase::setOutputTabHorizontalAlignment(const Real32 &value)
+{
+    _sfOutputTabHorizontalAlignment.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabComponentGenerator field.
+inline
+ComponentGeneratorPtr &FunctionComponentBase::getInputTabComponentGenerator(void)
+{
+    return _sfInputTabComponentGenerator.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabComponentGenerator field.
+inline
+const ComponentGeneratorPtr &FunctionComponentBase::getInputTabComponentGenerator(void) const
+{
+    return _sfInputTabComponentGenerator.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfInputTabComponentGenerator field.
+inline
+void FunctionComponentBase::setInputTabComponentGenerator(const ComponentGeneratorPtr &value)
+{
+    _sfInputTabComponentGenerator.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabComponentGenerator field.
+inline
+ComponentGeneratorPtr &FunctionComponentBase::getOutputTabComponentGenerator(void)
+{
+    return _sfOutputTabComponentGenerator.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabComponentGenerator field.
+inline
+const ComponentGeneratorPtr &FunctionComponentBase::getOutputTabComponentGenerator(void) const
+{
+    return _sfOutputTabComponentGenerator.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfOutputTabComponentGenerator field.
+inline
+void FunctionComponentBase::setOutputTabComponentGenerator(const ComponentGeneratorPtr &value)
+{
+    _sfOutputTabComponentGenerator.setValue(value);
 }
 
 //! Get the value of the FunctionComponent::_sfFocusedTextColor field.
@@ -265,6 +503,48 @@ void FunctionComponentBase::setTextColor(const Color4f &value)
     _sfTextColor.setValue(value);
 }
 
+
+//! Get the value of the \a index element the FunctionComponent::_mfInputTabs field.
+inline
+ComponentPtr &FunctionComponentBase::getInputTabs(const UInt32 index)
+{
+    return _mfInputTabs[index];
+}
+
+//! Get the FunctionComponent::_mfInputTabs field.
+inline
+MFComponentPtr &FunctionComponentBase::getInputTabs(void)
+{
+    return _mfInputTabs;
+}
+
+//! Get the FunctionComponent::_mfInputTabs field.
+inline
+const MFComponentPtr &FunctionComponentBase::getInputTabs(void) const
+{
+    return _mfInputTabs;
+}
+
+//! Get the value of the \a index element the FunctionComponent::_mfOutputTabs field.
+inline
+ComponentPtr &FunctionComponentBase::getOutputTabs(const UInt32 index)
+{
+    return _mfOutputTabs[index];
+}
+
+//! Get the FunctionComponent::_mfOutputTabs field.
+inline
+MFComponentPtr &FunctionComponentBase::getOutputTabs(void)
+{
+    return _mfOutputTabs;
+}
+
+//! Get the FunctionComponent::_mfOutputTabs field.
+inline
+const MFComponentPtr &FunctionComponentBase::getOutputTabs(void) const
+{
+    return _mfOutputTabs;
+}
 
 OSG_END_NAMESPACE
 

@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class FunctionComponent
+ **     class DefaultFunctionComponentIOTabComponentGenerator
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGFUNCTIONCOMPONENTBASE_H_
-#define _OSGFUNCTIONCOMPONENTBASE_H_
+#ifndef _OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORBASE_H_
+#define _OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,82 +65,85 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/UserInterface/OSGContainer.h> // Parent
+#include "OSGFunctionComponentIOTabComponentGenerator.h" // Parent
 
-#include "Function/OSGFunctionFields.h" // Function type
-#include <OpenSG/UserInterface/OSGUIFont.h> // Font type
-#include <OpenSG/OSGUInt32Fields.h> // InputTabOrientation type
-#include <OpenSG/OSGUInt32Fields.h> // OutputTabOrientation type
-#include <OpenSG/OSGReal32Fields.h> // InputTabVerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // InputTabHorizontalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // OutputTabVerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // OutputTabHorizontalAlignment type
-#include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // InputTabComponentGenerator type
-#include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // OutputTabComponentGenerator type
-#include <OpenSG/UserInterface/OSGComponentFields.h> // InputTabs type
-#include <OpenSG/UserInterface/OSGComponentFields.h> // OutputTabs type
+#include <OpenSG/OSGVec2fFields.h> // TabTextSource type
+#include <OpenSG/OSGBoolFields.h> // EnableTooltip type
+#include <OpenSG/OSGTimeFields.h> // TooltipTime type
+#include <OpenSG/OSGTimeFields.h> // TooltipTextSource type
+#include <OpenSG/UserInterface/OSGComponentFields.h> // DefaultTab type
 #include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
 #include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
 #include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
 #include <OpenSG/OSGColor4fFields.h> // TextColor type
+#include <OpenSG/OSGColor4fFields.h> // DragToTextColor type
+#include <OpenSG/OSGColor4fFields.h> // DragFromTextColor type
+#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h> // FocusedDrawObject type
+#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h> // RolloverDrawObject type
+#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h> // DisabledDrawObject type
+#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h> // DrawObject type
+#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h> // DragToDrawObject type
+#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h> // DragFromDrawObject type
 
-#include "OSGFunctionComponentFields.h"
+#include "OSGDefaultFunctionComponentIOTabComponentGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class FunctionComponent;
+class DefaultFunctionComponentIOTabComponentGenerator;
 class BinaryDataHandler;
 
-//! \brief FunctionComponent Base Class.
+//! \brief DefaultFunctionComponentIOTabComponentGenerator Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
+class OSG_DYNAMICSLIB_DLLMAPPING DefaultFunctionComponentIOTabComponentGeneratorBase : public FunctionComponentIOTabComponentGenerator
 {
   private:
 
-    typedef Container    Inherited;
+    typedef FunctionComponentIOTabComponentGenerator    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef FunctionComponentPtr  Ptr;
+    typedef DefaultFunctionComponentIOTabComponentGeneratorPtr  Ptr;
 
     enum
     {
-        FunctionFieldId                     = Inherited::NextFieldId,
-        FontFieldId                         = FunctionFieldId                     + 1,
-        InputTabOrientationFieldId          = FontFieldId                         + 1,
-        OutputTabOrientationFieldId         = InputTabOrientationFieldId          + 1,
-        InputTabVerticalAlignmentFieldId    = OutputTabOrientationFieldId         + 1,
-        InputTabHorizontalAlignmentFieldId  = InputTabVerticalAlignmentFieldId    + 1,
-        OutputTabVerticalAlignmentFieldId   = InputTabHorizontalAlignmentFieldId  + 1,
-        OutputTabHorizontalAlignmentFieldId = OutputTabVerticalAlignmentFieldId   + 1,
-        InputTabComponentGeneratorFieldId   = OutputTabHorizontalAlignmentFieldId + 1,
-        OutputTabComponentGeneratorFieldId  = InputTabComponentGeneratorFieldId   + 1,
-        InputTabsFieldId                    = OutputTabComponentGeneratorFieldId  + 1,
-        OutputTabsFieldId                   = InputTabsFieldId                    + 1,
-        FocusedTextColorFieldId             = OutputTabsFieldId                   + 1,
-        RolloverTextColorFieldId            = FocusedTextColorFieldId             + 1,
-        DisabledTextColorFieldId            = RolloverTextColorFieldId            + 1,
-        TextColorFieldId                    = DisabledTextColorFieldId            + 1,
-        NextFieldId                         = TextColorFieldId                    + 1
+        TabTextSourceFieldId      = Inherited::NextFieldId,
+        EnableTooltipFieldId      = TabTextSourceFieldId      + 1,
+        TooltipTimeFieldId        = EnableTooltipFieldId      + 1,
+        TooltipTextSourceFieldId  = TooltipTimeFieldId        + 1,
+        DefaultTabFieldId         = TooltipTextSourceFieldId  + 1,
+        FocusedTextColorFieldId   = DefaultTabFieldId         + 1,
+        RolloverTextColorFieldId  = FocusedTextColorFieldId   + 1,
+        DisabledTextColorFieldId  = RolloverTextColorFieldId  + 1,
+        TextColorFieldId          = DisabledTextColorFieldId  + 1,
+        DragToTextColorFieldId    = TextColorFieldId          + 1,
+        DragFromTextColorFieldId  = DragToTextColorFieldId    + 1,
+        FocusedDrawObjectFieldId  = DragFromTextColorFieldId  + 1,
+        RolloverDrawObjectFieldId = FocusedDrawObjectFieldId  + 1,
+        DisabledDrawObjectFieldId = RolloverDrawObjectFieldId + 1,
+        DrawObjectFieldId         = DisabledDrawObjectFieldId + 1,
+        DragToDrawObjectFieldId   = DrawObjectFieldId         + 1,
+        DragFromDrawObjectFieldId = DragToDrawObjectFieldId   + 1,
+        NextFieldId               = DragFromDrawObjectFieldId + 1
     };
 
-    static const OSG::BitVector FunctionFieldMask;
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector InputTabOrientationFieldMask;
-    static const OSG::BitVector OutputTabOrientationFieldMask;
-    static const OSG::BitVector InputTabVerticalAlignmentFieldMask;
-    static const OSG::BitVector InputTabHorizontalAlignmentFieldMask;
-    static const OSG::BitVector OutputTabVerticalAlignmentFieldMask;
-    static const OSG::BitVector OutputTabHorizontalAlignmentFieldMask;
-    static const OSG::BitVector InputTabComponentGeneratorFieldMask;
-    static const OSG::BitVector OutputTabComponentGeneratorFieldMask;
-    static const OSG::BitVector InputTabsFieldMask;
-    static const OSG::BitVector OutputTabsFieldMask;
+    static const OSG::BitVector TabTextSourceFieldMask;
+    static const OSG::BitVector EnableTooltipFieldMask;
+    static const OSG::BitVector TooltipTimeFieldMask;
+    static const OSG::BitVector TooltipTextSourceFieldMask;
+    static const OSG::BitVector DefaultTabFieldMask;
     static const OSG::BitVector FocusedTextColorFieldMask;
     static const OSG::BitVector RolloverTextColorFieldMask;
     static const OSG::BitVector DisabledTextColorFieldMask;
     static const OSG::BitVector TextColorFieldMask;
+    static const OSG::BitVector DragToTextColorFieldMask;
+    static const OSG::BitVector DragFromTextColorFieldMask;
+    static const OSG::BitVector FocusedDrawObjectFieldMask;
+    static const OSG::BitVector RolloverDrawObjectFieldMask;
+    static const OSG::BitVector DisabledDrawObjectFieldMask;
+    static const OSG::BitVector DrawObjectFieldMask;
+    static const OSG::BitVector DragToDrawObjectFieldMask;
+    static const OSG::BitVector DragFromDrawObjectFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -167,43 +170,34 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFunctionPtr       *getSFFunction       (void);
-           SFUIFontPtr         *getSFFont           (void);
-           SFUInt32            *getSFInputTabOrientation(void);
-           SFUInt32            *getSFOutputTabOrientation(void);
-           SFReal32            *getSFInputTabVerticalAlignment(void);
-           SFReal32            *getSFInputTabHorizontalAlignment(void);
-           SFReal32            *getSFOutputTabVerticalAlignment(void);
-           SFReal32            *getSFOutputTabHorizontalAlignment(void);
-           SFComponentGeneratorPtr *getSFInputTabComponentGenerator(void);
-           SFComponentGeneratorPtr *getSFOutputTabComponentGenerator(void);
-           MFComponentPtr      *getMFInputTabs      (void);
-           MFComponentPtr      *getMFOutputTabs     (void);
+           SFVec2f             *getSFTabTextSource  (void);
+           SFBool              *getSFEnableTooltip  (void);
+           SFTime              *getSFTooltipTime    (void);
+           SFTime              *getSFTooltipTextSource(void);
+           SFComponentPtr      *getSFDefaultTab     (void);
            SFColor4f           *getSFFocusedTextColor(void);
            SFColor4f           *getSFRolloverTextColor(void);
            SFColor4f           *getSFDisabledTextColor(void);
            SFColor4f           *getSFTextColor      (void);
+           SFColor4f           *getSFDragToTextColor(void);
+           SFColor4f           *getSFDragFromTextColor(void);
+           SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
+           SFUIDrawObjectCanvasPtr *getSFDragToDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDragFromDrawObject(void);
 
-           FunctionPtr         &getFunction       (void);
-     const FunctionPtr         &getFunction       (void) const;
-           UIFontPtr           &getFont           (void);
-     const UIFontPtr           &getFont           (void) const;
-           UInt32              &getInputTabOrientation(void);
-     const UInt32              &getInputTabOrientation(void) const;
-           UInt32              &getOutputTabOrientation(void);
-     const UInt32              &getOutputTabOrientation(void) const;
-           Real32              &getInputTabVerticalAlignment(void);
-     const Real32              &getInputTabVerticalAlignment(void) const;
-           Real32              &getInputTabHorizontalAlignment(void);
-     const Real32              &getInputTabHorizontalAlignment(void) const;
-           Real32              &getOutputTabVerticalAlignment(void);
-     const Real32              &getOutputTabVerticalAlignment(void) const;
-           Real32              &getOutputTabHorizontalAlignment(void);
-     const Real32              &getOutputTabHorizontalAlignment(void) const;
-           ComponentGeneratorPtr &getInputTabComponentGenerator(void);
-     const ComponentGeneratorPtr &getInputTabComponentGenerator(void) const;
-           ComponentGeneratorPtr &getOutputTabComponentGenerator(void);
-     const ComponentGeneratorPtr &getOutputTabComponentGenerator(void) const;
+           Vec2f               &getTabTextSource  (void);
+     const Vec2f               &getTabTextSource  (void) const;
+           bool                &getEnableTooltip  (void);
+     const bool                &getEnableTooltip  (void) const;
+           Time                &getTooltipTime    (void);
+     const Time                &getTooltipTime    (void) const;
+           Time                &getTooltipTextSource(void);
+     const Time                &getTooltipTextSource(void) const;
+           ComponentPtr        &getDefaultTab     (void);
+     const ComponentPtr        &getDefaultTab     (void) const;
            Color4f             &getFocusedTextColor(void);
      const Color4f             &getFocusedTextColor(void) const;
            Color4f             &getRolloverTextColor(void);
@@ -212,32 +206,45 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
      const Color4f             &getDisabledTextColor(void) const;
            Color4f             &getTextColor      (void);
      const Color4f             &getTextColor      (void) const;
-           ComponentPtr        &getInputTabs      (const UInt32 index);
-           MFComponentPtr      &getInputTabs      (void);
-     const MFComponentPtr      &getInputTabs      (void) const;
-           ComponentPtr        &getOutputTabs     (const UInt32 index);
-           MFComponentPtr      &getOutputTabs     (void);
-     const MFComponentPtr      &getOutputTabs     (void) const;
+           Color4f             &getDragToTextColor(void);
+     const Color4f             &getDragToTextColor(void) const;
+           Color4f             &getDragFromTextColor(void);
+     const Color4f             &getDragFromTextColor(void) const;
+           UIDrawObjectCanvasPtr &getFocusedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getFocusedDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getRolloverDrawObject(void);
+     const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDrawObject     (void);
+     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
+           UIDrawObjectCanvasPtr &getDragToDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDragToDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDragFromDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDragFromDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFunction       ( const FunctionPtr &value );
-     void setFont           ( const UIFontPtr &value );
-     void setInputTabOrientation( const UInt32 &value );
-     void setOutputTabOrientation( const UInt32 &value );
-     void setInputTabVerticalAlignment( const Real32 &value );
-     void setInputTabHorizontalAlignment( const Real32 &value );
-     void setOutputTabVerticalAlignment( const Real32 &value );
-     void setOutputTabHorizontalAlignment( const Real32 &value );
-     void setInputTabComponentGenerator( const ComponentGeneratorPtr &value );
-     void setOutputTabComponentGenerator( const ComponentGeneratorPtr &value );
+     void setTabTextSource  ( const Vec2f &value );
+     void setEnableTooltip  ( const bool &value );
+     void setTooltipTime    ( const Time &value );
+     void setTooltipTextSource( const Time &value );
+     void setDefaultTab     ( const ComponentPtr &value );
      void setFocusedTextColor( const Color4f &value );
      void setRolloverTextColor( const Color4f &value );
      void setDisabledTextColor( const Color4f &value );
      void setTextColor      ( const Color4f &value );
+     void setDragToTextColor( const Color4f &value );
+     void setDragFromTextColor( const Color4f &value );
+     void setFocusedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
+     void setDragToDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDragFromDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -261,8 +268,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  FunctionComponentPtr      create          (void); 
-    static  FunctionComponentPtr      createEmpty     (void); 
+    static  DefaultFunctionComponentIOTabComponentGeneratorPtr      create          (void); 
+    static  DefaultFunctionComponentIOTabComponentGeneratorPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -280,37 +287,38 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFunctionPtr       _sfFunction;
-    SFUIFontPtr         _sfFont;
-    SFUInt32            _sfInputTabOrientation;
-    SFUInt32            _sfOutputTabOrientation;
-    SFReal32            _sfInputTabVerticalAlignment;
-    SFReal32            _sfInputTabHorizontalAlignment;
-    SFReal32            _sfOutputTabVerticalAlignment;
-    SFReal32            _sfOutputTabHorizontalAlignment;
-    SFComponentGeneratorPtr   _sfInputTabComponentGenerator;
-    SFComponentGeneratorPtr   _sfOutputTabComponentGenerator;
-    MFComponentPtr      _mfInputTabs;
-    MFComponentPtr      _mfOutputTabs;
+    SFVec2f             _sfTabTextSource;
+    SFBool              _sfEnableTooltip;
+    SFTime              _sfTooltipTime;
+    SFTime              _sfTooltipTextSource;
+    SFComponentPtr      _sfDefaultTab;
     SFColor4f           _sfFocusedTextColor;
     SFColor4f           _sfRolloverTextColor;
     SFColor4f           _sfDisabledTextColor;
     SFColor4f           _sfTextColor;
+    SFColor4f           _sfDragToTextColor;
+    SFColor4f           _sfDragFromTextColor;
+    SFUIDrawObjectCanvasPtr   _sfFocusedDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDragToDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDragFromDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    FunctionComponentBase(void);
-    FunctionComponentBase(const FunctionComponentBase &source);
+    DefaultFunctionComponentIOTabComponentGeneratorBase(void);
+    DefaultFunctionComponentIOTabComponentGeneratorBase(const DefaultFunctionComponentIOTabComponentGeneratorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FunctionComponentBase(void); 
+    virtual ~DefaultFunctionComponentIOTabComponentGeneratorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -318,13 +326,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      FunctionComponentBase *pOther,
+    void executeSyncImpl(      DefaultFunctionComponentIOTabComponentGeneratorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      FunctionComponentBase *pOther,
+    void executeSyncImpl(      DefaultFunctionComponentIOTabComponentGeneratorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -354,7 +362,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const FunctionComponentBase &source);
+    void operator =(const DefaultFunctionComponentIOTabComponentGeneratorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -362,17 +370,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef FunctionComponentBase *FunctionComponentBaseP;
+typedef DefaultFunctionComponentIOTabComponentGeneratorBase *DefaultFunctionComponentIOTabComponentGeneratorBaseP;
 
-typedef osgIF<FunctionComponentBase::isNodeCore,
-              CoredNodePtr<FunctionComponent>,
+typedef osgIF<DefaultFunctionComponentIOTabComponentGeneratorBase::isNodeCore,
+              CoredNodePtr<DefaultFunctionComponentIOTabComponentGenerator>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet FunctionComponentNodePtr;
+              >::_IRet DefaultFunctionComponentIOTabComponentGeneratorNodePtr;
 
-typedef RefPtr<FunctionComponentPtr> FunctionComponentRefPtr;
+typedef RefPtr<DefaultFunctionComponentIOTabComponentGeneratorPtr> DefaultFunctionComponentIOTabComponentGeneratorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGFUNCTIONCOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGFUNCTIONCOMPONENTBASE_H_ */
+#endif /* _OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORBASE_H_ */

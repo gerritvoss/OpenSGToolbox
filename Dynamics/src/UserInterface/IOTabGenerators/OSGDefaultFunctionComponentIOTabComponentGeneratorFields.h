@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGFUNCTIONCOMPONENTFIELDS_H_
-#define _OSGFUNCTIONCOMPONENTFIELDS_H_
+#ifndef _OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORFIELDS_H_
+#define _OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGDynamicsDef.h"
 
-#include <OpenSG/UserInterface/OSGContainerFields.h>
+#include "OSGFunctionComponentIOTabComponentGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class FunctionComponent;
+class DefaultFunctionComponentIOTabComponentGenerator;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! FunctionComponentPtr
+//! DefaultFunctionComponentIOTabComponentGeneratorPtr
 
-typedef FCPtr<ContainerPtr, FunctionComponent> FunctionComponentPtr;
+typedef FCPtr<FunctionComponentIOTabComponentGeneratorPtr, DefaultFunctionComponentIOTabComponentGenerator> DefaultFunctionComponentIOTabComponentGeneratorPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ContainerPtr, FunctionComponent> FunctionComponentPtr;
 #endif
 
 template <>
-struct FieldDataTraits<FunctionComponentPtr> : 
-    public FieldTraitsRecurseMapper<FunctionComponentPtr, true>
+struct FieldDataTraits<DefaultFunctionComponentIOTabComponentGeneratorPtr> : 
+    public FieldTraitsRecurseMapper<DefaultFunctionComponentIOTabComponentGeneratorPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<FunctionComponentPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFFunctionComponentPtr"; }
-    static const char *getMName(void) { return "MFFunctionComponentPtr"; }
+    static const char *getSName(void) { return "SFDefaultFunctionComponentIOTabComponentGeneratorPtr"; }
+    static const char *getMName(void) { return "MFDefaultFunctionComponentIOTabComponentGeneratorPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<FunctionComponentPtr, true>
+/*! \class  FieldTraitsRecurseMapper<DefaultFunctionComponentIOTabComponentGeneratorPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<FunctionComponentPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpDynamicsFieldSingle */
 
-typedef SField<FunctionComponentPtr> SFFunctionComponentPtr;
+typedef SField<DefaultFunctionComponentIOTabComponentGeneratorPtr> SFDefaultFunctionComponentIOTabComponentGeneratorPtr;
 #endif
 
-#ifndef OSG_COMPILEFUNCTIONCOMPONENTINST
-OSG_DLLEXPORT_DECL1(SField, FunctionComponentPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORINST
+OSG_DLLEXPORT_DECL1(SField, DefaultFunctionComponentIOTabComponentGeneratorPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpDynamicsFieldMulti */
 
-typedef MField<FunctionComponentPtr> MFFunctionComponentPtr;
+typedef MField<DefaultFunctionComponentIOTabComponentGeneratorPtr> MFDefaultFunctionComponentIOTabComponentGeneratorPtr;
 #endif
 
-#ifndef OSG_COMPILEFUNCTIONCOMPONENTINST
-OSG_DLLEXPORT_DECL1(MField, FunctionComponentPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORINST
+OSG_DLLEXPORT_DECL1(MField, DefaultFunctionComponentIOTabComponentGeneratorPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGFUNCTIONCOMPONENTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGFUNCTIONCOMPONENTFIELDS_H_ */
+#endif /* _OSGDEFAULTFUNCTIONCOMPONENTIOTABCOMPONENTGENERATORFIELDS_H_ */

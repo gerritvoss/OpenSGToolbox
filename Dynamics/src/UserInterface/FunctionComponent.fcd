@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="FunctionComponent"
-	parent="Component"
+	parent="Container"
 	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -32,6 +32,105 @@ A User Interface Component that represents a function.
 		defaultValue="NullFC"
 	>
 	</Field>
+   
+	<Field
+		name="InputTabOrientation"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="FunctionComponent::VERTICAL_ORIENTATION"
+	>
+	</Field>
+	<Field
+		name="OutputTabOrientation"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="FunctionComponent::VERTICAL_ORIENTATION"
+	>
+	</Field>
+   
+	<Field
+		name="InputTabVerticalAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.5f"
+	>
+	</Field>
+	<Field
+		name="InputTabHorizontalAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f"
+	>
+	</Field>
+   
+	<Field
+		name="OutputTabVerticalAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.5f"
+	>
+	</Field>
+	<Field
+		name="OutputTabHorizontalAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0f"
+	>
+	</Field>
+   
+	<Field
+		name="InputTabComponentGenerator"
+		type="ComponentGeneratorPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+		header="OpenSG/UserInterface/OSGComponentGeneratorFields.h"
+	>
+	</Field>
+	<Field
+		name="OutputTabComponentGenerator"
+		type="ComponentGeneratorPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+		header="OpenSG/UserInterface/OSGComponentGeneratorFields.h"
+	>
+	</Field>
+   
+	<Field
+		name="InputTabs"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="OpenSG/UserInterface/OSGComponentFields.h"
+	>
+	</Field>
+	<Field
+		name="OutputTabs"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="OpenSG/UserInterface/OSGComponentFields.h"
+	>
+	</Field>
+   
+   
 	<Field
 		name="FocusedTextColor"
 		type="Color4f"
