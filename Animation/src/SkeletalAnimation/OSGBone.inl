@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const Matrix &Bone::getTransformation(void) const
+{
+	return getInternalTransformation();
+}
+
+inline
 UInt32 Bone::getNumChildren(void) const
 {
     return getInternalChildren().size();

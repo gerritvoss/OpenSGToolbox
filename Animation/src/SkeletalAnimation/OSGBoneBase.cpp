@@ -220,7 +220,7 @@ void BoneBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 BoneBase::BoneBase(void) :
     _sfRotation               (), 
     _sfTranslation            (), 
-    _sfLength                 (), 
+    _sfLength                 (),// 
     _mfInternalChildren       (), 
     _sfInternalParent         (), 
     _sfInternalTransformation (), 

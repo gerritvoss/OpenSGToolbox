@@ -86,6 +86,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
     BonePtr getChild(UInt32 Index) const;
 
     BonePtr getParent(void) const;
+    const Matrix              &getTransformation(void) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

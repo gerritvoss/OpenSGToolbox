@@ -22,6 +22,8 @@
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGSkeletonDrawable.h>
 
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -171,9 +173,51 @@ int main(int argc, char **argv)
 		ExampleMaterial->addChunk(ExampleBlendChunk);
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
-    //Bones
+    //Bone
+	BonePtr ExampleRootBone = Bone::create();
+	BonePtr TempRootBone;
+	TempRootBone = ExampleRootBone;
+	for (double i = 1; i < 9; i++)
+	{
+		
+
+		Real32 Rand = RandomPoolManager::getRandomReal32(9.0f, 180.0);  // opsg 32 bit real random number generator
+		BonePtr ExampleChildBone;                                       // check OSGRandomPoolManager.h in 
+                                                                        // vs-8.0-ToolBoxTutorials
+
+		ExampleChildBone = Bone::create(); //create a bone called ExampleChildbone
+		beginEditCP(ExampleChildBone, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+			ExampleChildBone->setLength(5.0f);
+			ExampleChildBone->setRotation(Quaternion(Vec3f((Rand/i),(Rand/i),(Rand/i)), osgdegree2rad(Rand)));
+		endEditCP(ExampleChildBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+		
+
+		TempRootBone->addChild(ExampleChildBone);//add a Child to the root bone
+		
+
+		TempRootBone = TempRootBone->getChild(0);
+	}
+	
+		//glMultMatrixf(m.getValues());
+		// const Matrix              &getTransformation(void) const;
+
+
+
+	//BonePtr ExampleRootBone = Bone::create();
+	//beginEditCP(ExampleRootBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
+		//ExampleRootBone->setLength(5.0f);
+		//ExampleRootBone->setRotation(Quaternion(Vec3f(1.0f,0.0f,0.0f), osgdegree2rad(225.0f)));
+	//endEditCP(ExampleRootBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
+	//ExampleRootBone->addChild(SecondChildBone);
+	//SecondChildBone->addChild(ThirdChildBone);
+	
+
     //Skeleton
     SkeletonPtr ExampleSkeleton = Skeleton::create();
+	beginEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
+		ExampleSkeleton->getRootBones().push_back(ExampleRootBone);
+	endEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
 
     //SkeletonDrawer
     SkeletonDrawablePtr ExampleSkeletonDrawable = osg::SkeletonDrawable::create();
@@ -184,17 +228,17 @@ int main(int argc, char **argv)
 	
 	//Particle System Node
     
-	NodePtr ParticleNode = osg::Node::create();
-    beginEditCP(ParticleNode, Node::CoreFieldMask);
-        ParticleNode->setCore(ExampleSkeletonDrawable);
-    endEditCP(ParticleNode, Node::CoreFieldMask);
+	NodePtr SkeletonNode = osg::Node::create();
+    beginEditCP(SkeletonNode, Node::CoreFieldMask);
+        SkeletonNode->setCore(ExampleSkeletonDrawable);
+    endEditCP(SkeletonNode, Node::CoreFieldMask);
 
 
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
-        scene->addChild(ParticleNode);
+        scene->addChild(SkeletonNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);

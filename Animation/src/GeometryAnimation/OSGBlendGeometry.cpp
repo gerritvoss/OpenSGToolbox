@@ -73,7 +73,7 @@ OSG_USING_NAMESPACE
 
 void BlendGeometry::initMethod (void)
 {
-    DrawAction::registerEnterDefault(getClassType(),
+    /*DrawAction::registerEnterDefault(getClassType(),
         osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
               CNodePtr, Action *>(&BlendGeometry::drawActionHandler));
 
@@ -83,7 +83,7 @@ void BlendGeometry::initMethod (void)
 
     RenderAction::registerEnterDefault(getClassType(),
         osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
-              CNodePtr, Action *>(&BlendGeometry::renderActionHandler));
+              CNodePtr, Action *>(&BlendGeometry::renderActionHandler));*/
 }
 
 BlendGeometryPtr BlendGeometry::create (const GeometryPtr Geo)

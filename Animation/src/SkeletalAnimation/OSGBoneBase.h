@@ -232,7 +232,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
            BonePtr             &getInternalParent (void);
      const BonePtr             &getInternalParent (void) const;
            Matrix              &getInternalTransformation(void);
-     const Matrix              &getInternalTransformation(void) const;
+     const Matrix              &getInternalTransformation(void) const; 
            BonePtr             &getInternalChildren(UInt32 index);
            MFBonePtr           &getInternalChildren(void);
      const MFBonePtr           &getInternalChildren(void) const;
@@ -243,7 +243,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     /*! \{                                                                 */
 
      void setInternalParent (const BonePtr &value);
-     void setInternalTransformation(const Matrix &value);
+     void setInternalTransformation(const Matrix &value); //name of the field is InternalTransformation
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

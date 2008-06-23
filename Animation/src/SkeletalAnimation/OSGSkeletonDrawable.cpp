@@ -55,6 +55,8 @@
 #include <OpenSG/OSGSimpleGeometry.h>
 
 #include <OpenSG/OSGGL.h>
+#include "OSGBone.h"
+#include "OSGSkeleton.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -102,14 +104,41 @@ Action::ResultE SkeletonDrawable::drawPrimitives (DrawActionBase *action)
     }
     else
     {
-        //TODO:Implement
-        glBegin(GL_LINES);
-            glVertex3f(0.0,0.0,0.0);
-            glVertex3f(10.0,10.0,10.0);
-        glEnd();
+		for(UInt32 i(0) ; i<getSkeleton()->getRootBones().size() ; ++i)
+		{
+			//TODO:Implement
+			//Draw all Root Bones of Skeleton
+			drawBone(getSkeleton()->getRootBones()[i], action);
+		}
     }
 
     return Action::Continue;
+}
+
+void SkeletonDrawable::drawBone (BonePtr TheBone, DrawActionBase *action)
+{
+	//Draw the Bone
+		//Set up the transformation to Object Space
+	
+
+		glPushMatrix();
+		glMultMatrixf(TheBone->getTransformation().getValues());
+		//Draw the bone as a line from it traslation point to the point
+		//in the direction of the bones rotation, that is the length of the bone
+		glBegin(GL_LINES);
+			glVertex3f(0.0f,0.0f,0.0f);
+			glVertex3f(0.0,0.0,TheBone->getLength());
+		glEnd();
+
+		
+		glTranslatef(0.0,0.0,TheBone->getLength());
+
+	//Draw all of the bones children
+	for(UInt32 i(0) ; i<TheBone->getNumChildren() ; ++i)
+	{
+		drawBone(TheBone->getChild(i), action);
+	}
+	glPopMatrix();
 }
 
 Action::ResultE SkeletonDrawable::drawActionHandler( Action* action )
@@ -174,6 +203,11 @@ void SkeletonDrawable::adjustVolume(Volume & volume)
     //TODO: Implement
 	Inherited::adjustVolume(volume);
 
+	//Extend the volume by all the Root Bones of Skeleton
+	//You will want to make a recursive function, similar to drawBone above
+	    //This function will essentially do the same thing but instead of drawing
+	    //point of the line, simply extend the volume by the endpoints of those
+	    //lines
     volume.extendBy(Pnt3f(0.0,0.0,0.0));
     volume.extendBy(Pnt3f(10.0,10.0,10.0));
 }

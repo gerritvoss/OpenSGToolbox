@@ -84,7 +84,9 @@ void Bone::addChild(BonePtr TheBone)
         TheBone->getParent()->removeChild(TheBone);
     }
 
-    getInternalChildren().push_back(TheBone);
+    beginEditCP(BonePtr(this), Bone::InternalChildrenFieldMask);
+		getInternalChildren().push_back(TheBone);
+    endEditCP(BonePtr(this), Bone::InternalChildrenFieldMask);
 
     beginEditCP(TheBone, Bone::InternalParentFieldMask);
         TheBone->setInternalParent(BonePtr(this));
@@ -101,7 +103,9 @@ void Bone::removeChild(BonePtr TheBone)
             (*SearchItor)->setInternalParent(NullFC);
         endEditCP((*SearchItor), Bone::InternalParentFieldMask);
 
-        getInternalChildren().erase(SearchItor);
+		beginEditCP(BonePtr(this), Bone::InternalChildrenFieldMask);
+			getInternalChildren().erase(SearchItor);
+		endEditCP(BonePtr(this), Bone::InternalChildrenFieldMask);
     }
 }
 
@@ -138,6 +142,15 @@ Bone::~Bone(void)
 void Bone::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & RotationFieldMask)
+	{
+		Matrix m; //a matrix called m
+		m.setTransform(Vec3f(getTranslation()), getRotation()); //calculates the the rotation of the bone
+		beginEditCP(BonePtr(this), Bone::InternalTransformationFieldMask);
+			setInternalTransformation(m); //field container
+		endEditCP(BonePtr(this), Bone::InternalTransformationFieldMask);
+	}
 }
 
 void Bone::dump(      UInt32    , 
