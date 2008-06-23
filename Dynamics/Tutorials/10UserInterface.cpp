@@ -42,6 +42,7 @@
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
 #include <OpenSG/Dynamics/OSGFunctionComponent.h>
+#include <OpenSG/Dynamics/OSGDataConverter.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -134,6 +135,11 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
+	//Function to attach to Component
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
 
     //Create the Function User Interface Component
     RoundedCornerLineBorderPtr FunctionComponentBorder = RoundedCornerLineBorder::create();
@@ -144,10 +150,13 @@ int main(int argc, char **argv)
     endEditCP(FunctionComponentBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
 
     FunctionComponentPtr ExampleFunctionComponent = FunctionComponent::create();
-    beginEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask);
+    beginEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask);
         ExampleFunctionComponent->setPreferredSize(Vec2f(100.0f,100.0f));
         ExampleFunctionComponent->setBorders(FunctionComponentBorder);
-    endEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask);
+		ExampleFunctionComponent->setFunction(TheVec3fConverter);
+		ExampleFunctionComponent->setInputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
+
+    endEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask);
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

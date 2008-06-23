@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFunctionComponent.h"
+#include "Function/OSGFunction.h"
+#include <OpenSG/UserInterface/OSGUIDrawUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,7 +80,142 @@ void FunctionComponent::initMethod (void)
 
 void FunctionComponent::drawInternal(const GraphicsPtr Graphics) const
 {
-    //TODO: Implement
+	if(getFunction() != NullFC)
+	{
+		//Get Input/Output information about function
+		FunctionIOTypeVector EmptyTypeVector;
+		FunctionIOTypeVector OutputTypes = getFunction()->getOutputTypes(EmptyTypeVector);
+		FunctionIOTypeVector InputTypes = getFunction()->getInputTypes(EmptyTypeVector);
+		UInt32 NumInputs = InputTypes.size();
+		UInt32 NumOutputs = OutputTypes.size();
+		
+		//Get bounds of function component
+		Pnt2f TopLeft, BottomRight;
+		getInsideBorderBounds(TopLeft, BottomRight);
+		
+		/*
+		//Determine size of and draw component
+		UInt32 ComponentWidth = 450;
+		UInt32 ComponentHeight;
+		
+		if(NumOutputs > NumInputs)
+		{
+			ComponentHeight = (50 + (25*NumOutputs) + (15*(NumOutputs - 1)));
+		}
+		else
+		{
+			ComponentHeight = (50 + (25*NumInputs) + (15*(NumInputs - 1)));
+		}
+		*/
+		
+		
+		//Input/Outup tab properties
+		Real32 TabWidth = 20; //Scaled down; normally 100
+		Real32 TabHeight = 5; //Scaled down; normally 25
+		Real32 HorizontalSpacing = 15;
+		Real32 VerticalSpacing = 15;
+		Color4f TabColor = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
+		Real32 TabOpacity = 1.0;
+		
+		//DRAW INPUT TABS
+		if(getInputTabOrientation() == VERTICAL_ORIENTATION)
+		{
+			Pnt2f InputsTopLeft, InputsBottomRight;
+			InputsTopLeft = Pnt2f(25.0f, 25.0f);
+			InputsBottomRight = Pnt2f(25.0f + TabWidth, 25.0f + TabHeight + ((NumInputs - 1) * (TabHeight + VerticalSpacing)));
+		
+			//Calculate Alignment
+			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (InputsBottomRight - InputsTopLeft), getInputTabVerticalAlignment(), getInputTabHorizontalAlignment());
+			
+			for (UInt32 i(0); i < NumInputs; ++i)
+			{
+				//Calculate bounding points
+				Pnt2f RectangleTopLeft, RectangleBottomRight;
+				RectangleTopLeft = Pnt2f(AlignedPosition.x(), AlignedPosition.y() + (i * (TabHeight + VerticalSpacing)));
+				RectangleBottomRight = Pnt2f(AlignedPosition.x() + TabWidth, AlignedPosition.y() + TabHeight + (i * (TabHeight + VerticalSpacing)));
+				
+				//Draw rectangle
+				Graphics->drawRect(RectangleTopLeft, RectangleBottomRight, TabColor, TabOpacity);
+			}
+		}
+		else
+		{
+			Pnt2f InputsTopLeft, InputsBottomRight;
+			InputsTopLeft = Pnt2f(25.0f, 25.0f);
+			InputsBottomRight = Pnt2f(25.0f + TabWidth + ((NumInputs - 1) * TabWidth + HorizontalSpacing), 25.0f + TabHeight);
+		
+			//Calculate Alignment
+			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (InputsBottomRight - InputsTopLeft), getInputTabVerticalAlignment(), getInputTabHorizontalAlignment());
+			
+			for (UInt32 i(0); i < NumInputs; ++i)
+			{
+				//Calculate bounding points
+				Pnt2f RectangleTopLeft, RectangleBottomRight;
+				RectangleTopLeft = Pnt2f(AlignedPosition.x() + (i * (TabWidth + HorizontalSpacing)), AlignedPosition.y());
+				RectangleBottomRight = Pnt2f(AlignedPosition.x() + TabWidth + (i * (TabWidth + HorizontalSpacing)), AlignedPosition.y() + TabHeight);
+				
+				//Draw rectangle
+				Graphics->drawRect(RectangleTopLeft, RectangleBottomRight, TabColor, TabOpacity);
+			}
+		}
+			
+					
+		//DRAW OUTPUT TABS
+		if(getOutputTabOrientation() == VERTICAL_ORIENTATION)
+		{
+			Pnt2f OutputsTopLeft, OutputsBottomRight;
+			OutputsTopLeft = Pnt2f(25.0f, 25.0f);
+			OutputsBottomRight = Pnt2f(25.0f + TabWidth, 25.0f + TabHeight + ((NumOutputs - 1) * (TabHeight + VerticalSpacing)));
+		
+			//Calculate Alignment
+			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (OutputsBottomRight - OutputsTopLeft), getOutputTabVerticalAlignment(), getOutputTabHorizontalAlignment());
+			
+			for (UInt32 i(0); i < NumOutputs; ++i)
+			{
+				//Calculate bounding points
+				Pnt2f RectangleTopLeft, RectangleBottomRight;
+				RectangleTopLeft = Pnt2f(AlignedPosition.x(), AlignedPosition.y() + (i * (TabHeight + VerticalSpacing)));
+				RectangleBottomRight = Pnt2f(AlignedPosition.x() + TabWidth, AlignedPosition.y() + TabHeight + (i * (TabHeight + VerticalSpacing)));
+				
+				//Draw rectangle
+				Graphics->drawRect(RectangleTopLeft, RectangleBottomRight, TabColor, TabOpacity);
+			}
+		}
+		else
+		{
+			Pnt2f OutputsTopLeft, OutputsBottomRight;
+			OutputsTopLeft = Pnt2f(25.0f, 25.0f);
+			OutputsBottomRight = Pnt2f(25.0f + TabWidth + ((NumOutputs - 1) * TabWidth + HorizontalSpacing), 25.0f + TabHeight);
+		
+			//Calculate Alignment
+			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (OutputsBottomRight - OutputsTopLeft), getOutputTabVerticalAlignment(), getOutputTabHorizontalAlignment());
+			
+			for (UInt32 i(0); i < NumOutputs; ++i)
+			{
+				//Calculate bounding points
+				Pnt2f RectangleTopLeft, RectangleBottomRight;
+				RectangleTopLeft = Pnt2f(AlignedPosition.x() + (i * (TabWidth + HorizontalSpacing)), AlignedPosition.y());
+				RectangleBottomRight = Pnt2f(AlignedPosition.x() + TabWidth + (i * (TabWidth + HorizontalSpacing)), AlignedPosition.y() + TabHeight);
+				
+				//Draw rectangle
+				Graphics->drawRect(RectangleTopLeft, RectangleBottomRight, TabColor, TabOpacity);
+			}
+		}
+
+		
+		/*
+		for (UInt32 i(0); i < NumOutputs; ++i)
+		{
+			//Calculate bounding points
+			Pnt2f RectangleTopLeft, RectangleBottomRight;
+			RectangleTopLeft = Pnt2f(BottomRight.x() - 125.0f, 25.0f + (i * 40.0f));
+			RectangleBottomRight = Pnt2f(BottomRight.x() - 25.0f, 50.0f + (i * 40.0f));
+			
+			//Draw rectangle
+			Graphics->drawRect(RectangleTopLeft, RectangleBottomRight, Color4f(1.0f, 1.0f, 1.0f, 1.0f), 1.0);
+		}
+		*/
+	}
 }
 
 Vec2f FunctionComponent::getContentRequestedSize(void) const

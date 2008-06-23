@@ -3,6 +3,7 @@
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
+#include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
@@ -27,6 +28,8 @@
 #include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
 #include <OpenSG/Dynamics/OSGTriDistribution3D.h>
+#include <OpenSG/Dynamics/OSGGeoSurfaceDistribution3D.h>
+#include <OpenSG/Dynamics/OSGGeoVolumeDistribution3D.h>
 
 #include <OpenSG/Dynamics/OSGDataSplitter.h>
 #include <OpenSG/Dynamics/OSGDataCombiner.h>
@@ -230,10 +233,22 @@ int main(int argc, char **argv)
       TheGaussianNormalDistribution->setStandardDeviationY(100.0);
       TheGaussianNormalDistribution->setStandardDeviationZ(100.0);
     endEditCP(TheGaussianNormalDistribution);
+	
+	//GeoSurfaceDistribution
+	GeoSurfaceDistribution3DPtr TheGeoSurfaceDistribution3D = GeoSurfaceDistribution3D::create();
+    beginEditCP(TheGeoSurfaceDistribution3D);
+      TheGeoSurfaceDistribution3D->setSurface(makeSphereGeo(5.0,4));
+    endEditCP(TheGeoSurfaceDistribution3D);
+	
+	//GeoVolumeDistribution
+	GeoVolumeDistribution3DPtr TheGeoVolumeDistribution3D = GeoVolumeDistribution3D::create();
+    beginEditCP(TheGeoVolumeDistribution3D);
+      TheGeoVolumeDistribution3D->setVolume(makeSphereGeo(5.0,4));
+    endEditCP(TheGeoVolumeDistribution3D);
 
     LineDistribution3D::Output0DataType::RawType ReturnValue;
 
-    FunctionPtr TheDistribution = TheSphereDistribution;
+    FunctionPtr TheDistribution = TheGeoVolumeDistribution3D;
     FunctionPtr TheInternalColorDistribution = TheLineDistribution;
     FunctionPtr TheInternalSizeDistribution = TheLineDistribution2;
 
@@ -289,7 +304,7 @@ int main(int argc, char **argv)
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-    UInt32 NumParticlesToGenerate(5000);
+    UInt32 NumParticlesToGenerate(2500);
 	Color3f ColorReturnValue;
 	Vec3f SizeReturnValue;
 	Pnt3f PositionReturnValue;
