@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGQuadParticleSystemDrawer.h"
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +79,20 @@ void QuadParticleSystemDrawer::initMethod (void)
 
 Action::ResultE QuadParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
 {
+    //TODO: Implement
+
+
+	//Loop through all particles
+		//Get The Normal of the Particle
+		//Get the Up Direction of the Particle
+	    //Calculate the Binormal as the cross between Normal and Up
+	    //Determine Local Space of the Particle
+
+		//Determine the Width and Height of the quad
+
+	    //Draw the Quad
+
+	//Generate a local space for the particle
     return Action::Continue;
 }
 
@@ -88,6 +103,18 @@ void QuadParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & v
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+Vec3f QuadParticleSystemDrawer::getQuadNormal(ParticleSystemPtr System, UInt32 Index)
+{
+	//TODO: Implement
+	return System->getNormal(Index);
+}
+
+Vec3f QuadParticleSystemDrawer::getQuadUpDir(ParticleSystemPtr System, UInt32 Index)
+{
+	//TODO: Implement
+	return Vec3f(0.0,1.0,0.0);
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 

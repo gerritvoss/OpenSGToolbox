@@ -76,6 +76,11 @@ void RateParticleGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
+{
+	return false;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

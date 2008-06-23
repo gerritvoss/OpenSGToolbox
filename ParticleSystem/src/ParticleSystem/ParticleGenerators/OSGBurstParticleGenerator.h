@@ -77,6 +77,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING BurstParticleGenerator : public BurstPart
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual bool generate(ParticleSystemPtr System, const Time& elps);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

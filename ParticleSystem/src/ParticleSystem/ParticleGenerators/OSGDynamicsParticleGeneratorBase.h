@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGParticleGenerator.h> // Parent
+#include "OSGParticleGenerator.h" // Parent
 
 #include <OpenSG/Dynamics/OSGFunctionFields.h> // Position type
 

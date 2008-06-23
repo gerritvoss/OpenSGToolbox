@@ -46,6 +46,7 @@
 #include "OSGParticleSystemDef.h"
 
 #include "OSGParticleGeneratorBase.h"
+#include "ParticleSystem/OSGParticleSystemFields.h"
 
 OSG_BEGIN_NAMESPACE
 

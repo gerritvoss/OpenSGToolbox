@@ -51,6 +51,7 @@
 #include "ParticleSystem/Events/OSGParticleEvent.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "ParticleSystem/ParticleAffectors/OSGParticleAffector.h"
+#include "ParticleSystem/ParticleGenerators/OSGParticleGenerator.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -963,7 +964,6 @@ void ParticleSystem::update(const Time& elps)
 {
     //TODO: Implement
 
-	//Generate Particles with Generators
 
 
 	//Affect Particle Systems
@@ -1018,6 +1018,13 @@ void ParticleSystem::update(const Time& elps)
 		AdvanceIterator = true;
     }
 
+	//Generate Particles with Generators
+	for(UInt32 j(0) ; j<getGenerators().size(); ++j)
+	{
+		if(getGenerators()[j]->generate(ParticleSystemPtr(this), elps))
+		{
+		}
+	}
 
     //Fire a Update Event
     produceSystemUpdated(VolumeChanged);

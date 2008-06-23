@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGDynamicsParticleGenerator.h> // Parent
+#include "OSGDynamicsParticleGenerator.h" // Parent
 
 #include <OpenSG/OSGReal32Fields.h> // GenerationRate type
 #include <OpenSG/OSGReal32Fields.h> // TimeSinceLastGeneration type

@@ -76,6 +76,11 @@ void BurstParticleGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+bool BurstParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
+{
+	return false;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

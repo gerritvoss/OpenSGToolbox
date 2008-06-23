@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGDynamicsParticleGenerator.h> // Parent
+#include "OSGDynamicsParticleGenerator.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // BurstAmount type
 

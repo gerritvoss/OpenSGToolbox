@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGParticleSystemDef.h"
 
-#include <OpenSG/OSGDynamicsParticleGeneratorFields.h>
+#include "OSGDynamicsParticleGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 

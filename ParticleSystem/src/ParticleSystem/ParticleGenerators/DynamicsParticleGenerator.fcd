@@ -7,7 +7,7 @@
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
-	parentsystemcomponent="true"
+	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
 >
