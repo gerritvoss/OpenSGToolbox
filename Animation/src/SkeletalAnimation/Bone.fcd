@@ -54,7 +54,15 @@
 	>
 	</Field>
 	<Field
-		name="InternalTransformation"
+		name="InternalRelativeTransformation"
+		type="Matrix"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="InternalAbsoluteTransformation"
 		type="Matrix"
 		cardinality="single"
 		visibility="external"

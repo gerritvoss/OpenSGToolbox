@@ -131,11 +131,18 @@ SFBonePtr *BoneBase::getSFInternalParent(void)
     return &_sfInternalParent;
 }
 
-//! Get the Bone::_sfInternalTransformation field.
+//! Get the Bone::_sfInternalRelativeTransformation field.
 inline
-SFMatrix *BoneBase::getSFInternalTransformation(void)
+SFMatrix *BoneBase::getSFInternalRelativeTransformation(void)
 {
-    return &_sfInternalTransformation;
+    return &_sfInternalRelativeTransformation;
+}
+
+//! Get the Bone::_sfInternalAbsoluteTransformation field.
+inline
+SFMatrix *BoneBase::getSFInternalAbsoluteTransformation(void)
+{
+    return &_sfInternalAbsoluteTransformation;
 }
 
 
@@ -223,25 +230,46 @@ void BoneBase::setInternalParent(const BonePtr &value)
     _sfInternalParent.setValue(value);
 }
 
-//! Get the value of the Bone::_sfInternalTransformation field.
+//! Get the value of the Bone::_sfInternalRelativeTransformation field.
 inline
-Matrix &BoneBase::getInternalTransformation(void)
+Matrix &BoneBase::getInternalRelativeTransformation(void)
 {
-    return _sfInternalTransformation.getValue();
+    return _sfInternalRelativeTransformation.getValue();
 }
 
-//! Get the value of the Bone::_sfInternalTransformation field.
+//! Get the value of the Bone::_sfInternalRelativeTransformation field.
 inline
-const Matrix &BoneBase::getInternalTransformation(void) const
+const Matrix &BoneBase::getInternalRelativeTransformation(void) const
 {
-    return _sfInternalTransformation.getValue();
+    return _sfInternalRelativeTransformation.getValue();
 }
 
-//! Set the value of the Bone::_sfInternalTransformation field.
+//! Set the value of the Bone::_sfInternalRelativeTransformation field.
 inline
-void BoneBase::setInternalTransformation(const Matrix &value)
+void BoneBase::setInternalRelativeTransformation(const Matrix &value)
 {
-    _sfInternalTransformation.setValue(value);
+    _sfInternalRelativeTransformation.setValue(value);
+}
+
+//! Get the value of the Bone::_sfInternalAbsoluteTransformation field.
+inline
+Matrix &BoneBase::getInternalAbsoluteTransformation(void)
+{
+    return _sfInternalAbsoluteTransformation.getValue();
+}
+
+//! Get the value of the Bone::_sfInternalAbsoluteTransformation field.
+inline
+const Matrix &BoneBase::getInternalAbsoluteTransformation(void) const
+{
+    return _sfInternalAbsoluteTransformation.getValue();
+}
+
+//! Set the value of the Bone::_sfInternalAbsoluteTransformation field.
+inline
+void BoneBase::setInternalAbsoluteTransformation(const Matrix &value)
+{
+    _sfInternalAbsoluteTransformation.setValue(value);
 }
 
 

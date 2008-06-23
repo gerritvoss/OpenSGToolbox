@@ -519,22 +519,22 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 
 	    //take care of tabs
 	    temptext = getText();
-	    for(Int32 i = 0; i < getText().size() ; i++)
+	    for(Int32 i = 0; i < temptext.size() ; i++)
 	    {
 		    if(temptext[i] == '\t')
 		    {
-			    temptext.erase(i);
-			    for(Int32 j = 0; j < getTabSize(); j++)
-			    {
-				    temptext.insert(i, " ");
-				    i++;
-			    }
+				temptext[i] = ' ';
+			    //for(Int32 j = 0; j < getTabSize()-1; j++)
+			    //{
+				//    temptext.insert(i, " ");
+				//    i++;
+			    //}
 		    }
 	    }
 	    //Set the contents of the lines (assuming letter by letter go down right now (which is wrong))
 	    _LineContents.push_back(TextLine());
 	    _LineContents[0]._StartPosition = 0;
-	    for(Int32 i = 0; i < getText().size(); ++i)
+	    for(Int32 i = 0; i < temptext.size(); ++i)
 	    {
 
 		    while(temptext[i] == ' ')

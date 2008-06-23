@@ -64,6 +64,8 @@
 #include <OpenSG/UserInterface/OSGSpringLayout.h>
 #include <OpenSG/UserInterface/OSGSpringLayoutConstraints.h>
 
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
+
 #include <sstream>
 
 
@@ -152,9 +154,20 @@ public:
 
                 if(TheFCType != NULL)
                 {
+					//Output the XML for the prototype of this Field Container
+					std::stringstream XMLOutputStream;
+					FCFileType::FCTypeVector IgnoreTypes;
+					FCFileType::FCPtrStore Containers;
+					Containers.insert(TheFCType->getPrototype());
+					FCFileHandler::the()->write(Containers, XMLOutputStream, "xml", IgnoreTypes);
+					
+					beginEditCP(_XMLTextArea, TextArea::TextFieldMask);
+						_XMLTextArea->setText(XMLOutputStream.str());
+					endEditCP(_XMLTextArea, TextArea::TextFieldMask);
+
+					//Output Information on the Fields of the Field Container
 					std::stringstream OutputStream;
 
-                    // Output selected font
                     OutputStream << "Field Container Type: " << TheFCType->getCName() << std::endl;
                     OutputStream << std::setw(25) << "Field Name" << " | " << std::setw(22) << "Type" << " | " << std::setw(11) << "Cardinality"  << " | " << std::setw(25) << "Default Value" << std::endl;
                     for(UInt32 i(1) ; i<TheFCType->getNumFieldDescs()+1 ; ++i)
@@ -192,14 +205,16 @@ public:
             }
         }
 
-        void setList(ListPtr TheList, TextAreaPtr TheTextArea)
+        void setList(ListPtr TheList, TextAreaPtr TheTextArea, TextAreaPtr TheXMLTextArea)
         {
              _List = TheList;
              _TextArea = TheTextArea;
+             _XMLTextArea = TheXMLTextArea;
         }
     protected:
         ListPtr _List;
 		TextAreaPtr _TextArea;
+		TextAreaPtr _XMLTextArea;
     };
 
 protected:
@@ -207,6 +222,7 @@ protected:
 	DefaultListModelPtr _FieldContainerTypeModel;
     FCListListener TheFCListListener;
 	TextAreaPtr FCDescriptionArea;
+	TextAreaPtr XMLArea;
 
 	PanelPtr createFieldContainerTypePanel(void)
 	{
@@ -298,11 +314,17 @@ protected:
 		beginEditCP(FCDescriptionArea, TextArea::FontFieldMask);
 		FCDescriptionArea->setFont(TextAreaFont);
 		endEditCP(FCDescriptionArea, TextArea::FontFieldMask);
+		
+		XMLArea = TextArea::create();
+
+		beginEditCP(XMLArea, TextArea::FontFieldMask);
+		XMLArea->setFont(TextAreaFont);
+		endEditCP(XMLArea, TextArea::FontFieldMask);
 
 		//ScrollPanelPtr TextAreaScrollPanel = ScrollPanel::create();
 		//TextAreaScrollPanel->setViewComponent(FCDescriptionArea);
 
-        TheFCListListener.setList(FieldContainerTypeList, FCDescriptionArea);
+        TheFCListListener.setList(FieldContainerTypeList, FCDescriptionArea, XMLArea);
 
 		//Create Main Panel Layout
 		SpringLayoutPtr FieldContainerTypePanelLayout = osg::SpringLayout::create();
@@ -315,12 +337,13 @@ protected:
 			FieldContainerTypePanel->getChildren().push_back(NumFCTypesLabel);
 			FieldContainerTypePanel->getChildren().push_back(NumFCTypesValueLabel);
 			FieldContainerTypePanel->getChildren().push_back(FCDescriptionArea);
+			FieldContainerTypePanel->getChildren().push_back(XMLArea);
 			FieldContainerTypePanel->setLayout(FieldContainerTypePanelLayout);
 		endEditCP(FieldContainerTypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
         
 		//Scrollbar Layout constraints
 		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypeListScrollPanel, 0, SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypePanel);
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, FieldContainerTypeListScrollPanel, 0, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, FieldContainerTypeListScrollPanel, 0, SpringLayoutConstraints::WEST_EDGE, FieldContainerTypePanel);
 		
 		//FieldContainerTypes Label Layout constraints
 		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, NumFCTypesLabel, 1, SpringLayoutConstraints::SOUTH_EDGE, FieldContainerTypeListScrollPanel);
@@ -336,6 +359,12 @@ protected:
 		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, FCDescriptionArea, 0, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypePanel);
 		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, FCDescriptionArea, 0, SpringLayoutConstraints::WEST_EDGE, FieldContainerTypePanel);
 		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, FCDescriptionArea, 0, SpringLayoutConstraints::SOUTH_EDGE, FieldContainerTypePanel);
+
+		//XML TextArea Layout constraints
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, XMLArea, 0, SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, XMLArea, 0, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, XMLArea, 1, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypeListScrollPanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, XMLArea, 0, SpringLayoutConstraints::SOUTH_EDGE, FieldContainerTypeListScrollPanel);
 
 
 		return FieldContainerTypePanel;

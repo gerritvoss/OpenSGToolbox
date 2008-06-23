@@ -72,7 +72,8 @@
 #include <OpenSG/OSGReal32Fields.h> // Length type
 #include "SkeletalAnimation/OSGBoneFields.h" // InternalChildren type
 #include "SkeletalAnimation/OSGBoneFields.h" // InternalParent type
-#include <OpenSG/OSGMatrixFields.h> // InternalTransformation type
+#include <OpenSG/OSGMatrixFields.h> // InternalRelativeTransformation type
+#include <OpenSG/OSGMatrixFields.h> // InternalAbsoluteTransformation type
 
 #include "OSGBoneFields.h"
 
@@ -96,13 +97,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
 
     enum
     {
-        RotationFieldId               = Inherited::NextFieldId,
-        TranslationFieldId            = RotationFieldId               + 1,
-        LengthFieldId                 = TranslationFieldId            + 1,
-        InternalChildrenFieldId       = LengthFieldId                 + 1,
-        InternalParentFieldId         = InternalChildrenFieldId       + 1,
-        InternalTransformationFieldId = InternalParentFieldId         + 1,
-        NextFieldId                   = InternalTransformationFieldId + 1
+        RotationFieldId                       = Inherited::NextFieldId,
+        TranslationFieldId                    = RotationFieldId                       + 1,
+        LengthFieldId                         = TranslationFieldId                    + 1,
+        InternalChildrenFieldId               = LengthFieldId                         + 1,
+        InternalParentFieldId                 = InternalChildrenFieldId               + 1,
+        InternalRelativeTransformationFieldId = InternalParentFieldId                 + 1,
+        InternalAbsoluteTransformationFieldId = InternalRelativeTransformationFieldId + 1,
+        NextFieldId                           = InternalAbsoluteTransformationFieldId + 1
     };
 
     static const OSG::BitVector RotationFieldMask;
@@ -110,7 +112,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     static const OSG::BitVector LengthFieldMask;
     static const OSG::BitVector InternalChildrenFieldMask;
     static const OSG::BitVector InternalParentFieldMask;
-    static const OSG::BitVector InternalTransformationFieldMask;
+    static const OSG::BitVector InternalRelativeTransformationFieldMask;
+    static const OSG::BitVector InternalAbsoluteTransformationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -203,7 +206,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     SFReal32            _sfLength;
     MFBonePtr           _mfInternalChildren;
     SFBonePtr           _sfInternalParent;
-    SFMatrix            _sfInternalTransformation;
+    SFMatrix            _sfInternalRelativeTransformation;
+    SFMatrix            _sfInternalAbsoluteTransformation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -227,12 +231,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
 
            MFBonePtr           *getMFInternalChildren(void);
            SFBonePtr           *getSFInternalParent (void);
-           SFMatrix            *getSFInternalTransformation(void);
+           SFMatrix            *getSFInternalRelativeTransformation(void);
+           SFMatrix            *getSFInternalAbsoluteTransformation(void);
 
            BonePtr             &getInternalParent (void);
      const BonePtr             &getInternalParent (void) const;
-           Matrix              &getInternalTransformation(void);
-     const Matrix              &getInternalTransformation(void) const; 
+           Matrix              &getInternalRelativeTransformation(void);
+     const Matrix              &getInternalRelativeTransformation(void) const;
+           Matrix              &getInternalAbsoluteTransformation(void);
+     const Matrix              &getInternalAbsoluteTransformation(void) const;
            BonePtr             &getInternalChildren(UInt32 index);
            MFBonePtr           &getInternalChildren(void);
      const MFBonePtr           &getInternalChildren(void) const;
@@ -243,7 +250,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     /*! \{                                                                 */
 
      void setInternalParent (const BonePtr &value);
-     void setInternalTransformation(const Matrix &value); //name of the field is InternalTransformation
+     void setInternalRelativeTransformation(const Matrix &value);
+     void setInternalAbsoluteTransformation(const Matrix &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

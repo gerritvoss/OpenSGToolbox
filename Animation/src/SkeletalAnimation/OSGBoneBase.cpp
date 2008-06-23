@@ -79,8 +79,11 @@ const OSG::BitVector  BoneBase::InternalChildrenFieldMask =
 const OSG::BitVector  BoneBase::InternalParentFieldMask = 
     (TypeTraits<BitVector>::One << BoneBase::InternalParentFieldId);
 
-const OSG::BitVector  BoneBase::InternalTransformationFieldMask = 
-    (TypeTraits<BitVector>::One << BoneBase::InternalTransformationFieldId);
+const OSG::BitVector  BoneBase::InternalRelativeTransformationFieldMask = 
+    (TypeTraits<BitVector>::One << BoneBase::InternalRelativeTransformationFieldId);
+
+const OSG::BitVector  BoneBase::InternalAbsoluteTransformationFieldMask = 
+    (TypeTraits<BitVector>::One << BoneBase::InternalAbsoluteTransformationFieldId);
 
 const OSG::BitVector BoneBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -104,7 +107,10 @@ const OSG::BitVector BoneBase::MTInfluenceMask =
 /*! \var BonePtr         BoneBase::_sfInternalParent
     
 */
-/*! \var Matrix          BoneBase::_sfInternalTransformation
+/*! \var Matrix          BoneBase::_sfInternalRelativeTransformation
+    
+*/
+/*! \var Matrix          BoneBase::_sfInternalAbsoluteTransformation
     
 */
 
@@ -138,10 +144,15 @@ FieldDescription *BoneBase::_desc[] =
                      false,
                      (FieldAccessMethod) &BoneBase::getSFInternalParent),
     new FieldDescription(SFMatrix::getClassType(), 
-                     "InternalTransformation", 
-                     InternalTransformationFieldId, InternalTransformationFieldMask,
+                     "InternalRelativeTransformation", 
+                     InternalRelativeTransformationFieldId, InternalRelativeTransformationFieldMask,
                      false,
-                     (FieldAccessMethod) &BoneBase::getSFInternalTransformation)
+                     (FieldAccessMethod) &BoneBase::getSFInternalRelativeTransformation),
+    new FieldDescription(SFMatrix::getClassType(), 
+                     "InternalAbsoluteTransformation", 
+                     InternalAbsoluteTransformationFieldId, InternalAbsoluteTransformationFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoneBase::getSFInternalAbsoluteTransformation)
 };
 
 
@@ -223,7 +234,8 @@ BoneBase::BoneBase(void) :
     _sfLength                 (),// 
     _mfInternalChildren       (), 
     _sfInternalParent         (), 
-    _sfInternalTransformation (), 
+    _sfInternalRelativeTransformation(), 
+    _sfInternalAbsoluteTransformation(), 
     Inherited() 
 {
 }
@@ -238,7 +250,8 @@ BoneBase::BoneBase(const BoneBase &source) :
     _sfLength                 (source._sfLength                 ), 
     _mfInternalChildren       (source._mfInternalChildren       ), 
     _sfInternalParent         (source._sfInternalParent         ), 
-    _sfInternalTransformation (source._sfInternalTransformation ), 
+    _sfInternalRelativeTransformation(source._sfInternalRelativeTransformation), 
+    _sfInternalAbsoluteTransformation(source._sfInternalAbsoluteTransformation), 
     Inherited                 (source)
 {
 }
@@ -280,9 +293,14 @@ UInt32 BoneBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInternalParent.getBinSize();
     }
 
-    if(FieldBits::NoField != (InternalTransformationFieldMask & whichField))
+    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
     {
-        returnValue += _sfInternalTransformation.getBinSize();
+        returnValue += _sfInternalRelativeTransformation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
+    {
+        returnValue += _sfInternalAbsoluteTransformation.getBinSize();
     }
 
 
@@ -319,9 +337,14 @@ void BoneBase::copyToBin(      BinaryDataHandler &pMem,
         _sfInternalParent.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (InternalTransformationFieldMask & whichField))
+    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
     {
-        _sfInternalTransformation.copyToBin(pMem);
+        _sfInternalRelativeTransformation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
+    {
+        _sfInternalAbsoluteTransformation.copyToBin(pMem);
     }
 
 
@@ -357,9 +380,14 @@ void BoneBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfInternalParent.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (InternalTransformationFieldMask & whichField))
+    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
     {
-        _sfInternalTransformation.copyFromBin(pMem);
+        _sfInternalRelativeTransformation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
+    {
+        _sfInternalAbsoluteTransformation.copyFromBin(pMem);
     }
 
 
@@ -387,8 +415,11 @@ void BoneBase::executeSyncImpl(      BoneBase *pOther,
     if(FieldBits::NoField != (InternalParentFieldMask & whichField))
         _sfInternalParent.syncWith(pOther->_sfInternalParent);
 
-    if(FieldBits::NoField != (InternalTransformationFieldMask & whichField))
-        _sfInternalTransformation.syncWith(pOther->_sfInternalTransformation);
+    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
+        _sfInternalRelativeTransformation.syncWith(pOther->_sfInternalRelativeTransformation);
+
+    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
+        _sfInternalAbsoluteTransformation.syncWith(pOther->_sfInternalAbsoluteTransformation);
 
 
 }
@@ -412,8 +443,11 @@ void BoneBase::executeSyncImpl(      BoneBase *pOther,
     if(FieldBits::NoField != (InternalParentFieldMask & whichField))
         _sfInternalParent.syncWith(pOther->_sfInternalParent);
 
-    if(FieldBits::NoField != (InternalTransformationFieldMask & whichField))
-        _sfInternalTransformation.syncWith(pOther->_sfInternalTransformation);
+    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
+        _sfInternalRelativeTransformation.syncWith(pOther->_sfInternalRelativeTransformation);
+
+    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
+        _sfInternalAbsoluteTransformation.syncWith(pOther->_sfInternalAbsoluteTransformation);
 
 
     if(FieldBits::NoField != (InternalChildrenFieldMask & whichField))
