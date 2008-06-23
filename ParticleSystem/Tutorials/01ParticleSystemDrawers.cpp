@@ -147,13 +147,6 @@ int main(int argc, char **argv)
 	beginEditCP(PSPointChunk);
 		PSPointChunk->setSize(5.0f);
 		PSPointChunk->setSmooth(true);
-		PSPointChunk->setMinSize(3.0f);
-		PSPointChunk->setMaxSize(200.0f);
-		PSPointChunk->setConstantAttenuation(1.0f);
-		PSPointChunk->setLinearAttenuation(0.3f);
-		PSPointChunk->setQuadraticAttenuation(0.3f);
-		PSPointChunk->setRMode(GL_ZERO);
-        PSPointChunk->setFadeThreshold(0.0);
 	endEditCP(PSPointChunk);
 	BlendChunkPtr PSBlendChunk = BlendChunk::create();
 	PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
@@ -184,14 +177,9 @@ int main(int argc, char **argv)
 			Vec3f(1.0,1.0,1.0), 
 			i, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
-			Vec3f(0.0f,1.0f,0.0f)
+			Vec3f(0.0f,2.0f,0.0f)
 			,0);
 	}
-
-    ExampleParticleSystem->killParticle(39);
-    ExampleParticleSystem->killParticle(29);
-    ExampleParticleSystem->killParticle(19);
-    ExampleParticleSystem->killParticle(9);
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
@@ -200,7 +188,7 @@ int main(int argc, char **argv)
 
 	LineParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
 	beginEditCP(ExampleParticleSystemDrawer);
-		ExampleParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_VELOCITY);
+		ExampleParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_VELOCITY_CHANGE);
 		ExampleParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
 	endEditCP(ExampleParticleSystemDrawer);
 	
