@@ -49,6 +49,9 @@
 
 #include "OSGAgeFadeParticleAffector.h"
 
+#include <OpenSG/Toolbox/OSGInterpolations.h>
+#include "ParticleSystem/OSGParticleSystem.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -76,9 +79,35 @@ void AgeFadeParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+
 bool AgeFadeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
     //TODO: Implement
+	
+
+	
+	
+	Real32 Alpha(0.0f);
+	if(System->getAge(ParticleIndex)<getFadeInTime())
+	{
+		lerp<Real32>(getStartAlpha(), getFadeToAlpha(),1.0f-((getFadeInTime() - System->getAge(ParticleIndex))/getFadeInTime()), Alpha); 
+	}
+	else if(System->getAge(ParticleIndex)>=getFadeInTime() && System->getAge(ParticleIndex)< System->getLifespan(ParticleIndex)-getFadeOutTime())
+	{
+		Alpha = getFadeToAlpha();
+	}
+	else if(System->getAge(ParticleIndex)>=System->getLifespan(ParticleIndex)-getFadeOutTime())
+	{
+		//lerp
+		lerp<Real32>(getFadeToAlpha(), getEndAlpha(), ((System->getAge(ParticleIndex)-System->getLifespan(ParticleIndex)+getFadeOutTime())/(getFadeOutTime())), Alpha);
+	}
+
+	Color4f Color = System->getColor(ParticleIndex);
+	Color[3] = Alpha;
+	System->setColor(Color, ParticleIndex);
+
+	
     return false;
 }
 

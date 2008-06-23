@@ -50,6 +50,7 @@
 #include "OSGParticleSystem.h"
 #include "ParticleSystem/Events/OSGParticleEvent.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
+#include "ParticleSystem/ParticleAffectors/OSGParticleAffector.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -561,12 +562,12 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 				 Properties);
 }
 
-const Vec3f& ParticleSystem::getPositionChange(const UInt32& Index) const
+const Vec3f ParticleSystem::getPositionChange(const UInt32& Index) const
 {
 	return getPosition(Index) - getSecPosition(Index);
 }
 
-const Vec3f& ParticleSystem::getVelocityChange(const UInt32& Index) const
+const Vec3f ParticleSystem::getVelocityChange(const UInt32& Index) const
 {
 	return getVelocity(Index) - getSecVelocity(Index);
 }
@@ -961,11 +962,9 @@ void ParticleSystem::setProperty(const UInt64& Property, const UInt32& Index)
 void ParticleSystem::update(const Time& elps)
 {
     //TODO: Implement
-	//Remember the Old Postions and velocities
 
 	//Generate Particles with Generators
 
-	//Affect Particles with Affectors
 
 	//Affect Particle Systems
 
@@ -977,10 +976,29 @@ void ParticleSystem::update(const Time& elps)
     {
         VolumeChanged = true;
 
+		//Remember the Old Postions and velocities
+		setSecPosition(getPosition(i),i);
+		setSecVelocity(getVelocity(i),i);
+
+
 		//Apply Acceleration and Velocity
         setPosition(getPosition(i) + getVelocity(i)*elps + getAcceleration(i)*elps*elps, i);
 
 		setVelocity(getVelocity(i) + getAcceleration(i)*elps,i);
+
+		//Affect Particles with Affectors
+		for(UInt32 j(0) ; j<getAffectors().size(); ++j)
+		{
+			if(getAffectors(j)->affect(ParticleSystemPtr(this), i, elps))
+			{
+				if(killParticle(i))
+				{
+					AdvanceIterator = false;
+					--NumParticles;
+				}
+			}
+			
+		}
 
 		//Kill Particles that have ages > lifespans
 		setAge(getAge(i) + elps,i);

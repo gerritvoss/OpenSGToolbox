@@ -88,7 +88,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	UInt32 getNumParticles(void) const;
 	const Pnt3f& getPosition(const UInt32& Index) const;
 	const Pnt3f& getSecPosition(const UInt32& Index) const;
-	const Vec3f& getPositionChange(const UInt32& Index) const;
+	const Vec3f getPositionChange(const UInt32& Index) const;
 	const Vec3f& getNormal(const UInt32& Index) const;
 	const Color4f& getColor(const UInt32& Index) const;
 	const Vec3f& getSize(const UInt32& Index) const;
@@ -96,7 +96,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	Real32 getAge(const UInt32& Index) const;
 	const Vec3f& getVelocity(const UInt32& Index) const;
 	const Vec3f& getSecVelocity(const UInt32& Index) const;
-	const Vec3f& getVelocityChange(const UInt32& Index) const;
+	const Vec3f getVelocityChange(const UInt32& Index) const;
 	const Vec3f& getAcceleration(const UInt32& Index) const;
 	UInt64 getProperty(const UInt32& Index) const;
 
