@@ -91,6 +91,25 @@ A User Interface Component that represents a function.
 	</Field>
    
 	<Field
+		name="InputTabSpacing"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="15.0f"
+	>
+	</Field>
+	<Field
+		name="OutputTabSpacing"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="15.0f"
+	>
+	</Field>
+   
+	<Field
 		name="InputTabComponentGenerator"
 		type="ComponentGeneratorPtr"
 		cardinality="single"

@@ -152,6 +152,20 @@ SFReal32 *FunctionComponentBase::getSFOutputTabHorizontalAlignment(void)
     return &_sfOutputTabHorizontalAlignment;
 }
 
+//! Get the FunctionComponent::_sfInputTabSpacing field.
+inline
+SFReal32 *FunctionComponentBase::getSFInputTabSpacing(void)
+{
+    return &_sfInputTabSpacing;
+}
+
+//! Get the FunctionComponent::_sfOutputTabSpacing field.
+inline
+SFReal32 *FunctionComponentBase::getSFOutputTabSpacing(void)
+{
+    return &_sfOutputTabSpacing;
+}
+
 //! Get the FunctionComponent::_sfInputTabComponentGenerator field.
 inline
 SFComponentGeneratorPtr *FunctionComponentBase::getSFInputTabComponentGenerator(void)
@@ -375,6 +389,48 @@ inline
 void FunctionComponentBase::setOutputTabHorizontalAlignment(const Real32 &value)
 {
     _sfOutputTabHorizontalAlignment.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabSpacing field.
+inline
+Real32 &FunctionComponentBase::getInputTabSpacing(void)
+{
+    return _sfInputTabSpacing.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfInputTabSpacing field.
+inline
+const Real32 &FunctionComponentBase::getInputTabSpacing(void) const
+{
+    return _sfInputTabSpacing.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfInputTabSpacing field.
+inline
+void FunctionComponentBase::setInputTabSpacing(const Real32 &value)
+{
+    _sfInputTabSpacing.setValue(value);
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabSpacing field.
+inline
+Real32 &FunctionComponentBase::getOutputTabSpacing(void)
+{
+    return _sfOutputTabSpacing.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfOutputTabSpacing field.
+inline
+const Real32 &FunctionComponentBase::getOutputTabSpacing(void) const
+{
+    return _sfOutputTabSpacing.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfOutputTabSpacing field.
+inline
+void FunctionComponentBase::setOutputTabSpacing(const Real32 &value)
+{
+    _sfOutputTabSpacing.setValue(value);
 }
 
 //! Get the value of the FunctionComponent::_sfInputTabComponentGenerator field.

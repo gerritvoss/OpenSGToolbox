@@ -75,6 +75,8 @@
 #include <OpenSG/OSGReal32Fields.h> // InputTabHorizontalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // OutputTabVerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // OutputTabHorizontalAlignment type
+#include <OpenSG/OSGReal32Fields.h> // InputTabSpacing type
+#include <OpenSG/OSGReal32Fields.h> // OutputTabSpacing type
 #include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // InputTabComponentGenerator type
 #include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // OutputTabComponentGenerator type
 #include <OpenSG/UserInterface/OSGComponentFields.h> // InputTabs type
@@ -114,7 +116,9 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
         InputTabHorizontalAlignmentFieldId  = InputTabVerticalAlignmentFieldId    + 1,
         OutputTabVerticalAlignmentFieldId   = InputTabHorizontalAlignmentFieldId  + 1,
         OutputTabHorizontalAlignmentFieldId = OutputTabVerticalAlignmentFieldId   + 1,
-        InputTabComponentGeneratorFieldId   = OutputTabHorizontalAlignmentFieldId + 1,
+        InputTabSpacingFieldId              = OutputTabHorizontalAlignmentFieldId + 1,
+        OutputTabSpacingFieldId             = InputTabSpacingFieldId              + 1,
+        InputTabComponentGeneratorFieldId   = OutputTabSpacingFieldId             + 1,
         OutputTabComponentGeneratorFieldId  = InputTabComponentGeneratorFieldId   + 1,
         InputTabsFieldId                    = OutputTabComponentGeneratorFieldId  + 1,
         OutputTabsFieldId                   = InputTabsFieldId                    + 1,
@@ -133,6 +137,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
     static const OSG::BitVector InputTabHorizontalAlignmentFieldMask;
     static const OSG::BitVector OutputTabVerticalAlignmentFieldMask;
     static const OSG::BitVector OutputTabHorizontalAlignmentFieldMask;
+    static const OSG::BitVector InputTabSpacingFieldMask;
+    static const OSG::BitVector OutputTabSpacingFieldMask;
     static const OSG::BitVector InputTabComponentGeneratorFieldMask;
     static const OSG::BitVector OutputTabComponentGeneratorFieldMask;
     static const OSG::BitVector InputTabsFieldMask;
@@ -175,6 +181,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
            SFReal32            *getSFInputTabHorizontalAlignment(void);
            SFReal32            *getSFOutputTabVerticalAlignment(void);
            SFReal32            *getSFOutputTabHorizontalAlignment(void);
+           SFReal32            *getSFInputTabSpacing(void);
+           SFReal32            *getSFOutputTabSpacing(void);
            SFComponentGeneratorPtr *getSFInputTabComponentGenerator(void);
            SFComponentGeneratorPtr *getSFOutputTabComponentGenerator(void);
            MFComponentPtr      *getMFInputTabs      (void);
@@ -200,6 +208,10 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
      const Real32              &getOutputTabVerticalAlignment(void) const;
            Real32              &getOutputTabHorizontalAlignment(void);
      const Real32              &getOutputTabHorizontalAlignment(void) const;
+           Real32              &getInputTabSpacing(void);
+     const Real32              &getInputTabSpacing(void) const;
+           Real32              &getOutputTabSpacing(void);
+     const Real32              &getOutputTabSpacing(void) const;
            ComponentGeneratorPtr &getInputTabComponentGenerator(void);
      const ComponentGeneratorPtr &getInputTabComponentGenerator(void) const;
            ComponentGeneratorPtr &getOutputTabComponentGenerator(void);
@@ -232,6 +244,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
      void setInputTabHorizontalAlignment( const Real32 &value );
      void setOutputTabVerticalAlignment( const Real32 &value );
      void setOutputTabHorizontalAlignment( const Real32 &value );
+     void setInputTabSpacing( const Real32 &value );
+     void setOutputTabSpacing( const Real32 &value );
      void setInputTabComponentGenerator( const ComponentGeneratorPtr &value );
      void setOutputTabComponentGenerator( const ComponentGeneratorPtr &value );
      void setFocusedTextColor( const Color4f &value );
@@ -288,6 +302,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
     SFReal32            _sfInputTabHorizontalAlignment;
     SFReal32            _sfOutputTabVerticalAlignment;
     SFReal32            _sfOutputTabHorizontalAlignment;
+    SFReal32            _sfInputTabSpacing;
+    SFReal32            _sfOutputTabSpacing;
     SFComponentGeneratorPtr   _sfInputTabComponentGenerator;
     SFComponentGeneratorPtr   _sfOutputTabComponentGenerator;
     MFComponentPtr      _mfInputTabs;
