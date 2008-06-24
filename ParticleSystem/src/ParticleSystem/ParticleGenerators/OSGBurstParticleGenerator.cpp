@@ -48,6 +48,9 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGBurstParticleGenerator.h"
+#include "ParticleSystem/OSGParticleSystem.h"
+//#include "ParticleSystem/OSGRateParticleGeneratorBase.h"
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +81,10 @@ void BurstParticleGenerator::initMethod (void)
 
 bool BurstParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 {
+	for(int i(0);i<getBurstAmount();i++)
+	{
+		generateDynamic(System);
+	}
 	return false;
 }
 

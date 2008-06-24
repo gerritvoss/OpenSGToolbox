@@ -19,7 +19,11 @@
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
-#include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
+#include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
+
+
+#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -33,10 +37,8 @@ bool ExitApp = false;
 void display(void);
 void reshape(Vec2f Size);
 
-//Particle System Drawer
-ParticleSystemCorePtr ParticleNodeCore;
-PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
-LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
+FunctionPtr createPositionDistribution(void);
+FunctionPtr createLifespanDistribution(void);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -53,28 +55,11 @@ public:
 
    virtual void keyReleased(const KeyEvent& e)
    {
+
    }
 
    virtual void keyTyped(const KeyEvent& e)
    {
-	   if(e.getKey()== KeyEvent::KEY_1) // Use the Point Drawer
-	   {
-			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
-				ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
-			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
-	   }
-
-	   if(e.getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
-	   {
-			 beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
-				ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
-			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
-	   }
-
-	   if(e.getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
-	   {
-
-	   }
    }
 };
 
@@ -192,34 +177,49 @@ int main(int argc, char **argv)
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-	for(UInt32 i(0) ; i<50 ; ++i)
-	{
-		ExampleParticleSystem->addParticle(Pnt3f(i,i,i),
+		ExampleParticleSystem->addParticle(Pnt3f(0,0,0),
 			Vec3f(0.0,0.0f,1.0f),
 			Color4f(1.0,0.0,0.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
-			i, 
+			5, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)
 			,0);
-	}
+		ExampleParticleSystem->addParticle(Pnt3f(100,100,100),
+			Vec3f(0.0,0.0f,1.0f),
+			Color4f(1.0,0.0,0.0,1.0), 
+			Vec3f(1.0,1.0,1.0), 
+			5, 
+			Vec3f(0.0f,0.0f,0.0f), //Velocity
+			Vec3f(0.0f,0.0f,0.0f)
+			,0);
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
-	ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
-    ExamplePointParticleSystemDrawer->setForcePerParticleSizing(true);
+	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+		
 
-	ExampleLineParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
-	beginEditCP(ExampleLineParticleSystemDrawer);
-	ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
-		ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
-	endEditCP(ExampleLineParticleSystemDrawer);
+	//Create a Rate Particle Generator
+	RateParticleGeneratorPtr ExampleGenerator = osg::RateParticleGenerator::create();
+
+	//Attach the function objects to the Generator
+	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		ExampleGenerator->setPositionFunction(createPositionDistribution());
+		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+		ExampleGenerator->setGenerationRate(5.0);
+	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
+	//Attach the Generator to the Particle System
+	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask);
+		ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
+	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask);
+
+
 	//Particle System Node
-    ParticleNodeCore = osg::ParticleSystemCore::create();
+    ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
+		ParticleNodeCore->setDrawer(ExampleParticleSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
     
@@ -266,4 +266,33 @@ void display(void)
 void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
+}
+
+FunctionPtr createPositionDistribution(void)
+{
+    //Cylinder Distribution
+    CylinderDistribution3DPtr TheCylinderDistribution = CylinderDistribution3D::create();
+    beginEditCP(TheCylinderDistribution);
+      TheCylinderDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheCylinderDistribution->setInnerRadius(30.0);
+      TheCylinderDistribution->setOuterRadius(100.0);
+      TheCylinderDistribution->setMinTheta(0.0);
+      TheCylinderDistribution->setMaxTheta(6.283185);
+      TheCylinderDistribution->setHeight(400.0);
+      TheCylinderDistribution->setNormal(Vec3f(0.0,0.0,1.0));
+      TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::SURFACE);
+    endEditCP(TheCylinderDistribution);
+
+    return TheCylinderDistribution;
+}
+
+FunctionPtr createLifespanDistribution(void)
+{
+    GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
+    beginEditCP(TheLifespanDistribution);
+      TheLifespanDistribution->setMean(10.0f);
+      TheLifespanDistribution->setStandardDeviation(40.0);
+    endEditCP(TheLifespanDistribution);
+	
+	return TheLifespanDistribution;
 }

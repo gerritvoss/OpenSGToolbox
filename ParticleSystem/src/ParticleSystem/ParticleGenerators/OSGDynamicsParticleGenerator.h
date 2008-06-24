@@ -89,7 +89,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGenerator : public Dynami
     DynamicsParticleGenerator(void);
     DynamicsParticleGenerator(const DynamicsParticleGenerator &source);
 
-	void generate(ParticleSystemPtr System) const;
+	void generateDynamic(ParticleSystemPtr System) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

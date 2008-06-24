@@ -19,6 +19,7 @@
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
+#include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 
@@ -159,8 +160,8 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
+                                        Vec2f(1280,1024),
                                         "OpenSG 02DynamicDistribution Window");
 										
 
@@ -196,7 +197,7 @@ int main(int argc, char **argv)
 
 
 	//Create the particles
-    UInt32 NumParticlesToGenerate(500);
+    UInt32 NumParticlesToGenerate(2500);
 
 	FunctionPtr PositionFunction = createPositionDistribution();
 	FunctionPtr NormalFunction = createNormalDistribution();
@@ -271,7 +272,13 @@ int main(int argc, char **argv)
     }
 
 	//Particle System Drawer
-	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+	//PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+
+	LineParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
+	beginEditCP(ExampleParticleSystemDrawer);
+		ExampleParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_VELOCITY);
+		ExampleParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
+	endEditCP(ExampleParticleSystemDrawer);
 
 	//Particle System Node
     ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
@@ -332,7 +339,7 @@ FunctionPtr createPositionDistribution(void)
     //Make The Distribution
     
     //Box Distribution
-    BoxDistribution3DPtr TheBoxDistribution = BoxDistribution3D::create();
+    /*BoxDistribution3DPtr TheBoxDistribution = BoxDistribution3D::create();
     beginEditCP(TheBoxDistribution);
       TheBoxDistribution->setMinPoint(Pnt3f(-10.0,-10.0,-10.0));
       TheBoxDistribution->setMaxPoint(Pnt3f(10.0,10.0,10.0));
@@ -364,19 +371,6 @@ FunctionPtr createPositionDistribution(void)
       TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::VOLUME);
     endEditCP(TheCylinderDistribution);
     
-    //Sphere Distribution
-    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
-    beginEditCP(TheSphereDistribution);
-      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheSphereDistribution->setInnerRadius(50.0);
-      TheSphereDistribution->setOuterRadius(500.0);
-      TheSphereDistribution->setMinTheta(0.0);
-      TheSphereDistribution->setMaxTheta(6.283185);
-      TheSphereDistribution->setMinZ(-1.0);
-      TheSphereDistribution->setMaxZ(1.0);
-      TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
-    endEditCP(TheSphereDistribution);
-    
     //Tri Distribution
     TriDistribution3DPtr TheTriDistribution = TriDistribution3D::create();
     beginEditCP(TheTriDistribution);
@@ -394,7 +388,21 @@ FunctionPtr createPositionDistribution(void)
       TheGaussianNormalDistribution->setStandardDeviationX(100.0);
       TheGaussianNormalDistribution->setStandardDeviationY(100.0);
       TheGaussianNormalDistribution->setStandardDeviationZ(100.0);
-    endEditCP(TheGaussianNormalDistribution);
+    endEditCP(TheGaussianNormalDistribution);*/
+
+    
+    //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(0.0);
+      TheSphereDistribution->setOuterRadius(3.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(6.283185);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+    endEditCP(TheSphereDistribution);
 
     return TheSphereDistribution;
 }
@@ -489,8 +497,8 @@ FunctionPtr createVelocityDistribution(void)
     SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
     beginEditCP(TheSphereDistribution);
       TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheSphereDistribution->setInnerRadius(5.0);
-      TheSphereDistribution->setOuterRadius(10.0);
+      TheSphereDistribution->setInnerRadius(100.0);
+      TheSphereDistribution->setOuterRadius(150.0);
       TheSphereDistribution->setMinTheta(0.0);
       TheSphereDistribution->setMaxTheta(6.283185);
       TheSphereDistribution->setMinZ(-1.0);
@@ -513,5 +521,7 @@ FunctionPtr createVelocityDistribution(void)
 }
 FunctionPtr createAccelerationDistribution(void)
 {
+	enum Colors{RED=0,YELLOW,GREEN};
+
 	return NullFC;
 }

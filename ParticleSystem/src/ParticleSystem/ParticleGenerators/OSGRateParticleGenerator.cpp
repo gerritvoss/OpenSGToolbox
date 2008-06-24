@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGRateParticleGenerator.h"
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +79,17 @@ void RateParticleGenerator::initMethod (void)
 
 bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 {
+	setTimeSinceLastGeneration(getTimeSinceLastGeneration()+elps);
+
+	while(getTimeSinceLastGeneration() > 1.0f/getGenerationRate())
+	{
+		generateDynamic(System);
+
+		//Decrement Time Since Last Action
+		setTimeSinceLastGeneration(getTimeSinceLastGeneration()-1.0f/getGenerationRate());
+
+	}
+
 	return false;
 }
 

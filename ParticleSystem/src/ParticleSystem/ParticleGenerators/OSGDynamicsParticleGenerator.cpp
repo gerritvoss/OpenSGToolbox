@@ -78,7 +78,7 @@ void DynamicsParticleGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DynamicsParticleGenerator::generate(ParticleSystemPtr System) const
+void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System) const
 {
 	Pnt3f PositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
 	Pnt3f SecPositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
