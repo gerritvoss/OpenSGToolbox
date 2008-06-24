@@ -223,6 +223,29 @@ Vec2f FunctionComponent::getContentRequestedSize(void) const
     return Inherited::getContentRequestedSize();
 }
 
+void FunctionComponent::updateLayout(void)
+{
+    //TODO: Implement
+    Inherited::updateLayout();
+}
+
+void FunctionComponent::updateTabs(void)
+{
+    //For Each Input Tab
+    //Update it
+    
+    //For Each Output Tab
+    //Update it
+}
+
+void FunctionComponent::updateInputTab(UInt32 Index)
+{
+}
+
+void FunctionComponent::updateOutputTab(UInt32 Index)
+{
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -248,6 +271,28 @@ FunctionComponent::~FunctionComponent(void)
 void FunctionComponent::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if((whichField & InputTabComponentGeneratorFieldMask) ||
+        (whichField & OutputTabComponentGeneratorFieldMask))
+    {
+        updateTabs();
+    }
+
+    if((whichField & InputTabsFieldMask) ||
+        (whichField & OutputTabsFieldMask))
+    {
+        beginEditCP(FunctionComponentPtr(this), FunctionComponent::ChildrenFieldMask);
+            getChildren().clear();
+            for(UInt32 i(0) ; i<getInputTabs().size() ; ++i)
+            {
+                getChildren().push_back(getInputTabs()[i]);
+            }
+            for(UInt32 i(0) ; i<getOutputTabs().size() ; ++i)
+            {
+                getChildren().push_back(getOutputTabs()[i]);
+            }
+        endEditCP(FunctionComponentPtr(this), FunctionComponent::ChildrenFieldMask);
+    }
 }
 
 void FunctionComponent::dump(      UInt32    , 

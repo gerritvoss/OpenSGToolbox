@@ -100,6 +100,12 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponent : public FunctionComponentBas
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+    virtual void updateLayout(void);
+
+    
+    void updateTabs(void);
+    void updateInputTab(UInt32 Index);
+    void updateOutputTab(UInt32 Index);
     
     /*==========================  PRIVATE  ================================*/
   private:
