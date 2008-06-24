@@ -67,7 +67,17 @@
 
 #include "OSGParticleGenerator.h" // Parent
 
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // Position type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // PositionFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // SecPositionFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // NormalFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // ColorFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // SizeFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // LifespanFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // AgeFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // VelocityFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // SecVelocityFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // AccelerationFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // PropertyFunction type
 
 #include "OSGDynamicsParticleGeneratorFields.h"
 
@@ -91,11 +101,31 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
 
     enum
     {
-        PositionFieldId = Inherited::NextFieldId,
-        NextFieldId     = PositionFieldId + 1
+        PositionFunctionFieldId     = Inherited::NextFieldId,
+        SecPositionFunctionFieldId  = PositionFunctionFieldId     + 1,
+        NormalFunctionFieldId       = SecPositionFunctionFieldId  + 1,
+        ColorFunctionFieldId        = NormalFunctionFieldId       + 1,
+        SizeFunctionFieldId         = ColorFunctionFieldId        + 1,
+        LifespanFunctionFieldId     = SizeFunctionFieldId         + 1,
+        AgeFunctionFieldId          = LifespanFunctionFieldId     + 1,
+        VelocityFunctionFieldId     = AgeFunctionFieldId          + 1,
+        SecVelocityFunctionFieldId  = VelocityFunctionFieldId     + 1,
+        AccelerationFunctionFieldId = SecVelocityFunctionFieldId  + 1,
+        PropertyFunctionFieldId     = AccelerationFunctionFieldId + 1,
+        NextFieldId                 = PropertyFunctionFieldId     + 1
     };
 
-    static const OSG::BitVector PositionFieldMask;
+    static const OSG::BitVector PositionFunctionFieldMask;
+    static const OSG::BitVector SecPositionFunctionFieldMask;
+    static const OSG::BitVector NormalFunctionFieldMask;
+    static const OSG::BitVector ColorFunctionFieldMask;
+    static const OSG::BitVector SizeFunctionFieldMask;
+    static const OSG::BitVector LifespanFunctionFieldMask;
+    static const OSG::BitVector AgeFunctionFieldMask;
+    static const OSG::BitVector VelocityFunctionFieldMask;
+    static const OSG::BitVector SecVelocityFunctionFieldMask;
+    static const OSG::BitVector AccelerationFunctionFieldMask;
+    static const OSG::BitVector PropertyFunctionFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +152,57 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFunctionPtr       *getSFPosition       (void);
+           SFFunctionPtr       *getSFPositionFunction(void);
+           SFFunctionPtr       *getSFSecPositionFunction(void);
+           SFFunctionPtr       *getSFNormalFunction (void);
+           SFFunctionPtr       *getSFColorFunction  (void);
+           SFFunctionPtr       *getSFSizeFunction   (void);
+           SFFunctionPtr       *getSFLifespanFunction(void);
+           SFFunctionPtr       *getSFAgeFunction    (void);
+           SFFunctionPtr       *getSFVelocityFunction(void);
+           SFFunctionPtr       *getSFSecVelocityFunction(void);
+           SFFunctionPtr       *getSFAccelerationFunction(void);
+           SFFunctionPtr       *getSFPropertyFunction(void);
 
-           FunctionPtr         &getPosition       (void);
-     const FunctionPtr         &getPosition       (void) const;
+           FunctionPtr         &getPositionFunction(void);
+     const FunctionPtr         &getPositionFunction(void) const;
+           FunctionPtr         &getSecPositionFunction(void);
+     const FunctionPtr         &getSecPositionFunction(void) const;
+           FunctionPtr         &getNormalFunction (void);
+     const FunctionPtr         &getNormalFunction (void) const;
+           FunctionPtr         &getColorFunction  (void);
+     const FunctionPtr         &getColorFunction  (void) const;
+           FunctionPtr         &getSizeFunction   (void);
+     const FunctionPtr         &getSizeFunction   (void) const;
+           FunctionPtr         &getLifespanFunction(void);
+     const FunctionPtr         &getLifespanFunction(void) const;
+           FunctionPtr         &getAgeFunction    (void);
+     const FunctionPtr         &getAgeFunction    (void) const;
+           FunctionPtr         &getVelocityFunction(void);
+     const FunctionPtr         &getVelocityFunction(void) const;
+           FunctionPtr         &getSecVelocityFunction(void);
+     const FunctionPtr         &getSecVelocityFunction(void) const;
+           FunctionPtr         &getAccelerationFunction(void);
+     const FunctionPtr         &getAccelerationFunction(void) const;
+           FunctionPtr         &getPropertyFunction(void);
+     const FunctionPtr         &getPropertyFunction(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPosition       ( const FunctionPtr &value );
+     void setPositionFunction( const FunctionPtr &value );
+     void setSecPositionFunction( const FunctionPtr &value );
+     void setNormalFunction ( const FunctionPtr &value );
+     void setColorFunction  ( const FunctionPtr &value );
+     void setSizeFunction   ( const FunctionPtr &value );
+     void setLifespanFunction( const FunctionPtr &value );
+     void setAgeFunction    ( const FunctionPtr &value );
+     void setVelocityFunction( const FunctionPtr &value );
+     void setSecVelocityFunction( const FunctionPtr &value );
+     void setAccelerationFunction( const FunctionPtr &value );
+     void setPropertyFunction( const FunctionPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -159,7 +229,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFunctionPtr       _sfPosition;
+    SFFunctionPtr       _sfPositionFunction;
+    SFFunctionPtr       _sfSecPositionFunction;
+    SFFunctionPtr       _sfNormalFunction;
+    SFFunctionPtr       _sfColorFunction;
+    SFFunctionPtr       _sfSizeFunction;
+    SFFunctionPtr       _sfLifespanFunction;
+    SFFunctionPtr       _sfAgeFunction;
+    SFFunctionPtr       _sfVelocityFunction;
+    SFFunctionPtr       _sfSecVelocityFunction;
+    SFFunctionPtr       _sfAccelerationFunction;
+    SFFunctionPtr       _sfPropertyFunction;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

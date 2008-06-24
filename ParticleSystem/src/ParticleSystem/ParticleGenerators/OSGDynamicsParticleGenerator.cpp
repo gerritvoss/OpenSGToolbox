@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDynamicsParticleGenerator.h"
+#include <OpenSG/Dynamics/OSGFunction.h>
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,6 +77,114 @@ void DynamicsParticleGenerator::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void DynamicsParticleGenerator::generate(ParticleSystemPtr System) const
+{
+	Pnt3f PositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
+	Pnt3f SecPositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
+	Vec3f NormalReturnValue = Vec3f(0.0,0.0f,1.0f);
+	Color4f ColorReturnValue = Color4f(0.0,0.0f,0.0f, 1.0f);
+	Vec3f SizeReturnValue = Vec3f(1.0,1.0f,1.0f);
+	Time LifespanReturnValue = -1;
+	Time AgeReturnValue = 0;
+	Vec3f VelocityReturnValue = Vec3f(0.0,0.0f,0.0f);
+	Vec3f SecVelocityReturnValue = Vec3f(0.0,0.0f,0.0f);
+	Vec3f AccelerationReturnValue = Vec3f(0.0,0.0f,0.0f);
+	UInt64 PropertyReturnValue = 0;
+
+
+    FunctionIOParameterVector EmptyParameters;
+	if(getPositionFunction() != NullFC)
+	{
+		PositionReturnValue = 
+			FunctionIOData<Pnt3f>::dcast(
+			getPositionFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+	if(getSecPositionFunction() != NullFC)
+	{
+		SecPositionReturnValue = 
+			FunctionIOData<Pnt3f>::dcast(
+			getSecPositionFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+
+	if(getNormalFunction() != NullFC)
+	{
+		NormalReturnValue = 
+			FunctionIOData<Vec3f>::dcast(
+			getNormalFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+		
+	if(getColorFunction() != NullFC)
+	{
+		ColorReturnValue = 
+			FunctionIOData<Color4f>::dcast(
+			getColorFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+
+	
+	if(getSizeFunction() != NullFC)
+	{
+		SizeReturnValue = 
+			FunctionIOData<Vec3f>::dcast(
+			getSizeFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+
+	if(getLifespanFunction() != NullFC)
+	{
+		LifespanReturnValue = 
+			FunctionIOData<Real32>::dcast(
+			getLifespanFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+	if(getAgeFunction() != NullFC)
+	{
+		AgeReturnValue = 
+			FunctionIOData<Real32>::dcast(
+			getAgeFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+	if(getVelocityFunction() != NullFC)
+	{
+		VelocityReturnValue = 
+			FunctionIOData<Vec3f>::dcast(
+			getVelocityFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+	if(getSecVelocityFunction() != NullFC)
+	{
+		SecVelocityReturnValue = 
+			FunctionIOData<Vec3f>::dcast(
+			getSecVelocityFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+	if(getAccelerationFunction() != NullFC)
+	{
+		AccelerationReturnValue = 
+			FunctionIOData<Vec3f>::dcast(
+			getAccelerationFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+	}
+
+	if(System != NullFC)
+	{
+		System->addParticle(PositionReturnValue,
+			SecPositionReturnValue,
+			NormalReturnValue,
+			ColorReturnValue,
+			SizeReturnValue,
+			LifespanReturnValue,
+			AgeReturnValue,
+			VelocityReturnValue,
+			SecVelocityReturnValue,
+			AccelerationReturnValue,
+			PropertyReturnValue);
+	}
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
