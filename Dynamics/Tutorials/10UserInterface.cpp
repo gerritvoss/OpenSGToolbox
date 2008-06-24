@@ -150,13 +150,18 @@ int main(int argc, char **argv)
     endEditCP(FunctionComponentBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
 
     FunctionComponentPtr ExampleFunctionComponent = FunctionComponent::create();
-    beginEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask);
+    beginEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabVerticalAlignmentFieldMask | FunctionComponent::InputTabHorizontalAlignmentFieldMask | FunctionComponent::OutputTabVerticalAlignmentFieldMask | FunctionComponent::OutputTabHorizontalAlignmentFieldMask);
         ExampleFunctionComponent->setPreferredSize(Vec2f(100.0f,100.0f));
         ExampleFunctionComponent->setBorders(FunctionComponentBorder);
 		ExampleFunctionComponent->setFunction(TheVec3fConverter);
 		ExampleFunctionComponent->setInputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
+		ExampleFunctionComponent->setOutputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
+		ExampleFunctionComponent->setInputTabVerticalAlignment(0.5);
+		ExampleFunctionComponent->setInputTabHorizontalAlignment(0.0);
+		ExampleFunctionComponent->setOutputTabVerticalAlignment(0.5);
+		ExampleFunctionComponent->setOutputTabHorizontalAlignment(1.0);
 
-    endEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask);
+    endEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabVerticalAlignmentFieldMask | FunctionComponent::InputTabHorizontalAlignmentFieldMask | FunctionComponent::OutputTabVerticalAlignmentFieldMask | FunctionComponent::OutputTabHorizontalAlignmentFieldMask);
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
