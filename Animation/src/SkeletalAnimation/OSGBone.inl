@@ -43,9 +43,15 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-const Matrix &Bone::getTransformation(void) const
+const Matrix &Bone::getRelativeTransformation(void) const
 {
-	return getInternalTransformation();
+	return getInternalRelativeTransformation();
+}
+
+inline
+const Matrix &Bone::getAbsoluteTransformation(void) const
+{
+	return getInternalAbsoluteTransformation();
 }
 
 inline

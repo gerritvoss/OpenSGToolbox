@@ -86,7 +86,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
     BonePtr getChild(UInt32 Index) const;
 
     BonePtr getParent(void) const;
-    const Matrix              &getTransformation(void) const;
+    const Matrix              &getRelativeTransformation(void) const;
+    const Matrix              &getAbsoluteTransformation(void) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -110,6 +111,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
+
+	void updateTransformation(void);
   private:
 
     friend class FieldContainer;

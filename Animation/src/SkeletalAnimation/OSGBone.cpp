@@ -117,6 +117,18 @@ void Bone::removeChild(UInt32 Index)
     }
 }
 
+void Bone::updateTransformation(void)
+{
+	//Calculate Relative Transformation
+	Matrix m; //a matrix called m
+	m.setTransform(Vec3f(getTranslation()), getRotation()); //calculates the the rotation of the bone
+	beginEditCP(BonePtr(this), Bone::InternalRelativeTransformationFieldMask);
+		setInternalRelativeTransformation(m); //field container
+	endEditCP(BonePtr(this), Bone::InternalRelativeTransformationFieldMask);
+
+	//Calculate Absolute Transformation
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -143,13 +155,12 @@ void Bone::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if(whichField & RotationFieldMask)
+	if((whichField & RotationFieldMask) ||
+		(whichField & InternalParentFieldMask) ||
+		(whichField & LengthFieldMask) ||
+		(whichField & TranslationFieldMask))
 	{
-		Matrix m; //a matrix called m
-		m.setTransform(Vec3f(getTranslation()), getRotation()); //calculates the the rotation of the bone
-		beginEditCP(BonePtr(this), Bone::InternalTransformationFieldMask);
-			setInternalTransformation(m); //field container
-		endEditCP(BonePtr(this), Bone::InternalTransformationFieldMask);
+		updateTransformation();
 	}
 }
 
