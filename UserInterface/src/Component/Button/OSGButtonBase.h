@@ -71,7 +71,8 @@
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGBoolFields.h> // Active type
 #include "Border/OSGBorder.h" // ActiveBorder type
-#include "Background/OSGUIBackground.h" // ActiveBackground type
+#include "Layer/OSGLayer.h" // ActiveBackground type
+#include "Layer/OSGLayer.h" // ActiveForeground type
 #include <OpenSG/OSGColor4fFields.h> // ActiveTextColor type
 #include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
 #include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
@@ -81,7 +82,7 @@
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 #include <OpenSG/OSGBoolFields.h> // EnableActionOnMouseDownTime type
 #include <OpenSG/OSGTimeFields.h> // ActionOnMouseDownRate type
-#include <OpenSG/OSGVec2fFields.h> // ActiveOffset type
+#include <OpenSG/OSGVec2sFields.h> // ActiveOffset type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // DrawObject type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
@@ -115,7 +116,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
         ActiveFieldId                      = TextFieldId                        + 1,
         ActiveBorderFieldId                = ActiveFieldId                      + 1,
         ActiveBackgroundFieldId            = ActiveBorderFieldId                + 1,
-        ActiveTextColorFieldId             = ActiveBackgroundFieldId            + 1,
+        ActiveForegroundFieldId            = ActiveBackgroundFieldId            + 1,
+        ActiveTextColorFieldId             = ActiveForegroundFieldId            + 1,
         FocusedTextColorFieldId            = ActiveTextColorFieldId             + 1,
         RolloverTextColorFieldId           = FocusedTextColorFieldId            + 1,
         DisabledTextColorFieldId           = RolloverTextColorFieldId           + 1,
@@ -138,6 +140,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     static const OSG::BitVector ActiveFieldMask;
     static const OSG::BitVector ActiveBorderFieldMask;
     static const OSG::BitVector ActiveBackgroundFieldMask;
+    static const OSG::BitVector ActiveForegroundFieldMask;
     static const OSG::BitVector ActiveTextColorFieldMask;
     static const OSG::BitVector FocusedTextColorFieldMask;
     static const OSG::BitVector RolloverTextColorFieldMask;
@@ -183,7 +186,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
            SFString            *getSFText           (void);
            SFBool              *getSFActive         (void);
            SFBorderPtr         *getSFActiveBorder   (void);
-           SFUIBackgroundPtr   *getSFActiveBackground(void);
+           SFLayerPtr          *getSFActiveBackground(void);
+           SFLayerPtr          *getSFActiveForeground(void);
            SFColor4f           *getSFActiveTextColor(void);
            SFColor4f           *getSFFocusedTextColor(void);
            SFColor4f           *getSFRolloverTextColor(void);
@@ -193,7 +197,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
            SFReal32            *getSFHorizontalAlignment(void);
            SFBool              *getSFEnableActionOnMouseDownTime(void);
            SFTime              *getSFActionOnMouseDownRate(void);
-           SFVec2f             *getSFActiveOffset   (void);
+           SFVec2s             *getSFActiveOffset   (void);
            SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
            SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
            SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void);
@@ -208,8 +212,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      const bool                &getActive         (void) const;
            BorderPtr           &getActiveBorder   (void);
      const BorderPtr           &getActiveBorder   (void) const;
-           UIBackgroundPtr     &getActiveBackground(void);
-     const UIBackgroundPtr     &getActiveBackground(void) const;
+           LayerPtr            &getActiveBackground(void);
+     const LayerPtr            &getActiveBackground(void) const;
+           LayerPtr            &getActiveForeground(void);
+     const LayerPtr            &getActiveForeground(void) const;
            Color4f             &getActiveTextColor(void);
      const Color4f             &getActiveTextColor(void) const;
            Color4f             &getFocusedTextColor(void);
@@ -228,8 +234,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      const bool                &getEnableActionOnMouseDownTime(void) const;
            Time                &getActionOnMouseDownRate(void);
      const Time                &getActionOnMouseDownRate(void) const;
-           Vec2f               &getActiveOffset   (void);
-     const Vec2f               &getActiveOffset   (void) const;
+           Vec2s               &getActiveOffset   (void);
+     const Vec2s               &getActiveOffset   (void) const;
            UIDrawObjectCanvasPtr &getDrawObject     (void);
      const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
            UIDrawObjectCanvasPtr &getActiveDrawObject(void);
@@ -250,7 +256,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      void setText           ( const std::string &value );
      void setActive         ( const bool &value );
      void setActiveBorder   ( const BorderPtr &value );
-     void setActiveBackground( const UIBackgroundPtr &value );
+     void setActiveBackground( const LayerPtr &value );
+     void setActiveForeground( const LayerPtr &value );
      void setActiveTextColor( const Color4f &value );
      void setFocusedTextColor( const Color4f &value );
      void setRolloverTextColor( const Color4f &value );
@@ -260,7 +267,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      void setHorizontalAlignment( const Real32 &value );
      void setEnableActionOnMouseDownTime( const bool &value );
      void setActionOnMouseDownRate( const Time &value );
-     void setActiveOffset   ( const Vec2f &value );
+     void setActiveOffset   ( const Vec2s &value );
      void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
      void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
      void setFocusedDrawObject( const UIDrawObjectCanvasPtr &value );
@@ -312,7 +319,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     SFString            _sfText;
     SFBool              _sfActive;
     SFBorderPtr         _sfActiveBorder;
-    SFUIBackgroundPtr   _sfActiveBackground;
+    SFLayerPtr          _sfActiveBackground;
+    SFLayerPtr          _sfActiveForeground;
     SFColor4f           _sfActiveTextColor;
     SFColor4f           _sfFocusedTextColor;
     SFColor4f           _sfRolloverTextColor;
@@ -322,7 +330,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     SFReal32            _sfHorizontalAlignment;
     SFBool              _sfEnableActionOnMouseDownTime;
     SFTime              _sfActionOnMouseDownRate;
-    SFVec2f             _sfActiveOffset;
+    SFVec2s             _sfActiveOffset;
     SFUIDrawObjectCanvasPtr   _sfDrawObject;
     SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
     SFUIDrawObjectCanvasPtr   _sfFocusedDrawObject;

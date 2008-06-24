@@ -68,8 +68,10 @@
 #include "OSGListComponentGenerator.h" // Parent
 
 #include "Component/OSGComponentFields.h" // DrawObjectPrototype type
-#include "Background/OSGUIBackgroundFields.h" // SelectedBackground type
-#include "Background/OSGUIBackgroundFields.h" // FocusedBackground type
+#include "Layer/OSGLayerFields.h" // SelectedBackground type
+#include "Layer/OSGLayerFields.h" // FocusedBackground type
+#include "Layer/OSGLayerFields.h" // SelectedForeground type
+#include "Layer/OSGLayerFields.h" // FocusedForeground type
 #include "Border/OSGBorderFields.h" // SelectedBorder type
 #include "Border/OSGBorderFields.h" // FocusedBorder type
 #include <OpenSG/OSGColor4fFields.h> // SelectedTextColor type
@@ -103,7 +105,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGeneratorBase : public
         DrawObjectPrototypeFieldId          = Inherited::NextFieldId,
         SelectedBackgroundFieldId           = DrawObjectPrototypeFieldId          + 1,
         FocusedBackgroundFieldId            = SelectedBackgroundFieldId           + 1,
-        SelectedBorderFieldId               = FocusedBackgroundFieldId            + 1,
+        SelectedForegroundFieldId           = FocusedBackgroundFieldId            + 1,
+        FocusedForegroundFieldId            = SelectedForegroundFieldId           + 1,
+        SelectedBorderFieldId               = FocusedForegroundFieldId            + 1,
         FocusedBorderFieldId                = SelectedBorderFieldId               + 1,
         SelectedTextColorFieldId            = FocusedBorderFieldId                + 1,
         FocusedTextColorFieldId             = SelectedTextColorFieldId            + 1,
@@ -116,6 +120,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGeneratorBase : public
     static const OSG::BitVector DrawObjectPrototypeFieldMask;
     static const OSG::BitVector SelectedBackgroundFieldMask;
     static const OSG::BitVector FocusedBackgroundFieldMask;
+    static const OSG::BitVector SelectedForegroundFieldMask;
+    static const OSG::BitVector FocusedForegroundFieldMask;
     static const OSG::BitVector SelectedBorderFieldMask;
     static const OSG::BitVector FocusedBorderFieldMask;
     static const OSG::BitVector SelectedTextColorFieldMask;
@@ -150,8 +156,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGeneratorBase : public
     /*! \{                                                                 */
 
            SFComponentPtr      *getSFDrawObjectPrototype(void);
-           SFUIBackgroundPtr   *getSFSelectedBackground(void);
-           SFUIBackgroundPtr   *getSFFocusedBackground(void);
+           SFLayerPtr          *getSFSelectedBackground(void);
+           SFLayerPtr          *getSFFocusedBackground(void);
+           SFLayerPtr          *getSFSelectedForeground(void);
+           SFLayerPtr          *getSFFocusedForeground(void);
            SFBorderPtr         *getSFSelectedBorder (void);
            SFBorderPtr         *getSFFocusedBorder  (void);
            SFColor4f           *getSFSelectedTextColor(void);
@@ -162,10 +170,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGeneratorBase : public
 
            ComponentPtr        &getDrawObjectPrototype(void);
      const ComponentPtr        &getDrawObjectPrototype(void) const;
-           UIBackgroundPtr     &getSelectedBackground(void);
-     const UIBackgroundPtr     &getSelectedBackground(void) const;
-           UIBackgroundPtr     &getFocusedBackground(void);
-     const UIBackgroundPtr     &getFocusedBackground(void) const;
+           LayerPtr            &getSelectedBackground(void);
+     const LayerPtr            &getSelectedBackground(void) const;
+           LayerPtr            &getFocusedBackground(void);
+     const LayerPtr            &getFocusedBackground(void) const;
+           LayerPtr            &getSelectedForeground(void);
+     const LayerPtr            &getSelectedForeground(void) const;
+           LayerPtr            &getFocusedForeground(void);
+     const LayerPtr            &getFocusedForeground(void) const;
            BorderPtr           &getSelectedBorder (void);
      const BorderPtr           &getSelectedBorder (void) const;
            BorderPtr           &getFocusedBorder  (void);
@@ -187,8 +199,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGeneratorBase : public
     /*! \{                                                                 */
 
      void setDrawObjectPrototype( const ComponentPtr &value );
-     void setSelectedBackground( const UIBackgroundPtr &value );
-     void setFocusedBackground( const UIBackgroundPtr &value );
+     void setSelectedBackground( const LayerPtr &value );
+     void setFocusedBackground( const LayerPtr &value );
+     void setSelectedForeground( const LayerPtr &value );
+     void setFocusedForeground( const LayerPtr &value );
      void setSelectedBorder ( const BorderPtr &value );
      void setFocusedBorder  ( const BorderPtr &value );
      void setSelectedTextColor( const Color4f &value );
@@ -239,8 +253,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGeneratorBase : public
     /*! \{                                                                 */
 
     SFComponentPtr      _sfDrawObjectPrototype;
-    SFUIBackgroundPtr   _sfSelectedBackground;
-    SFUIBackgroundPtr   _sfFocusedBackground;
+    SFLayerPtr          _sfSelectedBackground;
+    SFLayerPtr          _sfFocusedBackground;
+    SFLayerPtr          _sfSelectedForeground;
+    SFLayerPtr          _sfFocusedForeground;
     SFBorderPtr         _sfSelectedBorder;
     SFBorderPtr         _sfFocusedBorder;
     SFColor4f           _sfSelectedTextColor;

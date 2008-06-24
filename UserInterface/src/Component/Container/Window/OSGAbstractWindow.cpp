@@ -145,11 +145,23 @@ BorderPtr AbstractWindow::getDrawnBorder(void) const
 	}
 }
 
-UIBackgroundPtr AbstractWindow::getDrawnBackground(void) const
+LayerPtr AbstractWindow::getDrawnBackground(void) const
 {
 	if(getDrawDecorations())
 	{
 		return Inherited::getDrawnBackground();
+	}
+	else
+	{
+		return NullFC;
+	}
+}
+
+LayerPtr AbstractWindow::getDrawnForeground(void) const
+{
+	if(getDrawDecorations())
+	{
+		return Inherited::getDrawnForeground();
 	}
 	else
 	{

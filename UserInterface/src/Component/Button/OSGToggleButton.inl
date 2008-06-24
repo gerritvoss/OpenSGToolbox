@@ -49,7 +49,7 @@ void ToggleButton::setSelectedBorder   ( const BorderPtr &value )
 }
 
 inline
-void ToggleButton::setSelectedBackground( const UIBackgroundPtr &value )
+void ToggleButton::setSelectedBackground( const LayerPtr &value )
 {
     setActiveBackground(value);
 }
@@ -97,13 +97,13 @@ const BorderPtr &ToggleButton::getSelectedBorder(void) const
 }
 
 inline
-UIBackgroundPtr &ToggleButton::getSelectedBackground(void)
+LayerPtr &ToggleButton::getSelectedBackground(void)
 {
     return getActiveBackground();
 }
 
 inline
-const UIBackgroundPtr &ToggleButton::getSelectedBackground(void) const
+const LayerPtr &ToggleButton::getSelectedBackground(void) const
 {
     return getActiveBackground();
 }

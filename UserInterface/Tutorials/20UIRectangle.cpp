@@ -34,7 +34,7 @@
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
@@ -576,10 +576,10 @@ InternalWindowPtr createMainInternalWindow(void)
 	
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
     CardLayoutPtr MainInternalWindowLayout = osg::CardLayout::create();
 

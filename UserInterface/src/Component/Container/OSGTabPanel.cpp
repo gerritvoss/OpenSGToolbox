@@ -48,7 +48,7 @@
 #include "OSGTabPanel.h"
 #include "Util/OSGUIDrawUtils.h"
 #include "Border/OSGBorder.h"
-#include "Background/OSGUIBackground.h"
+#include "Layer/OSGLayer.h"
 #include "Models/SelectionModels/OSGSingleSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
@@ -181,7 +181,7 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 	Pnt2f TabPosition, TabBorderPosition;
 	Vec2f TabSize, TabBorderSize;
 	BorderPtr DrawnTabBorder;
-	UIBackgroundPtr DrawnTabBackground;
+	LayerPtr DrawnTabBackground;
 	for (UInt32 i = 0; i < getTabs().size(); ++i)
 	{
 		TabPosition = getTabs()[i]->getPosition();
@@ -232,7 +232,7 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 		ComponentPtr ContentComponent(getTabContents()[getSelectedIndex()]);
 
 		BorderPtr DrawnContentBorder = getDrawnContentBorder();
-		UIBackgroundPtr DrawnContentBackground = getDrawnContentBackground();
+		LayerPtr DrawnContentBackground = getDrawnContentBackground();
 		
 		Real32 ContentBorderLeftWidth, ContentBorderRightWidth,ContentBorderTopWidth, ContentBorderBottomWidth;
 		calculateContentBorderLengths(DrawnContentBorder, ContentBorderLeftWidth, ContentBorderRightWidth,ContentBorderTopWidth, ContentBorderBottomWidth);
@@ -757,7 +757,7 @@ BorderPtr TabPanel::getDrawnTabBorder(const UInt32& Index) const
     }
 }
 
-UIBackgroundPtr TabPanel::getDrawnTabBackground(const UInt32& Index) const
+LayerPtr TabPanel::getDrawnTabBackground(const UInt32& Index) const
 {
     if(getEnabled())
     {
@@ -803,7 +803,7 @@ BorderPtr TabPanel::getDrawnContentBorder(void) const
     }
 }
 
-UIBackgroundPtr TabPanel::getDrawnContentBackground(void) const
+LayerPtr TabPanel::getDrawnContentBackground(void) const
 {
     if(getEnabled())
     {

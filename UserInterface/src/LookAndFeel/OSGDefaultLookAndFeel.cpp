@@ -48,7 +48,7 @@
 #include "OSGDefaultLookAndFeel.h"
 #include "Text/OSGUIFont.h"
 #include "Border/OSGBorders.h"
-#include "Background/OSGUIBackgrounds.h"
+#include "Layer/OSGLayers.h"
 #include "Component/Button/OSGButton.h"
 #include "Component/Button/OSGCheckboxButton.h"
 #include "Component/Button/OSGRadioButton.h"
@@ -170,13 +170,13 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultActiveButtonBorder);
 
 	//Default ButtonBackground
-	ColorUIBackgroundPtr DefaultButtonBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultButtonBackground = ColorLayer::create();
 	beginEditCP(DefaultButtonBackground);
 		DefaultButtonBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultButtonBackground);
 	
 	//Default Disabled ButtonBackground
-	ColorUIBackgroundPtr DefaultDisabledButtonBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultDisabledButtonBackground = ColorLayer::create();
 	beginEditCP(DefaultDisabledButtonBackground);
 		DefaultDisabledButtonBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(DefaultDisabledButtonBackground);
@@ -235,7 +235,7 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultLabelBorder);
 
 	//Default LabelBackground
-	ColorUIBackgroundPtr DefaultLabelBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultLabelBackground = ColorLayer::create();
 	beginEditCP(DefaultLabelBackground);
 		DefaultLabelBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(DefaultLabelBackground);
@@ -283,7 +283,7 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultInternalWindowBorder);
 
 	//Default InternalWindowBackground
-	EmptyUIBackgroundPtr DefaultInternalWindowBackground = EmptyUIBackground::create();
+	EmptyLayerPtr DefaultInternalWindowBackground = EmptyLayer::create();
 
 	//Default InternalWindow
 	InternalWindowPtr DefaultInternalWindow = InternalWindow::create();
@@ -326,7 +326,7 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultPanelBorder);
 
 	//Default PanelBackground
-	ColorUIBackgroundPtr DefaultPanelBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultPanelBackground = ColorLayer::create();
 	beginEditCP(DefaultPanelBackground);
 		DefaultPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultPanelBackground);
@@ -365,7 +365,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultDividerBorder->setWidth(1);
 		DefaultDividerBorder->setColor(Color4f(0.13, 0.13, 0.13, 1.0));
 	endEditCP(DefaultDividerBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
-	ColorUIBackgroundPtr DefaultDividerBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultDividerBackground = ColorLayer::create();
 	beginEditCP(DefaultDividerBackground);
 		DefaultDividerBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultDividerBackground);
@@ -401,7 +401,7 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultUIViewportBorder);
 
 	//Default UIViewportBackground
-	EmptyUIBackgroundPtr DefaultUIViewportBackground = EmptyUIBackground::create();
+	EmptyLayerPtr DefaultUIViewportBackground = EmptyLayer::create();
 
 	//Default UIViewport
 	UIViewportPtr DefaultUIViewport = UIViewport::create();
@@ -432,7 +432,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultImageComponentBorder = EmptyBorder::create();
 
 	//Default ImageComponentBackground
-	EmptyUIBackgroundPtr DefaultImageComponentBackground = EmptyUIBackground::create();
+	EmptyLayerPtr DefaultImageComponentBackground = EmptyLayer::create();
 
 	//Default ImageComponent
 	ImageComponentPtr DefaultImageComponent = ImageComponent::create();
@@ -542,7 +542,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultCheckboxButtonBorder = EmptyBorder::create();
 
 
-	ColorUIBackgroundPtr DefaultCheckboxButtonBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultCheckboxButtonBackground = ColorLayer::create();
 	beginEditCP(DefaultCheckboxButtonBackground);
 		DefaultCheckboxButtonBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultCheckboxButtonBackground);
@@ -681,7 +681,7 @@ void DefaultLookAndFeel::init(void)
 		
 	EmptyBorderPtr DefaultRadioButtonBorder = EmptyBorder::create();
 
-	ColorUIBackgroundPtr DefaultRadioButtonBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultRadioButtonBackground = ColorLayer::create();
 	beginEditCP(DefaultRadioButtonBackground);
 		DefaultRadioButtonBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultRadioButtonBackground);	
@@ -779,12 +779,12 @@ void DefaultLookAndFeel::init(void)
 	ToggleButton::getClassType().setPrototype(DefaultToggleButton);
 
 	/********Text Field********/
-	ColorUIBackgroundPtr DefaultTextFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultTextFieldBackground = ColorLayer::create();
 	beginEditCP(DefaultTextFieldBackground);
 		DefaultTextFieldBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(DefaultTextFieldBackground);
 
-	ColorUIBackgroundPtr DefaultDisabledTextFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultDisabledTextFieldBackground = ColorLayer::create();
 	beginEditCP(DefaultDisabledTextFieldBackground);
 		DefaultDisabledTextFieldBackground->setColor(Color4f(.8, .8, .8, 1.0));
 	endEditCP(DefaultDisabledTextFieldBackground);
@@ -828,12 +828,12 @@ void DefaultLookAndFeel::init(void)
 	TextField::getClassType().setPrototype(DefaultTextField);
     
 	/********Password Field********/
-	ColorUIBackgroundPtr DefaultPasswordFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultPasswordFieldBackground = ColorLayer::create();
 	beginEditCP(DefaultPasswordFieldBackground);
 		DefaultPasswordFieldBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(DefaultPasswordFieldBackground);
 
-	ColorUIBackgroundPtr DefaultDisabledPasswordFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultDisabledPasswordFieldBackground = ColorLayer::create();
 	beginEditCP(DefaultDisabledPasswordFieldBackground);
 		DefaultDisabledPasswordFieldBackground->setColor(Color4f(.8, .8, .8, 1.0));
 	endEditCP(DefaultDisabledPasswordFieldBackground);
@@ -876,12 +876,12 @@ void DefaultLookAndFeel::init(void)
 	PasswordField::getClassType().setPrototype(DefaultPasswordField);
 
     /********Text Area********/
-	ColorUIBackgroundPtr DefaultTextAreaBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultTextAreaBackground = ColorLayer::create();
 	beginEditCP(DefaultTextAreaBackground);
 		DefaultTextAreaBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(DefaultTextAreaBackground);
 
-	ColorUIBackgroundPtr DefaultDisabledTextAreaBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultDisabledTextAreaBackground = ColorLayer::create();
 	beginEditCP(DefaultDisabledTextAreaBackground);
 		DefaultDisabledTextAreaBackground->setColor(Color4f(.8, .8, .8, 1.0));
 	endEditCP(DefaultDisabledTextAreaBackground);
@@ -947,7 +947,7 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultToolTipBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 
 	//Default ToolTipBackground
-	ColorUIBackgroundPtr DefaultToolTipBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultToolTipBackground = ColorLayer::create();
 	beginEditCP(DefaultToolTipBackground);
 		DefaultToolTipBackground->setColor(Color4f(1.0,1.0,0.9,1.0));
 	endEditCP(DefaultToolTipBackground);
@@ -988,7 +988,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultMenuItemBorder = EmptyBorder::create();
 
 	//Default MenuItemBackground
-	ColorUIBackgroundPtr DefaultMenuItemBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultMenuItemBackground = ColorLayer::create();
 	beginEditCP(DefaultMenuItemBackground);
 		DefaultMenuItemBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(DefaultMenuItemBackground);
@@ -997,7 +997,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultMenuItemSelectedBorder = EmptyBorder::create();
 
 	//Default MenuItemBackground
-	ColorUIBackgroundPtr DefaultMenuItemSelectedBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultMenuItemSelectedBackground = ColorLayer::create();
 	beginEditCP(DefaultMenuItemSelectedBackground);
 		DefaultMenuItemSelectedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
 	endEditCP(DefaultMenuItemSelectedBackground);
@@ -1049,7 +1049,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultMenuBorder = EmptyBorder::create();
 
 	//Default MenuBackground
-	ColorUIBackgroundPtr DefaultMenuBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultMenuBackground = ColorLayer::create();
 	beginEditCP(DefaultMenuBackground);
 		DefaultMenuBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(DefaultMenuBackground);
@@ -1058,7 +1058,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultMenuSelectedBorder = EmptyBorder::create();
 
 	//Default MenuBackground
-	ColorUIBackgroundPtr DefaultMenuSelectedBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultMenuSelectedBackground = ColorLayer::create();
 	beginEditCP(DefaultMenuSelectedBackground);
 		DefaultMenuSelectedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
 	endEditCP(DefaultMenuSelectedBackground);
@@ -1146,7 +1146,7 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultPopupMenuBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 
 	//Default PopupMenuBackground
-	ColorUIBackgroundPtr DefaultPopupMenuBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultPopupMenuBackground = ColorLayer::create();
 	beginEditCP(DefaultPopupMenuBackground);
 		DefaultPopupMenuBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(DefaultPopupMenuBackground);
@@ -1183,7 +1183,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultMenuBarBorder = EmptyBorder::create();
 
 	//Default MenuBarBackground
-	ColorUIBackgroundPtr DefaultMenuBarBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultMenuBarBackground = ColorLayer::create();
 	beginEditCP(DefaultMenuBarBackground);
 		DefaultMenuBarBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultMenuBarBackground);
@@ -1220,7 +1220,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultScrollBarBorder = EmptyBorder::create();
 
 	//Default ScrollBarBackground
-	EmptyUIBackgroundPtr DefaultScrollBarBackground = EmptyUIBackground::create();
+	EmptyLayerPtr DefaultScrollBarBackground = EmptyLayer::create();
 
     //Vertical Min Draw Object
 	PolygonUIDrawObjectPtr DefaultScrollBarVerticalMinButtonDrawObject = PolygonUIDrawObject::create();
@@ -1368,13 +1368,13 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultDisabledButtonBorder);
 
 	//Scroll Field Background
-	ColorUIBackgroundPtr DefaultScrollFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultScrollFieldBackground = ColorLayer::create();
 	beginEditCP(DefaultScrollFieldBackground);
 		DefaultScrollFieldBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultScrollFieldBackground);
 	
 	//Scroll Field Disabled Background
-	ColorUIBackgroundPtr DefaultDisabledScrollFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultDisabledScrollFieldBackground = ColorLayer::create();
 	beginEditCP(DefaultDisabledScrollFieldBackground);
 		DefaultDisabledScrollFieldBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(DefaultDisabledScrollFieldBackground);
@@ -1445,19 +1445,19 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultRolloverScrollBarDrawObjectBorder);
 
 	//Scroll Bar Background
-	ColorUIBackgroundPtr DefaultScrollBarDrawObjectBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultScrollBarDrawObjectBackground = ColorLayer::create();
 	beginEditCP(DefaultScrollBarDrawObjectBackground);
 		DefaultScrollBarDrawObjectBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultScrollBarDrawObjectBackground);
 	
 	//Scroll Bar Disabled Background
-	ColorUIBackgroundPtr DefaultDisabledScrollBarDrawObjectBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultDisabledScrollBarDrawObjectBackground = ColorLayer::create();
 	beginEditCP(DefaultDisabledScrollBarDrawObjectBackground);
 		DefaultDisabledScrollBarDrawObjectBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(DefaultDisabledScrollBarDrawObjectBackground);
 
 	//Scroll Bar Rollover Background
-	ColorUIBackgroundPtr DefaultRolloverScrollBarDrawObjectBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultRolloverScrollBarDrawObjectBackground = ColorLayer::create();
 	beginEditCP(DefaultRolloverScrollBarDrawObjectBackground);
 		DefaultRolloverScrollBarDrawObjectBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(DefaultRolloverScrollBarDrawObjectBackground);
@@ -1529,7 +1529,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultScrollPanelBorder = EmptyBorder::create();
 
 	//Default ScrollPanelBackground
-	EmptyUIBackgroundPtr DefaultScrollPanelBackground = EmptyUIBackground::create();
+	EmptyLayerPtr DefaultScrollPanelBackground = EmptyLayer::create();
     
 	//Vertical ScrollBar
 	ScrollBarPtr DefaultScrollPanelVerticalScrollBar = ScrollBar::create();
@@ -1589,7 +1589,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultRotatedComponentBorder = EmptyBorder::create();
 
 	//Default RotatedComponentBackground
-	EmptyUIBackgroundPtr DefaultRotatedComponentBackground = EmptyUIBackground::create();
+	EmptyLayerPtr DefaultRotatedComponentBackground = EmptyLayer::create();
 
 	//Default RotatedComponent
 	RotatedComponentPtr DefaultRotatedComponent = RotatedComponent::create();
@@ -1707,38 +1707,38 @@ void DefaultLookAndFeel::init(void)
 
 	/*********Backgounds***********/
 	/*********Color Background**********/
-	ColorUIBackgroundPtr DefaultColorBackground = ColorUIBackground::create();
+	ColorLayerPtr DefaultColorBackground = ColorLayer::create();
 	beginEditCP(DefaultColorBackground);
 		DefaultColorBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(DefaultColorBackground);
 
-	ColorUIBackground::getClassType().setPrototype(DefaultColorBackground);
+	ColorLayer::getClassType().setPrototype(DefaultColorBackground);
 	
 	/**********Gradient Background***********/
-	GradientUIBackgroundPtr DefaultGradientBackground = GradientUIBackground::create();
+	GradientLayerPtr DefaultGradientBackground = GradientLayer::create();
 	beginEditCP(DefaultGradientBackground);
 		DefaultGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
 		DefaultGradientBackground->setColorEnd(Color4f(1.0, 1.0, 1.0, 1.0));
-        DefaultGradientBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+        DefaultGradientBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
 	endEditCP(DefaultGradientBackground);
 
-	GradientUIBackground::getClassType().setPrototype(DefaultGradientBackground);
+	GradientLayer::getClassType().setPrototype(DefaultGradientBackground);
 
 	/**********Material Background***********/
-	MaterialUIBackgroundPtr DefaultMaterialBackground = MaterialUIBackground::create();
+	MaterialLayerPtr DefaultMaterialBackground = MaterialLayer::create();
 	beginEditCP(DefaultMaterialBackground);
 		DefaultMaterialBackground->setMaterial(NullFC);
 	endEditCP(DefaultMaterialBackground);
 
-	MaterialUIBackground::getClassType().setPrototype(DefaultMaterialBackground);
+	MaterialLayer::getClassType().setPrototype(DefaultMaterialBackground);
 
 	/*********Texture Background********/
-	TextureUIBackgroundPtr DefaultTextureBackground = TextureUIBackground::create();
+	TextureLayerPtr DefaultTextureBackground = TextureLayer::create();
 	beginEditCP(DefaultTextureBackground);
 		DefaultTextureBackground->setTexture(NullFC);
 	endEditCP(DefaultTextureBackground);
 
-	TextureUIBackground::getClassType().setPrototype(DefaultTextureBackground);
+	TextureLayer::getClassType().setPrototype(DefaultTextureBackground);
 
 	
 	//************************** List *****************************
@@ -1746,7 +1746,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultListBorder = EmptyBorder::create();
 
 	//Default RotatedComponentBackground
-	EmptyUIBackgroundPtr DefaultListBackground = EmptyUIBackground::create();
+	EmptyLayerPtr DefaultListBackground = EmptyLayer::create();
 
 	//Default RotatedComponent
 	ListPtr DefaultList = List::create();
@@ -1786,7 +1786,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultTableHeaderBorder = EmptyBorder::create();
 
 	//Default RotatedComponentBackground
-	EmptyUIBackgroundPtr DefaultTableHeaderBackground = EmptyUIBackground::create();
+	EmptyLayerPtr DefaultTableHeaderBackground = EmptyLayer::create();
     
 	//Default RotatedComponent
 	TableHeaderPtr DefaultTableHeader = TableHeader::create();
@@ -1833,7 +1833,7 @@ void DefaultLookAndFeel::init(void)
 	EmptyBorderPtr DefaultTableBorder = EmptyBorder::create();
 
 	//Default RotatedComponentBackground
-	EmptyUIBackgroundPtr DefaultTableBackground = EmptyUIBackground::create();
+	EmptyLayerPtr DefaultTableBackground = EmptyLayer::create();
 
 	//Default RotatedComponent
 	TablePtr DefaultTable = Table::create();

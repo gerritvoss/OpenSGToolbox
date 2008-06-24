@@ -50,11 +50,21 @@ A UI Button.
 	</Field>
 	<Field
 		name="ActiveBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ActiveForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>

@@ -56,7 +56,7 @@ void reshape(Vec2f Size);
 // 10Container Headers
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGColorLayer.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGBoxLayout.h>
@@ -203,16 +203,16 @@ int main(int argc, char **argv)
             Panels and MainInternalWindow.
 
     ******************************************************/
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    ColorUIBackgroundPtr ExamplePanelBackground = osg::ColorUIBackground::create();
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    ColorLayerPtr ExamplePanelBackground = osg::ColorLayer::create();
 
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    beginEditCP(ExamplePanelBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(ExamplePanelBackground, ColorLayer::ColorFieldMask);
         ExamplePanelBackground->setColor(Color4f(0.0,0.0,0.0,1.0));
-    endEditCP(ExamplePanelBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(ExamplePanelBackground, ColorLayer::ColorFieldMask);
     
     /******************************************************
             

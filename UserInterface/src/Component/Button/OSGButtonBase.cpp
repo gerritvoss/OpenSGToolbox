@@ -79,6 +79,9 @@ const OSG::BitVector  ButtonBase::ActiveBorderFieldMask =
 const OSG::BitVector  ButtonBase::ActiveBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::ActiveBackgroundFieldId);
 
+const OSG::BitVector  ButtonBase::ActiveForegroundFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::ActiveForegroundFieldId);
+
 const OSG::BitVector  ButtonBase::ActiveTextColorFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::ActiveTextColorFieldId);
 
@@ -143,7 +146,10 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
 /*! \var BorderPtr       ButtonBase::_sfActiveBorder
     
 */
-/*! \var UIBackgroundPtr ButtonBase::_sfActiveBackground
+/*! \var LayerPtr        ButtonBase::_sfActiveBackground
+    
+*/
+/*! \var LayerPtr        ButtonBase::_sfActiveForeground
     
 */
 /*! \var Color4f         ButtonBase::_sfActiveTextColor
@@ -173,7 +179,7 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
 /*! \var Time            ButtonBase::_sfActionOnMouseDownRate
     
 */
-/*! \var Vec2f           ButtonBase::_sfActiveOffset
+/*! \var Vec2s           ButtonBase::_sfActiveOffset
     
 */
 /*! \var UIDrawObjectCanvasPtr ButtonBase::_sfDrawObject
@@ -216,11 +222,16 @@ FieldDescription *ButtonBase::_desc[] =
                      ActiveBorderFieldId, ActiveBorderFieldMask,
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFActiveBorder),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+    new FieldDescription(SFLayerPtr::getClassType(), 
                      "ActiveBackground", 
                      ActiveBackgroundFieldId, ActiveBackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFActiveBackground),
+    new FieldDescription(SFLayerPtr::getClassType(), 
+                     "ActiveForeground", 
+                     ActiveForegroundFieldId, ActiveForegroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFActiveForeground),
     new FieldDescription(SFColor4f::getClassType(), 
                      "ActiveTextColor", 
                      ActiveTextColorFieldId, ActiveTextColorFieldMask,
@@ -266,7 +277,7 @@ FieldDescription *ButtonBase::_desc[] =
                      ActionOnMouseDownRateFieldId, ActionOnMouseDownRateFieldMask,
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFActionOnMouseDownRate),
-    new FieldDescription(SFVec2f::getClassType(), 
+    new FieldDescription(SFVec2s::getClassType(), 
                      "ActiveOffset", 
                      ActiveOffsetFieldId, ActiveOffsetFieldMask,
                      false,
@@ -375,7 +386,8 @@ ButtonBase::ButtonBase(void) :
     _sfText                   (), 
     _sfActive                 (bool(false)), 
     _sfActiveBorder           (BorderPtr(NullFC)), 
-    _sfActiveBackground       (UIBackgroundPtr(NullFC)), 
+    _sfActiveBackground       (LayerPtr(NullFC)), 
+    _sfActiveForeground       (LayerPtr(NullFC)), 
     _sfActiveTextColor        (), 
     _sfFocusedTextColor       (), 
     _sfRolloverTextColor      (), 
@@ -385,7 +397,7 @@ ButtonBase::ButtonBase(void) :
     _sfHorizontalAlignment    (Real32(0.5)), 
     _sfEnableActionOnMouseDownTime(bool(false)), 
     _sfActionOnMouseDownRate  (Time(0.1)), 
-    _sfActiveOffset           (Vec2f(0,0)), 
+    _sfActiveOffset           (Vec2s(0,0)), 
     _sfDrawObject             (UIDrawObjectCanvasPtr(NullFC)), 
     _sfActiveDrawObject       (UIDrawObjectCanvasPtr(NullFC)), 
     _sfFocusedDrawObject      (UIDrawObjectCanvasPtr(NullFC)), 
@@ -405,6 +417,7 @@ ButtonBase::ButtonBase(const ButtonBase &source) :
     _sfActive                 (source._sfActive                 ), 
     _sfActiveBorder           (source._sfActiveBorder           ), 
     _sfActiveBackground       (source._sfActiveBackground       ), 
+    _sfActiveForeground       (source._sfActiveForeground       ), 
     _sfActiveTextColor        (source._sfActiveTextColor        ), 
     _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
     _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
@@ -459,6 +472,11 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
     {
         returnValue += _sfActiveBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
+    {
+        returnValue += _sfActiveForeground.getBinSize();
     }
 
     if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
@@ -570,6 +588,11 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
         _sfActiveBackground.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
+    {
+        _sfActiveForeground.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
     {
         _sfActiveTextColor.copyToBin(pMem);
@@ -678,6 +701,11 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfActiveBackground.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
+    {
+        _sfActiveForeground.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
     {
         _sfActiveTextColor.copyFromBin(pMem);
@@ -778,6 +806,9 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
         _sfActiveBackground.syncWith(pOther->_sfActiveBackground);
 
+    if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
+        _sfActiveForeground.syncWith(pOther->_sfActiveForeground);
+
     if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
         _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);
 
@@ -847,6 +878,9 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
 
     if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
         _sfActiveBackground.syncWith(pOther->_sfActiveBackground);
+
+    if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
+        _sfActiveForeground.syncWith(pOther->_sfActiveForeground);
 
     if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
         _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);

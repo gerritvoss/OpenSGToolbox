@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="CompoundLayer"
+	parent="Layer"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+UI Compound Background.
+	<Field
+		name="Backgrounds"
+		type="LayerPtr"
+		cardinality="multi"
+		visibility="external"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

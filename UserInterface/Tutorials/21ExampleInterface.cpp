@@ -60,7 +60,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGColorLayer.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
@@ -72,7 +72,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGEmptyBorder.h>
 #include <OpenSG/UserInterface/OSGEtchedBorder.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGCheckboxButton.h>
 #include <OpenSG/UserInterface/OSGRadioButton.h>
@@ -130,7 +130,7 @@ ComponentPtr createRightPanelButtonPanel(void);
 ComponentPtr createRightPanelCheckPanel(void);
 // This function makes a complex Background outside of the main code
 // to make code easier to read
-UIBackgroundPtr createComplexBackground(void);
+LayerPtr createComplexBackground(void);
 // These functions create materials to use with objects in scene
 ChunkMaterialPtr createRedMaterial(void);
 ChunkMaterialPtr createBlueMaterial(void);
@@ -411,11 +411,11 @@ int main(int argc, char **argv)
             Create a Background
 
     ******************************************************/
-    ColorUIBackgroundPtr GreyBackground = osg::ColorUIBackground::create();
+    ColorLayerPtr GreyBackground = osg::ColorLayer::create();
 
-    beginEditCP(GreyBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(GreyBackground, ColorLayer::ColorFieldMask);
         GreyBackground->setColor(Color4f(.93,.93,.93,1.0));
-    endEditCP(GreyBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(GreyBackground, ColorLayer::ColorFieldMask);
 
 
     /******************************************************
@@ -641,10 +641,10 @@ ComponentPtr createLeftPanelButtonPanel(void)
     endEditCP(LeftPanelButtonPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create an edit Panel Background
-    ColorUIBackgroundPtr LeftPanelButtonPanelBackground = osg::ColorUIBackground::create();
-    beginEditCP(LeftPanelButtonPanelBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr LeftPanelButtonPanelBackground = osg::ColorLayer::create();
+    beginEditCP(LeftPanelButtonPanelBackground, ColorLayer::ColorFieldMask);
         LeftPanelButtonPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
-    endEditCP(LeftPanelButtonPanelBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(LeftPanelButtonPanelBackground, ColorLayer::ColorFieldMask);
 
     // Create Panel Border
     LineBorderPtr LeftPanelBorder = osg::LineBorder::create();
@@ -734,7 +734,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
 
     // Create Panel and its Background/Border to label TextField
     LabelPtr LeftPanelTextFieldLabel = osg::Label::create();
-    EmptyUIBackgroundPtr LeftPanelTextFieldLabelBackground = osg::EmptyUIBackground::create();
+    EmptyLayerPtr LeftPanelTextFieldLabelBackground = osg::EmptyLayer::create();
     EmptyBorderPtr LeftPanelTextFieldLabelBorder = osg::EmptyBorder::create();
     beginEditCP(LeftPanelTextFieldLabel, Label::PreferredSizeFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::TextFieldMask);
         LeftPanelTextFieldLabel->setPreferredSize(Vec2f(100, 25));
@@ -751,10 +751,10 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
 
     
     // Create an edit Panel Background
-    ColorUIBackgroundPtr LeftPanelRadioTextPanelBackground = osg::ColorUIBackground::create();
-    beginEditCP(LeftPanelRadioTextPanelBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr LeftPanelRadioTextPanelBackground = osg::ColorLayer::create();
+    beginEditCP(LeftPanelRadioTextPanelBackground, ColorLayer::ColorFieldMask);
         LeftPanelRadioTextPanelBackground->setColor(Color4f(0.93f,0.93f,0.93f,1.0f));
-    endEditCP(LeftPanelRadioTextPanelBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(LeftPanelRadioTextPanelBackground, ColorLayer::ColorFieldMask);
 
     // Create and edit Panel layouts
     FlowLayoutPtr LeftPanelRadioTextPanelLayout = osg::FlowLayout::create();
@@ -834,10 +834,10 @@ ComponentPtr createRightPanelButtonPanel(void)
 
 
     // Create an edit Panel Background
-    ColorUIBackgroundPtr RightPanelButtonPanelBackground = osg::ColorUIBackground::create();
-    beginEditCP(RightPanelButtonPanelBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr RightPanelButtonPanelBackground = osg::ColorLayer::create();
+    beginEditCP(RightPanelButtonPanelBackground, ColorLayer::ColorFieldMask);
         RightPanelButtonPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
-    endEditCP(RightPanelButtonPanelBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(RightPanelButtonPanelBackground, ColorLayer::ColorFieldMask);
 
     // Create and edit Panel layout
     BoxLayoutPtr RightPanelButtonPanelLayout = osg::BoxLayout::create();
@@ -909,10 +909,10 @@ ComponentPtr createRightPanelCheckPanel(void)
         RightPanelCheck4->addButtonSelectedListener(&RightPanelCheck4Listener);
 
     // Create an edit Panel Background
-    ColorUIBackgroundPtr RightPanelCheckPanelBackground = osg::ColorUIBackground::create();
-    beginEditCP(RightPanelCheckPanelBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr RightPanelCheckPanelBackground = osg::ColorLayer::create();
+    beginEditCP(RightPanelCheckPanelBackground, ColorLayer::ColorFieldMask);
         RightPanelCheckPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
-    endEditCP(RightPanelCheckPanelBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(RightPanelCheckPanelBackground, ColorLayer::ColorFieldMask);
 
     // Create and edit Panel layout
     BoxLayoutPtr RightPanelCheckPanelLayout = osg::BoxLayout::create();
@@ -943,54 +943,54 @@ ComponentPtr createRightPanelCheckPanel(void)
 
     return RightPanelCheckPanel;
 }
-UIBackgroundPtr createComplexBackground(void)
+LayerPtr createComplexBackground(void)
 {
 
     // Create complex Background 
-    ColorUIBackgroundPtr ComplexBackgroundBase = osg::ColorUIBackground::create();
-    GradientUIBackgroundPtr ComplexBackgroundGradient1 = osg::GradientUIBackground::create();
-    GradientUIBackgroundPtr ComplexBackgroundGradient2 = osg::GradientUIBackground::create();
-    GradientUIBackgroundPtr ComplexBackgroundGradient3 = osg::GradientUIBackground::create();
-    CompoundUIBackgroundPtr ComplexBackgroundCompound1 = osg::CompoundUIBackground::create();
-    CompoundUIBackgroundPtr ComplexBackgroundCompound2 = osg::CompoundUIBackground::create();
-    CompoundUIBackgroundPtr ComplexBackground = osg::CompoundUIBackground::create();
+    ColorLayerPtr ComplexBackgroundBase = osg::ColorLayer::create();
+    GradientLayerPtr ComplexBackgroundGradient1 = osg::GradientLayer::create();
+    GradientLayerPtr ComplexBackgroundGradient2 = osg::GradientLayer::create();
+    GradientLayerPtr ComplexBackgroundGradient3 = osg::GradientLayer::create();
+    CompoundLayerPtr ComplexBackgroundCompound1 = osg::CompoundLayer::create();
+    CompoundLayerPtr ComplexBackgroundCompound2 = osg::CompoundLayer::create();
+    CompoundLayerPtr ComplexBackground = osg::CompoundLayer::create();
 
-    beginEditCP(ComplexBackgroundBase, ColorUIBackground::ColorFieldMask);
+    beginEditCP(ComplexBackgroundBase, ColorLayer::ColorFieldMask);
         ComplexBackgroundBase->setColor(Color4f(0.0, 0.0, .25, 1.0));
-    endEditCP(ComplexBackgroundBase, ColorUIBackground::ColorFieldMask);
+    endEditCP(ComplexBackgroundBase, ColorLayer::ColorFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient1, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
+    beginEditCP(ComplexBackgroundGradient1, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
         ComplexBackgroundGradient1->setColorStart(Color4f(1.0, 0.0, 0.0, 0.5));
         ComplexBackgroundGradient1->setColorEnd(Color4f(0.5, 0.0, 0.0, 0.3));
-        ComplexBackgroundGradient1->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
-    endEditCP(ComplexBackgroundGradient1, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
+        ComplexBackgroundGradient1->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+    endEditCP(ComplexBackgroundGradient1, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient2, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
+    beginEditCP(ComplexBackgroundGradient2, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
         ComplexBackgroundGradient2->setColorStart(Color4f(.6, 0.0, 0.3, 1.0));
         ComplexBackgroundGradient2->setColorEnd(Color4f(.2, 0.0, 0.3, 0.5));
-        ComplexBackgroundGradient2->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
-    endEditCP(ComplexBackgroundGradient2, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
+        ComplexBackgroundGradient2->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+    endEditCP(ComplexBackgroundGradient2, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient3, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
+    beginEditCP(ComplexBackgroundGradient3, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
         ComplexBackgroundGradient3->setColorStart(Color4f(0.0, 0.0, 0.2, 0.2));
         ComplexBackgroundGradient3->setColorEnd(Color4f(0.0, 0.0, 0.2, 0.3));
-        ComplexBackgroundGradient3->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
-    endEditCP(ComplexBackgroundGradient3, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
+        ComplexBackgroundGradient3->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+    endEditCP(ComplexBackgroundGradient3, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
 
-    beginEditCP(ComplexBackgroundCompound1, CompoundUIBackground::BackgroundsFieldMask);
+    beginEditCP(ComplexBackgroundCompound1, CompoundLayer::BackgroundsFieldMask);
         ComplexBackgroundCompound1->getBackgrounds().push_back(ComplexBackgroundBase);
         ComplexBackgroundCompound1->getBackgrounds().push_back(ComplexBackgroundGradient1);
-    endEditCP(ComplexBackgroundCompound1, CompoundUIBackground::BackgroundsFieldMask);
+    endEditCP(ComplexBackgroundCompound1, CompoundLayer::BackgroundsFieldMask);
 
-    beginEditCP(ComplexBackgroundCompound2, CompoundUIBackground::BackgroundsFieldMask);
+    beginEditCP(ComplexBackgroundCompound2, CompoundLayer::BackgroundsFieldMask);
         ComplexBackgroundCompound2->getBackgrounds().push_back(ComplexBackgroundGradient2);
         ComplexBackgroundCompound2->getBackgrounds().push_back(ComplexBackgroundGradient3);
-    endEditCP(ComplexBackgroundCompound2, CompoundUIBackground::BackgroundsFieldMask);
+    endEditCP(ComplexBackgroundCompound2, CompoundLayer::BackgroundsFieldMask);
 
-    beginEditCP(ComplexBackground, CompoundUIBackground::BackgroundsFieldMask);
+    beginEditCP(ComplexBackground, CompoundLayer::BackgroundsFieldMask);
         ComplexBackground->getBackgrounds().push_back(ComplexBackgroundCompound1);
         ComplexBackground->getBackgrounds().push_back(ComplexBackgroundCompound2);
-    endEditCP(ComplexBackground, CompoundUIBackground::BackgroundsFieldMask);
+    endEditCP(ComplexBackground, CompoundLayer::BackgroundsFieldMask);
 
     return ComplexBackground;
 }

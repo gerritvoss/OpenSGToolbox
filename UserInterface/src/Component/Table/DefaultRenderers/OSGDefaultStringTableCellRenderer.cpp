@@ -45,7 +45,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "Background/OSGColorUIBackground.h"
+#include "Layer/OSGColorLayer.h"
 #include "Border/OSGLineBorder.h"
 #include "Border/OSGEmptyBorder.h"
 #include "Component/Text/OSGLabel.h"
@@ -87,21 +87,21 @@ ComponentPtr DefaultStringTableCellRenderer::getTableCellRendererComponent(Table
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-	ColorUIBackgroundPtr tempBackground;
-	tempBackground = ColorUIBackground::create();
+	ColorLayerPtr tempBackground;
+	tempBackground = ColorLayer::create();
 
 	beginEditCP(TheLabel, Label::BackgroundsFieldMask);
 		TheLabel->setBackgrounds(tempBackground);
 	endEditCP(TheLabel, Label::BackgroundsFieldMask);
 
-	beginEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
+	beginEditCP(tempBackground, ColorLayer::ColorFieldMask);
 		if(isSelected){
 			tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
 		}
 		else{
 			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 		}
-	endEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
+	endEditCP(tempBackground, ColorLayer::ColorFieldMask);
 
 	if(hasFocus){
 		LineBorderPtr tempBorder;

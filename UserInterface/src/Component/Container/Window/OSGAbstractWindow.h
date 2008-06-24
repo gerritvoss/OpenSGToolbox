@@ -129,7 +129,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
     
 	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
     virtual BorderPtr getDrawnBorder(void) const;
-    virtual UIBackgroundPtr getDrawnBackground(void) const;
+    virtual LayerPtr getDrawnBackground(void) const;
+    virtual LayerPtr getDrawnForeground(void) const;
 	
 	typedef std::set<WindowListenerPtr> WindowListenerSet;
     typedef WindowListenerSet::iterator WindowListenerSetItor;

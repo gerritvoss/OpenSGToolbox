@@ -50,7 +50,7 @@
 #include "OSGAbstractColorChooserPanelFields.h"
 #include "Component/Container/OSGTabPanelFields.h"
 #include "Component/Text/OSGLabelFields.h"
-#include "Background/OSGColorUIBackgroundFields.h"
+#include "Layer/OSGColorLayerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -155,7 +155,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ColorChooser : public ColorChooserBase
 	void createDefaultPanel(void);
 
 	LabelPtr _DefaultPreviewPanel;
-	ColorUIBackgroundPtr _DefaultPreviewPanelBackground;
+	ColorLayerPtr _DefaultPreviewPanelBackground;
     /*==========================  PRIVATE  ================================*/
   private:
 

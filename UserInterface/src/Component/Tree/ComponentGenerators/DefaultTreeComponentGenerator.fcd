@@ -79,21 +79,41 @@ A UI Default Tree ComponentGenerator.
 	</Field>
 	<Field
 		name="SelectedBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackgroundFields.h"
+		header="Layer/OSGLayerFields.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="NonSelectedBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackgroundFields.h"
+		header="Layer/OSGLayerFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="SelectedForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayerFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="NonSelectedForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayerFields.h"
 		access="public"
 	>
 	</Field>

@@ -48,7 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDefaultTableCellEditor.h"
-#include "Background/OSGColorUIBackground.h"
+#include "Layer/OSGColorLayer.h"
 #include "Border/OSGLineBorder.h"
 #include "Border/OSGEmptyBorder.h"
 #include "Component/Text/OSGTextField.h"
@@ -102,21 +102,21 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 		TheTextField->selectAll();
 		TheTextField->setCaretPosition(TheTextField->getText().size());
 	endEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::HorizontalAlignmentFieldMask | TextField::CaretPositionFieldMask);
-	ColorUIBackgroundPtr tempBackground;
-	tempBackground = ColorUIBackground::create();
+	ColorLayerPtr tempBackground;
+	tempBackground = ColorLayer::create();
 
 	beginEditCP(TheTextField, TextField::BackgroundFieldMask);
 		TheTextField->setBackground(tempBackground);
 	endEditCP(TheTextField, TextField::BackgroundFieldMask);
 
-	beginEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
+	beginEditCP(tempBackground, ColorLayer::ColorFieldMask);
 		//if(isSelected){
 		//	tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
 		//}
 		//else{
 			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 		//}
-	endEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
+	endEditCP(tempBackground, ColorLayer::ColorFieldMask);
 
 	LineBorderPtr tempBorder;
 

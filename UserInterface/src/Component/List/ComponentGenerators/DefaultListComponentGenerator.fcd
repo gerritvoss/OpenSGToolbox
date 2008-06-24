@@ -23,21 +23,41 @@ A UI Default List ComponentGenerator.
 	</Field>
 	<Field
 		name="SelectedBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackgroundFields.h"
+		header="Layer/OSGLayerFields.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="FocusedBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackgroundFields.h"
+		header="Layer/OSGLayerFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="SelectedForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayerFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FocusedForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayerFields.h"
 		access="public"
 	>
 	</Field>

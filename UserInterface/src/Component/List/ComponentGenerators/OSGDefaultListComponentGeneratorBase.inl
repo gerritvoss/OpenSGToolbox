@@ -105,16 +105,30 @@ SFComponentPtr *DefaultListComponentGeneratorBase::getSFDrawObjectPrototype(void
 
 //! Get the DefaultListComponentGenerator::_sfSelectedBackground field.
 inline
-SFUIBackgroundPtr *DefaultListComponentGeneratorBase::getSFSelectedBackground(void)
+SFLayerPtr *DefaultListComponentGeneratorBase::getSFSelectedBackground(void)
 {
     return &_sfSelectedBackground;
 }
 
 //! Get the DefaultListComponentGenerator::_sfFocusedBackground field.
 inline
-SFUIBackgroundPtr *DefaultListComponentGeneratorBase::getSFFocusedBackground(void)
+SFLayerPtr *DefaultListComponentGeneratorBase::getSFFocusedBackground(void)
 {
     return &_sfFocusedBackground;
+}
+
+//! Get the DefaultListComponentGenerator::_sfSelectedForeground field.
+inline
+SFLayerPtr *DefaultListComponentGeneratorBase::getSFSelectedForeground(void)
+{
+    return &_sfSelectedForeground;
+}
+
+//! Get the DefaultListComponentGenerator::_sfFocusedForeground field.
+inline
+SFLayerPtr *DefaultListComponentGeneratorBase::getSFFocusedForeground(void)
+{
+    return &_sfFocusedForeground;
 }
 
 //! Get the DefaultListComponentGenerator::_sfSelectedBorder field.
@@ -190,44 +204,86 @@ void DefaultListComponentGeneratorBase::setDrawObjectPrototype(const ComponentPt
 
 //! Get the value of the DefaultListComponentGenerator::_sfSelectedBackground field.
 inline
-UIBackgroundPtr &DefaultListComponentGeneratorBase::getSelectedBackground(void)
+LayerPtr &DefaultListComponentGeneratorBase::getSelectedBackground(void)
 {
     return _sfSelectedBackground.getValue();
 }
 
 //! Get the value of the DefaultListComponentGenerator::_sfSelectedBackground field.
 inline
-const UIBackgroundPtr &DefaultListComponentGeneratorBase::getSelectedBackground(void) const
+const LayerPtr &DefaultListComponentGeneratorBase::getSelectedBackground(void) const
 {
     return _sfSelectedBackground.getValue();
 }
 
 //! Set the value of the DefaultListComponentGenerator::_sfSelectedBackground field.
 inline
-void DefaultListComponentGeneratorBase::setSelectedBackground(const UIBackgroundPtr &value)
+void DefaultListComponentGeneratorBase::setSelectedBackground(const LayerPtr &value)
 {
     _sfSelectedBackground.setValue(value);
 }
 
 //! Get the value of the DefaultListComponentGenerator::_sfFocusedBackground field.
 inline
-UIBackgroundPtr &DefaultListComponentGeneratorBase::getFocusedBackground(void)
+LayerPtr &DefaultListComponentGeneratorBase::getFocusedBackground(void)
 {
     return _sfFocusedBackground.getValue();
 }
 
 //! Get the value of the DefaultListComponentGenerator::_sfFocusedBackground field.
 inline
-const UIBackgroundPtr &DefaultListComponentGeneratorBase::getFocusedBackground(void) const
+const LayerPtr &DefaultListComponentGeneratorBase::getFocusedBackground(void) const
 {
     return _sfFocusedBackground.getValue();
 }
 
 //! Set the value of the DefaultListComponentGenerator::_sfFocusedBackground field.
 inline
-void DefaultListComponentGeneratorBase::setFocusedBackground(const UIBackgroundPtr &value)
+void DefaultListComponentGeneratorBase::setFocusedBackground(const LayerPtr &value)
 {
     _sfFocusedBackground.setValue(value);
+}
+
+//! Get the value of the DefaultListComponentGenerator::_sfSelectedForeground field.
+inline
+LayerPtr &DefaultListComponentGeneratorBase::getSelectedForeground(void)
+{
+    return _sfSelectedForeground.getValue();
+}
+
+//! Get the value of the DefaultListComponentGenerator::_sfSelectedForeground field.
+inline
+const LayerPtr &DefaultListComponentGeneratorBase::getSelectedForeground(void) const
+{
+    return _sfSelectedForeground.getValue();
+}
+
+//! Set the value of the DefaultListComponentGenerator::_sfSelectedForeground field.
+inline
+void DefaultListComponentGeneratorBase::setSelectedForeground(const LayerPtr &value)
+{
+    _sfSelectedForeground.setValue(value);
+}
+
+//! Get the value of the DefaultListComponentGenerator::_sfFocusedForeground field.
+inline
+LayerPtr &DefaultListComponentGeneratorBase::getFocusedForeground(void)
+{
+    return _sfFocusedForeground.getValue();
+}
+
+//! Get the value of the DefaultListComponentGenerator::_sfFocusedForeground field.
+inline
+const LayerPtr &DefaultListComponentGeneratorBase::getFocusedForeground(void) const
+{
+    return _sfFocusedForeground.getValue();
+}
+
+//! Set the value of the DefaultListComponentGenerator::_sfFocusedForeground field.
+inline
+void DefaultListComponentGeneratorBase::setFocusedForeground(const LayerPtr &value)
+{
+    _sfFocusedForeground.setValue(value);
 }
 
 //! Get the value of the DefaultListComponentGenerator::_sfSelectedBorder field.

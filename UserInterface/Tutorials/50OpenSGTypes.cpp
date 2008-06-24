@@ -28,7 +28,7 @@
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
@@ -36,7 +36,7 @@
 #include <OpenSG/UserInterface/OSGGridBagLayout.h>
 #include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGGridBagLayoutConstraints.h>
-#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
+#include <OpenSG/UserInterface/OSGGradientLayer.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 //#include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/OSGTypeFactory.h>
@@ -688,10 +688,10 @@ int main(int argc, char **argv)
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
 	BorderLayoutPtr MainInternalWindowLayout = osg::BorderLayout::create();
 

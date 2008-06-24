@@ -173,7 +173,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	virtual void setBorders(BorderPtr TheBorder);
 
     static const OSG::BitVector BackgroundsFieldMask;
-	virtual void setBackgrounds(UIBackgroundPtr TheBackground);
+	virtual void setBackgrounds(LayerPtr TheBackground);
+    
+    static const OSG::BitVector ForegroundsFieldMask;
+	virtual void setForegrounds(LayerPtr TheForeground);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -198,13 +201,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 
 	virtual bool setupClipping(const GraphicsPtr Graphics) const;
     virtual void drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border) const;
-    virtual void drawBackground(const GraphicsPtr TheGraphics, const UIBackgroundPtr Background) const;
+    virtual void drawBackground(const GraphicsPtr TheGraphics, const LayerPtr Background) const;
+    virtual void drawForeground(const GraphicsPtr TheGraphics, const LayerPtr Foreground) const;
     
 	virtual void drawInternal(const GraphicsPtr Graphics) const = 0;
 	
     virtual bool giveFocus(ComponentPtr NewFocusedComponent, bool Temporary= false);
     virtual BorderPtr getDrawnBorder(void) const;
-    virtual UIBackgroundPtr getDrawnBackground(void) const;
+    virtual LayerPtr getDrawnBackground(void) const;
+    virtual LayerPtr getDrawnForeground(void) const;
 
     class ComponentUpdater : public UpdateListener
     {

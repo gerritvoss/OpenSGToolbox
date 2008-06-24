@@ -64,9 +64,9 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGEmptyBorder.h>
 #include <OpenSG/UserInterface/OSGEtchedBorder.h>
 //#include <OpenSG/UserInterface/OSGUIDefines.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
-#include <OpenSG/UserInterface/OSGCompoundUIBackground.h>
+#include <OpenSG/UserInterface/OSGColorLayer.h>
+#include <OpenSG/UserInterface/OSGGradientLayer.h>
+#include <OpenSG/UserInterface/OSGCompoundLayer.h>
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -149,39 +149,39 @@ int main(int argc, char **argv)
             Create some Backgrounds
 
     ******************************************************/
-    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
-    ColorUIBackgroundPtr ExamplePanelBackground = osg::ColorUIBackground::create();
-    ColorUIBackgroundPtr ExampleSmallPanelBackground = osg::ColorUIBackground::create();
-    ColorUIBackgroundPtr ExampleLabel1ColorBackground = osg::ColorUIBackground::create();
-    GradientUIBackgroundPtr ExampleLabel1GradientBackground = osg::GradientUIBackground::create();
-    CompoundUIBackgroundPtr ExampleLabel1CompoundBackground = osg::CompoundUIBackground::create();
+    ColorLayerPtr MainFrameBackground = osg::ColorLayer::create();
+    ColorLayerPtr ExamplePanelBackground = osg::ColorLayer::create();
+    ColorLayerPtr ExampleSmallPanelBackground = osg::ColorLayer::create();
+    ColorLayerPtr ExampleLabel1ColorBackground = osg::ColorLayer::create();
+    GradientLayerPtr ExampleLabel1GradientBackground = osg::GradientLayer::create();
+    CompoundLayerPtr ExampleLabel1CompoundBackground = osg::CompoundLayer::create();
     
-    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(MainFrameBackground, ColorLayer::ColorFieldMask);
         MainFrameBackground->setColor(Color4f(0,0,1.0,0.5));
-    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainFrameBackground, ColorLayer::ColorFieldMask);
 
-    beginEditCP(ExamplePanelBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(ExamplePanelBackground, ColorLayer::ColorFieldMask);
         ExamplePanelBackground->setColor(Color4f(0.0,0.0,0.0,0.5));
-    endEditCP(ExamplePanelBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(ExamplePanelBackground, ColorLayer::ColorFieldMask);
 
-    beginEditCP(ExampleSmallPanelBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(ExampleSmallPanelBackground, ColorLayer::ColorFieldMask);
         ExampleSmallPanelBackground->setColor(Color4f(0.0,0.5,0.7,1.0));
-    endEditCP(ExampleSmallPanelBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(ExampleSmallPanelBackground, ColorLayer::ColorFieldMask);
     
-    beginEditCP(ExampleLabel1ColorBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(ExampleLabel1ColorBackground, ColorLayer::ColorFieldMask);
         ExampleLabel1ColorBackground->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
-    endEditCP(ExampleLabel1ColorBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(ExampleLabel1ColorBackground, ColorLayer::ColorFieldMask);
     
-    beginEditCP(ExampleLabel1GradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
+    beginEditCP(ExampleLabel1GradientBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
         ExampleLabel1GradientBackground->setColorStart(Color4f(1.0, 0.0, 1.0, 0.8));
         ExampleLabel1GradientBackground->setColorEnd(Color4f(0.0, 0.0, 1.0, 0.3));
-        ExampleLabel1GradientBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
-    endEditCP(ExampleLabel1GradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
+        ExampleLabel1GradientBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+    endEditCP(ExampleLabel1GradientBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
     
-    beginEditCP(ExampleLabel1CompoundBackground, CompoundUIBackground::BackgroundsFieldMask);
+    beginEditCP(ExampleLabel1CompoundBackground, CompoundLayer::BackgroundsFieldMask);
         ExampleLabel1CompoundBackground->getBackgrounds().push_back(ExampleLabel1ColorBackground);
         ExampleLabel1CompoundBackground->getBackgrounds().push_back(ExampleLabel1GradientBackground);
-    endEditCP(ExampleLabel1CompoundBackground, CompoundUIBackground::BackgroundsFieldMask);
+    endEditCP(ExampleLabel1CompoundBackground, CompoundLayer::BackgroundsFieldMask);
 
     /******************************************************
             
@@ -392,10 +392,10 @@ int main(int argc, char **argv)
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);

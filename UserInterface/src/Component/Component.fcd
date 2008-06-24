@@ -14,7 +14,7 @@
 A UI Component Interface.
 	<Field
 		name="Position"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="internal"
 		defaultValue="0,0"
@@ -23,7 +23,7 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="ClipTopLeft"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="internal"
 		defaultValue="0,0"
@@ -32,7 +32,7 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="ClipBottomRight"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="internal"
 		defaultValue="0,0"
@@ -41,7 +41,7 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="MinSize"
-		type="Vec2s"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0,0"
@@ -50,7 +50,7 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="MaxSize"
-		type="Vec2s"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
 		defaultValue="32767,32767"
@@ -59,7 +59,7 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="PreferredSize"
-		type="Vec2s"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -68,7 +68,7 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="Size"
-		type="Vec2s"
+		type="Vec2f"
 		cardinality="single"
 		visibility="internal"
 		access="public"
@@ -122,11 +122,11 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="Background"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -142,11 +142,11 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="DisabledBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -171,11 +171,11 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="FocusedBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -191,11 +191,11 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="RolloverBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -252,6 +252,46 @@ A UI Component Interface.
 		visibility="internal"
 		header="Component/Menu/OSGPopupMenuFields.h"
 		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+   <Field
+		name="FocusedForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="RolloverForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DisabledForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Foreground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>

@@ -146,9 +146,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
 	void calculateContentBorderLengths(BorderPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
 
     virtual BorderPtr getDrawnTabBorder(const UInt32& Index) const;
-    virtual UIBackgroundPtr getDrawnTabBackground(const UInt32& Index) const;
+    virtual LayerPtr getDrawnTabBackground(const UInt32& Index) const;
     virtual BorderPtr getDrawnContentBorder(void) const;
-    virtual UIBackgroundPtr getDrawnContentBackground(void) const;
+    virtual LayerPtr getDrawnContentBackground(void) const;
 
 	Int32 _MouseInTabLastMouse;
     

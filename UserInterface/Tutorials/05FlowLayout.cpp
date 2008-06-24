@@ -78,7 +78,7 @@ void reshape(Vec2f Size);
 // 05FlowLayout Headers
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGColorLayer.h>
 #include <OpenSG/UserInterface/OSGBevelBorder.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 
@@ -237,10 +237,10 @@ int main(int argc, char **argv)
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);

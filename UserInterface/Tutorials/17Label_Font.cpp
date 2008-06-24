@@ -51,10 +51,10 @@ void display(void);
 void reshape(Vec2f Size);
 
 // 17Label_Font Headers
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
+#include <OpenSG/UserInterface/OSGGradientLayer.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 //#include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
@@ -398,11 +398,11 @@ int main(int argc, char **argv)
     ******************************************************/
 
 	// Create a GradientBackground to add to the Label
-    GradientUIBackgroundPtr ExampleLabelBackground = osg::GradientUIBackground::create();
-    beginEditCP(ExampleLabelBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+    GradientLayerPtr ExampleLabelBackground = osg::GradientLayer::create();
+    beginEditCP(ExampleLabelBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
         ExampleLabelBackground->setColorStart(Color4f(1.0, 0.0, 0.0, 1.0));
         ExampleLabelBackground->setColorEnd(Color4f(0.0, 0.0, 1.0, 1.0));
-    endEditCP(ExampleLabelBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+    endEditCP(ExampleLabelBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
     ExampleLabel = osg::Label::create();
     beginEditCP(ExampleLabel, Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
         ExampleLabel->setBackgrounds(ExampleLabelBackground);
@@ -470,10 +470,10 @@ int main(int argc, char **argv)
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
     FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 

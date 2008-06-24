@@ -49,7 +49,7 @@
 #include "Component/Spinner/OSGSpinnerFields.h"
 #include "Component/Slider/OSGSliderFields.h"
 #include "Component/Spinner/OSGBoundedRangeSpinnerModel.h"
-#include "Background/OSGGradientUIBackground.h"
+#include "Layer/OSGGradientLayer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -121,10 +121,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING HSVColorChooserPanel : public HSVColorChoo
 	SpinnerPtr _ValueSpinner;
 	SpinnerPtr _AlphaSpinner;
 
-	GradientUIBackgroundPtr _HueSliderTrackBackground;
-	GradientUIBackgroundPtr _SaturationSliderTrackBackground;
-	GradientUIBackgroundPtr _ValueSliderTrackBackground;
-	GradientUIBackgroundPtr _AlphaSliderTrackBackground;
+	GradientLayerPtr _HueSliderTrackBackground;
+	GradientLayerPtr _SaturationSliderTrackBackground;
+	GradientLayerPtr _ValueSliderTrackBackground;
+	GradientLayerPtr _AlphaSliderTrackBackground;
 
 	SliderPtr _HueSlider;
 	SliderPtr _SaturationSlider;

@@ -87,6 +87,12 @@ const OSG::BitVector  Component::BackgroundsFieldMask =
     (TypeTraits<BitVector>::One << ComponentBase::FocusedBackgroundFieldId) |
     (TypeTraits<BitVector>::One << ComponentBase::RolloverBackgroundFieldId);
 
+const OSG::BitVector  Component::ForegroundsFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ForegroundFieldId) |
+    (TypeTraits<BitVector>::One << ComponentBase::DisabledForegroundFieldId) |
+    (TypeTraits<BitVector>::One << ComponentBase::FocusedForegroundFieldId) |
+    (TypeTraits<BitVector>::One << ComponentBase::RolloverForegroundFieldId);
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -129,12 +135,21 @@ void Component::setBorders(BorderPtr TheBorder)
 	setRolloverBorder(TheBorder);
 }
 
-void Component::setBackgrounds(UIBackgroundPtr TheBackground)
+void Component::setBackgrounds(LayerPtr TheBackground)
 {
 	setBackground(TheBackground);
 	setDisabledBackground(TheBackground);
 	setFocusedBackground(TheBackground);
 	setRolloverBackground(TheBackground);
+}
+
+
+void Component::setForegrounds(LayerPtr TheForeground)
+{
+	setForeground(TheForeground);
+	setDisabledForeground(TheForeground);
+	setFocusedForeground(TheForeground);
+	setRolloverForeground(TheForeground);
 }
 
 BorderPtr Component::getDrawnBorder(void) const
@@ -160,7 +175,7 @@ BorderPtr Component::getDrawnBorder(void) const
     }
 }
 
-UIBackgroundPtr Component::getDrawnBackground(void) const
+LayerPtr Component::getDrawnBackground(void) const
 {
 	if(getEnabled())
 	{
@@ -180,6 +195,29 @@ UIBackgroundPtr Component::getDrawnBackground(void) const
     else
     {
         return getDisabledBackground();
+    }
+}
+
+LayerPtr Component::getDrawnForeground(void) const
+{
+	if(getEnabled())
+	{
+        if(getFocused())
+        {
+            return getFocusedForeground();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverForeground();
+        }
+        else
+        {
+            return getForeground();
+        }
+    }
+    else
+    {
+        return getDisabledForeground();
     }
 }
 
@@ -260,14 +298,25 @@ void Component::drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border
    }
 }
 
-void Component::drawBackground(const GraphicsPtr TheGraphics, const UIBackgroundPtr Background) const
+void Component::drawBackground(const GraphicsPtr TheGraphics, const LayerPtr Background) const
 {
    //Draw the Background on the Inside of my border
-   Pnt2f TopLeft, BottomRight;
-   getInsideBorderBounds(TopLeft, BottomRight);
    if(Background != NullFC)
    {
+       Pnt2f TopLeft, BottomRight;
+       getInsideBorderBounds(TopLeft, BottomRight);
 	   Background->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
+   }
+}
+
+void Component::drawForeground(const GraphicsPtr TheGraphics, const LayerPtr Foreground) const
+{
+   //Draw the Foreground on the Inside of my border
+   if(Foreground != NullFC)
+   {
+       Pnt2f TopLeft, BottomRight;
+       getInsideBorderBounds(TopLeft, BottomRight);
+	   Foreground->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
    }
 }
 
@@ -344,6 +393,9 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 
     //Draw Internal
     drawInternal(TheGraphics);
+    
+	//Draw My Foreground
+	drawForeground(TheGraphics, getDrawnForeground());
     
     //Deactivate Border Drawing Constrants
     if(DrawnBorder != NullFC)

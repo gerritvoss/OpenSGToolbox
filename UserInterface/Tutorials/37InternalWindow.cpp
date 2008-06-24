@@ -57,7 +57,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGColorLayer.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 
 // Create a class to allow for the use of the Escape
@@ -252,10 +252,10 @@ int main(int argc, char **argv)
 
 
     // Create Background to be used with the MainInternalWindow
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
     // Create The Internal Window
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();

@@ -74,8 +74,10 @@
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // ExpandedNonLeafDrawObjectPrototype type
 #include "Component/Text/OSGLabelFields.h" // NodeLabelPrototype type
 #include "Component/Container/OSGPanelFields.h" // NodePanelPrototype type
-#include "Background/OSGUIBackgroundFields.h" // SelectedBackground type
-#include "Background/OSGUIBackgroundFields.h" // NonSelectedBackground type
+#include "Layer/OSGLayerFields.h" // SelectedBackground type
+#include "Layer/OSGLayerFields.h" // NonSelectedBackground type
+#include "Layer/OSGLayerFields.h" // SelectedForeground type
+#include "Layer/OSGLayerFields.h" // NonSelectedForeground type
 #include "Border/OSGBorderFields.h" // SelectedBorder type
 #include <OpenSG/OSGColor4fFields.h> // SelectedTextColor type
 #include <OpenSG/OSGColor4fFields.h> // NonSelectedTextColor type
@@ -111,7 +113,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
         NodePanelPrototypeFieldId                 = NodeLabelPrototypeFieldId                 + 1,
         SelectedBackgroundFieldId                 = NodePanelPrototypeFieldId                 + 1,
         NonSelectedBackgroundFieldId              = SelectedBackgroundFieldId                 + 1,
-        SelectedBorderFieldId                     = NonSelectedBackgroundFieldId              + 1,
+        SelectedForegroundFieldId                 = NonSelectedBackgroundFieldId              + 1,
+        NonSelectedForegroundFieldId              = SelectedForegroundFieldId                 + 1,
+        SelectedBorderFieldId                     = NonSelectedForegroundFieldId              + 1,
         SelectedTextColorFieldId                  = SelectedBorderFieldId                     + 1,
         NonSelectedTextColorFieldId               = SelectedTextColorFieldId                  + 1,
         NextFieldId                               = NonSelectedTextColorFieldId               + 1
@@ -126,6 +130,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
     static const OSG::BitVector NodePanelPrototypeFieldMask;
     static const OSG::BitVector SelectedBackgroundFieldMask;
     static const OSG::BitVector NonSelectedBackgroundFieldMask;
+    static const OSG::BitVector SelectedForegroundFieldMask;
+    static const OSG::BitVector NonSelectedForegroundFieldMask;
     static const OSG::BitVector SelectedBorderFieldMask;
     static const OSG::BitVector SelectedTextColorFieldMask;
     static const OSG::BitVector NonSelectedTextColorFieldMask;
@@ -162,8 +168,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
            SFUIDrawObjectCanvasPtr *getSFExpandedNonLeafDrawObjectPrototype(void);
            SFLabelPtr          *getSFNodeLabelPrototype(void);
            SFPanelPtr          *getSFNodePanelPrototype(void);
-           SFUIBackgroundPtr   *getSFSelectedBackground(void);
-           SFUIBackgroundPtr   *getSFNonSelectedBackground(void);
+           SFLayerPtr          *getSFSelectedBackground(void);
+           SFLayerPtr          *getSFNonSelectedBackground(void);
+           SFLayerPtr          *getSFSelectedForeground(void);
+           SFLayerPtr          *getSFNonSelectedForeground(void);
            SFBorderPtr         *getSFSelectedBorder (void);
            SFColor4f           *getSFSelectedTextColor(void);
            SFColor4f           *getSFNonSelectedTextColor(void);
@@ -182,10 +190,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
      const LabelPtr            &getNodeLabelPrototype(void) const;
            PanelPtr            &getNodePanelPrototype(void);
      const PanelPtr            &getNodePanelPrototype(void) const;
-           UIBackgroundPtr     &getSelectedBackground(void);
-     const UIBackgroundPtr     &getSelectedBackground(void) const;
-           UIBackgroundPtr     &getNonSelectedBackground(void);
-     const UIBackgroundPtr     &getNonSelectedBackground(void) const;
+           LayerPtr            &getSelectedBackground(void);
+     const LayerPtr            &getSelectedBackground(void) const;
+           LayerPtr            &getNonSelectedBackground(void);
+     const LayerPtr            &getNonSelectedBackground(void) const;
+           LayerPtr            &getSelectedForeground(void);
+     const LayerPtr            &getSelectedForeground(void) const;
+           LayerPtr            &getNonSelectedForeground(void);
+     const LayerPtr            &getNonSelectedForeground(void) const;
            BorderPtr           &getSelectedBorder (void);
      const BorderPtr           &getSelectedBorder (void) const;
            Color4f             &getSelectedTextColor(void);
@@ -205,8 +217,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
      void setExpandedNonLeafDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
      void setNodeLabelPrototype( const LabelPtr &value );
      void setNodePanelPrototype( const PanelPtr &value );
-     void setSelectedBackground( const UIBackgroundPtr &value );
-     void setNonSelectedBackground( const UIBackgroundPtr &value );
+     void setSelectedBackground( const LayerPtr &value );
+     void setNonSelectedBackground( const LayerPtr &value );
+     void setSelectedForeground( const LayerPtr &value );
+     void setNonSelectedForeground( const LayerPtr &value );
      void setSelectedBorder ( const BorderPtr &value );
      void setSelectedTextColor( const Color4f &value );
      void setNonSelectedTextColor( const Color4f &value );
@@ -259,8 +273,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
     SFUIDrawObjectCanvasPtr   _sfExpandedNonLeafDrawObjectPrototype;
     SFLabelPtr          _sfNodeLabelPrototype;
     SFPanelPtr          _sfNodePanelPrototype;
-    SFUIBackgroundPtr   _sfSelectedBackground;
-    SFUIBackgroundPtr   _sfNonSelectedBackground;
+    SFLayerPtr          _sfSelectedBackground;
+    SFLayerPtr          _sfNonSelectedBackground;
+    SFLayerPtr          _sfSelectedForeground;
+    SFLayerPtr          _sfNonSelectedForeground;
     SFBorderPtr         _sfSelectedBorder;
     SFColor4f           _sfSelectedTextColor;
     SFColor4f           _sfNonSelectedTextColor;

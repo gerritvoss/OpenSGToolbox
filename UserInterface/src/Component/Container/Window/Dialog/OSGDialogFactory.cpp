@@ -11,7 +11,7 @@
 #include "Component/Misc/OSGImageComponent.h"
 #include "Component/Text/OSGTextArea.h"
 #include "Border/OSGEmptyBorder.h"
-#include "Background/OSGEmptyUIBackground.h"
+#include "Layer/OSGEmptyLayer.h"
 #include "OSGDialogWindow.h"
 #include "Event/OSGActionListener.h"
 
@@ -132,7 +132,7 @@ DialogWindowPtr DialogFactory::createMessageDialog(const std::string& Title, con
 TextAreaPtr DialogFactory::createTransparentTextArea(const std::string& Message)
 {
 	TextAreaPtr TransparentTextArea = osg::TextArea::create();
-	EmptyUIBackgroundPtr TransparentTextAreaBackground = osg::EmptyUIBackground::create();
+	EmptyLayerPtr TransparentTextAreaBackground = osg::EmptyLayer::create();
 	EmptyBorderPtr TransparentTextAreaBorder = osg::EmptyBorder::create();
 
     beginEditCP(TransparentTextArea, TextArea::BordersFieldMask | TextArea::BackgroundsFieldMask | TextArea::TextFieldMask | TextArea::EditableFieldMask);

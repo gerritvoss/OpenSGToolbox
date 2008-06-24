@@ -280,7 +280,7 @@ void EditableTextComponent::focusLost(const FocusEvent& e)
 	Inherited::focusLost(e);
 }
 
-UIBackgroundPtr EditableTextComponent::getDrawnBackground(void) const
+LayerPtr EditableTextComponent::getDrawnBackground(void) const
 {
 	if(getEditable())
 	{
@@ -289,6 +289,18 @@ UIBackgroundPtr EditableTextComponent::getDrawnBackground(void) const
 	else
 	{
 		return getDisabledBackground();
+	}
+}
+
+LayerPtr EditableTextComponent::getDrawnForeground(void) const
+{
+	if(getEditable())
+	{
+		return Inherited::getDrawnForeground();
+	}
+	else
+	{
+		return getDisabledForeground();
 	}
 }
 

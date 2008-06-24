@@ -67,6 +67,9 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+#include <OpenSG/OSGPnt2fFields.h> // Position type
+#include <OpenSG/OSGPnt2fFields.h> // ClipTopLeft type
+#include <OpenSG/OSGPnt2fFields.h> // ClipBottomRight type
 #include <OpenSG/OSGVec2fFields.h> // MinSize type
 #include <OpenSG/OSGVec2fFields.h> // MaxSize type
 #include <OpenSG/OSGVec2fFields.h> // PreferredSize type
@@ -76,20 +79,24 @@
 #include <OpenSG/OSGBoolFields.h> // Focused type
 #include "Layout/OSGLayoutConstraints.h" // Constraints type
 #include "Border/OSGBorder.h" // Border type
-#include "Background/OSGUIBackground.h" // Background type
+#include "Layer/OSGLayer.h" // Background type
 #include "Border/OSGBorder.h" // DisabledBorder type
-#include "Background/OSGUIBackground.h" // DisabledBackground type
+#include "Layer/OSGLayer.h" // DisabledBackground type
 #include <OpenSG/OSGBoolFields.h> // Focusable type
 #include "Border/OSGBorder.h" // FocusedBorder type
-#include "Background/OSGUIBackground.h" // FocusedBackground type
+#include "Layer/OSGLayer.h" // FocusedBackground type
 #include "Border/OSGBorder.h" // RolloverBorder type
-#include "Background/OSGUIBackground.h" // RolloverBackground type
+#include "Layer/OSGLayer.h" // RolloverBackground type
 #include <OpenSG/OSGStringFields.h> // ToolTipText type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
 #include "Component/Container/OSGContainerFields.h" // ParentContainer type
 #include "Component/Container/Window/OSGInternalWindowFields.h" // ParentWindow type
 #include <OpenSG/OSGBoolFields.h> // Clipping type
 #include "Component/Menu/OSGPopupMenuFields.h" // PopupMenu type
+#include "Layer/OSGLayer.h" // FocusedForeground type
+#include "Layer/OSGLayer.h" // RolloverForeground type
+#include "Layer/OSGLayer.h" // DisabledForeground type
+#include "Layer/OSGLayer.h" // Foreground type
 
 #include "OSGComponentFields.h"
 
@@ -139,7 +146,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
         ParentWindowFieldId       = ParentContainerFieldId    + 1,
         ClippingFieldId           = ParentWindowFieldId       + 1,
         PopupMenuFieldId          = ClippingFieldId           + 1,
-        NextFieldId               = PopupMenuFieldId          + 1
+        FocusedForegroundFieldId  = PopupMenuFieldId          + 1,
+        RolloverForegroundFieldId = FocusedForegroundFieldId  + 1,
+        DisabledForegroundFieldId = RolloverForegroundFieldId + 1,
+        ForegroundFieldId         = DisabledForegroundFieldId + 1,
+        NextFieldId               = ForegroundFieldId         + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -168,6 +179,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector ParentWindowFieldMask;
     static const OSG::BitVector ClippingFieldMask;
     static const OSG::BitVector PopupMenuFieldMask;
+    static const OSG::BitVector FocusedForegroundFieldMask;
+    static const OSG::BitVector RolloverForegroundFieldMask;
+    static const OSG::BitVector DisabledForegroundFieldMask;
+    static const OSG::BitVector ForegroundFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -204,20 +219,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       SFBool              *getSFFocused        (void);
     virtual       SFLayoutConstraintsPtr *getSFConstraints    (void);
     virtual       SFBorderPtr         *getSFBorder         (void);
-    virtual       SFUIBackgroundPtr   *getSFBackground     (void);
+    virtual       SFLayerPtr          *getSFBackground     (void);
     virtual       SFBorderPtr         *getSFDisabledBorder (void);
-    virtual       SFUIBackgroundPtr   *getSFDisabledBackground(void);
+    virtual       SFLayerPtr          *getSFDisabledBackground(void);
     virtual       SFBool              *getSFFocusable      (void);
     virtual       SFBorderPtr         *getSFFocusedBorder  (void);
-    virtual       SFUIBackgroundPtr   *getSFFocusedBackground(void);
+    virtual       SFLayerPtr          *getSFFocusedBackground(void);
     virtual       SFBorderPtr         *getSFRolloverBorder (void);
-    virtual       SFUIBackgroundPtr   *getSFRolloverBackground(void);
+    virtual       SFLayerPtr          *getSFRolloverBackground(void);
     virtual       SFString            *getSFToolTipText    (void);
     virtual       SFReal32            *getSFOpacity        (void);
     virtual       SFContainerPtr      *getSFParentContainer(void);
     virtual       SFInternalWindowPtr *getSFParentWindow   (void);
     virtual       SFBool              *getSFClipping       (void);
     virtual       SFPopupMenuPtr      *getSFPopupMenu      (void);
+    virtual       SFLayerPtr          *getSFFocusedForeground(void);
+    virtual       SFLayerPtr          *getSFRolloverForeground(void);
+    virtual       SFLayerPtr          *getSFDisabledForeground(void);
+    virtual       SFLayerPtr          *getSFForeground     (void);
 
     virtual       Pnt2f               &getPosition       (void);
     virtual const Pnt2f               &getPosition       (void) const;
@@ -239,22 +258,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual const LayoutConstraintsPtr &getConstraints    (void) const;
     virtual       BorderPtr           &getBorder         (void);
     virtual const BorderPtr           &getBorder         (void) const;
-    virtual       UIBackgroundPtr     &getBackground     (void);
-    virtual const UIBackgroundPtr     &getBackground     (void) const;
+    virtual       LayerPtr            &getBackground     (void);
+    virtual const LayerPtr            &getBackground     (void) const;
     virtual       BorderPtr           &getDisabledBorder (void);
     virtual const BorderPtr           &getDisabledBorder (void) const;
-    virtual       UIBackgroundPtr     &getDisabledBackground(void);
-    virtual const UIBackgroundPtr     &getDisabledBackground(void) const;
+    virtual       LayerPtr            &getDisabledBackground(void);
+    virtual const LayerPtr            &getDisabledBackground(void) const;
     virtual       bool                &getFocusable      (void);
     virtual const bool                &getFocusable      (void) const;
     virtual       BorderPtr           &getFocusedBorder  (void);
     virtual const BorderPtr           &getFocusedBorder  (void) const;
-    virtual       UIBackgroundPtr     &getFocusedBackground(void);
-    virtual const UIBackgroundPtr     &getFocusedBackground(void) const;
+    virtual       LayerPtr            &getFocusedBackground(void);
+    virtual const LayerPtr            &getFocusedBackground(void) const;
     virtual       BorderPtr           &getRolloverBorder (void);
     virtual const BorderPtr           &getRolloverBorder (void) const;
-    virtual       UIBackgroundPtr     &getRolloverBackground(void);
-    virtual const UIBackgroundPtr     &getRolloverBackground(void) const;
+    virtual       LayerPtr            &getRolloverBackground(void);
+    virtual const LayerPtr            &getRolloverBackground(void) const;
     virtual       std::string         &getToolTipText    (void);
     virtual const std::string         &getToolTipText    (void) const;
     virtual       Real32              &getOpacity        (void);
@@ -267,6 +286,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual const bool                &getClipping       (void) const;
     virtual       PopupMenuPtr        &getPopupMenu      (void);
     virtual const PopupMenuPtr        &getPopupMenu      (void) const;
+    virtual       LayerPtr            &getFocusedForeground(void);
+    virtual const LayerPtr            &getFocusedForeground(void) const;
+    virtual       LayerPtr            &getRolloverForeground(void);
+    virtual const LayerPtr            &getRolloverForeground(void) const;
+    virtual       LayerPtr            &getDisabledForeground(void);
+    virtual const LayerPtr            &getDisabledForeground(void) const;
+    virtual       LayerPtr            &getForeground     (void);
+    virtual const LayerPtr            &getForeground     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -283,20 +310,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual void setFocused        ( const bool &value );
     virtual void setConstraints    ( const LayoutConstraintsPtr &value );
     virtual void setBorder         ( const BorderPtr &value );
-    virtual void setBackground     ( const UIBackgroundPtr &value );
+    virtual void setBackground     ( const LayerPtr &value );
     virtual void setDisabledBorder ( const BorderPtr &value );
-    virtual void setDisabledBackground( const UIBackgroundPtr &value );
+    virtual void setDisabledBackground( const LayerPtr &value );
     virtual void setFocusable      ( const bool &value );
     virtual void setFocusedBorder  ( const BorderPtr &value );
-    virtual void setFocusedBackground( const UIBackgroundPtr &value );
+    virtual void setFocusedBackground( const LayerPtr &value );
     virtual void setRolloverBorder ( const BorderPtr &value );
-    virtual void setRolloverBackground( const UIBackgroundPtr &value );
+    virtual void setRolloverBackground( const LayerPtr &value );
     virtual void setToolTipText    ( const std::string &value );
     virtual void setOpacity        ( const Real32 &value );
     virtual void setParentContainer( const ContainerPtr &value );
     virtual void setParentWindow   ( const InternalWindowPtr &value );
     virtual void setClipping       ( const bool &value );
     virtual void setPopupMenu      ( const PopupMenuPtr &value );
+    virtual void setFocusedForeground( const LayerPtr &value );
+    virtual void setRolloverForeground( const LayerPtr &value );
+    virtual void setDisabledForeground( const LayerPtr &value );
+    virtual void setForeground     ( const LayerPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -335,20 +366,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     SFBool              _sfFocused;
     SFLayoutConstraintsPtr   _sfConstraints;
     SFBorderPtr         _sfBorder;
-    SFUIBackgroundPtr   _sfBackground;
+    SFLayerPtr          _sfBackground;
     SFBorderPtr         _sfDisabledBorder;
-    SFUIBackgroundPtr   _sfDisabledBackground;
+    SFLayerPtr          _sfDisabledBackground;
     SFBool              _sfFocusable;
     SFBorderPtr         _sfFocusedBorder;
-    SFUIBackgroundPtr   _sfFocusedBackground;
+    SFLayerPtr          _sfFocusedBackground;
     SFBorderPtr         _sfRolloverBorder;
-    SFUIBackgroundPtr   _sfRolloverBackground;
+    SFLayerPtr          _sfRolloverBackground;
     SFString            _sfToolTipText;
     SFReal32            _sfOpacity;
     SFContainerPtr      _sfParentContainer;
     SFInternalWindowPtr   _sfParentWindow;
     SFBool              _sfClipping;
     SFPopupMenuPtr      _sfPopupMenu;
+    SFLayerPtr          _sfFocusedForeground;
+    SFLayerPtr          _sfRolloverForeground;
+    SFLayerPtr          _sfDisabledForeground;
+    SFLayerPtr          _sfForeground;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

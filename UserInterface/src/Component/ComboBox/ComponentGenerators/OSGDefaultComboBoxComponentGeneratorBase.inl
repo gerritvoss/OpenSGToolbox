@@ -105,16 +105,30 @@ SFComponentPtr *DefaultComboBoxComponentGeneratorBase::getSFDrawObjectPrototype(
 
 //! Get the DefaultComboBoxComponentGenerator::_sfSelectedBackground field.
 inline
-SFUIBackgroundPtr *DefaultComboBoxComponentGeneratorBase::getSFSelectedBackground(void)
+SFLayerPtr *DefaultComboBoxComponentGeneratorBase::getSFSelectedBackground(void)
 {
     return &_sfSelectedBackground;
 }
 
 //! Get the DefaultComboBoxComponentGenerator::_sfFocusedBackground field.
 inline
-SFUIBackgroundPtr *DefaultComboBoxComponentGeneratorBase::getSFFocusedBackground(void)
+SFLayerPtr *DefaultComboBoxComponentGeneratorBase::getSFFocusedBackground(void)
 {
     return &_sfFocusedBackground;
+}
+
+//! Get the DefaultComboBoxComponentGenerator::_sfSelectedForeground field.
+inline
+SFLayerPtr *DefaultComboBoxComponentGeneratorBase::getSFSelectedForeground(void)
+{
+    return &_sfSelectedForeground;
+}
+
+//! Get the DefaultComboBoxComponentGenerator::_sfFocusedForeground field.
+inline
+SFLayerPtr *DefaultComboBoxComponentGeneratorBase::getSFFocusedForeground(void)
+{
+    return &_sfFocusedForeground;
 }
 
 //! Get the DefaultComboBoxComponentGenerator::_sfSelectedBorder field.
@@ -190,44 +204,86 @@ void DefaultComboBoxComponentGeneratorBase::setDrawObjectPrototype(const Compone
 
 //! Get the value of the DefaultComboBoxComponentGenerator::_sfSelectedBackground field.
 inline
-UIBackgroundPtr &DefaultComboBoxComponentGeneratorBase::getSelectedBackground(void)
+LayerPtr &DefaultComboBoxComponentGeneratorBase::getSelectedBackground(void)
 {
     return _sfSelectedBackground.getValue();
 }
 
 //! Get the value of the DefaultComboBoxComponentGenerator::_sfSelectedBackground field.
 inline
-const UIBackgroundPtr &DefaultComboBoxComponentGeneratorBase::getSelectedBackground(void) const
+const LayerPtr &DefaultComboBoxComponentGeneratorBase::getSelectedBackground(void) const
 {
     return _sfSelectedBackground.getValue();
 }
 
 //! Set the value of the DefaultComboBoxComponentGenerator::_sfSelectedBackground field.
 inline
-void DefaultComboBoxComponentGeneratorBase::setSelectedBackground(const UIBackgroundPtr &value)
+void DefaultComboBoxComponentGeneratorBase::setSelectedBackground(const LayerPtr &value)
 {
     _sfSelectedBackground.setValue(value);
 }
 
 //! Get the value of the DefaultComboBoxComponentGenerator::_sfFocusedBackground field.
 inline
-UIBackgroundPtr &DefaultComboBoxComponentGeneratorBase::getFocusedBackground(void)
+LayerPtr &DefaultComboBoxComponentGeneratorBase::getFocusedBackground(void)
 {
     return _sfFocusedBackground.getValue();
 }
 
 //! Get the value of the DefaultComboBoxComponentGenerator::_sfFocusedBackground field.
 inline
-const UIBackgroundPtr &DefaultComboBoxComponentGeneratorBase::getFocusedBackground(void) const
+const LayerPtr &DefaultComboBoxComponentGeneratorBase::getFocusedBackground(void) const
 {
     return _sfFocusedBackground.getValue();
 }
 
 //! Set the value of the DefaultComboBoxComponentGenerator::_sfFocusedBackground field.
 inline
-void DefaultComboBoxComponentGeneratorBase::setFocusedBackground(const UIBackgroundPtr &value)
+void DefaultComboBoxComponentGeneratorBase::setFocusedBackground(const LayerPtr &value)
 {
     _sfFocusedBackground.setValue(value);
+}
+
+//! Get the value of the DefaultComboBoxComponentGenerator::_sfSelectedForeground field.
+inline
+LayerPtr &DefaultComboBoxComponentGeneratorBase::getSelectedForeground(void)
+{
+    return _sfSelectedForeground.getValue();
+}
+
+//! Get the value of the DefaultComboBoxComponentGenerator::_sfSelectedForeground field.
+inline
+const LayerPtr &DefaultComboBoxComponentGeneratorBase::getSelectedForeground(void) const
+{
+    return _sfSelectedForeground.getValue();
+}
+
+//! Set the value of the DefaultComboBoxComponentGenerator::_sfSelectedForeground field.
+inline
+void DefaultComboBoxComponentGeneratorBase::setSelectedForeground(const LayerPtr &value)
+{
+    _sfSelectedForeground.setValue(value);
+}
+
+//! Get the value of the DefaultComboBoxComponentGenerator::_sfFocusedForeground field.
+inline
+LayerPtr &DefaultComboBoxComponentGeneratorBase::getFocusedForeground(void)
+{
+    return _sfFocusedForeground.getValue();
+}
+
+//! Get the value of the DefaultComboBoxComponentGenerator::_sfFocusedForeground field.
+inline
+const LayerPtr &DefaultComboBoxComponentGeneratorBase::getFocusedForeground(void) const
+{
+    return _sfFocusedForeground.getValue();
+}
+
+//! Set the value of the DefaultComboBoxComponentGenerator::_sfFocusedForeground field.
+inline
+void DefaultComboBoxComponentGeneratorBase::setFocusedForeground(const LayerPtr &value)
+{
+    _sfFocusedForeground.setValue(value);
 }
 
 //! Get the value of the DefaultComboBoxComponentGenerator::_sfSelectedBorder field.

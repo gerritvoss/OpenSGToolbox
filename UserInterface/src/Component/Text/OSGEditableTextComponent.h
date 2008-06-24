@@ -106,7 +106,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTex
     virtual ~EditableTextComponent(void); 
 
     /*! \}                                                                 */
-    virtual UIBackgroundPtr getDrawnBackground(void) const;
+    virtual LayerPtr getDrawnBackground(void) const;
+    virtual LayerPtr getDrawnForeground(void) const;
     virtual BorderPtr getDrawnBorder(void) const;
     
     /*==========================  PRIVATE  ================================*/

@@ -129,7 +129,7 @@ ComponentPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxPtr
 	}
 	if(IsSelected && HasFocus)
 	{
-		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
+		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 			if(getFocusedBorderHasPriority())
 			{
 				TheComponent->setBorders(getFocusedBorder());
@@ -141,26 +141,30 @@ ComponentPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxPtr
 			if(getFocusedBackgroundHasPriority())
 			{
 				TheComponent->setBackgrounds(getFocusedBackground());
+			    TheComponent->setForegrounds(getFocusedForeground());
 			}
 			else
 			{
 				TheComponent->setBackgrounds(getSelectedBackground());
+			    TheComponent->setForegrounds(getSelectedForeground());
 			}
-		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
+		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 	}
 	else if(IsSelected)
 	{
-		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
+		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 			TheComponent->setBorders(getSelectedBorder());
 			TheComponent->setBackgrounds(getSelectedBackground());
-		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
+			TheComponent->setForegrounds(getSelectedForeground());
+		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 	}
 	else if(HasFocus)
 	{
-		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
+		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 			TheComponent->setBorders(getFocusedBorder());
 			TheComponent->setBackgrounds(getFocusedBackground());
-		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
+			TheComponent->setForegrounds(getFocusedForeground());
+		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 	}
 	return TheComponent;
 }

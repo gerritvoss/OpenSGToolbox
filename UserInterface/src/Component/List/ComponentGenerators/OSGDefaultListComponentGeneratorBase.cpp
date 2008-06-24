@@ -73,6 +73,12 @@ const OSG::BitVector  DefaultListComponentGeneratorBase::SelectedBackgroundField
 const OSG::BitVector  DefaultListComponentGeneratorBase::FocusedBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::FocusedBackgroundFieldId);
 
+const OSG::BitVector  DefaultListComponentGeneratorBase::SelectedForegroundFieldMask = 
+    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::SelectedForegroundFieldId);
+
+const OSG::BitVector  DefaultListComponentGeneratorBase::FocusedForegroundFieldMask = 
+    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::FocusedForegroundFieldId);
+
 const OSG::BitVector  DefaultListComponentGeneratorBase::SelectedBorderFieldMask = 
     (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::SelectedBorderFieldId);
 
@@ -104,10 +110,16 @@ const OSG::BitVector DefaultListComponentGeneratorBase::MTInfluenceMask =
 /*! \var ComponentPtr    DefaultListComponentGeneratorBase::_sfDrawObjectPrototype
     
 */
-/*! \var UIBackgroundPtr DefaultListComponentGeneratorBase::_sfSelectedBackground
+/*! \var LayerPtr        DefaultListComponentGeneratorBase::_sfSelectedBackground
     
 */
-/*! \var UIBackgroundPtr DefaultListComponentGeneratorBase::_sfFocusedBackground
+/*! \var LayerPtr        DefaultListComponentGeneratorBase::_sfFocusedBackground
+    
+*/
+/*! \var LayerPtr        DefaultListComponentGeneratorBase::_sfSelectedForeground
+    
+*/
+/*! \var LayerPtr        DefaultListComponentGeneratorBase::_sfFocusedForeground
     
 */
 /*! \var BorderPtr       DefaultListComponentGeneratorBase::_sfSelectedBorder
@@ -141,16 +153,26 @@ FieldDescription *DefaultListComponentGeneratorBase::_desc[] =
                      DrawObjectPrototypeFieldId, DrawObjectPrototypeFieldMask,
                      false,
                      (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFDrawObjectPrototype),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+    new FieldDescription(SFLayerPtr::getClassType(), 
                      "SelectedBackground", 
                      SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFSelectedBackground),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+    new FieldDescription(SFLayerPtr::getClassType(), 
                      "FocusedBackground", 
                      FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFFocusedBackground),
+    new FieldDescription(SFLayerPtr::getClassType(), 
+                     "SelectedForeground", 
+                     SelectedForegroundFieldId, SelectedForegroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFSelectedForeground),
+    new FieldDescription(SFLayerPtr::getClassType(), 
+                     "FocusedForeground", 
+                     FocusedForegroundFieldId, FocusedForegroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFFocusedForeground),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "SelectedBorder", 
                      SelectedBorderFieldId, SelectedBorderFieldMask,
@@ -262,8 +284,10 @@ void DefaultListComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAs
 
 DefaultListComponentGeneratorBase::DefaultListComponentGeneratorBase(void) :
     _sfDrawObjectPrototype    (ComponentPtr(NullFC)), 
-    _sfSelectedBackground     (UIBackgroundPtr(NullFC)), 
-    _sfFocusedBackground      (UIBackgroundPtr(NullFC)), 
+    _sfSelectedBackground     (LayerPtr(NullFC)), 
+    _sfFocusedBackground      (LayerPtr(NullFC)), 
+    _sfSelectedForeground     (LayerPtr(NullFC)), 
+    _sfFocusedForeground      (LayerPtr(NullFC)), 
     _sfSelectedBorder         (BorderPtr(NullFC)), 
     _sfFocusedBorder          (BorderPtr(NullFC)), 
     _sfSelectedTextColor      (Color4f(0.0,0.0,0.0,1.0)), 
@@ -283,6 +307,8 @@ DefaultListComponentGeneratorBase::DefaultListComponentGeneratorBase(const Defau
     _sfDrawObjectPrototype    (source._sfDrawObjectPrototype    ), 
     _sfSelectedBackground     (source._sfSelectedBackground     ), 
     _sfFocusedBackground      (source._sfFocusedBackground      ), 
+    _sfSelectedForeground     (source._sfSelectedForeground     ), 
+    _sfFocusedForeground      (source._sfFocusedForeground      ), 
     _sfSelectedBorder         (source._sfSelectedBorder         ), 
     _sfFocusedBorder          (source._sfFocusedBorder          ), 
     _sfSelectedTextColor      (source._sfSelectedTextColor      ), 
@@ -319,6 +345,16 @@ UInt32 DefaultListComponentGeneratorBase::getBinSize(const BitVector &whichField
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         returnValue += _sfFocusedBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+    {
+        returnValue += _sfSelectedForeground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        returnValue += _sfFocusedForeground.getBinSize();
     }
 
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
@@ -380,6 +416,16 @@ void DefaultListComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFocusedBackground.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+    {
+        _sfSelectedForeground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        _sfFocusedForeground.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyToBin(pMem);
@@ -438,6 +484,16 @@ void DefaultListComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMe
         _sfFocusedBackground.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+    {
+        _sfSelectedForeground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        _sfFocusedForeground.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyFromBin(pMem);
@@ -492,6 +548,12 @@ void DefaultListComponentGeneratorBase::executeSyncImpl(      DefaultListCompone
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
         _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
 
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
+
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
         _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
 
@@ -531,6 +593,12 @@ void DefaultListComponentGeneratorBase::executeSyncImpl(      DefaultListCompone
 
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
         _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
+
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
 
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
         _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);

@@ -102,7 +102,7 @@ void RGBColorChooserPanel::updateChooser(void)
 	Color4f ColorSelected(getColorFromModel());
 	//Update the Red Bounded Range
     _RedModel->setValue(osgClamp(0.0f, getColorFromModel().red(), 1.0f) * 255);
-	beginEditCP(_RedSliderTrackBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+	beginEditCP(_RedSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
 		_RedSliderTrackBackground->setColorStart(Color4f(0.0f,
 			                                             ColorSelected.green(),
 														 ColorSelected.blue(),
@@ -111,11 +111,11 @@ void RGBColorChooserPanel::updateChooser(void)
 			                                             ColorSelected.green(),
 														 ColorSelected.blue(),
 														 ColorSelected.alpha()));
-	endEditCP(_RedSliderTrackBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+	endEditCP(_RedSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
 
 	//Update the Green Bounded Range
     _GreenModel->setValue(osgClamp(0.0f, getColorFromModel().green(), 1.0f) * 255);
-	beginEditCP(_GreenSliderTrackBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+	beginEditCP(_GreenSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
 		_GreenSliderTrackBackground->setColorStart(Color4f(ColorSelected.red(),
 			                                             0.0f,
 														 ColorSelected.blue(),
@@ -124,11 +124,11 @@ void RGBColorChooserPanel::updateChooser(void)
 			                                             1.0f,
 														 ColorSelected.blue(),
 														 ColorSelected.alpha()));
-	endEditCP(_GreenSliderTrackBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+	endEditCP(_GreenSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
 
 	//Update the Blue Bounded Range
     _BlueModel->setValue(osgClamp(0.0f, getColorFromModel().blue(), 1.0f) * 255);
-	beginEditCP(_BlueSliderTrackBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+	beginEditCP(_BlueSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
 		_BlueSliderTrackBackground->setColorStart(Color4f(ColorSelected.red(),
 			                                             ColorSelected.green(),
 														 0.0f,
@@ -137,14 +137,14 @@ void RGBColorChooserPanel::updateChooser(void)
 			                                             ColorSelected.green(),
 														 1.0f,
 														 ColorSelected.alpha()));
-	endEditCP(_BlueSliderTrackBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+	endEditCP(_BlueSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
 
 	//Update the Alpha Bounded Range
 	_AlphaModel->setValue(osgClamp(0.0f, getColorFromModel().alpha(), 1.0f) * 255);
 	
 	if(getIncludeAlpha())
 	{
-		beginEditCP(_AlphaSliderTrackBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
 			_AlphaSliderTrackBackground->setColorStart(Color4f(ColorSelected.red(),
 				                                             ColorSelected.green(),
 															 ColorSelected.blue(),
@@ -153,7 +153,7 @@ void RGBColorChooserPanel::updateChooser(void)
 				                                             ColorSelected.green(),
 															 ColorSelected.blue(),
 															 1.0f));
-		endEditCP(_AlphaSliderTrackBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+		endEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
 	}
 	
 	attachModelListener();
@@ -192,10 +192,10 @@ void RGBColorChooserPanel::buildChooser(void)
 	}
 
 	//Sliders
-	_RedSliderTrackBackground = GradientUIBackground::create();
-	beginEditCP(_RedSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
-		_RedSliderTrackBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
-	endEditCP(_RedSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
+	_RedSliderTrackBackground = GradientLayer::create();
+	beginEditCP(_RedSliderTrackBackground, GradientLayer::OrientationFieldMask);
+		_RedSliderTrackBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+	endEditCP(_RedSliderTrackBackground, GradientLayer::OrientationFieldMask);
 	
 	UIDrawObjectCanvasPtr RedSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(RedSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -215,10 +215,10 @@ void RGBColorChooserPanel::buildChooser(void)
 	_RedSlider->setModel(_RedModel->getBoundedRangeModel());
 	
 	//Green
-	_GreenSliderTrackBackground = GradientUIBackground::create();
-	beginEditCP(_GreenSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
-		_GreenSliderTrackBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
-	endEditCP(_GreenSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
+	_GreenSliderTrackBackground = GradientLayer::create();
+	beginEditCP(_GreenSliderTrackBackground, GradientLayer::OrientationFieldMask);
+		_GreenSliderTrackBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+	endEditCP(_GreenSliderTrackBackground, GradientLayer::OrientationFieldMask);
 	
 	UIDrawObjectCanvasPtr GreenSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(GreenSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -238,10 +238,10 @@ void RGBColorChooserPanel::buildChooser(void)
 	_GreenSlider->setModel(_GreenModel->getBoundedRangeModel());
 	
 	//Blue
-	_BlueSliderTrackBackground = GradientUIBackground::create();
-	beginEditCP(_BlueSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
-		_BlueSliderTrackBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
-	endEditCP(_BlueSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
+	_BlueSliderTrackBackground = GradientLayer::create();
+	beginEditCP(_BlueSliderTrackBackground, GradientLayer::OrientationFieldMask);
+		_BlueSliderTrackBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+	endEditCP(_BlueSliderTrackBackground, GradientLayer::OrientationFieldMask);
 	
 	UIDrawObjectCanvasPtr BlueSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(BlueSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -262,10 +262,10 @@ void RGBColorChooserPanel::buildChooser(void)
 	
 	if(getIncludeAlpha())
 	{
-		_AlphaSliderTrackBackground = GradientUIBackground::create();
-		beginEditCP(_AlphaSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
-			_AlphaSliderTrackBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
-		endEditCP(_AlphaSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
+		_AlphaSliderTrackBackground = GradientLayer::create();
+		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::OrientationFieldMask);
+			_AlphaSliderTrackBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+		endEditCP(_AlphaSliderTrackBackground, GradientLayer::OrientationFieldMask);
 		
 		UIDrawObjectCanvasPtr AlphaSliderTrackCanvas = UIDrawObjectCanvas::create();
 		beginEditCP(AlphaSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);

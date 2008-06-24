@@ -147,7 +147,7 @@ SFBorderPtr *TabPanelBase::getSFTabBorder(void)
 
 //! Get the TabPanel::_sfTabBackground field.
 inline
-SFUIBackgroundPtr *TabPanelBase::getSFTabBackground(void)
+SFLayerPtr *TabPanelBase::getSFTabBackground(void)
 {
     return &_sfTabBackground;
 }
@@ -161,7 +161,7 @@ SFBorderPtr *TabPanelBase::getSFTabDisabledBorder(void)
 
 //! Get the TabPanel::_sfTabDisabledBackground field.
 inline
-SFUIBackgroundPtr *TabPanelBase::getSFTabDisabledBackground(void)
+SFLayerPtr *TabPanelBase::getSFTabDisabledBackground(void)
 {
     return &_sfTabDisabledBackground;
 }
@@ -175,7 +175,7 @@ SFBorderPtr *TabPanelBase::getSFTabFocusedBorder(void)
 
 //! Get the TabPanel::_sfTabFocusedBackground field.
 inline
-SFUIBackgroundPtr *TabPanelBase::getSFTabFocusedBackground(void)
+SFLayerPtr *TabPanelBase::getSFTabFocusedBackground(void)
 {
     return &_sfTabFocusedBackground;
 }
@@ -189,7 +189,7 @@ SFBorderPtr *TabPanelBase::getSFTabRolloverBorder(void)
 
 //! Get the TabPanel::_sfTabRolloverBackground field.
 inline
-SFUIBackgroundPtr *TabPanelBase::getSFTabRolloverBackground(void)
+SFLayerPtr *TabPanelBase::getSFTabRolloverBackground(void)
 {
     return &_sfTabRolloverBackground;
 }
@@ -203,7 +203,7 @@ SFBorderPtr *TabPanelBase::getSFTabActiveBorder(void)
 
 //! Get the TabPanel::_sfTabActiveBackground field.
 inline
-SFUIBackgroundPtr *TabPanelBase::getSFTabActiveBackground(void)
+SFLayerPtr *TabPanelBase::getSFTabActiveBackground(void)
 {
     return &_sfTabActiveBackground;
 }
@@ -224,7 +224,7 @@ SFBorderPtr *TabPanelBase::getSFContentBorder(void)
 
 //! Get the TabPanel::_sfContentBackground field.
 inline
-SFUIBackgroundPtr *TabPanelBase::getSFContentBackground(void)
+SFLayerPtr *TabPanelBase::getSFContentBackground(void)
 {
     return &_sfContentBackground;
 }
@@ -238,7 +238,7 @@ SFBorderPtr *TabPanelBase::getSFContentDisabledBorder(void)
 
 //! Get the TabPanel::_sfContentDisabledBackground field.
 inline
-SFUIBackgroundPtr *TabPanelBase::getSFContentDisabledBackground(void)
+SFLayerPtr *TabPanelBase::getSFContentDisabledBackground(void)
 {
     return &_sfContentDisabledBackground;
 }
@@ -252,7 +252,7 @@ SFBorderPtr *TabPanelBase::getSFContentRolloverBorder(void)
 
 //! Get the TabPanel::_sfContentRolloverBackground field.
 inline
-SFUIBackgroundPtr *TabPanelBase::getSFContentRolloverBackground(void)
+SFLayerPtr *TabPanelBase::getSFContentRolloverBackground(void)
 {
     return &_sfContentRolloverBackground;
 }
@@ -262,6 +262,62 @@ inline
 SFSingleSelectionModelPtr *TabPanelBase::getSFSelectionModel(void)
 {
     return &_sfSelectionModel;
+}
+
+//! Get the TabPanel::_sfTabForeground field.
+inline
+SFLayerPtr *TabPanelBase::getSFTabForeground(void)
+{
+    return &_sfTabForeground;
+}
+
+//! Get the TabPanel::_sfTabDisabledForeground field.
+inline
+SFLayerPtr *TabPanelBase::getSFTabDisabledForeground(void)
+{
+    return &_sfTabDisabledForeground;
+}
+
+//! Get the TabPanel::_sfTabFocusedForeground field.
+inline
+SFLayerPtr *TabPanelBase::getSFTabFocusedForeground(void)
+{
+    return &_sfTabFocusedForeground;
+}
+
+//! Get the TabPanel::_sfTabRolloverForeground field.
+inline
+SFLayerPtr *TabPanelBase::getSFTabRolloverForeground(void)
+{
+    return &_sfTabRolloverForeground;
+}
+
+//! Get the TabPanel::_sfTabActiveForeground field.
+inline
+SFLayerPtr *TabPanelBase::getSFTabActiveForeground(void)
+{
+    return &_sfTabActiveForeground;
+}
+
+//! Get the TabPanel::_sfContentForeground field.
+inline
+SFLayerPtr *TabPanelBase::getSFContentForeground(void)
+{
+    return &_sfContentForeground;
+}
+
+//! Get the TabPanel::_sfContentDisabledForeground field.
+inline
+SFLayerPtr *TabPanelBase::getSFContentDisabledForeground(void)
+{
+    return &_sfContentDisabledForeground;
+}
+
+//! Get the TabPanel::_sfContentRolloverForeground field.
+inline
+SFLayerPtr *TabPanelBase::getSFContentRolloverForeground(void)
+{
+    return &_sfContentRolloverForeground;
 }
 
 
@@ -372,21 +428,21 @@ void TabPanelBase::setTabBorder(const BorderPtr &value)
 
 //! Get the value of the TabPanel::_sfTabBackground field.
 inline
-UIBackgroundPtr &TabPanelBase::getTabBackground(void)
+LayerPtr &TabPanelBase::getTabBackground(void)
 {
     return _sfTabBackground.getValue();
 }
 
 //! Get the value of the TabPanel::_sfTabBackground field.
 inline
-const UIBackgroundPtr &TabPanelBase::getTabBackground(void) const
+const LayerPtr &TabPanelBase::getTabBackground(void) const
 {
     return _sfTabBackground.getValue();
 }
 
 //! Set the value of the TabPanel::_sfTabBackground field.
 inline
-void TabPanelBase::setTabBackground(const UIBackgroundPtr &value)
+void TabPanelBase::setTabBackground(const LayerPtr &value)
 {
     _sfTabBackground.setValue(value);
 }
@@ -414,21 +470,21 @@ void TabPanelBase::setTabDisabledBorder(const BorderPtr &value)
 
 //! Get the value of the TabPanel::_sfTabDisabledBackground field.
 inline
-UIBackgroundPtr &TabPanelBase::getTabDisabledBackground(void)
+LayerPtr &TabPanelBase::getTabDisabledBackground(void)
 {
     return _sfTabDisabledBackground.getValue();
 }
 
 //! Get the value of the TabPanel::_sfTabDisabledBackground field.
 inline
-const UIBackgroundPtr &TabPanelBase::getTabDisabledBackground(void) const
+const LayerPtr &TabPanelBase::getTabDisabledBackground(void) const
 {
     return _sfTabDisabledBackground.getValue();
 }
 
 //! Set the value of the TabPanel::_sfTabDisabledBackground field.
 inline
-void TabPanelBase::setTabDisabledBackground(const UIBackgroundPtr &value)
+void TabPanelBase::setTabDisabledBackground(const LayerPtr &value)
 {
     _sfTabDisabledBackground.setValue(value);
 }
@@ -456,21 +512,21 @@ void TabPanelBase::setTabFocusedBorder(const BorderPtr &value)
 
 //! Get the value of the TabPanel::_sfTabFocusedBackground field.
 inline
-UIBackgroundPtr &TabPanelBase::getTabFocusedBackground(void)
+LayerPtr &TabPanelBase::getTabFocusedBackground(void)
 {
     return _sfTabFocusedBackground.getValue();
 }
 
 //! Get the value of the TabPanel::_sfTabFocusedBackground field.
 inline
-const UIBackgroundPtr &TabPanelBase::getTabFocusedBackground(void) const
+const LayerPtr &TabPanelBase::getTabFocusedBackground(void) const
 {
     return _sfTabFocusedBackground.getValue();
 }
 
 //! Set the value of the TabPanel::_sfTabFocusedBackground field.
 inline
-void TabPanelBase::setTabFocusedBackground(const UIBackgroundPtr &value)
+void TabPanelBase::setTabFocusedBackground(const LayerPtr &value)
 {
     _sfTabFocusedBackground.setValue(value);
 }
@@ -498,21 +554,21 @@ void TabPanelBase::setTabRolloverBorder(const BorderPtr &value)
 
 //! Get the value of the TabPanel::_sfTabRolloverBackground field.
 inline
-UIBackgroundPtr &TabPanelBase::getTabRolloverBackground(void)
+LayerPtr &TabPanelBase::getTabRolloverBackground(void)
 {
     return _sfTabRolloverBackground.getValue();
 }
 
 //! Get the value of the TabPanel::_sfTabRolloverBackground field.
 inline
-const UIBackgroundPtr &TabPanelBase::getTabRolloverBackground(void) const
+const LayerPtr &TabPanelBase::getTabRolloverBackground(void) const
 {
     return _sfTabRolloverBackground.getValue();
 }
 
 //! Set the value of the TabPanel::_sfTabRolloverBackground field.
 inline
-void TabPanelBase::setTabRolloverBackground(const UIBackgroundPtr &value)
+void TabPanelBase::setTabRolloverBackground(const LayerPtr &value)
 {
     _sfTabRolloverBackground.setValue(value);
 }
@@ -540,21 +596,21 @@ void TabPanelBase::setTabActiveBorder(const BorderPtr &value)
 
 //! Get the value of the TabPanel::_sfTabActiveBackground field.
 inline
-UIBackgroundPtr &TabPanelBase::getTabActiveBackground(void)
+LayerPtr &TabPanelBase::getTabActiveBackground(void)
 {
     return _sfTabActiveBackground.getValue();
 }
 
 //! Get the value of the TabPanel::_sfTabActiveBackground field.
 inline
-const UIBackgroundPtr &TabPanelBase::getTabActiveBackground(void) const
+const LayerPtr &TabPanelBase::getTabActiveBackground(void) const
 {
     return _sfTabActiveBackground.getValue();
 }
 
 //! Set the value of the TabPanel::_sfTabActiveBackground field.
 inline
-void TabPanelBase::setTabActiveBackground(const UIBackgroundPtr &value)
+void TabPanelBase::setTabActiveBackground(const LayerPtr &value)
 {
     _sfTabActiveBackground.setValue(value);
 }
@@ -603,21 +659,21 @@ void TabPanelBase::setContentBorder(const BorderPtr &value)
 
 //! Get the value of the TabPanel::_sfContentBackground field.
 inline
-UIBackgroundPtr &TabPanelBase::getContentBackground(void)
+LayerPtr &TabPanelBase::getContentBackground(void)
 {
     return _sfContentBackground.getValue();
 }
 
 //! Get the value of the TabPanel::_sfContentBackground field.
 inline
-const UIBackgroundPtr &TabPanelBase::getContentBackground(void) const
+const LayerPtr &TabPanelBase::getContentBackground(void) const
 {
     return _sfContentBackground.getValue();
 }
 
 //! Set the value of the TabPanel::_sfContentBackground field.
 inline
-void TabPanelBase::setContentBackground(const UIBackgroundPtr &value)
+void TabPanelBase::setContentBackground(const LayerPtr &value)
 {
     _sfContentBackground.setValue(value);
 }
@@ -645,21 +701,21 @@ void TabPanelBase::setContentDisabledBorder(const BorderPtr &value)
 
 //! Get the value of the TabPanel::_sfContentDisabledBackground field.
 inline
-UIBackgroundPtr &TabPanelBase::getContentDisabledBackground(void)
+LayerPtr &TabPanelBase::getContentDisabledBackground(void)
 {
     return _sfContentDisabledBackground.getValue();
 }
 
 //! Get the value of the TabPanel::_sfContentDisabledBackground field.
 inline
-const UIBackgroundPtr &TabPanelBase::getContentDisabledBackground(void) const
+const LayerPtr &TabPanelBase::getContentDisabledBackground(void) const
 {
     return _sfContentDisabledBackground.getValue();
 }
 
 //! Set the value of the TabPanel::_sfContentDisabledBackground field.
 inline
-void TabPanelBase::setContentDisabledBackground(const UIBackgroundPtr &value)
+void TabPanelBase::setContentDisabledBackground(const LayerPtr &value)
 {
     _sfContentDisabledBackground.setValue(value);
 }
@@ -687,21 +743,21 @@ void TabPanelBase::setContentRolloverBorder(const BorderPtr &value)
 
 //! Get the value of the TabPanel::_sfContentRolloverBackground field.
 inline
-UIBackgroundPtr &TabPanelBase::getContentRolloverBackground(void)
+LayerPtr &TabPanelBase::getContentRolloverBackground(void)
 {
     return _sfContentRolloverBackground.getValue();
 }
 
 //! Get the value of the TabPanel::_sfContentRolloverBackground field.
 inline
-const UIBackgroundPtr &TabPanelBase::getContentRolloverBackground(void) const
+const LayerPtr &TabPanelBase::getContentRolloverBackground(void) const
 {
     return _sfContentRolloverBackground.getValue();
 }
 
 //! Set the value of the TabPanel::_sfContentRolloverBackground field.
 inline
-void TabPanelBase::setContentRolloverBackground(const UIBackgroundPtr &value)
+void TabPanelBase::setContentRolloverBackground(const LayerPtr &value)
 {
     _sfContentRolloverBackground.setValue(value);
 }
@@ -725,6 +781,174 @@ inline
 void TabPanelBase::setSelectionModel(const SingleSelectionModelPtr &value)
 {
     _sfSelectionModel.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfTabForeground field.
+inline
+LayerPtr &TabPanelBase::getTabForeground(void)
+{
+    return _sfTabForeground.getValue();
+}
+
+//! Get the value of the TabPanel::_sfTabForeground field.
+inline
+const LayerPtr &TabPanelBase::getTabForeground(void) const
+{
+    return _sfTabForeground.getValue();
+}
+
+//! Set the value of the TabPanel::_sfTabForeground field.
+inline
+void TabPanelBase::setTabForeground(const LayerPtr &value)
+{
+    _sfTabForeground.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfTabDisabledForeground field.
+inline
+LayerPtr &TabPanelBase::getTabDisabledForeground(void)
+{
+    return _sfTabDisabledForeground.getValue();
+}
+
+//! Get the value of the TabPanel::_sfTabDisabledForeground field.
+inline
+const LayerPtr &TabPanelBase::getTabDisabledForeground(void) const
+{
+    return _sfTabDisabledForeground.getValue();
+}
+
+//! Set the value of the TabPanel::_sfTabDisabledForeground field.
+inline
+void TabPanelBase::setTabDisabledForeground(const LayerPtr &value)
+{
+    _sfTabDisabledForeground.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfTabFocusedForeground field.
+inline
+LayerPtr &TabPanelBase::getTabFocusedForeground(void)
+{
+    return _sfTabFocusedForeground.getValue();
+}
+
+//! Get the value of the TabPanel::_sfTabFocusedForeground field.
+inline
+const LayerPtr &TabPanelBase::getTabFocusedForeground(void) const
+{
+    return _sfTabFocusedForeground.getValue();
+}
+
+//! Set the value of the TabPanel::_sfTabFocusedForeground field.
+inline
+void TabPanelBase::setTabFocusedForeground(const LayerPtr &value)
+{
+    _sfTabFocusedForeground.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfTabRolloverForeground field.
+inline
+LayerPtr &TabPanelBase::getTabRolloverForeground(void)
+{
+    return _sfTabRolloverForeground.getValue();
+}
+
+//! Get the value of the TabPanel::_sfTabRolloverForeground field.
+inline
+const LayerPtr &TabPanelBase::getTabRolloverForeground(void) const
+{
+    return _sfTabRolloverForeground.getValue();
+}
+
+//! Set the value of the TabPanel::_sfTabRolloverForeground field.
+inline
+void TabPanelBase::setTabRolloverForeground(const LayerPtr &value)
+{
+    _sfTabRolloverForeground.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfTabActiveForeground field.
+inline
+LayerPtr &TabPanelBase::getTabActiveForeground(void)
+{
+    return _sfTabActiveForeground.getValue();
+}
+
+//! Get the value of the TabPanel::_sfTabActiveForeground field.
+inline
+const LayerPtr &TabPanelBase::getTabActiveForeground(void) const
+{
+    return _sfTabActiveForeground.getValue();
+}
+
+//! Set the value of the TabPanel::_sfTabActiveForeground field.
+inline
+void TabPanelBase::setTabActiveForeground(const LayerPtr &value)
+{
+    _sfTabActiveForeground.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfContentForeground field.
+inline
+LayerPtr &TabPanelBase::getContentForeground(void)
+{
+    return _sfContentForeground.getValue();
+}
+
+//! Get the value of the TabPanel::_sfContentForeground field.
+inline
+const LayerPtr &TabPanelBase::getContentForeground(void) const
+{
+    return _sfContentForeground.getValue();
+}
+
+//! Set the value of the TabPanel::_sfContentForeground field.
+inline
+void TabPanelBase::setContentForeground(const LayerPtr &value)
+{
+    _sfContentForeground.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfContentDisabledForeground field.
+inline
+LayerPtr &TabPanelBase::getContentDisabledForeground(void)
+{
+    return _sfContentDisabledForeground.getValue();
+}
+
+//! Get the value of the TabPanel::_sfContentDisabledForeground field.
+inline
+const LayerPtr &TabPanelBase::getContentDisabledForeground(void) const
+{
+    return _sfContentDisabledForeground.getValue();
+}
+
+//! Set the value of the TabPanel::_sfContentDisabledForeground field.
+inline
+void TabPanelBase::setContentDisabledForeground(const LayerPtr &value)
+{
+    _sfContentDisabledForeground.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfContentRolloverForeground field.
+inline
+LayerPtr &TabPanelBase::getContentRolloverForeground(void)
+{
+    return _sfContentRolloverForeground.getValue();
+}
+
+//! Get the value of the TabPanel::_sfContentRolloverForeground field.
+inline
+const LayerPtr &TabPanelBase::getContentRolloverForeground(void) const
+{
+    return _sfContentRolloverForeground.getValue();
+}
+
+//! Set the value of the TabPanel::_sfContentRolloverForeground field.
+inline
+void TabPanelBase::setContentRolloverForeground(const LayerPtr &value)
+{
+    _sfContentRolloverForeground.setValue(value);
 }
 
 

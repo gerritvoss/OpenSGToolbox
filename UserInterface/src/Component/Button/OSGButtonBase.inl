@@ -126,9 +126,16 @@ SFBorderPtr *ButtonBase::getSFActiveBorder(void)
 
 //! Get the Button::_sfActiveBackground field.
 inline
-SFUIBackgroundPtr *ButtonBase::getSFActiveBackground(void)
+SFLayerPtr *ButtonBase::getSFActiveBackground(void)
 {
     return &_sfActiveBackground;
+}
+
+//! Get the Button::_sfActiveForeground field.
+inline
+SFLayerPtr *ButtonBase::getSFActiveForeground(void)
+{
+    return &_sfActiveForeground;
 }
 
 //! Get the Button::_sfActiveTextColor field.
@@ -196,7 +203,7 @@ SFTime *ButtonBase::getSFActionOnMouseDownRate(void)
 
 //! Get the Button::_sfActiveOffset field.
 inline
-SFVec2f *ButtonBase::getSFActiveOffset(void)
+SFVec2s *ButtonBase::getSFActiveOffset(void)
 {
     return &_sfActiveOffset;
 }
@@ -323,23 +330,44 @@ void ButtonBase::setActiveBorder(const BorderPtr &value)
 
 //! Get the value of the Button::_sfActiveBackground field.
 inline
-UIBackgroundPtr &ButtonBase::getActiveBackground(void)
+LayerPtr &ButtonBase::getActiveBackground(void)
 {
     return _sfActiveBackground.getValue();
 }
 
 //! Get the value of the Button::_sfActiveBackground field.
 inline
-const UIBackgroundPtr &ButtonBase::getActiveBackground(void) const
+const LayerPtr &ButtonBase::getActiveBackground(void) const
 {
     return _sfActiveBackground.getValue();
 }
 
 //! Set the value of the Button::_sfActiveBackground field.
 inline
-void ButtonBase::setActiveBackground(const UIBackgroundPtr &value)
+void ButtonBase::setActiveBackground(const LayerPtr &value)
 {
     _sfActiveBackground.setValue(value);
+}
+
+//! Get the value of the Button::_sfActiveForeground field.
+inline
+LayerPtr &ButtonBase::getActiveForeground(void)
+{
+    return _sfActiveForeground.getValue();
+}
+
+//! Get the value of the Button::_sfActiveForeground field.
+inline
+const LayerPtr &ButtonBase::getActiveForeground(void) const
+{
+    return _sfActiveForeground.getValue();
+}
+
+//! Set the value of the Button::_sfActiveForeground field.
+inline
+void ButtonBase::setActiveForeground(const LayerPtr &value)
+{
+    _sfActiveForeground.setValue(value);
 }
 
 //! Get the value of the Button::_sfActiveTextColor field.
@@ -533,21 +561,21 @@ void ButtonBase::setActionOnMouseDownRate(const Time &value)
 
 //! Get the value of the Button::_sfActiveOffset field.
 inline
-Vec2f &ButtonBase::getActiveOffset(void)
+Vec2s &ButtonBase::getActiveOffset(void)
 {
     return _sfActiveOffset.getValue();
 }
 
 //! Get the value of the Button::_sfActiveOffset field.
 inline
-const Vec2f &ButtonBase::getActiveOffset(void) const
+const Vec2s &ButtonBase::getActiveOffset(void) const
 {
     return _sfActiveOffset.getValue();
 }
 
 //! Set the value of the Button::_sfActiveOffset field.
 inline
-void ButtonBase::setActiveOffset(const Vec2f &value)
+void ButtonBase::setActiveOffset(const Vec2s &value)
 {
     _sfActiveOffset.setValue(value);
 }

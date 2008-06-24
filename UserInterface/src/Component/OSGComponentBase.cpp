@@ -142,6 +142,18 @@ const OSG::BitVector  ComponentBase::ClippingFieldMask =
 const OSG::BitVector  ComponentBase::PopupMenuFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::PopupMenuFieldId);
 
+const OSG::BitVector  ComponentBase::FocusedForegroundFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::FocusedForegroundFieldId);
+
+const OSG::BitVector  ComponentBase::RolloverForegroundFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::RolloverForegroundFieldId);
+
+const OSG::BitVector  ComponentBase::DisabledForegroundFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::DisabledForegroundFieldId);
+
+const OSG::BitVector  ComponentBase::ForegroundFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ForegroundFieldId);
+
 const OSG::BitVector ComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -185,13 +197,13 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var BorderPtr       ComponentBase::_sfBorder
     
 */
-/*! \var UIBackgroundPtr ComponentBase::_sfBackground
+/*! \var LayerPtr        ComponentBase::_sfBackground
     
 */
 /*! \var BorderPtr       ComponentBase::_sfDisabledBorder
     
 */
-/*! \var UIBackgroundPtr ComponentBase::_sfDisabledBackground
+/*! \var LayerPtr        ComponentBase::_sfDisabledBackground
     
 */
 /*! \var bool            ComponentBase::_sfFocusable
@@ -200,13 +212,13 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var BorderPtr       ComponentBase::_sfFocusedBorder
     
 */
-/*! \var UIBackgroundPtr ComponentBase::_sfFocusedBackground
+/*! \var LayerPtr        ComponentBase::_sfFocusedBackground
     
 */
 /*! \var BorderPtr       ComponentBase::_sfRolloverBorder
     
 */
-/*! \var UIBackgroundPtr ComponentBase::_sfRolloverBackground
+/*! \var LayerPtr        ComponentBase::_sfRolloverBackground
     
 */
 /*! \var std::string     ComponentBase::_sfToolTipText
@@ -225,6 +237,18 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
     
 */
 /*! \var PopupMenuPtr    ComponentBase::_sfPopupMenu
+    
+*/
+/*! \var LayerPtr        ComponentBase::_sfFocusedForeground
+    
+*/
+/*! \var LayerPtr        ComponentBase::_sfRolloverForeground
+    
+*/
+/*! \var LayerPtr        ComponentBase::_sfDisabledForeground
+    
+*/
+/*! \var LayerPtr        ComponentBase::_sfForeground
     
 */
 
@@ -292,7 +316,7 @@ FieldDescription *ComponentBase::_desc[] =
                      BorderFieldId, BorderFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFBorder),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+    new FieldDescription(SFLayerPtr::getClassType(), 
                      "Background", 
                      BackgroundFieldId, BackgroundFieldMask,
                      false,
@@ -302,7 +326,7 @@ FieldDescription *ComponentBase::_desc[] =
                      DisabledBorderFieldId, DisabledBorderFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFDisabledBorder),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+    new FieldDescription(SFLayerPtr::getClassType(), 
                      "DisabledBackground", 
                      DisabledBackgroundFieldId, DisabledBackgroundFieldMask,
                      false,
@@ -317,7 +341,7 @@ FieldDescription *ComponentBase::_desc[] =
                      FocusedBorderFieldId, FocusedBorderFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFFocusedBorder),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+    new FieldDescription(SFLayerPtr::getClassType(), 
                      "FocusedBackground", 
                      FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
                      false,
@@ -327,7 +351,7 @@ FieldDescription *ComponentBase::_desc[] =
                      RolloverBorderFieldId, RolloverBorderFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFRolloverBorder),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+    new FieldDescription(SFLayerPtr::getClassType(), 
                      "RolloverBackground", 
                      RolloverBackgroundFieldId, RolloverBackgroundFieldMask,
                      false,
@@ -361,7 +385,27 @@ FieldDescription *ComponentBase::_desc[] =
                      "PopupMenu", 
                      PopupMenuFieldId, PopupMenuFieldMask,
                      true,
-                     (FieldAccessMethod) &ComponentBase::getSFPopupMenu)
+                     (FieldAccessMethod) &ComponentBase::getSFPopupMenu),
+    new FieldDescription(SFLayerPtr::getClassType(), 
+                     "FocusedForeground", 
+                     FocusedForegroundFieldId, FocusedForegroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFFocusedForeground),
+    new FieldDescription(SFLayerPtr::getClassType(), 
+                     "RolloverForeground", 
+                     RolloverForegroundFieldId, RolloverForegroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFRolloverForeground),
+    new FieldDescription(SFLayerPtr::getClassType(), 
+                     "DisabledForeground", 
+                     DisabledForegroundFieldId, DisabledForegroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFDisabledForeground),
+    new FieldDescription(SFLayerPtr::getClassType(), 
+                     "Foreground", 
+                     ForegroundFieldId, ForegroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFForeground)
 };
 
 
@@ -440,20 +484,24 @@ ComponentBase::ComponentBase(void) :
     _sfFocused                (bool(false)), 
     _sfConstraints            (), 
     _sfBorder                 (BorderPtr(NullFC)), 
-    _sfBackground             (UIBackgroundPtr(NullFC)), 
+    _sfBackground             (LayerPtr(NullFC)), 
     _sfDisabledBorder         (BorderPtr(NullFC)), 
-    _sfDisabledBackground     (UIBackgroundPtr(NullFC)), 
+    _sfDisabledBackground     (LayerPtr(NullFC)), 
     _sfFocusable              (bool(true)), 
     _sfFocusedBorder          (BorderPtr(NullFC)), 
-    _sfFocusedBackground      (UIBackgroundPtr(NullFC)), 
+    _sfFocusedBackground      (LayerPtr(NullFC)), 
     _sfRolloverBorder         (BorderPtr(NullFC)), 
-    _sfRolloverBackground     (UIBackgroundPtr(NullFC)), 
+    _sfRolloverBackground     (LayerPtr(NullFC)), 
     _sfToolTipText            (), 
     _sfOpacity                (Real32(1.0)), 
     _sfParentContainer        (ContainerPtr(NullFC)), 
     _sfParentWindow           (InternalWindowPtr(NullFC)), 
     _sfClipping               (bool(true)), 
     _sfPopupMenu              (PopupMenuPtr(NullFC)), 
+    _sfFocusedForeground      (LayerPtr(NullFC)), 
+    _sfRolloverForeground     (LayerPtr(NullFC)), 
+    _sfDisabledForeground     (LayerPtr(NullFC)), 
+    _sfForeground             (LayerPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -489,6 +537,10 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfParentWindow           (source._sfParentWindow           ), 
     _sfClipping               (source._sfClipping               ), 
     _sfPopupMenu              (source._sfPopupMenu              ), 
+    _sfFocusedForeground      (source._sfFocusedForeground      ), 
+    _sfRolloverForeground     (source._sfRolloverForeground     ), 
+    _sfDisabledForeground     (source._sfDisabledForeground     ), 
+    _sfForeground             (source._sfForeground             ), 
     Inherited                 (source)
 {
 }
@@ -635,6 +687,26 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfPopupMenu.getBinSize();
     }
 
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        returnValue += _sfFocusedForeground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+    {
+        returnValue += _sfRolloverForeground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+    {
+        returnValue += _sfDisabledForeground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+    {
+        returnValue += _sfForeground.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -772,6 +844,26 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
     {
         _sfPopupMenu.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        _sfFocusedForeground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+    {
+        _sfRolloverForeground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+    {
+        _sfDisabledForeground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+    {
+        _sfForeground.copyToBin(pMem);
     }
 
 
@@ -912,6 +1004,26 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfPopupMenu.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        _sfFocusedForeground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+    {
+        _sfRolloverForeground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+    {
+        _sfDisabledForeground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+    {
+        _sfForeground.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -999,6 +1111,18 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
         _sfPopupMenu.syncWith(pOther->_sfPopupMenu);
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
+
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+        _sfRolloverForeground.syncWith(pOther->_sfRolloverForeground);
+
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+        _sfDisabledForeground.syncWith(pOther->_sfDisabledForeground);
+
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+        _sfForeground.syncWith(pOther->_sfForeground);
 
 
 }
@@ -1088,6 +1212,18 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
         _sfPopupMenu.syncWith(pOther->_sfPopupMenu);
 
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
+
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+        _sfRolloverForeground.syncWith(pOther->_sfRolloverForeground);
+
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+        _sfDisabledForeground.syncWith(pOther->_sfDisabledForeground);
+
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+        _sfForeground.syncWith(pOther->_sfForeground);
+
 
 
 }
@@ -1176,7 +1312,7 @@ SFBorderPtr *ComponentBase::getSFBorder(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFUIBackgroundPtr *ComponentBase::getSFBackground(void)
+SFLayerPtr *ComponentBase::getSFBackground(void)
 {
     return &_sfBackground;
 }
@@ -1188,7 +1324,7 @@ SFBorderPtr *ComponentBase::getSFDisabledBorder(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFUIBackgroundPtr *ComponentBase::getSFDisabledBackground(void)
+SFLayerPtr *ComponentBase::getSFDisabledBackground(void)
 {
     return &_sfDisabledBackground;
 }
@@ -1206,7 +1342,7 @@ SFBorderPtr *ComponentBase::getSFFocusedBorder(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFUIBackgroundPtr *ComponentBase::getSFFocusedBackground(void)
+SFLayerPtr *ComponentBase::getSFFocusedBackground(void)
 {
     return &_sfFocusedBackground;
 }
@@ -1218,7 +1354,7 @@ SFBorderPtr *ComponentBase::getSFRolloverBorder(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFUIBackgroundPtr *ComponentBase::getSFRolloverBackground(void)
+SFLayerPtr *ComponentBase::getSFRolloverBackground(void)
 {
     return &_sfRolloverBackground;
 }
@@ -1257,6 +1393,30 @@ OSG_USERINTERFACELIB_DLLMAPPING
 SFPopupMenuPtr *ComponentBase::getSFPopupMenu(void)
 {
     return &_sfPopupMenu;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFLayerPtr *ComponentBase::getSFFocusedForeground(void)
+{
+    return &_sfFocusedForeground;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFLayerPtr *ComponentBase::getSFRolloverForeground(void)
+{
+    return &_sfRolloverForeground;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFLayerPtr *ComponentBase::getSFDisabledForeground(void)
+{
+    return &_sfDisabledForeground;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFLayerPtr *ComponentBase::getSFForeground(void)
+{
+    return &_sfForeground;
 }
 
 
@@ -1477,19 +1637,19 @@ void ComponentBase::setBorder(const BorderPtr &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-UIBackgroundPtr &ComponentBase::getBackground(void)
+LayerPtr &ComponentBase::getBackground(void)
 {
     return _sfBackground.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const UIBackgroundPtr &ComponentBase::getBackground(void) const
+const LayerPtr &ComponentBase::getBackground(void) const
 {
     return _sfBackground.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setBackground(const UIBackgroundPtr &value)
+void ComponentBase::setBackground(const LayerPtr &value)
 {
     _sfBackground.setValue(value);
 }
@@ -1513,19 +1673,19 @@ void ComponentBase::setDisabledBorder(const BorderPtr &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-UIBackgroundPtr &ComponentBase::getDisabledBackground(void)
+LayerPtr &ComponentBase::getDisabledBackground(void)
 {
     return _sfDisabledBackground.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const UIBackgroundPtr &ComponentBase::getDisabledBackground(void) const
+const LayerPtr &ComponentBase::getDisabledBackground(void) const
 {
     return _sfDisabledBackground.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setDisabledBackground(const UIBackgroundPtr &value)
+void ComponentBase::setDisabledBackground(const LayerPtr &value)
 {
     _sfDisabledBackground.setValue(value);
 }
@@ -1567,19 +1727,19 @@ void ComponentBase::setFocusedBorder(const BorderPtr &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-UIBackgroundPtr &ComponentBase::getFocusedBackground(void)
+LayerPtr &ComponentBase::getFocusedBackground(void)
 {
     return _sfFocusedBackground.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const UIBackgroundPtr &ComponentBase::getFocusedBackground(void) const
+const LayerPtr &ComponentBase::getFocusedBackground(void) const
 {
     return _sfFocusedBackground.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setFocusedBackground(const UIBackgroundPtr &value)
+void ComponentBase::setFocusedBackground(const LayerPtr &value)
 {
     _sfFocusedBackground.setValue(value);
 }
@@ -1603,19 +1763,19 @@ void ComponentBase::setRolloverBorder(const BorderPtr &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-UIBackgroundPtr &ComponentBase::getRolloverBackground(void)
+LayerPtr &ComponentBase::getRolloverBackground(void)
 {
     return _sfRolloverBackground.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const UIBackgroundPtr &ComponentBase::getRolloverBackground(void) const
+const LayerPtr &ComponentBase::getRolloverBackground(void) const
 {
     return _sfRolloverBackground.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setRolloverBackground(const UIBackgroundPtr &value)
+void ComponentBase::setRolloverBackground(const LayerPtr &value)
 {
     _sfRolloverBackground.setValue(value);
 }
@@ -1726,6 +1886,78 @@ OSG_USERINTERFACELIB_DLLMAPPING
 void ComponentBase::setPopupMenu(const PopupMenuPtr &value)
 {
     _sfPopupMenu.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+LayerPtr &ComponentBase::getFocusedForeground(void)
+{
+    return _sfFocusedForeground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const LayerPtr &ComponentBase::getFocusedForeground(void) const
+{
+    return _sfFocusedForeground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setFocusedForeground(const LayerPtr &value)
+{
+    _sfFocusedForeground.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+LayerPtr &ComponentBase::getRolloverForeground(void)
+{
+    return _sfRolloverForeground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const LayerPtr &ComponentBase::getRolloverForeground(void) const
+{
+    return _sfRolloverForeground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setRolloverForeground(const LayerPtr &value)
+{
+    _sfRolloverForeground.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+LayerPtr &ComponentBase::getDisabledForeground(void)
+{
+    return _sfDisabledForeground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const LayerPtr &ComponentBase::getDisabledForeground(void) const
+{
+    return _sfDisabledForeground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setDisabledForeground(const LayerPtr &value)
+{
+    _sfDisabledForeground.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+LayerPtr &ComponentBase::getForeground(void)
+{
+    return _sfForeground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const LayerPtr &ComponentBase::getForeground(void) const
+{
+    return _sfForeground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setForeground(const LayerPtr &value)
+{
+    _sfForeground.setValue(value);
 }
 
 

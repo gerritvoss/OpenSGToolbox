@@ -56,7 +56,7 @@ void reshape(Vec2f Size);
 // 01 Button Headers
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGBorders.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGList.h>
@@ -68,7 +68,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGCommandManager.h>
 #include <OpenSG/UserInterface/OSGUndoManager.h>
 
-ColorUIBackgroundPtr ChangableBackground;
+ColorLayerPtr ChangableBackground;
 LineBorderPtr ChangableBorder;
 
 // Create a class to allow for the use of the Ctrl+q
@@ -211,11 +211,11 @@ class SetBackgroundColor: public UndoableCommand
 protected:
 	typedef UndoableCommand Inherited;
 
-	ColorUIBackgroundPtr _TheBackground;
+	ColorLayerPtr _TheBackground;
 	Color4f _ChangeToColor;
 	Color4f _PreviousColor;
 
-	SetBackgroundColor(ColorUIBackgroundPtr TheBackground, Color4f ChangeToColor) : Inherited(),
+	SetBackgroundColor(ColorLayerPtr TheBackground, Color4f ChangeToColor) : Inherited(),
 		_TheBackground(TheBackground),
 		_ChangeToColor(ChangeToColor)
 	{
@@ -237,9 +237,9 @@ protected:
 
 		_PreviousColor = _TheBackground->getColor();
 
-		beginEditCP(_TheBackground, ColorUIBackground::ColorFieldMask);
+		beginEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 			_TheBackground->setColor(_ChangeToColor);
-		endEditCP(_TheBackground, ColorUIBackground::ColorFieldMask);
+		endEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 	}
 public:
 
@@ -259,17 +259,17 @@ public:
 	virtual void redo(void)
 	{
 		Inherited::redo();
-		beginEditCP(_TheBackground, ColorUIBackground::ColorFieldMask);
+		beginEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 			_TheBackground->setColor(_ChangeToColor);
-		endEditCP(_TheBackground, ColorUIBackground::ColorFieldMask);
+		endEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 	}
 	
 	virtual void undo(void)
 	{
 		Inherited::undo();
-		beginEditCP(_TheBackground, ColorUIBackground::ColorFieldMask);
+		beginEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 			_TheBackground->setColor(_PreviousColor);
-		endEditCP(_TheBackground, ColorUIBackground::ColorFieldMask);
+		endEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 	}
 
 	virtual bool isSignificant(void) const
@@ -291,7 +291,7 @@ public:
 	{
 	}
 	
-	static SetBackgroundColorPtr create(ColorUIBackgroundPtr TheBackground, Color4f ChangeToColor)
+	static SetBackgroundColorPtr create(ColorLayerPtr TheBackground, Color4f ChangeToColor)
 	{
 		return SetBackgroundColorPtr(new SetBackgroundColor(TheBackground, ChangeToColor));
 	}
@@ -334,12 +334,12 @@ class SetBackgroundColorActionListener : public ActionListener
 {
 protected:
 	Color4f _ChangeToColor;
-	ColorUIBackgroundPtr _TheBackground;
+	ColorLayerPtr _TheBackground;
 	CommandManagerPtr _CommandManager;
 
 public:
 
-	SetBackgroundColorActionListener(ColorUIBackgroundPtr TheBackground, Color4f ChangeToColor, CommandManagerPtr Manager) : ActionListener(),
+	SetBackgroundColorActionListener(ColorLayerPtr TheBackground, Color4f ChangeToColor, CommandManagerPtr Manager) : ActionListener(),
 		_TheBackground(TheBackground),
 		_ChangeToColor(ChangeToColor),
 		_CommandManager(Manager)
@@ -500,10 +500,10 @@ int main(int argc, char **argv)
 		ChangableBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
 	endEditCP(ChangableBorder, LineBorder::ColorFieldMask);
     
-	ChangableBackground = osg::ColorUIBackground::create();
-	beginEditCP(ChangableBackground, ColorUIBackground::ColorFieldMask);
+	ChangableBackground = osg::ColorLayer::create();
+	beginEditCP(ChangableBackground, ColorLayer::ColorFieldMask);
 		ChangableBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
-	endEditCP(ChangableBackground, ColorUIBackground::ColorFieldMask);
+	endEditCP(ChangableBackground, ColorLayer::ColorFieldMask);
 
     LabelPtr ChangableLabel = osg::Label::create();
 
@@ -606,10 +606,10 @@ int main(int argc, char **argv)
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);

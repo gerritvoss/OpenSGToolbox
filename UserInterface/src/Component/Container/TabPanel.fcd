@@ -78,11 +78,11 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="TabBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -98,11 +98,11 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="TabDisabledBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -118,11 +118,11 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="TabFocusedBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -138,11 +138,11 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="TabRolloverBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -158,11 +158,11 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="TabActiveBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -187,11 +187,11 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="ContentBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -207,11 +207,11 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="ContentDisabledBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -227,11 +227,11 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="ContentRolloverBackground"
-		type="UIBackgroundPtr"
+		type="LayerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Background/OSGUIBackground.h"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>
@@ -242,6 +242,87 @@ A UI Tab Panel.
 		visibility="external"
 		defaultValue="NullFC"
 		header="Models/SelectionModels/OSGSingleSelectionModelFields.h"
+		access="public"
+	>
+	</Field>
+
+	<Field
+		name="TabForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TabDisabledForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TabFocusedForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TabRolloverForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TabActiveForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ContentForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ContentDisabledForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ContentRolloverForeground"
+		type="LayerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>

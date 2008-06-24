@@ -52,7 +52,7 @@
 #include "OSGDefaultColorSelectionModel.h"
 #include "Component/Container/OSGTabPanel.h"
 #include "Component/Text/OSGLabel.h"
-#include "Background/OSGColorUIBackground.h"
+#include "Layer/OSGColorLayer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -231,9 +231,9 @@ void ColorChooser::setSelectionModel(ColorSelectionModelPtr newModel)
 
 void ColorChooser::updateChoosers(void)
 {
-	beginEditCP(_DefaultPreviewPanelBackground, ColorUIBackground::ColorFieldMask);
+	beginEditCP(_DefaultPreviewPanelBackground, ColorLayer::ColorFieldMask);
 		_DefaultPreviewPanelBackground->setColor(_SelectionModel->getSelectedColor());
-	endEditCP(_DefaultPreviewPanelBackground, ColorUIBackground::ColorFieldMask);
+	endEditCP(_DefaultPreviewPanelBackground, ColorLayer::ColorFieldMask);
 
 	for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
 	{
@@ -243,7 +243,7 @@ void ColorChooser::updateChoosers(void)
 
 void ColorChooser::createDefaultPanel(void)
 {
-	_DefaultPreviewPanelBackground = ColorUIBackground::create();
+	_DefaultPreviewPanelBackground = ColorLayer::create();
 
 	_DefaultPreviewPanel = Label::create();
 	beginEditCP(_DefaultPreviewPanel, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::PreferredSizeFieldMask);

@@ -4908,234 +4908,234 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Background"
+				Name="Layer"
 				>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackground.cpp"
+					RelativePath="..\..\src\Layer\OSGColorLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackground.h"
+					RelativePath="..\..\src\Layer\OSGColorLayer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackground.inl"
+					RelativePath="..\..\src\Layer\OSGColorLayer.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackgroundBase.cpp"
+					RelativePath="..\..\src\Layer\OSGColorLayerBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackgroundBase.h"
+					RelativePath="..\..\src\Layer\OSGColorLayerBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackgroundBase.inl"
+					RelativePath="..\..\src\Layer\OSGColorLayerBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackgroundFields.h"
+					RelativePath="..\..\src\Layer\OSGColorLayerFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackground.cpp"
+					RelativePath="..\..\src\Layer\OSGCompoundLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackground.h"
+					RelativePath="..\..\src\Layer\OSGCompoundLayer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackground.inl"
+					RelativePath="..\..\src\Layer\OSGCompoundLayer.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundBase.cpp"
+					RelativePath="..\..\src\Layer\OSGCompoundLayerBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundBase.h"
+					RelativePath="..\..\src\Layer\OSGCompoundLayerBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundBase.inl"
+					RelativePath="..\..\src\Layer\OSGCompoundLayerBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundFields.h"
+					RelativePath="..\..\src\Layer\OSGCompoundLayerFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackground.cpp"
+					RelativePath="..\..\src\Layer\OSGEmptyLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackground.h"
+					RelativePath="..\..\src\Layer\OSGEmptyLayer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackground.inl"
+					RelativePath="..\..\src\Layer\OSGEmptyLayer.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundBase.cpp"
+					RelativePath="..\..\src\Layer\OSGEmptyLayerBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundBase.h"
+					RelativePath="..\..\src\Layer\OSGEmptyLayerBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundBase.inl"
+					RelativePath="..\..\src\Layer\OSGEmptyLayerBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundFields.h"
+					RelativePath="..\..\src\Layer\OSGEmptyLayerFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackground.cpp"
+					RelativePath="..\..\src\Layer\OSGGradientLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackground.h"
+					RelativePath="..\..\src\Layer\OSGGradientLayer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackground.inl"
+					RelativePath="..\..\src\Layer\OSGGradientLayer.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackgroundBase.cpp"
+					RelativePath="..\..\src\Layer\OSGGradientLayerBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackgroundBase.h"
+					RelativePath="..\..\src\Layer\OSGGradientLayerBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackgroundBase.inl"
+					RelativePath="..\..\src\Layer\OSGGradientLayerBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackgroundFields.h"
+					RelativePath="..\..\src\Layer\OSGGradientLayerFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackground.cpp"
+					RelativePath="..\..\src\Layer\OSGLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackground.h"
+					RelativePath="..\..\src\Layer\OSGLayer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackground.inl"
+					RelativePath="..\..\src\Layer\OSGLayer.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundBase.cpp"
+					RelativePath="..\..\src\Layer\OSGLayerBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundBase.h"
+					RelativePath="..\..\src\Layer\OSGLayerBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundBase.inl"
+					RelativePath="..\..\src\Layer\OSGLayerBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundFields.h"
+					RelativePath="..\..\src\Layer\OSGLayerFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGPatternUIBackground.cpp"
+					RelativePath="..\..\src\Layer\OSGLayers.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGPatternUIBackground.h"
+					RelativePath="..\..\src\Layer\OSGMaterialLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGPatternUIBackground.inl"
+					RelativePath="..\..\src\Layer\OSGMaterialLayer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGPatternUIBackgroundBase.cpp"
+					RelativePath="..\..\src\Layer\OSGMaterialLayer.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGPatternUIBackgroundBase.h"
+					RelativePath="..\..\src\Layer\OSGMaterialLayerBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGPatternUIBackgroundBase.inl"
+					RelativePath="..\..\src\Layer\OSGMaterialLayerBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGPatternUIBackgroundFields.h"
+					RelativePath="..\..\src\Layer\OSGMaterialLayerBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackground.cpp"
+					RelativePath="..\..\src\Layer\OSGMaterialLayerFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackground.h"
+					RelativePath="..\..\src\Layer\OSGPatternLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackground.inl"
+					RelativePath="..\..\src\Layer\OSGPatternLayer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackgroundBase.cpp"
+					RelativePath="..\..\src\Layer\OSGPatternLayer.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackgroundBase.h"
+					RelativePath="..\..\src\Layer\OSGPatternLayerBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackgroundBase.inl"
+					RelativePath="..\..\src\Layer\OSGPatternLayerBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackgroundFields.h"
+					RelativePath="..\..\src\Layer\OSGPatternLayerBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackground.cpp"
+					RelativePath="..\..\src\Layer\OSGPatternLayerFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackground.h"
+					RelativePath="..\..\src\Layer\OSGTextureLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackground.inl"
+					RelativePath="..\..\src\Layer\OSGTextureLayer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgroundBase.cpp"
+					RelativePath="..\..\src\Layer\OSGTextureLayer.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgroundBase.h"
+					RelativePath="..\..\src\Layer\OSGTextureLayerBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgroundBase.inl"
+					RelativePath="..\..\src\Layer\OSGTextureLayerBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgroundFields.h"
+					RelativePath="..\..\src\Layer\OSGTextureLayerBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgrounds.h"
+					RelativePath="..\..\src\Layer\OSGTextureLayerFields.h"
 					>
 				</File>
 			</Filter>

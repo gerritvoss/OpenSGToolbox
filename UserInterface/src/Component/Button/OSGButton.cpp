@@ -157,7 +157,7 @@ BorderPtr Button::getDrawnBorder(void) const
     }
 }
 
-UIBackgroundPtr Button::getDrawnBackground(void) const
+LayerPtr Button::getDrawnBackground(void) const
 {
     if(getEnabled())
     {
@@ -181,6 +181,32 @@ UIBackgroundPtr Button::getDrawnBackground(void) const
     else
     {
         return getDisabledBackground();
+    }
+}
+LayerPtr Button::getDrawnForeground(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getActive())
+        {
+            return getActiveForeground();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverForeground();
+        }
+        else
+        {
+            return getForeground();
+        }
+    }
+    else
+    {
+        return getDisabledForeground();
     }
 }
 

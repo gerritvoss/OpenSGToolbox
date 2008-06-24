@@ -68,7 +68,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
 #include <OpenSG/UserInterface/OSGCheckboxButton.h>
 #include <OpenSG/UserInterface/OSGPasswordField.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGBorders.h>
 #include <OpenSG/UserInterface/OSGTextField.h>
 #include <OpenSG/UserInterface/OSGTextArea.h>
@@ -269,10 +269,10 @@ int main(int argc, char **argv)
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
     
 	CardLayoutPtr MainInternalWindowLayout = osg::CardLayout::create();
 
@@ -1194,7 +1194,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     LabelPtr separatorLabel = osg::Label::create();
     LabelPtr enabledLabel = osg::Label::create();
     LabelPtr disabledLabel = osg::Label::create();
-    EmptyUIBackgroundPtr labelBackground = osg::EmptyUIBackground::create();
+    EmptyLayerPtr labelBackground = osg::EmptyLayer::create();
     EmptyBorderPtr labelBorder = osg::EmptyBorder::create();
     beginEditCP(labelLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
         labelLabel->setText("Labels");

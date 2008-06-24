@@ -61,7 +61,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGBorders.h>
 #include <OpenSG/UserInterface/OSGMenu.h>
 #include <OpenSG/UserInterface/OSGMenuItem.h>
@@ -296,8 +296,8 @@ int main(int argc, char **argv)
 
     ******************************************************/
     // Creates two Backgrounds
-    EmptyUIBackgroundPtr EmptyMenuBarBackground = osg::EmptyUIBackground::create();
-    ColorUIBackgroundPtr ColorMenuBarBackground = osg::ColorUIBackground::create();
+    EmptyLayerPtr EmptyMenuBarBackground = osg::EmptyLayer::create();
+    ColorLayerPtr ColorMenuBarBackground = osg::ColorLayer::create();
 
     MenuBarPtr MainMenuBar = MenuBar::create();
     // Adds the two Menus to the MainMenuBar
@@ -333,7 +333,7 @@ int main(int argc, char **argv)
     
 	// Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    EmptyUIBackgroundPtr MainInternalWindowBackground = osg::EmptyUIBackground::create();
+    EmptyLayerPtr MainInternalWindowBackground = osg::EmptyLayer::create();
     EmptyBorderPtr MainInternalWindowBorder = osg::EmptyBorder::create();
 
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();

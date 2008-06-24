@@ -73,6 +73,12 @@ const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::SelectedBackgroundF
 const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::FocusedBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::FocusedBackgroundFieldId);
 
+const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::SelectedForegroundFieldMask = 
+    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::SelectedForegroundFieldId);
+
+const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::FocusedForegroundFieldMask = 
+    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::FocusedForegroundFieldId);
+
 const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::SelectedBorderFieldMask = 
     (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::SelectedBorderFieldId);
 
@@ -104,10 +110,16 @@ const OSG::BitVector DefaultComboBoxComponentGeneratorBase::MTInfluenceMask =
 /*! \var ComponentPtr    DefaultComboBoxComponentGeneratorBase::_sfDrawObjectPrototype
     
 */
-/*! \var UIBackgroundPtr DefaultComboBoxComponentGeneratorBase::_sfSelectedBackground
+/*! \var LayerPtr        DefaultComboBoxComponentGeneratorBase::_sfSelectedBackground
     
 */
-/*! \var UIBackgroundPtr DefaultComboBoxComponentGeneratorBase::_sfFocusedBackground
+/*! \var LayerPtr        DefaultComboBoxComponentGeneratorBase::_sfFocusedBackground
+    
+*/
+/*! \var LayerPtr        DefaultComboBoxComponentGeneratorBase::_sfSelectedForeground
+    
+*/
+/*! \var LayerPtr        DefaultComboBoxComponentGeneratorBase::_sfFocusedForeground
     
 */
 /*! \var BorderPtr       DefaultComboBoxComponentGeneratorBase::_sfSelectedBorder
@@ -141,16 +153,26 @@ FieldDescription *DefaultComboBoxComponentGeneratorBase::_desc[] =
                      DrawObjectPrototypeFieldId, DrawObjectPrototypeFieldMask,
                      false,
                      (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFDrawObjectPrototype),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+    new FieldDescription(SFLayerPtr::getClassType(), 
                      "SelectedBackground", 
                      SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFSelectedBackground),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+    new FieldDescription(SFLayerPtr::getClassType(), 
                      "FocusedBackground", 
                      FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFFocusedBackground),
+    new FieldDescription(SFLayerPtr::getClassType(), 
+                     "SelectedForeground", 
+                     SelectedForegroundFieldId, SelectedForegroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFSelectedForeground),
+    new FieldDescription(SFLayerPtr::getClassType(), 
+                     "FocusedForeground", 
+                     FocusedForegroundFieldId, FocusedForegroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFFocusedForeground),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "SelectedBorder", 
                      SelectedBorderFieldId, SelectedBorderFieldMask,
@@ -262,8 +284,10 @@ void DefaultComboBoxComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 
 
 DefaultComboBoxComponentGeneratorBase::DefaultComboBoxComponentGeneratorBase(void) :
     _sfDrawObjectPrototype    (ComponentPtr(NullFC)), 
-    _sfSelectedBackground     (UIBackgroundPtr(NullFC)), 
-    _sfFocusedBackground      (UIBackgroundPtr(NullFC)), 
+    _sfSelectedBackground     (LayerPtr(NullFC)), 
+    _sfFocusedBackground      (LayerPtr(NullFC)), 
+    _sfSelectedForeground     (LayerPtr(NullFC)), 
+    _sfFocusedForeground      (LayerPtr(NullFC)), 
     _sfSelectedBorder         (BorderPtr(NullFC)), 
     _sfFocusedBorder          (BorderPtr(NullFC)), 
     _sfSelectedTextColor      (Color4f(0.0,0.0,0.0,1.0)), 
@@ -283,6 +307,8 @@ DefaultComboBoxComponentGeneratorBase::DefaultComboBoxComponentGeneratorBase(con
     _sfDrawObjectPrototype    (source._sfDrawObjectPrototype    ), 
     _sfSelectedBackground     (source._sfSelectedBackground     ), 
     _sfFocusedBackground      (source._sfFocusedBackground      ), 
+    _sfSelectedForeground     (source._sfSelectedForeground     ), 
+    _sfFocusedForeground      (source._sfFocusedForeground      ), 
     _sfSelectedBorder         (source._sfSelectedBorder         ), 
     _sfFocusedBorder          (source._sfFocusedBorder          ), 
     _sfSelectedTextColor      (source._sfSelectedTextColor      ), 
@@ -319,6 +345,16 @@ UInt32 DefaultComboBoxComponentGeneratorBase::getBinSize(const BitVector &whichF
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         returnValue += _sfFocusedBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+    {
+        returnValue += _sfSelectedForeground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        returnValue += _sfFocusedForeground.getBinSize();
     }
 
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
@@ -380,6 +416,16 @@ void DefaultComboBoxComponentGeneratorBase::copyToBin(      BinaryDataHandler &p
         _sfFocusedBackground.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+    {
+        _sfSelectedForeground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        _sfFocusedForeground.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyToBin(pMem);
@@ -438,6 +484,16 @@ void DefaultComboBoxComponentGeneratorBase::copyFromBin(      BinaryDataHandler 
         _sfFocusedBackground.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+    {
+        _sfSelectedForeground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        _sfFocusedForeground.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyFromBin(pMem);
@@ -492,6 +548,12 @@ void DefaultComboBoxComponentGeneratorBase::executeSyncImpl(      DefaultComboBo
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
         _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
 
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
+
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
         _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
 
@@ -531,6 +593,12 @@ void DefaultComboBoxComponentGeneratorBase::executeSyncImpl(      DefaultComboBo
 
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
         _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
+
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
 
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
         _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);

@@ -147,16 +147,30 @@ SFPanelPtr *DefaultTreeComponentGeneratorBase::getSFNodePanelPrototype(void)
 
 //! Get the DefaultTreeComponentGenerator::_sfSelectedBackground field.
 inline
-SFUIBackgroundPtr *DefaultTreeComponentGeneratorBase::getSFSelectedBackground(void)
+SFLayerPtr *DefaultTreeComponentGeneratorBase::getSFSelectedBackground(void)
 {
     return &_sfSelectedBackground;
 }
 
 //! Get the DefaultTreeComponentGenerator::_sfNonSelectedBackground field.
 inline
-SFUIBackgroundPtr *DefaultTreeComponentGeneratorBase::getSFNonSelectedBackground(void)
+SFLayerPtr *DefaultTreeComponentGeneratorBase::getSFNonSelectedBackground(void)
 {
     return &_sfNonSelectedBackground;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfSelectedForeground field.
+inline
+SFLayerPtr *DefaultTreeComponentGeneratorBase::getSFSelectedForeground(void)
+{
+    return &_sfSelectedForeground;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfNonSelectedForeground field.
+inline
+SFLayerPtr *DefaultTreeComponentGeneratorBase::getSFNonSelectedForeground(void)
+{
+    return &_sfNonSelectedForeground;
 }
 
 //! Get the DefaultTreeComponentGenerator::_sfSelectedBorder field.
@@ -330,44 +344,86 @@ void DefaultTreeComponentGeneratorBase::setNodePanelPrototype(const PanelPtr &va
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfSelectedBackground field.
 inline
-UIBackgroundPtr &DefaultTreeComponentGeneratorBase::getSelectedBackground(void)
+LayerPtr &DefaultTreeComponentGeneratorBase::getSelectedBackground(void)
 {
     return _sfSelectedBackground.getValue();
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfSelectedBackground field.
 inline
-const UIBackgroundPtr &DefaultTreeComponentGeneratorBase::getSelectedBackground(void) const
+const LayerPtr &DefaultTreeComponentGeneratorBase::getSelectedBackground(void) const
 {
     return _sfSelectedBackground.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfSelectedBackground field.
 inline
-void DefaultTreeComponentGeneratorBase::setSelectedBackground(const UIBackgroundPtr &value)
+void DefaultTreeComponentGeneratorBase::setSelectedBackground(const LayerPtr &value)
 {
     _sfSelectedBackground.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfNonSelectedBackground field.
 inline
-UIBackgroundPtr &DefaultTreeComponentGeneratorBase::getNonSelectedBackground(void)
+LayerPtr &DefaultTreeComponentGeneratorBase::getNonSelectedBackground(void)
 {
     return _sfNonSelectedBackground.getValue();
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfNonSelectedBackground field.
 inline
-const UIBackgroundPtr &DefaultTreeComponentGeneratorBase::getNonSelectedBackground(void) const
+const LayerPtr &DefaultTreeComponentGeneratorBase::getNonSelectedBackground(void) const
 {
     return _sfNonSelectedBackground.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfNonSelectedBackground field.
 inline
-void DefaultTreeComponentGeneratorBase::setNonSelectedBackground(const UIBackgroundPtr &value)
+void DefaultTreeComponentGeneratorBase::setNonSelectedBackground(const LayerPtr &value)
 {
     _sfNonSelectedBackground.setValue(value);
+}
+
+//! Get the value of the DefaultTreeComponentGenerator::_sfSelectedForeground field.
+inline
+LayerPtr &DefaultTreeComponentGeneratorBase::getSelectedForeground(void)
+{
+    return _sfSelectedForeground.getValue();
+}
+
+//! Get the value of the DefaultTreeComponentGenerator::_sfSelectedForeground field.
+inline
+const LayerPtr &DefaultTreeComponentGeneratorBase::getSelectedForeground(void) const
+{
+    return _sfSelectedForeground.getValue();
+}
+
+//! Set the value of the DefaultTreeComponentGenerator::_sfSelectedForeground field.
+inline
+void DefaultTreeComponentGeneratorBase::setSelectedForeground(const LayerPtr &value)
+{
+    _sfSelectedForeground.setValue(value);
+}
+
+//! Get the value of the DefaultTreeComponentGenerator::_sfNonSelectedForeground field.
+inline
+LayerPtr &DefaultTreeComponentGeneratorBase::getNonSelectedForeground(void)
+{
+    return _sfNonSelectedForeground.getValue();
+}
+
+//! Get the value of the DefaultTreeComponentGenerator::_sfNonSelectedForeground field.
+inline
+const LayerPtr &DefaultTreeComponentGeneratorBase::getNonSelectedForeground(void) const
+{
+    return _sfNonSelectedForeground.getValue();
+}
+
+//! Set the value of the DefaultTreeComponentGenerator::_sfNonSelectedForeground field.
+inline
+void DefaultTreeComponentGeneratorBase::setNonSelectedForeground(const LayerPtr &value)
+{
+    _sfNonSelectedForeground.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfSelectedBorder field.

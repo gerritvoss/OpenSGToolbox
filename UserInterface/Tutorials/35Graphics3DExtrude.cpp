@@ -66,7 +66,7 @@ ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel());
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGBorders.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGUIRectangle.h>
@@ -85,13 +85,13 @@ ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel());
 #include <OpenSG/UserInterface/OSGEmptyBorder.h>
 #include <OpenSG/UserInterface/OSGEtchedBorder.h>
 //#include <OpenSG/UserInterface/OSGUIDefines.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
-#include <OpenSG/UserInterface/OSGCompoundUIBackground.h>
+#include <OpenSG/UserInterface/OSGColorLayer.h>
+#include <OpenSG/UserInterface/OSGGradientLayer.h>
+#include <OpenSG/UserInterface/OSGCompoundLayer.h>
 
 // 29Spinner Headers
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGRadioButton.h>
 #include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
 #include <OpenSG/UserInterface/OSGSpinner.h>
@@ -614,7 +614,7 @@ int main(int argc, char **argv)
         sampleFont->setStyle(TextFace::STYLE_PLAIN);
     endEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
 
-    ColorUIBackgroundPtr button1Background = ColorUIBackground::create();
+    ColorLayerPtr button1Background = ColorLayer::create();
     beginEditCP(button1Background);
 		button1Background->setColor(Color4f(1.0,0.0,0.0,1.0));
     endEditCP(button1Background);
@@ -798,11 +798,11 @@ int main(int argc, char **argv)
 
 	
     // Create Background to be used with the Main Frame
-    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainFrameBackground = osg::ColorLayer::create();
+    beginEditCP(MainFrameBackground, ColorLayer::ColorFieldMask);
         //MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 		MainFrameBackground->setColor(Color4f(0.0,0.0,0.0,0.0));
-    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainFrameBackground, ColorLayer::ColorFieldMask);
     
 	// Create ListPtr
     ListPtr list1 = List::create();
@@ -1089,7 +1089,7 @@ int main(int argc, char **argv)
 
     // Create The Main Frame
     // Create Background to be used with the Main Frame
-    EmptyUIBackgroundPtr MainBackground = osg::EmptyUIBackground::create();
+    EmptyLayerPtr MainBackground = osg::EmptyLayer::create();
     
     EmptyBorderPtr MainFrameLineBorder = EmptyBorder::create();
 

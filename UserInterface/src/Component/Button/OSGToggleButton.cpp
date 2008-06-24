@@ -134,7 +134,7 @@ Vec2f ToggleButton::getDrawnOffset(void) const
     }
 }
 
-UIBackgroundPtr ToggleButton::getDrawnBackground(void) const
+LayerPtr ToggleButton::getDrawnBackground(void) const
 {
 	if(getSelected())
 	{
@@ -143,6 +143,17 @@ UIBackgroundPtr ToggleButton::getDrawnBackground(void) const
 	else
 	{
         return Inherited::getDrawnBackground();
+    }
+}
+LayerPtr ToggleButton::getDrawnForeground(void) const
+{
+	if(getSelected())
+	{
+		return getActiveForeground();
+	}
+	else
+	{
+        return Inherited::getDrawnForeground();
     }
 }
 

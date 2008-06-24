@@ -50,7 +50,7 @@
 #include "OSGWindowsLookAndFeel.h"
 #include "Text/OSGUIFont.h"
 #include "Border/OSGBorders.h"
-#include "Background/OSGUIBackgrounds.h"
+#include "Layer/OSGLayers.h"
 #include "Component/Button/OSGButton.h"
 #include "Component/Button/OSGCheckboxButton.h"
 #include "Component/Button/OSGRadioButton.h"
@@ -256,7 +256,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsEmptyBorder);
 
 	/*********Empty Background**********/
-	EmptyUIBackgroundPtr WindowsEmptyBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsEmptyBackground = EmptyLayer::create();
 
 	//Windows Font
 	UIFontPtr WindowsFont = UIFont::create();
@@ -323,33 +323,33 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsDisabledButtonBorder);
 
 	//Windows ButtonBackground
-	GradientUIBackgroundPtr WindowsButtonBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsButtonBackground);
 		WindowsButtonBackground->setColorStart(Color4f(.988, .988, .984, 1.0));
 		WindowsButtonBackground->setColorEnd(Color4f(.941, .941, .918, 1.0));
-		WindowsButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsButtonBackground);
 	
 	//Windows Disabled ButtonBackground
-	ColorUIBackgroundPtr WindowsDisabledButtonBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsDisabledButtonBackground = ColorLayer::create();
 	beginEditCP(WindowsDisabledButtonBackground);
 		WindowsDisabledButtonBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(WindowsDisabledButtonBackground);
     
 	//Windows Active ButtonBackground
-	GradientUIBackgroundPtr WindowsActiveButtonBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsActiveButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsActiveButtonBackground);
 		WindowsActiveButtonBackground->setColorStart(Color4f(.90, .89, .87, 1.0));
 		WindowsActiveButtonBackground->setColorEnd(Color4f(.89, .89, .85, 1.0));
-		WindowsActiveButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsActiveButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsActiveButtonBackground);
     
 	//Windows Rollover ButtonBackground
-	GradientUIBackgroundPtr WindowsRolloverButtonBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsRolloverButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsRolloverButtonBackground);
 		WindowsRolloverButtonBackground->setColorStart(Color4f(.99, .99, .98, 1.0));
 		WindowsRolloverButtonBackground->setColorEnd(Color4f(.93, .92, .90, 1.0));
-		WindowsRolloverButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsRolloverButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsRolloverButtonBackground);
 
 	//Windows Button
@@ -396,7 +396,7 @@ void WindowsLookAndFeel::init(void)
 
 	//************************** Label*****************************
 	//Windows LabelBackground
-	ColorUIBackgroundPtr WindowsLabelBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsLabelBackground = ColorLayer::create();
 	beginEditCP(WindowsLabelBackground);
 		WindowsLabelBackground->setColor(Color4f(0.9569,0.9529,0.9373,1.0));
 	endEditCP(WindowsLabelBackground);
@@ -495,7 +495,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsInternalWindowUnfocusedBorder);	
 
 	//InternalWindow Background
-	ColorUIBackgroundPtr WindowsInternalWindowBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsInternalWindowBackground = ColorLayer::create();
 	beginEditCP(WindowsInternalWindowBackground);
 		WindowsInternalWindowBackground->setColor( Color4f(0.9569,0.9529,0.9373,1.0) );
 	endEditCP(WindowsInternalWindowBackground);
@@ -526,27 +526,27 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(DisabledWindowsIconifyMaximizeButtonBorder);
 
 	//Windows  IconifyMaximizeButtonBackground
-	GradientUIBackgroundPtr WindowsIconifyMaximizeButtonBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsIconifyMaximizeButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsIconifyMaximizeButtonBackground);
 		WindowsIconifyMaximizeButtonBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
 		WindowsIconifyMaximizeButtonBackground->setColorEnd(Color4f(0.52, 0.54, 0.69, 1.0));
-		WindowsIconifyMaximizeButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsIconifyMaximizeButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsIconifyMaximizeButtonBackground);
 
 	//Windows  ActiveIconifyMaximizeButtonBackground
-	GradientUIBackgroundPtr ActiveWindowsIconifyMaximizeButtonBackground = GradientUIBackground::create();
+	GradientLayerPtr ActiveWindowsIconifyMaximizeButtonBackground = GradientLayer::create();
 	beginEditCP(ActiveWindowsIconifyMaximizeButtonBackground);
 		ActiveWindowsIconifyMaximizeButtonBackground->setColorStart(Color4f(0.55, 0.56, 0.68, 1.0));
 		ActiveWindowsIconifyMaximizeButtonBackground->setColorEnd(Color4f(1.0, 0.98, 1.0, 1.0));
-		ActiveWindowsIconifyMaximizeButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		ActiveWindowsIconifyMaximizeButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(ActiveWindowsIconifyMaximizeButtonBackground);
 	
 	//Windows  DisabledIconifyMaximizeButtonBackground
-	GradientUIBackgroundPtr WindowsDisabledIconifyMaximizeButtonBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsDisabledIconifyMaximizeButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsDisabledIconifyMaximizeButtonBackground);
 		WindowsDisabledIconifyMaximizeButtonBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
 		WindowsDisabledIconifyMaximizeButtonBackground->setColorEnd(Color4f(0.74, 0.75, 0.82, 1.0));
-		WindowsDisabledIconifyMaximizeButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsDisabledIconifyMaximizeButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsDisabledIconifyMaximizeButtonBackground);
 
 	//IconifyButton DrawObject
@@ -676,27 +676,27 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(DisabledWindowsCloseButtonBorder);
 
 	//Windows  CloseButtonBackground
-	GradientUIBackgroundPtr WindowsCloseButtonBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsCloseButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsCloseButtonBackground);
 		WindowsCloseButtonBackground->setColorStart(Color4f(0.96, 0.56, 0.52, 1.0));
 		WindowsCloseButtonBackground->setColorEnd(Color4f(0.78, 0.33, 0.36, 1.0));
-		WindowsCloseButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsCloseButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsCloseButtonBackground);
 
 	//Windows  ActiveCloseButtonBackground
-	GradientUIBackgroundPtr ActiveWindowsCloseButtonBackground = GradientUIBackground::create();
+	GradientLayerPtr ActiveWindowsCloseButtonBackground = GradientLayer::create();
 	beginEditCP(ActiveWindowsCloseButtonBackground);
 		ActiveWindowsCloseButtonBackground->setColorStart(Color4f(0.92, 0.41, 0.36, 1.0));
 		ActiveWindowsCloseButtonBackground->setColorEnd(Color4f(1.0, 0.64, 0.54, 1.0));
-		ActiveWindowsCloseButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		ActiveWindowsCloseButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(ActiveWindowsCloseButtonBackground);
 	
 	//Windows  DisabledCloseButtonBackground
-	GradientUIBackgroundPtr WindowsDisabledCloseButtonBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsDisabledCloseButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsDisabledCloseButtonBackground);
 		WindowsDisabledCloseButtonBackground->setColorStart(Color4f(0.94, 0.76, 0.75, 1.0));
 		WindowsDisabledCloseButtonBackground->setColorEnd(Color4f(0.83, 0.63, 0.64, 1.0));
-		WindowsDisabledCloseButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsDisabledCloseButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsDisabledCloseButtonBackground);
 
 	
@@ -801,18 +801,18 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsInternalWindowTitlebarTitleLabel);
 
 	//Titlebar background
-	GradientUIBackgroundPtr WIndowsInternalWindowTitlebarBackground = GradientUIBackground::create();
+	GradientLayerPtr WIndowsInternalWindowTitlebarBackground = GradientLayer::create();
 	beginEditCP(WIndowsInternalWindowTitlebarBackground);
 		WIndowsInternalWindowTitlebarBackground->setColorStart(Color4f(0.64, 0.64, 0.75, 1.0));
 		WIndowsInternalWindowTitlebarBackground->setColorEnd(Color4f(0.89, 0.89, 0.89, 1.0));
-		WIndowsInternalWindowTitlebarBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WIndowsInternalWindowTitlebarBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WIndowsInternalWindowTitlebarBackground);
 	//Titlebar DisabledBackground
-	GradientUIBackgroundPtr WindowsInternalWindowTitlebarDisabledBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsInternalWindowTitlebarDisabledBackground = GradientLayer::create();
 	beginEditCP(WindowsInternalWindowTitlebarDisabledBackground);
 		WindowsInternalWindowTitlebarDisabledBackground->setColorStart(Color4f(0.84, 0.84, 0.89, 1.0));
 		WindowsInternalWindowTitlebarDisabledBackground->setColorEnd(Color4f(0.99, 1.0, 0.99, 1.0));
-		WindowsInternalWindowTitlebarDisabledBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsInternalWindowTitlebarDisabledBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsInternalWindowTitlebarDisabledBackground);
 
 
@@ -1004,7 +1004,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsPanelBorder);
 
 	//Windows PanelBackground
-	ColorUIBackgroundPtr WindowsPanelBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsPanelBackground = ColorLayer::create();
 	beginEditCP(WindowsPanelBackground);
 		WindowsPanelBackground->setColor(Color4f(0.9569,0.9529,0.9373,1.0));
 	endEditCP(WindowsPanelBackground);
@@ -1056,7 +1056,7 @@ void WindowsLookAndFeel::init(void)
 	//The only default value set will be the divider
 
 	//Windows Divider Background and Border
-	ColorUIBackgroundPtr WindowsDividerBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsDividerBackground = ColorLayer::create();
 	beginEditCP(WindowsDividerBackground);
 		WindowsDividerBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(WindowsDividerBackground);
@@ -1117,14 +1117,14 @@ void WindowsLookAndFeel::init(void)
         WindowsTabPanelActiveTabBorder->setOuterBorder(WindowsTabPanelTabBorder);
 	endEditCP(WindowsTabPanelActiveTabBorder);
 
-	GradientUIBackgroundPtr WindowsTabPanelTabBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsTabPanelTabBackground = GradientLayer::create();
 	beginEditCP(WindowsTabPanelTabBackground);
 		WindowsTabPanelTabBackground->setColorStart(Color4f(1.0,1.0,1.0,1.0));
 		WindowsTabPanelTabBackground->setColorEnd(Color4f(0.75,0.75,0.85,1.0));
-		WindowsTabPanelTabBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsTabPanelTabBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsTabPanelTabBackground);
 	
-	ColorUIBackgroundPtr WindowsTabPanelTabActiveBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsTabPanelTabActiveBackground = ColorLayer::create();
 	beginEditCP(WindowsTabPanelTabActiveBackground);
 		WindowsTabPanelTabActiveBackground->setColor(Color4f(0.9569,0.9529,0.9373,1.0));
 	endEditCP(WindowsTabPanelTabActiveBackground);
@@ -1187,7 +1187,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsImageComponentBorder = EmptyBorder::create();
 
 	//Windows ImageComponentBackground
-	EmptyUIBackgroundPtr WindowsImageComponentBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsImageComponentBackground = EmptyLayer::create();
 
 	//Windows ImageComponent
 	beginEditCP(WindowsImageComponent);
@@ -1426,7 +1426,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsCheckboxButtonBorder = EmptyBorder::create();
 
     //Background
-	EmptyUIBackgroundPtr WindowsCheckboxButtonBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsCheckboxButtonBackground = EmptyLayer::create();
 
 	beginEditCP(WindowsCheckboxButton);
 		WindowsCheckboxButton->setEnabled(true);
@@ -1648,7 +1648,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsDisabledSelectedRadioDrawObject);
 		
 	EmptyBorderPtr WindowsRadioButtonBorder = EmptyBorder::create();
-	EmptyUIBackgroundPtr WindowsRadioButtonBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsRadioButtonBackground = EmptyLayer::create();
 	
 
 	beginEditCP(WindowsRadioButton);
@@ -1748,12 +1748,12 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsToggleButton);
 
 	/********Text Field********/
-	ColorUIBackgroundPtr WindowsTextFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsTextFieldBackground = ColorLayer::create();
 	beginEditCP(WindowsTextFieldBackground);
 		WindowsTextFieldBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(WindowsTextFieldBackground);
 
-	ColorUIBackgroundPtr WindowsDisabledTextFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsDisabledTextFieldBackground = ColorLayer::create();
 	beginEditCP(WindowsDisabledTextFieldBackground);
 		WindowsDisabledTextFieldBackground->setColor(Color4f(.8, .8, .8, 1.0));
 	endEditCP(WindowsDisabledTextFieldBackground);
@@ -1800,12 +1800,12 @@ void WindowsLookAndFeel::init(void)
     
     
 	/********Password Field********/
-	ColorUIBackgroundPtr WindowsPasswordFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsPasswordFieldBackground = ColorLayer::create();
 	beginEditCP(WindowsPasswordFieldBackground);
 		WindowsPasswordFieldBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(WindowsPasswordFieldBackground);
 
-	ColorUIBackgroundPtr WindowsDisabledPasswordFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsDisabledPasswordFieldBackground = ColorLayer::create();
 	beginEditCP(WindowsDisabledPasswordFieldBackground);
 		WindowsDisabledPasswordFieldBackground->setColor(Color4f(.8, .8, .8, 1.0));
 	endEditCP(WindowsDisabledPasswordFieldBackground);
@@ -1849,12 +1849,12 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsPasswordField);
 
 	/********Text Area********/
-	ColorUIBackgroundPtr WindowsTextAreaBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsTextAreaBackground = ColorLayer::create();
 	beginEditCP(WindowsTextAreaBackground);
 		WindowsTextAreaBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(WindowsTextAreaBackground);
 
-	ColorUIBackgroundPtr WindowsDisabledTextAreaBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsDisabledTextAreaBackground = ColorLayer::create();
 	beginEditCP(WindowsDisabledTextAreaBackground);
 		WindowsDisabledTextAreaBackground->setColor(Color4f(.8, .8, .8, 1.0));
 	endEditCP(WindowsDisabledTextAreaBackground);
@@ -1919,7 +1919,7 @@ void WindowsLookAndFeel::init(void)
 
     
 	//Default ToolTipBackground
-	ColorUIBackgroundPtr WindowsToolTipBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsToolTipBackground = ColorLayer::create();
 	beginEditCP(WindowsToolTipBackground);
 		WindowsToolTipBackground->setColor(Color4f(1.0,1.0,0.88,1.0));
 	endEditCP(WindowsToolTipBackground);
@@ -1957,7 +1957,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsMenuItemBorder = EmptyBorder::create();
 
 	//Windows MenuItemBackground
-	ColorUIBackgroundPtr WindowsMenuItemBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsMenuItemBackground = ColorLayer::create();
 	beginEditCP(WindowsMenuItemBackground);
 		WindowsMenuItemBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(WindowsMenuItemBackground);
@@ -1966,7 +1966,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsMenuItemSelectedBorder = EmptyBorder::create();
 
 	//Windows MenuItemBackground
-	ColorUIBackgroundPtr WindowsMenuItemSelectedBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsMenuItemSelectedBackground = ColorLayer::create();
 	beginEditCP(WindowsMenuItemSelectedBackground);
 		WindowsMenuItemSelectedBackground->setColor(Color4f(0.19,0.42,0.77,1.0));
 	endEditCP(WindowsMenuItemSelectedBackground);
@@ -2018,7 +2018,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsComponentMenuItemBorder = EmptyBorder::create();
 
 	//Windows ComponentMenuItemBackground
-	ColorUIBackgroundPtr WindowsComponentMenuItemBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsComponentMenuItemBackground = ColorLayer::create();
 	beginEditCP(WindowsComponentMenuItemBackground);
 		WindowsComponentMenuItemBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(WindowsComponentMenuItemBackground);
@@ -2027,7 +2027,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsComponentMenuItemSelectedBorder = EmptyBorder::create();
 
 	//Windows ComponentMenuItemBackground
-	ColorUIBackgroundPtr WindowsComponentMenuItemSelectedBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsComponentMenuItemSelectedBackground = ColorLayer::create();
 	beginEditCP(WindowsComponentMenuItemSelectedBackground);
 		WindowsComponentMenuItemSelectedBackground->setColor(Color4f(0.19,0.42,0.77,1.0));
 	endEditCP(WindowsComponentMenuItemSelectedBackground);
@@ -2079,7 +2079,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsMenuBorder = EmptyBorder::create();
 
 	//Windows MenuBackground
-	ColorUIBackgroundPtr WindowsMenuBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsMenuBackground = ColorLayer::create();
 	beginEditCP(WindowsMenuBackground);
 		WindowsMenuBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(WindowsMenuBackground);
@@ -2088,7 +2088,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsMenuSelectedBorder = EmptyBorder::create();
 
 	//Windows MenuBackground
-	ColorUIBackgroundPtr WindowsMenuSelectedBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsMenuSelectedBackground = ColorLayer::create();
 	beginEditCP(WindowsMenuSelectedBackground);
 		WindowsMenuSelectedBackground->setColor(Color4f(0.19,0.42,0.77,1.0));
 	endEditCP(WindowsMenuSelectedBackground);
@@ -2178,7 +2178,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsPopupMenuBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 
 	//Windows PopupMenuBackground
-	ColorUIBackgroundPtr WindowsPopupMenuBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsPopupMenuBackground = ColorLayer::create();
 	beginEditCP(WindowsPopupMenuBackground);
 		WindowsPopupMenuBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(WindowsPopupMenuBackground);
@@ -2250,7 +2250,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsListGeneratedPopupMenuBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 
 	//Windows ListGeneratedPopupMenuBackground
-	ColorUIBackgroundPtr WindowsListGeneratedPopupMenuBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsListGeneratedPopupMenuBackground = ColorLayer::create();
 	beginEditCP(WindowsListGeneratedPopupMenuBackground);
 		WindowsListGeneratedPopupMenuBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(WindowsListGeneratedPopupMenuBackground);
@@ -2294,7 +2294,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsMenuBarBorder = EmptyBorder::create();
 
 	//Windows MenuBarBackground
-	ColorUIBackgroundPtr WindowsMenuBarBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsMenuBarBackground = ColorLayer::create();
 	beginEditCP(WindowsMenuBarBackground);
 		WindowsMenuBarBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(WindowsMenuBarBackground);
@@ -2336,7 +2336,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsScrollBarBorder = EmptyBorder::create();
 
 	//Windows ScrollBarBackground
-	EmptyUIBackgroundPtr WindowsScrollBarBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsScrollBarBackground = EmptyLayer::create();
 
 	RoundedCornerLineBorderPtr WindowsWhiteCorneredBorder = RoundedCornerLineBorder::create();
 	beginEditCP(WindowsWhiteCorneredBorder);
@@ -2417,22 +2417,22 @@ void WindowsLookAndFeel::init(void)
 		WindowsScrollBarDisabledButtonBorder->setOuterBorder(WindowsScrollBarButtonDisabledOuterBorder);
 	endEditCP(WindowsScrollBarDisabledButtonBorder);
 
-    ColorUIBackgroundPtr WindowsScrollBarButtonBackground = ColorUIBackground::create();
+    ColorLayerPtr WindowsScrollBarButtonBackground = ColorLayer::create();
 	beginEditCP(WindowsScrollBarButtonBackground);
 		WindowsScrollBarButtonBackground->setColor(Color4f(0.76,0.84,0.99,1.0));
 	endEditCP(WindowsScrollBarButtonBackground);
 
-    ColorUIBackgroundPtr WindowsScrollBarRolloverButtonBackground = ColorUIBackground::create();
+    ColorLayerPtr WindowsScrollBarRolloverButtonBackground = ColorLayer::create();
 	beginEditCP(WindowsScrollBarRolloverButtonBackground);
 		WindowsScrollBarRolloverButtonBackground->setColor(Color4f(0.82,0.92,1.0,1.0));
 	endEditCP(WindowsScrollBarRolloverButtonBackground);
     
-    ColorUIBackgroundPtr WindowsScrollBarDisabledButtonBackground = ColorUIBackground::create();
+    ColorLayerPtr WindowsScrollBarDisabledButtonBackground = ColorLayer::create();
 	beginEditCP(WindowsScrollBarDisabledButtonBackground);
 		WindowsScrollBarDisabledButtonBackground->setColor(Color4f(0.93,0.93,0.90,1.0));
 	endEditCP(WindowsScrollBarDisabledButtonBackground);
     
-    ColorUIBackgroundPtr WindowsScrollBarActiveButtonBackground = ColorUIBackground::create();
+    ColorLayerPtr WindowsScrollBarActiveButtonBackground = ColorLayer::create();
 	beginEditCP(WindowsScrollBarActiveButtonBackground);
 		WindowsScrollBarActiveButtonBackground->setColor(Color4f(0.55,0.63,0.94,1.0));
 	endEditCP(WindowsScrollBarActiveButtonBackground);
@@ -2647,15 +2647,15 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsVerticalDisabledScrollFieldBorder);
 
 	//Vertical Scroll Field Background
-	GradientUIBackgroundPtr WindowsVerticalScrollFieldBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsVerticalScrollFieldBackground = GradientLayer::create();
 	beginEditCP(WindowsVerticalScrollFieldBackground);
 		WindowsVerticalScrollFieldBackground->setColorStart(Color4f(0.95,0.95,0.93,1.0));
 		WindowsVerticalScrollFieldBackground->setColorEnd(Color4f(1.0,1.0,0.98,1.0));
-		WindowsVerticalScrollFieldBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+		WindowsVerticalScrollFieldBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
 	endEditCP(WindowsVerticalScrollFieldBackground);
 	
 	//Vertical Scroll Field Disabled Background
-	ColorUIBackgroundPtr WindowsVerticalDisabledScrollFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsVerticalDisabledScrollFieldBackground = ColorLayer::create();
 	beginEditCP(WindowsVerticalDisabledScrollFieldBackground);
 		WindowsVerticalDisabledScrollFieldBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(WindowsVerticalDisabledScrollFieldBackground);
@@ -2706,33 +2706,33 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsDisabledVerticalScrollBarDrawObjectBorder);
 
 	//Vertical Scroll Bar Background
-	GradientUIBackgroundPtr WindowsVerticalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsVerticalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsVerticalScrollBarDrawObjectBackground);
 		WindowsVerticalScrollBarDrawObjectBackground->setColorStart(Color4f(0.79,0.85,0.99,1.0));
 		WindowsVerticalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.73,0.8,0.98,1.0));
-		WindowsVerticalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+		WindowsVerticalScrollBarDrawObjectBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
 	endEditCP(WindowsVerticalScrollBarDrawObjectBackground);
 	
 	//Vertical Scroll Bar Disabled Background
-	ColorUIBackgroundPtr WindowsDisabledVerticalScrollBarDrawObjectBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsDisabledVerticalScrollBarDrawObjectBackground = ColorLayer::create();
 	beginEditCP(WindowsDisabledVerticalScrollBarDrawObjectBackground);
 		WindowsDisabledVerticalScrollBarDrawObjectBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(WindowsDisabledVerticalScrollBarDrawObjectBackground);
 
 	//Vertical Scroll Bar Rollover Background
-	GradientUIBackgroundPtr WindowsRolloverVerticalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsRolloverVerticalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsRolloverVerticalScrollBarDrawObjectBackground);
 		WindowsRolloverVerticalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
 		WindowsRolloverVerticalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
-		WindowsRolloverVerticalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+		WindowsRolloverVerticalScrollBarDrawObjectBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
 	endEditCP(WindowsRolloverVerticalScrollBarDrawObjectBackground);
 
 	//Vertical Scroll Bar Active Background
-	GradientUIBackgroundPtr WindowsActiveVerticalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsActiveVerticalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsActiveVerticalScrollBarDrawObjectBackground);
 		WindowsActiveVerticalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
 		WindowsActiveVerticalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
-		WindowsActiveVerticalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsActiveVerticalScrollBarDrawObjectBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsActiveVerticalScrollBarDrawObjectBackground);
 
     //Vertical Scroll Bar Center Ridges
@@ -2990,15 +2990,15 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsHorizontalDisabledScrollFieldBorder);
 
 	//Horizontal Scroll Field Background
-	GradientUIBackgroundPtr WindowsHorizontalScrollFieldBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsHorizontalScrollFieldBackground = GradientLayer::create();
 	beginEditCP(WindowsHorizontalScrollFieldBackground);
 		WindowsHorizontalScrollFieldBackground->setColorStart(Color4f(0.95,0.95,0.93,1.0));
 		WindowsHorizontalScrollFieldBackground->setColorEnd(Color4f(1.0,1.0,0.98,1.0));
-		WindowsHorizontalScrollFieldBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsHorizontalScrollFieldBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsHorizontalScrollFieldBackground);
 	
 	//Horizontal Scroll Field Disabled Background
-	ColorUIBackgroundPtr WindowsHorizontalDisabledScrollFieldBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsHorizontalDisabledScrollFieldBackground = ColorLayer::create();
 	beginEditCP(WindowsHorizontalDisabledScrollFieldBackground);
 		WindowsHorizontalDisabledScrollFieldBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(WindowsHorizontalDisabledScrollFieldBackground);
@@ -3042,33 +3042,33 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsDisabledHorizontalScrollBarDrawObjectBorder);
 
 	//Horizontal Scroll Bar Background
-	GradientUIBackgroundPtr WindowsHorizontalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsHorizontalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsHorizontalScrollBarDrawObjectBackground);
 		WindowsHorizontalScrollBarDrawObjectBackground->setColorStart(Color4f(0.79,0.85,0.99,1.0));
 		WindowsHorizontalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.73,0.8,0.98,1.0));
-		WindowsHorizontalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsHorizontalScrollBarDrawObjectBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsHorizontalScrollBarDrawObjectBackground);
 	
 	//Horizontal Scroll Bar Disabled Background
-	ColorUIBackgroundPtr WindowsDisabledHorizontalScrollBarDrawObjectBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsDisabledHorizontalScrollBarDrawObjectBackground = ColorLayer::create();
 	beginEditCP(WindowsDisabledHorizontalScrollBarDrawObjectBackground);
 		WindowsDisabledHorizontalScrollBarDrawObjectBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 	endEditCP(WindowsDisabledHorizontalScrollBarDrawObjectBackground);
 
 	//Horizontal Scroll Bar Rollover Background
-	GradientUIBackgroundPtr WindowsRolloverHorizontalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsRolloverHorizontalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsRolloverHorizontalScrollBarDrawObjectBackground);
 		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
 		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
-		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsRolloverHorizontalScrollBarDrawObjectBackground);
 
 	//Horizontal Scroll Bar Active Background
-	GradientUIBackgroundPtr WindowsActiveHorizontalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	GradientLayerPtr WindowsActiveHorizontalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsActiveHorizontalScrollBarDrawObjectBackground);
 		WindowsActiveHorizontalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
 		WindowsActiveHorizontalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
-		WindowsActiveHorizontalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+		WindowsActiveHorizontalScrollBarDrawObjectBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
 	endEditCP(WindowsActiveHorizontalScrollBarDrawObjectBackground);
 
     //Horizontal Scroll Bar Center Ridges
@@ -3352,7 +3352,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsScrollPanelBorder = EmptyBorder::create();
 
 	//Windows ScrollPanelBackground
-	EmptyUIBackgroundPtr WindowsScrollPanelBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsScrollPanelBackground = EmptyLayer::create();
     
 	//Vertical ScrollBar
 	ScrollBarPtr WindowsScrollPanelVerticalScrollBar = ScrollBar::create();
@@ -3415,7 +3415,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsUIViewportBorder);
 
 	//Windows UIViewportBackground
-	EmptyUIBackgroundPtr WindowsUIViewportBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsUIViewportBackground = EmptyLayer::create();
 
 	//Windows UIViewport
 	beginEditCP(WindowsUIViewport);
@@ -3443,7 +3443,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsRotatedComponentBorder = EmptyBorder::create();
 
 	//Windows RotatedComponentBackground
-	EmptyUIBackgroundPtr WindowsRotatedComponentBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsRotatedComponentBackground = EmptyLayer::create();
 
 	//Windows RotatedComponent
 	beginEditCP(WindowsRotatedComponent);
@@ -3476,7 +3476,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsListBorder = EmptyBorder::create();
 
 	//Windows RotatedComponentBackground
-	EmptyUIBackgroundPtr WindowsListBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsListBackground = EmptyLayer::create();
 
 	//************************** DefaultListComponentGenerator *****************************
 	LabelPtr WindowsDefaultListComponentGeneratorComponentPrototype = Label::create();
@@ -3484,12 +3484,12 @@ void WindowsLookAndFeel::init(void)
 		WindowsDefaultListComponentGeneratorComponentPrototype->setBorders(WindowsEmptyBorder);
 	endEditCP(WindowsDefaultListComponentGeneratorComponentPrototype, Label::BordersFieldMask);
 
-    ColorUIBackgroundPtr WindowsDefaultListComponentGeneratorSelectedBackground = ColorUIBackground::create();
-	beginEditCP(WindowsDefaultListComponentGeneratorSelectedBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr WindowsDefaultListComponentGeneratorSelectedBackground = ColorLayer::create();
+	beginEditCP(WindowsDefaultListComponentGeneratorSelectedBackground, ColorLayer::ColorFieldMask);
 		WindowsDefaultListComponentGeneratorSelectedBackground->setColor(Color4f(0.4f,0.4f,1.0f,1.0f));
-	endEditCP(WindowsDefaultListComponentGeneratorSelectedBackground, ColorUIBackground::ColorFieldMask);
+	endEditCP(WindowsDefaultListComponentGeneratorSelectedBackground, ColorLayer::ColorFieldMask);
 
-    UIBackgroundPtr WindowsDefaultListComponentGeneratorFocusedBackground = WindowsDefaultListComponentGeneratorComponentPrototype->getBackground();
+    LayerPtr WindowsDefaultListComponentGeneratorFocusedBackground = WindowsDefaultListComponentGeneratorComponentPrototype->getBackground();
 
     BorderPtr WindowsDefaultListComponentGeneratorSelectedBorder = WindowsDefaultListComponentGeneratorComponentPrototype->getBorder();
 
@@ -3662,7 +3662,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsSpinnerBorder = EmptyBorder::create();
 
 	//Windows SpinnerBackground
-	EmptyUIBackgroundPtr WindowsSpinnerBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsSpinnerBackground = EmptyLayer::create();
 
     beginEditCP(WindowsSpinner);
 		WindowsSpinner->setConstraints(NullFC);
@@ -3787,7 +3787,7 @@ void WindowsLookAndFeel::init(void)
 
 	//Windows SeparatorBackground
 	EmptyBorderPtr WindowsSeparatorBorder = EmptyBorder::create();
-	EmptyUIBackgroundPtr WindowsSeparatorBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsSeparatorBackground = EmptyLayer::create();
 
     beginEditCP(WindowsSeparator);
 		WindowsSeparator->setConstraints(NullFC);
@@ -3821,13 +3821,13 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsProgressBarBorder);
 	
 	//Windows ProgressBarBackground
-	ColorUIBackgroundPtr ProgressBarBackground = ColorUIBackground::create();
+	ColorLayerPtr ProgressBarBackground = ColorLayer::create();
 	beginEditCP(ProgressBarBackground);
 		ProgressBarBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(ProgressBarBackground);
 	
 	//Windows ProgressBarDrawObjectBackground
-	ColorUIBackgroundPtr ProgressBarDrawObjectBackground = ColorUIBackground::create();
+	ColorLayerPtr ProgressBarDrawObjectBackground = ColorLayer::create();
 	beginEditCP(ProgressBarDrawObjectBackground);
 		ProgressBarDrawObjectBackground->setColor(Color4f(0.0, 1.0, 0.0, 1.0));
 	endEditCP(ProgressBarDrawObjectBackground);
@@ -3908,7 +3908,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsSliderKnobButtonBorder->setOuterBorder(WindowsSliderKnobButtonRoundedCornerBorder);
 	endEditCP(WindowsSliderKnobButtonBorder);
 	
-	ColorUIBackgroundPtr WindowsSliderBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsSliderBackground = ColorLayer::create();
 	beginEditCP(WindowsSliderBackground);
 		WindowsSliderBackground->setColor(Color4f(0.95, 0.95, 0.94, 1.0));
 	endEditCP(WindowsSliderBackground);
@@ -3962,13 +3962,13 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsSliderBorder);
 	
 	//Windows SliderBackground
-	ColorUIBackgroundPtr SliderBackground = ColorUIBackground::create();
+	ColorLayerPtr SliderBackground = ColorLayer::create();
 	beginEditCP(SliderBackground);
 		SliderBackground->setColor(Color4f(0.93, 0.91, 0.85, 1.0));
 	endEditCP(SliderBackground);
 	
 	//Windows SliderDrawObjectBackground
-	ColorUIBackgroundPtr SliderTrackDrawObjectBackground = ColorUIBackground::create();
+	ColorLayerPtr SliderTrackDrawObjectBackground = ColorLayer::create();
 	beginEditCP(SliderTrackDrawObjectBackground);
 		SliderTrackDrawObjectBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(SliderTrackDrawObjectBackground);
@@ -4103,7 +4103,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsComboBoxBorder);
 	
 	//Windows ComboBoxBackground
-	ColorUIBackgroundPtr WindowsComboBoxBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsComboBoxBackground = ColorLayer::create();
 	beginEditCP(WindowsComboBoxBackground);
 		WindowsComboBoxBackground->setColor(Color4f(0.93, 0.91, 0.85, 1.0));
 	endEditCP(WindowsComboBoxBackground);
@@ -4139,12 +4139,12 @@ void WindowsLookAndFeel::init(void)
 		WindowsDefaultComboBoxComponentGeneratorComponentPrototype->setBackgrounds(WindowsEmptyBackground);
 	endEditCP(WindowsDefaultComboBoxComponentGeneratorComponentPrototype, Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
-    ColorUIBackgroundPtr WindowsDefaultComboBoxComponentGeneratorSelectedBackground = ColorUIBackground::create();
-	beginEditCP(WindowsDefaultComboBoxComponentGeneratorSelectedBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr WindowsDefaultComboBoxComponentGeneratorSelectedBackground = ColorLayer::create();
+	beginEditCP(WindowsDefaultComboBoxComponentGeneratorSelectedBackground, ColorLayer::ColorFieldMask);
 		WindowsDefaultComboBoxComponentGeneratorSelectedBackground->setColor(Color4f(0.4f,0.4f,1.0f,1.0f));
-	endEditCP(WindowsDefaultComboBoxComponentGeneratorSelectedBackground, ColorUIBackground::ColorFieldMask);
+	endEditCP(WindowsDefaultComboBoxComponentGeneratorSelectedBackground, ColorLayer::ColorFieldMask);
 
-    UIBackgroundPtr WindowsDefaultComboBoxComponentGeneratorFocusedBackground = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBackground();
+    LayerPtr WindowsDefaultComboBoxComponentGeneratorFocusedBackground = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBackground();
 
     BorderPtr WindowsDefaultComboBoxComponentGeneratorSelectedBorder = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBorder();
 
@@ -4200,7 +4200,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsTableHeaderBorder = EmptyBorder::create();
 
 	//Windows RotatedComponentBackground
-	EmptyUIBackgroundPtr WindowsTableHeaderBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsTableHeaderBackground = EmptyLayer::create();
     
 	//Windows RotatedComponent
 	beginEditCP(WindowsTableHeader);
@@ -4244,7 +4244,7 @@ void WindowsLookAndFeel::init(void)
 	EmptyBorderPtr WindowsTableBorder = EmptyBorder::create();
 
 	//Windows RotatedComponentBackground
-	EmptyUIBackgroundPtr WindowsTableBackground = EmptyUIBackground::create();
+	EmptyLayerPtr WindowsTableBackground = EmptyLayer::create();
 
 	//Windows RotatedComponent
 	beginEditCP(WindowsTable);
@@ -4315,9 +4315,9 @@ void WindowsLookAndFeel::init(void)
 
     LabelPtr WindowsDefaultTreeComponentGeneratorNodeLabelPrototype = Label::create();
 
-    ColorUIBackgroundPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = ColorUIBackground::create();
+    ColorLayerPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = ColorLayer::create();
 
-    ColorUIBackgroundPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = ColorUIBackground::create();
+    ColorLayerPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = ColorLayer::create();
 
     LineBorderPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = LineBorder::create();
 
@@ -4370,7 +4370,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsTreeBorder);
 
 	//Windows RotatedComponentBackground
-	ColorUIBackgroundPtr WindowsTreeBackground = ColorUIBackground::create();
+	ColorLayerPtr WindowsTreeBackground = ColorLayer::create();
 	beginEditCP(WindowsTreeBackground);
 		WindowsTreeBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(WindowsTreeBackground);
