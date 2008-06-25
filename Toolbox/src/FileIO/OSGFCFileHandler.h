@@ -81,6 +81,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileHandler
      /*---------------------------------------------------------------------*/
      //virtual bool               setOptions(const Char8 *suffix, const Char8 *options);
      //virtual const Char8        *getOptions(const Char8 *suffix);
+
+     const Path& getRootFilePath(void) const;
  
      /*=========================  PROTECTED  ===============================*/
    protected:
@@ -121,6 +123,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileHandler
      progresscbfp    _ReadProgressFP;
      progressS       _ProgressData;
      bool            _ReadReady;
+
+     Path _RootFilePath;
 };
 
 typedef FCFileHandler* FCFileHandlerP;

@@ -188,7 +188,14 @@ std::string XMLFCFileType::getName(void) const
 					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
 					if(SearchItor != (*NodeListItor)->get_attrmap().end())
 					{
-						FilePathAttachment::setFilePath(AttachmentContainerPtr::dcast(NewFieldContainer),Path(SearchItor->second.c_str()));
+                        Path TheFilePath(SearchItor->second.c_str());
+                        if(!TheFilePath.has_root_path())
+                        {
+                            TheFilePath = FCFileHandler::the()->getRootFilePath() / TheFilePath;
+                        }
+
+
+						FilePathAttachment::setFilePath(AttachmentContainerPtr::dcast(NewFieldContainer),TheFilePath);
 
 						if(FilePathAttachment::loadFromFilePath(AttachmentContainerPtr::dcast(NewFieldContainer)))
 						{

@@ -241,6 +241,10 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 std::string Extension(boost::filesystem::extension(FilePath));
 	 boost::algorithm::trim_if(Extension,boost::is_any_of("."));
 
+     //Get the Parent Directory Path of the file
+     _RootFilePath = FilePath;
+     _RootFilePath.remove_leaf();
+
 	 //Get the FileType for this extension
 	 FCFileTypeP TheFileType(getFileType(Extension, FCFileType::OSG_READ_SUPPORTED));
 
