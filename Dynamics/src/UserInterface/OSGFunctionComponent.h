@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGFunctionComponentBase.h"
 

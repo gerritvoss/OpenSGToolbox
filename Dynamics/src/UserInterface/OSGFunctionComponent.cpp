@@ -50,6 +50,7 @@
 #include "OSGFunctionComponent.h"
 #include "Function/OSGFunction.h"
 #include <OpenSG/UserInterface/OSGUIDrawUtils.h>
+#include "UserInterface/IOTabGenerators/OSGFunctionComponentIOTabComponentGenerator.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -216,6 +217,8 @@ void FunctionComponent::drawInternal(const GraphicsPtr Graphics) const
 		}
 		*/
 	}
+
+    Inherited::drawInternal(Graphics);
 }
 
 Vec2f FunctionComponent::getContentRequestedSize(void) const
@@ -226,16 +229,79 @@ Vec2f FunctionComponent::getContentRequestedSize(void) const
 void FunctionComponent::updateLayout(void)
 {
     //TODO: Implement
+    //Loop through each of the Input tabs and set its Size and Position
+    for(UInt32 i(0) ; i<getInputTabs().size() ; ++i)
+    {
+        beginEditCP(getInputTabs()[i], Component::PositionFieldMask | Component::SizeFieldMask);
+            getInputTabs()[i]->setPosition(Pnt2f(0.0f,0.0f));
+            getInputTabs()[i]->setSize(getInputTabs()[i]->getPreferredSize());
+        endEditCP(getInputTabs()[i], Component::PositionFieldMask | Component::SizeFieldMask);
+    }
+
+    //Loop through each of the Output tabs and set its Size and Position
+
     Inherited::updateLayout();
 }
 
 void FunctionComponent::updateTabs(void)
 {
+	FunctionIOTypeVector EmptyTypeVector;
+	FunctionIOTypeVector OutputTypes = getFunction()->getOutputTypes(EmptyTypeVector);
+	FunctionIOTypeVector InputTypes = getFunction()->getInputTypes(EmptyTypeVector);
+	UInt32 NumInputs = InputTypes.size();
+	UInt32 NumOutputs = OutputTypes.size();
+
     //For Each Input Tab
-    //Update it
+    ComponentPtr TabComponent;
+    if(getInputTabComponentGenerator() != NullFC)
+    {
+        beginEditCP(FunctionComponentPtr(this), FunctionComponent::InputTabsFieldMask);
+            getInputTabs().clear();
+            //Update it
+            for(UInt32 i(0) ; i<NumInputs ; ++i)
+            {
+                if(getInputTabComponentGenerator()->getType().isDerivedFrom( FunctionComponentIOTabComponentGenerator::getClassType()))
+                {
+                    TabComponent = FunctionComponentIOTabComponentGenerator::Ptr::dcast(getInputTabComponentGenerator())
+                        ->getIOTabComponent(FunctionComponentPtr(this), InputTypes[i],i,false,false,false,false);
+                }
+                else
+                {
+                    TabComponent = getInputTabComponentGenerator()->getComponent(FunctionComponentPtr(this),SharedFieldPtr(),i,0,false,false);
+                }
+                if(TabComponent != NullFC)
+                {
+                    getInputTabs().push_back(TabComponent);
+                }
+            }
+        endEditCP(FunctionComponentPtr(this), FunctionComponent::InputTabsFieldMask);
+    }
+
     
     //For Each Output Tab
-    //Update it
+    if(getOutputTabComponentGenerator() != NullFC)
+    {
+        beginEditCP(FunctionComponentPtr(this), FunctionComponent::OutputTabsFieldMask);
+            getOutputTabs().clear();
+            //Update it
+            for(UInt32 i(0) ; i<NumOutputs ; ++i)
+            {
+                if(getOutputTabComponentGenerator()->getType().isDerivedFrom( FunctionComponentIOTabComponentGenerator::getClassType()))
+                {
+                    TabComponent = FunctionComponentIOTabComponentGenerator::Ptr::dcast(getOutputTabComponentGenerator())
+                        ->getIOTabComponent(FunctionComponentPtr(this), OutputTypes[i],i,false,false,false,false);
+                }
+                else
+                {
+                    TabComponent = getOutputTabComponentGenerator()->getComponent(FunctionComponentPtr(this),SharedFieldPtr(),i,0,false,false);
+                }
+                if(TabComponent != NullFC)
+                {
+                    getOutputTabs().push_back(TabComponent);
+                }
+            }
+        endEditCP(FunctionComponentPtr(this), FunctionComponent::OutputTabsFieldMask);
+    }
 }
 
 void FunctionComponent::updateInputTab(UInt32 Index)
@@ -273,7 +339,8 @@ void FunctionComponent::changed(BitVector whichField, UInt32 origin)
     Inherited::changed(whichField, origin);
 
     if((whichField & InputTabComponentGeneratorFieldMask) ||
-        (whichField & OutputTabComponentGeneratorFieldMask))
+        (whichField & OutputTabComponentGeneratorFieldMask) ||
+        (whichField & FunctionFieldMask))
     {
         updateTabs();
     }

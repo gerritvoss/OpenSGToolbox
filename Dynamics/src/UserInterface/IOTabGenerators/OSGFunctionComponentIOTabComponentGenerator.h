@@ -43,9 +43,11 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGFunctionComponentIOTabComponentGeneratorBase.h"
 #include "UserInterface/OSGFunctionComponentFields.h"
+#include "Function/OSGFunction.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,7 +80,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentIOTabComponentGenerator : publ
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual ComponentPtr getIOTabComponent(FunctionComponentPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo) = 0;
+	virtual ComponentPtr getIOTabComponent(FunctionComponentPtr Parent, const FunctionIOType& Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo) = 0;
 
 	virtual ComponentPtr getComponent(ComponentPtr Parent, SharedFieldPtr Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
     /*=========================  PROTECTED  ===============================*/

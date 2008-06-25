@@ -90,6 +90,11 @@ private:
     std::string _IOParameterName;
     const TypeBase* _Type;
 public:
+    FunctionIOType() :
+       _IOParameterName(""),
+       _Type(NULL)
+    {
+    }
     FunctionIOType(const std::string& name, const TypeBase* type) :
        _IOParameterName(name),
        _Type(type)

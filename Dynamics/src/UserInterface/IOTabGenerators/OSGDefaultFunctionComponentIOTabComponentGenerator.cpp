@@ -47,6 +47,9 @@
 
 #include <OpenSG/OSGConfig.h>
 
+
+#include <OpenSG/UserInterface/OSGButton.h>
+
 #include "OSGDefaultFunctionComponentIOTabComponentGenerator.h"
 
 OSG_BEGIN_NAMESPACE
@@ -75,9 +78,15 @@ void DefaultFunctionComponentIOTabComponentGenerator::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-ComponentPtr DefaultFunctionComponentIOTabComponentGenerator::getIOTabComponent(FunctionComponentPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo)
+ComponentPtr DefaultFunctionComponentIOTabComponentGenerator::getIOTabComponent(FunctionComponentPtr Parent, const FunctionIOType& Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo)
 {
-    return NullFC;
+    ButtonPtr TabComponent = Button::create();
+
+    beginEditCP(TabComponent, Button::TextFieldMask);
+        TabComponent->setText(Value.getType()->getCName());
+    endEditCP(TabComponent, Button::TextFieldMask);
+
+    return TabComponent;
 }
 
 /*-------------------------------------------------------------------------*\

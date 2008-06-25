@@ -79,13 +79,14 @@ void FunctionComponentIOTabComponentGenerator::initMethod (void)
 
 ComponentPtr FunctionComponentIOTabComponentGenerator::getComponent(ComponentPtr Parent, SharedFieldPtr Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
 {
+    FunctionIOType IOTypeValue;
     if(Parent->getType().isDerivedFrom(FunctionComponent::getClassType()))
     {
-        return getIOTabComponent(FunctionComponent::Ptr::dcast(Parent), Value, PrimaryAxisIndex, IsSelected, HasFocus, false, false);
+        return getIOTabComponent(FunctionComponent::Ptr::dcast(Parent), IOTypeValue, PrimaryAxisIndex, IsSelected, HasFocus, false, false);
     }
     else
     {
-        return getIOTabComponent(NullFC, Value, PrimaryAxisIndex, IsSelected, HasFocus, false, false);
+        return getIOTabComponent(NullFC, IOTypeValue, PrimaryAxisIndex, IsSelected, HasFocus, false, false);
     }
 }
 /*-------------------------------------------------------------------------*\

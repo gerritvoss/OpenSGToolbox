@@ -35,7 +35,7 @@
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
@@ -43,6 +43,7 @@
 
 #include <OpenSG/Dynamics/OSGFunctionComponent.h>
 #include <OpenSG/Dynamics/OSGDataConverter.h>
+#include <OpenSG/Dynamics/OSGDefaultFunctionComponentIOTabComponentGenerator.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -149,8 +150,11 @@ int main(int argc, char **argv)
         FunctionComponentBorder->setCornerRadius(4.0f);
     endEditCP(FunctionComponentBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
 
+    //Create the Default Tab Generator
+    DefaultFunctionComponentIOTabComponentGeneratorPtr TabGenerator = DefaultFunctionComponentIOTabComponentGenerator::create();
+
     FunctionComponentPtr ExampleFunctionComponent = FunctionComponent::create();
-    beginEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabVerticalAlignmentFieldMask | FunctionComponent::InputTabHorizontalAlignmentFieldMask | FunctionComponent::OutputTabVerticalAlignmentFieldMask | FunctionComponent::OutputTabHorizontalAlignmentFieldMask);
+    beginEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabVerticalAlignmentFieldMask | FunctionComponent::InputTabHorizontalAlignmentFieldMask | FunctionComponent::OutputTabVerticalAlignmentFieldMask | FunctionComponent::OutputTabHorizontalAlignmentFieldMask);
         ExampleFunctionComponent->setPreferredSize(Vec2f(100.0f,100.0f));
         ExampleFunctionComponent->setBorders(FunctionComponentBorder);
 		ExampleFunctionComponent->setFunction(TheVec3fConverter);
@@ -160,15 +164,18 @@ int main(int argc, char **argv)
 		ExampleFunctionComponent->setInputTabHorizontalAlignment(0.0);
 		ExampleFunctionComponent->setOutputTabVerticalAlignment(0.5);
 		ExampleFunctionComponent->setOutputTabHorizontalAlignment(1.0);
+        
+		ExampleFunctionComponent->setInputTabComponentGenerator(TabGenerator);
+		ExampleFunctionComponent->setOutputTabComponentGenerator(TabGenerator);
 
-    endEditCP(ExampleFunctionComponent, FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabVerticalAlignmentFieldMask | FunctionComponent::InputTabHorizontalAlignmentFieldMask | FunctionComponent::OutputTabVerticalAlignmentFieldMask | FunctionComponent::OutputTabHorizontalAlignmentFieldMask);
+    endEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabVerticalAlignmentFieldMask | FunctionComponent::InputTabHorizontalAlignmentFieldMask | FunctionComponent::OutputTabVerticalAlignmentFieldMask | FunctionComponent::OutputTabHorizontalAlignmentFieldMask);
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 
