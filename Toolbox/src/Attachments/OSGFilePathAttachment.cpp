@@ -47,6 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGImageFileHandler.h>
+#include <OpenSG/OSGSceneFileHandler.h>
 
 #include "OSGFilePathAttachment.h"
 #include <boost/filesystem/operations.hpp>
@@ -138,7 +139,7 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container,
     endEditCP(PathAttachment, FilePathAttachment::PathFieldMask);
 }
 
-bool FilePathAttachment::loadFromFilePath(      AttachmentContainerPtr  container)
+bool FilePathAttachment::loadFromFilePath(AttachmentContainerPtr&  container)
 {
 	const Path* LoadFilePath = FilePathAttachment::getFilePath(container);
 	if(LoadFilePath != NULL && boost::filesystem::exists(*LoadFilePath))
@@ -146,6 +147,10 @@ bool FilePathAttachment::loadFromFilePath(      AttachmentContainerPtr  containe
 		if(container->getType().isDerivedFrom(Image::getClassType()))
 		{
 			ImageFileHandler::the().read(Image::Ptr::dcast(container),LoadFilePath->string().c_str());
+		}
+		else if(container->getType().isDerivedFrom(Node::getClassType()))
+		{
+			Node::Ptr::dcast(container) = SceneFileHandler::the().read(LoadFilePath->string().c_str());
 		}
 		return true;
 	}

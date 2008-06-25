@@ -79,7 +79,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING FilePathAttachment : public FilePathAttachmentBa
 
     /*! \}                                                                 */
     static const Path* getFilePath(      AttachmentContainerPtr  container);
-    static bool loadFromFilePath(      AttachmentContainerPtr  container);
+    static bool loadFromFilePath(      AttachmentContainerPtr&  container);
 
     static void   setFilePath(      AttachmentContainerPtr  container, 
                          const Path            &ThePath     );
