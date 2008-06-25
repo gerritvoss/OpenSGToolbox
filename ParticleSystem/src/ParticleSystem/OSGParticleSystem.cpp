@@ -1019,10 +1019,16 @@ void ParticleSystem::update(const Time& elps)
     }
 
 	//Generate Particles with Generators
-	for(UInt32 j(0) ; j<getGenerators().size(); ++j)
+	UInt32 NumGenerators(getGenerators().size());
+	for(UInt32 j(0) ; j<NumGenerators; )
 	{
 		if(getGenerators()[j]->generate(ParticleSystemPtr(this), elps))
 		{
+			--NumGenerators;
+		}
+		else
+		{
+			++j;
 		}
 	}
 

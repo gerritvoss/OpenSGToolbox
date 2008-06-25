@@ -85,7 +85,7 @@ bool BurstParticleGenerator::generate(ParticleSystemPtr System, const Time& elps
 	{
 		generateDynamic(System);
 	}
-	return false;
+	return true;
 }
 
 /*-------------------------------------------------------------------------*\
