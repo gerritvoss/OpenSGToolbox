@@ -19,9 +19,12 @@
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
-#include <OpenSG/ParticleSystem/OSGAgeFadeParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGBurstParticleGenerator.h>
+#include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
+#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
 
-
+#include <OpenSG/Dynamics/OSGDataConverter.h>
+#include <OpenSG/Dynamics/OSGCompoundFunction.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
 
@@ -36,9 +39,17 @@ bool ExitApp = false;
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
+void ClickToGenerate(const MouseEvent& e);
 
 FunctionPtr createPositionDistribution(void);
 FunctionPtr createLifespanDistribution(void);
+FunctionPtr createVelocityDistribution(void);
+FunctionPtr createAccelerationDistribution(void);
+
+//Create a Rate Particle Generator
+	BurstParticleGeneratorPtr ExampleBurstGenerator;
+
+ParticleSystemPtr ExampleParticleSystem;
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -51,6 +62,14 @@ public:
        {
            ExitApp = true;
        }
+
+	   if(e.getKey() == KeyEvent::KEY_B)//generate particles when clicked
+	   {
+		  //Attach the Generator to the Particle System
+				beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask);
+					ExampleParticleSystem->getGenerators().push_back(ExampleBurstGenerator);
+				endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask);
+	   }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -61,6 +80,12 @@ public:
    {
    }
 };
+
+void ClickToGenerate(const MouseEvent& e)
+{
+	
+
+}
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -81,6 +106,17 @@ class TutorialMouseListener : public MouseListener
   public:
     virtual void mouseClicked(const MouseEvent& e)
     {
+		if(e.getButton()== MouseEvent::BUTTON1)
+		{
+
+			
+		}
+
+		if(e.getButton()== MouseEvent::BUTTON3)
+		{
+
+		}
+
     }
     virtual void mouseEntered(const MouseEvent& e)
     {
@@ -174,66 +210,48 @@ int main(int argc, char **argv)
 		PSMaterial->addChunk(PSBlendChunk);
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
-	FunctionPtr PositionFunction = createPositionDistribution();
-	FunctionPtr LifespanFunction = createLifespanDistribution();
-	
-	Pnt3f PositionReturnValue;
-	Time LifespanReturnValue = -1;
+
 
 	//Particle System
-    FunctionIOParameterVector EmptyParameters;
-    ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-	for(UInt32 i(0) ; i<500 ; ++i)//controls how many particles are created
-	{
-		if(PositionFunction != NullFC)
-		{
-			PositionReturnValue = 
-				FunctionIOData<Pnt3f>::dcast(
-				PositionFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
-		}
-		if(LifespanFunction != NullFC)
-		{
-			LifespanReturnValue = 
-				FunctionIOData<Real32>::dcast(
-				LifespanFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
-		}
+		
+    ExampleParticleSystem = osg::ParticleSystem::create();
+				ExampleParticleSystem->addParticle(Pnt3f(0,0,0),
+					Vec3f(0.0,0.0f,1.0f),
+					Color4f(1.0,0.0,0.0,1.0), 
+					Vec3f(1.0,1.0,1.0), 
+					5, 
+					Vec3f(0.0f,0.0f,0.0f), //Velocity
+					Vec3f(0.0f,0.0f,0.0f)
+					,0);
+				ExampleParticleSystem->addParticle(Pnt3f(100,100,100),
+					Vec3f(0.0,0.0f,1.0f),
+					Color4f(1.0,0.0,0.0,1.0), 
+					Vec3f(1.0,1.0,1.0), 
+					5, 
+					Vec3f(0.0f,0.0f,0.0f), //Velocity
+					Vec3f(0.0f,0.0f,0.0f)
+					,0);
+			ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
-		ExampleParticleSystem->addParticle(
-			PositionReturnValue,
-			Vec3f(0.0f,0.0f,1.0f),
-			Color4f(1.0,0.0,0.0,0.0), 
-			Vec3f(1.0,1.0,1.0), 
-			LifespanReturnValue, 
-			Vec3f(0.0f,2.0f,0.0f), //Velocity
-			Vec3f(0.0f,0.0f,0.0f)	//acceleration
-			,0);
-	}
-    ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+    FunctionIOParameterVector EmptyParameters;
 
 	//Particle System Drawer
 	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
 	
 
-	//Create an AgeFadeAffector
-	AgeFadeParticleAffectorPtr ExampleAgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
-	beginEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
-		ExampleAgeFadeParticleAffector->setFadeInTime(1.0f);
-		ExampleAgeFadeParticleAffector->setFadeOutTime(1.0f);
-		ExampleAgeFadeParticleAffector->setStartAlpha(1.0f);
-		ExampleAgeFadeParticleAffector->setFadeToAlpha(0.0f);
-		ExampleAgeFadeParticleAffector->setEndAlpha(1.0f);
-		
-		
-	endEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+
+
+	ExampleBurstGenerator = osg::BurstParticleGenerator::create();
+	//Attach the function objects to the Generator
+	beginEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+		ExampleBurstGenerator->setPositionFunction(createPositionDistribution());
+		ExampleBurstGenerator->setLifespanFunction(createLifespanDistribution());
+		ExampleBurstGenerator->setBurstAmount(50.0);
+		ExampleBurstGenerator->setVelocityFunction(createVelocityDistribution());
+		ExampleBurstGenerator->setAccelerationFunction(createAccelerationDistribution());
+	endEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
 	
-	//beginEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask);
-
-	beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
-		ExampleParticleSystem->getAffectors().push_back(ExampleAgeFadeParticleAffector);
-	endEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
-
+	
 
 	//Particle System Node
     ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
@@ -290,21 +308,56 @@ void reshape(Vec2f Size)
 
 FunctionPtr createPositionDistribution(void)
 {
-    //Cylinder Distribution
-    CylinderDistribution3DPtr TheCylinderDistribution = CylinderDistribution3D::create();
-    beginEditCP(TheCylinderDistribution);
-      TheCylinderDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheCylinderDistribution->setInnerRadius(30.0);
-      TheCylinderDistribution->setOuterRadius(100.0);
-      TheCylinderDistribution->setMinTheta(0.0);
-      TheCylinderDistribution->setMaxTheta(6.283185);
-      TheCylinderDistribution->setHeight(400.0);
-      TheCylinderDistribution->setNormal(Vec3f(0.0,0.0,1.0));
-      TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::SURFACE);
-    endEditCP(TheCylinderDistribution);
+   
 
-    return TheCylinderDistribution;
+	 //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(0.0);
+      TheSphereDistribution->setOuterRadius(3.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(6.283185);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+    endEditCP(TheSphereDistribution);
+
+    return TheSphereDistribution;
 }
+
+FunctionPtr createVelocityDistribution(void)
+{
+   
+
+	 //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(3.0);
+      TheSphereDistribution->setOuterRadius(10.0);
+      TheSphereDistribution->setMinTheta(-3.141950);
+      TheSphereDistribution->setMaxTheta(3.141950);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
+    endEditCP(TheSphereDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheSphereDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
+}
+
+
 
 FunctionPtr createLifespanDistribution(void)
 {
@@ -315,4 +368,29 @@ FunctionPtr createLifespanDistribution(void)
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;
+}
+
+FunctionPtr createAccelerationDistribution(void)
+{
+	Pnt3f pt1 = (0.0,-30.0,0.0);
+
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+      TheLineDistribution->setPoint1(pt1);
+	  TheLineDistribution->setPoint2(pt1);
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheAccelerationDistribution = CompoundFunction::create();
+	beginEditCP(TheAccelerationDistribution);
+		TheAccelerationDistribution->getFunctions().push_back(TheLineDistribution);
+		TheAccelerationDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheAccelerationDistribution);
+
+    return TheAccelerationDistribution;
 }

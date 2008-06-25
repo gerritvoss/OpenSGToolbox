@@ -283,6 +283,7 @@ FunctionPtr createPositionDistribution(void)
       TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::SURFACE);
     endEditCP(TheCylinderDistribution);
 
+
     return TheCylinderDistribution;
 }
 
