@@ -165,6 +165,7 @@ int main(int argc, char **argv)
 		ExampleFunctionComponent->setOutputTabVerticalAlignment(0.5);
 		ExampleFunctionComponent->setOutputTabHorizontalAlignment(1.0);
         
+        //Add Generators
 		ExampleFunctionComponent->setInputTabComponentGenerator(TabGenerator);
 		ExampleFunctionComponent->setOutputTabComponentGenerator(TabGenerator);
 
