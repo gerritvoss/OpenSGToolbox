@@ -46,8 +46,10 @@
 #define OSG_COMPILETOOLBOXLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGImageFileHandler.h>
 
 #include "OSGFilePathAttachment.h"
+#include <boost/filesystem/operations.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -139,13 +141,17 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container,
 bool FilePathAttachment::loadFromFilePath(      AttachmentContainerPtr  container)
 {
 	const Path* LoadFilePath = FilePathAttachment::getFilePath(container);
-	if(LoadFilePath == NULL)
+	if(LoadFilePath != NULL && boost::filesystem::exists(*LoadFilePath))
 	{
-		return false;
+		if(container->getType().isDerivedFrom(Image::getClassType()))
+		{
+			ImageFileHandler::the().read(Image::Ptr::dcast(container),LoadFilePath->string().c_str());
+		}
+		return true;
 	}
 	else
 	{
-		return true;
+		return false;
 	}
 }
 
