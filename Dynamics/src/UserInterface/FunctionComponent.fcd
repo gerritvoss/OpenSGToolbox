@@ -32,6 +32,15 @@ A User Interface Component that represents a function.
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="TextAlignment"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.5f, 1.0f"
+	>
+	</Field>
    
 	<Field
 		name="InputTabOrientation"
@@ -53,40 +62,22 @@ A User Interface Component that represents a function.
 	</Field>
    
 	<Field
-		name="InputTabVerticalAlignment"
-		type="Real32"
+		name="InputTabAlignment"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0.5f"
-	>
-	</Field>
-	<Field
-		name="InputTabHorizontalAlignment"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="0.0f"
+		defaultValue="0.0f, 0.5f"
 	>
 	</Field>
    
 	<Field
-		name="OutputTabVerticalAlignment"
-		type="Real32"
+		name="OutputTabAlignment"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0.5f"
-	>
-	</Field>
-	<Field
-		name="OutputTabHorizontalAlignment"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="1.0f"
+		defaultValue="1.0f, 0.5f"
 	>
 	</Field>
    

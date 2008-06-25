@@ -110,6 +110,13 @@ SFUIFontPtr *FunctionComponentBase::getSFFont(void)
     return &_sfFont;
 }
 
+//! Get the FunctionComponent::_sfTextAlignment field.
+inline
+SFVec2f *FunctionComponentBase::getSFTextAlignment(void)
+{
+    return &_sfTextAlignment;
+}
+
 //! Get the FunctionComponent::_sfInputTabOrientation field.
 inline
 SFUInt32 *FunctionComponentBase::getSFInputTabOrientation(void)
@@ -124,32 +131,18 @@ SFUInt32 *FunctionComponentBase::getSFOutputTabOrientation(void)
     return &_sfOutputTabOrientation;
 }
 
-//! Get the FunctionComponent::_sfInputTabVerticalAlignment field.
+//! Get the FunctionComponent::_sfInputTabAlignment field.
 inline
-SFReal32 *FunctionComponentBase::getSFInputTabVerticalAlignment(void)
+SFVec2f *FunctionComponentBase::getSFInputTabAlignment(void)
 {
-    return &_sfInputTabVerticalAlignment;
+    return &_sfInputTabAlignment;
 }
 
-//! Get the FunctionComponent::_sfInputTabHorizontalAlignment field.
+//! Get the FunctionComponent::_sfOutputTabAlignment field.
 inline
-SFReal32 *FunctionComponentBase::getSFInputTabHorizontalAlignment(void)
+SFVec2f *FunctionComponentBase::getSFOutputTabAlignment(void)
 {
-    return &_sfInputTabHorizontalAlignment;
-}
-
-//! Get the FunctionComponent::_sfOutputTabVerticalAlignment field.
-inline
-SFReal32 *FunctionComponentBase::getSFOutputTabVerticalAlignment(void)
-{
-    return &_sfOutputTabVerticalAlignment;
-}
-
-//! Get the FunctionComponent::_sfOutputTabHorizontalAlignment field.
-inline
-SFReal32 *FunctionComponentBase::getSFOutputTabHorizontalAlignment(void)
-{
-    return &_sfOutputTabHorizontalAlignment;
+    return &_sfOutputTabAlignment;
 }
 
 //! Get the FunctionComponent::_sfInputTabSpacing field.
@@ -265,6 +258,27 @@ void FunctionComponentBase::setFont(const UIFontPtr &value)
     _sfFont.setValue(value);
 }
 
+//! Get the value of the FunctionComponent::_sfTextAlignment field.
+inline
+Vec2f &FunctionComponentBase::getTextAlignment(void)
+{
+    return _sfTextAlignment.getValue();
+}
+
+//! Get the value of the FunctionComponent::_sfTextAlignment field.
+inline
+const Vec2f &FunctionComponentBase::getTextAlignment(void) const
+{
+    return _sfTextAlignment.getValue();
+}
+
+//! Set the value of the FunctionComponent::_sfTextAlignment field.
+inline
+void FunctionComponentBase::setTextAlignment(const Vec2f &value)
+{
+    _sfTextAlignment.setValue(value);
+}
+
 //! Get the value of the FunctionComponent::_sfInputTabOrientation field.
 inline
 UInt32 &FunctionComponentBase::getInputTabOrientation(void)
@@ -307,88 +321,46 @@ void FunctionComponentBase::setOutputTabOrientation(const UInt32 &value)
     _sfOutputTabOrientation.setValue(value);
 }
 
-//! Get the value of the FunctionComponent::_sfInputTabVerticalAlignment field.
+//! Get the value of the FunctionComponent::_sfInputTabAlignment field.
 inline
-Real32 &FunctionComponentBase::getInputTabVerticalAlignment(void)
+Vec2f &FunctionComponentBase::getInputTabAlignment(void)
 {
-    return _sfInputTabVerticalAlignment.getValue();
+    return _sfInputTabAlignment.getValue();
 }
 
-//! Get the value of the FunctionComponent::_sfInputTabVerticalAlignment field.
+//! Get the value of the FunctionComponent::_sfInputTabAlignment field.
 inline
-const Real32 &FunctionComponentBase::getInputTabVerticalAlignment(void) const
+const Vec2f &FunctionComponentBase::getInputTabAlignment(void) const
 {
-    return _sfInputTabVerticalAlignment.getValue();
+    return _sfInputTabAlignment.getValue();
 }
 
-//! Set the value of the FunctionComponent::_sfInputTabVerticalAlignment field.
+//! Set the value of the FunctionComponent::_sfInputTabAlignment field.
 inline
-void FunctionComponentBase::setInputTabVerticalAlignment(const Real32 &value)
+void FunctionComponentBase::setInputTabAlignment(const Vec2f &value)
 {
-    _sfInputTabVerticalAlignment.setValue(value);
+    _sfInputTabAlignment.setValue(value);
 }
 
-//! Get the value of the FunctionComponent::_sfInputTabHorizontalAlignment field.
+//! Get the value of the FunctionComponent::_sfOutputTabAlignment field.
 inline
-Real32 &FunctionComponentBase::getInputTabHorizontalAlignment(void)
+Vec2f &FunctionComponentBase::getOutputTabAlignment(void)
 {
-    return _sfInputTabHorizontalAlignment.getValue();
+    return _sfOutputTabAlignment.getValue();
 }
 
-//! Get the value of the FunctionComponent::_sfInputTabHorizontalAlignment field.
+//! Get the value of the FunctionComponent::_sfOutputTabAlignment field.
 inline
-const Real32 &FunctionComponentBase::getInputTabHorizontalAlignment(void) const
+const Vec2f &FunctionComponentBase::getOutputTabAlignment(void) const
 {
-    return _sfInputTabHorizontalAlignment.getValue();
+    return _sfOutputTabAlignment.getValue();
 }
 
-//! Set the value of the FunctionComponent::_sfInputTabHorizontalAlignment field.
+//! Set the value of the FunctionComponent::_sfOutputTabAlignment field.
 inline
-void FunctionComponentBase::setInputTabHorizontalAlignment(const Real32 &value)
+void FunctionComponentBase::setOutputTabAlignment(const Vec2f &value)
 {
-    _sfInputTabHorizontalAlignment.setValue(value);
-}
-
-//! Get the value of the FunctionComponent::_sfOutputTabVerticalAlignment field.
-inline
-Real32 &FunctionComponentBase::getOutputTabVerticalAlignment(void)
-{
-    return _sfOutputTabVerticalAlignment.getValue();
-}
-
-//! Get the value of the FunctionComponent::_sfOutputTabVerticalAlignment field.
-inline
-const Real32 &FunctionComponentBase::getOutputTabVerticalAlignment(void) const
-{
-    return _sfOutputTabVerticalAlignment.getValue();
-}
-
-//! Set the value of the FunctionComponent::_sfOutputTabVerticalAlignment field.
-inline
-void FunctionComponentBase::setOutputTabVerticalAlignment(const Real32 &value)
-{
-    _sfOutputTabVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the FunctionComponent::_sfOutputTabHorizontalAlignment field.
-inline
-Real32 &FunctionComponentBase::getOutputTabHorizontalAlignment(void)
-{
-    return _sfOutputTabHorizontalAlignment.getValue();
-}
-
-//! Get the value of the FunctionComponent::_sfOutputTabHorizontalAlignment field.
-inline
-const Real32 &FunctionComponentBase::getOutputTabHorizontalAlignment(void) const
-{
-    return _sfOutputTabHorizontalAlignment.getValue();
-}
-
-//! Set the value of the FunctionComponent::_sfOutputTabHorizontalAlignment field.
-inline
-void FunctionComponentBase::setOutputTabHorizontalAlignment(const Real32 &value)
-{
-    _sfOutputTabHorizontalAlignment.setValue(value);
+    _sfOutputTabAlignment.setValue(value);
 }
 
 //! Get the value of the FunctionComponent::_sfInputTabSpacing field.

@@ -69,12 +69,11 @@
 
 #include "Function/OSGFunctionFields.h" // Function type
 #include <OpenSG/UserInterface/OSGUIFont.h> // Font type
+#include <OpenSG/OSGVec2fFields.h> // TextAlignment type
 #include <OpenSG/OSGUInt32Fields.h> // InputTabOrientation type
 #include <OpenSG/OSGUInt32Fields.h> // OutputTabOrientation type
-#include <OpenSG/OSGReal32Fields.h> // InputTabVerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // InputTabHorizontalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // OutputTabVerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // OutputTabHorizontalAlignment type
+#include <OpenSG/OSGVec2fFields.h> // InputTabAlignment type
+#include <OpenSG/OSGVec2fFields.h> // OutputTabAlignment type
 #include <OpenSG/OSGReal32Fields.h> // InputTabSpacing type
 #include <OpenSG/OSGReal32Fields.h> // OutputTabSpacing type
 #include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // InputTabComponentGenerator type
@@ -108,35 +107,33 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
 
     enum
     {
-        FunctionFieldId                     = Inherited::NextFieldId,
-        FontFieldId                         = FunctionFieldId                     + 1,
-        InputTabOrientationFieldId          = FontFieldId                         + 1,
-        OutputTabOrientationFieldId         = InputTabOrientationFieldId          + 1,
-        InputTabVerticalAlignmentFieldId    = OutputTabOrientationFieldId         + 1,
-        InputTabHorizontalAlignmentFieldId  = InputTabVerticalAlignmentFieldId    + 1,
-        OutputTabVerticalAlignmentFieldId   = InputTabHorizontalAlignmentFieldId  + 1,
-        OutputTabHorizontalAlignmentFieldId = OutputTabVerticalAlignmentFieldId   + 1,
-        InputTabSpacingFieldId              = OutputTabHorizontalAlignmentFieldId + 1,
-        OutputTabSpacingFieldId             = InputTabSpacingFieldId              + 1,
-        InputTabComponentGeneratorFieldId   = OutputTabSpacingFieldId             + 1,
-        OutputTabComponentGeneratorFieldId  = InputTabComponentGeneratorFieldId   + 1,
-        InputTabsFieldId                    = OutputTabComponentGeneratorFieldId  + 1,
-        OutputTabsFieldId                   = InputTabsFieldId                    + 1,
-        FocusedTextColorFieldId             = OutputTabsFieldId                   + 1,
-        RolloverTextColorFieldId            = FocusedTextColorFieldId             + 1,
-        DisabledTextColorFieldId            = RolloverTextColorFieldId            + 1,
-        TextColorFieldId                    = DisabledTextColorFieldId            + 1,
-        NextFieldId                         = TextColorFieldId                    + 1
+        FunctionFieldId                    = Inherited::NextFieldId,
+        FontFieldId                        = FunctionFieldId                    + 1,
+        TextAlignmentFieldId               = FontFieldId                        + 1,
+        InputTabOrientationFieldId         = TextAlignmentFieldId               + 1,
+        OutputTabOrientationFieldId        = InputTabOrientationFieldId         + 1,
+        InputTabAlignmentFieldId           = OutputTabOrientationFieldId        + 1,
+        OutputTabAlignmentFieldId          = InputTabAlignmentFieldId           + 1,
+        InputTabSpacingFieldId             = OutputTabAlignmentFieldId          + 1,
+        OutputTabSpacingFieldId            = InputTabSpacingFieldId             + 1,
+        InputTabComponentGeneratorFieldId  = OutputTabSpacingFieldId            + 1,
+        OutputTabComponentGeneratorFieldId = InputTabComponentGeneratorFieldId  + 1,
+        InputTabsFieldId                   = OutputTabComponentGeneratorFieldId + 1,
+        OutputTabsFieldId                  = InputTabsFieldId                   + 1,
+        FocusedTextColorFieldId            = OutputTabsFieldId                  + 1,
+        RolloverTextColorFieldId           = FocusedTextColorFieldId            + 1,
+        DisabledTextColorFieldId           = RolloverTextColorFieldId           + 1,
+        TextColorFieldId                   = DisabledTextColorFieldId           + 1,
+        NextFieldId                        = TextColorFieldId                   + 1
     };
 
     static const OSG::BitVector FunctionFieldMask;
     static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector TextAlignmentFieldMask;
     static const OSG::BitVector InputTabOrientationFieldMask;
     static const OSG::BitVector OutputTabOrientationFieldMask;
-    static const OSG::BitVector InputTabVerticalAlignmentFieldMask;
-    static const OSG::BitVector InputTabHorizontalAlignmentFieldMask;
-    static const OSG::BitVector OutputTabVerticalAlignmentFieldMask;
-    static const OSG::BitVector OutputTabHorizontalAlignmentFieldMask;
+    static const OSG::BitVector InputTabAlignmentFieldMask;
+    static const OSG::BitVector OutputTabAlignmentFieldMask;
     static const OSG::BitVector InputTabSpacingFieldMask;
     static const OSG::BitVector OutputTabSpacingFieldMask;
     static const OSG::BitVector InputTabComponentGeneratorFieldMask;
@@ -175,12 +172,11 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
 
            SFFunctionPtr       *getSFFunction       (void);
            SFUIFontPtr         *getSFFont           (void);
+           SFVec2f             *getSFTextAlignment  (void);
            SFUInt32            *getSFInputTabOrientation(void);
            SFUInt32            *getSFOutputTabOrientation(void);
-           SFReal32            *getSFInputTabVerticalAlignment(void);
-           SFReal32            *getSFInputTabHorizontalAlignment(void);
-           SFReal32            *getSFOutputTabVerticalAlignment(void);
-           SFReal32            *getSFOutputTabHorizontalAlignment(void);
+           SFVec2f             *getSFInputTabAlignment(void);
+           SFVec2f             *getSFOutputTabAlignment(void);
            SFReal32            *getSFInputTabSpacing(void);
            SFReal32            *getSFOutputTabSpacing(void);
            SFComponentGeneratorPtr *getSFInputTabComponentGenerator(void);
@@ -196,18 +192,16 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
      const FunctionPtr         &getFunction       (void) const;
            UIFontPtr           &getFont           (void);
      const UIFontPtr           &getFont           (void) const;
+           Vec2f               &getTextAlignment  (void);
+     const Vec2f               &getTextAlignment  (void) const;
            UInt32              &getInputTabOrientation(void);
      const UInt32              &getInputTabOrientation(void) const;
            UInt32              &getOutputTabOrientation(void);
      const UInt32              &getOutputTabOrientation(void) const;
-           Real32              &getInputTabVerticalAlignment(void);
-     const Real32              &getInputTabVerticalAlignment(void) const;
-           Real32              &getInputTabHorizontalAlignment(void);
-     const Real32              &getInputTabHorizontalAlignment(void) const;
-           Real32              &getOutputTabVerticalAlignment(void);
-     const Real32              &getOutputTabVerticalAlignment(void) const;
-           Real32              &getOutputTabHorizontalAlignment(void);
-     const Real32              &getOutputTabHorizontalAlignment(void) const;
+           Vec2f               &getInputTabAlignment(void);
+     const Vec2f               &getInputTabAlignment(void) const;
+           Vec2f               &getOutputTabAlignment(void);
+     const Vec2f               &getOutputTabAlignment(void) const;
            Real32              &getInputTabSpacing(void);
      const Real32              &getInputTabSpacing(void) const;
            Real32              &getOutputTabSpacing(void);
@@ -238,12 +232,11 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
 
      void setFunction       ( const FunctionPtr &value );
      void setFont           ( const UIFontPtr &value );
+     void setTextAlignment  ( const Vec2f &value );
      void setInputTabOrientation( const UInt32 &value );
      void setOutputTabOrientation( const UInt32 &value );
-     void setInputTabVerticalAlignment( const Real32 &value );
-     void setInputTabHorizontalAlignment( const Real32 &value );
-     void setOutputTabVerticalAlignment( const Real32 &value );
-     void setOutputTabHorizontalAlignment( const Real32 &value );
+     void setInputTabAlignment( const Vec2f &value );
+     void setOutputTabAlignment( const Vec2f &value );
      void setInputTabSpacing( const Real32 &value );
      void setOutputTabSpacing( const Real32 &value );
      void setInputTabComponentGenerator( const ComponentGeneratorPtr &value );
@@ -296,12 +289,11 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentBase : public Container
 
     SFFunctionPtr       _sfFunction;
     SFUIFontPtr         _sfFont;
+    SFVec2f             _sfTextAlignment;
     SFUInt32            _sfInputTabOrientation;
     SFUInt32            _sfOutputTabOrientation;
-    SFReal32            _sfInputTabVerticalAlignment;
-    SFReal32            _sfInputTabHorizontalAlignment;
-    SFReal32            _sfOutputTabVerticalAlignment;
-    SFReal32            _sfOutputTabHorizontalAlignment;
+    SFVec2f             _sfInputTabAlignment;
+    SFVec2f             _sfOutputTabAlignment;
     SFReal32            _sfInputTabSpacing;
     SFReal32            _sfOutputTabSpacing;
     SFComponentGeneratorPtr   _sfInputTabComponentGenerator;

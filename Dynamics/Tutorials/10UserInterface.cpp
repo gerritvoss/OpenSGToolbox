@@ -154,22 +154,20 @@ int main(int argc, char **argv)
     DefaultFunctionComponentIOTabComponentGeneratorPtr TabGenerator = DefaultFunctionComponentIOTabComponentGenerator::create();
 
     FunctionComponentPtr ExampleFunctionComponent = FunctionComponent::create();
-    beginEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabVerticalAlignmentFieldMask | FunctionComponent::InputTabHorizontalAlignmentFieldMask | FunctionComponent::OutputTabVerticalAlignmentFieldMask | FunctionComponent::OutputTabHorizontalAlignmentFieldMask);
+    beginEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask);
         ExampleFunctionComponent->setPreferredSize(Vec2f(100.0f,100.0f));
         ExampleFunctionComponent->setBorders(FunctionComponentBorder);
 		ExampleFunctionComponent->setFunction(TheVec3fConverter);
 		ExampleFunctionComponent->setInputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
 		ExampleFunctionComponent->setOutputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
-		ExampleFunctionComponent->setInputTabVerticalAlignment(0.5);
-		ExampleFunctionComponent->setInputTabHorizontalAlignment(0.0);
-		ExampleFunctionComponent->setOutputTabVerticalAlignment(0.5);
-		ExampleFunctionComponent->setOutputTabHorizontalAlignment(1.0);
+		ExampleFunctionComponent->setInputTabAlignment(Vec2f(0.0, 0.5));
+		ExampleFunctionComponent->setOutputTabAlignment(Vec2f(1.0, 0.5));
         
         //Add Generators
 		ExampleFunctionComponent->setInputTabComponentGenerator(TabGenerator);
 		ExampleFunctionComponent->setOutputTabComponentGenerator(TabGenerator);
 
-    endEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabVerticalAlignmentFieldMask | FunctionComponent::InputTabHorizontalAlignmentFieldMask | FunctionComponent::OutputTabVerticalAlignmentFieldMask | FunctionComponent::OutputTabHorizontalAlignmentFieldMask);
+    endEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask);
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

@@ -126,7 +126,7 @@ void FunctionComponent::drawInternal(const GraphicsPtr Graphics) const
 			InputsBottomRight = Pnt2f(25.0f + TabWidth, 25.0f + TabHeight + ((NumInputs - 1) * (TabHeight + VerticalSpacing)));
 		
 			//Calculate Alignment
-			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (InputsBottomRight - InputsTopLeft), getInputTabVerticalAlignment(), getInputTabHorizontalAlignment());
+			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (InputsBottomRight - InputsTopLeft), getInputTabAlignment().y(), getInputTabAlignment().x());
 			
 			for (UInt32 i(0); i < NumInputs; ++i)
 			{
@@ -146,7 +146,7 @@ void FunctionComponent::drawInternal(const GraphicsPtr Graphics) const
 			InputsBottomRight = Pnt2f(25.0f + TabWidth + ((NumInputs - 1) * TabWidth + HorizontalSpacing), 25.0f + TabHeight);
 		
 			//Calculate Alignment
-			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (InputsBottomRight - InputsTopLeft), getInputTabVerticalAlignment(), getInputTabHorizontalAlignment());
+			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (InputsBottomRight - InputsTopLeft), getInputTabAlignment().y(), getInputTabAlignment().x());
 			
 			for (UInt32 i(0); i < NumInputs; ++i)
 			{
@@ -169,7 +169,7 @@ void FunctionComponent::drawInternal(const GraphicsPtr Graphics) const
 			OutputsBottomRight = Pnt2f(25.0f + TabWidth, 25.0f + TabHeight + ((NumOutputs - 1) * (TabHeight + VerticalSpacing)));
 		
 			//Calculate Alignment
-			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (OutputsBottomRight - OutputsTopLeft), getOutputTabVerticalAlignment(), getOutputTabHorizontalAlignment());
+			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (OutputsBottomRight - OutputsTopLeft), getOutputTabAlignment().y(), getOutputTabAlignment().x());
 			
 			for (UInt32 i(0); i < NumOutputs; ++i)
 			{
@@ -189,7 +189,7 @@ void FunctionComponent::drawInternal(const GraphicsPtr Graphics) const
 			OutputsBottomRight = Pnt2f(25.0f + TabWidth + ((NumOutputs - 1) * TabWidth + HorizontalSpacing), 25.0f + TabHeight);
 		
 			//Calculate Alignment
-			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (OutputsBottomRight - OutputsTopLeft), getOutputTabVerticalAlignment(), getOutputTabHorizontalAlignment());
+			Pnt2f AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (OutputsBottomRight - OutputsTopLeft), getOutputTabAlignment().y(), getOutputTabAlignment().x());
 			
 			for (UInt32 i(0); i < NumOutputs; ++i)
 			{

@@ -70,23 +70,20 @@ const OSG::BitVector  FunctionComponentBase::FunctionFieldMask =
 const OSG::BitVector  FunctionComponentBase::FontFieldMask = 
     (TypeTraits<BitVector>::One << FunctionComponentBase::FontFieldId);
 
+const OSG::BitVector  FunctionComponentBase::TextAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::TextAlignmentFieldId);
+
 const OSG::BitVector  FunctionComponentBase::InputTabOrientationFieldMask = 
     (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabOrientationFieldId);
 
 const OSG::BitVector  FunctionComponentBase::OutputTabOrientationFieldMask = 
     (TypeTraits<BitVector>::One << FunctionComponentBase::OutputTabOrientationFieldId);
 
-const OSG::BitVector  FunctionComponentBase::InputTabVerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabVerticalAlignmentFieldId);
+const OSG::BitVector  FunctionComponentBase::InputTabAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabAlignmentFieldId);
 
-const OSG::BitVector  FunctionComponentBase::InputTabHorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabHorizontalAlignmentFieldId);
-
-const OSG::BitVector  FunctionComponentBase::OutputTabVerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << FunctionComponentBase::OutputTabVerticalAlignmentFieldId);
-
-const OSG::BitVector  FunctionComponentBase::OutputTabHorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << FunctionComponentBase::OutputTabHorizontalAlignmentFieldId);
+const OSG::BitVector  FunctionComponentBase::OutputTabAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentBase::OutputTabAlignmentFieldId);
 
 const OSG::BitVector  FunctionComponentBase::InputTabSpacingFieldMask = 
     (TypeTraits<BitVector>::One << FunctionComponentBase::InputTabSpacingFieldId);
@@ -131,22 +128,19 @@ const OSG::BitVector FunctionComponentBase::MTInfluenceMask =
 /*! \var UIFontPtr       FunctionComponentBase::_sfFont
     
 */
+/*! \var Vec2f           FunctionComponentBase::_sfTextAlignment
+    
+*/
 /*! \var UInt32          FunctionComponentBase::_sfInputTabOrientation
     
 */
 /*! \var UInt32          FunctionComponentBase::_sfOutputTabOrientation
     
 */
-/*! \var Real32          FunctionComponentBase::_sfInputTabVerticalAlignment
+/*! \var Vec2f           FunctionComponentBase::_sfInputTabAlignment
     
 */
-/*! \var Real32          FunctionComponentBase::_sfInputTabHorizontalAlignment
-    
-*/
-/*! \var Real32          FunctionComponentBase::_sfOutputTabVerticalAlignment
-    
-*/
-/*! \var Real32          FunctionComponentBase::_sfOutputTabHorizontalAlignment
+/*! \var Vec2f           FunctionComponentBase::_sfOutputTabAlignment
     
 */
 /*! \var Real32          FunctionComponentBase::_sfInputTabSpacing
@@ -194,6 +188,11 @@ FieldDescription *FunctionComponentBase::_desc[] =
                      FontFieldId, FontFieldMask,
                      false,
                      (FieldAccessMethod) &FunctionComponentBase::getSFFont),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "TextAlignment", 
+                     TextAlignmentFieldId, TextAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFTextAlignment),
     new FieldDescription(SFUInt32::getClassType(), 
                      "InputTabOrientation", 
                      InputTabOrientationFieldId, InputTabOrientationFieldMask,
@@ -204,26 +203,16 @@ FieldDescription *FunctionComponentBase::_desc[] =
                      OutputTabOrientationFieldId, OutputTabOrientationFieldMask,
                      false,
                      (FieldAccessMethod) &FunctionComponentBase::getSFOutputTabOrientation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "InputTabVerticalAlignment", 
-                     InputTabVerticalAlignmentFieldId, InputTabVerticalAlignmentFieldMask,
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "InputTabAlignment", 
+                     InputTabAlignmentFieldId, InputTabAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &FunctionComponentBase::getSFInputTabVerticalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "InputTabHorizontalAlignment", 
-                     InputTabHorizontalAlignmentFieldId, InputTabHorizontalAlignmentFieldMask,
+                     (FieldAccessMethod) &FunctionComponentBase::getSFInputTabAlignment),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "OutputTabAlignment", 
+                     OutputTabAlignmentFieldId, OutputTabAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &FunctionComponentBase::getSFInputTabHorizontalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "OutputTabVerticalAlignment", 
-                     OutputTabVerticalAlignmentFieldId, OutputTabVerticalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &FunctionComponentBase::getSFOutputTabVerticalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "OutputTabHorizontalAlignment", 
-                     OutputTabHorizontalAlignmentFieldId, OutputTabHorizontalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &FunctionComponentBase::getSFOutputTabHorizontalAlignment),
+                     (FieldAccessMethod) &FunctionComponentBase::getSFOutputTabAlignment),
     new FieldDescription(SFReal32::getClassType(), 
                      "InputTabSpacing", 
                      InputTabSpacingFieldId, InputTabSpacingFieldMask,
@@ -353,12 +342,11 @@ void FunctionComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 FunctionComponentBase::FunctionComponentBase(void) :
     _sfFunction               (FunctionPtr(NullFC)), 
     _sfFont                   (UIFontPtr(NullFC)), 
+    _sfTextAlignment          (Vec2f(0.5f, 1.0f)), 
     _sfInputTabOrientation    (UInt32(FunctionComponent::VERTICAL_ORIENTATION)), 
     _sfOutputTabOrientation   (UInt32(FunctionComponent::VERTICAL_ORIENTATION)), 
-    _sfInputTabVerticalAlignment(Real32(0.5f)), 
-    _sfInputTabHorizontalAlignment(Real32(0.0f)), 
-    _sfOutputTabVerticalAlignment(Real32(0.5f)), 
-    _sfOutputTabHorizontalAlignment(Real32(1.0f)), 
+    _sfInputTabAlignment      (Vec2f(0.0f, 0.5f)), 
+    _sfOutputTabAlignment     (Vec2f(1.0f, 0.5f)), 
     _sfInputTabSpacing        (Real32(15.0f)), 
     _sfOutputTabSpacing       (Real32(15.0f)), 
     _sfInputTabComponentGenerator(ComponentGeneratorPtr(NullFC)), 
@@ -380,12 +368,11 @@ FunctionComponentBase::FunctionComponentBase(void) :
 FunctionComponentBase::FunctionComponentBase(const FunctionComponentBase &source) :
     _sfFunction               (source._sfFunction               ), 
     _sfFont                   (source._sfFont                   ), 
+    _sfTextAlignment          (source._sfTextAlignment          ), 
     _sfInputTabOrientation    (source._sfInputTabOrientation    ), 
     _sfOutputTabOrientation   (source._sfOutputTabOrientation   ), 
-    _sfInputTabVerticalAlignment(source._sfInputTabVerticalAlignment), 
-    _sfInputTabHorizontalAlignment(source._sfInputTabHorizontalAlignment), 
-    _sfOutputTabVerticalAlignment(source._sfOutputTabVerticalAlignment), 
-    _sfOutputTabHorizontalAlignment(source._sfOutputTabHorizontalAlignment), 
+    _sfInputTabAlignment      (source._sfInputTabAlignment      ), 
+    _sfOutputTabAlignment     (source._sfOutputTabAlignment     ), 
     _sfInputTabSpacing        (source._sfInputTabSpacing        ), 
     _sfOutputTabSpacing       (source._sfOutputTabSpacing       ), 
     _sfInputTabComponentGenerator(source._sfInputTabComponentGenerator), 
@@ -422,6 +409,11 @@ UInt32 FunctionComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFont.getBinSize();
     }
 
+    if(FieldBits::NoField != (TextAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfTextAlignment.getBinSize();
+    }
+
     if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
     {
         returnValue += _sfInputTabOrientation.getBinSize();
@@ -432,24 +424,14 @@ UInt32 FunctionComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfOutputTabOrientation.getBinSize();
     }
 
-    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (InputTabAlignmentFieldMask & whichField))
     {
-        returnValue += _sfInputTabVerticalAlignment.getBinSize();
+        returnValue += _sfInputTabAlignment.getBinSize();
     }
 
-    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OutputTabAlignmentFieldMask & whichField))
     {
-        returnValue += _sfInputTabHorizontalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfOutputTabVerticalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfOutputTabHorizontalAlignment.getBinSize();
+        returnValue += _sfOutputTabAlignment.getBinSize();
     }
 
     if(FieldBits::NoField != (InputTabSpacingFieldMask & whichField))
@@ -521,6 +503,11 @@ void FunctionComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFont.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (TextAlignmentFieldMask & whichField))
+    {
+        _sfTextAlignment.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
     {
         _sfInputTabOrientation.copyToBin(pMem);
@@ -531,24 +518,14 @@ void FunctionComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfOutputTabOrientation.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (InputTabAlignmentFieldMask & whichField))
     {
-        _sfInputTabVerticalAlignment.copyToBin(pMem);
+        _sfInputTabAlignment.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OutputTabAlignmentFieldMask & whichField))
     {
-        _sfInputTabHorizontalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
-    {
-        _sfOutputTabVerticalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
-    {
-        _sfOutputTabHorizontalAlignment.copyToBin(pMem);
+        _sfOutputTabAlignment.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (InputTabSpacingFieldMask & whichField))
@@ -619,6 +596,11 @@ void FunctionComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFont.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TextAlignmentFieldMask & whichField))
+    {
+        _sfTextAlignment.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
     {
         _sfInputTabOrientation.copyFromBin(pMem);
@@ -629,24 +611,14 @@ void FunctionComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfOutputTabOrientation.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (InputTabAlignmentFieldMask & whichField))
     {
-        _sfInputTabVerticalAlignment.copyFromBin(pMem);
+        _sfInputTabAlignment.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OutputTabAlignmentFieldMask & whichField))
     {
-        _sfInputTabHorizontalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
-    {
-        _sfOutputTabVerticalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
-    {
-        _sfOutputTabHorizontalAlignment.copyFromBin(pMem);
+        _sfOutputTabAlignment.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (InputTabSpacingFieldMask & whichField))
@@ -715,23 +687,20 @@ void FunctionComponentBase::executeSyncImpl(      FunctionComponentBase *pOther,
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
 
+    if(FieldBits::NoField != (TextAlignmentFieldMask & whichField))
+        _sfTextAlignment.syncWith(pOther->_sfTextAlignment);
+
     if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
         _sfInputTabOrientation.syncWith(pOther->_sfInputTabOrientation);
 
     if(FieldBits::NoField != (OutputTabOrientationFieldMask & whichField))
         _sfOutputTabOrientation.syncWith(pOther->_sfOutputTabOrientation);
 
-    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
-        _sfInputTabVerticalAlignment.syncWith(pOther->_sfInputTabVerticalAlignment);
+    if(FieldBits::NoField != (InputTabAlignmentFieldMask & whichField))
+        _sfInputTabAlignment.syncWith(pOther->_sfInputTabAlignment);
 
-    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
-        _sfInputTabHorizontalAlignment.syncWith(pOther->_sfInputTabHorizontalAlignment);
-
-    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
-        _sfOutputTabVerticalAlignment.syncWith(pOther->_sfOutputTabVerticalAlignment);
-
-    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
-        _sfOutputTabHorizontalAlignment.syncWith(pOther->_sfOutputTabHorizontalAlignment);
+    if(FieldBits::NoField != (OutputTabAlignmentFieldMask & whichField))
+        _sfOutputTabAlignment.syncWith(pOther->_sfOutputTabAlignment);
 
     if(FieldBits::NoField != (InputTabSpacingFieldMask & whichField))
         _sfInputTabSpacing.syncWith(pOther->_sfInputTabSpacing);
@@ -779,23 +748,20 @@ void FunctionComponentBase::executeSyncImpl(      FunctionComponentBase *pOther,
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
 
+    if(FieldBits::NoField != (TextAlignmentFieldMask & whichField))
+        _sfTextAlignment.syncWith(pOther->_sfTextAlignment);
+
     if(FieldBits::NoField != (InputTabOrientationFieldMask & whichField))
         _sfInputTabOrientation.syncWith(pOther->_sfInputTabOrientation);
 
     if(FieldBits::NoField != (OutputTabOrientationFieldMask & whichField))
         _sfOutputTabOrientation.syncWith(pOther->_sfOutputTabOrientation);
 
-    if(FieldBits::NoField != (InputTabVerticalAlignmentFieldMask & whichField))
-        _sfInputTabVerticalAlignment.syncWith(pOther->_sfInputTabVerticalAlignment);
+    if(FieldBits::NoField != (InputTabAlignmentFieldMask & whichField))
+        _sfInputTabAlignment.syncWith(pOther->_sfInputTabAlignment);
 
-    if(FieldBits::NoField != (InputTabHorizontalAlignmentFieldMask & whichField))
-        _sfInputTabHorizontalAlignment.syncWith(pOther->_sfInputTabHorizontalAlignment);
-
-    if(FieldBits::NoField != (OutputTabVerticalAlignmentFieldMask & whichField))
-        _sfOutputTabVerticalAlignment.syncWith(pOther->_sfOutputTabVerticalAlignment);
-
-    if(FieldBits::NoField != (OutputTabHorizontalAlignmentFieldMask & whichField))
-        _sfOutputTabHorizontalAlignment.syncWith(pOther->_sfOutputTabHorizontalAlignment);
+    if(FieldBits::NoField != (OutputTabAlignmentFieldMask & whichField))
+        _sfOutputTabAlignment.syncWith(pOther->_sfOutputTabAlignment);
 
     if(FieldBits::NoField != (InputTabSpacingFieldMask & whichField))
         _sfInputTabSpacing.syncWith(pOther->_sfInputTabSpacing);
