@@ -1024,6 +1024,9 @@ void ParticleSystem::update(const Time& elps)
 	{
 		if(getGenerators()[j]->generate(ParticleSystemPtr(this), elps))
 		{
+			beginEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
+				getGenerators().erase(std::find(getGenerators().begin(), getGenerators().end(), getGenerators()[j])); 
+			endEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
 			--NumGenerators;
 		}
 		else
