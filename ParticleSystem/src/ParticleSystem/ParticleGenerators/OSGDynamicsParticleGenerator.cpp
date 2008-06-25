@@ -78,7 +78,7 @@ void DynamicsParticleGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System) const
+void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32 AdditionalAging) const
 {
 	Pnt3f PositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
 	Pnt3f SecPositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
@@ -148,6 +148,7 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System) const
 			getAgeFunction()->evaluate(EmptyParameters).front().getDataPtr()
 			)->getData();
 	}
+	AgeReturnValue += AdditionalAging;
 	if(getVelocityFunction() != NullFC)
 	{
 		VelocityReturnValue = 

@@ -1002,7 +1002,7 @@ void ParticleSystem::update(const Time& elps)
 
 		//Kill Particles that have ages > lifespans
 		setAge(getAge(i) + elps,i);
-		if(getAge(i)>getLifespan(i))
+		if(getLifespan(i) > 0.0f && getAge(i)>getLifespan(i))
 		{
 			if(killParticle(i))
 			{

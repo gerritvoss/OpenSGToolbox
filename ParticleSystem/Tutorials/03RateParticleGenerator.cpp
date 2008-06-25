@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 01ParticleSystemDrawer Window");
+                                        "OpenSG 03RateParticleGenerator Window");
 										
 
 	//Particle System Material
@@ -290,8 +290,8 @@ FunctionPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setMean(10.0f);
-      TheLifespanDistribution->setStandardDeviation(40.0);
+      TheLifespanDistribution->setMean(50.0f);
+      TheLifespanDistribution->setStandardDeviation(3.0);
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;

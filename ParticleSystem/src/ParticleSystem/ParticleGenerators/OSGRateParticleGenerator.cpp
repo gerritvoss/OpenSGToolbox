@@ -83,7 +83,7 @@ bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 
 	while(getTimeSinceLastGeneration() > 1.0f/getGenerationRate())
 	{
-		generateDynamic(System);
+		generateDynamic(System, getTimeSinceLastGeneration()-1.0f/getGenerationRate());
 
 		//Decrement Time Since Last Action
 		setTimeSinceLastGeneration(getTimeSinceLastGeneration()-1.0f/getGenerationRate());
