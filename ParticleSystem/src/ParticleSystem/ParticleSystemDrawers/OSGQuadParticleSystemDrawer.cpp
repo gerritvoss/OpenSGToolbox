@@ -80,18 +80,42 @@ void QuadParticleSystemDrawer::initMethod (void)
 Action::ResultE QuadParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
 {
     //TODO: Implement
+	Pnt3f P1,P2,P3,P4;
 
-
+glBegin(GL_QUADS);
+	for(UInt32 i(0); i<System->getNumParticles();++i)
+	{
 	//Loop through all particles
 		//Get The Normal of the Particle
+		Vec3f Normal = getQuadNormal(action,System, i);
+
 		//Get the Up Direction of the Particle
+		Vec3f Up = Vec3f(0.0,1.0,0.0);
+
 	    //Calculate the Binormal as the cross between Normal and Up
-	    //Determine Local Space of the Particle
+	    Vec3f Binormal = Normal;
+		Binormal.cross(Up);
+		
+		//Determine Local Space of the Particle
+		Pnt3f Position = System->getPosition(i);
 
 		//Determine the Width and Height of the quad
+		Real32 Width = 1,Height =1;
+
+		//Calculate Quads positions
+		P1 = Position + (Width/2.0f)*Binormal + (Height/2.0f)*Up;
+		P2 = Position + (Width/2.0f)*Binormal - (Height/2.0f)*Up;
+		P3 = Position - (Width/2.0f)*Binormal - (Height/2.0f)*Up;
+		P4 = Position - (Width/2.0f)*Binormal + (Height/2.0f)*Up;
 
 	    //Draw the Quad
+		glVertex3fv(P1.getValues());
+		glVertex3fv(P2.getValues());
+		glVertex3fv(P3.getValues());
+		glVertex3fv(P4.getValues());
 
+	}
+glEnd();
 	//Generate a local space for the particle
     return Action::Continue;
 }
@@ -104,13 +128,47 @@ void QuadParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & v
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-Vec3f QuadParticleSystemDrawer::getQuadNormal(ParticleSystemPtr System, UInt32 Index)
+Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
 {
 	//TODO: Implement
-	return System->getNormal(Index);
+	Vec3f Direction;
+	
+	switch(getNormalSource())
+	{
+	case NORMAL_POSITION_CHANGE:
+		Direction = System->getPositionChange(Index);
+		break;
+	case NORMAL_VELOCITY_CHANGE:
+		Direction = System->getVelocityChange(Index);
+		break;
+	case NORMAL_VELOCITY:
+		Direction = System->getVelocity(Index);
+		break;
+	case NORMAL_ACCELERATION:
+		Direction = System->getAcceleration(Index);
+		break;
+	case NORMAL_PARTICLE_NORMAL:
+		Direction = System->getNormal(Index);
+		break;
+	case NORMAL_VIEW_POSITION:
+		
+		break;
+	case NORMAL_STATIC:
+		Direction = getNormal();
+			break;
+	case NORMAL_VIEW_DIRECTION:
+	default:
+		{
+			Matrix ModelView = action->getCameraToWorld();
+			Direction.setValues(ModelView[2][0],ModelView[2][1],ModelView[2][2]);
+		
+		break;
+		}
+	}
+	return Direction;
 }
 
-Vec3f QuadParticleSystemDrawer::getQuadUpDir(ParticleSystemPtr System, UInt32 Index)
+Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
 {
 	//TODO: Implement
 	return Vec3f(0.0,1.0,0.0);
