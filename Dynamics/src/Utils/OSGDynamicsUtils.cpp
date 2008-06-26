@@ -56,5 +56,11 @@ UInt32 stlLowerBound(std::vector<Real32> vector, UInt32 lowerBound, UInt32 upper
 	}
 }
 
+std::string addStringBetweenUpperCaseChange(const std::string& Source, const std::string& Pad)
+{
+	std::string Result;
+	//std::char[] = Result.ToCharArray();
+	return Result;
+}
 OSG_END_NAMESPACE
 

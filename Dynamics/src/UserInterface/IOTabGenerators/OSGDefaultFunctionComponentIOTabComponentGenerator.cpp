@@ -52,6 +52,15 @@
 
 #include "OSGDefaultFunctionComponentIOTabComponentGenerator.h"
 
+#include <OpenSG/UserInterface/OSGLineBorder.h>
+#include <OpenSG/UserInterface/OSGColorLayer.h>
+#include <OpenSG/UserInterface/OSGBoxLayout.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGContainer.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGLineBorder.h>
+#include <OpenSG/UserInterface/OSGLabel.h>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -80,11 +89,51 @@ void DefaultFunctionComponentIOTabComponentGenerator::initMethod (void)
 \***************************************************************************/
 ComponentPtr DefaultFunctionComponentIOTabComponentGenerator::getIOTabComponent(FunctionComponentPtr Parent, const FunctionIOType& Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo)
 {
-    ButtonPtr TabComponent = Button::create();
-
-    beginEditCP(TabComponent, Button::TextFieldMask);
-        TabComponent->setText(Value.getType()->getCName());
-    endEditCP(TabComponent, Button::TextFieldMask);
+	ButtonPtr Button = Button::create();
+    beginEditCP(Button, Button::TextFieldMask);
+        Button->setText(Value.getType()->getCName());
+    endEditCP(Button, Button::TextFieldMask);
+	
+	UIFontPtr ParameterNameFont = osg::UIFont::create();
+    beginEditCP(ParameterNameFont, UIFont::SizeFieldMask);
+        ParameterNameFont->setSize(16);
+    endEditCP(ParameterNameFont, UIFont::SizeFieldMask);
+	
+	LabelPtr ParameterName = osg::Label::create();
+	beginEditCP(ParameterName, /*Label::BordersFieldMask | Label::BackgroundsFieldMask |*/ Label::FontFieldMask | Label::TextFieldMask /*| Label::PreferredSizeFieldMask*/ | Label::HorizontalAlignmentFieldMask);
+        //ParameterName->setBorders(emptyBorder);
+        //ParameterName->setBackgrounds(GreyBackground);
+        ParameterName->setFont(ParameterNameFont);
+        ParameterName->setText(Value.getParameterName());
+        //ParameterName->setPreferredSize(Vec2f(300, 100));
+		ParameterName->setHorizontalAlignment(0.5);
+	endEditCP(ParameterName, /*Label::BordersFieldMask | Label::BackgroundsFieldMask |*/ Label::FontFieldMask | Label::TextFieldMask /*| Label::PreferredSizeFieldMask*/ | Label::HorizontalAlignmentFieldMask);
+	
+	FlowLayoutPtr PanelLayout = osg::FlowLayout::create();
+	beginEditCP(PanelLayout, FlowLayout::OrientationFieldMask);
+        PanelLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
+    endEditCP(PanelLayout, FlowLayout::OrientationFieldMask);
+	
+	LineBorderPtr PanelBorder = osg::LineBorder::create();
+    beginEditCP(PanelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+        PanelBorder->setColor(Color4f(0.9, 0.9, 0.9, 1.0));
+        PanelBorder->setWidth(1);
+    endEditCP(PanelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+	
+	ColorLayerPtr PanelBackground = osg::ColorLayer::create();
+	beginEditCP(PanelBackground, ColorLayer::ColorFieldMask);
+        PanelBackground->setColor(Color4f(0.0, 0.0, 1.0, 0.1));
+    endEditCP(PanelBackground, ColorLayer::ColorFieldMask);
+	
+	PanelPtr TabComponent = osg::Panel::create();
+	beginEditCP(TabComponent, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
+        TabComponent->setPreferredSize(Vec2f(100, 50));
+        TabComponent->getChildren().push_back(Button);
+		TabComponent->getChildren().push_back(ParameterName);
+        TabComponent->setLayout(PanelLayout);
+        TabComponent->setBackgrounds(PanelBackground);
+        TabComponent->setBorders(PanelBorder);
+    endEditCP(TabComponent, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     return TabComponent;
 }
