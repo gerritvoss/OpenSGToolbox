@@ -13,20 +13,27 @@
 >
 UI Gradient Background.
 	<Field
-		name="ColorStart"
+		name="Colors"
 		type="Color4f"
-		cardinality="single"
+		cardinality="multi"
 		visibility="external"
-		defaultValue="1.0,1.0,1.0,1.0"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="ColorEnd"
-		type="Color4f"
+		name="Positions"
+		type="Pnt2f"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="SpreadMethod"
+		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0.0,0.0,0.0,1.0"
+		defaultValue="GradientLayer::SPREAD_PAD"
 		access="public"
 	>
 	</Field>
@@ -36,6 +43,15 @@ UI Gradient Background.
 		cardinality="single"
 		visibility="external"
 		defaultValue="GradientLayer::VERTICAL_ORIENTATION"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Angle"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0f"
 		access="public"
 	>
 	</Field>
