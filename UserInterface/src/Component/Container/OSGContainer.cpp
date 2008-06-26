@@ -94,7 +94,7 @@ Vec2f Container::getContentRequestedSize(void) const
 
 		for(UInt32 i(1) ; i<getChildren().size() ; ++i)
 		{
-			getChildren()[0]->getBounds(ChildTopLeft, ChildBottomRight);
+			getChildren()[i]->getBounds(ChildTopLeft, ChildBottomRight);
 			
 			Minimum[0] = osgMin(osgMin(ChildTopLeft.x(), ChildBottomRight.x()), Minimum.x());
 			Minimum[1] = osgMin(osgMin(ChildTopLeft.y(), ChildBottomRight.y()), Minimum.y());
