@@ -20,6 +20,7 @@
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
+#include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -37,6 +38,7 @@ void reshape(Vec2f Size);
 ParticleSystemCorePtr ParticleNodeCore;
 PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
 LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
+QuadParticleSystemDrawerPtr ExampleQuadParticleSystemDrawer;
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -71,9 +73,11 @@ public:
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
 	   }
 
-	   if(e.getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
+	   if(e.getKey()== KeyEvent::KEY_3)//Use the Quad Drawer for 3
 	   {
-
+			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
+				ParticleNodeCore->setDrawer(ExampleQuadParticleSystemDrawer);
+			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
 	   }
    }
 };
@@ -206,14 +210,18 @@ int main(int argc, char **argv)
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
+		//Point
 	ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
     ExamplePointParticleSystemDrawer->setForcePerParticleSizing(true);
 
+		//Line
 	ExampleLineParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
 	beginEditCP(ExampleLineParticleSystemDrawer);
 	ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
 		ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
 	endEditCP(ExampleLineParticleSystemDrawer);
+		//Quad
+	ExampleQuadParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
 	
 	//Particle System Node
     ParticleNodeCore = osg::ParticleSystemCore::create();

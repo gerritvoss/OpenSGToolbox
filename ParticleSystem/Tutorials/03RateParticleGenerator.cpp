@@ -18,12 +18,14 @@
 #include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
-#include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
+#include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
 
-
+#include <OpenSG/Dynamics/OSGDataConverter.h>
+#include <OpenSG/Dynamics/OSGCompoundFunction.h>
+#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
-#include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
+#include <OpenSG/Dynamics/OSGDiscDistribution3D.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -39,6 +41,7 @@ void reshape(Vec2f Size);
 
 FunctionPtr createPositionDistribution(void);
 FunctionPtr createLifespanDistribution(void);
+FunctionPtr createVelocityDistribution(void);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -179,7 +182,7 @@ int main(int argc, char **argv)
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
 		ExampleParticleSystem->addParticle(Pnt3f(0,0,0),
 			Vec3f(0.0,0.0f,1.0f),
-			Color4f(1.0,0.0,0.0,1.0), 
+			Color4f(1.0,1.0,1.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
 			5, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
@@ -187,7 +190,7 @@ int main(int argc, char **argv)
 			,0);
 		ExampleParticleSystem->addParticle(Pnt3f(100,100,100),
 			Vec3f(0.0,0.0f,1.0f),
-			Color4f(1.0,0.0,0.0,1.0), 
+			Color4f(1.0,1.0,1.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
 			5, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
@@ -196,7 +199,12 @@ int main(int argc, char **argv)
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
-	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+	LineParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
+	beginEditCP(ExampleParticleSystemDrawer);
+		ExampleParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_VELOCITY);
+		ExampleParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_STATIC);
+		ExampleParticleSystemDrawer->setLineLength(0.1);
+	endEditCP(ExampleParticleSystemDrawer);
 		
 
 	//Create a Rate Particle Generator
@@ -206,7 +214,8 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 		ExampleGenerator->setPositionFunction(createPositionDistribution());
 		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
-		ExampleGenerator->setGenerationRate(5.0);
+		ExampleGenerator->setGenerationRate(100.0);
+		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
 	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
 	//Attach the Generator to the Particle System
@@ -270,21 +279,20 @@ void reshape(Vec2f Size)
 
 FunctionPtr createPositionDistribution(void)
 {
-    //Cylinder Distribution
-    CylinderDistribution3DPtr TheCylinderDistribution = CylinderDistribution3D::create();
-    beginEditCP(TheCylinderDistribution);
-      TheCylinderDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheCylinderDistribution->setInnerRadius(30.0);
-      TheCylinderDistribution->setOuterRadius(100.0);
-      TheCylinderDistribution->setMinTheta(0.0);
-      TheCylinderDistribution->setMaxTheta(6.283185);
-      TheCylinderDistribution->setHeight(400.0);
-      TheCylinderDistribution->setNormal(Vec3f(0.0,0.0,1.0));
-      TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::SURFACE);
-    endEditCP(TheCylinderDistribution);
+     //Disc Distribution
+    DiscDistribution3DPtr TheDiscDistribution = DiscDistribution3D::create();
+    beginEditCP(TheDiscDistribution);
+      TheDiscDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheDiscDistribution->setInnerRadius(10.0);
+      TheDiscDistribution->setOuterRadius(200.0);
+      TheDiscDistribution->setMinTheta(0.0);
+      TheDiscDistribution->setMaxTheta(6.283185307);
+      TheDiscDistribution->setNormal(Vec3f(1.0,0.0,0.0));
+      TheDiscDistribution->setSurfaceOrEdge(DiscDistribution3D::SURFACE);
+    endEditCP(TheDiscDistribution);
 
 
-    return TheCylinderDistribution;
+    return TheDiscDistribution;
 }
 
 FunctionPtr createLifespanDistribution(void)
@@ -296,4 +304,30 @@ FunctionPtr createLifespanDistribution(void)
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;
+}
+
+FunctionPtr createVelocityDistribution(void)
+{
+   Pnt3f pt1 = (0.0,0.0,100.0);
+   Pnt3f pt2 = (0.0,0.0,110.0);
+
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(pt1);
+		TheLineDistribution->setPoint2(pt2);
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
 }
