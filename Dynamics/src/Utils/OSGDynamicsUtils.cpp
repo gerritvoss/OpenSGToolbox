@@ -58,8 +58,16 @@ UInt32 stlLowerBound(std::vector<Real32> vector, UInt32 lowerBound, UInt32 upper
 
 std::string addStringBetweenUpperCaseChange(const std::string& Source, const std::string& Pad)
 {
-	std::string Result;
-	//std::char[] = Result.ToCharArray();
+	std::string Result(Source);
+	
+	for (UInt32 i(0); i < Result.size() - 2; ++i)
+	{
+		if ((97 <= Result[i] && Result[i] <= 122) && (65 <= Result[i + 1] && Result[i + 1] <= 90))
+		{
+			Result.insert(i+1, Pad);
+		}
+	}
+	
 	return Result;
 }
 OSG_END_NAMESPACE
