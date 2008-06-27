@@ -104,46 +104,62 @@ void HSVColorChooserPanel::updateChooser(void)
 	Color4f TempColor(getColorFromModel());
 	//Update the Hue Bounded Range
 	_HueModel->setValue(osgClamp<Real32>(_HueModel->getMinimum(), Hue, _HueModel->getMaximum()));
-	beginEditCP(_HueSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+	beginEditCP(_HueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		_HueSliderTrackBackground->getColors().clear();
+		_HueSliderTrackBackground->getPositions().clear();
 		TempColor.setValuesHSV(0.0f, Saturation, Value);
-		_HueSliderTrackBackground->setColorStart(TempColor);
+		_HueSliderTrackBackground->getColors().push_back(TempColor);
+		_HueSliderTrackBackground->getPositions().push_back(0.0);
 		TempColor.setValuesHSV(360.0f, Saturation, Value);
-		_HueSliderTrackBackground->setColorEnd(TempColor);
-	endEditCP(_HueSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+		_HueSliderTrackBackground->getColors().push_back(TempColor);
+		_HueSliderTrackBackground->getPositions().push_back(1.0);
+	endEditCP(_HueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
 
 	//Update the Saturation Bounded Range
     _SaturationModel->setValue(osgClamp(0.0f, Saturation, 1.0f) * _SaturationModel->getMaximum());
-	beginEditCP(_SaturationSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+	beginEditCP(_SaturationSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		_SaturationSliderTrackBackground->getColors().clear();
+		_SaturationSliderTrackBackground->getPositions().clear();
 		TempColor.setValuesHSV(Hue, 0.0f, Value);
-		_SaturationSliderTrackBackground->setColorStart(TempColor);
+		_SaturationSliderTrackBackground->getColors().push_back(TempColor);
+		_SaturationSliderTrackBackground->getPositions().push_back(0.0);
 		TempColor.setValuesHSV(Hue, 1.0f, Value);
-		_SaturationSliderTrackBackground->setColorEnd(TempColor);
-	endEditCP(_SaturationSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+		_SaturationSliderTrackBackground->getColors().push_back(TempColor);
+		_SaturationSliderTrackBackground->getPositions().push_back(1.0);
+	endEditCP(_SaturationSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
 
 	//Update the Value Bounded Range
     _ValueModel->setValue(osgClamp(0.0f, Value, 1.0f) * _ValueModel->getMaximum());
-	beginEditCP(_ValueSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+	beginEditCP(_ValueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		_ValueSliderTrackBackground->getColors().clear();
+		_ValueSliderTrackBackground->getPositions().clear();
 		TempColor.setValuesHSV(Hue, Saturation, 0.0f);
-		_ValueSliderTrackBackground->setColorStart(TempColor);
+		_ValueSliderTrackBackground->getColors().push_back(TempColor);
+		_ValueSliderTrackBackground->getPositions().push_back(0.0);
 		TempColor.setValuesHSV(Hue, Saturation, 1.0f);
-		_ValueSliderTrackBackground->setColorEnd(TempColor);
-	endEditCP(_ValueSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+		_ValueSliderTrackBackground->getColors().push_back(TempColor);
+		_ValueSliderTrackBackground->getPositions().push_back(1.0);
+	endEditCP(_ValueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
 
 	//Update the Alpha Bounded Range
 	_AlphaModel->setValue(osgClamp(0.0f, getColorFromModel().alpha(), 1.0f) * _AlphaModel->getMaximum());
 	
 	if(getIncludeAlpha())
 	{
-		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
-			_AlphaSliderTrackBackground->setColorStart(Color4f(getColorFromModel().red(),
+		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+			_AlphaSliderTrackBackground->getColors().clear();
+			_AlphaSliderTrackBackground->getPositions().clear();
+			_AlphaSliderTrackBackground->getColors().push_back(Color4f(getColorFromModel().red(),
 				                                             getColorFromModel().green(),
 															 getColorFromModel().blue(),
 															 0.0f));
-			_AlphaSliderTrackBackground->setColorEnd(Color4f(getColorFromModel().red(),
+			_AlphaSliderTrackBackground->getPositions().push_back(0.0);
+			_AlphaSliderTrackBackground->getColors().push_back(Color4f(getColorFromModel().red(),
 				                                             getColorFromModel().green(),
 															 getColorFromModel().blue(),
 															 1.0f));
-		endEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+			_AlphaSliderTrackBackground->getPositions().push_back(1.0);
+		endEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
 	}
 	
 	attachModelListener();

@@ -58,6 +58,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientLayer : public GradientLayerBase
     /*==========================  PUBLIC  =================================*/
   public:
       enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
+      enum Spread{SPREAD_PAD=0, SPREAD_REFLECT, SPREAD_REPEAT};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

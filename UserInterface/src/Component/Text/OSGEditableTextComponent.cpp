@@ -79,6 +79,17 @@ void EditableTextComponent::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+UInt32 EditableTextComponent::queryCursor(const Pnt2f& CursorLoc) const
+{
+	if(getEnabled() && getEditable())
+	{
+		return WindowEventProducer::CURSOR_I_BEAM;
+	}
+	else
+	{
+		Inherited::queryCursor(CursorLoc);
+	}
+}
 void EditableTextComponent::keyPressed(const KeyEvent& e)
 {
 	Inherited::keyPressed(e);
@@ -244,40 +255,6 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
 		}
 	}
 	Inherited::keyTyped(e);
-}
-void EditableTextComponent::mouseEntered(const MouseEvent& e)
-{
-	if(getEnabled() && getEditable())
-	{
-		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
-		{
-			getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_I_BEAM);
-		}
-	}
-	Inherited::mouseEntered(e);
-}
-void EditableTextComponent::mouseExited(const MouseEvent& e)
-{
-	if(getEnabled() && getEditable())
-	{
-		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!= NullFC && getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
-		{
-			getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
-		}
-	}
-	Inherited::mouseExited(e);
-}
-
-void EditableTextComponent::focusLost(const FocusEvent& e)
-{
-	if( getParentWindow() != NullFC &&
-		getParentWindow()->getDrawingSurface() != NullFC &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC && 
-		isContained(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition(), true))
-    {
-		getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
-	}
-	Inherited::focusLost(e);
 }
 
 LayerPtr EditableTextComponent::getDrawnBackground(void) const

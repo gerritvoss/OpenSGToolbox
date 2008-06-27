@@ -102,58 +102,74 @@ void RGBColorChooserPanel::updateChooser(void)
 	Color4f ColorSelected(getColorFromModel());
 	//Update the Red Bounded Range
     _RedModel->setValue(osgClamp(0.0f, getColorFromModel().red(), 1.0f) * 255);
-	beginEditCP(_RedSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
-		_RedSliderTrackBackground->setColorStart(Color4f(0.0f,
+	beginEditCP(_RedSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		_RedSliderTrackBackground->getColors().clear();
+		_RedSliderTrackBackground->getPositions().clear();
+		_RedSliderTrackBackground->getColors().push_back(Color4f(0.0f,
 			                                             ColorSelected.green(),
 														 ColorSelected.blue(),
 														 ColorSelected.alpha()));
-		_RedSliderTrackBackground->setColorEnd(Color4f(1.0f,
+		_RedSliderTrackBackground->getPositions().push_back(0.0);
+		_RedSliderTrackBackground->getColors().push_back(Color4f(1.0f,
 			                                             ColorSelected.green(),
 														 ColorSelected.blue(),
 														 ColorSelected.alpha()));
-	endEditCP(_RedSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+		_RedSliderTrackBackground->getPositions().push_back(1.0);
+	endEditCP(_RedSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
 
 	//Update the Green Bounded Range
     _GreenModel->setValue(osgClamp(0.0f, getColorFromModel().green(), 1.0f) * 255);
-	beginEditCP(_GreenSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
-		_GreenSliderTrackBackground->setColorStart(Color4f(ColorSelected.red(),
+	beginEditCP(_GreenSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		_GreenSliderTrackBackground->getColors().clear();
+		_GreenSliderTrackBackground->getPositions().clear();
+		_GreenSliderTrackBackground->getColors().push_back(Color4f(ColorSelected.red(),
 			                                             0.0f,
 														 ColorSelected.blue(),
 														 ColorSelected.alpha()));
-		_GreenSliderTrackBackground->setColorEnd(Color4f(ColorSelected.red(),
+		_GreenSliderTrackBackground->getPositions().push_back(0.0);
+		_GreenSliderTrackBackground->getColors().push_back(Color4f(ColorSelected.red(),
 			                                             1.0f,
 														 ColorSelected.blue(),
 														 ColorSelected.alpha()));
-	endEditCP(_GreenSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+		_GreenSliderTrackBackground->getPositions().push_back(1.0);
+	endEditCP(_GreenSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
 
 	//Update the Blue Bounded Range
     _BlueModel->setValue(osgClamp(0.0f, getColorFromModel().blue(), 1.0f) * 255);
-	beginEditCP(_BlueSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
-		_BlueSliderTrackBackground->setColorStart(Color4f(ColorSelected.red(),
+	beginEditCP(_BlueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		_BlueSliderTrackBackground->getColors().clear();
+		_BlueSliderTrackBackground->getPositions().clear();
+		_BlueSliderTrackBackground->getColors().push_back(Color4f(ColorSelected.red(),
 			                                             ColorSelected.green(),
 														 0.0f,
 														 ColorSelected.alpha()));
-		_BlueSliderTrackBackground->setColorEnd(Color4f(ColorSelected.red(),
+		_BlueSliderTrackBackground->getPositions().push_back(0.0);
+		_BlueSliderTrackBackground->getColors().push_back(Color4f(ColorSelected.red(),
 			                                             ColorSelected.green(),
 														 1.0f,
 														 ColorSelected.alpha()));
-	endEditCP(_BlueSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+		_BlueSliderTrackBackground->getPositions().push_back(1.0);
+	endEditCP(_BlueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
 
 	//Update the Alpha Bounded Range
 	_AlphaModel->setValue(osgClamp(0.0f, getColorFromModel().alpha(), 1.0f) * 255);
 	
 	if(getIncludeAlpha())
 	{
-		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
-			_AlphaSliderTrackBackground->setColorStart(Color4f(ColorSelected.red(),
+		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+			_AlphaSliderTrackBackground->getColors().clear();
+			_AlphaSliderTrackBackground->getPositions().clear();
+			_AlphaSliderTrackBackground->getColors().push_back(Color4f(ColorSelected.red(),
 				                                             ColorSelected.green(),
 															 ColorSelected.blue(),
 															 0.0f));
-			_AlphaSliderTrackBackground->setColorEnd(Color4f(ColorSelected.red(),
+		_AlphaSliderTrackBackground->getPositions().push_back(0.0);
+			_AlphaSliderTrackBackground->getColors().push_back(Color4f(ColorSelected.red(),
 				                                             ColorSelected.green(),
 															 ColorSelected.blue(),
 															 1.0f));
-		endEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask);
+		_AlphaSliderTrackBackground->getPositions().push_back(1.0);
+		endEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
 	}
 	
 	attachModelListener();

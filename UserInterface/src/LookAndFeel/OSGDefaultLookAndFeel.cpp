@@ -1717,8 +1717,10 @@ void DefaultLookAndFeel::init(void)
 	/**********Gradient Background***********/
 	GradientLayerPtr DefaultGradientBackground = GradientLayer::create();
 	beginEditCP(DefaultGradientBackground);
-		DefaultGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
-		DefaultGradientBackground->setColorEnd(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultGradientBackground->getColors().push_back(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultGradientBackground->getPositions().push_back(0.0);
+		DefaultGradientBackground->getColors().push_back(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultGradientBackground->getPositions().push_back(1.0);
         DefaultGradientBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
 	endEditCP(DefaultGradientBackground);
 

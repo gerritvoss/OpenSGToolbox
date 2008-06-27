@@ -67,9 +67,11 @@
 
 #include "OSGLayer.h" // Parent
 
-#include <OpenSG/OSGColor4fFields.h> // ColorStart type
-#include <OpenSG/OSGColor4fFields.h> // ColorEnd type
+#include <OpenSG/OSGColor4fFields.h> // Colors type
+#include <OpenSG/OSGReal32Fields.h> // Positions type
+#include <OpenSG/OSGUInt32Fields.h> // SpreadMethod type
 #include <OpenSG/OSGUInt32Fields.h> // Orientation type
+#include <OpenSG/OSGReal32Fields.h> // Angle type
 
 #include "OSGGradientLayerFields.h"
 
@@ -93,15 +95,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientLayerBase : public Layer
 
     enum
     {
-        ColorStartFieldId  = Inherited::NextFieldId,
-        ColorEndFieldId    = ColorStartFieldId  + 1,
-        OrientationFieldId = ColorEndFieldId    + 1,
-        NextFieldId        = OrientationFieldId + 1
+        ColorsFieldId       = Inherited::NextFieldId,
+        PositionsFieldId    = ColorsFieldId       + 1,
+        SpreadMethodFieldId = PositionsFieldId    + 1,
+        OrientationFieldId  = SpreadMethodFieldId + 1,
+        AngleFieldId        = OrientationFieldId  + 1,
+        NextFieldId         = AngleFieldId        + 1
     };
 
-    static const OSG::BitVector ColorStartFieldMask;
-    static const OSG::BitVector ColorEndFieldMask;
+    static const OSG::BitVector ColorsFieldMask;
+    static const OSG::BitVector PositionsFieldMask;
+    static const OSG::BitVector SpreadMethodFieldMask;
     static const OSG::BitVector OrientationFieldMask;
+    static const OSG::BitVector AngleFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,25 +134,33 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientLayerBase : public Layer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFColor4f           *getSFColorStart     (void);
-           SFColor4f           *getSFColorEnd       (void);
+           MFColor4f           *getMFColors         (void);
+           MFReal32            *getMFPositions      (void);
+           SFUInt32            *getSFSpreadMethod   (void);
            SFUInt32            *getSFOrientation    (void);
+           SFReal32            *getSFAngle          (void);
 
-           Color4f             &getColorStart     (void);
-     const Color4f             &getColorStart     (void) const;
-           Color4f             &getColorEnd       (void);
-     const Color4f             &getColorEnd       (void) const;
+           UInt32              &getSpreadMethod   (void);
+     const UInt32              &getSpreadMethod   (void) const;
            UInt32              &getOrientation    (void);
      const UInt32              &getOrientation    (void) const;
+           Real32              &getAngle          (void);
+     const Real32              &getAngle          (void) const;
+           Color4f             &getColors         (const UInt32 index);
+           MFColor4f           &getColors         (void);
+     const MFColor4f           &getColors         (void) const;
+           Real32              &getPositions      (const UInt32 index);
+           MFReal32            &getPositions      (void);
+     const MFReal32            &getPositions      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setColorStart     ( const Color4f &value );
-     void setColorEnd       ( const Color4f &value );
+     void setSpreadMethod   ( const UInt32 &value );
      void setOrientation    ( const UInt32 &value );
+     void setAngle          ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,9 +203,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientLayerBase : public Layer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFColor4f           _sfColorStart;
-    SFColor4f           _sfColorEnd;
+    MFColor4f           _mfColors;
+    MFReal32            _mfPositions;
+    SFUInt32            _sfSpreadMethod;
     SFUInt32            _sfOrientation;
+    SFReal32            _sfAngle;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

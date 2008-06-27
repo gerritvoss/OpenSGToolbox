@@ -254,9 +254,9 @@ int main(int argc, char **argv)
             The GradientLayer is a Background
 			which displays a gradient of Color.
 
-			-setColorStart(Color4f): Determines the 
+			-getColors().push_back(Color4f): Determines the 
 				starting Color for the gradient.
-			-setColorEnd(Color4f): Determines the
+			-getColors().push_back(Color4f): Determines the
 				ending Color for the gradient.
 			-setOrientation(ENUM): Determines the
 				gradient alignment.  Takes 
@@ -265,11 +265,17 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    beginEditCP(ExampleGradientLayer, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
-         ExampleGradientLayer->setColorStart(Color4f(1.0, 0.0, 0.0, 1.0));
-         ExampleGradientLayer->setColorEnd(Color4f(0.0, 0.0, 1.0, 0.5));
+    beginEditCP(ExampleGradientLayer, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+         ExampleGradientLayer->getColors().push_back(Color4f(1.0, 0.0, 0.0, 1.0));
+		ExampleGradientLayer->getPositions().push_back(0.0);
+         ExampleGradientLayer->getColors().push_back(Color4f(1.0, 1.0, 0.0, 0.8222));
+		ExampleGradientLayer->getPositions().push_back(0.33);
+         ExampleGradientLayer->getColors().push_back(Color4f(0.0, 1.0, 1.0, 0.6667));
+		ExampleGradientLayer->getPositions().push_back(0.67);
+         ExampleGradientLayer->getColors().push_back(Color4f(0.0, 0.0, 1.0, 0.5));
+		ExampleGradientLayer->getPositions().push_back(1.0);
          ExampleGradientLayer->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
-    endEditCP(ExampleGradientLayer, GradientLayer::ColorStartFieldMask | GradientLayer::ColorEndFieldMask | GradientLayer::OrientationFieldMask);
+    endEditCP(ExampleGradientLayer, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
 		
     /******************************************************
 

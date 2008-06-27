@@ -22,7 +22,7 @@ UI Gradient Background.
 	</Field>
 	<Field
 		name="Positions"
-		type="Pnt2f"
+		type="Real32"
 		cardinality="multi"
 		visibility="external"
 		access="public"

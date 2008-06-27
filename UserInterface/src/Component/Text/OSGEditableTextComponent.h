@@ -78,13 +78,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTex
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
 	virtual void keyPressed(const KeyEvent& e);
 	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
-	
-	virtual void focusLost(const FocusEvent& e);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -110,6 +106,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTex
     virtual LayerPtr getDrawnForeground(void) const;
     virtual BorderPtr getDrawnBorder(void) const;
     
+	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

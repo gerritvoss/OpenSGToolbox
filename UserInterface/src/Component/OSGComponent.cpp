@@ -45,6 +45,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 #include "OSGComponent.h"
 #include "Component/Container/OSGContainer.h"
@@ -105,6 +106,11 @@ void Component::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+UInt32 Component::queryCursor(const Pnt2f& CursorLoc) const
+{
+	return WindowEventProducer::CURSOR_POINTER;
+}
 
 Vec2f Component::getRequestedSize(void) const
 {
@@ -517,6 +523,11 @@ void Component::mouseReleased(const MouseEvent& e)
 
 void Component::mouseMoved(const MouseEvent& e)
 {
+	
+	if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+		getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(queryCursor(e.getLocation()));
+	}
 	produceMouseMoved(e);
 }
 

@@ -257,6 +257,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     DeactivateToolTipListener _DeactivateToolTipListener;
     
 	bool _MouseInComponentLastMouse;
+
+	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

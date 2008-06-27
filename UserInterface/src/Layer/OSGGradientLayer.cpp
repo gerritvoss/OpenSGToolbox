@@ -76,14 +76,51 @@ void GradientLayer::initMethod (void)
 
 void GradientLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
-	if(getOrientation() == GradientLayer::HORIZONTAL_ORIENTATION)
+	if(getColors().size() == getPositions().size())
+	{
+		UInt32 MajorAxisIndex, MinorAxisIndex;
+		if(getOrientation() == HORIZONTAL_ORIENTATION)
+		{
+			MajorAxisIndex = 0;
+		}
+		else
+		{
+			MajorAxisIndex = 1;
+		}
+		MinorAxisIndex = (MajorAxisIndex+1)%2;
+
+		if(getColors().size() == 1)
+		{
+			TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()), getColors()[0], getColors()[0], getColors()[0], getColors()[0], Opacity);
+		}
+		else
+		{
+			Pnt2f QuadTopLeft(TopLeft), QuadBottomRight(BottomRight);
+			for(UInt32 i(1) ; i<getColors().size(); ++i)
+			{
+				if(getPositions()[i] <=1.0)
+				{
+					QuadBottomRight[MajorAxisIndex] = TopLeft[MajorAxisIndex] + (getPositions()[i]* (BottomRight[MajorAxisIndex] - TopLeft[MajorAxisIndex]));
+				}
+				else
+				{
+					QuadBottomRight[MajorAxisIndex] = getPositions()[i];
+				}
+
+				TheGraphics->drawQuad(QuadTopLeft, Pnt2f(QuadBottomRight.x(), QuadTopLeft.y()), QuadBottomRight, Pnt2f(QuadTopLeft.x(), QuadBottomRight.y()), getColors()[i-1], getColors()[i], getColors()[i], getColors()[i-1], Opacity);
+
+				QuadTopLeft[MajorAxisIndex] = QuadBottomRight[MajorAxisIndex];
+			}
+		}
+	}
+	/*if(getOrientation() == GradientLayer::HORIZONTAL_ORIENTATION)
 	{
 		TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()), getColorStart(), getColorEnd(), getColorEnd(), getColorStart(), Opacity);
 	}
 	else
 	{
 		TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()), getColorStart(), getColorStart(), getColorEnd(), getColorEnd(), Opacity);
-	}
+	}*/
 }
 
 /*-------------------------------------------------------------------------*\
