@@ -924,6 +924,34 @@
 					RelativePath="..\..\src\UserInterface\OSGFunctionComponentFields.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanel.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanel.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanel.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanelBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanelBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanelBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanelFields.h"
+					>
+				</File>
 				<Filter
 					Name="IOTabGenerators"
 					>

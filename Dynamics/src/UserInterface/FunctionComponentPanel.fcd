@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FunctionComponentPanel"
+	parent="Container"
+	library="Dynamics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A User Interface Panel that contains Function Components.
+	<Field
+		name="Zoom"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
+	>
+	</Field>
+	<Field
+		name="DrawMiniMap"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
+	<Field
+		name="MiniMapSize"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.1f"
+	>
+	</Field>
+	<Field
+		name="MiniMapAlignment"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0,1.0"
+	>
+	</Field>
+</FieldContainer>
