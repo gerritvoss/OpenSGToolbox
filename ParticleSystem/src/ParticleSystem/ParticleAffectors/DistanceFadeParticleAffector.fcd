@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DistanceFadeParticleAffector"
+	parent="DistanceParticleAffector"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concreate"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="DistanceFadeStart"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="100.0"
+	>
+	</Field>
+	<Field
+		name="DistanceFadeEnd"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="200.0"
+	>
+	</Field>
+	<Field
+		name="FadeStartAplpha"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0f"
+	>
+	</Field>
+	<Field
+		name="FadeEndAlpha"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f"
+	>
+	</Field>
+</FieldContainer>

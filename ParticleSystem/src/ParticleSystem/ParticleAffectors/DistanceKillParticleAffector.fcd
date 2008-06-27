@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DistanceKillParticleAffector"
+	parent="DistanceParticleAffector"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concreate"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="KillDistance"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="100.0"
+	>
+	</Field>
+</FieldContainer>

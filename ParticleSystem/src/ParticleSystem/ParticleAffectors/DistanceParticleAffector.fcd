@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DistanceParticleAffector"
+	parent="ParticleAffector"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="DistanceFromSource"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="DistanceParticleAffector::DISTANCE_FROM_CAMERA"
+	>
+	</Field>
+	<Field
+		name="DistanceFromNode"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
+</FieldContainer>

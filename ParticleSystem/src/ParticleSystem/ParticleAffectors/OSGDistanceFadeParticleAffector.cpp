@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,8 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGQuadParticleSystemDrawer.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGDistanceFadeParticleAffector.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::QuadParticleSystemDrawer
+/*! \class osg::DistanceFadeParticleAffector
 
 */
 
@@ -68,7 +67,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void QuadParticleSystemDrawer::initMethod (void)
+void DistanceFadeParticleAffector::initMethod (void)
 {
 }
 
@@ -77,138 +76,42 @@ void QuadParticleSystemDrawer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Action::ResultE QuadParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
+bool DistanceFadeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& Distance)
 {
     //TODO: Implement
-	Pnt3f P1,P2,P3,P4;
-
-glBegin(GL_QUADS);
-	for(UInt32 i(0); i<System->getNumParticles();++i)
-	{
-	//Loop through all particles
-		//Get The Normal of the Particle
-		Vec3f Normal = getQuadNormal(action,System, i);
-
-
-	    //Calculate the Binormal as the cross between Normal and Up
-	    Vec3f Binormal = getQuadUpDir(action,  System, i).cross(Normal);
-		
-		//Get the Up Direction of the Particle
-		Vec3f Up = Normal.cross(Binormal);
-
-		//Determine Local Space of the Particle
-		Pnt3f Position = System->getPosition(i);
-
-		//Determine the Width and Height of the quad
-		Real32 Width = 1,Height =1;
-
-		//Calculate Quads positions
-		P1 = Position + (Width/2.0f)*Binormal + (Height/2.0f)*Up;
-		P2 = Position + (Width/2.0f)*Binormal - (Height/2.0f)*Up;
-		P3 = Position - (Width/2.0f)*Binormal - (Height/2.0f)*Up;
-		P4 = Position - (Width/2.0f)*Binormal + (Height/2.0f)*Up;
-
-	    //Draw the Quad
-		glNormal3fv(Normal.getValues());
-		glVertex3fv(P1.getValues());
-		glVertex3fv(P2.getValues());
-		glVertex3fv(P3.getValues());
-		glVertex3fv(P4.getValues());
-
-	}
-glEnd();
-	//Generate a local space for the particle
-    return Action::Continue;
-}
-
-void QuadParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
-{
-    //TODO: Implement
+	return false;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
-{
-	//TODO: Implement
-	Vec3f Direction;
-	
-	switch(getNormalSource())
-	{
-	case NORMAL_POSITION_CHANGE:
-		Direction = System->getPositionChange(Index);
-		break;
-	case NORMAL_VELOCITY_CHANGE:
-		Direction = System->getVelocityChange(Index);
-		break;
-	case NORMAL_VELOCITY:
-		Direction = System->getVelocity(Index);
-		break;
-	case NORMAL_ACCELERATION:
-		Direction = System->getAcceleration(Index);
-		break;
-	case NORMAL_PARTICLE_NORMAL:
-		Direction = System->getNormal(Index);
-		break;
-	case NORMAL_VIEW_POSITION:
-		{
-			//TODO: make this more efficient
-			Matrix ModelView = action->getCameraToWorld();
-			Vec3f Position(ModelView[0][3],ModelView[1][3],ModelView[2][3]);
-			Direction = Position - System->getPosition(Index);
-			Direction.normalize();
-		
-		break;
-		}
-	case NORMAL_STATIC:
-		Direction = getNormal();
-			break;
-	case NORMAL_VIEW_DIRECTION:
-	default:
-		{
-			//TODO: make this more efficient
-			Matrix ModelView = action->getCameraToWorld();
-			Direction.setValues(ModelView[2][0],ModelView[2][1],ModelView[2][2]);
-		break;
-		}
-	}
-	return Direction;
-}
-
-Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
-{
-	//TODO: Implement
-	return Vec3f(0.0,1.0,0.0);
-}
-
 /*----------------------- constructors & destructors ----------------------*/
 
-QuadParticleSystemDrawer::QuadParticleSystemDrawer(void) :
+DistanceFadeParticleAffector::DistanceFadeParticleAffector(void) :
     Inherited()
 {
 }
 
-QuadParticleSystemDrawer::QuadParticleSystemDrawer(const QuadParticleSystemDrawer &source) :
+DistanceFadeParticleAffector::DistanceFadeParticleAffector(const DistanceFadeParticleAffector &source) :
     Inherited(source)
 {
 }
 
-QuadParticleSystemDrawer::~QuadParticleSystemDrawer(void)
+DistanceFadeParticleAffector::~DistanceFadeParticleAffector(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void QuadParticleSystemDrawer::changed(BitVector whichField, UInt32 origin)
+void DistanceFadeParticleAffector::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void QuadParticleSystemDrawer::dump(      UInt32    , 
+void DistanceFadeParticleAffector::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump QuadParticleSystemDrawer NI" << std::endl;
+    SLOG << "Dump DistanceFadeParticleAffector NI" << std::endl;
 }
 
 
@@ -226,10 +129,10 @@ void QuadParticleSystemDrawer::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGQUADPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGQUADPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDISTANCEFADEPARTICLEAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDISTANCEFADEPARTICLEAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGQUADPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDISTANCEFADEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi
