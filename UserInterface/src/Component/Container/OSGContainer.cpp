@@ -84,9 +84,15 @@ Vec2f Container::getContentRequestedSize(void) const
 
 	if(getChildren().size() > 0)
 	{
-		Pnt2f ChildTopLeft, ChildBottomRight;
+		Pnt2f ChildTopLeft, ChildBottomRight, ChildPosition;
 
 		getChildren()[0]->getBounds(ChildTopLeft, ChildBottomRight);
+        ChildPosition = getChildren()[0]->getPosition();
+        //These bounds are in the Components coordinate space,
+        //we need to convert them to this containers coordinate space
+        ChildTopLeft += Vec3f(ChildPosition);
+        ChildBottomRight += Vec3f(ChildPosition);
+
 		Minimum[0] = osgMin(ChildTopLeft.x(), ChildBottomRight.x());
 		Minimum[1] = osgMin(ChildTopLeft.y(), ChildBottomRight.y());
 		Maximum[0] = osgMax(ChildTopLeft.x(), ChildBottomRight.x());
@@ -95,6 +101,11 @@ Vec2f Container::getContentRequestedSize(void) const
 		for(UInt32 i(1) ; i<getChildren().size() ; ++i)
 		{
 			getChildren()[i]->getBounds(ChildTopLeft, ChildBottomRight);
+            ChildPosition = getChildren()[i]->getPosition();
+            //These bounds are in the Components coordinate space,
+            //we need to convert them to this containers coordinate space
+            ChildTopLeft += Vec3f(ChildPosition);
+            ChildBottomRight += Vec3f(ChildPosition);
 			
 			Minimum[0] = osgMin(osgMin(ChildTopLeft.x(), ChildBottomRight.x()), Minimum.x());
 			Minimum[1] = osgMin(osgMin(ChildTopLeft.y(), ChildBottomRight.y()), Minimum.y());
