@@ -156,7 +156,19 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     /*==========================  PUBLIC  =================================*/
   public:
+
 	enum CursorType {CURSOR_POINTER=0, CURSOR_HAND, CURSOR_I_BEAM, CURSOR_WAIT, CURSOR_RESIZE_W_TO_E, CURSOR_RESIZE_N_TO_S, CURSOR_RESIZE_NW_TO_SE, CURSOR_RESIZE_SW_TO_NE, CURSOR_RESIZE_ALL, CURSOR_NONE};
+
+    struct CursorRegion
+	{
+		Pnt2f _TopLeft,
+			  _BottomRight;
+
+		UInt32 _CursorType;
+		CursorRegion(Pnt2f TopLeft, Pnt2f BottomRight, UInt32 Type);
+	};
+	typedef std::list<CursorRegion> CursorRegionList;
+	typedef CursorRegionList::iterator CursorRegionListItor;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -276,13 +288,18 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     
     virtual void closeWindow(void) = 0;
 
-	CursorType getCursorType(void) const;
-	void setCursorType(CursorType Type); 
+	UInt32 getCursorType(void) const;
+	void setCursorType(UInt32 Type); 
 
 	RenderAction * getRenderAction(void);
 	void setRenderAction(RenderAction *action);
+
+	CursorRegionListItor addCursorRegion(const CursorRegion& r);
+	bool removeCursorRegion(CursorRegionListItor RegionItor);
     /*=========================  PROTECTED  ===============================*/
   protected:
+	  CursorRegionList _CursorRegions;
+	  void updateCursor(Pnt2f MousePos);
 
     // Variables should all be in WindowEventProducerBase.
 
@@ -335,7 +352,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     void produceWindowEntered(void);
     void produceWindowExited(void);
 
-	CursorType _CursorType;
+	UInt32 _CursorType;
 
 	virtual void setCursor(void) = 0;
     virtual WindowPtr createWindow(void) = 0;

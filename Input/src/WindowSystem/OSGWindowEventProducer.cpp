@@ -77,6 +77,46 @@ void WindowEventProducer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void WindowEventProducer::updateCursor(Pnt2f MousePos)
+{
+	CursorRegionListItor ListItor;
+	bool CursorChanged(false);
+	for(ListItor = _CursorRegions.begin() ; ListItor != _CursorRegions.end() ; ++ListItor)
+	{
+		if(MousePos.x() >= ListItor->_TopLeft.x() &&
+		   MousePos.y() >= ListItor->_TopLeft.y() &&
+		   MousePos.x() <= ListItor->_BottomRight.x() &&
+		   MousePos.y() <= ListItor->_TopLeft.y())
+		{
+			setCursorType(ListItor->_CursorType);
+			CursorChanged = true;
+		}
+	}
+	if(!CursorChanged)
+	{
+		setCursorType(CURSOR_POINTER);
+	}
+}
+
+WindowEventProducer::CursorRegionListItor WindowEventProducer::addCursorRegion(const CursorRegion& r)
+{
+	_CursorRegions.push_back(r);
+	return --(_CursorRegions.end());
+}
+
+bool WindowEventProducer::removeCursorRegion(CursorRegionListItor RegionItor)
+{
+	if(RegionItor != _CursorRegions.end())
+	{
+		_CursorRegions.erase(RegionItor);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 WindowPtr WindowEventProducer::initWindow(void)
 {
     beginEditCP(WindowEventProducerPtr(this), WindowEventProducer::WindowFieldMask);

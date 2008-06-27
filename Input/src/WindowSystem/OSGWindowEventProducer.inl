@@ -50,13 +50,13 @@ void WindowEventProducer::draw(void)
 }
 
 inline
-WindowEventProducer::CursorType WindowEventProducer::getCursorType(void) const
+UInt32 WindowEventProducer::getCursorType(void) const
 {
 	return _CursorType;
 }
 
 inline
-void WindowEventProducer::setCursorType(CursorType Type)
+void WindowEventProducer::setCursorType(UInt32 Type)
 {
 	_CursorType = Type;
     setCursor();
