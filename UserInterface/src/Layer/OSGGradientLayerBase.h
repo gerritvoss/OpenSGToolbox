@@ -67,11 +67,11 @@
 
 #include "OSGLayer.h" // Parent
 
+#include <OpenSG/OSGPnt2fFields.h> // StartPosition type
+#include <OpenSG/OSGPnt2fFields.h> // EndPosition type
 #include <OpenSG/OSGColor4fFields.h> // Colors type
-#include <OpenSG/OSGReal32Fields.h> // Positions type
+#include <OpenSG/OSGReal32Fields.h> // Stops type
 #include <OpenSG/OSGUInt32Fields.h> // SpreadMethod type
-#include <OpenSG/OSGUInt32Fields.h> // Orientation type
-#include <OpenSG/OSGReal32Fields.h> // Angle type
 
 #include "OSGGradientLayerFields.h"
 
@@ -95,19 +95,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientLayerBase : public Layer
 
     enum
     {
-        ColorsFieldId       = Inherited::NextFieldId,
-        PositionsFieldId    = ColorsFieldId       + 1,
-        SpreadMethodFieldId = PositionsFieldId    + 1,
-        OrientationFieldId  = SpreadMethodFieldId + 1,
-        AngleFieldId        = OrientationFieldId  + 1,
-        NextFieldId         = AngleFieldId        + 1
+        StartPositionFieldId = Inherited::NextFieldId,
+        EndPositionFieldId   = StartPositionFieldId + 1,
+        ColorsFieldId        = EndPositionFieldId   + 1,
+        StopsFieldId         = ColorsFieldId        + 1,
+        SpreadMethodFieldId  = StopsFieldId         + 1,
+        NextFieldId          = SpreadMethodFieldId  + 1
     };
 
+    static const OSG::BitVector StartPositionFieldMask;
+    static const OSG::BitVector EndPositionFieldMask;
     static const OSG::BitVector ColorsFieldMask;
-    static const OSG::BitVector PositionsFieldMask;
+    static const OSG::BitVector StopsFieldMask;
     static const OSG::BitVector SpreadMethodFieldMask;
-    static const OSG::BitVector OrientationFieldMask;
-    static const OSG::BitVector AngleFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,33 +134,33 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientLayerBase : public Layer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           SFPnt2f             *getSFStartPosition  (void);
+           SFPnt2f             *getSFEndPosition    (void);
            MFColor4f           *getMFColors         (void);
-           MFReal32            *getMFPositions      (void);
+           MFReal32            *getMFStops          (void);
            SFUInt32            *getSFSpreadMethod   (void);
-           SFUInt32            *getSFOrientation    (void);
-           SFReal32            *getSFAngle          (void);
 
+           Pnt2f               &getStartPosition  (void);
+     const Pnt2f               &getStartPosition  (void) const;
+           Pnt2f               &getEndPosition    (void);
+     const Pnt2f               &getEndPosition    (void) const;
            UInt32              &getSpreadMethod   (void);
      const UInt32              &getSpreadMethod   (void) const;
-           UInt32              &getOrientation    (void);
-     const UInt32              &getOrientation    (void) const;
-           Real32              &getAngle          (void);
-     const Real32              &getAngle          (void) const;
            Color4f             &getColors         (const UInt32 index);
            MFColor4f           &getColors         (void);
      const MFColor4f           &getColors         (void) const;
-           Real32              &getPositions      (const UInt32 index);
-           MFReal32            &getPositions      (void);
-     const MFReal32            &getPositions      (void) const;
+           Real32              &getStops          (const UInt32 index);
+           MFReal32            &getStops          (void);
+     const MFReal32            &getStops          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setStartPosition  ( const Pnt2f &value );
+     void setEndPosition    ( const Pnt2f &value );
      void setSpreadMethod   ( const UInt32 &value );
-     void setOrientation    ( const UInt32 &value );
-     void setAngle          ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,11 +203,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientLayerBase : public Layer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFPnt2f             _sfStartPosition;
+    SFPnt2f             _sfEndPosition;
     MFColor4f           _mfColors;
-    MFReal32            _mfPositions;
+    MFReal32            _mfStops;
     SFUInt32            _sfSpreadMethod;
-    SFUInt32            _sfOrientation;
-    SFReal32            _sfAngle;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

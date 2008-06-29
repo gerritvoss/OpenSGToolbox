@@ -326,10 +326,11 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsButtonBackground);
 		WindowsButtonBackground->getColors().push_back(Color4f(.988, .988, .984, 1.0));
-		WindowsButtonBackground->getPositions().push_back(0.0);
+		WindowsButtonBackground->getStops().push_back(0.0);
 		WindowsButtonBackground->getColors().push_back(Color4f(.941, .941, .918, 1.0));
-		WindowsButtonBackground->getPositions().push_back(1.0);
-		WindowsButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsButtonBackground->getStops().push_back(1.0);
+		WindowsButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsButtonBackground);
 	
 	//Windows Disabled ButtonBackground
@@ -342,20 +343,22 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsActiveButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsActiveButtonBackground);
 		WindowsActiveButtonBackground->getColors().push_back(Color4f(.90, .89, .87, 1.0));
-		WindowsActiveButtonBackground->getPositions().push_back(0.0);
+		WindowsActiveButtonBackground->getStops().push_back(0.0);
 		WindowsActiveButtonBackground->getColors().push_back(Color4f(.89, .89, .85, 1.0));
-		WindowsActiveButtonBackground->getPositions().push_back(1.0);
-		WindowsActiveButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsActiveButtonBackground->getStops().push_back(1.0);
+		WindowsActiveButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsActiveButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsActiveButtonBackground);
     
 	//Windows Rollover ButtonBackground
 	GradientLayerPtr WindowsRolloverButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsRolloverButtonBackground);
 		WindowsRolloverButtonBackground->getColors().push_back(Color4f(.99, .99, .98, 1.0));
-		WindowsRolloverButtonBackground->getPositions().push_back(0.0);
+		WindowsRolloverButtonBackground->getStops().push_back(0.0);
 		WindowsRolloverButtonBackground->getColors().push_back(Color4f(.93, .92, .90, 1.0));
-		WindowsRolloverButtonBackground->getPositions().push_back(1.0);
-		WindowsRolloverButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsRolloverButtonBackground->getStops().push_back(1.0);
+		WindowsRolloverButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsRolloverButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsRolloverButtonBackground);
 
 	//Windows Button
@@ -535,30 +538,33 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsIconifyMaximizeButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsIconifyMaximizeButtonBackground);
 		WindowsIconifyMaximizeButtonBackground->getColors().push_back(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsIconifyMaximizeButtonBackground->getPositions().push_back(0.0);
+		WindowsIconifyMaximizeButtonBackground->getStops().push_back(0.0);
 		WindowsIconifyMaximizeButtonBackground->getColors().push_back(Color4f(0.52, 0.54, 0.69, 1.0));
-		WindowsIconifyMaximizeButtonBackground->getPositions().push_back(0.0);
-		WindowsIconifyMaximizeButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsIconifyMaximizeButtonBackground->getStops().push_back(0.0);
+		WindowsIconifyMaximizeButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsIconifyMaximizeButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsIconifyMaximizeButtonBackground);
 
 	//Windows  ActiveIconifyMaximizeButtonBackground
 	GradientLayerPtr ActiveWindowsIconifyMaximizeButtonBackground = GradientLayer::create();
 	beginEditCP(ActiveWindowsIconifyMaximizeButtonBackground);
 		ActiveWindowsIconifyMaximizeButtonBackground->getColors().push_back(Color4f(0.55, 0.56, 0.68, 1.0));
-		ActiveWindowsIconifyMaximizeButtonBackground->getPositions().push_back(0.0);
+		ActiveWindowsIconifyMaximizeButtonBackground->getStops().push_back(0.0);
 		ActiveWindowsIconifyMaximizeButtonBackground->getColors().push_back(Color4f(1.0, 0.98, 1.0, 1.0));
-		ActiveWindowsIconifyMaximizeButtonBackground->getPositions().push_back(1.0);
-		ActiveWindowsIconifyMaximizeButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		ActiveWindowsIconifyMaximizeButtonBackground->getStops().push_back(1.0);
+		ActiveWindowsIconifyMaximizeButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		ActiveWindowsIconifyMaximizeButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(ActiveWindowsIconifyMaximizeButtonBackground);
 	
 	//Windows  DisabledIconifyMaximizeButtonBackground
 	GradientLayerPtr WindowsDisabledIconifyMaximizeButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsDisabledIconifyMaximizeButtonBackground);
-		WindowsDisabledIconifyMaximizeButtonBackground->getPositions().push_back(0.0);
+		WindowsDisabledIconifyMaximizeButtonBackground->getStops().push_back(0.0);
 		WindowsDisabledIconifyMaximizeButtonBackground->getColors().push_back(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsDisabledIconifyMaximizeButtonBackground->getPositions().push_back(1.0);
+		WindowsDisabledIconifyMaximizeButtonBackground->getStops().push_back(1.0);
 		WindowsDisabledIconifyMaximizeButtonBackground->getColors().push_back(Color4f(0.74, 0.75, 0.82, 1.0));
-		WindowsDisabledIconifyMaximizeButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsDisabledIconifyMaximizeButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsDisabledIconifyMaximizeButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsDisabledIconifyMaximizeButtonBackground);
 
 	//IconifyButton DrawObject
@@ -691,30 +697,33 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsCloseButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsCloseButtonBackground);
 		WindowsCloseButtonBackground->getColors().push_back(Color4f(0.96, 0.56, 0.52, 1.0));
-		WindowsCloseButtonBackground->getPositions().push_back(0.0);
+		WindowsCloseButtonBackground->getStops().push_back(0.0);
 		WindowsCloseButtonBackground->getColors().push_back(Color4f(0.78, 0.33, 0.36, 1.0));
-		WindowsCloseButtonBackground->getPositions().push_back(1.0);
-		WindowsCloseButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsCloseButtonBackground->getStops().push_back(1.0);
+		WindowsCloseButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsCloseButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsCloseButtonBackground);
 
 	//Windows  ActiveCloseButtonBackground
 	GradientLayerPtr ActiveWindowsCloseButtonBackground = GradientLayer::create();
 	beginEditCP(ActiveWindowsCloseButtonBackground);
 		ActiveWindowsCloseButtonBackground->getColors().push_back(Color4f(0.92, 0.41, 0.36, 1.0));
-		ActiveWindowsCloseButtonBackground->getPositions().push_back(0.0);
+		ActiveWindowsCloseButtonBackground->getStops().push_back(0.0);
 		ActiveWindowsCloseButtonBackground->getColors().push_back(Color4f(1.0, 0.64, 0.54, 1.0));
-		ActiveWindowsCloseButtonBackground->getPositions().push_back(1.0);
-		ActiveWindowsCloseButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		ActiveWindowsCloseButtonBackground->getStops().push_back(1.0);
+		ActiveWindowsCloseButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		ActiveWindowsCloseButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(ActiveWindowsCloseButtonBackground);
 	
 	//Windows  DisabledCloseButtonBackground
 	GradientLayerPtr WindowsDisabledCloseButtonBackground = GradientLayer::create();
 	beginEditCP(WindowsDisabledCloseButtonBackground);
 		WindowsDisabledCloseButtonBackground->getColors().push_back(Color4f(0.94, 0.76, 0.75, 1.0));
-		WindowsDisabledCloseButtonBackground->getPositions().push_back(0.0);
+		WindowsDisabledCloseButtonBackground->getStops().push_back(0.0);
 		WindowsDisabledCloseButtonBackground->getColors().push_back(Color4f(0.83, 0.63, 0.64, 1.0));
-		WindowsDisabledCloseButtonBackground->getPositions().push_back(1.0);
-		WindowsDisabledCloseButtonBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsDisabledCloseButtonBackground->getStops().push_back(1.0);
+		WindowsDisabledCloseButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsDisabledCloseButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsDisabledCloseButtonBackground);
 
 	
@@ -822,19 +831,21 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WIndowsInternalWindowTitlebarBackground = GradientLayer::create();
 	beginEditCP(WIndowsInternalWindowTitlebarBackground);
 		WIndowsInternalWindowTitlebarBackground->getColors().push_back(Color4f(0.64, 0.64, 0.75, 1.0));
-		WIndowsInternalWindowTitlebarBackground->getPositions().push_back(0.0);
+		WIndowsInternalWindowTitlebarBackground->getStops().push_back(0.0);
 		WIndowsInternalWindowTitlebarBackground->getColors().push_back(Color4f(0.89, 0.89, 0.89, 1.0));
-		WIndowsInternalWindowTitlebarBackground->getPositions().push_back(1.0);
-		WIndowsInternalWindowTitlebarBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WIndowsInternalWindowTitlebarBackground->getStops().push_back(1.0);
+		WIndowsInternalWindowTitlebarBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WIndowsInternalWindowTitlebarBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WIndowsInternalWindowTitlebarBackground);
 	//Titlebar DisabledBackground
 	GradientLayerPtr WindowsInternalWindowTitlebarDisabledBackground = GradientLayer::create();
 	beginEditCP(WindowsInternalWindowTitlebarDisabledBackground);
 		WindowsInternalWindowTitlebarDisabledBackground->getColors().push_back(Color4f(0.84, 0.84, 0.89, 1.0));
-		WindowsInternalWindowTitlebarDisabledBackground->getPositions().push_back(0.0);
+		WindowsInternalWindowTitlebarDisabledBackground->getStops().push_back(0.0);
 		WindowsInternalWindowTitlebarDisabledBackground->getColors().push_back(Color4f(0.99, 1.0, 0.99, 1.0));
-		WindowsInternalWindowTitlebarDisabledBackground->getPositions().push_back(1.0);
-		WindowsInternalWindowTitlebarDisabledBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsInternalWindowTitlebarDisabledBackground->getStops().push_back(1.0);
+		WindowsInternalWindowTitlebarDisabledBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsInternalWindowTitlebarDisabledBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsInternalWindowTitlebarDisabledBackground);
 
 
@@ -1142,10 +1153,11 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsTabPanelTabBackground = GradientLayer::create();
 	beginEditCP(WindowsTabPanelTabBackground);
 		WindowsTabPanelTabBackground->getColors().push_back(Color4f(1.0,1.0,1.0,1.0));
-		WindowsTabPanelTabBackground->getPositions().push_back(0.0);
+		WindowsTabPanelTabBackground->getStops().push_back(0.0);
 		WindowsTabPanelTabBackground->getColors().push_back(Color4f(0.75,0.75,0.85,1.0));
-		WindowsTabPanelTabBackground->getPositions().push_back(1.0);
-		WindowsTabPanelTabBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsTabPanelTabBackground->getStops().push_back(1.0);
+		WindowsTabPanelTabBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsTabPanelTabBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsTabPanelTabBackground);
 	
 	ColorLayerPtr WindowsTabPanelTabActiveBackground = ColorLayer::create();
@@ -2674,10 +2686,11 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsVerticalScrollFieldBackground = GradientLayer::create();
 	beginEditCP(WindowsVerticalScrollFieldBackground);
 		WindowsVerticalScrollFieldBackground->getColors().push_back(Color4f(0.95,0.95,0.93,1.0));
-		WindowsVerticalScrollFieldBackground->getPositions().push_back(0.0);
+		WindowsVerticalScrollFieldBackground->getStops().push_back(0.0);
 		WindowsVerticalScrollFieldBackground->getColors().push_back(Color4f(1.0,1.0,0.98,1.0));
-		WindowsVerticalScrollFieldBackground->getPositions().push_back(1.0);
-		WindowsVerticalScrollFieldBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+		WindowsVerticalScrollFieldBackground->getStops().push_back(1.0);
+		WindowsVerticalScrollFieldBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsVerticalScrollFieldBackground->setEndPosition(Vec2f(1.0f,0.0f));
 	endEditCP(WindowsVerticalScrollFieldBackground);
 	
 	//Vertical Scroll Field Disabled Background
@@ -2735,10 +2748,11 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsVerticalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsVerticalScrollBarDrawObjectBackground);
 		WindowsVerticalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.79,0.85,0.99,1.0));
-		WindowsVerticalScrollBarDrawObjectBackground->getPositions().push_back(0.0);
+		WindowsVerticalScrollBarDrawObjectBackground->getStops().push_back(0.0);
 		WindowsVerticalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.73,0.8,0.98,1.0));
-		WindowsVerticalScrollBarDrawObjectBackground->getPositions().push_back(1.0);
-		WindowsVerticalScrollBarDrawObjectBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+		WindowsVerticalScrollBarDrawObjectBackground->getStops().push_back(1.0);
+		WindowsVerticalScrollBarDrawObjectBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsVerticalScrollBarDrawObjectBackground->setEndPosition(Vec2f(1.0f,0.0f));
 	endEditCP(WindowsVerticalScrollBarDrawObjectBackground);
 	
 	//Vertical Scroll Bar Disabled Background
@@ -2751,20 +2765,22 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsRolloverVerticalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsRolloverVerticalScrollBarDrawObjectBackground);
 		WindowsRolloverVerticalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.84,0.91,1.0,1.0));
-		WindowsRolloverVerticalScrollBarDrawObjectBackground->getPositions().push_back(0.0);
+		WindowsRolloverVerticalScrollBarDrawObjectBackground->getStops().push_back(0.0);
 		WindowsRolloverVerticalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.80,0.88,1.0,1.0));
-		WindowsRolloverVerticalScrollBarDrawObjectBackground->getPositions().push_back(1.0);
-		WindowsRolloverVerticalScrollBarDrawObjectBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
+		WindowsRolloverVerticalScrollBarDrawObjectBackground->getStops().push_back(1.0);
+		WindowsRolloverVerticalScrollBarDrawObjectBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsRolloverVerticalScrollBarDrawObjectBackground->setEndPosition(Vec2f(1.0f,0.0f));
 	endEditCP(WindowsRolloverVerticalScrollBarDrawObjectBackground);
 
 	//Vertical Scroll Bar Active Background
 	GradientLayerPtr WindowsActiveVerticalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsActiveVerticalScrollBarDrawObjectBackground);
 		WindowsActiveVerticalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.84,0.91,1.0,1.0));
-		WindowsActiveVerticalScrollBarDrawObjectBackground->getPositions().push_back(0.0);
+		WindowsActiveVerticalScrollBarDrawObjectBackground->getStops().push_back(0.0);
 		WindowsActiveVerticalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.80,0.88,1.0,1.0));
-		WindowsActiveVerticalScrollBarDrawObjectBackground->getPositions().push_back(1.0);
-		WindowsActiveVerticalScrollBarDrawObjectBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsActiveVerticalScrollBarDrawObjectBackground->getStops().push_back(1.0);
+		WindowsActiveVerticalScrollBarDrawObjectBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsActiveVerticalScrollBarDrawObjectBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsActiveVerticalScrollBarDrawObjectBackground);
 
     //Vertical Scroll Bar Center Ridges
@@ -3025,10 +3041,11 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsHorizontalScrollFieldBackground = GradientLayer::create();
 	beginEditCP(WindowsHorizontalScrollFieldBackground);
 		WindowsHorizontalScrollFieldBackground->getColors().push_back(Color4f(0.95,0.95,0.93,1.0));
-		WindowsHorizontalScrollFieldBackground->getPositions().push_back(0.0);
+		WindowsHorizontalScrollFieldBackground->getStops().push_back(0.0);
 		WindowsHorizontalScrollFieldBackground->getColors().push_back(Color4f(1.0,1.0,0.98,1.0));
-		WindowsHorizontalScrollFieldBackground->getPositions().push_back(1.0);
-		WindowsHorizontalScrollFieldBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsHorizontalScrollFieldBackground->getStops().push_back(1.0);
+		WindowsHorizontalScrollFieldBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsHorizontalScrollFieldBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsHorizontalScrollFieldBackground);
 	
 	//Horizontal Scroll Field Disabled Background
@@ -3079,10 +3096,11 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsHorizontalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsHorizontalScrollBarDrawObjectBackground);
 		WindowsHorizontalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.79,0.85,0.99,1.0));
-		WindowsHorizontalScrollBarDrawObjectBackground->getPositions().push_back(0.0);
+		WindowsHorizontalScrollBarDrawObjectBackground->getStops().push_back(0.0);
 		WindowsHorizontalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.73,0.8,0.98,1.0));
-		WindowsHorizontalScrollBarDrawObjectBackground->getPositions().push_back(1.0);
-		WindowsHorizontalScrollBarDrawObjectBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsHorizontalScrollBarDrawObjectBackground->getStops().push_back(1.0);
+		WindowsHorizontalScrollBarDrawObjectBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsHorizontalScrollBarDrawObjectBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsHorizontalScrollBarDrawObjectBackground);
 	
 	//Horizontal Scroll Bar Disabled Background
@@ -3095,20 +3113,22 @@ void WindowsLookAndFeel::init(void)
 	GradientLayerPtr WindowsRolloverHorizontalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsRolloverHorizontalScrollBarDrawObjectBackground);
 		WindowsRolloverHorizontalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.84,0.91,1.0,1.0));
-		WindowsRolloverHorizontalScrollBarDrawObjectBackground->getPositions().push_back(0.0);
+		WindowsRolloverHorizontalScrollBarDrawObjectBackground->getStops().push_back(0.0);
 		WindowsRolloverHorizontalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.80,0.88,1.0,1.0));
-		WindowsRolloverHorizontalScrollBarDrawObjectBackground->getPositions().push_back(1.0);
-		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsRolloverHorizontalScrollBarDrawObjectBackground->getStops().push_back(1.0);
+		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsRolloverHorizontalScrollBarDrawObjectBackground);
 
 	//Horizontal Scroll Bar Active Background
 	GradientLayerPtr WindowsActiveHorizontalScrollBarDrawObjectBackground = GradientLayer::create();
 	beginEditCP(WindowsActiveHorizontalScrollBarDrawObjectBackground);
 		WindowsActiveHorizontalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.84,0.91,1.0,1.0));
-		WindowsActiveHorizontalScrollBarDrawObjectBackground->getPositions().push_back(0.0);
+		WindowsActiveHorizontalScrollBarDrawObjectBackground->getStops().push_back(0.0);
 		WindowsActiveHorizontalScrollBarDrawObjectBackground->getColors().push_back(Color4f(0.80,0.88,1.0,1.0));
-		WindowsActiveHorizontalScrollBarDrawObjectBackground->getPositions().push_back(1.0);
-		WindowsActiveHorizontalScrollBarDrawObjectBackground->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
+		WindowsActiveHorizontalScrollBarDrawObjectBackground->getStops().push_back(1.0);
+		WindowsActiveHorizontalScrollBarDrawObjectBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsActiveHorizontalScrollBarDrawObjectBackground->setEndPosition(Vec2f(0.0f,1.0f));
 	endEditCP(WindowsActiveHorizontalScrollBarDrawObjectBackground);
 
     //Horizontal Scroll Bar Center Ridges

@@ -13,6 +13,24 @@
 >
 UI Gradient Background.
 	<Field
+		name="StartPosition"
+		type="Pnt2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0,0.0"
+	>
+	</Field>
+	<Field
+		name="EndPosition"
+		type="Pnt2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0,0.0"
+	>
+	</Field>
+	<Field
 		name="Colors"
 		type="Color4f"
 		cardinality="multi"
@@ -21,7 +39,7 @@ UI Gradient Background.
 	>
 	</Field>
 	<Field
-		name="Positions"
+		name="Stops"
 		type="Real32"
 		cardinality="multi"
 		visibility="external"
@@ -34,24 +52,6 @@ UI Gradient Background.
 		cardinality="single"
 		visibility="external"
 		defaultValue="GradientLayer::SPREAD_PAD"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Orientation"
-		type="UInt32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="GradientLayer::VERTICAL_ORIENTATION"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Angle"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="0.0f"
 		access="public"
 	>
 	</Field>

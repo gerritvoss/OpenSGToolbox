@@ -96,6 +96,20 @@ GradientLayerPtr GradientLayerBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the GradientLayer::_sfStartPosition field.
+inline
+SFPnt2f *GradientLayerBase::getSFStartPosition(void)
+{
+    return &_sfStartPosition;
+}
+
+//! Get the GradientLayer::_sfEndPosition field.
+inline
+SFPnt2f *GradientLayerBase::getSFEndPosition(void)
+{
+    return &_sfEndPosition;
+}
+
 //! Get the GradientLayer::_mfColors field.
 inline
 MFColor4f *GradientLayerBase::getMFColors(void)
@@ -103,11 +117,11 @@ MFColor4f *GradientLayerBase::getMFColors(void)
     return &_mfColors;
 }
 
-//! Get the GradientLayer::_mfPositions field.
+//! Get the GradientLayer::_mfStops field.
 inline
-MFReal32 *GradientLayerBase::getMFPositions(void)
+MFReal32 *GradientLayerBase::getMFStops(void)
 {
-    return &_mfPositions;
+    return &_mfStops;
 }
 
 //! Get the GradientLayer::_sfSpreadMethod field.
@@ -117,20 +131,48 @@ SFUInt32 *GradientLayerBase::getSFSpreadMethod(void)
     return &_sfSpreadMethod;
 }
 
-//! Get the GradientLayer::_sfOrientation field.
+
+//! Get the value of the GradientLayer::_sfStartPosition field.
 inline
-SFUInt32 *GradientLayerBase::getSFOrientation(void)
+Pnt2f &GradientLayerBase::getStartPosition(void)
 {
-    return &_sfOrientation;
+    return _sfStartPosition.getValue();
 }
 
-//! Get the GradientLayer::_sfAngle field.
+//! Get the value of the GradientLayer::_sfStartPosition field.
 inline
-SFReal32 *GradientLayerBase::getSFAngle(void)
+const Pnt2f &GradientLayerBase::getStartPosition(void) const
 {
-    return &_sfAngle;
+    return _sfStartPosition.getValue();
 }
 
+//! Set the value of the GradientLayer::_sfStartPosition field.
+inline
+void GradientLayerBase::setStartPosition(const Pnt2f &value)
+{
+    _sfStartPosition.setValue(value);
+}
+
+//! Get the value of the GradientLayer::_sfEndPosition field.
+inline
+Pnt2f &GradientLayerBase::getEndPosition(void)
+{
+    return _sfEndPosition.getValue();
+}
+
+//! Get the value of the GradientLayer::_sfEndPosition field.
+inline
+const Pnt2f &GradientLayerBase::getEndPosition(void) const
+{
+    return _sfEndPosition.getValue();
+}
+
+//! Set the value of the GradientLayer::_sfEndPosition field.
+inline
+void GradientLayerBase::setEndPosition(const Pnt2f &value)
+{
+    _sfEndPosition.setValue(value);
+}
 
 //! Get the value of the GradientLayer::_sfSpreadMethod field.
 inline
@@ -151,48 +193,6 @@ inline
 void GradientLayerBase::setSpreadMethod(const UInt32 &value)
 {
     _sfSpreadMethod.setValue(value);
-}
-
-//! Get the value of the GradientLayer::_sfOrientation field.
-inline
-UInt32 &GradientLayerBase::getOrientation(void)
-{
-    return _sfOrientation.getValue();
-}
-
-//! Get the value of the GradientLayer::_sfOrientation field.
-inline
-const UInt32 &GradientLayerBase::getOrientation(void) const
-{
-    return _sfOrientation.getValue();
-}
-
-//! Set the value of the GradientLayer::_sfOrientation field.
-inline
-void GradientLayerBase::setOrientation(const UInt32 &value)
-{
-    _sfOrientation.setValue(value);
-}
-
-//! Get the value of the GradientLayer::_sfAngle field.
-inline
-Real32 &GradientLayerBase::getAngle(void)
-{
-    return _sfAngle.getValue();
-}
-
-//! Get the value of the GradientLayer::_sfAngle field.
-inline
-const Real32 &GradientLayerBase::getAngle(void) const
-{
-    return _sfAngle.getValue();
-}
-
-//! Set the value of the GradientLayer::_sfAngle field.
-inline
-void GradientLayerBase::setAngle(const Real32 &value)
-{
-    _sfAngle.setValue(value);
 }
 
 
@@ -217,25 +217,25 @@ const MFColor4f &GradientLayerBase::getColors(void) const
     return _mfColors;
 }
 
-//! Get the value of the \a index element the GradientLayer::_mfPositions field.
+//! Get the value of the \a index element the GradientLayer::_mfStops field.
 inline
-Real32 &GradientLayerBase::getPositions(const UInt32 index)
+Real32 &GradientLayerBase::getStops(const UInt32 index)
 {
-    return _mfPositions[index];
+    return _mfStops[index];
 }
 
-//! Get the GradientLayer::_mfPositions field.
+//! Get the GradientLayer::_mfStops field.
 inline
-MFReal32 &GradientLayerBase::getPositions(void)
+MFReal32 &GradientLayerBase::getStops(void)
 {
-    return _mfPositions;
+    return _mfStops;
 }
 
-//! Get the GradientLayer::_mfPositions field.
+//! Get the GradientLayer::_mfStops field.
 inline
-const MFReal32 &GradientLayerBase::getPositions(void) const
+const MFReal32 &GradientLayerBase::getStops(void) const
 {
-    return _mfPositions;
+    return _mfStops;
 }
 
 OSG_END_NAMESPACE

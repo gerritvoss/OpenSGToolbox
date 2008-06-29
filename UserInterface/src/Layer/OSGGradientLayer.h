@@ -97,6 +97,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientLayer : public GradientLayerBase
     virtual ~GradientLayer(void); 
 
     /*! \}                                                                 */
+	void drawGradient(const GraphicsPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Real32& Opacity) const; 
+	void drawPad(const GraphicsPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Color4f Color, const Real32& Opacity) const; 
     
     /*==========================  PRIVATE  ================================*/
   private:

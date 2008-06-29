@@ -265,17 +265,18 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    beginEditCP(ExampleGradientLayer, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
-         ExampleGradientLayer->getColors().push_back(Color4f(1.0, 0.0, 0.0, 1.0));
-		ExampleGradientLayer->getPositions().push_back(0.0);
-         ExampleGradientLayer->getColors().push_back(Color4f(1.0, 1.0, 0.0, 0.8222));
-		ExampleGradientLayer->getPositions().push_back(0.33);
-         ExampleGradientLayer->getColors().push_back(Color4f(0.0, 1.0, 1.0, 0.6667));
-		ExampleGradientLayer->getPositions().push_back(0.67);
+    beginEditCP(ExampleGradientLayer, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask | GradientLayer::SpreadMethodFieldMask);
+
+		 ExampleGradientLayer->getColors().push_back(Color4f(1.0, 0.0, 0.0, 1.0));
+		ExampleGradientLayer->getStops().push_back(0.0);
+         ExampleGradientLayer->getColors().push_back(Color4f(0.0, 1.0, 0.0, 0.75));
+		ExampleGradientLayer->getStops().push_back(0.5);
          ExampleGradientLayer->getColors().push_back(Color4f(0.0, 0.0, 1.0, 0.5));
-		ExampleGradientLayer->getPositions().push_back(1.0);
-         ExampleGradientLayer->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
-    endEditCP(ExampleGradientLayer, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+		ExampleGradientLayer->getStops().push_back(1.0);
+         ExampleGradientLayer->setStartPosition(Vec2f(0.2f,0.2f));
+         ExampleGradientLayer->setEndPosition(Vec2f(.6f,0.6f));
+         ExampleGradientLayer->setSpreadMethod(GradientLayer::SPREAD_REFLECT);
+    endEditCP(ExampleGradientLayer, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask | GradientLayer::SpreadMethodFieldMask);
 		
     /******************************************************
 

@@ -64,20 +64,20 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  GradientLayerBase::StartPositionFieldMask = 
+    (TypeTraits<BitVector>::One << GradientLayerBase::StartPositionFieldId);
+
+const OSG::BitVector  GradientLayerBase::EndPositionFieldMask = 
+    (TypeTraits<BitVector>::One << GradientLayerBase::EndPositionFieldId);
+
 const OSG::BitVector  GradientLayerBase::ColorsFieldMask = 
     (TypeTraits<BitVector>::One << GradientLayerBase::ColorsFieldId);
 
-const OSG::BitVector  GradientLayerBase::PositionsFieldMask = 
-    (TypeTraits<BitVector>::One << GradientLayerBase::PositionsFieldId);
+const OSG::BitVector  GradientLayerBase::StopsFieldMask = 
+    (TypeTraits<BitVector>::One << GradientLayerBase::StopsFieldId);
 
 const OSG::BitVector  GradientLayerBase::SpreadMethodFieldMask = 
     (TypeTraits<BitVector>::One << GradientLayerBase::SpreadMethodFieldId);
-
-const OSG::BitVector  GradientLayerBase::OrientationFieldMask = 
-    (TypeTraits<BitVector>::One << GradientLayerBase::OrientationFieldId);
-
-const OSG::BitVector  GradientLayerBase::AngleFieldMask = 
-    (TypeTraits<BitVector>::One << GradientLayerBase::AngleFieldId);
 
 const OSG::BitVector GradientLayerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -86,19 +86,19 @@ const OSG::BitVector GradientLayerBase::MTInfluenceMask =
 
 // Field descriptions
 
+/*! \var Pnt2f           GradientLayerBase::_sfStartPosition
+    
+*/
+/*! \var Pnt2f           GradientLayerBase::_sfEndPosition
+    
+*/
 /*! \var Color4f         GradientLayerBase::_mfColors
     
 */
-/*! \var Real32          GradientLayerBase::_mfPositions
+/*! \var Real32          GradientLayerBase::_mfStops
     
 */
 /*! \var UInt32          GradientLayerBase::_sfSpreadMethod
-    
-*/
-/*! \var UInt32          GradientLayerBase::_sfOrientation
-    
-*/
-/*! \var Real32          GradientLayerBase::_sfAngle
     
 */
 
@@ -106,31 +106,31 @@ const OSG::BitVector GradientLayerBase::MTInfluenceMask =
 
 FieldDescription *GradientLayerBase::_desc[] = 
 {
+    new FieldDescription(SFPnt2f::getClassType(), 
+                     "StartPosition", 
+                     StartPositionFieldId, StartPositionFieldMask,
+                     false,
+                     (FieldAccessMethod) &GradientLayerBase::getSFStartPosition),
+    new FieldDescription(SFPnt2f::getClassType(), 
+                     "EndPosition", 
+                     EndPositionFieldId, EndPositionFieldMask,
+                     false,
+                     (FieldAccessMethod) &GradientLayerBase::getSFEndPosition),
     new FieldDescription(MFColor4f::getClassType(), 
                      "Colors", 
                      ColorsFieldId, ColorsFieldMask,
                      false,
                      (FieldAccessMethod) &GradientLayerBase::getMFColors),
     new FieldDescription(MFReal32::getClassType(), 
-                     "Positions", 
-                     PositionsFieldId, PositionsFieldMask,
+                     "Stops", 
+                     StopsFieldId, StopsFieldMask,
                      false,
-                     (FieldAccessMethod) &GradientLayerBase::getMFPositions),
+                     (FieldAccessMethod) &GradientLayerBase::getMFStops),
     new FieldDescription(SFUInt32::getClassType(), 
                      "SpreadMethod", 
                      SpreadMethodFieldId, SpreadMethodFieldMask,
                      false,
-                     (FieldAccessMethod) &GradientLayerBase::getSFSpreadMethod),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Orientation", 
-                     OrientationFieldId, OrientationFieldMask,
-                     false,
-                     (FieldAccessMethod) &GradientLayerBase::getSFOrientation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Angle", 
-                     AngleFieldId, AngleFieldMask,
-                     false,
-                     (FieldAccessMethod) &GradientLayerBase::getSFAngle)
+                     (FieldAccessMethod) &GradientLayerBase::getSFSpreadMethod)
 };
 
 
@@ -197,7 +197,7 @@ void GradientLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     Inherited::onDestroyAspect(uiId, uiAspect);
 
     _mfColors.terminateShare(uiAspect, this->getContainerSize());
-    _mfPositions.terminateShare(uiAspect, this->getContainerSize());
+    _mfStops.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -208,11 +208,11 @@ void GradientLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 GradientLayerBase::GradientLayerBase(void) :
+    _sfStartPosition          (Pnt2f(0.0,0.0)), 
+    _sfEndPosition            (Pnt2f(1.0,0.0)), 
     _mfColors                 (), 
-    _mfPositions              (), 
+    _mfStops                  (), 
     _sfSpreadMethod           (UInt32(GradientLayer::SPREAD_PAD)), 
-    _sfOrientation            (UInt32(GradientLayer::VERTICAL_ORIENTATION)), 
-    _sfAngle                  (Real32(0.0f)), 
     Inherited() 
 {
 }
@@ -222,11 +222,11 @@ GradientLayerBase::GradientLayerBase(void) :
 #endif
 
 GradientLayerBase::GradientLayerBase(const GradientLayerBase &source) :
+    _sfStartPosition          (source._sfStartPosition          ), 
+    _sfEndPosition            (source._sfEndPosition            ), 
     _mfColors                 (source._mfColors                 ), 
-    _mfPositions              (source._mfPositions              ), 
+    _mfStops                  (source._mfStops                  ), 
     _sfSpreadMethod           (source._sfSpreadMethod           ), 
-    _sfOrientation            (source._sfOrientation            ), 
-    _sfAngle                  (source._sfAngle                  ), 
     Inherited                 (source)
 {
 }
@@ -243,29 +243,29 @@ UInt32 GradientLayerBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (StartPositionFieldMask & whichField))
+    {
+        returnValue += _sfStartPosition.getBinSize();
+    }
+
+    if(FieldBits::NoField != (EndPositionFieldMask & whichField))
+    {
+        returnValue += _sfEndPosition.getBinSize();
+    }
+
     if(FieldBits::NoField != (ColorsFieldMask & whichField))
     {
         returnValue += _mfColors.getBinSize();
     }
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
+    if(FieldBits::NoField != (StopsFieldMask & whichField))
     {
-        returnValue += _mfPositions.getBinSize();
+        returnValue += _mfStops.getBinSize();
     }
 
     if(FieldBits::NoField != (SpreadMethodFieldMask & whichField))
     {
         returnValue += _sfSpreadMethod.getBinSize();
-    }
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-    {
-        returnValue += _sfOrientation.getBinSize();
-    }
-
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
-    {
-        returnValue += _sfAngle.getBinSize();
     }
 
 
@@ -277,29 +277,29 @@ void GradientLayerBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (StartPositionFieldMask & whichField))
+    {
+        _sfStartPosition.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EndPositionFieldMask & whichField))
+    {
+        _sfEndPosition.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ColorsFieldMask & whichField))
     {
         _mfColors.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
+    if(FieldBits::NoField != (StopsFieldMask & whichField))
     {
-        _mfPositions.copyToBin(pMem);
+        _mfStops.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SpreadMethodFieldMask & whichField))
     {
         _sfSpreadMethod.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-    {
-        _sfOrientation.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
-    {
-        _sfAngle.copyToBin(pMem);
     }
 
 
@@ -310,29 +310,29 @@ void GradientLayerBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (StartPositionFieldMask & whichField))
+    {
+        _sfStartPosition.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EndPositionFieldMask & whichField))
+    {
+        _sfEndPosition.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (ColorsFieldMask & whichField))
     {
         _mfColors.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
+    if(FieldBits::NoField != (StopsFieldMask & whichField))
     {
-        _mfPositions.copyFromBin(pMem);
+        _mfStops.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SpreadMethodFieldMask & whichField))
     {
         _sfSpreadMethod.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-    {
-        _sfOrientation.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
-    {
-        _sfAngle.copyFromBin(pMem);
     }
 
 
@@ -345,20 +345,20 @@ void GradientLayerBase::executeSyncImpl(      GradientLayerBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (StartPositionFieldMask & whichField))
+        _sfStartPosition.syncWith(pOther->_sfStartPosition);
+
+    if(FieldBits::NoField != (EndPositionFieldMask & whichField))
+        _sfEndPosition.syncWith(pOther->_sfEndPosition);
+
     if(FieldBits::NoField != (ColorsFieldMask & whichField))
         _mfColors.syncWith(pOther->_mfColors);
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
-        _mfPositions.syncWith(pOther->_mfPositions);
+    if(FieldBits::NoField != (StopsFieldMask & whichField))
+        _mfStops.syncWith(pOther->_mfStops);
 
     if(FieldBits::NoField != (SpreadMethodFieldMask & whichField))
         _sfSpreadMethod.syncWith(pOther->_sfSpreadMethod);
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
-
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
-        _sfAngle.syncWith(pOther->_sfAngle);
 
 
 }
@@ -370,21 +370,21 @@ void GradientLayerBase::executeSyncImpl(      GradientLayerBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (StartPositionFieldMask & whichField))
+        _sfStartPosition.syncWith(pOther->_sfStartPosition);
+
+    if(FieldBits::NoField != (EndPositionFieldMask & whichField))
+        _sfEndPosition.syncWith(pOther->_sfEndPosition);
+
     if(FieldBits::NoField != (SpreadMethodFieldMask & whichField))
         _sfSpreadMethod.syncWith(pOther->_sfSpreadMethod);
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
-
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
-        _sfAngle.syncWith(pOther->_sfAngle);
 
 
     if(FieldBits::NoField != (ColorsFieldMask & whichField))
         _mfColors.syncWith(pOther->_mfColors, sInfo);
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
-        _mfPositions.syncWith(pOther->_mfPositions, sInfo);
+    if(FieldBits::NoField != (StopsFieldMask & whichField))
+        _mfStops.syncWith(pOther->_mfStops, sInfo);
 
 
 }
@@ -398,8 +398,8 @@ void GradientLayerBase::execBeginEditImpl (const BitVector &whichField,
     if(FieldBits::NoField != (ColorsFieldMask & whichField))
         _mfColors.beginEdit(uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (PositionsFieldMask & whichField))
-        _mfPositions.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (StopsFieldMask & whichField))
+        _mfStops.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

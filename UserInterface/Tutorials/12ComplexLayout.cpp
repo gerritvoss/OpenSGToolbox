@@ -172,13 +172,14 @@ int main(int argc, char **argv)
         ExampleLabel1ColorBackground->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
     endEditCP(ExampleLabel1ColorBackground, ColorLayer::ColorFieldMask);
     
-    beginEditCP(ExampleLabel1GradientBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+    beginEditCP(ExampleLabel1GradientBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
         ExampleLabel1GradientBackground->getColors().push_back(Color4f(1.0, 0.0, 1.0, 0.8));
-		ExampleLabel1GradientBackground->getPositions().push_back(0.0);
+		ExampleLabel1GradientBackground->getStops().push_back(0.0);
         ExampleLabel1GradientBackground->getColors().push_back(Color4f(0.0, 0.0, 1.0, 0.3));
-		ExampleLabel1GradientBackground->getPositions().push_back(1.0);
-        ExampleLabel1GradientBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
-    endEditCP(ExampleLabel1GradientBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+		ExampleLabel1GradientBackground->getStops().push_back(1.0);
+        ExampleLabel1GradientBackground->setStartPosition(Vec2f(0.0f,0.0f));
+        ExampleLabel1GradientBackground->setEndPosition(Vec2f(1.0f,0.0f));
+    endEditCP(ExampleLabel1GradientBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
     
     beginEditCP(ExampleLabel1CompoundBackground, CompoundLayer::BackgroundsFieldMask);
         ExampleLabel1CompoundBackground->getBackgrounds().push_back(ExampleLabel1ColorBackground);

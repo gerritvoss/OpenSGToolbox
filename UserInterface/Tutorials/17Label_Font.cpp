@@ -399,12 +399,12 @@ int main(int argc, char **argv)
 
 	// Create a GradientBackground to add to the Label
     GradientLayerPtr ExampleLabelBackground = osg::GradientLayer::create();
-    beginEditCP(ExampleLabelBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+    beginEditCP(ExampleLabelBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
         ExampleLabelBackground->getColors().push_back(Color4f(1.0, 0.0, 0.0, 1.0));
-		ExampleLabelBackground->getPositions().push_back(0.0);
+		ExampleLabelBackground->getStops().push_back(0.0);
         ExampleLabelBackground->getColors().push_back(Color4f(0.0, 0.0, 1.0, 1.0));
-		ExampleLabelBackground->getPositions().push_back(1.0);
-    endEditCP(ExampleLabelBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		ExampleLabelBackground->getStops().push_back(1.0);
+    endEditCP(ExampleLabelBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
     ExampleLabel = osg::Label::create();
     beginEditCP(ExampleLabel, Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
         ExampleLabel->setBackgrounds(ExampleLabelBackground);

@@ -104,62 +104,84 @@ void HSVColorChooserPanel::updateChooser(void)
 	Color4f TempColor(getColorFromModel());
 	//Update the Hue Bounded Range
 	_HueModel->setValue(osgClamp<Real32>(_HueModel->getMinimum(), Hue, _HueModel->getMaximum()));
-	beginEditCP(_HueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+	beginEditCP(_HueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
 		_HueSliderTrackBackground->getColors().clear();
-		_HueSliderTrackBackground->getPositions().clear();
+		_HueSliderTrackBackground->getStops().clear();
+		//Red
 		TempColor.setValuesHSV(0.0f, Saturation, Value);
 		_HueSliderTrackBackground->getColors().push_back(TempColor);
-		_HueSliderTrackBackground->getPositions().push_back(0.0);
+		_HueSliderTrackBackground->getStops().push_back(0.0);
+		//Yellow
+		TempColor.setValuesHSV(60.0f, Saturation, Value);
+		_HueSliderTrackBackground->getColors().push_back(TempColor);
+		_HueSliderTrackBackground->getStops().push_back(0.166667);
+		//Green
+		TempColor.setValuesHSV(120.0f, Saturation, Value);
+		_HueSliderTrackBackground->getColors().push_back(TempColor);
+		_HueSliderTrackBackground->getStops().push_back(0.333333);
+		//Teal
+		TempColor.setValuesHSV(180.0f, Saturation, Value);
+		_HueSliderTrackBackground->getColors().push_back(TempColor);
+		_HueSliderTrackBackground->getStops().push_back(0.5);
+		//Blue
+		TempColor.setValuesHSV(240.0f, Saturation, Value);
+		_HueSliderTrackBackground->getColors().push_back(TempColor);
+		_HueSliderTrackBackground->getStops().push_back(0.666667);
+		//Purple
+		TempColor.setValuesHSV(300.0f, Saturation, Value);
+		_HueSliderTrackBackground->getColors().push_back(TempColor);
+		_HueSliderTrackBackground->getStops().push_back(0.833333);
+		//Red
 		TempColor.setValuesHSV(360.0f, Saturation, Value);
 		_HueSliderTrackBackground->getColors().push_back(TempColor);
-		_HueSliderTrackBackground->getPositions().push_back(1.0);
-	endEditCP(_HueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		_HueSliderTrackBackground->getStops().push_back(1.0);
+	endEditCP(_HueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
 
 	//Update the Saturation Bounded Range
     _SaturationModel->setValue(osgClamp(0.0f, Saturation, 1.0f) * _SaturationModel->getMaximum());
-	beginEditCP(_SaturationSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+	beginEditCP(_SaturationSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
 		_SaturationSliderTrackBackground->getColors().clear();
-		_SaturationSliderTrackBackground->getPositions().clear();
+		_SaturationSliderTrackBackground->getStops().clear();
 		TempColor.setValuesHSV(Hue, 0.0f, Value);
 		_SaturationSliderTrackBackground->getColors().push_back(TempColor);
-		_SaturationSliderTrackBackground->getPositions().push_back(0.0);
+		_SaturationSliderTrackBackground->getStops().push_back(0.0);
 		TempColor.setValuesHSV(Hue, 1.0f, Value);
 		_SaturationSliderTrackBackground->getColors().push_back(TempColor);
-		_SaturationSliderTrackBackground->getPositions().push_back(1.0);
-	endEditCP(_SaturationSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		_SaturationSliderTrackBackground->getStops().push_back(1.0);
+	endEditCP(_SaturationSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
 
 	//Update the Value Bounded Range
     _ValueModel->setValue(osgClamp(0.0f, Value, 1.0f) * _ValueModel->getMaximum());
-	beginEditCP(_ValueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+	beginEditCP(_ValueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
 		_ValueSliderTrackBackground->getColors().clear();
-		_ValueSliderTrackBackground->getPositions().clear();
+		_ValueSliderTrackBackground->getStops().clear();
 		TempColor.setValuesHSV(Hue, Saturation, 0.0f);
 		_ValueSliderTrackBackground->getColors().push_back(TempColor);
-		_ValueSliderTrackBackground->getPositions().push_back(0.0);
+		_ValueSliderTrackBackground->getStops().push_back(0.0);
 		TempColor.setValuesHSV(Hue, Saturation, 1.0f);
 		_ValueSliderTrackBackground->getColors().push_back(TempColor);
-		_ValueSliderTrackBackground->getPositions().push_back(1.0);
-	endEditCP(_ValueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		_ValueSliderTrackBackground->getStops().push_back(1.0);
+	endEditCP(_ValueSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
 
 	//Update the Alpha Bounded Range
 	_AlphaModel->setValue(osgClamp(0.0f, getColorFromModel().alpha(), 1.0f) * _AlphaModel->getMaximum());
 	
 	if(getIncludeAlpha())
 	{
-		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
 			_AlphaSliderTrackBackground->getColors().clear();
-			_AlphaSliderTrackBackground->getPositions().clear();
+			_AlphaSliderTrackBackground->getStops().clear();
 			_AlphaSliderTrackBackground->getColors().push_back(Color4f(getColorFromModel().red(),
 				                                             getColorFromModel().green(),
 															 getColorFromModel().blue(),
 															 0.0f));
-			_AlphaSliderTrackBackground->getPositions().push_back(0.0);
+			_AlphaSliderTrackBackground->getStops().push_back(0.0);
 			_AlphaSliderTrackBackground->getColors().push_back(Color4f(getColorFromModel().red(),
 				                                             getColorFromModel().green(),
 															 getColorFromModel().blue(),
 															 1.0f));
-			_AlphaSliderTrackBackground->getPositions().push_back(1.0);
-		endEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask);
+			_AlphaSliderTrackBackground->getStops().push_back(1.0);
+		endEditCP(_AlphaSliderTrackBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
 	}
 	
 	attachModelListener();
@@ -199,9 +221,10 @@ void HSVColorChooserPanel::buildChooser(void)
 
 	//Sliders
 	_HueSliderTrackBackground = GradientLayer::create();
-	beginEditCP(_HueSliderTrackBackground, GradientLayer::OrientationFieldMask);
-    _HueSliderTrackBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
-	endEditCP(_HueSliderTrackBackground, GradientLayer::OrientationFieldMask);
+	beginEditCP(_HueSliderTrackBackground, GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
+    _HueSliderTrackBackground->setStartPosition(Vec2f(0.0f,0.0f));
+    _HueSliderTrackBackground->setEndPosition(Vec2f(1.0f,0.0f));
+	endEditCP(_HueSliderTrackBackground, GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 	
 	UIDrawObjectCanvasPtr HueSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(HueSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -222,9 +245,10 @@ void HSVColorChooserPanel::buildChooser(void)
 	
 	//Saturation
 	_SaturationSliderTrackBackground = GradientLayer::create();
-	beginEditCP(_SaturationSliderTrackBackground, GradientLayer::OrientationFieldMask);
-		_SaturationSliderTrackBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
-	endEditCP(_SaturationSliderTrackBackground, GradientLayer::OrientationFieldMask);
+	beginEditCP(_SaturationSliderTrackBackground, GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
+		_SaturationSliderTrackBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		_SaturationSliderTrackBackground->setEndPosition(Vec2f(1.0f,0.0f));
+	endEditCP(_SaturationSliderTrackBackground, GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 	
 	UIDrawObjectCanvasPtr SaturationSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(SaturationSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -245,9 +269,10 @@ void HSVColorChooserPanel::buildChooser(void)
 	
 	//Value
 	_ValueSliderTrackBackground = GradientLayer::create();
-	beginEditCP(_ValueSliderTrackBackground, GradientLayer::OrientationFieldMask);
-		_ValueSliderTrackBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
-	endEditCP(_ValueSliderTrackBackground, GradientLayer::OrientationFieldMask);
+	beginEditCP(_ValueSliderTrackBackground, GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
+		_ValueSliderTrackBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		_ValueSliderTrackBackground->setEndPosition(Vec2f(1.0f,0.0f));
+	endEditCP(_ValueSliderTrackBackground, GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 	
 	UIDrawObjectCanvasPtr ValueSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(ValueSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -269,9 +294,10 @@ void HSVColorChooserPanel::buildChooser(void)
 	if(getIncludeAlpha())
 	{
 		_AlphaSliderTrackBackground = GradientLayer::create();
-		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::OrientationFieldMask);
-			_AlphaSliderTrackBackground->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
-		endEditCP(_AlphaSliderTrackBackground, GradientLayer::OrientationFieldMask);
+		beginEditCP(_AlphaSliderTrackBackground, GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
+			_AlphaSliderTrackBackground->setStartPosition(Vec2f(0.0f,0.0f));
+			_AlphaSliderTrackBackground->setEndPosition(Vec2f(1.0f,0.0f));
+		endEditCP(_AlphaSliderTrackBackground, GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 		
 		UIDrawObjectCanvasPtr AlphaSliderTrackCanvas = UIDrawObjectCanvas::create();
 		beginEditCP(AlphaSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);

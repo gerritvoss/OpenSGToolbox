@@ -959,29 +959,32 @@ LayerPtr createComplexBackground(void)
         ComplexBackgroundBase->setColor(Color4f(0.0, 0.0, .25, 1.0));
     endEditCP(ComplexBackgroundBase, ColorLayer::ColorFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient1, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+    beginEditCP(ComplexBackgroundGradient1, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
         ComplexBackgroundGradient1->getColors().push_back(Color4f(1.0, 0.0, 0.0, 0.5));
-		ComplexBackgroundGradient1->getPositions().push_back(0.0);
+		ComplexBackgroundGradient1->getStops().push_back(0.0);
         ComplexBackgroundGradient1->getColors().push_back(Color4f(0.5, 0.0, 0.0, 0.3));
-		ComplexBackgroundGradient1->getPositions().push_back(1.0);
-        ComplexBackgroundGradient1->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
-    endEditCP(ComplexBackgroundGradient1, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+		ComplexBackgroundGradient1->getStops().push_back(1.0);
+        ComplexBackgroundGradient1->setStartPosition(Vec2f(0.0f,0.0f));
+        ComplexBackgroundGradient1->setEndPosition(Vec2f(1.0f,0.0f));
+    endEditCP(ComplexBackgroundGradient1, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient2, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+    beginEditCP(ComplexBackgroundGradient2, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
         ComplexBackgroundGradient2->getColors().push_back(Color4f(.6, 0.0, 0.3, 1.0));
-		ComplexBackgroundGradient2->getPositions().push_back(0.0);
+		ComplexBackgroundGradient2->getStops().push_back(0.0);
         ComplexBackgroundGradient2->getColors().push_back(Color4f(.2, 0.0, 0.3, 0.5));
-		ComplexBackgroundGradient2->getPositions().push_back(1.0);
-        ComplexBackgroundGradient2->setOrientation(GradientLayer::VERTICAL_ORIENTATION);
-    endEditCP(ComplexBackgroundGradient2, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+		ComplexBackgroundGradient2->getStops().push_back(1.0);
+        ComplexBackgroundGradient2->setStartPosition(Vec2f(0.0f,0.0f));
+        ComplexBackgroundGradient2->setEndPosition(Vec2f(0.0f,1.0f));
+    endEditCP(ComplexBackgroundGradient2, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient3, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+    beginEditCP(ComplexBackgroundGradient3, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
         ComplexBackgroundGradient3->getColors().push_back(Color4f(0.0, 0.0, 0.2, 0.2));
-		ComplexBackgroundGradient3->getPositions().push_back(0.0);
+		ComplexBackgroundGradient3->getStops().push_back(0.0);
         ComplexBackgroundGradient3->getColors().push_back(Color4f(0.0, 0.0, 0.2, 0.3));
-		ComplexBackgroundGradient3->getPositions().push_back(1.0);
-        ComplexBackgroundGradient3->setOrientation(GradientLayer::HORIZONTAL_ORIENTATION);
-    endEditCP(ComplexBackgroundGradient3, GradientLayer::ColorsFieldMask | GradientLayer::PositionsFieldMask | GradientLayer::OrientationFieldMask);
+		ComplexBackgroundGradient3->getStops().push_back(1.0);
+        ComplexBackgroundGradient3->setStartPosition(Vec2f(0.0f,0.0f));
+        ComplexBackgroundGradient3->setEndPosition(Vec2f(1.0f,0.0f));
+    endEditCP(ComplexBackgroundGradient3, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 
     beginEditCP(ComplexBackgroundCompound1, CompoundLayer::BackgroundsFieldMask);
         ComplexBackgroundCompound1->getBackgrounds().push_back(ComplexBackgroundBase);
