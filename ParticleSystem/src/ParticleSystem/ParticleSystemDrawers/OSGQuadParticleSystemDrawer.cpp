@@ -100,7 +100,7 @@ glBegin(GL_QUADS);
 		Pnt3f Position = System->getPosition(i);
 
 		//Determine the Width and Height of the quad
-		Real32 Width = 1,Height =1;
+		Real32 Width = System->getSize(i).x(),Height =System->getSize(i).y();
 
 		//Calculate Quads positions
 		P1 = Position + (Width/2.0f)*Binormal + (Height/2.0f)*Up;
@@ -110,11 +110,20 @@ glBegin(GL_QUADS);
 
 	    //Draw the Quad
 		glNormal3fv(Normal.getValues());
+		
+		glColor4fv(System->getColor(i).getValuesRGBA());
+		glTexCoord2f(0.0, 0.0);
 		glVertex3fv(P1.getValues());
+		
+		
+		glTexCoord2f(1.0, 0.0);
 		glVertex3fv(P2.getValues());
+	
+		glTexCoord2f(1.0, 1.0);
 		glVertex3fv(P3.getValues());
-		glVertex3fv(P4.getValues());
 
+		glTexCoord2f(0.0, 1.0);
+		glVertex3fv(P4.getValues());
 	}
 glEnd();
 	//Generate a local space for the particle
@@ -138,15 +147,19 @@ Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSys
 	{
 	case NORMAL_POSITION_CHANGE:
 		Direction = System->getPositionChange(Index);
+			Direction.normalize();
 		break;
 	case NORMAL_VELOCITY_CHANGE:
 		Direction = System->getVelocityChange(Index);
+			Direction.normalize();
 		break;
 	case NORMAL_VELOCITY:
 		Direction = System->getVelocity(Index);
+			Direction.normalize();
 		break;
 	case NORMAL_ACCELERATION:
 		Direction = System->getAcceleration(Index);
+			Direction.normalize();
 		break;
 	case NORMAL_PARTICLE_NORMAL:
 		Direction = System->getNormal(Index);
@@ -179,7 +192,40 @@ Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSys
 Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
 {
 	//TODO: Implement
-	return Vec3f(0.0,1.0,0.0);
+
+	Vec3f Direction;
+	
+	switch(getUpSource())
+	{
+	case UP_POSITION_CHANGE:
+		Direction = System->getPositionChange(Index);
+		break;
+	case UP_VELOCITY_CHANGE:
+		Direction = System->getVelocityChange(Index);
+		break;
+	case UP_VELOCITY:
+		Direction = System->getVelocity(Index);
+		break;
+	case UP_ACCELERATION:
+		Direction = System->getAcceleration(Index);
+		break;
+	case UP_PARTICLE_NORMAL:
+		Direction = System->getNormal(Index);
+		break;
+	case UP_STATIC:
+		Direction = getNormal();
+		break;
+	case UP_VIEW_DIRECTION:
+	default:
+		{
+			//TODO: make this more efficient
+			Matrix ModelView = action->getCameraToWorld();
+			Direction.setValues(ModelView[1][0],ModelView[1][1],ModelView[1][2]);
+		break;
+		}
+	}
+
+	return Direction;
 }
 
 /*----------------------- constructors & destructors ----------------------*/

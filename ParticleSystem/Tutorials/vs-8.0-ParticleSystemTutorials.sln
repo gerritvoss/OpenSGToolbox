@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03RateParticleGenerator", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04BurstParticleGenerator", "04BurstParticleGenerator.vcproj", "{EE6D9A7F-ED61-4398-A220-F36A69EE8129}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05QuadParticleDrawer", "05QuadParticleDrawer.vcproj", "{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -69,6 +71,10 @@ Global
 		{EE6D9A7F-ED61-4398-A220-F36A69EE8129}.Debug|Win32.Build.0 = Debug|Win32
 		{EE6D9A7F-ED61-4398-A220-F36A69EE8129}.Release|Win32.ActiveCfg = Release|Win32
 		{EE6D9A7F-ED61-4398-A220-F36A69EE8129}.Release|Win32.Build.0 = Release|Win32
+		{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}.Debug|Win32.Build.0 = Debug|Win32
+		{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}.Release|Win32.ActiveCfg = Release|Win32
+		{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
