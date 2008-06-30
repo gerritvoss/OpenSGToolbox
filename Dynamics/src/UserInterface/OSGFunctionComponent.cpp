@@ -234,7 +234,7 @@ void FunctionComponent::updateLayout(void)
     {
         beginEditCP(getInputTabs()[i], Component::PositionFieldMask | Component::SizeFieldMask);
             getInputTabs()[i]->setPosition(Pnt2f(0.0f,0.0f));
-            getInputTabs()[i]->setSize(getInputTabs()[i]->getPreferredSize());
+            getInputTabs()[i]->setSize(getInputTabs()[i]->getRequestedSize());
         endEditCP(getInputTabs()[i], Component::PositionFieldMask | Component::SizeFieldMask);
     }
 

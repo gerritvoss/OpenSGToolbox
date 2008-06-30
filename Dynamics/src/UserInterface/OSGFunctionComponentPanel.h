@@ -46,6 +46,8 @@
 #include "OSGDynamicsDef.h"
 
 #include "OSGFunctionComponentPanelBase.h"
+#include <OpenSG/Input/OSGMouseAdapter.h>
+#include <OpenSG/Input/OSGKeyAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,6 +78,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentPanel : public FunctionCompone
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+    virtual void mousePressed(const MouseEvent& e);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
@@ -98,6 +101,22 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentPanel : public FunctionCompone
     virtual ~FunctionComponentPanel(void); 
 
     /*! \}                                                                 */
+    virtual void updateLayout(void);
+    
+	class ComponentMoveListener : public MouseAdapter,public KeyAdapter
+	{
+	public :
+		ComponentMoveListener(FunctionComponentPanelPtr TheFunctionComponentPanel);
+		
+		virtual void mouseReleased(const MouseEvent& e);
+        virtual void keyPressed(const KeyEvent& e);
+	protected :
+		FunctionComponentPanelPtr _FunctionComponentPanel;
+	};
+
+	friend class ComponentMoveListener;
+
+	ComponentMoveListener _ComponentMoveListener;
     
     /*==========================  PRIVATE  ================================*/
   private:

@@ -48,6 +48,9 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFunctionComponentPanel.h"
+#include <OpenSG/UserInterface/OSGInternalWindow.h>
+#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,6 +79,24 @@ void FunctionComponentPanel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void FunctionComponentPanel::updateLayout(void)
+{
+    //Do Nothing
+}
+
+void FunctionComponentPanel::mousePressed(const MouseEvent& e)
+{
+    if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
+        getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+    {
+        //TODO: Implement
+    }
+    else
+    {
+        Inherited::mousePressed(e);
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -83,12 +104,14 @@ void FunctionComponentPanel::initMethod (void)
 /*----------------------- constructors & destructors ----------------------*/
 
 FunctionComponentPanel::FunctionComponentPanel(void) :
-    Inherited()
+    Inherited(),
+        _ComponentMoveListener(FunctionComponentPanelPtr(this))
 {
 }
 
 FunctionComponentPanel::FunctionComponentPanel(const FunctionComponentPanel &source) :
-    Inherited(source)
+    Inherited(source),
+        _ComponentMoveListener(FunctionComponentPanelPtr(this))
 {
 }
 
@@ -101,6 +124,17 @@ FunctionComponentPanel::~FunctionComponentPanel(void)
 void FunctionComponentPanel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & ChildrenFieldMask)
+    {
+        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        {
+            beginEditCP(getChildren()[i], Component::PositionFieldMask | Component::SizeFieldMask);
+                getChildren()[i]->setPosition(Pnt2f(0.0f,0.0f));
+                getChildren()[i]->setSize(getChildren()[i]->getRequestedSize());
+            endEditCP(getChildren()[i], Component::PositionFieldMask | Component::SizeFieldMask);
+        }
+    }
 }
 
 void FunctionComponentPanel::dump(      UInt32    , 
@@ -110,6 +144,15 @@ void FunctionComponentPanel::dump(      UInt32    ,
 }
 
 
+void FunctionComponentPanel::ComponentMoveListener::mouseReleased(const MouseEvent& e)
+{
+    //TODO:Implement
+}
+
+void FunctionComponentPanel::ComponentMoveListener::keyPressed(const KeyEvent& e)
+{
+    //TODO:Implement
+}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

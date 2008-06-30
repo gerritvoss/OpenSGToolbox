@@ -42,6 +42,7 @@
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
 #include <OpenSG/Dynamics/OSGFunctionComponent.h>
+#include <OpenSG/Dynamics/OSGFunctionComponentPanel.h>
 #include <OpenSG/Dynamics/OSGDataConverter.h>
 #include <OpenSG/Dynamics/OSGDefaultFunctionComponentIOTabComponentGenerator.h>
 
@@ -169,6 +170,26 @@ int main(int argc, char **argv)
 
     endEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask);
     
+    
+    //Create the Function User Interface Component
+    RoundedCornerLineBorderPtr FunctionComponentPanelBorder = RoundedCornerLineBorder::create();
+    beginEditCP(FunctionComponentPanelBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
+        FunctionComponentPanelBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+        FunctionComponentPanelBorder->setWidth(1.0f);
+        FunctionComponentPanelBorder->setCornerRadius(4.0f);
+    endEditCP(FunctionComponentPanelBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
+
+    
+    FunctionComponentPanelPtr ExampleFunctionComponentPanel = FunctionComponentPanel::create();
+    beginEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask);
+        ExampleFunctionComponentPanel->setPreferredSize(Vec2f(400.0f,400.0f));
+        ExampleFunctionComponentPanel->setBorders(FunctionComponentPanelBorder);
+        
+        //Add Components
+		ExampleFunctionComponentPanel->getChildren().push_back(ExampleFunctionComponent);
+
+    endEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask);
+    
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
     ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
@@ -180,11 +201,11 @@ int main(int argc, char **argv)
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleFunctionComponent);
+       MainInternalWindow->getChildren().push_back(ExampleFunctionComponentPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.75f,0.75f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
@@ -223,7 +244,7 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
+                                        Vec2f(850,850),
                                         "OpenSG 10UserInterface Window");
 
     //Main Event Loop

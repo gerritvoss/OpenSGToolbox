@@ -42,6 +42,11 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+FunctionComponentPanel::ComponentMoveListener::ComponentMoveListener(FunctionComponentPanelPtr TheFunctionComponentPanel) :
+_FunctionComponentPanel(TheFunctionComponentPanel)
+{
+}
 OSG_END_NAMESPACE
 
 #define OSGFUNCTIONCOMPONENTPANEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
