@@ -51,6 +51,7 @@
 #include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/UserInterface//OSGUIDrawUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -89,7 +90,24 @@ void FunctionComponentPanel::mousePressed(const MouseEvent& e)
     if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
         getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
     {
-        //TODO: Implement
+		
+		bool isContained(false);
+		for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
+		{
+			isContained = getChildren()[i]->isContained(e.getLocation(), true);
+			if(isContained)
+			{
+				//Set The Active Component
+				_ComponentMoveListener.setActiveComponent(getChildren()[i]);
+				//Set the Initial Position
+				_ComponentMoveListener.setInitialPosition(e.getLocation());
+				
+				//Attach Listeners
+				getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ComponentMoveListener);
+				getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_ComponentMoveListener);
+				getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_ComponentMoveListener);
+			}
+		}
     }
     else
     {
@@ -146,13 +164,45 @@ void FunctionComponentPanel::dump(      UInt32    ,
 
 void FunctionComponentPanel::ComponentMoveListener::mouseReleased(const MouseEvent& e)
 {
-    //TODO:Implement
+	detach();
 }
 
 void FunctionComponentPanel::ComponentMoveListener::keyPressed(const KeyEvent& e)
 {
     //TODO:Implement
+	if(e.getKey() == KeyEvent::KEY_ESCAPE)
+	{
+		detach();
+		
+		//Set the Active Component's Position back to it's initial position
+	}
 }
+
+void FunctionComponentPanel::ComponentMoveListener::mouseDragged(const MouseEvent& e)
+{
+    //TODO:Implement
+	//Move the Position of the Component based on the mouse position and it's initial position
+}
+
+void FunctionComponentPanel::ComponentMoveListener::detach(void)
+{
+    if(_FunctionComponentPanel->getParentWindow() != NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()!=NullFC&& _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+		_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+		_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    }
+}
+
+void FunctionComponentPanel::ComponentMoveListener::setActiveComponent(ComponentPtr TheComponent)
+{
+	_ActiveComponent = TheComponent;
+	if(_ActiveComponent != NullFC)
+	{
+		_InitialComponentPosition = _ActiveComponent->getPosition();
+	}
+}
+
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

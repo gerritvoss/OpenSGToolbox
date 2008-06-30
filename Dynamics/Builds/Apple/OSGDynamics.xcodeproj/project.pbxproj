@@ -26,6 +26,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		C9080B6B0E197430008157A7 /* 11FunctionComponentPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9080B6A0E197430008157A7 /* 11FunctionComponentPanel.cpp */; };
 		C91A46830E0ADBD7000DCCC5 /* 01RandomDistributions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C91A46820E0ADBD7000DCCC5 /* 01RandomDistributions.cpp */; };
 		C91A46ED0E0AE4BF000DCCC5 /* 10UserInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C91A46EC0E0AE4BF000DCCC5 /* 10UserInterface.cpp */; };
 		C98297E80E15637B00B39C2E /* OSGBooleanFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C98296F60E15637900B39C2E /* OSGBooleanFunction.cpp */; };
@@ -171,6 +172,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C9080B550E1973D4008157A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9882F310DF9B60C00777F25;
+			remoteInfo = "Includes Install Aggregate";
+		};
+		C9080B570E1973D4008157A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC09C05546B4700DB518D;
+			remoteInfo = "OSGDynamics Dynamic Library";
+		};
 		C91A46D70E0AE45D000DCCC5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -244,6 +259,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C9080B5E0E1973D4008157A7 /* 11FunctionComponentPanelD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 11FunctionComponentPanelD; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9080B6A0E197430008157A7 /* 11FunctionComponentPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 11FunctionComponentPanel.cpp; path = ../../Tutorials/11FunctionComponentPanel.cpp; sourceTree = SOURCE_ROOT; };
 		C91A46820E0ADBD7000DCCC5 /* 01RandomDistributions.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 01RandomDistributions.cpp; path = ../../Tutorials/01RandomDistributions.cpp; sourceTree = SOURCE_ROOT; };
 		C91A46E00E0AE45D000DCCC5 /* 10UserInterfaceD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 10UserInterfaceD; sourceTree = BUILT_PRODUCTS_DIR; };
 		C91A46EC0E0AE4BF000DCCC5 /* 10UserInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 10UserInterface.cpp; path = ../../Tutorials/10UserInterface.cpp; sourceTree = SOURCE_ROOT; };
@@ -480,6 +497,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C9080B5A0E1973D4008157A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C91A46DC0E0AE45D000DCCC5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -510,6 +534,7 @@
 				D2AAC09D05546B4700DB518D /* libOSGDynamicsD.dylib */,
 				C9D76AC30DF883B2005100D3 /* 01RandomDistributionD */,
 				C91A46E00E0AE45D000DCCC5 /* 10UserInterfaceD */,
+				C9080B5E0E1973D4008157A7 /* 11FunctionComponentPanelD */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -545,6 +570,7 @@
 			children = (
 				C91A46820E0ADBD7000DCCC5 /* 01RandomDistributions.cpp */,
 				C91A46EC0E0AE4BF000DCCC5 /* 10UserInterface.cpp */,
+				C9080B6A0E197430008157A7 /* 11FunctionComponentPanel.cpp */,
 			);
 			name = Tutorials;
 			sourceTree = "<group>";
@@ -1059,6 +1085,24 @@
 /* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
+		C9080B530E1973D4008157A7 /* 11FunctionComponentPanel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C9080B5B0E1973D4008157A7 /* Build configuration list for PBXNativeTarget "11FunctionComponentPanel" */;
+			buildPhases = (
+				C9080B580E1973D4008157A7 /* Sources */,
+				C9080B5A0E1973D4008157A7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C9080B540E1973D4008157A7 /* PBXTargetDependency */,
+				C9080B560E1973D4008157A7 /* PBXTargetDependency */,
+			);
+			name = 11FunctionComponentPanel;
+			productName = 01RandomDistribution;
+			productReference = C9080B5E0E1973D4008157A7 /* 11FunctionComponentPanelD */;
+			productType = "com.apple.product-type.tool";
+		};
 		C91A46D50E0AE45D000DCCC5 /* 10UserInterface */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C91A46DD0E0AE45D000DCCC5 /* Build configuration list for PBXNativeTarget "10UserInterface" */;
@@ -1133,11 +1177,20 @@
 				C9882F7E0DF9B88000777F25 /* OSGDynamics install Shell Script */,
 				C9D76AC20DF883B2005100D3 /* 01RandomDistribution */,
 				C91A46D50E0AE45D000DCCC5 /* 10UserInterface */,
+				C9080B530E1973D4008157A7 /* 11FunctionComponentPanel */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C9080B580E1973D4008157A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9080B6B0E197430008157A7 /* 11FunctionComponentPanel.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C91A46DA0E0AE45D000DCCC5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1220,6 +1273,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C9080B540E1973D4008157A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9882F310DF9B60C00777F25 /* Includes Install Aggregate */;
+			targetProxy = C9080B550E1973D4008157A7 /* PBXContainerItemProxy */;
+		};
+		C9080B560E1973D4008157A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC09C05546B4700DB518D /* OSGDynamics Dynamic Library */;
+			targetProxy = C9080B570E1973D4008157A7 /* PBXContainerItemProxy */;
+		};
 		C91A46D60E0AE45D000DCCC5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C9882F310DF9B60C00777F25 /* Includes Install Aggregate */;
@@ -1394,6 +1457,103 @@
 				OSG_TOOLBOX_LIB_NAME = Dynamics;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				SEPARATE_STRIP = YES;
+			};
+			name = Release;
+		};
+		C9080B5C0E1973D4008157A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = OSG_WITH_GLUT;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+				);
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/dbg",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/lib",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGWindowCarbon",
+					"-lOSGToolboxD",
+					"-lOSG$(OSG_TOOLBOX_LIB_NAME)D",
+					"-lOSGParticleSystemD",
+					"-lOSGInputD",
+					"-lOSGUserInterfaceD",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = 11FunctionComponentPanelD;
+				SYMROOT = /Users/dtnaylor/Work/OpenSGToolbox/OpenSGToolbox/Dynamics/Tutorials;
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		C9080B5D0E1973D4008157A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+				);
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = OSG_WITH_GLUT;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+				);
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/lib",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGWindowCarbon",
+					"-lOSG$(OSG_TOOLBOX_LIB_NAME)",
+					"-lOSGToolbox",
+					"-lOSGParticleSystem",
+					"-lOSGInput",
+					"-lOSGUserInterface",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = 11FunctionComponentPanel;
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/Tutorials";
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -1770,6 +1930,15 @@
 			buildConfigurations = (
 				1DEB916508733D950010E9CD /* Debug */,
 				1DEB916608733D950010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9080B5B0E1973D4008157A7 /* Build configuration list for PBXNativeTarget "11FunctionComponentPanel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9080B5C0E1973D4008157A7 /* Debug */,
+				C9080B5D0E1973D4008157A7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -47,6 +47,12 @@ FunctionComponentPanel::ComponentMoveListener::ComponentMoveListener(FunctionCom
 _FunctionComponentPanel(TheFunctionComponentPanel)
 {
 }
+
+inline
+void FunctionComponentPanel::ComponentMoveListener::setInitialPosition(Pnt2f InitialPosition)
+{
+	_InitialPosition = InitialPosition;
+}
 OSG_END_NAMESPACE
 
 #define OSGFUNCTIONCOMPONENTPANEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
