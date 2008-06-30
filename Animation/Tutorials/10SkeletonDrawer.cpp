@@ -177,6 +177,7 @@ int main(int argc, char **argv)
 	BonePtr ExampleRootBone = Bone::create();
 	BonePtr TempRootBone;
 	TempRootBone = ExampleRootBone;
+
 	for (double i = 1; i < 9; i++)
 	{
 		

@@ -70,6 +70,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
     virtual void changed(BitVector  whichField, 
                          UInt32     origin    );
 
+
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
@@ -95,6 +97,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
     SkeletonDrawable(void);
     SkeletonDrawable(const SkeletonDrawable &source);
 
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
@@ -105,6 +108,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
     /*! \}                                                                 */
     void    adjustVolume(Volume & volume);
     void drawBone (BonePtr TheBone, DrawActionBase *action);
+    void expandVolumeByBone (BonePtr TheBone, Volume &volume);
     
     /*==========================  PRIVATE  ================================*/
   private:

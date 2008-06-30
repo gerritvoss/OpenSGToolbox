@@ -236,9 +236,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
 
            BonePtr             &getInternalParent (void);
      const BonePtr             &getInternalParent (void) const;
-           Matrix              &getInternalRelativeTransformation(void);
+           Matrix              &getInternalRelativeTransformation(void);//field for relative transformation
      const Matrix              &getInternalRelativeTransformation(void) const;
-           Matrix              &getInternalAbsoluteTransformation(void);
+           Matrix              &getInternalAbsoluteTransformation(void); // field for absolute transformation
      const Matrix              &getInternalAbsoluteTransformation(void) const;
            BonePtr             &getInternalChildren(UInt32 index);
            MFBonePtr           &getInternalChildren(void);

@@ -87,7 +87,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
 
     BonePtr getParent(void) const;
     const Matrix              &getRelativeTransformation(void) const;
-    const Matrix              &getAbsoluteTransformation(void) const;
+    const Matrix              &getAbsoluteTransformation(void) const;//get the absolute transformation of a parent
+
 
     /*=========================  PROTECTED  ===============================*/
   protected:

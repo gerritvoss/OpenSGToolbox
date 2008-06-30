@@ -121,12 +121,34 @@ void Bone::updateTransformation(void)
 {
 	//Calculate Relative Transformation
 	Matrix m; //a matrix called m
-	m.setTransform(Vec3f(getTranslation()), getRotation()); //calculates the the rotation of the bone
+	Vec3f Translation;
+	if(getInternalParent() != NullFC)
+	{
+		Translation += Vec3f(0.0,0.0,getInternalParent()->getLength());
+	}
+	Translation += getTranslation();
+	m.setTransform(Translation , getRotation()); //calculates the the rotation of the bone
 	beginEditCP(BonePtr(this), Bone::InternalRelativeTransformationFieldMask);
 		setInternalRelativeTransformation(m); //field container
 	endEditCP(BonePtr(this), Bone::InternalRelativeTransformationFieldMask);
 
 	//Calculate Absolute Transformation
+	Matrix AbsoluteTransformation(getInternalRelativeTransformation()); //a matrix called m
+	if(getInternalParent() !=NullFC)
+	{
+		AbsoluteTransformation.mult( getInternalParent()->getAbsoluteTransformation() );
+	}
+	beginEditCP(BonePtr(this), Bone::InternalAbsoluteTransformationFieldMask);
+		setInternalAbsoluteTransformation(AbsoluteTransformation); //field container
+	endEditCP(BonePtr(this), Bone::InternalAbsoluteTransformationFieldMask);
+
+	//Tell all children to update Transformations
+	for(UInt32 i(0) ; i<getNumChildren() ; ++i)
+	{
+		getChild(i)->updateTransformation();
+	}
+	
+		
 }
 
 /*-------------------------------------------------------------------------*\

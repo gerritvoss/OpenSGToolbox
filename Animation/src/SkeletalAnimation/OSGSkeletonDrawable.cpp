@@ -122,7 +122,7 @@ void SkeletonDrawable::drawBone (BonePtr TheBone, DrawActionBase *action)
 	
 
 		glPushMatrix();
-		glMultMatrixf(TheBone->getTransformation().getValues());
+		glMultMatrixf(TheBone->getRelativeTransformation().getValues());
 		//Draw the bone as a line from it traslation point to the point
 		//in the direction of the bones rotation, that is the length of the bone
 		glBegin(GL_LINES);
@@ -131,7 +131,6 @@ void SkeletonDrawable::drawBone (BonePtr TheBone, DrawActionBase *action)
 		glEnd();
 
 		
-		glTranslatef(0.0,0.0,TheBone->getLength());
 
 	//Draw all of the bones children
 	for(UInt32 i(0) ; i<TheBone->getNumChildren() ; ++i)
@@ -208,9 +207,62 @@ void SkeletonDrawable::adjustVolume(Volume & volume)
 	    //This function will essentially do the same thing but instead of drawing
 	    //point of the line, simply extend the volume by the endpoints of those
 	    //lines
-    volume.extendBy(Pnt3f(0.0,0.0,0.0));
-    volume.extendBy(Pnt3f(10.0,10.0,10.0));
+    if(getSkeleton() == NullFC)
+    {
+        FWARNING(("SkeletonDrawable::drawPrimitives:: no skeleton!\n"));;
+    }
+    else
+    {
+		for(UInt32 i(0) ; i<getSkeleton()->getRootBones().size() ; ++i)
+		{
+			expandVolumeByBone(getSkeleton()->getRootBones()[i], volume);
+		}
+	}
+
 }
+
+void SkeletonDrawable::expandVolumeByBone (BonePtr TheBone, Volume &volume) 
+{/*Function to get the translation 
+	void getTransform (VectorType3f &translation, QuaternionType &rotation, \
+	VectorType3f &scaleFactor, QuaternionType &scaleOrientation) const 
+	
+	void multVec (const VectorType &src, VectorType &dst) const 
+	ecuation: p1= Translation(AbsoluteTransformation)
+			  p2= p1+Zaxis(AbsoluteTransformation)*Length
+			  Vec3f Seg
+			  rotate seg
+			  p2= p1+seg
+			  Vec3f(0,0,getLength)
+
+ */
+
+
+	//Expand the volume by TheBones two endpoints
+	//Caluculate the Absolute positions of the endpoints of this bone
+	
+	Vec3f Translation, Scale, Zaxis,Zlength;
+	Quaternion Rotation, ScaleOrientation;
+	TheBone->getAbsoluteTransformation().getTransform(Translation, Rotation, Scale, ScaleOrientation);
+	
+	
+	Zaxis.setValues(TheBone->getAbsoluteTransformation()[2][0],TheBone->getAbsoluteTransformation()[2][1],TheBone->getAbsoluteTransformation()[2][2]);
+	Translation+Zaxis;
+
+	volume.extendBy(Pnt3f(Translation));
+	volume.extendBy(Pnt3f(Translation+Zaxis));
+	//volume.extendBy(Pnt3f(0.0,0.0,TheBone->getLength()));
+
+	
+
+	//Then for each of TheBones children; call expandVolumeByBone on them
+	for(UInt32 i(0) ; i<TheBone->getNumChildren() ; ++i)
+	{
+		expandVolumeByBone(TheBone->getChild(i), volume);
+	}
+	
+	
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
