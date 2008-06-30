@@ -1,6 +1,7 @@
 #ifndef _OPENSG_INTERPOLATIONS_H_
 #define _OPENSG_INTERPOLATIONS_H_
 
+#include <OpenSG/OSGConfig.h>
 #include "OSGToolboxDef.h"
 
 #include <vector>

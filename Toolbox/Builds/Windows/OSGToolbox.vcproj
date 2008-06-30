@@ -234,6 +234,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentBase.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Util\OSGGLenumUtils.cpp"
 					>
 				</File>
@@ -255,6 +259,14 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGMathUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGMathUtils.h"
 					>
 				</File>
 				<File
@@ -455,10 +467,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentBase.h"
 					>
 				</File>
 				<File
