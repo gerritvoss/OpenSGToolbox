@@ -6,6 +6,7 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/Input/OSGWindowUtils.h>
 
 // Input
@@ -268,23 +269,7 @@ int main(int argc, char **argv)
 	//Particle System
 		
     ExampleParticleSystem = osg::ParticleSystem::create();
-				ExampleParticleSystem->addParticle(Pnt3f(0,0,0),
-					Vec3f(1.0,0.0f,0.0f),
-					Color4f(1.0,0.0,0.0,1.0), 
-					Vec3f(1.0,1.0,1.0), 
-					-1, 
-					Vec3f(0.0f,0.0f,0.0f), //Velocity
-					Vec3f(0.001f,0.0f,0.0f)
-					,0);
-				ExampleParticleSystem->addParticle(Pnt3f(100,100,100),
-					Vec3f(0.0,0.0f,1.0f),
-					Color4f(1.0,0.0,0.0,1.0), 
-					Vec3f(1.0,1.0,1.0), 
-					5, 
-					Vec3f(0.0f,0.0f,0.0f), //Velocity
-					Vec3f(0.0f,0.0f,0.0f)
-					,0);
-			ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+	ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
     FunctionIOParameterVector EmptyParameters;
 
@@ -294,14 +279,14 @@ int main(int argc, char **argv)
 
 	 ExampleBurstGenerator = osg::BurstParticleGenerator::create();
 	//Attach the function objects to the Generator
-	beginEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+	beginEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::SizeFunctionFieldMask);
 		ExampleBurstGenerator->setPositionFunction(createPositionDistribution());
 		//ExampleBurstGenerator->setLifespanFunction(createLifespanDistribution());
 		ExampleBurstGenerator->setBurstAmount(50.0);
 		ExampleBurstGenerator->setVelocityFunction(createVelocityDistribution());
 		//ExampleBurstGenerator->setAccelerationFunction(createAccelerationDistribution());
 		ExampleBurstGenerator->setSizeFunction(createSizeDistribution());
-	endEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+	endEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::SizeFunctionFieldMask);
 	
 	//Particle System Node
     ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
@@ -316,12 +301,29 @@ int main(int argc, char **argv)
         ParticleNode->setCore(ParticleNodeCore);
     endEditCP(ParticleNode, Node::CoreFieldMask);
 
+	//Ground Node
+	NodePtr GoundNode = makePlane(30.0,30.0,10,10);
+
+	Matrix GroundTransformation;
+	GroundTransformation.setRotate(Quaternion(Vec3f(1.0f,0.0,0.0), -3.14195f));
+	TransformPtr GroundTransformCore = Transform::create();
+    beginEditCP(GroundTransformCore, Transform::MatrixFieldMask);
+		GroundTransformCore->setMatrix(GroundTransformation);
+    endEditCP(GroundTransformCore, Transform::MatrixFieldMask);
+
+	NodePtr GroundTransformNode = Node::create();
+	beginEditCP(GroundTransformNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+		GroundTransformNode->setCore(GroundTransformCore);
+        GroundTransformNode->addChild(GoundNode);
+	endEditCP(GroundTransformNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
 
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(ParticleNode);
+        scene->addChild(GroundTransformNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
@@ -388,7 +390,7 @@ FunctionPtr createVelocityDistribution(void)
       TheSphereDistribution->setOuterRadius(10.0);
       TheSphereDistribution->setMinTheta(-3.141950);
       TheSphereDistribution->setMaxTheta(3.141950);
-      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMinZ(0.0);
       TheSphereDistribution->setMaxZ(1.0);
 	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
     endEditCP(TheSphereDistribution);
@@ -413,8 +415,8 @@ FunctionPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setMean(05.0f);
-      TheLifespanDistribution->setStandardDeviation(10.0);
+      TheLifespanDistribution->setMean(30.0f);
+      TheLifespanDistribution->setStandardDeviation(5.0);
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;
@@ -447,7 +449,7 @@ FunctionPtr createAccelerationDistribution(void)
 
 FunctionPtr createSizeDistribution(void)
 {
-	Pnt3f pt1 = (0.0,0.0,1.0), pt2 = (10.0,10.0,1.0);
+	Pnt3f pt1 = (5.0,5.0,1.0), pt2 = (10.0,10.0,1.0);
 
 
 	 //Sphere Distribution
@@ -468,5 +470,5 @@ FunctionPtr createSizeDistribution(void)
 		TheSizeDistribution->getFunctions().push_back(TheVec3fConverter);
 	endEditCP(TheSizeDistribution);
 
-	return TheSizeDistribution;
+	return NullFC;
 }
