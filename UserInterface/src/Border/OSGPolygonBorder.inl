@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,17 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#include "OSGBevelBorder.h"
-#include "OSGCompoundBorder.h"
-#include "OSGEmptyBorder.h"
-#include "OSGEtchedBorder.h"
-#include "OSGLineBorder.h"
-#include "OSGMatteBorder.h"
-#include "OSGMultiColorMatteBorder.h"
-#include "OSGShadowBorder.h"
-#include "OSGRoundedCornerLineBorder.h"
-#include "OSGWindowBorder.h"
-#include "OSGPolygonBorder.h"
+#include <OpenSG/OSGConfig.h>
+
+OSG_BEGIN_NAMESPACE
+
+OSG_END_NAMESPACE
+
+#define OSGPOLYGONBORDER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+

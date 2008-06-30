@@ -14,6 +14,7 @@ introduced:
 	MultiColorMatteBorder
     RoundedCornerLineBorder
 	ShadowBorder
+	PolygonBorder
 
 Borders are used to quite simply give 
 borders to components.  They can be added to 
@@ -187,6 +188,7 @@ int main(int argc, char **argv)
     MultiColorMatteBorderPtr ExampleMultiColorMatteBorder = osg::MultiColorMatteBorder::create();
     RoundedCornerLineBorderPtr ExampleRoundedCornerLineBorder = osg::RoundedCornerLineBorder::create();
     ShadowBorderPtr ExampleShadowBorder = osg::ShadowBorder::create();
+    PolygonBorderPtr ExamplePolygonBorder = osg::PolygonBorder::create();
     
     /******************************************************
 
@@ -426,6 +428,15 @@ int main(int argc, char **argv)
 		ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask | ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | 
 		ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 
+    // The PolygonBorder
+    beginEditCP(ExamplePolygonBorder, PolygonBorder::ColorFieldMask | PolygonBorder::WidthFieldMask | PolygonBorder::VerticesFieldMask );
+        ExamplePolygonBorder->setWidth(4.0f);
+        ExamplePolygonBorder->setColor(Color4f(1.0, 0.0, 0.0, 1.0));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.0, 0.0));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(1.0, 0.0));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.0, 1.0));
+    endEditCP(ExamplePolygonBorder, PolygonBorder::ColorFieldMask | PolygonBorder::WidthFieldMask | PolygonBorder::VerticesFieldMask );
+
     /******************************************************
 
         Create Button Components to display each 
@@ -450,6 +461,7 @@ int main(int argc, char **argv)
     ButtonPtr ExampleMultiColorMatteBorderButton = osg::Button::create();
     ButtonPtr ExampleoundedCornerLineBorderButton = osg::Button::create();
     ButtonPtr ExampleShadowBorderButton = osg::Button::create();
+    ButtonPtr ExamplePolygonBorderButton = osg::Button::create();
     
     beginEditCP(ExampleBevelBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
         ExampleBevelBorderButton->setPreferredSize(Vec2f(100,50));
@@ -523,7 +535,16 @@ int main(int argc, char **argv)
         ExampleShadowBorderButton->setBorder(ExampleShadowBorder);
         ExampleShadowBorderButton->setActiveBorder(ExampleShadowBorder);
         ExampleShadowBorderButton->setRolloverBorder(ExampleShadowBorder);
-		endEditCP(ExampleShadowBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
+	endEditCP(ExampleShadowBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
+
+	beginEditCP(ExamplePolygonBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
+        ExamplePolygonBorderButton->setPreferredSize(Vec2f(100,50));
+        ExamplePolygonBorderButton->setText("Polygon Border");
+        ExamplePolygonBorderButton->setBackgrounds(NullFC);
+        ExamplePolygonBorderButton->setBorder(ExamplePolygonBorder);
+        ExamplePolygonBorderButton->setActiveBorder(ExamplePolygonBorder);
+        ExamplePolygonBorderButton->setRolloverBorder(ExamplePolygonBorder);
+	endEditCP(ExamplePolygonBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
 
 
     // Create The Main InternalWindow
@@ -544,6 +565,7 @@ int main(int argc, char **argv)
        MainInternalWindow->getChildren().push_back(ExampleMultiColorMatteBorderButton);
        MainInternalWindow->getChildren().push_back(ExampleoundedCornerLineBorderButton);
        MainInternalWindow->getChildren().push_back(ExampleShadowBorderButton);
+       MainInternalWindow->getChildren().push_back(ExamplePolygonBorderButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));

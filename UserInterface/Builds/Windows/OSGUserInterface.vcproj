@@ -4643,6 +4643,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Border\OSGPolygonBorder.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGPolygonBorder.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGPolygonBorder.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGPolygonBorderBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGPolygonBorderBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGPolygonBorderBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGPolygonBorderFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.cpp"
 					>
 				</File>

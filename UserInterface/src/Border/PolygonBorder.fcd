@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PolygonBorder"
+	parent="Border"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+UI Polygon Border.
+	<Field
+		name="Width"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Color"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,0.0,0.0,1.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Vertices"
+		type="Pnt2f"
+		cardinality="multi"
+		visibility="external"
+		defaultValue=""
+		access="public"
+	>
+	</Field>
+</FieldContainer>
