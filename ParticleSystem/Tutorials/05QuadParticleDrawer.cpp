@@ -245,7 +245,7 @@ int main(int argc, char **argv)
 
 	//Particle System Material
 	TextureChunkPtr QuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");    
+    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/DragonPhase.jpg");    
     beginEditCP(QuadTextureChunk, TextureChunk::ImageFieldMask);
         QuadTextureChunk->setImage(LoadedImage);
     endEditCP(QuadTextureChunk, TextureChunk::ImageFieldMask);

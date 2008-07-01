@@ -23,7 +23,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03RateParticleGenerator", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04BurstParticleGenerator", "04BurstParticleGenerator.vcproj", "{EE6D9A7F-ED61-4398-A220-F36A69EE8129}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05QuadParticleDrawer", "05QuadParticleDrawer.vcproj", "{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06Explosion", "05QuadParticleDrawer.vcproj", "{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05QuadParticleDrawer", "06Explosion.vcproj", "{95262944-428E-4851-ABAF-AC2D85217E02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}.Debug|Win32.Build.0 = Debug|Win32
 		{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}.Release|Win32.ActiveCfg = Release|Win32
 		{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}.Release|Win32.Build.0 = Release|Win32
+		{95262944-428E-4851-ABAF-AC2D85217E02}.Debug|Win32.ActiveCfg = Debug|Win32
+		{95262944-428E-4851-ABAF-AC2D85217E02}.Debug|Win32.Build.0 = Debug|Win32
+		{95262944-428E-4851-ABAF-AC2D85217E02}.Release|Win32.ActiveCfg = Release|Win32
+		{95262944-428E-4851-ABAF-AC2D85217E02}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
