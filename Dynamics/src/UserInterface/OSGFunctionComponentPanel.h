@@ -127,6 +127,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentPanel : public FunctionCompone
 	friend class ComponentMoveListener;
 
 	ComponentMoveListener _ComponentMoveListener;
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

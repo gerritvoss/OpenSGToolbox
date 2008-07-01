@@ -167,6 +167,7 @@ int main(int argc, char **argv)
         //Add Generators
 		ExampleFunctionComponent->setInputTabComponentGenerator(TabGenerator);
 		ExampleFunctionComponent->setOutputTabComponentGenerator(TabGenerator);
+		
 
     endEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask);
     
@@ -175,7 +176,7 @@ int main(int argc, char **argv)
     RoundedCornerLineBorderPtr FunctionComponentPanelBorder = RoundedCornerLineBorder::create();
     beginEditCP(FunctionComponentPanelBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
         FunctionComponentPanelBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-        FunctionComponentPanelBorder->setWidth(1.0f);
+        FunctionComponentPanelBorder->setWidth(5.0f);
         FunctionComponentPanelBorder->setCornerRadius(4.0f);
     endEditCP(FunctionComponentPanelBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
 
@@ -187,6 +188,8 @@ int main(int argc, char **argv)
         
         //Add Components
 		ExampleFunctionComponentPanel->getChildren().push_back(ExampleFunctionComponent);
+		
+		ExampleFunctionComponentPanel->setAllInsets(5.0);
 
     endEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask);
     

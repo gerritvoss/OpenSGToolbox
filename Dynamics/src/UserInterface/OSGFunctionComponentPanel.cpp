@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFunctionComponentPanel.h"
+
 #include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/Input/OSGWindowEventProducer.h>
@@ -79,6 +80,36 @@ void FunctionComponentPanel::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+
+void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
+{
+	
+	
+	//Drawing Minimap
+	if(getDrawMiniMap())
+	{
+		//Calculate minimap size
+		Vec2f ComponentPanelSize = Vec2f(getSize());
+		Vec2f MinimapSize = ComponentPanelSize * getMiniMapSize();
+	
+		//Get bounds of function component panel
+		Pnt2f TopLeft, BottomRight;
+		getInsideBorderBounds(TopLeft, BottomRight);
+		
+		//Calculate minimap alignment
+		Pnt2f AlignedMapPosition;
+		Pnt2f MapTopLeft, MapBottomRight;
+		MapTopLeft = Pnt2f(0.0f, 0.0f);
+		MapBottomRight = MapTopLeft + MinimapSize;
+		AlignedMapPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (MapBottomRight - MapTopLeft), getMiniMapAlignment().y(), getMiniMapAlignment().x());
+		
+		//Draw minimap
+		Graphics->drawRect(AlignedMapPosition, AlignedMapPosition + MinimapSize, Color4f(1.0f, 1.0f, 1.0f, 1.0f), 1.0);
+	}
+	Inherited::drawInternal(Graphics);
+}
+
 
 void FunctionComponentPanel::updateLayout(void)
 {
@@ -175,13 +206,51 @@ void FunctionComponentPanel::ComponentMoveListener::keyPressed(const KeyEvent& e
 		detach();
 		
 		//Set the Active Component's Position back to it's initial position
+		beginEditCP(_ActiveComponent, Component::PositionFieldMask);	
+			_ActiveComponent->setPosition(_InitialComponentPosition);
+		endEditCP(_ActiveComponent, Component::PositionFieldMask);
+
 	}
 }
 
 void FunctionComponentPanel::ComponentMoveListener::mouseDragged(const MouseEvent& e)
 {
-    //TODO:Implement
-	//Move the Position of the Component based on the mouse position and it's initial position
+    
+	if(_ActiveComponent != NullFC && _ActiveComponent->getParentContainer() != NullFC)
+	{
+		//Move the Position of the Component based on the mouse position and it's initial position
+		Pnt2f InitialPositionsDifference = Pnt2f(_InitialComponentPosition - ViewportToComponent(_InitialPosition, _ActiveComponent->getParentContainer(), e.getViewport()));
+		Pnt2f AbsolutePosition = Pnt2f(ViewportToComponent(e.getLocation(), _ActiveComponent->getParentContainer(), e.getViewport()) + InitialPositionsDifference);
+		Pnt2f NewPosition = AbsolutePosition;
+		
+		//Test AbsolutePosition to make sure Component is inside parent container
+		Pnt2f AbsolutePositionBottomRight, ContainerTopLeft, ContainerBottomRight;
+		AbsolutePositionBottomRight = AbsolutePosition + _ActiveComponent->getSize();
+		//AbsolutePositionBottomRight[0] = AbsolutePosition.x() + _ActiveComponent->getSize().x();
+		//AbsolutePositionBottomRight[1] = AbsolutePosition.y() + _ActiveComponent->getSize().y();
+		_ActiveComponent->getParentContainer()->getInsideInsetsBounds(ContainerTopLeft, ContainerBottomRight);
+		if(AbsolutePosition.x() < ContainerTopLeft.x())
+		{
+			NewPosition[0] = ContainerTopLeft.x();
+		}
+		if(AbsolutePosition.y() < ContainerTopLeft.y())
+		{
+			NewPosition[1] = ContainerTopLeft.y();
+		}
+		if(AbsolutePositionBottomRight.x() > ContainerBottomRight.x())
+		{
+			NewPosition[0] = ContainerBottomRight.x() - _ActiveComponent->getSize().x();
+		}
+		if(AbsolutePositionBottomRight.y() > ContainerBottomRight.y())
+		{
+			NewPosition[1] = ContainerBottomRight.y() - _ActiveComponent->getSize().y();
+		}
+		
+		//Set new position
+		beginEditCP(_ActiveComponent, Component::PositionFieldMask);
+			_ActiveComponent->setPosition(NewPosition);
+		endEditCP(_ActiveComponent, Component::PositionFieldMask);
+	}
 }
 
 void FunctionComponentPanel::ComponentMoveListener::detach(void)
