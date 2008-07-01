@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Input&#x0D;&#x0A;"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Toolbox&#x0D;&#x0A;"
 				Outputs="include"
 			/>
 			<Tool

@@ -55,6 +55,7 @@ void reshape(Vec2f Size);
 // 49LookAndFeel Headers
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGBoxLayout.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGCardLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 //#include <OpenSG/UserInterface/OSGUIDefines.h>
@@ -117,14 +118,9 @@ public:
 
 class StatePanelCreator
 {
-public:
-	StatePanelCreator(void);
-
-	PanelPtr getPanel(void) const;
-
-protected:
+private:
 	PanelPtr _ThePanel;	
-
+	PanelPtr _WindowPanel;	
 		
 	class ButtonPressedListener : public ActionListener
 		{
@@ -143,21 +139,26 @@ protected:
 
 
 	PanelPtr createStatePanel(void);
+	PanelPtr createWindowPanel(void);
 	
 	
 
-private:
+public:
+	StatePanelCreator(void)
+    {
+	    _ThePanel = createStatePanel();
+	    _WindowPanel = createWindowPanel();
+    }
+
+	PanelPtr getPanel(void) const
+    {
+	    return _ThePanel;
+    }
+	PanelPtr getWindowPanel(void) const
+    {
+	    return _WindowPanel;
+    }
 };
-
-StatePanelCreator::StatePanelCreator(void)
-{
-	_ThePanel = createStatePanel();
-}
-
-PanelPtr StatePanelCreator::getPanel(void) const
-{
-	return _ThePanel;
-}
 
 //PanelPtr createStatePanel(void);
 
@@ -245,11 +246,14 @@ int main(int argc, char **argv)
 
     ******************************************************/
     LabelPtr StateTabPanelTab = osg::Label::create();
-
-
     beginEditCP(StateTabPanelTab, Label::TextFieldMask);
         StateTabPanelTab->setText("Basic Components");
     endEditCP(StateTabPanelTab, Label::TextFieldMask);
+
+    LabelPtr WindowTabPanelTab = osg::Label::create();
+    beginEditCP(WindowTabPanelTab, Label::TextFieldMask);
+        WindowTabPanelTab->setText("Windows");
+    endEditCP(WindowTabPanelTab, Label::TextFieldMask);
    
     /******************************************************
 
@@ -257,10 +261,12 @@ int main(int argc, char **argv)
     ******************************************************/
 	StatePanelCreator TheStatePanelCreator;
 	PanelPtr StatePanel = TheStatePanelCreator.getPanel();
+	PanelPtr WindowPanel = TheStatePanelCreator.getWindowPanel();
     TabPanelPtr MainTabPanel = osg::TabPanel::create();
     beginEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
         MainTabPanel->setPreferredSize(Vec2f(600,600));
         MainTabPanel->addTab(StateTabPanelTab, StatePanel);
+        MainTabPanel->addTab(WindowTabPanelTab, WindowPanel);
         MainTabPanel->setTabAlignment(0.5f);
         MainTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
     endEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
@@ -1361,4 +1367,24 @@ void display(void)
 void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
+}
+
+PanelPtr StatePanelCreator::createWindowPanel(void)
+{
+    //Button that creates an empty window
+    ButtonPtr CreateWindowButton = Button::create();
+    beginEditCP(CreateWindowButton, Button::TextFieldMask);
+        CreateWindowButton->setText("Create Window");
+    endEditCP(CreateWindowButton, Button::TextFieldMask);
+
+    PanelPtr WindowPanel = Panel::create();
+    FlowLayoutPtr WindowPanelLayout = FlowLayout::create();
+
+    beginEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+        WindowPanel->setLayout(WindowPanelLayout);
+        WindowPanel->getChildren().push_back(CreateWindowButton);
+    endEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+
+
+    return WindowPanel;
 }

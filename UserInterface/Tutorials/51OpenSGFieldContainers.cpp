@@ -65,6 +65,7 @@
 #include <OpenSG/UserInterface/OSGSpringLayoutConstraints.h>
 
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
+#include <OpenSG/UserInterface/OSGUIDrawObject.h>
 
 #include <sstream>
 
@@ -155,7 +156,7 @@ public:
                 if(TheFCType != NULL)
                 {
 					//Output the XML for the prototype of this Field Container
-					std::stringstream XMLOutputStream;
+					/*std::stringstream XMLOutputStream;
 					FCFileType::FCTypeVector IgnoreTypes;
 					FCFileType::FCPtrStore Containers;
 					Containers.insert(TheFCType->getPrototype());
@@ -163,7 +164,7 @@ public:
 					
 					beginEditCP(_XMLTextArea, TextArea::TextFieldMask);
 						_XMLTextArea->setText(XMLOutputStream.str());
-					endEditCP(_XMLTextArea, TextArea::TextFieldMask);
+					endEditCP(_XMLTextArea, TextArea::TextFieldMask);*/
 
 					//Output Information on the Fields of the Field Container
 					std::stringstream OutputStream;
@@ -241,6 +242,7 @@ protected:
             AllowedTypes.push_back(&UIFont::getClassType());
             AllowedTypes.push_back(&CellEditor::getClassType());
             AllowedTypes.push_back(&ComponentGenerator::getClassType());
+            AllowedTypes.push_back(&UIDrawObject::getClassType());
 			if(TheType != NULL)
 			{
                 for(std::vector<FieldContainerType*>::iterator Itor(AllowedTypes.begin()) ; Itor != AllowedTypes.end(); ++Itor)

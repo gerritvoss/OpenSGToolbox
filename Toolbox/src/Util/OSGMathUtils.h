@@ -2,8 +2,8 @@
 #define _OPENSG_TOOLBOX_MATH_UTILS_H_
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGVector.h>
 #include "OSGToolboxDef.h"
+#include <OpenSG/OSGVector.h>
 
 #include <OpenSG/OSGBaseFunctions.h>
 
