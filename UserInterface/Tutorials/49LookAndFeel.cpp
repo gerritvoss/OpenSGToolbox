@@ -100,6 +100,7 @@ DefaultMutableComboBoxModelPtr noneditableComboBoxModel;
 DefaultMutableComboBoxModelPtr disabledEditableComboBoxModel;
 DefaultMutableComboBoxModelPtr disabledNoneditableComboBoxModel;
 
+UIDrawingSurfacePtr TutorialDrawingSurface;
 
 
 class TutorialWindowListener : public WindowAdapter
@@ -122,20 +123,27 @@ private:
 	PanelPtr _ThePanel;	
 	PanelPtr _WindowPanel;	
 		
-	class ButtonPressedListener : public ActionListener
+	class CreateWindowButtonActionListener : public ActionListener
 		{
 		public:
 
 		virtual void actionPerformed(const ActionEvent& e)
 			{
-				//beginEditCP(inactiveButton, Button::TextFieldMask);
-				//	inactiveButton->Button::setText("Active");
-				//endEditCP(inactiveButton, Button::TextFieldMask);
-				
+                //Create a window
+                InternalWindowPtr ExampleInternalWindow = osg::InternalWindow::create();
+	            beginEditCP(ExampleInternalWindow, InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
+                   // Assign the Button to the MainInternalWindow so it will be displayed
+                   // when the view is rendered.
+                   ExampleInternalWindow->setPosition(Pnt2f(0,0));
+                   ExampleInternalWindow->setPreferredSize(Vec2f(300,300));
+	               ExampleInternalWindow->setTitle(std::string("Example Window"));
+                endEditCP(ExampleInternalWindow, InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
+
+	            TutorialDrawingSurface->openWindow(ExampleInternalWindow);
 			}
 		};
 			
-	ButtonPressedListener _ButtonListener;
+	CreateWindowButtonActionListener _CreateWindowButtonActionListener;
 
 
 	PanelPtr createStatePanel(void);
@@ -294,7 +302,7 @@ int main(int argc, char **argv)
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    TutorialDrawingSurface = UIDrawingSurface::create();
     beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask  | Component::ConstraintsFieldMask);
         TutorialDrawingSurface->setGraphics(graphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
@@ -789,19 +797,21 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     ButtonPtr disabledInactiveButton = osg::Button::create();
     ButtonPtr disabledActiveButton = osg::Button::create();
 
-	beginEditCP(inactiveButton, Button::ActiveFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
+	beginEditCP(inactiveButton, Button::ActiveFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask | Button::ToolTipTextFieldMask);
         inactiveButton->setActive(false);
         inactiveButton->setText("Inactive");
+        inactiveButton->setToolTipText("Inactive Button Tooltip");
         inactiveButton->setConstraints(Constraint0101);
         inactiveButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(inactiveButton, Button::ActiveFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
+    endEditCP(inactiveButton, Button::ActiveFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask | Button::ToolTipTextFieldMask);
     
-    beginEditCP(activeButton, Button::TextFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
+    beginEditCP(activeButton, Button::TextFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask | Button::ToolTipTextFieldMask);
         activeButton->setText("RolledOver");
+        activeButton->setToolTipText("RolledOver Button Tooltip");
 		activeButton->setBorder(activeButton->getRolloverBorder());
         activeButton->setConstraints(Constraint0201);
         activeButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(activeButton, Button::TextFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
+    endEditCP(activeButton, Button::TextFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask | Button::ToolTipTextFieldMask);
 
     beginEditCP(disabledInactiveButton, Button::ActiveFieldMask | Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
         disabledInactiveButton->setActive(false);
@@ -1375,15 +1385,18 @@ PanelPtr StatePanelCreator::createWindowPanel(void)
     ButtonPtr CreateWindowButton = Button::create();
     beginEditCP(CreateWindowButton, Button::TextFieldMask);
         CreateWindowButton->setText("Create Window");
+        CreateWindowButton->setPreferredSize(Vec2f(100.0f,20.0f));
     endEditCP(CreateWindowButton, Button::TextFieldMask);
+    CreateWindowButton->addActionListener(&_CreateWindowButtonActionListener);
 
     PanelPtr WindowPanel = Panel::create();
     FlowLayoutPtr WindowPanelLayout = FlowLayout::create();
 
-    beginEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+    beginEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
         WindowPanel->setLayout(WindowPanelLayout);
         WindowPanel->getChildren().push_back(CreateWindowButton);
-    endEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+        WindowPanel->setPreferredSize(Vec2f(500,800));
+    endEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
 
 
     return WindowPanel;
