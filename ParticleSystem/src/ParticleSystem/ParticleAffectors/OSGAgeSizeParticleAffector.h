@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDISTANCEFADEPARTICLEAFFECTOR_H_
-#define _OSGDISTANCEFADEPARTICLEAFFECTOR_H_
+#ifndef _OSGAGESIZEPARTICLEAFFECTOR_H_
+#define _OSGAGESIZEPARTICLEAFFECTOR_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,19 +45,19 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGParticleSystemDef.h"
 
-#include "OSGDistanceFadeParticleAffectorBase.h"
+#include "OSGAgeSizeParticleAffectorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DistanceFadeParticleAffector class. See \ref 
-           PageParticleSystemDistanceFadeParticleAffector for a description.
+/*! \brief AgeSizeParticleAffector class. See \ref 
+           PageParticleSystemAgeSizeParticleAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffector : public DistanceFadeParticleAffectorBase
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING AgeSizeParticleAffector : public AgeSizeParticleAffectorBase
 {
   private:
 
-    typedef DistanceFadeParticleAffectorBase Inherited;
+    typedef AgeSizeParticleAffectorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -78,48 +78,48 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffector : public Dis
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in DistanceFadeParticleAffectorBase.
+    // Variables should all be in AgeSizeParticleAffectorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DistanceFadeParticleAffector(void);
-    DistanceFadeParticleAffector(const DistanceFadeParticleAffector &source);
+    AgeSizeParticleAffector(void);
+    AgeSizeParticleAffector(const AgeSizeParticleAffector &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DistanceFadeParticleAffector(void); 
+    virtual ~AgeSizeParticleAffector(void); 
 
     /*! \}                                                                 */
-    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& Distance);
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class DistanceFadeParticleAffectorBase;
+    friend class AgeSizeParticleAffectorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const DistanceFadeParticleAffector &source);
+    void operator =(const AgeSizeParticleAffector &source);
 };
 
-typedef DistanceFadeParticleAffector *DistanceFadeParticleAffectorP;
+typedef AgeSizeParticleAffector *AgeSizeParticleAffectorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDistanceFadeParticleAffectorBase.inl"
-#include "OSGDistanceFadeParticleAffector.inl"
+#include "OSGAgeSizeParticleAffectorBase.inl"
+#include "OSGAgeSizeParticleAffector.inl"
 
-#define OSGDISTANCEFADEPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGAGESIZEPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDISTANCEFADEPARTICLEAFFECTOR_H_ */
+#endif /* _OSGAGESIZEPARTICLEAFFECTOR_H_ */

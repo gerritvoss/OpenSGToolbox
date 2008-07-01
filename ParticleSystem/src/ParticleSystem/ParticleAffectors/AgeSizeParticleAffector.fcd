@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AgeSizeParticleAffector"
+	parent="ParticleAffector"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Ages"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		defaultValue=""
+	>
+	</Field>
+	<Field
+		name="Sizes"
+		type="Vec3f"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		defaultValue=""
+	>
+	</Field>
+</FieldContainer>

@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDistanceParticleAffector.h"
+#include "OSGAgeSizeParticleAffector.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DistanceParticleAffector
+/*! \class osg::AgeSizeParticleAffector
 
 */
 
@@ -67,7 +67,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DistanceParticleAffector::initMethod (void)
+void AgeSizeParticleAffector::initMethod (void)
 {
 }
 
@@ -76,55 +76,43 @@ void DistanceParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
-    //TODO: Implement
-	Real32 Distance;
-
-	//Calculate the Distance
-	switch(getDistanceFromSource())
-	{
-	case DISTANCE_FROM_NODE:
-		break;
-	case DISTANCE_FROM_CAMERA:
-	default:
-		break;
-	}
-
-	return affect(System, ParticleIndex, elps, Distance);
+	//TODO: Implement
+	return false;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DistanceParticleAffector::DistanceParticleAffector(void) :
+AgeSizeParticleAffector::AgeSizeParticleAffector(void) :
     Inherited()
 {
 }
 
-DistanceParticleAffector::DistanceParticleAffector(const DistanceParticleAffector &source) :
+AgeSizeParticleAffector::AgeSizeParticleAffector(const AgeSizeParticleAffector &source) :
     Inherited(source)
 {
 }
 
-DistanceParticleAffector::~DistanceParticleAffector(void)
+AgeSizeParticleAffector::~AgeSizeParticleAffector(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DistanceParticleAffector::changed(BitVector whichField, UInt32 origin)
+void AgeSizeParticleAffector::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void DistanceParticleAffector::dump(      UInt32    , 
+void AgeSizeParticleAffector::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump DistanceParticleAffector NI" << std::endl;
+    SLOG << "Dump AgeSizeParticleAffector NI" << std::endl;
 }
 
 
@@ -142,10 +130,10 @@ void DistanceParticleAffector::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDISTANCEPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDISTANCEPARTICLEAFFECTORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGAGESIZEPARTICLEAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGAGESIZEPARTICLEAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGDISTANCEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGAGESIZEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

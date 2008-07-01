@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGParticleSystemDef.h"
 
 #include "OSGDistanceParticleAffectorBase.h"
 
@@ -60,7 +61,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffector : public Distanc
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  enum DistanceSource {DISTANCE_FROM_CAMERA=0, DISTANCE_FROM_NODE};
+	  enum DistanceSource {DISTANCE_FROM_CAMERA=0, DISTANCE_FROM_NODE=1};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
