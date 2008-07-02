@@ -4,6 +4,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGToolboxDef.h"
 #include <OpenSG/OSGVector.h>
+#include <OpenSG/OSGMatrix.h>
 
 #include <OpenSG/OSGBaseFunctions.h>
 
@@ -97,6 +98,19 @@ Int8 solveLinearSystem2(FloatTypeT A11, FloatTypeT A12, FloatTypeT A21, FloatTyp
 
 	return 1;
 }
+
+
+void OSG_TOOLBOXLIB_DLLMAPPING makeViewFromUVND(Matrix& Result,const Vec3f& U,const Vec3f& V,const Vec3f& N,const Vec3f& D);
+
+void OSG_TOOLBOXLIB_DLLMAPPING makeViewFromUVNP(Matrix& Result,const Vec3f& U,const Vec3f& V,const Vec3f& N,const Vec3f& P);
+
+void OSG_TOOLBOXLIB_DLLMAPPING getUVNDFromMat(const Matrix& Mat,Vec3f& U,Vec3f& V,Vec3f& N,Vec3f& D);
+
+void OSG_TOOLBOXLIB_DLLMAPPING getUVNPFromMat(const Matrix& Mat,Vec3f& U,Vec3f& V,Vec3f& N,Pnt3f& P);
+
+void OSG_TOOLBOXLIB_DLLMAPPING getPFromViewMat(Pnt3f& P, const Matrix& Mat);
+
+void OSG_TOOLBOXLIB_DLLMAPPING setViewMatEyePos(Matrix& Result,const Pnt3f& P);
 
 OSG_END_NAMESPACE
 

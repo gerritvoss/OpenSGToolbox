@@ -47,6 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGCamera.h>
+#include <OpenSG/Toolbox/OSGMathUtils.h>
 #include "ParticleSystem/OSGParticleSystem.h"
 
 #include "OSGDistanceParticleAffector.h"
@@ -105,8 +106,7 @@ bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIn
 			{
 				Matrix m;
 				getDistanceFromCamera()->getViewing(m,1,1);
-				assert(false && "DistanceParticleAffector::affect: DISTANCE_FROM_CAMERA: NOT IMPLEMENTED");
-				NodePositionInWorldSpace.setValues(m[0][3],m[1][3],m[2][3]);
+				getPFromViewMat(NodePositionInWorldSpace,m);
 			}
 		default:
 			break;
