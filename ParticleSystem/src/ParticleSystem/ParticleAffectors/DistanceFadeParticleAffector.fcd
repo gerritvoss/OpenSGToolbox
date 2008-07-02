@@ -30,7 +30,7 @@
 	>
 	</Field>
 	<Field
-		name="FadeStartAplpha"
+		name="FadeStartAlpha"
 		type="Real32"
 		cardinality="single"
 		visibility="external"

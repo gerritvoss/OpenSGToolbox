@@ -69,7 +69,7 @@
 
 #include <OpenSG/OSGReal32Fields.h> // DistanceFadeStart type
 #include <OpenSG/OSGReal32Fields.h> // DistanceFadeEnd type
-#include <OpenSG/OSGReal32Fields.h> // FadeStartAplpha type
+#include <OpenSG/OSGReal32Fields.h> // FadeStartAlpha type
 #include <OpenSG/OSGReal32Fields.h> // FadeEndAlpha type
 
 #include "OSGDistanceFadeParticleAffectorFields.h"
@@ -96,14 +96,14 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffectorBase : public
     {
         DistanceFadeStartFieldId = Inherited::NextFieldId,
         DistanceFadeEndFieldId   = DistanceFadeStartFieldId + 1,
-        FadeStartAplphaFieldId   = DistanceFadeEndFieldId   + 1,
-        FadeEndAlphaFieldId      = FadeStartAplphaFieldId   + 1,
+        FadeStartAlphaFieldId    = DistanceFadeEndFieldId   + 1,
+        FadeEndAlphaFieldId      = FadeStartAlphaFieldId    + 1,
         NextFieldId              = FadeEndAlphaFieldId      + 1
     };
 
     static const OSG::BitVector DistanceFadeStartFieldMask;
     static const OSG::BitVector DistanceFadeEndFieldMask;
-    static const OSG::BitVector FadeStartAplphaFieldMask;
+    static const OSG::BitVector FadeStartAlphaFieldMask;
     static const OSG::BitVector FadeEndAlphaFieldMask;
 
 
@@ -133,15 +133,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffectorBase : public
 
            SFReal32            *getSFDistanceFadeStart(void);
            SFReal32            *getSFDistanceFadeEnd(void);
-           SFReal32            *getSFFadeStartAplpha(void);
+           SFReal32            *getSFFadeStartAlpha (void);
            SFReal32            *getSFFadeEndAlpha   (void);
 
            Real32              &getDistanceFadeStart(void);
      const Real32              &getDistanceFadeStart(void) const;
            Real32              &getDistanceFadeEnd(void);
      const Real32              &getDistanceFadeEnd(void) const;
-           Real32              &getFadeStartAplpha(void);
-     const Real32              &getFadeStartAplpha(void) const;
+           Real32              &getFadeStartAlpha (void);
+     const Real32              &getFadeStartAlpha (void) const;
            Real32              &getFadeEndAlpha   (void);
      const Real32              &getFadeEndAlpha   (void) const;
 
@@ -152,7 +152,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffectorBase : public
 
      void setDistanceFadeStart( const Real32 &value );
      void setDistanceFadeEnd( const Real32 &value );
-     void setFadeStartAplpha( const Real32 &value );
+     void setFadeStartAlpha ( const Real32 &value );
      void setFadeEndAlpha   ( const Real32 &value );
 
     /*! \}                                                                 */
@@ -198,7 +198,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffectorBase : public
 
     SFReal32            _sfDistanceFadeStart;
     SFReal32            _sfDistanceFadeEnd;
-    SFReal32            _sfFadeStartAplpha;
+    SFReal32            _sfFadeStartAlpha;
     SFReal32            _sfFadeEndAlpha;
 
     /*! \}                                                                 */

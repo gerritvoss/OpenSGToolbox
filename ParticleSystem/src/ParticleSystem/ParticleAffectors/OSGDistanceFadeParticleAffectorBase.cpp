@@ -70,8 +70,8 @@ const OSG::BitVector  DistanceFadeParticleAffectorBase::DistanceFadeStartFieldMa
 const OSG::BitVector  DistanceFadeParticleAffectorBase::DistanceFadeEndFieldMask = 
     (TypeTraits<BitVector>::One << DistanceFadeParticleAffectorBase::DistanceFadeEndFieldId);
 
-const OSG::BitVector  DistanceFadeParticleAffectorBase::FadeStartAplphaFieldMask = 
-    (TypeTraits<BitVector>::One << DistanceFadeParticleAffectorBase::FadeStartAplphaFieldId);
+const OSG::BitVector  DistanceFadeParticleAffectorBase::FadeStartAlphaFieldMask = 
+    (TypeTraits<BitVector>::One << DistanceFadeParticleAffectorBase::FadeStartAlphaFieldId);
 
 const OSG::BitVector  DistanceFadeParticleAffectorBase::FadeEndAlphaFieldMask = 
     (TypeTraits<BitVector>::One << DistanceFadeParticleAffectorBase::FadeEndAlphaFieldId);
@@ -89,7 +89,7 @@ const OSG::BitVector DistanceFadeParticleAffectorBase::MTInfluenceMask =
 /*! \var Real32          DistanceFadeParticleAffectorBase::_sfDistanceFadeEnd
     
 */
-/*! \var Real32          DistanceFadeParticleAffectorBase::_sfFadeStartAplpha
+/*! \var Real32          DistanceFadeParticleAffectorBase::_sfFadeStartAlpha
     
 */
 /*! \var Real32          DistanceFadeParticleAffectorBase::_sfFadeEndAlpha
@@ -111,10 +111,10 @@ FieldDescription *DistanceFadeParticleAffectorBase::_desc[] =
                      false,
                      (FieldAccessMethod) &DistanceFadeParticleAffectorBase::getSFDistanceFadeEnd),
     new FieldDescription(SFReal32::getClassType(), 
-                     "FadeStartAplpha", 
-                     FadeStartAplphaFieldId, FadeStartAplphaFieldMask,
+                     "FadeStartAlpha", 
+                     FadeStartAlphaFieldId, FadeStartAlphaFieldMask,
                      false,
-                     (FieldAccessMethod) &DistanceFadeParticleAffectorBase::getSFFadeStartAplpha),
+                     (FieldAccessMethod) &DistanceFadeParticleAffectorBase::getSFFadeStartAlpha),
     new FieldDescription(SFReal32::getClassType(), 
                      "FadeEndAlpha", 
                      FadeEndAlphaFieldId, FadeEndAlphaFieldMask,
@@ -197,7 +197,7 @@ void DistanceFadeParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAsp
 DistanceFadeParticleAffectorBase::DistanceFadeParticleAffectorBase(void) :
     _sfDistanceFadeStart      (Real32(100.0)), 
     _sfDistanceFadeEnd        (Real32(200.0)), 
-    _sfFadeStartAplpha        (Real32(1.0f)), 
+    _sfFadeStartAlpha         (Real32(1.0f)), 
     _sfFadeEndAlpha           (Real32(0.0f)), 
     Inherited() 
 {
@@ -210,7 +210,7 @@ DistanceFadeParticleAffectorBase::DistanceFadeParticleAffectorBase(void) :
 DistanceFadeParticleAffectorBase::DistanceFadeParticleAffectorBase(const DistanceFadeParticleAffectorBase &source) :
     _sfDistanceFadeStart      (source._sfDistanceFadeStart      ), 
     _sfDistanceFadeEnd        (source._sfDistanceFadeEnd        ), 
-    _sfFadeStartAplpha        (source._sfFadeStartAplpha        ), 
+    _sfFadeStartAlpha         (source._sfFadeStartAlpha         ), 
     _sfFadeEndAlpha           (source._sfFadeEndAlpha           ), 
     Inherited                 (source)
 {
@@ -238,9 +238,9 @@ UInt32 DistanceFadeParticleAffectorBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDistanceFadeEnd.getBinSize();
     }
 
-    if(FieldBits::NoField != (FadeStartAplphaFieldMask & whichField))
+    if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
     {
-        returnValue += _sfFadeStartAplpha.getBinSize();
+        returnValue += _sfFadeStartAlpha.getBinSize();
     }
 
     if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
@@ -267,9 +267,9 @@ void DistanceFadeParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
         _sfDistanceFadeEnd.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (FadeStartAplphaFieldMask & whichField))
+    if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
     {
-        _sfFadeStartAplpha.copyToBin(pMem);
+        _sfFadeStartAlpha.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
@@ -295,9 +295,9 @@ void DistanceFadeParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem
         _sfDistanceFadeEnd.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (FadeStartAplphaFieldMask & whichField))
+    if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
     {
-        _sfFadeStartAplpha.copyFromBin(pMem);
+        _sfFadeStartAlpha.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
@@ -321,8 +321,8 @@ void DistanceFadeParticleAffectorBase::executeSyncImpl(      DistanceFadeParticl
     if(FieldBits::NoField != (DistanceFadeEndFieldMask & whichField))
         _sfDistanceFadeEnd.syncWith(pOther->_sfDistanceFadeEnd);
 
-    if(FieldBits::NoField != (FadeStartAplphaFieldMask & whichField))
-        _sfFadeStartAplpha.syncWith(pOther->_sfFadeStartAplpha);
+    if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
+        _sfFadeStartAlpha.syncWith(pOther->_sfFadeStartAlpha);
 
     if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
         _sfFadeEndAlpha.syncWith(pOther->_sfFadeEndAlpha);
@@ -343,8 +343,8 @@ void DistanceFadeParticleAffectorBase::executeSyncImpl(      DistanceFadeParticl
     if(FieldBits::NoField != (DistanceFadeEndFieldMask & whichField))
         _sfDistanceFadeEnd.syncWith(pOther->_sfDistanceFadeEnd);
 
-    if(FieldBits::NoField != (FadeStartAplphaFieldMask & whichField))
-        _sfFadeStartAplpha.syncWith(pOther->_sfFadeStartAplpha);
+    if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
+        _sfFadeStartAlpha.syncWith(pOther->_sfFadeStartAlpha);
 
     if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
         _sfFadeEndAlpha.syncWith(pOther->_sfFadeEndAlpha);

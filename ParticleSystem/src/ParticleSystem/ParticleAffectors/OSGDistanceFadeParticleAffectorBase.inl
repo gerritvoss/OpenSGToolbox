@@ -110,11 +110,11 @@ SFReal32 *DistanceFadeParticleAffectorBase::getSFDistanceFadeEnd(void)
     return &_sfDistanceFadeEnd;
 }
 
-//! Get the DistanceFadeParticleAffector::_sfFadeStartAplpha field.
+//! Get the DistanceFadeParticleAffector::_sfFadeStartAlpha field.
 inline
-SFReal32 *DistanceFadeParticleAffectorBase::getSFFadeStartAplpha(void)
+SFReal32 *DistanceFadeParticleAffectorBase::getSFFadeStartAlpha(void)
 {
-    return &_sfFadeStartAplpha;
+    return &_sfFadeStartAlpha;
 }
 
 //! Get the DistanceFadeParticleAffector::_sfFadeEndAlpha field.
@@ -167,25 +167,25 @@ void DistanceFadeParticleAffectorBase::setDistanceFadeEnd(const Real32 &value)
     _sfDistanceFadeEnd.setValue(value);
 }
 
-//! Get the value of the DistanceFadeParticleAffector::_sfFadeStartAplpha field.
+//! Get the value of the DistanceFadeParticleAffector::_sfFadeStartAlpha field.
 inline
-Real32 &DistanceFadeParticleAffectorBase::getFadeStartAplpha(void)
+Real32 &DistanceFadeParticleAffectorBase::getFadeStartAlpha(void)
 {
-    return _sfFadeStartAplpha.getValue();
+    return _sfFadeStartAlpha.getValue();
 }
 
-//! Get the value of the DistanceFadeParticleAffector::_sfFadeStartAplpha field.
+//! Get the value of the DistanceFadeParticleAffector::_sfFadeStartAlpha field.
 inline
-const Real32 &DistanceFadeParticleAffectorBase::getFadeStartAplpha(void) const
+const Real32 &DistanceFadeParticleAffectorBase::getFadeStartAlpha(void) const
 {
-    return _sfFadeStartAplpha.getValue();
+    return _sfFadeStartAlpha.getValue();
 }
 
-//! Set the value of the DistanceFadeParticleAffector::_sfFadeStartAplpha field.
+//! Set the value of the DistanceFadeParticleAffector::_sfFadeStartAlpha field.
 inline
-void DistanceFadeParticleAffectorBase::setFadeStartAplpha(const Real32 &value)
+void DistanceFadeParticleAffectorBase::setFadeStartAlpha(const Real32 &value)
 {
-    _sfFadeStartAplpha.setValue(value);
+    _sfFadeStartAlpha.setValue(value);
 }
 
 //! Get the value of the DistanceFadeParticleAffector::_sfFadeEndAlpha field.
