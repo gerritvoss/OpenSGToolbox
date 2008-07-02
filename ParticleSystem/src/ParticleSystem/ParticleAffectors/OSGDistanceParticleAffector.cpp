@@ -46,6 +46,8 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGCamera.h>
+#include "ParticleSystem/OSGParticleSystem.h"
 
 #include "OSGDistanceParticleAffector.h"
 
@@ -79,20 +81,45 @@ void DistanceParticleAffector::initMethod (void)
 
 bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
-    //TODO: Implement
-	Real32 Distance;
-
-	//Calculate the Distance
-	switch(getDistanceFromSource())
+	if(System != NullFC && getParticleSystemNode() != NullFC)
 	{
-	case DISTANCE_FROM_NODE:
-		break;
-	case DISTANCE_FROM_CAMERA:
-	default:
-		break;
-	}
+		Real32 DistanceSqrd;
 
-	return affect(System, ParticleIndex, elps, Distance);
+		Pnt3f ParticlePositionInWorldSpace = System->getPosition(ParticleIndex);
+		getParticleSystemNode()->getToWorld().multFullMatrixPnt(ParticlePositionInWorldSpace);
+
+		Pnt3f NodePositionInWorldSpace;
+
+		//Calculate the Distance
+		switch(getDistanceFromSource())
+		{
+		case DISTANCE_FROM_NODE:
+			if(getDistanceFromNode() != NullFC)
+			{
+				Matrix m = getDistanceFromNode()->getToWorld();
+				NodePositionInWorldSpace.setValues(m[0][3],m[1][3],m[2][3]);
+			}
+			break;
+		case DISTANCE_FROM_CAMERA:
+			if(getDistanceFromCamera() != NullFC)
+			{
+				Matrix m;
+				getDistanceFromCamera()->getViewing(m,1,1);
+				assert(false && "DistanceParticleAffector::affect: DISTANCE_FROM_CAMERA: NOT IMPLEMENTED");
+				NodePositionInWorldSpace.setValues(m[0][3],m[1][3],m[2][3]);
+			}
+		default:
+			break;
+		}
+
+		DistanceSqrd = ParticlePositionInWorldSpace.dist2(NodePositionInWorldSpace);
+
+		return affect(System, ParticleIndex, elps, DistanceSqrd);
+	}
+	else
+	{
+		return false;
+	}
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

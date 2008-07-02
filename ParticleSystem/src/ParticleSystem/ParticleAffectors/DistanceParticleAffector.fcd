@@ -29,4 +29,22 @@
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="ParticleSystemNode"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="DistanceFromCamera"
+		type="CameraPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>

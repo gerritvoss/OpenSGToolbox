@@ -70,6 +70,12 @@ const OSG::BitVector  DistanceParticleAffectorBase::DistanceFromSourceFieldMask 
 const OSG::BitVector  DistanceParticleAffectorBase::DistanceFromNodeFieldMask = 
     (TypeTraits<BitVector>::One << DistanceParticleAffectorBase::DistanceFromNodeFieldId);
 
+const OSG::BitVector  DistanceParticleAffectorBase::ParticleSystemNodeFieldMask = 
+    (TypeTraits<BitVector>::One << DistanceParticleAffectorBase::ParticleSystemNodeFieldId);
+
+const OSG::BitVector  DistanceParticleAffectorBase::DistanceFromCameraFieldMask = 
+    (TypeTraits<BitVector>::One << DistanceParticleAffectorBase::DistanceFromCameraFieldId);
+
 const OSG::BitVector DistanceParticleAffectorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -81,6 +87,12 @@ const OSG::BitVector DistanceParticleAffectorBase::MTInfluenceMask =
     
 */
 /*! \var NodePtr         DistanceParticleAffectorBase::_sfDistanceFromNode
+    
+*/
+/*! \var NodePtr         DistanceParticleAffectorBase::_sfParticleSystemNode
+    
+*/
+/*! \var CameraPtr       DistanceParticleAffectorBase::_sfDistanceFromCamera
     
 */
 
@@ -97,7 +109,17 @@ FieldDescription *DistanceParticleAffectorBase::_desc[] =
                      "DistanceFromNode", 
                      DistanceFromNodeFieldId, DistanceFromNodeFieldMask,
                      false,
-                     (FieldAccessMethod) &DistanceParticleAffectorBase::getSFDistanceFromNode)
+                     (FieldAccessMethod) &DistanceParticleAffectorBase::getSFDistanceFromNode),
+    new FieldDescription(SFNodePtr::getClassType(), 
+                     "ParticleSystemNode", 
+                     ParticleSystemNodeFieldId, ParticleSystemNodeFieldMask,
+                     false,
+                     (FieldAccessMethod) &DistanceParticleAffectorBase::getSFParticleSystemNode),
+    new FieldDescription(SFCameraPtr::getClassType(), 
+                     "DistanceFromCamera", 
+                     DistanceFromCameraFieldId, DistanceFromCameraFieldMask,
+                     false,
+                     (FieldAccessMethod) &DistanceParticleAffectorBase::getSFDistanceFromCamera)
 };
 
 
@@ -166,6 +188,8 @@ void DistanceParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 DistanceParticleAffectorBase::DistanceParticleAffectorBase(void) :
     _sfDistanceFromSource     (UInt32(DistanceParticleAffector::DISTANCE_FROM_CAMERA)), 
     _sfDistanceFromNode       (NodePtr(NullFC)), 
+    _sfParticleSystemNode     (NodePtr(NullFC)), 
+    _sfDistanceFromCamera     (CameraPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -177,6 +201,8 @@ DistanceParticleAffectorBase::DistanceParticleAffectorBase(void) :
 DistanceParticleAffectorBase::DistanceParticleAffectorBase(const DistanceParticleAffectorBase &source) :
     _sfDistanceFromSource     (source._sfDistanceFromSource     ), 
     _sfDistanceFromNode       (source._sfDistanceFromNode       ), 
+    _sfParticleSystemNode     (source._sfParticleSystemNode     ), 
+    _sfDistanceFromCamera     (source._sfDistanceFromCamera     ), 
     Inherited                 (source)
 {
 }
@@ -203,6 +229,16 @@ UInt32 DistanceParticleAffectorBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDistanceFromNode.getBinSize();
     }
 
+    if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
+    {
+        returnValue += _sfParticleSystemNode.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
+    {
+        returnValue += _sfDistanceFromCamera.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -220,6 +256,16 @@ void DistanceParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DistanceFromNodeFieldMask & whichField))
     {
         _sfDistanceFromNode.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
+    {
+        _sfParticleSystemNode.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
+    {
+        _sfDistanceFromCamera.copyToBin(pMem);
     }
 
 
@@ -240,6 +286,16 @@ void DistanceParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDistanceFromNode.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
+    {
+        _sfParticleSystemNode.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
+    {
+        _sfDistanceFromCamera.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -256,6 +312,12 @@ void DistanceParticleAffectorBase::executeSyncImpl(      DistanceParticleAffecto
     if(FieldBits::NoField != (DistanceFromNodeFieldMask & whichField))
         _sfDistanceFromNode.syncWith(pOther->_sfDistanceFromNode);
 
+    if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
+        _sfParticleSystemNode.syncWith(pOther->_sfParticleSystemNode);
+
+    if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
+        _sfDistanceFromCamera.syncWith(pOther->_sfDistanceFromCamera);
+
 
 }
 #else
@@ -271,6 +333,12 @@ void DistanceParticleAffectorBase::executeSyncImpl(      DistanceParticleAffecto
 
     if(FieldBits::NoField != (DistanceFromNodeFieldMask & whichField))
         _sfDistanceFromNode.syncWith(pOther->_sfDistanceFromNode);
+
+    if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
+        _sfParticleSystemNode.syncWith(pOther->_sfParticleSystemNode);
+
+    if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
+        _sfDistanceFromCamera.syncWith(pOther->_sfDistanceFromCamera);
 
 
 

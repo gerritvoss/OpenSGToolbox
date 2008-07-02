@@ -84,6 +84,20 @@ SFNodePtr *DistanceParticleAffectorBase::getSFDistanceFromNode(void)
     return &_sfDistanceFromNode;
 }
 
+//! Get the DistanceParticleAffector::_sfParticleSystemNode field.
+inline
+SFNodePtr *DistanceParticleAffectorBase::getSFParticleSystemNode(void)
+{
+    return &_sfParticleSystemNode;
+}
+
+//! Get the DistanceParticleAffector::_sfDistanceFromCamera field.
+inline
+SFCameraPtr *DistanceParticleAffectorBase::getSFDistanceFromCamera(void)
+{
+    return &_sfDistanceFromCamera;
+}
+
 
 //! Get the value of the DistanceParticleAffector::_sfDistanceFromSource field.
 inline
@@ -125,6 +139,48 @@ inline
 void DistanceParticleAffectorBase::setDistanceFromNode(const NodePtr &value)
 {
     _sfDistanceFromNode.setValue(value);
+}
+
+//! Get the value of the DistanceParticleAffector::_sfParticleSystemNode field.
+inline
+NodePtr &DistanceParticleAffectorBase::getParticleSystemNode(void)
+{
+    return _sfParticleSystemNode.getValue();
+}
+
+//! Get the value of the DistanceParticleAffector::_sfParticleSystemNode field.
+inline
+const NodePtr &DistanceParticleAffectorBase::getParticleSystemNode(void) const
+{
+    return _sfParticleSystemNode.getValue();
+}
+
+//! Set the value of the DistanceParticleAffector::_sfParticleSystemNode field.
+inline
+void DistanceParticleAffectorBase::setParticleSystemNode(const NodePtr &value)
+{
+    _sfParticleSystemNode.setValue(value);
+}
+
+//! Get the value of the DistanceParticleAffector::_sfDistanceFromCamera field.
+inline
+CameraPtr &DistanceParticleAffectorBase::getDistanceFromCamera(void)
+{
+    return _sfDistanceFromCamera.getValue();
+}
+
+//! Get the value of the DistanceParticleAffector::_sfDistanceFromCamera field.
+inline
+const CameraPtr &DistanceParticleAffectorBase::getDistanceFromCamera(void) const
+{
+    return _sfDistanceFromCamera.getValue();
+}
+
+//! Set the value of the DistanceParticleAffector::_sfDistanceFromCamera field.
+inline
+void DistanceParticleAffectorBase::setDistanceFromCamera(const CameraPtr &value)
+{
+    _sfDistanceFromCamera.setValue(value);
 }
 
 

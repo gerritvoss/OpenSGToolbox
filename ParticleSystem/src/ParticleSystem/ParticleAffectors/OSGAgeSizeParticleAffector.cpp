@@ -52,7 +52,6 @@
 
 #include "ParticleSystem/OSGParticleSystem.h"
 #include <OpenSG/Toolbox/OSGInterpolations.h>
-#include <OpenSG/ParticleSystem/OSGAgeSizeParticleAffectorBase.h>
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\

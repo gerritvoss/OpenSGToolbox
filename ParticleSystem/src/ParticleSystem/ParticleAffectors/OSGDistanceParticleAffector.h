@@ -100,7 +100,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffector : public Distanc
     virtual ~DistanceParticleAffector(void); 
 
     /*! \}                                                                 */
-    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& Distance) = 0;
+    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& DistanceSqrd) = 0;
     
     /*==========================  PRIVATE  ================================*/
   private:

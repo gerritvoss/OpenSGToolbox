@@ -69,6 +69,8 @@
 
 #include <OpenSG/OSGUInt32Fields.h> // DistanceFromSource type
 #include <OpenSG/OSGNodeFields.h> // DistanceFromNode type
+#include <OpenSG/OSGNodeFields.h> // ParticleSystemNode type
+#include <OpenSG/OSGCameraFields.h> // DistanceFromCamera type
 
 #include "OSGDistanceParticleAffectorFields.h"
 
@@ -94,11 +96,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffectorBase : public Par
     {
         DistanceFromSourceFieldId = Inherited::NextFieldId,
         DistanceFromNodeFieldId   = DistanceFromSourceFieldId + 1,
-        NextFieldId               = DistanceFromNodeFieldId   + 1
+        ParticleSystemNodeFieldId = DistanceFromNodeFieldId   + 1,
+        DistanceFromCameraFieldId = ParticleSystemNodeFieldId + 1,
+        NextFieldId               = DistanceFromCameraFieldId + 1
     };
 
     static const OSG::BitVector DistanceFromSourceFieldMask;
     static const OSG::BitVector DistanceFromNodeFieldMask;
+    static const OSG::BitVector ParticleSystemNodeFieldMask;
+    static const OSG::BitVector DistanceFromCameraFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -127,11 +133,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffectorBase : public Par
 
            SFUInt32            *getSFDistanceFromSource(void);
            SFNodePtr           *getSFDistanceFromNode(void);
+           SFNodePtr           *getSFParticleSystemNode(void);
+           SFCameraPtr         *getSFDistanceFromCamera(void);
 
            UInt32              &getDistanceFromSource(void);
      const UInt32              &getDistanceFromSource(void) const;
            NodePtr             &getDistanceFromNode(void);
      const NodePtr             &getDistanceFromNode(void) const;
+           NodePtr             &getParticleSystemNode(void);
+     const NodePtr             &getParticleSystemNode(void) const;
+           CameraPtr           &getDistanceFromCamera(void);
+     const CameraPtr           &getDistanceFromCamera(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,6 +152,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffectorBase : public Par
 
      void setDistanceFromSource( const UInt32 &value );
      void setDistanceFromNode( const NodePtr &value );
+     void setParticleSystemNode( const NodePtr &value );
+     void setDistanceFromCamera( const CameraPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -168,6 +182,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffectorBase : public Par
 
     SFUInt32            _sfDistanceFromSource;
     SFNodePtr           _sfDistanceFromNode;
+    SFNodePtr           _sfParticleSystemNode;
+    SFCameraPtr         _sfDistanceFromCamera;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
