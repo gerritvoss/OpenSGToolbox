@@ -381,6 +381,8 @@ void List::contentsChanged(ListDataEvent e)
 		getModel()->getSize() != getChildren().size())
 	{
 		updateIndiciesDrawnFromModel();
+        
+		updatePreferredSize();
 	}
 }
 

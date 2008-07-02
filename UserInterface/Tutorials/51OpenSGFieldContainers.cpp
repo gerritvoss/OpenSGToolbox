@@ -66,6 +66,9 @@
 
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 #include <OpenSG/UserInterface/OSGUIDrawObject.h>
+#include <OpenSG/UserInterface/OSGComboBox.h>
+#include <OpenSG/UserInterface/OSGFieldContainerComboBoxModel.h>
+#include <OpenSG/UserInterface/OSGDerivedFieldContainerComboBoxModel.h>
 
 #include <sstream>
 
@@ -137,6 +140,32 @@ class OpenSGTypePanel
 {
 public:
 
+    class FCComboBoxListener: public ComboBoxSelectionListener
+    {
+    public:
+        void selectionChanged(const ComboBoxSelectionEvent& e)
+        {
+            FieldContainerType* FoundType = FieldContainerFactory::the()->findType(dynamic_cast<SFString*>(_DerivedComboBoxModel->getSelectedItem().get())->getValue().c_str());
+            if(FoundType != NULL)
+            {
+                beginEditCP(DerivedFieldContainerComboBoxModel::Ptr::dcast(_FieldContainerTypeModel), DerivedFieldContainerComboBoxModel::DerivedFieldContainerTypesFieldMask);
+                    DerivedFieldContainerComboBoxModel::Ptr::dcast(_FieldContainerTypeModel)->getDerivedFieldContainerTypes().clear();
+                    DerivedFieldContainerComboBoxModel::Ptr::dcast(_FieldContainerTypeModel)->getDerivedFieldContainerTypes().push_back(std::string(FoundType->getCName()));
+                endEditCP(DerivedFieldContainerComboBoxModel::Ptr::dcast(_FieldContainerTypeModel), DerivedFieldContainerComboBoxModel::DerivedFieldContainerTypesFieldMask);
+            }
+		
+        }
+
+        void set(ListModelPtr FieldContainerTypeModel, FieldContainerComboBoxModelPtr DerivedComboBoxModel)
+        {
+            _FieldContainerTypeModel = FieldContainerTypeModel;
+            _DerivedComboBoxModel = DerivedComboBoxModel;
+        }
+    protected:
+	    ListModelPtr _FieldContainerTypeModel;
+        FieldContainerComboBoxModelPtr _DerivedComboBoxModel;
+    };
+
     class FCListListener: public ListSelectionListener
     {
       public:
@@ -155,18 +184,6 @@ public:
 
                 if(TheFCType != NULL)
                 {
-					//Output the XML for the prototype of this Field Container
-					/*std::stringstream XMLOutputStream;
-					FCFileType::FCTypeVector IgnoreTypes;
-					FCFileType::FCPtrStore Containers;
-					Containers.insert(TheFCType->getPrototype());
-					FCFileHandler::the()->write(Containers, XMLOutputStream, "xml", IgnoreTypes);
-					
-					beginEditCP(_XMLTextArea, TextArea::TextFieldMask);
-						_XMLTextArea->setText(XMLOutputStream.str());
-					endEditCP(_XMLTextArea, TextArea::TextFieldMask);*/
-
-					//Output Information on the Fields of the Field Container
 					std::stringstream OutputStream;
 
                     OutputStream << "Field Container Type: " << TheFCType->getCName() << std::endl;
@@ -220,41 +237,48 @@ public:
 
 protected:
 	PanelPtr _MainPanel;
-	DefaultListModelPtr _FieldContainerTypeModel;
+	ListModelPtr _FieldContainerTypeModel;
     FCListListener TheFCListListener;
 	TextAreaPtr FCDescriptionArea;
 	TextAreaPtr XMLArea;
+    FCComboBoxListener _TheFCComboBoxListener;
 
 	PanelPtr createFieldContainerTypePanel(void)
 	{
-		//Put all the FieldContainerTypes into the model
-		_FieldContainerTypeModel = DefaultListModel::create();
-		UInt32 NumTypesFound(0);
-		for (UInt32 i(0); NumTypesFound < FieldContainerFactory::the()->getNumTypes() ; ++i)
-		{
-			FieldContainerType* TheType;
-			TheType = FieldContainerFactory::the()->findType(i);
+        LabelPtr DerivedComboBoxLabel = Label::create();
+        beginEditCP(DerivedComboBoxLabel, Label::TextFieldMask);
+            DerivedComboBoxLabel->setText("Type:");
+        beginEditCP(DerivedComboBoxLabel, Label::TextFieldMask);
 
-            std::vector<FieldContainerType*> AllowedTypes;
-            AllowedTypes.push_back(&Component::getClassType());
-            AllowedTypes.push_back(&Border::getClassType());
-            AllowedTypes.push_back(&Layer::getClassType());
-            AllowedTypes.push_back(&UIFont::getClassType());
-            AllowedTypes.push_back(&CellEditor::getClassType());
-            AllowedTypes.push_back(&ComponentGenerator::getClassType());
-            AllowedTypes.push_back(&UIDrawObject::getClassType());
-			if(TheType != NULL)
-			{
-                for(std::vector<FieldContainerType*>::iterator Itor(AllowedTypes.begin()) ; Itor != AllowedTypes.end(); ++Itor)
-                {
-                    if(TheType->isDerivedFrom(*(*Itor)) )
-                    {
-				        _FieldContainerTypeModel->pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
-                    }
-                }
-				++NumTypesFound;
-			}
-		}
+        //Create a ComboBox to select the DerivedFieldContainerType
+        FieldContainerComboBoxModelPtr DerivedComboBoxModel = FieldContainerComboBoxModel::create();
+        beginEditCP(DerivedComboBoxModel, FieldContainerComboBoxModel::FieldContainerTypesFieldMask);
+            DerivedComboBoxModel->getFieldContainerTypes().push_back(std::string(Component::getClassType().getCName()));
+            DerivedComboBoxModel->getFieldContainerTypes().push_back(std::string(Container::getClassType().getCName()));
+            DerivedComboBoxModel->getFieldContainerTypes().push_back(std::string(AbstractWindow::getClassType().getCName()));
+            DerivedComboBoxModel->getFieldContainerTypes().push_back(std::string(Border::getClassType().getCName()));
+            DerivedComboBoxModel->getFieldContainerTypes().push_back(std::string(Layer::getClassType().getCName()));
+            DerivedComboBoxModel->getFieldContainerTypes().push_back(std::string(UIFont::getClassType().getCName()));
+            DerivedComboBoxModel->getFieldContainerTypes().push_back(std::string(CellEditor::getClassType().getCName()));
+            DerivedComboBoxModel->getFieldContainerTypes().push_back(std::string(ComponentGenerator::getClassType().getCName()));
+            DerivedComboBoxModel->getFieldContainerTypes().push_back(std::string(UIDrawObject::getClassType().getCName()));
+        endEditCP(DerivedComboBoxModel, FieldContainerComboBoxModel::FieldContainerTypesFieldMask);
+
+	    // Create another ComboBox
+	    ComboBoxPtr DerivedComboBox = ComboBox::create();
+
+	    // Set it to be uneditable
+	    beginEditCP(DerivedComboBox, ComboBox::EditableFieldMask | ComboBox::ModelFieldMask);
+		    DerivedComboBox->setEditable(false);
+		    DerivedComboBox->setModel(DerivedComboBoxModel);
+	    endEditCP(DerivedComboBox, ComboBox::EditableFieldMask | ComboBox::ModelFieldMask);
+
+		//Put all the FieldContainerTypes into the model
+        _FieldContainerTypeModel = DerivedFieldContainerComboBoxModel::create();
+        
+        _TheFCComboBoxListener.set(_FieldContainerTypeModel, DerivedComboBoxModel);
+        DerivedComboBoxModel->addSelectionListener(&_TheFCComboBoxListener);
+        DerivedComboBoxModel->setSelectedItem(0);
 
 		// Create FieldContainerTypeList
 		ListPtr FieldContainerTypeList = List::create();
@@ -316,6 +340,13 @@ protected:
 		beginEditCP(FCDescriptionArea, TextArea::FontFieldMask);
 		FCDescriptionArea->setFont(TextAreaFont);
 		endEditCP(FCDescriptionArea, TextArea::FontFieldMask);
+
+		ScrollPanelPtr FCDescriptionAreaScrollPanel = ScrollPanel::create();
+		beginEditCP(FCDescriptionAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+			//FCDescriptionAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+			//FCDescriptionAreaScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+		endEditCP(FCDescriptionAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+		//FCDescriptionAreaScrollPanel->setViewComponent(FCDescriptionArea);
 		
 		XMLArea = TextArea::create();
 
@@ -335,16 +366,28 @@ protected:
 		PanelPtr FieldContainerTypePanel = Panel::create();
 
 		beginEditCP(FieldContainerTypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+			FieldContainerTypePanel->getChildren().push_back(DerivedComboBoxLabel);
+			FieldContainerTypePanel->getChildren().push_back(DerivedComboBox);
 			FieldContainerTypePanel->getChildren().push_back(FieldContainerTypeListScrollPanel);
 			FieldContainerTypePanel->getChildren().push_back(NumFCTypesLabel);
 			FieldContainerTypePanel->getChildren().push_back(NumFCTypesValueLabel);
+			//FieldContainerTypePanel->getChildren().push_back(FCDescriptionAreaScrollPanel);
 			FieldContainerTypePanel->getChildren().push_back(FCDescriptionArea);
 			FieldContainerTypePanel->getChildren().push_back(XMLArea);
 			FieldContainerTypePanel->setLayout(FieldContainerTypePanelLayout);
 		endEditCP(FieldContainerTypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
         
+        //ComboBox Layout constraints
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, DerivedComboBoxLabel, 0, SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, DerivedComboBoxLabel, 0, SpringLayoutConstraints::WEST_EDGE, FieldContainerTypePanel);
+		
+        //ComboBox Layout constraints
+        FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, DerivedComboBox, 0, SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, DerivedComboBox, 1, SpringLayoutConstraints::EAST_EDGE, DerivedComboBoxLabel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, DerivedComboBox, 1, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypeListScrollPanel);
+		
 		//Scrollbar Layout constraints
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypeListScrollPanel, 0, SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypeListScrollPanel, 1, SpringLayoutConstraints::SOUTH_EDGE, DerivedComboBox);
 		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, FieldContainerTypeListScrollPanel, 0, SpringLayoutConstraints::WEST_EDGE, FieldContainerTypePanel);
 		
 		//FieldContainerTypes Label Layout constraints

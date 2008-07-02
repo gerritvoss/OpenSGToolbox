@@ -622,8 +622,9 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 	    }
         
         //Update my PreferredSize based on text
-        Vec2f PreferredSize(getMinSize());
+        Vec2f PreferredSize;
 		getFont()->getBounds(_LineContents.back()._Contents, TempTopLeft, TempBottomRight);
+        PreferredSize[0] = getPreferredSize().x();
         PreferredSize[1] = osgMax<UInt32>(getMinSize().y(), _LineContents.back()._VerticalOffset + TempBottomRight.y());
         if(getPreferredSize() != PreferredSize)
         {
