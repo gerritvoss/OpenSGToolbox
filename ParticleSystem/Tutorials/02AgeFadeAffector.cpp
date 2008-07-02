@@ -223,12 +223,8 @@ int main(int argc, char **argv)
 		ExampleAgeFadeParticleAffector->setFadeOutTime(1.0f);
 		ExampleAgeFadeParticleAffector->setStartAlpha(1.0f);
 		ExampleAgeFadeParticleAffector->setFadeToAlpha(0.0f);
-		ExampleAgeFadeParticleAffector->setEndAlpha(1.0f);
-		
-		
+		ExampleAgeFadeParticleAffector->setEndAlpha(1.0f);	
 	endEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
-	
-	//beginEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask);
 
 	beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
 		ExampleParticleSystem->getAffectors().push_back(ExampleAgeFadeParticleAffector);
