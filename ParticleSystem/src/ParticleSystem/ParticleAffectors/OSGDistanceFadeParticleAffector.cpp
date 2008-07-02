@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDistanceFadeParticleAffector.h"
+#include <OpenSG/Toolbox/OSGInterpolations.h>
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,9 +78,29 @@ void DistanceFadeParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool DistanceFadeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& Distance)
+bool DistanceFadeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& DistanceSqrd)
 {
     //TODO: Implement
+	Real32 Alpha(0.0f);
+	if(DistanceSqrd >= getDistanceFadeStart()*getDistanceFadeStart())
+	{
+		if(DistanceSqrd >= getDistanceFadeEnd()*getDistanceFadeEnd())
+		{
+			Alpha = getFadeEndAlpha();
+		}
+		else
+		{
+			lerp<Real32>(getFadeStartAlpha(),getFadeEndAlpha(),(osgsqrt(DistanceSqrd) - getDistanceFadeStart())/(getDistanceFadeEnd() - getDistanceFadeStart()), Alpha);
+		}
+	}
+	else
+	{
+		Alpha = getFadeStartAlpha();
+	}
+	Color4f Color = System->getColor(ParticleIndex);
+		Color[3] = Alpha;
+		System->setColor(Color, ParticleIndex);
+
 	return false;
 }
 /*-------------------------------------------------------------------------*\
