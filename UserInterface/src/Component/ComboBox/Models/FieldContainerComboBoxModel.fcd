@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FieldContainerComboBoxModel"
+	parent="AbstractComboBoxModel"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI FieldContainerComboBoxModel.
+	<Field
+		name="FieldContainerTypes"
+		type="std::string"
+		cardinality="multi"
+		visibility="external"
+		defaultValue=""
+		access="public"
+	>
+	</Field>
+	<Field
+		name="InternalFieldContainerTypes"
+		type="UInt32"
+		cardinality="multi"
+		visibility="internal"
+		defaultValue=""
+		access="protected"
+	>
+	</Field>
+</FieldContainer>

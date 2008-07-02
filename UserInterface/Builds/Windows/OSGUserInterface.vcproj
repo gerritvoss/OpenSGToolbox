@@ -2261,6 +2261,62 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDerivedFieldContainerComboBoxModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDerivedFieldContainerComboBoxModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDerivedFieldContainerComboBoxModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDerivedFieldContainerComboBoxModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDerivedFieldContainerComboBoxModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDerivedFieldContainerComboBoxModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDerivedFieldContainerComboBoxModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGFieldContainerComboBoxModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGFieldContainerComboBoxModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGFieldContainerComboBoxModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGFieldContainerComboBoxModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGFieldContainerComboBoxModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGFieldContainerComboBoxModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGFieldContainerComboBoxModelFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\ComboBox\Models\OSGMutableComboBoxModel.cpp"
 							>
 						</File>

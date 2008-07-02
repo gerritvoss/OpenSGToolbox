@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Button", "01Button.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
@@ -93,6 +93,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "..\Builds\Windows\OSGUserInterface.vcproj", "{A1522E75-3430-4B6C-883C-935732C315D3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "51OpenSGFieldContainers", "51OpenSGFieldContainers.vcproj", "{C1EC802A-7B32-4A06-B94F-9E853C55FC4C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "42FieldContainerComboBox", "42FieldContainerComboBox.vcproj", "{264F40D3-4F64-4413-86A4-D4DCD79FBACF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -288,6 +290,10 @@ Global
 		{C1EC802A-7B32-4A06-B94F-9E853C55FC4C}.Debug|Win32.Build.0 = Debug|Win32
 		{C1EC802A-7B32-4A06-B94F-9E853C55FC4C}.Release|Win32.ActiveCfg = Release|Win32
 		{C1EC802A-7B32-4A06-B94F-9E853C55FC4C}.Release|Win32.Build.0 = Release|Win32
+		{264F40D3-4F64-4413-86A4-D4DCD79FBACF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{264F40D3-4F64-4413-86A4-D4DCD79FBACF}.Debug|Win32.Build.0 = Debug|Win32
+		{264F40D3-4F64-4413-86A4-D4DCD79FBACF}.Release|Win32.ActiveCfg = Release|Win32
+		{264F40D3-4F64-4413-86A4-D4DCD79FBACF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
