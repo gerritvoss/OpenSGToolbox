@@ -162,7 +162,7 @@ void DataConverterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 DataConverterBase::DataConverterBase(void) :
-    _sfToTypeName             (), 
+    _sfToTypeName             (std::string("Vec3f")), 
     Inherited() 
 {
 }

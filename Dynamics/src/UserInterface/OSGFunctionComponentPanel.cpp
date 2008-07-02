@@ -226,8 +226,6 @@ void FunctionComponentPanel::ComponentMoveListener::mouseDragged(const MouseEven
 		//Test AbsolutePosition to make sure Component is inside parent container
 		Pnt2f AbsolutePositionBottomRight, ContainerTopLeft, ContainerBottomRight;
 		AbsolutePositionBottomRight = AbsolutePosition + _ActiveComponent->getSize();
-		//AbsolutePositionBottomRight[0] = AbsolutePosition.x() + _ActiveComponent->getSize().x();
-		//AbsolutePositionBottomRight[1] = AbsolutePosition.y() + _ActiveComponent->getSize().y();
 		_ActiveComponent->getParentContainer()->getInsideInsetsBounds(ContainerTopLeft, ContainerBottomRight);
 		if(AbsolutePosition.x() < ContainerTopLeft.x())
 		{

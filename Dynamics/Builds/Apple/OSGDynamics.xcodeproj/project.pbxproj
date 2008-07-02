@@ -443,12 +443,6 @@
 		C98297AB0E15637A00B39C2E /* OSGCompoundFunctionFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGCompoundFunctionFields.h; path = ../../src/Function/OSGCompoundFunctionFields.h; sourceTree = SOURCE_ROOT; };
 		C98297AC0E15637A00B39C2E /* OSGFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFunction.cpp; path = ../../src/Function/OSGFunction.cpp; sourceTree = SOURCE_ROOT; };
 		C98297AD0E15637A00B39C2E /* OSGFunction.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFunction.h; path = ../../src/Function/OSGFunction.h; sourceTree = SOURCE_ROOT; };
-		C98297AE0E15637A00B39C2E /* OSGFunction.h.2.mine */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFunction.h.2.mine; path = ../../src/Function/OSGFunction.h.2.mine; sourceTree = SOURCE_ROOT; };
-		C98297AF0E15637A00B39C2E /* OSGFunction.h.mine */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFunction.h.mine; path = ../../src/Function/OSGFunction.h.mine; sourceTree = SOURCE_ROOT; };
-		C98297B00E15637A00B39C2E /* OSGFunction.h.r542 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFunction.h.r542; path = ../../src/Function/OSGFunction.h.r542; sourceTree = SOURCE_ROOT; };
-		C98297B10E15637A00B39C2E /* OSGFunction.h.r560 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFunction.h.r560; path = ../../src/Function/OSGFunction.h.r560; sourceTree = SOURCE_ROOT; };
-		C98297B20E15637A00B39C2E /* OSGFunction.h.r602 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFunction.h.r602; path = ../../src/Function/OSGFunction.h.r602; sourceTree = SOURCE_ROOT; };
-		C98297B30E15637A00B39C2E /* OSGFunction.h.r603 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFunction.h.r603; path = ../../src/Function/OSGFunction.h.r603; sourceTree = SOURCE_ROOT; };
 		C98297B40E15637A00B39C2E /* OSGFunction.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFunction.inl; path = ../../src/Function/OSGFunction.inl; sourceTree = SOURCE_ROOT; };
 		C98297B50E15637A00B39C2E /* OSGFunctionBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFunctionBase.cpp; path = ../../src/Function/OSGFunctionBase.cpp; sourceTree = SOURCE_ROOT; };
 		C98297B60E15637A00B39C2E /* OSGFunctionBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFunctionBase.h; path = ../../src/Function/OSGFunctionBase.h; sourceTree = SOURCE_ROOT; };
@@ -791,12 +785,6 @@
 				C98297AB0E15637A00B39C2E /* OSGCompoundFunctionFields.h */,
 				C98297AC0E15637A00B39C2E /* OSGFunction.cpp */,
 				C98297AD0E15637A00B39C2E /* OSGFunction.h */,
-				C98297AE0E15637A00B39C2E /* OSGFunction.h.2.mine */,
-				C98297AF0E15637A00B39C2E /* OSGFunction.h.mine */,
-				C98297B00E15637A00B39C2E /* OSGFunction.h.r542 */,
-				C98297B10E15637A00B39C2E /* OSGFunction.h.r560 */,
-				C98297B20E15637A00B39C2E /* OSGFunction.h.r602 */,
-				C98297B30E15637A00B39C2E /* OSGFunction.h.r603 */,
 				C98297B40E15637A00B39C2E /* OSGFunction.inl */,
 				C98297B50E15637A00B39C2E /* OSGFunctionBase.cpp */,
 				C98297B60E15637A00B39C2E /* OSGFunctionBase.h */,

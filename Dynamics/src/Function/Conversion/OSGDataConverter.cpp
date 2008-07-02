@@ -82,6 +82,11 @@ void DataConverter::initMethod (void)
 FunctionIOTypeVector DataConverter::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
+	
+	if(getToType() == NULL)
+	{
+		return OutputTypes;
+	}
 
 	if(*getToType() == FieldDataTraits<Vec2f>::getType())
 	{
