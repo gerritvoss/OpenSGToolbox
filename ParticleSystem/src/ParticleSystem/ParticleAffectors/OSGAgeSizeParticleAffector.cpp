@@ -47,8 +47,12 @@
 
 #include <OpenSG/OSGConfig.h>
 
+
 #include "OSGAgeSizeParticleAffector.h"
 
+#include "ParticleSystem/OSGParticleSystem.h"
+#include <OpenSG/Toolbox/OSGInterpolations.h>
+#include <OpenSG/ParticleSystem/OSGAgeSizeParticleAffectorBase.h>
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -79,6 +83,45 @@ void AgeSizeParticleAffector::initMethod (void)
 bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
 	//TODO: Implement
+	
+	
+	if(getAges().size()!=getSizes().size())
+	{
+		return false;
+	}
+	else
+	{
+		Real32 time;
+		UInt32 i(0);
+		time = (System->getAge(ParticleIndex))/(System->getLifespan(ParticleIndex));
+		for( ;i<getAges().size() && time>getAges(i);++i)
+		{
+			
+		}
+
+		if(i == 0)
+		{
+			System->setSize(getSizes().front(),ParticleIndex);
+		}
+
+		else if(i == getAges().size())
+		{
+			System->setSize(getSizes().back(),ParticleIndex);
+		}
+
+		else
+		{
+			Vec3f size;
+			//{
+				time = (time - getAges(i-1))/(getAges(i)-getAges(i-1));
+
+				lerp<Vec3f>(getSizes(i-1),getSizes(i),time,size);
+				System->setSize(size,ParticleIndex);
+			//}
+		}
+
+
+	}
 	return false;
 }
 
