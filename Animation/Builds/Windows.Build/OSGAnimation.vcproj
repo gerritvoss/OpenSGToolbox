@@ -1593,6 +1593,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonAnimation.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonAnimation.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonAnimation.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonAnimationBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonAnimationBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonAnimationBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonAnimationFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBase.cpp"
 					>
 				</File>
