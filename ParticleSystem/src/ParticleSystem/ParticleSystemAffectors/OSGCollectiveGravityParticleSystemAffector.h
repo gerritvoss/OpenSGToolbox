@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGParticleSystemDef.h"
 
 #include "OSGCollectiveGravityParticleSystemAffectorBase.h"
 
