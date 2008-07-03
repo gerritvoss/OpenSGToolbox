@@ -69,6 +69,7 @@ Animation is the base class of all Animation
 
 void Animation::initMethod (void)
 {
+
 }
 
 void Animation::start(void)

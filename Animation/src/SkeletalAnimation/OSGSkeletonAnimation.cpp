@@ -88,7 +88,7 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 	for(UInt32 i(0) ; i<getRotationAnimators().size() ; ++i)
 	{
 		UInt32 RotationFieldId = Bone::getClassType().findFieldDescription("Rotation")->getFieldId();
-	   osg::beginEditCP(getRotationAnimators(i), getRotationAnimators(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask() );
+	   osg::beginEditCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask() );
 	   
 	   if( getRotationAnimators(i)->animate(
 				   static_cast<osg::InterpolationType>(getInterpolationType()), 
@@ -96,22 +96,70 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 				   -1, 
 				   advancer->getValue(),
 				   advancer->getPrevValue(),
-				   *getRotationAnimators(i)->getField( RotationFieldId )) )
+				   *getRotationAnimatorBones(i)->getField( RotationFieldId )) )
 	   {
-		  osg::endEditCP(getRotationAnimators(i), getRotationAnimators(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask());
+		  osg::endEditCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask());
 	   }
 	   else
 	   {
-		  osg::endEditNotChangedCP(getRotationAnimators(i), getRotationAnimators(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask());
+		  osg::endEditNotChangedCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask());
 	   }
 	}
 
-	//TODO: Implement
-	//Apply all of the Length Animators
-	//Apply all of the Translation Animators
+
+//TODO: Implement
+//==================================================================================================================
+//Apply all of the Length Animators
+//==================================================================================================================
+	for(UInt32 i(0) ; i<getLengthAnimators().size() ; ++i)
+	{
+		UInt32 LengthFieldId = Bone::getClassType().findFieldDescription("Length")->getFieldId();
+	   osg::beginEditCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(LengthFieldId)->getFieldMask() );
+	   
+	   if( getLengthAnimators(i)->animate(
+				   static_cast<osg::InterpolationType>(getInterpolationType()), 
+				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
+				   -1, 
+				   advancer->getValue(),
+				   advancer->getPrevValue(),
+				   *getLengthAnimatorBones(i)->getField( LengthFieldId )) )
+	   {
+		  osg::endEditCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(LengthFieldId)->getFieldMask());
+	   }
+	   else
+	   {
+		  osg::endEditNotChangedCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(LengthFieldId)->getFieldMask());
+	   }
+	}
+
+//==================================================================================================================
+//Apply all of the Translation Animators
+//==================================================================================================================
+	for(UInt32 i(0) ; i<getTranslationAnimators().size() ; ++i)
+	{
+		UInt32 TranslationFieldId = Bone::getClassType().findFieldDescription("Translation")->getFieldId();
+	   osg::beginEditCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(TranslationFieldId)->getFieldMask() );
+	   
+	   if( getTranslationAnimators(i)->animate(
+				   static_cast<osg::InterpolationType>(getInterpolationType()), 
+				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
+				   -1, 
+				   advancer->getValue(),
+				   advancer->getPrevValue(),
+				   *getTranslationAnimatorBones(i)->getField( TranslationFieldId )) )
+	   {
+		  osg::endEditCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(TranslationFieldId)->getFieldMask());
+	   }
+	   else
+	   {
+		  osg::endEditNotChangedCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(TranslationFieldId)->getFieldMask());
+	   }
+	}
 	return false;
 }
-
+//===============================================================================================================
+// END HERE
+//================================================================================================================
 void SkeletonAnimation::addRotationAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone)
 {
 	if(TheAnimator != NullFC && TheBone != NullFC && 
