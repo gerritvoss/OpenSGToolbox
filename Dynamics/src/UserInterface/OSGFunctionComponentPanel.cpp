@@ -54,6 +54,8 @@
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/UserInterface//OSGUIDrawUtils.h>
 
+#include <OpenSG/OSGGL.h>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -85,8 +87,6 @@ void FunctionComponentPanel::initMethod (void)
 void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 {
 	
-	
-	//Drawing Minimap
 	if(getDrawMiniMap())
 	{
 		//Calculate minimap size
@@ -104,10 +104,37 @@ void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 		MapBottomRight = MapTopLeft + MinimapSize;
 		AlignedMapPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (MapBottomRight - MapTopLeft), getMiniMapAlignment().y(), getMiniMapAlignment().x());
 		
-		//Draw minimap
-		Graphics->drawRect(AlignedMapPosition, AlignedMapPosition + MinimapSize, Color4f(1.0f, 1.0f, 1.0f, 1.0f), 1.0);
+		drawMiniMap(Graphics, AlignedMapPosition, AlignedMapPosition + MinimapSize);
 	}
+	
 	Inherited::drawInternal(Graphics);
+}
+
+void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f& TopLeft, const Pnt3f BottomRight) const
+{
+	//Drawing Minimap
+	Graphics->drawRect(TopLeft, BottomRight, Color4f(0.75f, 0.75f, 1.0f, 1.0f), 0.5);
+	
+	//Get bounds of function component panel
+	Pnt2f PanelTopLeft, PanelBottomRight;
+	getInsideBorderBounds(PanelTopLeft, PanelBottomRight);
+	
+	//Determine how much to scale The internally drawn components
+	//To match the MiniMap Size
+	Real32 xTranslation, yTranslation, xScale, yScale;
+	xTranslation = TopLeft.x();
+	yTranslation = TopLeft.y();
+	xScale = (BottomRight.x() - TopLeft.x()) / (PanelBottomRight.x() - PanelTopLeft.x());
+	yScale = (BottomRight.y() - TopLeft.y()) / (PanelBottomRight.y() - PanelTopLeft.y());
+	
+	glPushMatrix();
+	glTranslatef(xTranslation, yTranslation, 0.0f);
+	glScalef(xScale, yScale, 1.0f);
+	
+	Inherited::drawInternal(Graphics);
+	
+	
+	glPopMatrix();
 }
 
 
@@ -154,13 +181,15 @@ void FunctionComponentPanel::mousePressed(const MouseEvent& e)
 
 FunctionComponentPanel::FunctionComponentPanel(void) :
     Inherited(),
-        _ComponentMoveListener(FunctionComponentPanelPtr(this))
+        _ComponentMoveListener(FunctionComponentPanelPtr(this))//,
+		//_MouseWheelListener(FunctionComponentPanelPtr(this))
 {
 }
 
 FunctionComponentPanel::FunctionComponentPanel(const FunctionComponentPanel &source) :
     Inherited(source),
-        _ComponentMoveListener(FunctionComponentPanelPtr(this))
+        _ComponentMoveListener(FunctionComponentPanelPtr(this))//,
+		//_MouseWheelListener(FunctionComponentPanelPtr(this))
 {
 }
 

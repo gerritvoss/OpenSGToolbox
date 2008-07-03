@@ -119,7 +119,7 @@ public:
    virtual void actionPerformed(const ActionEvent& e)
     {
 	
-		std::string TypeName = dynamic_cast<SFString>(_TheComboBox->getSelectedItem().get()).getValue();
+		std::string TypeName = static_cast<SFString*>(_TheComboBox->getSelectedItem().get())->getValue();
 		
         FunctionPtr NewFunction = Function::Ptr::dcast(FieldContainerFactory::the()->createFieldContainer(TypeName.c_str()));
 		
@@ -131,24 +131,35 @@ public:
 			FunctionComponentBorder->setCornerRadius(4.0f);
 		endEditCP(FunctionComponentBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
 		
+		//Create the Font
+		UIFontPtr TheFont = UIFont::create();
+		beginEditCP(TheFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
+			TheFont->setFamily("Arial");
+			TheFont->setSize(16);
+			TheFont->setStyle(TextFace::STYLE_PLAIN);
+		endEditCP(TheFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
+		
 		//Create the Default Tab Generator
 		DefaultFunctionComponentIOTabComponentGeneratorPtr TabGenerator = DefaultFunctionComponentIOTabComponentGenerator::create();
 			
 		FunctionComponentPtr NewFunctionComponent = FunctionComponent::create();
-		beginEditCP(NewFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask);
+		beginEditCP(NewFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask | FunctionComponent::FontFieldMask | FunctionComponent::TextColorFieldMask | FunctionComponent::TextAlignmentFieldMask);
 			NewFunctionComponent->setBorders(FunctionComponentBorder);
 			NewFunctionComponent->setFunction(NewFunction);
 			NewFunctionComponent->setInputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
 			NewFunctionComponent->setOutputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
 			NewFunctionComponent->setInputTabAlignment(Vec2f(0.0, 0.5));
 			NewFunctionComponent->setOutputTabAlignment(Vec2f(1.0, 0.5));
+			NewFunctionComponent->setFont(TheFont);
+			NewFunctionComponent->setTextColor(Color4f(0.0f, 0.0f, 0.0f, 1.0f));
+			NewFunctionComponent->setTextAlignment(Vec2f(0.5, 0.5));
 			
 			//Add Generators
 			NewFunctionComponent->setInputTabComponentGenerator(TabGenerator);
 			NewFunctionComponent->setOutputTabComponentGenerator(TabGenerator);
 			
 
-		endEditCP(NewFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask);
+		endEditCP(NewFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask | FunctionComponent::FontFieldMask | FunctionComponent::TextColorFieldMask | FunctionComponent::TextAlignmentFieldMask);
 			
 		beginEditCP(_ThePanel, FunctionComponentPanel::ChildrenFieldMask);
 			_ThePanel->getChildren().push_back(NewFunctionComponent);
@@ -208,11 +219,19 @@ int main(int argc, char **argv)
         FunctionComponentBorder->setCornerRadius(4.0f);
     endEditCP(FunctionComponentBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
 
-    //Create the Default Tab Generator
+    //Create the Font
+	UIFontPtr TheFont = UIFont::create();
+	beginEditCP(TheFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
+		TheFont->setFamily("Arial");
+		TheFont->setSize(16);
+		TheFont->setStyle(TextFace::STYLE_PLAIN);
+	endEditCP(TheFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
+	
+	//Create the Default Tab Generator
     DefaultFunctionComponentIOTabComponentGeneratorPtr TabGenerator = DefaultFunctionComponentIOTabComponentGenerator::create();
 
     FunctionComponentPtr ExampleFunctionComponent = FunctionComponent::create();
-    beginEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask);
+    beginEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask | FunctionComponent::FontFieldMask | FunctionComponent::TextColorFieldMask | FunctionComponent::TextAlignmentFieldMask);
         ExampleFunctionComponent->setPreferredSize(Vec2f(100.0f,100.0f));
         ExampleFunctionComponent->setBorders(FunctionComponentBorder);
 		ExampleFunctionComponent->setFunction(TheVec3fConverter);
@@ -220,13 +239,16 @@ int main(int argc, char **argv)
 		ExampleFunctionComponent->setOutputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
 		ExampleFunctionComponent->setInputTabAlignment(Vec2f(0.0, 0.5));
 		ExampleFunctionComponent->setOutputTabAlignment(Vec2f(1.0, 0.5));
+		ExampleFunctionComponent->setFont(TheFont);
+		ExampleFunctionComponent->setTextColor(Color4f(0.0f, 0.0f, 0.0f, 1.0f));
+		ExampleFunctionComponent->setTextAlignment(Vec2f(0.5, 0.5));
         
         //Add Generators
 		ExampleFunctionComponent->setInputTabComponentGenerator(TabGenerator);
 		ExampleFunctionComponent->setOutputTabComponentGenerator(TabGenerator);
 		
 
-    endEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask);
+    endEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask | FunctionComponent::FontFieldMask | FunctionComponent::TextColorFieldMask | FunctionComponent::TextAlignmentFieldMask);
 	
 	//Create add component combo box
 	DerivedFieldContainerComboBoxModelPtr ExampleComboBoxModel = DerivedFieldContainerComboBoxModel::create();
@@ -260,16 +282,17 @@ int main(int argc, char **argv)
 
     
     FunctionComponentPanelPtr ExampleFunctionComponentPanel = FunctionComponentPanel::create();
-    beginEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask);
-        ExampleFunctionComponentPanel->setPreferredSize(Vec2f(450.0f,450.0f));
+    beginEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask | FunctionComponentPanel::MiniMapSizeFieldMask);
+        ExampleFunctionComponentPanel->setPreferredSize(Vec2f(600.0f,600.0f));
         ExampleFunctionComponentPanel->setBorders(FunctionComponentPanelBorder);
+		ExampleFunctionComponentPanel->setMiniMapSize(Real32(0.15f));
         
         //Add Components
 		ExampleFunctionComponentPanel->getChildren().push_back(ExampleFunctionComponent);
 		
 		ExampleFunctionComponentPanel->setAllInsets(5.0);
 
-    endEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask);
+    endEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask | FunctionComponentPanel::MiniMapSizeFieldMask);
 	
 	ExampleButtonActionListener TheExampleButtonActionListener(ExampleFunctionComponentPanel, ComponentTypesComboBox);
     AddFunctionComponentButton->addActionListener(&TheExampleButtonActionListener);

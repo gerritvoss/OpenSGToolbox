@@ -169,6 +169,7 @@
 		C98298710E15637B00B39C2E /* OSGFunctionComponentPanelFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C98297E40E15637A00B39C2E /* OSGFunctionComponentPanelFields.h */; };
 		C98298720E15637B00B39C2E /* OSGDynamicsUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C98297E60E15637A00B39C2E /* OSGDynamicsUtils.cpp */; };
 		C98298730E15637B00B39C2E /* OSGDynamicsUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C98297E70E15637A00B39C2E /* OSGDynamicsUtils.h */; };
+		C9AF4A430E1D5B14003772F5 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AF4A420E1D5B14003772F5 /* OpenGL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -486,6 +487,7 @@
 		C98297E40E15637A00B39C2E /* OSGFunctionComponentPanelFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFunctionComponentPanelFields.h; path = ../../src/UserInterface/OSGFunctionComponentPanelFields.h; sourceTree = SOURCE_ROOT; };
 		C98297E60E15637A00B39C2E /* OSGDynamicsUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGDynamicsUtils.cpp; path = ../../src/Utils/OSGDynamicsUtils.cpp; sourceTree = SOURCE_ROOT; };
 		C98297E70E15637A00B39C2E /* OSGDynamicsUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGDynamicsUtils.h; path = ../../src/Utils/OSGDynamicsUtils.h; sourceTree = SOURCE_ROOT; };
+		C9AF4A420E1D5B14003772F5 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		C9D76AC30DF883B2005100D3 /* 01RandomDistributionD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 01RandomDistributionD; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2AAC09D05546B4700DB518D /* libOSGDynamicsD.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGDynamicsD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -516,6 +518,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9AF4A430E1D5B14003772F5 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,6 +550,7 @@
 		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				C9AF4A420E1D5B14003772F5 /* OpenGL.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
