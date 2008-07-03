@@ -30,6 +30,7 @@
 #include <OpenSG/Animation/OSGFieldAnimation.h>
 #include <OpenSG/Animation/OSGKeyframeAnimator.h>
 #include <OpenSG/Animation/OSGKeyframeSequenceVec3f.h>
+#include <OpenSG/Animation/OSGKeyframeSequenceQuaternion.h>
 #include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
 
 #include <OpenSG/OSGComponentTransform.h>
@@ -268,13 +269,13 @@ void setupAnimation(void)
    
    
    //Vector
-   osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceVec3f::create();
+   /*osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceVec3f::create();
    
    osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,-1.5,0.0));
    osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,1.5,0.0));
    osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(1.5,1.5,0.0));
    osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(1.5,-1.5,0.0));
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,-1.5,0.0));
+   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,-1.5,0.0));*/
          
    //Point
    /*osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequencePnt3f::create();
@@ -311,13 +312,13 @@ void setupAnimation(void)
    osg::endEditCP(KeyframeSequence);*/
          
    //Quaternion
-   /*osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceQuaternion::create();
    
    osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.0));
    osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.5*osg::Pi));
    osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),osg::Pi));
    osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),1.5*osg::Pi));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),2.0*osg::Pi));*/
+ //  osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),2.0*osg::Pi));
    
    //Animator
    osg::AnimatorPtr Animator = osg::KeyframeAnimator::create();
@@ -338,7 +339,7 @@ void setupAnimation(void)
    osg::beginEditCP(TheAnimation);
       osg::FieldAnimationPtr::dcast(TheAnimation)->setAnimator(Animator);
       osg::FieldAnimationPtr::dcast(TheAnimation)->setContainer(AnimatedObject);
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("translation") );
+      osg::FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("rotation") );
       osg::FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(osg::CUBIC_INTERPOLATION);
       osg::FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
    osg::endEditCP(TheAnimation);

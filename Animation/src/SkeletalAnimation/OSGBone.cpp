@@ -121,7 +121,7 @@ void Bone::updateTransformation(void)
 {
 	//Calculate Relative Transformation
 	Matrix m; //a matrix called m
-	Vec3f Translation;
+	 Vec3f Translation;
 	if(getInternalParent() != NullFC)
 	{
 		Translation += Vec3f(0.0,0.0,getInternalParent()->getLength());
