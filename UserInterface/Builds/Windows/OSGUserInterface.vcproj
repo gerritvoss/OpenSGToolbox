@@ -4960,38 +4960,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Text"
-				>
-				<File
-					RelativePath="..\..\src\Text\OSGUIFont.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Text\OSGUIFont.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Text\OSGUIFont.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Text\OSGUIFontBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Text\OSGUIFontBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Text\OSGUIFontBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Text\OSGUIFontFields.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Layer"
 				>
 				<File
@@ -5718,6 +5686,38 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Text"
+				>
+				<File
+					RelativePath="..\..\src\Text\OSGUIFont.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Text\OSGUIFont.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Text\OSGUIFont.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Text\OSGUIFontBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Text\OSGUIFontBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Text\OSGUIFontBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Text\OSGUIFontFields.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

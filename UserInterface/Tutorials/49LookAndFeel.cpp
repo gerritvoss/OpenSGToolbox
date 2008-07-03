@@ -121,7 +121,8 @@ class StatePanelCreator
 {
 private:
 	PanelPtr _ThePanel;	
-	PanelPtr _WindowPanel;	
+	PanelPtr _WindowPanel;
+	PanelPtr _AdvancedPanel;	
 		
 	class CreateWindowButtonActionListener : public ActionListener
 		{
@@ -148,6 +149,7 @@ private:
 
 	PanelPtr createStatePanel(void);
 	PanelPtr createWindowPanel(void);
+	PanelPtr createAdvancedPanel(void);
 	
 	
 
@@ -156,6 +158,7 @@ public:
     {
 	    _ThePanel = createStatePanel();
 	    _WindowPanel = createWindowPanel();
+	    _AdvancedPanel = createAdvancedPanel();
     }
 
 	PanelPtr getPanel(void) const
@@ -165,6 +168,10 @@ public:
 	PanelPtr getWindowPanel(void) const
     {
 	    return _WindowPanel;
+    }
+	PanelPtr getAdvancedPanel(void) const
+    {
+	    return _AdvancedPanel;
     }
 };
 
@@ -262,6 +269,11 @@ int main(int argc, char **argv)
     beginEditCP(WindowTabPanelTab, Label::TextFieldMask);
         WindowTabPanelTab->setText("Windows");
     endEditCP(WindowTabPanelTab, Label::TextFieldMask);
+
+    LabelPtr AdvancedTabPanelTab = osg::Label::create();
+    beginEditCP(AdvancedTabPanelTab, Label::TextFieldMask);
+        AdvancedTabPanelTab->setText("Advanced Components");
+    endEditCP(AdvancedTabPanelTab, Label::TextFieldMask);
    
     /******************************************************
 
@@ -275,6 +287,7 @@ int main(int argc, char **argv)
         MainTabPanel->setPreferredSize(Vec2f(600,600));
         MainTabPanel->addTab(StateTabPanelTab, StatePanel);
         MainTabPanel->addTab(WindowTabPanelTab, WindowPanel);
+        MainTabPanel->addTab(AdvancedTabPanelTab, TheStatePanelCreator.getAdvancedPanel());
         MainTabPanel->setTabAlignment(0.5f);
         MainTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
     endEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
@@ -1400,4 +1413,18 @@ PanelPtr StatePanelCreator::createWindowPanel(void)
 
 
     return WindowPanel;
+}
+
+PanelPtr StatePanelCreator::createAdvancedPanel(void)
+{
+    PanelPtr AdvancedPanel = Panel::create();
+    FlowLayoutPtr AdvancedPanelLayout = FlowLayout::create();
+
+    beginEditCP(AdvancedPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
+        AdvancedPanel->setLayout(AdvancedPanelLayout);
+        AdvancedPanel->setPreferredSize(Vec2f(500,800));
+    endEditCP(AdvancedPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
+
+
+    return AdvancedPanel;
 }
