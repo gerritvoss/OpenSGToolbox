@@ -756,6 +756,34 @@
 					Name="ParticleSystemAffectors"
 					>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGCollectiveGravityParticleSystemAffector.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGCollectiveGravityParticleSystemAffector.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGCollectiveGravityParticleSystemAffector.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGCollectiveGravityParticleSystemAffectorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGCollectiveGravityParticleSystemAffectorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGCollectiveGravityParticleSystemAffectorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGCollectiveGravityParticleSystemAffectorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGParticleSystemAffector.cpp"
 						>
 					</File>

@@ -52,6 +52,7 @@
 #include "ParticleSystem/Events/OSGParticleEvent.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "ParticleSystem/ParticleAffectors/OSGParticleAffector.h"
+#include "ParticleSystem/ParticleSystemAffectors/OSGParticleSystemAffector.h"
 #include "ParticleSystem/ParticleGenerators/OSGParticleGenerator.h"
 
 OSG_BEGIN_NAMESPACE
@@ -1004,6 +1005,13 @@ void ParticleSystem::update(const Time& elps)
 		}
 
     }
+    
+	//Affect Particles with System Affectors
+	for(UInt32 j(0) ; j<getSystemAffectors().size(); ++j)
+	{
+		getSystemAffectors(j)->affect(ParticleSystemPtr(this), elps);
+	}
+
 	//Kill Particles
 	if(ParticlesToKill.size() > 0)
 	{

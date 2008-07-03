@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="CollectiveGravityParticleSystemAffector"
+	parent="ParticleSystemAffector"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="ParticleMass"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="10000.0f"
+	>
+	</Field>
+	<Field
+		name="GravitationalConstant"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0000000000667300"
+	>
+	</Field>
+	<Field
+		name="ParticleMassSource"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="CollectiveGravityParticleSystemAffector::MASS_STATIC"
+	>
+	</Field>
+</FieldContainer>
