@@ -1013,19 +1013,9 @@ void ParticleSystem::update(const Time& elps)
 	}
 
 	//Kill Particles
-	if(ParticlesToKill.size() > 0)
-	{
-		std::cout << "Kill Particles: ";
-	}
 	for(std::set<UInt32, GreaterThanUInt32>::iterator Itor(ParticlesToKill.begin()) ; Itor != ParticlesToKill.end() ; ++Itor)
 	{
 		killParticle(*Itor);
-		std::cout << *Itor << ", ";
-	}
-	if(ParticlesToKill.size() > 0)
-	{
-		std::cout << std::endl;
-		std::cout << "Num Particles: " << getNumParticles()<< std::endl;
 	}
 
 	//Generate Particles with Generators
