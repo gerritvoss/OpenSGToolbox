@@ -64,6 +64,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 
     typedef ParticleSystemBase Inherited;
 
+	struct GreaterThanUInt32
+	{
+	  bool operator()(const UInt32 s1, const UInt32 s2) const;
+	};
     /*==========================  PUBLIC  =================================*/
   public:
     static const OSG::BitVector InternalParticlesFieldMask;

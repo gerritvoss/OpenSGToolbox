@@ -46,6 +46,7 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <set>
 
 #include "OSGParticleSystem.h"
 #include "ParticleSystem/Events/OSGParticleEvent.h"
@@ -370,7 +371,7 @@ bool ParticleSystem::killParticle(UInt32 Index)
 void ParticleSystem::removePosition(UInt32 Index)
 {
     getInternalPositions()[Index] = getInternalPositions().back();
-    getInternalPositions().resize(getInternalPositions().size()-1);
+    getInternalPositions().erase(--getInternalPositions().end());
 }
 
 void ParticleSystem::removeSecPosition(UInt32 Index)
@@ -378,7 +379,7 @@ void ParticleSystem::removeSecPosition(UInt32 Index)
     if(getNumSecPositions() > 1)
     {
         getInternalSecPositions()[Index] = getInternalSecPositions().back();
-        getInternalSecPositions().resize(getInternalSecPositions().size()-1);
+        getInternalSecPositions().erase(--getInternalSecPositions().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -391,7 +392,7 @@ void ParticleSystem::removeNormal(UInt32 Index)
     if(getNumNormals() > 1)
     {
         getInternalNormals()[Index] = getInternalNormals().back();
-        getInternalNormals().resize(getInternalNormals().size()-1);
+        getInternalNormals().erase(--getInternalNormals().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -404,7 +405,7 @@ void ParticleSystem::removeColor(UInt32 Index)
     if(getNumColors() > 1)
     {
         getInternalColors()[Index] = getInternalColors().back();
-        getInternalColors().resize(getInternalColors().size()-1);
+        getInternalColors().erase(--getInternalColors().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -417,7 +418,7 @@ void ParticleSystem::removeSize(UInt32 Index)
     if(getNumSizes() > 1)
     {
         getInternalSizes()[Index] = getInternalSizes().back();
-        getInternalSizes().resize(getInternalSizes().size()-1);
+        getInternalSizes().erase(--getInternalSizes().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -430,7 +431,7 @@ void ParticleSystem::removeLifespan(UInt32 Index)
     if(getNumLifespans() > 1)
     {
         getInternalLifespans()[Index] = getInternalLifespans().back();
-        getInternalLifespans().resize(getInternalLifespans().size()-1);
+        getInternalLifespans().erase(--getInternalLifespans().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -443,7 +444,7 @@ void ParticleSystem::removeAge(UInt32 Index)
     if(getNumAges() > 1)
     {
         getInternalAges()[Index] = getInternalAges().back();
-        getInternalAges().resize(getInternalAges().size()-1);
+        getInternalAges().erase(--getInternalAges().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -456,7 +457,7 @@ void ParticleSystem::removeVelocity(UInt32 Index)
     if(getNumVelocities() > 1)
     {
         getInternalVelocities()[Index] = getInternalVelocities().back();
-        getInternalVelocities().resize(getInternalVelocities().size()-1);
+        getInternalVelocities().erase(--getInternalVelocities().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -469,7 +470,7 @@ void ParticleSystem::removeSecVelocity(UInt32 Index)
     if(getNumSecVelocities() > 1)
     {
         getInternalSecVelocities()[Index] = getInternalSecVelocities().back();
-        getInternalSecVelocities().resize(getInternalSecVelocities().size()-1);
+        getInternalSecVelocities().erase(--getInternalSecVelocities().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -482,7 +483,7 @@ void ParticleSystem::removeAcceleration(UInt32 Index)
     if(getNumAccelerations() > 1)
     {
         getInternalAccelerations()[Index] = getInternalAccelerations().back();
-        getInternalAccelerations().resize(getInternalAccelerations().size()-1);
+        getInternalAccelerations().erase(--getInternalAccelerations().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -495,7 +496,7 @@ void ParticleSystem::removeProperty(UInt32 Index)
     if(getNumProperties() > 1)
     {
         getInternalProperties()[Index] = getInternalProperties().back();
-        getInternalProperties().resize(getInternalProperties().size()-1);
+        getInternalProperties().erase(--getInternalProperties().end());
     }
     else if(getNumParticles() == 0)
     {
@@ -522,7 +523,6 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 	}
 
 	beginEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
-		getInternalPositions().push_back(Position);
 
 		addAndExpandSecPositions(SecPosition);
 		addAndExpandNormals(Normal);
@@ -534,6 +534,8 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 		addAndExpandSecVelocities(SecVelocity);
 		addAndExpandAccelerations(Acceleration);
 		addAndExpandProperties(Properties);
+
+		getInternalPositions().push_back(Position);
 	endEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
 
     produceParticleGenerated();
@@ -962,18 +964,22 @@ void ParticleSystem::setProperty(const UInt64& Property, const UInt32& Index)
 
 void ParticleSystem::update(const Time& elps)
 {
-    //TODO: Implement
-
-
-
-	//Affect Particle Systems
 
     //Loop through all of the particles
     bool VolumeChanged(false);
     UInt32 NumParticles(getNumParticles());
 	bool AdvanceIterator(true);
-    for(UInt32 i(0) ; i<NumParticles;)
+	std::set<UInt32, GreaterThanUInt32> ParticlesToKill;
+    for(UInt32 i(0) ; i<NumParticles; ++i)
     {
+		//Kill Particles that have ages > lifespans
+		setAge(getAge(i) + elps,i);
+		if(getLifespan(i) > 0.0f && getAge(i)>getLifespan(i))
+		{
+			ParticlesToKill.insert(i);
+			continue;
+		}
+
         VolumeChanged = true;
 
 		//Remember the Old Postions and velocities
@@ -991,32 +997,28 @@ void ParticleSystem::update(const Time& elps)
 		{
 			if(getAffectors(j)->affect(ParticleSystemPtr(this), i, elps))
 			{
-				if(killParticle(i))
-				{
-					AdvanceIterator = false;
-					--NumParticles;
-				}
+				ParticlesToKill.insert(i);
+				continue;
 			}
 			
 		}
 
-		//Kill Particles that have ages > lifespans
-		setAge(getAge(i) + elps,i);
-		if(getLifespan(i) > 0.0f && getAge(i)>getLifespan(i))
-		{
-			if(killParticle(i))
-			{
-				AdvanceIterator = false;
-				--NumParticles;
-			}
-		}
-
-		if(AdvanceIterator)
-		{
-			 ++i;
-		}
-		AdvanceIterator = true;
     }
+	//Kill Particles
+	if(ParticlesToKill.size() > 0)
+	{
+		std::cout << "Kill Particles: ";
+	}
+	for(std::set<UInt32, GreaterThanUInt32>::iterator Itor(ParticlesToKill.begin()) ; Itor != ParticlesToKill.end() ; ++Itor)
+	{
+		killParticle(*Itor);
+		std::cout << *Itor << ", ";
+	}
+	if(ParticlesToKill.size() > 0)
+	{
+		std::cout << std::endl;
+		std::cout << "Num Particles: " << getNumParticles()<< std::endl;
+	}
 
 	//Generate Particles with Generators
 	UInt32 NumGenerators(getGenerators().size());

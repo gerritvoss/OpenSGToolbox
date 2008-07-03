@@ -42,6 +42,12 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline 
+bool ParticleSystem::GreaterThanUInt32::operator()(const UInt32 s1, const UInt32 s2) const
+{
+	return s1>s2;
+}
+
 inline
 void ParticleSystem::setPosition(const Pnt3f& Pos, const UInt32& Index)
 {

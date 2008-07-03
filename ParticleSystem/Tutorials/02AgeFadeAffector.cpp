@@ -206,7 +206,7 @@ int main(int argc, char **argv)
 			Color4f(1.0,0.0,0.0,0.0), 
 			Vec3f(1.0,1.0,1.0), 
 			LifespanReturnValue, 
-			Vec3f(0.0f,2.0f,0.0f), //Velocity
+			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)	//acceleration
 			,0);
 	}
@@ -221,9 +221,9 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 		ExampleAgeFadeParticleAffector->setFadeInTime(1.0f);
 		ExampleAgeFadeParticleAffector->setFadeOutTime(1.0f);
-		ExampleAgeFadeParticleAffector->setStartAlpha(1.0f);
-		ExampleAgeFadeParticleAffector->setFadeToAlpha(0.0f);
-		ExampleAgeFadeParticleAffector->setEndAlpha(1.0f);	
+		ExampleAgeFadeParticleAffector->setStartAlpha(0.0f);
+		ExampleAgeFadeParticleAffector->setFadeToAlpha(1.0f);
+		ExampleAgeFadeParticleAffector->setEndAlpha(0.0f);	
 	endEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 
 	beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
@@ -306,8 +306,8 @@ FunctionPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setMean(05.0f);
-      TheLifespanDistribution->setStandardDeviation(10.0);
+      TheLifespanDistribution->setMean(10.0f);
+      TheLifespanDistribution->setStandardDeviation(2.0);
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;

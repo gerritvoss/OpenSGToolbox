@@ -452,6 +452,18 @@ FunctionPtr createSizeDistribution(void)
 	Pnt3f pt1 = (5.0,5.0,1.0), pt2 = (10.0,10.0,1.0);
 
 
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(0.0);
+      TheSphereDistribution->setOuterRadius(3.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(6.283185);
+      TheSphereDistribution->setMinZ(0.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+    endEditCP(TheSphereDistribution);
+
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
@@ -466,9 +478,9 @@ FunctionPtr createSizeDistribution(void)
 
 	CompoundFunctionPtr TheSizeDistribution = CompoundFunction::create();
 	beginEditCP(TheSizeDistribution);
-		TheSizeDistribution->getFunctions().push_back(TheLineDistribution);
+		TheSizeDistribution->getFunctions().push_back(TheSphereDistribution);
 		TheSizeDistribution->getFunctions().push_back(TheVec3fConverter);
 	endEditCP(TheSizeDistribution);
 
-	return NullFC;
+	return TheSizeDistribution;
 }

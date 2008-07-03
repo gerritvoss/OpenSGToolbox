@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="06Explosion"
+	Name="05QuadParticleDrawer"
 	ProjectGUID="{15B252C4-DB8C-43F6-AC5E-28D3B31D469B}"
 	Keyword="Win32Proj"
 	>
@@ -206,7 +206,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\06Explosion.cpp"
+				RelativePath=".\05QuadParticleDrawer.cpp"
 				>
 			</File>
 		</Filter>
