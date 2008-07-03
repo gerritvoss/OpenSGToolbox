@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11BoneAnimation", "11BoneAnimation.vcproj", "{54E379D2-C481-48F7-932F-A0689899664C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12SkeletonAnimation", "12SkeletonAnimation.vcproj", "{1661F191-8191-4D96-A961-D44495177C41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,6 +51,10 @@ Global
 		{54E379D2-C481-48F7-932F-A0689899664C}.Debug|Win32.Build.0 = Debug|Win32
 		{54E379D2-C481-48F7-932F-A0689899664C}.Release|Win32.ActiveCfg = Release|Win32
 		{54E379D2-C481-48F7-932F-A0689899664C}.Release|Win32.Build.0 = Release|Win32
+		{1661F191-8191-4D96-A961-D44495177C41}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1661F191-8191-4D96-A961-D44495177C41}.Debug|Win32.Build.0 = Debug|Win32
+		{1661F191-8191-4D96-A961-D44495177C41}.Release|Win32.ActiveCfg = Release|Win32
+		{1661F191-8191-4D96-A961-D44495177C41}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
