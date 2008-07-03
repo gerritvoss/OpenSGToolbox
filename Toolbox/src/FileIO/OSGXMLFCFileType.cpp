@@ -217,8 +217,23 @@ std::string XMLFCFileType::getName(void) const
                     BitVector ChangedFields = 0;
 					for(AttributeIterator = attr.begin(); AttributeIterator != attr.end(); AttributeIterator++)
 					{
-						Desc = NewFieldContainer->getType().findFieldDescription(AttributeIterator->first.c_str());
-						if(Desc != NULL)
+						std::string FieldName = AttributeIterator->first;
+						if(FieldName.compare(FieldContainerIDXMLToken) == 0 ||
+						   FieldName.compare(FieldContainerIDXMLToken) == 0)
+						{
+							continue;
+						}
+						Desc = NewFieldContainer->getType().findFieldDescription(FieldName.c_str());
+						if(Desc == NULL)
+						{
+							SWARNING <<
+								"ERROR in XMLFCFileType::read():" <<
+								" There is no Field named: " <<
+								FieldName <<
+								", for FieldContainers of Type: " <<
+								NewFieldContainer->getType().getCName() << std::endl;
+						}
+						else
 						{
 							FieldValue = AttributeIterator->second;
 							TheField = NewFieldContainer->getField(Desc->getFieldId());
