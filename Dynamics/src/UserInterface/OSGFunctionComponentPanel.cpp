@@ -184,6 +184,7 @@ FunctionComponentPanel::FunctionComponentPanel(void) :
         _ComponentMoveListener(FunctionComponentPanelPtr(this))//,
 		//_MouseWheelListener(FunctionComponentPanelPtr(this))
 {
+	getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseWheelListener(_MouseWheelListener);
 }
 
 FunctionComponentPanel::FunctionComponentPanel(const FunctionComponentPanel &source) :
@@ -191,6 +192,7 @@ FunctionComponentPanel::FunctionComponentPanel(const FunctionComponentPanel &sou
         _ComponentMoveListener(FunctionComponentPanelPtr(this))//,
 		//_MouseWheelListener(FunctionComponentPanelPtr(this))
 {
+	getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseWheelListener(_MouseWheelListener);
 }
 
 FunctionComponentPanel::~FunctionComponentPanel(void)
