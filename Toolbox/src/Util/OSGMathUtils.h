@@ -102,7 +102,7 @@ Int8 solveLinearSystem2(FloatTypeT A11, FloatTypeT A12, FloatTypeT A21, FloatTyp
 
 void OSG_TOOLBOXLIB_DLLMAPPING makeViewFromUVND(Matrix& Result,const Vec3f& U,const Vec3f& V,const Vec3f& N,const Vec3f& D);
 
-void OSG_TOOLBOXLIB_DLLMAPPING makeViewFromUVNP(Matrix& Result,const Vec3f& U,const Vec3f& V,const Vec3f& N,const Vec3f& P);
+void OSG_TOOLBOXLIB_DLLMAPPING makeViewFromUVNP(Matrix& Result,const Vec3f& U,const Vec3f& V,const Vec3f& N,const Pnt3f& P);
 
 void OSG_TOOLBOXLIB_DLLMAPPING getUVNDFromMat(const Matrix& Mat,Vec3f& U,Vec3f& V,Vec3f& N,Vec3f& D);
 
