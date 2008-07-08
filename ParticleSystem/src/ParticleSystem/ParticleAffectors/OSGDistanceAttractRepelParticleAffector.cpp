@@ -76,7 +76,7 @@ void DistanceAttractRepelParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool DistanceAttractRepelParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& DistanceSqrd)
+bool DistanceAttractRepelParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement)
 {
 	//TODO: Implement
 	return false;

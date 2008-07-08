@@ -75,11 +75,9 @@ void DistanceKillParticleAffector::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-bool DistanceKillParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& DistanceSqrd)
+bool DistanceKillParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement)
 {
-    //TODO: Implement
-
-	return DistanceSqrd <= getKillDistance()*getKillDistance();
+	return Displacement.squareLength() <= getKillDistance()*getKillDistance();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

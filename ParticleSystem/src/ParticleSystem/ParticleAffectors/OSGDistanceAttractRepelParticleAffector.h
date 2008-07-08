@@ -97,7 +97,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceAttractRepelParticleAffector : pu
     virtual ~DistanceAttractRepelParticleAffector(void); 
 
     /*! \}                                                                 */
-    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& DistanceSqrd);
+    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement);
     
     /*==========================  PRIVATE  ================================*/
   private:

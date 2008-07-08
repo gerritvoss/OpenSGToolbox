@@ -98,7 +98,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffector : public Dis
     virtual ~DistanceFadeParticleAffector(void); 
 
     /*! \}                                                                 */
-    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& DistanceSqrd);
+    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement);
     
     /*==========================  PRIVATE  ================================*/
   private:

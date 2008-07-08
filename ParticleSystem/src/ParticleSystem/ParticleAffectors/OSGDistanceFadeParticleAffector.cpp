@@ -78,10 +78,11 @@ void DistanceFadeParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool DistanceFadeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Real32& DistanceSqrd)
+bool DistanceFadeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement)
 {
     //TODO: Implement
 	Real32 Alpha(0.0f);
+	Real32 DistanceSqrd(Displacement.squareLength());
 	if(DistanceSqrd >= getDistanceFadeStart()*getDistanceFadeStart())
 	{
 		if(DistanceSqrd >= getDistanceFadeEnd()*getDistanceFadeEnd())

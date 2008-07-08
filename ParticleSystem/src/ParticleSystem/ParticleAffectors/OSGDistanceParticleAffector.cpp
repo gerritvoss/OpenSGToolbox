@@ -84,7 +84,7 @@ bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIn
 {
 	if(System != NullFC && getParticleSystemNode() != NullFC)
 	{
-		Real32 DistanceSqrd;
+		Vec3f Displacement;
 
 		Pnt3f ParticlePositionInWorldSpace = System->getPosition(ParticleIndex);
 		getParticleSystemNode()->getToWorld().multFullMatrixPnt(ParticlePositionInWorldSpace);
@@ -112,15 +112,16 @@ bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIn
 			break;
 		}
 
-		DistanceSqrd = ParticlePositionInWorldSpace.dist2(NodePositionInWorldSpace);
+		Displacement = NodePositionInWorldSpace - ParticlePositionInWorldSpace;
 
-		return affect(System, ParticleIndex, elps, DistanceSqrd);
+		return affect(System, ParticleIndex, elps, Displacement);
 	}
 	else
 	{
 		return false;
 	}
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
