@@ -45,10 +45,10 @@
 #include <OpenSG/UserInterface/OSGComboBox.h>
 #include <OpenSG/UserInterface/OSGDerivedFieldContainerComboBoxModel.h>
 
-#include <OpenSG/Dynamics/OSGFunctionComponent.h>
-#include <OpenSG/Dynamics/OSGFunctionComponentPanel.h>
+#include <OpenSG/UserInterface/OSGFunctionComponent.h>
+#include <OpenSG/UserInterface/OSGFunctionComponentPanel.h>
+#include <OpenSG/UserInterface/OSGDefaultFunctionComponentIOTabComponentGenerator.h>
 #include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGDefaultFunctionComponentIOTabComponentGenerator.h>
 
 #include <OpenSG/OSGFieldContainerFactoryImpl.h>
 

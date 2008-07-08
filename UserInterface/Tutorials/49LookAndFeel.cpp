@@ -83,6 +83,14 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGComboBox.h>
 #include <OpenSG/UserInterface/OSGDefaultMutableComboBoxModel.h>
 #include <OpenSG/UserInterface/OSGXMLLookAndFeel.h>
+#include <OpenSG/UserInterface/OSGProgressBar.h>
+#include <OpenSG/UserInterface/OSGDefaultBoundedRangeModel.h>
+#include <OpenSG/Input/OSGUpdateListener.h>
+#include <OpenSG/UserInterface/OSGScrollBar.h>
+#include <OpenSG/UserInterface/OSGSlider.h>
+#include <OpenSG/UserInterface/OSGPopupMenu.h>
+#include <OpenSG/UserInterface/OSGMenu.h>
+#include <OpenSG/UserInterface/OSGMenuItem.h>
 
 RadioButtonGroup DeselectedRadioButtonGroup;
 RadioButtonGroup SelectedRadioButtonGroup;
@@ -122,7 +130,10 @@ class StatePanelCreator
 private:
 	PanelPtr _ThePanel;	
 	PanelPtr _WindowPanel;
-	PanelPtr _AdvancedPanel;	
+	PanelPtr _AdvancedPanel;
+    DefaultBoundedRangeModel _ProgressBarBoundedRangeModel;	
+    DefaultBoundedRangeModel _ScrollBarBoundedRangeModel;
+    DefaultBoundedRangeModel _SliderBoundedRangeModel;
 		
 	class CreateWindowButtonActionListener : public ActionListener
 		{
@@ -1315,6 +1326,97 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledLabel->setBorder(labelBorder);
     endEditCP(disabledLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
 
+    //PopupMenu
+    
+    MenuItemPtr MenuItem1 = MenuItem::create();
+    MenuItemPtr MenuItem2 = MenuItem::create();
+    MenuItemPtr MenuItem3 = MenuItem::create();
+    MenuItemPtr MenuItem4 = MenuItem::create();
+    MenuItemPtr SubMenuItem1 = MenuItem::create();
+    MenuItemPtr SubMenuItem2 = MenuItem::create();
+    MenuItemPtr SubMenuItem3 = MenuItem::create();
+    MenuPtr ExampleSubMenu = Menu::create();
+    
+    /******************************************************
+            
+            Edit the MenuItems
+
+            -setText("TEXT"): Sets the text on the 
+                item to be TEXT
+            -setEnabled(Boolean): sets the menu item
+                to be either enabled or disabled
+
+    ******************************************************/
+
+    beginEditCP(MenuItem1, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask);
+        MenuItem1->setText("Menu Item 1");
+    endEditCP(MenuItem1, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask);
+    
+    beginEditCP(MenuItem2, MenuItem::TextFieldMask);
+        MenuItem2->setText("Menu Item 2");
+    endEditCP(MenuItem2, MenuItem::TextFieldMask);
+    
+    beginEditCP(MenuItem3, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask);
+        MenuItem3->setText("Menu Item 3");
+    endEditCP(MenuItem3, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask);
+    
+    beginEditCP(MenuItem4, MenuItem::TextFieldMask | MenuItem::EnabledFieldMask);
+        MenuItem4->setText("Menu Item 4");
+        MenuItem4->setEnabled(false);
+    endEditCP(MenuItem4, MenuItem::TextFieldMask | MenuItem::EnabledFieldMask);
+    
+    beginEditCP(SubMenuItem1, MenuItem::TextFieldMask);
+        SubMenuItem1->setText("SubMenu Item 1");
+    endEditCP(SubMenuItem1, MenuItem::TextFieldMask);
+    
+    beginEditCP(SubMenuItem2, MenuItem::TextFieldMask);
+        SubMenuItem2->setText("SubMenu Item 2");
+    endEditCP(SubMenuItem2, MenuItem::TextFieldMask);
+    
+    beginEditCP(SubMenuItem3, MenuItem::TextFieldMask);
+        SubMenuItem3->setText("SubMenu Item 3");
+    endEditCP(SubMenuItem3, MenuItem::TextFieldMask);
+    
+    beginEditCP(ExampleSubMenu, MenuItem::TextFieldMask);
+        ExampleSubMenu->setText("Sub Menu");
+    endEditCP(ExampleSubMenu, MenuItem::TextFieldMask);
+
+    // This adds three MenuItems to the Menu,
+    // creating a submenu.  Note this does not
+    // involve begin/endEditCPs to do
+
+    ExampleSubMenu->addItem(SubMenuItem1);
+    ExampleSubMenu->addItem(SubMenuItem2);
+    ExampleSubMenu->addItem(SubMenuItem3);
+    
+    /******************************************************
+            
+            Create the PopupMenu itself.
+
+            Items are added in the order in which
+            they will be displayed (top to bottom)
+            via addItem(ItemToBeAdded)
+
+            The PopupMenu is attached to a 
+			Button below using 
+			setPopupMenu(PopupMenuName).  
+			
+			Note: PopupMenus can be added to any
+			Component.
+
+    ******************************************************/
+    PopupMenuPtr ExamplePopupMenu = PopupMenu::create();
+    ExamplePopupMenu->addItem(MenuItem1);
+    ExamplePopupMenu->addItem(MenuItem2);
+    ExamplePopupMenu->addItem(MenuItem3);
+    ExamplePopupMenu->addSeparator();
+    ExamplePopupMenu->addItem(ExampleSubMenu);
+    ExamplePopupMenu->addItem(MenuItem4);
+    
+    beginEditCP(inactiveButton, Button::PopupMenuFieldMask);
+        inactiveButton->setPopupMenu(ExamplePopupMenu);
+    endEditCP(inactiveButton, Button::PopupMenuFieldMask);
+
     beginEditCP(statePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask  | Panel::PreferredSizeFieldMask);
         statePanel->getChildren().push_back(inactiveSpinner);
         statePanel->getChildren().push_back(activeSpinner);
@@ -1417,14 +1519,108 @@ PanelPtr StatePanelCreator::createWindowPanel(void)
 
 PanelPtr StatePanelCreator::createAdvancedPanel(void)
 {
+    
+    //Progress Bar
+    _ProgressBarBoundedRangeModel.setMinimum(0);
+    _ProgressBarBoundedRangeModel.setMaximum(100);
+    _ProgressBarBoundedRangeModel.setValue(50);
+    _ProgressBarBoundedRangeModel.setExtent(0);
+
+	// Create the ProgressBar
+    ProgressBarPtr ExampleProgressBar = ProgressBar::create();
+	
+	// Add its BoundedRangeModel
+    ExampleProgressBar->setModel(&_ProgressBarBoundedRangeModel);
+
+	beginEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
+        ExampleProgressBar->setEnableProgressString(true);
+        ExampleProgressBar->setIndeterminate(false);
+        ExampleProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
+		ExampleProgressBar->setProgressString("Loading...");
+    endEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
+
+
+    //Scrollbars
+    _ScrollBarBoundedRangeModel.setMinimum(10);
+    _ScrollBarBoundedRangeModel.setMaximum(100);
+    _ScrollBarBoundedRangeModel.setValue(10);
+    _ScrollBarBoundedRangeModel.setExtent(20);
+
+    ScrollBarPtr ExampleVerticalScrollBar = ScrollBar::create();
+    //ExampleScrollPanel->getHorizontalScrollBar()
+    beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
+        ExampleVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
+        ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
+        ExampleVerticalScrollBar->setEnabled(false);
+        ExampleVerticalScrollBar->setUnitIncrement(10);
+        ExampleVerticalScrollBar->setBlockIncrement(100);
+    endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
+    ExampleVerticalScrollBar->setModel(&_ScrollBarBoundedRangeModel);
+
+    ScrollBarPtr ExampleHorizontalScrollBar = ScrollBar::create();
+    beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
+        ExampleHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
+        ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
+    endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
+    ExampleHorizontalScrollBar->setModel(&_ScrollBarBoundedRangeModel);
+
+    //The Slider
+    _SliderBoundedRangeModel.setMinimum(10);
+    _SliderBoundedRangeModel.setMaximum(110);
+    _SliderBoundedRangeModel.setValue(60);
+    _SliderBoundedRangeModel.setExtent(0);
+    
+    //Create the slider
+    LabelPtr TempLabel;
+    SliderPtr TheSliderVertical = Slider::create();
+    beginEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+        TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
+        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Min"); endEditCP(TempLabel, Label::TextFieldMask);
+        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel.getMinimum()] = TempLabel;
+        
+        TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
+        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Low"); endEditCP(TempLabel, Label::TextFieldMask);
+        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel.getMinimum() + (_SliderBoundedRangeModel.getMaximum() - _SliderBoundedRangeModel.getMinimum())/10] = TempLabel;
+
+        TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
+        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Max"); endEditCP(TempLabel, Label::TextFieldMask);
+        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel.getMaximum()] = TempLabel;
+
+
+        TheSliderVertical->setPreferredSize(Vec2f(100, 300));
+        TheSliderVertical->setSnapToTicks(true);
+        TheSliderVertical->setMajorTickSpacing(10);
+        TheSliderVertical->setMinorTickSpacing(5);
+        TheSliderVertical->setOrientation(Slider::VERTICAL_ORIENTATION);
+        TheSliderVertical->setInverted(true);
+        TheSliderVertical->setDrawLabels(true);
+    endEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    TheSliderVertical->setModel(&_SliderBoundedRangeModel);
+    
+    SliderPtr TheSliderHorizontal = Slider::create();
+    beginEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+        TheSliderHorizontal->setPreferredSize(Vec2f(300, 100));
+        TheSliderHorizontal->setSnapToTicks(false);
+        TheSliderHorizontal->setMajorTickSpacing(10);
+        TheSliderHorizontal->setMinorTickSpacing(5);
+        TheSliderHorizontal->setOrientation(Slider::HORIZONTAL_ORIENTATION);
+        TheSliderHorizontal->setInverted(false);
+        TheSliderHorizontal->setDrawLabels(true);
+    endEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    TheSliderHorizontal->setModel(&_SliderBoundedRangeModel);
+
+    //The Panel
     PanelPtr AdvancedPanel = Panel::create();
     FlowLayoutPtr AdvancedPanelLayout = FlowLayout::create();
 
     beginEditCP(AdvancedPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
+        AdvancedPanel->getChildren().push_back(ExampleProgressBar);
+        AdvancedPanel->getChildren().push_back(ExampleVerticalScrollBar);
+        AdvancedPanel->getChildren().push_back(ExampleHorizontalScrollBar);
+        AdvancedPanel->getChildren().push_back(TheSliderVertical);
+        AdvancedPanel->getChildren().push_back(TheSliderHorizontal);
         AdvancedPanel->setLayout(AdvancedPanelLayout);
         AdvancedPanel->setPreferredSize(Vec2f(500,800));
     endEditCP(AdvancedPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
-
-
     return AdvancedPanel;
 }

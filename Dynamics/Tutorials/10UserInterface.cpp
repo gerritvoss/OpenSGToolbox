@@ -41,9 +41,9 @@
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
-#include <OpenSG/Dynamics/OSGFunctionComponent.h>
+#include <OpenSG/UserInterface/OSGFunctionComponent.h>
+#include <OpenSG/UserInterface/OSGDefaultFunctionComponentIOTabComponentGenerator.h>
 #include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGDefaultFunctionComponentIOTabComponentGenerator.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE

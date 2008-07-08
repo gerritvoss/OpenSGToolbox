@@ -293,6 +293,14 @@
 					RelativePath="..\..\src\Util\OSGSharedFieldPtr.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGStringUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGStringUtils.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Cameras"

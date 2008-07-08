@@ -74,7 +74,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib OSGInputD.lib OSGUserInterfaceD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -166,7 +166,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGToolbox.lib OSGInput.lib OSGUserInterface.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGToolbox.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -892,126 +892,6 @@
 					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunctionFields.h"
 					>
 				</File>
-			</Filter>
-			<Filter
-				Name="UserInterface"
-				>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponent.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponent.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponent.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanel.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanel.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanel.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanelBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanelBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanelBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UserInterface\OSGFunctionComponentPanelFields.h"
-					>
-				</File>
-				<Filter
-					Name="IOTabGenerators"
-					>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGDefaultFunctionComponentIOTabComponentGenerator.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGDefaultFunctionComponentIOTabComponentGenerator.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGDefaultFunctionComponentIOTabComponentGenerator.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGDefaultFunctionComponentIOTabComponentGeneratorBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGDefaultFunctionComponentIOTabComponentGeneratorBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGDefaultFunctionComponentIOTabComponentGeneratorBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGDefaultFunctionComponentIOTabComponentGeneratorFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGFunctionComponentIOTabComponentGenerator.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGFunctionComponentIOTabComponentGenerator.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGFunctionComponentIOTabComponentGenerator.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGFunctionComponentIOTabComponentGeneratorBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGFunctionComponentIOTabComponentGeneratorBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGFunctionComponentIOTabComponentGeneratorBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UserInterface\IOTabGenerators\OSGFunctionComponentIOTabComponentGeneratorFields.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Utils"
