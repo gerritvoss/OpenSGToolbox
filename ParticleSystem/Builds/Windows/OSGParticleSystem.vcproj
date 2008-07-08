@@ -640,6 +640,34 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGDistanceAttractRepelParticleAffector.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGDistanceAttractRepelParticleAffector.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGDistanceAttractRepelParticleAffector.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGDistanceAttractRepelParticleAffectorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGDistanceAttractRepelParticleAffectorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGDistanceAttractRepelParticleAffectorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGDistanceAttractRepelParticleAffectorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGDistanceFadeParticleAffector.cpp"
 						>
 					</File>
