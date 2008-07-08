@@ -107,7 +107,17 @@ void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 		drawMiniMap(Graphics, AlignedMapPosition, AlignedMapPosition + MinimapSize);
 	}
 	
+	Real32 xScale, yScale;
+	xScale = FunctionComponentPanelPtr(this)->getZoom();
+	yScale = FunctionComponentPanelPtr(this)->getZoom();
+	
+	glPushMatrix();
+	//glTranslatef(xTranslation, yTranslation, 0.0f);
+	glScalef(xScale, yScale, 1.0f);
+	
 	Inherited::drawInternal(Graphics);
+	
+	glPopMatrix();
 }
 
 void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f& TopLeft, const Pnt3f BottomRight) const
@@ -132,7 +142,6 @@ void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f
 	glScalef(xScale, yScale, 1.0f);
 	
 	Inherited::drawInternal(Graphics);
-	
 	
 	glPopMatrix();
 }
@@ -173,6 +182,38 @@ void FunctionComponentPanel::mousePressed(const MouseEvent& e)
     }
 }
 
+
+void FunctionComponentPanel::mouseWheelMoved(const MouseWheelEvent& e)
+{
+    if(e.getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
+    {
+        //scrollBlock(-e.getScrollAmount());
+		
+		Real32 newZoom = FunctionComponentPanelPtr(this)->getZoom() + e.getScrollAmount();
+		
+		beginEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::ZoomFieldMask);
+			FunctionComponentPanelPtr(this)->setZoom(newZoom);
+		endEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::ZoomFieldMask);
+    }
+    else if(e.getScrollType() == MouseWheelEvent::UNIT_SCROLL)
+    {
+        //scrollUnit(-e.getUnitsToScroll());
+		
+		Real32 newZoom = FunctionComponentPanelPtr(this)->getZoom() + 0.1 * e.getUnitsToScroll();
+		
+		if (newZoom < 0.1)
+		{
+			newZoom = 0.1;
+		}
+		
+		beginEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::ZoomFieldMask);
+			FunctionComponentPanelPtr(this)->setZoom(newZoom);
+		endEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::ZoomFieldMask);
+    }
+    Container::mouseWheelMoved(e);
+}
+
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -181,18 +222,16 @@ void FunctionComponentPanel::mousePressed(const MouseEvent& e)
 
 FunctionComponentPanel::FunctionComponentPanel(void) :
     Inherited(),
-        _ComponentMoveListener(FunctionComponentPanelPtr(this))//,
-		//_MouseWheelListener(FunctionComponentPanelPtr(this))
+        _ComponentMoveListener(FunctionComponentPanelPtr(this))
 {
-	getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseWheelListener(_MouseWheelListener);
+	//getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseWheelListener(_MouseWheelListener);
 }
 
 FunctionComponentPanel::FunctionComponentPanel(const FunctionComponentPanel &source) :
     Inherited(source),
-        _ComponentMoveListener(FunctionComponentPanelPtr(this))//,
-		//_MouseWheelListener(FunctionComponentPanelPtr(this))
+        _ComponentMoveListener(FunctionComponentPanelPtr(this))
 {
-	getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseWheelListener(_MouseWheelListener);
+	//getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseWheelListener(_MouseWheelListener);
 }
 
 FunctionComponentPanel::~FunctionComponentPanel(void)
@@ -215,6 +254,14 @@ void FunctionComponentPanel::changed(BitVector whichField, UInt32 origin)
             endEditCP(getChildren()[i], Component::PositionFieldMask | Component::SizeFieldMask);
         }
     }
+	
+	
+    if(whichField & ZoomFieldMask)
+    {
+            beginEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::PreferredSizeFieldMask);
+				setPreferredSize(getPreferredSize());
+            endEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::PreferredSizeFieldMask);
+	}
 }
 
 void FunctionComponentPanel::dump(      UInt32    , 

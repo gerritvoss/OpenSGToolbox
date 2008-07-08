@@ -80,6 +80,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING FunctionComponentPanel : public FunctionCompone
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
     virtual void mousePressed(const MouseEvent& e);
+	
+	virtual void mouseWheelMoved(const MouseWheelEvent& e);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
