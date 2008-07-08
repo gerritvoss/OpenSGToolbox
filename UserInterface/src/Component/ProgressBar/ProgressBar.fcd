@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="ProgressBar"
-	parent="Component"
+	parent="Container"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -11,7 +11,7 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Spinner.
+A UI ProgressBar.
 	<Field
 		name="Indeterminate"
 		type="bool"

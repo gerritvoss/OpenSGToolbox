@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/OSGComponentFields.h"
+#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class ProgressBar;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! ProgressBarPtr
 
-typedef FCPtr<ComponentPtr, ProgressBar> ProgressBarPtr;
+typedef FCPtr<ContainerPtr, ProgressBar> ProgressBarPtr;
 
 #endif
 

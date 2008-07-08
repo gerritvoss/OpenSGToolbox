@@ -82,8 +82,12 @@ void ProgressBar::initMethod (void)
 void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
 {
 	//Draw The ProgressBar
-	getProgressBarDrawObject()->draw(Graphics);
+	Inherited::drawInternal(Graphics);
+
+	//Setup Clipping
+	setupClipping(Graphics);
 	
+	//Draw The Progress String
 	if(getEnableProgressString() && getFont() != NullFC)
 	{
 		Pnt2f TopLeft, BottomRight;
@@ -118,6 +122,11 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
 		//Draw the Text
 		Graphics->drawText(AlignedPosition, StringToDraw, getFont(), getTextColor(), getOpacity());
 	}
+}
+
+void ProgressBar::updateLayout(void)
+{
+	updateProgressBarDrawObject();
 }
 
 void ProgressBar::updateProgressBarDrawObject(void)
@@ -246,9 +255,15 @@ void ProgressBar::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if(whichField & SizeFieldMask)
+	if(whichField & ProgressBarDrawObjectFieldMask)
 	{
-		updateProgressBarDrawObject();
+		beginEditCP(ProgressBarPtr(this), ChildrenFieldMask);
+			getChildren().clear();
+			if(getProgressBarDrawObject() != NullFC)
+			{
+				getChildren().push_back(getProgressBarDrawObject());
+			}
+		endEditCP(ProgressBarPtr(this), ChildrenFieldMask);
 	}
 }
 

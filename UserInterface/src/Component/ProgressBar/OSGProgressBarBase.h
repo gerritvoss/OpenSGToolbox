@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/OSGComponent.h" // Parent
+#include "Component/Container/OSGContainer.h" // Parent
 
 #include <OpenSG/OSGBoolFields.h> // Indeterminate type
 #include <OpenSG/OSGReal32Fields.h> // IndeterminateBarMoveRate type
@@ -88,11 +88,11 @@ class BinaryDataHandler;
 
 //! \brief ProgressBar Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Container
 {
   private:
 
-    typedef Component    Inherited;
+    typedef Container    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:

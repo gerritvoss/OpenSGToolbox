@@ -84,6 +84,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 
     /*! \}                                                                 */
 
+    virtual void updateLayout(void);
+
 	//Adds the specified ChangeListener to the progress bar.
 	void addChangeListener(ChangeListenerPtr Listener);
 

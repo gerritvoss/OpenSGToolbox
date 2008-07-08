@@ -202,7 +202,7 @@ FieldDescription *ProgressBarBase::_desc[] =
 
 FieldContainerType ProgressBarBase::_type(
     "ProgressBar",
-    "Component",
+    "Container",
     NULL,
     (PrototypeCreateF) &ProgressBarBase::createEmpty,
     ProgressBar::initMethod,
@@ -610,7 +610,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ProgressBarPtr>::_type("ProgressBarPtr", "ComponentPtr");
+DataType FieldDataTraits<ProgressBarPtr>::_type("ProgressBarPtr", "ContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(ProgressBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
