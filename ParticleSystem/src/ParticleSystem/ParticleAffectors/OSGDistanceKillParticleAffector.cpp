@@ -77,7 +77,7 @@ void DistanceKillParticleAffector::initMethod (void)
 \***************************************************************************/
 bool DistanceKillParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement)
 {
-	return Displacement.squareLength() <= getKillDistance()*getKillDistance();
+	return Displacement.squareLength() > getKillDistance()*getKillDistance();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

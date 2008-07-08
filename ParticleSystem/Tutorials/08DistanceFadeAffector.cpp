@@ -176,10 +176,8 @@ int main(int argc, char **argv)
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
 	FunctionPtr PositionFunction = createPositionDistribution();
-	FunctionPtr LifespanFunction = createLifespanDistribution();
 	
 	Pnt3f PositionReturnValue;
-	Time LifespanReturnValue = -1;
 
 	//Particle System
     FunctionIOParameterVector EmptyParameters;
@@ -193,21 +191,14 @@ int main(int argc, char **argv)
 				PositionFunction->evaluate(EmptyParameters).front().getDataPtr()
 				)->getData();
 		}
-		if(LifespanFunction != NullFC)
-		{
-			LifespanReturnValue = 
-				FunctionIOData<Real32>::dcast(
-				LifespanFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
-		}
 
 		ExampleParticleSystem->addParticle(
 			PositionReturnValue,
 			Vec3f(0.0f,0.0f,1.0f),
 			Color4f(1.0,0.0,0.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
-			LifespanReturnValue, 
-			Vec3f(0.0f,2.0f,0.0f), //Velocity
+			-1, 
+			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)	//acceleration
 			,0);
 	}
@@ -249,8 +240,8 @@ int main(int argc, char **argv)
 	DistanceFadeParticleAffectorPtr ExampleDistanceFadeParticleAffector = osg::DistanceFadeParticleAffector::create();
 	beginEditCP(ExampleDistanceFadeParticleAffector, DistanceFadeParticleAffector::DistanceFadeStartFieldMask | DistanceFadeParticleAffector::ParticleSystemNodeFieldMask | DistanceFadeParticleAffector::DistanceFadeEndFieldMask | DistanceFadeParticleAffector::FadeEndAlphaFieldMask | DistanceFadeParticleAffector::FadeStartAlphaFieldMask | DistanceFadeParticleAffector::DistanceFromSourceFieldMask | DistanceFadeParticleAffector::DistanceFromCameraFieldMask);
 	//	ExampleDistanceFadeParticleAffector->setFadeInTime(1.0f);
-		ExampleDistanceFadeParticleAffector->setDistanceFadeStart(50.0f);
-		ExampleDistanceFadeParticleAffector->setDistanceFadeEnd(100.0f);
+		ExampleDistanceFadeParticleAffector->setDistanceFadeStart(500.0f);
+		ExampleDistanceFadeParticleAffector->setDistanceFadeEnd(1000.0f);
 		ExampleDistanceFadeParticleAffector->setFadeStartAlpha(1.0f);
 		ExampleDistanceFadeParticleAffector->setFadeEndAlpha(0.0f);
 		ExampleDistanceFadeParticleAffector->setParticleSystemNode(ParticleNode);

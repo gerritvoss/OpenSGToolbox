@@ -175,10 +175,8 @@ int main(int argc, char **argv)
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
 	FunctionPtr PositionFunction = createPositionDistribution();
-	FunctionPtr LifespanFunction = createLifespanDistribution();
 	
 	Pnt3f PositionReturnValue;
-	Time LifespanReturnValue = -1;
 
 	//Particle System
     FunctionIOParameterVector EmptyParameters;
@@ -192,21 +190,14 @@ int main(int argc, char **argv)
 				PositionFunction->evaluate(EmptyParameters).front().getDataPtr()
 				)->getData();
 		}
-		if(LifespanFunction != NullFC)
-		{
-			LifespanReturnValue = 
-				FunctionIOData<Real32>::dcast(
-				LifespanFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
-		}
 
 		ExampleParticleSystem->addParticle(
 			PositionReturnValue,
 			Vec3f(0.0f,0.0f,1.0f),
 			Color4f(1.0,0.0,0.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
-			LifespanReturnValue, 
-			Vec3f(0.0f,2.0f,0.0f), //Velocity
+			-1, 
+			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)	//acceleration
 			,0);
 	}
@@ -216,15 +207,6 @@ int main(int argc, char **argv)
 	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
 	
 
-	//Create an AgeFadeAffector
-	DistanceKillParticleAffectorPtr ExampleDistanceKillParticleAffector = osg::DistanceKillParticleAffector::create();
-	beginEditCP(ExampleDistanceKillParticleAffector, DistanceKillParticleAffector::KillDistanceFieldMask );
-		ExampleDistanceKillParticleAffector->setKillDistance(20.0f);
-	endEditCP(ExampleDistanceKillParticleAffector, DistanceKillParticleAffector::KillDistanceFieldMask );
-
-	beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
-		ExampleParticleSystem->getAffectors().push_back(ExampleDistanceKillParticleAffector);
-	endEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
 
 
 	//Particle System Node
@@ -253,6 +235,18 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
+	//Create an AgeFadeAffector
+	DistanceKillParticleAffectorPtr ExampleDistanceKillParticleAffector = osg::DistanceKillParticleAffector::create();
+	beginEditCP(ExampleDistanceKillParticleAffector, DistanceKillParticleAffector::KillDistanceFieldMask | DistanceKillParticleAffector::ParticleSystemNodeFieldMask | DistanceKillParticleAffector::DistanceFromSourceFieldMask |	DistanceKillParticleAffector::DistanceFromCameraFieldMask);
+		ExampleDistanceKillParticleAffector->setKillDistance(1000.0f);
+		ExampleDistanceKillParticleAffector->setParticleSystemNode(ParticleNode);
+		ExampleDistanceKillParticleAffector->setDistanceFromSource(DistanceKillParticleAffector::DISTANCE_FROM_CAMERA);
+		ExampleDistanceKillParticleAffector->setDistanceFromCamera(mgr->getCamera());
+	endEditCP(ExampleDistanceKillParticleAffector, DistanceKillParticleAffector::KillDistanceFieldMask | DistanceKillParticleAffector::ParticleSystemNodeFieldMask | DistanceKillParticleAffector::DistanceFromSourceFieldMask |	DistanceKillParticleAffector::DistanceFromCameraFieldMask);
+
+	beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
+		ExampleParticleSystem->getAffectors().push_back(ExampleDistanceKillParticleAffector);
+	endEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
 
     while(!ExitApp)
     {
