@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XXTesting", "XXTesting.vcproj", "{101B4E61-3D86-4512-A4D8-1A0D2FF2BB9D}"
@@ -32,6 +32,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08DistanceFadeAffector", "08DistanceFadeAffector.vcproj", "{BEB47100-944E-4004-AF0A-2C44B0243503}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09DistanceKillParticleAffector", "09DistanceKillParticleAffector.vcproj", "{B838A4F7-ABEC-4900-B5BB-A66889573826}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11DistanceAttractRepelParticleAffector", "11DistanceAttractRepelParticleAffector.vcproj", "{78008FF7-0647-4049-87BC-19B01FD6EB1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{B838A4F7-ABEC-4900-B5BB-A66889573826}.Debug|Win32.Build.0 = Debug|Win32
 		{B838A4F7-ABEC-4900-B5BB-A66889573826}.Release|Win32.ActiveCfg = Release|Win32
 		{B838A4F7-ABEC-4900-B5BB-A66889573826}.Release|Win32.Build.0 = Release|Win32
+		{78008FF7-0647-4049-87BC-19B01FD6EB1F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{78008FF7-0647-4049-87BC-19B01FD6EB1F}.Debug|Win32.Build.0 = Debug|Win32
+		{78008FF7-0647-4049-87BC-19B01FD6EB1F}.Release|Win32.ActiveCfg = Release|Win32
+		{78008FF7-0647-4049-87BC-19B01FD6EB1F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

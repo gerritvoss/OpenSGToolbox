@@ -46,6 +46,7 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 
 #include "OSGDistanceAttractRepelParticleAffector.h"
 
@@ -78,8 +79,16 @@ void DistanceAttractRepelParticleAffector::initMethod (void)
 
 bool DistanceAttractRepelParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement)
 {
-	//TODO: Implement
+	Real32 d = Displacement.length();
+	Vec3f dnormal =  Displacement;
+	dnormal =  dnormal *(1.0/d);
+	if( d > getMinDistance()  && d < getMaxDistance())
+	{
+		Pnt3f pos = System->getPosition(ParticleIndex) + (dnormal * (getQuadratic() * d*d + getLinear() * d + getConstant()));
+		System->setPosition(pos,ParticleIndex) ;
+	}
 	return false;
+	
 }
 
 /*-------------------------------------------------------------------------*\

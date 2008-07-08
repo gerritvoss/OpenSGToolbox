@@ -269,7 +269,7 @@ int main(int argc, char **argv)
 
 	//Affector
 	ExampleAgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
-	beginEditCP(ExampleAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask,AgeSizeParticleAffector::SizesFieldMask);
+	beginEditCP(ExampleAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
 			//ages
 			ExampleAgeSizeParticleAffector->getAges().push_back(0.05);
 			ExampleAgeSizeParticleAffector->getAges().push_back(0.2);
@@ -285,7 +285,7 @@ int main(int argc, char **argv)
 			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.0,6.0,6.0));
 			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,3.0,1.0));
 			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,1.0,1.0));
-	endEditCP(ExampleAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask,AgeSizeParticleAffector::SizesFieldMask);
+	endEditCP(ExampleAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
 
 	//Particle System
     ExampleParticleSystem = osg::ParticleSystem::create();
