@@ -101,6 +101,7 @@ void FunctionComponent::drawInternal(const GraphicsPtr Graphics) const
 		//Draw the text
 		Graphics->drawText(AlignedTextPosition, TheText, getFont(), getTextColor(), 1.0);
 	}
+	
     Inherited::drawInternal(Graphics);
 }
 

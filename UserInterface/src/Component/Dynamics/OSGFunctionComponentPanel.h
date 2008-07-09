@@ -81,6 +81,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
                       const BitVector  bvFlags  = 0) const;
     virtual void mousePressed(const MouseEvent& e);
 	
+	virtual void mouseMoved(const MouseEvent& e);
+	
 	virtual void mouseWheelMoved(const MouseWheelEvent& e);
 
     virtual Pnt2f getParentToLocal(const Pnt2f& Location);
@@ -144,6 +146,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
     friend class FunctionComponentPanelBase;
 
     static void initMethod(void);
+	
+	bool _drawComponentResizeSquares;
+	Pnt2f _ResizableComponentTopLeft, _ResizableComponentBottomRight;
 
     // prohibit default functions (move to 'public' if you need one)
 

@@ -87,8 +87,11 @@ Pnt2f FunctionComponentPanel::getParentToLocal(const Pnt2f& Location)
 {
     //TODO: Implement
     Pnt2f Result(Inherited::getParentToLocal(Location));
+	
+	
     return Result;
 }
+
 Vec2f &FunctionComponentPanel::getPreferredSize  (void)
 {
     if(getZoom() == 1.0f)
@@ -147,6 +150,30 @@ void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 	Inherited::drawInternal(Graphics);
 	
 	glPopMatrix();
+	
+	setupClipping(Graphics);
+	
+	/*
+	if (_ActiveComponent != NullFC)
+	{
+		Graphics->drawRect(Pnt2f(100.0f, 100.0f), Pnt2f(110.0f, 110.0f), Color4f(1.0, 0.0f, 0.0f, 1.0f), 1.0);
+	}
+	*/
+	
+	if(_drawComponentResizeSquares)
+	{
+		Graphics->drawRect(Pnt2f(100.0f, 100.0f), Pnt2f(110.0f, 110.0f), Color4f(1.0, 0.0f, 0.0f, 1.0f), 1.0);
+		
+		Pnt2f ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
+		ResizableComponentTopRight = _ResizableComponentTopLeft + (_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x());
+		ResizableComponentBottomLeft = _ResizableComponentTopLeft + Pnt2f(0.0f, (_ResizableComponentBottomRight.y() - _ResizableComponentTopLeft.y()));
+				
+		Graphics->drawRect(_ResizableComponentTopLeft - Pnt2f(5.0f, 5.0f), _ResizableComponentTopLeft + Pnt2f(5.0f, 5.0f), Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(_ResizableComponentBottomRight - Pnt2f(5.0f, 5.0f), _ResizableComponentBottomRight + Pnt2f(5.0f, 5.0f), Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(ResizableComponentTopRight - Pnt2f(5.0f, 5.0f), ResizableComponentTopRight + Pnt2f(5.0f, 5.0f), Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(ResizableComponentBottomLeft - Pnt2f(5.0f, 5.0f), ResizableComponentBottomLeft + Pnt2f(5.0f, 5.0f), Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+				
+	}
 }
 
 void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f& TopLeft, const Pnt3f BottomRight) const
@@ -211,6 +238,37 @@ void FunctionComponentPanel::mousePressed(const MouseEvent& e)
     }
 }
 
+void FunctionComponentPanel::mouseMoved(const MouseEvent& e)
+{
+	if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
+        getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+    {
+		
+		bool isContained(false);
+		for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
+		{
+			isContained = getChildren()[i]->isContained(e.getLocation(), true);
+			if(isContained)
+			{
+				_drawComponentResizeSquares = true;
+				_ResizableComponentTopLeft = getChildren()[i]->getPosition();
+				_ResizableComponentBottomRight = getChildren()[i]->getPosition() + getChildren()[i]->getSize();
+			}
+			else
+			{
+				_drawComponentResizeSquares = false;
+				_ResizableComponentTopLeft = Pnt2f(0.0f, 0.0f);
+				_ResizableComponentBottomRight = Pnt2f(0.0f, 0.0f);
+			}
+		}
+	}
+	else
+	{
+		_drawComponentResizeSquares = false;
+		_ResizableComponentTopLeft = Pnt2f(0.0f, 0.0f);
+		_ResizableComponentBottomRight = Pnt2f(0.0f, 0.0f);
+	}
+}
 
 void FunctionComponentPanel::mouseWheelMoved(const MouseWheelEvent& e)
 {
@@ -228,7 +286,7 @@ void FunctionComponentPanel::mouseWheelMoved(const MouseWheelEvent& e)
     {
         //scrollUnit(-e.getUnitsToScroll());
 		
-		Real32 newZoom = FunctionComponentPanelPtr(this)->getZoom() + 0.1 * e.getUnitsToScroll();
+		Real32 newZoom = FunctionComponentPanelPtr(this)->getZoom() + 0.05 * e.getUnitsToScroll();
 		
 		if (newZoom < 0.1)
 		{
@@ -287,9 +345,16 @@ void FunctionComponentPanel::changed(BitVector whichField, UInt32 origin)
 	
     if(whichField & ZoomFieldMask)
     {
-            beginEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::PreferredSizeFieldMask);
-				setPreferredSize(getPreferredSize());
-            endEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::PreferredSizeFieldMask);
+			/*std::cout << "getPreferredSize: " << getPreferredSize() << std::endl;
+            beginEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::ZoomedPreferredSizeFieldMask);
+				setZoomedPreferredSize(getPreferredSize()*getZoom());
+            endEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::ZoomedPreferredSizeFieldMask);
+			std::cout << "getZoomedPreferredSize: " << getZoomedPreferredSize() << std::endl;*/
+	}
+	
+	if(whichField & ZoomedPreferredSizeFieldMask)
+	{
+        updateContainerLayout();
 	}
 }
 
