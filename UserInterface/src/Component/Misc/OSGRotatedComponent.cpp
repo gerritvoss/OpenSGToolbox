@@ -78,6 +78,15 @@ void RotatedComponent::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Pnt2f RotatedComponent::getParentToLocal(const Pnt2f& Location)
+{
+    Pnt2f Result(Inherited::getParentToLocal(Location));
+    Result = Result - Vec2f(static_cast<Real32>(getSize().x())/2.0,static_cast<Real32>(getSize().y())/2.0);
+    Result.setValues( Result[0]*osgcos(getAngle()) - Result[1]*osgsin(getAngle()), Result[0]*osgsin(getAngle()) + Result[1]*osgcos(getAngle()));
+    Result = Result + Vec2f(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0,static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
+    return Result;
+}
+
 void RotatedComponent::drawInternal(const GraphicsPtr TheGraphics) const
 {
     if(getInternalComponent() != NullFC)
@@ -235,15 +244,6 @@ void RotatedComponent::mouseWheelMoved(const MouseWheelEvent& e)
         }
     }
 	Component::mouseWheelMoved(e);
-}
-
-Pnt2f RotatedComponent::getLocalToInternalComponent(const Pnt2f& LocalPoint) const
-{
-    Pnt2f Result(LocalPoint);
-    Result = Result - Vec2f(static_cast<Real32>(getSize().x())/2.0,static_cast<Real32>(getSize().y())/2.0);
-    Result.setValues( Result[0]*osgcos(getAngle()) - Result[1]*osgsin(getAngle()), Result[0]*osgsin(getAngle()) + Result[1]*osgcos(getAngle()));
-    Result = Result + Vec2f(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0,static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
-    return Result;
 }
 
 /*-------------------------------------------------------------------------*\

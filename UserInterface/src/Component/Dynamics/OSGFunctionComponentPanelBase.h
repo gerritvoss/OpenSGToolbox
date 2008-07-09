@@ -71,6 +71,7 @@
 #include <OpenSG/OSGBoolFields.h> // DrawMiniMap type
 #include <OpenSG/OSGReal32Fields.h> // MiniMapSize type
 #include <OpenSG/OSGVec2fFields.h> // MiniMapAlignment type
+#include <OpenSG/OSGVec2fFields.h> // ZoomedPreferredSize type
 
 #include "OSGFunctionComponentPanelFields.h"
 
@@ -94,17 +95,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
 
     enum
     {
-        ZoomFieldId             = Inherited::NextFieldId,
-        DrawMiniMapFieldId      = ZoomFieldId             + 1,
-        MiniMapSizeFieldId      = DrawMiniMapFieldId      + 1,
-        MiniMapAlignmentFieldId = MiniMapSizeFieldId      + 1,
-        NextFieldId             = MiniMapAlignmentFieldId + 1
+        ZoomFieldId                = Inherited::NextFieldId,
+        DrawMiniMapFieldId         = ZoomFieldId                + 1,
+        MiniMapSizeFieldId         = DrawMiniMapFieldId         + 1,
+        MiniMapAlignmentFieldId    = MiniMapSizeFieldId         + 1,
+        ZoomedPreferredSizeFieldId = MiniMapAlignmentFieldId    + 1,
+        NextFieldId                = ZoomedPreferredSizeFieldId + 1
     };
 
     static const OSG::BitVector ZoomFieldMask;
     static const OSG::BitVector DrawMiniMapFieldMask;
     static const OSG::BitVector MiniMapSizeFieldMask;
     static const OSG::BitVector MiniMapAlignmentFieldMask;
+    static const OSG::BitVector ZoomedPreferredSizeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -200,6 +203,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
     SFBool              _sfDrawMiniMap;
     SFReal32            _sfMiniMapSize;
     SFVec2f             _sfMiniMapAlignment;
+    SFVec2f             _sfZoomedPreferredSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -215,6 +219,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
     /*! \{                                                                 */
 
     virtual ~FunctionComponentPanelBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFVec2f             *getSFZoomedPreferredSize(void);
+
+           Vec2f               &getZoomedPreferredSize(void);
+     const Vec2f               &getZoomedPreferredSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setZoomedPreferredSize(const Vec2f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

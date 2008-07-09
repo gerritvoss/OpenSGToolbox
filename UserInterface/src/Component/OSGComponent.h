@@ -178,6 +178,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     static const OSG::BitVector ForegroundsFieldMask;
 	virtual void setForegrounds(LayerPtr TheForeground);
 
+    virtual Pnt2f getParentToLocal(const Pnt2f& Location);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

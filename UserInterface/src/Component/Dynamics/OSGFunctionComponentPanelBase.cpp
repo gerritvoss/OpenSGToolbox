@@ -76,6 +76,9 @@ const OSG::BitVector  FunctionComponentPanelBase::MiniMapSizeFieldMask =
 const OSG::BitVector  FunctionComponentPanelBase::MiniMapAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << FunctionComponentPanelBase::MiniMapAlignmentFieldId);
 
+const OSG::BitVector  FunctionComponentPanelBase::ZoomedPreferredSizeFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentPanelBase::ZoomedPreferredSizeFieldId);
+
 const OSG::BitVector FunctionComponentPanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -93,6 +96,9 @@ const OSG::BitVector FunctionComponentPanelBase::MTInfluenceMask =
     
 */
 /*! \var Vec2f           FunctionComponentPanelBase::_sfMiniMapAlignment
+    
+*/
+/*! \var Vec2f           FunctionComponentPanelBase::_sfZoomedPreferredSize
     
 */
 
@@ -119,7 +125,12 @@ FieldDescription *FunctionComponentPanelBase::_desc[] =
                      "MiniMapAlignment", 
                      MiniMapAlignmentFieldId, MiniMapAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &FunctionComponentPanelBase::getSFMiniMapAlignment)
+                     (FieldAccessMethod) &FunctionComponentPanelBase::getSFMiniMapAlignment),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "ZoomedPreferredSize", 
+                     ZoomedPreferredSizeFieldId, ZoomedPreferredSizeFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentPanelBase::getSFZoomedPreferredSize)
 };
 
 
@@ -199,6 +210,7 @@ FunctionComponentPanelBase::FunctionComponentPanelBase(void) :
     _sfDrawMiniMap            (bool(true)), 
     _sfMiniMapSize            (Real32(0.1f)), 
     _sfMiniMapAlignment       (Vec2f(0.0,1.0)), 
+    _sfZoomedPreferredSize    (Vec2f(1.0,1.0)), 
     Inherited() 
 {
 }
@@ -212,6 +224,7 @@ FunctionComponentPanelBase::FunctionComponentPanelBase(const FunctionComponentPa
     _sfDrawMiniMap            (source._sfDrawMiniMap            ), 
     _sfMiniMapSize            (source._sfMiniMapSize            ), 
     _sfMiniMapAlignment       (source._sfMiniMapAlignment       ), 
+    _sfZoomedPreferredSize    (source._sfZoomedPreferredSize    ), 
     Inherited                 (source)
 {
 }
@@ -248,6 +261,11 @@ UInt32 FunctionComponentPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMiniMapAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (ZoomedPreferredSizeFieldMask & whichField))
+    {
+        returnValue += _sfZoomedPreferredSize.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -275,6 +293,11 @@ void FunctionComponentPanelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MiniMapAlignmentFieldMask & whichField))
     {
         _sfMiniMapAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ZoomedPreferredSizeFieldMask & whichField))
+    {
+        _sfZoomedPreferredSize.copyToBin(pMem);
     }
 
 
@@ -305,6 +328,11 @@ void FunctionComponentPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMiniMapAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ZoomedPreferredSizeFieldMask & whichField))
+    {
+        _sfZoomedPreferredSize.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -327,6 +355,9 @@ void FunctionComponentPanelBase::executeSyncImpl(      FunctionComponentPanelBas
     if(FieldBits::NoField != (MiniMapAlignmentFieldMask & whichField))
         _sfMiniMapAlignment.syncWith(pOther->_sfMiniMapAlignment);
 
+    if(FieldBits::NoField != (ZoomedPreferredSizeFieldMask & whichField))
+        _sfZoomedPreferredSize.syncWith(pOther->_sfZoomedPreferredSize);
+
 
 }
 #else
@@ -348,6 +379,9 @@ void FunctionComponentPanelBase::executeSyncImpl(      FunctionComponentPanelBas
 
     if(FieldBits::NoField != (MiniMapAlignmentFieldMask & whichField))
         _sfMiniMapAlignment.syncWith(pOther->_sfMiniMapAlignment);
+
+    if(FieldBits::NoField != (ZoomedPreferredSizeFieldMask & whichField))
+        _sfZoomedPreferredSize.syncWith(pOther->_sfZoomedPreferredSize);
 
 
 

@@ -83,6 +83,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 	
 	virtual void mouseWheelMoved(const MouseWheelEvent& e);
 
+    virtual Pnt2f getParentToLocal(const Pnt2f& Location);
+    virtual       Vec2f               &getPreferredSize  (void);
+    virtual const Vec2f               &getPreferredSize  (void) const;
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

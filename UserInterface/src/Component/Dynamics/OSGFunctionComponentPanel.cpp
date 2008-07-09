@@ -83,6 +83,35 @@ void FunctionComponentPanel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Pnt2f FunctionComponentPanel::getParentToLocal(const Pnt2f& Location)
+{
+    //TODO: Implement
+    Pnt2f Result(Inherited::getParentToLocal(Location));
+    return Result;
+}
+Vec2f &FunctionComponentPanel::getPreferredSize  (void)
+{
+    if(getZoom() == 1.0f)
+    {
+        return Inherited::getPreferredSize();
+    }
+    else
+    {
+        return getZoomedPreferredSize();
+    }
+}
+
+const Vec2f &FunctionComponentPanel::getPreferredSize  (void) const
+{
+    if(getZoom() == 1.0f)
+    {
+        return Inherited::getPreferredSize();
+    }
+    else
+    {
+        return getZoomedPreferredSize();
+    }
+}
 
 void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 {

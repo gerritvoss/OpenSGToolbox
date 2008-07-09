@@ -94,7 +94,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponent : public RotatedComponent
 	//Mouse Wheel Events
     virtual void mouseWheelMoved(const MouseWheelEvent& e);
 
-    Pnt2f getLocalToInternalComponent(const Pnt2f& LocalPoint) const;
+    virtual Pnt2f getParentToLocal(const Pnt2f& Location);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

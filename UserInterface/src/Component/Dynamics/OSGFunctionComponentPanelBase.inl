@@ -124,6 +124,13 @@ SFVec2f *FunctionComponentPanelBase::getSFMiniMapAlignment(void)
     return &_sfMiniMapAlignment;
 }
 
+//! Get the FunctionComponentPanel::_sfZoomedPreferredSize field.
+inline
+SFVec2f *FunctionComponentPanelBase::getSFZoomedPreferredSize(void)
+{
+    return &_sfZoomedPreferredSize;
+}
+
 
 //! Get the value of the FunctionComponentPanel::_sfZoom field.
 inline
@@ -207,6 +214,27 @@ inline
 void FunctionComponentPanelBase::setMiniMapAlignment(const Vec2f &value)
 {
     _sfMiniMapAlignment.setValue(value);
+}
+
+//! Get the value of the FunctionComponentPanel::_sfZoomedPreferredSize field.
+inline
+Vec2f &FunctionComponentPanelBase::getZoomedPreferredSize(void)
+{
+    return _sfZoomedPreferredSize.getValue();
+}
+
+//! Get the value of the FunctionComponentPanel::_sfZoomedPreferredSize field.
+inline
+const Vec2f &FunctionComponentPanelBase::getZoomedPreferredSize(void) const
+{
+    return _sfZoomedPreferredSize.getValue();
+}
+
+//! Set the value of the FunctionComponentPanel::_sfZoomedPreferredSize field.
+inline
+void FunctionComponentPanelBase::setZoomedPreferredSize(const Vec2f &value)
+{
+    _sfZoomedPreferredSize.setValue(value);
 }
 
 

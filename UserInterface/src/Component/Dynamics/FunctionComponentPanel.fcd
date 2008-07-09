@@ -48,4 +48,13 @@ A User Interface Panel that contains Function Components.
 		defaultValue="0.0,1.0"
 	>
 	</Field>
+	<Field
+		name="ZoomedPreferredSize"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="1.0,1.0"
+	>
+	</Field>
 </FieldContainer>

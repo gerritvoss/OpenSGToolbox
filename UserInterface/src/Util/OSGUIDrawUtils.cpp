@@ -117,10 +117,11 @@ Pnt2f DrawingSurfaceToComponent(const Pnt2f& DrawingSurfacePoint, const Componen
 		CompRecurse = CompRecurse->getParentContainer();
 	}
 
-    bool WasPrevComponentRotated(false);
+    //bool WasPrevComponentRotated(false);
 	for(UInt32 i(0) ; i<PathToComponent.size() ; ++i)
 	{
-        if(WasPrevComponentRotated)
+        Result = PathToComponent[i]->getParentToLocal(Result);
+        /*if(WasPrevComponentRotated)
         {
 	        WasPrevComponentRotated = false;
 		    Result = RotatedComponent::Ptr::dcast(PathToComponent[i-1])->getLocalToInternalComponent(Result);
@@ -133,7 +134,7 @@ Pnt2f DrawingSurfaceToComponent(const Pnt2f& DrawingSurfacePoint, const Componen
 	    else
 	    {
 		    Result -= Vec2f(PathToComponent[i]->getPosition());
-		}
+		}*/
 	}
 
 	return Result;
