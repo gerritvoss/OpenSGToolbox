@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SkeletonBlendedGeometry"
+	parent="Geometry"
+	library="Animation"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="BaseGeometry"
+		type="GeometryPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Bones"
+		type="BonePtr"
+		cardinality="multi"
+		visibility="external"
+		header="SkeletalAnimation/OSGBoneFields.h"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="PositionIndexes"
+		type="UInt32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="BlendAmounts"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+</FieldContainer>
