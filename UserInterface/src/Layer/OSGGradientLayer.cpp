@@ -126,7 +126,7 @@ void GradientLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, co
 			{
 				//Code for drawing the Gradient with Repeating/Reflection
 					//Determine the Number of Repeats
-					UInt32 RepeatCount = static_cast<UInt32>(osgceil((Max.x() - Min.x())/GradientLength));
+					UInt32 RepeatCount = static_cast<UInt32>(osgceil(1.0f/GradientLength));
 
 					//Determine the relative location in the gradient that the Start left is at
 					Real32 StartGradientLocation = PreStartLength - GradientLength * osgceil(PreStartLength/GradientLength);

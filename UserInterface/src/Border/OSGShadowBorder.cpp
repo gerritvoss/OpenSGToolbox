@@ -265,7 +265,15 @@ void ShadowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , co
 
 void ShadowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
-    getInsideBorder()->getInsets(Left, Right, Top, Bottom);
+    if(getInsideBorder() != NullFC)
+    {
+        getInsideBorder()->getInsets(Left, Right, Top, Bottom);
+    }
+    else
+    {
+        SWARNING << "Warning: ShadowBorder::getInsets: InsideBorder is NULL." << std::endl;
+        Left = Right = Top = Bottom = 0.0f;
+    }
     Left +=getLeftOffset();
     Right +=getRightOffset();
     Top +=getTopOffset();
