@@ -83,6 +83,11 @@ void FunctionComponentPanel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+UInt32 FunctionComponentPanel::queryCursor(const Pnt2f& CursorLoc) const
+{
+	return Inherited::queryCursor(CursorLoc);
+}
+
 Pnt2f FunctionComponentPanel::getParentToLocal(const Pnt2f& Location)
 {
     //TODO: Implement

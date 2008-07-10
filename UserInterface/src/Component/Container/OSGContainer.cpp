@@ -245,6 +245,8 @@ void Container::mouseReleased(const MouseEvent& e)
 
 void Container::mouseMoved(const MouseEvent& e)
 {
+	Component::mouseMoved(e);
+
 	bool isContained;
 	bool isContainedAbove(false);
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
@@ -257,7 +259,6 @@ void Container::mouseMoved(const MouseEvent& e)
 			getChildren()[i]->mouseMoved(e);
 		}
     }
-	Component::mouseMoved(e);
 }
 
 void Container::mouseDragged(const MouseEvent& e)

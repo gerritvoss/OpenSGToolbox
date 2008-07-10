@@ -382,7 +382,7 @@ void InternalWindow::mouseExited(const MouseEvent& e)
     }
     if(!getLockInput())
     {
-		getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+		//getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
         Container::mouseExited(e);
     }
 }
@@ -651,7 +651,7 @@ void InternalWindow::mouseMoved(const MouseEvent& e)
 		//Check if the Mouse is whithin the resize border width
 		if(getResizable())
 		{
-			WindowArea TheArea(getCursurArea(e.getLocation()));
+			/*WindowArea TheArea(getCursurArea(e.getLocation()));
 			switch(TheArea)
 			{
 			case WINDOW_LEFT_BORDER:
@@ -679,7 +679,7 @@ void InternalWindow::mouseMoved(const MouseEvent& e)
 			case WINDOW_TITLE_BAR:
 				getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
 				break;
-			}
+			}*/
 		}
         Container::mouseMoved(e);
     }

@@ -440,13 +440,13 @@ TextField::TextField(const TextField &source) :
 
 TextField::~TextField(void)
 {
-	if( getParentWindow() != NullFC &&
+	/*if( getParentWindow() != NullFC &&
 		getParentWindow()->getDrawingSurface() != NullFC &&
 		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC && 
 		isContained(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition(), true) )
     {
 		getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
-	}
+	}*/
 }
 
 
