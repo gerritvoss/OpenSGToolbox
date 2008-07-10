@@ -92,7 +92,6 @@ void ParticleSystemCore::initMethod (void)
 
 Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
 {
-    //TODO:Implement
     //If I have a Drawer tell it to draw the particles
     if(getDrawer() != NullFC && getSystem() != NullFC)
     {
@@ -173,7 +172,6 @@ Action::ResultE ParticleSystemCore::intersect( Action* action )
 
 void ParticleSystemCore::adjustVolume(Volume & volume)
 {
-    //TODO: Implement
     //The adjusted volume is dependent on the Particle System as well as the 
     //Particle Drawer
 	Inherited::adjustVolume(volume);
@@ -186,6 +184,7 @@ void ParticleSystemCore::adjustVolume(Volume & volume)
 
 void ParticleSystemCore::sortParticles(void)
 {
+	//TODO:Implement
     //This should be called if the ParticleSystem has
     //just finished an update
 

@@ -103,7 +103,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawer : public QuadPar
 
     /*! \}                                                                 */
 	Vec3f getQuadNormal(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index);
-	Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index);
+	Vec3f getQuadUpDir(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index);
+	void getQuadWidthHeight(ParticleSystemPtr System, UInt32 Index, Real32& Width, Real32& Height);
     
     /*==========================  PRIVATE  ================================*/
   private:

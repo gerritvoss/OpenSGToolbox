@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class NodeParticleSystemDrawer!
+ **     class NodeParticleSystemCore!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &NodeParticleSystemDrawerBase::getClassType(void)
+OSG::FieldContainerType &NodeParticleSystemCoreBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 NodeParticleSystemDrawerBase::getClassTypeId(void) 
+OSG::UInt32 NodeParticleSystemCoreBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-NodeParticleSystemDrawerPtr NodeParticleSystemDrawerBase::create(void) 
+NodeParticleSystemCorePtr NodeParticleSystemCoreBase::create(void) 
 {
-    NodeParticleSystemDrawerPtr fc; 
+    NodeParticleSystemCorePtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = NodeParticleSystemDrawerPtr::dcast(
+        fc = NodeParticleSystemCorePtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ NodeParticleSystemDrawerPtr NodeParticleSystemDrawerBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-NodeParticleSystemDrawerPtr NodeParticleSystemDrawerBase::createEmpty(void) 
+NodeParticleSystemCorePtr NodeParticleSystemCoreBase::createEmpty(void) 
 { 
-    NodeParticleSystemDrawerPtr returnValue; 
+    NodeParticleSystemCorePtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,93 +96,121 @@ NodeParticleSystemDrawerPtr NodeParticleSystemDrawerBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the NodeParticleSystemDrawer::_sfPrototypeNode field.
+//! Get the NodeParticleSystemCore::_sfSystem field.
 inline
-SFNodePtr *NodeParticleSystemDrawerBase::getSFPrototypeNode(void)
+SFParticleSystemPtr *NodeParticleSystemCoreBase::getSFSystem(void)
+{
+    return &_sfSystem;
+}
+
+//! Get the NodeParticleSystemCore::_sfPrototypeNode field.
+inline
+SFNodePtr *NodeParticleSystemCoreBase::getSFPrototypeNode(void)
 {
     return &_sfPrototypeNode;
 }
 
-//! Get the NodeParticleSystemDrawer::_sfSizeScaling field.
+//! Get the NodeParticleSystemCore::_sfSizeScaling field.
 inline
-SFVec3f *NodeParticleSystemDrawerBase::getSFSizeScaling(void)
+SFVec3f *NodeParticleSystemCoreBase::getSFSizeScaling(void)
 {
     return &_sfSizeScaling;
 }
 
-//! Get the NodeParticleSystemDrawer::_mfNodes field.
+//! Get the NodeParticleSystemCore::_mfParticleNodes field.
 inline
-MFNodePtr *NodeParticleSystemDrawerBase::getMFNodes(void)
+MFNodePtr *NodeParticleSystemCoreBase::getMFParticleNodes(void)
 {
-    return &_mfNodes;
+    return &_mfParticleNodes;
 }
 
 
-//! Get the value of the NodeParticleSystemDrawer::_sfPrototypeNode field.
+//! Get the value of the NodeParticleSystemCore::_sfSystem field.
 inline
-NodePtr &NodeParticleSystemDrawerBase::getPrototypeNode(void)
+ParticleSystemPtr &NodeParticleSystemCoreBase::getSystem(void)
+{
+    return _sfSystem.getValue();
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfSystem field.
+inline
+const ParticleSystemPtr &NodeParticleSystemCoreBase::getSystem(void) const
+{
+    return _sfSystem.getValue();
+}
+
+//! Set the value of the NodeParticleSystemCore::_sfSystem field.
+inline
+void NodeParticleSystemCoreBase::setSystem(const ParticleSystemPtr &value)
+{
+    _sfSystem.setValue(value);
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfPrototypeNode field.
+inline
+NodePtr &NodeParticleSystemCoreBase::getPrototypeNode(void)
 {
     return _sfPrototypeNode.getValue();
 }
 
-//! Get the value of the NodeParticleSystemDrawer::_sfPrototypeNode field.
+//! Get the value of the NodeParticleSystemCore::_sfPrototypeNode field.
 inline
-const NodePtr &NodeParticleSystemDrawerBase::getPrototypeNode(void) const
+const NodePtr &NodeParticleSystemCoreBase::getPrototypeNode(void) const
 {
     return _sfPrototypeNode.getValue();
 }
 
-//! Set the value of the NodeParticleSystemDrawer::_sfPrototypeNode field.
+//! Set the value of the NodeParticleSystemCore::_sfPrototypeNode field.
 inline
-void NodeParticleSystemDrawerBase::setPrototypeNode(const NodePtr &value)
+void NodeParticleSystemCoreBase::setPrototypeNode(const NodePtr &value)
 {
     _sfPrototypeNode.setValue(value);
 }
 
-//! Get the value of the NodeParticleSystemDrawer::_sfSizeScaling field.
+//! Get the value of the NodeParticleSystemCore::_sfSizeScaling field.
 inline
-Vec3f &NodeParticleSystemDrawerBase::getSizeScaling(void)
+Vec3f &NodeParticleSystemCoreBase::getSizeScaling(void)
 {
     return _sfSizeScaling.getValue();
 }
 
-//! Get the value of the NodeParticleSystemDrawer::_sfSizeScaling field.
+//! Get the value of the NodeParticleSystemCore::_sfSizeScaling field.
 inline
-const Vec3f &NodeParticleSystemDrawerBase::getSizeScaling(void) const
+const Vec3f &NodeParticleSystemCoreBase::getSizeScaling(void) const
 {
     return _sfSizeScaling.getValue();
 }
 
-//! Set the value of the NodeParticleSystemDrawer::_sfSizeScaling field.
+//! Set the value of the NodeParticleSystemCore::_sfSizeScaling field.
 inline
-void NodeParticleSystemDrawerBase::setSizeScaling(const Vec3f &value)
+void NodeParticleSystemCoreBase::setSizeScaling(const Vec3f &value)
 {
     _sfSizeScaling.setValue(value);
 }
 
 
-//! Get the value of the \a index element the NodeParticleSystemDrawer::_mfNodes field.
+//! Get the value of the \a index element the NodeParticleSystemCore::_mfParticleNodes field.
 inline
-NodePtr &NodeParticleSystemDrawerBase::getNodes(const UInt32 index)
+NodePtr &NodeParticleSystemCoreBase::getParticleNodes(const UInt32 index)
 {
-    return _mfNodes[index];
+    return _mfParticleNodes[index];
 }
 
-//! Get the NodeParticleSystemDrawer::_mfNodes field.
+//! Get the NodeParticleSystemCore::_mfParticleNodes field.
 inline
-MFNodePtr &NodeParticleSystemDrawerBase::getNodes(void)
+MFNodePtr &NodeParticleSystemCoreBase::getParticleNodes(void)
 {
-    return _mfNodes;
+    return _mfParticleNodes;
 }
 
-//! Get the NodeParticleSystemDrawer::_mfNodes field.
+//! Get the NodeParticleSystemCore::_mfParticleNodes field.
 inline
-const MFNodePtr &NodeParticleSystemDrawerBase::getNodes(void) const
+const MFNodePtr &NodeParticleSystemCoreBase::getParticleNodes(void) const
 {
-    return _mfNodes;
+    return _mfParticleNodes;
 }
 
 OSG_END_NAMESPACE
 
-#define OSGNODEPARTICLESYSTEMDRAWERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGNODEPARTICLESYSTEMCOREBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

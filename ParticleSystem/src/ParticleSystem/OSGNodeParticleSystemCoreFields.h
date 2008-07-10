@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGNODEPARTICLESYSTEMDRAWERFIELDS_H_
-#define _OSGNODEPARTICLESYSTEMDRAWERFIELDS_H_
+#ifndef _OSGNODEPARTICLESYSTEMCOREFIELDS_H_
+#define _OSGNODEPARTICLESYSTEMCOREFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGParticleSystemDef.h"
 
-#include "OSGParticleSystemDrawerFields.h"
+#include <OpenSG/OSGGroupFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class NodeParticleSystemDrawer;
+class NodeParticleSystemCore;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! NodeParticleSystemDrawerPtr
+//! NodeParticleSystemCorePtr
 
-typedef FCPtr<ParticleSystemDrawerPtr, NodeParticleSystemDrawer> NodeParticleSystemDrawerPtr;
+typedef FCPtr<GroupPtr, NodeParticleSystemCore> NodeParticleSystemCorePtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ParticleSystemDrawerPtr, NodeParticleSystemDrawer> NodeParticleSys
 #endif
 
 template <>
-struct FieldDataTraits<NodeParticleSystemDrawerPtr> : 
-    public FieldTraitsRecurseMapper<NodeParticleSystemDrawerPtr, true>
+struct FieldDataTraits<NodeParticleSystemCorePtr> : 
+    public FieldTraitsRecurseMapper<NodeParticleSystemCorePtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<NodeParticleSystemDrawerPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFNodeParticleSystemDrawerPtr"; }
-    static const char *getMName(void) { return "MFNodeParticleSystemDrawerPtr"; }
+    static const char *getSName(void) { return "SFNodeParticleSystemCorePtr"; }
+    static const char *getMName(void) { return "MFNodeParticleSystemCorePtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<NodeParticleSystemDrawerPtr, true>
+/*! \class  FieldTraitsRecurseMapper<NodeParticleSystemCorePtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<NodeParticleSystemDrawerPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpParticleSystemFieldSingle */
 
-typedef SField<NodeParticleSystemDrawerPtr> SFNodeParticleSystemDrawerPtr;
+typedef SField<NodeParticleSystemCorePtr> SFNodeParticleSystemCorePtr;
 #endif
 
-#ifndef OSG_COMPILENODEPARTICLESYSTEMDRAWERINST
-OSG_DLLEXPORT_DECL1(SField, NodeParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILENODEPARTICLESYSTEMCOREINST
+OSG_DLLEXPORT_DECL1(SField, NodeParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<NodeParticleSystemDrawerPtr> MFNodeParticleSystemDrawerPtr;
+typedef MField<NodeParticleSystemCorePtr> MFNodeParticleSystemCorePtr;
 #endif
 
-#ifndef OSG_COMPILENODEPARTICLESYSTEMDRAWERINST
-OSG_DLLEXPORT_DECL1(MField, NodeParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILENODEPARTICLESYSTEMCOREINST
+OSG_DLLEXPORT_DECL1(MField, NodeParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGNODEPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGNODEPARTICLESYSTEMCOREFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGNODEPARTICLESYSTEMDRAWERFIELDS_H_ */
+#endif /* _OSGNODEPARTICLESYSTEMCOREFIELDS_H_ */

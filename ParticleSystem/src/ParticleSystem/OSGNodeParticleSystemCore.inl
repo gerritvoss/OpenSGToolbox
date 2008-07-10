@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,7 +42,12 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+NodeParticleSystemCore::SystemUpdateListener::SystemUpdateListener(NodeParticleSystemCorePtr TheCore) : _Core(TheCore)
+{
+}
+
 OSG_END_NAMESPACE
 
-#define OSGNODEPARTICLESYSTEMDRAWER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGNODEPARTICLESYSTEMCORE_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

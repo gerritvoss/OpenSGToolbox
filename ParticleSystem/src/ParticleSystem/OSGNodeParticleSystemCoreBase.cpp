@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,136 +45,147 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class NodeParticleSystemDrawer!
+ **     class NodeParticleSystemCore!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILENODEPARTICLESYSTEMDRAWERINST
+#define OSG_COMPILENODEPARTICLESYSTEMCOREINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGNodeParticleSystemDrawerBase.h"
-#include "OSGNodeParticleSystemDrawer.h"
+#include "OSGNodeParticleSystemCoreBase.h"
+#include "OSGNodeParticleSystemCore.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  NodeParticleSystemDrawerBase::PrototypeNodeFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemDrawerBase::PrototypeNodeFieldId);
+const OSG::BitVector  NodeParticleSystemCoreBase::SystemFieldMask = 
+    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::SystemFieldId);
 
-const OSG::BitVector  NodeParticleSystemDrawerBase::SizeScalingFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemDrawerBase::SizeScalingFieldId);
+const OSG::BitVector  NodeParticleSystemCoreBase::PrototypeNodeFieldMask = 
+    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::PrototypeNodeFieldId);
 
-const OSG::BitVector  NodeParticleSystemDrawerBase::NodesFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemDrawerBase::NodesFieldId);
+const OSG::BitVector  NodeParticleSystemCoreBase::SizeScalingFieldMask = 
+    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::SizeScalingFieldId);
 
-const OSG::BitVector NodeParticleSystemDrawerBase::MTInfluenceMask = 
+const OSG::BitVector  NodeParticleSystemCoreBase::ParticleNodesFieldMask = 
+    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::ParticleNodesFieldId);
+
+const OSG::BitVector NodeParticleSystemCoreBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var NodePtr         NodeParticleSystemDrawerBase::_sfPrototypeNode
+/*! \var ParticleSystemPtr NodeParticleSystemCoreBase::_sfSystem
+    
+*/
+/*! \var NodePtr         NodeParticleSystemCoreBase::_sfPrototypeNode
     PrototypeNode is the node that clones are made of for each particle.
 */
-/*! \var Vec3f           NodeParticleSystemDrawerBase::_sfSizeScaling
+/*! \var Vec3f           NodeParticleSystemCoreBase::_sfSizeScaling
     This value is used to scale the size of the particle and apply that size to the transformation of the node for that particle.
 */
-/*! \var NodePtr         NodeParticleSystemDrawerBase::_mfNodes
-    Internal list of the Nodes.
+/*! \var NodePtr         NodeParticleSystemCoreBase::_mfParticleNodes
+    
 */
 
-//! NodeParticleSystemDrawer description
+//! NodeParticleSystemCore description
 
-FieldDescription *NodeParticleSystemDrawerBase::_desc[] = 
+FieldDescription *NodeParticleSystemCoreBase::_desc[] = 
 {
+    new FieldDescription(SFParticleSystemPtr::getClassType(), 
+                     "System", 
+                     SystemFieldId, SystemFieldMask,
+                     false,
+                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFSystem),
     new FieldDescription(SFNodePtr::getClassType(), 
                      "PrototypeNode", 
                      PrototypeNodeFieldId, PrototypeNodeFieldMask,
                      false,
-                     (FieldAccessMethod) &NodeParticleSystemDrawerBase::getSFPrototypeNode),
+                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFPrototypeNode),
     new FieldDescription(SFVec3f::getClassType(), 
                      "SizeScaling", 
                      SizeScalingFieldId, SizeScalingFieldMask,
                      false,
-                     (FieldAccessMethod) &NodeParticleSystemDrawerBase::getSFSizeScaling),
+                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFSizeScaling),
     new FieldDescription(MFNodePtr::getClassType(), 
-                     "Nodes", 
-                     NodesFieldId, NodesFieldMask,
+                     "ParticleNodes", 
+                     ParticleNodesFieldId, ParticleNodesFieldMask,
                      false,
-                     (FieldAccessMethod) &NodeParticleSystemDrawerBase::getMFNodes)
+                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getMFParticleNodes)
 };
 
 
-FieldContainerType NodeParticleSystemDrawerBase::_type(
-    "NodeParticleSystemDrawer",
-    "ParticleSystemDrawer",
+FieldContainerType NodeParticleSystemCoreBase::_type(
+    "NodeParticleSystemCore",
+    "Group",
     NULL,
-    (PrototypeCreateF) &NodeParticleSystemDrawerBase::createEmpty,
-    NodeParticleSystemDrawer::initMethod,
+    (PrototypeCreateF) &NodeParticleSystemCoreBase::createEmpty,
+    NodeParticleSystemCore::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(NodeParticleSystemDrawerBase, NodeParticleSystemDrawerPtr)
+//OSG_FIELD_CONTAINER_DEF(NodeParticleSystemCoreBase, NodeParticleSystemCorePtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &NodeParticleSystemDrawerBase::getType(void) 
+FieldContainerType &NodeParticleSystemCoreBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &NodeParticleSystemDrawerBase::getType(void) const 
+const FieldContainerType &NodeParticleSystemCoreBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr NodeParticleSystemDrawerBase::shallowCopy(void) const 
+FieldContainerPtr NodeParticleSystemCoreBase::shallowCopy(void) const 
 { 
-    NodeParticleSystemDrawerPtr returnValue; 
+    NodeParticleSystemCorePtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const NodeParticleSystemDrawer *>(this)); 
+    newPtr(returnValue, dynamic_cast<const NodeParticleSystemCore *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 NodeParticleSystemDrawerBase::getContainerSize(void) const 
+UInt32 NodeParticleSystemCoreBase::getContainerSize(void) const 
 { 
-    return sizeof(NodeParticleSystemDrawer); 
+    return sizeof(NodeParticleSystemCore); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void NodeParticleSystemDrawerBase::executeSync(      FieldContainer &other,
+void NodeParticleSystemCoreBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((NodeParticleSystemDrawerBase *) &other, whichField);
+    this->executeSyncImpl((NodeParticleSystemCoreBase *) &other, whichField);
 }
 #else
-void NodeParticleSystemDrawerBase::executeSync(      FieldContainer &other,
+void NodeParticleSystemCoreBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((NodeParticleSystemDrawerBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((NodeParticleSystemCoreBase *) &other, whichField, sInfo);
 }
-void NodeParticleSystemDrawerBase::execBeginEdit(const BitVector &whichField, 
+void NodeParticleSystemCoreBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void NodeParticleSystemDrawerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void NodeParticleSystemCoreBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfNodes.terminateShare(uiAspect, this->getContainerSize());
+    _mfParticleNodes.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -184,10 +195,11 @@ void NodeParticleSystemDrawerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-NodeParticleSystemDrawerBase::NodeParticleSystemDrawerBase(void) :
+NodeParticleSystemCoreBase::NodeParticleSystemCoreBase(void) :
+    _sfSystem                 (ParticleSystemPtr(NullFC)), 
     _sfPrototypeNode          (NodePtr(NullFC)), 
     _sfSizeScaling            (Vec3f(1.0,1.0,1.0)), 
-    _mfNodes                  (), 
+    _mfParticleNodes          (), 
     Inherited() 
 {
 }
@@ -196,25 +208,31 @@ NodeParticleSystemDrawerBase::NodeParticleSystemDrawerBase(void) :
 #pragma warning (default : 383)
 #endif
 
-NodeParticleSystemDrawerBase::NodeParticleSystemDrawerBase(const NodeParticleSystemDrawerBase &source) :
+NodeParticleSystemCoreBase::NodeParticleSystemCoreBase(const NodeParticleSystemCoreBase &source) :
+    _sfSystem                 (source._sfSystem                 ), 
     _sfPrototypeNode          (source._sfPrototypeNode          ), 
     _sfSizeScaling            (source._sfSizeScaling            ), 
-    _mfNodes                  (source._mfNodes                  ), 
+    _mfParticleNodes          (source._mfParticleNodes          ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-NodeParticleSystemDrawerBase::~NodeParticleSystemDrawerBase(void)
+NodeParticleSystemCoreBase::~NodeParticleSystemCoreBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 NodeParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
+UInt32 NodeParticleSystemCoreBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (SystemFieldMask & whichField))
+    {
+        returnValue += _sfSystem.getBinSize();
+    }
 
     if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
     {
@@ -226,19 +244,24 @@ UInt32 NodeParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSizeScaling.getBinSize();
     }
 
-    if(FieldBits::NoField != (NodesFieldMask & whichField))
+    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
     {
-        returnValue += _mfNodes.getBinSize();
+        returnValue += _mfParticleNodes.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void NodeParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
+void NodeParticleSystemCoreBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
+
+    if(FieldBits::NoField != (SystemFieldMask & whichField))
+    {
+        _sfSystem.copyToBin(pMem);
+    }
 
     if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
     {
@@ -250,18 +273,23 @@ void NodeParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSizeScaling.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (NodesFieldMask & whichField))
+    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
     {
-        _mfNodes.copyToBin(pMem);
+        _mfParticleNodes.copyToBin(pMem);
     }
 
 
 }
 
-void NodeParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
+void NodeParticleSystemCoreBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (SystemFieldMask & whichField))
+    {
+        _sfSystem.copyFromBin(pMem);
+    }
 
     if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
     {
@@ -273,20 +301,23 @@ void NodeParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSizeScaling.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (NodesFieldMask & whichField))
+    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
     {
-        _mfNodes.copyFromBin(pMem);
+        _mfParticleNodes.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void NodeParticleSystemDrawerBase::executeSyncImpl(      NodeParticleSystemDrawerBase *pOther,
+void NodeParticleSystemCoreBase::executeSyncImpl(      NodeParticleSystemCoreBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
+
+    if(FieldBits::NoField != (SystemFieldMask & whichField))
+        _sfSystem.syncWith(pOther->_sfSystem);
 
     if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
         _sfPrototypeNode.syncWith(pOther->_sfPrototypeNode);
@@ -294,19 +325,22 @@ void NodeParticleSystemDrawerBase::executeSyncImpl(      NodeParticleSystemDrawe
     if(FieldBits::NoField != (SizeScalingFieldMask & whichField))
         _sfSizeScaling.syncWith(pOther->_sfSizeScaling);
 
-    if(FieldBits::NoField != (NodesFieldMask & whichField))
-        _mfNodes.syncWith(pOther->_mfNodes);
+    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
+        _mfParticleNodes.syncWith(pOther->_mfParticleNodes);
 
 
 }
 #else
-void NodeParticleSystemDrawerBase::executeSyncImpl(      NodeParticleSystemDrawerBase *pOther,
+void NodeParticleSystemCoreBase::executeSyncImpl(      NodeParticleSystemCoreBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (SystemFieldMask & whichField))
+        _sfSystem.syncWith(pOther->_sfSystem);
+
     if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
         _sfPrototypeNode.syncWith(pOther->_sfPrototypeNode);
 
@@ -314,20 +348,20 @@ void NodeParticleSystemDrawerBase::executeSyncImpl(      NodeParticleSystemDrawe
         _sfSizeScaling.syncWith(pOther->_sfSizeScaling);
 
 
-    if(FieldBits::NoField != (NodesFieldMask & whichField))
-        _mfNodes.syncWith(pOther->_mfNodes, sInfo);
+    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
+        _mfParticleNodes.syncWith(pOther->_mfParticleNodes, sInfo);
 
 
 }
 
-void NodeParticleSystemDrawerBase::execBeginEditImpl (const BitVector &whichField, 
+void NodeParticleSystemCoreBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (NodesFieldMask & whichField))
-        _mfNodes.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
+        _mfParticleNodes.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -342,11 +376,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<NodeParticleSystemDrawerPtr>::_type("NodeParticleSystemDrawerPtr", "ParticleSystemDrawerPtr");
+DataType FieldDataTraits<NodeParticleSystemCorePtr>::_type("NodeParticleSystemCorePtr", "GroupPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(NodeParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(NodeParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(NodeParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(NodeParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -363,10 +397,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(NodeParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLL
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGNODEPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGNODEPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGNODEPARTICLESYSTEMCOREBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGNODEPARTICLESYSTEMCOREBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGNODEPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGNODEPARTICLESYSTEMCOREFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

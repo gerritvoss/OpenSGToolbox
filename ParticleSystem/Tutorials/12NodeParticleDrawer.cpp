@@ -6,22 +6,16 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/Input/OSGWindowUtils.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
-#include <OpenSG/OSGBlendChunk.h>
-#include <OpenSG/OSGPointChunk.h>
-#include <OpenSG/OSGChunkMaterial.h>
-#include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
-#include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
-#include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
-#include <OpenSG/ParticleSystem/OSGAgeFadeParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGNodeParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGCollectiveGravityParticleSystemAffector.h>
-
 
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
@@ -147,33 +141,8 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 01ParticleSystemDrawer Window");
-										
-
-	//Particle System Material
-	PointChunkPtr PSPointChunk = PointChunk::create();
-	beginEditCP(PSPointChunk);
-		PSPointChunk->setSize(5.0f);
-		PSPointChunk->setSmooth(true);
-	endEditCP(PSPointChunk);
-	BlendChunkPtr PSBlendChunk = BlendChunk::create();
-	PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
-	PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
-
-	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
-	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
-		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
-	endEditCP(PSMaterialChunkChunk);
-
-	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
-	beginEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
-		PSMaterial->addChunk(PSPointChunk);
-		PSMaterial->addChunk(PSMaterialChunkChunk);
-		PSMaterial->addChunk(PSBlendChunk);
-	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
+                                        "OpenSG 12NodeParticleDrawer Window");
+									
 
 	FunctionPtr PositionFunction = createPositionDistribution();
 	FunctionPtr LifespanFunction = createLifespanDistribution();
@@ -213,9 +182,19 @@ int main(int argc, char **argv)
 	}
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
-	//Particle System Drawer
-	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+	NodePtr ParticlePrototypeNode = makeTorus(1.0,5.0,16,16);
+
+	//Particle System Node
+    NodeParticleSystemCorePtr NodeParticleNodeCore = osg::NodeParticleSystemCore::create();
+    beginEditCP(NodeParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
+		NodeParticleNodeCore->setSystem(ExampleParticleSystem);
+		NodeParticleNodeCore->setPrototypeNode(ParticlePrototypeNode);
+    endEditCP(NodeParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 	
+	NodePtr ParticleNode = osg::Node::create();
+    beginEditCP(ParticleNode, Node::CoreFieldMask);
+        ParticleNode->setCore(NodeParticleNodeCore);
+    endEditCP(ParticleNode, Node::CoreFieldMask);
 
 	//Create an CollectiveGravityParticleSystemAffector
 	CollectiveGravityParticleSystemAffectorPtr ExampleCollectiveGravityParticleSystemAffector = osg::CollectiveGravityParticleSystemAffector::create();
@@ -226,20 +205,6 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleParticleSystem, ParticleSystem::SystemAffectorsFieldMask);
 		ExampleParticleSystem->getSystemAffectors().push_back(ExampleCollectiveGravityParticleSystemAffector);
 	endEditCP(ExampleParticleSystem, ParticleSystem::SystemAffectorsFieldMask);
-
-
-	//Particle System Node
-    ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
-    beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
-		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExampleParticleSystemDrawer);
-		ParticleNodeCore->setMaterial(PSMaterial);
-    endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
-    
-	NodePtr ParticleNode = osg::Node::create();
-    beginEditCP(ParticleNode, Node::CoreFieldMask);
-        ParticleNode->setCore(ParticleNodeCore);
-    endEditCP(ParticleNode, Node::CoreFieldMask);
 
 
     // Make Main Scene Node and add the Torus

@@ -249,8 +249,8 @@ int main(int argc, char **argv)
 			ExampleDistanceAttractRepelParticleAffector->setMinDistance(0.0);
 			ExampleDistanceAttractRepelParticleAffector->setMaxDistance(1000.0);
 			ExampleDistanceAttractRepelParticleAffector->setQuadratic(0.0);
-			ExampleDistanceAttractRepelParticleAffector->setLinear(0.0);
-			ExampleDistanceAttractRepelParticleAffector->setConstant(10.0);
+			ExampleDistanceAttractRepelParticleAffector->setLinear(100.0);
+			ExampleDistanceAttractRepelParticleAffector->setConstant(0.0);
 			ExampleDistanceAttractRepelParticleAffector->setParticleSystemNode(ParticleNode);
 			ExampleDistanceAttractRepelParticleAffector->setDistanceFromSource(DistanceAttractRepelParticleAffector::DISTANCE_FROM_NODE);
 			ExampleDistanceAttractRepelParticleAffector->setDistanceFromNode(AttractionNode);

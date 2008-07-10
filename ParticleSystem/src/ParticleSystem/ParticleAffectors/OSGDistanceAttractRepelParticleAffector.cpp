@@ -84,7 +84,7 @@ bool DistanceAttractRepelParticleAffector::affect(ParticleSystemPtr System, Int3
 	dnormal =  dnormal *(1.0/d);
 	if( d > getMinDistance()  && d < getMaxDistance())
 	{
-		Real32 t((getQuadratic() * d*d + getLinear() * d + getConstant())*elps);
+		Real32 t((getQuadratic() * (1.0/(d*d)) + getLinear() * (1.0/d) + getConstant())*elps);
 		if(t > d)
 		{
 			t=d;

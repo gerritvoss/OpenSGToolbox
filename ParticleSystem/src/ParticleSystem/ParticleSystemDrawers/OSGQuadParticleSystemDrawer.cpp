@@ -79,7 +79,6 @@ void QuadParticleSystemDrawer::initMethod (void)
 
 Action::ResultE QuadParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
 {
-    //TODO: Implement
 	Pnt3f P1,P2,P3,P4;
 
 glBegin(GL_QUADS);
@@ -132,15 +131,36 @@ glEnd();
 
 void QuadParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
 {
-    //TODO: Implement
+	Pnt3f Position;
+	Real32 Width, Height, Max;
+	for(UInt32 i(0); i<System->getNumParticles();++i)
+	{
+	//Loop through all particles
+
+		//Get the Particle Position
+		Position = System->getPosition(i);
+
+		//Maximum of Length and Height
+		getQuadWidthHeight(System, i, Width, Height);
+		Max= osgMax(Width, Height);
+
+		//Calculate Quads positions
+		volume.extendBy( Position - Vec3f(Max/2.0f) );
+		volume.extendBy( Position + Vec3f(Max/2.0f) );
+	}
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void QuadParticleSystemDrawer::getQuadWidthHeight(ParticleSystemPtr System, UInt32 Index, Real32& Width, Real32& Height)
+{
+	Width = System->getSize(Index).x();
+	Height = System->getSize(Index).y();
+}
+
 Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
 {
-	//TODO: Implement
 	Vec3f Direction;
 	
 	switch(getNormalSource())
@@ -191,8 +211,6 @@ Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSys
 
 Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
 {
-	//TODO: Implement
-
 	Vec3f Direction;
 	
 	switch(getUpSource())

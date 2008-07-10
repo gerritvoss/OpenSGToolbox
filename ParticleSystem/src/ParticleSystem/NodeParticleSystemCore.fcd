@@ -1,16 +1,26 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="NodeParticleSystemDrawer"
-	parent="ParticleSystemDrawer"
+	name="NodeParticleSystemCore"
+	parent="Group"
 	library="ParticleSystem"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
-	parentsystemcomponent="false"
+	parentsystemcomponent="true"
 	decoratable="false"
 	useLocalIncludes="true"
 >
+	<Field
+		name="System"
+		type="ParticleSystemPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="ParticleSystem/OSGParticleSystem.h"
+		defaultValue="NullFC"
+	>
+	</Field>
 	<Field
 		name="PrototypeNode"
 		type="NodePtr"
@@ -32,12 +42,12 @@
 	This value is used to scale the size of the particle and apply that size to the transformation of the node for that particle.
 	</Field>
 	<Field
-		name="Nodes"
+		name="ParticleNodes"
 		type="NodePtr"
 		cardinality="multi"
 		visibility="external"
+		defaultValue=""
 		access="protected"
 	>
-   Internal list of the Nodes.
 	</Field>
 </FieldContainer>

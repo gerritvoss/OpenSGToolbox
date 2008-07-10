@@ -218,24 +218,36 @@
 				>
 			</File>
 			<Filter
-				Name="ListType"
-				>
-				<File
-					RelativePath="..\..\src\ListType\OSGBaseListTypes.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\ListType\OSGListTypes.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\ListType\OSGListTypes.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="ParticleSystem"
 				>
+				<File
+					RelativePath="..\..\src\ParticleSystem\OSGNodeParticleSystemCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\ParticleSystem\OSGNodeParticleSystemCore.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\ParticleSystem\OSGNodeParticleSystemCore.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\ParticleSystem\OSGNodeParticleSystemCoreBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\ParticleSystem\OSGNodeParticleSystemCoreBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\ParticleSystem\OSGNodeParticleSystemCoreBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\ParticleSystem\OSGNodeParticleSystemCoreFields.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\src\ParticleSystem\OSGParticleSystem.cpp"
 					>
@@ -321,34 +333,6 @@
 					</File>
 					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawerFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawer.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGNodeParticleSystemDrawerFields.h"
 						>
 					</File>
 					<File

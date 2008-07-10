@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGNODEPARTICLESYSTEMDRAWER_H_
-#define _OSGNODEPARTICLESYSTEMDRAWER_H_
+#ifndef _OSGNODEPARTICLESYSTEMCORE_H_
+#define _OSGNODEPARTICLESYSTEMCORE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,19 +45,20 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGParticleSystemDef.h"
 
-#include "OSGNodeParticleSystemDrawerBase.h"
+#include "OSGNodeParticleSystemCoreBase.h"
+#include "ParticleSystem/Events/OSGParticleSystemListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief NodeParticleSystemDrawer class. See \ref 
-           PageParticleSystemNodeParticleSystemDrawer for a description.
+/*! \brief NodeParticleSystemCore class. See \ref 
+           PageParticleSystemNodeParticleSystemCore for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawer : public NodeParticleSystemDrawerBase
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCore : public NodeParticleSystemCoreBase
 {
   private:
 
-    typedef NodeParticleSystemDrawerBase Inherited;
+    typedef NodeParticleSystemCoreBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -78,48 +79,63 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawer : public NodePar
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort);
+	void updateNodes(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in NodeParticleSystemDrawerBase.
+    // Variables should all be in NodeParticleSystemCoreBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    NodeParticleSystemDrawer(void);
-    NodeParticleSystemDrawer(const NodeParticleSystemDrawer &source);
+    NodeParticleSystemCore(void);
+    NodeParticleSystemCore(const NodeParticleSystemCore &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~NodeParticleSystemDrawer(void); 
+    virtual ~NodeParticleSystemCore(void); 
 
     /*! \}                                                                 */
     
+	class SystemUpdateListener : public ParticleSystemListener
+	{
+	public:
+		SystemUpdateListener(NodeParticleSystemCorePtr TheCore);
+       virtual void systemUpdated(const ParticleSystemEvent& e);
+       virtual void particleGenerated(const ParticleEvent& e);
+       virtual void particleKilled(const ParticleEvent& e);
+       virtual void particleStolen(const ParticleEvent& e);
+	private:
+		NodeParticleSystemCorePtr _Core;
+	};
+
+	friend class SystemUpdateListener;
+
+	SystemUpdateListener _SystemUpdateListener;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class NodeParticleSystemDrawerBase;
+    friend class NodeParticleSystemCoreBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const NodeParticleSystemDrawer &source);
+    void operator =(const NodeParticleSystemCore &source);
 };
 
-typedef NodeParticleSystemDrawer *NodeParticleSystemDrawerP;
+typedef NodeParticleSystemCore *NodeParticleSystemCoreP;
 
 OSG_END_NAMESPACE
 
-#include "OSGNodeParticleSystemDrawerBase.inl"
-#include "OSGNodeParticleSystemDrawer.inl"
+#include "OSGNodeParticleSystemCoreBase.inl"
+#include "OSGNodeParticleSystemCore.inl"
 
-#define OSGNODEPARTICLESYSTEMDRAWER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGNODEPARTICLESYSTEMCORE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGNODEPARTICLESYSTEMDRAWER_H_ */
+#endif /* _OSGNODEPARTICLESYSTEMCORE_H_ */

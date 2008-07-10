@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class NodeParticleSystemDrawer
+ **     class NodeParticleSystemCore
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGNODEPARTICLESYSTEMDRAWERBASE_H_
-#define _OSGNODEPARTICLESYSTEMDRAWERBASE_H_
+#ifndef _OSGNODEPARTICLESYSTEMCOREBASE_H_
+#define _OSGNODEPARTICLESYSTEMCOREBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,43 +65,46 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGParticleSystemDrawer.h" // Parent
+#include <OpenSG/OSGGroup.h> // Parent
 
+#include "ParticleSystem/OSGParticleSystem.h" // System type
 #include <OpenSG/OSGNodeFields.h> // PrototypeNode type
 #include <OpenSG/OSGVec3fFields.h> // SizeScaling type
-#include <OpenSG/OSGNodeFields.h> // Nodes type
+#include <OpenSG/OSGNodeFields.h> // ParticleNodes type
 
-#include "OSGNodeParticleSystemDrawerFields.h"
+#include "OSGNodeParticleSystemCoreFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class NodeParticleSystemDrawer;
+class NodeParticleSystemCore;
 class BinaryDataHandler;
 
-//! \brief NodeParticleSystemDrawer Base Class.
+//! \brief NodeParticleSystemCore Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawerBase : public ParticleSystemDrawer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
 {
   private:
 
-    typedef ParticleSystemDrawer    Inherited;
+    typedef Group    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef NodeParticleSystemDrawerPtr  Ptr;
+    typedef NodeParticleSystemCorePtr  Ptr;
 
     enum
     {
-        PrototypeNodeFieldId = Inherited::NextFieldId,
+        SystemFieldId        = Inherited::NextFieldId,
+        PrototypeNodeFieldId = SystemFieldId        + 1,
         SizeScalingFieldId   = PrototypeNodeFieldId + 1,
-        NodesFieldId         = SizeScalingFieldId   + 1,
-        NextFieldId          = NodesFieldId         + 1
+        ParticleNodesFieldId = SizeScalingFieldId   + 1,
+        NextFieldId          = ParticleNodesFieldId + 1
     };
 
+    static const OSG::BitVector SystemFieldMask;
     static const OSG::BitVector PrototypeNodeFieldMask;
     static const OSG::BitVector SizeScalingFieldMask;
-    static const OSG::BitVector NodesFieldMask;
+    static const OSG::BitVector ParticleNodesFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,9 +131,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawerBase : public Par
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           SFParticleSystemPtr *getSFSystem         (void);
            SFNodePtr           *getSFPrototypeNode  (void);
            SFVec3f             *getSFSizeScaling    (void);
 
+           ParticleSystemPtr   &getSystem         (void);
+     const ParticleSystemPtr   &getSystem         (void) const;
            NodePtr             &getPrototypeNode  (void);
      const NodePtr             &getPrototypeNode  (void) const;
            Vec3f               &getSizeScaling    (void);
@@ -141,6 +147,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawerBase : public Par
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setSystem         ( const ParticleSystemPtr &value );
      void setPrototypeNode  ( const NodePtr &value );
      void setSizeScaling    ( const Vec3f &value );
 
@@ -166,8 +173,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawerBase : public Par
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  NodeParticleSystemDrawerPtr      create          (void); 
-    static  NodeParticleSystemDrawerPtr      createEmpty     (void); 
+    static  NodeParticleSystemCorePtr      create          (void); 
+    static  NodeParticleSystemCorePtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -185,35 +192,36 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawerBase : public Par
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFParticleSystemPtr   _sfSystem;
     SFNodePtr           _sfPrototypeNode;
     SFVec3f             _sfSizeScaling;
-    MFNodePtr           _mfNodes;
+    MFNodePtr           _mfParticleNodes;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    NodeParticleSystemDrawerBase(void);
-    NodeParticleSystemDrawerBase(const NodeParticleSystemDrawerBase &source);
+    NodeParticleSystemCoreBase(void);
+    NodeParticleSystemCoreBase(const NodeParticleSystemCoreBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~NodeParticleSystemDrawerBase(void); 
+    virtual ~NodeParticleSystemCoreBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFNodePtr           *getMFNodes          (void);
+           MFNodePtr           *getMFParticleNodes  (void);
 
-           NodePtr             &getNodes          (UInt32 index);
-           MFNodePtr           &getNodes          (void);
-     const MFNodePtr           &getNodes          (void) const;
+           NodePtr             &getParticleNodes  (UInt32 index);
+           MFNodePtr           &getParticleNodes  (void);
+     const MFNodePtr           &getParticleNodes  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -227,13 +235,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawerBase : public Par
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      NodeParticleSystemDrawerBase *pOther,
+    void executeSyncImpl(      NodeParticleSystemCoreBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      NodeParticleSystemDrawerBase *pOther,
+    void executeSyncImpl(      NodeParticleSystemCoreBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -263,7 +271,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawerBase : public Par
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const NodeParticleSystemDrawerBase &source);
+    void operator =(const NodeParticleSystemCoreBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -271,17 +279,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemDrawerBase : public Par
 //---------------------------------------------------------------------------
 
 
-typedef NodeParticleSystemDrawerBase *NodeParticleSystemDrawerBaseP;
+typedef NodeParticleSystemCoreBase *NodeParticleSystemCoreBaseP;
 
-typedef osgIF<NodeParticleSystemDrawerBase::isNodeCore,
-              CoredNodePtr<NodeParticleSystemDrawer>,
+typedef osgIF<NodeParticleSystemCoreBase::isNodeCore,
+              CoredNodePtr<NodeParticleSystemCore>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet NodeParticleSystemDrawerNodePtr;
+              >::_IRet NodeParticleSystemCoreNodePtr;
 
-typedef RefPtr<NodeParticleSystemDrawerPtr> NodeParticleSystemDrawerRefPtr;
+typedef RefPtr<NodeParticleSystemCorePtr> NodeParticleSystemCoreRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGNODEPARTICLESYSTEMDRAWERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGNODEPARTICLESYSTEMCOREBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGNODEPARTICLESYSTEMDRAWERBASE_H_ */
+#endif /* _OSGNODEPARTICLESYSTEMCOREBASE_H_ */
