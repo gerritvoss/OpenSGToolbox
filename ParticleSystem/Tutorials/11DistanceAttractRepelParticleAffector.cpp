@@ -18,7 +18,7 @@
 #include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
-#include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
+#include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGDistanceFadeParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGDistanceAttractRepelParticleAffector.h>
 
@@ -151,15 +151,6 @@ int main(int argc, char **argv)
 										
 
 	//Particle System Material
-	PointChunkPtr PSPointChunk = PointChunk::create();
-	beginEditCP(PSPointChunk);
-		PSPointChunk->setSize(5.0f);
-		PSPointChunk->setSmooth(true);
-	endEditCP(PSPointChunk);
-	BlendChunkPtr PSBlendChunk = BlendChunk::create();
-	PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
-	PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
-
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
 		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
@@ -170,9 +161,7 @@ int main(int argc, char **argv)
 
 	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
 	beginEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
-		PSMaterial->addChunk(PSPointChunk);
 		PSMaterial->addChunk(PSMaterialChunkChunk);
-		PSMaterial->addChunk(PSBlendChunk);
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
 	FunctionPtr PositionFunction = createPositionDistribution();
@@ -182,7 +171,7 @@ int main(int argc, char **argv)
 	//Particle System
     FunctionIOParameterVector EmptyParameters;
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-	for(UInt32 i(0) ; i<1 ; ++i)//controls how many particles are created
+	for(UInt32 i(0) ; i<500 ; ++i)//controls how many particles are created
 	{
 		if(PositionFunction != NullFC)
 		{
@@ -205,7 +194,7 @@ int main(int argc, char **argv)
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
-	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+	QuadParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
 	
 
 
@@ -223,32 +212,50 @@ int main(int argc, char **argv)
         ParticleNode->setCore(ParticleNodeCore);
     endEditCP(ParticleNode, Node::CoreFieldMask);
 
+	
+	//AttractionNode
+    TransformPtr AttractionCore = osg::Transform::create();
+	Matrix AttractTransform;
+
+    beginEditCP(AttractionCore, Transform::MatrixFieldMask);
+		AttractionCore->setMatrix(AttractTransform);
+    endEditCP(AttractionCore, Transform::MatrixFieldMask);
+
+    NodePtr AttractionNode = osg::Node::create();
+    beginEditCP(AttractionNode, Node::CoreFieldMask);
+		AttractionNode->setCore(AttractionCore);
+    endEditCP(AttractionNode, Node::CoreFieldMask);
 
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(ParticleNode);
+        scene->addChild(AttractionNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
 
     // Show the whole Scene
-    mgr->showAll();
+    //mgr->showAll();
+	mgr->getNavigator()->set(Pnt3f(0.0,0.0,500.0), Pnt3f(0.0,0.0,0.0), Vec3f(0.0,1.0,0.0));
+	mgr->getNavigator()->setMotionFactor(1.0f);
+	mgr->getCamera()->setNear(0.1f);
+	mgr->getCamera()->setFar(1000.0f);
 
 	DistanceAttractRepelParticleAffectorPtr ExampleDistanceAttractRepelParticleAffector = osg::DistanceAttractRepelParticleAffector::create();
-	beginEditCP(ExampleDistanceAttractRepelParticleAffector,DistanceAttractRepelParticleAffector::MinDistanceFieldMask | DistanceAttractRepelParticleAffector::MaxDistanceFieldMask | DistanceAttractRepelParticleAffector::QuadraticFieldMask | DistanceAttractRepelParticleAffector::LinearFieldMask | DistanceAttractRepelParticleAffector::ConstantFieldMask | DistanceAttractRepelParticleAffector::ParticleSystemNodeFieldMask | DistanceAttractRepelParticleAffector::DistanceFromSourceFieldMask |	DistanceAttractRepelParticleAffector::DistanceFromCameraFieldMask);
+	beginEditCP(ExampleDistanceAttractRepelParticleAffector,DistanceAttractRepelParticleAffector::MinDistanceFieldMask | DistanceAttractRepelParticleAffector::MaxDistanceFieldMask | DistanceAttractRepelParticleAffector::QuadraticFieldMask | DistanceAttractRepelParticleAffector::LinearFieldMask | DistanceAttractRepelParticleAffector::ConstantFieldMask | DistanceAttractRepelParticleAffector::ParticleSystemNodeFieldMask | DistanceAttractRepelParticleAffector::DistanceFromSourceFieldMask |	DistanceAttractRepelParticleAffector::DistanceFromNodeFieldMask);
 		
 			ExampleDistanceAttractRepelParticleAffector->setMinDistance(0.0);
-			ExampleDistanceAttractRepelParticleAffector->setMaxDistance(500.0);
+			ExampleDistanceAttractRepelParticleAffector->setMaxDistance(1000.0);
 			ExampleDistanceAttractRepelParticleAffector->setQuadratic(0.0);
 			ExampleDistanceAttractRepelParticleAffector->setLinear(0.0);
-			ExampleDistanceAttractRepelParticleAffector->setConstant(1.0);
+			ExampleDistanceAttractRepelParticleAffector->setConstant(10.0);
 			ExampleDistanceAttractRepelParticleAffector->setParticleSystemNode(ParticleNode);
-			ExampleDistanceAttractRepelParticleAffector->setDistanceFromSource(DistanceAttractRepelParticleAffector::DISTANCE_FROM_CAMERA);
-			ExampleDistanceAttractRepelParticleAffector->setDistanceFromCamera(mgr->getCamera());
+			ExampleDistanceAttractRepelParticleAffector->setDistanceFromSource(DistanceAttractRepelParticleAffector::DISTANCE_FROM_NODE);
+			ExampleDistanceAttractRepelParticleAffector->setDistanceFromNode(AttractionNode);
 
-	endEditCP(ExampleDistanceAttractRepelParticleAffector,DistanceAttractRepelParticleAffector::MinDistanceFieldMask | DistanceAttractRepelParticleAffector::MaxDistanceFieldMask | DistanceAttractRepelParticleAffector::QuadraticFieldMask | DistanceAttractRepelParticleAffector::LinearFieldMask | DistanceAttractRepelParticleAffector::ConstantFieldMask | DistanceAttractRepelParticleAffector::ParticleSystemNodeFieldMask | DistanceAttractRepelParticleAffector::DistanceFromSourceFieldMask |	DistanceAttractRepelParticleAffector::DistanceFromCameraFieldMask);
+	endEditCP(ExampleDistanceAttractRepelParticleAffector,DistanceAttractRepelParticleAffector::MinDistanceFieldMask | DistanceAttractRepelParticleAffector::MaxDistanceFieldMask | DistanceAttractRepelParticleAffector::QuadraticFieldMask | DistanceAttractRepelParticleAffector::LinearFieldMask | DistanceAttractRepelParticleAffector::ConstantFieldMask | DistanceAttractRepelParticleAffector::ParticleSystemNodeFieldMask | DistanceAttractRepelParticleAffector::DistanceFromSourceFieldMask |	DistanceAttractRepelParticleAffector::DistanceFromNodeFieldMask);
 
 	beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
 		ExampleParticleSystem->getAffectors().push_back(ExampleDistanceAttractRepelParticleAffector);
