@@ -82,6 +82,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
     virtual void mousePressed(const MouseEvent& e);
 	
 	virtual void mouseMoved(const MouseEvent& e);
+	virtual void mouseDragged(const MouseEvent& e);
+	virtual void keyReleased(const KeyEvent& e);
 	
 	virtual void mouseWheelMoved(const MouseWheelEvent& e);
 
@@ -150,6 +152,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 	
 	bool _drawComponentResizeSquares;
 	Pnt2f _ResizableComponentTopLeft, _ResizableComponentBottomRight;
+	ComponentPtr _ResizableComponent;
 
     // prohibit default functions (move to 'public' if you need one)
 

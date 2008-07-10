@@ -85,6 +85,7 @@ void FunctionComponentPanel::initMethod (void)
 
 UInt32 FunctionComponentPanel::queryCursor(const Pnt2f& CursorLoc) const
 {
+	return WindowEventProducer::CURSOR_HAND;
 	return Inherited::queryCursor(CursorLoc);
 }
 
@@ -157,27 +158,26 @@ void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 	glPopMatrix();
 	
 	setupClipping(Graphics);
-	
-	/*
-	if (_ActiveComponent != NullFC)
-	{
-		Graphics->drawRect(Pnt2f(100.0f, 100.0f), Pnt2f(110.0f, 110.0f), Color4f(1.0, 0.0f, 0.0f, 1.0f), 1.0);
-	}
-	*/
-	
+
 	if(_drawComponentResizeSquares)
 	{
-		Graphics->drawRect(Pnt2f(100.0f, 100.0f), Pnt2f(110.0f, 110.0f), Color4f(1.0, 0.0f, 0.0f, 1.0f), 1.0);
-		
-		Pnt2f ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
-		ResizableComponentTopRight = _ResizableComponentTopLeft + (_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x());
+		Pnt2f ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight, BoxSize;
+		ResizableComponentTopRight = _ResizableComponentTopLeft + Pnt2f((_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x()), 0.0f);
 		ResizableComponentBottomLeft = _ResizableComponentTopLeft + Pnt2f(0.0f, (_ResizableComponentBottomRight.y() - _ResizableComponentTopLeft.y()));
-				
-		Graphics->drawRect(_ResizableComponentTopLeft - Pnt2f(5.0f, 5.0f), _ResizableComponentTopLeft + Pnt2f(5.0f, 5.0f), Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
-		Graphics->drawRect(_ResizableComponentBottomRight - Pnt2f(5.0f, 5.0f), _ResizableComponentBottomRight + Pnt2f(5.0f, 5.0f), Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
-		Graphics->drawRect(ResizableComponentTopRight - Pnt2f(5.0f, 5.0f), ResizableComponentTopRight + Pnt2f(5.0f, 5.0f), Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
-		Graphics->drawRect(ResizableComponentBottomLeft - Pnt2f(5.0f, 5.0f), ResizableComponentBottomLeft + Pnt2f(5.0f, 5.0f), Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
-				
+		ResizableComponentTop = _ResizableComponentTopLeft + Pnt2f((_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x()) / 2, 0.0f);
+		ResizableComponentBottom = _ResizableComponentTopLeft + Pnt2f((_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x()) / 2, (_ResizableComponentBottomRight.y() - _ResizableComponentTopLeft.y()));
+		ResizableComponentLeft = _ResizableComponentTopLeft + Pnt2f(0.0f, (_ResizableComponentBottomRight.y() - _ResizableComponentTopLeft.y()) / 2);
+		ResizableComponentRight = _ResizableComponentTopLeft + Pnt2f((_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x()), (_ResizableComponentBottomRight.y() - _ResizableComponentTopLeft.y()) / 2);
+		BoxSize = Pnt2f(4.0f, 4.0f);
+		
+		Graphics->drawRect(_ResizableComponentTopLeft - BoxSize, _ResizableComponentTopLeft + BoxSize, Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(_ResizableComponentBottomRight - BoxSize, _ResizableComponentBottomRight + BoxSize, Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(ResizableComponentTopRight - BoxSize, ResizableComponentTopRight + BoxSize, Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(ResizableComponentBottomLeft - BoxSize, ResizableComponentBottomLeft + BoxSize, Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(ResizableComponentTop - BoxSize, ResizableComponentTop + BoxSize, Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(ResizableComponentBottom - BoxSize, ResizableComponentBottom + BoxSize, Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(ResizableComponentLeft - BoxSize, ResizableComponentLeft + BoxSize, Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawRect(ResizableComponentRight - BoxSize, ResizableComponentRight + BoxSize, Color4f(0.0, 0.0f, 0.0f, 1.0f), 1.0);
 	}
 }
 
@@ -243,6 +243,22 @@ void FunctionComponentPanel::mousePressed(const MouseEvent& e)
     }
 }
 
+void FunctionComponentPanel::mouseDragged(const MouseEvent& e)
+{
+	if(_drawComponentResizeSquares)
+	{
+		_ResizableComponentTopLeft = _ResizableComponent->getPosition();
+		_ResizableComponentBottomRight = _ResizableComponent->getPosition() + _ResizableComponent->getSize();
+	}
+	else
+	{
+		_ResizableComponentTopLeft = Pnt2f(0.0f, 0.0f);
+		_ResizableComponentBottomRight = Pnt2f(0.0f, 0.0f);
+	}
+	
+	Inherited::mouseDragged(e);
+}
+
 void FunctionComponentPanel::mouseMoved(const MouseEvent& e)
 {
 	if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
@@ -256,23 +272,46 @@ void FunctionComponentPanel::mouseMoved(const MouseEvent& e)
 			if(isContained)
 			{
 				_drawComponentResizeSquares = true;
-				_ResizableComponentTopLeft = getChildren()[i]->getPosition();
-				_ResizableComponentBottomRight = getChildren()[i]->getPosition() + getChildren()[i]->getSize();
+				_ResizableComponent = getChildren()[i];
 			}
 			else
 			{
 				_drawComponentResizeSquares = false;
-				_ResizableComponentTopLeft = Pnt2f(0.0f, 0.0f);
-				_ResizableComponentBottomRight = Pnt2f(0.0f, 0.0f);
+				_ResizableComponent = NullFC;
 			}
 		}
 	}
 	else
 	{
 		_drawComponentResizeSquares = false;
+		_ResizableComponent = NullFC;
+	}
+	
+	if(_drawComponentResizeSquares)
+	{
+		_ResizableComponentTopLeft = _ResizableComponent->getPosition();
+		_ResizableComponentBottomRight = _ResizableComponent->getPosition() + _ResizableComponent->getSize();
+	}
+	else
+	{
 		_ResizableComponentTopLeft = Pnt2f(0.0f, 0.0f);
 		_ResizableComponentBottomRight = Pnt2f(0.0f, 0.0f);
 	}
+	
+	Inherited::mouseMoved(e);
+}
+
+void FunctionComponentPanel::keyReleased(const KeyEvent& e)
+{
+	std::cout << "Key Released " << e.getKey() << std::endl;
+	std::cout << "Modifier Released " << e.getModifiers() << std::endl;
+	if(e.getKey() == KeyEvent::KEY_CONTROL)
+	{
+		_drawComponentResizeSquares = false;
+		_ResizableComponentTopLeft = Pnt2f(0.0f, 0.0f);
+		_ResizableComponentBottomRight = Pnt2f(0.0f, 0.0f);
+	}
+	Inherited::keyReleased(e);
 }
 
 void FunctionComponentPanel::mouseWheelMoved(const MouseWheelEvent& e)
