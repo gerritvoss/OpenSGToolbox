@@ -85,7 +85,14 @@ void FunctionComponentPanel::initMethod (void)
 
 UInt32 FunctionComponentPanel::queryCursor(const Pnt2f& CursorLoc) const
 {
-	    return Inherited::queryCursor(CursorLoc);
+	if(_drawComponentResizeSquares)
+	{
+		return WindowEventProducer::CURSOR_RESIZE_ALL;
+	}
+	else
+	{
+		return Inherited::queryCursor(CursorLoc);
+	}
 }
 
 Pnt2f FunctionComponentPanel::getParentToLocal(const Pnt2f& Location)
@@ -279,17 +286,23 @@ void FunctionComponentPanel::mouseMoved(const MouseEvent& e)
 		bool isContained(false);
 		for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
 		{
-			isContained = getChildren()[i]->isContained(e.getLocation(), true);
+			if(getChildren()[i]->isContained(e.getLocation(), true) || getChildren()[i]->isContained(e.getLocation() + Pnt2f(4.0f, 4.0f), true)
+			   || getChildren()[i]->isContained(e.getLocation() - Pnt2f(4.0f, 4.0f), true))
+			{
+				isContained = true;
+				_ResizableComponent = getChildren()[i];
+			}
+			
 			if(isContained)
 			{
 				_drawComponentResizeSquares = true;
-				_ResizableComponent = getChildren()[i];
 			}
 			else
 			{
 				_drawComponentResizeSquares = false;
 				_ResizableComponent = NullFC;
 			}
+			
 		}
 	}
 	else
@@ -364,7 +377,8 @@ void FunctionComponentPanel::mouseWheelMoved(const MouseWheelEvent& e)
 
 FunctionComponentPanel::FunctionComponentPanel(void) :
     Inherited(),
-        _ComponentMoveListener(FunctionComponentPanelPtr(this))
+        _ComponentMoveListener(FunctionComponentPanelPtr(this)),
+        _ComponentPanelMoveListener(FunctionComponentPanelPtr(this))
 {
 	//getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseWheelListener(_MouseWheelListener);
 }
@@ -428,6 +442,14 @@ void FunctionComponentPanel::changed(BitVector whichField, UInt32 origin)
 	{
         updateContainerLayout();
 	}
+	
+	if((whichField & ParentWindowFieldMask) &&
+	   getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+		//Attatch a Key and mouse listener to Event Producer
+		getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ComponentPanelMoveListener);
+		getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_ComponentPanelMoveListener);
+	}
 }
 
 void FunctionComponentPanel::dump(      UInt32    , 
@@ -435,6 +457,114 @@ void FunctionComponentPanel::dump(      UInt32    ,
 {
     SLOG << "Dump FunctionComponentPanel NI" << std::endl;
 }
+
+void FunctionComponentPanel::ComponentPanelMoveListener::mousePressed(const MouseEvent& e)
+{
+    if(_FunctionComponentPanel->getParentWindow() != NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()!=NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
+        _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+    {
+		
+		bool isContained(false);
+		for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
+		{
+			isContained = _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true);
+			if(isContained)
+			{
+				//Set The Active Component
+				_ComponentMoveListener.setActiveComponent(i);
+				//Set the Initial Position
+				_ComponentMoveListener.setInitialPosition(e.getLocation());
+				
+				//Attach Listeners
+				_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ComponentMoveListener);
+				_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_ComponentMoveListener);
+				_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_ComponentMoveListener);
+			}
+		}
+    }
+    else
+    {
+        Inherited::mousePressed(e);
+    }
+}
+
+void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseEvent& e)
+{
+	if(_FunctionComponentPanel->getParentWindow() != NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()!=NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
+        _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+    {
+		
+		bool isContained(false);
+		for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
+		{
+			if(_FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true) || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() + Pnt2f(4.0f, 4.0f), true)
+			   || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - Pnt2f(4.0f, 4.0f), true))
+			{
+				isContained = true;
+				_ResizableComponent = _FunctionComponentPanel->getChildren()[i];
+			}
+			
+			if(isContained)
+			{
+				_drawComponentResizeSquares = true;
+			}
+			else
+			{
+				_drawComponentResizeSquares = false;
+				_ResizableComponent = NullFC;
+			}
+			
+		}
+	}
+	else
+	{
+		_drawComponentResizeSquares = false;
+		_ResizableComponent = NullFC;
+	}
+	
+	if(_drawComponentResizeSquares)
+	{
+		_ResizableComponentTopLeft = _ResizableComponent->getPosition();
+		_ResizableComponentBottomRight = _ResizableComponent->getPosition() + _ResizableComponent->getSize();
+	}
+	else
+	{
+		_ResizableComponentTopLeft = Pnt2f(0.0f, 0.0f);
+		_ResizableComponentBottomRight = Pnt2f(0.0f, 0.0f);
+	}
+	
+	Inherited::mouseMoved(e);
+}
+
+void FunctionComponentPanel::ComponentPanelMoveListener::mouseDragged(const MouseEvent& e)
+{
+	if(_drawComponentResizeSquares)
+	{
+		_ResizableComponentTopLeft = _ResizableComponent->getPosition();
+		_ResizableComponentBottomRight = _ResizableComponent->getPosition() + _ResizableComponent->getSize();
+	}
+	else
+	{
+		_ResizableComponentTopLeft = Pnt2f(0.0f, 0.0f);
+		_ResizableComponentBottomRight = Pnt2f(0.0f, 0.0f);
+	}
+	
+	Inherited::mouseDragged(e);
+}
+
+void FunctionComponentPanel::ComponentPanelMoveListener::keyReleased(const KeyEvent& e)
+{
+	//std::cout << "Key Released " << e.getKey() << std::endl;
+	//std::cout << "Modifier Released " << e.getModifiers() << std::endl;
+	if(e.getKey() == KeyEvent::KEY_CONTROL)
+	{
+		_drawComponentResizeSquares = false;
+		_ResizableComponentTopLeft = Pnt2f(0.0f, 0.0f);
+		_ResizableComponentBottomRight = Pnt2f(0.0f, 0.0f);
+	}
+	Inherited::keyReleased(e);
+}
+
 
 
 void FunctionComponentPanel::ComponentMoveListener::mouseReleased(const MouseEvent& e)

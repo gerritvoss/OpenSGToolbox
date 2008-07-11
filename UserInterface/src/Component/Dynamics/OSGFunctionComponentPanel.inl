@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+FunctionComponentPanel::ComponentPanelMoveListener::ComponentPanelMoveListener(FunctionComponentPanelPtr TheFunctionComponentPanel) :
+_FunctionComponentPanel(TheFunctionComponentPanel)
+{
+}
+
+inline
 FunctionComponentPanel::ComponentMoveListener::ComponentMoveListener(FunctionComponentPanelPtr TheFunctionComponentPanel) :
 _FunctionComponentPanel(TheFunctionComponentPanel)
 {

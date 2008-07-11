@@ -114,6 +114,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
     /*! \}                                                                 */
     virtual void updateLayout(void);
     
+	class ComponentPanelMoveListener : public MouseAdapter,public KeyAdapter,public MouseMotionAdapter
+	{
+	public :
+		ComponentPanelMoveListener(FunctionComponentPanelPtr TheFunctionComponentPanel);
+		
+		virtual void mousePressed(const MouseEvent& e);
+		virtual void mouseMoved(const MouseEvent& e);
+		virtual void mouseDragged(const MouseEvent& e);
+        virtual void keyReleased(const KeyEvent& e);
+		
+		//void setResizableComponent(ComponentPtr Component);
+		//void setResizableComponentBounds(Pnt2f TopLeft, Pnt2f BottomRight);
+	protected :
+		FunctionComponentPanelPtr _FunctionComponentPanel;
+		bool _drawComponentResizeSquares;
+		Pnt2f _ResizableComponentTopLeft, _ResizableComponentBottomRight;
+		ComponentPtr _ResizableComponent;
+	};
+	
 	class ComponentMoveListener : public MouseAdapter,public KeyAdapter,public MouseMotionAdapter
 	{
 	public :
