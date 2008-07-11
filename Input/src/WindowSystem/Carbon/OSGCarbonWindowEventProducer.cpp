@@ -238,6 +238,7 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
 		{ kEventClassKeyboard, kEventRawKeyDown},
         { kEventClassKeyboard, kEventRawKeyRepeat},
         { kEventClassKeyboard, kEventRawKeyUp},
+        { kEventClassKeyboard, kEventRawKeyModifiersChanged},
         { kEventClassMouse, kEventMouseDown },
         { kEventClassMouse, kEventMouseUp },
         { kEventClassMouse, kEventMouseMoved },
@@ -581,6 +582,22 @@ OSStatus CarbonWindowEventProducer::handleKeyEvent(EventHandlerCallRef nextHandl
 			break;
 		case kEventRawKeyRepeat:
 			produceKeyPressed(determineKey(key),determineKeyModifiers(keyModifiers));
+			break;
+		case kEventRawKeyModifiersChanged:
+		    //std::cout << "kEventRawKeyModifiersChanged " << determineKeyModifiers(keyModifiers) << std::endl;
+			if((determineKeyModifiers(keyModifiers) & KeyEvent::KEY_MODIFIER_CONTROL) &&
+			   !(_modifierKeyState & KeyEvent::KEY_MODIFIER_CONTROL))
+			{
+				//Control key pressed
+				produceKeyPressed(KeyEvent::KEY_CONTROL, determineKeyModifiers(keyModifiers));
+			}
+			if(!(determineKeyModifiers(keyModifiers) & KeyEvent::KEY_MODIFIER_CONTROL) &&
+			   (_modifierKeyState & KeyEvent::KEY_MODIFIER_CONTROL))
+			{
+				//Control key released
+				produceKeyReleased(KeyEvent::KEY_CONTROL, determineKeyModifiers(keyModifiers));
+			}
+			_modifierKeyState = determineKeyModifiers(keyModifiers);
 			break;
 		default:
 			break;

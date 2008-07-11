@@ -41,6 +41,160 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		C97C44170E1C12340078CE35 /* OSGEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43A20E1C12340078CE35 /* OSGEvent.h */; };
+		C97C44180E1C12340078CE35 /* OSGEventFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43A40E1C12340078CE35 /* OSGEventFactory.cpp */; };
+		C97C44190E1C12340078CE35 /* OSGEventFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43A50E1C12340078CE35 /* OSGEventFactory.h */; };
+		C97C441A0E1C12340078CE35 /* OSGEventListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43A60E1C12340078CE35 /* OSGEventListener.h */; };
+		C97C441B0E1C12340078CE35 /* OSGEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43A70E1C12340078CE35 /* OSGEventProducer.h */; };
+		C97C441C0E1C12340078CE35 /* OSGEventType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43A90E1C12340078CE35 /* OSGEventType.cpp */; };
+		C97C441D0E1C12340078CE35 /* OSGEventType.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43AA0E1C12340078CE35 /* OSGEventType.h */; };
+		C97C441E0E1C12340078CE35 /* OSGFieldChangeEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43AC0E1C12340078CE35 /* OSGFieldChangeEvent.cpp */; };
+		C97C441F0E1C12340078CE35 /* OSGFieldChangeEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43AD0E1C12340078CE35 /* OSGFieldChangeEvent.h */; };
+		C97C44200E1C12340078CE35 /* OSGFieldChangeListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43AF0E1C12340078CE35 /* OSGFieldChangeListener.cpp */; };
+		C97C44210E1C12340078CE35 /* OSGFieldChangeListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B00E1C12340078CE35 /* OSGFieldChangeListener.h */; };
+		C97C44220E1C12340078CE35 /* OSGKeyAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43B10E1C12340078CE35 /* OSGKeyAdapter.cpp */; };
+		C97C44230E1C12340078CE35 /* OSGKeyAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B20E1C12340078CE35 /* OSGKeyAdapter.h */; };
+		C97C44240E1C12340078CE35 /* OSGKeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43B30E1C12340078CE35 /* OSGKeyEvent.cpp */; };
+		C97C44250E1C12340078CE35 /* OSGKeyEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B40E1C12340078CE35 /* OSGKeyEvent.h */; };
+		C97C44260E1C12340078CE35 /* OSGKeyEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43B60E1C12340078CE35 /* OSGKeyEventProducer.cpp */; };
+		C97C44270E1C12340078CE35 /* OSGKeyEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B70E1C12340078CE35 /* OSGKeyEventProducer.h */; };
+		C97C44280E1C12340078CE35 /* OSGKeyListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B90E1C12340078CE35 /* OSGKeyListener.h */; };
+		C97C44290E1C12340078CE35 /* OSGMouseAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43BA0E1C12340078CE35 /* OSGMouseAdapter.cpp */; };
+		C97C442A0E1C12340078CE35 /* OSGMouseAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43BB0E1C12340078CE35 /* OSGMouseAdapter.h */; };
+		C97C442B0E1C12340078CE35 /* OSGMouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43BC0E1C12340078CE35 /* OSGMouseEvent.cpp */; };
+		C97C442C0E1C12340078CE35 /* OSGMouseEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43BD0E1C12340078CE35 /* OSGMouseEvent.h */; };
+		C97C442D0E1C12340078CE35 /* OSGMouseEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43BF0E1C12340078CE35 /* OSGMouseEventProducer.cpp */; };
+		C97C442E0E1C12340078CE35 /* OSGMouseEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C00E1C12340078CE35 /* OSGMouseEventProducer.h */; };
+		C97C442F0E1C12340078CE35 /* OSGMouseListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C20E1C12340078CE35 /* OSGMouseListener.h */; };
+		C97C44300E1C12340078CE35 /* OSGMouseMotionAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43C30E1C12340078CE35 /* OSGMouseMotionAdapter.cpp */; };
+		C97C44310E1C12340078CE35 /* OSGMouseMotionAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C40E1C12340078CE35 /* OSGMouseMotionAdapter.h */; };
+		C97C44320E1C12340078CE35 /* OSGMouseMotionEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43C50E1C12340078CE35 /* OSGMouseMotionEventProducer.cpp */; };
+		C97C44330E1C12340078CE35 /* OSGMouseMotionEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C60E1C12340078CE35 /* OSGMouseMotionEventProducer.h */; };
+		C97C44340E1C12340078CE35 /* OSGMouseMotionListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C80E1C12340078CE35 /* OSGMouseMotionListener.h */; };
+		C97C44350E1C12340078CE35 /* OSGMouseWheelEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43C90E1C12340078CE35 /* OSGMouseWheelEvent.cpp */; };
+		C97C44360E1C12340078CE35 /* OSGMouseWheelEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43CA0E1C12340078CE35 /* OSGMouseWheelEvent.h */; };
+		C97C44370E1C12340078CE35 /* OSGMouseWheelEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43CC0E1C12340078CE35 /* OSGMouseWheelEventProducer.cpp */; };
+		C97C44380E1C12340078CE35 /* OSGMouseWheelEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43CD0E1C12340078CE35 /* OSGMouseWheelEventProducer.h */; };
+		C97C44390E1C12340078CE35 /* OSGMouseWheelListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43CF0E1C12340078CE35 /* OSGMouseWheelListener.h */; };
+		C97C443A0E1C12340078CE35 /* OSGUpdateEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43D00E1C12340078CE35 /* OSGUpdateEvent.cpp */; };
+		C97C443B0E1C12340078CE35 /* OSGUpdateEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D10E1C12340078CE35 /* OSGUpdateEvent.h */; };
+		C97C443C0E1C12340078CE35 /* OSGUpdateListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D30E1C12340078CE35 /* OSGUpdateListener.h */; };
+		C97C443D0E1C12340078CE35 /* OSGWindowAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43D40E1C12340078CE35 /* OSGWindowAdapter.cpp */; };
+		C97C443E0E1C12340078CE35 /* OSGWindowAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D50E1C12340078CE35 /* OSGWindowAdapter.h */; };
+		C97C443F0E1C12340078CE35 /* OSGWindowEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43D60E1C12340078CE35 /* OSGWindowEvent.cpp */; };
+		C97C44400E1C12340078CE35 /* OSGWindowEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D70E1C12340078CE35 /* OSGWindowEvent.h */; };
+		C97C44410E1C12340078CE35 /* OSGWindowListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D90E1C12340078CE35 /* OSGWindowListener.h */; };
+		C97C44420E1C12340078CE35 /* OSGInputDef.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43DA0E1C12340078CE35 /* OSGInputDef.h */; };
+		C97C44430E1C12340078CE35 /* OSGInputSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43DB0E1C12340078CE35 /* OSGInputSettings.cpp */; };
+		C97C44440E1C12340078CE35 /* OSGInputSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43DC0E1C12340078CE35 /* OSGInputSettings.h */; };
+		C97C44450E1C12340078CE35 /* OSGStringUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43DF0E1C12340078CE35 /* OSGStringUtils.cpp */; };
+		C97C44460E1C12340078CE35 /* OSGStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43E00E1C12340078CE35 /* OSGStringUtils.h */; };
+		C97C44470E1C12340078CE35 /* OSGCarbonWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43E40E1C12340078CE35 /* OSGCarbonWindowEventProducer.cpp */; };
+		C97C44480E1C12340078CE35 /* OSGCarbonWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43E50E1C12340078CE35 /* OSGCarbonWindowEventProducer.h */; };
+		C97C44490E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43E70E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.cpp */; };
+		C97C444A0E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43E80E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.h */; };
+		C97C444B0E1C12340078CE35 /* OSGCarbonWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43EA0E1C12340078CE35 /* OSGCarbonWindowEventProducerFields.h */; };
+		C97C444C0E1C12340078CE35 /* OSGGLUTWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43EF0E1C12340078CE35 /* OSGGLUTWindowEventProducer.cpp */; };
+		C97C444D0E1C12340078CE35 /* OSGGLUTWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43F00E1C12340078CE35 /* OSGGLUTWindowEventProducer.h */; };
+		C97C444E0E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43F20E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.cpp */; };
+		C97C444F0E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43F30E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.h */; };
+		C97C44500E1C12340078CE35 /* OSGGLUTWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43F50E1C12340078CE35 /* OSGGLUTWindowEventProducerFields.h */; };
+		C97C44510E1C12340078CE35 /* OSGWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43F60E1C12340078CE35 /* OSGWindowEventProducer.cpp */; };
+		C97C44520E1C12340078CE35 /* OSGWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43F70E1C12340078CE35 /* OSGWindowEventProducer.h */; };
+		C97C44530E1C12340078CE35 /* OSGWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43F90E1C12340078CE35 /* OSGWindowEventProducerBase.cpp */; };
+		C97C44540E1C12340078CE35 /* OSGWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43FA0E1C12340078CE35 /* OSGWindowEventProducerBase.h */; };
+		C97C44550E1C12340078CE35 /* OSGWindowEventProducerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43FC0E1C12340078CE35 /* OSGWindowEventProducerFactory.cpp */; };
+		C97C44560E1C12340078CE35 /* OSGWindowEventProducerFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43FD0E1C12340078CE35 /* OSGWindowEventProducerFactory.h */; };
+		C97C44570E1C12340078CE35 /* OSGWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43FF0E1C12340078CE35 /* OSGWindowEventProducerFields.h */; };
+		C97C44580E1C12340078CE35 /* OSGWindowUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C44000E1C12340078CE35 /* OSGWindowUtils.cpp */; };
+		C97C44590E1C12340078CE35 /* OSGWindowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44010E1C12340078CE35 /* OSGWindowUtils.h */; };
+		C97C445A0E1C12340078CE35 /* OSGWin32WindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C44050E1C12340078CE35 /* OSGWin32WindowEventProducer.cpp */; };
+		C97C445B0E1C12340078CE35 /* OSGWin32WindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44060E1C12340078CE35 /* OSGWin32WindowEventProducer.h */; };
+		C97C445C0E1C12340078CE35 /* OSGWin32WindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C44080E1C12340078CE35 /* OSGWin32WindowEventProducerBase.cpp */; };
+		C97C445D0E1C12340078CE35 /* OSGWin32WindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44090E1C12340078CE35 /* OSGWin32WindowEventProducerBase.h */; };
+		C97C445E0E1C12340078CE35 /* OSGWin32WindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C440B0E1C12340078CE35 /* OSGWin32WindowEventProducerFields.h */; };
+		C97C445F0E1C12340078CE35 /* OSGXWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C440F0E1C12340078CE35 /* OSGXWindowEventProducer.cpp */; };
+		C97C44600E1C12340078CE35 /* OSGXWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44100E1C12340078CE35 /* OSGXWindowEventProducer.h */; };
+		C97C44610E1C12340078CE35 /* OSGXWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C44120E1C12340078CE35 /* OSGXWindowEventProducerBase.cpp */; };
+		C97C44620E1C12340078CE35 /* OSGXWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44130E1C12340078CE35 /* OSGXWindowEventProducerBase.h */; };
+		C97C44630E1C12340078CE35 /* OSGXWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44150E1C12340078CE35 /* OSGXWindowEventProducerFields.h */; };
+		C97C44640E1C12340078CE35 /* OSGEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43A20E1C12340078CE35 /* OSGEvent.h */; };
+		C97C44650E1C12340078CE35 /* OSGEventFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43A40E1C12340078CE35 /* OSGEventFactory.cpp */; };
+		C97C44660E1C12340078CE35 /* OSGEventFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43A50E1C12340078CE35 /* OSGEventFactory.h */; };
+		C97C44670E1C12340078CE35 /* OSGEventListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43A60E1C12340078CE35 /* OSGEventListener.h */; };
+		C97C44680E1C12340078CE35 /* OSGEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43A70E1C12340078CE35 /* OSGEventProducer.h */; };
+		C97C44690E1C12340078CE35 /* OSGEventType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43A90E1C12340078CE35 /* OSGEventType.cpp */; };
+		C97C446A0E1C12340078CE35 /* OSGEventType.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43AA0E1C12340078CE35 /* OSGEventType.h */; };
+		C97C446B0E1C12340078CE35 /* OSGFieldChangeEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43AC0E1C12340078CE35 /* OSGFieldChangeEvent.cpp */; };
+		C97C446C0E1C12340078CE35 /* OSGFieldChangeEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43AD0E1C12340078CE35 /* OSGFieldChangeEvent.h */; };
+		C97C446D0E1C12340078CE35 /* OSGFieldChangeListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43AF0E1C12340078CE35 /* OSGFieldChangeListener.cpp */; };
+		C97C446E0E1C12340078CE35 /* OSGFieldChangeListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B00E1C12340078CE35 /* OSGFieldChangeListener.h */; };
+		C97C446F0E1C12340078CE35 /* OSGKeyAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43B10E1C12340078CE35 /* OSGKeyAdapter.cpp */; };
+		C97C44700E1C12340078CE35 /* OSGKeyAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B20E1C12340078CE35 /* OSGKeyAdapter.h */; };
+		C97C44710E1C12340078CE35 /* OSGKeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43B30E1C12340078CE35 /* OSGKeyEvent.cpp */; };
+		C97C44720E1C12340078CE35 /* OSGKeyEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B40E1C12340078CE35 /* OSGKeyEvent.h */; };
+		C97C44730E1C12340078CE35 /* OSGKeyEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43B60E1C12340078CE35 /* OSGKeyEventProducer.cpp */; };
+		C97C44740E1C12340078CE35 /* OSGKeyEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B70E1C12340078CE35 /* OSGKeyEventProducer.h */; };
+		C97C44750E1C12340078CE35 /* OSGKeyListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43B90E1C12340078CE35 /* OSGKeyListener.h */; };
+		C97C44760E1C12340078CE35 /* OSGMouseAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43BA0E1C12340078CE35 /* OSGMouseAdapter.cpp */; };
+		C97C44770E1C12340078CE35 /* OSGMouseAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43BB0E1C12340078CE35 /* OSGMouseAdapter.h */; };
+		C97C44780E1C12340078CE35 /* OSGMouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43BC0E1C12340078CE35 /* OSGMouseEvent.cpp */; };
+		C97C44790E1C12340078CE35 /* OSGMouseEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43BD0E1C12340078CE35 /* OSGMouseEvent.h */; };
+		C97C447A0E1C12340078CE35 /* OSGMouseEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43BF0E1C12340078CE35 /* OSGMouseEventProducer.cpp */; };
+		C97C447B0E1C12340078CE35 /* OSGMouseEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C00E1C12340078CE35 /* OSGMouseEventProducer.h */; };
+		C97C447C0E1C12340078CE35 /* OSGMouseListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C20E1C12340078CE35 /* OSGMouseListener.h */; };
+		C97C447D0E1C12340078CE35 /* OSGMouseMotionAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43C30E1C12340078CE35 /* OSGMouseMotionAdapter.cpp */; };
+		C97C447E0E1C12340078CE35 /* OSGMouseMotionAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C40E1C12340078CE35 /* OSGMouseMotionAdapter.h */; };
+		C97C447F0E1C12340078CE35 /* OSGMouseMotionEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43C50E1C12340078CE35 /* OSGMouseMotionEventProducer.cpp */; };
+		C97C44800E1C12340078CE35 /* OSGMouseMotionEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C60E1C12340078CE35 /* OSGMouseMotionEventProducer.h */; };
+		C97C44810E1C12340078CE35 /* OSGMouseMotionListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43C80E1C12340078CE35 /* OSGMouseMotionListener.h */; };
+		C97C44820E1C12340078CE35 /* OSGMouseWheelEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43C90E1C12340078CE35 /* OSGMouseWheelEvent.cpp */; };
+		C97C44830E1C12340078CE35 /* OSGMouseWheelEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43CA0E1C12340078CE35 /* OSGMouseWheelEvent.h */; };
+		C97C44840E1C12340078CE35 /* OSGMouseWheelEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43CC0E1C12340078CE35 /* OSGMouseWheelEventProducer.cpp */; };
+		C97C44850E1C12340078CE35 /* OSGMouseWheelEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43CD0E1C12340078CE35 /* OSGMouseWheelEventProducer.h */; };
+		C97C44860E1C12340078CE35 /* OSGMouseWheelListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43CF0E1C12340078CE35 /* OSGMouseWheelListener.h */; };
+		C97C44870E1C12340078CE35 /* OSGUpdateEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43D00E1C12340078CE35 /* OSGUpdateEvent.cpp */; };
+		C97C44880E1C12340078CE35 /* OSGUpdateEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D10E1C12340078CE35 /* OSGUpdateEvent.h */; };
+		C97C44890E1C12340078CE35 /* OSGUpdateListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D30E1C12340078CE35 /* OSGUpdateListener.h */; };
+		C97C448A0E1C12340078CE35 /* OSGWindowAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43D40E1C12340078CE35 /* OSGWindowAdapter.cpp */; };
+		C97C448B0E1C12340078CE35 /* OSGWindowAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D50E1C12340078CE35 /* OSGWindowAdapter.h */; };
+		C97C448C0E1C12340078CE35 /* OSGWindowEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43D60E1C12340078CE35 /* OSGWindowEvent.cpp */; };
+		C97C448D0E1C12340078CE35 /* OSGWindowEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D70E1C12340078CE35 /* OSGWindowEvent.h */; };
+		C97C448E0E1C12340078CE35 /* OSGWindowListener.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43D90E1C12340078CE35 /* OSGWindowListener.h */; };
+		C97C448F0E1C12340078CE35 /* OSGInputDef.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43DA0E1C12340078CE35 /* OSGInputDef.h */; };
+		C97C44900E1C12340078CE35 /* OSGInputSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43DB0E1C12340078CE35 /* OSGInputSettings.cpp */; };
+		C97C44910E1C12340078CE35 /* OSGInputSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43DC0E1C12340078CE35 /* OSGInputSettings.h */; };
+		C97C44920E1C12340078CE35 /* OSGStringUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43DF0E1C12340078CE35 /* OSGStringUtils.cpp */; };
+		C97C44930E1C12340078CE35 /* OSGStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43E00E1C12340078CE35 /* OSGStringUtils.h */; };
+		C97C44940E1C12340078CE35 /* OSGCarbonWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43E40E1C12340078CE35 /* OSGCarbonWindowEventProducer.cpp */; };
+		C97C44950E1C12340078CE35 /* OSGCarbonWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43E50E1C12340078CE35 /* OSGCarbonWindowEventProducer.h */; };
+		C97C44960E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43E70E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.cpp */; };
+		C97C44970E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43E80E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.h */; };
+		C97C44980E1C12340078CE35 /* OSGCarbonWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43EA0E1C12340078CE35 /* OSGCarbonWindowEventProducerFields.h */; };
+		C97C44990E1C12340078CE35 /* OSGGLUTWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43EF0E1C12340078CE35 /* OSGGLUTWindowEventProducer.cpp */; };
+		C97C449A0E1C12340078CE35 /* OSGGLUTWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43F00E1C12340078CE35 /* OSGGLUTWindowEventProducer.h */; };
+		C97C449B0E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43F20E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.cpp */; };
+		C97C449C0E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43F30E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.h */; };
+		C97C449D0E1C12340078CE35 /* OSGGLUTWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43F50E1C12340078CE35 /* OSGGLUTWindowEventProducerFields.h */; };
+		C97C449E0E1C12340078CE35 /* OSGWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43F60E1C12340078CE35 /* OSGWindowEventProducer.cpp */; };
+		C97C449F0E1C12340078CE35 /* OSGWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43F70E1C12340078CE35 /* OSGWindowEventProducer.h */; };
+		C97C44A00E1C12340078CE35 /* OSGWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43F90E1C12340078CE35 /* OSGWindowEventProducerBase.cpp */; };
+		C97C44A10E1C12340078CE35 /* OSGWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43FA0E1C12340078CE35 /* OSGWindowEventProducerBase.h */; };
+		C97C44A20E1C12340078CE35 /* OSGWindowEventProducerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C43FC0E1C12340078CE35 /* OSGWindowEventProducerFactory.cpp */; };
+		C97C44A30E1C12340078CE35 /* OSGWindowEventProducerFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43FD0E1C12340078CE35 /* OSGWindowEventProducerFactory.h */; };
+		C97C44A40E1C12340078CE35 /* OSGWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C43FF0E1C12340078CE35 /* OSGWindowEventProducerFields.h */; };
+		C97C44A50E1C12340078CE35 /* OSGWindowUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C44000E1C12340078CE35 /* OSGWindowUtils.cpp */; };
+		C97C44A60E1C12340078CE35 /* OSGWindowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44010E1C12340078CE35 /* OSGWindowUtils.h */; };
+		C97C44A70E1C12340078CE35 /* OSGWin32WindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C44050E1C12340078CE35 /* OSGWin32WindowEventProducer.cpp */; };
+		C97C44A80E1C12340078CE35 /* OSGWin32WindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44060E1C12340078CE35 /* OSGWin32WindowEventProducer.h */; };
+		C97C44A90E1C12340078CE35 /* OSGWin32WindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C44080E1C12340078CE35 /* OSGWin32WindowEventProducerBase.cpp */; };
+		C97C44AA0E1C12340078CE35 /* OSGWin32WindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44090E1C12340078CE35 /* OSGWin32WindowEventProducerBase.h */; };
+		C97C44AB0E1C12340078CE35 /* OSGWin32WindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C440B0E1C12340078CE35 /* OSGWin32WindowEventProducerFields.h */; };
+		C97C44AC0E1C12340078CE35 /* OSGXWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C440F0E1C12340078CE35 /* OSGXWindowEventProducer.cpp */; };
+		C97C44AD0E1C12340078CE35 /* OSGXWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44100E1C12340078CE35 /* OSGXWindowEventProducer.h */; };
+		C97C44AE0E1C12340078CE35 /* OSGXWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C97C44120E1C12340078CE35 /* OSGXWindowEventProducerBase.cpp */; };
+		C97C44AF0E1C12340078CE35 /* OSGXWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44130E1C12340078CE35 /* OSGXWindowEventProducerBase.h */; };
+		C97C44B00E1C12340078CE35 /* OSGXWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C97C44150E1C12340078CE35 /* OSGXWindowEventProducerFields.h */; };
 		D4BE3F7B0CF0D0DE0046BAE7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BE3F7A0CF0D0DE0046BAE7 /* Carbon.framework */; };
 		D4BE3F7C0CF0D0DE0046BAE7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BE3F7A0CF0D0DE0046BAE7 /* Carbon.framework */; };
 		D4BE3F840CF0D12B0046BAE7 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BE3F830CF0D12B0046BAE7 /* AGL.framework */; };
@@ -48,160 +202,6 @@
 		D4BE410F0CF0D8500046BAE7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BE3F7A0CF0D0DE0046BAE7 /* Carbon.framework */; };
 		D4BE41100CF0D8540046BAE7 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BE3F830CF0D12B0046BAE7 /* AGL.framework */; };
 		D4BE41120CF0D8640046BAE7 /* 03DefaultWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4BE40010CF0D56B0046BAE7 /* 03DefaultWindow.cpp */; };
-		D4DD00000CF0CB6B00F00431 /* OSGKeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF8F0CF0CB6B00F00431 /* OSGKeyEvent.cpp */; };
-		D4DD00010CF0CB6B00F00431 /* OSGKeyEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF900CF0CB6B00F00431 /* OSGKeyEvent.h */; };
-		D4DD00020CF0CB6B00F00431 /* OSGKeyEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF920CF0CB6B00F00431 /* OSGKeyEventProducer.cpp */; };
-		D4DD00030CF0CB6B00F00431 /* OSGKeyEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF930CF0CB6B00F00431 /* OSGKeyEventProducer.h */; };
-		D4DD00040CF0CB6B00F00431 /* OSGKeyListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF950CF0CB6B00F00431 /* OSGKeyListener.h */; };
-		D4DD00050CF0CB6B00F00431 /* OSGMouseAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF960CF0CB6B00F00431 /* OSGMouseAdapter.cpp */; };
-		D4DD00060CF0CB6B00F00431 /* OSGMouseAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF970CF0CB6B00F00431 /* OSGMouseAdapter.h */; };
-		D4DD00070CF0CB6B00F00431 /* OSGMouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF980CF0CB6B00F00431 /* OSGMouseEvent.cpp */; };
-		D4DD00080CF0CB6B00F00431 /* OSGMouseEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF990CF0CB6B00F00431 /* OSGMouseEvent.h */; };
-		D4DD00090CF0CB6B00F00431 /* OSGMouseEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF9B0CF0CB6B00F00431 /* OSGMouseEventProducer.cpp */; };
-		D4DD000A0CF0CB6B00F00431 /* OSGMouseEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF9C0CF0CB6B00F00431 /* OSGMouseEventProducer.h */; };
-		D4DD000B0CF0CB6B00F00431 /* OSGMouseListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF9E0CF0CB6B00F00431 /* OSGMouseListener.h */; };
-		D4DD000C0CF0CB6B00F00431 /* OSGMouseMotionAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF9F0CF0CB6B00F00431 /* OSGMouseMotionAdapter.cpp */; };
-		D4DD000D0CF0CB6B00F00431 /* OSGMouseMotionAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA00CF0CB6B00F00431 /* OSGMouseMotionAdapter.h */; };
-		D4DD000E0CF0CB6B00F00431 /* OSGMouseMotionEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFA10CF0CB6B00F00431 /* OSGMouseMotionEventProducer.cpp */; };
-		D4DD000F0CF0CB6B00F00431 /* OSGMouseMotionEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA20CF0CB6B00F00431 /* OSGMouseMotionEventProducer.h */; };
-		D4DD00100CF0CB6B00F00431 /* OSGMouseMotionListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA40CF0CB6B00F00431 /* OSGMouseMotionListener.h */; };
-		D4DD00110CF0CB6B00F00431 /* OSGMouseWheelEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFA50CF0CB6B00F00431 /* OSGMouseWheelEvent.cpp */; };
-		D4DD00120CF0CB6B00F00431 /* OSGMouseWheelEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA60CF0CB6B00F00431 /* OSGMouseWheelEvent.h */; };
-		D4DD00130CF0CB6B00F00431 /* OSGMouseWheelEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFA80CF0CB6B00F00431 /* OSGMouseWheelEventProducer.cpp */; };
-		D4DD00140CF0CB6B00F00431 /* OSGMouseWheelEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA90CF0CB6B00F00431 /* OSGMouseWheelEventProducer.h */; };
-		D4DD00150CF0CB6B00F00431 /* OSGMouseWheelListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFAB0CF0CB6B00F00431 /* OSGMouseWheelListener.h */; };
-		D4DD00160CF0CB6B00F00431 /* OSGUpdateEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFAC0CF0CB6B00F00431 /* OSGUpdateEvent.cpp */; };
-		D4DD00170CF0CB6B00F00431 /* OSGUpdateEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFAD0CF0CB6B00F00431 /* OSGUpdateEvent.h */; };
-		D4DD00180CF0CB6B00F00431 /* OSGUpdateListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFAF0CF0CB6B00F00431 /* OSGUpdateListener.h */; };
-		D4DD00190CF0CB6B00F00431 /* OSGWindowAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFB00CF0CB6B00F00431 /* OSGWindowAdapter.cpp */; };
-		D4DD001A0CF0CB6B00F00431 /* OSGWindowAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB10CF0CB6B00F00431 /* OSGWindowAdapter.h */; };
-		D4DD001B0CF0CB6B00F00431 /* OSGWindowEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFB20CF0CB6B00F00431 /* OSGWindowEvent.cpp */; };
-		D4DD001C0CF0CB6B00F00431 /* OSGWindowEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB30CF0CB6B00F00431 /* OSGWindowEvent.h */; };
-		D4DD001D0CF0CB6B00F00431 /* OSGWindowListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB50CF0CB6B00F00431 /* OSGWindowListener.h */; };
-		D4DD001E0CF0CB6B00F00431 /* OSGInputDef.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB60CF0CB6B00F00431 /* OSGInputDef.h */; };
-		D4DD001F0CF0CB6B00F00431 /* OSGInputSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFB70CF0CB6B00F00431 /* OSGInputSettings.cpp */; };
-		D4DD00200CF0CB6B00F00431 /* OSGInputSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB80CF0CB6B00F00431 /* OSGInputSettings.h */; };
-		D4DD00210CF0CB6B00F00431 /* OSGStringUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFBB0CF0CB6B00F00431 /* OSGStringUtils.cpp */; };
-		D4DD00220CF0CB6B00F00431 /* OSGStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFBC0CF0CB6B00F00431 /* OSGStringUtils.h */; };
-		D4DD00230CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFC00CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.cpp */; };
-		D4DD00240CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFC10CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.h */; };
-		D4DD00250CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFC30CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.cpp */; };
-		D4DD00260CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFC40CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.h */; };
-		D4DD00270CF0CB6B00F00431 /* OSGCarbonWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFC60CF0CB6B00F00431 /* OSGCarbonWindowEventProducerFields.h */; };
-		D4DD00280CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFCB0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.cpp */; };
-		D4DD00290CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFCC0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.h */; };
-		D4DD002A0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFCE0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.cpp */; };
-		D4DD002B0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFCF0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.h */; };
-		D4DD002C0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFD10CF0CB6B00F00431 /* OSGGLUTWindowEventProducerFields.h */; };
-		D4DD002D0CF0CB6B00F00431 /* OSGWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFD20CF0CB6B00F00431 /* OSGWindowEventProducer.cpp */; };
-		D4DD002E0CF0CB6B00F00431 /* OSGWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFD30CF0CB6B00F00431 /* OSGWindowEventProducer.h */; };
-		D4DD002F0CF0CB6B00F00431 /* OSGWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFD50CF0CB6B00F00431 /* OSGWindowEventProducerBase.cpp */; };
-		D4DD00300CF0CB6B00F00431 /* OSGWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFD60CF0CB6B00F00431 /* OSGWindowEventProducerBase.h */; };
-		D4DD00310CF0CB6B00F00431 /* OSGWindowEventProducerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFD80CF0CB6B00F00431 /* OSGWindowEventProducerFactory.cpp */; };
-		D4DD00320CF0CB6B00F00431 /* OSGWindowEventProducerFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFD90CF0CB6B00F00431 /* OSGWindowEventProducerFactory.h */; };
-		D4DD00330CF0CB6B00F00431 /* OSGWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFDB0CF0CB6B00F00431 /* OSGWindowEventProducerFields.h */; };
-		D4DD00340CF0CB6B00F00431 /* OSGWindowUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFDC0CF0CB6B00F00431 /* OSGWindowUtils.cpp */; };
-		D4DD00350CF0CB6B00F00431 /* OSGWindowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFDD0CF0CB6B00F00431 /* OSGWindowUtils.h */; };
-		D4DD00360CF0CB6B00F00431 /* OSGWin32WindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFE10CF0CB6B00F00431 /* OSGWin32WindowEventProducer.cpp */; };
-		D4DD00370CF0CB6B00F00431 /* OSGWin32WindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFE20CF0CB6B00F00431 /* OSGWin32WindowEventProducer.h */; };
-		D4DD00380CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFE40CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.cpp */; };
-		D4DD00390CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFE50CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.h */; };
-		D4DD003A0CF0CB6B00F00431 /* OSGWin32WindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFE70CF0CB6B00F00431 /* OSGWin32WindowEventProducerFields.h */; };
-		D4DD003B0CF0CB6B00F00431 /* OSGXWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFEB0CF0CB6B00F00431 /* OSGXWindowEventProducer.cpp */; };
-		D4DD003C0CF0CB6B00F00431 /* OSGXWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFEC0CF0CB6B00F00431 /* OSGXWindowEventProducer.h */; };
-		D4DD003D0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFEE0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.cpp */; };
-		D4DD003E0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFEF0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.h */; };
-		D4DD003F0CF0CB6B00F00431 /* OSGXWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFF10CF0CB6B00F00431 /* OSGXWindowEventProducerFields.h */; };
-		D4DD00400CF0CB6B00F00431 /* OSGEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF7E0CF0CB6B00F00431 /* OSGEvent.h */; };
-		D4DD00410CF0CB6B00F00431 /* OSGEventFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF800CF0CB6B00F00431 /* OSGEventFactory.cpp */; };
-		D4DD00420CF0CB6B00F00431 /* OSGEventFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF810CF0CB6B00F00431 /* OSGEventFactory.h */; };
-		D4DD00430CF0CB6B00F00431 /* OSGEventListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF820CF0CB6B00F00431 /* OSGEventListener.h */; };
-		D4DD00440CF0CB6B00F00431 /* OSGEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF830CF0CB6B00F00431 /* OSGEventProducer.h */; };
-		D4DD00450CF0CB6B00F00431 /* OSGEventType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF850CF0CB6B00F00431 /* OSGEventType.cpp */; };
-		D4DD00460CF0CB6B00F00431 /* OSGEventType.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF860CF0CB6B00F00431 /* OSGEventType.h */; };
-		D4DD00470CF0CB6B00F00431 /* OSGFieldChangeEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF880CF0CB6B00F00431 /* OSGFieldChangeEvent.cpp */; };
-		D4DD00480CF0CB6B00F00431 /* OSGFieldChangeEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF890CF0CB6B00F00431 /* OSGFieldChangeEvent.h */; };
-		D4DD00490CF0CB6B00F00431 /* OSGFieldChangeListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF8B0CF0CB6B00F00431 /* OSGFieldChangeListener.cpp */; };
-		D4DD004A0CF0CB6B00F00431 /* OSGFieldChangeListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF8C0CF0CB6B00F00431 /* OSGFieldChangeListener.h */; };
-		D4DD004B0CF0CB6B00F00431 /* OSGKeyAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF8D0CF0CB6B00F00431 /* OSGKeyAdapter.cpp */; };
-		D4DD004C0CF0CB6B00F00431 /* OSGKeyAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF8E0CF0CB6B00F00431 /* OSGKeyAdapter.h */; };
-		D4DD004D0CF0CB6B00F00431 /* OSGKeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF8F0CF0CB6B00F00431 /* OSGKeyEvent.cpp */; };
-		D4DD004E0CF0CB6B00F00431 /* OSGKeyEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF900CF0CB6B00F00431 /* OSGKeyEvent.h */; };
-		D4DD004F0CF0CB6B00F00431 /* OSGKeyEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF920CF0CB6B00F00431 /* OSGKeyEventProducer.cpp */; };
-		D4DD00500CF0CB6B00F00431 /* OSGKeyEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF930CF0CB6B00F00431 /* OSGKeyEventProducer.h */; };
-		D4DD00510CF0CB6B00F00431 /* OSGKeyListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF950CF0CB6B00F00431 /* OSGKeyListener.h */; };
-		D4DD00520CF0CB6B00F00431 /* OSGMouseAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF960CF0CB6B00F00431 /* OSGMouseAdapter.cpp */; };
-		D4DD00530CF0CB6B00F00431 /* OSGMouseAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF970CF0CB6B00F00431 /* OSGMouseAdapter.h */; };
-		D4DD00540CF0CB6B00F00431 /* OSGMouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF980CF0CB6B00F00431 /* OSGMouseEvent.cpp */; };
-		D4DD00550CF0CB6B00F00431 /* OSGMouseEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF990CF0CB6B00F00431 /* OSGMouseEvent.h */; };
-		D4DD00560CF0CB6B00F00431 /* OSGMouseEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF9B0CF0CB6B00F00431 /* OSGMouseEventProducer.cpp */; };
-		D4DD00570CF0CB6B00F00431 /* OSGMouseEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF9C0CF0CB6B00F00431 /* OSGMouseEventProducer.h */; };
-		D4DD00580CF0CB6B00F00431 /* OSGMouseListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF9E0CF0CB6B00F00431 /* OSGMouseListener.h */; };
-		D4DD00590CF0CB6B00F00431 /* OSGMouseMotionAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF9F0CF0CB6B00F00431 /* OSGMouseMotionAdapter.cpp */; };
-		D4DD005A0CF0CB6B00F00431 /* OSGMouseMotionAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA00CF0CB6B00F00431 /* OSGMouseMotionAdapter.h */; };
-		D4DD005B0CF0CB6B00F00431 /* OSGMouseMotionEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFA10CF0CB6B00F00431 /* OSGMouseMotionEventProducer.cpp */; };
-		D4DD005C0CF0CB6B00F00431 /* OSGMouseMotionEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA20CF0CB6B00F00431 /* OSGMouseMotionEventProducer.h */; };
-		D4DD005D0CF0CB6B00F00431 /* OSGMouseMotionListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA40CF0CB6B00F00431 /* OSGMouseMotionListener.h */; };
-		D4DD005E0CF0CB6B00F00431 /* OSGMouseWheelEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFA50CF0CB6B00F00431 /* OSGMouseWheelEvent.cpp */; };
-		D4DD005F0CF0CB6B00F00431 /* OSGMouseWheelEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA60CF0CB6B00F00431 /* OSGMouseWheelEvent.h */; };
-		D4DD00600CF0CB6B00F00431 /* OSGMouseWheelEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFA80CF0CB6B00F00431 /* OSGMouseWheelEventProducer.cpp */; };
-		D4DD00610CF0CB6B00F00431 /* OSGMouseWheelEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFA90CF0CB6B00F00431 /* OSGMouseWheelEventProducer.h */; };
-		D4DD00620CF0CB6B00F00431 /* OSGMouseWheelListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFAB0CF0CB6B00F00431 /* OSGMouseWheelListener.h */; };
-		D4DD00630CF0CB6B00F00431 /* OSGUpdateEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFAC0CF0CB6B00F00431 /* OSGUpdateEvent.cpp */; };
-		D4DD00640CF0CB6B00F00431 /* OSGUpdateEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFAD0CF0CB6B00F00431 /* OSGUpdateEvent.h */; };
-		D4DD00650CF0CB6B00F00431 /* OSGUpdateListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFAF0CF0CB6B00F00431 /* OSGUpdateListener.h */; };
-		D4DD00660CF0CB6B00F00431 /* OSGWindowAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFB00CF0CB6B00F00431 /* OSGWindowAdapter.cpp */; };
-		D4DD00670CF0CB6B00F00431 /* OSGWindowAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB10CF0CB6B00F00431 /* OSGWindowAdapter.h */; };
-		D4DD00680CF0CB6B00F00431 /* OSGWindowEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFB20CF0CB6B00F00431 /* OSGWindowEvent.cpp */; };
-		D4DD00690CF0CB6B00F00431 /* OSGWindowEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB30CF0CB6B00F00431 /* OSGWindowEvent.h */; };
-		D4DD006A0CF0CB6B00F00431 /* OSGWindowListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB50CF0CB6B00F00431 /* OSGWindowListener.h */; };
-		D4DD006B0CF0CB6B00F00431 /* OSGInputDef.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB60CF0CB6B00F00431 /* OSGInputDef.h */; };
-		D4DD006C0CF0CB6B00F00431 /* OSGInputSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFB70CF0CB6B00F00431 /* OSGInputSettings.cpp */; };
-		D4DD006D0CF0CB6B00F00431 /* OSGInputSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFB80CF0CB6B00F00431 /* OSGInputSettings.h */; };
-		D4DD006E0CF0CB6B00F00431 /* OSGStringUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFBB0CF0CB6B00F00431 /* OSGStringUtils.cpp */; };
-		D4DD006F0CF0CB6B00F00431 /* OSGStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFBC0CF0CB6B00F00431 /* OSGStringUtils.h */; };
-		D4DD00700CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFC00CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.cpp */; };
-		D4DD00710CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFC10CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.h */; };
-		D4DD00720CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFC30CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.cpp */; };
-		D4DD00730CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFC40CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.h */; };
-		D4DD00740CF0CB6B00F00431 /* OSGCarbonWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFC60CF0CB6B00F00431 /* OSGCarbonWindowEventProducerFields.h */; };
-		D4DD00750CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFCB0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.cpp */; };
-		D4DD00760CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFCC0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.h */; };
-		D4DD00770CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFCE0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.cpp */; };
-		D4DD00780CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFCF0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.h */; };
-		D4DD00790CF0CB6B00F00431 /* OSGGLUTWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFD10CF0CB6B00F00431 /* OSGGLUTWindowEventProducerFields.h */; };
-		D4DD007A0CF0CB6B00F00431 /* OSGWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFD20CF0CB6B00F00431 /* OSGWindowEventProducer.cpp */; };
-		D4DD007B0CF0CB6B00F00431 /* OSGWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFD30CF0CB6B00F00431 /* OSGWindowEventProducer.h */; };
-		D4DD007C0CF0CB6B00F00431 /* OSGWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFD50CF0CB6B00F00431 /* OSGWindowEventProducerBase.cpp */; };
-		D4DD007D0CF0CB6B00F00431 /* OSGWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFD60CF0CB6B00F00431 /* OSGWindowEventProducerBase.h */; };
-		D4DD007E0CF0CB6B00F00431 /* OSGWindowEventProducerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFD80CF0CB6B00F00431 /* OSGWindowEventProducerFactory.cpp */; };
-		D4DD007F0CF0CB6B00F00431 /* OSGWindowEventProducerFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFD90CF0CB6B00F00431 /* OSGWindowEventProducerFactory.h */; };
-		D4DD00800CF0CB6B00F00431 /* OSGWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFDB0CF0CB6B00F00431 /* OSGWindowEventProducerFields.h */; };
-		D4DD00810CF0CB6B00F00431 /* OSGWindowUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFDC0CF0CB6B00F00431 /* OSGWindowUtils.cpp */; };
-		D4DD00820CF0CB6B00F00431 /* OSGWindowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFDD0CF0CB6B00F00431 /* OSGWindowUtils.h */; };
-		D4DD00830CF0CB6B00F00431 /* OSGWin32WindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFE10CF0CB6B00F00431 /* OSGWin32WindowEventProducer.cpp */; };
-		D4DD00840CF0CB6B00F00431 /* OSGWin32WindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFE20CF0CB6B00F00431 /* OSGWin32WindowEventProducer.h */; };
-		D4DD00850CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFE40CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.cpp */; };
-		D4DD00860CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFE50CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.h */; };
-		D4DD00870CF0CB6B00F00431 /* OSGWin32WindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFE70CF0CB6B00F00431 /* OSGWin32WindowEventProducerFields.h */; };
-		D4DD00880CF0CB6B00F00431 /* OSGXWindowEventProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFEB0CF0CB6B00F00431 /* OSGXWindowEventProducer.cpp */; };
-		D4DD00890CF0CB6B00F00431 /* OSGXWindowEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFEC0CF0CB6B00F00431 /* OSGXWindowEventProducer.h */; };
-		D4DD008A0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFFEE0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.cpp */; };
-		D4DD008B0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFEF0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.h */; };
-		D4DD008C0CF0CB6B00F00431 /* OSGXWindowEventProducerFields.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFFF10CF0CB6B00F00431 /* OSGXWindowEventProducerFields.h */; };
-		D4DDFFF30CF0CB6B00F00431 /* OSGEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF7E0CF0CB6B00F00431 /* OSGEvent.h */; };
-		D4DDFFF40CF0CB6B00F00431 /* OSGEventFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF800CF0CB6B00F00431 /* OSGEventFactory.cpp */; };
-		D4DDFFF50CF0CB6B00F00431 /* OSGEventFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF810CF0CB6B00F00431 /* OSGEventFactory.h */; };
-		D4DDFFF60CF0CB6B00F00431 /* OSGEventListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF820CF0CB6B00F00431 /* OSGEventListener.h */; };
-		D4DDFFF70CF0CB6B00F00431 /* OSGEventProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF830CF0CB6B00F00431 /* OSGEventProducer.h */; };
-		D4DDFFF80CF0CB6B00F00431 /* OSGEventType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF850CF0CB6B00F00431 /* OSGEventType.cpp */; };
-		D4DDFFF90CF0CB6B00F00431 /* OSGEventType.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF860CF0CB6B00F00431 /* OSGEventType.h */; };
-		D4DDFFFA0CF0CB6B00F00431 /* OSGFieldChangeEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF880CF0CB6B00F00431 /* OSGFieldChangeEvent.cpp */; };
-		D4DDFFFB0CF0CB6B00F00431 /* OSGFieldChangeEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF890CF0CB6B00F00431 /* OSGFieldChangeEvent.h */; };
-		D4DDFFFC0CF0CB6B00F00431 /* OSGFieldChangeListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF8B0CF0CB6B00F00431 /* OSGFieldChangeListener.cpp */; };
-		D4DDFFFD0CF0CB6B00F00431 /* OSGFieldChangeListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF8C0CF0CB6B00F00431 /* OSGFieldChangeListener.h */; };
-		D4DDFFFE0CF0CB6B00F00431 /* OSGKeyAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4DDFF8D0CF0CB6B00F00431 /* OSGKeyAdapter.cpp */; };
-		D4DDFFFF0CF0CB6B00F00431 /* OSGKeyAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DDFF8E0CF0CB6B00F00431 /* OSGKeyAdapter.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -292,119 +292,119 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C97C43A20E1C12340078CE35 /* OSGEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGEvent.h; path = ../../src/Event/OSGEvent.h; sourceTree = SOURCE_ROOT; };
+		C97C43A30E1C12340078CE35 /* OSGEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGEvent.inl; path = ../../src/Event/OSGEvent.inl; sourceTree = SOURCE_ROOT; };
+		C97C43A40E1C12340078CE35 /* OSGEventFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGEventFactory.cpp; path = ../../src/Event/OSGEventFactory.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43A50E1C12340078CE35 /* OSGEventFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGEventFactory.h; path = ../../src/Event/OSGEventFactory.h; sourceTree = SOURCE_ROOT; };
+		C97C43A60E1C12340078CE35 /* OSGEventListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGEventListener.h; path = ../../src/Event/OSGEventListener.h; sourceTree = SOURCE_ROOT; };
+		C97C43A70E1C12340078CE35 /* OSGEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGEventProducer.h; path = ../../src/Event/OSGEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C43A80E1C12340078CE35 /* OSGEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGEventProducer.inl; path = ../../src/Event/OSGEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C43A90E1C12340078CE35 /* OSGEventType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGEventType.cpp; path = ../../src/Event/OSGEventType.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43AA0E1C12340078CE35 /* OSGEventType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGEventType.h; path = ../../src/Event/OSGEventType.h; sourceTree = SOURCE_ROOT; };
+		C97C43AB0E1C12340078CE35 /* OSGEventType.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGEventType.inl; path = ../../src/Event/OSGEventType.inl; sourceTree = SOURCE_ROOT; };
+		C97C43AC0E1C12340078CE35 /* OSGFieldChangeEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFieldChangeEvent.cpp; path = ../../src/Event/OSGFieldChangeEvent.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43AD0E1C12340078CE35 /* OSGFieldChangeEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFieldChangeEvent.h; path = ../../src/Event/OSGFieldChangeEvent.h; sourceTree = SOURCE_ROOT; };
+		C97C43AE0E1C12340078CE35 /* OSGFieldChangeEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFieldChangeEvent.inl; path = ../../src/Event/OSGFieldChangeEvent.inl; sourceTree = SOURCE_ROOT; };
+		C97C43AF0E1C12340078CE35 /* OSGFieldChangeListener.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFieldChangeListener.cpp; path = ../../src/Event/OSGFieldChangeListener.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43B00E1C12340078CE35 /* OSGFieldChangeListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFieldChangeListener.h; path = ../../src/Event/OSGFieldChangeListener.h; sourceTree = SOURCE_ROOT; };
+		C97C43B10E1C12340078CE35 /* OSGKeyAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGKeyAdapter.cpp; path = ../../src/Event/OSGKeyAdapter.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43B20E1C12340078CE35 /* OSGKeyAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGKeyAdapter.h; path = ../../src/Event/OSGKeyAdapter.h; sourceTree = SOURCE_ROOT; };
+		C97C43B30E1C12340078CE35 /* OSGKeyEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGKeyEvent.cpp; path = ../../src/Event/OSGKeyEvent.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43B40E1C12340078CE35 /* OSGKeyEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGKeyEvent.h; path = ../../src/Event/OSGKeyEvent.h; sourceTree = SOURCE_ROOT; };
+		C97C43B50E1C12340078CE35 /* OSGKeyEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGKeyEvent.inl; path = ../../src/Event/OSGKeyEvent.inl; sourceTree = SOURCE_ROOT; };
+		C97C43B60E1C12340078CE35 /* OSGKeyEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGKeyEventProducer.cpp; path = ../../src/Event/OSGKeyEventProducer.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43B70E1C12340078CE35 /* OSGKeyEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGKeyEventProducer.h; path = ../../src/Event/OSGKeyEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C43B80E1C12340078CE35 /* OSGKeyEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGKeyEventProducer.inl; path = ../../src/Event/OSGKeyEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C43B90E1C12340078CE35 /* OSGKeyListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGKeyListener.h; path = ../../src/Event/OSGKeyListener.h; sourceTree = SOURCE_ROOT; };
+		C97C43BA0E1C12340078CE35 /* OSGMouseAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMouseAdapter.cpp; path = ../../src/Event/OSGMouseAdapter.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43BB0E1C12340078CE35 /* OSGMouseAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseAdapter.h; path = ../../src/Event/OSGMouseAdapter.h; sourceTree = SOURCE_ROOT; };
+		C97C43BC0E1C12340078CE35 /* OSGMouseEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMouseEvent.cpp; path = ../../src/Event/OSGMouseEvent.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43BD0E1C12340078CE35 /* OSGMouseEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseEvent.h; path = ../../src/Event/OSGMouseEvent.h; sourceTree = SOURCE_ROOT; };
+		C97C43BE0E1C12340078CE35 /* OSGMouseEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGMouseEvent.inl; path = ../../src/Event/OSGMouseEvent.inl; sourceTree = SOURCE_ROOT; };
+		C97C43BF0E1C12340078CE35 /* OSGMouseEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMouseEventProducer.cpp; path = ../../src/Event/OSGMouseEventProducer.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43C00E1C12340078CE35 /* OSGMouseEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseEventProducer.h; path = ../../src/Event/OSGMouseEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C43C10E1C12340078CE35 /* OSGMouseEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGMouseEventProducer.inl; path = ../../src/Event/OSGMouseEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C43C20E1C12340078CE35 /* OSGMouseListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseListener.h; path = ../../src/Event/OSGMouseListener.h; sourceTree = SOURCE_ROOT; };
+		C97C43C30E1C12340078CE35 /* OSGMouseMotionAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMouseMotionAdapter.cpp; path = ../../src/Event/OSGMouseMotionAdapter.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43C40E1C12340078CE35 /* OSGMouseMotionAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseMotionAdapter.h; path = ../../src/Event/OSGMouseMotionAdapter.h; sourceTree = SOURCE_ROOT; };
+		C97C43C50E1C12340078CE35 /* OSGMouseMotionEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMouseMotionEventProducer.cpp; path = ../../src/Event/OSGMouseMotionEventProducer.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43C60E1C12340078CE35 /* OSGMouseMotionEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseMotionEventProducer.h; path = ../../src/Event/OSGMouseMotionEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C43C70E1C12340078CE35 /* OSGMouseMotionEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGMouseMotionEventProducer.inl; path = ../../src/Event/OSGMouseMotionEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C43C80E1C12340078CE35 /* OSGMouseMotionListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseMotionListener.h; path = ../../src/Event/OSGMouseMotionListener.h; sourceTree = SOURCE_ROOT; };
+		C97C43C90E1C12340078CE35 /* OSGMouseWheelEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMouseWheelEvent.cpp; path = ../../src/Event/OSGMouseWheelEvent.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43CA0E1C12340078CE35 /* OSGMouseWheelEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseWheelEvent.h; path = ../../src/Event/OSGMouseWheelEvent.h; sourceTree = SOURCE_ROOT; };
+		C97C43CB0E1C12340078CE35 /* OSGMouseWheelEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGMouseWheelEvent.inl; path = ../../src/Event/OSGMouseWheelEvent.inl; sourceTree = SOURCE_ROOT; };
+		C97C43CC0E1C12340078CE35 /* OSGMouseWheelEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMouseWheelEventProducer.cpp; path = ../../src/Event/OSGMouseWheelEventProducer.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43CD0E1C12340078CE35 /* OSGMouseWheelEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseWheelEventProducer.h; path = ../../src/Event/OSGMouseWheelEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C43CE0E1C12340078CE35 /* OSGMouseWheelEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGMouseWheelEventProducer.inl; path = ../../src/Event/OSGMouseWheelEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C43CF0E1C12340078CE35 /* OSGMouseWheelListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMouseWheelListener.h; path = ../../src/Event/OSGMouseWheelListener.h; sourceTree = SOURCE_ROOT; };
+		C97C43D00E1C12340078CE35 /* OSGUpdateEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGUpdateEvent.cpp; path = ../../src/Event/OSGUpdateEvent.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43D10E1C12340078CE35 /* OSGUpdateEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGUpdateEvent.h; path = ../../src/Event/OSGUpdateEvent.h; sourceTree = SOURCE_ROOT; };
+		C97C43D20E1C12340078CE35 /* OSGUpdateEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGUpdateEvent.inl; path = ../../src/Event/OSGUpdateEvent.inl; sourceTree = SOURCE_ROOT; };
+		C97C43D30E1C12340078CE35 /* OSGUpdateListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGUpdateListener.h; path = ../../src/Event/OSGUpdateListener.h; sourceTree = SOURCE_ROOT; };
+		C97C43D40E1C12340078CE35 /* OSGWindowAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGWindowAdapter.cpp; path = ../../src/Event/OSGWindowAdapter.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43D50E1C12340078CE35 /* OSGWindowAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWindowAdapter.h; path = ../../src/Event/OSGWindowAdapter.h; sourceTree = SOURCE_ROOT; };
+		C97C43D60E1C12340078CE35 /* OSGWindowEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGWindowEvent.cpp; path = ../../src/Event/OSGWindowEvent.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43D70E1C12340078CE35 /* OSGWindowEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWindowEvent.h; path = ../../src/Event/OSGWindowEvent.h; sourceTree = SOURCE_ROOT; };
+		C97C43D80E1C12340078CE35 /* OSGWindowEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGWindowEvent.inl; path = ../../src/Event/OSGWindowEvent.inl; sourceTree = SOURCE_ROOT; };
+		C97C43D90E1C12340078CE35 /* OSGWindowListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWindowListener.h; path = ../../src/Event/OSGWindowListener.h; sourceTree = SOURCE_ROOT; };
+		C97C43DA0E1C12340078CE35 /* OSGInputDef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGInputDef.h; path = ../../src/OSGInputDef.h; sourceTree = SOURCE_ROOT; };
+		C97C43DB0E1C12340078CE35 /* OSGInputSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGInputSettings.cpp; path = ../../src/OSGInputSettings.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43DC0E1C12340078CE35 /* OSGInputSettings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGInputSettings.h; path = ../../src/OSGInputSettings.h; sourceTree = SOURCE_ROOT; };
+		C97C43DD0E1C12340078CE35 /* OSGInputSettings.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGInputSettings.inl; path = ../../src/OSGInputSettings.inl; sourceTree = SOURCE_ROOT; };
+		C97C43DF0E1C12340078CE35 /* OSGStringUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGStringUtils.cpp; path = ../../src/Utils/OSGStringUtils.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43E00E1C12340078CE35 /* OSGStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGStringUtils.h; path = ../../src/Utils/OSGStringUtils.h; sourceTree = SOURCE_ROOT; };
+		C97C43E30E1C12340078CE35 /* CarbonWindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = CarbonWindowEventProducer.fcd; path = ../../src/WindowSystem/Carbon/CarbonWindowEventProducer.fcd; sourceTree = SOURCE_ROOT; };
+		C97C43E40E1C12340078CE35 /* OSGCarbonWindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGCarbonWindowEventProducer.cpp; path = ../../src/WindowSystem/Carbon/OSGCarbonWindowEventProducer.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43E50E1C12340078CE35 /* OSGCarbonWindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGCarbonWindowEventProducer.h; path = ../../src/WindowSystem/Carbon/OSGCarbonWindowEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C43E60E1C12340078CE35 /* OSGCarbonWindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGCarbonWindowEventProducer.inl; path = ../../src/WindowSystem/Carbon/OSGCarbonWindowEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C43E70E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGCarbonWindowEventProducerBase.cpp; path = ../../src/WindowSystem/Carbon/OSGCarbonWindowEventProducerBase.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43E80E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGCarbonWindowEventProducerBase.h; path = ../../src/WindowSystem/Carbon/OSGCarbonWindowEventProducerBase.h; sourceTree = SOURCE_ROOT; };
+		C97C43E90E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGCarbonWindowEventProducerBase.inl; path = ../../src/WindowSystem/Carbon/OSGCarbonWindowEventProducerBase.inl; sourceTree = SOURCE_ROOT; };
+		C97C43EA0E1C12340078CE35 /* OSGCarbonWindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGCarbonWindowEventProducerFields.h; path = ../../src/WindowSystem/Carbon/OSGCarbonWindowEventProducerFields.h; sourceTree = SOURCE_ROOT; };
+		C97C43EE0E1C12340078CE35 /* GLUTWindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GLUTWindowEventProducer.fcd; path = ../../src/WindowSystem/GLUT/GLUTWindowEventProducer.fcd; sourceTree = SOURCE_ROOT; };
+		C97C43EF0E1C12340078CE35 /* OSGGLUTWindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGGLUTWindowEventProducer.cpp; path = ../../src/WindowSystem/GLUT/OSGGLUTWindowEventProducer.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43F00E1C12340078CE35 /* OSGGLUTWindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGGLUTWindowEventProducer.h; path = ../../src/WindowSystem/GLUT/OSGGLUTWindowEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C43F10E1C12340078CE35 /* OSGGLUTWindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGGLUTWindowEventProducer.inl; path = ../../src/WindowSystem/GLUT/OSGGLUTWindowEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C43F20E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGGLUTWindowEventProducerBase.cpp; path = ../../src/WindowSystem/GLUT/OSGGLUTWindowEventProducerBase.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43F30E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGGLUTWindowEventProducerBase.h; path = ../../src/WindowSystem/GLUT/OSGGLUTWindowEventProducerBase.h; sourceTree = SOURCE_ROOT; };
+		C97C43F40E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGGLUTWindowEventProducerBase.inl; path = ../../src/WindowSystem/GLUT/OSGGLUTWindowEventProducerBase.inl; sourceTree = SOURCE_ROOT; };
+		C97C43F50E1C12340078CE35 /* OSGGLUTWindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGGLUTWindowEventProducerFields.h; path = ../../src/WindowSystem/GLUT/OSGGLUTWindowEventProducerFields.h; sourceTree = SOURCE_ROOT; };
+		C97C43F60E1C12340078CE35 /* OSGWindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGWindowEventProducer.cpp; path = ../../src/WindowSystem/OSGWindowEventProducer.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43F70E1C12340078CE35 /* OSGWindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWindowEventProducer.h; path = ../../src/WindowSystem/OSGWindowEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C43F80E1C12340078CE35 /* OSGWindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGWindowEventProducer.inl; path = ../../src/WindowSystem/OSGWindowEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C43F90E1C12340078CE35 /* OSGWindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGWindowEventProducerBase.cpp; path = ../../src/WindowSystem/OSGWindowEventProducerBase.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43FA0E1C12340078CE35 /* OSGWindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWindowEventProducerBase.h; path = ../../src/WindowSystem/OSGWindowEventProducerBase.h; sourceTree = SOURCE_ROOT; };
+		C97C43FB0E1C12340078CE35 /* OSGWindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGWindowEventProducerBase.inl; path = ../../src/WindowSystem/OSGWindowEventProducerBase.inl; sourceTree = SOURCE_ROOT; };
+		C97C43FC0E1C12340078CE35 /* OSGWindowEventProducerFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGWindowEventProducerFactory.cpp; path = ../../src/WindowSystem/OSGWindowEventProducerFactory.cpp; sourceTree = SOURCE_ROOT; };
+		C97C43FD0E1C12340078CE35 /* OSGWindowEventProducerFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWindowEventProducerFactory.h; path = ../../src/WindowSystem/OSGWindowEventProducerFactory.h; sourceTree = SOURCE_ROOT; };
+		C97C43FE0E1C12340078CE35 /* OSGWindowEventProducerFactory.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGWindowEventProducerFactory.inl; path = ../../src/WindowSystem/OSGWindowEventProducerFactory.inl; sourceTree = SOURCE_ROOT; };
+		C97C43FF0E1C12340078CE35 /* OSGWindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWindowEventProducerFields.h; path = ../../src/WindowSystem/OSGWindowEventProducerFields.h; sourceTree = SOURCE_ROOT; };
+		C97C44000E1C12340078CE35 /* OSGWindowUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGWindowUtils.cpp; path = ../../src/WindowSystem/OSGWindowUtils.cpp; sourceTree = SOURCE_ROOT; };
+		C97C44010E1C12340078CE35 /* OSGWindowUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWindowUtils.h; path = ../../src/WindowSystem/OSGWindowUtils.h; sourceTree = SOURCE_ROOT; };
+		C97C44050E1C12340078CE35 /* OSGWin32WindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGWin32WindowEventProducer.cpp; path = ../../src/WindowSystem/Win32/OSGWin32WindowEventProducer.cpp; sourceTree = SOURCE_ROOT; };
+		C97C44060E1C12340078CE35 /* OSGWin32WindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWin32WindowEventProducer.h; path = ../../src/WindowSystem/Win32/OSGWin32WindowEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C44070E1C12340078CE35 /* OSGWin32WindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGWin32WindowEventProducer.inl; path = ../../src/WindowSystem/Win32/OSGWin32WindowEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C44080E1C12340078CE35 /* OSGWin32WindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGWin32WindowEventProducerBase.cpp; path = ../../src/WindowSystem/Win32/OSGWin32WindowEventProducerBase.cpp; sourceTree = SOURCE_ROOT; };
+		C97C44090E1C12340078CE35 /* OSGWin32WindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWin32WindowEventProducerBase.h; path = ../../src/WindowSystem/Win32/OSGWin32WindowEventProducerBase.h; sourceTree = SOURCE_ROOT; };
+		C97C440A0E1C12340078CE35 /* OSGWin32WindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGWin32WindowEventProducerBase.inl; path = ../../src/WindowSystem/Win32/OSGWin32WindowEventProducerBase.inl; sourceTree = SOURCE_ROOT; };
+		C97C440B0E1C12340078CE35 /* OSGWin32WindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGWin32WindowEventProducerFields.h; path = ../../src/WindowSystem/Win32/OSGWin32WindowEventProducerFields.h; sourceTree = SOURCE_ROOT; };
+		C97C440C0E1C12340078CE35 /* Win32WindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = Win32WindowEventProducer.fcd; path = ../../src/WindowSystem/Win32/Win32WindowEventProducer.fcd; sourceTree = SOURCE_ROOT; };
+		C97C440D0E1C12340078CE35 /* WindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = WindowEventProducer.fcd; path = ../../src/WindowSystem/WindowEventProducer.fcd; sourceTree = SOURCE_ROOT; };
+		C97C440F0E1C12340078CE35 /* OSGXWindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGXWindowEventProducer.cpp; path = ../../src/WindowSystem/X/OSGXWindowEventProducer.cpp; sourceTree = SOURCE_ROOT; };
+		C97C44100E1C12340078CE35 /* OSGXWindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGXWindowEventProducer.h; path = ../../src/WindowSystem/X/OSGXWindowEventProducer.h; sourceTree = SOURCE_ROOT; };
+		C97C44110E1C12340078CE35 /* OSGXWindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGXWindowEventProducer.inl; path = ../../src/WindowSystem/X/OSGXWindowEventProducer.inl; sourceTree = SOURCE_ROOT; };
+		C97C44120E1C12340078CE35 /* OSGXWindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGXWindowEventProducerBase.cpp; path = ../../src/WindowSystem/X/OSGXWindowEventProducerBase.cpp; sourceTree = SOURCE_ROOT; };
+		C97C44130E1C12340078CE35 /* OSGXWindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGXWindowEventProducerBase.h; path = ../../src/WindowSystem/X/OSGXWindowEventProducerBase.h; sourceTree = SOURCE_ROOT; };
+		C97C44140E1C12340078CE35 /* OSGXWindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGXWindowEventProducerBase.inl; path = ../../src/WindowSystem/X/OSGXWindowEventProducerBase.inl; sourceTree = SOURCE_ROOT; };
+		C97C44150E1C12340078CE35 /* OSGXWindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGXWindowEventProducerFields.h; path = ../../src/WindowSystem/X/OSGXWindowEventProducerFields.h; sourceTree = SOURCE_ROOT; };
+		C97C44160E1C12340078CE35 /* XWindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = XWindowEventProducer.fcd; path = ../../src/WindowSystem/X/XWindowEventProducer.fcd; sourceTree = SOURCE_ROOT; };
 		D4BE3F7A0CF0D0DE0046BAE7 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		D4BE3F830CF0D12B0046BAE7 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		D4BE40010CF0D56B0046BAE7 /* 03DefaultWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 03DefaultWindow.cpp; path = ../../Tutorials/03DefaultWindow.cpp; sourceTree = SOURCE_ROOT; };
-		D4BE40040CF0D5930046BAE7 /* libOSGInput.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInput.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4BE41080CF0D7A50046BAE7 /* 03DefaultWindow */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 03DefaultWindow; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4DD00950CF0CC3900F00431 /* libOSGInput.a */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInput.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4DDFF7E0CF0CB6B00F00431 /* OSGEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGEvent.h; sourceTree = "<group>"; };
-		D4DDFF7F0CF0CB6B00F00431 /* OSGEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGEvent.inl; sourceTree = "<group>"; };
-		D4DDFF800CF0CB6B00F00431 /* OSGEventFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGEventFactory.cpp; sourceTree = "<group>"; };
-		D4DDFF810CF0CB6B00F00431 /* OSGEventFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGEventFactory.h; sourceTree = "<group>"; };
-		D4DDFF820CF0CB6B00F00431 /* OSGEventListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGEventListener.h; sourceTree = "<group>"; };
-		D4DDFF830CF0CB6B00F00431 /* OSGEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGEventProducer.h; sourceTree = "<group>"; };
-		D4DDFF840CF0CB6B00F00431 /* OSGEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFF850CF0CB6B00F00431 /* OSGEventType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGEventType.cpp; sourceTree = "<group>"; };
-		D4DDFF860CF0CB6B00F00431 /* OSGEventType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGEventType.h; sourceTree = "<group>"; };
-		D4DDFF870CF0CB6B00F00431 /* OSGEventType.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGEventType.inl; sourceTree = "<group>"; };
-		D4DDFF880CF0CB6B00F00431 /* OSGFieldChangeEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGFieldChangeEvent.cpp; sourceTree = "<group>"; };
-		D4DDFF890CF0CB6B00F00431 /* OSGFieldChangeEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGFieldChangeEvent.h; sourceTree = "<group>"; };
-		D4DDFF8A0CF0CB6B00F00431 /* OSGFieldChangeEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGFieldChangeEvent.inl; sourceTree = "<group>"; };
-		D4DDFF8B0CF0CB6B00F00431 /* OSGFieldChangeListener.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGFieldChangeListener.cpp; sourceTree = "<group>"; };
-		D4DDFF8C0CF0CB6B00F00431 /* OSGFieldChangeListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGFieldChangeListener.h; sourceTree = "<group>"; };
-		D4DDFF8D0CF0CB6B00F00431 /* OSGKeyAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGKeyAdapter.cpp; sourceTree = "<group>"; };
-		D4DDFF8E0CF0CB6B00F00431 /* OSGKeyAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGKeyAdapter.h; sourceTree = "<group>"; };
-		D4DDFF8F0CF0CB6B00F00431 /* OSGKeyEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGKeyEvent.cpp; sourceTree = "<group>"; };
-		D4DDFF900CF0CB6B00F00431 /* OSGKeyEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGKeyEvent.h; sourceTree = "<group>"; };
-		D4DDFF910CF0CB6B00F00431 /* OSGKeyEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGKeyEvent.inl; sourceTree = "<group>"; };
-		D4DDFF920CF0CB6B00F00431 /* OSGKeyEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGKeyEventProducer.cpp; sourceTree = "<group>"; };
-		D4DDFF930CF0CB6B00F00431 /* OSGKeyEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGKeyEventProducer.h; sourceTree = "<group>"; };
-		D4DDFF940CF0CB6B00F00431 /* OSGKeyEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGKeyEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFF950CF0CB6B00F00431 /* OSGKeyListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGKeyListener.h; sourceTree = "<group>"; };
-		D4DDFF960CF0CB6B00F00431 /* OSGMouseAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGMouseAdapter.cpp; sourceTree = "<group>"; };
-		D4DDFF970CF0CB6B00F00431 /* OSGMouseAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseAdapter.h; sourceTree = "<group>"; };
-		D4DDFF980CF0CB6B00F00431 /* OSGMouseEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGMouseEvent.cpp; sourceTree = "<group>"; };
-		D4DDFF990CF0CB6B00F00431 /* OSGMouseEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseEvent.h; sourceTree = "<group>"; };
-		D4DDFF9A0CF0CB6B00F00431 /* OSGMouseEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGMouseEvent.inl; sourceTree = "<group>"; };
-		D4DDFF9B0CF0CB6B00F00431 /* OSGMouseEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGMouseEventProducer.cpp; sourceTree = "<group>"; };
-		D4DDFF9C0CF0CB6B00F00431 /* OSGMouseEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseEventProducer.h; sourceTree = "<group>"; };
-		D4DDFF9D0CF0CB6B00F00431 /* OSGMouseEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGMouseEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFF9E0CF0CB6B00F00431 /* OSGMouseListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseListener.h; sourceTree = "<group>"; };
-		D4DDFF9F0CF0CB6B00F00431 /* OSGMouseMotionAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGMouseMotionAdapter.cpp; sourceTree = "<group>"; };
-		D4DDFFA00CF0CB6B00F00431 /* OSGMouseMotionAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseMotionAdapter.h; sourceTree = "<group>"; };
-		D4DDFFA10CF0CB6B00F00431 /* OSGMouseMotionEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGMouseMotionEventProducer.cpp; sourceTree = "<group>"; };
-		D4DDFFA20CF0CB6B00F00431 /* OSGMouseMotionEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseMotionEventProducer.h; sourceTree = "<group>"; };
-		D4DDFFA30CF0CB6B00F00431 /* OSGMouseMotionEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGMouseMotionEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFFA40CF0CB6B00F00431 /* OSGMouseMotionListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseMotionListener.h; sourceTree = "<group>"; };
-		D4DDFFA50CF0CB6B00F00431 /* OSGMouseWheelEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGMouseWheelEvent.cpp; sourceTree = "<group>"; };
-		D4DDFFA60CF0CB6B00F00431 /* OSGMouseWheelEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseWheelEvent.h; sourceTree = "<group>"; };
-		D4DDFFA70CF0CB6B00F00431 /* OSGMouseWheelEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGMouseWheelEvent.inl; sourceTree = "<group>"; };
-		D4DDFFA80CF0CB6B00F00431 /* OSGMouseWheelEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGMouseWheelEventProducer.cpp; sourceTree = "<group>"; };
-		D4DDFFA90CF0CB6B00F00431 /* OSGMouseWheelEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseWheelEventProducer.h; sourceTree = "<group>"; };
-		D4DDFFAA0CF0CB6B00F00431 /* OSGMouseWheelEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGMouseWheelEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFFAB0CF0CB6B00F00431 /* OSGMouseWheelListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGMouseWheelListener.h; sourceTree = "<group>"; };
-		D4DDFFAC0CF0CB6B00F00431 /* OSGUpdateEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGUpdateEvent.cpp; sourceTree = "<group>"; };
-		D4DDFFAD0CF0CB6B00F00431 /* OSGUpdateEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGUpdateEvent.h; sourceTree = "<group>"; };
-		D4DDFFAE0CF0CB6B00F00431 /* OSGUpdateEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGUpdateEvent.inl; sourceTree = "<group>"; };
-		D4DDFFAF0CF0CB6B00F00431 /* OSGUpdateListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGUpdateListener.h; sourceTree = "<group>"; };
-		D4DDFFB00CF0CB6B00F00431 /* OSGWindowAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGWindowAdapter.cpp; sourceTree = "<group>"; };
-		D4DDFFB10CF0CB6B00F00431 /* OSGWindowAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWindowAdapter.h; sourceTree = "<group>"; };
-		D4DDFFB20CF0CB6B00F00431 /* OSGWindowEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGWindowEvent.cpp; sourceTree = "<group>"; };
-		D4DDFFB30CF0CB6B00F00431 /* OSGWindowEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWindowEvent.h; sourceTree = "<group>"; };
-		D4DDFFB40CF0CB6B00F00431 /* OSGWindowEvent.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGWindowEvent.inl; sourceTree = "<group>"; };
-		D4DDFFB50CF0CB6B00F00431 /* OSGWindowListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWindowListener.h; sourceTree = "<group>"; };
-		D4DDFFB60CF0CB6B00F00431 /* OSGInputDef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGInputDef.h; path = ../../src/OSGInputDef.h; sourceTree = SOURCE_ROOT; };
-		D4DDFFB70CF0CB6B00F00431 /* OSGInputSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGInputSettings.cpp; path = ../../src/OSGInputSettings.cpp; sourceTree = SOURCE_ROOT; };
-		D4DDFFB80CF0CB6B00F00431 /* OSGInputSettings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGInputSettings.h; path = ../../src/OSGInputSettings.h; sourceTree = SOURCE_ROOT; };
-		D4DDFFB90CF0CB6B00F00431 /* OSGInputSettings.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGInputSettings.inl; path = ../../src/OSGInputSettings.inl; sourceTree = SOURCE_ROOT; };
-		D4DDFFBB0CF0CB6B00F00431 /* OSGStringUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGStringUtils.cpp; sourceTree = "<group>"; };
-		D4DDFFBC0CF0CB6B00F00431 /* OSGStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGStringUtils.h; sourceTree = "<group>"; };
-		D4DDFFBF0CF0CB6B00F00431 /* CarbonWindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = CarbonWindowEventProducer.fcd; sourceTree = "<group>"; };
-		D4DDFFC00CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGCarbonWindowEventProducer.cpp; sourceTree = "<group>"; };
-		D4DDFFC10CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGCarbonWindowEventProducer.h; sourceTree = "<group>"; };
-		D4DDFFC20CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGCarbonWindowEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFFC30CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGCarbonWindowEventProducerBase.cpp; sourceTree = "<group>"; };
-		D4DDFFC40CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGCarbonWindowEventProducerBase.h; sourceTree = "<group>"; };
-		D4DDFFC50CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGCarbonWindowEventProducerBase.inl; sourceTree = "<group>"; };
-		D4DDFFC60CF0CB6B00F00431 /* OSGCarbonWindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGCarbonWindowEventProducerFields.h; sourceTree = "<group>"; };
-		D4DDFFCA0CF0CB6B00F00431 /* GLUTWindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = GLUTWindowEventProducer.fcd; sourceTree = "<group>"; };
-		D4DDFFCB0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGLUTWindowEventProducer.cpp; sourceTree = "<group>"; };
-		D4DDFFCC0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGLUTWindowEventProducer.h; sourceTree = "<group>"; };
-		D4DDFFCD0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGLUTWindowEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFFCE0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGGLUTWindowEventProducerBase.cpp; sourceTree = "<group>"; };
-		D4DDFFCF0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGLUTWindowEventProducerBase.h; sourceTree = "<group>"; };
-		D4DDFFD00CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGGLUTWindowEventProducerBase.inl; sourceTree = "<group>"; };
-		D4DDFFD10CF0CB6B00F00431 /* OSGGLUTWindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGGLUTWindowEventProducerFields.h; sourceTree = "<group>"; };
-		D4DDFFD20CF0CB6B00F00431 /* OSGWindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGWindowEventProducer.cpp; sourceTree = "<group>"; };
-		D4DDFFD30CF0CB6B00F00431 /* OSGWindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWindowEventProducer.h; sourceTree = "<group>"; };
-		D4DDFFD40CF0CB6B00F00431 /* OSGWindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGWindowEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFFD50CF0CB6B00F00431 /* OSGWindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGWindowEventProducerBase.cpp; sourceTree = "<group>"; };
-		D4DDFFD60CF0CB6B00F00431 /* OSGWindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWindowEventProducerBase.h; sourceTree = "<group>"; };
-		D4DDFFD70CF0CB6B00F00431 /* OSGWindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGWindowEventProducerBase.inl; sourceTree = "<group>"; };
-		D4DDFFD80CF0CB6B00F00431 /* OSGWindowEventProducerFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGWindowEventProducerFactory.cpp; sourceTree = "<group>"; };
-		D4DDFFD90CF0CB6B00F00431 /* OSGWindowEventProducerFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWindowEventProducerFactory.h; sourceTree = "<group>"; };
-		D4DDFFDA0CF0CB6B00F00431 /* OSGWindowEventProducerFactory.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGWindowEventProducerFactory.inl; sourceTree = "<group>"; };
-		D4DDFFDB0CF0CB6B00F00431 /* OSGWindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWindowEventProducerFields.h; sourceTree = "<group>"; };
-		D4DDFFDC0CF0CB6B00F00431 /* OSGWindowUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGWindowUtils.cpp; sourceTree = "<group>"; };
-		D4DDFFDD0CF0CB6B00F00431 /* OSGWindowUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWindowUtils.h; sourceTree = "<group>"; };
-		D4DDFFE10CF0CB6B00F00431 /* OSGWin32WindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGWin32WindowEventProducer.cpp; sourceTree = "<group>"; };
-		D4DDFFE20CF0CB6B00F00431 /* OSGWin32WindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWin32WindowEventProducer.h; sourceTree = "<group>"; };
-		D4DDFFE30CF0CB6B00F00431 /* OSGWin32WindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGWin32WindowEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFFE40CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGWin32WindowEventProducerBase.cpp; sourceTree = "<group>"; };
-		D4DDFFE50CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWin32WindowEventProducerBase.h; sourceTree = "<group>"; };
-		D4DDFFE60CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGWin32WindowEventProducerBase.inl; sourceTree = "<group>"; };
-		D4DDFFE70CF0CB6B00F00431 /* OSGWin32WindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGWin32WindowEventProducerFields.h; sourceTree = "<group>"; };
-		D4DDFFE80CF0CB6B00F00431 /* Win32WindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = Win32WindowEventProducer.fcd; sourceTree = "<group>"; };
-		D4DDFFE90CF0CB6B00F00431 /* WindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = WindowEventProducer.fcd; sourceTree = "<group>"; };
-		D4DDFFEB0CF0CB6B00F00431 /* OSGXWindowEventProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGXWindowEventProducer.cpp; sourceTree = "<group>"; };
-		D4DDFFEC0CF0CB6B00F00431 /* OSGXWindowEventProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGXWindowEventProducer.h; sourceTree = "<group>"; };
-		D4DDFFED0CF0CB6B00F00431 /* OSGXWindowEventProducer.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGXWindowEventProducer.inl; sourceTree = "<group>"; };
-		D4DDFFEE0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSGXWindowEventProducerBase.cpp; sourceTree = "<group>"; };
-		D4DDFFEF0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGXWindowEventProducerBase.h; sourceTree = "<group>"; };
-		D4DDFFF00CF0CB6B00F00431 /* OSGXWindowEventProducerBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = OSGXWindowEventProducerBase.inl; sourceTree = "<group>"; };
-		D4DDFFF10CF0CB6B00F00431 /* OSGXWindowEventProducerFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSGXWindowEventProducerFields.h; sourceTree = "<group>"; };
-		D4DDFFF20CF0CB6B00F00431 /* XWindowEventProducer.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = XWindowEventProducer.fcd; sourceTree = "<group>"; };
+		D4BE40040CF0D5930046BAE7 /* libOSGInputD.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInputD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4BE41080CF0D7A50046BAE7 /* 03DefaultWindowD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 03DefaultWindowD; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4DD00950CF0CC3900F00431 /* libOSGInputD.a */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInputD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -441,9 +441,9 @@
 		034768DDFF38A45A11DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D4DD00950CF0CC3900F00431 /* libOSGInput.a */,
-				D4BE40040CF0D5930046BAE7 /* libOSGInput.dylib */,
-				D4BE41080CF0D7A50046BAE7 /* 03DefaultWindow */,
+				D4DD00950CF0CC3900F00431 /* libOSGInputD.a */,
+				D4BE40040CF0D5930046BAE7 /* libOSGInputD.dylib */,
+				D4BE41080CF0D7A50046BAE7 /* 03DefaultWindowD */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -470,25 +470,225 @@
 		08FB77ACFE841707C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C97C43A00E1C12340078CE35 /* src */,
 				D4BE3FA60CF0D4350046BAE7 /* 03DefaultWindow */,
-				D4BE3FA50CF0D4280046BAE7 /* Input */,
 			);
 			name = Source;
 			sourceTree = "<group>";
 		};
-		D4BE3FA50CF0D4280046BAE7 /* Input */ = {
+		C97C43A00E1C12340078CE35 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				D4DDFF7D0CF0CB6B00F00431 /* Event */,
-				D4DDFFB60CF0CB6B00F00431 /* OSGInputDef.h */,
-				D4DDFFB70CF0CB6B00F00431 /* OSGInputSettings.cpp */,
-				D4DDFFB80CF0CB6B00F00431 /* OSGInputSettings.h */,
-				D4DDFFB90CF0CB6B00F00431 /* OSGInputSettings.inl */,
-				D4DDFFBA0CF0CB6B00F00431 /* Utils */,
-				D4DDFFBD0CF0CB6B00F00431 /* WindowSystem */,
+				C97C43A10E1C12340078CE35 /* Event */,
+				C97C43DA0E1C12340078CE35 /* OSGInputDef.h */,
+				C97C43DB0E1C12340078CE35 /* OSGInputSettings.cpp */,
+				C97C43DC0E1C12340078CE35 /* OSGInputSettings.h */,
+				C97C43DD0E1C12340078CE35 /* OSGInputSettings.inl */,
+				C97C43DE0E1C12340078CE35 /* Utils */,
+				C97C43E10E1C12340078CE35 /* WindowSystem */,
 			);
-			name = Input;
-			sourceTree = "<group>";
+			name = src;
+			path = ../../src;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C43A10E1C12340078CE35 /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				C97C43A20E1C12340078CE35 /* OSGEvent.h */,
+				C97C43A30E1C12340078CE35 /* OSGEvent.inl */,
+				C97C43A40E1C12340078CE35 /* OSGEventFactory.cpp */,
+				C97C43A50E1C12340078CE35 /* OSGEventFactory.h */,
+				C97C43A60E1C12340078CE35 /* OSGEventListener.h */,
+				C97C43A70E1C12340078CE35 /* OSGEventProducer.h */,
+				C97C43A80E1C12340078CE35 /* OSGEventProducer.inl */,
+				C97C43A90E1C12340078CE35 /* OSGEventType.cpp */,
+				C97C43AA0E1C12340078CE35 /* OSGEventType.h */,
+				C97C43AB0E1C12340078CE35 /* OSGEventType.inl */,
+				C97C43AC0E1C12340078CE35 /* OSGFieldChangeEvent.cpp */,
+				C97C43AD0E1C12340078CE35 /* OSGFieldChangeEvent.h */,
+				C97C43AE0E1C12340078CE35 /* OSGFieldChangeEvent.inl */,
+				C97C43AF0E1C12340078CE35 /* OSGFieldChangeListener.cpp */,
+				C97C43B00E1C12340078CE35 /* OSGFieldChangeListener.h */,
+				C97C43B10E1C12340078CE35 /* OSGKeyAdapter.cpp */,
+				C97C43B20E1C12340078CE35 /* OSGKeyAdapter.h */,
+				C97C43B30E1C12340078CE35 /* OSGKeyEvent.cpp */,
+				C97C43B40E1C12340078CE35 /* OSGKeyEvent.h */,
+				C97C43B50E1C12340078CE35 /* OSGKeyEvent.inl */,
+				C97C43B60E1C12340078CE35 /* OSGKeyEventProducer.cpp */,
+				C97C43B70E1C12340078CE35 /* OSGKeyEventProducer.h */,
+				C97C43B80E1C12340078CE35 /* OSGKeyEventProducer.inl */,
+				C97C43B90E1C12340078CE35 /* OSGKeyListener.h */,
+				C97C43BA0E1C12340078CE35 /* OSGMouseAdapter.cpp */,
+				C97C43BB0E1C12340078CE35 /* OSGMouseAdapter.h */,
+				C97C43BC0E1C12340078CE35 /* OSGMouseEvent.cpp */,
+				C97C43BD0E1C12340078CE35 /* OSGMouseEvent.h */,
+				C97C43BE0E1C12340078CE35 /* OSGMouseEvent.inl */,
+				C97C43BF0E1C12340078CE35 /* OSGMouseEventProducer.cpp */,
+				C97C43C00E1C12340078CE35 /* OSGMouseEventProducer.h */,
+				C97C43C10E1C12340078CE35 /* OSGMouseEventProducer.inl */,
+				C97C43C20E1C12340078CE35 /* OSGMouseListener.h */,
+				C97C43C30E1C12340078CE35 /* OSGMouseMotionAdapter.cpp */,
+				C97C43C40E1C12340078CE35 /* OSGMouseMotionAdapter.h */,
+				C97C43C50E1C12340078CE35 /* OSGMouseMotionEventProducer.cpp */,
+				C97C43C60E1C12340078CE35 /* OSGMouseMotionEventProducer.h */,
+				C97C43C70E1C12340078CE35 /* OSGMouseMotionEventProducer.inl */,
+				C97C43C80E1C12340078CE35 /* OSGMouseMotionListener.h */,
+				C97C43C90E1C12340078CE35 /* OSGMouseWheelEvent.cpp */,
+				C97C43CA0E1C12340078CE35 /* OSGMouseWheelEvent.h */,
+				C97C43CB0E1C12340078CE35 /* OSGMouseWheelEvent.inl */,
+				C97C43CC0E1C12340078CE35 /* OSGMouseWheelEventProducer.cpp */,
+				C97C43CD0E1C12340078CE35 /* OSGMouseWheelEventProducer.h */,
+				C97C43CE0E1C12340078CE35 /* OSGMouseWheelEventProducer.inl */,
+				C97C43CF0E1C12340078CE35 /* OSGMouseWheelListener.h */,
+				C97C43D00E1C12340078CE35 /* OSGUpdateEvent.cpp */,
+				C97C43D10E1C12340078CE35 /* OSGUpdateEvent.h */,
+				C97C43D20E1C12340078CE35 /* OSGUpdateEvent.inl */,
+				C97C43D30E1C12340078CE35 /* OSGUpdateListener.h */,
+				C97C43D40E1C12340078CE35 /* OSGWindowAdapter.cpp */,
+				C97C43D50E1C12340078CE35 /* OSGWindowAdapter.h */,
+				C97C43D60E1C12340078CE35 /* OSGWindowEvent.cpp */,
+				C97C43D70E1C12340078CE35 /* OSGWindowEvent.h */,
+				C97C43D80E1C12340078CE35 /* OSGWindowEvent.inl */,
+				C97C43D90E1C12340078CE35 /* OSGWindowListener.h */,
+			);
+			name = Event;
+			path = ../../src/Event;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C43DE0E1C12340078CE35 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				C97C43DF0E1C12340078CE35 /* OSGStringUtils.cpp */,
+				C97C43E00E1C12340078CE35 /* OSGStringUtils.h */,
+			);
+			name = Utils;
+			path = ../../src/Utils;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C43E10E1C12340078CE35 /* WindowSystem */ = {
+			isa = PBXGroup;
+			children = (
+				C97C43E20E1C12340078CE35 /* Carbon */,
+				C97C43EB0E1C12340078CE35 /* Cocoa */,
+				C97C43EC0E1C12340078CE35 /* CoreGL */,
+				C97C43ED0E1C12340078CE35 /* GLUT */,
+				C97C43F60E1C12340078CE35 /* OSGWindowEventProducer.cpp */,
+				C97C43F70E1C12340078CE35 /* OSGWindowEventProducer.h */,
+				C97C43F80E1C12340078CE35 /* OSGWindowEventProducer.inl */,
+				C97C43F90E1C12340078CE35 /* OSGWindowEventProducerBase.cpp */,
+				C97C43FA0E1C12340078CE35 /* OSGWindowEventProducerBase.h */,
+				C97C43FB0E1C12340078CE35 /* OSGWindowEventProducerBase.inl */,
+				C97C43FC0E1C12340078CE35 /* OSGWindowEventProducerFactory.cpp */,
+				C97C43FD0E1C12340078CE35 /* OSGWindowEventProducerFactory.h */,
+				C97C43FE0E1C12340078CE35 /* OSGWindowEventProducerFactory.inl */,
+				C97C43FF0E1C12340078CE35 /* OSGWindowEventProducerFields.h */,
+				C97C44000E1C12340078CE35 /* OSGWindowUtils.cpp */,
+				C97C44010E1C12340078CE35 /* OSGWindowUtils.h */,
+				C97C44020E1C12340078CE35 /* QT */,
+				C97C44030E1C12340078CE35 /* QT4 */,
+				C97C44040E1C12340078CE35 /* Win32 */,
+				C97C440D0E1C12340078CE35 /* WindowEventProducer.fcd */,
+				C97C440E0E1C12340078CE35 /* X */,
+			);
+			name = WindowSystem;
+			path = ../../src/WindowSystem;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C43E20E1C12340078CE35 /* Carbon */ = {
+			isa = PBXGroup;
+			children = (
+				C97C43E30E1C12340078CE35 /* CarbonWindowEventProducer.fcd */,
+				C97C43E40E1C12340078CE35 /* OSGCarbonWindowEventProducer.cpp */,
+				C97C43E50E1C12340078CE35 /* OSGCarbonWindowEventProducer.h */,
+				C97C43E60E1C12340078CE35 /* OSGCarbonWindowEventProducer.inl */,
+				C97C43E70E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.cpp */,
+				C97C43E80E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.h */,
+				C97C43E90E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.inl */,
+				C97C43EA0E1C12340078CE35 /* OSGCarbonWindowEventProducerFields.h */,
+			);
+			name = Carbon;
+			path = ../../src/WindowSystem/Carbon;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C43EB0E1C12340078CE35 /* Cocoa */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Cocoa;
+			path = ../../src/WindowSystem/Cocoa;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C43EC0E1C12340078CE35 /* CoreGL */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = CoreGL;
+			path = ../../src/WindowSystem/CoreGL;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C43ED0E1C12340078CE35 /* GLUT */ = {
+			isa = PBXGroup;
+			children = (
+				C97C43EE0E1C12340078CE35 /* GLUTWindowEventProducer.fcd */,
+				C97C43EF0E1C12340078CE35 /* OSGGLUTWindowEventProducer.cpp */,
+				C97C43F00E1C12340078CE35 /* OSGGLUTWindowEventProducer.h */,
+				C97C43F10E1C12340078CE35 /* OSGGLUTWindowEventProducer.inl */,
+				C97C43F20E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.cpp */,
+				C97C43F30E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.h */,
+				C97C43F40E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.inl */,
+				C97C43F50E1C12340078CE35 /* OSGGLUTWindowEventProducerFields.h */,
+			);
+			name = GLUT;
+			path = ../../src/WindowSystem/GLUT;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C44020E1C12340078CE35 /* QT */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = QT;
+			path = ../../src/WindowSystem/QT;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C44030E1C12340078CE35 /* QT4 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = QT4;
+			path = ../../src/WindowSystem/QT4;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C44040E1C12340078CE35 /* Win32 */ = {
+			isa = PBXGroup;
+			children = (
+				C97C44050E1C12340078CE35 /* OSGWin32WindowEventProducer.cpp */,
+				C97C44060E1C12340078CE35 /* OSGWin32WindowEventProducer.h */,
+				C97C44070E1C12340078CE35 /* OSGWin32WindowEventProducer.inl */,
+				C97C44080E1C12340078CE35 /* OSGWin32WindowEventProducerBase.cpp */,
+				C97C44090E1C12340078CE35 /* OSGWin32WindowEventProducerBase.h */,
+				C97C440A0E1C12340078CE35 /* OSGWin32WindowEventProducerBase.inl */,
+				C97C440B0E1C12340078CE35 /* OSGWin32WindowEventProducerFields.h */,
+				C97C440C0E1C12340078CE35 /* Win32WindowEventProducer.fcd */,
+			);
+			name = Win32;
+			path = ../../src/WindowSystem/Win32;
+			sourceTree = SOURCE_ROOT;
+		};
+		C97C440E0E1C12340078CE35 /* X */ = {
+			isa = PBXGroup;
+			children = (
+				C97C440F0E1C12340078CE35 /* OSGXWindowEventProducer.cpp */,
+				C97C44100E1C12340078CE35 /* OSGXWindowEventProducer.h */,
+				C97C44110E1C12340078CE35 /* OSGXWindowEventProducer.inl */,
+				C97C44120E1C12340078CE35 /* OSGXWindowEventProducerBase.cpp */,
+				C97C44130E1C12340078CE35 /* OSGXWindowEventProducerBase.h */,
+				C97C44140E1C12340078CE35 /* OSGXWindowEventProducerBase.inl */,
+				C97C44150E1C12340078CE35 /* OSGXWindowEventProducerFields.h */,
+				C97C44160E1C12340078CE35 /* XWindowEventProducer.fcd */,
+			);
+			name = X;
+			path = ../../src/WindowSystem/X;
+			sourceTree = SOURCE_ROOT;
 		};
 		D4BE3FA60CF0D4350046BAE7 /* 03DefaultWindow */ = {
 			isa = PBXGroup;
@@ -498,197 +698,6 @@
 			name = 03DefaultWindow;
 			sourceTree = "<group>";
 		};
-		D4DDFF7D0CF0CB6B00F00431 /* Event */ = {
-			isa = PBXGroup;
-			children = (
-				D4DDFF7E0CF0CB6B00F00431 /* OSGEvent.h */,
-				D4DDFF7F0CF0CB6B00F00431 /* OSGEvent.inl */,
-				D4DDFF800CF0CB6B00F00431 /* OSGEventFactory.cpp */,
-				D4DDFF810CF0CB6B00F00431 /* OSGEventFactory.h */,
-				D4DDFF820CF0CB6B00F00431 /* OSGEventListener.h */,
-				D4DDFF830CF0CB6B00F00431 /* OSGEventProducer.h */,
-				D4DDFF840CF0CB6B00F00431 /* OSGEventProducer.inl */,
-				D4DDFF850CF0CB6B00F00431 /* OSGEventType.cpp */,
-				D4DDFF860CF0CB6B00F00431 /* OSGEventType.h */,
-				D4DDFF870CF0CB6B00F00431 /* OSGEventType.inl */,
-				D4DDFF880CF0CB6B00F00431 /* OSGFieldChangeEvent.cpp */,
-				D4DDFF890CF0CB6B00F00431 /* OSGFieldChangeEvent.h */,
-				D4DDFF8A0CF0CB6B00F00431 /* OSGFieldChangeEvent.inl */,
-				D4DDFF8B0CF0CB6B00F00431 /* OSGFieldChangeListener.cpp */,
-				D4DDFF8C0CF0CB6B00F00431 /* OSGFieldChangeListener.h */,
-				D4DDFF8D0CF0CB6B00F00431 /* OSGKeyAdapter.cpp */,
-				D4DDFF8E0CF0CB6B00F00431 /* OSGKeyAdapter.h */,
-				D4DDFF8F0CF0CB6B00F00431 /* OSGKeyEvent.cpp */,
-				D4DDFF900CF0CB6B00F00431 /* OSGKeyEvent.h */,
-				D4DDFF910CF0CB6B00F00431 /* OSGKeyEvent.inl */,
-				D4DDFF920CF0CB6B00F00431 /* OSGKeyEventProducer.cpp */,
-				D4DDFF930CF0CB6B00F00431 /* OSGKeyEventProducer.h */,
-				D4DDFF940CF0CB6B00F00431 /* OSGKeyEventProducer.inl */,
-				D4DDFF950CF0CB6B00F00431 /* OSGKeyListener.h */,
-				D4DDFF960CF0CB6B00F00431 /* OSGMouseAdapter.cpp */,
-				D4DDFF970CF0CB6B00F00431 /* OSGMouseAdapter.h */,
-				D4DDFF980CF0CB6B00F00431 /* OSGMouseEvent.cpp */,
-				D4DDFF990CF0CB6B00F00431 /* OSGMouseEvent.h */,
-				D4DDFF9A0CF0CB6B00F00431 /* OSGMouseEvent.inl */,
-				D4DDFF9B0CF0CB6B00F00431 /* OSGMouseEventProducer.cpp */,
-				D4DDFF9C0CF0CB6B00F00431 /* OSGMouseEventProducer.h */,
-				D4DDFF9D0CF0CB6B00F00431 /* OSGMouseEventProducer.inl */,
-				D4DDFF9E0CF0CB6B00F00431 /* OSGMouseListener.h */,
-				D4DDFF9F0CF0CB6B00F00431 /* OSGMouseMotionAdapter.cpp */,
-				D4DDFFA00CF0CB6B00F00431 /* OSGMouseMotionAdapter.h */,
-				D4DDFFA10CF0CB6B00F00431 /* OSGMouseMotionEventProducer.cpp */,
-				D4DDFFA20CF0CB6B00F00431 /* OSGMouseMotionEventProducer.h */,
-				D4DDFFA30CF0CB6B00F00431 /* OSGMouseMotionEventProducer.inl */,
-				D4DDFFA40CF0CB6B00F00431 /* OSGMouseMotionListener.h */,
-				D4DDFFA50CF0CB6B00F00431 /* OSGMouseWheelEvent.cpp */,
-				D4DDFFA60CF0CB6B00F00431 /* OSGMouseWheelEvent.h */,
-				D4DDFFA70CF0CB6B00F00431 /* OSGMouseWheelEvent.inl */,
-				D4DDFFA80CF0CB6B00F00431 /* OSGMouseWheelEventProducer.cpp */,
-				D4DDFFA90CF0CB6B00F00431 /* OSGMouseWheelEventProducer.h */,
-				D4DDFFAA0CF0CB6B00F00431 /* OSGMouseWheelEventProducer.inl */,
-				D4DDFFAB0CF0CB6B00F00431 /* OSGMouseWheelListener.h */,
-				D4DDFFAC0CF0CB6B00F00431 /* OSGUpdateEvent.cpp */,
-				D4DDFFAD0CF0CB6B00F00431 /* OSGUpdateEvent.h */,
-				D4DDFFAE0CF0CB6B00F00431 /* OSGUpdateEvent.inl */,
-				D4DDFFAF0CF0CB6B00F00431 /* OSGUpdateListener.h */,
-				D4DDFFB00CF0CB6B00F00431 /* OSGWindowAdapter.cpp */,
-				D4DDFFB10CF0CB6B00F00431 /* OSGWindowAdapter.h */,
-				D4DDFFB20CF0CB6B00F00431 /* OSGWindowEvent.cpp */,
-				D4DDFFB30CF0CB6B00F00431 /* OSGWindowEvent.h */,
-				D4DDFFB40CF0CB6B00F00431 /* OSGWindowEvent.inl */,
-				D4DDFFB50CF0CB6B00F00431 /* OSGWindowListener.h */,
-			);
-			name = Event;
-			path = ../../src/Event;
-			sourceTree = SOURCE_ROOT;
-		};
-		D4DDFFBA0CF0CB6B00F00431 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				D4DDFFBB0CF0CB6B00F00431 /* OSGStringUtils.cpp */,
-				D4DDFFBC0CF0CB6B00F00431 /* OSGStringUtils.h */,
-			);
-			name = Utils;
-			path = ../../src/Utils;
-			sourceTree = SOURCE_ROOT;
-		};
-		D4DDFFBD0CF0CB6B00F00431 /* WindowSystem */ = {
-			isa = PBXGroup;
-			children = (
-				D4DDFFBE0CF0CB6B00F00431 /* Carbon */,
-				D4DDFFC70CF0CB6B00F00431 /* Cocoa */,
-				D4DDFFC80CF0CB6B00F00431 /* CoreGL */,
-				D4DDFFC90CF0CB6B00F00431 /* GLUT */,
-				D4DDFFD20CF0CB6B00F00431 /* OSGWindowEventProducer.cpp */,
-				D4DDFFD30CF0CB6B00F00431 /* OSGWindowEventProducer.h */,
-				D4DDFFD40CF0CB6B00F00431 /* OSGWindowEventProducer.inl */,
-				D4DDFFD50CF0CB6B00F00431 /* OSGWindowEventProducerBase.cpp */,
-				D4DDFFD60CF0CB6B00F00431 /* OSGWindowEventProducerBase.h */,
-				D4DDFFD70CF0CB6B00F00431 /* OSGWindowEventProducerBase.inl */,
-				D4DDFFD80CF0CB6B00F00431 /* OSGWindowEventProducerFactory.cpp */,
-				D4DDFFD90CF0CB6B00F00431 /* OSGWindowEventProducerFactory.h */,
-				D4DDFFDA0CF0CB6B00F00431 /* OSGWindowEventProducerFactory.inl */,
-				D4DDFFDB0CF0CB6B00F00431 /* OSGWindowEventProducerFields.h */,
-				D4DDFFDC0CF0CB6B00F00431 /* OSGWindowUtils.cpp */,
-				D4DDFFDD0CF0CB6B00F00431 /* OSGWindowUtils.h */,
-				D4DDFFDE0CF0CB6B00F00431 /* QT */,
-				D4DDFFDF0CF0CB6B00F00431 /* QT4 */,
-				D4DDFFE00CF0CB6B00F00431 /* Win32 */,
-				D4DDFFE90CF0CB6B00F00431 /* WindowEventProducer.fcd */,
-				D4DDFFEA0CF0CB6B00F00431 /* X */,
-			);
-			name = WindowSystem;
-			path = ../../src/WindowSystem;
-			sourceTree = SOURCE_ROOT;
-		};
-		D4DDFFBE0CF0CB6B00F00431 /* Carbon */ = {
-			isa = PBXGroup;
-			children = (
-				D4DDFFBF0CF0CB6B00F00431 /* CarbonWindowEventProducer.fcd */,
-				D4DDFFC00CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.cpp */,
-				D4DDFFC10CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.h */,
-				D4DDFFC20CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.inl */,
-				D4DDFFC30CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.cpp */,
-				D4DDFFC40CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.h */,
-				D4DDFFC50CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.inl */,
-				D4DDFFC60CF0CB6B00F00431 /* OSGCarbonWindowEventProducerFields.h */,
-			);
-			path = Carbon;
-			sourceTree = "<group>";
-		};
-		D4DDFFC70CF0CB6B00F00431 /* Cocoa */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Cocoa;
-			sourceTree = "<group>";
-		};
-		D4DDFFC80CF0CB6B00F00431 /* CoreGL */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CoreGL;
-			sourceTree = "<group>";
-		};
-		D4DDFFC90CF0CB6B00F00431 /* GLUT */ = {
-			isa = PBXGroup;
-			children = (
-				D4DDFFCA0CF0CB6B00F00431 /* GLUTWindowEventProducer.fcd */,
-				D4DDFFCB0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.cpp */,
-				D4DDFFCC0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.h */,
-				D4DDFFCD0CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.inl */,
-				D4DDFFCE0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.cpp */,
-				D4DDFFCF0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.h */,
-				D4DDFFD00CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.inl */,
-				D4DDFFD10CF0CB6B00F00431 /* OSGGLUTWindowEventProducerFields.h */,
-			);
-			path = GLUT;
-			sourceTree = "<group>";
-		};
-		D4DDFFDE0CF0CB6B00F00431 /* QT */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = QT;
-			sourceTree = "<group>";
-		};
-		D4DDFFDF0CF0CB6B00F00431 /* QT4 */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = QT4;
-			sourceTree = "<group>";
-		};
-		D4DDFFE00CF0CB6B00F00431 /* Win32 */ = {
-			isa = PBXGroup;
-			children = (
-				D4DDFFE10CF0CB6B00F00431 /* OSGWin32WindowEventProducer.cpp */,
-				D4DDFFE20CF0CB6B00F00431 /* OSGWin32WindowEventProducer.h */,
-				D4DDFFE30CF0CB6B00F00431 /* OSGWin32WindowEventProducer.inl */,
-				D4DDFFE40CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.cpp */,
-				D4DDFFE50CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.h */,
-				D4DDFFE60CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.inl */,
-				D4DDFFE70CF0CB6B00F00431 /* OSGWin32WindowEventProducerFields.h */,
-				D4DDFFE80CF0CB6B00F00431 /* Win32WindowEventProducer.fcd */,
-			);
-			path = Win32;
-			sourceTree = "<group>";
-		};
-		D4DDFFEA0CF0CB6B00F00431 /* X */ = {
-			isa = PBXGroup;
-			children = (
-				D4DDFFEB0CF0CB6B00F00431 /* OSGXWindowEventProducer.cpp */,
-				D4DDFFEC0CF0CB6B00F00431 /* OSGXWindowEventProducer.h */,
-				D4DDFFED0CF0CB6B00F00431 /* OSGXWindowEventProducer.inl */,
-				D4DDFFEE0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.cpp */,
-				D4DDFFEF0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.h */,
-				D4DDFFF00CF0CB6B00F00431 /* OSGXWindowEventProducerBase.inl */,
-				D4DDFFF10CF0CB6B00F00431 /* OSGXWindowEventProducerFields.h */,
-				D4DDFFF20CF0CB6B00F00431 /* XWindowEventProducer.fcd */,
-			);
-			path = X;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -696,52 +705,52 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4DDFFF30CF0CB6B00F00431 /* OSGEvent.h in Headers */,
-				D4DDFFF50CF0CB6B00F00431 /* OSGEventFactory.h in Headers */,
-				D4DDFFF60CF0CB6B00F00431 /* OSGEventListener.h in Headers */,
-				D4DDFFF70CF0CB6B00F00431 /* OSGEventProducer.h in Headers */,
-				D4DDFFF90CF0CB6B00F00431 /* OSGEventType.h in Headers */,
-				D4DDFFFB0CF0CB6B00F00431 /* OSGFieldChangeEvent.h in Headers */,
-				D4DDFFFD0CF0CB6B00F00431 /* OSGFieldChangeListener.h in Headers */,
-				D4DDFFFF0CF0CB6B00F00431 /* OSGKeyAdapter.h in Headers */,
-				D4DD00010CF0CB6B00F00431 /* OSGKeyEvent.h in Headers */,
-				D4DD00030CF0CB6B00F00431 /* OSGKeyEventProducer.h in Headers */,
-				D4DD00040CF0CB6B00F00431 /* OSGKeyListener.h in Headers */,
-				D4DD00060CF0CB6B00F00431 /* OSGMouseAdapter.h in Headers */,
-				D4DD00080CF0CB6B00F00431 /* OSGMouseEvent.h in Headers */,
-				D4DD000A0CF0CB6B00F00431 /* OSGMouseEventProducer.h in Headers */,
-				D4DD000B0CF0CB6B00F00431 /* OSGMouseListener.h in Headers */,
-				D4DD000D0CF0CB6B00F00431 /* OSGMouseMotionAdapter.h in Headers */,
-				D4DD000F0CF0CB6B00F00431 /* OSGMouseMotionEventProducer.h in Headers */,
-				D4DD00100CF0CB6B00F00431 /* OSGMouseMotionListener.h in Headers */,
-				D4DD00120CF0CB6B00F00431 /* OSGMouseWheelEvent.h in Headers */,
-				D4DD00140CF0CB6B00F00431 /* OSGMouseWheelEventProducer.h in Headers */,
-				D4DD00150CF0CB6B00F00431 /* OSGMouseWheelListener.h in Headers */,
-				D4DD00170CF0CB6B00F00431 /* OSGUpdateEvent.h in Headers */,
-				D4DD00180CF0CB6B00F00431 /* OSGUpdateListener.h in Headers */,
-				D4DD001A0CF0CB6B00F00431 /* OSGWindowAdapter.h in Headers */,
-				D4DD001C0CF0CB6B00F00431 /* OSGWindowEvent.h in Headers */,
-				D4DD001D0CF0CB6B00F00431 /* OSGWindowListener.h in Headers */,
-				D4DD001E0CF0CB6B00F00431 /* OSGInputDef.h in Headers */,
-				D4DD00200CF0CB6B00F00431 /* OSGInputSettings.h in Headers */,
-				D4DD00220CF0CB6B00F00431 /* OSGStringUtils.h in Headers */,
-				D4DD00240CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.h in Headers */,
-				D4DD00260CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.h in Headers */,
-				D4DD00270CF0CB6B00F00431 /* OSGCarbonWindowEventProducerFields.h in Headers */,
-				D4DD00290CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.h in Headers */,
-				D4DD002B0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.h in Headers */,
-				D4DD002C0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerFields.h in Headers */,
-				D4DD002E0CF0CB6B00F00431 /* OSGWindowEventProducer.h in Headers */,
-				D4DD00300CF0CB6B00F00431 /* OSGWindowEventProducerBase.h in Headers */,
-				D4DD00320CF0CB6B00F00431 /* OSGWindowEventProducerFactory.h in Headers */,
-				D4DD00330CF0CB6B00F00431 /* OSGWindowEventProducerFields.h in Headers */,
-				D4DD00350CF0CB6B00F00431 /* OSGWindowUtils.h in Headers */,
-				D4DD00370CF0CB6B00F00431 /* OSGWin32WindowEventProducer.h in Headers */,
-				D4DD00390CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.h in Headers */,
-				D4DD003A0CF0CB6B00F00431 /* OSGWin32WindowEventProducerFields.h in Headers */,
-				D4DD003C0CF0CB6B00F00431 /* OSGXWindowEventProducer.h in Headers */,
-				D4DD003E0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.h in Headers */,
-				D4DD003F0CF0CB6B00F00431 /* OSGXWindowEventProducerFields.h in Headers */,
+				C97C44170E1C12340078CE35 /* OSGEvent.h in Headers */,
+				C97C44190E1C12340078CE35 /* OSGEventFactory.h in Headers */,
+				C97C441A0E1C12340078CE35 /* OSGEventListener.h in Headers */,
+				C97C441B0E1C12340078CE35 /* OSGEventProducer.h in Headers */,
+				C97C441D0E1C12340078CE35 /* OSGEventType.h in Headers */,
+				C97C441F0E1C12340078CE35 /* OSGFieldChangeEvent.h in Headers */,
+				C97C44210E1C12340078CE35 /* OSGFieldChangeListener.h in Headers */,
+				C97C44230E1C12340078CE35 /* OSGKeyAdapter.h in Headers */,
+				C97C44250E1C12340078CE35 /* OSGKeyEvent.h in Headers */,
+				C97C44270E1C12340078CE35 /* OSGKeyEventProducer.h in Headers */,
+				C97C44280E1C12340078CE35 /* OSGKeyListener.h in Headers */,
+				C97C442A0E1C12340078CE35 /* OSGMouseAdapter.h in Headers */,
+				C97C442C0E1C12340078CE35 /* OSGMouseEvent.h in Headers */,
+				C97C442E0E1C12340078CE35 /* OSGMouseEventProducer.h in Headers */,
+				C97C442F0E1C12340078CE35 /* OSGMouseListener.h in Headers */,
+				C97C44310E1C12340078CE35 /* OSGMouseMotionAdapter.h in Headers */,
+				C97C44330E1C12340078CE35 /* OSGMouseMotionEventProducer.h in Headers */,
+				C97C44340E1C12340078CE35 /* OSGMouseMotionListener.h in Headers */,
+				C97C44360E1C12340078CE35 /* OSGMouseWheelEvent.h in Headers */,
+				C97C44380E1C12340078CE35 /* OSGMouseWheelEventProducer.h in Headers */,
+				C97C44390E1C12340078CE35 /* OSGMouseWheelListener.h in Headers */,
+				C97C443B0E1C12340078CE35 /* OSGUpdateEvent.h in Headers */,
+				C97C443C0E1C12340078CE35 /* OSGUpdateListener.h in Headers */,
+				C97C443E0E1C12340078CE35 /* OSGWindowAdapter.h in Headers */,
+				C97C44400E1C12340078CE35 /* OSGWindowEvent.h in Headers */,
+				C97C44410E1C12340078CE35 /* OSGWindowListener.h in Headers */,
+				C97C44420E1C12340078CE35 /* OSGInputDef.h in Headers */,
+				C97C44440E1C12340078CE35 /* OSGInputSettings.h in Headers */,
+				C97C44460E1C12340078CE35 /* OSGStringUtils.h in Headers */,
+				C97C44480E1C12340078CE35 /* OSGCarbonWindowEventProducer.h in Headers */,
+				C97C444A0E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.h in Headers */,
+				C97C444B0E1C12340078CE35 /* OSGCarbonWindowEventProducerFields.h in Headers */,
+				C97C444D0E1C12340078CE35 /* OSGGLUTWindowEventProducer.h in Headers */,
+				C97C444F0E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.h in Headers */,
+				C97C44500E1C12340078CE35 /* OSGGLUTWindowEventProducerFields.h in Headers */,
+				C97C44520E1C12340078CE35 /* OSGWindowEventProducer.h in Headers */,
+				C97C44540E1C12340078CE35 /* OSGWindowEventProducerBase.h in Headers */,
+				C97C44560E1C12340078CE35 /* OSGWindowEventProducerFactory.h in Headers */,
+				C97C44570E1C12340078CE35 /* OSGWindowEventProducerFields.h in Headers */,
+				C97C44590E1C12340078CE35 /* OSGWindowUtils.h in Headers */,
+				C97C445B0E1C12340078CE35 /* OSGWin32WindowEventProducer.h in Headers */,
+				C97C445D0E1C12340078CE35 /* OSGWin32WindowEventProducerBase.h in Headers */,
+				C97C445E0E1C12340078CE35 /* OSGWin32WindowEventProducerFields.h in Headers */,
+				C97C44600E1C12340078CE35 /* OSGXWindowEventProducer.h in Headers */,
+				C97C44620E1C12340078CE35 /* OSGXWindowEventProducerBase.h in Headers */,
+				C97C44630E1C12340078CE35 /* OSGXWindowEventProducerFields.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -749,52 +758,52 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4DD00400CF0CB6B00F00431 /* OSGEvent.h in Headers */,
-				D4DD00420CF0CB6B00F00431 /* OSGEventFactory.h in Headers */,
-				D4DD00430CF0CB6B00F00431 /* OSGEventListener.h in Headers */,
-				D4DD00440CF0CB6B00F00431 /* OSGEventProducer.h in Headers */,
-				D4DD00460CF0CB6B00F00431 /* OSGEventType.h in Headers */,
-				D4DD00480CF0CB6B00F00431 /* OSGFieldChangeEvent.h in Headers */,
-				D4DD004A0CF0CB6B00F00431 /* OSGFieldChangeListener.h in Headers */,
-				D4DD004C0CF0CB6B00F00431 /* OSGKeyAdapter.h in Headers */,
-				D4DD004E0CF0CB6B00F00431 /* OSGKeyEvent.h in Headers */,
-				D4DD00500CF0CB6B00F00431 /* OSGKeyEventProducer.h in Headers */,
-				D4DD00510CF0CB6B00F00431 /* OSGKeyListener.h in Headers */,
-				D4DD00530CF0CB6B00F00431 /* OSGMouseAdapter.h in Headers */,
-				D4DD00550CF0CB6B00F00431 /* OSGMouseEvent.h in Headers */,
-				D4DD00570CF0CB6B00F00431 /* OSGMouseEventProducer.h in Headers */,
-				D4DD00580CF0CB6B00F00431 /* OSGMouseListener.h in Headers */,
-				D4DD005A0CF0CB6B00F00431 /* OSGMouseMotionAdapter.h in Headers */,
-				D4DD005C0CF0CB6B00F00431 /* OSGMouseMotionEventProducer.h in Headers */,
-				D4DD005D0CF0CB6B00F00431 /* OSGMouseMotionListener.h in Headers */,
-				D4DD005F0CF0CB6B00F00431 /* OSGMouseWheelEvent.h in Headers */,
-				D4DD00610CF0CB6B00F00431 /* OSGMouseWheelEventProducer.h in Headers */,
-				D4DD00620CF0CB6B00F00431 /* OSGMouseWheelListener.h in Headers */,
-				D4DD00640CF0CB6B00F00431 /* OSGUpdateEvent.h in Headers */,
-				D4DD00650CF0CB6B00F00431 /* OSGUpdateListener.h in Headers */,
-				D4DD00670CF0CB6B00F00431 /* OSGWindowAdapter.h in Headers */,
-				D4DD00690CF0CB6B00F00431 /* OSGWindowEvent.h in Headers */,
-				D4DD006A0CF0CB6B00F00431 /* OSGWindowListener.h in Headers */,
-				D4DD006B0CF0CB6B00F00431 /* OSGInputDef.h in Headers */,
-				D4DD006D0CF0CB6B00F00431 /* OSGInputSettings.h in Headers */,
-				D4DD006F0CF0CB6B00F00431 /* OSGStringUtils.h in Headers */,
-				D4DD00710CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.h in Headers */,
-				D4DD00730CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.h in Headers */,
-				D4DD00740CF0CB6B00F00431 /* OSGCarbonWindowEventProducerFields.h in Headers */,
-				D4DD00760CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.h in Headers */,
-				D4DD00780CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.h in Headers */,
-				D4DD00790CF0CB6B00F00431 /* OSGGLUTWindowEventProducerFields.h in Headers */,
-				D4DD007B0CF0CB6B00F00431 /* OSGWindowEventProducer.h in Headers */,
-				D4DD007D0CF0CB6B00F00431 /* OSGWindowEventProducerBase.h in Headers */,
-				D4DD007F0CF0CB6B00F00431 /* OSGWindowEventProducerFactory.h in Headers */,
-				D4DD00800CF0CB6B00F00431 /* OSGWindowEventProducerFields.h in Headers */,
-				D4DD00820CF0CB6B00F00431 /* OSGWindowUtils.h in Headers */,
-				D4DD00840CF0CB6B00F00431 /* OSGWin32WindowEventProducer.h in Headers */,
-				D4DD00860CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.h in Headers */,
-				D4DD00870CF0CB6B00F00431 /* OSGWin32WindowEventProducerFields.h in Headers */,
-				D4DD00890CF0CB6B00F00431 /* OSGXWindowEventProducer.h in Headers */,
-				D4DD008B0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.h in Headers */,
-				D4DD008C0CF0CB6B00F00431 /* OSGXWindowEventProducerFields.h in Headers */,
+				C97C44640E1C12340078CE35 /* OSGEvent.h in Headers */,
+				C97C44660E1C12340078CE35 /* OSGEventFactory.h in Headers */,
+				C97C44670E1C12340078CE35 /* OSGEventListener.h in Headers */,
+				C97C44680E1C12340078CE35 /* OSGEventProducer.h in Headers */,
+				C97C446A0E1C12340078CE35 /* OSGEventType.h in Headers */,
+				C97C446C0E1C12340078CE35 /* OSGFieldChangeEvent.h in Headers */,
+				C97C446E0E1C12340078CE35 /* OSGFieldChangeListener.h in Headers */,
+				C97C44700E1C12340078CE35 /* OSGKeyAdapter.h in Headers */,
+				C97C44720E1C12340078CE35 /* OSGKeyEvent.h in Headers */,
+				C97C44740E1C12340078CE35 /* OSGKeyEventProducer.h in Headers */,
+				C97C44750E1C12340078CE35 /* OSGKeyListener.h in Headers */,
+				C97C44770E1C12340078CE35 /* OSGMouseAdapter.h in Headers */,
+				C97C44790E1C12340078CE35 /* OSGMouseEvent.h in Headers */,
+				C97C447B0E1C12340078CE35 /* OSGMouseEventProducer.h in Headers */,
+				C97C447C0E1C12340078CE35 /* OSGMouseListener.h in Headers */,
+				C97C447E0E1C12340078CE35 /* OSGMouseMotionAdapter.h in Headers */,
+				C97C44800E1C12340078CE35 /* OSGMouseMotionEventProducer.h in Headers */,
+				C97C44810E1C12340078CE35 /* OSGMouseMotionListener.h in Headers */,
+				C97C44830E1C12340078CE35 /* OSGMouseWheelEvent.h in Headers */,
+				C97C44850E1C12340078CE35 /* OSGMouseWheelEventProducer.h in Headers */,
+				C97C44860E1C12340078CE35 /* OSGMouseWheelListener.h in Headers */,
+				C97C44880E1C12340078CE35 /* OSGUpdateEvent.h in Headers */,
+				C97C44890E1C12340078CE35 /* OSGUpdateListener.h in Headers */,
+				C97C448B0E1C12340078CE35 /* OSGWindowAdapter.h in Headers */,
+				C97C448D0E1C12340078CE35 /* OSGWindowEvent.h in Headers */,
+				C97C448E0E1C12340078CE35 /* OSGWindowListener.h in Headers */,
+				C97C448F0E1C12340078CE35 /* OSGInputDef.h in Headers */,
+				C97C44910E1C12340078CE35 /* OSGInputSettings.h in Headers */,
+				C97C44930E1C12340078CE35 /* OSGStringUtils.h in Headers */,
+				C97C44950E1C12340078CE35 /* OSGCarbonWindowEventProducer.h in Headers */,
+				C97C44970E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.h in Headers */,
+				C97C44980E1C12340078CE35 /* OSGCarbonWindowEventProducerFields.h in Headers */,
+				C97C449A0E1C12340078CE35 /* OSGGLUTWindowEventProducer.h in Headers */,
+				C97C449C0E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.h in Headers */,
+				C97C449D0E1C12340078CE35 /* OSGGLUTWindowEventProducerFields.h in Headers */,
+				C97C449F0E1C12340078CE35 /* OSGWindowEventProducer.h in Headers */,
+				C97C44A10E1C12340078CE35 /* OSGWindowEventProducerBase.h in Headers */,
+				C97C44A30E1C12340078CE35 /* OSGWindowEventProducerFactory.h in Headers */,
+				C97C44A40E1C12340078CE35 /* OSGWindowEventProducerFields.h in Headers */,
+				C97C44A60E1C12340078CE35 /* OSGWindowUtils.h in Headers */,
+				C97C44A80E1C12340078CE35 /* OSGWin32WindowEventProducer.h in Headers */,
+				C97C44AA0E1C12340078CE35 /* OSGWin32WindowEventProducerBase.h in Headers */,
+				C97C44AB0E1C12340078CE35 /* OSGWin32WindowEventProducerFields.h in Headers */,
+				C97C44AD0E1C12340078CE35 /* OSGXWindowEventProducer.h in Headers */,
+				C97C44AF0E1C12340078CE35 /* OSGXWindowEventProducerBase.h in Headers */,
+				C97C44B00E1C12340078CE35 /* OSGXWindowEventProducerFields.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -930,7 +939,7 @@
 			);
 			name = "OSGInput Dynamic Library";
 			productName = libOSGToolbox;
-			productReference = D4BE40040CF0D5930046BAE7 /* libOSGInput.dylib */;
+			productReference = D4BE40040CF0D5930046BAE7 /* libOSGInputD.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		D437835E0CF0BED30062E3A4 /* OSGInput Static Library */ = {
@@ -947,7 +956,7 @@
 			);
 			name = "OSGInput Static Library";
 			productName = libOSGToolbox;
-			productReference = D4DD00950CF0CC3900F00431 /* libOSGInput.a */;
+			productReference = D4DD00950CF0CC3900F00431 /* libOSGInputD.a */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		D4BE41070CF0D7A50046BAE7 /* 03DefaultWindow */ = {
@@ -964,7 +973,7 @@
 			);
 			name = 03DefaultWindow;
 			productName = 03DefaultWindow2;
-			productReference = D4BE41080CF0D7A50046BAE7 /* 03DefaultWindow */;
+			productReference = D4BE41080CF0D7A50046BAE7 /* 03DefaultWindowD */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -1000,37 +1009,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4DDFFF40CF0CB6B00F00431 /* OSGEventFactory.cpp in Sources */,
-				D4DDFFF80CF0CB6B00F00431 /* OSGEventType.cpp in Sources */,
-				D4DDFFFA0CF0CB6B00F00431 /* OSGFieldChangeEvent.cpp in Sources */,
-				D4DDFFFC0CF0CB6B00F00431 /* OSGFieldChangeListener.cpp in Sources */,
-				D4DDFFFE0CF0CB6B00F00431 /* OSGKeyAdapter.cpp in Sources */,
-				D4DD00000CF0CB6B00F00431 /* OSGKeyEvent.cpp in Sources */,
-				D4DD00020CF0CB6B00F00431 /* OSGKeyEventProducer.cpp in Sources */,
-				D4DD00050CF0CB6B00F00431 /* OSGMouseAdapter.cpp in Sources */,
-				D4DD00070CF0CB6B00F00431 /* OSGMouseEvent.cpp in Sources */,
-				D4DD00090CF0CB6B00F00431 /* OSGMouseEventProducer.cpp in Sources */,
-				D4DD000C0CF0CB6B00F00431 /* OSGMouseMotionAdapter.cpp in Sources */,
-				D4DD000E0CF0CB6B00F00431 /* OSGMouseMotionEventProducer.cpp in Sources */,
-				D4DD00110CF0CB6B00F00431 /* OSGMouseWheelEvent.cpp in Sources */,
-				D4DD00130CF0CB6B00F00431 /* OSGMouseWheelEventProducer.cpp in Sources */,
-				D4DD00160CF0CB6B00F00431 /* OSGUpdateEvent.cpp in Sources */,
-				D4DD00190CF0CB6B00F00431 /* OSGWindowAdapter.cpp in Sources */,
-				D4DD001B0CF0CB6B00F00431 /* OSGWindowEvent.cpp in Sources */,
-				D4DD001F0CF0CB6B00F00431 /* OSGInputSettings.cpp in Sources */,
-				D4DD00210CF0CB6B00F00431 /* OSGStringUtils.cpp in Sources */,
-				D4DD00230CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.cpp in Sources */,
-				D4DD00250CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.cpp in Sources */,
-				D4DD00280CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.cpp in Sources */,
-				D4DD002A0CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.cpp in Sources */,
-				D4DD002D0CF0CB6B00F00431 /* OSGWindowEventProducer.cpp in Sources */,
-				D4DD002F0CF0CB6B00F00431 /* OSGWindowEventProducerBase.cpp in Sources */,
-				D4DD00310CF0CB6B00F00431 /* OSGWindowEventProducerFactory.cpp in Sources */,
-				D4DD00340CF0CB6B00F00431 /* OSGWindowUtils.cpp in Sources */,
-				D4DD00360CF0CB6B00F00431 /* OSGWin32WindowEventProducer.cpp in Sources */,
-				D4DD00380CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.cpp in Sources */,
-				D4DD003B0CF0CB6B00F00431 /* OSGXWindowEventProducer.cpp in Sources */,
-				D4DD003D0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.cpp in Sources */,
+				C97C44180E1C12340078CE35 /* OSGEventFactory.cpp in Sources */,
+				C97C441C0E1C12340078CE35 /* OSGEventType.cpp in Sources */,
+				C97C441E0E1C12340078CE35 /* OSGFieldChangeEvent.cpp in Sources */,
+				C97C44200E1C12340078CE35 /* OSGFieldChangeListener.cpp in Sources */,
+				C97C44220E1C12340078CE35 /* OSGKeyAdapter.cpp in Sources */,
+				C97C44240E1C12340078CE35 /* OSGKeyEvent.cpp in Sources */,
+				C97C44260E1C12340078CE35 /* OSGKeyEventProducer.cpp in Sources */,
+				C97C44290E1C12340078CE35 /* OSGMouseAdapter.cpp in Sources */,
+				C97C442B0E1C12340078CE35 /* OSGMouseEvent.cpp in Sources */,
+				C97C442D0E1C12340078CE35 /* OSGMouseEventProducer.cpp in Sources */,
+				C97C44300E1C12340078CE35 /* OSGMouseMotionAdapter.cpp in Sources */,
+				C97C44320E1C12340078CE35 /* OSGMouseMotionEventProducer.cpp in Sources */,
+				C97C44350E1C12340078CE35 /* OSGMouseWheelEvent.cpp in Sources */,
+				C97C44370E1C12340078CE35 /* OSGMouseWheelEventProducer.cpp in Sources */,
+				C97C443A0E1C12340078CE35 /* OSGUpdateEvent.cpp in Sources */,
+				C97C443D0E1C12340078CE35 /* OSGWindowAdapter.cpp in Sources */,
+				C97C443F0E1C12340078CE35 /* OSGWindowEvent.cpp in Sources */,
+				C97C44430E1C12340078CE35 /* OSGInputSettings.cpp in Sources */,
+				C97C44450E1C12340078CE35 /* OSGStringUtils.cpp in Sources */,
+				C97C44470E1C12340078CE35 /* OSGCarbonWindowEventProducer.cpp in Sources */,
+				C97C44490E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.cpp in Sources */,
+				C97C444C0E1C12340078CE35 /* OSGGLUTWindowEventProducer.cpp in Sources */,
+				C97C444E0E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.cpp in Sources */,
+				C97C44510E1C12340078CE35 /* OSGWindowEventProducer.cpp in Sources */,
+				C97C44530E1C12340078CE35 /* OSGWindowEventProducerBase.cpp in Sources */,
+				C97C44550E1C12340078CE35 /* OSGWindowEventProducerFactory.cpp in Sources */,
+				C97C44580E1C12340078CE35 /* OSGWindowUtils.cpp in Sources */,
+				C97C445A0E1C12340078CE35 /* OSGWin32WindowEventProducer.cpp in Sources */,
+				C97C445C0E1C12340078CE35 /* OSGWin32WindowEventProducerBase.cpp in Sources */,
+				C97C445F0E1C12340078CE35 /* OSGXWindowEventProducer.cpp in Sources */,
+				C97C44610E1C12340078CE35 /* OSGXWindowEventProducerBase.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1038,37 +1047,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4DD00410CF0CB6B00F00431 /* OSGEventFactory.cpp in Sources */,
-				D4DD00450CF0CB6B00F00431 /* OSGEventType.cpp in Sources */,
-				D4DD00470CF0CB6B00F00431 /* OSGFieldChangeEvent.cpp in Sources */,
-				D4DD00490CF0CB6B00F00431 /* OSGFieldChangeListener.cpp in Sources */,
-				D4DD004B0CF0CB6B00F00431 /* OSGKeyAdapter.cpp in Sources */,
-				D4DD004D0CF0CB6B00F00431 /* OSGKeyEvent.cpp in Sources */,
-				D4DD004F0CF0CB6B00F00431 /* OSGKeyEventProducer.cpp in Sources */,
-				D4DD00520CF0CB6B00F00431 /* OSGMouseAdapter.cpp in Sources */,
-				D4DD00540CF0CB6B00F00431 /* OSGMouseEvent.cpp in Sources */,
-				D4DD00560CF0CB6B00F00431 /* OSGMouseEventProducer.cpp in Sources */,
-				D4DD00590CF0CB6B00F00431 /* OSGMouseMotionAdapter.cpp in Sources */,
-				D4DD005B0CF0CB6B00F00431 /* OSGMouseMotionEventProducer.cpp in Sources */,
-				D4DD005E0CF0CB6B00F00431 /* OSGMouseWheelEvent.cpp in Sources */,
-				D4DD00600CF0CB6B00F00431 /* OSGMouseWheelEventProducer.cpp in Sources */,
-				D4DD00630CF0CB6B00F00431 /* OSGUpdateEvent.cpp in Sources */,
-				D4DD00660CF0CB6B00F00431 /* OSGWindowAdapter.cpp in Sources */,
-				D4DD00680CF0CB6B00F00431 /* OSGWindowEvent.cpp in Sources */,
-				D4DD006C0CF0CB6B00F00431 /* OSGInputSettings.cpp in Sources */,
-				D4DD006E0CF0CB6B00F00431 /* OSGStringUtils.cpp in Sources */,
-				D4DD00700CF0CB6B00F00431 /* OSGCarbonWindowEventProducer.cpp in Sources */,
-				D4DD00720CF0CB6B00F00431 /* OSGCarbonWindowEventProducerBase.cpp in Sources */,
-				D4DD00750CF0CB6B00F00431 /* OSGGLUTWindowEventProducer.cpp in Sources */,
-				D4DD00770CF0CB6B00F00431 /* OSGGLUTWindowEventProducerBase.cpp in Sources */,
-				D4DD007A0CF0CB6B00F00431 /* OSGWindowEventProducer.cpp in Sources */,
-				D4DD007C0CF0CB6B00F00431 /* OSGWindowEventProducerBase.cpp in Sources */,
-				D4DD007E0CF0CB6B00F00431 /* OSGWindowEventProducerFactory.cpp in Sources */,
-				D4DD00810CF0CB6B00F00431 /* OSGWindowUtils.cpp in Sources */,
-				D4DD00830CF0CB6B00F00431 /* OSGWin32WindowEventProducer.cpp in Sources */,
-				D4DD00850CF0CB6B00F00431 /* OSGWin32WindowEventProducerBase.cpp in Sources */,
-				D4DD00880CF0CB6B00F00431 /* OSGXWindowEventProducer.cpp in Sources */,
-				D4DD008A0CF0CB6B00F00431 /* OSGXWindowEventProducerBase.cpp in Sources */,
+				C97C44650E1C12340078CE35 /* OSGEventFactory.cpp in Sources */,
+				C97C44690E1C12340078CE35 /* OSGEventType.cpp in Sources */,
+				C97C446B0E1C12340078CE35 /* OSGFieldChangeEvent.cpp in Sources */,
+				C97C446D0E1C12340078CE35 /* OSGFieldChangeListener.cpp in Sources */,
+				C97C446F0E1C12340078CE35 /* OSGKeyAdapter.cpp in Sources */,
+				C97C44710E1C12340078CE35 /* OSGKeyEvent.cpp in Sources */,
+				C97C44730E1C12340078CE35 /* OSGKeyEventProducer.cpp in Sources */,
+				C97C44760E1C12340078CE35 /* OSGMouseAdapter.cpp in Sources */,
+				C97C44780E1C12340078CE35 /* OSGMouseEvent.cpp in Sources */,
+				C97C447A0E1C12340078CE35 /* OSGMouseEventProducer.cpp in Sources */,
+				C97C447D0E1C12340078CE35 /* OSGMouseMotionAdapter.cpp in Sources */,
+				C97C447F0E1C12340078CE35 /* OSGMouseMotionEventProducer.cpp in Sources */,
+				C97C44820E1C12340078CE35 /* OSGMouseWheelEvent.cpp in Sources */,
+				C97C44840E1C12340078CE35 /* OSGMouseWheelEventProducer.cpp in Sources */,
+				C97C44870E1C12340078CE35 /* OSGUpdateEvent.cpp in Sources */,
+				C97C448A0E1C12340078CE35 /* OSGWindowAdapter.cpp in Sources */,
+				C97C448C0E1C12340078CE35 /* OSGWindowEvent.cpp in Sources */,
+				C97C44900E1C12340078CE35 /* OSGInputSettings.cpp in Sources */,
+				C97C44920E1C12340078CE35 /* OSGStringUtils.cpp in Sources */,
+				C97C44940E1C12340078CE35 /* OSGCarbonWindowEventProducer.cpp in Sources */,
+				C97C44960E1C12340078CE35 /* OSGCarbonWindowEventProducerBase.cpp in Sources */,
+				C97C44990E1C12340078CE35 /* OSGGLUTWindowEventProducer.cpp in Sources */,
+				C97C449B0E1C12340078CE35 /* OSGGLUTWindowEventProducerBase.cpp in Sources */,
+				C97C449E0E1C12340078CE35 /* OSGWindowEventProducer.cpp in Sources */,
+				C97C44A00E1C12340078CE35 /* OSGWindowEventProducerBase.cpp in Sources */,
+				C97C44A20E1C12340078CE35 /* OSGWindowEventProducerFactory.cpp in Sources */,
+				C97C44A50E1C12340078CE35 /* OSGWindowUtils.cpp in Sources */,
+				C97C44A70E1C12340078CE35 /* OSGWin32WindowEventProducer.cpp in Sources */,
+				C97C44A90E1C12340078CE35 /* OSGWin32WindowEventProducerBase.cpp in Sources */,
+				C97C44AC0E1C12340078CE35 /* OSGXWindowEventProducer.cpp in Sources */,
+				C97C44AE0E1C12340078CE35 /* OSGXWindowEventProducerBase.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

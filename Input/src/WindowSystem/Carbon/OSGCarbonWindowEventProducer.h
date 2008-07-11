@@ -121,6 +121,8 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 
     /*! \}                                                                 */
 	
+	//Store state of modifier keys
+	UInt32 _modifierKeyState;
 	
     //Set the Window Position
     virtual void setPosition(Pnt2f Pos);
