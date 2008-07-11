@@ -62,6 +62,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCore : public NodeParti
 
     /*==========================  PUBLIC  =================================*/
   public:
+      enum NormalSource {NORMAL_POSITION_CHANGE, NORMAL_VELOCITY_CHANGE, NORMAL_VELOCITY, NORMAL_ACCELERATION, NORMAL_PARTICLE_NORMAL, NORMAL_VIEW_DIRECTION, NORMAL_VIEW_POSITION, NORMAL_STATIC};
+      enum UpSource {UP_POSITION_CHANGE, UP_VELOCITY_CHANGE, UP_VELOCITY, UP_ACCELERATION, UP_PARTICLE_NORMAL, UP_VIEW_DIRECTION, UP_STATIC};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -116,6 +118,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCore : public NodeParti
 	friend class SystemUpdateListener;
 
 	SystemUpdateListener _SystemUpdateListener;
+
+	Vec3f getNodeNormal(ParticleSystemPtr System, UInt32 Index);
+	Vec3f getNodeUpDir(ParticleSystemPtr System, UInt32 Index);
     /*==========================  PRIVATE  ================================*/
   private:
 

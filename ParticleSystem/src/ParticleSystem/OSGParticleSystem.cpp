@@ -973,6 +973,7 @@ void ParticleSystem::update(const Time& elps)
 	std::set<UInt32, GreaterThanUInt32> ParticlesToKill;
     for(UInt32 i(0) ; i<NumParticles; ++i)
     {
+        VolumeChanged = true;
 		//Kill Particles that have ages > lifespans
 		setAge(getAge(i) + elps,i);
 		if(getLifespan(i) > 0.0f && getAge(i)>getLifespan(i))
@@ -981,7 +982,6 @@ void ParticleSystem::update(const Time& elps)
 			continue;
 		}
 
-        VolumeChanged = true;
 
 		//Remember the Old Postions and velocities
 		setSecPosition(getPosition(i),i);

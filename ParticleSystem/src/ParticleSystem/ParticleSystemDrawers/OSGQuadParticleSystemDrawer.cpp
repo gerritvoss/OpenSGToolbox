@@ -231,7 +231,7 @@ Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawActionBase *action,ParticleSyst
 		Direction = System->getNormal(Index);
 		break;
 	case UP_STATIC:
-		Direction = getNormal();
+		Direction = getUp();
 		break;
 	case UP_VIEW_DIRECTION:
 	default:

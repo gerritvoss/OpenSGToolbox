@@ -76,6 +76,18 @@ const OSG::BitVector  NodeParticleSystemCoreBase::SizeScalingFieldMask =
 const OSG::BitVector  NodeParticleSystemCoreBase::ParticleNodesFieldMask = 
     (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::ParticleNodesFieldId);
 
+const OSG::BitVector  NodeParticleSystemCoreBase::NormalSourceFieldMask = 
+    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::NormalSourceFieldId);
+
+const OSG::BitVector  NodeParticleSystemCoreBase::NormalFieldMask = 
+    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::NormalFieldId);
+
+const OSG::BitVector  NodeParticleSystemCoreBase::UpSourceFieldMask = 
+    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::UpSourceFieldId);
+
+const OSG::BitVector  NodeParticleSystemCoreBase::UpFieldMask = 
+    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::UpFieldId);
+
 const OSG::BitVector NodeParticleSystemCoreBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -94,6 +106,18 @@ const OSG::BitVector NodeParticleSystemCoreBase::MTInfluenceMask =
 */
 /*! \var NodePtr         NodeParticleSystemCoreBase::_mfParticleNodes
     
+*/
+/*! \var UInt32          NodeParticleSystemCoreBase::_sfNormalSource
+    This enum is used to determine what is used for the direction of the line.    NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.    NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    NORMAL_VELOCITY uses the velocity.    NORMAL_ACCELERATION uses the acceleration.    NORMAL_PARTICLE_NORMAL uses the normal of the particle.    NORMAL_VIEW_DIRECTION uses the z axis of the view space.    NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.    NORMAL_STATIC uses the normal of this drawer.
+*/
+/*! \var Vec3f           NodeParticleSystemCoreBase::_sfNormal
+    The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.
+*/
+/*! \var UInt32          NodeParticleSystemCoreBase::_sfUpSource
+    This enum is used to determine what is used for the direction of the line.    UP_POSITION_CHANGE uses the diference between Position and SecPosition.    UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    UP_VELOCITY uses the velocity.    UP_ACCELERATION uses the acceleration.    UP_PARTICLE_NORMAL uses the normal of the particle.    UP_VIEW_DIRECTION uses the y axis of the view space.    UP_STATIC uses the normal of this drawer.
+*/
+/*! \var Vec3f           NodeParticleSystemCoreBase::_sfUp
+    The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.
 */
 
 //! NodeParticleSystemCore description
@@ -119,7 +143,27 @@ FieldDescription *NodeParticleSystemCoreBase::_desc[] =
                      "ParticleNodes", 
                      ParticleNodesFieldId, ParticleNodesFieldMask,
                      false,
-                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getMFParticleNodes)
+                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getMFParticleNodes),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "NormalSource", 
+                     NormalSourceFieldId, NormalSourceFieldMask,
+                     false,
+                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFNormalSource),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Normal", 
+                     NormalFieldId, NormalFieldMask,
+                     false,
+                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFNormal),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "UpSource", 
+                     UpSourceFieldId, UpSourceFieldMask,
+                     false,
+                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFUpSource),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Up", 
+                     UpFieldId, UpFieldMask,
+                     false,
+                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFUp)
 };
 
 
@@ -200,6 +244,10 @@ NodeParticleSystemCoreBase::NodeParticleSystemCoreBase(void) :
     _sfPrototypeNode          (NodePtr(NullFC)), 
     _sfSizeScaling            (Vec3f(1.0,1.0,1.0)), 
     _mfParticleNodes          (), 
+    _sfNormalSource           (UInt32(NodeParticleSystemCore::NORMAL_VIEW_DIRECTION)), 
+    _sfNormal                 (Vec3f(1.0,0.0,0.0)), 
+    _sfUpSource               (UInt32(NodeParticleSystemCore::UP_VIEW_DIRECTION)), 
+    _sfUp                     (Vec3f(0.0,1.0,0.0)), 
     Inherited() 
 {
 }
@@ -213,6 +261,10 @@ NodeParticleSystemCoreBase::NodeParticleSystemCoreBase(const NodeParticleSystemC
     _sfPrototypeNode          (source._sfPrototypeNode          ), 
     _sfSizeScaling            (source._sfSizeScaling            ), 
     _mfParticleNodes          (source._mfParticleNodes          ), 
+    _sfNormalSource           (source._sfNormalSource           ), 
+    _sfNormal                 (source._sfNormal                 ), 
+    _sfUpSource               (source._sfUpSource               ), 
+    _sfUp                     (source._sfUp                     ), 
     Inherited                 (source)
 {
 }
@@ -249,6 +301,26 @@ UInt32 NodeParticleSystemCoreBase::getBinSize(const BitVector &whichField)
         returnValue += _mfParticleNodes.getBinSize();
     }
 
+    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
+    {
+        returnValue += _sfNormalSource.getBinSize();
+    }
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+    {
+        returnValue += _sfNormal.getBinSize();
+    }
+
+    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
+    {
+        returnValue += _sfUpSource.getBinSize();
+    }
+
+    if(FieldBits::NoField != (UpFieldMask & whichField))
+    {
+        returnValue += _sfUp.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -276,6 +348,26 @@ void NodeParticleSystemCoreBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
     {
         _mfParticleNodes.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
+    {
+        _sfNormalSource.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+    {
+        _sfNormal.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
+    {
+        _sfUpSource.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UpFieldMask & whichField))
+    {
+        _sfUp.copyToBin(pMem);
     }
 
 
@@ -306,6 +398,26 @@ void NodeParticleSystemCoreBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfParticleNodes.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
+    {
+        _sfNormalSource.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+    {
+        _sfNormal.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
+    {
+        _sfUpSource.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UpFieldMask & whichField))
+    {
+        _sfUp.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -328,6 +440,18 @@ void NodeParticleSystemCoreBase::executeSyncImpl(      NodeParticleSystemCoreBas
     if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
         _mfParticleNodes.syncWith(pOther->_mfParticleNodes);
 
+    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
+        _sfNormalSource.syncWith(pOther->_sfNormalSource);
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+        _sfNormal.syncWith(pOther->_sfNormal);
+
+    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
+        _sfUpSource.syncWith(pOther->_sfUpSource);
+
+    if(FieldBits::NoField != (UpFieldMask & whichField))
+        _sfUp.syncWith(pOther->_sfUp);
+
 
 }
 #else
@@ -346,6 +470,18 @@ void NodeParticleSystemCoreBase::executeSyncImpl(      NodeParticleSystemCoreBas
 
     if(FieldBits::NoField != (SizeScalingFieldMask & whichField))
         _sfSizeScaling.syncWith(pOther->_sfSizeScaling);
+
+    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
+        _sfNormalSource.syncWith(pOther->_sfNormalSource);
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+        _sfNormal.syncWith(pOther->_sfNormal);
+
+    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
+        _sfUpSource.syncWith(pOther->_sfUpSource);
+
+    if(FieldBits::NoField != (UpFieldMask & whichField))
+        _sfUp.syncWith(pOther->_sfUp);
 
 
     if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))

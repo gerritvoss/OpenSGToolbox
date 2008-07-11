@@ -71,6 +71,10 @@
 #include <OpenSG/OSGNodeFields.h> // PrototypeNode type
 #include <OpenSG/OSGVec3fFields.h> // SizeScaling type
 #include <OpenSG/OSGNodeFields.h> // ParticleNodes type
+#include <OpenSG/OSGUInt32Fields.h> // NormalSource type
+#include <OpenSG/OSGVec3fFields.h> // Normal type
+#include <OpenSG/OSGUInt32Fields.h> // UpSource type
+#include <OpenSG/OSGVec3fFields.h> // Up type
 
 #include "OSGNodeParticleSystemCoreFields.h"
 
@@ -98,13 +102,21 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
         PrototypeNodeFieldId = SystemFieldId        + 1,
         SizeScalingFieldId   = PrototypeNodeFieldId + 1,
         ParticleNodesFieldId = SizeScalingFieldId   + 1,
-        NextFieldId          = ParticleNodesFieldId + 1
+        NormalSourceFieldId  = ParticleNodesFieldId + 1,
+        NormalFieldId        = NormalSourceFieldId  + 1,
+        UpSourceFieldId      = NormalFieldId        + 1,
+        UpFieldId            = UpSourceFieldId      + 1,
+        NextFieldId          = UpFieldId            + 1
     };
 
     static const OSG::BitVector SystemFieldMask;
     static const OSG::BitVector PrototypeNodeFieldMask;
     static const OSG::BitVector SizeScalingFieldMask;
     static const OSG::BitVector ParticleNodesFieldMask;
+    static const OSG::BitVector NormalSourceFieldMask;
+    static const OSG::BitVector NormalFieldMask;
+    static const OSG::BitVector UpSourceFieldMask;
+    static const OSG::BitVector UpFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,6 +146,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
            SFParticleSystemPtr *getSFSystem         (void);
            SFNodePtr           *getSFPrototypeNode  (void);
            SFVec3f             *getSFSizeScaling    (void);
+           SFUInt32            *getSFNormalSource   (void);
+           SFVec3f             *getSFNormal         (void);
+           SFUInt32            *getSFUpSource       (void);
+           SFVec3f             *getSFUp             (void);
 
            ParticleSystemPtr   &getSystem         (void);
      const ParticleSystemPtr   &getSystem         (void) const;
@@ -141,6 +157,14 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
      const NodePtr             &getPrototypeNode  (void) const;
            Vec3f               &getSizeScaling    (void);
      const Vec3f               &getSizeScaling    (void) const;
+           UInt32              &getNormalSource   (void);
+     const UInt32              &getNormalSource   (void) const;
+           Vec3f               &getNormal         (void);
+     const Vec3f               &getNormal         (void) const;
+           UInt32              &getUpSource       (void);
+     const UInt32              &getUpSource       (void) const;
+           Vec3f               &getUp             (void);
+     const Vec3f               &getUp             (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -150,6 +174,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
      void setSystem         ( const ParticleSystemPtr &value );
      void setPrototypeNode  ( const NodePtr &value );
      void setSizeScaling    ( const Vec3f &value );
+     void setNormalSource   ( const UInt32 &value );
+     void setNormal         ( const Vec3f &value );
+     void setUpSource       ( const UInt32 &value );
+     void setUp             ( const Vec3f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,6 +224,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
     SFNodePtr           _sfPrototypeNode;
     SFVec3f             _sfSizeScaling;
     MFNodePtr           _mfParticleNodes;
+    SFUInt32            _sfNormalSource;
+    SFVec3f             _sfNormal;
+    SFUInt32            _sfUpSource;
+    SFVec3f             _sfUp;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

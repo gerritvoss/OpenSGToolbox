@@ -124,6 +124,34 @@ MFNodePtr *NodeParticleSystemCoreBase::getMFParticleNodes(void)
     return &_mfParticleNodes;
 }
 
+//! Get the NodeParticleSystemCore::_sfNormalSource field.
+inline
+SFUInt32 *NodeParticleSystemCoreBase::getSFNormalSource(void)
+{
+    return &_sfNormalSource;
+}
+
+//! Get the NodeParticleSystemCore::_sfNormal field.
+inline
+SFVec3f *NodeParticleSystemCoreBase::getSFNormal(void)
+{
+    return &_sfNormal;
+}
+
+//! Get the NodeParticleSystemCore::_sfUpSource field.
+inline
+SFUInt32 *NodeParticleSystemCoreBase::getSFUpSource(void)
+{
+    return &_sfUpSource;
+}
+
+//! Get the NodeParticleSystemCore::_sfUp field.
+inline
+SFVec3f *NodeParticleSystemCoreBase::getSFUp(void)
+{
+    return &_sfUp;
+}
+
 
 //! Get the value of the NodeParticleSystemCore::_sfSystem field.
 inline
@@ -186,6 +214,90 @@ inline
 void NodeParticleSystemCoreBase::setSizeScaling(const Vec3f &value)
 {
     _sfSizeScaling.setValue(value);
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfNormalSource field.
+inline
+UInt32 &NodeParticleSystemCoreBase::getNormalSource(void)
+{
+    return _sfNormalSource.getValue();
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfNormalSource field.
+inline
+const UInt32 &NodeParticleSystemCoreBase::getNormalSource(void) const
+{
+    return _sfNormalSource.getValue();
+}
+
+//! Set the value of the NodeParticleSystemCore::_sfNormalSource field.
+inline
+void NodeParticleSystemCoreBase::setNormalSource(const UInt32 &value)
+{
+    _sfNormalSource.setValue(value);
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfNormal field.
+inline
+Vec3f &NodeParticleSystemCoreBase::getNormal(void)
+{
+    return _sfNormal.getValue();
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfNormal field.
+inline
+const Vec3f &NodeParticleSystemCoreBase::getNormal(void) const
+{
+    return _sfNormal.getValue();
+}
+
+//! Set the value of the NodeParticleSystemCore::_sfNormal field.
+inline
+void NodeParticleSystemCoreBase::setNormal(const Vec3f &value)
+{
+    _sfNormal.setValue(value);
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfUpSource field.
+inline
+UInt32 &NodeParticleSystemCoreBase::getUpSource(void)
+{
+    return _sfUpSource.getValue();
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfUpSource field.
+inline
+const UInt32 &NodeParticleSystemCoreBase::getUpSource(void) const
+{
+    return _sfUpSource.getValue();
+}
+
+//! Set the value of the NodeParticleSystemCore::_sfUpSource field.
+inline
+void NodeParticleSystemCoreBase::setUpSource(const UInt32 &value)
+{
+    _sfUpSource.setValue(value);
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfUp field.
+inline
+Vec3f &NodeParticleSystemCoreBase::getUp(void)
+{
+    return _sfUp.getValue();
+}
+
+//! Get the value of the NodeParticleSystemCore::_sfUp field.
+inline
+const Vec3f &NodeParticleSystemCoreBase::getUp(void) const
+{
+    return _sfUp.getValue();
+}
+
+//! Set the value of the NodeParticleSystemCore::_sfUp field.
+inline
+void NodeParticleSystemCoreBase::setUp(const Vec3f &value)
+{
+    _sfUp.setValue(value);
 }
 
 

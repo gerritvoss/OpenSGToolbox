@@ -97,8 +97,13 @@ void NodeParticleSystemCore::updateNodes(void)
 	//Resize the ParticleNodes MultiField
 	if(NumParticles < getParticleNodes().size())
 	{
+        for(UInt32 i(NumParticles) ; i<getParticleNodes().size(); ++i)
+        {
+            subRefCP(getParticleNodes()[i]);
+        }
+
 		beginEditCP(NodeParticleSystemCorePtr(this), ParticleNodesFieldMask);
-			getParticleNodes().resize(NumParticles, NullFC);
+			getParticleNodes().resize(NumParticles);
 		endEditCP(NodeParticleSystemCorePtr(this), ParticleNodesFieldMask);
 	}
 	else if(NumParticles > getParticleNodes().size())
@@ -122,6 +127,7 @@ void NodeParticleSystemCore::updateNodes(void)
 				TransformationNode->addChild(ParticleNode);
 			endEditCP(TransformationNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 			
+            addRefCP(TransformationNode);
 			getParticleNodes().push_back(TransformationNode);
 		}
 		endEditCP(NodeParticleSystemCorePtr(this), ParticleNodesFieldMask);
@@ -130,15 +136,29 @@ void NodeParticleSystemCore::updateNodes(void)
 	//Update the transformations of the Particle Nodes
 	Matrix Transformation;
 	Vec3f Scaling;
+	Matrix Rotation;
+    Vec3f Normal,Binormal, Up;
 	for(UInt32 i(0) ; i<NumParticles ; ++i)
 	{
 		Scaling = getSystem()->getSize(i);
 		Scaling.setValues(Scaling.x()*getSizeScaling().x(),
 			Scaling.y()*getSizeScaling().y(),
 			Scaling.z()*getSizeScaling().z());
+        
+		Normal = getNodeNormal(getSystem(), i);
+	    Binormal = getNodeUpDir(getSystem(), i).cross(Normal);
+		Up = Normal.cross(Binormal);
+        Rotation.setValue(Binormal.x(),Binormal.y(),Binormal.z(),0.0,
+                           Up.x(),Up.y(),Up.z(),0.0,
+                           Normal.x(),Normal.y(),Normal.z(),0.0,
+                           0.0,0.0,0.0,1.0);
+        //Rotation.setValue(Binormal.x(),Up.x(),Normal.x(),0.0,
+        //                   Binormal.y(),Up.y(),Normal.y(),0.0,
+        //                   Binormal.z(),Up.z(),Normal.z(),0.0,
+        //                   0.0,0.0,0.0,1.0);
 
 		Transformation.setTransform(getSystem()->getPosition(i),
-			                        Quaternion(),
+			                        Quaternion( Rotation ),
 									Scaling);
 
 		beginEditCP(getParticleNodes()[i]->getCore(), Transform::MatrixFieldMask);
@@ -165,6 +185,92 @@ void NodeParticleSystemCore::updateNodes(void)
 	}
 }
 
+Vec3f NodeParticleSystemCore::getNodeNormal(ParticleSystemPtr System, UInt32 Index)
+{
+	Vec3f Direction;
+	
+	switch(getNormalSource())
+	{
+	case NORMAL_POSITION_CHANGE:
+		Direction = System->getPositionChange(Index);
+			Direction.normalize();
+		break;
+	case NORMAL_VELOCITY_CHANGE:
+		Direction = System->getVelocityChange(Index);
+			Direction.normalize();
+		break;
+	case NORMAL_VELOCITY:
+		Direction = System->getVelocity(Index);
+			Direction.normalize();
+		break;
+	case NORMAL_ACCELERATION:
+		Direction = System->getAcceleration(Index);
+			Direction.normalize();
+		break;
+	case NORMAL_PARTICLE_NORMAL:
+		Direction = System->getNormal(Index);
+		break;
+	case NORMAL_VIEW_POSITION:
+		{
+			//TODO: make this more efficient
+			//Matrix ModelView = action->getCameraToWorld();
+			//Vec3f Position(ModelView[0][3],ModelView[1][3],ModelView[2][3]);
+			//Direction = Position - System->getPosition(Index);
+			//Direction.normalize();
+		
+		break;
+		}
+	case NORMAL_STATIC:
+		Direction = getNormal();
+			break;
+	case NORMAL_VIEW_DIRECTION:
+	default:
+		{
+			//TODO: make this more efficient
+			//Matrix ModelView = action->getCameraToWorld();
+			//Direction.setValues(ModelView[2][0],ModelView[2][1],ModelView[2][2]);
+		break;
+		}
+	}
+	return Direction;
+}
+
+Vec3f NodeParticleSystemCore::getNodeUpDir(ParticleSystemPtr System, UInt32 Index)
+{
+	Vec3f Direction;
+	
+	switch(getUpSource())
+	{
+	case UP_POSITION_CHANGE:
+		Direction = System->getPositionChange(Index);
+		break;
+	case UP_VELOCITY_CHANGE:
+		Direction = System->getVelocityChange(Index);
+		break;
+	case UP_VELOCITY:
+		Direction = System->getVelocity(Index);
+		break;
+	case UP_ACCELERATION:
+		Direction = System->getAcceleration(Index);
+		break;
+	case UP_PARTICLE_NORMAL:
+		Direction = System->getNormal(Index);
+		break;
+	case UP_STATIC:
+		Direction = getUp();
+		break;
+	case UP_VIEW_DIRECTION:
+	default:
+		{
+			//TODO: make this more efficient
+			//Matrix ModelView = action->getCameraToWorld();
+			//Direction.setValues(ModelView[1][0],ModelView[1][1],ModelView[1][2]);
+		break;
+		}
+	}
+
+	return Direction;
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -172,7 +172,7 @@ int main(int argc, char **argv)
 
 		ExampleParticleSystem->addParticle(
 			PositionReturnValue,
-			Vec3f(0.0f,0.0f,1.0f),
+			Vec3f(1.0f,0.0f,0.0f),
 			Color4f(1.0,0.0,0.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
 			LifespanReturnValue, 
@@ -182,13 +182,16 @@ int main(int argc, char **argv)
 	}
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
-	NodePtr ParticlePrototypeNode = makeTorus(1.0,5.0,16,16);
+	NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
 
 	//Particle System Node
     NodeParticleSystemCorePtr NodeParticleNodeCore = osg::NodeParticleSystemCore::create();
     beginEditCP(NodeParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 		NodeParticleNodeCore->setSystem(ExampleParticleSystem);
 		NodeParticleNodeCore->setPrototypeNode(ParticlePrototypeNode);
+        NodeParticleNodeCore->setNormalSource(NodeParticleSystemCore::NORMAL_VELOCITY);
+        NodeParticleNodeCore->setUpSource(NodeParticleSystemCore::UP_STATIC);
+        NodeParticleNodeCore->setUp(Vec3f(0.0f,1.0f,0.0f));
     endEditCP(NodeParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 	
 	NodePtr ParticleNode = osg::Node::create();
