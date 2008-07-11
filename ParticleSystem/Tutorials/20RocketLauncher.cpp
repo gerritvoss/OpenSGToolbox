@@ -21,6 +21,9 @@
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
+#include <OpenSG/OSGSimpleSceneManager.h>
+#include <OpenSG/OSGSceneFileHandler.h>
+
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -37,8 +40,8 @@ void reshape(Vec2f Size);
 //Particle System Drawer
 ParticleSystemCorePtr ParticleNodeCore;
 PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
-LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
-QuadParticleSystemDrawerPtr ExampleQuadParticleSystemDrawer;
+ParticleSystemPtr ExampleParticleSystem;
+
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -61,24 +64,9 @@ public:
    {
 	   if(e.getKey()== KeyEvent::KEY_1) // Use the Point Drawer
 	   {
-			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
-				ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
-			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
+			
 	   }
 
-	   if(e.getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
-	   {
-			 beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
-				ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
-			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
-	   }
-
-	   if(e.getKey()== KeyEvent::KEY_3)//Use the Quad Drawer for 3
-	   {
-			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
-				ParticleNodeCore->setDrawer(ExampleQuadParticleSystemDrawer);
-			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
-	   }
    }
 };
 
@@ -110,7 +98,23 @@ class TutorialMouseListener : public MouseListener
     }
     virtual void mousePressed(const MouseEvent& e)
     {
+          Line TheRay;
             mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+			if(e.getButton() == MouseEvent::BUTTON1)
+		{
+			std::cout<<e.getLocation()<<std::endl;
+			
+			mgr->getCamera()->calcViewRay(TheRay,e.getLocation().x(),e.getLocation().y(),*(mgr->getWindow()->getPort(0)));
+			std::cout<<TheRay.getPosition()<<" "<<TheRay.getDirection()<<std::endl;
+		}
+			ExampleParticleSystem->addParticle(TheRay.getPosition(),
+			Vec3f(0.0,0.0f,1.0f),
+			Color4f(1.0,0.0,0.0,1.0), 
+			Vec3f(1.0,1.0,1.0), 
+			10, 
+			Vec3f(TheRay.getDirection()*5), //Velocity
+			Vec3f(0.0f,0.0f,0.0f)
+			,0);
     }
     virtual void mouseReleased(const MouseEvent& e)
     {
@@ -166,7 +170,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 01ParticleSystemDrawer Window");
+                                        "OpenSG 20RocketLauncher Window");
 										
 
 	//Particle System Material
@@ -195,39 +199,22 @@ int main(int argc, char **argv)
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
 	//Particle System
-    ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-	for(UInt32 i(0) ; i<10 ; ++i)
-	{
-		ExampleParticleSystem->addParticle(Pnt3f(i,i,i),
-			Vec3f(0.0,0.0f,1.0f),
-			Color4f(1.0,0.0,0.0,1.0), 
-			Vec3f(1.0,1.0,1.0), 
-			i, 
-			Vec3f(0.0f,0.0f,0.0f), //Velocity
-			Vec3f(0.0f,0.0f,0.0f)
-			,0);
-	}
-    ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+     ExampleParticleSystem = osg::ParticleSystem::create();
+	
+	 ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
 		//Point
 	ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
     ExamplePointParticleSystemDrawer->setForcePerParticleSizing(true);
 
-		//Line
-	ExampleLineParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
-	beginEditCP(ExampleLineParticleSystemDrawer);
-	ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
-		ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
-	endEditCP(ExampleLineParticleSystemDrawer);
-		//Quad
-	ExampleQuadParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
+		
 	
 	//Particle System Node
     ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
+		ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
     
@@ -236,12 +223,15 @@ int main(int argc, char **argv)
         ParticleNode->setCore(ParticleNodeCore);
     endEditCP(ParticleNode, Node::CoreFieldMask);
 
+	NodePtr RocketNode = SceneFileHandler::the().read("Data/rocket.obj");
 
-    // Make Main Scene Node and add the Torus
+
+    // Make Main Scene Node 
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(ParticleNode);
+		scene->addChild(RocketNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);

@@ -320,7 +320,7 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::SizeFunctionFieldMask);
 		ExampleBurstGenerator->setPositionFunction(createPositionDistribution());
 		//ExampleBurstGenerator->setLifespanFunction(createLifespanDistribution());
-		ExampleBurstGenerator->setBurstAmount(3.0);
+		ExampleBurstGenerator->setBurstAmount(250.0);
 		ExampleBurstGenerator->setVelocityFunction(createVelocityDistribution());
 		//ExampleBurstGenerator->setAccelerationFunction(createAccelerationDistribution());
 		ExampleBurstGenerator->setSizeFunction(createSizeDistribution());
@@ -331,7 +331,7 @@ int main(int argc, char **argv)
 	beginEditCP(Example2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::SizeFunctionFieldMask);
 		Example2BurstGenerator->setPositionFunction(createPositionDistribution());
 		//Example2BurstGenerator->setLifespanFunction(createLifespanDistribution());
-		Example2BurstGenerator->setBurstAmount(2.0);
+		Example2BurstGenerator->setBurstAmount(250.0);
 		Example2BurstGenerator->setVelocityFunction(createVelocityDistribution2());
 		//Example2BurstGenerator->setAccelerationFunction(createAccelerationDistribution());
 		Example2BurstGenerator->setSizeFunction(createSizeDistribution());

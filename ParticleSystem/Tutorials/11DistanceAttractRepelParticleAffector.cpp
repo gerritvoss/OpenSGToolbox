@@ -216,6 +216,7 @@ int main(int argc, char **argv)
 	//AttractionNode
     TransformPtr AttractionCore = osg::Transform::create();
 	Matrix AttractTransform;
+	AttractTransform.setTranslate(0.0f, 0.0,0.0);
 
     beginEditCP(AttractionCore, Transform::MatrixFieldMask);
 		AttractionCore->setMatrix(AttractTransform);
