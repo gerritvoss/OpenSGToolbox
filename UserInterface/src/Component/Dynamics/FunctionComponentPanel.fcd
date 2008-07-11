@@ -57,4 +57,48 @@ A User Interface Panel that contains Function Components.
 		defaultValue="1.0,1.0"
 	>
 	</Field>
+	<Field
+		name="ChildrenPositions"
+		type="Pnt2f"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="ChildrenSizes"
+		type="Vec2f"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+   
+	<Field
+		name="ResizeTabsColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f,0.0f,0.0f,1.0f"
+	>
+	</Field>
+	<Field
+		name="ResizeTabsSize"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="4.0f,4.0f"
+	>
+	</Field>
+	<Field
+		name="ResizeAreaOfEffectOffset"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="3.0f,3.0f"
+	>
+	</Field>
 </FieldContainer>

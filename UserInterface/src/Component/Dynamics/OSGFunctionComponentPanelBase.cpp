@@ -79,6 +79,21 @@ const OSG::BitVector  FunctionComponentPanelBase::MiniMapAlignmentFieldMask =
 const OSG::BitVector  FunctionComponentPanelBase::ZoomedPreferredSizeFieldMask = 
     (TypeTraits<BitVector>::One << FunctionComponentPanelBase::ZoomedPreferredSizeFieldId);
 
+const OSG::BitVector  FunctionComponentPanelBase::ChildrenPositionsFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentPanelBase::ChildrenPositionsFieldId);
+
+const OSG::BitVector  FunctionComponentPanelBase::ChildrenSizesFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentPanelBase::ChildrenSizesFieldId);
+
+const OSG::BitVector  FunctionComponentPanelBase::ResizeTabsColorFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentPanelBase::ResizeTabsColorFieldId);
+
+const OSG::BitVector  FunctionComponentPanelBase::ResizeTabsSizeFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentPanelBase::ResizeTabsSizeFieldId);
+
+const OSG::BitVector  FunctionComponentPanelBase::ResizeAreaOfEffectOffsetFieldMask = 
+    (TypeTraits<BitVector>::One << FunctionComponentPanelBase::ResizeAreaOfEffectOffsetFieldId);
+
 const OSG::BitVector FunctionComponentPanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -99,6 +114,21 @@ const OSG::BitVector FunctionComponentPanelBase::MTInfluenceMask =
     
 */
 /*! \var Vec2f           FunctionComponentPanelBase::_sfZoomedPreferredSize
+    
+*/
+/*! \var Pnt2f           FunctionComponentPanelBase::_mfChildrenPositions
+    
+*/
+/*! \var Vec2f           FunctionComponentPanelBase::_mfChildrenSizes
+    
+*/
+/*! \var Color4f         FunctionComponentPanelBase::_sfResizeTabsColor
+    
+*/
+/*! \var Vec2f           FunctionComponentPanelBase::_sfResizeTabsSize
+    
+*/
+/*! \var Vec2f           FunctionComponentPanelBase::_sfResizeAreaOfEffectOffset
     
 */
 
@@ -130,7 +160,32 @@ FieldDescription *FunctionComponentPanelBase::_desc[] =
                      "ZoomedPreferredSize", 
                      ZoomedPreferredSizeFieldId, ZoomedPreferredSizeFieldMask,
                      false,
-                     (FieldAccessMethod) &FunctionComponentPanelBase::getSFZoomedPreferredSize)
+                     (FieldAccessMethod) &FunctionComponentPanelBase::getSFZoomedPreferredSize),
+    new FieldDescription(MFPnt2f::getClassType(), 
+                     "ChildrenPositions", 
+                     ChildrenPositionsFieldId, ChildrenPositionsFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentPanelBase::getMFChildrenPositions),
+    new FieldDescription(MFVec2f::getClassType(), 
+                     "ChildrenSizes", 
+                     ChildrenSizesFieldId, ChildrenSizesFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentPanelBase::getMFChildrenSizes),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "ResizeTabsColor", 
+                     ResizeTabsColorFieldId, ResizeTabsColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentPanelBase::getSFResizeTabsColor),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "ResizeTabsSize", 
+                     ResizeTabsSizeFieldId, ResizeTabsSizeFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentPanelBase::getSFResizeTabsSize),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "ResizeAreaOfEffectOffset", 
+                     ResizeAreaOfEffectOffsetFieldId, ResizeAreaOfEffectOffsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &FunctionComponentPanelBase::getSFResizeAreaOfEffectOffset)
 };
 
 
@@ -196,6 +251,8 @@ void FunctionComponentPanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfChildrenPositions.terminateShare(uiAspect, this->getContainerSize());
+    _mfChildrenSizes.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -211,6 +268,9 @@ FunctionComponentPanelBase::FunctionComponentPanelBase(void) :
     _sfMiniMapSize            (Real32(0.1f)), 
     _sfMiniMapAlignment       (Vec2f(0.0,1.0)), 
     _sfZoomedPreferredSize    (Vec2f(1.0,1.0)), 
+    _sfResizeTabsColor        (Color4f(0.0f,0.0f,0.0f,1.0f)), 
+    _sfResizeTabsSize         (Vec2f(4.0f,4.0f)), 
+    _sfResizeAreaOfEffectOffset(Vec2f(3.0f,3.0f)), 
     Inherited() 
 {
 }
@@ -225,6 +285,11 @@ FunctionComponentPanelBase::FunctionComponentPanelBase(const FunctionComponentPa
     _sfMiniMapSize            (source._sfMiniMapSize            ), 
     _sfMiniMapAlignment       (source._sfMiniMapAlignment       ), 
     _sfZoomedPreferredSize    (source._sfZoomedPreferredSize    ), 
+    _mfChildrenPositions      (source._mfChildrenPositions      ), 
+    _mfChildrenSizes          (source._mfChildrenSizes          ), 
+    _sfResizeTabsColor        (source._sfResizeTabsColor        ), 
+    _sfResizeTabsSize         (source._sfResizeTabsSize         ), 
+    _sfResizeAreaOfEffectOffset(source._sfResizeAreaOfEffectOffset), 
     Inherited                 (source)
 {
 }
@@ -266,6 +331,31 @@ UInt32 FunctionComponentPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfZoomedPreferredSize.getBinSize();
     }
 
+    if(FieldBits::NoField != (ChildrenPositionsFieldMask & whichField))
+    {
+        returnValue += _mfChildrenPositions.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ChildrenSizesFieldMask & whichField))
+    {
+        returnValue += _mfChildrenSizes.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ResizeTabsColorFieldMask & whichField))
+    {
+        returnValue += _sfResizeTabsColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ResizeTabsSizeFieldMask & whichField))
+    {
+        returnValue += _sfResizeTabsSize.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ResizeAreaOfEffectOffsetFieldMask & whichField))
+    {
+        returnValue += _sfResizeAreaOfEffectOffset.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -298,6 +388,31 @@ void FunctionComponentPanelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ZoomedPreferredSizeFieldMask & whichField))
     {
         _sfZoomedPreferredSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ChildrenPositionsFieldMask & whichField))
+    {
+        _mfChildrenPositions.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ChildrenSizesFieldMask & whichField))
+    {
+        _mfChildrenSizes.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ResizeTabsColorFieldMask & whichField))
+    {
+        _sfResizeTabsColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ResizeTabsSizeFieldMask & whichField))
+    {
+        _sfResizeTabsSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ResizeAreaOfEffectOffsetFieldMask & whichField))
+    {
+        _sfResizeAreaOfEffectOffset.copyToBin(pMem);
     }
 
 
@@ -333,6 +448,31 @@ void FunctionComponentPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfZoomedPreferredSize.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ChildrenPositionsFieldMask & whichField))
+    {
+        _mfChildrenPositions.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ChildrenSizesFieldMask & whichField))
+    {
+        _mfChildrenSizes.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ResizeTabsColorFieldMask & whichField))
+    {
+        _sfResizeTabsColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ResizeTabsSizeFieldMask & whichField))
+    {
+        _sfResizeTabsSize.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ResizeAreaOfEffectOffsetFieldMask & whichField))
+    {
+        _sfResizeAreaOfEffectOffset.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -357,6 +497,21 @@ void FunctionComponentPanelBase::executeSyncImpl(      FunctionComponentPanelBas
 
     if(FieldBits::NoField != (ZoomedPreferredSizeFieldMask & whichField))
         _sfZoomedPreferredSize.syncWith(pOther->_sfZoomedPreferredSize);
+
+    if(FieldBits::NoField != (ChildrenPositionsFieldMask & whichField))
+        _mfChildrenPositions.syncWith(pOther->_mfChildrenPositions);
+
+    if(FieldBits::NoField != (ChildrenSizesFieldMask & whichField))
+        _mfChildrenSizes.syncWith(pOther->_mfChildrenSizes);
+
+    if(FieldBits::NoField != (ResizeTabsColorFieldMask & whichField))
+        _sfResizeTabsColor.syncWith(pOther->_sfResizeTabsColor);
+
+    if(FieldBits::NoField != (ResizeTabsSizeFieldMask & whichField))
+        _sfResizeTabsSize.syncWith(pOther->_sfResizeTabsSize);
+
+    if(FieldBits::NoField != (ResizeAreaOfEffectOffsetFieldMask & whichField))
+        _sfResizeAreaOfEffectOffset.syncWith(pOther->_sfResizeAreaOfEffectOffset);
 
 
 }
@@ -383,6 +538,21 @@ void FunctionComponentPanelBase::executeSyncImpl(      FunctionComponentPanelBas
     if(FieldBits::NoField != (ZoomedPreferredSizeFieldMask & whichField))
         _sfZoomedPreferredSize.syncWith(pOther->_sfZoomedPreferredSize);
 
+    if(FieldBits::NoField != (ResizeTabsColorFieldMask & whichField))
+        _sfResizeTabsColor.syncWith(pOther->_sfResizeTabsColor);
+
+    if(FieldBits::NoField != (ResizeTabsSizeFieldMask & whichField))
+        _sfResizeTabsSize.syncWith(pOther->_sfResizeTabsSize);
+
+    if(FieldBits::NoField != (ResizeAreaOfEffectOffsetFieldMask & whichField))
+        _sfResizeAreaOfEffectOffset.syncWith(pOther->_sfResizeAreaOfEffectOffset);
+
+
+    if(FieldBits::NoField != (ChildrenPositionsFieldMask & whichField))
+        _mfChildrenPositions.syncWith(pOther->_mfChildrenPositions, sInfo);
+
+    if(FieldBits::NoField != (ChildrenSizesFieldMask & whichField))
+        _mfChildrenSizes.syncWith(pOther->_mfChildrenSizes, sInfo);
 
 
 }
@@ -392,6 +562,12 @@ void FunctionComponentPanelBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (ChildrenPositionsFieldMask & whichField))
+        _mfChildrenPositions.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (ChildrenSizesFieldMask & whichField))
+        _mfChildrenSizes.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

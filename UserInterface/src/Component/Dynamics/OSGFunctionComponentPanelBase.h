@@ -72,6 +72,11 @@
 #include <OpenSG/OSGReal32Fields.h> // MiniMapSize type
 #include <OpenSG/OSGVec2fFields.h> // MiniMapAlignment type
 #include <OpenSG/OSGVec2fFields.h> // ZoomedPreferredSize type
+#include <OpenSG/OSGPnt2fFields.h> // ChildrenPositions type
+#include <OpenSG/OSGVec2fFields.h> // ChildrenSizes type
+#include <OpenSG/OSGColor4fFields.h> // ResizeTabsColor type
+#include <OpenSG/OSGVec2fFields.h> // ResizeTabsSize type
+#include <OpenSG/OSGVec2fFields.h> // ResizeAreaOfEffectOffset type
 
 #include "OSGFunctionComponentPanelFields.h"
 
@@ -95,12 +100,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
 
     enum
     {
-        ZoomFieldId                = Inherited::NextFieldId,
-        DrawMiniMapFieldId         = ZoomFieldId                + 1,
-        MiniMapSizeFieldId         = DrawMiniMapFieldId         + 1,
-        MiniMapAlignmentFieldId    = MiniMapSizeFieldId         + 1,
-        ZoomedPreferredSizeFieldId = MiniMapAlignmentFieldId    + 1,
-        NextFieldId                = ZoomedPreferredSizeFieldId + 1
+        ZoomFieldId                     = Inherited::NextFieldId,
+        DrawMiniMapFieldId              = ZoomFieldId                     + 1,
+        MiniMapSizeFieldId              = DrawMiniMapFieldId              + 1,
+        MiniMapAlignmentFieldId         = MiniMapSizeFieldId              + 1,
+        ZoomedPreferredSizeFieldId      = MiniMapAlignmentFieldId         + 1,
+        ChildrenPositionsFieldId        = ZoomedPreferredSizeFieldId      + 1,
+        ChildrenSizesFieldId            = ChildrenPositionsFieldId        + 1,
+        ResizeTabsColorFieldId          = ChildrenSizesFieldId            + 1,
+        ResizeTabsSizeFieldId           = ResizeTabsColorFieldId          + 1,
+        ResizeAreaOfEffectOffsetFieldId = ResizeTabsSizeFieldId           + 1,
+        NextFieldId                     = ResizeAreaOfEffectOffsetFieldId + 1
     };
 
     static const OSG::BitVector ZoomFieldMask;
@@ -108,6 +118,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
     static const OSG::BitVector MiniMapSizeFieldMask;
     static const OSG::BitVector MiniMapAlignmentFieldMask;
     static const OSG::BitVector ZoomedPreferredSizeFieldMask;
+    static const OSG::BitVector ChildrenPositionsFieldMask;
+    static const OSG::BitVector ChildrenSizesFieldMask;
+    static const OSG::BitVector ResizeTabsColorFieldMask;
+    static const OSG::BitVector ResizeTabsSizeFieldMask;
+    static const OSG::BitVector ResizeAreaOfEffectOffsetFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -138,6 +153,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
            SFBool              *getSFDrawMiniMap    (void);
            SFReal32            *getSFMiniMapSize    (void);
            SFVec2f             *getSFMiniMapAlignment(void);
+           SFColor4f           *getSFResizeTabsColor(void);
+           SFVec2f             *getSFResizeTabsSize (void);
+           SFVec2f             *getSFResizeAreaOfEffectOffset(void);
 
            Real32              &getZoom           (void);
      const Real32              &getZoom           (void) const;
@@ -147,6 +165,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
      const Real32              &getMiniMapSize    (void) const;
            Vec2f               &getMiniMapAlignment(void);
      const Vec2f               &getMiniMapAlignment(void) const;
+           Color4f             &getResizeTabsColor(void);
+     const Color4f             &getResizeTabsColor(void) const;
+           Vec2f               &getResizeTabsSize (void);
+     const Vec2f               &getResizeTabsSize (void) const;
+           Vec2f               &getResizeAreaOfEffectOffset(void);
+     const Vec2f               &getResizeAreaOfEffectOffset(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -157,6 +181,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
      void setDrawMiniMap    ( const bool &value );
      void setMiniMapSize    ( const Real32 &value );
      void setMiniMapAlignment( const Vec2f &value );
+     void setResizeTabsColor( const Color4f &value );
+     void setResizeTabsSize ( const Vec2f &value );
+     void setResizeAreaOfEffectOffset( const Vec2f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -204,6 +231,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
     SFReal32            _sfMiniMapSize;
     SFVec2f             _sfMiniMapAlignment;
     SFVec2f             _sfZoomedPreferredSize;
+    MFPnt2f             _mfChildrenPositions;
+    MFVec2f             _mfChildrenSizes;
+    SFColor4f           _sfResizeTabsColor;
+    SFVec2f             _sfResizeTabsSize;
+    SFVec2f             _sfResizeAreaOfEffectOffset;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -226,9 +258,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanelBase : public Contai
     /*! \{                                                                 */
 
            SFVec2f             *getSFZoomedPreferredSize(void);
+           MFPnt2f             *getMFChildrenPositions(void);
+           MFVec2f             *getMFChildrenSizes  (void);
 
            Vec2f               &getZoomedPreferredSize(void);
      const Vec2f               &getZoomedPreferredSize(void) const;
+           Pnt2f               &getChildrenPositions(UInt32 index);
+           MFPnt2f             &getChildrenPositions(void);
+     const MFPnt2f             &getChildrenPositions(void) const;
+           Vec2f               &getChildrenSizes  (UInt32 index);
+           MFVec2f             &getChildrenSizes  (void);
+     const MFVec2f             &getChildrenSizes  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

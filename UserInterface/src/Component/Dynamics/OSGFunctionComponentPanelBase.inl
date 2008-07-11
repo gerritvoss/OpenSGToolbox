@@ -131,6 +131,41 @@ SFVec2f *FunctionComponentPanelBase::getSFZoomedPreferredSize(void)
     return &_sfZoomedPreferredSize;
 }
 
+//! Get the FunctionComponentPanel::_mfChildrenPositions field.
+inline
+MFPnt2f *FunctionComponentPanelBase::getMFChildrenPositions(void)
+{
+    return &_mfChildrenPositions;
+}
+
+//! Get the FunctionComponentPanel::_mfChildrenSizes field.
+inline
+MFVec2f *FunctionComponentPanelBase::getMFChildrenSizes(void)
+{
+    return &_mfChildrenSizes;
+}
+
+//! Get the FunctionComponentPanel::_sfResizeTabsColor field.
+inline
+SFColor4f *FunctionComponentPanelBase::getSFResizeTabsColor(void)
+{
+    return &_sfResizeTabsColor;
+}
+
+//! Get the FunctionComponentPanel::_sfResizeTabsSize field.
+inline
+SFVec2f *FunctionComponentPanelBase::getSFResizeTabsSize(void)
+{
+    return &_sfResizeTabsSize;
+}
+
+//! Get the FunctionComponentPanel::_sfResizeAreaOfEffectOffset field.
+inline
+SFVec2f *FunctionComponentPanelBase::getSFResizeAreaOfEffectOffset(void)
+{
+    return &_sfResizeAreaOfEffectOffset;
+}
+
 
 //! Get the value of the FunctionComponentPanel::_sfZoom field.
 inline
@@ -237,6 +272,111 @@ void FunctionComponentPanelBase::setZoomedPreferredSize(const Vec2f &value)
     _sfZoomedPreferredSize.setValue(value);
 }
 
+//! Get the value of the FunctionComponentPanel::_sfResizeTabsColor field.
+inline
+Color4f &FunctionComponentPanelBase::getResizeTabsColor(void)
+{
+    return _sfResizeTabsColor.getValue();
+}
+
+//! Get the value of the FunctionComponentPanel::_sfResizeTabsColor field.
+inline
+const Color4f &FunctionComponentPanelBase::getResizeTabsColor(void) const
+{
+    return _sfResizeTabsColor.getValue();
+}
+
+//! Set the value of the FunctionComponentPanel::_sfResizeTabsColor field.
+inline
+void FunctionComponentPanelBase::setResizeTabsColor(const Color4f &value)
+{
+    _sfResizeTabsColor.setValue(value);
+}
+
+//! Get the value of the FunctionComponentPanel::_sfResizeTabsSize field.
+inline
+Vec2f &FunctionComponentPanelBase::getResizeTabsSize(void)
+{
+    return _sfResizeTabsSize.getValue();
+}
+
+//! Get the value of the FunctionComponentPanel::_sfResizeTabsSize field.
+inline
+const Vec2f &FunctionComponentPanelBase::getResizeTabsSize(void) const
+{
+    return _sfResizeTabsSize.getValue();
+}
+
+//! Set the value of the FunctionComponentPanel::_sfResizeTabsSize field.
+inline
+void FunctionComponentPanelBase::setResizeTabsSize(const Vec2f &value)
+{
+    _sfResizeTabsSize.setValue(value);
+}
+
+//! Get the value of the FunctionComponentPanel::_sfResizeAreaOfEffectOffset field.
+inline
+Vec2f &FunctionComponentPanelBase::getResizeAreaOfEffectOffset(void)
+{
+    return _sfResizeAreaOfEffectOffset.getValue();
+}
+
+//! Get the value of the FunctionComponentPanel::_sfResizeAreaOfEffectOffset field.
+inline
+const Vec2f &FunctionComponentPanelBase::getResizeAreaOfEffectOffset(void) const
+{
+    return _sfResizeAreaOfEffectOffset.getValue();
+}
+
+//! Set the value of the FunctionComponentPanel::_sfResizeAreaOfEffectOffset field.
+inline
+void FunctionComponentPanelBase::setResizeAreaOfEffectOffset(const Vec2f &value)
+{
+    _sfResizeAreaOfEffectOffset.setValue(value);
+}
+
+
+//! Get the value of the \a index element the FunctionComponentPanel::_mfChildrenPositions field.
+inline
+Pnt2f &FunctionComponentPanelBase::getChildrenPositions(const UInt32 index)
+{
+    return _mfChildrenPositions[index];
+}
+
+//! Get the FunctionComponentPanel::_mfChildrenPositions field.
+inline
+MFPnt2f &FunctionComponentPanelBase::getChildrenPositions(void)
+{
+    return _mfChildrenPositions;
+}
+
+//! Get the FunctionComponentPanel::_mfChildrenPositions field.
+inline
+const MFPnt2f &FunctionComponentPanelBase::getChildrenPositions(void) const
+{
+    return _mfChildrenPositions;
+}
+
+//! Get the value of the \a index element the FunctionComponentPanel::_mfChildrenSizes field.
+inline
+Vec2f &FunctionComponentPanelBase::getChildrenSizes(const UInt32 index)
+{
+    return _mfChildrenSizes[index];
+}
+
+//! Get the FunctionComponentPanel::_mfChildrenSizes field.
+inline
+MFVec2f &FunctionComponentPanelBase::getChildrenSizes(void)
+{
+    return _mfChildrenSizes;
+}
+
+//! Get the FunctionComponentPanel::_mfChildrenSizes field.
+inline
+const MFVec2f &FunctionComponentPanelBase::getChildrenSizes(void) const
+{
+    return _mfChildrenSizes;
+}
 
 OSG_END_NAMESPACE
 

@@ -85,17 +85,19 @@ void FunctionComponentPanel::initMethod (void)
 
 UInt32 FunctionComponentPanel::queryCursor(const Pnt2f& CursorLoc) const
 {
-	return WindowEventProducer::CURSOR_HAND;
-	return Inherited::queryCursor(CursorLoc);
+	    return Inherited::queryCursor(CursorLoc);
 }
 
 Pnt2f FunctionComponentPanel::getParentToLocal(const Pnt2f& Location)
 {
-    //TODO: Implement
-    Pnt2f Result(Inherited::getParentToLocal(Location));
-	
-	
-    return Result;
+    if(getZoom() == 1.0f)
+    {
+	    return Inherited::getParentToLocal(Location);
+    }
+    else
+    {
+        return (Location - getPosition())*(1.0/getZoom());
+    }
 }
 
 Vec2f &FunctionComponentPanel::getPreferredSize  (void)
@@ -210,7 +212,16 @@ void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f
 
 void FunctionComponentPanel::updateLayout(void)
 {
-    //Do Nothing
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(i<getChildrenPositions().size() && i<getChildrenSizes().size())
+        {
+            beginEditCP(getChildren()[i], Component::PositionFieldMask | Component::SizeFieldMask);
+                getChildren()[i]->setPosition(getChildrenPositions()[i]);
+                getChildren()[i]->setSize(getChildrenSizes()[i]);
+            endEditCP(getChildren()[i], Component::PositionFieldMask | Component::SizeFieldMask);
+        }
+    }
 }
 
 void FunctionComponentPanel::mousePressed(const MouseEvent& e)
@@ -226,7 +237,7 @@ void FunctionComponentPanel::mousePressed(const MouseEvent& e)
 			if(isContained)
 			{
 				//Set The Active Component
-				_ComponentMoveListener.setActiveComponent(getChildren()[i]);
+				_ComponentMoveListener.setActiveComponent(i);
 				//Set the Initial Position
 				_ComponentMoveListener.setInitialPosition(e.getLocation());
 				
@@ -377,23 +388,40 @@ void FunctionComponentPanel::changed(BitVector whichField, UInt32 origin)
 
     if(whichField & ChildrenFieldMask)
     {
-        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        if(getChildren().size() > getChildrenPositions().size())
         {
-            beginEditCP(getChildren()[i], Component::PositionFieldMask | Component::SizeFieldMask);
-                getChildren()[i]->setPosition(Pnt2f(0.0f,0.0f));
-                getChildren()[i]->setSize(getChildren()[i]->getRequestedSize());
-            endEditCP(getChildren()[i], Component::PositionFieldMask | Component::SizeFieldMask);
+		    Pnt2f TopLeft, BottomRight;
+		    getInsideInsetsBounds(TopLeft, BottomRight);
+
+            beginEditCP(FunctionComponentPanelPtr(this), ChildrenPositionsFieldMask | ChildrenSizesFieldMask);
+                while(getChildren().size() > getChildrenPositions().size())
+                {
+                    getChildrenPositions().push_back(TopLeft);
+                    getChildrenSizes().push_back(getChildren()[getChildrenSizes().size()]->getRequestedSize());
+
+                }
+            endEditCP(FunctionComponentPanelPtr(this), ChildrenPositionsFieldMask | ChildrenSizesFieldMask);
+        }
+        else if(getChildren().size() < getChildrenPositions().size())
+        {
+            beginEditCP(FunctionComponentPanelPtr(this), ChildrenPositionsFieldMask | ChildrenSizesFieldMask);
+                getChildrenPositions().resize(getChildren().size());
+                getChildrenSizes().resize(getChildren().size());
+            endEditCP(FunctionComponentPanelPtr(this), ChildrenPositionsFieldMask | ChildrenSizesFieldMask);
         }
     }
-	
-	
+
+    if((whichField & ChildrenPositionsFieldMask) ||
+        (whichField & ChildrenSizesFieldMask))
+    {
+        updateLayout();
+    }
+
     if(whichField & ZoomFieldMask)
     {
-			/*std::cout << "getPreferredSize: " << getPreferredSize() << std::endl;
             beginEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::ZoomedPreferredSizeFieldMask);
-				setZoomedPreferredSize(getPreferredSize()*getZoom());
+				setZoomedPreferredSize(getSFPreferredSize()->getValue()*getZoom());
             endEditCP(FunctionComponentPanelPtr(this), FunctionComponentPanel::ZoomedPreferredSizeFieldMask);
-			std::cout << "getZoomedPreferredSize: " << getZoomedPreferredSize() << std::endl;*/
 	}
 	
 	if(whichField & ZoomedPreferredSizeFieldMask)
@@ -416,15 +444,14 @@ void FunctionComponentPanel::ComponentMoveListener::mouseReleased(const MouseEve
 
 void FunctionComponentPanel::ComponentMoveListener::keyPressed(const KeyEvent& e)
 {
-    //TODO:Implement
 	if(e.getKey() == KeyEvent::KEY_ESCAPE)
 	{
 		detach();
 		
 		//Set the Active Component's Position back to it's initial position
-		beginEditCP(_ActiveComponent, Component::PositionFieldMask);	
-			_ActiveComponent->setPosition(_InitialComponentPosition);
-		endEditCP(_ActiveComponent, Component::PositionFieldMask);
+		beginEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask);	
+			_FunctionComponentPanel->getChildrenPositions()[_ActiveComponent].setValue(_InitialComponentPosition);
+		endEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask);
 
 	}
 }
@@ -432,17 +459,17 @@ void FunctionComponentPanel::ComponentMoveListener::keyPressed(const KeyEvent& e
 void FunctionComponentPanel::ComponentMoveListener::mouseDragged(const MouseEvent& e)
 {
     
-	if(_ActiveComponent != NullFC && _ActiveComponent->getParentContainer() != NullFC)
+	if(_FunctionComponentPanel != NullFC)
 	{
 		//Move the Position of the Component based on the mouse position and it's initial position
-		Pnt2f InitialPositionsDifference = Pnt2f(_InitialComponentPosition - ViewportToComponent(_InitialPosition, _ActiveComponent->getParentContainer(), e.getViewport()));
-		Pnt2f AbsolutePosition = Pnt2f(ViewportToComponent(e.getLocation(), _ActiveComponent->getParentContainer(), e.getViewport()) + InitialPositionsDifference);
+		Pnt2f InitialPositionsDifference = Pnt2f(_InitialComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
+		Pnt2f AbsolutePosition = Pnt2f(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()) + InitialPositionsDifference);
 		Pnt2f NewPosition = AbsolutePosition;
 		
 		//Test AbsolutePosition to make sure Component is inside parent container
 		Pnt2f AbsolutePositionBottomRight, ContainerTopLeft, ContainerBottomRight;
-		AbsolutePositionBottomRight = AbsolutePosition + _ActiveComponent->getSize();
-		_ActiveComponent->getParentContainer()->getInsideInsetsBounds(ContainerTopLeft, ContainerBottomRight);
+		AbsolutePositionBottomRight = AbsolutePosition + _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize();
+		_FunctionComponentPanel->getInsideInsetsBounds(ContainerTopLeft, ContainerBottomRight);
 		if(AbsolutePosition.x() < ContainerTopLeft.x())
 		{
 			NewPosition[0] = ContainerTopLeft.x();
@@ -453,17 +480,17 @@ void FunctionComponentPanel::ComponentMoveListener::mouseDragged(const MouseEven
 		}
 		if(AbsolutePositionBottomRight.x() > ContainerBottomRight.x())
 		{
-			NewPosition[0] = ContainerBottomRight.x() - _ActiveComponent->getSize().x();
+			NewPosition[0] = ContainerBottomRight.x() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().x();
 		}
 		if(AbsolutePositionBottomRight.y() > ContainerBottomRight.y())
 		{
-			NewPosition[1] = ContainerBottomRight.y() - _ActiveComponent->getSize().y();
+			NewPosition[1] = ContainerBottomRight.y() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().y();
 		}
 		
 		//Set new position
-		beginEditCP(_ActiveComponent, Component::PositionFieldMask);
-			_ActiveComponent->setPosition(NewPosition);
-		endEditCP(_ActiveComponent, Component::PositionFieldMask);
+		beginEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask);	
+			_FunctionComponentPanel->getChildrenPositions()[_ActiveComponent].setValue(NewPosition);
+		endEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask);
 	}
 }
 
@@ -477,13 +504,10 @@ void FunctionComponentPanel::ComponentMoveListener::detach(void)
     }
 }
 
-void FunctionComponentPanel::ComponentMoveListener::setActiveComponent(ComponentPtr TheComponent)
+void FunctionComponentPanel::ComponentMoveListener::setActiveComponent(UInt32 Index)
 {
-	_ActiveComponent = TheComponent;
-	if(_ActiveComponent != NullFC)
-	{
-		_InitialComponentPosition = _ActiveComponent->getPosition();
-	}
+	_ActiveComponent = Index;
+    _InitialComponentPosition = _FunctionComponentPanel->getChildrenPositions()[_ActiveComponent];
 }
 
 /*------------------------------------------------------------------------*/

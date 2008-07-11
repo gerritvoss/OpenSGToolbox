@@ -44,6 +44,7 @@
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGComboBox.h>
 #include <OpenSG/UserInterface/OSGDerivedFieldContainerComboBoxModel.h>
+#include <OpenSG/UserInterface/OSGScrollPanel.h>
 
 #include <OpenSG/UserInterface/OSGFunctionComponent.h>
 #include <OpenSG/UserInterface/OSGFunctionComponentPanel.h>
@@ -211,14 +212,6 @@ int main(int argc, char **argv)
 		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
 	endEditCP(TheVec3fConverter);
 
-    //Create the Function User Interface Component
-    RoundedCornerLineBorderPtr FunctionComponentBorder = RoundedCornerLineBorder::create();
-    beginEditCP(FunctionComponentBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
-        FunctionComponentBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-        FunctionComponentBorder->setWidth(1.0f);
-        FunctionComponentBorder->setCornerRadius(4.0f);
-    endEditCP(FunctionComponentBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
-
     //Create the Font
 	UIFontPtr TheFont = UIFont::create();
 	beginEditCP(TheFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
@@ -227,14 +220,22 @@ int main(int argc, char **argv)
 		TheFont->setStyle(TextFace::STYLE_PLAIN);
 	endEditCP(TheFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
 	
+    //Create the Function User Interface Component
+    RoundedCornerLineBorderPtr FunctionComponentBorder = RoundedCornerLineBorder::create();
+    beginEditCP(FunctionComponentBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
+        FunctionComponentBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+        FunctionComponentBorder->setWidth(1.0f);
+        FunctionComponentBorder->setCornerRadius(4.0f);
+    endEditCP(FunctionComponentBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
+
 	//Create the Default Tab Generator
     DefaultFunctionComponentIOTabComponentGeneratorPtr TabGenerator = DefaultFunctionComponentIOTabComponentGenerator::create();
 
     FunctionComponentPtr ExampleFunctionComponent = FunctionComponent::create();
     beginEditCP(ExampleFunctionComponent, FunctionComponent::InputTabComponentGeneratorFieldMask | FunctionComponent::OutputTabComponentGeneratorFieldMask | FunctionComponent::PreferredSizeFieldMask | FunctionComponent::BordersFieldMask | FunctionComponent::FunctionFieldMask | FunctionComponent::InputTabOrientationFieldMask | FunctionComponent::OutputTabOrientationFieldMask | FunctionComponent::InputTabAlignmentFieldMask | FunctionComponent::OutputTabAlignmentFieldMask | FunctionComponent::FontFieldMask | FunctionComponent::TextColorFieldMask | FunctionComponent::TextAlignmentFieldMask);
         ExampleFunctionComponent->setPreferredSize(Vec2f(100.0f,100.0f));
-        ExampleFunctionComponent->setBorders(FunctionComponentBorder);
 		ExampleFunctionComponent->setFunction(TheVec3fConverter);
+        ExampleFunctionComponent->setBorders(FunctionComponentBorder);
 		ExampleFunctionComponent->setInputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
 		ExampleFunctionComponent->setOutputTabOrientation(FunctionComponent::VERTICAL_ORIENTATION);
 		ExampleFunctionComponent->setInputTabAlignment(Vec2f(0.0, 0.5));
@@ -284,17 +285,24 @@ int main(int argc, char **argv)
     FunctionComponentPanelPtr ExampleFunctionComponentPanel = FunctionComponentPanel::create();
     beginEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask | FunctionComponentPanel::MiniMapSizeFieldMask);
         ExampleFunctionComponentPanel->setPreferredSize(Vec2f(600.0f,600.0f));
-        ExampleFunctionComponentPanel->setBorders(FunctionComponentPanelBorder);
 		ExampleFunctionComponentPanel->setMiniMapSize(Real32(0.15f));
         
         //Add Components
 		ExampleFunctionComponentPanel->getChildren().push_back(ExampleFunctionComponent);
 		
-		ExampleFunctionComponentPanel->setAllInsets(5.0);
+	    ExampleFunctionComponentPanel->setAllInsets(5.0);
 
     endEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask | FunctionComponentPanel::MiniMapSizeFieldMask);
 	
-	ExampleButtonActionListener TheExampleButtonActionListener(ExampleFunctionComponentPanel, ComponentTypesComboBox);
+    //Scroll Panel
+	ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
+    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+        ExampleScrollPanel->setPreferredSize(Vec2f(600.0f,600.0f));
+    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    
+    ExampleScrollPanel->setViewComponent(ExampleFunctionComponentPanel);
+	
+    ExampleButtonActionListener TheExampleButtonActionListener(ExampleFunctionComponentPanel, ComponentTypesComboBox);
     AddFunctionComponentButton->addActionListener(&TheExampleButtonActionListener);
     
     // Create The Main InternalWindow
@@ -308,7 +316,7 @@ int main(int argc, char **argv)
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleFunctionComponentPanel);
+       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
 	   MainInternalWindow->getChildren().push_back(AddFunctionComponentButton);
 	   MainInternalWindow->getChildren().push_back(ComponentTypesComboBox);
        MainInternalWindow->setLayout(MainInternalWindowLayout);

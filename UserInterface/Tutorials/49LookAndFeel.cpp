@@ -357,8 +357,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
+                                        Vec2f(1280,1024),
                                         "OpenSG 49LookAndFeel Window");
 
     //Main Event Loop
