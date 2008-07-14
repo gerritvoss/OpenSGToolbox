@@ -123,14 +123,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 		virtual void mouseMoved(const MouseEvent& e);
 		virtual void mouseDragged(const MouseEvent& e);
         virtual void keyReleased(const KeyEvent& e);
+		virtual void keyPressed(const KeyEvent& e);
 		
 		//void setResizableComponent(ComponentPtr Component);
 		//void setResizableComponentBounds(Pnt2f TopLeft, Pnt2f BottomRight);
 	protected :
 		FunctionComponentPanelPtr _FunctionComponentPanel;
-		bool _drawComponentResizeSquares;
-		Pnt2f _ResizableComponentTopLeft, _ResizableComponentBottomRight;
-		ComponentPtr _ResizableComponent;
 	};
 	
 	class ComponentMoveListener : public MouseAdapter,public KeyAdapter,public MouseMotionAdapter
@@ -156,7 +154,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 	friend class ComponentMoveListener;
 
 	ComponentMoveListener _ComponentMoveListener;
-	MouseWheelListenerPtr _MouseWheelListener;
+	ComponentPanelMoveListener _ComponentPanelMoveListener;
+	//MouseWheelListenerPtr _MouseWheelListener;
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
 	void drawMiniMap(const GraphicsPtr Graphics, const Pnt3f& TopLeft, const Pnt3f BottomRight) const;
 	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
@@ -170,7 +169,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
     static void initMethod(void);
 	
 	bool _drawComponentResizeSquares;
-	Pnt2f _ResizableComponentTopLeft, _ResizableComponentBottomRight;
 	ComponentPtr _ResizableComponent;
 
     // prohibit default functions (move to 'public' if you need one)
