@@ -115,10 +115,7 @@ void NodeParticleSystemCore::updateNodes(void)
 		beginEditCP(NodeParticleSystemCorePtr(this), ParticleNodesFieldMask);
 		while(NumParticles > getParticleNodes().size())
 		{
-			ParticleNode = Node::create();
-			beginEditCP(ParticleNode, Node::CoreFieldMask);
-				ParticleNode->setCore(getPrototypeNode()->getCore());
-			endEditCP(ParticleNode, Node::CoreFieldMask);
+			ParticleNode = cloneTree(getPrototypeNode());
 
 			TransformationCore = Transform::create();
 			TransformationNode = Node::create();
