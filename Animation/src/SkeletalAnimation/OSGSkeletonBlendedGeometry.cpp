@@ -88,22 +88,42 @@ void SkeletonBlendedGeometry::addBoneBlending(const UInt32& PositionIndex, const
 
 void SkeletonBlendedGeometry::calculatePositions(void)
 {
-	
+	Matrix BonesTransforms,m;
+	std::vector<Matrix> PositionTrans;
+
 	if(getBaseGeometry() != NullFC &&
 		getPositionIndexes().size() == getBones().size() == getBlendAmounts().size())
 	{
-		Matrix BonesTransforms;
-		std::vector<Matrix> PositionTrans;
-		PositionTrans.resize(getBones().size());
+		
+		PositionTrans.resize(getBaseGeometry()->getPositions()->size());
 		//UInt32 VertexesTransformations[n];
 		for(UInt32 i(0) ; i<getPositionIndexes().size() ; ++i)
 		{
 			BonesTransforms = getBones(i)->getAbsoluteTransformation();
 			BonesTransforms.scale(getBlendAmounts(i));
-			BonesTransforms.mult(PositionTrans[i]);
-			PositionTrans[i] = BonesTransforms;
+			BonesTransforms.mult(PositionTrans[getPositionIndexes(i)]);
+			PositionTrans[getPositionIndexes(i)] = BonesTransforms;
 
 
+		}
+		//Update the Positions and Normals
+		setPositions(GeoPositionsPtr::dcast(getBaseGeometry()->getPositions()->shallowCopy()));
+		setNormals(GeoNormalsPtr::dcast(getBaseGeometry()->getNormals()->shallowCopy())); 
+
+
+
+		Pnt3f CalculatedPoint;
+		Vec3f CalculatedVector;
+		for(UInt32 i(0) ; i<getPositions()->size() ; ++i)
+		{
+			//get's the Positions
+			PositionTrans[i].multFullMatrixPnt(getPositions()->getValue(i), CalculatedPoint);
+			getPositions()->setValue(CalculatedPoint, i);   //P[i]
+
+			//get's the Normals
+			PositionTrans[i].multMatrixVec(getNormals()-> getValue(i),CalculatedVector);
+			getNormals()->setValue(CalculatedVector,i);
+	
 		}
 	}
 	else
@@ -144,6 +164,13 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 		(whichField & BlendAmountsFieldMask))
 	{
 		calculatePositions();
+	}
+	if((whichField & BaseGeometryFieldMask) &&
+		getBaseGeometry() != Null)
+	{
+		if()
+		{
+		}
 	}
 }
 
