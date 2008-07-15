@@ -101,7 +101,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
         NextFieldId            = BlendAmountsFieldId    + 1
     };
 
-    static const OSG::BitVector BaseGeometryFieldMask;
+    static const OSG::BitVector BaseGeometryFieldMask;     //Field Masks
     static const OSG::BitVector BonesFieldMask;
     static const OSG::BitVector PositionIndexesFieldMask;
     static const OSG::BitVector BlendAmountsFieldMask;

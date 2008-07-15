@@ -99,6 +99,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
     virtual ~SkeletonBlendedGeometry(void); 
 
     /*! \}                                                                 */
+
+	void calculatePositions(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

@@ -36,6 +36,8 @@
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/Animation/OSGKeyframeSequenceReal32.h>
 #include <OpenSG/Animation/OSGSkeletonAnimation.h>
+#include <OpenSG/Animation/OSGSkeleton.h>
+#include <OpenSG/Animation/OSGBone.h>
 
 
 
@@ -54,7 +56,8 @@ bool ExitApp = false;
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-void setupAnimation(BonePtr TheBone, BonePtr TheChildBone, BonePtr TheBoneLength);
+void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeftHand,BonePtr TheLeftFemur,BonePtr TheRightHumerus,BonePtr TheRightRadius,BonePtr TheRightHand,BonePtr TheRightFemur,BonePtr TheTorso);
+
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -210,51 +213,195 @@ int main(int argc, char **argv)
 //===========================================BONE==================================================================
 	const int num = 9;
 	BonePtr Torso, LeftHumerus, LeftRadius, LeftHand, LeftFemur, LeftTibia, LeftFeet,
-		           RightHumerus, RighRadius, RighHand, RighFemur, RighTibia, RightFeet; 
-
-	BonePtr ExampleRootBone = Bone::create();
-	BonePtr TempRootBone;
-	BonePtr ExampleChildBone;
-	TempRootBone = ExampleRootBone;
+		           RightHumerus, RightRadius, RightHand, RightFemur, RightTibia, RightFeet; 
 
 
-	for (int i = 1; i < num; i++)
-	{
-		
 
-		Real32 Rand = RandomPoolManager::getRandomReal32(9.0f, 180.0);  // opsg 32 bit real random number generator
-																		// check OSGRandomPoolManager.h in 
-                                                                        // vs-8.0-ToolBoxTutorials
+/*================================================================================================*/
+/*                                       TORSO                                                    */
 
-		// Pic a bone and animate it 
-
-		ExampleChildBone = Bone::create(); //create a bone called ExampleChildbone
-		beginEditCP(ExampleChildBone, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-			ExampleChildBone->setLength(5.0f);
-			ExampleChildBone->setRotation(Quaternion(Vec3f((Rand/i),(Rand/i),(Rand/i)), osgdegree2rad(Rand)));
-		endEditCP(ExampleChildBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
-		
-		
-		TempRootBone->addChild(ExampleChildBone);//add a Child to the root bone
-		TempRootBone = TempRootBone->getChild(0);
+	Torso = Bone::create(); //create a bone called ExampleChildbone
+	beginEditCP(Torso, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+		Torso->setLength(15.0f);
+		Torso->setRotation(Quaternion(Vec3f(10,0,5), osgdegree2rad(90)));
+	endEditCP(Torso, Bone::RotationFieldMask | Bone::LengthFieldMask);
 	
-	}
-//=================================================================================================================
-	UInt32 SelectedChildDepth=1;
-	BonePtr TheSelectedBone = ExampleRootBone;
-	for(UInt32 i(0) ; i<SelectedChildDepth && TheSelectedBone->getNumChildren() >0 ; ++i )
-	{
-		TheSelectedBone = TheSelectedBone->getChild(0);
-		
-	}
+
+/*================================================================================================*/
+/*                                    LEFT HUMERUS                                                */
+
+	LeftHumerus = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(LeftHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);//use the field masks
+				LeftHumerus->setLength(4.0f);
+				LeftHumerus->setRotation(Quaternion(Vec3f(1,0,1), osgdegree2rad(180)));
+				LeftHumerus->setTranslation(Vec3f(0,0,-10));
+			endEditCP(LeftHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);
+
+/*================================================================================================*/
+/*                                    LEFT RADIUS                                                 */
 
 
-	
+	LeftRadius = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(LeftRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+				LeftRadius->setLength(4.0f);
+				LeftRadius->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
+			endEditCP(LeftRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+
+
+/*================================================================================================*/
+/*                                    LEFT HAND                                                   */
+
+	LeftHand = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(LeftHand, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+				LeftHand->setLength(1.0f);
+				LeftHand->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
+			endEditCP(LeftHand, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+/*================================================================================================*/
+/*                                    LEFT FEMUR                                                  */
+
+	LeftFemur = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(LeftFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+				LeftFemur->setLength(5.0f);
+				LeftFemur->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(45)));
+			endEditCP(LeftFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+/*================================================================================================*/
+/*                                    LEFT TIBIA                                                  */
+
+	LeftTibia = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(LeftTibia, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);//use the field masks
+				LeftTibia->setLength(8.0f);
+				LeftTibia->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(0)));
+			endEditCP(LeftTibia, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);
+
+/*================================================================================================*/
+/*                                    LEFT FEET                                                   */
+
+	LeftFeet = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(LeftFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+				LeftFeet->setLength(2.0f);
+				LeftFeet->setRotation(Quaternion(Vec3f(0,1,1), osgdegree2rad(180)));
+			endEditCP(LeftFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+
+/*================================================================================================*/
+/*                                    RIGHT HUMERUS                                               */
+
+	RightHumerus = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(RightHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);//use the field masks
+				RightHumerus->setLength(4.0f);
+				RightHumerus->setRotation(Quaternion(Vec3f(-1,0,1), osgdegree2rad(180)));
+				RightHumerus->setTranslation(Vec3f(0,0,-10));
+			endEditCP(RightHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);
+
+
+/*================================================================================================*/
+/*                                    RIGHT RADIUS                                                */
+
+	RightRadius = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(RightRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+				RightRadius->setLength(4.0f);
+				RightRadius->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
+			endEditCP(RightRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+
+/*================================================================================================*/
+/*                                     RIGHT HAND                                                 */
+
+
+	RightHand = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(RightHand, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+				RightHand->setLength(1.0f);
+				RightHand->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
+				
+			endEditCP(RightHand, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+/*================================================================================================*/
+/*                                     RIGHT FEMUR                                                */
+
+
+	RightFemur = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(RightFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+				RightFemur->setLength(5.0f);
+				RightFemur->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(-45)));
+			endEditCP(RightFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+/*================================================================================================*/
+/*                                     RIGHT TIBIA                                                */
+
+
+	RightTibia = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(RightTibia, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+				RightTibia->setLength(8.0f);
+				RightTibia->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(0)));
+				
+			endEditCP(RightTibia, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+/*================================================================================================*/
+/*                                     RIGHT FEET                                                 */
+
+
+	RightFeet = Bone::create(); //create a bone called ExampleChildbone
+			beginEditCP(RightFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+				RightFeet->setLength(2.0f);
+				RightFeet->setRotation(Quaternion(Vec3f(0,1,1), osgdegree2rad(180)));
+			endEditCP(RightFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+
+
+			Torso->addChild(LeftHumerus);
+			Torso->addChild(RightHumerus);
+			Torso->addChild(LeftFemur);
+			Torso->addChild(RightFemur);
+
+			LeftHumerus->addChild(LeftRadius);
+			LeftRadius->addChild(LeftHand);
+			RightHumerus->addChild(RightRadius);
+			RightRadius->addChild(RightHand);
+
+			LeftFemur->addChild(LeftTibia);
+			LeftTibia->addChild(LeftFeet);
+			RightFemur->addChild(RightTibia);
+			RightTibia->addChild(RightFeet);
+
+			//get the Childrens
+
+			BonePtr TheLeftHumerus, TheLeftRadius, TheLeftHand, TheLeftFemur, TheLeftTibia, TheLeftFeet,
+		            TheRightHumerus, TheRightRadius, TheRightHand, TheRightFemur, TheRightTibia, TheRightFeet; 
+
+
+			LeftHumerus  = Torso->getChild(0);
+			RightHumerus = Torso->getChild(1);
+			LeftFemur    = Torso->getChild(2);
+			RightFemur   = Torso->getChild(3);
+			LeftRadius   = LeftHumerus->getChild(0);
+			LeftHand     = LeftRadius->getChild(0);
+			RightRadius  = RightHumerus->getChild(0);
+			RightHand    = RightRadius->getChild(0);
+			LeftTibia    = LeftFemur->getChild(0);
+			LeftFeet     = LeftTibia->getChild(0);
+			RightTibia   = RightFemur->getChild(0);
+			RightFeet    = RightTibia->getChild(0);
+
+
+
+/*=================================================================================================*/
+
+	//UInt32 SelectedChildDepth=4;
+	//BonePtr TheSelectedBone = ExampleRootBone;
+	//for(UInt32 i(0) ; i<SelectedChildDepth && TheSelectedBone->getNumChildren() >0 ; ++i )
+	//{
+	//	TheSelectedBone = TheSelectedBone->getChild(0);
+	//	
+	//}
+
 
     //Skeleton
     SkeletonPtr ExampleSkeleton = Skeleton::create();
 	beginEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
-		ExampleSkeleton->getRootBones().push_back(ExampleRootBone);
+		ExampleSkeleton->getRootBones().push_back(Torso);
 	endEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
 
     //SkeletonDrawer
@@ -264,12 +411,18 @@ int main(int argc, char **argv)
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
 	
-	//Particle System Node
+	//Skeleton Node
     
 	NodePtr SkeletonNode = osg::Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);
     endEditCP(SkeletonNode, Node::CoreFieldMask);
+	
+   //Animation Advancer
+   TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
+   osg::beginEditCP(TheAnimationAdvancer);
+   osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
+   osg::beginEditCP(TheAnimationAdvancer);
 
 
     
@@ -282,7 +435,7 @@ int main(int argc, char **argv)
     mgr->setRoot(scene);
 
 	//Setup the Animation
-	setupAnimation(ExampleRootBone,TheSelectedBone,TheSelectedBone);
+	setupAnimation(LeftHumerus,LeftRadius,LeftHand,LeftFemur,RightHumerus,RightRadius,RightHand,RightFemur,Torso);
 	
 
 
@@ -316,64 +469,351 @@ void reshape(Vec2f Size)
 
 
 
-void setupAnimation(BonePtr TheBone,BonePtr TheChildBone,BonePtr TheBoneLength )
+void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeftHand,BonePtr TheLeftFemur,BonePtr TheRightHumerus,BonePtr TheRightRadius,BonePtr TheRightHand,BonePtr TheRightFemur,BonePtr TheTorso)
 {
+ 
+/* ================================ ANIMATION OF THE BONES ==============================================*/
 
-   //Quaternion
-   osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceQuaternion::create();
+/*================================================================================================*/
+/*                                       TORSO                                                    */
+ //Length
+   osg::KeyframeSequencePtr TorsoLenghtFrame = osg::KeyframeSequenceReal32::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.0));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.5*osg::Pi));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),osg::Pi));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),1.5*osg::Pi));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),2.0*osg::Pi));
+   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(15.0);
+   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(10.0);
+   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(15.0);
+   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(10.0);
+   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(15.0);
+
+  //Length Animator
+   osg::KeyframeAnimatorPtr TorsoLengthAnimator = osg::KeyframeAnimator::create();
+   osg::beginEditCP(TorsoLengthAnimator);
+      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->setValues(TorsoLenghtFrame);
+      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(0.0);
+      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(3.0);
+      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(4.0);
+      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(5.0);
+      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(6.0);
+   osg::endEditCP(TorsoLengthAnimator);
+
+/*================================================================================================*/
+/*                                    LEFT HUMERUS                                                */
+ //Quaternion
+   osg::KeyframeSequencePtr LeftHumerusKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(130.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.5)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.5)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(130.0)));
+
+//Rotation Animator
+   osg::KeyframeAnimatorPtr  LeftHumerusAnimator = osg::KeyframeAnimator::create();
+   osg::beginEditCP(LeftHumerusAnimator);
+      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->setValues(LeftHumerusKeyFrame);
+      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(0.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(2.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(4.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(6.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(8.0);
+   osg::endEditCP(LeftHumerusAnimator);
 
 
-   //Length
-   osg::KeyframeSequencePtr LengthKeyframeSequence = osg::KeyframeSequenceReal32::create();
+
+ 
+
+
+/*================================================================================================*/
+/*                                    LEFT RADIUS                                                 */
+
+//Quaternion
+   osg::KeyframeSequencePtr LeftRadiusKeyFrame = osg::KeyframeSequenceQuaternion::create();
    
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(0.7);
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(20.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(0.7);
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(99.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(0.7);
-   
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
 
 
    //Rotation Animator
-   osg::KeyframeAnimatorPtr Animator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(Animator);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->setValues(KeyframeSequence);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(8.0);
-   osg::endEditCP(Animator);
-
- //Length Animator
-   osg::KeyframeAnimatorPtr LengthAnimator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(LengthAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->setValues(LengthKeyframeSequence);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(8.0);
-   osg::endEditCP(LengthAnimator);
+   osg::KeyframeAnimatorPtr LeftRadiusAnimator = osg::KeyframeAnimator::create();
+   osg::beginEditCP(LeftRadiusAnimator);
+      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->setValues(LeftRadiusKeyFrame);
+      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(0.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(2.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(4.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(6.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(8.0);
+   osg::endEditCP(LeftRadiusAnimator);
 
 
+	
 
-  //Skeleton Animation
+
+/*================================================================================================*/
+/*                                    LEFT HAND                                                   */
+
+//Quaternion
+   osg::KeyframeSequencePtr  LeftHandKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(70.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+
+
+   //Rotation Animator
+   osg::KeyframeAnimatorPtr  LeftHandAnimator= osg::KeyframeAnimator::create();
+   osg::beginEditCP(LeftHandAnimator);
+      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->setValues(LeftHandKeyFrame);
+      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(0.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(2.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(4.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(6.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(8.0);
+   osg::endEditCP(LeftHandAnimator);
+
+
+
+/*================================================================================================*/
+/*                                    LEFT FEMUR                                                  */
+
+ //Quaternion
+   osg::KeyframeSequencePtr  LeftFemurKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(5.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)));
+
+
+   //Rotation Animator
+   osg::KeyframeAnimatorPtr  LeftFemurAnimator = osg::KeyframeAnimator::create();
+   osg::beginEditCP(LeftFemurAnimator);
+      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->setValues(LeftFemurKeyFrame);
+      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(0.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(2.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(4.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(6.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(8.0);
+   osg::endEditCP(LeftFemurAnimator);
+
+
+
+///*================================================================================================*/
+///*                                    LEFT TIBIA                                                  */
+//
+//	
+//
+///*================================================================================================*/
+///*                                    LEFT FEET                                                   */
+//
+//	
+//
+//
+/*================================================================================================*/
+/*                                    RIGHT HUMERUS                                               */
+
+ //Quaternion
+   osg::KeyframeSequencePtr  RightHumerusKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-130.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.5)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.5)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-130.0)));
+
+
+   //Rotation Animator
+   osg::KeyframeAnimatorPtr RightHumerusAnimator = osg::KeyframeAnimator::create();
+   osg::beginEditCP(RightHumerusAnimator);
+      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->setValues(RightHumerusKeyFrame);
+      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(0.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(2.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(4.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(6.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(8.0);
+   osg::endEditCP(RightHumerusAnimator);
+
+
+
+
+/*================================================================================================*/
+/*                                    RIGHT RADIUS                                                */
+
+//Quaternion
+   osg::KeyframeSequencePtr  RightRadiusKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+
+
+   //Rotation Animator
+   osg::KeyframeAnimatorPtr  RightRadiusAnimator= osg::KeyframeAnimator::create();
+   osg::beginEditCP(RightRadiusAnimator);
+      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->setValues(RightRadiusKeyFrame);
+      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(0.0);
+      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(2.0);
+      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(4.0);
+      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(6.0);
+      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(8.0);
+   osg::endEditCP(RightRadiusAnimator);
+
+
+
+
+/*================================================================================================*/
+/*                                     RIGHT HAND                                                 */
+
+ //Quaternion
+   osg::KeyframeSequencePtr RightHandKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-70.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+
+
+   //Rotation Animator
+   osg::KeyframeAnimatorPtr RightHandAnimator = osg::KeyframeAnimator::create();
+   osg::beginEditCP(RightHandAnimator);
+      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->setValues(RightHandKeyFrame);
+      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(0.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(2.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(4.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(6.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(8.0);
+   osg::endEditCP(RightHandAnimator);
+
+
+
+
+/*================================================================================================*/
+/*                                     RIGHT FEMUR                                                */
+
+ //Quaternion
+   osg::KeyframeSequencePtr RightFemurKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-5.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)));
+   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)));
+
+
+   //Rotation Animator
+   osg::KeyframeAnimatorPtr RightFemurAnimator = osg::KeyframeAnimator::create();
+   osg::beginEditCP(RightFemurAnimator);
+      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->setValues(RightFemurKeyFrame);
+      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(0.0);
+      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(2.0);
+      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(4.0);
+      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(6.0);
+      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(8.0);
+   osg::endEditCP(RightFemurAnimator);
+
+
+
+	
+
+///*================================================================================================*/
+///*                                     RIGHT TIBIA                                                */
+//
+//
+//	
+//
+///*================================================================================================*/
+///*                                     RIGHT FEET                                                 */
+//
+
+   
+//  Skeleton Animation
    TheSkeletonAnimation = osg::SkeletonAnimation::create();
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(Animator, TheBone);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(Animator, TheChildBone);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addLengthAnimator(LengthAnimator, TheBoneLength);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftHumerusAnimator, TheLeftHumerus);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftRadiusAnimator,  TheLeftRadius);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftHandAnimator,    TheLeftHand);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftFemurAnimator,   TheLeftFemur);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightHumerusAnimator,TheRightHumerus );
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightRadiusAnimator, TheRightRadius);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightHandAnimator,   TheRightHand);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightFemurAnimator,  TheRightFemur);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addLengthAnimator  (TorsoLengthAnimator, TheTorso);
 
 
-   //Animation Advancer
-   TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
-   osg::beginEditCP(TheAnimationAdvancer);
-   osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
-   osg::beginEditCP(TheAnimationAdvancer);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ //Quaternion
+//   osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceQuaternion::create();
+//   
+//   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.0));
+//   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.5*osg::Pi));
+//   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),osg::Pi));
+//   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),1.5*osg::Pi));
+//   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),2.0*osg::Pi));
+//
+//
+//   //Length
+//   /*osg::KeyframeSequencePtr LengthKeyframeSequence = osg::KeyframeSequenceReal32::create();
+//   
+//   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(0.7);
+//   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(20.0);
+//   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(0.7);
+//   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(99.0);
+//   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(0.7);*/
+//   
+//
+//   //Rotation Animator
+//   osg::KeyframeAnimatorPtr Animator = osg::KeyframeAnimator::create();
+//   osg::beginEditCP(Animator);
+//      osg::KeyframeAnimatorPtr::dcast(Animator)->setValues(KeyframeSequence);
+//      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(0.0);
+//      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(2.0);
+//      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(4.0);
+//      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(6.0);
+//      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(8.0);
+//   osg::endEditCP(Animator);
+//
+// //Length Animator
+//   /*osg::KeyframeAnimatorPtr LengthAnimator = osg::KeyframeAnimator::create();
+//   osg::beginEditCP(LengthAnimator);
+//      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->setValues(LengthKeyframeSequence);
+//      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(0.0);
+//      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(2.0);
+//      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(4.0);
+//      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(6.0);
+//      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(8.0);
+//   osg::endEditCP(LengthAnimator);*/
+//
+//
+//
+////  //Skeleton Animation
+//   TheSkeletonAnimation = osg::SkeletonAnimation::create();
+//   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(Animator, TheBone);

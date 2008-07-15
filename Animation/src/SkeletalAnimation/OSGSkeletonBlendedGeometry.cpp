@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSkeletonBlendedGeometry.h"
+#include "OSGBone.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +79,38 @@ void SkeletonBlendedGeometry::initMethod (void)
 
 void SkeletonBlendedGeometry::addBoneBlending(const UInt32& PositionIndex, const BonePtr TheBone, const Real32& BlendAmount)
 {
+	beginEditCP(SkeletonBlendedGeometryPtr(this), BonesFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask);
+		getPositionIndexes().push_back(PositionIndex);
+		getBones().push_back(TheBone);
+		getBlendAmounts().push_back(BlendAmount);
+	endEditCP(SkeletonBlendedGeometryPtr(this), BonesFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask);
+}
+
+void SkeletonBlendedGeometry::calculatePositions(void)
+{
+	
+	if(getBaseGeometry() != NullFC &&
+		getPositionIndexes().size() == getBones().size() == getBlendAmounts().size())
+	{
+		Matrix BonesTransforms;
+		std::vector<Matrix> PositionTrans;
+		PositionTrans.resize(getBones().size());
+		//UInt32 VertexesTransformations[n];
+		for(UInt32 i(0) ; i<getPositionIndexes().size() ; ++i)
+		{
+			BonesTransforms = getBones(i)->getAbsoluteTransformation();
+			BonesTransforms.scale(getBlendAmounts(i));
+			BonesTransforms.mult(PositionTrans[i]);
+			PositionTrans[i] = BonesTransforms;
+
+
+		}
+	}
+	else
+	{
+		//Error
+	}
+
 }
 
 /*-------------------------------------------------------------------------*\
@@ -105,6 +138,13 @@ SkeletonBlendedGeometry::~SkeletonBlendedGeometry(void)
 void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if((whichField & BonesFieldMask) ||
+		(whichField & PositionIndexesFieldMask) ||
+		(whichField & BlendAmountsFieldMask))
+	{
+		calculatePositions();
+	}
 }
 
 void SkeletonBlendedGeometry::dump(      UInt32    , 
