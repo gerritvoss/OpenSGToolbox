@@ -184,6 +184,24 @@ public:
 
                 if(TheFCType != NULL)
                 {
+
+                    //XML Text
+                    std::ostringstream TheStream;
+                    FCFileHandler::FCPtrStore NewContainers;
+                    FCFileType::FCTypeVector IgnoreContainers;
+                    FieldContainerPtr Prototype(TheFCType->getPrototype());
+                    if(Prototype != NullFC)
+                    {
+                        IgnoreContainers.push_back(UIFont::getClassType().getId());
+                        NewContainers.insert(Prototype);
+                        FCFileHandler::the()->write(NewContainers, TheStream,"xml",IgnoreContainers);
+                    }
+				    beginEditCP(_XMLTextArea, TextArea::TextFieldMask);
+                        _XMLTextArea->setText(TheStream.str());
+				    endEditCP(_XMLTextArea, TextArea::TextFieldMask);
+
+
+                    //Fields Text
 					std::stringstream OutputStream;
 
                     OutputStream << "Field Container Type: " << TheFCType->getCName() << std::endl;
@@ -346,7 +364,8 @@ protected:
 			//FCDescriptionAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 			//FCDescriptionAreaScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 		endEditCP(FCDescriptionAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-		//FCDescriptionAreaScrollPanel->setViewComponent(FCDescriptionArea);
+		FCDescriptionAreaScrollPanel->setViewComponent(FCDescriptionArea);
+        
 		
 		XMLArea = TextArea::create();
 
@@ -354,8 +373,13 @@ protected:
 		XMLArea->setFont(TextAreaFont);
 		endEditCP(XMLArea, TextArea::FontFieldMask);
 
+		ScrollPanelPtr XMLAreaScrollPanel = ScrollPanel::create();
+		beginEditCP(XMLAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+			//XMLAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+			//XMLAreaScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+		endEditCP(XMLAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
 		//ScrollPanelPtr TextAreaScrollPanel = ScrollPanel::create();
-		//TextAreaScrollPanel->setViewComponent(FCDescriptionArea);
+		XMLAreaScrollPanel->setViewComponent(XMLArea);
 
         TheFCListListener.setList(FieldContainerTypeList, FCDescriptionArea, XMLArea);
 
@@ -371,9 +395,8 @@ protected:
 			FieldContainerTypePanel->getChildren().push_back(FieldContainerTypeListScrollPanel);
 			FieldContainerTypePanel->getChildren().push_back(NumFCTypesLabel);
 			FieldContainerTypePanel->getChildren().push_back(NumFCTypesValueLabel);
-			//FieldContainerTypePanel->getChildren().push_back(FCDescriptionAreaScrollPanel);
-			FieldContainerTypePanel->getChildren().push_back(FCDescriptionArea);
-			FieldContainerTypePanel->getChildren().push_back(XMLArea);
+			FieldContainerTypePanel->getChildren().push_back(FCDescriptionAreaScrollPanel);
+			FieldContainerTypePanel->getChildren().push_back(XMLAreaScrollPanel);
 			FieldContainerTypePanel->setLayout(FieldContainerTypePanelLayout);
 		endEditCP(FieldContainerTypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
         
@@ -400,16 +423,16 @@ protected:
 		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, NumFCTypesValueLabel, 0, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypeListScrollPanel);
 				
 		//FieldContainer Description TextArea Layout constraints
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, FCDescriptionArea, 1, SpringLayoutConstraints::SOUTH_EDGE, NumFCTypesLabel);
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, FCDescriptionArea, 0, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypePanel);
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, FCDescriptionArea, 0, SpringLayoutConstraints::WEST_EDGE, FieldContainerTypePanel);
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, FCDescriptionArea, 0, SpringLayoutConstraints::SOUTH_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, FCDescriptionAreaScrollPanel, 1, SpringLayoutConstraints::SOUTH_EDGE, NumFCTypesLabel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, FCDescriptionAreaScrollPanel, 0, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, FCDescriptionAreaScrollPanel, 0, SpringLayoutConstraints::WEST_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, FCDescriptionAreaScrollPanel, 0, SpringLayoutConstraints::SOUTH_EDGE, FieldContainerTypePanel);
 
 		//XML TextArea Layout constraints
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, XMLArea, 0, SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypePanel);
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, XMLArea, 0, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypePanel);
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, XMLArea, 1, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypeListScrollPanel);
-		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, XMLArea, 0, SpringLayoutConstraints::SOUTH_EDGE, FieldContainerTypeListScrollPanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, XMLAreaScrollPanel, 0, SpringLayoutConstraints::NORTH_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, XMLAreaScrollPanel, 0, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypePanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, XMLAreaScrollPanel, 1, SpringLayoutConstraints::EAST_EDGE, FieldContainerTypeListScrollPanel);
+		FieldContainerTypePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, XMLAreaScrollPanel, 0, SpringLayoutConstraints::SOUTH_EDGE, FieldContainerTypeListScrollPanel);
 
 
 		return FieldContainerTypePanel;

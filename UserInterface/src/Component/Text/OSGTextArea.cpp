@@ -88,6 +88,10 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 	{	
         if(getFont() != NullFC)
         {
+            if(_LineContents[i]._VerticalOffset > getClipBottomRight().y() || ( i+1<_LineContents.size() && _LineContents[i+1]._VerticalOffset < getClipTopLeft().y()))
+            {
+                continue;
+            }
 		    //draw like normal if not selected
 		    if(_LineContents[i]._StartPosition >= _TextSelectionEnd || _LineContents[i]._EndPosition <= _TextSelectionStart || _TextSelectionStart >= _TextSelectionEnd)
 		    {
@@ -624,7 +628,7 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
         //Update my PreferredSize based on text
         Vec2f PreferredSize;
 		getFont()->getBounds(_LineContents.back()._Contents, TempTopLeft, TempBottomRight);
-        PreferredSize[0] = getPreferredSize().x();
+        PreferredSize[0] = getSize().x();
         PreferredSize[1] = osgMax<UInt32>(getMinSize().y(), _LineContents.back()._VerticalOffset + TempBottomRight.y());
         if(getPreferredSize() != PreferredSize)
         {

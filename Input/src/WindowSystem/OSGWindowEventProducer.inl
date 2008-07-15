@@ -56,13 +56,6 @@ UInt32 WindowEventProducer::getCursorType(void) const
 }
 
 inline
-void WindowEventProducer::setCursorType(UInt32 Type)
-{
-	_CursorType = Type;
-    setCursor();
-}
-
-inline
 void WindowEventProducer::addUpdateListener(UpdateListenerPtr Listener)
 {
    _UpdateListeners.insert(Listener);

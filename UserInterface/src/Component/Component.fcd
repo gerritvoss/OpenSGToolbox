@@ -295,4 +295,14 @@ A UI Component Interface.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="Cursor"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="WindowEventProducer::CURSOR_POINTER"
+		defaultHeader="OpenSG/Input/OSGWindowEventProducer.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

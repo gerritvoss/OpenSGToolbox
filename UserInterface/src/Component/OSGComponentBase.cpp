@@ -61,6 +61,7 @@
 #include "OSGComponentBase.h"
 #include "OSGComponent.h"
 
+#include <OpenSG/Input/OSGWindowEventProducer.h>   // Cursor default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -153,6 +154,9 @@ const OSG::BitVector  ComponentBase::DisabledForegroundFieldMask =
 
 const OSG::BitVector  ComponentBase::ForegroundFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ForegroundFieldId);
+
+const OSG::BitVector  ComponentBase::CursorFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::CursorFieldId);
 
 const OSG::BitVector ComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -249,6 +253,9 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
     
 */
 /*! \var LayerPtr        ComponentBase::_sfForeground
+    
+*/
+/*! \var UInt32          ComponentBase::_sfCursor
     
 */
 
@@ -405,7 +412,12 @@ FieldDescription *ComponentBase::_desc[] =
                      "Foreground", 
                      ForegroundFieldId, ForegroundFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentBase::getSFForeground)
+                     (FieldAccessMethod) &ComponentBase::getSFForeground),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "Cursor", 
+                     CursorFieldId, CursorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFCursor)
 };
 
 
@@ -502,6 +514,7 @@ ComponentBase::ComponentBase(void) :
     _sfRolloverForeground     (LayerPtr(NullFC)), 
     _sfDisabledForeground     (LayerPtr(NullFC)), 
     _sfForeground             (LayerPtr(NullFC)), 
+    _sfCursor                 (UInt32(WindowEventProducer::CURSOR_POINTER)), 
     Inherited() 
 {
 }
@@ -541,6 +554,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfRolloverForeground     (source._sfRolloverForeground     ), 
     _sfDisabledForeground     (source._sfDisabledForeground     ), 
     _sfForeground             (source._sfForeground             ), 
+    _sfCursor                 (source._sfCursor                 ), 
     Inherited                 (source)
 {
 }
@@ -707,6 +721,11 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfForeground.getBinSize();
     }
 
+    if(FieldBits::NoField != (CursorFieldMask & whichField))
+    {
+        returnValue += _sfCursor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -864,6 +883,11 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ForegroundFieldMask & whichField))
     {
         _sfForeground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CursorFieldMask & whichField))
+    {
+        _sfCursor.copyToBin(pMem);
     }
 
 
@@ -1024,6 +1048,11 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfForeground.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (CursorFieldMask & whichField))
+    {
+        _sfCursor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -1124,6 +1153,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ForegroundFieldMask & whichField))
         _sfForeground.syncWith(pOther->_sfForeground);
 
+    if(FieldBits::NoField != (CursorFieldMask & whichField))
+        _sfCursor.syncWith(pOther->_sfCursor);
+
 
 }
 #else
@@ -1223,6 +1255,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     if(FieldBits::NoField != (ForegroundFieldMask & whichField))
         _sfForeground.syncWith(pOther->_sfForeground);
+
+    if(FieldBits::NoField != (CursorFieldMask & whichField))
+        _sfCursor.syncWith(pOther->_sfCursor);
 
 
 
@@ -1417,6 +1452,12 @@ OSG_USERINTERFACELIB_DLLMAPPING
 SFLayerPtr *ComponentBase::getSFForeground(void)
 {
     return &_sfForeground;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFUInt32 *ComponentBase::getSFCursor(void)
+{
+    return &_sfCursor;
 }
 
 
@@ -1958,6 +1999,24 @@ OSG_USERINTERFACELIB_DLLMAPPING
 void ComponentBase::setForeground(const LayerPtr &value)
 {
     _sfForeground.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+UInt32 &ComponentBase::getCursor(void)
+{
+    return _sfCursor.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const UInt32 &ComponentBase::getCursor(void) const
+{
+    return _sfCursor.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setCursor(const UInt32 &value)
+{
+    _sfCursor.setValue(value);
 }
 
 

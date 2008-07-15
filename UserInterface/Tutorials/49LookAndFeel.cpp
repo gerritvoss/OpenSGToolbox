@@ -91,6 +91,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGPopupMenu.h>
 #include <OpenSG/UserInterface/OSGMenu.h>
 #include <OpenSG/UserInterface/OSGMenuItem.h>
+#include <OpenSG/UserInterface/OSGUIRectangle.h>
 
 RadioButtonGroup DeselectedRadioButtonGroup;
 RadioButtonGroup SelectedRadioButtonGroup;
@@ -109,7 +110,12 @@ DefaultMutableComboBoxModelPtr disabledEditableComboBoxModel;
 DefaultMutableComboBoxModelPtr disabledNoneditableComboBoxModel;
 
 UIDrawingSurfacePtr TutorialDrawingSurface;
+NodePtr ExampleUIRectangleNode;
+NodePtr scene;
+WindowEventProducerPtr TutorialWindowEventProducer;
+UIRectanglePtr ExampleUIRectangle;
 
+UIForegroundPtr TutorialUIForeground;
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -200,6 +206,40 @@ public:
        {
            ExitApp = true;
        }
+       if(e.getKey() == KeyEvent::KEY_F1)
+       {
+            ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+            beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+                TutorialViewport->getForegrounds().clear();
+                TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
+            beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+
+            
+            beginEditCP(scene, Node::ChildrenFieldMask);
+                // Add the UIRectangle as a child to the scene
+                scene->subChild(ExampleUIRectangleNode);
+            endEditCP(scene, Node::ChildrenFieldMask);
+
+            beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+                TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+            endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+       }
+       if(e.getKey() == KeyEvent::KEY_F2)
+       {
+            ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+            beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+                TutorialViewport->getForegrounds().clear();
+            beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+            
+            beginEditCP(scene, Node::ChildrenFieldMask);
+                // Add the UIRectangle as a child to the scene
+                scene->addChild(ExampleUIRectangleNode);
+            endEditCP(scene, Node::ChildrenFieldMask);
+
+            beginEditCP(ExampleUIRectangle, UIRectangle::DrawingSurfaceFieldMask);
+                ExampleUIRectangle->setDrawingSurface(TutorialDrawingSurface);
+            endEditCP(ExampleUIRectangle, UIRectangle::DrawingSurfaceFieldMask);
+       }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -211,13 +251,61 @@ public:
    }
 };
 
+class TutorialMouseListener : public MouseListener
+{
+  public:
+    virtual void mouseClicked(const MouseEvent& e)
+    {
+    }
+    virtual void mouseEntered(const MouseEvent& e)
+    {
+    }
+    virtual void mouseExited(const MouseEvent& e)
+    {
+    }
+    virtual void mousePressed(const MouseEvent& e)
+    {
+        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        {
+            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+        }
+    }
+    virtual void mouseReleased(const MouseEvent& e)
+    {
+        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        {
+           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+        }
+    }
+};
+
+class TutorialMouseMotionListener : public MouseMotionListener
+{
+  public:
+    virtual void mouseMoved(const MouseEvent& e)
+    {
+        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+        }
+    }
+
+    virtual void mouseDragged(const MouseEvent& e)
+    {
+        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+        }
+    }
+};
+
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
 
 	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
@@ -233,13 +321,17 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialMouseListener TheTutorialMouseListener;
+    TutorialMouseMotionListener TheTutorialMouseMotionListener;
+    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
 
 
     // Make Torus Node
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodePtr TorusGeometryNode = makeTorus(150, 600, 32, 32);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
+    scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(TorusGeometryNode);
@@ -334,13 +426,28 @@ int main(int argc, char **argv)
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
+    //Make A 3D Rectangle to draw the UI on
+    ExampleUIRectangle = UIRectangle::create();
+    beginEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask);
+        ExampleUIRectangle->setPoint(Pnt3f(-640,-512,250));
+        ExampleUIRectangle->setWidth(1280);
+        ExampleUIRectangle->setHeight(1024);
+    endEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask);
+ 	
+    ExampleUIRectangleNode = osg::Node::create();
+    beginEditCP(ExampleUIRectangleNode, Node::CoreFieldMask);
+        ExampleUIRectangleNode->setCore(ExampleUIRectangle);
+    endEditCP(ExampleUIRectangleNode, Node::CoreFieldMask);
+    addRefCP(ExampleUIRectangleNode);
+
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    TutorialUIForeground = osg::UIForeground::create();
 
     beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask  | Component::ConstraintsFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
     endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask  | Component::ConstraintsFieldMask);
     
+    addRefCP(TutorialUIForeground);
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 

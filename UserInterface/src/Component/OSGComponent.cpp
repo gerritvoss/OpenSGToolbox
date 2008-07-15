@@ -114,7 +114,7 @@ Pnt2f Component::getParentToLocal(const Pnt2f& Location)
 
 UInt32 Component::queryCursor(const Pnt2f& CursorLoc) const
 {
-	return WindowEventProducer::CURSOR_POINTER;
+	return getCursor();
 }
 
 Vec2f Component::getRequestedSize(void) const
@@ -949,6 +949,15 @@ void Component::changed(BitVector whichField, UInt32 origin)
         {
             removeMouseListener(&_ActivateToolTipListener);
         }
+    }
+    
+    if((whichField & CursorFieldMask) &&
+        _MouseInComponentLastMouse &&
+        getParentWindow() != NullFC &&
+        getParentWindow()->getDrawingSurface() != NullFC &&
+        getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+        getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(getCursor());
     }
 }
 

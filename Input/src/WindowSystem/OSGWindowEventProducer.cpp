@@ -104,6 +104,16 @@ WindowEventProducer::CursorRegionListItor WindowEventProducer::addCursorRegion(c
 	return --(_CursorRegions.end());
 }
 
+inline
+void WindowEventProducer::setCursorType(UInt32 Type)
+{
+    if(!getLockCursor())
+    {
+	    _CursorType = Type;
+        setCursor();
+    }
+}
+
 bool WindowEventProducer::removeCursorRegion(CursorRegionListItor RegionItor)
 {
 	if(RegionItor != _CursorRegions.end())

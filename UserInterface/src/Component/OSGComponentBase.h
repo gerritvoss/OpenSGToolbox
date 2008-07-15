@@ -97,6 +97,7 @@
 #include "Layer/OSGLayer.h" // RolloverForeground type
 #include "Layer/OSGLayer.h" // DisabledForeground type
 #include "Layer/OSGLayer.h" // Foreground type
+#include <OpenSG/OSGUInt32Fields.h> // Cursor type
 
 #include "OSGComponentFields.h"
 
@@ -150,7 +151,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
         RolloverForegroundFieldId = FocusedForegroundFieldId  + 1,
         DisabledForegroundFieldId = RolloverForegroundFieldId + 1,
         ForegroundFieldId         = DisabledForegroundFieldId + 1,
-        NextFieldId               = ForegroundFieldId         + 1
+        CursorFieldId             = ForegroundFieldId         + 1,
+        NextFieldId               = CursorFieldId             + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -183,6 +185,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector RolloverForegroundFieldMask;
     static const OSG::BitVector DisabledForegroundFieldMask;
     static const OSG::BitVector ForegroundFieldMask;
+    static const OSG::BitVector CursorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -237,6 +240,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       SFLayerPtr          *getSFRolloverForeground(void);
     virtual       SFLayerPtr          *getSFDisabledForeground(void);
     virtual       SFLayerPtr          *getSFForeground     (void);
+    virtual       SFUInt32            *getSFCursor         (void);
 
     virtual       Pnt2f               &getPosition       (void);
     virtual const Pnt2f               &getPosition       (void) const;
@@ -294,6 +298,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual const LayerPtr            &getDisabledForeground(void) const;
     virtual       LayerPtr            &getForeground     (void);
     virtual const LayerPtr            &getForeground     (void) const;
+    virtual       UInt32              &getCursor         (void);
+    virtual const UInt32              &getCursor         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -328,6 +334,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual void setRolloverForeground( const LayerPtr &value );
     virtual void setDisabledForeground( const LayerPtr &value );
     virtual void setForeground     ( const LayerPtr &value );
+    virtual void setCursor         ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -384,6 +391,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     SFLayerPtr          _sfRolloverForeground;
     SFLayerPtr          _sfDisabledForeground;
     SFLayerPtr          _sfForeground;
+    SFUInt32            _sfCursor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

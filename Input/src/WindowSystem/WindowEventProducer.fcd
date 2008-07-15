@@ -64,4 +64,13 @@ WindowEventProducer is the base class for all Window specific Event producers. I
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="LockCursor"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+	</Field>
 </FieldContainer>

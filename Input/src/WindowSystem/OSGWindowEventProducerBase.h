@@ -73,6 +73,7 @@
 #include <OpenSG/OSGBoolFields.h> // UseCallbackForReshape type
 #include <OpenSG/OSGTimeFields.h> // LastUpdateTime type
 #include <OpenSG/OSGImageFields.h> // Icon type
+#include <OpenSG/OSGBoolFields.h> // LockCursor type
 
 #include "OSGWindowEventProducerFields.h"
 
@@ -102,7 +103,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
         UseCallbackForReshapeFieldId = UseCallbackForDrawFieldId    + 1,
         LastUpdateTimeFieldId        = UseCallbackForReshapeFieldId + 1,
         IconFieldId                  = LastUpdateTimeFieldId        + 1,
-        NextFieldId                  = IconFieldId                  + 1
+        LockCursorFieldId            = IconFieldId                  + 1,
+        NextFieldId                  = LockCursorFieldId            + 1
     };
 
     static const OSG::BitVector WindowFieldMask;
@@ -111,6 +113,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     static const OSG::BitVector UseCallbackForReshapeFieldMask;
     static const OSG::BitVector LastUpdateTimeFieldMask;
     static const OSG::BitVector IconFieldMask;
+    static const OSG::BitVector LockCursorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,6 +146,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
            SFBool              *getSFUseCallbackForReshape(void);
            SFTime              *getSFLastUpdateTime (void);
            SFImagePtr          *getSFIcon           (void);
+           SFBool              *getSFLockCursor     (void);
 
            WindowPtr           &getWindow         (void);
      const WindowPtr           &getWindow         (void) const;
@@ -156,6 +160,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
      const Time                &getLastUpdateTime (void) const;
            ImagePtr            &getIcon           (void);
      const ImagePtr            &getIcon           (void) const;
+           bool                &getLockCursor     (void);
+     const bool                &getLockCursor     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -168,6 +174,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
      void setUseCallbackForReshape( const bool &value );
      void setLastUpdateTime ( const Time &value );
      void setIcon           ( const ImagePtr &value );
+     void setLockCursor     ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -200,6 +207,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     SFBool              _sfUseCallbackForReshape;
     SFTime              _sfLastUpdateTime;
     SFImagePtr          _sfIcon;
+    SFBool              _sfLockCursor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

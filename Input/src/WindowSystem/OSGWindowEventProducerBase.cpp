@@ -82,6 +82,9 @@ const OSG::BitVector  WindowEventProducerBase::LastUpdateTimeFieldMask =
 const OSG::BitVector  WindowEventProducerBase::IconFieldMask = 
     (TypeTraits<BitVector>::One << WindowEventProducerBase::IconFieldId);
 
+const OSG::BitVector  WindowEventProducerBase::LockCursorFieldMask = 
+    (TypeTraits<BitVector>::One << WindowEventProducerBase::LockCursorFieldId);
+
 const OSG::BitVector WindowEventProducerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -105,6 +108,9 @@ const OSG::BitVector WindowEventProducerBase::MTInfluenceMask =
     
 */
 /*! \var ImagePtr        WindowEventProducerBase::_sfIcon
+    
+*/
+/*! \var bool            WindowEventProducerBase::_sfLockCursor
     
 */
 
@@ -141,7 +147,12 @@ FieldDescription *WindowEventProducerBase::_desc[] =
                      "Icon", 
                      IconFieldId, IconFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFIcon)
+                     (FieldAccessMethod) &WindowEventProducerBase::getSFIcon),
+    new FieldDescription(SFBool::getClassType(), 
+                     "LockCursor", 
+                     LockCursorFieldId, LockCursorFieldMask,
+                     false,
+                     (FieldAccessMethod) &WindowEventProducerBase::getSFLockCursor)
 };
 
 
@@ -214,6 +225,7 @@ WindowEventProducerBase::WindowEventProducerBase(void) :
     _sfUseCallbackForReshape  (bool(false)), 
     _sfLastUpdateTime         (Time(-1.0)), 
     _sfIcon                   (ImagePtr(NullFC)), 
+    _sfLockCursor             (bool(false)), 
     Inherited() 
 {
 }
@@ -229,6 +241,7 @@ WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &
     _sfUseCallbackForReshape  (source._sfUseCallbackForReshape  ), 
     _sfLastUpdateTime         (source._sfLastUpdateTime         ), 
     _sfIcon                   (source._sfIcon                   ), 
+    _sfLockCursor             (source._sfLockCursor             ), 
     Inherited                 (source)
 {
 }
@@ -275,6 +288,11 @@ UInt32 WindowEventProducerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfIcon.getBinSize();
     }
 
+    if(FieldBits::NoField != (LockCursorFieldMask & whichField))
+    {
+        returnValue += _sfLockCursor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -312,6 +330,11 @@ void WindowEventProducerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (IconFieldMask & whichField))
     {
         _sfIcon.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LockCursorFieldMask & whichField))
+    {
+        _sfLockCursor.copyToBin(pMem);
     }
 
 
@@ -352,6 +375,11 @@ void WindowEventProducerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfIcon.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (LockCursorFieldMask & whichField))
+    {
+        _sfLockCursor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -380,6 +408,9 @@ void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOt
     if(FieldBits::NoField != (IconFieldMask & whichField))
         _sfIcon.syncWith(pOther->_sfIcon);
 
+    if(FieldBits::NoField != (LockCursorFieldMask & whichField))
+        _sfLockCursor.syncWith(pOther->_sfLockCursor);
+
 
 }
 #else
@@ -407,6 +438,9 @@ void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOt
 
     if(FieldBits::NoField != (IconFieldMask & whichField))
         _sfIcon.syncWith(pOther->_sfIcon);
+
+    if(FieldBits::NoField != (LockCursorFieldMask & whichField))
+        _sfLockCursor.syncWith(pOther->_sfLockCursor);
 
 
 

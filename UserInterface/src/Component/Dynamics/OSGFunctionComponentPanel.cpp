@@ -83,16 +83,29 @@ void FunctionComponentPanel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-UInt32 FunctionComponentPanel::queryCursor(const Pnt2f& CursorLoc) const
+void FunctionComponentPanel::setupCursor(void)
 {
-	if(_drawComponentResizeSquares)
-	{
-		return WindowEventProducer::CURSOR_RESIZE_ALL;
-	}
-	else
-	{
-		return Inherited::queryCursor(CursorLoc);
-	}
+    UInt32 Cursor;
+    if(_drawComponentResizeSquares)
+    {
+        Cursor = WindowEventProducer::CURSOR_RESIZE_ALL;
+    }
+    else
+    {
+        Cursor = WindowEventProducer::CURSOR_POINTER;
+    }
+    if(Cursor != getCursor())
+    {
+        beginEditCP(FunctionComponentPanelPtr(this) , CursorFieldMask);
+            setCursor(Cursor);
+        endEditCP(FunctionComponentPanelPtr(this) , CursorFieldMask);
+    }
+    if(_ResizableComponent != NullFC && Cursor != _ResizableComponent->getCursor())
+    {
+        beginEditCP(_ResizableComponent , CursorFieldMask);
+            _ResizableComponent->setCursor(Cursor);
+        endEditCP(_ResizableComponent , CursorFieldMask);
+    }
 }
 
 Pnt2f FunctionComponentPanel::getParentToLocal(const Pnt2f& Location)
@@ -144,12 +157,11 @@ void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 	if(getDrawMiniMap())
 	{
 		//Calculate minimap size
-		Vec2f ComponentPanelSize = Vec2f(getSize());
+		Vec2f ComponentPanelSize = Vec2f(_sfPreferredSize.getValue());
 		Vec2f MinimapSize = ComponentPanelSize * getMiniMapSize();
 	
 		//Get bounds of function component panel
-		Pnt2f TopLeft, BottomRight;
-		getInsideBorderBounds(TopLeft, BottomRight);
+		Pnt2f TopLeft = getClipTopLeft(), BottomRight = getClipBottomRight();
 		
 		//Calculate minimap alignment
 		Pnt2f AlignedMapPosition;
@@ -210,7 +222,7 @@ void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f
 	{
 		Pnt2f AreaViewedTopLeft, AreaViewedBottomRight, AreaViewedTopRight, AreaViewedBottomLeft;
 		AreaViewedTopLeft = Pnt2f(TopLeft + getClipTopLeft() * getMiniMapSize());
-		AreaViewedBottomRight = AreaViewedTopLeft + Pnt2f((BottomRight.x() - TopLeft.x()) / getZoom(), ((BottomRight.y() - TopLeft.y()) / getZoom()));
+		AreaViewedBottomRight = Pnt2f(TopLeft + getClipBottomRight() * getMiniMapSize());
 		AreaViewedTopRight = AreaViewedTopLeft + Pnt2f((AreaViewedBottomRight.x() - AreaViewedTopLeft.x()), 0.0f);
 		AreaViewedBottomLeft = AreaViewedTopLeft + Pnt2f(0.0f, (AreaViewedBottomRight.y() - AreaViewedTopLeft.y()));
 		
@@ -317,7 +329,8 @@ FunctionComponentPanel::FunctionComponentPanel(void) :
     Inherited(),
         _ComponentMoveListener(FunctionComponentPanelPtr(this)),
         _ComponentPanelMoveListener(FunctionComponentPanelPtr(this)),
-		_ComponentResizeListener(FunctionComponentPanelPtr(this))
+		_ComponentResizeListener(FunctionComponentPanelPtr(this)),
+        _drawComponentResizeSquares(false)
 {
 	
 }
@@ -326,7 +339,8 @@ FunctionComponentPanel::FunctionComponentPanel(const FunctionComponentPanel &sou
     Inherited(source),
         _ComponentMoveListener(FunctionComponentPanelPtr(this)),
 		_ComponentPanelMoveListener(FunctionComponentPanelPtr(this)),
-		_ComponentResizeListener(FunctionComponentPanelPtr(this))
+		_ComponentResizeListener(FunctionComponentPanelPtr(this)),
+        _drawComponentResizeSquares(false)
 {
 
 }
@@ -443,7 +457,7 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 			else
 			{
 				_FunctionComponentPanel->_drawComponentResizeSquares = false;
-				_FunctionComponentPanel->_ResizableComponent = NullFC;
+				//_FunctionComponentPanel->_ResizableComponent = NullFC;
 			}
 			
 		}
@@ -464,78 +478,22 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 				else
 				{
 					_FunctionComponentPanel->_drawComponentResizeSquares = false;
-					_FunctionComponentPanel->_ResizableComponent = NullFC;
+					//_FunctionComponentPanel->_ResizableComponent = NullFC;
 				}
 			}
 		}
 		else
 		{
 			_FunctionComponentPanel->_drawComponentResizeSquares = false;
-			_FunctionComponentPanel->_ResizableComponent = NullFC;
+			//_FunctionComponentPanel->_ResizableComponent = NullFC;
 		}
 	}
+    _FunctionComponentPanel->setupCursor();
 	//Inherited::mouseMoved(e);
 }
 
 void FunctionComponentPanel::ComponentPanelMoveListener::mouseDragged(const MouseEvent& e)
 {
-/*
-	if(_drawComponentResizeSquares && _ResizableComponent != NullFC && _FunctionComponentPanel != NullFC)
-	{
-		Pnt2f ResizableComponentTopLeft, ResizableComponentBottomRight, ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
-		ResizableComponentTopLeft = _FunctionComponentPanel->getZoom() * (_ResizableComponent->getPosition());
-		ResizableComponentBottomRight = ResizableComponentTopLeft + _FunctionComponentPanel->getZoom() * (_ResizableComponent->getSize());
-		ResizableComponentTopRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), 0.0f));
-		ResizableComponentBottomLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
-		ResizableComponentTop = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, 0.0f));
-		ResizableComponentBottom = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
-		ResizableComponentLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
-		ResizableComponentRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
-		
-		Vec2f TabSize = _FunctionComponentPanel->getResizeTabsSize() * _FunctionComponentPanel->getZoom();
-		
-		if((e.getLocation() >= (ResizableComponentBottom - TabSize)) && (e.getLocation() <= (ResizableComponentBottom + TabSize)))
-		{
-			//Set new size
-			beginEditCP(_ResizableComponent, FunctionComponentPanel::ChildrenPositionsFieldMask);	
-				_ResizableComponent->setSize();
-			endEditCP(_ResizableComponent, FunctionComponentPanel::ChildrenPositionsFieldMask);
-		}
-	}
-	if(_FunctionComponentPanel != NullFC)
-	{
-		//Move the Position of the Component based on the mouse position and it's initial position
-		Pnt2f InitialPositionsDifference = Pnt2f(_InitialComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
-		Pnt2f AbsolutePosition = Pnt2f(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()) + InitialPositionsDifference);
-		Pnt2f NewPosition = AbsolutePosition;
-		
-		//Test AbsolutePosition to make sure Component is inside parent container
-		Pnt2f AbsolutePositionBottomRight, ContainerTopLeft, ContainerBottomRight;
-		AbsolutePositionBottomRight = AbsolutePosition + _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize();
-		_FunctionComponentPanel->getInsideInsetsBounds(ContainerTopLeft, ContainerBottomRight);
-		if(AbsolutePosition.x() < ContainerTopLeft.x())
-		{
-			NewPosition[0] = ContainerTopLeft.x();
-		}
-		if(AbsolutePosition.y() < ContainerTopLeft.y())
-		{
-			NewPosition[1] = ContainerTopLeft.y();
-		}
-		if(AbsolutePositionBottomRight.x() > ContainerBottomRight.x())
-		{
-			NewPosition[0] = ContainerBottomRight.x() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().x();
-		}
-		if(AbsolutePositionBottomRight.y() > ContainerBottomRight.y())
-		{
-			NewPosition[1] = ContainerBottomRight.y() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().y();
-		}
-		
-		//Set new position
-		beginEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask);	
-			_FunctionComponentPanel->getChildrenPositions()[_ActiveComponent].setValue(NewPosition);
-		endEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask);
-	}*/
-	//Inherited::mouseDragged(e);
 }
 
 void FunctionComponentPanel::ComponentPanelMoveListener::keyReleased(const KeyEvent& e)
@@ -546,6 +504,7 @@ void FunctionComponentPanel::ComponentPanelMoveListener::keyReleased(const KeyEv
 	{
 		_FunctionComponentPanel->_drawComponentResizeSquares = false;
 	}
+    _FunctionComponentPanel->setupCursor();
 	//Inherited::keyReleased(e);
 }
 
@@ -558,8 +517,9 @@ void FunctionComponentPanel::ComponentPanelMoveListener::keyPressed(const KeyEve
 	else
 	{
 		_FunctionComponentPanel->_drawComponentResizeSquares = false;
-		_FunctionComponentPanel->_ResizableComponent = NullFC;
+		//_FunctionComponentPanel->_ResizableComponent = NullFC;
 	}
+    _FunctionComponentPanel->setupCursor();
 }
 
 

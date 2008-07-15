@@ -82,6 +82,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
     void addTextListener(TextListenerPtr Listener);
     void removeTextListener(TextListenerPtr Listener);
 	
+	virtual void keyTyped(const KeyEvent& e);
+
 	virtual void select(const UInt32& index1,
 						const UInt32& index2);
 	virtual void selectAll(void);

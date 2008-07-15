@@ -210,9 +210,10 @@ void UIRectangle::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
     
-    if( (whichField & HeightFieldMask) ||
+    if( ((whichField & HeightFieldMask) ||
         (whichField & WidthFieldMask) ||
-        (whichField & DrawingSurfaceFieldMask) )
+        (whichField & DrawingSurfaceFieldMask))
+        && getDrawingSurface() != NullFC)
     {
 		invalidateVolume();
 		

@@ -48,6 +48,9 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTextComponent.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 
 OSG_BEGIN_NAMESPACE
@@ -82,6 +85,24 @@ void TextComponent::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void TextComponent::keyTyped(const KeyEvent& e)
+{
+    if(e.getKey() == KeyEvent::KEY_C && (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) &&
+        getParentWindow() != NullFC &&
+        getParentWindow()->getDrawingSurface()->getEventProducer())
+    {
+        getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard(getSelectedText());
+    }
+    else if(e.getKey() == KeyEvent::KEY_A && (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL))
+    {
+        selectAll();
+    }
+    else
+    {
+        Inherited::keyTyped(e);
+    }
+}
 
 void TextComponent::setTextColors(const Color4f& TheColor)
 {

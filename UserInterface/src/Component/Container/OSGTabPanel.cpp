@@ -671,6 +671,7 @@ void TabPanel::mouseReleased(const MouseEvent& e)
 
 void TabPanel::mouseMoved(const MouseEvent& e)
 {
+	Component::mouseMoved(e);
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
@@ -689,7 +690,6 @@ void TabPanel::mouseMoved(const MouseEvent& e)
 		getTabContents()[getSelectedIndex()]->mouseMoved(e);
 	}
 
-	Component::mouseMoved(e);
 }
 
 void TabPanel::mouseDragged(const MouseEvent& e)

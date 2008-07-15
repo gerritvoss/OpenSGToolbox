@@ -78,18 +78,6 @@ void EditableTextComponent::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-UInt32 EditableTextComponent::queryCursor(const Pnt2f& CursorLoc) const
-{
-	if(getEnabled() && getEditable())
-	{
-		return WindowEventProducer::CURSOR_I_BEAM;
-	}
-	else
-	{
-		Inherited::queryCursor(CursorLoc);
-	}
-}
 void EditableTextComponent::keyPressed(const KeyEvent& e)
 {
 	Inherited::keyPressed(e);
@@ -285,6 +273,25 @@ BorderPtr EditableTextComponent::getDrawnBorder(void) const
 {
     return Inherited::getDrawnBorder();
 }
+
+void EditableTextComponent::setupCursor(void)
+{
+    UInt32 Cursor;
+    if(getEnabled() && getEditable())
+    {
+        Cursor = WindowEventProducer::CURSOR_I_BEAM;
+    }
+    else
+    {
+        Cursor = WindowEventProducer::CURSOR_POINTER;
+    }
+    if(Cursor != getCursor())
+    {
+        beginEditCP(EditableTextComponentPtr(this) , CursorFieldMask);
+            setCursor(Cursor);
+        endEditCP(EditableTextComponentPtr(this) , CursorFieldMask);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -294,11 +301,13 @@ BorderPtr EditableTextComponent::getDrawnBorder(void) const
 EditableTextComponent::EditableTextComponent(void) :
     Inherited()
 {
+    setupCursor();
 }
 
 EditableTextComponent::EditableTextComponent(const EditableTextComponent &source) :
     Inherited(source)
 {
+    setupCursor();
 }
 
 EditableTextComponent::~EditableTextComponent(void)
@@ -310,6 +319,11 @@ EditableTextComponent::~EditableTextComponent(void)
 void EditableTextComponent::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if((whichField & EnabledFieldMask) || (whichField & EditableFieldMask))
+    {
+        setupCursor();
+    }
 }
 
 void EditableTextComponent::dump(      UInt32    , 

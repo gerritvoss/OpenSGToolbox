@@ -105,8 +105,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTex
     virtual LayerPtr getDrawnBackground(void) const;
     virtual LayerPtr getDrawnForeground(void) const;
     virtual BorderPtr getDrawnBorder(void) const;
+
+    void setupCursor(void);
     
-	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

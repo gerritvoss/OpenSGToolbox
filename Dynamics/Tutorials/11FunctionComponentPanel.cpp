@@ -67,6 +67,7 @@ void reshape(Vec2f Size);
 
 // 12CheckboxButton Headers
 #include <OpenSG/UserInterface/OSGBorders.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 
@@ -273,6 +274,12 @@ int main(int argc, char **argv)
     endEditCP(AddFunctionComponentButton,  Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
 
+    ColorLayerPtr FunctionComponentPanelBackground = ColorLayer::create();
+	beginEditCP(FunctionComponentPanelBackground,  ColorLayer::ColorFieldMask);
+        FunctionComponentPanelBackground->setColor(Color4f(1.0,0.0,0.0,1.0));
+	endEditCP(FunctionComponentPanelBackground,  ColorLayer::ColorFieldMask);
+
+
     //Create the Function User Interface Component
     RoundedCornerLineBorderPtr FunctionComponentPanelBorder = RoundedCornerLineBorder::create();
     beginEditCP(FunctionComponentPanelBorder, RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
@@ -291,6 +298,7 @@ int main(int argc, char **argv)
 		ExampleFunctionComponentPanel->getChildren().push_back(ExampleFunctionComponent);
 		
 	    ExampleFunctionComponentPanel->setAllInsets(5.0);
+	    ExampleFunctionComponentPanel->setBackgrounds(FunctionComponentPanelBackground);
 
     endEditCP(ExampleFunctionComponentPanel, FunctionComponentPanel::PreferredSizeFieldMask | FunctionComponentPanel::BordersFieldMask | FunctionComponentPanel::ChildrenFieldMask | FunctionComponentPanel::MiniMapSizeFieldMask);
 	

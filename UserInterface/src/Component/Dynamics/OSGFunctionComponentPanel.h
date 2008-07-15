@@ -180,8 +180,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 	//MouseWheelListenerPtr _MouseWheelListener;
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
 	void drawMiniMap(const GraphicsPtr Graphics, const Pnt3f& TopLeft, const Pnt3f BottomRight) const;
-	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
     
+    void setupCursor(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

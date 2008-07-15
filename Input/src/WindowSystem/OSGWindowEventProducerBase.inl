@@ -112,6 +112,13 @@ SFImagePtr *WindowEventProducerBase::getSFIcon(void)
     return &_sfIcon;
 }
 
+//! Get the WindowEventProducer::_sfLockCursor field.
+inline
+SFBool *WindowEventProducerBase::getSFLockCursor(void)
+{
+    return &_sfLockCursor;
+}
+
 
 //! Get the value of the WindowEventProducer::_sfWindow field.
 inline
@@ -237,6 +244,27 @@ inline
 void WindowEventProducerBase::setIcon(const ImagePtr &value)
 {
     _sfIcon.setValue(value);
+}
+
+//! Get the value of the WindowEventProducer::_sfLockCursor field.
+inline
+bool &WindowEventProducerBase::getLockCursor(void)
+{
+    return _sfLockCursor.getValue();
+}
+
+//! Get the value of the WindowEventProducer::_sfLockCursor field.
+inline
+const bool &WindowEventProducerBase::getLockCursor(void) const
+{
+    return _sfLockCursor.getValue();
+}
+
+//! Set the value of the WindowEventProducer::_sfLockCursor field.
+inline
+void WindowEventProducerBase::setLockCursor(const bool &value)
+{
+    _sfLockCursor.setValue(value);
 }
 
 

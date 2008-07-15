@@ -164,6 +164,7 @@ LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd, UINT uMsg,
                 pfd.cDepthBits = 32;
                 pfd.iLayerType = PFD_MAIN_PLANE;
                 pfd.cStencilBits = 8;
+                pfd.cAlphaBits = 8;
                 
 
                // init the OSG window  
@@ -202,10 +203,9 @@ void Win32WindowEventProducer::putClipboard(const std::string Value)
 			if(hglbCopy != NULL)
 			{
 				LPTSTR  lptstrCopy;
-				//lptstrCopy = GlobalLock(hglbCopy); 
-				//memcpy(lptstrCopy, &pbox->atchLabel[ich1],  cch * sizeof(TCHAR)); 
-				//lptstrCopy[Value.size()] = (char) 0;    // null character 
-				//GlobalUnlock(hglbCopy);
+                void * buf = ::GlobalLock(hglbCopy);
+                ::memcpy(buf, (const void *)Value.c_str(), Value.length()+1);
+                ::GlobalUnlock(hglbCopy);
 				SetClipboardData(CF_TEXT, hglbCopy);
 			}
 		}
