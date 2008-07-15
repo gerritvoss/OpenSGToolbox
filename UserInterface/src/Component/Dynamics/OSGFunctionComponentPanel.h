@@ -150,11 +150,33 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 		
 		void detach(void);
 	};
+	
+	class ComponentResizeListener : public MouseAdapter,public KeyAdapter,public MouseMotionAdapter
+	{
+	public :
+		ComponentResizeListener(FunctionComponentPanelPtr TheFunctionComponentPanel);
+		
+		virtual void mouseReleased(const MouseEvent& e);
+		virtual void mouseDragged(const MouseEvent& e);
+		virtual void keyPressed(const KeyEvent& e);
+		
+		void setActiveComponent(UInt32 Index);
+		void setInitialPosition(Pnt2f InitialPosition);
+	protected :
+		FunctionComponentPanelPtr _FunctionComponentPanel;
+		UInt32 _ActiveComponent;
+		Pnt2f _InitialPosition;
+		Pnt2f _InitialComponentPosition;
+		Vec2f _InitialComponentSize;
+		
+		void detach(void);
+	};
 
 	friend class ComponentMoveListener;
 
 	ComponentMoveListener _ComponentMoveListener;
 	ComponentPanelMoveListener _ComponentPanelMoveListener;
+	ComponentResizeListener _ComponentResizeListener;
 	//MouseWheelListenerPtr _MouseWheelListener;
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
 	void drawMiniMap(const GraphicsPtr Graphics, const Pnt3f& TopLeft, const Pnt3f BottomRight) const;

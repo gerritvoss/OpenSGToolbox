@@ -177,26 +177,26 @@ void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 
 	if(_drawComponentResizeSquares)
 	{
-		Pnt2f _ResizableComponentTopLeft, _ResizableComponentBottomRight;
-		_ResizableComponentTopLeft = _ResizableComponent->getPosition();
-		_ResizableComponentBottomRight = _ResizableComponentTopLeft + _ResizableComponent->getSize();
-		Pnt2f ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight, BoxSize;
-		ResizableComponentTopRight = _ResizableComponentTopLeft + Pnt2f((_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x()), 0.0f);
-		ResizableComponentBottomLeft = _ResizableComponentTopLeft + Pnt2f(0.0f, (_ResizableComponentBottomRight.y() - _ResizableComponentTopLeft.y()));
-		ResizableComponentTop = _ResizableComponentTopLeft + Pnt2f((_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x()) / 2, 0.0f);
-		ResizableComponentBottom = _ResizableComponentTopLeft + Pnt2f((_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x()) / 2, (_ResizableComponentBottomRight.y() - _ResizableComponentTopLeft.y()));
-		ResizableComponentLeft = _ResizableComponentTopLeft + Pnt2f(0.0f, (_ResizableComponentBottomRight.y() - _ResizableComponentTopLeft.y()) / 2);
-		ResizableComponentRight = _ResizableComponentTopLeft + Pnt2f((_ResizableComponentBottomRight.x() - _ResizableComponentTopLeft.x()), (_ResizableComponentBottomRight.y() - _ResizableComponentTopLeft.y()) / 2);
-		BoxSize = Pnt2f(getResizeTabsSize());
+		Pnt2f ResizableComponentTopLeft, ResizableComponentBottomRight, ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
+		ResizableComponentTopLeft = getZoom() * (_ResizableComponent->getPosition());
+		ResizableComponentBottomRight = ResizableComponentTopLeft + getZoom() * (_ResizableComponent->getSize());
+		ResizableComponentTopRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), 0.0f));
+		ResizableComponentBottomLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+		ResizableComponentTop = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, 0.0f));
+		ResizableComponentBottom = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+		ResizableComponentLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
+		ResizableComponentRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
 		
-		Graphics->drawRect(_ResizableComponentTopLeft - BoxSize, _ResizableComponentTopLeft + BoxSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(_ResizableComponentBottomRight - BoxSize, _ResizableComponentBottomRight + BoxSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentTopRight - BoxSize, ResizableComponentTopRight + BoxSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentBottomLeft - BoxSize, ResizableComponentBottomLeft + BoxSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentTop - BoxSize, ResizableComponentTop + BoxSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentBottom - BoxSize, ResizableComponentBottom + BoxSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentLeft - BoxSize, ResizableComponentLeft + BoxSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentRight - BoxSize, ResizableComponentRight + BoxSize, getResizeTabsColor(), 1.0);
+		Vec2f TabSize = getResizeTabsSize() * getZoom();
+		
+		Graphics->drawRect(ResizableComponentTopLeft - TabSize, ResizableComponentTopLeft + TabSize, getResizeTabsColor(), 1.0);
+		Graphics->drawRect(ResizableComponentBottomRight - TabSize, ResizableComponentBottomRight + TabSize, getResizeTabsColor(), 1.0);
+		Graphics->drawRect(ResizableComponentTopRight - TabSize, ResizableComponentTopRight + TabSize, getResizeTabsColor(), 1.0);
+		Graphics->drawRect(ResizableComponentBottomLeft - TabSize, ResizableComponentBottomLeft + TabSize, getResizeTabsColor(), 1.0);
+		Graphics->drawRect(ResizableComponentTop - TabSize, ResizableComponentTop + TabSize, getResizeTabsColor(), 1.0);
+		Graphics->drawRect(ResizableComponentBottom - TabSize, ResizableComponentBottom + TabSize, getResizeTabsColor(), 1.0);
+		Graphics->drawRect(ResizableComponentLeft - TabSize, ResizableComponentLeft + TabSize, getResizeTabsColor(), 1.0);
+		Graphics->drawRect(ResizableComponentRight - TabSize, ResizableComponentRight + TabSize, getResizeTabsColor(), 1.0);
 	}
 }
 
@@ -204,6 +204,21 @@ void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f
 {
 	//Drawing Minimap
 	Graphics->drawRect(TopLeft, BottomRight, Color4f(0.75f, 0.75f, 1.0f, 1.0f), 0.5);
+	
+	//Draw rectangle if zoomed in
+	if (getZoom() != 1.0)
+	{
+		Pnt2f AreaViewedTopLeft, AreaViewedBottomRight, AreaViewedTopRight, AreaViewedBottomLeft;
+		AreaViewedTopLeft = Pnt2f(TopLeft + getClipTopLeft() * getMiniMapSize());
+		AreaViewedBottomRight = AreaViewedTopLeft + Pnt2f((BottomRight.x() - TopLeft.x()) / getZoom(), ((BottomRight.y() - TopLeft.y()) / getZoom()));
+		AreaViewedTopRight = AreaViewedTopLeft + Pnt2f((AreaViewedBottomRight.x() - AreaViewedTopLeft.x()), 0.0f);
+		AreaViewedBottomLeft = AreaViewedTopLeft + Pnt2f(0.0f, (AreaViewedBottomRight.y() - AreaViewedTopLeft.y()));
+		
+		Graphics->drawLine(AreaViewedTopLeft, AreaViewedTopRight, 1.0, Color4f(0.0f, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawLine(AreaViewedTopRight, AreaViewedBottomRight, 1.0, Color4f(0.0f, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawLine(AreaViewedBottomLeft, AreaViewedBottomRight, 1.0, Color4f(0.0f, 0.0f, 0.0f, 1.0f), 1.0);
+		Graphics->drawLine(AreaViewedTopLeft, AreaViewedBottomLeft, 1.0, Color4f(0.0f, 0.0f, 0.0f, 1.0f), 1.0);
+	}
 	
 	//Get bounds of function component panel
 	Pnt2f PanelTopLeft, PanelBottomRight;
@@ -301,7 +316,8 @@ void FunctionComponentPanel::mouseWheelMoved(const MouseWheelEvent& e)
 FunctionComponentPanel::FunctionComponentPanel(void) :
     Inherited(),
         _ComponentMoveListener(FunctionComponentPanelPtr(this)),
-        _ComponentPanelMoveListener(FunctionComponentPanelPtr(this))
+        _ComponentPanelMoveListener(FunctionComponentPanelPtr(this)),
+		_ComponentResizeListener(FunctionComponentPanelPtr(this))
 {
 	
 }
@@ -309,7 +325,8 @@ FunctionComponentPanel::FunctionComponentPanel(void) :
 FunctionComponentPanel::FunctionComponentPanel(const FunctionComponentPanel &source) :
     Inherited(source),
         _ComponentMoveListener(FunctionComponentPanelPtr(this)),
-		_ComponentPanelMoveListener(FunctionComponentPanelPtr(this))
+		_ComponentPanelMoveListener(FunctionComponentPanelPtr(this)),
+		_ComponentResizeListener(FunctionComponentPanelPtr(this))
 {
 
 }
@@ -412,8 +429,8 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 		bool isContained(false);
 		for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
 		{
-			if(_FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true) || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() + _FunctionComponentPanel->getResizeAreaOfEffectOffset(), true)
-			   || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - _FunctionComponentPanel->getResizeAreaOfEffectOffset(), true))
+			if(_FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true) || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() + _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true)
+			   || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true))
 			{
 				isContained = true;
 				_FunctionComponentPanel->_ResizableComponent = _FunctionComponentPanel->getChildren()[i];
@@ -435,16 +452,15 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 	{
 		if(_FunctionComponentPanel->getParentWindow() != NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()!=NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 		{
-			
-			bool isContained(false);
 			for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
 			{
-				if(_FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true) || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() + Pnt2f(4.0f, 4.0f), true)
-				   || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - Pnt2f(4.0f, 4.0f), true))
+				if(_FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true) || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() + _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true)
+				   || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true))
 				{
-					isContained = true;
 					_FunctionComponentPanel->_ResizableComponent = _FunctionComponentPanel->getChildren()[i];
+					i = -1;
 				}
+				
 				else
 				{
 					_FunctionComponentPanel->_drawComponentResizeSquares = false;
@@ -463,7 +479,62 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 
 void FunctionComponentPanel::ComponentPanelMoveListener::mouseDragged(const MouseEvent& e)
 {
-	
+/*
+	if(_drawComponentResizeSquares && _ResizableComponent != NullFC && _FunctionComponentPanel != NullFC)
+	{
+		Pnt2f ResizableComponentTopLeft, ResizableComponentBottomRight, ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
+		ResizableComponentTopLeft = _FunctionComponentPanel->getZoom() * (_ResizableComponent->getPosition());
+		ResizableComponentBottomRight = ResizableComponentTopLeft + _FunctionComponentPanel->getZoom() * (_ResizableComponent->getSize());
+		ResizableComponentTopRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), 0.0f));
+		ResizableComponentBottomLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+		ResizableComponentTop = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, 0.0f));
+		ResizableComponentBottom = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+		ResizableComponentLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
+		ResizableComponentRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
+		
+		Vec2f TabSize = _FunctionComponentPanel->getResizeTabsSize() * _FunctionComponentPanel->getZoom();
+		
+		if((e.getLocation() >= (ResizableComponentBottom - TabSize)) && (e.getLocation() <= (ResizableComponentBottom + TabSize)))
+		{
+			//Set new size
+			beginEditCP(_ResizableComponent, FunctionComponentPanel::ChildrenPositionsFieldMask);	
+				_ResizableComponent->setSize();
+			endEditCP(_ResizableComponent, FunctionComponentPanel::ChildrenPositionsFieldMask);
+		}
+	}
+	if(_FunctionComponentPanel != NullFC)
+	{
+		//Move the Position of the Component based on the mouse position and it's initial position
+		Pnt2f InitialPositionsDifference = Pnt2f(_InitialComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
+		Pnt2f AbsolutePosition = Pnt2f(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()) + InitialPositionsDifference);
+		Pnt2f NewPosition = AbsolutePosition;
+		
+		//Test AbsolutePosition to make sure Component is inside parent container
+		Pnt2f AbsolutePositionBottomRight, ContainerTopLeft, ContainerBottomRight;
+		AbsolutePositionBottomRight = AbsolutePosition + _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize();
+		_FunctionComponentPanel->getInsideInsetsBounds(ContainerTopLeft, ContainerBottomRight);
+		if(AbsolutePosition.x() < ContainerTopLeft.x())
+		{
+			NewPosition[0] = ContainerTopLeft.x();
+		}
+		if(AbsolutePosition.y() < ContainerTopLeft.y())
+		{
+			NewPosition[1] = ContainerTopLeft.y();
+		}
+		if(AbsolutePositionBottomRight.x() > ContainerBottomRight.x())
+		{
+			NewPosition[0] = ContainerBottomRight.x() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().x();
+		}
+		if(AbsolutePositionBottomRight.y() > ContainerBottomRight.y())
+		{
+			NewPosition[1] = ContainerBottomRight.y() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().y();
+		}
+		
+		//Set new position
+		beginEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask);	
+			_FunctionComponentPanel->getChildrenPositions()[_ActiveComponent].setValue(NewPosition);
+		endEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask);
+	}*/
 	//Inherited::mouseDragged(e);
 }
 
@@ -564,6 +635,51 @@ void FunctionComponentPanel::ComponentMoveListener::setActiveComponent(UInt32 In
 {
 	_ActiveComponent = Index;
     _InitialComponentPosition = _FunctionComponentPanel->getChildrenPositions()[_ActiveComponent];
+}
+
+
+
+
+void FunctionComponentPanel::ComponentResizeListener::keyPressed(const KeyEvent& e)
+{
+	if(e.getKey() == KeyEvent::KEY_ESCAPE)
+	{
+		detach();
+		
+		//Set the Active Component's size and position back to it's initial size and position
+		beginEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);	
+			_FunctionComponentPanel->getChildrenPositions()[_ActiveComponent].setValue(_InitialComponentPosition);
+			_FunctionComponentPanel->getChildrenSizes()[_ActiveComponent].setValue(_InitialComponentSize);
+		endEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);
+
+	}
+}
+
+void FunctionComponentPanel::ComponentResizeListener::mouseReleased(const MouseEvent& e)
+{
+	detach();
+}
+
+void FunctionComponentPanel::ComponentResizeListener::mouseDragged(const MouseEvent& e)
+{
+    
+}
+
+void FunctionComponentPanel::ComponentResizeListener::detach(void)
+{
+    if(_FunctionComponentPanel->getParentWindow() != NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface() != NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+		_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+		_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    }
+}
+
+void FunctionComponentPanel::ComponentResizeListener::setActiveComponent(UInt32 Index)
+{
+	_ActiveComponent = Index;
+    _InitialComponentPosition = _FunctionComponentPanel->getChildrenPositions()[_ActiveComponent];
+	_InitialComponentSize = _FunctionComponentPanel->getChildrenSizes()[_ActiveComponent];
 }
 
 /*------------------------------------------------------------------------*/
