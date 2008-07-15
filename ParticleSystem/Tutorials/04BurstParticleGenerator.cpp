@@ -46,7 +46,7 @@ FunctionPtr createLifespanDistribution(void);
 FunctionPtr createVelocityDistribution(void);
 FunctionPtr createAccelerationDistribution(void);
 
-//Create a Rate Particle Generator
+//Create a Burst Particle Generator
 	BurstParticleGeneratorPtr ExampleBurstGenerator;
 
 ParticleSystemPtr ExampleParticleSystem;

@@ -20,6 +20,8 @@
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
 
+#include <OpenSG/OSGSceneFileHandler.h>
+
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -182,8 +184,8 @@ int main(int argc, char **argv)
 	}
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
-	NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
-
+	//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
+	NodePtr ParticlePrototypeNode = SceneFileHandler::the().read("Data/rocket.obj");
 	//Particle System Node
     NodeParticleSystemCorePtr NodeParticleNodeCore = osg::NodeParticleSystemCore::create();
     beginEditCP(NodeParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);

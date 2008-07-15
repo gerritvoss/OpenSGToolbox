@@ -99,7 +99,7 @@ glBegin(GL_QUADS);
 		Pnt3f Position = System->getPosition(i);
 
 		//Determine the Width and Height of the quad
-		Real32 Width = System->getSize(i).x(),Height =System->getSize(i).y();
+		Real32 Width = System->getSize(i).x()*getQuadSizeScaling().x(),Height =System->getSize(i).y()*getQuadSizeScaling().y();
 
 		//Calculate Quads positions
 		P1 = Position + (Width/2.0f)*Binormal + (Height/2.0f)*Up;
