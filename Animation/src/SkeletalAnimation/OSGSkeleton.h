@@ -78,6 +78,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    void skeletonUpdated(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

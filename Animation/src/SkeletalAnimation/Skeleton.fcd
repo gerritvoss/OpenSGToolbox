@@ -20,4 +20,13 @@
 		header="SkeletalAnimation/OSGBoneFields.h"
 	>
 	</Field>
+	<Field
+		name="AttachedGeometries"
+		type="SkeletonBlendedGeometryPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="SkeletalAnimation/OSGSkeletonBlendedGeometryFields.h"
+	>
+	</Field>
 </FieldContainer>

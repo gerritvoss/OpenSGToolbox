@@ -44,4 +44,13 @@
 		access="protected"
 	>
 	</Field>
+	<Field
+		name="Skeletons"
+		type="SkeletonPtr"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+		header="OSGSkeletonFields.h"
+	>
+	</Field>
 </FieldContainer>

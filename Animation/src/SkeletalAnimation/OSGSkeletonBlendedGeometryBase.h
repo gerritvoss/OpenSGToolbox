@@ -71,6 +71,7 @@
 #include "SkeletalAnimation/OSGBoneFields.h" // Bones type
 #include <OpenSG/OSGUInt32Fields.h> // PositionIndexes type
 #include <OpenSG/OSGReal32Fields.h> // BlendAmounts type
+#include "OSGSkeletonFields.h" // Skeletons type
 
 #include "OSGSkeletonBlendedGeometryFields.h"
 
@@ -98,13 +99,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
         BonesFieldId           = BaseGeometryFieldId    + 1,
         PositionIndexesFieldId = BonesFieldId           + 1,
         BlendAmountsFieldId    = PositionIndexesFieldId + 1,
-        NextFieldId            = BlendAmountsFieldId    + 1
+        SkeletonsFieldId       = BlendAmountsFieldId    + 1,
+        NextFieldId            = SkeletonsFieldId       + 1
     };
 
-    static const OSG::BitVector BaseGeometryFieldMask;     //Field Masks
+    static const OSG::BitVector BaseGeometryFieldMask;
     static const OSG::BitVector BonesFieldMask;
     static const OSG::BitVector PositionIndexesFieldMask;
     static const OSG::BitVector BlendAmountsFieldMask;
+    static const OSG::BitVector SkeletonsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -188,6 +191,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     MFBonePtr           _mfBones;
     MFUInt32            _mfPositionIndexes;
     MFReal32            _mfBlendAmounts;
+    MFSkeletonPtr       _mfSkeletons;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -212,6 +216,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
            MFBonePtr           *getMFBones          (void);
            MFUInt32            *getMFPositionIndexes(void);
            MFReal32            *getMFBlendAmounts   (void);
+           MFSkeletonPtr       *getMFSkeletons      (void);
 
            BonePtr             &getBones          (UInt32 index);
            MFBonePtr           &getBones          (void);
@@ -222,6 +227,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
            Real32              &getBlendAmounts   (UInt32 index);
            MFReal32            &getBlendAmounts   (void);
      const MFReal32            &getBlendAmounts   (void) const;
+           SkeletonPtr         &getSkeletons      (UInt32 index);
+           MFSkeletonPtr       &getSkeletons      (void);
+     const MFSkeletonPtr       &getSkeletons      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

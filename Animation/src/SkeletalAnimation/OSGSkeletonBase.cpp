@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  SkeletonBase::RootBonesFieldMask = 
     (TypeTraits<BitVector>::One << SkeletonBase::RootBonesFieldId);
 
+const OSG::BitVector  SkeletonBase::AttachedGeometriesFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonBase::AttachedGeometriesFieldId);
+
 const OSG::BitVector SkeletonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector SkeletonBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var BonePtr         SkeletonBase::_mfRootBones
+    
+*/
+/*! \var SkeletonBlendedGeometryPtr SkeletonBase::_mfAttachedGeometries
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *SkeletonBase::_desc[] =
                      "RootBones", 
                      RootBonesFieldId, RootBonesFieldMask,
                      false,
-                     (FieldAccessMethod) &SkeletonBase::getMFRootBones)
+                     (FieldAccessMethod) &SkeletonBase::getMFRootBones),
+    new FieldDescription(MFSkeletonBlendedGeometryPtr::getClassType(), 
+                     "AttachedGeometries", 
+                     AttachedGeometriesFieldId, AttachedGeometriesFieldMask,
+                     false,
+                     (FieldAccessMethod) &SkeletonBase::getMFAttachedGeometries)
 };
 
 
@@ -153,6 +164,7 @@ void SkeletonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     Inherited::onDestroyAspect(uiId, uiAspect);
 
     _mfRootBones.terminateShare(uiAspect, this->getContainerSize());
+    _mfAttachedGeometries.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -164,6 +176,7 @@ void SkeletonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 SkeletonBase::SkeletonBase(void) :
     _mfRootBones              (), 
+    _mfAttachedGeometries     (), 
     Inherited() 
 {
 }
@@ -174,6 +187,7 @@ SkeletonBase::SkeletonBase(void) :
 
 SkeletonBase::SkeletonBase(const SkeletonBase &source) :
     _mfRootBones              (source._mfRootBones              ), 
+    _mfAttachedGeometries     (source._mfAttachedGeometries     ), 
     Inherited                 (source)
 {
 }
@@ -195,6 +209,11 @@ UInt32 SkeletonBase::getBinSize(const BitVector &whichField)
         returnValue += _mfRootBones.getBinSize();
     }
 
+    if(FieldBits::NoField != (AttachedGeometriesFieldMask & whichField))
+    {
+        returnValue += _mfAttachedGeometries.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +226,11 @@ void SkeletonBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (RootBonesFieldMask & whichField))
     {
         _mfRootBones.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AttachedGeometriesFieldMask & whichField))
+    {
+        _mfAttachedGeometries.copyToBin(pMem);
     }
 
 
@@ -222,6 +246,11 @@ void SkeletonBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfRootBones.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (AttachedGeometriesFieldMask & whichField))
+    {
+        _mfAttachedGeometries.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +263,9 @@ void SkeletonBase::executeSyncImpl(      SkeletonBase *pOther,
 
     if(FieldBits::NoField != (RootBonesFieldMask & whichField))
         _mfRootBones.syncWith(pOther->_mfRootBones);
+
+    if(FieldBits::NoField != (AttachedGeometriesFieldMask & whichField))
+        _mfAttachedGeometries.syncWith(pOther->_mfAttachedGeometries);
 
 
 }
@@ -249,6 +281,9 @@ void SkeletonBase::executeSyncImpl(      SkeletonBase *pOther,
     if(FieldBits::NoField != (RootBonesFieldMask & whichField))
         _mfRootBones.syncWith(pOther->_mfRootBones, sInfo);
 
+    if(FieldBits::NoField != (AttachedGeometriesFieldMask & whichField))
+        _mfAttachedGeometries.syncWith(pOther->_mfAttachedGeometries, sInfo);
+
 
 }
 
@@ -260,6 +295,9 @@ void SkeletonBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (RootBonesFieldMask & whichField))
         _mfRootBones.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (AttachedGeometriesFieldMask & whichField))
+        _mfAttachedGeometries.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

@@ -50,6 +50,7 @@
 #include "OSGSkeletonAnimation.h"
 
 #include "OSGBone.h"
+#include "OSGSkeleton.h"
 #include "Animators/OSGKeyframeAnimator.h"
 #include "KeyframeSequence/OSGKeyframeSequenceQuaternion.h"
 #include "KeyframeSequence/OSGKeyframeSequenceReal32.h"
@@ -107,7 +108,6 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 	}
 
 
-//TODO: Implement
 //==================================================================================================================
 //Apply all of the Length Animators
 //==================================================================================================================
@@ -155,6 +155,11 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 		  osg::endEditNotChangedCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(TranslationFieldId)->getFieldMask());
 	   }
 	}
+
+    if(getSkeleton() != NullFC)
+    {
+        getSkeleton()->skeletonUpdated();
+    }
 	return false;
 }
 //===============================================================================================================

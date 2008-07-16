@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSkeleton.h"
+#include "OSGSkeletonBlendedGeometry.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,6 +76,15 @@ void Skeleton::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void Skeleton::skeletonUpdated(void)
+{
+    //Tell all attached Blended Geometry that the skeleton has been updated
+    for(UInt32 i(0) ; i<getAttachedGeometries().size() ; ++i)
+    {
+        getAttachedGeometries(i)->skeletonUpdated();
+    }
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

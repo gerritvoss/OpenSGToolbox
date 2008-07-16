@@ -103,6 +103,13 @@ MFBonePtr *SkeletonBase::getMFRootBones(void)
     return &_mfRootBones;
 }
 
+//! Get the Skeleton::_mfAttachedGeometries field.
+inline
+MFSkeletonBlendedGeometryPtr *SkeletonBase::getMFAttachedGeometries(void)
+{
+    return &_mfAttachedGeometries;
+}
+
 
 
 //! Get the value of the \a index element the Skeleton::_mfRootBones field.
@@ -124,6 +131,27 @@ inline
 const MFBonePtr &SkeletonBase::getRootBones(void) const
 {
     return _mfRootBones;
+}
+
+//! Get the value of the \a index element the Skeleton::_mfAttachedGeometries field.
+inline
+SkeletonBlendedGeometryPtr &SkeletonBase::getAttachedGeometries(const UInt32 index)
+{
+    return _mfAttachedGeometries[index];
+}
+
+//! Get the Skeleton::_mfAttachedGeometries field.
+inline
+MFSkeletonBlendedGeometryPtr &SkeletonBase::getAttachedGeometries(void)
+{
+    return _mfAttachedGeometries;
+}
+
+//! Get the Skeleton::_mfAttachedGeometries field.
+inline
+const MFSkeletonBlendedGeometryPtr &SkeletonBase::getAttachedGeometries(void) const
+{
+    return _mfAttachedGeometries;
 }
 
 OSG_END_NAMESPACE

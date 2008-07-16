@@ -68,6 +68,7 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include "SkeletalAnimation/OSGBoneFields.h" // RootBones type
+#include "SkeletalAnimation/OSGSkeletonBlendedGeometryFields.h" // AttachedGeometries type
 
 #include "OSGSkeletonFields.h"
 
@@ -91,11 +92,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
 
     enum
     {
-        RootBonesFieldId = Inherited::NextFieldId,
-        NextFieldId      = RootBonesFieldId + 1
+        RootBonesFieldId          = Inherited::NextFieldId,
+        AttachedGeometriesFieldId = RootBonesFieldId          + 1,
+        NextFieldId               = AttachedGeometriesFieldId + 1
     };
 
     static const OSG::BitVector RootBonesFieldMask;
+    static const OSG::BitVector AttachedGeometriesFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,10 +126,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
     /*! \{                                                                 */
 
            MFBonePtr           *getMFRootBones      (void);
+           MFSkeletonBlendedGeometryPtr *getMFAttachedGeometries(void);
 
            BonePtr             &getRootBones      (const UInt32 index);
            MFBonePtr           &getRootBones      (void);
      const MFBonePtr           &getRootBones      (void) const;
+           SkeletonBlendedGeometryPtr &getAttachedGeometries(const UInt32 index);
+           MFSkeletonBlendedGeometryPtr &getAttachedGeometries(void);
+     const MFSkeletonBlendedGeometryPtr &getAttachedGeometries(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
     /*! \{                                                                 */
 
     MFBonePtr           _mfRootBones;
+    MFSkeletonBlendedGeometryPtr   _mfAttachedGeometries;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

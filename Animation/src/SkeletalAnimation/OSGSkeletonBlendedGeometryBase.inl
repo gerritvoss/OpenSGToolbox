@@ -124,6 +124,13 @@ MFReal32 *SkeletonBlendedGeometryBase::getMFBlendAmounts(void)
     return &_mfBlendAmounts;
 }
 
+//! Get the SkeletonBlendedGeometry::_mfSkeletons field.
+inline
+MFSkeletonPtr *SkeletonBlendedGeometryBase::getMFSkeletons(void)
+{
+    return &_mfSkeletons;
+}
+
 
 //! Get the value of the SkeletonBlendedGeometry::_sfBaseGeometry field.
 inline
@@ -208,6 +215,27 @@ inline
 const MFReal32 &SkeletonBlendedGeometryBase::getBlendAmounts(void) const
 {
     return _mfBlendAmounts;
+}
+
+//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfSkeletons field.
+inline
+SkeletonPtr &SkeletonBlendedGeometryBase::getSkeletons(const UInt32 index)
+{
+    return _mfSkeletons[index];
+}
+
+//! Get the SkeletonBlendedGeometry::_mfSkeletons field.
+inline
+MFSkeletonPtr &SkeletonBlendedGeometryBase::getSkeletons(void)
+{
+    return _mfSkeletons;
+}
+
+//! Get the SkeletonBlendedGeometry::_mfSkeletons field.
+inline
+const MFSkeletonPtr &SkeletonBlendedGeometryBase::getSkeletons(void) const
+{
+    return _mfSkeletons;
 }
 
 OSG_END_NAMESPACE

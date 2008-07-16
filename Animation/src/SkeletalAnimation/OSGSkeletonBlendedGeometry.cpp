@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSkeletonBlendedGeometry.h"
+#include "OSGSkeleton.h"
 #include "OSGBone.h"
 
 OSG_BEGIN_NAMESPACE
@@ -77,6 +78,57 @@ void SkeletonBlendedGeometry::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void SkeletonBlendedGeometry::addSkeleton(SkeletonPtr TheSkeleton)
+{
+    if(TheSkeleton != NullFC && getSkeletons().find(TheSkeleton) != getSkeletons().end())
+    {
+        beginEditCP(TheSkeleton, Skeleton::AttachedGeometriesFieldMask);
+            TheSkeleton->getAttachedGeometries().push_back(SkeletonBlendedGeometryPtr(this));
+        endEditCP(TheSkeleton, Skeleton::AttachedGeometriesFieldMask);
+
+        
+        beginEditCP(SkeletonBlendedGeometryPtr(this), SkeletonsFieldMask);
+            getSkeletons().push_back(TheSkeleton);
+        endEditCP(SkeletonBlendedGeometryPtr(this), SkeletonsFieldMask);
+    }
+}
+
+void SkeletonBlendedGeometry::subSkeleton(SkeletonPtr TheSkeleton)
+{
+    if(TheSkeleton != NullFC)
+    {
+        MFSkeletonPtr::iterator SearchItor(getSkeletons().find(TheSkeleton));
+        if(SearchItor != getSkeletons().end())
+        {
+            MFSkeletonBlendedGeometryPtr::iterator GeoSearchItor((*SearchItor)->getAttachedGeometries().find(SkeletonBlendedGeometryPtr(this)));
+            if(GeoSearchItor != (*SearchItor)->getAttachedGeometries().end())
+            {
+                beginEditCP((*SearchItor), Skeleton::AttachedGeometriesFieldMask);
+                    (*SearchItor)->getAttachedGeometries().erase(GeoSearchItor);
+                endEditCP((*SearchItor), Skeleton::AttachedGeometriesFieldMask);
+            }
+
+            
+            beginEditCP(SkeletonBlendedGeometryPtr(this), SkeletonsFieldMask);
+                getSkeletons().erase(SearchItor);
+            endEditCP(SkeletonBlendedGeometryPtr(this), SkeletonsFieldMask);
+        }
+    }
+}
+
+UInt32 SkeletonBlendedGeometry::numSkeletons(void) const
+{
+    return getSkeletons().size();
+}
+
+void SkeletonBlendedGeometry::subSkeleton(UInt32 Index)
+{
+    if(Index < getSkeletons().size())
+    {
+        subSkeleton(getSkeletons(Index));
+    }
+}
+
 void SkeletonBlendedGeometry::addBoneBlending(const UInt32& PositionIndex, const BonePtr TheBone, const Real32& BlendAmount)
 {
 	beginEditCP(SkeletonBlendedGeometryPtr(this), BonesFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask);
@@ -95,7 +147,7 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 		getPositionIndexes().size() == getBones().size() == getBlendAmounts().size())
 	{
 		
-		PositionTrans.resize(getBaseGeometry()->getPositions()->size());
+		PositionTrans.resize(getPositions()->size());
 		//UInt32 VertexesTransformations[n];
 		for(UInt32 i(0) ; i<getPositionIndexes().size() ; ++i)
 		{
@@ -107,21 +159,16 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 
 		}
 		//Update the Positions and Normals
-		setPositions(GeoPositionsPtr::dcast(getBaseGeometry()->getPositions()->shallowCopy()));
-		setNormals(GeoNormalsPtr::dcast(getBaseGeometry()->getNormals()->shallowCopy())); 
-
-
-
 		Pnt3f CalculatedPoint;
 		Vec3f CalculatedVector;
 		for(UInt32 i(0) ; i<getPositions()->size() ; ++i)
 		{
 			//get's the Positions
-			PositionTrans[i].multFullMatrixPnt(getPositions()->getValue(i), CalculatedPoint);
+			PositionTrans[i].multFullMatrixPnt(getBaseGeometry()->getPositions()->getValue(i), CalculatedPoint);
 			getPositions()->setValue(CalculatedPoint, i);   //P[i]
 
 			//get's the Normals
-			PositionTrans[i].multMatrixVec(getNormals()-> getValue(i),CalculatedVector);
+			PositionTrans[i].multMatrixVec(getBaseGeometry()->getNormals()-> getValue(i),CalculatedVector);
 			getNormals()->setValue(CalculatedVector,i);
 	
 		}
@@ -131,6 +178,11 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 		//Error
 	}
 
+}
+
+void SkeletonBlendedGeometry::skeletonUpdated(void)
+{
+    calculatePositions();
 }
 
 /*-------------------------------------------------------------------------*\
@@ -166,12 +218,100 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 		calculatePositions();
 	}
 	if((whichField & BaseGeometryFieldMask) &&
-		getBaseGeometry() != Null)
+		getBaseGeometry() != NullFC)
 	{
-		if()
+		if(getBaseGeometry()->getTypes() != NullFC)
 		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TypesFieldMask);
+                setTypes(getBaseGeometry()->getTypes());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TypesFieldMask);
 		}
-	}
+		if(getBaseGeometry()->getLengths() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::LengthsFieldMask);
+                setLengths(getBaseGeometry()->getLengths());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::LengthsFieldMask);
+		}
+		if(getBaseGeometry()->getPositions() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::PositionsFieldMask);
+                setPositions(getBaseGeometry()->getPositions());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::PositionsFieldMask);
+		}
+		if(getBaseGeometry()->getNormals() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::NormalsFieldMask);
+                setNormals(getBaseGeometry()->getNormals());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::NormalsFieldMask);
+		}
+		if(getBaseGeometry()->getColors() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::ColorsFieldMask);
+                setColors(getBaseGeometry()->getColors());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::ColorsFieldMask);
+		}
+		if(getBaseGeometry()->getSecondaryColors() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::SecondaryColorsFieldMask);
+                setSecondaryColors(getBaseGeometry()->getSecondaryColors());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::SecondaryColorsFieldMask);
+		}
+		if(getBaseGeometry()->getTexCoords() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoordsFieldMask);
+                setTexCoords(getBaseGeometry()->getTexCoords());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoordsFieldMask);
+		}
+		if(getBaseGeometry()->getTexCoords1() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords1FieldMask);
+                setTexCoords1(getBaseGeometry()->getTexCoords1());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords1FieldMask);
+		}
+		if(getBaseGeometry()->getTexCoords2() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords2FieldMask);
+                setTexCoords2(getBaseGeometry()->getTexCoords2());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords2FieldMask);
+		}
+		if(getBaseGeometry()->getTexCoords3() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords3FieldMask);
+                setTexCoords3(getBaseGeometry()->getTexCoords3());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords3FieldMask);
+		}
+		if(getBaseGeometry()->getTexCoords4() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords4FieldMask);
+                setTexCoords4(getBaseGeometry()->getTexCoords4());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords4FieldMask);
+		}
+		if(getBaseGeometry()->getTexCoords5() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords5FieldMask);
+                setTexCoords5(getBaseGeometry()->getTexCoords5());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords5FieldMask);
+		}
+		if(getBaseGeometry()->getTexCoords6() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords6FieldMask);
+                setTexCoords6(getBaseGeometry()->getTexCoords6());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords6FieldMask);
+		}
+		if(getBaseGeometry()->getTexCoords7() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords7FieldMask);
+                setTexCoords7(getBaseGeometry()->getTexCoords7());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords7FieldMask);
+		}
+        beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::HighindicesFieldMask | Geometry::LowindicesFieldMask | Geometry::MaxindexFieldMask | Geometry::MinindexFieldMask | Geometry::IndexMappingFieldMask);
+            getIndexMapping().setValues(getBaseGeometry()->getIndexMapping());
+	        setMinindex(getBaseGeometry()->getMinindex());
+	        setMaxindex(getBaseGeometry()->getMaxindex());
+	        getLowindices().setValues(getBaseGeometry()->getLowindices());
+	        getHighindices().setValues(getBaseGeometry()->getHighindices());
+	    endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::HighindicesFieldMask | Geometry::LowindicesFieldMask | Geometry::MaxindexFieldMask | Geometry::MinindexFieldMask | Geometry::IndexMappingFieldMask);
+    }
 }
 
 void SkeletonBlendedGeometry::dump(      UInt32    , 
