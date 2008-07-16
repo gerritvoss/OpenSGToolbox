@@ -318,7 +318,10 @@ int main(int argc, char **argv)
 	//Particle System Node
 		//Rocket
 	//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
+//	NodePtr FireballPrototypeNode = makeSphere(4, 1.0f);
+
 	NodePtr RocketParticlePrototypeNode = SceneFileHandler::the().read("Data/rocket.obj");
+	
 
     NodeParticleSystemCorePtr RocketParticleNodeCore = osg::NodeParticleSystemCore::create();
     beginEditCP(RocketParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
@@ -340,36 +343,39 @@ int main(int argc, char **argv)
 	beginEditCP(SmokeGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 		SmokeGenerator->setPositionFunction(createSmokePositionDistribution());
 		SmokeGenerator->setLifespanFunction(createSmokeLifespanDistribution());
-		SmokeGenerator->setGenerationRate(10.0);
+		SmokeGenerator->setGenerationRate(30.0);
 		SmokeGenerator->setVelocityFunction(createSmokeVelocityDistribution());
 	endEditCP(SmokeGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 			//Attach the function objects the Affectors
 	SmokeAgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
 	beginEditCP(SmokeAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
-		SmokeAgeFadeParticleAffector->setFadeInTime(1.0f);
-		SmokeAgeFadeParticleAffector->setFadeOutTime(1.0f);
+		SmokeAgeFadeParticleAffector->setFadeInTime(2.0f);
+		SmokeAgeFadeParticleAffector->setFadeOutTime(5.0f);
 		SmokeAgeFadeParticleAffector->setStartAlpha(0.0f);
-		SmokeAgeFadeParticleAffector->setFadeToAlpha(0.5f);
-		SmokeAgeFadeParticleAffector->setEndAlpha(1.0f);	
+		SmokeAgeFadeParticleAffector->setFadeToAlpha(1.0f);
+		SmokeAgeFadeParticleAffector->setEndAlpha(0.0f);	
 	endEditCP(SmokeAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 
 	SmokeAgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
 	beginEditCP(SmokeAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
 			//ages
-			SmokeAgeSizeParticleAffector->getAges().push_back(0.05);
+			SmokeAgeSizeParticleAffector->getAges().push_back(0.1);
 			SmokeAgeSizeParticleAffector->getAges().push_back(0.2);
-			/*SmokeAgeSizeParticleAffector->getAges().push_back(0.36);
+			SmokeAgeSizeParticleAffector->getAges().push_back(0.3);
+			SmokeAgeSizeParticleAffector->getAges().push_back(0.5);
 			SmokeAgeSizeParticleAffector->getAges().push_back(0.7);
 			SmokeAgeSizeParticleAffector->getAges().push_back(0.8);
-			SmokeAgeSizeParticleAffector->getAges().push_back(1.1);
+			SmokeAgeSizeParticleAffector->getAges().push_back(1.0);
 
 			//sizes
-			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,0.5,1.0));
-			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,0.5,3.0));
-			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(3.0,3.0,3.0));
-			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.0,6.0,6.0));*/
-			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,3.0,1.0));
+			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(0.5,0.5,0.5));
 			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,1.0,1.0));
+			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,2.0,2.0));
+			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(3.0,3.0,3.0));
+			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(4.0,4.0,4.0));
+			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
+			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
+			
 	endEditCP(SmokeAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
    
 	ParticleSystemCorePtr SmokeParticleNodeCore = osg::ParticleSystemCore::create();
@@ -422,7 +428,7 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         //scene->addChild(ParticleNode);
-		scene->addChild(SmokeParticleNode);
+		//scene->addChild(SmokeParticleNode);
 		scene->addChild(ShrapnelParticleNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
@@ -536,7 +542,6 @@ FunctionPtr createSmokeLifespanDistribution(void)
 
 FunctionPtr createSmokeVelocityDistribution(void)
 {
-
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
