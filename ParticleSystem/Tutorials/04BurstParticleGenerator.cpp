@@ -372,13 +372,12 @@ FunctionPtr createLifespanDistribution(void)
 
 FunctionPtr createAccelerationDistribution(void)
 {
-	Pnt3f pt1 = (0.0,-30.0,0.0);
 
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
-      TheLineDistribution->setPoint1(pt1);
-	  TheLineDistribution->setPoint2(pt1);
+      TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,-3.0));
+	  TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,-3.0));
     endEditCP(TheLineDistribution);
 
 	DataConverterPtr TheVec3fConverter = DataConverter::create();

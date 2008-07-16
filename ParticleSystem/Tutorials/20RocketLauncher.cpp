@@ -536,15 +536,12 @@ FunctionPtr createSmokeLifespanDistribution(void)
 
 FunctionPtr createSmokeVelocityDistribution(void)
 {
-   Pnt3f pt1 = (0.0,0.0,1.0);
-   Pnt3f pt2 = (0.0,0.0,3.0);
-   Pnt3f pt3 = (0.0,5.0,0.0);
 
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
- 		TheLineDistribution->setPoint1(pt1);
-		TheLineDistribution->setPoint2(pt3);
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,1.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,3.0));
     endEditCP(TheLineDistribution);
 
 	DataConverterPtr TheVec3fConverter = DataConverter::create();
@@ -562,13 +559,12 @@ FunctionPtr createSmokeVelocityDistribution(void)
 }
 FunctionPtr createShrapnelAccelerationDistribution(void)
 {
-	Pnt3f pt1 = (0.0,-30.0,0.0);
 
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
-      TheLineDistribution->setPoint1(pt1);
-	  TheLineDistribution->setPoint2(pt1);
+      TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,-3.0));
+	  TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,-3.0));
     endEditCP(TheLineDistribution);
 
 	DataConverterPtr TheVec3fConverter = DataConverter::create();
