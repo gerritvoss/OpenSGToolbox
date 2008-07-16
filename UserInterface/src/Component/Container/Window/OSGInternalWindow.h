@@ -293,6 +293,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	friend class IconifyButtonListener;
 
 	IconifyButtonListener _IconifyButtonListener;
+	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

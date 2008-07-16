@@ -317,14 +317,17 @@ void ScrollBar::setMajorAxisScrollBarPosition(const Pnt2f& Pos)
 
 void ScrollBar::mouseWheelMoved(const MouseWheelEvent& e)
 {
-    if(e.getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
-    {
-        scrollBlock(-e.getScrollAmount());
-    }
-    else if(e.getScrollType() == MouseWheelEvent::UNIT_SCROLL)
-    {
-        scrollUnit(-e.getUnitsToScroll());
-    }
+	if(getEnabled())
+	{
+		if(e.getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
+		{
+			scrollBlock(-e.getScrollAmount());
+		}
+		else if(e.getScrollType() == MouseWheelEvent::UNIT_SCROLL)
+		{
+			scrollUnit(-e.getUnitsToScroll());
+		}
+	}
     Container::mouseWheelMoved(e);
 }
 
@@ -597,17 +600,23 @@ void ScrollBar::BoundedRangeModelChangeListener::stateChanged(const ChangeEvent&
 
 void ScrollBar::MinButtonActionListener::actionPerformed(const ActionEvent& e)
 {
-    _ScrollBar->scrollUnit(-1);
+	if(_ScrollBar->getEnabled())
+	{
+		_ScrollBar->scrollUnit(-1);
+	}
 }
 
 void ScrollBar::MaxButtonActionListener::actionPerformed(const ActionEvent& e)
 {
-    _ScrollBar->scrollUnit(1);
+	if(_ScrollBar->getEnabled())
+	{
+		_ScrollBar->scrollUnit(1);
+	}
 }
 
 void ScrollBar::ScrollBarListener::mousePressed(const MouseEvent& e)
 {
-	if(e.getButton() == e.BUTTON1)
+	if(_ScrollBar->getEnabled() && e.getButton() == e.BUTTON1)
 	{
         _ScrollBar->_ScrollBarDraggedListener.setInitialMousePosition(ViewportToComponent(e.getLocation(), _ScrollBar, e.getViewport()));
         _ScrollBar->_ScrollBarDraggedListener.setInitialScrollBarPosition(_ScrollBar->getScrollBar()->getPosition());
@@ -636,23 +645,26 @@ void ScrollBar::ScrollBarDraggedListener::mouseDragged(const MouseEvent& e)
 
 void ScrollBar::ScrollFieldListener::actionPerformed(const ActionEvent& e)
 {
-	UInt32 AxisIndex(0);
-    if(_ScrollBar->getOrientation() == ScrollBar::HORIZONTAL_ORIENTATION ) AxisIndex = 0;
-    else  AxisIndex = 1;
+	if(_ScrollBar->getEnabled())
+	{
+		UInt32 AxisIndex(0);
+		if(_ScrollBar->getOrientation() == ScrollBar::HORIZONTAL_ORIENTATION ) AxisIndex = 0;
+		else  AxisIndex = 1;
 
-    Pnt2f ComponentMousePosition(DrawingSurfaceToComponent(_ScrollBar->getParentWindow()->getDrawingSurface()->getMousePosition(), _ScrollBar));
-    //Is Mouse Major axis on the min or max side of the scroll bar
-    if(ComponentMousePosition[AxisIndex] < _ScrollBar->getScrollBar()->getPosition()[AxisIndex])
-    {
-        //Move the Bounded range model one block in the Min direction
-        _ScrollBar->scrollBlock(-1);
-    }
-    else if(ComponentMousePosition[AxisIndex] > 
-        (_ScrollBar->getScrollBar()->getPosition()[AxisIndex] + _ScrollBar->getScrollBar()->getSize()[AxisIndex]))
-    {
-        //Move the Bounded range model one block in the Max direction
-        _ScrollBar->scrollBlock(1);
-    }
+		Pnt2f ComponentMousePosition(DrawingSurfaceToComponent(_ScrollBar->getParentWindow()->getDrawingSurface()->getMousePosition(), _ScrollBar));
+		//Is Mouse Major axis on the min or max side of the scroll bar
+		if(ComponentMousePosition[AxisIndex] < _ScrollBar->getScrollBar()->getPosition()[AxisIndex])
+		{
+			//Move the Bounded range model one block in the Min direction
+			_ScrollBar->scrollBlock(-1);
+		}
+		else if(ComponentMousePosition[AxisIndex] > 
+			(_ScrollBar->getScrollBar()->getPosition()[AxisIndex] + _ScrollBar->getScrollBar()->getSize()[AxisIndex]))
+		{
+			//Move the Bounded range model one block in the Max direction
+			_ScrollBar->scrollBlock(1);
+		}
+	}
 }
 
 /*------------------------------------------------------------------------*/

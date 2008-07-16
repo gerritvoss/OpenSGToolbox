@@ -382,7 +382,10 @@ void InternalWindow::mouseExited(const MouseEvent& e)
     }
     if(!getLockInput())
     {
-		//getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+		if(getDrawingSurface() != NullFC && getDrawingSurface()->getEventProducer() != NullFC)
+		{
+			getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+		}
         Container::mouseExited(e);
     }
 }
@@ -648,41 +651,49 @@ void InternalWindow::mouseMoved(const MouseEvent& e)
     }
     if(!getLockInput())
     {
-		//Check if the Mouse is whithin the resize border width
-		if(getResizable())
-		{
-			/*WindowArea TheArea(getCursurArea(e.getLocation()));
-			switch(TheArea)
-			{
-			case WINDOW_LEFT_BORDER:
-			case WINDOW_RIGHT_BORDER:
-				getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
-				break;
-
-			case WINDOW_TOP_BORDER:
-			case WINDOW_BOTTOM_BORDER:
-				getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_N_TO_S);
-				break;
-				
-			case WINDOW_TOP_LEFT_BORDER:
-			case WINDOW_BOTTOM_RIGHT_BORDER:
-				getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_NW_TO_SE);
-				break;
-				
-			case WINDOW_TOP_RIGHT_BORDER:
-			case WINDOW_BOTTOM_LEFT_BORDER:
-				getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_SW_TO_NE);
-				break;
-
-			case WINDOW_OUTSIDE:
-			case WINDOW_MAIN_PANEL:
-			case WINDOW_TITLE_BAR:
-				getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
-				break;
-			}*/
-		}
         Container::mouseMoved(e);
     }
+}
+
+UInt32 InternalWindow::queryCursor(const Pnt2f& CursorLoc) const
+{
+    if(!getLockInput() && getResizable())
+    {
+		//Check if the Mouse is whithin the resize border width
+		WindowArea TheArea(getCursurArea(CursorLoc));
+		switch(TheArea)
+		{
+		case WINDOW_LEFT_BORDER:
+		case WINDOW_RIGHT_BORDER:
+			return WindowEventProducer::CURSOR_RESIZE_W_TO_E;
+			break;
+
+		case WINDOW_TOP_BORDER:
+		case WINDOW_BOTTOM_BORDER:
+			return WindowEventProducer::CURSOR_RESIZE_N_TO_S;
+			break;
+			
+		case WINDOW_TOP_LEFT_BORDER:
+		case WINDOW_BOTTOM_RIGHT_BORDER:
+			return WindowEventProducer::CURSOR_RESIZE_NW_TO_SE;
+			break;
+			
+		case WINDOW_TOP_RIGHT_BORDER:
+		case WINDOW_BOTTOM_LEFT_BORDER:
+			return WindowEventProducer::CURSOR_RESIZE_SW_TO_NE;
+			break;
+
+		case WINDOW_OUTSIDE:
+		case WINDOW_MAIN_PANEL:
+		case WINDOW_TITLE_BAR:
+			return WindowEventProducer::CURSOR_POINTER;
+			break;
+		}
+    }
+	else 
+	{
+		return Inherited::queryCursor(CursorLoc);
+	}
 }
 
 void InternalWindow::mouseDragged(const MouseEvent& e)

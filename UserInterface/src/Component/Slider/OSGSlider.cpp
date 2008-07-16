@@ -625,6 +625,7 @@ void Slider::KnobDraggedListener::mouseDragged(const MouseEvent& e)
 void Slider::KnobDraggedListener::mousePressed(const MouseEvent& e)
 {
     if(e.getButton() == e.BUTTON1 &&
+		_Slider->getEnabled() &&
        _Slider->getParentWindow() != NullFC &&
        _Slider->getParentWindow()->getDrawingSurface() != NullFC &&
        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)

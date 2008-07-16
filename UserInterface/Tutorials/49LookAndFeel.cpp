@@ -1626,7 +1626,145 @@ PanelPtr StatePanelCreator::createWindowPanel(void)
 
 PanelPtr StatePanelCreator::createAdvancedPanel(void)
 {
+    GridBagLayoutPtr AdvancedPanelLayout = osg::GridBagLayout::create();
+    beginEditCP(AdvancedPanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask  | Component::ConstraintsFieldMask);
+        AdvancedPanelLayout->setRows(6);
+        AdvancedPanelLayout->setColumns(3);
+    endEditCP(AdvancedPanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask  | Component::ConstraintsFieldMask);
     
+    /******************************************************
+                            Row0
+    ******************************************************/
+    GridBagLayoutConstraintsPtr Constraint0000 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0100 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0200 = osg::GridBagLayoutConstraints::create();
+
+    beginEditCP(Constraint0000, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0000->setGridX(0);
+        Constraint0000->setGridY(0);
+    endEditCP(Constraint0000, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0100, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0100->setGridX(1);
+        Constraint0100->setGridY(0);
+    endEditCP(Constraint0100, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0200, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0200->setGridX(2);
+        Constraint0200->setGridY(0);
+    endEditCP(Constraint0200, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+	
+    /******************************************************
+                            Row1
+    ******************************************************/
+    GridBagLayoutConstraintsPtr Constraint0001 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0101 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0201 = osg::GridBagLayoutConstraints::create();
+
+    beginEditCP(Constraint0001, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0001->setGridX(0);
+        Constraint0001->setGridY(1);
+    endEditCP(Constraint0001, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0101, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0101->setGridX(1);
+        Constraint0101->setGridY(1);
+    endEditCP(Constraint0101, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0201, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0201->setGridX(2);
+        Constraint0201->setGridY(1);
+    endEditCP(Constraint0201, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+
+    /******************************************************
+                            Row2
+    ******************************************************/
+    GridBagLayoutConstraintsPtr Constraint0002 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0102 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0202 = osg::GridBagLayoutConstraints::create();
+
+    beginEditCP(Constraint0002, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0002->setGridX(0);
+        Constraint0002->setGridY(2);
+    endEditCP(Constraint0002, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0102, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0102->setGridX(1);
+        Constraint0102->setGridY(2);
+    endEditCP(Constraint0102, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0202, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0202->setGridX(2);
+        Constraint0202->setGridY(2);
+    endEditCP(Constraint0202, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+
+	
+    /******************************************************
+                            Row3
+    ******************************************************/
+    GridBagLayoutConstraintsPtr Constraint0003 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0103 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0203 = osg::GridBagLayoutConstraints::create();
+
+    beginEditCP(Constraint0003, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0003->setGridX(0);
+        Constraint0003->setGridY(3);
+    endEditCP(Constraint0003, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0103, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0103->setGridX(1);
+        Constraint0103->setGridY(3);
+    endEditCP(Constraint0103, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0203, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0203->setGridX(2);
+        Constraint0203->setGridY(3);
+    endEditCP(Constraint0203, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+	
+    /******************************************************
+                            Row4
+    ******************************************************/
+    GridBagLayoutConstraintsPtr Constraint0004 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0104 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0204 = osg::GridBagLayoutConstraints::create();
+
+    beginEditCP(Constraint0004, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0004->setGridX(0);
+        Constraint0004->setGridY(4);
+    endEditCP(Constraint0004, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0104, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0104->setGridX(1);
+        Constraint0104->setGridY(4);
+    endEditCP(Constraint0104, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0204, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0204->setGridX(2);
+        Constraint0204->setGridY(4);
+    endEditCP(Constraint0204, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+	
+    /******************************************************
+                            Row5
+    ******************************************************/
+    GridBagLayoutConstraintsPtr Constraint0005 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0105 = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr Constraint0205 = osg::GridBagLayoutConstraints::create();
+
+    beginEditCP(Constraint0005, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0005->setGridX(0);
+        Constraint0005->setGridY(5);
+    endEditCP(Constraint0005, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0105, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0105->setGridX(1);
+        Constraint0105->setGridY(5);
+    endEditCP(Constraint0105, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    
+    beginEditCP(Constraint0205, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        Constraint0205->setGridX(2);
+        Constraint0205->setGridY(5);
+    endEditCP(Constraint0205, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+
     //Progress Bar
     _ProgressBarBoundedRangeModel.setMinimum(0);
     _ProgressBarBoundedRangeModel.setMaximum(100);
@@ -1644,8 +1782,16 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
         ExampleProgressBar->setIndeterminate(false);
         ExampleProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
 		ExampleProgressBar->setProgressString("Loading...");
+        ExampleProgressBar->setConstraints(Constraint0101);
+        ExampleProgressBar->setMaxSize(ExampleProgressBar->getPreferredSize());
     endEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
 
+
+	ProgressBarPtr DisabledProgressBar = ProgressBar::Ptr::dcast(ExampleProgressBar->shallowCopy());
+	beginEditCP(DisabledProgressBar, ProgressBar::EnabledFieldMask | ProgressBar::ConstraintsFieldMask);
+        DisabledProgressBar->setConstraints(Constraint0201);
+        DisabledProgressBar->setEnabled(false);
+	endEditCP(DisabledProgressBar, ProgressBar::EnabledFieldMask | ProgressBar::ConstraintsFieldMask);
 
     //Scrollbars
     _ScrollBarBoundedRangeModel.setMinimum(10);
@@ -1661,15 +1807,31 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
         ExampleVerticalScrollBar->setEnabled(false);
         ExampleVerticalScrollBar->setUnitIncrement(10);
         ExampleVerticalScrollBar->setBlockIncrement(100);
+        ExampleVerticalScrollBar->setConstraints(Constraint0102);
+        ExampleVerticalScrollBar->setMaxSize(ExampleVerticalScrollBar->getPreferredSize());
     endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
     ExampleVerticalScrollBar->setModel(&_ScrollBarBoundedRangeModel);
+	
+	ScrollBarPtr DisabledVerticalScrollBar = ScrollBar::Ptr::dcast(ExampleVerticalScrollBar->shallowCopy());
+	beginEditCP(DisabledVerticalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
+        DisabledVerticalScrollBar->setConstraints(Constraint0202);
+        DisabledVerticalScrollBar->setEnabled(false);
+	endEditCP(DisabledVerticalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
 
     ScrollBarPtr ExampleHorizontalScrollBar = ScrollBar::create();
     beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
         ExampleHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
         ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
+        ExampleHorizontalScrollBar->setConstraints(Constraint0103);
+        ExampleHorizontalScrollBar->setMaxSize(ExampleHorizontalScrollBar->getPreferredSize());
     endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
     ExampleHorizontalScrollBar->setModel(&_ScrollBarBoundedRangeModel);
+	
+	ScrollBarPtr DisabledHorizontalScrollBar = ScrollBar::Ptr::dcast(ExampleHorizontalScrollBar->shallowCopy());
+	beginEditCP(DisabledHorizontalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
+        DisabledHorizontalScrollBar->setConstraints(Constraint0203);
+        DisabledHorizontalScrollBar->setEnabled(false);
+	endEditCP(DisabledHorizontalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
 
     //The Slider
     _SliderBoundedRangeModel.setMinimum(10);
@@ -1701,8 +1863,16 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
         TheSliderVertical->setOrientation(Slider::VERTICAL_ORIENTATION);
         TheSliderVertical->setInverted(true);
         TheSliderVertical->setDrawLabels(true);
+        TheSliderVertical->setConstraints(Constraint0104);
+        TheSliderVertical->setMaxSize(TheSliderVertical->getPreferredSize());
     endEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
     TheSliderVertical->setModel(&_SliderBoundedRangeModel);
+	
+	SliderPtr DisabledVerticalSlider = Slider::Ptr::dcast(TheSliderVertical->shallowCopy());
+	beginEditCP(DisabledVerticalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
+        DisabledVerticalSlider->setConstraints(Constraint0204);
+        DisabledVerticalSlider->setEnabled(false);
+	endEditCP(DisabledVerticalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
     
     SliderPtr TheSliderHorizontal = Slider::create();
     beginEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
@@ -1713,19 +1883,95 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
         TheSliderHorizontal->setOrientation(Slider::HORIZONTAL_ORIENTATION);
         TheSliderHorizontal->setInverted(false);
         TheSliderHorizontal->setDrawLabels(true);
+        TheSliderHorizontal->setConstraints(Constraint0105);
+        TheSliderHorizontal->setMaxSize(TheSliderHorizontal->getPreferredSize());
     endEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
     TheSliderHorizontal->setModel(&_SliderBoundedRangeModel);
+	
+	SliderPtr DisabledHorizontalSlider = Slider::Ptr::dcast(TheSliderHorizontal->shallowCopy());
+	beginEditCP(DisabledHorizontalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
+        DisabledHorizontalSlider->setConstraints(Constraint0205);
+        DisabledHorizontalSlider->setEnabled(false);
+	endEditCP(DisabledHorizontalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
+
+	//Labels
+    LabelPtr labelEnabled = osg::Label::create();
+    beginEditCP(labelEnabled, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+        labelEnabled->setText("Enabled");
+        labelEnabled->setConstraints(Constraint0100);
+        labelEnabled->setBackground(NullFC);
+        labelEnabled->setBorder(NullFC);
+    endEditCP(labelEnabled, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+	
+    LabelPtr labelDisabled = osg::Label::create();
+    beginEditCP(labelDisabled, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+        labelDisabled->setText("Disabled");
+        labelDisabled->setConstraints(Constraint0200);
+        labelDisabled->setBackground(NullFC);
+        labelDisabled->setBorder(NullFC);
+    endEditCP(labelDisabled, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+
+    LabelPtr labelProgressBar = osg::Label::create();
+    beginEditCP(labelProgressBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+        labelProgressBar->setText("Progress Bars");
+        labelProgressBar->setConstraints(Constraint0001);
+        labelProgressBar->setBackground(NullFC);
+        labelProgressBar->setBorder(NullFC);
+    endEditCP(labelProgressBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+	
+    LabelPtr labelVerticalScrolBar = osg::Label::create();
+    beginEditCP(labelVerticalScrolBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+        labelVerticalScrolBar->setText("Vertical Scroll Bars");
+        labelVerticalScrolBar->setConstraints(Constraint0002);
+        labelVerticalScrolBar->setBackground(NullFC);
+        labelVerticalScrolBar->setBorder(NullFC);
+    endEditCP(labelVerticalScrolBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+	
+    LabelPtr labelHorizontalScrolBar = osg::Label::create();
+    beginEditCP(labelHorizontalScrolBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+        labelHorizontalScrolBar->setText("Horizontal Scroll Bars");
+        labelHorizontalScrolBar->setConstraints(Constraint0003);
+        labelHorizontalScrolBar->setBackground(NullFC);
+        labelHorizontalScrolBar->setBorder(NullFC);
+    endEditCP(labelHorizontalScrolBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+	
+    LabelPtr labelVerticalSlider = osg::Label::create();
+    beginEditCP(labelVerticalSlider, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+        labelVerticalSlider->setText("Vertical Slider");
+        labelVerticalSlider->setConstraints(Constraint0004);
+        labelVerticalSlider->setBackground(NullFC);
+        labelVerticalSlider->setBorder(NullFC);
+    endEditCP(labelVerticalSlider, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+	
+    LabelPtr labelHorizontalSlider = osg::Label::create();
+    beginEditCP(labelHorizontalSlider, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+        labelHorizontalSlider->setText("Horizontal Slider");
+        labelHorizontalSlider->setConstraints(Constraint0005);
+        labelHorizontalSlider->setBackground(NullFC);
+        labelHorizontalSlider->setBorder(NullFC);
+    endEditCP(labelHorizontalSlider, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
 
     //The Panel
     PanelPtr AdvancedPanel = Panel::create();
-    FlowLayoutPtr AdvancedPanelLayout = FlowLayout::create();
 
     beginEditCP(AdvancedPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
+        AdvancedPanel->getChildren().push_back(labelEnabled);
+        AdvancedPanel->getChildren().push_back(labelDisabled);
+        AdvancedPanel->getChildren().push_back(labelProgressBar);
+        AdvancedPanel->getChildren().push_back(labelVerticalScrolBar);
+        AdvancedPanel->getChildren().push_back(labelHorizontalScrolBar);
+        AdvancedPanel->getChildren().push_back(labelVerticalSlider);
+        AdvancedPanel->getChildren().push_back(labelHorizontalSlider);
         AdvancedPanel->getChildren().push_back(ExampleProgressBar);
         AdvancedPanel->getChildren().push_back(ExampleVerticalScrollBar);
         AdvancedPanel->getChildren().push_back(ExampleHorizontalScrollBar);
         AdvancedPanel->getChildren().push_back(TheSliderVertical);
         AdvancedPanel->getChildren().push_back(TheSliderHorizontal);
+        AdvancedPanel->getChildren().push_back(DisabledProgressBar);
+        AdvancedPanel->getChildren().push_back(DisabledVerticalScrollBar);
+        AdvancedPanel->getChildren().push_back(DisabledHorizontalScrollBar);
+        AdvancedPanel->getChildren().push_back(DisabledVerticalSlider);
+        AdvancedPanel->getChildren().push_back(DisabledHorizontalSlider);
         AdvancedPanel->setLayout(AdvancedPanelLayout);
         AdvancedPanel->setPreferredSize(Vec2f(500,800));
     endEditCP(AdvancedPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
