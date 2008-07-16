@@ -403,7 +403,7 @@
 		D4BE3F830CF0D12B0046BAE7 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		D4BE40010CF0D56B0046BAE7 /* 03DefaultWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 03DefaultWindow.cpp; path = ../../Tutorials/03DefaultWindow.cpp; sourceTree = SOURCE_ROOT; };
 		D4BE40040CF0D5930046BAE7 /* libOSGInputD.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInputD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4BE41080CF0D7A50046BAE7 /* 03DefaultWindowD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 03DefaultWindowD; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4BE41080CF0D7A50046BAE7 /* 03DefaultWindowD */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = 03DefaultWindowD; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4DD00950CF0CC3900F00431 /* libOSGInputD.a */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGInputD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
