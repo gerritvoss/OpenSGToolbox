@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Real32ConstantFunction"
+	parent="Function"
+	library="Dynamics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+An Real32ConstantFunction.
+	<Field
+		name="Value"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

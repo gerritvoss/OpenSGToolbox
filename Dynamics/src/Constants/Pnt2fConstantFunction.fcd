@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Pnt2fConstantFunction"
+	parent="Function"
+	library="Dynamics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+An Real32ConstantFunction.
+	<Field
+		name="Value"
+		type="Pnt2f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0f,0.0f"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
