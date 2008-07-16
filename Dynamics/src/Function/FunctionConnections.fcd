@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FunctionConnections"
+	parent="AttachmentContainer"
+	library="Dynamics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Function Connection Hierarchy.
+	<Field
+		name="FunctionOutputs"
+		type="FunctionPtr"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+		header="OSGFunctionFields.h"
+	>
+	</Field>
+	<Field
+		name="FunctionInputs"
+		type="FunctionPtr"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+		header="OSGFunctionFields.h"
+	>
+	</Field>
+	<Field
+		name="FunctionOutputIndex"
+		type="UInt32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>    
+	<Field
+		name="FunctionInputIndex"
+		type="UInt32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+</FieldContainer>

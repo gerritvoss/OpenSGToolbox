@@ -273,6 +273,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Function\OSGFunctionConnections.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionConnections.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionConnections.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionConnectionsBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionConnectionsBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionConnectionsBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionConnectionsFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Function\OSGFunctionFactory.cpp"
 					>
 				</File>
