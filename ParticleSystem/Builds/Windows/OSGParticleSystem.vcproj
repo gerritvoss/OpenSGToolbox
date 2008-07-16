@@ -888,6 +888,38 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Dynamics"
+					>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Dynamics\OSGParticleDistribution3D.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Dynamics\OSGParticleDistribution3D.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Dynamics\OSGParticleDistribution3D.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Dynamics\OSGParticleDistribution3DBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Dynamics\OSGParticleDistribution3DBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Dynamics\OSGParticleDistribution3DBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Dynamics\OSGParticleDistribution3DFields.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>
