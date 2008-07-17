@@ -62,16 +62,20 @@ void reshape(Vec2f Size);
 PointParticleSystemDrawerPtr ExampleRocketParticleSystemDrawer;
 QuadParticleSystemDrawerPtr SmokeParticleSystemDrawer;
 PointParticleSystemDrawerPtr ExampleShrapnelParticleSystemDrawer;
+PointParticleSystemDrawerPtr ExampleFireballParticleSystemDrawer;
 
 ParticleSystemPtr RocketParticleSystem;
 ParticleSystemPtr SmokeParticleSystem;
 ParticleSystemPtr ShrapnelParticleSystem;
+ParticleSystemPtr FireballParticleSystem;
 
 BurstParticleGeneratorPtr ShrapnelBurstGenerator;
 RateParticleGeneratorPtr SmokeGenerator;
+BurstParticleGeneratorPtr FireballGenerator;
 
 AgeFadeParticleAffectorPtr SmokeAgeFadeParticleAffector;
 AgeSizeParticleAffectorPtr SmokeAgeSizeParticleAffector;
+AgeSizeParticleAffectorPtr FireballAgeSizeParticleAffector;
 ParticleSystemCorePtr PointParticleNodeCore;
 
 FunctionPtr createPositionDistribution(void);
@@ -82,6 +86,9 @@ FunctionPtr createSmokePositionDistribution(void);
 FunctionPtr createShrapnelPositionDistribution(void);
 FunctionPtr createShrapnelAccelerationDistribution(void);
 FunctionPtr createShrapnelVelocityDistribution(void);
+FunctionPtr createFireballVelocityDistribution(void);
+FunctionPtr createFireballPositionDistribution(void);
+FunctionPtr createFireballAccelerationDistribution(void);
 
 
 
@@ -110,6 +117,12 @@ public:
 					SmokeParticleSystem->getAffectors().push_back(SmokeAgeFadeParticleAffector);
 					SmokeParticleSystem->getAffectors().push_back(SmokeAgeSizeParticleAffector);
 				endEditCP(SmokeParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+		
+		//Attach the Affector to the Smoke Particle System
+				beginEditCP(FireballParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+					FireballParticleSystem->getGenerators().push_back(FireballGenerator);
+					FireballParticleSystem->getAffectors().push_back(FireballAgeSizeParticleAffector);
+				endEditCP(FireballParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 
 	   }
    }
@@ -300,6 +313,10 @@ int main(int argc, char **argv)
 		//Shrapnel
 	ShrapnelParticleSystem = osg::ParticleSystem::create();
 	ShrapnelParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+		//Fireball
+	FireballParticleSystem = osg::ParticleSystem::create();
+	FireballParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+
 
 
 	//Particle System Drawer
@@ -312,17 +329,17 @@ int main(int argc, char **argv)
 		//Shrapnel
 	ExampleShrapnelParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
     ExampleShrapnelParticleSystemDrawer->setForcePerParticleSizing(true);
+		//Fireball
+	ExampleFireballParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+    ExampleFireballParticleSystemDrawer->setForcePerParticleSizing(true);
 
 		
 	
 	//Particle System Node
-		//Rocket
-	//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
-//	NodePtr FireballPrototypeNode = makeSphere(4, 1.0f);
-
+	
+		//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
 	NodePtr RocketParticlePrototypeNode = SceneFileHandler::the().read("Data/rocket.obj");
 	
-
     NodeParticleSystemCorePtr RocketParticleNodeCore = osg::NodeParticleSystemCore::create();
     beginEditCP(RocketParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 		RocketParticleNodeCore->setSystem(RocketParticleSystem);
@@ -375,7 +392,6 @@ int main(int argc, char **argv)
 			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(4.0,4.0,4.0));
 			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
 			SmokeAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
-			
 	endEditCP(SmokeAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
    
 	ParticleSystemCorePtr SmokeParticleNodeCore = osg::ParticleSystemCore::create();
@@ -389,6 +405,7 @@ int main(int argc, char **argv)
     beginEditCP(SmokeParticleNode, Node::CoreFieldMask);
         SmokeParticleNode->setCore(SmokeParticleNodeCore);
     endEditCP(SmokeParticleNode, Node::CoreFieldMask);
+		//end/////////////////////
 
 		//Shrapnel
 	ShrapnelBurstGenerator = osg::BurstParticleGenerator::create();
@@ -398,9 +415,6 @@ int main(int argc, char **argv)
     beginEditCP(ShrapnelParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 		ShrapnelParticleNodeCore->setSystem(ShrapnelParticleSystem);
 		ShrapnelParticleNodeCore->setPrototypeNode(ShrapnelParticlePrototypeNode);
-       // ShrapnelParticleNodeCore->setNormalSource(NodeParticleSystemCore::NORMAL_VELOCITY);
-       // ShrapnelParticleNodeCore->setUpSource(NodeParticleSystemCore::UP_STATIC);
-       // ShrapnelParticleNodeCore->setUp(Vec3f(0.0f,1.0f,0.0f));
     endEditCP(ShrapnelParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 			
 			//Attach the function objects to the Generator
@@ -416,11 +430,52 @@ int main(int argc, char **argv)
     beginEditCP(ShrapnelParticleNode, Node::CoreFieldMask);
         ShrapnelParticleNode->setCore(ShrapnelParticleNodeCore);
     endEditCP(ShrapnelParticleNode, Node::CoreFieldMask);
-	
-	
-	
-/////////////////////////
-	//NodePtr RocketNode = SceneFileHandler::the().read("Data/rocket.obj");
+		//end/////////////////////
+
+		//fireball
+	FireballGenerator = osg::BurstParticleGenerator::create();
+	NodePtr FireballParticlePrototypeNode = SceneFileHandler::the().read("Data/fireball.obj");
+
+	NodeParticleSystemCorePtr FireballParticleNodeCore = osg::NodeParticleSystemCore::create();
+    beginEditCP(FireballParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
+		FireballParticleNodeCore->setSystem(FireballParticleSystem);
+		FireballParticleNodeCore->setPrototypeNode(FireballParticlePrototypeNode);
+	 endEditCP(FireballParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
+			//Attach the function objects to the Generator
+	beginEditCP(FireballGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		FireballGenerator->setPositionFunction(createFireballPositionDistribution());
+		FireballGenerator->setLifespanFunction(createSmokeLifespanDistribution());
+		FireballGenerator->setBurstAmount(100.0);
+		FireballGenerator->setVelocityFunction(createFireballVelocityDistribution());
+		FireballGenerator->setAccelerationFunction(createFireballAccelerationDistribution());
+	endEditCP(FireballGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+			//Attach the function objects the Affectors
+	FireballAgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
+	beginEditCP(FireballAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+			//ages
+			FireballAgeSizeParticleAffector->getAges().push_back(0.1);
+			FireballAgeSizeParticleAffector->getAges().push_back(0.2);
+			FireballAgeSizeParticleAffector->getAges().push_back(0.3);
+			FireballAgeSizeParticleAffector->getAges().push_back(0.5);
+			FireballAgeSizeParticleAffector->getAges().push_back(0.7);
+			FireballAgeSizeParticleAffector->getAges().push_back(0.8);
+			FireballAgeSizeParticleAffector->getAges().push_back(1.0);
+
+			//sizes
+			FireballAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,2.0,2.0));
+			FireballAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.3,2.3,2.3));
+			FireballAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.5,2.5,2.5));
+			FireballAgeSizeParticleAffector->getSizes().push_back(Vec3f(3.0,3.0,3.0));
+			FireballAgeSizeParticleAffector->getSizes().push_back(Vec3f(4.0,4.0,4.0));
+			FireballAgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
+			FireballAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
+	endEditCP(FireballAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+   
+	NodePtr FireballParticleNode = osg::Node::create();
+    beginEditCP(FireballParticleNode, Node::CoreFieldMask);
+        FireballParticleNode->setCore(FireballParticleNodeCore);
+    endEditCP(FireballParticleNode, Node::CoreFieldMask);
+		//end/////////////////////
 
 
     // Make Main Scene Node 
@@ -428,8 +483,9 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         //scene->addChild(ParticleNode);
-		//scene->addChild(SmokeParticleNode);
-		scene->addChild(ShrapnelParticleNode);
+		scene->addChild(SmokeParticleNode);
+		//scene->addChild(ShrapnelParticleNode);
+		scene->addChild(FireballParticleNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
@@ -484,23 +540,7 @@ FunctionPtr createPositionDistribution(void)
     return TheCylinderDistribution;
 }
 
-FunctionPtr createShrapnelPositionDistribution(void)
-{
-    //Sphere Distribution
-    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
-    beginEditCP(TheSphereDistribution);
-      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheSphereDistribution->setInnerRadius(0.0);
-      TheSphereDistribution->setOuterRadius(3.0);
-      TheSphereDistribution->setMinTheta(0.0);
-      TheSphereDistribution->setMaxTheta(6.283185);
-      TheSphereDistribution->setMinZ(-1.0);
-      TheSphereDistribution->setMaxZ(1.0);
-	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
-    endEditCP(TheSphereDistribution);
 
-    return TheSphereDistribution;
-}
 FunctionPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
@@ -521,7 +561,7 @@ FunctionPtr createSmokePositionDistribution(void)
       TheDiscDistribution->setOuterRadius(02.0);
       TheDiscDistribution->setMinTheta(0.0);
       TheDiscDistribution->setMaxTheta(6.283185307);
-      TheDiscDistribution->setNormal(Vec3f(1.0,0.0,0.0));
+      TheDiscDistribution->setNormal(Vec3f(0.0,0.0,1.0));
       TheDiscDistribution->setSurfaceOrEdge(DiscDistribution3D::SURFACE);
     endEditCP(TheDiscDistribution);
 
@@ -561,6 +601,23 @@ FunctionPtr createSmokeVelocityDistribution(void)
 	endEditCP(TheVelocityDistribution);
 
     return TheVelocityDistribution;
+}
+FunctionPtr createShrapnelPositionDistribution(void)
+{
+    //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(0.0);
+      TheSphereDistribution->setOuterRadius(3.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(6.283185);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+    endEditCP(TheSphereDistribution);
+
+    return TheSphereDistribution;
 }
 FunctionPtr createShrapnelAccelerationDistribution(void)
 {
@@ -615,3 +672,73 @@ FunctionPtr createShrapnelVelocityDistribution(void)
 
     return TheVelocityDistribution;
 }
+
+FunctionPtr createFireballVelocityDistribution(void)
+{
+	 //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(3.0);
+      TheSphereDistribution->setOuterRadius(5.0);
+      TheSphereDistribution->setMinTheta(-3.141950);
+      TheSphereDistribution->setMaxTheta(3.141950);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
+    endEditCP(TheSphereDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheSphereDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
+}
+FunctionPtr createFireballPositionDistribution(void)
+{
+     //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(1.0);
+      TheSphereDistribution->setOuterRadius(2.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(6.283185);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+    endEditCP(TheSphereDistribution);
+
+    return TheSphereDistribution;
+}
+
+FunctionPtr createFireballAccelerationDistribution(void)
+{
+
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+      TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,3.0));
+	  TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,3.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheAccelerationDistribution = CompoundFunction::create();
+	beginEditCP(TheAccelerationDistribution);
+		TheAccelerationDistribution->getFunctions().push_back(TheLineDistribution);
+		TheAccelerationDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheAccelerationDistribution);
+
+    return TheAccelerationDistribution;
+} 
