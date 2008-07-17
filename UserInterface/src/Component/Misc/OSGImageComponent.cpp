@@ -84,7 +84,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    Vec2f ComponentSize(BottomRight-TopLeft);
 
    TextureChunkPtr DrawnTexture = getDrawnTexture();
-   if(DrawnTexture == NullFC)
+   if(DrawnTexture == NullFC || DrawnTexture->getImage() == NullFC)
    {
 	   return;
    }
@@ -93,63 +93,60 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    //Draw a quad on top of the background according to the alignment and scaling
    //Figure out Scaling
    Vec2f Size(0.0,0.0);
-   if(&& DrawnTexture->getImage() != NullFC)
+   switch(getScale())
    {
-	   switch(getScale())
+   case SCALE_NONE:
+	   //Size in pixels Should be the Image size in pixels
+	   Size.setValues(DrawnTexture->getImage()->getWidth(), DrawnTexture->getImage()->getHeight());
+	   break;
+   case SCALE_STRETCH:
+	   Size.setValue(ComponentSize);
+	   break;
+   case SCALE_MIN_AXIS:
 	   {
-	   case SCALE_NONE:
-		   //Size in pixels Should be the Image size in pixels
-		   Size.setValues(DrawnTexture->getImage()->getWidth(), DrawnTexture->getImage()->getHeight());
-		   break;
-	   case SCALE_STRETCH:
-		   Size.setValue(ComponentSize);
-		   break;
-	   case SCALE_MIN_AXIS:
-		   {
-		   //Figure out the aspect ratio of this Component
-		   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-		   Real32 AspectImage = DrawnTexture->getImage()->getWidth()/DrawnTexture->getImage()->getHeight();
+	   //Figure out the aspect ratio of this Component
+	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
+	   Real32 AspectImage = DrawnTexture->getImage()->getWidth()/DrawnTexture->getImage()->getHeight();
 
-		   Vec2f vector(0,0);
-		   if (AspectComponent < AspectImage)
-		   {
-			   vector[0] = ComponentSize.x();
-			   vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
-		   }
-		   else
-		   {
-			   vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
-			   vector[1] = ComponentSize.y();
-		   }
-		   Size.setValue(vector);
-		   }
-		   break;
-	   case SCALE_MAX_AXIS:
-		   {
-		   //Figure out the aspect ratio of this Component
-		   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-		   Real32 AspectImage = DrawnTexture->getImage()->getWidth()/DrawnTexture->getImage()->getHeight();
-
-		   Vec2f vector(0,0);
-		   if (AspectComponent > AspectImage)
-		   {
-			   vector[0] = ComponentSize.x();
-			   vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
-		   }
-		   else
-		   {
-			   vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
-			   vector[1] = ComponentSize.y();
-		   }
-		   Size.setValue(vector);
-		   }
-		   break;
-	   case SCALE_ABSOLUTE:
-		   Size.setValue(getScaleAbsoluteSize());
-		   break;
-	   default:
-		   break;
+	   Vec2f vector(0,0);
+	   if (AspectComponent < AspectImage)
+	   {
+		   vector[0] = ComponentSize.x();
+		   vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
 	   }
+	   else
+	   {
+		   vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
+		   vector[1] = ComponentSize.y();
+	   }
+	   Size.setValue(vector);
+	   }
+	   break;
+   case SCALE_MAX_AXIS:
+	   {
+	   //Figure out the aspect ratio of this Component
+	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
+	   Real32 AspectImage = DrawnTexture->getImage()->getWidth()/DrawnTexture->getImage()->getHeight();
+
+	   Vec2f vector(0,0);
+	   if (AspectComponent > AspectImage)
+	   {
+		   vector[0] = ComponentSize.x();
+		   vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
+	   }
+	   else
+	   {
+		   vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
+		   vector[1] = ComponentSize.y();
+	   }
+	   Size.setValue(vector);
+	   }
+	   break;
+   case SCALE_ABSOLUTE:
+	   Size.setValue(getScaleAbsoluteSize());
+	   break;
+   default:
+	   break;
    }
 
    //Figure out Position
