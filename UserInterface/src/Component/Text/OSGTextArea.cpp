@@ -500,12 +500,13 @@ void TextArea::CaretUpdateListener::update(const UpdateEvent& e)
 
 void TextArea::changed(BitVector whichField, UInt32 origin)
 {
-    if(whichField & TextFieldMask ||
+    if((whichField & TextFieldMask ||
        whichField & LineWrapFieldMask ||
        whichField & WrapStyleWordFieldMask ||
        whichField & TabSizeFieldMask ||
        whichField & FontFieldMask ||
-       whichField & SizeFieldMask)
+       whichField & SizeFieldMask) &&
+	   getFont() != NullFC)
     {
  	    while( _LineContents.size()>0)
 	    {

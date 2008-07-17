@@ -15576,6 +15576,7 @@
 					"-lOSGInputD",
 					"-lboost_filesystem-mt-1_35",
 					"-lboost_system-mt-1_35",
+					"-lOSGDynamicsD",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = 01ButtonD;
@@ -15624,6 +15625,7 @@
 					"-lOSGInput",
 					"-lboost_filesystem-mt-1_35",
 					"-lboost_system-mt-1_35",
+					"-lOSGDynamcis",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = 01Button;

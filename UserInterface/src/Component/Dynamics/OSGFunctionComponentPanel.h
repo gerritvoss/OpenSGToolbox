@@ -162,12 +162,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 		
 		void setActiveComponent(UInt32 Index);
 		void setInitialPosition(Pnt2f InitialPosition);
+		void setActiveResizeTab(UInt32 Tab);
 	protected :
 		FunctionComponentPanelPtr _FunctionComponentPanel;
 		UInt32 _ActiveComponent;
 		Pnt2f _InitialPosition;
 		Pnt2f _InitialComponentPosition;
 		Vec2f _InitialComponentSize;
+		UInt32 _ActiveResizeTab;
 		
 		void detach(void);
 	};
@@ -191,6 +193,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
     static void initMethod(void);
 	
 	bool _drawComponentResizeSquares;
+	bool _overResizeSquare;
 	ComponentPtr _ResizableComponent;
 
     // prohibit default functions (move to 'public' if you need one)

@@ -86,14 +86,22 @@ void FunctionComponentPanel::initMethod (void)
 void FunctionComponentPanel::setupCursor(void)
 {
     UInt32 Cursor;
-    if(_drawComponentResizeSquares)
-    {
-        Cursor = WindowEventProducer::CURSOR_RESIZE_ALL;
-    }
-    else
-    {
-        Cursor = WindowEventProducer::CURSOR_POINTER;
-    }
+	if(_overResizeSquare)
+	{
+		Cursor = WindowEventProducer::CURSOR_I_BEAM;
+	}
+	else
+	{
+		if(_drawComponentResizeSquares)
+		{
+			Cursor = WindowEventProducer::CURSOR_RESIZE_ALL;
+		}
+		else
+		{
+			Cursor = WindowEventProducer::CURSOR_POINTER;
+		}
+	}
+    
     if(Cursor != getCursor())
     {
         beginEditCP(FunctionComponentPanelPtr(this) , CursorFieldMask);
@@ -220,9 +228,18 @@ void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f
 	//Draw rectangle if zoomed in
 	if (getZoom() != 1.0)
 	{
+	/*
 		Pnt2f AreaViewedTopLeft, AreaViewedBottomRight, AreaViewedTopRight, AreaViewedBottomLeft;
 		AreaViewedTopLeft = Pnt2f(TopLeft + getClipTopLeft() * getMiniMapSize());
 		AreaViewedBottomRight = Pnt2f(TopLeft + getClipBottomRight() * getMiniMapSize());
+		AreaViewedTopRight = AreaViewedTopLeft + Pnt2f((AreaViewedBottomRight.x() - AreaViewedTopLeft.x()), 0.0f);
+		AreaViewedBottomLeft = AreaViewedTopLeft + Pnt2f(0.0f, (AreaViewedBottomRight.y() - AreaViewedTopLeft.y()));
+		*/
+		
+		
+		Pnt2f AreaViewedTopLeft, AreaViewedBottomRight, AreaViewedTopRight, AreaViewedBottomLeft;
+		AreaViewedTopLeft = Pnt2f(TopLeft.x() + getClipTopLeft().x() * getMiniMapSize(), TopLeft.y() + getClipTopLeft().y() * getMiniMapSize());
+		AreaViewedBottomRight = Pnt2f(AreaViewedTopLeft.x() + ((BottomRight.x() - TopLeft.x()) / getZoom()), (AreaViewedTopLeft.y() + (BottomRight.y() - TopLeft.y()) / getZoom()));
 		AreaViewedTopRight = AreaViewedTopLeft + Pnt2f((AreaViewedBottomRight.x() - AreaViewedTopLeft.x()), 0.0f);
 		AreaViewedBottomLeft = AreaViewedTopLeft + Pnt2f(0.0f, (AreaViewedBottomRight.y() - AreaViewedTopLeft.y()));
 		
@@ -330,7 +347,8 @@ FunctionComponentPanel::FunctionComponentPanel(void) :
         _ComponentMoveListener(FunctionComponentPanelPtr(this)),
         _ComponentPanelMoveListener(FunctionComponentPanelPtr(this)),
 		_ComponentResizeListener(FunctionComponentPanelPtr(this)),
-        _drawComponentResizeSquares(false)
+        _drawComponentResizeSquares(false),
+		_overResizeSquare(false)
 {
 	
 }
@@ -340,7 +358,8 @@ FunctionComponentPanel::FunctionComponentPanel(const FunctionComponentPanel &sou
         _ComponentMoveListener(FunctionComponentPanelPtr(this)),
 		_ComponentPanelMoveListener(FunctionComponentPanelPtr(this)),
 		_ComponentResizeListener(FunctionComponentPanelPtr(this)),
-        _drawComponentResizeSquares(false)
+        _drawComponentResizeSquares(false),
+		_overResizeSquare(false)
 {
 
 }
@@ -409,28 +428,59 @@ void FunctionComponentPanel::dump(      UInt32    ,
 
 void FunctionComponentPanel::ComponentPanelMoveListener::mousePressed(const MouseEvent& e)
 {
-    if(_FunctionComponentPanel->getParentWindow() != NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()!=NullFC&& _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
-        _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-    {
+	if(_FunctionComponentPanel->_drawComponentResizeSquares &&
+		_FunctionComponentPanel->getParentWindow() != NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()!=NullFC&& _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
+		_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+	{
+		Pnt2f ResizableComponentTopLeft, ResizableComponentBottomRight, ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
+		ResizableComponentTopLeft = _FunctionComponentPanel->getZoom() * (_FunctionComponentPanel->_ResizableComponent->getPosition());
+		ResizableComponentBottomRight = ResizableComponentTopLeft + _FunctionComponentPanel->getZoom() * (_FunctionComponentPanel->_ResizableComponent->getSize());
+		ResizableComponentTopRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), 0.0f));
+		ResizableComponentBottomLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+		ResizableComponentTop = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, 0.0f));
+		ResizableComponentBottom = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+		ResizableComponentLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
+		ResizableComponentRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
 		
-		bool isContained(false);
-		for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
+		Vec2f TabSize = _FunctionComponentPanel->getResizeTabsSize() * _FunctionComponentPanel->getZoom();
+		
+		if((e.getLocation().x() > (ResizableComponentTopLeft.x() - TabSize.x())) && (e.getLocation().x() < (ResizableComponentTopLeft.x() + TabSize.x())) &&
+			(e.getLocation().y() > (ResizableComponentTopLeft.y() - TabSize.y())) && (e.getLocation().y() < (ResizableComponentTopLeft.y() + TabSize.y())))
 		{
-			isContained = _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true);
-			if(isContained)
+			//Set The Active Resize Tab
+			_FunctionComponentPanel->_ComponentResizeListener.setActiveResizeTab(1);
+			
+			//Attach Listeners
+			_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_FunctionComponentPanel->_ComponentResizeListener));
+			_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&(_FunctionComponentPanel->_ComponentResizeListener));
+			_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_FunctionComponentPanel->_ComponentResizeListener));
+		}
+	}
+	//else
+	//{
+		if(_FunctionComponentPanel->getParentWindow() != NullFC && _FunctionComponentPanel->getParentWindow()->getDrawingSurface()!=NullFC&& _FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
+			_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		{
+			
+			bool isContained(false);
+			for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
 			{
-				//Set The Active Component
-				_FunctionComponentPanel->_ComponentMoveListener.setActiveComponent(i);
-				//Set the Initial Position
-				_FunctionComponentPanel->_ComponentMoveListener.setInitialPosition(e.getLocation());
-				
-				//Attach Listeners
-				_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_FunctionComponentPanel->_ComponentMoveListener));
-				_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&(_FunctionComponentPanel->_ComponentMoveListener));
-				_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_FunctionComponentPanel->_ComponentMoveListener));
+				isContained = _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true);
+				if(isContained)
+				{
+					//Set The Active Component
+					_FunctionComponentPanel->_ComponentMoveListener.setActiveComponent(i);
+					//Set the Initial Position
+					_FunctionComponentPanel->_ComponentMoveListener.setInitialPosition(e.getLocation());
+					
+					//Attach Listeners
+					_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_FunctionComponentPanel->_ComponentMoveListener));
+					_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&(_FunctionComponentPanel->_ComponentMoveListener));
+					_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_FunctionComponentPanel->_ComponentMoveListener));
+				}
 			}
 		}
-    }
+	//}
 }
 
 
@@ -486,6 +536,32 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 		{
 			_FunctionComponentPanel->_drawComponentResizeSquares = false;
 			//_FunctionComponentPanel->_ResizableComponent = NullFC;
+		}
+	}
+	if(_FunctionComponentPanel->_drawComponentResizeSquares)
+	{
+		Pnt2f ResizableComponentTopLeft, ResizableComponentBottomRight, ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
+		ResizableComponentTopLeft = _FunctionComponentPanel->getZoom() * (_FunctionComponentPanel->_ResizableComponent->getPosition());
+		ResizableComponentBottomRight = ResizableComponentTopLeft + _FunctionComponentPanel->getZoom() * (_FunctionComponentPanel->_ResizableComponent->getSize());
+		ResizableComponentTopRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), 0.0f));
+		ResizableComponentBottomLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+		ResizableComponentTop = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, 0.0f));
+		ResizableComponentBottom = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+		ResizableComponentLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
+		ResizableComponentRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
+		
+		Vec2f TabSize = _FunctionComponentPanel->getResizeTabsSize() * _FunctionComponentPanel->getZoom();
+		
+		//if((e.getLocation().x() > (ResizableComponentTopLeft.x() - TabSize.x())) && (e.getLocation().x() < (ResizableComponentTopLeft.x() + TabSize.x())) &&
+			//(e.getLocation().y() > (ResizableComponentTopLeft.y() - TabSize.y())) && (e.getLocation().y() < (ResizableComponentTopLeft.y() + TabSize.y())))
+		if((e.getLocation().x() > (ResizableComponentTopLeft.x() - 10)) && (e.getLocation().x() < (ResizableComponentTopLeft.x() + 10)) &&
+			(e.getLocation().y() > (ResizableComponentTopLeft.y() - 10)) && (e.getLocation().y() < (ResizableComponentTopLeft.y() + 10)))
+		{
+			_FunctionComponentPanel->_overResizeSquare = true;
+		}
+		else
+		{
+			_FunctionComponentPanel->_overResizeSquare = false;
 		}
 	}
     _FunctionComponentPanel->setupCursor();
@@ -622,7 +698,55 @@ void FunctionComponentPanel::ComponentResizeListener::mouseReleased(const MouseE
 
 void FunctionComponentPanel::ComponentResizeListener::mouseDragged(const MouseEvent& e)
 {
-    
+    if(_FunctionComponentPanel != NullFC)
+	{
+		Pnt2f MouseMovedDistance = Pnt2f(0.0f, 0.0f);
+		Pnt2f AbsolutePosition, NewPosition;
+		
+		if(_ActiveResizeTab == 1)
+		{
+			//Change size and position of component based on the mouse position and it's initial position
+			Pnt2f InitialPositionsDifference = Pnt2f(_InitialComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
+			MouseMovedDistance = Pnt2f(_InitialPosition - e.getLocation());
+			
+			AbsolutePosition = Pnt2f(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()) + InitialPositionsDifference);
+			NewPosition = AbsolutePosition;
+		}
+		
+		
+		
+		//Test AbsolutePosition to make sure Component is inside parent container
+		Pnt2f AbsolutePositionBottomRight, ContainerTopLeft, ContainerBottomRight;
+		AbsolutePositionBottomRight = AbsolutePosition + _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize();
+		_FunctionComponentPanel->getInsideInsetsBounds(ContainerTopLeft, ContainerBottomRight);
+		if(AbsolutePosition.x() < ContainerTopLeft.x())
+		{
+			NewPosition[0] = ContainerTopLeft.x();
+		}
+		if(AbsolutePosition.y() < ContainerTopLeft.y())
+		{
+			NewPosition[1] = ContainerTopLeft.y();
+		}
+		if(AbsolutePositionBottomRight.x() > ContainerBottomRight.x())
+		{
+			NewPosition[0] = ContainerBottomRight.x() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().x();
+		}
+		if(AbsolutePositionBottomRight.y() > ContainerBottomRight.y())
+		{
+			NewPosition[1] = ContainerBottomRight.y() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().y();
+		}
+		
+		
+		//Calculate new size
+		Vec2f NewSize = _InitialComponentSize + MouseMovedDistance;
+		
+		//Set new position and size
+		beginEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);	
+			//_FunctionComponentPanel->getChildrenPositions()[_ActiveComponent].setValue(NewPosition);
+			_FunctionComponentPanel->getChildrenSizes()[_ActiveComponent].setValue(NewSize);
+		endEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);
+
+	}
 }
 
 void FunctionComponentPanel::ComponentResizeListener::detach(void)
@@ -640,6 +764,11 @@ void FunctionComponentPanel::ComponentResizeListener::setActiveComponent(UInt32 
 	_ActiveComponent = Index;
     _InitialComponentPosition = _FunctionComponentPanel->getChildrenPositions()[_ActiveComponent];
 	_InitialComponentSize = _FunctionComponentPanel->getChildrenSizes()[_ActiveComponent];
+}
+
+void FunctionComponentPanel::ComponentResizeListener::setActiveResizeTab(UInt32 Tab)
+{
+	_ActiveResizeTab = Tab;
 }
 
 /*------------------------------------------------------------------------*/
