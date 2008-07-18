@@ -80,7 +80,7 @@ void SkeletonBlendedGeometry::initMethod (void)
 
 void SkeletonBlendedGeometry::addSkeleton(SkeletonPtr TheSkeleton)
 {
-    if(TheSkeleton != NullFC && getSkeletons().find(TheSkeleton) != getSkeletons().end())
+    if(TheSkeleton != NullFC && getSkeletons().find(TheSkeleton) == getSkeletons().end())
     {
         beginEditCP(TheSkeleton, Skeleton::AttachedGeometriesFieldMask);
             TheSkeleton->getAttachedGeometries().push_back(SkeletonBlendedGeometryPtr(this));
@@ -144,7 +144,9 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 	std::vector<Matrix> PositionTrans;
 
 	if(getBaseGeometry() != NullFC &&
-		getPositionIndexes().size() == getBones().size() == getBlendAmounts().size())
+		getPositions() != NullFC &&
+		(getPositionIndexes().size() == getBones().size() &&
+		getPositionIndexes().size() == getBlendAmounts().size()))
 	{
 		
 		PositionTrans.resize(getPositions()->size());
@@ -167,9 +169,12 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 			PositionTrans[i].multFullMatrixPnt(getBaseGeometry()->getPositions()->getValue(i), CalculatedPoint);
 			getPositions()->setValue(CalculatedPoint, i);   //P[i]
 
-			//get's the Normals
-			PositionTrans[i].multMatrixVec(getBaseGeometry()->getNormals()-> getValue(i),CalculatedVector);
-			getNormals()->setValue(CalculatedVector,i);
+			if(getNormals() != NullFC)
+			{
+				//get's the Normals
+				PositionTrans[i].multMatrixVec(getBaseGeometry()->getNormals()-> getValue(i),CalculatedVector);
+				getNormals()->setValue(CalculatedVector,i);
+			}
 	
 		}
 	}
@@ -211,12 +216,6 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if((whichField & BonesFieldMask) ||
-		(whichField & PositionIndexesFieldMask) ||
-		(whichField & BlendAmountsFieldMask))
-	{
-		calculatePositions();
-	}
 	if((whichField & BaseGeometryFieldMask) &&
 		getBaseGeometry() != NullFC)
 	{
@@ -312,6 +311,13 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 	        getHighindices().setValues(getBaseGeometry()->getHighindices());
 	    endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::HighindicesFieldMask | Geometry::LowindicesFieldMask | Geometry::MaxindexFieldMask | Geometry::MinindexFieldMask | Geometry::IndexMappingFieldMask);
     }
+
+	if((whichField & BonesFieldMask) ||
+		(whichField & PositionIndexesFieldMask) ||
+		(whichField & BlendAmountsFieldMask))
+	{
+		calculatePositions();
+	}
 }
 
 void SkeletonBlendedGeometry::dump(      UInt32    , 
