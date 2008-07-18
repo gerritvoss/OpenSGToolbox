@@ -227,6 +227,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	void removeSecVelocity(UInt32 Index);
 	void removeAcceleration(UInt32 Index);
 	void removeProperty(UInt32 Index);
+
+	bool internalKillParticle(UInt32 Index);
+	void internalKillParticles();
+
+	bool _isUpdating;
+	std::set<UInt32, GreaterThanUInt32> _ParticlesToKill;
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -46,7 +46,6 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
-#include <set>
 
 #include "OSGParticleSystem.h"
 #include "ParticleSystem/Events/OSGParticleEvent.h"
@@ -345,7 +344,7 @@ void ParticleSystem::addAndExpandProperties(UInt64 Properties)
 	}
 }
 
-bool ParticleSystem::killParticle(UInt32 Index)
+bool ParticleSystem::internalKillParticle(UInt32 Index)
 {
     if(Index >= getNumParticles())
     {
@@ -368,6 +367,19 @@ bool ParticleSystem::killParticle(UInt32 Index)
     produceParticleKilled(Pos);
 
     return true;
+}
+
+bool ParticleSystem::killParticle(UInt32 Index)
+{
+	if(_isUpdating)
+	{
+		_ParticlesToKill.insert(Index);
+		return false;
+	}
+	else
+	{
+		return internalKillParticle(Index);
+	}
 }
 
 void ParticleSystem::removePosition(UInt32 Index)
@@ -964,11 +976,24 @@ void ParticleSystem::setProperty(const UInt64& Property, const UInt32& Index)
 	}
 }
 
+void ParticleSystem::internalKillParticles()
+{
+	if(!_isUpdating)
+	{
+		//Kill Particles
+		for(std::set<UInt32, GreaterThanUInt32>::iterator Itor(_ParticlesToKill.begin()) ; Itor != _ParticlesToKill.end() ; ++Itor)
+		{
+			killParticle(*Itor);
+		}
+	}
+}
+
 void ParticleSystem::update(const Time& elps)
 {
 
     //Loop through all of the particles
     bool VolumeChanged(false);
+	_isUpdating = true;
 
 	//Generate Particles with Generators
 	UInt32 NumGenerators(getGenerators().size());
@@ -989,7 +1014,6 @@ void ParticleSystem::update(const Time& elps)
 
     UInt32 NumParticles(getNumParticles());
 	bool AdvanceIterator(true);
-	std::set<UInt32, GreaterThanUInt32> ParticlesToKill;
     for(UInt32 i(0) ; i<NumParticles; ++i)
     {
         VolumeChanged = true;
@@ -997,7 +1021,7 @@ void ParticleSystem::update(const Time& elps)
 		setAge(getAge(i) + elps,i);
 		if(getLifespan(i) > 0.0f && getAge(i)>getLifespan(i))
 		{
-			ParticlesToKill.insert(i);
+			killParticle(i);
 			continue;
 		}
 
@@ -1017,7 +1041,7 @@ void ParticleSystem::update(const Time& elps)
 		{
 			if(getAffectors(j)->affect(ParticleSystemPtr(this), i, elps))
 			{
-				ParticlesToKill.insert(i);
+				killParticle(i);
 				continue;
 			}
 			
@@ -1031,11 +1055,8 @@ void ParticleSystem::update(const Time& elps)
 		getSystemAffectors(j)->affect(ParticleSystemPtr(this), elps);
 	}
 
-	//Kill Particles
-	for(std::set<UInt32, GreaterThanUInt32>::iterator Itor(ParticlesToKill.begin()) ; Itor != ParticlesToKill.end() ; ++Itor)
-	{
-		killParticle(*Itor);
-	}
+	_isUpdating = false;
+	internalKillParticles();
 
     //Fire a Update Event
     produceSystemUpdated(VolumeChanged);
