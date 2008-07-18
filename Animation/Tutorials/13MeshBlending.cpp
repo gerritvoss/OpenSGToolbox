@@ -413,23 +413,24 @@ int main(int argc, char **argv)
 	GeoPTypesPtr type = GeoPTypesUI8::create();        
     beginEditCP(type, GeoPTypesUI8::GeoPropDataFieldMask);
     {
-        type->addValue(GL_TRIANGLES);
+        type->addValue(GL_QUADS);
     }
     endEditCP  (type, GeoPTypesUI8::GeoPropDataFieldMask);
 
 	GeoPLengthsPtr lens = GeoPLengthsUI32::create();    
     beginEditCP(lens, GeoPLengthsUI32::GeoPropDataFieldMask);
     {
-        lens->addValue(3);
+        lens->addValue(4);
     }
     endEditCP  (lens, GeoPLengthsUI32::GeoPropDataFieldMask);
 	 GeoPositions3fPtr pnts = GeoPositions3f::create();
     beginEditCP(pnts, GeoPositions3f::GeoPropDataFieldMask);
     {
 		// the points of the triangles
-        pnts->addValue(Pnt3f( 1,  0, -1));
-        pnts->addValue(Pnt3f(-1,  0, -1));
-        pnts->addValue(Pnt3f( 0,  1, -1));
+        pnts->addValue(Pnt3f( 0,  0, 0));
+        pnts->addValue(Pnt3f( 1,  0, 0));
+        pnts->addValue(Pnt3f( 1,  1, 0));
+        pnts->addValue(Pnt3f(0,  1, 0));
     }
 
     endEditCP  (pnts, GeoPositions3f::GeoPropDataFieldMask);
@@ -491,9 +492,10 @@ int main(int argc, char **argv)
 	beginEditCP(TheNewSkeletonGeometry);
 		TheNewSkeletonGeometry->addSkeleton(ExampleSkeleton);
 		TheNewSkeletonGeometry->setBaseGeometry(geo);
-		TheNewSkeletonGeometry->addBoneBlending(0,RightHumerus,1.0f);
-		TheNewSkeletonGeometry->addBoneBlending(1,RightHumerus,1.0f);
-		TheNewSkeletonGeometry->addBoneBlending(2,RightHumerus,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(0,Torso,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(1,Torso,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(2,RightFemur,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(3,RightFemur,1.0f);
     endEditCP(TheNewSkeletonGeometry);
 	
 	NodePtr MeshNode = osg::Node::create();

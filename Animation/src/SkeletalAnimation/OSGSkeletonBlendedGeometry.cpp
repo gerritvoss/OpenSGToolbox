@@ -50,6 +50,12 @@
 #include "OSGSkeletonBlendedGeometry.h"
 #include "OSGSkeleton.h"
 #include "OSGBone.h"
+#include <OpenSG/OSGAction.h>
+#include <OpenSG/OSGDrawAction.h>
+#include <OpenSG/OSGRenderAction.h>
+#include <OpenSG/OSGIntersectAction.h>
+#include <OpenSG/OSGRenderAction.h>
+#include <OpenSG/OSGIntersectActor.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,6 +77,25 @@ OSG_BEGIN_NAMESPACE
 
 void SkeletonBlendedGeometry::initMethod (void)
 {
+    DrawAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
+              CNodePtr, Action *>(&MaterialDrawable::drawActionHandler));
+
+    IntersectAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, GeometryPtr,
+              CNodePtr, Action *>(&Geometry::intersect));
+
+    IntersectActor::regClassEnter(
+        osgTypedMethodFunctor2BaseCPtr<
+            NewActionTypes::ResultE,
+            GeometryPtr,
+            NodeCorePtr,
+            ActorBase::FunctorArgumentType &>(&Geometry::intersectActor),
+        getClassType());
+
+    RenderAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
+              CNodePtr, Action *>(&MaterialDrawable::renderActionHandler));
 }
 
 
@@ -177,11 +202,16 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 			}
 	
 		}
+		for(UInt32 i = 0; i < _parents.size(); i++)
+		{
+			_parents[i]->invalidateVolume();
+		}
 	}
 	else
 	{
 		//Error
 	}
+
 
 }
 
@@ -234,13 +264,13 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 		if(getBaseGeometry()->getPositions() != NullFC)
 		{
             beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::PositionsFieldMask);
-                setPositions(getBaseGeometry()->getPositions());
+			setPositions(getBaseGeometry()->getPositions()->clone());
             endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::PositionsFieldMask);
 		}
 		if(getBaseGeometry()->getNormals() != NullFC)
 		{
             beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::NormalsFieldMask);
-                setNormals(getBaseGeometry()->getNormals());
+                setNormals(getBaseGeometry()->getNormals()->clone());
             endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::NormalsFieldMask);
 		}
 		if(getBaseGeometry()->getColors() != NullFC)
@@ -303,13 +333,15 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
                 setTexCoords7(getBaseGeometry()->getTexCoords7());
             endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords7FieldMask);
 		}
-        beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::HighindicesFieldMask | Geometry::LowindicesFieldMask | Geometry::MaxindexFieldMask | Geometry::MinindexFieldMask | Geometry::IndexMappingFieldMask);
+        beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::DlistCacheFieldMask | Geometry::MaterialFieldMask | Geometry::HighindicesFieldMask | Geometry::LowindicesFieldMask | Geometry::MaxindexFieldMask | Geometry::MinindexFieldMask | Geometry::IndexMappingFieldMask);
             getIndexMapping().setValues(getBaseGeometry()->getIndexMapping());
 	        setMinindex(getBaseGeometry()->getMinindex());
 	        setMaxindex(getBaseGeometry()->getMaxindex());
 	        getLowindices().setValues(getBaseGeometry()->getLowindices());
 	        getHighindices().setValues(getBaseGeometry()->getHighindices());
-	    endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::HighindicesFieldMask | Geometry::LowindicesFieldMask | Geometry::MaxindexFieldMask | Geometry::MinindexFieldMask | Geometry::IndexMappingFieldMask);
+	        setMaterial(getBaseGeometry()->getMaterial());
+	        setDlistCache(false);
+	    endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::DlistCacheFieldMask | Geometry::MaterialFieldMask | Geometry::HighindicesFieldMask | Geometry::LowindicesFieldMask | Geometry::MaxindexFieldMask | Geometry::MinindexFieldMask | Geometry::IndexMappingFieldMask);
     }
 
 	if((whichField & BonesFieldMask) ||

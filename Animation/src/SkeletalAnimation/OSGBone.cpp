@@ -133,11 +133,19 @@ void Bone::updateTransformation(void)
 	endEditCP(BonePtr(this), Bone::InternalRelativeTransformationFieldMask);
 
 	//Calculate Absolute Transformation
-	Matrix AbsoluteTransformation(getInternalRelativeTransformation()); //a matrix called m
+	//Matrix AbsoluteTransformation(getInternalRelativeTransformation()); //a matrix called m
+	Matrix AbsoluteTransformation; //a matrix called m
 	if(getInternalParent() !=NullFC)
 	{
-		AbsoluteTransformation.mult( getInternalParent()->getAbsoluteTransformation() );
+		AbsoluteTransformation = getInternalParent()->getAbsoluteTransformation();
+		//AbsoluteTransformation.mult( getInternalParent()->getAbsoluteTransformation() );
+		AbsoluteTransformation.mult( getInternalRelativeTransformation() );
 	}
+	else
+	{
+		AbsoluteTransformation = getInternalRelativeTransformation();
+	}
+
 	beginEditCP(BonePtr(this), Bone::InternalAbsoluteTransformationFieldMask);
 		setInternalAbsoluteTransformation(AbsoluteTransformation); //field container
 	endEditCP(BonePtr(this), Bone::InternalAbsoluteTransformationFieldMask);

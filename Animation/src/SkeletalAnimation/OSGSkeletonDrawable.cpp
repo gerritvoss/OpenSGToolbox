@@ -122,13 +122,14 @@ void SkeletonDrawable::drawBone (BonePtr TheBone, DrawActionBase *action)
 	
 
 		glPushMatrix();
-		glMultMatrixf(TheBone->getRelativeTransformation().getValues());
-		//Draw the bone as a line from it traslation point to the point
-		//in the direction of the bones rotation, that is the length of the bone
-		glBegin(GL_LINES);
-			glVertex3f(0.0f,0.0f,0.0f);
-			glVertex3f(0.0,0.0,TheBone->getLength());
-		glEnd();
+			glMultMatrixf(TheBone->getAbsoluteTransformation().getValues());
+			//Draw the bone as a line from it traslation point to the point
+			//in the direction of the bones rotation, that is the length of the bone
+			glBegin(GL_LINES);
+				glVertex3f(0.0f,0.0f,0.0f);
+				glVertex3f(0.0,0.0,TheBone->getLength());
+			glEnd();
+		glPopMatrix();
 
 		
 
@@ -137,7 +138,6 @@ void SkeletonDrawable::drawBone (BonePtr TheBone, DrawActionBase *action)
 	{
 		drawBone(TheBone->getChild(i), action);
 	}
-	glPopMatrix();
 }
 
 Action::ResultE SkeletonDrawable::drawActionHandler( Action* action )
