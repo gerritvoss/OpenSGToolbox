@@ -145,14 +145,10 @@ void NodeParticleSystemCore::updateNodes(void)
 		Normal = getNodeNormal(getSystem(), i);
 	    Binormal = getNodeUpDir(getSystem(), i).cross(Normal);
 		Up = Normal.cross(Binormal);
-        Rotation.setValue(Binormal.x(),Binormal.y(),Binormal.z(),0.0,
-                           Up.x(),Up.y(),Up.z(),0.0,
-                           Normal.x(),Normal.y(),Normal.z(),0.0,
+        Rotation.setValue(Binormal.x(),Up.x(),Normal.x(),0.0,
+                           Binormal.y(),Up.y(),Normal.y(),0.0,
+                           Binormal.z(),Up.z(),Normal.z(),0.0,
                            0.0,0.0,0.0,1.0);
-        //Rotation.setValue(Binormal.x(),Up.x(),Normal.x(),0.0,
-        //                   Binormal.y(),Up.y(),Normal.y(),0.0,
-        //                   Binormal.z(),Up.z(),Normal.z(),0.0,
-        //                   0.0,0.0,0.0,1.0);
 
 		Transformation.setTransform(getSystem()->getPosition(i),
 			                        Quaternion( Rotation ),

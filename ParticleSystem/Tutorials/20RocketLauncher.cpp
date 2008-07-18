@@ -178,10 +178,9 @@ class TutorialMouseListener : public MouseListener
           Line TheRay;
 			if(e.getButton() == MouseEvent::BUTTON1)
 			{
-				std::cout<<e.getLocation()<<std::endl;
 				
 				mgr->getCamera()->calcViewRay(TheRay,e.getLocation().x(),e.getLocation().y(),*(mgr->getWindow()->getPort(0)));
-				std::cout<<TheRay.getPosition()<<" "<<TheRay.getDirection()<<std::endl;
+				std::cout<<"Velocity "<<TheRay.getDirection()<<std::endl;
 			}
 			RocketParticleSystem->addParticle(TheRay.getPosition(),
 			Vec3f(0.0,0.0f,1.0f),
@@ -321,8 +320,6 @@ int main(int argc, char **argv)
 
 	//Particle System Drawer
 		//Rocket
-	ExampleRocketParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
-    ExampleRocketParticleSystemDrawer->setForcePerParticleSizing(true);
 		//Smoke
 	SmokeParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
 	//SmokeParticleSystemDrawer->setQuadSizeScaling(Vec2f(0.5f,0.5f));
@@ -349,10 +346,10 @@ int main(int argc, char **argv)
         RocketParticleNodeCore->setUp(Vec3f(0.0f,1.0f,0.0f));
     endEditCP(RocketParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 	
-	NodePtr ParticleNode = osg::Node::create();
-    beginEditCP(ParticleNode, Node::CoreFieldMask);
-        ParticleNode->setCore(RocketParticleNodeCore);
-    endEditCP(ParticleNode, Node::CoreFieldMask);
+	NodePtr RocketParticleNode = osg::Node::create();
+    beginEditCP(RocketParticleNode, Node::CoreFieldMask);
+        RocketParticleNode->setCore(RocketParticleNodeCore);
+    endEditCP(RocketParticleNode, Node::CoreFieldMask);
 		
 		//Smoke
 	SmokeGenerator = osg::RateParticleGenerator::create();
@@ -482,7 +479,7 @@ int main(int argc, char **argv)
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
-        //scene->addChild(ParticleNode);
+        scene->addChild(RocketParticleNode);
 		scene->addChild(SmokeParticleNode);
 		//scene->addChild(ShrapnelParticleNode);
 		scene->addChild(FireballParticleNode);

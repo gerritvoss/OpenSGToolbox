@@ -968,6 +968,24 @@ void ParticleSystem::update(const Time& elps)
 
     //Loop through all of the particles
     bool VolumeChanged(false);
+
+	//Generate Particles with Generators
+	UInt32 NumGenerators(getGenerators().size());
+	for(UInt32 j(0) ; j<NumGenerators; )
+	{
+		if(getGenerators()[j]->generate(ParticleSystemPtr(this), elps))
+		{
+			beginEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
+				getGenerators().erase(std::find(getGenerators().begin(), getGenerators().end(), getGenerators()[j])); 
+			endEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
+			--NumGenerators;
+		}
+		else
+		{
+			++j;
+		}
+	}
+
     UInt32 NumParticles(getNumParticles());
 	bool AdvanceIterator(true);
 	std::set<UInt32, GreaterThanUInt32> ParticlesToKill;
@@ -1016,23 +1034,6 @@ void ParticleSystem::update(const Time& elps)
 	for(std::set<UInt32, GreaterThanUInt32>::iterator Itor(ParticlesToKill.begin()) ; Itor != ParticlesToKill.end() ; ++Itor)
 	{
 		killParticle(*Itor);
-	}
-
-	//Generate Particles with Generators
-	UInt32 NumGenerators(getGenerators().size());
-	for(UInt32 j(0) ; j<NumGenerators; )
-	{
-		if(getGenerators()[j]->generate(ParticleSystemPtr(this), elps))
-		{
-			beginEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
-				getGenerators().erase(std::find(getGenerators().begin(), getGenerators().end(), getGenerators()[j])); 
-			endEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
-			--NumGenerators;
-		}
-		else
-		{
-			++j;
-		}
 	}
 
     //Fire a Update Event
