@@ -118,7 +118,7 @@ public:
 					SmokeParticleSystem->getAffectors().push_back(SmokeAgeSizeParticleAffector);
 				endEditCP(SmokeParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 		
-		//Attach the Affector to the Smoke Particle System
+		//Attach the Affector to the fireball Particle System
 				beginEditCP(FireballParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 					FireballParticleSystem->getGenerators().push_back(FireballGenerator);
 					FireballParticleSystem->getAffectors().push_back(FireballAgeSizeParticleAffector);
@@ -480,9 +480,9 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(RocketParticleNode);
-		scene->addChild(SmokeParticleNode);
+		//scene->addChild(SmokeParticleNode);
 		//scene->addChild(ShrapnelParticleNode);
-		scene->addChild(FireballParticleNode);
+		//scene->addChild(FireballParticleNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
