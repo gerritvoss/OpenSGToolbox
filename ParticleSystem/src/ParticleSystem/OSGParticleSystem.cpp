@@ -352,6 +352,7 @@ bool ParticleSystem::killParticle(UInt32 Index)
         return false;
     }
 
+	Pnt3f Pos(getPosition(Index));
     removePosition(Index);
     removeSecPosition(Index);
     removeNormal(Index);
@@ -364,7 +365,7 @@ bool ParticleSystem::killParticle(UInt32 Index)
     removeAcceleration(Index);
     removeProperty(Index);
 
-    produceParticleKilled();
+    produceParticleKilled(Pos);
 
     return true;
 }
@@ -539,7 +540,7 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 		getInternalPositions().push_back(Position);
 	endEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
 
-    produceParticleGenerated();
+    produceParticleGenerated(Position);
 
 	return true;
 }
@@ -1040,9 +1041,9 @@ void ParticleSystem::update(const Time& elps)
     produceSystemUpdated(VolumeChanged);
 }
 
-void ParticleSystem::produceParticleGenerated(void)
+void ParticleSystem::produceParticleGenerated(Pnt3f ParticlePos)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime() );
+   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), ParticlePos );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1053,9 +1054,9 @@ void ParticleSystem::produceParticleGenerated(void)
    }
 }
 
-void ParticleSystem::produceParticleKilled(void)
+void ParticleSystem::produceParticleKilled(Pnt3f ParticlePos)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime() );
+   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), ParticlePos );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1066,9 +1067,9 @@ void ParticleSystem::produceParticleKilled(void)
    }
 }
 
-void ParticleSystem::produceParticleStolen(void)
+void ParticleSystem::produceParticleStolen(Pnt3f ParticlePos)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime() );
+   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), ParticlePos );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {

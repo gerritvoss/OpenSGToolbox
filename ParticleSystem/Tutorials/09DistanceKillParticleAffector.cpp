@@ -234,7 +234,7 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-	//Create an AgeFadeAffector
+	//Create an DistanceKill
 	DistanceKillParticleAffectorPtr ExampleDistanceKillParticleAffector = osg::DistanceKillParticleAffector::create();
 	beginEditCP(ExampleDistanceKillParticleAffector, DistanceKillParticleAffector::KillDistanceFieldMask | DistanceKillParticleAffector::ParticleSystemNodeFieldMask | DistanceKillParticleAffector::DistanceFromSourceFieldMask |	DistanceKillParticleAffector::DistanceFromCameraFieldMask);
 		ExampleDistanceKillParticleAffector->setKillDistance(1000.0f);

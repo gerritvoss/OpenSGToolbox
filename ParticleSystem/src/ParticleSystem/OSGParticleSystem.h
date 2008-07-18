@@ -186,9 +186,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
     ParticleSystemListenerSet       _ParticleSystemListeners;
 
     void produceSystemUpdated(bool VolumeChanged);
-    void produceParticleGenerated(void);
-    void produceParticleKilled(void);
-    void produceParticleStolen(void);
+    void produceParticleGenerated(Pnt3f ParticlePos);
+    void produceParticleKilled(Pnt3f ParticlePos);
+    void produceParticleStolen(Pnt3f ParticlePos);
 
 	class SystemUpdateListener : public UpdateListener
 	{

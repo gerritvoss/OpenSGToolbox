@@ -36,6 +36,7 @@
 #include <OpenSG/Input/OSGEvent.h>
 
 #include <OpenSG/OSGBaseTypes.h>
+#include <OpenSG/OSGVector.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -44,13 +45,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEvent : public Event
   /*=========================  PUBLIC  ===============================*/
   public:
 
-   ParticleEvent(FieldContainerPtr Source, Time TimeStamp);
+   ParticleEvent(FieldContainerPtr Source, Time TimeStamp, Pnt3f ParticlePosition);
 
     virtual const EventType &getType(void) const;
+    const Pnt3f &getPosition(void) const;
     
     static const EventType &getClassType(void);
   private:
      static EventType _Type;
+	 Pnt3f _ParticlePosition;
 };
 
 OSG_END_NAMESPACE

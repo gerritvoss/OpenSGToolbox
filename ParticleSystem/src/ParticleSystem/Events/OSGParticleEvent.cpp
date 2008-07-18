@@ -9,8 +9,9 @@ const EventType &ParticleEvent::getType(void) const
     return _Type;
 }
 
-ParticleEvent::ParticleEvent(FieldContainerPtr Source, Time TimeStamp) :
-   Event(Source, TimeStamp)
+ParticleEvent::ParticleEvent(FieldContainerPtr Source, Time TimeStamp, Pnt3f ParticlePosition) :
+   Event(Source, TimeStamp),
+   _ParticlePosition(ParticlePosition)
 {
 }
 
