@@ -92,6 +92,10 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGMenu.h>
 #include <OpenSG/UserInterface/OSGMenuItem.h>
 #include <OpenSG/UserInterface/OSGUIRectangle.h>
+#include <OpenSG/UserInterface/OSGList.h>
+#include <OpenSG/UserInterface/OSGDefaultListModel.h>
+#include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
+#include <OpenSG/UserInterface/OSGScrollPanel.h>
 
 RadioButtonGroup DeselectedRadioButtonGroup;
 RadioButtonGroup SelectedRadioButtonGroup;
@@ -137,9 +141,13 @@ private:
 	PanelPtr _ThePanel;	
 	PanelPtr _WindowPanel;
 	PanelPtr _AdvancedPanel;
+	PanelPtr _ListPanel;
     DefaultBoundedRangeModel _ProgressBarBoundedRangeModel;	
     DefaultBoundedRangeModel _ScrollBarBoundedRangeModel;
     DefaultBoundedRangeModel _SliderBoundedRangeModel;
+    
+    DefaultListModelPtr _ExampleListModel;
+    ListSelectionModelPtr _SelectionModel;
 		
 	class CreateWindowButtonActionListener : public ActionListener
 		{
@@ -167,15 +175,17 @@ private:
 	PanelPtr createStatePanel(void);
 	PanelPtr createWindowPanel(void);
 	PanelPtr createAdvancedPanel(void);
+	PanelPtr createListPanel(void);
 	
 	
 
 public:
-	StatePanelCreator(void)
+    StatePanelCreator(void) : _SelectionModel(new DefaultListSelectionModel())
     {
 	    _ThePanel = createStatePanel();
 	    _WindowPanel = createWindowPanel();
 	    _AdvancedPanel = createAdvancedPanel();
+	    _ListPanel = createListPanel();
     }
 
 	PanelPtr getPanel(void) const
@@ -189,6 +199,10 @@ public:
 	PanelPtr getAdvancedPanel(void) const
     {
 	    return _AdvancedPanel;
+    }
+	PanelPtr getListPanel(void) const
+    {
+	    return _ListPanel;
     }
 };
 
@@ -377,6 +391,11 @@ int main(int argc, char **argv)
     beginEditCP(AdvancedTabPanelTab, Label::TextFieldMask);
         AdvancedTabPanelTab->setText("Advanced Components");
     endEditCP(AdvancedTabPanelTab, Label::TextFieldMask);
+    
+    LabelPtr ListTabPanelTab = osg::Label::create();
+    beginEditCP(ListTabPanelTab, Label::TextFieldMask);
+        ListTabPanelTab->setText("List Components");
+    endEditCP(ListTabPanelTab, Label::TextFieldMask);
    
     /******************************************************
 
@@ -391,6 +410,7 @@ int main(int argc, char **argv)
         MainTabPanel->addTab(StateTabPanelTab, StatePanel);
         MainTabPanel->addTab(WindowTabPanelTab, WindowPanel);
         MainTabPanel->addTab(AdvancedTabPanelTab, TheStatePanelCreator.getAdvancedPanel());
+        MainTabPanel->addTab(ListTabPanelTab, TheStatePanelCreator.getListPanel());
         MainTabPanel->setTabAlignment(0.5f);
         MainTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
     endEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
@@ -1976,4 +1996,53 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
         AdvancedPanel->setPreferredSize(Vec2f(500,800));
     endEditCP(AdvancedPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
     return AdvancedPanel;
+}
+
+PanelPtr StatePanelCreator::createListPanel(void)
+{
+    // Add data to it
+	_ExampleListModel = DefaultListModel::create();
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Red")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Green")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Blue")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Orange")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Purple")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Yellow")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("White")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Black")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Gray")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Brown")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Indigo")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Pink")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Violet")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Mauve")));
+    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Peach")));
+    
+    ListPtr ExampleList = List::create();
+	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
+        ExampleList->setPreferredSize(Vec2f(200, 300));
+        ExampleList->setOrientation(List::VERTICAL_ORIENTATION);
+        //ExampleList->setOrientation(List::HORIZONTAL_ORIENTATION);
+		ExampleList->setModel(_ExampleListModel);
+    endEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
+
+    ExampleList->setSelectionModel(_SelectionModel);
+
+
+    // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
+    ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
+    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+        ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
+        ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    ExampleScrollPanel->setViewComponent(ExampleList);
+
+    //The Panel
+    PanelPtr ListPanel = Panel::create();
+    beginEditCP(ListPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+        ListPanel->getChildren().push_back(ExampleScrollPanel);
+        ListPanel->setLayout(FlowLayout::create());
+    endEditCP(ListPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+    return ListPanel;
 }
