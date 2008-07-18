@@ -151,6 +151,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 		void detach(void);
 	};
 	
+	enum ResizeTab { TAB_NONE=0, TAB_TOP_LEFT, TAB_TOP, TAB_TOP_RIGHT, TAB_RIGHT, TAB_BOTTOM_RIGHT, TAB_BOTTOM, TAB_BOTTOM_LEFT, TAB_LEFT };
 	class ComponentResizeListener : public MouseAdapter,public KeyAdapter,public MouseMotionAdapter
 	{
 	public :
@@ -160,16 +161,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 		virtual void mouseDragged(const MouseEvent& e);
 		virtual void keyPressed(const KeyEvent& e);
 		
-		void setActiveComponent(UInt32 Index);
+		void setActiveComponent(ComponentPtr Component);
 		void setInitialPosition(Pnt2f InitialPosition);
-		void setActiveResizeTab(UInt32 Tab);
 	protected :
 		FunctionComponentPanelPtr _FunctionComponentPanel;
 		UInt32 _ActiveComponent;
 		Pnt2f _InitialPosition;
 		Pnt2f _InitialComponentPosition;
 		Vec2f _InitialComponentSize;
-		UInt32 _ActiveResizeTab;
+		ResizeTab _ResizeTab;
+
 		
 		void detach(void);
 	};
@@ -183,7 +184,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
 	void drawMiniMap(const GraphicsPtr Graphics, const Pnt3f& TopLeft, const Pnt3f BottomRight) const;
     
-    void setupCursor(void);
+    void setupCursor(Pnt2f MouseLocation);
+	
+	ResizeTab getTabOverLocation(const Pnt2f& Location) const;
+	ComponentPtr getActiveComponent(const Pnt2f& Location) const;
+	
+	
     /*==========================  PRIVATE  ================================*/
   private:
 
@@ -195,6 +201,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 	bool _drawComponentResizeSquares;
 	bool _overResizeSquare;
 	ComponentPtr _ResizableComponent;
+	ResizeTab _ActiveResizeTab;
 
     // prohibit default functions (move to 'public' if you need one)
 
