@@ -582,8 +582,8 @@ FunctionPtr createSmokeVelocityDistribution(void)
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
- 		TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,1.0));
-		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,3.0));
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,1.0,1.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,1.0,3.0));
     endEditCP(TheLineDistribution);
 
 	DataConverterPtr TheVec3fConverter = DataConverter::create();
