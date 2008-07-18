@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFunctionConnections.h"
+#include <set>
+#include <algorithm>
 
 OSG_BEGIN_NAMESPACE
 
@@ -195,7 +197,42 @@ std::vector<FunctionConnections::EvaluationResult> FunctionConnections::evaluate
 {
 	//TODO: Implement
 	assert(false && "Not Implemented" );
+
 	std::vector<EvaluationResult> Result;
+
+    //Get all of the Root Functions
+    std::vector<FunctionPtr> CurFunctions;
+    std::vector<FunctionPtr> NextFunctions(getRootFunctions());
+    std::vector<FunctionIOParameterVector> FunctionEvaluations;
+
+    //Evaluate the hierarchy
+     while(NextFunctions.size() > 0)
+    {
+        CurFunctions = NextFunctions;
+
+        FunctionEvaluations.clear();
+        for(UInt32 i(0) ; i<CurFunctions.size() ; ++i)
+        {
+            FunctionEvaluations.push_back(CurFunctions[i]->evaluate(FunctionIOParameterVector()));
+        }
+        
+        NextFunctions.clear();
+	    for(UInt32 i(0) ; i<numConnections() ; ++i)
+	    {
+            if(std::find(CurFunctions.begin(), CurFunctions.end(), getFunctionOutputs()[i]) != CurFunctions.end())
+            {
+                NextFunctions.push_back(getFunctionInputs()[i]);
+            }
+        }
+
+    }
+
+    //Place the evaluations of the leaf nodes in the result
+    for(UInt32 i(0) ; CurFunctions.size(); ++i)
+    {
+        Result.push_back(EvaluationResult(CurFunctions[i],FunctionEvaluations[i] ));
+    }
+
 
 	return Result;
 }
@@ -206,20 +243,35 @@ UInt32 FunctionConnections::numConnections(void) const
 }
 
 std::vector<FunctionPtr> FunctionConnections::getRootFunctions(void) const
-{
-	//TODO: Implement
-	assert(false && "Not Implemented" );
-	std::vector<FunctionPtr> Result;
+{	
+    std::vector<FunctionPtr> Result;
+    
+    std::set<FunctionPtr> FunctionOutputConnected;
+    std::set<FunctionPtr> FunctionInputConnected;
+	for(UInt32 i(0) ; i<numConnections() ; ++i)
+	{
+        FunctionOutputConnected.insert(getFunctionOutputs()[i]);
+        FunctionInputConnected.insert(getFunctionInputs()[i]);
+    }
+
+    std::set_difference(FunctionInputConnected.begin(), FunctionInputConnected.end(), FunctionOutputConnected.begin(), FunctionOutputConnected.end(),std::inserter(Result, Result.end()));
 
 	return Result;
 }
 
 std::vector<FunctionPtr> FunctionConnections::getLeafFunctions(void) const
 {
-	//TODO: Implement
-	assert(false && "Not Implemented" );
+    std::vector<FunctionPtr> Result;
+    
+    std::set<FunctionPtr> FunctionOutputConnected;
+    std::set<FunctionPtr> FunctionInputConnected;
+	for(UInt32 i(0) ; i<numConnections() ; ++i)
+	{
+        FunctionOutputConnected.insert(getFunctionOutputs()[i]);
+        FunctionInputConnected.insert(getFunctionInputs()[i]);
+    }
 
-	std::vector<FunctionPtr> Result;
+    std::set_difference(FunctionOutputConnected.begin(), FunctionOutputConnected.end(), FunctionInputConnected.begin(), FunctionInputConnected.end(),std::inserter(Result, Result.end()));
 
 	return Result;
 }
