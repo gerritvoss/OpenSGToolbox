@@ -77,6 +77,39 @@ OSG_BEGIN_NAMESPACE
 
 void SkeletonBlendedGeometry::initMethod (void)
 {
+#if OSG_VERSION == 0x010801
+
+    // DrawAction
+    DrawAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
+              CNodePtr, Action *>(&MaterialDrawable::drawActionEnterHandler));
+    
+    DrawAction::registerLeaveDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
+              CNodePtr, Action *>(&MaterialDrawable::drawActionLeaveHandler));
+
+    // IntersectAction
+    IntersectAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, GeometryPtr,
+              CNodePtr, Action *>(&Geometry::intersect));
+
+    IntersectActor::regClassEnter(
+        osgTypedMethodFunctor2BaseCPtr<
+            NewActionTypes::ResultE,
+            GeometryPtr,
+            NodeCorePtr,
+            ActorBase::FunctorArgumentType &>(&Geometry::intersectActor),
+        getClassType());
+
+    // RenderAction
+    RenderAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
+              CNodePtr, Action *>(&MaterialDrawable::renderActionEnterHandler));
+    
+    RenderAction::registerLeaveDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
+              CNodePtr, Action *>(&MaterialDrawable::renderActionLeaveHandler));
+#else
     DrawAction::registerEnterDefault(getClassType(),
         osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
               CNodePtr, Action *>(&MaterialDrawable::drawActionHandler));
@@ -96,6 +129,8 @@ void SkeletonBlendedGeometry::initMethod (void)
     RenderAction::registerEnterDefault(getClassType(),
         osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
               CNodePtr, Action *>(&MaterialDrawable::renderActionHandler));
+#endif
+    
 }
 
 

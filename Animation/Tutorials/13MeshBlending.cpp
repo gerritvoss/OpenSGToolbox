@@ -420,37 +420,58 @@ int main(int argc, char **argv)
 	GeoPLengthsPtr lens = GeoPLengthsUI32::create();    
     beginEditCP(lens, GeoPLengthsUI32::GeoPropDataFieldMask);
     {
-        lens->addValue(4);
+        lens->addValue(8);
     }
     endEditCP  (lens, GeoPLengthsUI32::GeoPropDataFieldMask);
 	 GeoPositions3fPtr pnts = GeoPositions3f::create();
     beginEditCP(pnts, GeoPositions3f::GeoPropDataFieldMask);
     {
 		// the points of the triangles
-        pnts->addValue(Pnt3f( 0,  0, 0));
-        pnts->addValue(Pnt3f( 1,  0, 0));
-        pnts->addValue(Pnt3f( 1,  1, 0));
-        pnts->addValue(Pnt3f(0,  1, 0));
+        pnts->addValue(Pnt3f( -0.5,  0, 0));
+        pnts->addValue(Pnt3f( 0.5,  0, 0));
+        pnts->addValue(Pnt3f( 0.5,  0, 0));
+        pnts->addValue(Pnt3f(-0.5,  0, 0));
+        pnts->addValue(Pnt3f( -0.5,  0, 0));
+        pnts->addValue(Pnt3f( 0.5,  0, 0));
+        pnts->addValue(Pnt3f( 0.5,  0, 0));
+        pnts->addValue(Pnt3f(-0.5,  0, 0));
     }
-
     endEditCP  (pnts, GeoPositions3f::GeoPropDataFieldMask);
+    
+    //Normals
+	 GeoNormals3fPtr norms = GeoNormals3f::create();
 	 geo=Geometry::create();
+    beginEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
+        norms->addValue(Vec3f( 0.0,1.0,0.0));
+        norms->addValue(Vec3f( 0.0,1.0,0.0));
+        norms->addValue(Vec3f( 0.0,1.0,0.0));
+        norms->addValue(Vec3f( 0.0,1.0,0.0));
+        norms->addValue(Vec3f( 0.0,1.0,0.0));
+        norms->addValue(Vec3f( 0.0,1.0,0.0));
+        norms->addValue(Vec3f( 0.0,1.0,0.0));
+        norms->addValue(Vec3f( 0.0,1.0,0.0));
+    endEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
+
+
     beginEditCP(geo, Geometry::TypesFieldMask     |
                      Geometry::LengthsFieldMask   |
                      Geometry::PositionsFieldMask |
+                     Geometry::NormalsFieldMask |
                      Geometry::MaterialFieldMask  );
     {
         geo->setTypes    (type);
         geo->setLengths  (lens);
         geo->setPositions(pnts);
+        geo->setNormals(norms);
 
         // assign a material to the geometry to make it visible. The details
         // of materials are defined later.
-        geo->setMaterial(getDefaultUnlitMaterial());   
+        geo->setMaterial(getDefaultMaterial());   
     }
     endEditCP  (geo, Geometry::TypesFieldMask     |
                      Geometry::LengthsFieldMask   |
                      Geometry::PositionsFieldMask |
+                     Geometry::NormalsFieldMask |
                      Geometry::MaterialFieldMask  );
     
     // put the geometry core into a node
@@ -496,6 +517,10 @@ int main(int argc, char **argv)
 		TheNewSkeletonGeometry->addBoneBlending(1,Torso,1.0f);
 		TheNewSkeletonGeometry->addBoneBlending(2,RightFemur,1.0f);
 		TheNewSkeletonGeometry->addBoneBlending(3,RightFemur,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(4,RightFemur,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(5,RightFemur,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(6,RightTibia,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(7,RightTibia,1.0f);
     endEditCP(TheNewSkeletonGeometry);
 	
 	NodePtr MeshNode = osg::Node::create();
