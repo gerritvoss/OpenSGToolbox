@@ -796,6 +796,34 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGGeometryCollisionParticleSystemAffector.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGGeometryCollisionParticleSystemAffector.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGGeometryCollisionParticleSystemAffector.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGGeometryCollisionParticleSystemAffectorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGGeometryCollisionParticleSystemAffectorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGGeometryCollisionParticleSystemAffectorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGGeometryCollisionParticleSystemAffectorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleSystemAffectors\OSGParticleSystemAffector.cpp"
 						>
 					</File>

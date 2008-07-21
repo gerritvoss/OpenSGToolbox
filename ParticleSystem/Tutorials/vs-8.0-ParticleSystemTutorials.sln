@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XXTesting", "XXTesting.vcproj", "{101B4E61-3D86-4512-A4D8-1A0D2FF2BB9D}"
@@ -40,6 +40,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12NodeParticleDrawer", "12NodeParticleDrawer.vcproj", "{0E5BCFF5-30C3-4317-AE1F-B3C0955D532B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20RocketLauncher", "20RocketLauncher.vcproj", "{0C95C205-F232-45FB-B2FB-4F240AE3E3EE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13GeometryCollision", "13GeometryCollision.vcproj", "{0305133F-682A-4248-8082-26FBC0E535CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +125,10 @@ Global
 		{0C95C205-F232-45FB-B2FB-4F240AE3E3EE}.Debug|Win32.Build.0 = Debug|Win32
 		{0C95C205-F232-45FB-B2FB-4F240AE3E3EE}.Release|Win32.ActiveCfg = Release|Win32
 		{0C95C205-F232-45FB-B2FB-4F240AE3E3EE}.Release|Win32.Build.0 = Release|Win32
+		{0305133F-682A-4248-8082-26FBC0E535CA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0305133F-682A-4248-8082-26FBC0E535CA}.Debug|Win32.Build.0 = Debug|Win32
+		{0305133F-682A-4248-8082-26FBC0E535CA}.Release|Win32.ActiveCfg = Release|Win32
+		{0305133F-682A-4248-8082-26FBC0E535CA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

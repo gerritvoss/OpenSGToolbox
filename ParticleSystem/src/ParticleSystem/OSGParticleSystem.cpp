@@ -985,6 +985,7 @@ void ParticleSystem::internalKillParticles()
 		{
 			killParticle(*Itor);
 		}
+		_ParticlesToKill.clear();
 	}
 }
 

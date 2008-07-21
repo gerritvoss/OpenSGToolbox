@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="GeometryCollisionParticleSystemAffector"
+	parent="ParticleSystemAffector"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="CollisionAffector"
+		type="ParticleAffectorPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="CollisionNode"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>s
+</FieldContainer>
