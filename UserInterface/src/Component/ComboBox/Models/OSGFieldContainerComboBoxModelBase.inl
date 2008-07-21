@@ -110,6 +110,34 @@ MFUInt32 *FieldContainerComboBoxModelBase::getMFInternalFieldContainerTypes(void
     return &_mfInternalFieldContainerTypes;
 }
 
+//! Get the FieldContainerComboBoxModel::_sfIncludeAbstract field.
+inline
+SFBool *FieldContainerComboBoxModelBase::getSFIncludeAbstract(void)
+{
+    return &_sfIncludeAbstract;
+}
+
+
+//! Get the value of the FieldContainerComboBoxModel::_sfIncludeAbstract field.
+inline
+bool &FieldContainerComboBoxModelBase::getIncludeAbstract(void)
+{
+    return _sfIncludeAbstract.getValue();
+}
+
+//! Get the value of the FieldContainerComboBoxModel::_sfIncludeAbstract field.
+inline
+const bool &FieldContainerComboBoxModelBase::getIncludeAbstract(void) const
+{
+    return _sfIncludeAbstract.getValue();
+}
+
+//! Set the value of the FieldContainerComboBoxModel::_sfIncludeAbstract field.
+inline
+void FieldContainerComboBoxModelBase::setIncludeAbstract(const bool &value)
+{
+    _sfIncludeAbstract.setValue(value);
+}
 
 
 //! Get the value of the \a index element the FieldContainerComboBoxModel::_mfFieldContainerTypes field.

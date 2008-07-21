@@ -117,6 +117,34 @@ MFUInt32 *DerivedFieldContainerComboBoxModelBase::getMFInternalFieldContainerTyp
     return &_mfInternalFieldContainerTypes;
 }
 
+//! Get the DerivedFieldContainerComboBoxModel::_sfIncludeAbstract field.
+inline
+SFBool *DerivedFieldContainerComboBoxModelBase::getSFIncludeAbstract(void)
+{
+    return &_sfIncludeAbstract;
+}
+
+
+//! Get the value of the DerivedFieldContainerComboBoxModel::_sfIncludeAbstract field.
+inline
+bool &DerivedFieldContainerComboBoxModelBase::getIncludeAbstract(void)
+{
+    return _sfIncludeAbstract.getValue();
+}
+
+//! Get the value of the DerivedFieldContainerComboBoxModel::_sfIncludeAbstract field.
+inline
+const bool &DerivedFieldContainerComboBoxModelBase::getIncludeAbstract(void) const
+{
+    return _sfIncludeAbstract.getValue();
+}
+
+//! Set the value of the DerivedFieldContainerComboBoxModel::_sfIncludeAbstract field.
+inline
+void DerivedFieldContainerComboBoxModelBase::setIncludeAbstract(const bool &value)
+{
+    _sfIncludeAbstract.setValue(value);
+}
 
 
 //! Get the value of the \a index element the DerivedFieldContainerComboBoxModel::_mfDerivedFieldContainerTypes field.

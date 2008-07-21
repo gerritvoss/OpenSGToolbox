@@ -308,6 +308,7 @@ void Titlebar::changed(BitVector whichField, UInt32 origin)
 	if(((whichField & IconifyButtonFieldMask) ||
 		(whichField & ParentWindowFieldMask)) &&
 		getParentWindow() != NullFC &&
+		getIconifyButton() != NullFC &&
 		getParentWindow()->getIconable() != getIconifyButton()->getEnabled())
 	{
 		beginEditCP(getIconifyButton(), Button::EnabledFieldMask);
@@ -318,6 +319,7 @@ void Titlebar::changed(BitVector whichField, UInt32 origin)
 	if(((whichField & MaximizeButtonFieldMask) ||
 		(whichField & ParentWindowFieldMask)) &&
 		getParentWindow() != NullFC &&
+		getMaximizeButton() != NullFC &&
 		getParentWindow()->getMaximizable() != getMaximizeButton()->getEnabled())
 	{
 		beginEditCP(getMaximizeButton(), Button::EnabledFieldMask);
@@ -328,6 +330,7 @@ void Titlebar::changed(BitVector whichField, UInt32 origin)
 	if(((whichField & CloseButtonFieldMask) ||
 		(whichField & ParentWindowFieldMask)) &&
 		getParentWindow() != NullFC &&
+		getCloseButton() != NullFC &&
 		getParentWindow()->getClosable() != getCloseButton()->getEnabled())
 	{
 		beginEditCP(getCloseButton(), Button::EnabledFieldMask);

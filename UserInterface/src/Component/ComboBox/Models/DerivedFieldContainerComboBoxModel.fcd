@@ -39,4 +39,13 @@ A UI FieldContainerComboBoxModel.
 		access="protected"
 	>
 	</Field>
+	<Field
+		name="IncludeAbstract"
+		type="bool"
+		cardinality="single"
+		visibility="internal"
+		defaultValue="false"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

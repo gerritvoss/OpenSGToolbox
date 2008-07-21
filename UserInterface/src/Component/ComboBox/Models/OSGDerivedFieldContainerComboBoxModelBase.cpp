@@ -73,6 +73,9 @@ const OSG::BitVector  DerivedFieldContainerComboBoxModelBase::InternalDerivedFie
 const OSG::BitVector  DerivedFieldContainerComboBoxModelBase::InternalFieldContainerTypesFieldMask = 
     (TypeTraits<BitVector>::One << DerivedFieldContainerComboBoxModelBase::InternalFieldContainerTypesFieldId);
 
+const OSG::BitVector  DerivedFieldContainerComboBoxModelBase::IncludeAbstractFieldMask = 
+    (TypeTraits<BitVector>::One << DerivedFieldContainerComboBoxModelBase::IncludeAbstractFieldId);
+
 const OSG::BitVector DerivedFieldContainerComboBoxModelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,9 @@ const OSG::BitVector DerivedFieldContainerComboBoxModelBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          DerivedFieldContainerComboBoxModelBase::_mfInternalFieldContainerTypes
+    
+*/
+/*! \var bool            DerivedFieldContainerComboBoxModelBase::_sfIncludeAbstract
     
 */
 
@@ -108,7 +114,12 @@ FieldDescription *DerivedFieldContainerComboBoxModelBase::_desc[] =
                      "InternalFieldContainerTypes", 
                      InternalFieldContainerTypesFieldId, InternalFieldContainerTypesFieldMask,
                      true,
-                     (FieldAccessMethod) &DerivedFieldContainerComboBoxModelBase::getMFInternalFieldContainerTypes)
+                     (FieldAccessMethod) &DerivedFieldContainerComboBoxModelBase::getMFInternalFieldContainerTypes),
+    new FieldDescription(SFBool::getClassType(), 
+                     "IncludeAbstract", 
+                     IncludeAbstractFieldId, IncludeAbstractFieldMask,
+                     true,
+                     (FieldAccessMethod) &DerivedFieldContainerComboBoxModelBase::getSFIncludeAbstract)
 };
 
 
@@ -190,6 +201,7 @@ DerivedFieldContainerComboBoxModelBase::DerivedFieldContainerComboBoxModelBase(v
     _mfDerivedFieldContainerTypes(), 
     _mfInternalDerivedFieldContainerTypes(), 
     _mfInternalFieldContainerTypes(), 
+    _sfIncludeAbstract        (bool(false)), 
     Inherited() 
 {
 }
@@ -202,6 +214,7 @@ DerivedFieldContainerComboBoxModelBase::DerivedFieldContainerComboBoxModelBase(c
     _mfDerivedFieldContainerTypes(source._mfDerivedFieldContainerTypes), 
     _mfInternalDerivedFieldContainerTypes(source._mfInternalDerivedFieldContainerTypes), 
     _mfInternalFieldContainerTypes(source._mfInternalFieldContainerTypes), 
+    _sfIncludeAbstract        (source._sfIncludeAbstract        ), 
     Inherited                 (source)
 {
 }
@@ -233,6 +246,11 @@ UInt32 DerivedFieldContainerComboBoxModelBase::getBinSize(const BitVector &which
         returnValue += _mfInternalFieldContainerTypes.getBinSize();
     }
 
+    if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
+    {
+        returnValue += _sfIncludeAbstract.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -255,6 +273,11 @@ void DerivedFieldContainerComboBoxModelBase::copyToBin(      BinaryDataHandler &
     if(FieldBits::NoField != (InternalFieldContainerTypesFieldMask & whichField))
     {
         _mfInternalFieldContainerTypes.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
+    {
+        _sfIncludeAbstract.copyToBin(pMem);
     }
 
 
@@ -280,6 +303,11 @@ void DerivedFieldContainerComboBoxModelBase::copyFromBin(      BinaryDataHandler
         _mfInternalFieldContainerTypes.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
+    {
+        _sfIncludeAbstract.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -299,6 +327,9 @@ void DerivedFieldContainerComboBoxModelBase::executeSyncImpl(      DerivedFieldC
     if(FieldBits::NoField != (InternalFieldContainerTypesFieldMask & whichField))
         _mfInternalFieldContainerTypes.syncWith(pOther->_mfInternalFieldContainerTypes);
 
+    if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
+        _sfIncludeAbstract.syncWith(pOther->_sfIncludeAbstract);
+
 
 }
 #else
@@ -308,6 +339,9 @@ void DerivedFieldContainerComboBoxModelBase::executeSyncImpl(      DerivedFieldC
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
+        _sfIncludeAbstract.syncWith(pOther->_sfIncludeAbstract);
 
 
     if(FieldBits::NoField != (DerivedFieldContainerTypesFieldMask & whichField))

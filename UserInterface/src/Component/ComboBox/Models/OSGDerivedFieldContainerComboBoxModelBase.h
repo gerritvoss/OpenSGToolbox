@@ -70,6 +70,7 @@
 #include <OpenSG/OSGStringFields.h> // DerivedFieldContainerTypes type
 #include <OpenSG/OSGUInt32Fields.h> // InternalDerivedFieldContainerTypes type
 #include <OpenSG/OSGUInt32Fields.h> // InternalFieldContainerTypes type
+#include <OpenSG/OSGBoolFields.h> // IncludeAbstract type
 
 #include "OSGDerivedFieldContainerComboBoxModelFields.h"
 
@@ -96,12 +97,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING DerivedFieldContainerComboBoxModelBase : p
         DerivedFieldContainerTypesFieldId         = Inherited::NextFieldId,
         InternalDerivedFieldContainerTypesFieldId = DerivedFieldContainerTypesFieldId         + 1,
         InternalFieldContainerTypesFieldId        = InternalDerivedFieldContainerTypesFieldId + 1,
-        NextFieldId                               = InternalFieldContainerTypesFieldId        + 1
+        IncludeAbstractFieldId                    = InternalFieldContainerTypesFieldId        + 1,
+        NextFieldId                               = IncludeAbstractFieldId                    + 1
     };
 
     static const OSG::BitVector DerivedFieldContainerTypesFieldMask;
     static const OSG::BitVector InternalDerivedFieldContainerTypesFieldMask;
     static const OSG::BitVector InternalFieldContainerTypesFieldMask;
+    static const OSG::BitVector IncludeAbstractFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -129,7 +132,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DerivedFieldContainerComboBoxModelBase : p
     /*! \{                                                                 */
 
            MFString            *getMFDerivedFieldContainerTypes(void);
+           SFBool              *getSFIncludeAbstract(void);
 
+           bool                &getIncludeAbstract(void);
+     const bool                &getIncludeAbstract(void) const;
            std::string         &getDerivedFieldContainerTypes(const UInt32 index);
            MFString            &getDerivedFieldContainerTypes(void);
      const MFString            &getDerivedFieldContainerTypes(void) const;
@@ -139,6 +145,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DerivedFieldContainerComboBoxModelBase : p
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setIncludeAbstract( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,6 +191,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DerivedFieldContainerComboBoxModelBase : p
     MFString            _mfDerivedFieldContainerTypes;
     MFUInt32            _mfInternalDerivedFieldContainerTypes;
     MFUInt32            _mfInternalFieldContainerTypes;
+    SFBool              _sfIncludeAbstract;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

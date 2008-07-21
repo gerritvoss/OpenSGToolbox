@@ -144,8 +144,11 @@ bool WindowBorder::isContained(const Pnt2f& p, const Real32& x, const Real32& y 
 
 void WindowBorder::getTitlebarBounds(const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, Pnt2f& TopLeft, Pnt2f& BottomRight)
 {
-	Real32 LeftIn, RightIn, BottomIn, UpperIn;
-	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+	Real32 LeftIn(0.0f), RightIn(0.0f), BottomIn(0.0f), UpperIn(0.0f);
+    if(getOuterBorder() != NullFC)
+    {
+	    getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+    }
 
 	TopLeft.setValues(x+LeftIn, y+UpperIn);
 	if(getTitlebar() != NullFC)

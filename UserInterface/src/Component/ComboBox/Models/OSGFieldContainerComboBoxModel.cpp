@@ -178,7 +178,7 @@ void FieldContainerComboBoxModel::changed(BitVector whichField, UInt32 origin)
         for(UInt32 i(0) ; i<getFieldContainerTypes().size() ; ++i)
         {
             FieldContainerType* FoundType = FieldContainerFactory::the()->findType(getFieldContainerTypes()[i].c_str());
-            if(FoundType != NULL)
+            if(FoundType != NULL && (getIncludeAbstract() || !FoundType->isAbstract()))
             {
 
                  _FieldList.push_back(SharedFieldPtr(new SFString(FoundType->getCName())));

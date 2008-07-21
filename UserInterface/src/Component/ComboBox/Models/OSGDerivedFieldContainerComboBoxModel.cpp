@@ -186,7 +186,7 @@ void DerivedFieldContainerComboBoxModel::changed(BitVector whichField, UInt32 or
                         FoundType = FieldContainerFactory::the()->findType(j);
                         if(FoundType != NULL)
                         {
-                            if(FoundType->isDerivedFrom(*DerivedType) )
+                            if(FoundType->isDerivedFrom(*DerivedType)  && (getIncludeAbstract() || !FoundType->isAbstract()))
                             {
                                 getInternalFieldContainerTypes().push_back(FoundType->getId());
                             }

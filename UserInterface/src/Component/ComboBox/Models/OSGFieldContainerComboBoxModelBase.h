@@ -69,6 +69,7 @@
 
 #include <OpenSG/OSGStringFields.h> // FieldContainerTypes type
 #include <OpenSG/OSGUInt32Fields.h> // InternalFieldContainerTypes type
+#include <OpenSG/OSGBoolFields.h> // IncludeAbstract type
 
 #include "OSGFieldContainerComboBoxModelFields.h"
 
@@ -94,11 +95,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING FieldContainerComboBoxModelBase : public A
     {
         FieldContainerTypesFieldId         = Inherited::NextFieldId,
         InternalFieldContainerTypesFieldId = FieldContainerTypesFieldId         + 1,
-        NextFieldId                        = InternalFieldContainerTypesFieldId + 1
+        IncludeAbstractFieldId             = InternalFieldContainerTypesFieldId + 1,
+        NextFieldId                        = IncludeAbstractFieldId             + 1
     };
 
     static const OSG::BitVector FieldContainerTypesFieldMask;
     static const OSG::BitVector InternalFieldContainerTypesFieldMask;
+    static const OSG::BitVector IncludeAbstractFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -126,7 +129,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING FieldContainerComboBoxModelBase : public A
     /*! \{                                                                 */
 
            MFString            *getMFFieldContainerTypes(void);
+           SFBool              *getSFIncludeAbstract(void);
 
+           bool                &getIncludeAbstract(void);
+     const bool                &getIncludeAbstract(void) const;
            std::string         &getFieldContainerTypes(const UInt32 index);
            MFString            &getFieldContainerTypes(void);
      const MFString            &getFieldContainerTypes(void) const;
@@ -136,6 +142,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FieldContainerComboBoxModelBase : public A
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setIncludeAbstract( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -180,6 +187,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FieldContainerComboBoxModelBase : public A
 
     MFString            _mfFieldContainerTypes;
     MFUInt32            _mfInternalFieldContainerTypes;
+    SFBool              _sfIncludeAbstract;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

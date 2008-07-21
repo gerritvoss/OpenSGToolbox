@@ -915,7 +915,6 @@ InternalWindow::~InternalWindow(void)
 
 void InternalWindow::changed(BitVector whichField, UInt32 origin)
 {
-    Inherited::changed(whichField, origin);
 	
 	if( ((whichField & FocusedFieldMask) ||
 		(whichField & TitlebarFieldMask))&&
@@ -1058,6 +1057,8 @@ void InternalWindow::changed(BitVector whichField, UInt32 origin)
 			getTitlebar()->setDrawClose(getClosable());
 		endEditCP(getTitlebar(), Titlebar::DrawCloseFieldMask);
 	}
+
+    Inherited::changed(whichField, origin);
 }
 
 void InternalWindow::dump(      UInt32    , 
