@@ -888,6 +888,22 @@
 					Name="Events"
 					>
 					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGCollisionEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGCollisionEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGCollisionEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleCollisionListener.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEvent.cpp"
 						>
 					</File>

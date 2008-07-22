@@ -12,12 +12,14 @@
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
+#include <OpenSG/Toolbox/OSGMathUtils.h>
 
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGGeometryCollisionParticleSystemAffector.h>
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
+#include <OpenSG/ParticleSystem/OSGParticleCollisionListener.h>
 
 #include <OpenSG/Dynamics/OSGDataConverter.h>
 #include <OpenSG/Dynamics/OSGCompoundFunction.h>
@@ -117,6 +119,18 @@ class TutorialMouseMotionListener : public MouseMotionListener
             mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
     }
 };
+
+
+class TutorialParticleCollisionListener : public ParticleCollisionListener
+{
+   virtual void particleCollision(const ParticleEvent& ParE, const CollisionEvent& ColE)
+   {
+	   Vec3f Reflect(reflect(ParE.getVelocity(), ColE.getHitNormal()));
+	   ParE.getSystem()->setVelocity(Reflect, ParE.getIndex());
+	   ParE.getSystem()->setPosition(ColE.getHitPoint() + (0.00001f*Reflect), ParE.getIndex());
+   }
+};
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -162,7 +176,8 @@ int main(int argc, char **argv)
 
 	PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
 	//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
-	NodePtr CollisionNode = makeBox(5.0,5.0,5.0,1,1,1);//makeSphere(4,10.0f);
+	//NodePtr CollisionNode = makeBox(5.0,5.0,5.0,1,1,1);//makeSphere(4,10.0f);
+	NodePtr CollisionNode = makeSphere(2,4.0f);
 	
 	//Particle System Material
 	PointChunkPtr PSPointChunk = PointChunk::create();
@@ -218,6 +233,9 @@ int main(int argc, char **argv)
 		ExampleGeometryCollisionParticleSystemAffector->setCollisionAffector(NullFC);
 		ExampleGeometryCollisionParticleSystemAffector->setCollisionNode(CollisionNode);
 	endEditCP(ExampleGeometryCollisionParticleSystemAffector, GeometryCollisionParticleSystemAffector::CollisionAffectorFieldMask | GeometryCollisionParticleSystemAffector::CollisionNodeFieldMask);
+
+	TutorialParticleCollisionListener TheCollisionListener;
+	ExampleGeometryCollisionParticleSystemAffector->addParticleCollisionListener(&TheCollisionListener);
 
 	beginEditCP(ExampleParticleSystem, ParticleSystem::SystemAffectorsFieldMask | ParticleSystem::GeneratorsFieldMask);
 		ExampleParticleSystem->getSystemAffectors().push_back(ExampleGeometryCollisionParticleSystemAffector);

@@ -44,6 +44,10 @@
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGParticleSystemDef.h"
+#include <OpenSG/OSGIntersectAction.h>
+
+#include <set>
+#include "ParticleSystem/Events/OSGParticleCollisionListener.h"
 
 #include "OSGGeometryCollisionParticleSystemAffectorBase.h"
 
@@ -79,6 +83,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffector :
 
     /*! \}                                                                 */
     virtual void affect(ParticleSystemPtr System, const Time& elps);
+	
+    void addParticleCollisionListener(ParticleCollisionListenerPtr Listener);
+    void removeParticleCollisionListener(ParticleCollisionListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -100,6 +107,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffector :
 
     /*! \}                                                                 */
     
+	typedef std::set<ParticleCollisionListenerPtr> ParticleCollisionListenerSet;
+    typedef ParticleCollisionListenerSet::iterator ParticleCollisionListenerSetItor;
+
+    ParticleCollisionListenerSet       _ParticleCollisionListeners;
+
+    void produceCollision(ParticleSystemPtr System,Int32 ParticleIndex, IntersectAction* Action);
     /*==========================  PRIVATE  ================================*/
   private:
 

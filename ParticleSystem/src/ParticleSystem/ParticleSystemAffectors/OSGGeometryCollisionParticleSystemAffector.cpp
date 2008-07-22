@@ -46,7 +46,6 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGIntersectAction.h>
 
 #include "OSGGeometryCollisionParticleSystemAffector.h"
 #include "ParticleSystem/OSGParticleSystem.h"
@@ -78,6 +77,42 @@ void GeometryCollisionParticleSystemAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+
+void GeometryCollisionParticleSystemAffector::removeParticleCollisionListener(ParticleCollisionListenerPtr Listener)
+{
+   ParticleCollisionListenerSetItor EraseIter(_ParticleCollisionListeners.find(Listener));
+   if(EraseIter != _ParticleCollisionListeners.end())
+   {
+      _ParticleCollisionListeners.erase(EraseIter);
+   }
+}
+
+void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemPtr System, Int32 ParticleIndex, IntersectAction* Action)
+{
+	ParticleEvent TheParticleEvent( GeometryCollisionParticleSystemAffectorPtr(this), getSystemTime(),ParticleIndex, System
+		, System->getPosition(ParticleIndex)
+		, System->getSecPosition(ParticleIndex)
+		, System->getNormal(ParticleIndex)
+		, System->getColor(ParticleIndex)
+		, System->getSize(ParticleIndex)
+		, System->getLifespan(ParticleIndex)
+		, System->getAge(ParticleIndex)
+		, System->getVelocity(ParticleIndex)
+		, System->getSecVelocity(ParticleIndex)
+		, System->getAcceleration(ParticleIndex)
+		, System->getProperty(ParticleIndex));
+   CollisionEvent TheCollisionEvent( GeometryCollisionParticleSystemAffectorPtr(this), getSystemTime(),Action->getHitT(), Action->getHitObject(), Action->getHitTriangle(), Action->getHitNormal(), Action->getHitPoint() );
+   ParticleCollisionListenerSetItor NextItor;
+   for(ParticleCollisionListenerSetItor SetItor(_ParticleCollisionListeners.begin()) ; SetItor != _ParticleCollisionListeners.end() ;)
+   {
+      NextItor = SetItor;
+      ++NextItor;
+      (*SetItor)->particleCollision(TheParticleEvent, TheCollisionEvent);
+      SetItor = NextItor;
+   }
+}
+
 void GeometryCollisionParticleSystemAffector::affect(ParticleSystemPtr System, const Time& elps)
 {
 	UInt32 NumParticles(System->getNumParticles());
@@ -101,10 +136,11 @@ void GeometryCollisionParticleSystemAffector::affect(ParticleSystemPtr System, c
 			HitT = iAct->getHitT();
 			if(HitT > 0.0f && HitT*HitT<ParticlePos.dist2(ParticleSecPos))
 			{
+				produceCollision(System, i, iAct);
 				//System->killParticle(i);
-				System->setVelocity(-System->getVelocity(i),i);
-				System->setSecPosition(iAct->getHitPoint(), i);
-				System->setPosition(iAct->getHitPoint(),i);
+				//System->setVelocity(-System->getVelocity(i),i);
+				//System->setSecPosition(iAct->getHitPoint(), i);
+				//System->setPosition(iAct->getHitPoint(),i);
 			}
 		}
 	}

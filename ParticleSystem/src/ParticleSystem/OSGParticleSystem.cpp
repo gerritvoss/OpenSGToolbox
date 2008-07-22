@@ -351,7 +351,18 @@ bool ParticleSystem::internalKillParticle(UInt32 Index)
         return false;
     }
 
-	Pnt3f Pos(getPosition(Index));
+	Pnt3f Position(getPosition(Index));
+	Pnt3f SecPosition(getSecPosition(Index));
+	Vec3f Normal(getNormal(Index));
+	Color4f Color(getColor(Index));
+	Vec3f Size(getSize(Index));
+	Real32 Lifespan(getLifespan(Index));
+	Real32 Age(getAge(Index));
+	Vec3f Velocity(getVelocity(Index));
+	Vec3f SecVelocity(getSecVelocity(Index));
+	Vec3f Acceleration(getAcceleration(Index));
+	UInt64 Properties(getProperty(Index));
+
     removePosition(Index);
     removeSecPosition(Index);
     removeNormal(Index);
@@ -364,7 +375,7 @@ bool ParticleSystem::internalKillParticle(UInt32 Index)
     removeAcceleration(Index);
     removeProperty(Index);
 
-    produceParticleKilled(Pos);
+    produceParticleKilled(Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties);
 
     return true;
 }
@@ -552,7 +563,7 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 		getInternalPositions().push_back(Position);
 	endEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
 
-    produceParticleGenerated(Position);
+    produceParticleGenerated(getInternalPositions().size()-1, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties);
 
 	return true;
 }
@@ -1063,9 +1074,20 @@ void ParticleSystem::update(const Time& elps)
     produceSystemUpdated(VolumeChanged);
 }
 
-void ParticleSystem::produceParticleGenerated(Pnt3f ParticlePos)
+void ParticleSystem::produceParticleGenerated(Int32 Index,
+										 const Pnt3f& Position,
+										 const Pnt3f& SecPosition,
+										 const Vec3f& Normal,
+										 const Color4f& Color,
+										 const Vec3f& Size,
+										 Real32 Lifespan,
+										 Real32 Age,
+										 const Vec3f& Velocity,
+										 const Vec3f& SecVelocity,
+										 const Vec3f& Acceleration,
+										 UInt64 Properties)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), ParticlePos );
+   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1076,9 +1098,20 @@ void ParticleSystem::produceParticleGenerated(Pnt3f ParticlePos)
    }
 }
 
-void ParticleSystem::produceParticleKilled(Pnt3f ParticlePos)
+void ParticleSystem::produceParticleKilled(Int32 Index,
+										 const Pnt3f& Position,
+										 const Pnt3f& SecPosition,
+										 const Vec3f& Normal,
+										 const Color4f& Color,
+										 const Vec3f& Size,
+										 Real32 Lifespan,
+										 Real32 Age,
+										 const Vec3f& Velocity,
+										 const Vec3f& SecVelocity,
+										 const Vec3f& Acceleration,
+										 UInt64 Properties)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), ParticlePos );
+   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1089,9 +1122,21 @@ void ParticleSystem::produceParticleKilled(Pnt3f ParticlePos)
    }
 }
 
-void ParticleSystem::produceParticleStolen(Pnt3f ParticlePos)
+void ParticleSystem::produceParticleStolen(Int32 Index,
+										 const Pnt3f& Position,
+										 const Pnt3f& SecPosition,
+										 const Vec3f& Normal,
+										 const Color4f& Color,
+										 const Vec3f& Size,
+										 Real32 Lifespan,
+										 Real32 Age,
+										 const Vec3f& Velocity,
+										 const Vec3f& SecVelocity,
+										 const Vec3f& Acceleration,
+										 UInt64 Properties)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), ParticlePos );
+   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties );
+
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
