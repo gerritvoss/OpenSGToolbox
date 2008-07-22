@@ -84,8 +84,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 
     /*! \}                                                                 */
 
-    virtual void updateLayout(void);
-
 	//Adds the specified ChangeListener to the progress bar.
 	void addChangeListener(ChangeListenerPtr Listener);
 
@@ -144,11 +142,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+    virtual Color4f getDrawnTextColor(void) const;
+    virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
 
     BoundedRangeModel* _Model;
 
-	void updateProgressBarDrawObject(void);
-	void updateIndeterminateProgressBar(const Time& Elps);
+	void setupProgressBar();
+	void setupIndeterminateProgressBar(const Time& Elps);
     
     //Listener for getting change updates of the UIViewport
 	class ModelChangeListener : public ChangeListener
@@ -177,6 +177,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 
 	IndeterminateUpdateListener _IndeterminateUpdateListener;
 	Real32 _IndeterminateBarPosition;
+
+    Pnt2f _ProgressBarPosition;
+    Vec2f _ProgressBarSize;
     /*==========================  PRIVATE  ================================*/
   private:
 

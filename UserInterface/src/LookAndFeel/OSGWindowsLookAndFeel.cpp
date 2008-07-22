@@ -3942,7 +3942,13 @@ void WindowsLookAndFeel::init(void)
         WindowsProgressBar->setHorizontalAlignment(0.5);
         WindowsProgressBar->setFont(WindowsFont);
         WindowsProgressBar->setTextColor(Color4f(0.0,0.0,0.0,1.0));
-        WindowsProgressBar->setProgressBarDrawObject(WindowsProgressBarCanvas);
+        WindowsProgressBar->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+        WindowsProgressBar->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+        WindowsProgressBar->setDisabledTextColor(Color4f(0.0,0.0,0.0,1.0));
+        WindowsProgressBar->setDrawObject(WindowsProgressBarCanvas);
+        WindowsProgressBar->setFocusedDrawObject(WindowsProgressBarCanvas);
+        WindowsProgressBar->setRolloverDrawObject(WindowsProgressBarCanvas);
+        WindowsProgressBar->setDisabledDrawObject(WindowsProgressBarCanvas);
     endEditCP(WindowsProgressBar);
     
 	//************************** Slider *****************************

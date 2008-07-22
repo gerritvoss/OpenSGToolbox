@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="ProgressBar"
-	parent="Container"
+	parent="Component"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -85,6 +85,30 @@ A UI ProgressBar.
 	>
 	</Field>
 	<Field
+		name="FocusedTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="RolloverTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DisabledTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="TextColor"
 		type="Color4f"
 		cardinality="single"
@@ -102,12 +126,39 @@ A UI ProgressBar.
 	>
 	</Field>
 	<Field
-		name="ProgressBarDrawObject"
+		name="DrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
 		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="FocusedDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/Misc/OSGUIDrawObjectCanvas.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="RolloverDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/Misc/OSGUIDrawObjectCanvas.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="DisabledDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/Misc/OSGUIDrawObjectCanvas.h"
+		defaultValue="NullFC"
 	>
 	</Field>
 </FieldContainer>

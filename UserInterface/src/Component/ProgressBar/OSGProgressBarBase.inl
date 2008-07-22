@@ -152,6 +152,27 @@ SFUIFontPtr *ProgressBarBase::getSFFont(void)
     return &_sfFont;
 }
 
+//! Get the ProgressBar::_sfFocusedTextColor field.
+inline
+SFColor4f *ProgressBarBase::getSFFocusedTextColor(void)
+{
+    return &_sfFocusedTextColor;
+}
+
+//! Get the ProgressBar::_sfRolloverTextColor field.
+inline
+SFColor4f *ProgressBarBase::getSFRolloverTextColor(void)
+{
+    return &_sfRolloverTextColor;
+}
+
+//! Get the ProgressBar::_sfDisabledTextColor field.
+inline
+SFColor4f *ProgressBarBase::getSFDisabledTextColor(void)
+{
+    return &_sfDisabledTextColor;
+}
+
 //! Get the ProgressBar::_sfTextColor field.
 inline
 SFColor4f *ProgressBarBase::getSFTextColor(void)
@@ -166,11 +187,32 @@ SFUInt32 *ProgressBarBase::getSFOrientation(void)
     return &_sfOrientation;
 }
 
-//! Get the ProgressBar::_sfProgressBarDrawObject field.
+//! Get the ProgressBar::_sfDrawObject field.
 inline
-SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFProgressBarDrawObject(void)
+SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFDrawObject(void)
 {
-    return &_sfProgressBarDrawObject;
+    return &_sfDrawObject;
+}
+
+//! Get the ProgressBar::_sfFocusedDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFFocusedDrawObject(void)
+{
+    return &_sfFocusedDrawObject;
+}
+
+//! Get the ProgressBar::_sfRolloverDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFRolloverDrawObject(void)
+{
+    return &_sfRolloverDrawObject;
+}
+
+//! Get the ProgressBar::_sfDisabledDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFDisabledDrawObject(void)
+{
+    return &_sfDisabledDrawObject;
 }
 
 
@@ -342,6 +384,69 @@ void ProgressBarBase::setFont(const UIFontPtr &value)
     _sfFont.setValue(value);
 }
 
+//! Get the value of the ProgressBar::_sfFocusedTextColor field.
+inline
+Color4f &ProgressBarBase::getFocusedTextColor(void)
+{
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Get the value of the ProgressBar::_sfFocusedTextColor field.
+inline
+const Color4f &ProgressBarBase::getFocusedTextColor(void) const
+{
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Set the value of the ProgressBar::_sfFocusedTextColor field.
+inline
+void ProgressBarBase::setFocusedTextColor(const Color4f &value)
+{
+    _sfFocusedTextColor.setValue(value);
+}
+
+//! Get the value of the ProgressBar::_sfRolloverTextColor field.
+inline
+Color4f &ProgressBarBase::getRolloverTextColor(void)
+{
+    return _sfRolloverTextColor.getValue();
+}
+
+//! Get the value of the ProgressBar::_sfRolloverTextColor field.
+inline
+const Color4f &ProgressBarBase::getRolloverTextColor(void) const
+{
+    return _sfRolloverTextColor.getValue();
+}
+
+//! Set the value of the ProgressBar::_sfRolloverTextColor field.
+inline
+void ProgressBarBase::setRolloverTextColor(const Color4f &value)
+{
+    _sfRolloverTextColor.setValue(value);
+}
+
+//! Get the value of the ProgressBar::_sfDisabledTextColor field.
+inline
+Color4f &ProgressBarBase::getDisabledTextColor(void)
+{
+    return _sfDisabledTextColor.getValue();
+}
+
+//! Get the value of the ProgressBar::_sfDisabledTextColor field.
+inline
+const Color4f &ProgressBarBase::getDisabledTextColor(void) const
+{
+    return _sfDisabledTextColor.getValue();
+}
+
+//! Set the value of the ProgressBar::_sfDisabledTextColor field.
+inline
+void ProgressBarBase::setDisabledTextColor(const Color4f &value)
+{
+    _sfDisabledTextColor.setValue(value);
+}
+
 //! Get the value of the ProgressBar::_sfTextColor field.
 inline
 Color4f &ProgressBarBase::getTextColor(void)
@@ -384,25 +489,88 @@ void ProgressBarBase::setOrientation(const UInt32 &value)
     _sfOrientation.setValue(value);
 }
 
-//! Get the value of the ProgressBar::_sfProgressBarDrawObject field.
+//! Get the value of the ProgressBar::_sfDrawObject field.
 inline
-UIDrawObjectCanvasPtr &ProgressBarBase::getProgressBarDrawObject(void)
+UIDrawObjectCanvasPtr &ProgressBarBase::getDrawObject(void)
 {
-    return _sfProgressBarDrawObject.getValue();
+    return _sfDrawObject.getValue();
 }
 
-//! Get the value of the ProgressBar::_sfProgressBarDrawObject field.
+//! Get the value of the ProgressBar::_sfDrawObject field.
 inline
-const UIDrawObjectCanvasPtr &ProgressBarBase::getProgressBarDrawObject(void) const
+const UIDrawObjectCanvasPtr &ProgressBarBase::getDrawObject(void) const
 {
-    return _sfProgressBarDrawObject.getValue();
+    return _sfDrawObject.getValue();
 }
 
-//! Set the value of the ProgressBar::_sfProgressBarDrawObject field.
+//! Set the value of the ProgressBar::_sfDrawObject field.
 inline
-void ProgressBarBase::setProgressBarDrawObject(const UIDrawObjectCanvasPtr &value)
+void ProgressBarBase::setDrawObject(const UIDrawObjectCanvasPtr &value)
 {
-    _sfProgressBarDrawObject.setValue(value);
+    _sfDrawObject.setValue(value);
+}
+
+//! Get the value of the ProgressBar::_sfFocusedDrawObject field.
+inline
+UIDrawObjectCanvasPtr &ProgressBarBase::getFocusedDrawObject(void)
+{
+    return _sfFocusedDrawObject.getValue();
+}
+
+//! Get the value of the ProgressBar::_sfFocusedDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &ProgressBarBase::getFocusedDrawObject(void) const
+{
+    return _sfFocusedDrawObject.getValue();
+}
+
+//! Set the value of the ProgressBar::_sfFocusedDrawObject field.
+inline
+void ProgressBarBase::setFocusedDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfFocusedDrawObject.setValue(value);
+}
+
+//! Get the value of the ProgressBar::_sfRolloverDrawObject field.
+inline
+UIDrawObjectCanvasPtr &ProgressBarBase::getRolloverDrawObject(void)
+{
+    return _sfRolloverDrawObject.getValue();
+}
+
+//! Get the value of the ProgressBar::_sfRolloverDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &ProgressBarBase::getRolloverDrawObject(void) const
+{
+    return _sfRolloverDrawObject.getValue();
+}
+
+//! Set the value of the ProgressBar::_sfRolloverDrawObject field.
+inline
+void ProgressBarBase::setRolloverDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfRolloverDrawObject.setValue(value);
+}
+
+//! Get the value of the ProgressBar::_sfDisabledDrawObject field.
+inline
+UIDrawObjectCanvasPtr &ProgressBarBase::getDisabledDrawObject(void)
+{
+    return _sfDisabledDrawObject.getValue();
+}
+
+//! Get the value of the ProgressBar::_sfDisabledDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &ProgressBarBase::getDisabledDrawObject(void) const
+{
+    return _sfDisabledDrawObject.getValue();
+}
+
+//! Set the value of the ProgressBar::_sfDisabledDrawObject field.
+inline
+void ProgressBarBase::setDisabledDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfDisabledDrawObject.setValue(value);
 }
 
 

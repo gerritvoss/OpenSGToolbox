@@ -1813,6 +1813,7 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
         DisabledProgressBar->setEnabled(false);
 	endEditCP(DisabledProgressBar, ProgressBar::EnabledFieldMask | ProgressBar::ConstraintsFieldMask);
 
+    DisabledProgressBar->setModel(&_ProgressBarBoundedRangeModel);
     //Scrollbars
     _ScrollBarBoundedRangeModel.setMinimum(10);
     _ScrollBarBoundedRangeModel.setMaximum(100);

@@ -79,13 +79,65 @@ void ProgressBar::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Color4f ProgressBar::getDrawnTextColor(void) const
+{
+    if(getEnabled())
+    {
+        if(getFocused())
+        {
+            return getFocusedTextColor();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverTextColor();
+        }
+        else
+        {
+            return getTextColor();
+        }
+    }
+    else
+    {
+        return getDisabledTextColor();
+    }
+}
+
+UIDrawObjectCanvasPtr ProgressBar::getDrawnDrawObject(void) const
+{
+    if(getEnabled())
+    {
+        if(getFocused())
+        {
+            return getFocusedDrawObject();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverDrawObject();
+        }
+        else
+        {
+            return getDrawObject();
+        }
+    }
+    else
+    {
+        return getDisabledDrawObject();
+    }
+}
+
 void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
 {
-	//Draw The ProgressBar
-	Inherited::drawInternal(Graphics);
 
-	//Setup Clipping
-	setupClipping(Graphics);
+	//Draw The ProgressBar
+    UIDrawObjectCanvasPtr DrawObject(getDrawnDrawObject());
+    if(DrawObject != NullFC)
+    {
+		beginEditCP(DrawObject , SizeFieldMask | PositionFieldMask);
+            DrawObject->setPosition(_ProgressBarPosition);
+            DrawObject->setSize(_ProgressBarSize);
+		endEditCP(DrawObject , SizeFieldMask | PositionFieldMask);
+        DrawObject->draw(Graphics);
+    }
 	
 	//Draw The Progress String
 	if(getEnableProgressString() && getFont() != NullFC)
@@ -120,16 +172,11 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
 		AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
 
 		//Draw the Text
-		Graphics->drawText(AlignedPosition, StringToDraw, getFont(), getTextColor(), getOpacity());
+		Graphics->drawText(AlignedPosition, StringToDraw, getFont(), getDrawnTextColor(), getOpacity());
 	}
 }
 
-void ProgressBar::updateLayout(void)
-{
-	updateProgressBarDrawObject();
-}
-
-void ProgressBar::updateProgressBarDrawObject(void)
+void ProgressBar::setupProgressBar(void)
 {
 
     Pnt2f TopLeft, BottomRight;
@@ -146,20 +193,18 @@ void ProgressBar::updateProgressBarDrawObject(void)
 		{
 			Pos = _IndeterminateBarPosition;
 		}
-		beginEditCP(getProgressBarDrawObject() , SizeFieldMask | PositionFieldMask);
 			switch(getOrientation())
 			{
 			case ProgressBar::HORIZONTAL_ORIENTATION:
-				getProgressBarDrawObject()->setSize(Vec2f((BottomRight.x() - TopLeft.x())*getIndeterminateBarSize(),BottomRight.y() - TopLeft.y()));
-				getProgressBarDrawObject()->setPosition(Pnt2f(Pos*(BottomRight.x() - TopLeft.x())*(1.0-getIndeterminateBarSize()), TopLeft.y()));
+                _ProgressBarPosition.setValues((BottomRight.x() - TopLeft.x())*Pos*(1.0-getIndeterminateBarSize()), TopLeft.y());
+                _ProgressBarSize.setValues( (BottomRight.x() - TopLeft.x())*getIndeterminateBarSize(),BottomRight.y() - TopLeft.y());
 				break;
 			case ProgressBar::VERTICAL_ORIENTATION:
 			default:
-				getProgressBarDrawObject()->setSize(Vec2f(BottomRight.x() - TopLeft.x(), (BottomRight.y() - TopLeft.y())*getIndeterminateBarSize()));
-				getProgressBarDrawObject()->setPosition(Pnt2f(TopLeft.x(), Pos*(BottomRight.y() - TopLeft.y())*(1.0-getIndeterminateBarSize())));
+                _ProgressBarPosition.setValues( Pos*(BottomRight.x() - TopLeft.x())*(1.0-getIndeterminateBarSize()), TopLeft.y());
+                _ProgressBarSize.setValues( TopLeft.x(), Pos*(BottomRight.y() - TopLeft.y())*(1.0-getIndeterminateBarSize()));
 				break;
 			}
-		endEditCP(getProgressBarDrawObject() , SizeFieldMask | PositionFieldMask);
 	}
 	else
 	{
@@ -167,30 +212,28 @@ void ProgressBar::updateProgressBarDrawObject(void)
 
 		Real32 Percent(getPercentComplete());
 
-		beginEditCP(getProgressBarDrawObject() , SizeFieldMask | PositionFieldMask);
-		getProgressBarDrawObject()->setPosition(TopLeft);
+        _ProgressBarPosition = TopLeft;
 		switch(getOrientation())
 		{
 		case ProgressBar::HORIZONTAL_ORIENTATION:
-			getProgressBarDrawObject()->setSize(Vec2f((BottomRight.x() - TopLeft.x())*Percent,BottomRight.y() - TopLeft.y()));
+            _ProgressBarSize.setValues( (BottomRight.x() - TopLeft.x())*Percent,BottomRight.y() - TopLeft.y());
 			break;
 		case ProgressBar::VERTICAL_ORIENTATION:
 		default:
-			getProgressBarDrawObject()->setSize(Vec2f(BottomRight.x() - TopLeft.x(),(BottomRight.y() - TopLeft.y())*Percent));
+            _ProgressBarSize.setValues( BottomRight.x() - TopLeft.x(),(BottomRight.y() - TopLeft.y())*Percent);
 			break;
 		}
-		endEditCP(getProgressBarDrawObject() , SizeFieldMask | PositionFieldMask);
 	}
 }
 
-void ProgressBar::updateIndeterminateProgressBar(const Time& Elps)
+void ProgressBar::setupIndeterminateProgressBar(const Time& Elps)
 {
 	_IndeterminateBarPosition += Elps * getIndeterminateBarMoveRate();
 	if(_IndeterminateBarPosition > 2.0)
 	{
 		_IndeterminateBarPosition -= 2.0f*osgfloor(_IndeterminateBarPosition/2.0f);
 	}
-	updateProgressBarDrawObject();
+	setupProgressBar();
 }
 
 void ProgressBar::startIndeterminate(void)
@@ -218,7 +261,7 @@ void ProgressBar::endIndeterminate(void)
 	{
         getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
 	}
-    updateProgressBarDrawObject();
+    setupProgressBar();
 }
 
 /*-------------------------------------------------------------------------*\
@@ -241,7 +284,9 @@ ProgressBar::ProgressBar(const ProgressBar &source) :
 	_Model(NULL),
 	_ModelChangeListener(ProgressBarPtr(this)),
 	_IndeterminateUpdateListener(ProgressBarPtr(this)),
-    _IndeterminateBarPosition(0)
+    _IndeterminateBarPosition(0),
+    _ProgressBarPosition(source._ProgressBarPosition),
+    _ProgressBarSize(source._ProgressBarSize)
 {
 }
 
@@ -255,16 +300,10 @@ void ProgressBar::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if(whichField & ProgressBarDrawObjectFieldMask)
-	{
-		beginEditCP(ProgressBarPtr(this), ChildrenFieldMask);
-			getChildren().clear();
-			if(getProgressBarDrawObject() != NullFC)
-			{
-				getChildren().push_back(getProgressBarDrawObject());
-			}
-		endEditCP(ProgressBarPtr(this), ChildrenFieldMask);
-	}
+    if((whichField & SizeFieldMask))
+    {
+        setupProgressBar();
+    }
 }
 
 void ProgressBar::dump(      UInt32    , 
@@ -276,12 +315,12 @@ void ProgressBar::dump(      UInt32    ,
 
 void ProgressBar::ModelChangeListener::stateChanged(const ChangeEvent& e)
 {
-	_ProgressBar->updateProgressBarDrawObject();
+	_ProgressBar->setupProgressBar();
 }
 
 void ProgressBar::IndeterminateUpdateListener::update(const UpdateEvent& e)
 {
-	_ProgressBar->updateIndeterminateProgressBar(e.getElapsedTime());
+	_ProgressBar->setupIndeterminateProgressBar(e.getElapsedTime());
 }
 
 /*------------------------------------------------------------------------*/

@@ -88,14 +88,32 @@ const OSG::BitVector  ProgressBarBase::HorizontalAlignmentFieldMask =
 const OSG::BitVector  ProgressBarBase::FontFieldMask = 
     (TypeTraits<BitVector>::One << ProgressBarBase::FontFieldId);
 
+const OSG::BitVector  ProgressBarBase::FocusedTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << ProgressBarBase::FocusedTextColorFieldId);
+
+const OSG::BitVector  ProgressBarBase::RolloverTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << ProgressBarBase::RolloverTextColorFieldId);
+
+const OSG::BitVector  ProgressBarBase::DisabledTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << ProgressBarBase::DisabledTextColorFieldId);
+
 const OSG::BitVector  ProgressBarBase::TextColorFieldMask = 
     (TypeTraits<BitVector>::One << ProgressBarBase::TextColorFieldId);
 
 const OSG::BitVector  ProgressBarBase::OrientationFieldMask = 
     (TypeTraits<BitVector>::One << ProgressBarBase::OrientationFieldId);
 
-const OSG::BitVector  ProgressBarBase::ProgressBarDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << ProgressBarBase::ProgressBarDrawObjectFieldId);
+const OSG::BitVector  ProgressBarBase::DrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ProgressBarBase::DrawObjectFieldId);
+
+const OSG::BitVector  ProgressBarBase::FocusedDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ProgressBarBase::FocusedDrawObjectFieldId);
+
+const OSG::BitVector  ProgressBarBase::RolloverDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ProgressBarBase::RolloverDrawObjectFieldId);
+
+const OSG::BitVector  ProgressBarBase::DisabledDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ProgressBarBase::DisabledDrawObjectFieldId);
 
 const OSG::BitVector ProgressBarBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -128,13 +146,31 @@ const OSG::BitVector ProgressBarBase::MTInfluenceMask =
 /*! \var UIFontPtr       ProgressBarBase::_sfFont
     
 */
+/*! \var Color4f         ProgressBarBase::_sfFocusedTextColor
+    
+*/
+/*! \var Color4f         ProgressBarBase::_sfRolloverTextColor
+    
+*/
+/*! \var Color4f         ProgressBarBase::_sfDisabledTextColor
+    
+*/
 /*! \var Color4f         ProgressBarBase::_sfTextColor
     
 */
 /*! \var UInt32          ProgressBarBase::_sfOrientation
     
 */
-/*! \var UIDrawObjectCanvasPtr ProgressBarBase::_sfProgressBarDrawObject
+/*! \var UIDrawObjectCanvasPtr ProgressBarBase::_sfDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr ProgressBarBase::_sfFocusedDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr ProgressBarBase::_sfRolloverDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr ProgressBarBase::_sfDisabledDrawObject
     
 */
 
@@ -183,6 +219,21 @@ FieldDescription *ProgressBarBase::_desc[] =
                      false,
                      (FieldAccessMethod) &ProgressBarBase::getSFFont),
     new FieldDescription(SFColor4f::getClassType(), 
+                     "FocusedTextColor", 
+                     FocusedTextColorFieldId, FocusedTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ProgressBarBase::getSFFocusedTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "RolloverTextColor", 
+                     RolloverTextColorFieldId, RolloverTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ProgressBarBase::getSFRolloverTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "DisabledTextColor", 
+                     DisabledTextColorFieldId, DisabledTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ProgressBarBase::getSFDisabledTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
                      "TextColor", 
                      TextColorFieldId, TextColorFieldMask,
                      false,
@@ -193,16 +244,31 @@ FieldDescription *ProgressBarBase::_desc[] =
                      false,
                      (FieldAccessMethod) &ProgressBarBase::getSFOrientation),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ProgressBarDrawObject", 
-                     ProgressBarDrawObjectFieldId, ProgressBarDrawObjectFieldMask,
+                     "DrawObject", 
+                     DrawObjectFieldId, DrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &ProgressBarBase::getSFProgressBarDrawObject)
+                     (FieldAccessMethod) &ProgressBarBase::getSFDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "FocusedDrawObject", 
+                     FocusedDrawObjectFieldId, FocusedDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &ProgressBarBase::getSFFocusedDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "RolloverDrawObject", 
+                     RolloverDrawObjectFieldId, RolloverDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &ProgressBarBase::getSFRolloverDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "DisabledDrawObject", 
+                     DisabledDrawObjectFieldId, DisabledDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &ProgressBarBase::getSFDisabledDrawObject)
 };
 
 
 FieldContainerType ProgressBarBase::_type(
     "ProgressBar",
-    "Container",
+    "Component",
     NULL,
     (PrototypeCreateF) &ProgressBarBase::createEmpty,
     ProgressBar::initMethod,
@@ -280,9 +346,15 @@ ProgressBarBase::ProgressBarBase(void) :
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
     _sfFont                   (), 
+    _sfFocusedTextColor       (), 
+    _sfRolloverTextColor      (), 
+    _sfDisabledTextColor      (), 
     _sfTextColor              (), 
     _sfOrientation            (UInt32(ProgressBar::VERTICAL_ORIENTATION)), 
-    _sfProgressBarDrawObject  (), 
+    _sfDrawObject             (), 
+    _sfFocusedDrawObject      (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfRolloverDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfDisabledDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -300,9 +372,15 @@ ProgressBarBase::ProgressBarBase(const ProgressBarBase &source) :
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
     _sfFont                   (source._sfFont                   ), 
+    _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
+    _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
+    _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
     _sfTextColor              (source._sfTextColor              ), 
     _sfOrientation            (source._sfOrientation            ), 
-    _sfProgressBarDrawObject  (source._sfProgressBarDrawObject  ), 
+    _sfDrawObject             (source._sfDrawObject             ), 
+    _sfFocusedDrawObject      (source._sfFocusedDrawObject      ), 
+    _sfRolloverDrawObject     (source._sfRolloverDrawObject     ), 
+    _sfDisabledDrawObject     (source._sfDisabledDrawObject     ), 
     Inherited                 (source)
 {
 }
@@ -359,6 +437,21 @@ UInt32 ProgressBarBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFont.getBinSize();
     }
 
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        returnValue += _sfFocusedTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        returnValue += _sfRolloverTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        returnValue += _sfDisabledTextColor.getBinSize();
+    }
+
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
         returnValue += _sfTextColor.getBinSize();
@@ -369,9 +462,24 @@ UInt32 ProgressBarBase::getBinSize(const BitVector &whichField)
         returnValue += _sfOrientation.getBinSize();
     }
 
-    if(FieldBits::NoField != (ProgressBarDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
     {
-        returnValue += _sfProgressBarDrawObject.getBinSize();
+        returnValue += _sfDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfFocusedDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfRolloverDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfDisabledDrawObject.getBinSize();
     }
 
 
@@ -423,6 +531,21 @@ void ProgressBarBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFont.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
         _sfTextColor.copyToBin(pMem);
@@ -433,9 +556,24 @@ void ProgressBarBase::copyToBin(      BinaryDataHandler &pMem,
         _sfOrientation.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ProgressBarDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
     {
-        _sfProgressBarDrawObject.copyToBin(pMem);
+        _sfDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+    {
+        _sfFocusedDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    {
+        _sfRolloverDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    {
+        _sfDisabledDrawObject.copyToBin(pMem);
     }
 
 
@@ -486,6 +624,21 @@ void ProgressBarBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFont.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
         _sfTextColor.copyFromBin(pMem);
@@ -496,9 +649,24 @@ void ProgressBarBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfOrientation.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ProgressBarDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
     {
-        _sfProgressBarDrawObject.copyFromBin(pMem);
+        _sfDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+    {
+        _sfFocusedDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    {
+        _sfRolloverDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    {
+        _sfDisabledDrawObject.copyFromBin(pMem);
     }
 
 
@@ -535,14 +703,32 @@ void ProgressBarBase::executeSyncImpl(      ProgressBarBase *pOther,
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
 
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
         _sfTextColor.syncWith(pOther->_sfTextColor);
 
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
         _sfOrientation.syncWith(pOther->_sfOrientation);
 
-    if(FieldBits::NoField != (ProgressBarDrawObjectFieldMask & whichField))
-        _sfProgressBarDrawObject.syncWith(pOther->_sfProgressBarDrawObject);
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+        _sfDrawObject.syncWith(pOther->_sfDrawObject);
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+        _sfFocusedDrawObject.syncWith(pOther->_sfFocusedDrawObject);
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
 
 
 }
@@ -578,14 +764,32 @@ void ProgressBarBase::executeSyncImpl(      ProgressBarBase *pOther,
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
 
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
         _sfTextColor.syncWith(pOther->_sfTextColor);
 
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
         _sfOrientation.syncWith(pOther->_sfOrientation);
 
-    if(FieldBits::NoField != (ProgressBarDrawObjectFieldMask & whichField))
-        _sfProgressBarDrawObject.syncWith(pOther->_sfProgressBarDrawObject);
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+        _sfDrawObject.syncWith(pOther->_sfDrawObject);
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+        _sfFocusedDrawObject.syncWith(pOther->_sfFocusedDrawObject);
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
 
 
 
@@ -610,7 +814,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ProgressBarPtr>::_type("ProgressBarPtr", "ContainerPtr");
+DataType FieldDataTraits<ProgressBarPtr>::_type("ProgressBarPtr", "ComponentPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(ProgressBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "Component/OSGComponent.h" // Parent
 
 #include <OpenSG/OSGBoolFields.h> // Indeterminate type
 #include <OpenSG/OSGReal32Fields.h> // IndeterminateBarMoveRate type
@@ -75,9 +75,15 @@
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 #include "Text/OSGUIFont.h" // Font type
+#include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
+#include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
+#include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
 #include <OpenSG/OSGColor4fFields.h> // TextColor type
 #include <OpenSG/OSGUInt32Fields.h> // Orientation type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ProgressBarDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
 
 #include "OSGProgressBarFields.h"
 
@@ -88,11 +94,11 @@ class BinaryDataHandler;
 
 //! \brief ProgressBar Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
 {
   private:
 
-    typedef Container    Inherited;
+    typedef Component    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -109,10 +115,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Container
         VerticalAlignmentFieldId        = ProgressStringFieldId           + 1,
         HorizontalAlignmentFieldId      = VerticalAlignmentFieldId        + 1,
         FontFieldId                     = HorizontalAlignmentFieldId      + 1,
-        TextColorFieldId                = FontFieldId                     + 1,
+        FocusedTextColorFieldId         = FontFieldId                     + 1,
+        RolloverTextColorFieldId        = FocusedTextColorFieldId         + 1,
+        DisabledTextColorFieldId        = RolloverTextColorFieldId        + 1,
+        TextColorFieldId                = DisabledTextColorFieldId        + 1,
         OrientationFieldId              = TextColorFieldId                + 1,
-        ProgressBarDrawObjectFieldId    = OrientationFieldId              + 1,
-        NextFieldId                     = ProgressBarDrawObjectFieldId    + 1
+        DrawObjectFieldId               = OrientationFieldId              + 1,
+        FocusedDrawObjectFieldId        = DrawObjectFieldId               + 1,
+        RolloverDrawObjectFieldId       = FocusedDrawObjectFieldId        + 1,
+        DisabledDrawObjectFieldId       = RolloverDrawObjectFieldId       + 1,
+        NextFieldId                     = DisabledDrawObjectFieldId       + 1
     };
 
     static const OSG::BitVector IndeterminateFieldMask;
@@ -123,9 +135,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Container
     static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector HorizontalAlignmentFieldMask;
     static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector FocusedTextColorFieldMask;
+    static const OSG::BitVector RolloverTextColorFieldMask;
+    static const OSG::BitVector DisabledTextColorFieldMask;
     static const OSG::BitVector TextColorFieldMask;
     static const OSG::BitVector OrientationFieldMask;
-    static const OSG::BitVector ProgressBarDrawObjectFieldMask;
+    static const OSG::BitVector DrawObjectFieldMask;
+    static const OSG::BitVector FocusedDrawObjectFieldMask;
+    static const OSG::BitVector RolloverDrawObjectFieldMask;
+    static const OSG::BitVector DisabledDrawObjectFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -160,9 +178,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Container
            SFReal32            *getSFVerticalAlignment(void);
            SFReal32            *getSFHorizontalAlignment(void);
            SFUIFontPtr         *getSFFont           (void);
+           SFColor4f           *getSFFocusedTextColor(void);
+           SFColor4f           *getSFRolloverTextColor(void);
+           SFColor4f           *getSFDisabledTextColor(void);
            SFColor4f           *getSFTextColor      (void);
            SFUInt32            *getSFOrientation    (void);
-           SFUIDrawObjectCanvasPtr *getSFProgressBarDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
+           SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
 
            bool                &getIndeterminate  (void);
      const bool                &getIndeterminate  (void) const;
@@ -180,12 +204,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Container
      const Real32              &getHorizontalAlignment(void) const;
            UIFontPtr           &getFont           (void);
      const UIFontPtr           &getFont           (void) const;
+           Color4f             &getFocusedTextColor(void);
+     const Color4f             &getFocusedTextColor(void) const;
+           Color4f             &getRolloverTextColor(void);
+     const Color4f             &getRolloverTextColor(void) const;
+           Color4f             &getDisabledTextColor(void);
+     const Color4f             &getDisabledTextColor(void) const;
            Color4f             &getTextColor      (void);
      const Color4f             &getTextColor      (void) const;
            UInt32              &getOrientation    (void);
      const UInt32              &getOrientation    (void) const;
-           UIDrawObjectCanvasPtr &getProgressBarDrawObject(void);
-     const UIDrawObjectCanvasPtr &getProgressBarDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDrawObject     (void);
+     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
+           UIDrawObjectCanvasPtr &getFocusedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getFocusedDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getRolloverDrawObject(void);
+     const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -200,9 +236,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Container
      void setVerticalAlignment( const Real32 &value );
      void setHorizontalAlignment( const Real32 &value );
      void setFont           ( const UIFontPtr &value );
+     void setFocusedTextColor( const Color4f &value );
+     void setRolloverTextColor( const Color4f &value );
+     void setDisabledTextColor( const Color4f &value );
      void setTextColor      ( const Color4f &value );
      void setOrientation    ( const UInt32 &value );
-     void setProgressBarDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
+     void setFocusedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -253,9 +295,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Container
     SFReal32            _sfVerticalAlignment;
     SFReal32            _sfHorizontalAlignment;
     SFUIFontPtr         _sfFont;
+    SFColor4f           _sfFocusedTextColor;
+    SFColor4f           _sfRolloverTextColor;
+    SFColor4f           _sfDisabledTextColor;
     SFColor4f           _sfTextColor;
     SFUInt32            _sfOrientation;
-    SFUIDrawObjectCanvasPtr   _sfProgressBarDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfFocusedDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
