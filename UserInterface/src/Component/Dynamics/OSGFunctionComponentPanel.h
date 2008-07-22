@@ -161,7 +161,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 		virtual void mouseDragged(const MouseEvent& e);
 		virtual void keyPressed(const KeyEvent& e);
 		
-		void setActiveComponent(ComponentPtr Component);
+		void setActiveComponent(UInt32 Index);
 		void setInitialPosition(Pnt2f InitialPosition);
 	protected :
 		FunctionComponentPanelPtr _FunctionComponentPanel;
