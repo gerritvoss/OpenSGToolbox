@@ -516,9 +516,10 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mousePressed(const Mous
 {
 	if(_FunctionComponentPanel->_drawComponentResizeSquares && _FunctionComponentPanel->getTabOverLocation(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport())) != TAB_NONE)
 	{
-		bool isContained(false);
+		
 		for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
 		{
+			bool isContained(false);
 			//isContained = _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true);
 			if(_FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true) || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() + _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true)
 			   || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true))
@@ -545,9 +546,10 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mousePressed(const Mous
 			_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
 			
-			bool isContained(false);
+			
 			for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
 			{
+				bool isContained(false);
 				//isContained = _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true);
 				if(_FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true) || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() + _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true)
 					|| _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true))
@@ -586,7 +588,7 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 			{
 				isContained = true;
 				_FunctionComponentPanel->_ResizableComponent = _FunctionComponentPanel->getChildren()[i];
-				_FunctionComponentPanel->_ComponentResizeListener.setActiveComponent(i);
+				//_FunctionComponentPanel->_ComponentResizeListener.setActiveComponent(i);
 			}
 			
 			if(isContained)
@@ -677,8 +679,6 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseDragged(const Mous
 
 void FunctionComponentPanel::ComponentPanelMoveListener::keyReleased(const KeyEvent& e)
 {
-	//std::cout << "Key Released " << e.getKey() << std::endl;
-	//std::cout << "Modifier Released " << e.getModifiers() << std::endl;
 	if(e.getKey() == KeyEvent::KEY_CONTROL)
 	{
 		_FunctionComponentPanel->_drawComponentResizeSquares = false;
@@ -793,8 +793,8 @@ void FunctionComponentPanel::ComponentResizeListener::keyPressed(const KeyEvent&
 		
 		//Set the Active Component's size and position back to it's initial size and position
 		beginEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);	
-			_FunctionComponentPanel->getChildrenPositions()[_ActiveComponent].setValue(_InitialComponentPosition);
-			_FunctionComponentPanel->getChildrenSizes()[_ActiveComponent].setValue(_InitialComponentSize);
+			_FunctionComponentPanel->getChildrenPositions()[_ActiveResizeComponent].setValue(_InitialComponentPosition);
+			_FunctionComponentPanel->getChildrenSizes()[_ActiveResizeComponent].setValue(_InitialComponentSize);
 		endEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);
 
 	}
@@ -880,7 +880,7 @@ void FunctionComponentPanel::ComponentResizeListener::mouseDragged(const MouseEv
 		
 		//Test AbsolutePosition to make sure Component is inside parent container
 		Pnt2f AbsolutePositionBottomRight, ContainerTopLeft, ContainerBottomRight;
-		AbsolutePositionBottomRight = AbsolutePosition + _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize();
+		AbsolutePositionBottomRight = AbsolutePosition + _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize();
 		_FunctionComponentPanel->getInsideInsetsBounds(ContainerTopLeft, ContainerBottomRight);
 		if(AbsolutePosition.x() < ContainerTopLeft.x())
 		{
@@ -892,11 +892,11 @@ void FunctionComponentPanel::ComponentResizeListener::mouseDragged(const MouseEv
 		}
 		if(AbsolutePositionBottomRight.x() > ContainerBottomRight.x())
 		{
-			NewPosition[0] = ContainerBottomRight.x() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().x();
+			NewPosition[0] = ContainerBottomRight.x() - _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize().x();
 		}
 		if(AbsolutePositionBottomRight.y() > ContainerBottomRight.y())
 		{
-			NewPosition[1] = ContainerBottomRight.y() - _FunctionComponentPanel->getChildren()[_ActiveComponent]->getSize().y();
+			NewPosition[1] = ContainerBottomRight.y() - _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize().y();
 		}
 		
 		
@@ -905,8 +905,8 @@ void FunctionComponentPanel::ComponentResizeListener::mouseDragged(const MouseEv
 		
 		//Set new position and size
 		beginEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);	
-			_FunctionComponentPanel->getChildrenPositions()[_ActiveComponent].setValue(NewPosition);
-			_FunctionComponentPanel->getChildrenSizes()[_ActiveComponent].setValue(NewSize);
+			_FunctionComponentPanel->getChildrenPositions()[_ActiveResizeComponent].setValue(NewPosition);
+			_FunctionComponentPanel->getChildrenSizes()[_ActiveResizeComponent].setValue(NewSize);
 		endEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);
 
 	}
@@ -924,9 +924,9 @@ void FunctionComponentPanel::ComponentResizeListener::detach(void)
 
 void FunctionComponentPanel::ComponentResizeListener::setActiveComponent(UInt32 Index)
 {
-	_ActiveComponent = Index;
-    _InitialComponentPosition = _FunctionComponentPanel->getChildrenPositions()[_ActiveComponent];
-	_InitialComponentSize = _FunctionComponentPanel->getChildrenSizes()[_ActiveComponent];
+	_ActiveResizeComponent = Index;
+    _InitialComponentPosition = _FunctionComponentPanel->getChildrenPositions()[_ActiveResizeComponent];
+	_InitialComponentSize = _FunctionComponentPanel->getChildrenSizes()[_ActiveResizeComponent];
 }
 
 /*------------------------------------------------------------------------*/

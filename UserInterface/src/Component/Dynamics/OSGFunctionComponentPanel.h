@@ -165,7 +165,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 		void setInitialPosition(Pnt2f InitialPosition);
 	protected :
 		FunctionComponentPanelPtr _FunctionComponentPanel;
-		UInt32 _ActiveComponent;
+		UInt32 _ActiveResizeComponent;
 		Pnt2f _InitialPosition;
 		Pnt2f _InitialComponentPosition;
 		Vec2f _InitialComponentSize;
