@@ -173,7 +173,7 @@ class TutorialMouseListener : public MouseListener
 				std::cout<<"Velocity "<<TheRay.getDirection()<<std::endl;
 			}
 			RocketParticleSystem->addParticle(TheRay.getPosition(),
-			Vec3f(0.0,0.0f,1.0f),
+			Vec3f(0.0,1.0f,0.0f),
 			Color4f(1.0,0.0,0.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
 			10, 
@@ -389,7 +389,7 @@ int main(int argc, char **argv)
 		RocketParticleNodeCore->setSystem(RocketParticleSystem);
 		RocketParticleNodeCore->setPrototypeNode(RocketParticlePrototypeNode);
         RocketParticleNodeCore->setNormalSource(NodeParticleSystemCore::NORMAL_VELOCITY);
-        RocketParticleNodeCore->setUpSource(NodeParticleSystemCore::UP_STATIC);
+        RocketParticleNodeCore->setUpSource(NodeParticleSystemCore::UP_PARTICLE_NORMAL);
         RocketParticleNodeCore->setUp(Vec3f(0.0f,1.0f,0.0f));
     endEditCP(RocketParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 	

@@ -67,7 +67,7 @@
 
 #include "OSGParticleSystemAffector.h" // Parent
 
-#include "ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h" // CollisionAffector type
+#include "ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h" // CollisionAffectors type
 #include <OpenSG/OSGNodeFields.h> // CollisionNode type
 
 #include "OSGGeometryCollisionParticleSystemAffectorFields.h"
@@ -92,12 +92,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
 
     enum
     {
-        CollisionAffectorFieldId = Inherited::NextFieldId,
-        CollisionNodeFieldId     = CollisionAffectorFieldId + 1,
-        NextFieldId              = CollisionNodeFieldId     + 1
+        CollisionAffectorsFieldId = Inherited::NextFieldId,
+        CollisionNodeFieldId      = CollisionAffectorsFieldId + 1,
+        NextFieldId               = CollisionNodeFieldId      + 1
     };
 
-    static const OSG::BitVector CollisionAffectorFieldMask;
+    static const OSG::BitVector CollisionAffectorsFieldMask;
     static const OSG::BitVector CollisionNodeFieldMask;
 
 
@@ -125,20 +125,20 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFParticleAffectorPtr *getSFCollisionAffector(void);
+           MFParticleAffectorPtr *getMFCollisionAffectors(void);
            SFNodePtr           *getSFCollisionNode  (void);
 
-           ParticleAffectorPtr &getCollisionAffector(void);
-     const ParticleAffectorPtr &getCollisionAffector(void) const;
            NodePtr             &getCollisionNode  (void);
      const NodePtr             &getCollisionNode  (void) const;
+           ParticleAffectorPtr &getCollisionAffectors(const UInt32 index);
+           MFParticleAffectorPtr &getCollisionAffectors(void);
+     const MFParticleAffectorPtr &getCollisionAffectors(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCollisionAffector( const ParticleAffectorPtr &value );
      void setCollisionNode  ( const NodePtr &value );
 
     /*! \}                                                                 */
@@ -182,7 +182,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFParticleAffectorPtr   _sfCollisionAffector;
+    MFParticleAffectorPtr   _mfCollisionAffectors;
     SFNodePtr           _sfCollisionNode;
 
     /*! \}                                                                 */

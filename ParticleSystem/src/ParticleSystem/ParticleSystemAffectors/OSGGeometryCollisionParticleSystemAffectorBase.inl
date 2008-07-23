@@ -96,11 +96,11 @@ GeometryCollisionParticleSystemAffectorPtr GeometryCollisionParticleSystemAffect
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GeometryCollisionParticleSystemAffector::_sfCollisionAffector field.
+//! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
 inline
-SFParticleAffectorPtr *GeometryCollisionParticleSystemAffectorBase::getSFCollisionAffector(void)
+MFParticleAffectorPtr *GeometryCollisionParticleSystemAffectorBase::getMFCollisionAffectors(void)
 {
-    return &_sfCollisionAffector;
+    return &_mfCollisionAffectors;
 }
 
 //! Get the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
@@ -110,27 +110,6 @@ SFNodePtr *GeometryCollisionParticleSystemAffectorBase::getSFCollisionNode(void)
     return &_sfCollisionNode;
 }
 
-
-//! Get the value of the GeometryCollisionParticleSystemAffector::_sfCollisionAffector field.
-inline
-ParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffector(void)
-{
-    return _sfCollisionAffector.getValue();
-}
-
-//! Get the value of the GeometryCollisionParticleSystemAffector::_sfCollisionAffector field.
-inline
-const ParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffector(void) const
-{
-    return _sfCollisionAffector.getValue();
-}
-
-//! Set the value of the GeometryCollisionParticleSystemAffector::_sfCollisionAffector field.
-inline
-void GeometryCollisionParticleSystemAffectorBase::setCollisionAffector(const ParticleAffectorPtr &value)
-{
-    _sfCollisionAffector.setValue(value);
-}
 
 //! Get the value of the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
 inline
@@ -153,6 +132,27 @@ void GeometryCollisionParticleSystemAffectorBase::setCollisionNode(const NodePtr
     _sfCollisionNode.setValue(value);
 }
 
+
+//! Get the value of the \a index element the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
+inline
+ParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(const UInt32 index)
+{
+    return _mfCollisionAffectors[index];
+}
+
+//! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
+inline
+MFParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(void)
+{
+    return _mfCollisionAffectors;
+}
+
+//! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
+inline
+const MFParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(void) const
+{
+    return _mfCollisionAffectors;
+}
 
 OSG_END_NAMESPACE
 

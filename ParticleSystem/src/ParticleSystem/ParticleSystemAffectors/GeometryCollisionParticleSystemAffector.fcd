@@ -12,13 +12,12 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="CollisionAffector"
+		name="CollisionAffectors"
 		type="ParticleAffectorPtr"
-		cardinality="single"
+		cardinality="multi"
 		visibility="external"
 		access="public"
 		header="ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h"
-		defaultValue="NullFC"
 	>
 	</Field>
 	<Field

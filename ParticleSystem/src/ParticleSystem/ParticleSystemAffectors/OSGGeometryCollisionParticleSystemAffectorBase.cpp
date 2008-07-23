@@ -64,8 +64,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  GeometryCollisionParticleSystemAffectorBase::CollisionAffectorFieldMask = 
-    (TypeTraits<BitVector>::One << GeometryCollisionParticleSystemAffectorBase::CollisionAffectorFieldId);
+const OSG::BitVector  GeometryCollisionParticleSystemAffectorBase::CollisionAffectorsFieldMask = 
+    (TypeTraits<BitVector>::One << GeometryCollisionParticleSystemAffectorBase::CollisionAffectorsFieldId);
 
 const OSG::BitVector  GeometryCollisionParticleSystemAffectorBase::CollisionNodeFieldMask = 
     (TypeTraits<BitVector>::One << GeometryCollisionParticleSystemAffectorBase::CollisionNodeFieldId);
@@ -77,7 +77,7 @@ const OSG::BitVector GeometryCollisionParticleSystemAffectorBase::MTInfluenceMas
 
 // Field descriptions
 
-/*! \var ParticleAffectorPtr GeometryCollisionParticleSystemAffectorBase::_sfCollisionAffector
+/*! \var ParticleAffectorPtr GeometryCollisionParticleSystemAffectorBase::_mfCollisionAffectors
     
 */
 /*! \var NodePtr         GeometryCollisionParticleSystemAffectorBase::_sfCollisionNode
@@ -88,11 +88,11 @@ const OSG::BitVector GeometryCollisionParticleSystemAffectorBase::MTInfluenceMas
 
 FieldDescription *GeometryCollisionParticleSystemAffectorBase::_desc[] = 
 {
-    new FieldDescription(SFParticleAffectorPtr::getClassType(), 
-                     "CollisionAffector", 
-                     CollisionAffectorFieldId, CollisionAffectorFieldMask,
+    new FieldDescription(MFParticleAffectorPtr::getClassType(), 
+                     "CollisionAffectors", 
+                     CollisionAffectorsFieldId, CollisionAffectorsFieldMask,
                      false,
-                     (FieldAccessMethod) &GeometryCollisionParticleSystemAffectorBase::getSFCollisionAffector),
+                     (FieldAccessMethod) &GeometryCollisionParticleSystemAffectorBase::getMFCollisionAffectors),
     new FieldDescription(SFNodePtr::getClassType(), 
                      "CollisionNode", 
                      CollisionNodeFieldId, CollisionNodeFieldMask,
@@ -163,6 +163,7 @@ void GeometryCollisionParticleSystemAffectorBase::onDestroyAspect(UInt32 uiId, U
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfCollisionAffectors.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -173,7 +174,7 @@ void GeometryCollisionParticleSystemAffectorBase::onDestroyAspect(UInt32 uiId, U
 #endif
 
 GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(void) :
-    _sfCollisionAffector      (ParticleAffectorPtr(NullFC)), 
+    _mfCollisionAffectors     (), 
     _sfCollisionNode          (NodePtr(NullFC)), 
     Inherited() 
 {
@@ -184,7 +185,7 @@ GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffe
 #endif
 
 GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(const GeometryCollisionParticleSystemAffectorBase &source) :
-    _sfCollisionAffector      (source._sfCollisionAffector      ), 
+    _mfCollisionAffectors     (source._mfCollisionAffectors     ), 
     _sfCollisionNode          (source._sfCollisionNode          ), 
     Inherited                 (source)
 {
@@ -202,9 +203,9 @@ UInt32 GeometryCollisionParticleSystemAffectorBase::getBinSize(const BitVector &
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (CollisionAffectorFieldMask & whichField))
+    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
     {
-        returnValue += _sfCollisionAffector.getBinSize();
+        returnValue += _mfCollisionAffectors.getBinSize();
     }
 
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
@@ -221,9 +222,9 @@ void GeometryCollisionParticleSystemAffectorBase::copyToBin(      BinaryDataHand
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (CollisionAffectorFieldMask & whichField))
+    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
     {
-        _sfCollisionAffector.copyToBin(pMem);
+        _mfCollisionAffectors.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
@@ -239,9 +240,9 @@ void GeometryCollisionParticleSystemAffectorBase::copyFromBin(      BinaryDataHa
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (CollisionAffectorFieldMask & whichField))
+    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
     {
-        _sfCollisionAffector.copyFromBin(pMem);
+        _mfCollisionAffectors.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
@@ -259,8 +260,8 @@ void GeometryCollisionParticleSystemAffectorBase::executeSyncImpl(      Geometry
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (CollisionAffectorFieldMask & whichField))
-        _sfCollisionAffector.syncWith(pOther->_sfCollisionAffector);
+    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
+        _mfCollisionAffectors.syncWith(pOther->_mfCollisionAffectors);
 
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
         _sfCollisionNode.syncWith(pOther->_sfCollisionNode);
@@ -275,12 +276,12 @@ void GeometryCollisionParticleSystemAffectorBase::executeSyncImpl(      Geometry
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (CollisionAffectorFieldMask & whichField))
-        _sfCollisionAffector.syncWith(pOther->_sfCollisionAffector);
-
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
         _sfCollisionNode.syncWith(pOther->_sfCollisionNode);
 
+
+    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
+        _mfCollisionAffectors.syncWith(pOther->_mfCollisionAffectors, sInfo);
 
 
 }
@@ -290,6 +291,9 @@ void GeometryCollisionParticleSystemAffectorBase::execBeginEditImpl (const BitVe
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
+        _mfCollisionAffectors.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

@@ -229,10 +229,9 @@ int main(int argc, char **argv)
 	
 	//Geometry Collision Affector
 	GeometryCollisionParticleSystemAffectorPtr ExampleGeometryCollisionParticleSystemAffector = GeometryCollisionParticleSystemAffector::create();
-	beginEditCP(ExampleGeometryCollisionParticleSystemAffector, GeometryCollisionParticleSystemAffector::CollisionAffectorFieldMask | GeometryCollisionParticleSystemAffector::CollisionNodeFieldMask);
-		ExampleGeometryCollisionParticleSystemAffector->setCollisionAffector(NullFC);
+	beginEditCP(ExampleGeometryCollisionParticleSystemAffector, GeometryCollisionParticleSystemAffector::CollisionNodeFieldMask);
 		ExampleGeometryCollisionParticleSystemAffector->setCollisionNode(CollisionNode);
-	endEditCP(ExampleGeometryCollisionParticleSystemAffector, GeometryCollisionParticleSystemAffector::CollisionAffectorFieldMask | GeometryCollisionParticleSystemAffector::CollisionNodeFieldMask);
+	endEditCP(ExampleGeometryCollisionParticleSystemAffector, GeometryCollisionParticleSystemAffector::CollisionNodeFieldMask);
 
 	TutorialParticleCollisionListener TheCollisionListener;
 	ExampleGeometryCollisionParticleSystemAffector->addParticleCollisionListener(&TheCollisionListener);

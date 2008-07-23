@@ -49,6 +49,7 @@
 
 #include "OSGGeometryCollisionParticleSystemAffector.h"
 #include "ParticleSystem/OSGParticleSystem.h"
+#include "ParticleSystem/ParticleAffectors/OSGParticleAffector.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -117,7 +118,7 @@ void GeometryCollisionParticleSystemAffector::affect(ParticleSystemPtr System, c
 {
 	UInt32 NumParticles(System->getNumParticles());
 	
-	Line ray;// = Line(Pnt3f(5,0,-10), Vec3f(0,-1,0));
+	Line ray;
     IntersectAction *iAct = IntersectAction::create();
 	Pnt3f ParticlePos, ParticleSecPos;
     
@@ -137,10 +138,10 @@ void GeometryCollisionParticleSystemAffector::affect(ParticleSystemPtr System, c
 			if(HitT > 0.0f && HitT*HitT<ParticlePos.dist2(ParticleSecPos))
 			{
 				produceCollision(System, i, iAct);
-				//System->killParticle(i);
-				//System->setVelocity(-System->getVelocity(i),i);
-				//System->setSecPosition(iAct->getHitPoint(), i);
-				//System->setPosition(iAct->getHitPoint(),i);
+                for(UInt32 j(0) ; j<getCollisionAffectors().size(); ++j)
+                {
+                    getCollisionAffectors()[i]->affect(System,i,elps);
+                }
 			}
 		}
 	}
