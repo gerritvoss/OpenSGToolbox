@@ -6,11 +6,15 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/Input/OSGWindowUtils.h>
+
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
+#include <OpenSG/ParticleSystem/OSGParticleCollisionListener.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
+#include <OpenSG/Toolbox/OSGMathUtils.h>
 
 #include <OpenSG/OSGBlendChunk.h>
 #include <OpenSG/OSGPointChunk.h>
@@ -34,6 +38,7 @@
 #include <OpenSG/ParticleSystem/OSGAgeSizeParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGDistanceKillParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGCollectiveGravityParticleSystemAffector.h>
+#include <OpenSG/ParticleSystem/OSGGeometryCollisionParticleSystemAffector.h>
 
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
 #include <OpenSG/ParticleSystem/OSGBurstParticleGenerator.h>
@@ -61,7 +66,7 @@ void display(void);
 void reshape(Vec2f Size);
 
 //Particle System Drawer
-PointParticleSystemDrawerPtr ExampleRocketParticleSystemDrawer;
+
 QuadParticleSystemDrawerPtr SmokeParticleSystemDrawer;
 PointParticleSystemDrawerPtr ExampleShrapnelParticleSystemDrawer;
 PointParticleSystemDrawerPtr ExampleFireballParticleSystemDrawer;
@@ -70,6 +75,7 @@ ParticleSystemPtr RocketParticleSystem;
 ParticleSystemPtr SmokeParticleSystem;
 ParticleSystemPtr ShrapnelParticleSystem;
 ParticleSystemPtr FireballParticleSystem;
+ParticleSystemPtr HouseParticleSystem;
 
 BurstParticleGeneratorPtr ShrapnelBurstGenerator;
 RateParticleGeneratorPtr SmokeGenerator;
@@ -86,12 +92,16 @@ FunctionPtr SmokePositionDistribution;
 
 FunctionPtr createPositionDistribution(void);
 FunctionPtr createLifespanDistribution(void);
+FunctionPtr createVelocityDistribution(void);
+
 FunctionPtr createSmokeVelocityDistribution(void);
 FunctionPtr createSmokeLifespanDistribution(void);
 FunctionPtr createSmokePositionDistribution(void);
+
 FunctionPtr createShrapnelPositionDistribution(void);
 FunctionPtr createShrapnelAccelerationDistribution(void);
 FunctionPtr createShrapnelVelocityDistribution(void);
+
 FunctionPtr createFireballVelocityDistribution(void);
 FunctionPtr createFireballPositionDistribution(void);
 FunctionPtr createFireballAccelerationDistribution(void);
@@ -257,6 +267,27 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
    {
    }
 };
+class TutorialParticleCollisionListener : public ParticleCollisionListener
+{
+   virtual void particleCollision(const ParticleEvent& ParE, const CollisionEvent& ColE)
+   {
+	   Real32 phi= osgacos((ParE.getVelocity().dot(ColE.getHitNormal()))/(ParE.getVelocity().length()*ColE.getHitNormal().length()));
+	   
+		float degree = deg2rad(80.0);
+	   if( deg2rad(80.0) < phi)
+	   {
+		   ParE.getSystem()->killParticle(ParE.getIndex());
+	   }
+	   else
+	   {
+			//Reflect the Particle
+		   Vec3f Reflect(reflect(ParE.getVelocity(), ColE.getHitNormal()));
+		   ParE.getSystem()->setVelocity(Reflect, ParE.getIndex());
+		   ParE.getSystem()->setPosition(ColE.getHitPoint() + (0.00001f*Reflect), ParE.getIndex());
+	   }
+	  
+   }
+};
 int main(int argc, char **argv)
 {
     // OSG init
@@ -380,7 +411,23 @@ int main(int argc, char **argv)
 		
 	
 	//Particle System Node
+		//collision node
+	//NodePtr EnvironmentNode = makeSphere(2,4.0f);
+
+	Matrix EnvironmentTransformation;
+	EnvironmentTransformation.setScale(5.0f);
+
+	TransformPtr EnvironmentTransformCore = Transform::create();
+	beginEditCP(EnvironmentTransformCore, Transform::MatrixFieldMask);
+		EnvironmentTransformCore->setMatrix(EnvironmentTransformation);
+	endEditCP(EnvironmentTransformCore, Transform::MatrixFieldMask);
 	
+	NodePtr EnvironmentNode = Node::create();
+	beginEditCP(EnvironmentNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+		EnvironmentNode->setCore(EnvironmentTransformCore);
+		EnvironmentNode->addChild(SceneFileHandler::the().read("Data/house.obj"));
+	endEditCP(EnvironmentNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
 		//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
 	NodePtr RocketParticlePrototypeNode = SceneFileHandler::the().read("Data/rocket.obj");
 	
@@ -393,21 +440,25 @@ int main(int argc, char **argv)
         RocketParticleNodeCore->setUp(Vec3f(0.0f,1.0f,0.0f));
     endEditCP(RocketParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 	
+	//Geometry Collision Affector
+	GeometryCollisionParticleSystemAffectorPtr ExampleGeometryCollisionParticleSystemAffector = GeometryCollisionParticleSystemAffector::create();
+	beginEditCP(ExampleGeometryCollisionParticleSystemAffector, GeometryCollisionParticleSystemAffector::CollisionNodeFieldMask);
+		ExampleGeometryCollisionParticleSystemAffector->setCollisionNode(EnvironmentNode);
+	endEditCP(ExampleGeometryCollisionParticleSystemAffector, GeometryCollisionParticleSystemAffector::CollisionNodeFieldMask);
+
+	TutorialParticleCollisionListener TheCollisionListener;
+	ExampleGeometryCollisionParticleSystemAffector->addParticleCollisionListener(&TheCollisionListener);
+
+
 	NodePtr RocketParticleNode = osg::Node::create();
     beginEditCP(RocketParticleNode, Node::CoreFieldMask);
         RocketParticleNode->setCore(RocketParticleNodeCore);
     endEditCP(RocketParticleNode, Node::CoreFieldMask);
 
-	DistanceKillParticleAffectorPtr RocketDistanceKillParticleAffector = osg::DistanceKillParticleAffector::create();
-	beginEditCP(RocketDistanceKillParticleAffector, DistanceKillParticleAffector::KillDistanceFieldMask | DistanceKillParticleAffector::ParticleSystemNodeFieldMask | DistanceKillParticleAffector::DistanceFromSourceFieldMask |	DistanceKillParticleAffector::DistanceFromCameraFieldMask);
-		RocketDistanceKillParticleAffector->setKillDistance(100.0f);
-		RocketDistanceKillParticleAffector->setParticleSystemNode(RocketParticleNode);
-		RocketDistanceKillParticleAffector->setDistanceFromSource(DistanceKillParticleAffector::DISTANCE_FROM_CAMERA);
-		RocketDistanceKillParticleAffector->setDistanceFromCamera(mgr->getCamera());
-	endEditCP(RocketDistanceKillParticleAffector, DistanceKillParticleAffector::KillDistanceFieldMask | DistanceKillParticleAffector::ParticleSystemNodeFieldMask | DistanceKillParticleAffector::DistanceFromSourceFieldMask |	DistanceKillParticleAffector::DistanceFromCameraFieldMask);
 	//Attach the Affector to the Rocket Particle System
 	beginEditCP(RocketParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
-		RocketParticleSystem->getAffectors().push_back(RocketDistanceKillParticleAffector);
+		//RocketParticleSystem->getAffectors().push_back();
+		RocketParticleSystem->getSystemAffectors().push_back(ExampleGeometryCollisionParticleSystemAffector);
 	endEditCP(RocketParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 
 		
@@ -546,6 +597,7 @@ int main(int argc, char **argv)
 		scene->addChild(SmokeParticleNode);
 		scene->addChild(ShrapnelParticleNode);
 		scene->addChild(FireballParticleNode);
+		scene->addChild(EnvironmentNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
@@ -610,6 +662,28 @@ FunctionPtr createLifespanDistribution(void)
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;
+}
+FunctionPtr createVelocityDistribution(void)
+{
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,-4.5));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,-5.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
 }
 FunctionPtr createSmokePositionDistribution(void)
 {

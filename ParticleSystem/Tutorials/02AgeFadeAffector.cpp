@@ -203,7 +203,7 @@ int main(int argc, char **argv)
 		ExampleParticleSystem->addParticle(
 			PositionReturnValue,
 			Vec3f(0.0f,0.0f,1.0f),
-			Color4f(1.0,0.0,0.0,0.0), 
+			Color4f(0.0,1.0,0.0,0.0), 
 			Vec3f(1.0,1.0,1.0), 
 			LifespanReturnValue, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
