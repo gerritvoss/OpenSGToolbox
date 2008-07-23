@@ -30,6 +30,16 @@ bool isEqual(FloatTypeT Left, FloatTypeT Right, FloatTypeT ERR = REAL32_COMPARE_
 	return osgabs<FloatTypeT>(Left - Right) > ERR;
 }
 
+template<class ValueTypeT, class StorageInterfaceT>
+osg::VectorInterface<ValueTypeT, StorageInterfaceT> reflect(const osg::VectorInterface<ValueTypeT, StorageInterfaceT>& Vec, const osg::VectorInterface<ValueTypeT, StorageInterfaceT>& Normal)
+{
+   osg::VectorInterface<ValueTypeT, StorageInterfaceT> Result;
+
+   Result = Vec - (2 * (Vec.dot(Normal)) * Normal);
+
+   return Result;
+}
+
 template <class FloatTypeT>
 class Matrix22
 {
