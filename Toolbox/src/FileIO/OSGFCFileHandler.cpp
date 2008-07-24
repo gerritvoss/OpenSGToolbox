@@ -205,6 +205,33 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 return _ReadProgressFP;
  }
 
+ FieldContainerPtr FCFileHandler::read(const  Path& FilePath, const FieldContainerType& Type)
+ {
+    FCPtrStore Containers;
+    Containers = read(FilePath);
+
+    FCPtrStore::iterator ContainerItor;
+    for(ContainerItor = Containers.begin(); ContainerItor != Containers.end(); ++ContainerItor)
+    {
+        if((*ContainerItor)->getType() == Type)
+        {
+            return (*ContainerItor);
+            break;
+        }
+    }
+    return NullFC;
+ }
+ 
+ bool FCFileHandler::write(const FieldContainerPtr Container, const  Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
+ {
+	FCPtrStore Containers;
+	Containers.insert(Container);
+
+	//Save the Field Containers to a file
+	return write(Containers,FilePath, IgnoreTypes, Compress);
+ }
+
+
  FCFileHandler::FCPtrStore FCFileHandler::read(std::istream &InputStream, const std::string& Extension)
  {
 	 FCPtrStore Result;
