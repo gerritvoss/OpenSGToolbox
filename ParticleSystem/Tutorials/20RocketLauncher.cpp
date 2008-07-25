@@ -354,7 +354,7 @@ int main(int argc, char **argv)
 
 		//smoke material
 	TextureChunkPtr QuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Smoke.png");    
+    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/ooze.png");    
     beginEditCP(QuadTextureChunk, TextureChunk::ImageFieldMask);
         QuadTextureChunk->setImage(LoadedImage);
         QuadTextureChunk->setEnvMode(GL_MODULATE);
@@ -415,7 +415,7 @@ int main(int argc, char **argv)
 	//NodePtr EnvironmentNode = makeSphere(2,4.0f);
 
 	Matrix EnvironmentTransformation;
-	EnvironmentTransformation.setScale(5.0f);
+	EnvironmentTransformation.setScale(0.1f);
 
 	TransformPtr EnvironmentTransformCore = Transform::create();
 	beginEditCP(EnvironmentTransformCore, Transform::MatrixFieldMask);
@@ -425,7 +425,7 @@ int main(int argc, char **argv)
 	NodePtr EnvironmentNode = Node::create();
 	beginEditCP(EnvironmentNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 		EnvironmentNode->setCore(EnvironmentTransformCore);
-		EnvironmentNode->addChild(SceneFileHandler::the().read("Data/house.obj"));
+		EnvironmentNode->addChild(SceneFileHandler::the().read("Data/Chloroplast.osb"));
 	endEditCP(EnvironmentNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 		//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
@@ -469,7 +469,7 @@ int main(int argc, char **argv)
 	beginEditCP(SmokeGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 		SmokeGenerator->setPositionFunction(SmokePositionDistribution);
 		SmokeGenerator->setLifespanFunction(createSmokeLifespanDistribution());
-		SmokeGenerator->setGenerationRate(30.0);
+		SmokeGenerator->setGenerationRate(50.0);
 		SmokeGenerator->setVelocityFunction(createSmokeVelocityDistribution());
 	endEditCP(SmokeGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 			//Attach the function objects the Affectors
@@ -478,7 +478,7 @@ int main(int argc, char **argv)
 		SmokeAgeFadeParticleAffector->setFadeInTime(2.0f);
 		SmokeAgeFadeParticleAffector->setFadeOutTime(5.0f);
 		SmokeAgeFadeParticleAffector->setStartAlpha(0.0f);
-		SmokeAgeFadeParticleAffector->setFadeToAlpha(1.0f);
+		SmokeAgeFadeParticleAffector->setFadeToAlpha(0.2f);
 		SmokeAgeFadeParticleAffector->setEndAlpha(0.0f);	
 	endEditCP(SmokeAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 
@@ -544,7 +544,7 @@ int main(int argc, char **argv)
 
 		//fireball
 	FireballGenerator = osg::BurstParticleGenerator::create();
-	NodePtr FireballParticlePrototypeNode = SceneFileHandler::the().read("Data/fireball.obj");
+	NodePtr FireballParticlePrototypeNode = SceneFileHandler::the().read("Data/bubble.obj");
 
 	NodeParticleSystemCorePtr FireballParticleNodeCore = osg::NodeParticleSystemCore::create();
     beginEditCP(FireballParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);

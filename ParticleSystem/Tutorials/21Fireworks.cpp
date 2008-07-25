@@ -86,6 +86,7 @@ AgeFadeParticleAffectorPtr StarAgeFadeParticleAffector;
 AgeSizeParticleAffectorPtr StarAgeSizeParticleAffector;
 AgeFadeParticleAffectorPtr ComStarAgeFadeParticleAffector;
 AgeSizeParticleAffectorPtr ComStarAgeSizeParticleAffector;
+CollectiveGravityParticleSystemAffectorPtr StarCollectiveGravityParticleSystemAffector;
 
 
 ParticleSystemCorePtr PointParticleNodeCore;
@@ -252,11 +253,12 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
 					CircleParticleSystem->getAffectors().push_back(CircleAgeSizeParticleAffector);
 				endEditCP(CircleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 		//Attach the Affector to the Star Particle System
-				beginEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+				beginEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 					StarParticleSystem->getGenerators().push_back(StarBurstGenerator);
 					StarParticleSystem->getAffectors().push_back(StarAgeFadeParticleAffector);
 					StarParticleSystem->getAffectors().push_back(StarAgeSizeParticleAffector);
-				endEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+					//StarParticleSystem->getSystemAffectors().push_back(StarCollectiveGravityParticleSystemAffector);
+				endEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 		//Attach the Affector to the ComStar Particle System
 				beginEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 					ComStarParticleSystem->getGenerators().push_back(ComStarBurstGenerator);
@@ -602,6 +604,12 @@ int main(int argc, char **argv)
 			StarAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
 	endEditCP(StarAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
    
+	/*//Create an CollectiveGravityParticleSystemAffector
+	CollectiveGravityParticleSystemAffectorPtr StarCollectiveGravityParticleSystemAffector = osg::CollectiveGravityParticleSystemAffector::create();
+	beginEditCP(StarCollectiveGravityParticleSystemAffector, CollectiveGravityParticleSystemAffector::ParticleMassFieldMask);
+		StarCollectiveGravityParticleSystemAffector->setParticleMass(10000000000.0f);
+	endEditCP(StarCollectiveGravityParticleSystemAffector, CollectiveGravityParticleSystemAffector::ParticleMassFieldMask);
+*/
 	ParticleSystemCorePtr StarParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(StarParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		StarParticleNodeCore->setSystem(StarParticleSystem);
@@ -683,7 +691,7 @@ int main(int argc, char **argv)
         scene->setCore(osg::Group::create());
         scene->addChild(RocketParticleNode);
 		scene->addChild(CircleParticleNode);
-		scene->addChild(StarParticleNode);
+		//scene->addChild(StarParticleNode);
 		scene->addChild(ComStarParticleNode);
 	endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 

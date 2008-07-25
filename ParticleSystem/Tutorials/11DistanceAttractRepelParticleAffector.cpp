@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 01ParticleSystemDrawer Window");
+                                        "OpenSG 11DistanceAttractRepel Window");
 										
 
 	//Particle System Material

@@ -209,7 +209,7 @@ int main(int argc, char **argv)
 
 	Pnt3f PositionReturnValue;
 	Vec3f NormalReturnValue = Vec3f(0.0,0.0f,1.0f);
-	Color4f ColorReturnValue = Color4f(0.0,0.0f,1.0f, 1.0f);
+	Color4f ColorReturnValue = Color4f(1.0,1.0f,1.0f, 1.0f);
 	Vec3f SizeReturnValue;
 	Time LifespanReturnValue = -1;
 	Vec3f VelocityReturnValue;
