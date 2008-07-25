@@ -103,18 +103,18 @@ SFUIViewportPtr *ScrollPanelBase::getSFView(void)
     return &_sfView;
 }
 
-//! Get the ScrollPanel::_sfVerticalScrollBar field.
+//! Get the ScrollPanel::_sfInternalVerticalScrollBar field.
 inline
-SFScrollBarPtr *ScrollPanelBase::getSFVerticalScrollBar(void)
+SFScrollBarPtr *ScrollPanelBase::getSFInternalVerticalScrollBar(void)
 {
-    return &_sfVerticalScrollBar;
+    return &_sfInternalVerticalScrollBar;
 }
 
-//! Get the ScrollPanel::_sfHorizontalScrollBar field.
+//! Get the ScrollPanel::_sfInternalHorizontalScrollBar field.
 inline
-SFScrollBarPtr *ScrollPanelBase::getSFHorizontalScrollBar(void)
+SFScrollBarPtr *ScrollPanelBase::getSFInternalHorizontalScrollBar(void)
 {
-    return &_sfHorizontalScrollBar;
+    return &_sfInternalHorizontalScrollBar;
 }
 
 //! Get the ScrollPanel::_sfVerticalScrollBarDisplayPolicy field.
@@ -167,46 +167,46 @@ void ScrollPanelBase::setView(const UIViewportPtr &value)
     _sfView.setValue(value);
 }
 
-//! Get the value of the ScrollPanel::_sfVerticalScrollBar field.
+//! Get the value of the ScrollPanel::_sfInternalVerticalScrollBar field.
 inline
-ScrollBarPtr &ScrollPanelBase::getVerticalScrollBar(void)
+ScrollBarPtr &ScrollPanelBase::getInternalVerticalScrollBar(void)
 {
-    return _sfVerticalScrollBar.getValue();
+    return _sfInternalVerticalScrollBar.getValue();
 }
 
-//! Get the value of the ScrollPanel::_sfVerticalScrollBar field.
+//! Get the value of the ScrollPanel::_sfInternalVerticalScrollBar field.
 inline
-const ScrollBarPtr &ScrollPanelBase::getVerticalScrollBar(void) const
+const ScrollBarPtr &ScrollPanelBase::getInternalVerticalScrollBar(void) const
 {
-    return _sfVerticalScrollBar.getValue();
+    return _sfInternalVerticalScrollBar.getValue();
 }
 
-//! Set the value of the ScrollPanel::_sfVerticalScrollBar field.
+//! Set the value of the ScrollPanel::_sfInternalVerticalScrollBar field.
 inline
-void ScrollPanelBase::setVerticalScrollBar(const ScrollBarPtr &value)
+void ScrollPanelBase::setInternalVerticalScrollBar(const ScrollBarPtr &value)
 {
-    _sfVerticalScrollBar.setValue(value);
+    _sfInternalVerticalScrollBar.setValue(value);
 }
 
-//! Get the value of the ScrollPanel::_sfHorizontalScrollBar field.
+//! Get the value of the ScrollPanel::_sfInternalHorizontalScrollBar field.
 inline
-ScrollBarPtr &ScrollPanelBase::getHorizontalScrollBar(void)
+ScrollBarPtr &ScrollPanelBase::getInternalHorizontalScrollBar(void)
 {
-    return _sfHorizontalScrollBar.getValue();
+    return _sfInternalHorizontalScrollBar.getValue();
 }
 
-//! Get the value of the ScrollPanel::_sfHorizontalScrollBar field.
+//! Get the value of the ScrollPanel::_sfInternalHorizontalScrollBar field.
 inline
-const ScrollBarPtr &ScrollPanelBase::getHorizontalScrollBar(void) const
+const ScrollBarPtr &ScrollPanelBase::getInternalHorizontalScrollBar(void) const
 {
-    return _sfHorizontalScrollBar.getValue();
+    return _sfInternalHorizontalScrollBar.getValue();
 }
 
-//! Set the value of the ScrollPanel::_sfHorizontalScrollBar field.
+//! Set the value of the ScrollPanel::_sfInternalHorizontalScrollBar field.
 inline
-void ScrollPanelBase::setHorizontalScrollBar(const ScrollBarPtr &value)
+void ScrollPanelBase::setInternalHorizontalScrollBar(const ScrollBarPtr &value)
 {
-    _sfHorizontalScrollBar.setValue(value);
+    _sfInternalHorizontalScrollBar.setValue(value);
 }
 
 //! Get the value of the ScrollPanel::_sfVerticalScrollBarDisplayPolicy field.

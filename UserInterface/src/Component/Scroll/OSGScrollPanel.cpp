@@ -135,6 +135,40 @@ void ScrollPanel::updateRangeModels(void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+ScrollBarPtr ScrollPanel::getVerticalScrollBar(void)
+{
+    if(getInternalVerticalScrollBar() == NullFC)
+    {
+        ScrollBarPtr NewVerticalScrollBar = ScrollBar::create();
+        beginEditCP(NewVerticalScrollBar, ScrollBar::OrientationFieldMask);
+            NewVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
+        endEditCP(NewVerticalScrollBar, ScrollBar::OrientationFieldMask);
+
+
+        beginEditCP(ScrollPanelPtr(this), InternalVerticalScrollBarFieldMask);
+            setInternalVerticalScrollBar(NewVerticalScrollBar);
+        endEditCP(ScrollPanelPtr(this), InternalVerticalScrollBarFieldMask);
+    }
+    return getInternalVerticalScrollBar();
+}
+
+ScrollBarPtr ScrollPanel::getHorizontalScrollBar(void)
+{
+    if(getInternalHorizontalScrollBar() == NullFC)
+    {
+        ScrollBarPtr NewHorizontalScrollBar = ScrollBar::create();
+        beginEditCP(NewHorizontalScrollBar, ScrollBar::OrientationFieldMask);
+            NewHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
+        endEditCP(NewHorizontalScrollBar, ScrollBar::OrientationFieldMask);
+
+
+        beginEditCP(ScrollPanelPtr(this), InternalHorizontalScrollBarFieldMask);
+            setInternalHorizontalScrollBar(NewHorizontalScrollBar);
+        endEditCP(ScrollPanelPtr(this), InternalHorizontalScrollBarFieldMask);
+    }
+    return getInternalHorizontalScrollBar();
+}
+
 void ScrollPanel::updateLayout(void)
 {
     bool VerticalScrollbarShown;
@@ -322,18 +356,21 @@ ScrollPanel::ScrollPanel(const ScrollPanel &source) :
     _ViewportVerticalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
     _ViewportHorizontalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
     
-    if(getVerticalScrollBar() != NullFC &&
-        getHorizontalScrollBar() != NullFC)
-    {
-        beginEditCP(ScrollPanelPtr(this), VerticalScrollBarFieldMask | 
-            HorizontalScrollBarFieldMask);
+    ScrollBarPtr NewVerticalScrollBar = ScrollBar::create();
+    beginEditCP(NewVerticalScrollBar, ScrollBar::OrientationFieldMask);
+        NewVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
+    endEditCP(NewVerticalScrollBar, ScrollBar::OrientationFieldMask);
 
-        setVerticalScrollBar(ScrollBar::Ptr::dcast(getVerticalScrollBar()->shallowCopy()));
-        setHorizontalScrollBar(ScrollBar::Ptr::dcast(getHorizontalScrollBar()->shallowCopy()));
-        
-        endEditCP(ScrollPanelPtr(this), VerticalScrollBarFieldMask | 
-            HorizontalScrollBarFieldMask);
-    }
+    ScrollBarPtr NewHorizontalScrollBar = ScrollBar::create();
+    beginEditCP(NewHorizontalScrollBar, ScrollBar::OrientationFieldMask);
+        NewHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
+    endEditCP(NewHorizontalScrollBar, ScrollBar::OrientationFieldMask);
+
+    beginEditCP(ScrollPanelPtr(this), InternalVerticalScrollBarFieldMask | InternalHorizontalScrollBarFieldMask);
+        setInternalVerticalScrollBar(NewVerticalScrollBar);
+        setInternalHorizontalScrollBar(NewHorizontalScrollBar);
+    endEditCP(ScrollPanelPtr(this), InternalVerticalScrollBarFieldMask | InternalHorizontalScrollBarFieldMask);
+
 }
 
 ScrollPanel::~ScrollPanel(void)
@@ -353,31 +390,31 @@ void ScrollPanel::changed(BitVector whichField, UInt32 origin)
     {
         updateRangeModels();
     }
-    if((whichField & VerticalScrollBarFieldMask) ||
-        (whichField & HorizontalScrollBarFieldMask) ||
+    if((whichField & InternalVerticalScrollBarFieldMask) ||
+        (whichField & InternalHorizontalScrollBarFieldMask) ||
         (whichField & ViewFieldMask))
     {
         beginEditCP(ScrollPanelPtr(this), ChildrenFieldMask);
             getChildren().clear();
             if(getView() != NullFC){getChildren().push_back(getView());}
-            if(getVerticalScrollBar() != NullFC){getChildren().push_back(getVerticalScrollBar());}
-            if(getHorizontalScrollBar() != NullFC)
+            if(getInternalVerticalScrollBar() != NullFC){getChildren().push_back(getInternalVerticalScrollBar());}
+            if(getInternalHorizontalScrollBar() != NullFC)
             {
-                getChildren().push_back(getHorizontalScrollBar());
+                getChildren().push_back(getInternalHorizontalScrollBar());
             }
         endEditCP(ScrollPanelPtr(this), ChildrenFieldMask);
     }
 
-    if((whichField & VerticalScrollBarFieldMask) &&
-        getVerticalScrollBar() != NullFC)
+    if((whichField & InternalVerticalScrollBarFieldMask) &&
+        getInternalVerticalScrollBar() != NullFC)
     {
-        getVerticalScrollBar()->setModel(&_ViewportVerticalRangeModel);
+        getInternalVerticalScrollBar()->setModel(&_ViewportVerticalRangeModel);
     }
     
-    if((whichField & HorizontalScrollBarFieldMask) &&
-        getHorizontalScrollBar() != NullFC)
+    if((whichField & InternalHorizontalScrollBarFieldMask) &&
+        getInternalHorizontalScrollBar() != NullFC)
     {
-        getHorizontalScrollBar()->setModel(&_ViewportHorizontalRangeModel);
+        getInternalHorizontalScrollBar()->setModel(&_ViewportHorizontalRangeModel);
     }
 }
 

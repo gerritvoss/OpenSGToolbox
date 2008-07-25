@@ -49,6 +49,18 @@ _GLViewport(TheGLViewport)
 {
 }
 
+inline
+void GLViewport::lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up)
+{
+    _Navigator.set(From,At,Up);
+}
+
+inline
+void GLViewport::setMode(Navigator::Mode TheMode)
+{
+    _Navigator.setMode(TheMode);
+}
+
 OSG_END_NAMESPACE
 
 #define OSGGLVIEWPORT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

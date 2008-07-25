@@ -144,6 +144,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
 	ViewportRangeModelChangeListener _ViewportRangeModelChangeListener;
 
     void updateRangeModels(void);
+
+    ScrollBarPtr getVerticalScrollBar(void);
+
+    ScrollBarPtr getHorizontalScrollBar(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

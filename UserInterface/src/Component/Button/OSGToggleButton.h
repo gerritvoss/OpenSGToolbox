@@ -60,14 +60,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
   public:
     enum
     {
-        SelectedFieldId                      = Inherited::ActiveFieldId,
         SelectedBorderFieldId                = Inherited::ActiveBorderFieldId,
         SelectedBackgroundFieldId            = Inherited::ActiveBackgroundFieldId,
         SelectedTextColorFieldId             = Inherited::ActiveTextColorFieldId,
         SelectedDrawObjectFieldId            = Inherited::ActiveDrawObjectFieldId
     };
 
-    static const OSG::BitVector SelectedFieldMask;
     static const OSG::BitVector SelectedBorderFieldMask;
     static const OSG::BitVector SelectedBackgroundFieldMask;
     static const OSG::BitVector SelectedTextColorFieldMask;

@@ -3372,7 +3372,7 @@ void WindowsLookAndFeel::init(void)
 		//Sizes
 		WindowsScrollBar->setMinSize(Vec2f(0,0));
 		WindowsScrollBar->setMaxSize(Vec2f(32767,32767)); //2^15
-		WindowsScrollBar->setPreferredSize(Vec2f(17,100));
+		WindowsScrollBar->setPreferredSize(Vec2f(17,17));
 
 		//Border
 		WindowsScrollBar->setBorder(WindowsScrollBarBorder);
@@ -3414,19 +3414,6 @@ void WindowsLookAndFeel::init(void)
 	//Windows ScrollPanelBackground
 	EmptyLayerPtr WindowsScrollPanelBackground = EmptyLayer::create();
     
-	//Vertical ScrollBar
-	ScrollBarPtr WindowsScrollPanelVerticalScrollBar = ScrollBar::create();
-    beginEditCP(WindowsScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-		WindowsScrollPanelVerticalScrollBar->setPreferredSize(Vec2f(17,100));
-        WindowsScrollPanelVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
-    beginEditCP(WindowsScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-
-	//Horizontal ScrollBar
-	ScrollBarPtr WindowsScrollPanelHorizontalScrollBar = ScrollBar::create();
-    beginEditCP(WindowsScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-		WindowsScrollPanelHorizontalScrollBar->setPreferredSize(Vec2f(100,17));
-        WindowsScrollPanelHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
-    beginEditCP(WindowsScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 
 
 	//Windows ScrollPanel
@@ -3457,11 +3444,9 @@ void WindowsLookAndFeel::init(void)
 
         //Vertical Scroll Bar
         WindowsScrollPanel->setVerticalScrollBarDisplayPolicy(ScrollPanel::SCROLLBAR_AS_NEEDED);
-        WindowsScrollPanel->setVerticalScrollBar(WindowsScrollPanelVerticalScrollBar);
 
         //Horizontal Scroll Bar
         WindowsScrollPanel->setHorizontalScrollBarDisplayPolicy(ScrollPanel::SCROLLBAR_AS_NEEDED);
-        WindowsScrollPanel->setHorizontalScrollBar(WindowsScrollPanelHorizontalScrollBar);
 	endEditCP(WindowsScrollPanel);
 
 	//************************** UIViewport *****************************

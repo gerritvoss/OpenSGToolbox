@@ -392,12 +392,6 @@ void Component::draw(const GraphicsPtr TheGraphics) const
     BorderPtr DrawnBorder = getDrawnBorder();
 	drawBorder(TheGraphics, DrawnBorder);
 
-    //Activate Border Drawing Constrants
-    if(DrawnBorder != NullFC)
-    {
-        DrawnBorder->activateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
-    }
-
     
 	//Draw My Background
 	drawBackground(TheGraphics, getDrawnBackground());

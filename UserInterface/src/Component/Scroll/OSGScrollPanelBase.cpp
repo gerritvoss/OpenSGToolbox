@@ -71,11 +71,11 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  ScrollPanelBase::ViewFieldMask = 
     (TypeTraits<BitVector>::One << ScrollPanelBase::ViewFieldId);
 
-const OSG::BitVector  ScrollPanelBase::VerticalScrollBarFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalScrollBarFieldId);
+const OSG::BitVector  ScrollPanelBase::InternalVerticalScrollBarFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollPanelBase::InternalVerticalScrollBarFieldId);
 
-const OSG::BitVector  ScrollPanelBase::HorizontalScrollBarFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalScrollBarFieldId);
+const OSG::BitVector  ScrollPanelBase::InternalHorizontalScrollBarFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollPanelBase::InternalHorizontalScrollBarFieldId);
 
 const OSG::BitVector  ScrollPanelBase::VerticalScrollBarDisplayPolicyFieldMask = 
     (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalScrollBarDisplayPolicyFieldId);
@@ -99,10 +99,10 @@ const OSG::BitVector ScrollPanelBase::MTInfluenceMask =
 /*! \var UIViewportPtr   ScrollPanelBase::_sfView
     
 */
-/*! \var ScrollBarPtr    ScrollPanelBase::_sfVerticalScrollBar
+/*! \var ScrollBarPtr    ScrollPanelBase::_sfInternalVerticalScrollBar
     
 */
-/*! \var ScrollBarPtr    ScrollPanelBase::_sfHorizontalScrollBar
+/*! \var ScrollBarPtr    ScrollPanelBase::_sfInternalHorizontalScrollBar
     
 */
 /*! \var UInt32          ScrollPanelBase::_sfVerticalScrollBarDisplayPolicy
@@ -128,15 +128,15 @@ FieldDescription *ScrollPanelBase::_desc[] =
                      false,
                      (FieldAccessMethod) &ScrollPanelBase::getSFView),
     new FieldDescription(SFScrollBarPtr::getClassType(), 
-                     "VerticalScrollBar", 
-                     VerticalScrollBarFieldId, VerticalScrollBarFieldMask,
+                     "InternalVerticalScrollBar", 
+                     InternalVerticalScrollBarFieldId, InternalVerticalScrollBarFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFVerticalScrollBar),
+                     (FieldAccessMethod) &ScrollPanelBase::getSFInternalVerticalScrollBar),
     new FieldDescription(SFScrollBarPtr::getClassType(), 
-                     "HorizontalScrollBar", 
-                     HorizontalScrollBarFieldId, HorizontalScrollBarFieldMask,
+                     "InternalHorizontalScrollBar", 
+                     InternalHorizontalScrollBarFieldId, InternalHorizontalScrollBarFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalScrollBar),
+                     (FieldAccessMethod) &ScrollPanelBase::getSFInternalHorizontalScrollBar),
     new FieldDescription(SFUInt32::getClassType(), 
                      "VerticalScrollBarDisplayPolicy", 
                      VerticalScrollBarDisplayPolicyFieldId, VerticalScrollBarDisplayPolicyFieldMask,
@@ -233,8 +233,8 @@ void ScrollPanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ScrollPanelBase::ScrollPanelBase(void) :
     _sfView                   (UIViewportPtr(NullFC)), 
-    _sfVerticalScrollBar      (ScrollBarPtr(NullFC)), 
-    _sfHorizontalScrollBar    (ScrollBarPtr(NullFC)), 
+    _sfInternalVerticalScrollBar(ScrollBarPtr(NullFC)), 
+    _sfInternalHorizontalScrollBar(ScrollBarPtr(NullFC)), 
     _sfVerticalScrollBarDisplayPolicy(UInt32(ScrollPanel::SCROLLBAR_AS_NEEDED)), 
     _sfHorizontalScrollBarDisplayPolicy(UInt32(ScrollPanel::SCROLLBAR_AS_NEEDED)), 
     _sfVerticalResizePolicy   (UInt32(ScrollPanel::NO_RESIZE)), 
@@ -249,8 +249,8 @@ ScrollPanelBase::ScrollPanelBase(void) :
 
 ScrollPanelBase::ScrollPanelBase(const ScrollPanelBase &source) :
     _sfView                   (source._sfView                   ), 
-    _sfVerticalScrollBar      (source._sfVerticalScrollBar      ), 
-    _sfHorizontalScrollBar    (source._sfHorizontalScrollBar    ), 
+    _sfInternalVerticalScrollBar(source._sfInternalVerticalScrollBar), 
+    _sfInternalHorizontalScrollBar(source._sfInternalHorizontalScrollBar), 
     _sfVerticalScrollBarDisplayPolicy(source._sfVerticalScrollBarDisplayPolicy), 
     _sfHorizontalScrollBarDisplayPolicy(source._sfHorizontalScrollBarDisplayPolicy), 
     _sfVerticalResizePolicy   (source._sfVerticalResizePolicy   ), 
@@ -276,14 +276,14 @@ UInt32 ScrollPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfView.getBinSize();
     }
 
-    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
+    if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
     {
-        returnValue += _sfVerticalScrollBar.getBinSize();
+        returnValue += _sfInternalVerticalScrollBar.getBinSize();
     }
 
-    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
+    if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
     {
-        returnValue += _sfHorizontalScrollBar.getBinSize();
+        returnValue += _sfInternalHorizontalScrollBar.getBinSize();
     }
 
     if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
@@ -320,14 +320,14 @@ void ScrollPanelBase::copyToBin(      BinaryDataHandler &pMem,
         _sfView.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
+    if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
     {
-        _sfVerticalScrollBar.copyToBin(pMem);
+        _sfInternalVerticalScrollBar.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
+    if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
     {
-        _sfHorizontalScrollBar.copyToBin(pMem);
+        _sfInternalHorizontalScrollBar.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
@@ -363,14 +363,14 @@ void ScrollPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfView.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
+    if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
     {
-        _sfVerticalScrollBar.copyFromBin(pMem);
+        _sfInternalVerticalScrollBar.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
+    if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
     {
-        _sfHorizontalScrollBar.copyFromBin(pMem);
+        _sfInternalHorizontalScrollBar.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
@@ -406,11 +406,11 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
     if(FieldBits::NoField != (ViewFieldMask & whichField))
         _sfView.syncWith(pOther->_sfView);
 
-    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
-        _sfVerticalScrollBar.syncWith(pOther->_sfVerticalScrollBar);
+    if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
+        _sfInternalVerticalScrollBar.syncWith(pOther->_sfInternalVerticalScrollBar);
 
-    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
-        _sfHorizontalScrollBar.syncWith(pOther->_sfHorizontalScrollBar);
+    if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
+        _sfInternalHorizontalScrollBar.syncWith(pOther->_sfInternalHorizontalScrollBar);
 
     if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
         _sfVerticalScrollBarDisplayPolicy.syncWith(pOther->_sfVerticalScrollBarDisplayPolicy);
@@ -437,11 +437,11 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
     if(FieldBits::NoField != (ViewFieldMask & whichField))
         _sfView.syncWith(pOther->_sfView);
 
-    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
-        _sfVerticalScrollBar.syncWith(pOther->_sfVerticalScrollBar);
+    if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
+        _sfInternalVerticalScrollBar.syncWith(pOther->_sfInternalVerticalScrollBar);
 
-    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
-        _sfHorizontalScrollBar.syncWith(pOther->_sfHorizontalScrollBar);
+    if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
+        _sfInternalHorizontalScrollBar.syncWith(pOther->_sfInternalHorizontalScrollBar);
 
     if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
         _sfVerticalScrollBarDisplayPolicy.syncWith(pOther->_sfVerticalScrollBarDisplayPolicy);

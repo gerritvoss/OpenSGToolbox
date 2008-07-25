@@ -1487,7 +1487,7 @@ void DefaultLookAndFeel::init(void)
 		//Sizes
 		DefaultScrollBar->setMinSize(Vec2f(0,0));
 		DefaultScrollBar->setMaxSize(Vec2f(32767,32767)); //2^15
-		DefaultScrollBar->setPreferredSize(Vec2f(20,100));
+		DefaultScrollBar->setPreferredSize(Vec2f(20,20));
 
 		//Border
 		DefaultScrollBar->setBorder(DefaultScrollBarBorder);
@@ -1530,21 +1530,6 @@ void DefaultLookAndFeel::init(void)
 
 	//Default ScrollPanelBackground
 	EmptyLayerPtr DefaultScrollPanelBackground = EmptyLayer::create();
-    
-	//Vertical ScrollBar
-	ScrollBarPtr DefaultScrollPanelVerticalScrollBar = ScrollBar::create();
-    beginEditCP(DefaultScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-		DefaultScrollPanelVerticalScrollBar->setPreferredSize(Vec2f(20,100));
-        DefaultScrollPanelVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
-    beginEditCP(DefaultScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-
-	//Horizontal ScrollBar
-	ScrollBarPtr DefaultScrollPanelHorizontalScrollBar = ScrollBar::create();
-    beginEditCP(DefaultScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-		DefaultScrollPanelHorizontalScrollBar->setPreferredSize(Vec2f(100,20));
-        DefaultScrollPanelHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
-    beginEditCP(DefaultScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-
 
 	//Default ScrollPanel
 	ScrollPanelPtr DefaultScrollPanel = ScrollPanel::create();
@@ -1575,11 +1560,9 @@ void DefaultLookAndFeel::init(void)
 
         //Vertical Scroll Bar
         DefaultScrollPanel->setVerticalScrollBarDisplayPolicy(ScrollPanel::SCROLLBAR_AS_NEEDED);
-        DefaultScrollPanel->setVerticalScrollBar(DefaultScrollPanelVerticalScrollBar);
 
         //Horizontal Scroll Bar
         DefaultScrollPanel->setHorizontalScrollBarDisplayPolicy(ScrollPanel::SCROLLBAR_AS_NEEDED);
-        DefaultScrollPanel->setHorizontalScrollBar(DefaultScrollPanelHorizontalScrollBar);
 	endEditCP(DefaultScrollPanel);
 	
     ScrollPanel::getClassType().setPrototype(DefaultScrollPanel);

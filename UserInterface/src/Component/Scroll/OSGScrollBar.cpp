@@ -101,38 +101,47 @@ void ScrollBar::updateLayout(void)
     Vec2f Size;
 
     //Min Button
-    Size[MajorAxis] = getMinButton()->getPreferredSize()[MajorAxis];
-    Size[MinorAxis] = BottomRight[MinorAxis] - TopLeft[MinorAxis];
+    if(getMinButton() != NullFC)
+    {
+        Size[MajorAxis] = getMinButton()->getPreferredSize()[MajorAxis];
+        Size[MinorAxis] = BottomRight[MinorAxis] - TopLeft[MinorAxis];
 
-    Position = TopLeft;
+        Position = TopLeft;
 
-    beginEditCP(getMinButton(), PositionFieldMask | SizeFieldMask);
-        getMinButton()->setPosition(Position);
-        getMinButton()->setSize(Size);
-    endEditCP(getMinButton(), PositionFieldMask | SizeFieldMask);
+        beginEditCP(getMinButton(), PositionFieldMask | SizeFieldMask);
+            getMinButton()->setPosition(Position);
+            getMinButton()->setSize(Size);
+        endEditCP(getMinButton(), PositionFieldMask | SizeFieldMask);
+    }
 
     //Max Button
-    Size[MajorAxis] = getMaxButton()->getPreferredSize()[MajorAxis];
-    Size[MinorAxis] = BottomRight[MinorAxis] - TopLeft[MinorAxis];
+    if(getMaxButton() != NullFC)
+    {
+        Size[MajorAxis] = getMaxButton()->getPreferredSize()[MajorAxis];
+        Size[MinorAxis] = BottomRight[MinorAxis] - TopLeft[MinorAxis];
 
-    Position = BottomRight - Size;
+        Position = BottomRight - Size;
 
-    beginEditCP(getMaxButton(), PositionFieldMask | SizeFieldMask);
-        getMaxButton()->setPosition(Position);
-        getMaxButton()->setSize(Size);
-    endEditCP(getMaxButton(), PositionFieldMask | SizeFieldMask);
+        beginEditCP(getMaxButton(), PositionFieldMask | SizeFieldMask);
+            getMaxButton()->setPosition(Position);
+            getMaxButton()->setSize(Size);
+        endEditCP(getMaxButton(), PositionFieldMask | SizeFieldMask);
+    }
 
     //Scroll Field
-    Size[MajorAxis] = (BottomRight[MajorAxis] - TopLeft[MajorAxis]) - getMinButton()->getSize()[MajorAxis] - getMaxButton()->getSize()[MajorAxis];
-    Size[MinorAxis] = BottomRight[MinorAxis] - TopLeft[MinorAxis];
+    if(getScrollField() != NullFC)
+    {
+        Size[MajorAxis] = (BottomRight[MajorAxis] - TopLeft[MajorAxis]) - getMinButton()->getSize()[MajorAxis] - getMaxButton()->getSize()[MajorAxis];
+        Size[MinorAxis] = BottomRight[MinorAxis] - TopLeft[MinorAxis];
 
-    Position[MajorAxis] = getMinButton()->getPosition()[MajorAxis] + getMinButton()->getSize()[MajorAxis];
-    Position[MinorAxis] = getMinButton()->getPosition()[MinorAxis];
-    
-    beginEditCP(getScrollField(), PositionFieldMask | SizeFieldMask);
-        getScrollField()->setPosition(Position);
-        getScrollField()->setSize(Size);
-    endEditCP(getScrollField(), PositionFieldMask | SizeFieldMask);
+        Position[MajorAxis] = getMinButton()->getPosition()[MajorAxis] + getMinButton()->getSize()[MajorAxis];
+        Position[MinorAxis] = getMinButton()->getPosition()[MinorAxis];
+        
+        beginEditCP(getScrollField(), PositionFieldMask | SizeFieldMask);
+            getScrollField()->setPosition(Position);
+            getScrollField()->setSize(Size);
+        endEditCP(getScrollField(), PositionFieldMask | SizeFieldMask);
+    }
 
     //ScrollBar
     updateScrollBarLayout();
@@ -204,7 +213,7 @@ Vec2f ScrollBar::calculateScrollBarSize(void) const
 
 void ScrollBar::updateScrollBarLayout(void)
 {
-    if(getModel() != NULL)
+    if(getModel() != NULL && getScrollBar() != NullFC)
     {
         beginEditCP(getScrollBar(), PositionFieldMask | SizeFieldMask);
             getScrollBar()->setSize(calculateScrollBarSize());

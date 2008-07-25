@@ -116,6 +116,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING RoundedCornerLineBorder : public RoundedCo
     static StencilChunkPtr _StenciledAreaSetup;
     static StencilChunkPtr _StenciledAreaCleanup;
     static StencilChunkPtr _StenciledAreaTest;
+
+    static UInt32 _StencilNesting;
     
     /*==========================  PRIVATE  ================================*/
   private:

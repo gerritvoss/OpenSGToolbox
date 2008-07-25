@@ -62,9 +62,6 @@ A UI Button.
  *                           Class variables                               *
 \***************************************************************************/
 
-const OSG::BitVector  ToggleButton::SelectedFieldMask = 
-    (TypeTraits<BitVector>::One << ToggleButton::SelectedFieldId);
-
 const OSG::BitVector  ToggleButton::SelectedBorderFieldMask = 
     (TypeTraits<BitVector>::One << ToggleButton::SelectedBorderFieldId);
 

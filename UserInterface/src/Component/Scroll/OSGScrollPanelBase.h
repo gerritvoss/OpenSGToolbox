@@ -68,8 +68,8 @@
 #include "Component/Container/OSGContainer.h" // Parent
 
 #include "Component/Container/OSGUIViewport.h" // View type
-#include "Component/Scroll/OSGScrollBar.h" // VerticalScrollBar type
-#include "Component/Scroll/OSGScrollBar.h" // HorizontalScrollBar type
+#include "Component/Scroll/OSGScrollBar.h" // InternalVerticalScrollBar type
+#include "Component/Scroll/OSGScrollBar.h" // InternalHorizontalScrollBar type
 #include <OpenSG/OSGUInt32Fields.h> // VerticalScrollBarDisplayPolicy type
 #include <OpenSG/OSGUInt32Fields.h> // HorizontalScrollBarDisplayPolicy type
 #include <OpenSG/OSGUInt32Fields.h> // VerticalResizePolicy type
@@ -98,9 +98,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     enum
     {
         ViewFieldId                             = Inherited::NextFieldId,
-        VerticalScrollBarFieldId                = ViewFieldId                             + 1,
-        HorizontalScrollBarFieldId              = VerticalScrollBarFieldId                + 1,
-        VerticalScrollBarDisplayPolicyFieldId   = HorizontalScrollBarFieldId              + 1,
+        InternalVerticalScrollBarFieldId        = ViewFieldId                             + 1,
+        InternalHorizontalScrollBarFieldId      = InternalVerticalScrollBarFieldId        + 1,
+        VerticalScrollBarDisplayPolicyFieldId   = InternalHorizontalScrollBarFieldId      + 1,
         HorizontalScrollBarDisplayPolicyFieldId = VerticalScrollBarDisplayPolicyFieldId   + 1,
         VerticalResizePolicyFieldId             = HorizontalScrollBarDisplayPolicyFieldId + 1,
         HorizontalResizePolicyFieldId           = VerticalResizePolicyFieldId             + 1,
@@ -108,8 +108,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     };
 
     static const OSG::BitVector ViewFieldMask;
-    static const OSG::BitVector VerticalScrollBarFieldMask;
-    static const OSG::BitVector HorizontalScrollBarFieldMask;
+    static const OSG::BitVector InternalVerticalScrollBarFieldMask;
+    static const OSG::BitVector InternalHorizontalScrollBarFieldMask;
     static const OSG::BitVector VerticalScrollBarDisplayPolicyFieldMask;
     static const OSG::BitVector HorizontalScrollBarDisplayPolicyFieldMask;
     static const OSG::BitVector VerticalResizePolicyFieldMask;
@@ -140,17 +140,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFScrollBarPtr      *getSFVerticalScrollBar(void);
-           SFScrollBarPtr      *getSFHorizontalScrollBar(void);
            SFUInt32            *getSFVerticalScrollBarDisplayPolicy(void);
            SFUInt32            *getSFHorizontalScrollBarDisplayPolicy(void);
            SFUInt32            *getSFVerticalResizePolicy(void);
            SFUInt32            *getSFHorizontalResizePolicy(void);
 
-           ScrollBarPtr        &getVerticalScrollBar(void);
-     const ScrollBarPtr        &getVerticalScrollBar(void) const;
-           ScrollBarPtr        &getHorizontalScrollBar(void);
-     const ScrollBarPtr        &getHorizontalScrollBar(void) const;
            UInt32              &getVerticalScrollBarDisplayPolicy(void);
      const UInt32              &getVerticalScrollBarDisplayPolicy(void) const;
            UInt32              &getHorizontalScrollBarDisplayPolicy(void);
@@ -165,8 +159,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setVerticalScrollBar( const ScrollBarPtr &value );
-     void setHorizontalScrollBar( const ScrollBarPtr &value );
      void setVerticalScrollBarDisplayPolicy( const UInt32 &value );
      void setHorizontalScrollBarDisplayPolicy( const UInt32 &value );
      void setVerticalResizePolicy( const UInt32 &value );
@@ -214,8 +206,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \{                                                                 */
 
     SFUIViewportPtr     _sfView;
-    SFScrollBarPtr      _sfVerticalScrollBar;
-    SFScrollBarPtr      _sfHorizontalScrollBar;
+    SFScrollBarPtr      _sfInternalVerticalScrollBar;
+    SFScrollBarPtr      _sfInternalHorizontalScrollBar;
     SFUInt32            _sfVerticalScrollBarDisplayPolicy;
     SFUInt32            _sfHorizontalScrollBarDisplayPolicy;
     SFUInt32            _sfVerticalResizePolicy;
@@ -242,9 +234,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \{                                                                 */
 
            SFUIViewportPtr     *getSFView           (void);
+           SFScrollBarPtr      *getSFInternalVerticalScrollBar(void);
+           SFScrollBarPtr      *getSFInternalHorizontalScrollBar(void);
 
            UIViewportPtr       &getView           (void);
      const UIViewportPtr       &getView           (void) const;
+           ScrollBarPtr        &getInternalVerticalScrollBar(void);
+     const ScrollBarPtr        &getInternalVerticalScrollBar(void) const;
+           ScrollBarPtr        &getInternalHorizontalScrollBar(void);
+     const ScrollBarPtr        &getInternalHorizontalScrollBar(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -252,6 +250,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \{                                                                 */
 
      void setView           (const UIViewportPtr &value);
+     void setInternalVerticalScrollBar(const ScrollBarPtr &value);
+     void setInternalHorizontalScrollBar(const ScrollBarPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

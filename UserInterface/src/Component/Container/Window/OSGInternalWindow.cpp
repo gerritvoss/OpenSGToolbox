@@ -73,6 +73,9 @@ A UI Internal Window.
  *                           Class variables                               *
 \***************************************************************************/
 
+ColorMaskChunkPtr InternalWindow::_ColorMask = NullFC;
+StencilChunkPtr InternalWindow::_StenciledAreaSetup = NullFC;
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -81,6 +84,33 @@ void InternalWindow::initMethod (void)
 {
 }
 
+ColorMaskChunkPtr InternalWindow::getColorMask(void)
+{
+    if(_ColorMask == NullFC)
+    {
+        _ColorMask = ColorMaskChunk::create();
+        beginEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
+            _ColorMask->setMask(false, false, false,false);
+        endEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
+    }
+    return _ColorMask;
+}
+
+StencilChunkPtr InternalWindow::getStenciledAreaSetup(void)
+{
+    if(_StenciledAreaSetup == NullFC)
+    {
+        _StenciledAreaSetup = StencilChunk::create();
+        beginEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+            _StenciledAreaSetup->setStencilFunc(GL_ALWAYS);
+            _StenciledAreaSetup->setStencilValue(0);
+            _StenciledAreaSetup->setStencilOpFail(GL_ZERO);
+            _StenciledAreaSetup->setStencilOpZFail(GL_ZERO);
+            _StenciledAreaSetup->setStencilOpZPass(GL_ZERO);
+        endEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+    }
+    return _StenciledAreaSetup;
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -737,8 +767,38 @@ void InternalWindow::mouseWheelMoved(const MouseWheelEvent& e)
 }
 
 
+void InternalWindow::drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border) const
+{
+    getColorMask()->activate(TheGraphics->getDrawAction());
+    getStenciledAreaSetup()->activate(TheGraphics->getDrawAction());
+
+    glBegin(GL_QUADS);
+        glVertex2f(0.0f,0.0f);
+        glVertex2f(getSize().x(),0.0f);
+        glVertex2f(getSize().x(),getSize().y());
+        glVertex2f(0.0f,getSize().y());
+    glEnd();
+
+    getColorMask()->deactivate(TheGraphics->getDrawAction());
+    getStenciledAreaSetup()->deactivate(TheGraphics->getDrawAction());
+
+    Inherited::drawBorder(TheGraphics, Border);
+}
+
 void InternalWindow::drawInternal(const GraphicsPtr TheGraphics) const
 {
+    //If I have a Titlebar then Draw it
+    if(getDrawDecorations() && getDrawTitlebar() && getTitlebar() != NullFC)
+    {
+        getTitlebar()->draw(TheGraphics);
+    }
+
+    //If I have a MenuBar then Draw it
+    if(getMenuBar() != NullFC)
+    {
+        getMenuBar()->draw(TheGraphics);
+    }
+
     Inherited::drawInternal(TheGraphics);
         
     //If I have an active tooltip then draw it
@@ -753,17 +813,7 @@ void InternalWindow::drawInternal(const GraphicsPtr TheGraphics) const
         getActivePopupMenus()[i]->draw(TheGraphics);
     }
 
-    //If I have a MenuBar then Draw it
-    if(getMenuBar() != NullFC)
-    {
-        getMenuBar()->draw(TheGraphics);
-    }
 
-    //If I have a Titlebar then Draw it
-    if(getDrawDecorations() && getDrawTitlebar() && getTitlebar() != NullFC)
-    {
-        getTitlebar()->draw(TheGraphics);
-    }
 }
 
 void InternalWindow::destroyPopupMenu(void)

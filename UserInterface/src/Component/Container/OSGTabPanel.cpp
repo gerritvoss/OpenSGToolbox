@@ -202,9 +202,9 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 								 TabBorderPosition.x(), TabBorderPosition.y(),
 								 TabBorderSize.x(), TabBorderSize.y(),
 								 getOpacity());
-			DrawnTabBorder->activateInternalDrawConstraints(Graphics,
-			                 TabBorderPosition.x(), TabBorderPosition.y(),
-							 TabBorderSize.x(), TabBorderSize.y());
+			//DrawnTabBorder->activateInternalDrawConstraints(Graphics,
+			//                 TabBorderPosition.x(), TabBorderPosition.y(),
+			//				 TabBorderSize.x(), TabBorderSize.y());
 		}
 
 		if(DrawnTabBackground != NullFC)
@@ -245,9 +245,6 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 								 ContentBorderPosition.x(), ContentBorderPosition.y(),
 								 ContentBorderSize.x(), ContentBorderSize.y(),
 								 getOpacity());
-			DrawnContentBorder->activateInternalDrawConstraints(Graphics,
-			                 ContentBorderPosition.x(), ContentBorderPosition.y(),
-							 ContentBorderSize.x(), ContentBorderSize.y());
 		}
 		if(DrawnContentBackground != NullFC)
 		{

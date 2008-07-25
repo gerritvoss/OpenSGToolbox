@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 #include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/OSGNavigator.h>
+#include <OpenSG/OSGVector.h>
 
 #include "OSGGLViewportBase.h"
 #include <OpenSG/Input/OSGMouseAdapter.h>
@@ -83,6 +84,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
                       const BitVector  bvFlags  = 0) const;
 
 	void showAll(void);
+    void lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up);
+    void setMode(Navigator::Mode TheMode);
 
     virtual void mousePressed(const MouseEvent& e);
 	virtual void keyTyped(const KeyEvent& e);

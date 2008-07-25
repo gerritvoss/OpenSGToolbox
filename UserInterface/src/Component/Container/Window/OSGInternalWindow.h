@@ -47,6 +47,8 @@
 
 #include "OSGInternalWindowBase.h"
 
+#include <OpenSG/OSGColorMaskChunk.h>
+#include <OpenSG/OSGStencilChunk.h>
 #include <OpenSG/Input/OSGMouseAdapter.h>
 #include <OpenSG/Input/OSGMouseMotionAdapter.h>
 #include <OpenSG/Input/OSGKeyAdapter.h>
@@ -159,6 +161,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
     /*! \}                                                                 */
     
 	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
+    virtual void drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border) const;
+    
+    static ColorMaskChunkPtr getColorMask(void);
+    static StencilChunkPtr getStenciledAreaSetup(void);
+    static ColorMaskChunkPtr _ColorMask;
+    static StencilChunkPtr _StenciledAreaSetup;
 	
 	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
 	{

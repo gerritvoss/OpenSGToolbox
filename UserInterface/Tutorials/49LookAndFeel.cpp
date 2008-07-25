@@ -145,6 +145,7 @@ private:
     DefaultBoundedRangeModel _ProgressBarBoundedRangeModel;	
     DefaultBoundedRangeModel _ScrollBarBoundedRangeModel;
     DefaultBoundedRangeModel _SliderBoundedRangeModel;
+    ToggleButtonPtr CreateNoTitlebarWindowButton;
     
     DefaultListModelPtr _ExampleListModel;
     ListSelectionModelPtr _SelectionModel;
@@ -168,8 +169,42 @@ private:
 	            TutorialDrawingSurface->openWindow(ExampleInternalWindow);
 			}
 		};
+	class CreateNoTitlebarWindowButtonSelectedListener : public ButtonSelectedListener
+		{
+        protected:
+            InternalWindowPtr ExampleInternalWindow;
+		public:
+        CreateNoTitlebarWindowButtonSelectedListener() : ExampleInternalWindow(NullFC)
+        {
+        }
+
+        virtual void buttonSelected(const ButtonSelectedEvent& e)
+			{
+                //Create a window
+                ExampleInternalWindow = osg::InternalWindow::create();
+	            beginEditCP(ExampleInternalWindow, InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::TitleFieldMask);
+                   // Assign the Button to the MainInternalWindow so it will be displayed
+                   // when the view is rendered.
+                   ExampleInternalWindow->setPosition(Pnt2f(100,100));
+                   ExampleInternalWindow->setPreferredSize(Vec2f(400,400));
+	               ExampleInternalWindow->setTitle(std::string("Example No Titlebar Window"));
+	               ExampleInternalWindow->setDrawTitlebar(false);
+                endEditCP(ExampleInternalWindow, InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::TitleFieldMask);
+
+	            TutorialDrawingSurface->openWindow(ExampleInternalWindow);
+			}
+        virtual void buttonDeselected(const ButtonSelectedEvent& e)
+			{
+                if(ExampleInternalWindow != NullFC)
+                {
+                    ExampleInternalWindow->close();
+                }
+                ExampleInternalWindow = NullFC;
+			}
+		};
 			
 	CreateWindowButtonActionListener _CreateWindowButtonActionListener;
+    CreateNoTitlebarWindowButtonSelectedListener _CreateNoTitlebarWindowButtonSelectedListener;
 
 
 	PanelPtr createStatePanel(void);
@@ -1630,6 +1665,13 @@ PanelPtr StatePanelCreator::createWindowPanel(void)
         CreateWindowButton->setPreferredSize(Vec2f(100.0f,20.0f));
     endEditCP(CreateWindowButton, Button::TextFieldMask);
     CreateWindowButton->addActionListener(&_CreateWindowButtonActionListener);
+    
+    CreateNoTitlebarWindowButton = ToggleButton::create();
+    beginEditCP(CreateNoTitlebarWindowButton, ToggleButton::TextFieldMask);
+        CreateNoTitlebarWindowButton->setText("Create No Titlebar Window");
+        CreateNoTitlebarWindowButton->setPreferredSize(Vec2f(100.0f,20.0f));
+    endEditCP(CreateNoTitlebarWindowButton, ToggleButton::TextFieldMask);
+    CreateNoTitlebarWindowButton->addButtonSelectedListener(&_CreateNoTitlebarWindowButtonSelectedListener);
 
     PanelPtr WindowPanel = Panel::create();
     FlowLayoutPtr WindowPanelLayout = FlowLayout::create();
@@ -1637,6 +1679,7 @@ PanelPtr StatePanelCreator::createWindowPanel(void)
     beginEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
         WindowPanel->setLayout(WindowPanelLayout);
         WindowPanel->getChildren().push_back(CreateWindowButton);
+        WindowPanel->getChildren().push_back(CreateNoTitlebarWindowButton);
         WindowPanel->setPreferredSize(Vec2f(500,800));
     endEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
 

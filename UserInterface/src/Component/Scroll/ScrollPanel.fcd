@@ -23,21 +23,21 @@ A UI ScrollPanel
 	>
 	</Field>
 	<Field
-		name="VerticalScrollBar"
+		name="InternalVerticalScrollBar"
 		type="ScrollBarPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 		header="Component/Scroll/OSGScrollBar.h"
 		defaultValue="NullFC"
 	>
 	</Field>
 	<Field
-		name="HorizontalScrollBar"
+		name="InternalHorizontalScrollBar"
 		type="ScrollBarPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 		header="Component/Scroll/OSGScrollBar.h"
 		defaultValue="NullFC"
 	>
