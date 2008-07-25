@@ -163,6 +163,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 		
 		void setActiveComponent(UInt32 Index);
 		void setInitialPosition(Pnt2f InitialPosition);
+		void setResizeTab(ResizeTab Tab);
 	protected :
 		FunctionComponentPanelPtr _FunctionComponentPanel;
 		UInt32 _ActiveResizeComponent;

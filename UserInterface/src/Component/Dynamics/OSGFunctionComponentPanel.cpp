@@ -286,8 +286,6 @@ FunctionComponentPanel::ResizeTab FunctionComponentPanel::getTabOverLocation(con
 		
 		Vec2f TabSize = getResizeTabsSize() * getZoom();
 		
-		//Pnt2f MouseLocation = ViewportToComponent(Location, this, getViewport());
-		
 		if((Location.x() > (ResizableComponentTopLeft.x() - TabSize.x())) && (Location.x() < (ResizableComponentTopLeft.x() + TabSize.x())) &&
 			(Location.y() > (ResizableComponentTopLeft.y() - TabSize.y())) && (Location.y() < (ResizableComponentTopLeft.y() + TabSize.y())))
 		{
@@ -519,7 +517,6 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mousePressed(const Mous
 		for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
 		{
 			bool isContained(false);
-			//isContained = _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true);
 			if(_FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true) || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() + _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true)
 			   || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true))
 			{
@@ -536,8 +533,11 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mousePressed(const Mous
 				_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_FunctionComponentPanel->_ComponentResizeListener));
 				_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&(_FunctionComponentPanel->_ComponentResizeListener));
 				_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_FunctionComponentPanel->_ComponentResizeListener));
+				_FunctionComponentPanel->_ComponentResizeListener.setResizeTab(_FunctionComponentPanel->getTabOverLocation(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport())));
 			}
 		}
+		
+		
 	}
 	else
 	{
@@ -549,7 +549,6 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mousePressed(const Mous
 			for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
 			{
 				bool isContained(false);
-				//isContained = _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true);
 				if(_FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation(), true) || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() + _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true)
 					|| _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true))
 				{
@@ -597,7 +596,6 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 			else
 			{
 				_FunctionComponentPanel->_drawComponentResizeSquares = false;
-				//_FunctionComponentPanel->_ResizableComponent = NullFC;
 			}
 			
 		}
@@ -612,21 +610,18 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 				   || _FunctionComponentPanel->getChildren()[i]->isContained(e.getLocation() - _FunctionComponentPanel->getResizeAreaOfEffectOffset() * _FunctionComponentPanel->getZoom(), true))
 				{
 					_FunctionComponentPanel->_ResizableComponent = _FunctionComponentPanel->getChildren()[i];
-					//_FunctionComponentPanel->_ComponentResizeListener.setActiveComponent(i);
 					i = -1;
 				}
 				
 				else
 				{
 					_FunctionComponentPanel->_drawComponentResizeSquares = false;
-					//_FunctionComponentPanel->_ResizableComponent = NullFC;
 				}
 			}
 		}
 		else
 		{
 			_FunctionComponentPanel->_drawComponentResizeSquares = false;
-			//_FunctionComponentPanel->_ResizableComponent = NullFC;
 		}
 	}
     _FunctionComponentPanel->setupCursor(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()));
@@ -659,7 +654,6 @@ void FunctionComponentPanel::ComponentPanelMoveListener::keyPressed(const KeyEve
 	else
 	{
 		_FunctionComponentPanel->_drawComponentResizeSquares = false;
-		//_FunctionComponentPanel->_ResizableComponent = NullFC;
 	}
     if(_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 	{
@@ -772,31 +766,38 @@ void FunctionComponentPanel::ComponentResizeListener::mouseDragged(const MouseEv
 	{
 		Vec2f MouseMovedDistance;
 		Pnt2f AbsolutePosition, NewPosition;
-		switch (_FunctionComponentPanel->getTabOverLocation(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport())))
+		switch (_ResizeTab)
 		{
 			case TAB_TOP_LEFT:
 				{
-					std::cout << "TopLeftInitialResizeComponentPosition: " << _InitialResizeComponentPosition << std::endl;
-					//Change size and position of component based on the mouse position and it's initial position
-					Vec2f InitialPositionsDifference = Vec2f(_InitialResizeComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
+					//Mouse moved distance
 					MouseMovedDistance = Vec2f(ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()) - ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()));
 					
+					//New position
+					Vec2f InitialPositionsDifference = Vec2f(_InitialResizeComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
 					AbsolutePosition = Pnt2f(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()) + InitialPositionsDifference);
-					NewPosition = AbsolutePosition;
-					
-					std::cout << "NewPosition: " << NewPosition << std::endl;
 				}
 				break;
 			
 			case TAB_TOP:
 				{
-				
+					//Vertical mouse moved distance
+					MouseMovedDistance = Vec2f(0.0f, _InitialPosition.y() - e.getLocation().y());
+					
+					//New position
+					Vec2f InitialPositionsDifference = Vec2f(_InitialResizeComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
+					AbsolutePosition = Pnt2f(_FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getPosition().x(), ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()).y() + InitialPositionsDifference.y());
 				}
 				break;
 				
 			case TAB_TOP_RIGHT:
 				{
-				
+					//Mouse moved distance
+					MouseMovedDistance = Vec2f(e.getLocation().x() - _InitialPosition.x(), _InitialPosition.y() - e.getLocation().y());
+					
+					//New position
+					Vec2f InitialPositionsDifference = Vec2f(_InitialResizeComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
+					AbsolutePosition = Pnt2f(_FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getPosition().x(), ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()).y() + InitialPositionsDifference.y());
 				}
 				break;
 				
@@ -805,87 +806,108 @@ void FunctionComponentPanel::ComponentResizeListener::mouseDragged(const MouseEv
 					//Horizontal mouse moved distance
 					MouseMovedDistance = Vec2f(e.getLocation().x() - _InitialPosition.x(), 0.0f);
 					
-					//Calculate new size
-					//Vec2f NewSize = _InitialResizeComponentSize + MouseMovedDistance;
-					
-					NewPosition = _InitialResizeComponentPosition;
-					/*
-					//Set new position and size
-					beginEditCP(_FunctionComponentPanel, /*FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);	
-						//_FunctionComponentPanel->getChildrenPositions()[_ActiveResizeComponent].setValue(NewPosition);
-						_FunctionComponentPanel->getChildrenSizes()[_ActiveResizeComponent].setValue(NewSize);
-					endEditCP(_FunctionComponentPanel, /*FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);*/
+					//Position stays the same
+					AbsolutePosition = _InitialResizeComponentPosition;
 				}
 				break;
 			
 			case TAB_BOTTOM_RIGHT:
 				{
-				
+					//Mouse moved distance
+					MouseMovedDistance = Vec2f(e.getLocation() - _InitialPosition);
+					
+					//Position stays the same
+					AbsolutePosition = _InitialResizeComponentPosition;
 				}
 				break;
 			
 			case TAB_BOTTOM:
 				{
-					//Change size and position of component based on the mouse position and it's initial position
-					//Vec2f InitialPositionsDifference = Vec2f(_InitialResizeComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
-					
-					//Horizontal mouse moved distance
+					//Vertical mouse moved distance
 					MouseMovedDistance = Vec2f(0.0f, e.getLocation().y() - _InitialPosition.y());
 					
 					//Position stays the same
-					//AbsolutePosition = _InitialResizeComponentPosition;
-					//NewPosition = _InitialResizeComponentPosition;
-					
-					
-					//Calculate new size
-					Vec2f NewSize = _InitialResizeComponentSize + MouseMovedDistance;
-					
-					//Set new position and size
-					beginEditCP(_FunctionComponentPanel, /*FunctionComponentPanel::ChildrenPositionsFieldMask | */FunctionComponentPanel::ChildrenSizesFieldMask);	
-						//_FunctionComponentPanel->getChildrenPositions()[_ActiveResizeComponent].setValue(NewPosition);
-						_FunctionComponentPanel->getChildrenSizes()[_ActiveResizeComponent].setValue(NewSize);
-					endEditCP(_FunctionComponentPanel, /*FunctionComponentPanel::ChildrenPositionsFieldMask | */FunctionComponentPanel::ChildrenSizesFieldMask);
+					AbsolutePosition = _InitialResizeComponentPosition;
 				}
 				break;
 			
 			case TAB_BOTTOM_LEFT:
 				{
-				
+					//Mouse moved distance
+					MouseMovedDistance = Vec2f(_InitialPosition.x() - e.getLocation().x(), e.getLocation().y() - _InitialPosition.y());
+					
+					//New position
+					Vec2f InitialPositionsDifference = Vec2f(_InitialResizeComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
+					AbsolutePosition = Pnt2f(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()).x() + InitialPositionsDifference.x(), _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getPosition().y());
 				}
 				break;
 				
 			case TAB_LEFT:
 				{
-				
+					//Horizontal mouse moved distance
+					MouseMovedDistance = Vec2f(_InitialPosition.x() - e.getLocation().x(), 0.0f);
+					
+					//New position
+					Vec2f InitialPositionsDifference = Vec2f(_InitialResizeComponentPosition - ViewportToComponent(_InitialPosition, _FunctionComponentPanel, e.getViewport()));
+					AbsolutePosition = Pnt2f(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()).x() + InitialPositionsDifference.x(), _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getPosition().y());
 				}
 				break;
 		}
 		
-		/*
-		//Test AbsolutePosition to make sure Component is inside parent container
+		//Calculate new size
+		Vec2f NewSize = _InitialResizeComponentSize + MouseMovedDistance;
+		
+		//Calculate new position
+		NewPosition = AbsolutePosition;
 		Pnt2f AbsolutePositionBottomRight, ContainerTopLeft, ContainerBottomRight;
 		AbsolutePositionBottomRight = AbsolutePosition + _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize();
 		_FunctionComponentPanel->getInsideInsetsBounds(ContainerTopLeft, ContainerBottomRight);
+		
+		
+		//Test AbsolutePosition to make sure Component is inside parent container
 		if(AbsolutePosition.x() < ContainerTopLeft.x())
 		{
 			NewPosition[0] = ContainerTopLeft.x();
+			NewSize[0] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize().x();
 		}
 		if(AbsolutePosition.y() < ContainerTopLeft.y())
 		{
 			NewPosition[1] = ContainerTopLeft.y();
+			NewSize[1] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize().y();
 		}
 		if(AbsolutePositionBottomRight.x() > ContainerBottomRight.x())
 		{
 			NewPosition[0] = ContainerBottomRight.x() - _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize().x();
+			NewSize[0] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize().x();
 		}
 		if(AbsolutePositionBottomRight.y() > ContainerBottomRight.y())
 		{
 			NewPosition[1] = ContainerBottomRight.y() - _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize().y();
+			NewSize[1] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getSize().y();
 		}
-		*/
 		
-		//Calculate new size
-		Vec2f NewSize = _InitialResizeComponentSize + MouseMovedDistance;
+		
+		//Test new size
+		if(NewSize.x() > _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getMaxSize().x())
+		{
+			NewSize[0] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getMaxSize().x();
+			NewPosition[0] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getPosition().x();
+		}
+		if(NewSize.y() > _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getMaxSize().y())
+		{
+			NewSize[1] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getMaxSize().y();
+			NewPosition[1] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getPosition().y();
+		}
+		if(NewSize.x() < _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getMinSize().x())
+		{
+			NewSize[0] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getMinSize().x();
+			NewPosition[0] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getPosition().x();
+		}
+		if(NewSize.y() < _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getMinSize().y())
+		{
+			NewSize[1] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getMinSize().y();
+			NewPosition[1] = _FunctionComponentPanel->getChildren()[_ActiveResizeComponent]->getPosition().y();
+		}
 		
 		//Set new position and size
 		beginEditCP(_FunctionComponentPanel, FunctionComponentPanel::ChildrenPositionsFieldMask | FunctionComponentPanel::ChildrenSizesFieldMask);	
@@ -910,8 +932,11 @@ void FunctionComponentPanel::ComponentResizeListener::setActiveComponent(UInt32 
 	_ActiveResizeComponent = Index;
     _InitialResizeComponentPosition = _FunctionComponentPanel->getChildrenPositions()[_ActiveResizeComponent];
 	_InitialResizeComponentSize = _FunctionComponentPanel->getChildrenSizes()[_ActiveResizeComponent];
-	std::cout << "InitialResizeComponentPosition: " << _InitialResizeComponentPosition << std::endl;
-	std::cout << "InitialResizeComponentSize: " << _InitialResizeComponentSize << std::endl;
+}
+
+void FunctionComponentPanel::ComponentResizeListener::setResizeTab(ResizeTab Tab)
+{
+	_ResizeTab = Tab;
 }
 
 /*------------------------------------------------------------------------*/
