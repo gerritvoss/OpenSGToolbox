@@ -108,11 +108,10 @@ void Titlebar::updateLayout(void)
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 	Vec2f InsetsSize(InsetsBottomRight - InsetsTopLeft);
 
-	Pnt2f FrameIconPos;
-	Vec2f FrameIconSize;
+	Pnt2f FrameIconPos(InsetsTopLeft);
+	Vec2f FrameIconSize(0.0f,0.0f);
 	if(getFrameIcon() != NullFC)
 	{
-		FrameIconPos = InsetsTopLeft;
 		FrameIconSize.setValues( getFrameIcon()->getPreferredSize().x(), InsetsSize.y() );
 		beginEditCP(getFrameIcon(), Component::PositionFieldMask | Component::SizeFieldMask);
 			getFrameIcon()->setPosition(FrameIconPos);
@@ -158,7 +157,7 @@ void Titlebar::updateLayout(void)
 	{
 		TitleLabelSize.setValues(IconifyButtonPos.x()-1-FrameIconPos.x()-FrameIconSize.x(), InsetsSize.y());
 		beginEditCP(getTitleLabel(), Component::PositionFieldMask | Component::SizeFieldMask);
-			getTitleLabel()->setPosition(FrameIconPos);
+			getTitleLabel()->setPosition(TitleLabelPos);
 			getTitleLabel()->setSize(TitleLabelSize);
 		endEditCP(getTitleLabel(), Component::PositionFieldMask | Component::SizeFieldMask);
 	}
