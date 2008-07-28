@@ -955,6 +955,30 @@ InternalWindow::InternalWindow(const InternalWindow &source) :
 			setTitlebar(Titlebar::Ptr::dcast(getTitlebar()->shallowCopy()));
         endEditCP(InternalWindowPtr(this), TitlebarFieldMask);
     }
+    if(getBorder() != NullFC)
+    {
+        beginEditCP(InternalWindowPtr(this), BorderFieldMask);
+			setBorder(Border::Ptr::dcast(getBorder()->shallowCopy()));
+        endEditCP(InternalWindowPtr(this), BorderFieldMask);
+    }
+    if(getDisabledBorder() != NullFC)
+    {
+        beginEditCP(InternalWindowPtr(this), DisabledBorderFieldMask);
+			setDisabledBorder(Border::Ptr::dcast(getDisabledBorder()->shallowCopy()));
+        endEditCP(InternalWindowPtr(this), DisabledBorderFieldMask);
+    }
+    if(getFocusedBorder() != NullFC)
+    {
+        beginEditCP(InternalWindowPtr(this), FocusedBorderFieldMask);
+			setFocusedBorder(Border::Ptr::dcast(getFocusedBorder()->shallowCopy()));
+        endEditCP(InternalWindowPtr(this), FocusedBorderFieldMask);
+    }
+    if(getRolloverBorder() != NullFC)
+    {
+        beginEditCP(InternalWindowPtr(this), RolloverBorderFieldMask);
+			setRolloverBorder(Border::Ptr::dcast(getRolloverBorder()->shallowCopy()));
+        endEditCP(InternalWindowPtr(this), RolloverBorderFieldMask);
+    }
 }
 
 InternalWindow::~InternalWindow(void)

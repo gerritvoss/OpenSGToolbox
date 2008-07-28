@@ -453,24 +453,17 @@ int main(int argc, char **argv)
     MainTabPanel->setSelectedIndex(0);
 
     // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-    
 	CardLayoutPtr MainInternalWindowLayout = osg::CardLayout::create();
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(MainTabPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.65f,0.65f));
 	   MainInternalWindow->setDrawTitlebar(true);
 	   MainInternalWindow->setResizable(true);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
     TutorialDrawingSurface = UIDrawingSurface::create();
