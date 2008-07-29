@@ -213,8 +213,7 @@ void DefaultLookAndFeel::init(void)
 		//Text
 		DefaultButton->setText("");
 		DefaultButton->setFont(DefaultFont);
-		DefaultButton->setVerticalAlignment(0.5);
-		DefaultButton->setHorizontalAlignment(0.5);
+		DefaultButton->setAlignment(Vec2f(0.5f,0.5f));
 		DefaultButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
@@ -458,8 +457,7 @@ void DefaultLookAndFeel::init(void)
 
 		//Image Alignment
 		DefaultImageComponent->setScale(ImageComponent::SCALE_NONE);
-		DefaultImageComponent->setVerticalAlignment(0.5);
-		DefaultImageComponent->setHorizontalAlignment(0.5);
+		DefaultImageComponent->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(DefaultImageComponent);
 	
 	ImageComponent::getClassType().setPrototype(DefaultImageComponent);
@@ -584,8 +582,7 @@ void DefaultLookAndFeel::init(void)
 		//Text
 		DefaultCheckboxButton->setText("");
 		DefaultCheckboxButton->setFont(DefaultFont);
-		DefaultCheckboxButton->setVerticalAlignment(0.5);
-		DefaultCheckboxButton->setHorizontalAlignment(0.5);
+		DefaultCheckboxButton->setAlignment(Vec2f(0.5f,0.5f));
 		DefaultCheckboxButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultCheckboxButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultCheckboxButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
@@ -723,8 +720,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setFont(DefaultFont);
 
 		//alignment
-		DefaultRadioButton->setVerticalAlignment(0.5);
-		DefaultRadioButton->setHorizontalAlignment(0.5);
+		DefaultRadioButton->setAlignment(Vec2f(0.5f,0.5f));
 		DefaultRadioButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultRadioButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultRadioButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
@@ -765,8 +761,7 @@ void DefaultLookAndFeel::init(void)
 		//Text
 		DefaultToggleButton->setText("");
 		DefaultToggleButton->setFont(DefaultFont);
-		DefaultToggleButton->setVerticalAlignment(0.5);
-		DefaultToggleButton->setHorizontalAlignment(0.5);
+		DefaultToggleButton->setAlignment(Vec2f(0.5f,0.5f));
 		DefaultToggleButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultToggleButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultToggleButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
@@ -821,8 +816,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultTextField->setBorder(DefaultTextFieldBorder);
 		DefaultTextField->setDisabledBorder(DefaultTextFieldBorder);
 
-		DefaultTextField->setHorizontalAlignment(0.0);
-		DefaultTextField->setVerticalAlignment(0.5);
+		DefaultTextField->setAlignment(Vec2f(0.0f,0.5f));
 	endEditCP(DefaultTextField);
 
 	TextField::getClassType().setPrototype(DefaultTextField);
@@ -976,8 +970,7 @@ void DefaultLookAndFeel::init(void)
 		//Text
 		DefaultToolTip->setText("");
 		DefaultToolTip->setFont(DefaultFont);
-        DefaultToolTip->setVerticalAlignment(0.5);
-        DefaultToolTip->setHorizontalAlignment(0.0);
+        DefaultToolTip->setAlignment(Vec2f(0.0f,0.5f));
 		DefaultToolTip->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 	endEditCP(DefaultToolTip);
 	

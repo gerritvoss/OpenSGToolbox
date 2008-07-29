@@ -110,13 +110,6 @@ SFString *ButtonBase::getSFText(void)
     return &_sfText;
 }
 
-//! Get the Button::_sfActive field.
-inline
-SFBool *ButtonBase::getSFActive(void)
-{
-    return &_sfActive;
-}
-
 //! Get the Button::_sfActiveBorder field.
 inline
 SFBorderPtr *ButtonBase::getSFActiveBorder(void)
@@ -173,18 +166,11 @@ SFColor4f *ButtonBase::getSFTextColor(void)
     return &_sfTextColor;
 }
 
-//! Get the Button::_sfVerticalAlignment field.
+//! Get the Button::_sfAlignment field.
 inline
-SFReal32 *ButtonBase::getSFVerticalAlignment(void)
+SFVec2f *ButtonBase::getSFAlignment(void)
 {
-    return &_sfVerticalAlignment;
-}
-
-//! Get the Button::_sfHorizontalAlignment field.
-inline
-SFReal32 *ButtonBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
+    return &_sfAlignment;
 }
 
 //! Get the Button::_sfEnableActionOnMouseDownTime field.
@@ -203,7 +189,7 @@ SFTime *ButtonBase::getSFActionOnMouseDownRate(void)
 
 //! Get the Button::_sfActiveOffset field.
 inline
-SFVec2s *ButtonBase::getSFActiveOffset(void)
+SFVec2f *ButtonBase::getSFActiveOffset(void)
 {
     return &_sfActiveOffset;
 }
@@ -284,27 +270,6 @@ inline
 void ButtonBase::setText(const std::string &value)
 {
     _sfText.setValue(value);
-}
-
-//! Get the value of the Button::_sfActive field.
-inline
-bool &ButtonBase::getActive(void)
-{
-    return _sfActive.getValue();
-}
-
-//! Get the value of the Button::_sfActive field.
-inline
-const bool &ButtonBase::getActive(void) const
-{
-    return _sfActive.getValue();
-}
-
-//! Set the value of the Button::_sfActive field.
-inline
-void ButtonBase::setActive(const bool &value)
-{
-    _sfActive.setValue(value);
 }
 
 //! Get the value of the Button::_sfActiveBorder field.
@@ -475,46 +440,25 @@ void ButtonBase::setTextColor(const Color4f &value)
     _sfTextColor.setValue(value);
 }
 
-//! Get the value of the Button::_sfVerticalAlignment field.
+//! Get the value of the Button::_sfAlignment field.
 inline
-Real32 &ButtonBase::getVerticalAlignment(void)
+Vec2f &ButtonBase::getAlignment(void)
 {
-    return _sfVerticalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Get the value of the Button::_sfVerticalAlignment field.
+//! Get the value of the Button::_sfAlignment field.
 inline
-const Real32 &ButtonBase::getVerticalAlignment(void) const
+const Vec2f &ButtonBase::getAlignment(void) const
 {
-    return _sfVerticalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Set the value of the Button::_sfVerticalAlignment field.
+//! Set the value of the Button::_sfAlignment field.
 inline
-void ButtonBase::setVerticalAlignment(const Real32 &value)
+void ButtonBase::setAlignment(const Vec2f &value)
 {
-    _sfVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the Button::_sfHorizontalAlignment field.
-inline
-Real32 &ButtonBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Get the value of the Button::_sfHorizontalAlignment field.
-inline
-const Real32 &ButtonBase::getHorizontalAlignment(void) const
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Set the value of the Button::_sfHorizontalAlignment field.
-inline
-void ButtonBase::setHorizontalAlignment(const Real32 &value)
-{
-    _sfHorizontalAlignment.setValue(value);
+    _sfAlignment.setValue(value);
 }
 
 //! Get the value of the Button::_sfEnableActionOnMouseDownTime field.
@@ -561,21 +505,21 @@ void ButtonBase::setActionOnMouseDownRate(const Time &value)
 
 //! Get the value of the Button::_sfActiveOffset field.
 inline
-Vec2s &ButtonBase::getActiveOffset(void)
+Vec2f &ButtonBase::getActiveOffset(void)
 {
     return _sfActiveOffset.getValue();
 }
 
 //! Get the value of the Button::_sfActiveOffset field.
 inline
-const Vec2s &ButtonBase::getActiveOffset(void) const
+const Vec2f &ButtonBase::getActiveOffset(void) const
 {
     return _sfActiveOffset.getValue();
 }
 
 //! Set the value of the Button::_sfActiveOffset field.
 inline
-void ButtonBase::setActiveOffset(const Vec2s &value)
+void ButtonBase::setActiveOffset(const Vec2f &value)
 {
     _sfActiveOffset.setValue(value);
 }

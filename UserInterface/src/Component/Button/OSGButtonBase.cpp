@@ -70,9 +70,6 @@ const OSG::BitVector  ButtonBase::FontFieldMask =
 const OSG::BitVector  ButtonBase::TextFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::TextFieldId);
 
-const OSG::BitVector  ButtonBase::ActiveFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::ActiveFieldId);
-
 const OSG::BitVector  ButtonBase::ActiveBorderFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::ActiveBorderFieldId);
 
@@ -97,11 +94,8 @@ const OSG::BitVector  ButtonBase::DisabledTextColorFieldMask =
 const OSG::BitVector  ButtonBase::TextColorFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::TextColorFieldId);
 
-const OSG::BitVector  ButtonBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::VerticalAlignmentFieldId);
-
-const OSG::BitVector  ButtonBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::HorizontalAlignmentFieldId);
+const OSG::BitVector  ButtonBase::AlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::AlignmentFieldId);
 
 const OSG::BitVector  ButtonBase::EnableActionOnMouseDownTimeFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::EnableActionOnMouseDownTimeFieldId);
@@ -140,9 +134,6 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
 /*! \var std::string     ButtonBase::_sfText
     
 */
-/*! \var bool            ButtonBase::_sfActive
-    
-*/
 /*! \var BorderPtr       ButtonBase::_sfActiveBorder
     
 */
@@ -167,10 +158,7 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
 /*! \var Color4f         ButtonBase::_sfTextColor
     
 */
-/*! \var Real32          ButtonBase::_sfVerticalAlignment
-    
-*/
-/*! \var Real32          ButtonBase::_sfHorizontalAlignment
+/*! \var Vec2f           ButtonBase::_sfAlignment
     
 */
 /*! \var bool            ButtonBase::_sfEnableActionOnMouseDownTime
@@ -179,7 +167,7 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
 /*! \var Time            ButtonBase::_sfActionOnMouseDownRate
     
 */
-/*! \var Vec2s           ButtonBase::_sfActiveOffset
+/*! \var Vec2f           ButtonBase::_sfActiveOffset
     
 */
 /*! \var UIDrawObjectCanvasPtr ButtonBase::_sfDrawObject
@@ -212,11 +200,6 @@ FieldDescription *ButtonBase::_desc[] =
                      TextFieldId, TextFieldMask,
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFText),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Active", 
-                     ActiveFieldId, ActiveFieldMask,
-                     false,
-                     (FieldAccessMethod) &ButtonBase::getSFActive),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "ActiveBorder", 
                      ActiveBorderFieldId, ActiveBorderFieldMask,
@@ -257,16 +240,11 @@ FieldDescription *ButtonBase::_desc[] =
                      TextColorFieldId, TextColorFieldMask,
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFTextColor),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "VerticalAlignment", 
-                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "Alignment", 
+                     AlignmentFieldId, AlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFVerticalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HorizontalAlignment", 
-                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ButtonBase::getSFHorizontalAlignment),
+                     (FieldAccessMethod) &ButtonBase::getSFAlignment),
     new FieldDescription(SFBool::getClassType(), 
                      "EnableActionOnMouseDownTime", 
                      EnableActionOnMouseDownTimeFieldId, EnableActionOnMouseDownTimeFieldMask,
@@ -277,7 +255,7 @@ FieldDescription *ButtonBase::_desc[] =
                      ActionOnMouseDownRateFieldId, ActionOnMouseDownRateFieldMask,
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFActionOnMouseDownRate),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "ActiveOffset", 
                      ActiveOffsetFieldId, ActiveOffsetFieldMask,
                      false,
@@ -384,7 +362,6 @@ void ButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ButtonBase::ButtonBase(void) :
     _sfFont                   (), 
     _sfText                   (), 
-    _sfActive                 (bool(false)), 
     _sfActiveBorder           (BorderPtr(NullFC)), 
     _sfActiveBackground       (LayerPtr(NullFC)), 
     _sfActiveForeground       (LayerPtr(NullFC)), 
@@ -393,11 +370,10 @@ ButtonBase::ButtonBase(void) :
     _sfRolloverTextColor      (), 
     _sfDisabledTextColor      (), 
     _sfTextColor              (), 
-    _sfVerticalAlignment      (Real32(0.5)), 
-    _sfHorizontalAlignment    (Real32(0.5)), 
+    _sfAlignment              (Vec2f(0.5,0.5)), 
     _sfEnableActionOnMouseDownTime(bool(false)), 
     _sfActionOnMouseDownRate  (Time(0.1)), 
-    _sfActiveOffset           (Vec2s(0,0)), 
+    _sfActiveOffset           (Vec2f(0,0)), 
     _sfDrawObject             (UIDrawObjectCanvasPtr(NullFC)), 
     _sfActiveDrawObject       (UIDrawObjectCanvasPtr(NullFC)), 
     _sfFocusedDrawObject      (UIDrawObjectCanvasPtr(NullFC)), 
@@ -414,7 +390,6 @@ ButtonBase::ButtonBase(void) :
 ButtonBase::ButtonBase(const ButtonBase &source) :
     _sfFont                   (source._sfFont                   ), 
     _sfText                   (source._sfText                   ), 
-    _sfActive                 (source._sfActive                 ), 
     _sfActiveBorder           (source._sfActiveBorder           ), 
     _sfActiveBackground       (source._sfActiveBackground       ), 
     _sfActiveForeground       (source._sfActiveForeground       ), 
@@ -423,8 +398,7 @@ ButtonBase::ButtonBase(const ButtonBase &source) :
     _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
     _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
     _sfTextColor              (source._sfTextColor              ), 
-    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
-    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
+    _sfAlignment              (source._sfAlignment              ), 
     _sfEnableActionOnMouseDownTime(source._sfEnableActionOnMouseDownTime), 
     _sfActionOnMouseDownRate  (source._sfActionOnMouseDownRate  ), 
     _sfActiveOffset           (source._sfActiveOffset           ), 
@@ -457,11 +431,6 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         returnValue += _sfText.getBinSize();
-    }
-
-    if(FieldBits::NoField != (ActiveFieldMask & whichField))
-    {
-        returnValue += _sfActive.getBinSize();
     }
 
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
@@ -504,14 +473,9 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTextColor.getBinSize();
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        returnValue += _sfVerticalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfHorizontalAlignment.getBinSize();
+        returnValue += _sfAlignment.getBinSize();
     }
 
     if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
@@ -573,11 +537,6 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
         _sfText.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveFieldMask & whichField))
-    {
-        _sfActive.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
     {
         _sfActiveBorder.copyToBin(pMem);
@@ -618,14 +577,9 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTextColor.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfVerticalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyToBin(pMem);
+        _sfAlignment.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
@@ -686,11 +640,6 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfText.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveFieldMask & whichField))
-    {
-        _sfActive.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
     {
         _sfActiveBorder.copyFromBin(pMem);
@@ -731,14 +680,9 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTextColor.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfVerticalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyFromBin(pMem);
+        _sfAlignment.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
@@ -797,9 +741,6 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
 
-    if(FieldBits::NoField != (ActiveFieldMask & whichField))
-        _sfActive.syncWith(pOther->_sfActive);
-
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
         _sfActiveBorder.syncWith(pOther->_sfActiveBorder);
 
@@ -824,11 +765,8 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
         _sfTextColor.syncWith(pOther->_sfTextColor);
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
     if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
         _sfEnableActionOnMouseDownTime.syncWith(pOther->_sfEnableActionOnMouseDownTime);
@@ -870,9 +808,6 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
 
-    if(FieldBits::NoField != (ActiveFieldMask & whichField))
-        _sfActive.syncWith(pOther->_sfActive);
-
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
         _sfActiveBorder.syncWith(pOther->_sfActiveBorder);
 
@@ -897,11 +832,8 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
         _sfTextColor.syncWith(pOther->_sfTextColor);
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
     if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
         _sfEnableActionOnMouseDownTime.syncWith(pOther->_sfEnableActionOnMouseDownTime);

@@ -392,8 +392,7 @@ void WindowsLookAndFeel::init(void)
 		//Text
 		WindowsButton->setText("");
 		WindowsButton->setFont(WindowsFont);
-		WindowsButton->setVerticalAlignment(0.5);
-		WindowsButton->setHorizontalAlignment(0.5);
+		WindowsButton->setAlignment(Vec2f(0.5f,0.5f));
 		WindowsButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
@@ -438,8 +437,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsLabel->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsLabel->setDisabledTextColor(WindowsDisabledTextColor);
 		
-		WindowsLabel->setVerticalAlignment(0.5);
-		WindowsLabel->setHorizontalAlignment(0.0);
+		WindowsLabel->setAlignment(Vec2f(0.0f,0.5f));
 		WindowsLabel->setTextSelectable(false);
 	endEditCP(WindowsLabel);
 	
@@ -643,8 +641,7 @@ void WindowsLookAndFeel::init(void)
         WindowsInternalWindowTitlebarIconifyButton->setDisabledDrawObject(WindowsIconifyButtonCanvas);
 
         WindowsInternalWindowTitlebarIconifyButton->setActiveOffset(Vec2f(0,0));
-		WindowsInternalWindowTitlebarIconifyButton->setVerticalAlignment(0.85f);
-		WindowsInternalWindowTitlebarIconifyButton->setHorizontalAlignment(0.25f);
+		WindowsInternalWindowTitlebarIconifyButton->setAlignment(Vec2f(0.25f,0.85f));
 	endEditCP(WindowsInternalWindowTitlebarIconifyButton);
 
 	//MaximizeButton
@@ -806,8 +803,7 @@ void WindowsLookAndFeel::init(void)
         WindowsInternalWindowTitlebarCloseButton->setDisabledDrawObject(WindowsCloseButtonCanvas);
 
         WindowsInternalWindowTitlebarCloseButton->setActiveOffset(Vec2f(0,0));
-		WindowsInternalWindowTitlebarCloseButton->setVerticalAlignment(0.5f);
-		WindowsInternalWindowTitlebarCloseButton->setHorizontalAlignment(0.5f);
+		WindowsInternalWindowTitlebarCloseButton->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(WindowsInternalWindowTitlebarCloseButton);
 
 	LabelPtr WindowsInternalWindowTitlebarTitleLabel = Label::create();
@@ -1248,8 +1244,7 @@ void WindowsLookAndFeel::init(void)
 
 		//Image Alignment
 		WindowsImageComponent->setScale(ImageComponent::SCALE_NONE);
-		WindowsImageComponent->setVerticalAlignment(0.5);
-		WindowsImageComponent->setHorizontalAlignment(0.5);
+		WindowsImageComponent->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(WindowsImageComponent);
 
 	
@@ -1505,8 +1500,7 @@ void WindowsLookAndFeel::init(void)
 		//Text
 		WindowsCheckboxButton->setText("");
 		WindowsCheckboxButton->setFont(WindowsFont);
-		WindowsCheckboxButton->setVerticalAlignment(0.5);
-		WindowsCheckboxButton->setHorizontalAlignment(0.5);
+		WindowsCheckboxButton->setAlignment(Vec2f(0.5f,0.5f));
 		WindowsCheckboxButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsCheckboxButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsCheckboxButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
@@ -1729,8 +1723,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsRadioButton->setFont(WindowsFont);
 
 		//alignment
-		WindowsRadioButton->setVerticalAlignment(0.5);
-		WindowsRadioButton->setHorizontalAlignment(0.5);
+		WindowsRadioButton->setAlignment(Vec2f(0.5f,0.5f));
 		WindowsRadioButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsRadioButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsRadioButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
@@ -1772,8 +1765,7 @@ void WindowsLookAndFeel::init(void)
 		//Text
 		WindowsToggleButton->setText("");
 		WindowsToggleButton->setFont(WindowsFont);
-		WindowsToggleButton->setVerticalAlignment(0.5);
-		WindowsToggleButton->setHorizontalAlignment(0.5);
+		WindowsToggleButton->setAlignment(Vec2f(0.5f,0.5f));
 		WindowsToggleButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsToggleButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsToggleButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
@@ -1816,7 +1808,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsTextField->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsTextField->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsTextField->setDisabledTextColor(WindowsDisabledTextColor);
-        WindowsTextField->setVerticalAlignment(0.5);
+        WindowsTextField->setAlignment(Vec2f(0.0f,0.5f));
 
 		//background
 		WindowsTextField->setBackground(WindowsTextFieldBackground);
@@ -1830,8 +1822,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsTextField->setFocusedBorder(WindowsTextFieldBorder);
 		WindowsTextField->setDisabledBorder(WindowsTextFieldBorder);
 
-		WindowsTextField->setHorizontalAlignment(0.0);
-		WindowsTextField->setVerticalAlignment(0.5);
 	endEditCP(WindowsTextField);
     
     
@@ -1868,7 +1858,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsPasswordField->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsPasswordField->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsPasswordField->setDisabledTextColor(WindowsDisabledTextColor);
-        WindowsPasswordField->setVerticalAlignment(0.5);
+        WindowsPasswordField->setAlignment(Vec2f(0.0f,0.5f));
 
 		//background
 		WindowsPasswordField->setBackground(WindowsPasswordFieldBackground);
@@ -1983,8 +1973,7 @@ void WindowsLookAndFeel::init(void)
 		//Text
 		WindowsToolTip->setText("");
 		WindowsToolTip->setFont(WindowsFont);
-        WindowsToolTip->setVerticalAlignment(0.5);
-        WindowsToolTip->setHorizontalAlignment(0.5);
+        WindowsToolTip->setAlignment(Vec2f(0.5f,0.5f));
 		WindowsToolTip->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 	endEditCP(WindowsToolTip);
 
@@ -2044,8 +2033,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsMenuItem->setSelectedTextColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsMenuItem->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsMenuItem->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
-		WindowsMenuItem->setVerticalAlignment(0.5);
-		WindowsMenuItem->setHorizontalAlignment(0.0);
+		WindowsMenuItem->setAlignment(Vec2f(0.0f,0.5f));
 		WindowsMenuItem->setActiveOffset(Vec2f(0.0f,0.0f));
 	endEditCP(WindowsMenuItem);
     
@@ -2105,8 +2093,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsComponentMenuItem->setSelectedTextColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsComponentMenuItem->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsComponentMenuItem->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
-		WindowsComponentMenuItem->setVerticalAlignment(0.5);
-		WindowsComponentMenuItem->setHorizontalAlignment(0.0);
+		WindowsComponentMenuItem->setAlignment(Vec2f(0.0f,0.5f));
 		WindowsComponentMenuItem->setActiveOffset(Vec2f(0.0f,0.0f));
 	endEditCP(WindowsComponentMenuItem);
     
@@ -2185,8 +2172,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsMenu->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsMenu->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 		WindowsMenu->setActiveOffset(Vec2f(0.0f,0.0f));
-		WindowsMenu->setVerticalAlignment(0.5);
-		WindowsMenu->setHorizontalAlignment(0.0);
+		WindowsMenu->setAlignment(Vec2f(0.0f,0.5f));
 
         //Expanding Draw Object
         WindowsMenu->setExpandDrawObject(defaultMenuDrawObject);
@@ -3004,8 +2990,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsVerticalScrollBarDrawObject->setDisabledBackground(WindowsDisabledVerticalScrollBarDrawObjectBackground);
 		WindowsVerticalScrollBarDrawObject->setActiveBackground(WindowsActiveVerticalScrollBarDrawObjectBackground);
 
-        WindowsVerticalScrollBarDrawObject->setVerticalAlignment(0.5);
-        WindowsVerticalScrollBarDrawObject->setHorizontalAlignment(0.5);
+        WindowsVerticalScrollBarDrawObject->setAlignment(Vec2f(0.5f,0.5f));
         WindowsVerticalScrollBarDrawObject->setActiveOffset(Vec2f(0,0));
 
         WindowsVerticalScrollBarDrawObject->setDrawObject(WindowsVerticalScrollBarRidges);
@@ -3352,8 +3337,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsHorizontalScrollBarDrawObject->setDisabledBackground(WindowsDisabledHorizontalScrollBarDrawObjectBackground);
 		WindowsHorizontalScrollBarDrawObject->setActiveBackground(WindowsActiveHorizontalScrollBarDrawObjectBackground);
         
-        WindowsHorizontalScrollBarDrawObject->setVerticalAlignment(0.5);
-        WindowsHorizontalScrollBarDrawObject->setHorizontalAlignment(0.5);
+        WindowsHorizontalScrollBarDrawObject->setAlignment(Vec2f(0.5f,0.5f));
         WindowsHorizontalScrollBarDrawObject->setActiveOffset(Vec2f(0,0));
 
         WindowsHorizontalScrollBarDrawObject->setDrawObject(WindowsHorizontalScrollBarRidges);
@@ -3644,8 +3628,7 @@ void WindowsLookAndFeel::init(void)
         WindowsSpinnerNextButton->setRolloverDrawObject(WindowsSpinnerNextButtonCanvas);
         WindowsSpinnerNextButton->setDisabledDrawObject(WindowsSpinnerNextButtonCanvas);
 
-		WindowsSpinnerNextButton->setVerticalAlignment(0.5f);
-		WindowsSpinnerNextButton->setHorizontalAlignment(0.5f);
+		WindowsSpinnerNextButton->setAlignment(Vec2f(0.5f,0.5f));
     endEditCP(WindowsSpinnerNextButton);
 
     //Spinner Previous Draw Object
@@ -3699,8 +3682,7 @@ void WindowsLookAndFeel::init(void)
         WindowsSpinnerPreviousButton->setRolloverDrawObject(WindowsSpinnerPreviousButtonCanvas);
         WindowsSpinnerPreviousButton->setDisabledDrawObject(WindowsSpinnerPreviousButtonCanvas);
 
-		WindowsSpinnerPreviousButton->setVerticalAlignment(0.5f);
-		WindowsSpinnerPreviousButton->setHorizontalAlignment(0.5f);
+		WindowsSpinnerPreviousButton->setAlignment(Vec2f(0.5f,0.5f));
     endEditCP(WindowsSpinnerPreviousButton);
 
 	//Windows SpinnerBorder
@@ -3740,8 +3722,8 @@ void WindowsLookAndFeel::init(void)
 	//************************** SpinnerDefaultEditor *****************************
 	//Windows SpinnerDefaultEditor TextField
 	TextFieldPtr WindowsSpinnerDefaultEditorTextField = TextField::create();
-    beginEditCP(WindowsSpinnerDefaultEditorTextField, TextField::HorizontalAlignmentFieldMask);
-        WindowsSpinnerDefaultEditorTextField->setHorizontalAlignment(1.0);
+    beginEditCP(WindowsSpinnerDefaultEditorTextField, TextField::AlignmentFieldMask);
+        WindowsSpinnerDefaultEditorTextField->setAlignment(Vec2f(1.0f,0.5f));
         
 		//Border
 		WindowsSpinnerDefaultEditorTextField->setBorder(WindowsEmptyBorder);
@@ -3754,7 +3736,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsSpinnerDefaultEditorTextField->setRolloverBackground(WindowsEmptyBackground);
 		WindowsSpinnerDefaultEditorTextField->setFocusedBackground(WindowsEmptyBackground);
 		WindowsSpinnerDefaultEditorTextField->setDisabledBackground(WindowsEmptyBackground);
-    endEditCP(WindowsSpinnerDefaultEditorTextField, TextField::HorizontalAlignmentFieldMask);
+    endEditCP(WindowsSpinnerDefaultEditorTextField, TextField::AlignmentFieldMask);
 
     beginEditCP(WindowsSpinnerDefaultEditor);
 		WindowsSpinnerDefaultEditor->setConstraints(NullFC);
@@ -3785,8 +3767,8 @@ void WindowsLookAndFeel::init(void)
 	//************************** SpinnerNumberEditor *****************************
 	//Windows SpinnerNumberEditor TextField
 	TextFieldPtr WindowsSpinnerNumberEditorTextField = TextField::create();
-    beginEditCP(WindowsSpinnerNumberEditorTextField, TextField::HorizontalAlignmentFieldMask);
-        WindowsSpinnerNumberEditorTextField->setHorizontalAlignment(1.0);
+    beginEditCP(WindowsSpinnerNumberEditorTextField, TextField::AlignmentFieldMask);
+        WindowsSpinnerNumberEditorTextField->setAlignment(Vec2f(1.0f,0.5f));
         
 		//Border
 		WindowsSpinnerNumberEditorTextField->setBorder(WindowsEmptyBorder);
@@ -3799,7 +3781,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsSpinnerNumberEditorTextField->setRolloverBackground(WindowsEmptyBackground);
 		WindowsSpinnerNumberEditorTextField->setFocusedBackground(WindowsEmptyBackground);
 		WindowsSpinnerNumberEditorTextField->setDisabledBackground(WindowsEmptyBackground);
-    endEditCP(WindowsSpinnerNumberEditorTextField, TextField::HorizontalAlignmentFieldMask);
+    endEditCP(WindowsSpinnerNumberEditorTextField, TextField::AlignmentFieldMask);
 
     beginEditCP(WindowsSpinnerNumberEditor);
 		WindowsSpinnerNumberEditor->setConstraints(NullFC);
@@ -3923,8 +3905,7 @@ void WindowsLookAndFeel::init(void)
         WindowsProgressBar->setIndeterminateBarSize(0.25);
         WindowsProgressBar->setEnableProgressString(false);
 		WindowsProgressBar->setProgressString(std::string(""));
-        WindowsProgressBar->setVerticalAlignment(0.5);
-        WindowsProgressBar->setHorizontalAlignment(0.5);
+        WindowsProgressBar->setAlignment(Vec2f(0.5f,0.5f));
         WindowsProgressBar->setFont(WindowsFont);
         WindowsProgressBar->setTextColor(Color4f(0.0,0.0,0.0,1.0));
         WindowsProgressBar->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
@@ -3999,8 +3980,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsSliderPrototypeLabel->setFocusedBackground(WindowsEmptyBackground);
 		WindowsSliderPrototypeLabel->setDisabledBackground(WindowsEmptyBackground);
 
-		WindowsSliderPrototypeLabel->setVerticalAlignment(0.5);
-		WindowsSliderPrototypeLabel->setHorizontalAlignment(0.0);
+		WindowsSliderPrototypeLabel->setAlignment(Vec2f(0.0f,0.5f));
 	endEditCP(WindowsSliderPrototypeLabel);
 
 	//Windows SliderBorder
@@ -4163,7 +4143,7 @@ void WindowsLookAndFeel::init(void)
 	//Windows Default ComboBoxEditor TextField
 	TextFieldPtr WindowsDefaultComboBoxTextField = TextField::create();
     beginEditCP(WindowsDefaultComboBoxTextField);
-        WindowsDefaultComboBoxTextField->setHorizontalAlignment(0.0);
+        WindowsDefaultComboBoxTextField->setAlignment(Vec2f(0.0f,0.5f));
         
 		//Border
 		WindowsDefaultComboBoxTextField->setBorder(WindowsEmptyBorder);

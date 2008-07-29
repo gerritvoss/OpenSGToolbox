@@ -13,20 +13,11 @@
 >
 A UI Label.
 	<Field
-		name="HorizontalAlignment"
-		type="Real32"
+		name="Alignment"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0.0"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="VerticalAlignment"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="0.5"
+		defaultValue="0.0f, 0.5f"
 		access="public"
 	>
 	</Field>

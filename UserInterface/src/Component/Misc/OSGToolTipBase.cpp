@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,11 +73,8 @@ const OSG::BitVector  ToolTipBase::TippedComponentFieldMask =
 const OSG::BitVector  ToolTipBase::TextFieldMask = 
     (TypeTraits<BitVector>::One << ToolTipBase::TextFieldId);
 
-const OSG::BitVector  ToolTipBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ToolTipBase::VerticalAlignmentFieldId);
-
-const OSG::BitVector  ToolTipBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ToolTipBase::HorizontalAlignmentFieldId);
+const OSG::BitVector  ToolTipBase::AlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << ToolTipBase::AlignmentFieldId);
 
 const OSG::BitVector  ToolTipBase::TextColorFieldMask = 
     (TypeTraits<BitVector>::One << ToolTipBase::TextColorFieldId);
@@ -98,10 +95,7 @@ const OSG::BitVector ToolTipBase::MTInfluenceMask =
 /*! \var std::string     ToolTipBase::_sfText
     
 */
-/*! \var Real32          ToolTipBase::_sfVerticalAlignment
-    
-*/
-/*! \var Real32          ToolTipBase::_sfHorizontalAlignment
+/*! \var Vec2f           ToolTipBase::_sfAlignment
     
 */
 /*! \var Color4f         ToolTipBase::_sfTextColor
@@ -127,16 +121,11 @@ FieldDescription *ToolTipBase::_desc[] =
                      TextFieldId, TextFieldMask,
                      false,
                      (FieldAccessMethod) &ToolTipBase::getSFText),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "VerticalAlignment", 
-                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "Alignment", 
+                     AlignmentFieldId, AlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &ToolTipBase::getSFVerticalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HorizontalAlignment", 
-                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ToolTipBase::getSFHorizontalAlignment),
+                     (FieldAccessMethod) &ToolTipBase::getSFAlignment),
     new FieldDescription(SFColor4f::getClassType(), 
                      "TextColor", 
                      TextColorFieldId, TextColorFieldMask,
@@ -220,8 +209,7 @@ ToolTipBase::ToolTipBase(void) :
     _sfFont                   (), 
     _sfTippedComponent        (ComponentPtr(NullFC)), 
     _sfText                   (), 
-    _sfVerticalAlignment      (Real32(0.5)), 
-    _sfHorizontalAlignment    (Real32(0.0)), 
+    _sfAlignment              (Vec2f(0.0f,0.5f)), 
     _sfTextColor              (), 
     Inherited() 
 {
@@ -235,8 +223,7 @@ ToolTipBase::ToolTipBase(const ToolTipBase &source) :
     _sfFont                   (source._sfFont                   ), 
     _sfTippedComponent        (source._sfTippedComponent        ), 
     _sfText                   (source._sfText                   ), 
-    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
-    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
+    _sfAlignment              (source._sfAlignment              ), 
     _sfTextColor              (source._sfTextColor              ), 
     Inherited                 (source)
 {
@@ -269,14 +256,9 @@ UInt32 ToolTipBase::getBinSize(const BitVector &whichField)
         returnValue += _sfText.getBinSize();
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        returnValue += _sfVerticalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfHorizontalAlignment.getBinSize();
+        returnValue += _sfAlignment.getBinSize();
     }
 
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
@@ -308,14 +290,9 @@ void ToolTipBase::copyToBin(      BinaryDataHandler &pMem,
         _sfText.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfVerticalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyToBin(pMem);
+        _sfAlignment.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
@@ -346,14 +323,9 @@ void ToolTipBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfText.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfVerticalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyFromBin(pMem);
+        _sfAlignment.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
@@ -380,11 +352,8 @@ void ToolTipBase::executeSyncImpl(      ToolTipBase *pOther,
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
         _sfTextColor.syncWith(pOther->_sfTextColor);
@@ -408,11 +377,8 @@ void ToolTipBase::executeSyncImpl(      ToolTipBase *pOther,
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
         _sfTextColor.syncWith(pOther->_sfTextColor);

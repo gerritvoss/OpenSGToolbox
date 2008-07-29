@@ -164,7 +164,7 @@ int main(int argc, char **argv)
     PasswordFieldPtr ExamplePasswordField = PasswordField::create();
 
     beginEditCP(ExamplePasswordField, PasswordField::MinSizeFieldMask | PasswordField::MaxSizeFieldMask | PasswordField::PreferredSizeFieldMask 
-        | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::VerticalAlignmentFieldMask 
+        | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::AlignmentFieldMask 
         | PasswordField::EchoCharFieldMask
         | PasswordField::SelectionBoxColorFieldMask | PasswordField::SelectionTextColorFieldMask);
         ExamplePasswordField->setPreferredSize(Vec2f(100, 50));
@@ -178,9 +178,9 @@ int main(int argc, char **argv)
         ExamplePasswordField->setFont(ExampleFont);
         ExamplePasswordField->setSelectionStart(2);
         ExamplePasswordField->setSelectionEnd(3);
-        ExamplePasswordField->setVerticalAlignment(.5);
+        ExamplePasswordField->setAlignment(Vec2f(0.0,0.5));
     endEditCP(ExamplePasswordField, PasswordField::MinSizeFieldMask | PasswordField::MaxSizeFieldMask | PasswordField::PreferredSizeFieldMask 
-        | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::VerticalAlignmentFieldMask 
+        | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::AlignmentFieldMask 
         | PasswordField::EchoCharFieldMask
         | PasswordField::SelectionBoxColorFieldMask | PasswordField::SelectionTextColorFieldMask);
 

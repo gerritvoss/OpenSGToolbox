@@ -684,40 +684,36 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     RadioButtonPtr RadioButton3 = osg::RadioButton::create();
     RadioButtonPtr RadioButton4 = osg::RadioButton::create();
 
-    beginEditCP(RadioButton1, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
-        RadioButton1->setVerticalAlignment(0.5);
-        RadioButton1->setHorizontalAlignment(0.0);
+    beginEditCP(RadioButton1, RadioButton::AlignmentFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
+        RadioButton1->setAlignment(Vec2f(0.0,0.5));
         RadioButton1->setPreferredSize(Vec2f(100, 40));
         RadioButton1->setText("Black Text");
         RadioButton1->setToolTipText("Set TextArea text black");
-    endEditCP(RadioButton1, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
+    endEditCP(RadioButton1, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
     RadioButton1->addButtonSelectedListener(&RadioButton1Listener);
 
-    beginEditCP(RadioButton2, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
-        RadioButton2->setVerticalAlignment(0.5);
-        RadioButton2->setHorizontalAlignment(0.0);
+    beginEditCP(RadioButton2, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
+        RadioButton2->setAlignment(Vec2f(0.0,0.5));
         RadioButton2->setPreferredSize(Vec2f(100, 40));
         RadioButton2->setText("Red Text");
         RadioButton2->setToolTipText("Set TextArea text red");
-    endEditCP(RadioButton2, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
+    endEditCP(RadioButton2, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
     RadioButton2->addButtonSelectedListener(&RadioButton2Listener);
 
-    beginEditCP(RadioButton3, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
-        RadioButton3->setVerticalAlignment(0.5);
-        RadioButton3->setHorizontalAlignment(0.0);
+    beginEditCP(RadioButton3, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
+        RadioButton3->setAlignment(Vec2f(0.0,0.5));
         RadioButton3->setPreferredSize(Vec2f(100, 40));
         RadioButton3->setText("Green Text");
         RadioButton3->setToolTipText("Set TextArea text green");
-    endEditCP(RadioButton3, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
+    endEditCP(RadioButton3, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
     RadioButton3->addButtonSelectedListener(&RadioButton3Listener);
 
-    beginEditCP(RadioButton4, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
-        RadioButton4->setVerticalAlignment(0.5);
-        RadioButton4->setHorizontalAlignment(0.0);
+    beginEditCP(RadioButton4, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
+        RadioButton4->setAlignment(Vec2f(0.0,0.5));
         RadioButton4->setPreferredSize(Vec2f(100, 40));
         RadioButton4->setText("Blue Text");
         RadioButton4->setToolTipText("Set TextArea text blue");
-    endEditCP(RadioButton4, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
+    endEditCP(RadioButton4, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
     RadioButton4->addButtonSelectedListener(&RadioButton4Listener);
 
     buttonGroup.addButton(RadioButton1);

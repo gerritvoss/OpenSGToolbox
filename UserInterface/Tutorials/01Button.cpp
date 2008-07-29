@@ -258,22 +258,14 @@ int main(int argc, char **argv)
                 what the text Color will be when
                 the Button is pressed (denoted by
                 Active).
-            -setVerticalAlignment(Float OR Enum):
+            -setAlignment(Vec2f):
                 Determine the Vertical Alignment
-                of the text.  The Float value is 
-                in [0.0, 1.0] and the Enums are:
-                VERTICAL_CENTER, VERTICAL_TOP, 
-                or VERTICAL_BOTTOM.
-            -setHorizontalAlignmnet(Real32 OR Enum):
-                Determine the Horizontal Alignment
-                of the text.  The Float value is 
-                in [0.0, 1.0] and the Enums are:
-                HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
-                or HORIZONTAL_RIGHT.
+                of the text.  The value is 
+                in [0.0, 1.0].
 
     ******************************************************/
     beginEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
             ExampleButton->setMinSize(Vec2f(50, 25));
             ExampleButton->setMaxSize(Vec2f(200, 100));
             ExampleButton->setPreferredSize(Vec2f(100, 50));
@@ -284,10 +276,9 @@ int main(int argc, char **argv)
             ExampleButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
             ExampleButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
             ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            ExampleButton->setVerticalAlignment(0.0);
-            ExampleButton->setHorizontalAlignment(1.0);
+            ExampleButton->setAlignment(1.0,0.0);
     endEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
             
     // Create an ActionListener and assign it to ExampleButton
     // This Class is defined above, and will cause the output

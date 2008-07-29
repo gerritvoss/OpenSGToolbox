@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -87,7 +87,7 @@ void ToolTip::drawInternal(const GraphicsPtr TheGraphics) const
         Pnt2f TextTopLeft, TextBottomRight;
         getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
         TheGraphics->drawText(
-           calculateAlignment(TopLeft, BottomRight-TopLeft, (TextBottomRight-TextTopLeft), getVerticalAlignment(), getHorizontalAlignment())
+           calculateAlignment(TopLeft, BottomRight-TopLeft, (TextBottomRight-TextTopLeft),getAlignment().y(), getAlignment().x())
    , getText(), getFont(), getTextColor(), getOpacity());
     }
 }

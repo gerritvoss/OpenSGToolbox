@@ -112,7 +112,7 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
         drawObjectSize.setValues(0,0);
     }
     InnerComponentsSize[1] = osgMax(drawObjectSize.y(), TextBounds.y());
-    InnerComponentsPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, InnerComponentsSize, getVerticalAlignment(), getHorizontalAlignment());
+    InnerComponentsPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, InnerComponentsSize,getAlignment().y(), getAlignment().x());
     
     if(DrawnDrawObject != NullFC)
     {

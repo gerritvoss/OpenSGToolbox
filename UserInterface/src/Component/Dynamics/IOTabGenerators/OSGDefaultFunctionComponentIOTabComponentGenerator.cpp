@@ -48,18 +48,18 @@
 #include <OpenSG/OSGConfig.h>
 
 
-#include <OpenSG/UserInterface/OSGButton.h>
+#include "Component/Button/OSGButton.h"
 
 #include "OSGDefaultFunctionComponentIOTabComponentGenerator.h"
 
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGColorLayer.h>
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGContainer.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
+#include "Border/OSGLineBorder.h"
+#include "Layer/OSGColorLayer.h"
+#include "Layout/OSGBoxLayout.h"
+#include "Layout/OSGFlowLayout.h"
+#include "Component/Container/OSGContainer.h"
+#include "Component/Container/OSGPanel.h"
+#include "Border/OSGLineBorder.h"
+#include "Component/Text/OSGLabel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -100,14 +100,14 @@ ComponentPtr DefaultFunctionComponentIOTabComponentGenerator::getIOTabComponent(
     endEditCP(ParameterNameFont, UIFont::SizeFieldMask);
 	
 	LabelPtr ParameterName = osg::Label::create();
-	beginEditCP(ParameterName, /*Label::BordersFieldMask | Label::BackgroundsFieldMask |*/ Label::FontFieldMask | Label::TextFieldMask /*| Label::PreferredSizeFieldMask*/ | Label::HorizontalAlignmentFieldMask);
+	beginEditCP(ParameterName, /*Label::BordersFieldMask | Label::BackgroundsFieldMask |*/ Label::FontFieldMask | Label::TextFieldMask /*| Label::PreferredSizeFieldMask*/ | Label::AlignmentFieldMask);
         //ParameterName->setBorders(emptyBorder);
         //ParameterName->setBackgrounds(GreyBackground);
         ParameterName->setFont(ParameterNameFont);
         ParameterName->setText(Value.getParameterName());
         //ParameterName->setPreferredSize(Vec2f(300, 100));
-		ParameterName->setHorizontalAlignment(0.5);
-	endEditCP(ParameterName, /*Label::BordersFieldMask | Label::BackgroundsFieldMask |*/ Label::FontFieldMask | Label::TextFieldMask /*| Label::PreferredSizeFieldMask*/ | Label::HorizontalAlignmentFieldMask);
+		ParameterName->setAlignment(Vec2f(0.5,0.5));
+	endEditCP(ParameterName, /*Label::BordersFieldMask | Label::BackgroundsFieldMask |*/ Label::FontFieldMask | Label::TextFieldMask /*| Label::PreferredSizeFieldMask*/ | Label::AlignmentFieldMask);
 	
 	FlowLayoutPtr PanelLayout = osg::FlowLayout::create();
 	beginEditCP(PanelLayout, FlowLayout::OrientationFieldMask);

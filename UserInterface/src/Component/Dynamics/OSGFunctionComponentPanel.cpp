@@ -49,10 +49,10 @@
 
 #include "OSGFunctionComponentPanel.h"
 
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
+#include "Component/Container/Window/OSGInternalWindow.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
-#include <OpenSG/UserInterface//OSGUIDrawUtils.h>
+#include "Util/OSGUIDrawUtils.h"
 
 #include <OpenSG/OSGGL.h>
 

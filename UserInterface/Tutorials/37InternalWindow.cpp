@@ -150,65 +150,8 @@ int main(int argc, char **argv)
         ExampleFont->setSize(16);
     endEditCP(ExampleFont, UIFont::SizeFieldMask);
 
-    /******************************************************
-
-            Edit the Button's characteristics.
-            Note: the first 4 functions can
-            be used with any Component and 
-            are not specific to Button.
-
-            -setMinSize(Vec2f): Determine the 
-                Minimum    Size of the Component.
-                Some Layouts will automatically
-                resize Components; this prevents
-                the Size from going below a
-                certain value.
-            -setMaxSize(Vec2f): Determine the 
-                Maximum Size of the Component.
-            -setPreferredSize(Vec2f): Determine
-                the Preferred Size of the Component.
-                This is what the Component will
-                be displayed at unless changed by
-                another Component (such as a 
-                Layout).
-            -setToolTipText("Text"): Determine
-                what text is displayed while
-                Mouse is hovering above Component.
-                The word Text will be displayed
-                in this case.
-            
-            Functions specfic to Button:
-            -setText("DesiredText"): Determine 
-                the Button's text.  It will read
-                DesiredText in this case.
-            -setFont(FontName): Determine the 
-                Font to be used on the Button.
-            -setTextColor(Color4f): Determine the
-                Color for the text.
-            -setRolloverTextColor(Color4f): Determine
-                what the text Color will be when
-                the Mouse Cursor is above the 
-                Button.
-            -setActiveTextColor(Color4f): Determine
-                what the text Color will be when
-                the Button is pressed (denoted by
-                Active).
-            -setVerticalAlignment(Float OR Enum):
-                Determine the Vertical Alignment
-                of the text.  The Float value is 
-                in [0.0, 1.0] and the Enums are:
-                VERTICAL_CENTER, VERTICAL_TOP, 
-                or VERTICAL_BOTTOM.
-            -setHorizontalAlignmnet(Real32 OR Enum):
-                Determine the Horizontal Alignment
-                of the text.  The Float value is 
-                in [0.0, 1.0] and the Enums are:
-                HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
-                or HORIZONTAL_RIGHT.
-
-    ******************************************************/
     beginEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
             ExampleButton->setMinSize(Vec2f(50, 25));
             ExampleButton->setMaxSize(Vec2f(200, 100));
             ExampleButton->setPreferredSize(Vec2f(100, 50));
@@ -219,10 +162,9 @@ int main(int argc, char **argv)
             ExampleButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
             ExampleButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
             ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            ExampleButton->setVerticalAlignment(0.0);
-            ExampleButton->setHorizontalAlignment(1.0);
+            ExampleButton->setAlignment(Vec2f(1.0,0.0));
     endEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
             
 
     /******************************************************

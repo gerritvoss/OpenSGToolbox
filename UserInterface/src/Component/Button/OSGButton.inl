@@ -43,6 +43,18 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool Button::getActive(void) const
+{
+    return _Active;
+}
+
+inline
+void Button::setActive(bool Value)
+{
+    _Active = Value;
+}
+
+inline
 Button::ButtonArmedListener::ButtonArmedListener(ButtonPtr TheButton) :
 _Button(TheButton)
 {

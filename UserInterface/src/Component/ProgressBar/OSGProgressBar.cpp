@@ -169,7 +169,7 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
 		Pnt2f TextTopLeft, TextBottomRight;
 		getFont()->getBounds(StringToDraw, TextTopLeft, TextBottomRight);
 
-		AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
+		AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getAlignment().y(), getAlignment().x());
 
 		//Draw the Text
 		Graphics->drawText(AlignedPosition, StringToDraw, getFont(), getDrawnTextColor(), getOpacity());

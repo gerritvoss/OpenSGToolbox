@@ -73,8 +73,7 @@
 #include <OpenSG/OSGTextureChunkFields.h> // FocusedTexture type
 #include <OpenSG/OSGUInt32Fields.h> // Scale type
 #include <OpenSG/OSGVec2fFields.h> // ScaleAbsoluteSize type
-#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGVec2fFields.h> // Alignment type
 
 #include "OSGImageComponentFields.h"
 
@@ -98,15 +97,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
 
     enum
     {
-        TextureFieldId             = Inherited::NextFieldId,
-        RolloverTextureFieldId     = TextureFieldId             + 1,
-        DisabledTextureFieldId     = RolloverTextureFieldId     + 1,
-        FocusedTextureFieldId      = DisabledTextureFieldId     + 1,
-        ScaleFieldId               = FocusedTextureFieldId      + 1,
-        ScaleAbsoluteSizeFieldId   = ScaleFieldId               + 1,
-        VerticalAlignmentFieldId   = ScaleAbsoluteSizeFieldId   + 1,
-        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
-        NextFieldId                = HorizontalAlignmentFieldId + 1
+        TextureFieldId           = Inherited::NextFieldId,
+        RolloverTextureFieldId   = TextureFieldId           + 1,
+        DisabledTextureFieldId   = RolloverTextureFieldId   + 1,
+        FocusedTextureFieldId    = DisabledTextureFieldId   + 1,
+        ScaleFieldId             = FocusedTextureFieldId    + 1,
+        ScaleAbsoluteSizeFieldId = ScaleFieldId             + 1,
+        AlignmentFieldId         = ScaleAbsoluteSizeFieldId + 1,
+        NextFieldId              = AlignmentFieldId         + 1
     };
 
     static const OSG::BitVector TextureFieldMask;
@@ -115,8 +113,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     static const OSG::BitVector FocusedTextureFieldMask;
     static const OSG::BitVector ScaleFieldMask;
     static const OSG::BitVector ScaleAbsoluteSizeFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector AlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -149,8 +146,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
            SFTextureChunkPtr   *getSFFocusedTexture (void);
            SFUInt32            *getSFScale          (void);
            SFVec2f             *getSFScaleAbsoluteSize(void);
-           SFReal32            *getSFVerticalAlignment(void);
-           SFReal32            *getSFHorizontalAlignment(void);
+           SFVec2f             *getSFAlignment      (void);
 
            TextureChunkPtr     &getTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
@@ -164,10 +160,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
      const UInt32              &getScale          (void) const;
            Vec2f               &getScaleAbsoluteSize(void);
      const Vec2f               &getScaleAbsoluteSize(void) const;
-           Real32              &getVerticalAlignment(void);
-     const Real32              &getVerticalAlignment(void) const;
-           Real32              &getHorizontalAlignment(void);
-     const Real32              &getHorizontalAlignment(void) const;
+           Vec2f               &getAlignment      (void);
+     const Vec2f               &getAlignment      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -180,8 +174,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
      void setFocusedTexture ( const TextureChunkPtr &value );
      void setScale          ( const UInt32 &value );
      void setScaleAbsoluteSize( const Vec2f &value );
-     void setVerticalAlignment( const Real32 &value );
-     void setHorizontalAlignment( const Real32 &value );
+     void setAlignment      ( const Vec2f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,8 +223,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     SFTextureChunkPtr   _sfFocusedTexture;
     SFUInt32            _sfScale;
     SFVec2f             _sfScaleAbsoluteSize;
-    SFReal32            _sfVerticalAlignment;
-    SFReal32            _sfHorizontalAlignment;
+    SFVec2f             _sfAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

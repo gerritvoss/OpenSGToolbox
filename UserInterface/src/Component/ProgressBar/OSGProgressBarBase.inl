@@ -131,18 +131,11 @@ SFString *ProgressBarBase::getSFProgressString(void)
     return &_sfProgressString;
 }
 
-//! Get the ProgressBar::_sfVerticalAlignment field.
+//! Get the ProgressBar::_sfAlignment field.
 inline
-SFReal32 *ProgressBarBase::getSFVerticalAlignment(void)
+SFVec2f *ProgressBarBase::getSFAlignment(void)
 {
-    return &_sfVerticalAlignment;
-}
-
-//! Get the ProgressBar::_sfHorizontalAlignment field.
-inline
-SFReal32 *ProgressBarBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
+    return &_sfAlignment;
 }
 
 //! Get the ProgressBar::_sfFont field.
@@ -321,46 +314,25 @@ void ProgressBarBase::setProgressString(const std::string &value)
     _sfProgressString.setValue(value);
 }
 
-//! Get the value of the ProgressBar::_sfVerticalAlignment field.
+//! Get the value of the ProgressBar::_sfAlignment field.
 inline
-Real32 &ProgressBarBase::getVerticalAlignment(void)
+Vec2f &ProgressBarBase::getAlignment(void)
 {
-    return _sfVerticalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Get the value of the ProgressBar::_sfVerticalAlignment field.
+//! Get the value of the ProgressBar::_sfAlignment field.
 inline
-const Real32 &ProgressBarBase::getVerticalAlignment(void) const
+const Vec2f &ProgressBarBase::getAlignment(void) const
 {
-    return _sfVerticalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Set the value of the ProgressBar::_sfVerticalAlignment field.
+//! Set the value of the ProgressBar::_sfAlignment field.
 inline
-void ProgressBarBase::setVerticalAlignment(const Real32 &value)
+void ProgressBarBase::setAlignment(const Vec2f &value)
 {
-    _sfVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the ProgressBar::_sfHorizontalAlignment field.
-inline
-Real32 &ProgressBarBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Get the value of the ProgressBar::_sfHorizontalAlignment field.
-inline
-const Real32 &ProgressBarBase::getHorizontalAlignment(void) const
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Set the value of the ProgressBar::_sfHorizontalAlignment field.
-inline
-void ProgressBarBase::setHorizontalAlignment(const Real32 &value)
-{
-    _sfHorizontalAlignment.setValue(value);
+    _sfAlignment.setValue(value);
 }
 
 //! Get the value of the ProgressBar::_sfFont field.

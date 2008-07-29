@@ -150,7 +150,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    }
 
    //Figure out Position
-   Pnt2f Pos( calculateAlignment(TopLeft,ComponentSize, Size, getVerticalAlignment(), getHorizontalAlignment()) );
+   Pnt2f Pos( calculateAlignment(TopLeft,ComponentSize, Size,getAlignment().y(), getAlignment().x()) );
 
    Vec2f TexTopLeft(0.0,0.0),
 	     TexTopRight(1.0,0.0),

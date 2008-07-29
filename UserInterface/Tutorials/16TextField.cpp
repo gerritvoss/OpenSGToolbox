@@ -167,8 +167,8 @@ int main(int argc, char **argv)
         -setSelectionEnd(EndCharacterNumber): 
             Determine the character which the
 			selection ends before.
-        -setVerticalAlignment(float): Determine 
-			the Vertical alignment of the text.  
+        -setAlignment(float): Determine 
+			the alignment of the text.  
 			The float is a percentage is from the 
 			top of the text [0.0-1.0].  Note: be 
 			sure to visually verify this, as due
@@ -182,7 +182,7 @@ int main(int argc, char **argv)
     TextFieldPtr ExampleTextField = osg::TextField::create();
 
     beginEditCP(ExampleTextField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-        | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
+        | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::AlignmentFieldMask 
         | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
         ExampleTextField->setPreferredSize(Vec2f(100, 50));
         ExampleTextField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
@@ -193,9 +193,9 @@ int main(int argc, char **argv)
         // The next two functions will select the "a" from above
         ExampleTextField->setSelectionStart(2);
         ExampleTextField->setSelectionEnd(3);
-        ExampleTextField->setVerticalAlignment(0.5);
+        ExampleTextField->setAlignment(Vec2f(0.0,0.5));
     endEditCP(ExampleTextField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-        | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
+        | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::AlignmentFieldMask
         | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
         
     // Create another TextField Component

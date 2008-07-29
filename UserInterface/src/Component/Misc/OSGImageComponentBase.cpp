@@ -82,11 +82,8 @@ const OSG::BitVector  ImageComponentBase::ScaleFieldMask =
 const OSG::BitVector  ImageComponentBase::ScaleAbsoluteSizeFieldMask = 
     (TypeTraits<BitVector>::One << ImageComponentBase::ScaleAbsoluteSizeFieldId);
 
-const OSG::BitVector  ImageComponentBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ImageComponentBase::VerticalAlignmentFieldId);
-
-const OSG::BitVector  ImageComponentBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ImageComponentBase::HorizontalAlignmentFieldId);
+const OSG::BitVector  ImageComponentBase::AlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << ImageComponentBase::AlignmentFieldId);
 
 const OSG::BitVector ImageComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -113,10 +110,7 @@ const OSG::BitVector ImageComponentBase::MTInfluenceMask =
 /*! \var Vec2f           ImageComponentBase::_sfScaleAbsoluteSize
     
 */
-/*! \var Real32          ImageComponentBase::_sfVerticalAlignment
-    
-*/
-/*! \var Real32          ImageComponentBase::_sfHorizontalAlignment
+/*! \var Vec2f           ImageComponentBase::_sfAlignment
     
 */
 
@@ -154,16 +148,11 @@ FieldDescription *ImageComponentBase::_desc[] =
                      ScaleAbsoluteSizeFieldId, ScaleAbsoluteSizeFieldMask,
                      false,
                      (FieldAccessMethod) &ImageComponentBase::getSFScaleAbsoluteSize),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "VerticalAlignment", 
-                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "Alignment", 
+                     AlignmentFieldId, AlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &ImageComponentBase::getSFVerticalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HorizontalAlignment", 
-                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ImageComponentBase::getSFHorizontalAlignment)
+                     (FieldAccessMethod) &ImageComponentBase::getSFAlignment)
 };
 
 
@@ -245,8 +234,7 @@ ImageComponentBase::ImageComponentBase(void) :
     _sfFocusedTexture         (TextureChunkPtr(NullFC)), 
     _sfScale                  (UInt32(ImageComponent::SCALE_NONE)), 
     _sfScaleAbsoluteSize      (Vec2f(1.0f,1.0f)), 
-    _sfVerticalAlignment      (Real32(0.5)), 
-    _sfHorizontalAlignment    (Real32(0.5)), 
+    _sfAlignment              (Vec2f(0.5f,0.5f)), 
     Inherited() 
 {
 }
@@ -262,8 +250,7 @@ ImageComponentBase::ImageComponentBase(const ImageComponentBase &source) :
     _sfFocusedTexture         (source._sfFocusedTexture         ), 
     _sfScale                  (source._sfScale                  ), 
     _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ), 
-    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
-    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
+    _sfAlignment              (source._sfAlignment              ), 
     Inherited                 (source)
 {
 }
@@ -310,14 +297,9 @@ UInt32 ImageComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfScaleAbsoluteSize.getBinSize();
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        returnValue += _sfVerticalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfHorizontalAlignment.getBinSize();
+        returnValue += _sfAlignment.getBinSize();
     }
 
 
@@ -359,14 +341,9 @@ void ImageComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfScaleAbsoluteSize.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfVerticalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyToBin(pMem);
+        _sfAlignment.copyToBin(pMem);
     }
 
 
@@ -407,14 +384,9 @@ void ImageComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfScaleAbsoluteSize.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfVerticalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyFromBin(pMem);
+        _sfAlignment.copyFromBin(pMem);
     }
 
 
@@ -445,11 +417,8 @@ void ImageComponentBase::executeSyncImpl(      ImageComponentBase *pOther,
     if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
         _sfScaleAbsoluteSize.syncWith(pOther->_sfScaleAbsoluteSize);
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
 
 }
@@ -479,11 +448,8 @@ void ImageComponentBase::executeSyncImpl(      ImageComponentBase *pOther,
     if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
         _sfScaleAbsoluteSize.syncWith(pOther->_sfScaleAbsoluteSize);
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
 
 

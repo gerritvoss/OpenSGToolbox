@@ -96,61 +96,33 @@ TextFieldPtr TextFieldBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TextField::_sfHorizontalAlignment field.
+//! Get the TextField::_sfAlignment field.
 inline
-SFReal32 *TextFieldBase::getSFHorizontalAlignment(void)
+SFVec2f *TextFieldBase::getSFAlignment(void)
 {
-    return &_sfHorizontalAlignment;
-}
-
-//! Get the TextField::_sfVerticalAlignment field.
-inline
-SFReal32 *TextFieldBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
+    return &_sfAlignment;
 }
 
 
-//! Get the value of the TextField::_sfHorizontalAlignment field.
+//! Get the value of the TextField::_sfAlignment field.
 inline
-Real32 &TextFieldBase::getHorizontalAlignment(void)
+Vec2f &TextFieldBase::getAlignment(void)
 {
-    return _sfHorizontalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Get the value of the TextField::_sfHorizontalAlignment field.
+//! Get the value of the TextField::_sfAlignment field.
 inline
-const Real32 &TextFieldBase::getHorizontalAlignment(void) const
+const Vec2f &TextFieldBase::getAlignment(void) const
 {
-    return _sfHorizontalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Set the value of the TextField::_sfHorizontalAlignment field.
+//! Set the value of the TextField::_sfAlignment field.
 inline
-void TextFieldBase::setHorizontalAlignment(const Real32 &value)
+void TextFieldBase::setAlignment(const Vec2f &value)
 {
-    _sfHorizontalAlignment.setValue(value);
-}
-
-//! Get the value of the TextField::_sfVerticalAlignment field.
-inline
-Real32 &TextFieldBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Get the value of the TextField::_sfVerticalAlignment field.
-inline
-const Real32 &TextFieldBase::getVerticalAlignment(void) const
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Set the value of the TextField::_sfVerticalAlignment field.
-inline
-void TextFieldBase::setVerticalAlignment(const Real32 &value)
-{
-    _sfVerticalAlignment.setValue(value);
+    _sfAlignment.setValue(value);
 }
 
 

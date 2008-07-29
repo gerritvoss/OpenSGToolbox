@@ -94,7 +94,7 @@ void Label::drawInternal(const GraphicsPtr TheGraphics) const
         Pnt2f TopLeft, BottomRight;
         Pnt2f TempPos;
         getInsideBorderBounds(TopLeft, BottomRight);
-        TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), getHorizontalAlignment());
+        TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getText()), getAlignment().y(), getAlignment().x());
         
         //Text Color
         Color4f TextColor = getDrawnTextColor();
@@ -135,7 +135,7 @@ void Label::calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, 
     Pnt2f ComponentTopLeft, ComponentBottomRight;
     getInsideBorderBounds(ComponentTopLeft, ComponentBottomRight);
 
-    Pnt2f AlignmentOffset = calculateAlignment(ComponentTopLeft, ComponentBottomRight-ComponentTopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), getHorizontalAlignment());
+    Pnt2f AlignmentOffset = calculateAlignment(ComponentTopLeft, ComponentBottomRight-ComponentTopLeft, getFont()->getBounds(getText()), getAlignment().y(), getAlignment().x());
 
 	getFont()->getBounds(getText().substr(StartIndex, EndIndex), TopLeft, BottomRight);
 	TopLeft = TopLeft + Vec2f(AlignmentOffset);
@@ -159,7 +159,7 @@ void Label::mouseClicked(const MouseEvent& e)
 			    Pnt2f TopLeft, BottomRight;
 			    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
 			    getInsideBorderBounds(TopLeft, BottomRight);
-                TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), getHorizontalAlignment());
+                TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getAlignment().y(), getAlignment().x());
 
 			    //set caret position to proper place
 			    //if the mouse is to the left of the text, set it to the begining.
@@ -229,7 +229,7 @@ void Label::mousePressed(const MouseEvent& e)
 	    Pnt2f TopLeft, BottomRight;
 	    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
         getInsideBorderBounds(TopLeft, BottomRight);
-        TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), getHorizontalAlignment());
+        TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getAlignment().y(), getAlignment().x());
 	    if(e.getButton() == e.BUTTON1)
 	    {
 		    //set caret position to proper place
@@ -283,7 +283,7 @@ void Label::mouseDragged(const MouseEvent& e)
 	    Int32 OriginalPosition = getCaretPosition();
 	    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
         getInsideBorderBounds(TopLeft, BottomRight);
-        TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), getHorizontalAlignment());
+        TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getAlignment().y(), getAlignment().x());
 	    if(e.getButton() == e.BUTTON1)
 	    {
 		    //set caret position to proper place

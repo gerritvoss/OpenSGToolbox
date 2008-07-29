@@ -112,6 +112,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 
 	void getTextBounds(Pnt2f& TextTopLeft, Pnt2f& TextBottomRight) const;
 
+    bool getActive(void) const;
+    void setActive(bool Value);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -162,6 +165,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     bool _Armed;
     
     static UIDrawObjectCanvasPtr createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+
+    bool _Active;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

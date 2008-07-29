@@ -67,8 +67,7 @@
 
 #include "OSGTextComponent.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
+#include <OpenSG/OSGVec2fFields.h> // Alignment type
 #include <OpenSG/OSGBoolFields.h> // TextSelectable type
 
 #include "OSGLabelFields.h"
@@ -93,14 +92,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
 
     enum
     {
-        HorizontalAlignmentFieldId = Inherited::NextFieldId,
-        VerticalAlignmentFieldId   = HorizontalAlignmentFieldId + 1,
-        TextSelectableFieldId      = VerticalAlignmentFieldId   + 1,
-        NextFieldId                = TextSelectableFieldId      + 1
+        AlignmentFieldId      = Inherited::NextFieldId,
+        TextSelectableFieldId = AlignmentFieldId      + 1,
+        NextFieldId           = TextSelectableFieldId + 1
     };
 
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
+    static const OSG::BitVector AlignmentFieldMask;
     static const OSG::BitVector TextSelectableFieldMask;
 
 
@@ -128,14 +125,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFHorizontalAlignment(void);
-           SFReal32            *getSFVerticalAlignment(void);
+           SFVec2f             *getSFAlignment      (void);
            SFBool              *getSFTextSelectable (void);
 
-           Real32              &getHorizontalAlignment(void);
-     const Real32              &getHorizontalAlignment(void) const;
-           Real32              &getVerticalAlignment(void);
-     const Real32              &getVerticalAlignment(void) const;
+           Vec2f               &getAlignment      (void);
+     const Vec2f               &getAlignment      (void) const;
            bool                &getTextSelectable (void);
      const bool                &getTextSelectable (void) const;
 
@@ -144,8 +138,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setHorizontalAlignment( const Real32 &value );
-     void setVerticalAlignment( const Real32 &value );
+     void setAlignment      ( const Vec2f &value );
      void setTextSelectable ( const bool &value );
 
     /*! \}                                                                 */
@@ -189,8 +182,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfHorizontalAlignment;
-    SFReal32            _sfVerticalAlignment;
+    SFVec2f             _sfAlignment;
     SFBool              _sfTextSelectable;
 
     /*! \}                                                                 */

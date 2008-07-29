@@ -380,17 +380,8 @@ int main(int argc, char **argv)
 			with this example.
         -setTextColor(Color4f): Determine the Font
 			Color.
-        -setVerticalAlignment(ENUM or float): Determine the 
-            alignment of the text on the Vertical axis.
-            Takes VERTICAL_TOP, VERTICAL_CENTER,
-            and VERTICAL_BOTTOM arguments or a float 
-			between 0.0 and 1.0.  Note: higher (and lower) 
-			values are allowed, but will cause the text 
-			to not be  completely displayed.
-        -setHorizontalAlignment(ENUM or float):
-			Determine the alignment of the text on the 
-			Horizontal axis.  Takes HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
-            and HORIZONTAL_RIGHT arguments or a float 
+        -setAlignment(Vec2f): Determine the 
+            alignment of the text a float 
 			between 0.0 and 1.0.  Note: higher (and lower) 
 			values are allowed, but will cause the text 
 			to not be  completely displayed.
@@ -406,17 +397,16 @@ int main(int argc, char **argv)
 		ExampleLabelBackground->getStops().push_back(1.0);
     endEditCP(ExampleLabelBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
     ExampleLabel = osg::Label::create();
-    beginEditCP(ExampleLabel, Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
+    beginEditCP(ExampleLabel, Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::AlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
         ExampleLabel->setBackgrounds(ExampleLabelBackground);
         ExampleLabel->setFont(ExampleLabelFont);
         ExampleLabel->setText("Change My Font!");
         ExampleLabel->setTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
         //ExampleLabel->setActiveTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-        ExampleLabel->setVerticalAlignment(0.5);
-        ExampleLabel->setHorizontalAlignment(0.5);
+        ExampleLabel->setAlignment(Vec2f(0.5,0.5));
         ExampleLabel->setPreferredSize(Vec2f(200, 50));
         ExampleLabel->setTextSelectable(true);
-    endEditCP(ExampleLabel, Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
+    endEditCP(ExampleLabel, Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::AlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
     
     /******************************************************
 

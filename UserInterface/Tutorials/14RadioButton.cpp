@@ -156,26 +156,23 @@ int main(int argc, char **argv)
     RadioButtonPtr ExampleRadioButton2 = osg::RadioButton::create();
     RadioButtonPtr ExampleRadioButton3 = osg::RadioButton::create();
 
-    beginEditCP(ExampleRadioButton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
-        ExampleRadioButton1->setVerticalAlignment(0.5);
-        ExampleRadioButton1->setHorizontalAlignment(0.0);
+    beginEditCP(ExampleRadioButton1, Button::AlignmentFieldMask| Button::PreferredSizeFieldMask | Button::TextFieldMask);
+        ExampleRadioButton1->setAlignment(Vec2f(0.0,0.5));
         ExampleRadioButton1->setPreferredSize(Vec2f(100, 50));
         ExampleRadioButton1->setText("Option 1");
-    endEditCP(ExampleRadioButton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+    endEditCP(ExampleRadioButton1, Button::AlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleRadioButton2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
-        ExampleRadioButton2->setVerticalAlignment(0.5);
-        ExampleRadioButton2->setHorizontalAlignment(0.0);
+    beginEditCP(ExampleRadioButton2,Button::AlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+        ExampleRadioButton2->setAlignment(Vec2f(0.0,0.5));
         ExampleRadioButton2->setPreferredSize(Vec2f(100, 50));
         ExampleRadioButton2->setText("Option 2");
-    endEditCP(ExampleRadioButton2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+    endEditCP(ExampleRadioButton2, Button::AlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleRadioButton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
-        ExampleRadioButton3->setVerticalAlignment(0.5);
-        ExampleRadioButton3->setHorizontalAlignment(0.0);
+    beginEditCP(ExampleRadioButton3, Button::AlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+        ExampleRadioButton3->setAlignment(Vec2f(0.0,0.5));
         ExampleRadioButton3->setPreferredSize(Vec2f(100, 50));
         ExampleRadioButton3->setText("Option 3");
-    endEditCP(ExampleRadioButton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+    endEditCP(ExampleRadioButton3, Button::AlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
     /***************************************************
                     

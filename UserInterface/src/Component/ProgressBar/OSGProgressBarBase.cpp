@@ -79,11 +79,8 @@ const OSG::BitVector  ProgressBarBase::EnableProgressStringFieldMask =
 const OSG::BitVector  ProgressBarBase::ProgressStringFieldMask = 
     (TypeTraits<BitVector>::One << ProgressBarBase::ProgressStringFieldId);
 
-const OSG::BitVector  ProgressBarBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ProgressBarBase::VerticalAlignmentFieldId);
-
-const OSG::BitVector  ProgressBarBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ProgressBarBase::HorizontalAlignmentFieldId);
+const OSG::BitVector  ProgressBarBase::AlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << ProgressBarBase::AlignmentFieldId);
 
 const OSG::BitVector  ProgressBarBase::FontFieldMask = 
     (TypeTraits<BitVector>::One << ProgressBarBase::FontFieldId);
@@ -137,10 +134,7 @@ const OSG::BitVector ProgressBarBase::MTInfluenceMask =
 /*! \var std::string     ProgressBarBase::_sfProgressString
     
 */
-/*! \var Real32          ProgressBarBase::_sfVerticalAlignment
-    
-*/
-/*! \var Real32          ProgressBarBase::_sfHorizontalAlignment
+/*! \var Vec2f           ProgressBarBase::_sfAlignment
     
 */
 /*! \var UIFontPtr       ProgressBarBase::_sfFont
@@ -203,16 +197,11 @@ FieldDescription *ProgressBarBase::_desc[] =
                      ProgressStringFieldId, ProgressStringFieldMask,
                      false,
                      (FieldAccessMethod) &ProgressBarBase::getSFProgressString),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "VerticalAlignment", 
-                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "Alignment", 
+                     AlignmentFieldId, AlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &ProgressBarBase::getSFVerticalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HorizontalAlignment", 
-                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ProgressBarBase::getSFHorizontalAlignment),
+                     (FieldAccessMethod) &ProgressBarBase::getSFAlignment),
     new FieldDescription(SFUIFontPtr::getClassType(), 
                      "Font", 
                      FontFieldId, FontFieldMask,
@@ -343,8 +332,7 @@ ProgressBarBase::ProgressBarBase(void) :
     _sfIndeterminateBarSize   (Real32(0.25)), 
     _sfEnableProgressString   (bool(false)), 
     _sfProgressString         (), 
-    _sfVerticalAlignment      (Real32(0.5)), 
-    _sfHorizontalAlignment    (Real32(0.5)), 
+    _sfAlignment              (Vec2f(0.5f,0.5f)), 
     _sfFont                   (), 
     _sfFocusedTextColor       (), 
     _sfRolloverTextColor      (), 
@@ -369,8 +357,7 @@ ProgressBarBase::ProgressBarBase(const ProgressBarBase &source) :
     _sfIndeterminateBarSize   (source._sfIndeterminateBarSize   ), 
     _sfEnableProgressString   (source._sfEnableProgressString   ), 
     _sfProgressString         (source._sfProgressString         ), 
-    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
-    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
+    _sfAlignment              (source._sfAlignment              ), 
     _sfFont                   (source._sfFont                   ), 
     _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
     _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
@@ -422,14 +409,9 @@ UInt32 ProgressBarBase::getBinSize(const BitVector &whichField)
         returnValue += _sfProgressString.getBinSize();
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        returnValue += _sfVerticalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfHorizontalAlignment.getBinSize();
+        returnValue += _sfAlignment.getBinSize();
     }
 
     if(FieldBits::NoField != (FontFieldMask & whichField))
@@ -516,14 +498,9 @@ void ProgressBarBase::copyToBin(      BinaryDataHandler &pMem,
         _sfProgressString.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfVerticalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyToBin(pMem);
+        _sfAlignment.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (FontFieldMask & whichField))
@@ -609,14 +586,9 @@ void ProgressBarBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfProgressString.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfVerticalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyFromBin(pMem);
+        _sfAlignment.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (FontFieldMask & whichField))
@@ -694,11 +666,8 @@ void ProgressBarBase::executeSyncImpl(      ProgressBarBase *pOther,
     if(FieldBits::NoField != (ProgressStringFieldMask & whichField))
         _sfProgressString.syncWith(pOther->_sfProgressString);
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
@@ -755,11 +724,8 @@ void ProgressBarBase::executeSyncImpl(      ProgressBarBase *pOther,
     if(FieldBits::NoField != (ProgressStringFieldMask & whichField))
         _sfProgressString.syncWith(pOther->_sfProgressString);
 
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);

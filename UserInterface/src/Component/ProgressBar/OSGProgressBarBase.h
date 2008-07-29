@@ -72,8 +72,7 @@
 #include <OpenSG/OSGReal32Fields.h> // IndeterminateBarSize type
 #include <OpenSG/OSGBoolFields.h> // EnableProgressString type
 #include <OpenSG/OSGStringFields.h> // ProgressString type
-#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGVec2fFields.h> // Alignment type
 #include "Text/OSGUIFont.h" // Font type
 #include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
 #include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
@@ -112,9 +111,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
         IndeterminateBarSizeFieldId     = IndeterminateBarMoveRateFieldId + 1,
         EnableProgressStringFieldId     = IndeterminateBarSizeFieldId     + 1,
         ProgressStringFieldId           = EnableProgressStringFieldId     + 1,
-        VerticalAlignmentFieldId        = ProgressStringFieldId           + 1,
-        HorizontalAlignmentFieldId      = VerticalAlignmentFieldId        + 1,
-        FontFieldId                     = HorizontalAlignmentFieldId      + 1,
+        AlignmentFieldId                = ProgressStringFieldId           + 1,
+        FontFieldId                     = AlignmentFieldId                + 1,
         FocusedTextColorFieldId         = FontFieldId                     + 1,
         RolloverTextColorFieldId        = FocusedTextColorFieldId         + 1,
         DisabledTextColorFieldId        = RolloverTextColorFieldId        + 1,
@@ -132,8 +130,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
     static const OSG::BitVector IndeterminateBarSizeFieldMask;
     static const OSG::BitVector EnableProgressStringFieldMask;
     static const OSG::BitVector ProgressStringFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector AlignmentFieldMask;
     static const OSG::BitVector FontFieldMask;
     static const OSG::BitVector FocusedTextColorFieldMask;
     static const OSG::BitVector RolloverTextColorFieldMask;
@@ -175,8 +172,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
            SFReal32            *getSFIndeterminateBarSize(void);
            SFBool              *getSFEnableProgressString(void);
            SFString            *getSFProgressString (void);
-           SFReal32            *getSFVerticalAlignment(void);
-           SFReal32            *getSFHorizontalAlignment(void);
+           SFVec2f             *getSFAlignment      (void);
            SFUIFontPtr         *getSFFont           (void);
            SFColor4f           *getSFFocusedTextColor(void);
            SFColor4f           *getSFRolloverTextColor(void);
@@ -198,10 +194,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
      const bool                &getEnableProgressString(void) const;
            std::string         &getProgressString (void);
      const std::string         &getProgressString (void) const;
-           Real32              &getVerticalAlignment(void);
-     const Real32              &getVerticalAlignment(void) const;
-           Real32              &getHorizontalAlignment(void);
-     const Real32              &getHorizontalAlignment(void) const;
+           Vec2f               &getAlignment      (void);
+     const Vec2f               &getAlignment      (void) const;
            UIFontPtr           &getFont           (void);
      const UIFontPtr           &getFont           (void) const;
            Color4f             &getFocusedTextColor(void);
@@ -233,8 +227,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
      void setIndeterminateBarSize( const Real32 &value );
      void setEnableProgressString( const bool &value );
      void setProgressString ( const std::string &value );
-     void setVerticalAlignment( const Real32 &value );
-     void setHorizontalAlignment( const Real32 &value );
+     void setAlignment      ( const Vec2f &value );
      void setFont           ( const UIFontPtr &value );
      void setFocusedTextColor( const Color4f &value );
      void setRolloverTextColor( const Color4f &value );
@@ -292,8 +285,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
     SFReal32            _sfIndeterminateBarSize;
     SFBool              _sfEnableProgressString;
     SFString            _sfProgressString;
-    SFReal32            _sfVerticalAlignment;
-    SFReal32            _sfHorizontalAlignment;
+    SFVec2f             _sfAlignment;
     SFUIFontPtr         _sfFont;
     SFColor4f           _sfFocusedTextColor;
     SFColor4f           _sfRolloverTextColor;

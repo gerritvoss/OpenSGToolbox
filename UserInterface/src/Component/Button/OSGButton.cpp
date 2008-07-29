@@ -278,7 +278,7 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
       Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
       DrawnDrawObject->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
 
-      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getVerticalAlignment(), getHorizontalAlignment());
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getAlignment().y(), getAlignment().x());
 
       //If active then translate the Text by the Active Offset
       AlignedPosition = AlignedPosition + getDrawnOffset();
@@ -304,7 +304,7 @@ void Button::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const
       Pnt2f TextTopLeft, TextBottomRight;
       getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
 
-      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getAlignment().y(), getAlignment().x());
 
       //If active then translate the Text by the Active Offset
       AlignedPosition = AlignedPosition + getDrawnOffset();
@@ -345,9 +345,7 @@ void Button::mouseEntered(const MouseEvent& e)
 	{
 		if(_Armed)
 		{
-			beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-				ButtonPtr(this)->setActive(true);
-			endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		    ButtonPtr(this)->setActive(true);
 		}
 	}
 
@@ -360,9 +358,7 @@ void Button::mouseExited(const MouseEvent& e)
 	{
 		if(_Armed)
 		{
-			beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-				ButtonPtr(this)->setActive(false);
-			endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+			ButtonPtr(this)->setActive(false);
 		}
 	}
 
@@ -374,9 +370,7 @@ void Button::mousePressed(const MouseEvent& e)
 	if(getEnabled())
 	{
 		if(e.getButton()==MouseEvent::BUTTON1){
-			beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-				ButtonPtr(this)->setActive(true);
-			endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+			ButtonPtr(this)->setActive(true);
 			_Armed = true;
 	        
 			if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
@@ -400,9 +394,7 @@ void Button::mouseReleased(const MouseEvent& e)
 	{
 		if(e.getButton() == MouseEvent::BUTTON1 && _Armed)
 		{
-			beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-				ButtonPtr(this)->setActive(false);
-			endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		   ButtonPtr(this)->setActive(false);
 		   produceActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
 		   _Armed = false;
 		}

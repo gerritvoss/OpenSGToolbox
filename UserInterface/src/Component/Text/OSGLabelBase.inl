@@ -96,18 +96,11 @@ LabelPtr LabelBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Label::_sfHorizontalAlignment field.
+//! Get the Label::_sfAlignment field.
 inline
-SFReal32 *LabelBase::getSFHorizontalAlignment(void)
+SFVec2f *LabelBase::getSFAlignment(void)
 {
-    return &_sfHorizontalAlignment;
-}
-
-//! Get the Label::_sfVerticalAlignment field.
-inline
-SFReal32 *LabelBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
+    return &_sfAlignment;
 }
 
 //! Get the Label::_sfTextSelectable field.
@@ -118,46 +111,25 @@ SFBool *LabelBase::getSFTextSelectable(void)
 }
 
 
-//! Get the value of the Label::_sfHorizontalAlignment field.
+//! Get the value of the Label::_sfAlignment field.
 inline
-Real32 &LabelBase::getHorizontalAlignment(void)
+Vec2f &LabelBase::getAlignment(void)
 {
-    return _sfHorizontalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Get the value of the Label::_sfHorizontalAlignment field.
+//! Get the value of the Label::_sfAlignment field.
 inline
-const Real32 &LabelBase::getHorizontalAlignment(void) const
+const Vec2f &LabelBase::getAlignment(void) const
 {
-    return _sfHorizontalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Set the value of the Label::_sfHorizontalAlignment field.
+//! Set the value of the Label::_sfAlignment field.
 inline
-void LabelBase::setHorizontalAlignment(const Real32 &value)
+void LabelBase::setAlignment(const Vec2f &value)
 {
-    _sfHorizontalAlignment.setValue(value);
-}
-
-//! Get the value of the Label::_sfVerticalAlignment field.
-inline
-Real32 &LabelBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Get the value of the Label::_sfVerticalAlignment field.
-inline
-const Real32 &LabelBase::getVerticalAlignment(void) const
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Set the value of the Label::_sfVerticalAlignment field.
-inline
-void LabelBase::setVerticalAlignment(const Real32 &value)
-{
-    _sfVerticalAlignment.setValue(value);
+    _sfAlignment.setValue(value);
 }
 
 //! Get the value of the Label::_sfTextSelectable field.

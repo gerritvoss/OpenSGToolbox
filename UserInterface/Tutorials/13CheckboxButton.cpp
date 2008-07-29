@@ -155,17 +155,16 @@ int main(int argc, char **argv)
     ******************************************************/
     CheckboxButtonPtr ExampleCheckboxButton = osg::CheckboxButton::create();
     beginEditCP(ExampleCheckboxButton, CheckboxButton::MinSizeFieldMask | CheckboxButton::MaxSizeFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SizeFieldMask |
-        CheckboxButton::TextFieldMask | CheckboxButton::VerticalAlignmentFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
+        CheckboxButton::TextFieldMask | CheckboxButton::AlignmentFieldMask| CheckboxButton::SelectedFieldMask);
         ExampleCheckboxButton->setMinSize(Vec2f(50, 25));
         ExampleCheckboxButton->setMaxSize(Vec2f(300, 100));
         ExampleCheckboxButton->setPreferredSize(Vec2f(200, 50));
         ExampleCheckboxButton->setEnabled(true);
         ExampleCheckboxButton->setText("Checkbox Button");
-        ExampleCheckboxButton->setVerticalAlignment(0.5);
-        ExampleCheckboxButton->setHorizontalAlignment(0.5);
+        ExampleCheckboxButton->setAlignment(Vec2f(0.5,0.5));
         ExampleCheckboxButton->setSelected(true);
    endEditCP(ExampleCheckboxButton, CheckboxButton::MinSizeFieldMask | CheckboxButton::MaxSizeFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SizeFieldMask |
-        CheckboxButton::TextFieldMask | CheckboxButton::VerticalAlignmentFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
+        CheckboxButton::TextFieldMask | CheckboxButton::AlignmentFieldMask| CheckboxButton::SelectedFieldMask);
 
     
     // Create The Main InternalWindow

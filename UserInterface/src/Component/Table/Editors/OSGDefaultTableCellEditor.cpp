@@ -86,7 +86,7 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 		return NullFC;
 	}
 	TextFieldPtr TheTextField = TextField::create();
-	beginEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::HorizontalAlignmentFieldMask | TextField::CaretPositionFieldMask);
+	beginEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::AlignmentFieldMask | TextField::CaretPositionFieldMask);
 		std::string tempString;
 		if(value->getType() == SFString::getClassType())
 		{
@@ -98,10 +98,10 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 		}
 		TheTextField->setText(tempString);
 		TheTextField->setPreferredSize(Vec2f(100,30));
-		TheTextField->setHorizontalAlignment(0.5);
+		TheTextField->setAlignment(Vec2f(0.5,0.5));
 		TheTextField->selectAll();
 		TheTextField->setCaretPosition(TheTextField->getText().size());
-	endEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::HorizontalAlignmentFieldMask | TextField::CaretPositionFieldMask);
+	endEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::AlignmentFieldMask | TextField::CaretPositionFieldMask);
 	ColorLayerPtr tempBackground;
 	tempBackground = ColorLayer::create();
 

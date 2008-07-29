@@ -67,8 +67,7 @@
 
 #include "OSGEditableTextComponent.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
+#include <OpenSG/OSGVec2fFields.h> // Alignment type
 
 #include "OSGTextFieldFields.h"
 
@@ -92,13 +91,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
 
     enum
     {
-        HorizontalAlignmentFieldId = Inherited::NextFieldId,
-        VerticalAlignmentFieldId   = HorizontalAlignmentFieldId + 1,
-        NextFieldId                = VerticalAlignmentFieldId   + 1
+        AlignmentFieldId = Inherited::NextFieldId,
+        NextFieldId      = AlignmentFieldId + 1
     };
 
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
+    static const OSG::BitVector AlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,21 +122,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFHorizontalAlignment(void);
-           SFReal32            *getSFVerticalAlignment(void);
+           SFVec2f             *getSFAlignment      (void);
 
-           Real32              &getHorizontalAlignment(void);
-     const Real32              &getHorizontalAlignment(void) const;
-           Real32              &getVerticalAlignment(void);
-     const Real32              &getVerticalAlignment(void) const;
+           Vec2f               &getAlignment      (void);
+     const Vec2f               &getAlignment      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setHorizontalAlignment( const Real32 &value );
-     void setVerticalAlignment( const Real32 &value );
+     void setAlignment      ( const Vec2f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,8 +175,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfHorizontalAlignment;
-    SFReal32            _sfVerticalAlignment;
+    SFVec2f             _sfAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

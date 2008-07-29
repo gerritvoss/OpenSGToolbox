@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -117,18 +117,11 @@ SFString *ToolTipBase::getSFText(void)
     return &_sfText;
 }
 
-//! Get the ToolTip::_sfVerticalAlignment field.
+//! Get the ToolTip::_sfAlignment field.
 inline
-SFReal32 *ToolTipBase::getSFVerticalAlignment(void)
+SFVec2f *ToolTipBase::getSFAlignment(void)
 {
-    return &_sfVerticalAlignment;
-}
-
-//! Get the ToolTip::_sfHorizontalAlignment field.
-inline
-SFReal32 *ToolTipBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
+    return &_sfAlignment;
 }
 
 //! Get the ToolTip::_sfTextColor field.
@@ -202,46 +195,25 @@ void ToolTipBase::setText(const std::string &value)
     _sfText.setValue(value);
 }
 
-//! Get the value of the ToolTip::_sfVerticalAlignment field.
+//! Get the value of the ToolTip::_sfAlignment field.
 inline
-Real32 &ToolTipBase::getVerticalAlignment(void)
+Vec2f &ToolTipBase::getAlignment(void)
 {
-    return _sfVerticalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Get the value of the ToolTip::_sfVerticalAlignment field.
+//! Get the value of the ToolTip::_sfAlignment field.
 inline
-const Real32 &ToolTipBase::getVerticalAlignment(void) const
+const Vec2f &ToolTipBase::getAlignment(void) const
 {
-    return _sfVerticalAlignment.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Set the value of the ToolTip::_sfVerticalAlignment field.
+//! Set the value of the ToolTip::_sfAlignment field.
 inline
-void ToolTipBase::setVerticalAlignment(const Real32 &value)
+void ToolTipBase::setAlignment(const Vec2f &value)
 {
-    _sfVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the ToolTip::_sfHorizontalAlignment field.
-inline
-Real32 &ToolTipBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Get the value of the ToolTip::_sfHorizontalAlignment field.
-inline
-const Real32 &ToolTipBase::getHorizontalAlignment(void) const
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Set the value of the ToolTip::_sfHorizontalAlignment field.
-inline
-void ToolTipBase::setHorizontalAlignment(const Real32 &value)
-{
-    _sfHorizontalAlignment.setValue(value);
+    _sfAlignment.setValue(value);
 }
 
 //! Get the value of the ToolTip::_sfTextColor field.

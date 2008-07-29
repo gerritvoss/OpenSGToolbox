@@ -30,15 +30,6 @@ A UI Button.
 	>
 	</Field>
 	<Field
-		name="Active"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		defaultValue="false"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="ActiveBorder"
 		type="BorderPtr"
 		cardinality="single"
@@ -109,20 +100,11 @@ A UI Button.
 	>
 	</Field>
 	<Field
-		name="VerticalAlignment"
-		type="Real32"
+		name="Alignment"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0.5"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="HorizontalAlignment"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="0.5"
+		defaultValue="0.5,0.5"
 		access="public"
 	>
 	</Field>
@@ -146,7 +128,7 @@ A UI Button.
 	</Field>
 	<Field
 		name="ActiveOffset"
-		type="Vec2s"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
 		access="public"

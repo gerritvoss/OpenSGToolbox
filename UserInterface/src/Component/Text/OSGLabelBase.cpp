@@ -64,11 +64,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LabelBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << LabelBase::HorizontalAlignmentFieldId);
-
-const OSG::BitVector  LabelBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << LabelBase::VerticalAlignmentFieldId);
+const OSG::BitVector  LabelBase::AlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::AlignmentFieldId);
 
 const OSG::BitVector  LabelBase::TextSelectableFieldMask = 
     (TypeTraits<BitVector>::One << LabelBase::TextSelectableFieldId);
@@ -80,10 +77,7 @@ const OSG::BitVector LabelBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Real32          LabelBase::_sfHorizontalAlignment
-    
-*/
-/*! \var Real32          LabelBase::_sfVerticalAlignment
+/*! \var Vec2f           LabelBase::_sfAlignment
     
 */
 /*! \var bool            LabelBase::_sfTextSelectable
@@ -94,16 +88,11 @@ const OSG::BitVector LabelBase::MTInfluenceMask =
 
 FieldDescription *LabelBase::_desc[] = 
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HorizontalAlignment", 
-                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "Alignment", 
+                     AlignmentFieldId, AlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &LabelBase::getSFHorizontalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "VerticalAlignment", 
-                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &LabelBase::getSFVerticalAlignment),
+                     (FieldAccessMethod) &LabelBase::getSFAlignment),
     new FieldDescription(SFBool::getClassType(), 
                      "TextSelectable", 
                      TextSelectableFieldId, TextSelectableFieldMask,
@@ -184,8 +173,7 @@ void LabelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 LabelBase::LabelBase(void) :
-    _sfHorizontalAlignment    (Real32(0.0)), 
-    _sfVerticalAlignment      (Real32(0.5)), 
+    _sfAlignment              (Vec2f(0.0f, 0.5f)), 
     _sfTextSelectable         (bool(false)), 
     Inherited() 
 {
@@ -196,8 +184,7 @@ LabelBase::LabelBase(void) :
 #endif
 
 LabelBase::LabelBase(const LabelBase &source) :
-    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
-    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
+    _sfAlignment              (source._sfAlignment              ), 
     _sfTextSelectable         (source._sfTextSelectable         ), 
     Inherited                 (source)
 {
@@ -215,14 +202,9 @@ UInt32 LabelBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        returnValue += _sfHorizontalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfVerticalAlignment.getBinSize();
+        returnValue += _sfAlignment.getBinSize();
     }
 
     if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
@@ -239,14 +221,9 @@ void LabelBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfHorizontalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-    {
-        _sfVerticalAlignment.copyToBin(pMem);
+        _sfAlignment.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
@@ -262,14 +239,9 @@ void LabelBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
-        _sfHorizontalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-    {
-        _sfVerticalAlignment.copyFromBin(pMem);
+        _sfAlignment.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
@@ -287,11 +259,8 @@ void LabelBase::executeSyncImpl(      LabelBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
     if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
         _sfTextSelectable.syncWith(pOther->_sfTextSelectable);
@@ -306,11 +275,8 @@ void LabelBase::executeSyncImpl(      LabelBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
 
     if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
         _sfTextSelectable.syncWith(pOther->_sfTextSelectable);

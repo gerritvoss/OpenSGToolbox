@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,8 +70,7 @@
 #include "Text/OSGUIFont.h" // Font type
 #include "Component/OSGComponentFields.h" // TippedComponent type
 #include <OpenSG/OSGStringFields.h> // Text type
-#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGVec2fFields.h> // Alignment type
 #include <OpenSG/OSGColor4fFields.h> // TextColor type
 
 #include "OSGToolTipFields.h"
@@ -96,20 +95,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
 
     enum
     {
-        FontFieldId                = Inherited::NextFieldId,
-        TippedComponentFieldId     = FontFieldId                + 1,
-        TextFieldId                = TippedComponentFieldId     + 1,
-        VerticalAlignmentFieldId   = TextFieldId                + 1,
-        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
-        TextColorFieldId           = HorizontalAlignmentFieldId + 1,
-        NextFieldId                = TextColorFieldId           + 1
+        FontFieldId            = Inherited::NextFieldId,
+        TippedComponentFieldId = FontFieldId            + 1,
+        TextFieldId            = TippedComponentFieldId + 1,
+        AlignmentFieldId       = TextFieldId            + 1,
+        TextColorFieldId       = AlignmentFieldId       + 1,
+        NextFieldId            = TextColorFieldId       + 1
     };
 
     static const OSG::BitVector FontFieldMask;
     static const OSG::BitVector TippedComponentFieldMask;
     static const OSG::BitVector TextFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector AlignmentFieldMask;
     static const OSG::BitVector TextColorFieldMask;
 
 
@@ -140,8 +137,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
            SFUIFontPtr         *getSFFont           (void);
            SFComponentPtr      *getSFTippedComponent(void);
            SFString            *getSFText           (void);
-           SFReal32            *getSFVerticalAlignment(void);
-           SFReal32            *getSFHorizontalAlignment(void);
+           SFVec2f             *getSFAlignment      (void);
            SFColor4f           *getSFTextColor      (void);
 
            UIFontPtr           &getFont           (void);
@@ -150,10 +146,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
      const ComponentPtr        &getTippedComponent(void) const;
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
-           Real32              &getVerticalAlignment(void);
-     const Real32              &getVerticalAlignment(void) const;
-           Real32              &getHorizontalAlignment(void);
-     const Real32              &getHorizontalAlignment(void) const;
+           Vec2f               &getAlignment      (void);
+     const Vec2f               &getAlignment      (void) const;
            Color4f             &getTextColor      (void);
      const Color4f             &getTextColor      (void) const;
 
@@ -165,8 +159,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
      void setFont           ( const UIFontPtr &value );
      void setTippedComponent( const ComponentPtr &value );
      void setText           ( const std::string &value );
-     void setVerticalAlignment( const Real32 &value );
-     void setHorizontalAlignment( const Real32 &value );
+     void setAlignment      ( const Vec2f &value );
      void setTextColor      ( const Color4f &value );
 
     /*! \}                                                                 */
@@ -213,8 +206,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     SFUIFontPtr         _sfFont;
     SFComponentPtr      _sfTippedComponent;
     SFString            _sfText;
-    SFReal32            _sfVerticalAlignment;
-    SFReal32            _sfHorizontalAlignment;
+    SFVec2f             _sfAlignment;
     SFColor4f           _sfTextColor;
 
     /*! \}                                                                 */
