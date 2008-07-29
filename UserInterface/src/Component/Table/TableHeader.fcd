@@ -22,6 +22,16 @@ A UI Table Header.
 		access="public"
 	>
     </Field>
+	<Field
+		name="ColumnModel"
+		type="TableColumnModelPtr"
+		cardinality="single"
+      visibility="external"
+      header="Models/OSGTableColumnModelFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+   </Field>
     <Field
           name="ReorderingAllowed"
           type="bool"

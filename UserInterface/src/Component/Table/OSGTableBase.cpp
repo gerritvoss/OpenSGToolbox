@@ -67,6 +67,12 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  TableBase::HeaderFieldMask = 
     (TypeTraits<BitVector>::One << TableBase::HeaderFieldId);
 
+const OSG::BitVector  TableBase::ModelFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::ModelFieldId);
+
+const OSG::BitVector  TableBase::ColumnModelFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::ColumnModelFieldId);
+
 const OSG::BitVector  TableBase::TableFieldMask = 
     (TypeTraits<BitVector>::One << TableBase::TableFieldId);
 
@@ -105,6 +111,12 @@ const OSG::BitVector TableBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var TableHeaderPtr  TableBase::_sfHeader
+    
+*/
+/*! \var TableModelPtr   TableBase::_sfModel
+    
+*/
+/*! \var TableColumnModelPtr TableBase::_sfColumnModel
     
 */
 /*! \var ComponentPtr    TableBase::_mfTable
@@ -147,6 +159,16 @@ FieldDescription *TableBase::_desc[] =
                      HeaderFieldId, HeaderFieldMask,
                      false,
                      (FieldAccessMethod) &TableBase::getSFHeader),
+    new FieldDescription(SFTableModelPtr::getClassType(), 
+                     "Model", 
+                     ModelFieldId, ModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFModel),
+    new FieldDescription(SFTableColumnModelPtr::getClassType(), 
+                     "ColumnModel", 
+                     ColumnModelFieldId, ColumnModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFColumnModel),
     new FieldDescription(MFComponentPtr::getClassType(), 
                      "Table", 
                      TableFieldId, TableFieldMask,
@@ -274,6 +296,8 @@ void TableBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 TableBase::TableBase(void) :
     _sfHeader                 (TableHeaderPtr(NullFC)), 
+    _sfModel                  (TableModelPtr(NullFC)), 
+    _sfColumnModel            (TableColumnModelPtr(NullFC)), 
     _mfTable                  (), 
     _sfAutoCreateColumnsFromModel(bool(true)), 
     _sfAutoResizeMode         (UInt32(Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS)), 
@@ -294,6 +318,8 @@ TableBase::TableBase(void) :
 
 TableBase::TableBase(const TableBase &source) :
     _sfHeader                 (source._sfHeader                 ), 
+    _sfModel                  (source._sfModel                  ), 
+    _sfColumnModel            (source._sfColumnModel            ), 
     _mfTable                  (source._mfTable                  ), 
     _sfAutoCreateColumnsFromModel(source._sfAutoCreateColumnsFromModel), 
     _sfAutoResizeMode         (source._sfAutoResizeMode         ), 
@@ -323,6 +349,16 @@ UInt32 TableBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (HeaderFieldMask & whichField))
     {
         returnValue += _sfHeader.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        returnValue += _sfModel.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+    {
+        returnValue += _sfColumnModel.getBinSize();
     }
 
     if(FieldBits::NoField != (TableFieldMask & whichField))
@@ -389,6 +425,16 @@ void TableBase::copyToBin(      BinaryDataHandler &pMem,
         _sfHeader.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        _sfModel.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+    {
+        _sfColumnModel.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (TableFieldMask & whichField))
     {
         _mfTable.copyToBin(pMem);
@@ -450,6 +496,16 @@ void TableBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HeaderFieldMask & whichField))
     {
         _sfHeader.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        _sfModel.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+    {
+        _sfColumnModel.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (TableFieldMask & whichField))
@@ -515,6 +571,12 @@ void TableBase::executeSyncImpl(      TableBase *pOther,
     if(FieldBits::NoField != (HeaderFieldMask & whichField))
         _sfHeader.syncWith(pOther->_sfHeader);
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+        _sfColumnModel.syncWith(pOther->_sfColumnModel);
+
     if(FieldBits::NoField != (TableFieldMask & whichField))
         _mfTable.syncWith(pOther->_mfTable);
 
@@ -557,6 +619,12 @@ void TableBase::executeSyncImpl(      TableBase *pOther,
 
     if(FieldBits::NoField != (HeaderFieldMask & whichField))
         _sfHeader.syncWith(pOther->_sfHeader);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+        _sfColumnModel.syncWith(pOther->_sfColumnModel);
 
     if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
         _sfAutoCreateColumnsFromModel.syncWith(pOther->_sfAutoCreateColumnsFromModel);

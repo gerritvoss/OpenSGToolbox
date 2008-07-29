@@ -92,7 +92,8 @@
 
 #include "Component/Table/OSGTableHeader.h"
 #include "Component/Table/OSGTable.h"
-#include "Component/Table/DefaultRenderers/OSGDefaultTableCellRenderers.h"
+#include "Component/Table/ComponentGenerators/OSGDefaultTableCellRenderers.h"
+#include "Component/Table/Models/OSGDefaultTableColumnModel.h"
 
 #include "Component/List/OSGList.h"
 #include "Component/List/OSGDefaultListSelectionModel.h"
@@ -4313,6 +4314,7 @@ void WindowsLookAndFeel::init(void)
         WindowsTable->setShowHorizontalLines(true);
         WindowsTable->setShowVerticalLines(true);
         WindowsTable->setGridColor(Color4f(0.0,0.0,0.0,1.0));
+        WindowsTable->setColumnModel(DefaultTableColumnModel::create());
 
         WindowsTable->setDefaultRenderer(&SFGLenum::getClassType(), TableCellRendererPtr(new DefaultGLenumTableCellRenderer()));
         WindowsTable->setDefaultRenderer(&SFString::getClassType(), TableCellRendererPtr(new DefaultStringTableCellRenderer()));

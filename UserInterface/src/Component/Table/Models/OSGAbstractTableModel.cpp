@@ -48,8 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGAbstractTableModel.h"
-#include "OSGTableModelListener.h"
-#include "OSGTableModelEvent.h"
+#include "Component/Table/OSGTableModelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::AbstractListModel
-A AbstractListModel. 
+/*! \class osg::AbstractTableModel
+A UI AbstractTableModel. 
 */
 
 /***************************************************************************\
@@ -69,23 +68,14 @@ A AbstractListModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void AbstractTableModel::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-/*std::string AbstractTableModel::getColumnName(UInt32 columnIndex) const
-{
-    //Defaults to A, B, C, ..., Y, Z, AA, BB, ...
-    UInt32 ColumnMod(columnIndex%24u);
-    UInt32 LetterRepeats(columnIndex/24u + 1);
-
-    //Now get the Character
-    UChar8 Letter('A' + ColumnMod);
-
-    //Now make a string with LetterRepeats number of the Character
-    return std::string(LetterRepeats,Letter);
-    
-}*/
 
 bool AbstractTableModel::isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const
 {
@@ -152,14 +142,39 @@ void AbstractTableModel::produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastC
       (*SetItor)->intervalRemoved(TheEvent);
    }
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
+AbstractTableModel::AbstractTableModel(void) :
+    Inherited()
+{
+}
+
+AbstractTableModel::AbstractTableModel(const AbstractTableModel &source) :
+    Inherited(source)
+{
+}
+
+AbstractTableModel::~AbstractTableModel(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
+
+void AbstractTableModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void AbstractTableModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump AbstractTableModel NI" << std::endl;
+}
+
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
@@ -171,6 +186,15 @@ void AbstractTableModel::produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastC
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGABSTRACTTABLEMODELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGABSTRACTTABLEMODELBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGABSTRACTTABLEMODELFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

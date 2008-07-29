@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGTABLEHEADERFIELDS_H_
-#define _OSGTABLEHEADERFIELDS_H_
+#ifndef _OSGABSTRACTTABLECOLUMNMODELFIELDS_H_
+#define _OSGABSTRACTTABLECOLUMNMODELFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/Container/OSGContainerFields.h"
+#include "OSGTableColumnModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class TableHeader;
+class AbstractTableColumnModel;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TableHeaderPtr
+//! AbstractTableColumnModelPtr
 
-typedef FCPtr<ContainerPtr, TableHeader> TableHeaderPtr;
+typedef FCPtr<TableColumnModelPtr, AbstractTableColumnModel> AbstractTableColumnModelPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ContainerPtr, TableHeader> TableHeaderPtr;
 #endif
 
 template <>
-struct FieldDataTraits<TableHeaderPtr> : 
-    public FieldTraitsRecurseMapper<TableHeaderPtr, true>
+struct FieldDataTraits<AbstractTableColumnModelPtr> : 
+    public FieldTraitsRecurseMapper<AbstractTableColumnModelPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<TableHeaderPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFTableHeaderPtr"; }
-    static const char *getMName(void) { return "MFTableHeaderPtr"; }
+    static const char *getSName(void) { return "SFAbstractTableColumnModelPtr"; }
+    static const char *getMName(void) { return "MFAbstractTableColumnModelPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TableHeaderPtr, true>
+/*! \class  FieldTraitsRecurseMapper<AbstractTableColumnModelPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<TableHeaderPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<TableHeaderPtr> SFTableHeaderPtr;
+typedef SField<AbstractTableColumnModelPtr> SFAbstractTableColumnModelPtr;
 #endif
 
-#ifndef OSG_COMPILETABLEHEADERINST
-OSG_DLLEXPORT_DECL1(SField, TableHeaderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEABSTRACTTABLECOLUMNMODELINST
+OSG_DLLEXPORT_DECL1(SField, AbstractTableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TableHeaderPtr> MFTableHeaderPtr;
+typedef MField<AbstractTableColumnModelPtr> MFAbstractTableColumnModelPtr;
 #endif
 
-#ifndef OSG_COMPILETABLEHEADERINST
-OSG_DLLEXPORT_DECL1(MField, TableHeaderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEABSTRACTTABLECOLUMNMODELINST
+OSG_DLLEXPORT_DECL1(MField, AbstractTableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGTABLEHEADERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGABSTRACTTABLECOLUMNMODELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGTABLEHEADERFIELDS_H_ */
+#endif /* _OSGABSTRACTTABLECOLUMNMODELFIELDS_H_ */

@@ -82,7 +82,7 @@
 
 #include "Component/Table/OSGTableHeader.h"
 #include "Component/Table/OSGTable.h"
-#include "Component/Table/DefaultRenderers/OSGDefaultTableCellRenderers.h"
+#include "Component/Table/ComponentGenerators/OSGDefaultTableCellRenderers.h"
 
 #include "Component/List/OSGList.h"
 #include "Component/List/OSGDefaultListSelectionModel.h"

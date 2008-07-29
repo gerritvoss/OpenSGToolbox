@@ -233,10 +233,23 @@ public:
 
 class ExampleTableModel : public AbstractTableModel
 {
+  public:
+    typedef          AbstractTableModel Inherited;
+    typedef          ExampleTableModel Self;
+	typedef          FCPtr<Inherited::Ptr,  Self      > PtrType;
+
+	OSG_FIELD_CONTAINER_DECL(PtrType)
 private:
     // Creates two vectors to store column/cell values in
     std::vector<SharedFieldPtr> _ColumnValues;
     std::vector<SharedFieldPtr> _CellValues;
+
+	friend class FieldContainer;
+
+    ExampleTableModel &operator =(const ExampleTableModel &source)
+	{
+		return *this;
+	}
 public:
 
     // Creates some functions to do what the Table requires to be done
@@ -289,7 +302,15 @@ public:
 
     ******************************************************/
 
-    ExampleTableModel()
+	static FieldContainerType  _type;
+
+	ExampleTableModel(const ExampleTableModel& source) : Inherited(source),
+        _ColumnValues(source._ColumnValues),
+        _CellValues(source._CellValues)
+    {
+    }
+
+    ExampleTableModel() : Inherited()
     {
         // Creates the lists within column/cell values and adds data (1d representation of 2d array basically)
         _ColumnValues.push_back(SharedFieldPtr(new SFString("Column String")));
@@ -328,6 +349,17 @@ public:
     }
 };
 
+FieldContainerType ExampleTableModel::_type("ExampleTableModel",
+                                     "AbstractTableModel",
+                                      NULL,
+                                      (PrototypeCreateF) &ExampleTableModel::createEmpty,
+                                      NULL,
+									  NULL,
+                                      0);
+
+OSG_FIELD_CONTAINER_INL_DEF(ExampleTableModel::Self, ExampleTableModel::PtrType)
+OSG_FIELD_CONTAINER_DEF(ExampleTableModel::Self, ExampleTableModel::PtrType)
+typedef ExampleTableModel::PtrType ExampleTableModelPtr;
 
 int main(int argc, char **argv)
 {
@@ -370,10 +402,10 @@ int main(int argc, char **argv)
 
     // Create TablePtr
     table = Table::create();
-    table->setModel(TableModelPtr(new ExampleTableModel()));
-    beginEditCP(table, Table::PreferredSizeFieldMask);
+    beginEditCP(table, Table::PreferredSizeFieldMask | Table::ModelFieldMask);
         table->setPreferredSize(Vec2f(500, 500));
-    endEditCP(table, Table::PreferredSizeFieldMask);
+        table->setModel(ExampleTableModel::create());
+    endEditCP(table, Table::PreferredSizeFieldMask | Table::ModelFieldMask);
     table->updateLayout();
 
     /******************************************************
@@ -481,35 +513,35 @@ PanelPtr createSelectionModePanel(void)
 
     //Label
     LabelPtr SelectionModeLabel = Label::create();
-    beginEditCP(SelectionModeLabel, Label::TextFieldMask | Label::HorizontalAlignmentFieldMask);
+    beginEditCP(SelectionModeLabel, Label::TextFieldMask | Label::AlignmentFieldMask);
         SelectionModeLabel->setText("Selection Mode");
-        SelectionModeLabel->setHorizontalAlignment(0.0);
-    endEditCP(SelectionModeLabel, Label::TextFieldMask | Label::HorizontalAlignmentFieldMask);
+        SelectionModeLabel->setAlignment(Vec2f(0.0,0.5));
+    endEditCP(SelectionModeLabel, Label::TextFieldMask | Label::AlignmentFieldMask);
 
     //Buttons
     RadioButtonPtr SingleSelectionButton = RadioButton::create();
-    beginEditCP(SingleSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask | RadioButton::HorizontalAlignmentFieldMask);
+    beginEditCP(SingleSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask | RadioButton::AlignmentFieldMask);
         SingleSelectionButton->setText("Single Selection");
         SingleSelectionButton->setSelected(true);
         SingleSelectionButton->setPreferredSize(Vec2f(180,30));
-        SingleSelectionButton->setHorizontalAlignment(0.0);
-    endEditCP(SingleSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask | RadioButton::HorizontalAlignmentFieldMask);
+        SingleSelectionButton->setAlignment(Vec2f(0.0,0.5));
+    endEditCP(SingleSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask | RadioButton::AlignmentFieldMask);
     SingleSelectionButton->addButtonSelectedListener(&TheSingleSelectionListener);
     
     RadioButtonPtr SingleIntervalSelectionButton = RadioButton::create();
-    beginEditCP(SingleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::HorizontalAlignmentFieldMask);
+    beginEditCP(SingleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::AlignmentFieldMask);
         SingleIntervalSelectionButton->setText("Single Interval Selection");
         SingleIntervalSelectionButton->setPreferredSize(Vec2f(180,30));
-        SingleIntervalSelectionButton->setHorizontalAlignment(0.0);
-    endEditCP(SingleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::HorizontalAlignmentFieldMask);
+        SingleIntervalSelectionButton->setAlignment(Vec2f(0.0,0.5));
+    endEditCP(SingleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::AlignmentFieldMask);
     SingleIntervalSelectionButton->addButtonSelectedListener(&TheSingleIntervalSelectionListener);
 
     RadioButtonPtr MultipleIntervalSelectionButton = RadioButton::create();
-    beginEditCP(MultipleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::HorizontalAlignmentFieldMask);
+    beginEditCP(MultipleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::AlignmentFieldMask);
         MultipleIntervalSelectionButton->setText("Multiple Interval Selection");
         MultipleIntervalSelectionButton->setPreferredSize(Vec2f(180,30));
-        MultipleIntervalSelectionButton->setHorizontalAlignment(0.0);
-    endEditCP(MultipleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::HorizontalAlignmentFieldMask);
+        MultipleIntervalSelectionButton->setAlignment(Vec2f(0.0,0.5));
+    endEditCP(MultipleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::AlignmentFieldMask);
     MultipleIntervalSelectionButton->addButtonSelectedListener(&TheMultipleIntervalSelectionListener);
 
     SelectionButtonGroup.addButton(SingleSelectionButton);
@@ -545,38 +577,38 @@ PanelPtr createSelectionOptionPanel(void)
 {
     //Label
     LabelPtr SelectionOptionLabel = Label::create();
-    beginEditCP(SelectionOptionLabel, Label::TextFieldMask | Label::HorizontalAlignmentFieldMask);
+    beginEditCP(SelectionOptionLabel, Label::TextFieldMask | Label::AlignmentFieldMask);
         SelectionOptionLabel->setText("Selection Options");
-        SelectionOptionLabel->setHorizontalAlignment(0.0);
-    endEditCP(SelectionOptionLabel, Label::TextFieldMask | Label::HorizontalAlignmentFieldMask);
+        SelectionOptionLabel->setAlignment(Vec2f(0.0,0.5));
+    endEditCP(SelectionOptionLabel, Label::TextFieldMask | Label::AlignmentFieldMask);
 
     //Buttons
     RowSelectionButton = CheckboxButton::create();
-    beginEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask );
+    beginEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::AlignmentFieldMask | CheckboxButton::SelectedFieldMask );
         RowSelectionButton->setText("Row Selection");
         RowSelectionButton->setPreferredSize(Vec2f(180,30));
-        RowSelectionButton->setHorizontalAlignment(0.0);
+        RowSelectionButton->setAlignment(Vec2f(0.0,0.5));
         RowSelectionButton->setSelected(true);
-    endEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask );
+    endEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::AlignmentFieldMask | CheckboxButton::SelectedFieldMask );
     RowSelectionButton->addButtonSelectedListener(&TheRowSelectionListener);
 
     ColumnSelectionButton = CheckboxButton::create();
-    beginEditCP(ColumnSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SelectedFieldMask | CheckboxButton::HorizontalAlignmentFieldMask);
+    beginEditCP(ColumnSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SelectedFieldMask | CheckboxButton::AlignmentFieldMask);
         ColumnSelectionButton->setText("Column Selection");
         ColumnSelectionButton->setPreferredSize(Vec2f(180,30));
-        ColumnSelectionButton->setHorizontalAlignment(0.0);
+        ColumnSelectionButton->setAlignment(Vec2f(0.0,0.5));
         ColumnSelectionButton->setSelected(true);
-    endEditCP(ColumnSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SelectedFieldMask | CheckboxButton::HorizontalAlignmentFieldMask);
+    endEditCP(ColumnSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SelectedFieldMask | CheckboxButton::AlignmentFieldMask);
     ColumnSelectionButton->addButtonSelectedListener(&TheColumnSelectionListener);
     
 
     CellSelectionButton = CheckboxButton::create();
-    beginEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
+    beginEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::AlignmentFieldMask | CheckboxButton::SelectedFieldMask);
         CellSelectionButton->setText("Cell Selection");
         CellSelectionButton->setPreferredSize(Vec2f(180,30));
-        CellSelectionButton->setHorizontalAlignment(0.0);
+        CellSelectionButton->setAlignment(Vec2f(0.0,0.5));
         CellSelectionButton->setSelected(false);
-    endEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
+    endEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::AlignmentFieldMask | CheckboxButton::SelectedFieldMask);
     CellSelectionButton->addButtonSelectedListener(&TheCellSelectionListener);
 
     //Box Layout

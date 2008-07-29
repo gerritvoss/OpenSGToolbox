@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTABLEHEADER_H_
-#define _OSGTABLEHEADER_H_
+#ifndef _OSGTABLEMODEL_H_
+#define _OSGTABLEMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,26 +45,22 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTableColumnModelListener.h"
+#include "OSGTableModelBase.h"
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
-#include "OSGTableHeaderBase.h"
-#include "OSGTableCellRenderer.h"
-#include "OSGTableColumn.h"
-
-#include <OpenSG/Input/OSGMouseListener.h>
-#include <OpenSG/Input/OSGMouseMotionListener.h>
+#include "Component/Table/OSGTableModelListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TableHeader class. See \ref 
-           PageUserInterfaceTableHeader for a description.
+/*! \brief TableModel class. See \ref 
+           PageUserInterfaceTableModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
+class OSG_USERINTERFACELIB_DLLMAPPING TableModel : public TableModelBase
 {
   private:
 
-    typedef TableHeaderBase Inherited;
+    typedef TableModelBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -85,150 +81,73 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    //Adds a listener to the list that is notified each time a change to the data model occurs.
+    virtual void addTableModelListener(TableModelListenerPtr l) = 0;
     
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
+    //Removes a listener from the list that is notified each time a change to the data model occurs.
+    virtual void removeTableModelListener(TableModelListenerPtr l) = 0;
     
-    virtual void updateLayout(void);
+    //Returns the number of columns in the model.
+    virtual UInt32 getColumnCount(void) const = 0;
     
-    //Returns a pointer to the column that point lies in, or -1 if it lies out of bounds.
-    //The point is assumed to be in TableHeader coordinate space
-    TableColumnPtr columnAtPoint(const Pnt2f& point) const;
+    //Returns the name of the column at columnIndex.
+    virtual SharedFieldPtr getColumnValue(UInt32 columnIndex) const = 0;
     
-    //Returns the TableColumnModel that contains all column information of this table header.
-    //TableColumnModelPtr getColumnModel(void) const;
+    //Returns the number of rows in the model.
+    virtual UInt32 getRowCount(void) const = 0;
     
-    //Returns the default renderer used when no headerRenderer is defined by a TableColumn.
-    TableCellRendererPtr getDefaultRenderer(void) const;
+    //Returns the value for the cell at columnIndex and rowIndex.
+    virtual SharedFieldPtr getValueAt(UInt32 rowIndex, UInt32 columnIndex) const = 0;
     
-    //Returns the the dragged column, if and only if, a drag is in process, otherwise returns null.
-    TableColumnPtr getDraggedColumn(void) const;
+    //Returns true if the cell at rowIndex and columnIndex is editable.
+    virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const = 0;
     
-    //Returns the column's horizontal distance from its original position, if and only if, a drag is in process.
-    Real32 getDraggedDistance(void) const;
-    
-    //Returns the rectangle containing the header tile at column.
-    void getHeaderBounds(const UInt32 ColumnIndex, Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-    
-    //Returns the resizing column.
-    Int32 getResizingColumn(void) const;
-    
-    //Sets the column model for this table to newModel and registers for listener notifications from the new column model.
-    //void setColumnModel(TableColumnModelPtr columnModel);
-    
-    //Sets the default renderer to be used when no headerRenderer is defined by a TableColumn.
-    void setDefaultRenderer(TableCellRendererPtr defaultRenderer);
-    
-    //Sets the header's draggedColumn to aColumn.
-    void setDraggedColumn(TableColumnPtr aColumn);
-    
-    //Sets the header's draggedDistance to distance.
-    void setDraggedDistance(const Real32& distance);
-    
-    //Sets the header's resizingColumn to aColumn.
-    void setResizingColumn(Int32 aColumn);
-          
+    //Sets the value in the cell at columnIndex and rowIndex to aValue.
+    virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex) = 0;
+
+    //Returns the most specific superclass for all the cell values in the column.
+    virtual const FieldType* getColumnType(const UInt32& columnIndex) = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in TableHeaderBase.
+    // Variables should all be in TableModelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TableHeader(void);
-    TableHeader(const TableHeader &source);
+    TableModel(void);
+    TableModel(const TableModel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableHeader(void); 
+    virtual ~TableModel(void); 
 
     /*! \}                                                                 */
-
-    //The Default Table Header Renderer
-    TableCellRendererPtr _DefaultTableHeaderRenderer;
-    
-    //The index of the column being dragged.
-    TableColumnPtr _DraggedColumn;
-    
-    //The distance from its original position the column has been dragged.
-    Real32 _DraggedDistance;
-    
-    //The index of the column being resized.
-    Int32 _ResizingColumn;
-
-    //TableColumnModelListener
-	class ColumnModelListener : public TableColumnModelListener
-	{
-	public :
-		ColumnModelListener(TableHeader* TheTableHeader);
-		
-        virtual void columnAdded(const TableColumnModelEvent& e);
-    
-        virtual void columnMarginChanged(const ChangeEvent& e);
-    
-        virtual void columnMoved(const TableColumnModelEvent& e);
-    
-        virtual void columnRemoved(const TableColumnModelEvent& e);
-    
-        virtual void columnSelectionChanged(const ListSelectionEvent& e);
-	protected :
-		TableHeader* _TableHeader;
-	};
-
-	friend class ColumnModelListener;
-
-	ColumnModelListener _ColumnModelListener;
-	
-	class MarginDraggedListener : public MouseMotionListener, public MouseListener
-	{
-	public :
-		MarginDraggedListener(TableHeader* ptr);
-		virtual void mouseMoved(const MouseEvent& e);
-		virtual void mouseDragged(const MouseEvent& e);
-		
-		virtual void mouseClicked(const MouseEvent& e);
-		virtual void mouseEntered(const MouseEvent& e);
-		virtual void mouseExited(const MouseEvent& e);
-		virtual void mousePressed(const MouseEvent& e);
-		virtual void mouseReleased(const MouseEvent& e);
-	protected :
-		TableHeader* _TableHeader;
-	};
-
-	friend class _MarginDraggedListener;
-
-	MarginDraggedListener _MarginDraggedListener;
-
-	void updateColumnHeadersComponents(void);
-
-	void checkMouseMargins(const MouseEvent& e);
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class TableHeaderBase;
+    friend class TableModelBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TableHeader &source);
+    void operator =(const TableModel &source);
 };
 
-typedef TableHeader *TableHeaderP;
+typedef TableModel *TableModelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTableHeaderBase.inl"
-#include "OSGTableHeader.inl"
+#include "OSGTableModelBase.inl"
+#include "OSGTableModel.inl"
 
-#define OSGTABLEHEADER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGTABLEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTABLEHEADER_H_ */
+#endif /* _OSGTABLEMODEL_H_ */

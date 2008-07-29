@@ -36,88 +36,103 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_TABLE_COLUMN_MODEL_H_
-#define _OSG_UI_TABLE_COLUMN_MODEL_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include <OpenSG/OSGField.h>
-#include "OSGTableColumn.h"
-#include "Component/List/OSGListSelectionModel.h"
-#include "OSGTableColumnModelListener.h"
 
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
+#include "OSGTableModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel : public IntrusivePtrImplBase
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::TableModel
+A UI TableModel. 
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void TableModel::initMethod (void)
 {
-private:
-protected:
-public:
-    //Adds a listener for table column model events.
-    virtual void addColumnModelListener(TableColumnModelListenerPtr l) = 0;
+}
 
-    //Removes a listener for table column model events.
-    virtual void removeColumnModelListener(TableColumnModelListenerPtr l) = 0;
 
-    //Appends aColumn to the end of the tableColumns array.
-    virtual void addColumn(const TableColumnPtr aColumn) = 0;
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    //Returns the TableColumn object for the column at columnIndex.
-    virtual TableColumnPtr getColumn(const UInt32& columnIndex) const = 0;
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    //Returns the number of columns in the model.
-    virtual UInt32 getColumnCount(void) const = 0;
+/*----------------------- constructors & destructors ----------------------*/
 
-    //Returns the index of the column that lies on the horizontal point, xPosition; or -1 if it lies outside the any of the column's bounds.
-    virtual Int32 getColumnIndexAtX(UInt32 xPosition) const = 0;
+TableModel::TableModel(void) :
+    Inherited()
+{
+}
 
-    //Returns the width between the cells in each column.
-    virtual UInt32 getColumnMargin(void) const = 0;
+TableModel::TableModel(const TableModel &source) :
+    Inherited(source)
+{
+}
 
-    //Returns an Enumeration of all the columns in the model.
-    virtual std::vector<TableColumnPtr> getColumns(void) const = 0;
+TableModel::~TableModel(void)
+{
+}
 
-    //Returns true if columns may be selected.
-    virtual bool getColumnSelectionAllowed(void) const = 0;
+/*----------------------------- class specific ----------------------------*/
 
-    //Returns the number of selected columns.
-    virtual UInt32 getSelectedColumnCount(void) const = 0;
+void TableModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    //Returns an array of indicies of all selected columns.
-    virtual std::vector<UInt32> getSelectedColumns(void) const = 0;
+void TableModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump TableModel NI" << std::endl;
+}
 
-    //Returns the current selection model.
-    virtual ListSelectionModelPtr getSelectionModel(void) const = 0;
 
-    //Returns the total width of all the columns.
-    virtual UInt32 getTotalColumnWidth(void) const = 0;
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    //Moves the column and its header at columnIndex to newIndex.
-    virtual void moveColumn(const UInt32& columnIndex, const UInt32& newIndex) = 0;
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    //Deletes the TableColumn column from the tableColumns array.
-    virtual void removeColumn(TableColumnPtr column) = 0;
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-    //Sets the TableColumn's column margin to newMargin.
-    virtual void setColumnMargin(const UInt32& newMargin) = 0;
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGTABLEMODELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTABLEMODELBASE_INLINE_CVSID;
 
-    //Sets whether the columns in this model may be selected.
-    virtual void setColumnSelectionAllowed(const bool& flag) = 0;
+    static Char8 cvsid_fields_hpp[] = OSGTABLEMODELFIELDS_HEADER_CVSID;
+}
 
-    //Sets the selection model.
-    virtual void setSelectionModel(ListSelectionModelPtr newModel) = 0;
-
-};
-
-typedef boost::intrusive_ptr<TableColumnModel> TableColumnModelPtr;
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
-
-#endif /* _OSG_UI_TABLE_COLUMN_MODEL_H_ */
 

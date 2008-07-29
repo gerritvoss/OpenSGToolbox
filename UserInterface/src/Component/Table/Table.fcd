@@ -23,6 +23,26 @@ A UI Table.
 	>
    </Field>
 	<Field
+		name="Model"
+		type="TableModelPtr"
+		cardinality="single"
+      visibility="external"
+      header="Models/OSGTableModelFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="ColumnModel"
+		type="TableColumnModelPtr"
+		cardinality="single"
+      visibility="external"
+      header="Models/OSGTableColumnModelFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+   </Field>
+	<Field
 		name="Table"
 		type="ComponentPtr"
 		cardinality="multi"

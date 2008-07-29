@@ -39,75 +39,22 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+
 OSG_BEGIN_NAMESPACE
 
 inline
-TableCellRendererPtr TableHeader::getDefaultRenderer(void) const
-{
-    return _DefaultTableHeaderRenderer;
-}
-
-inline
-TableColumnPtr TableHeader::getDraggedColumn(void) const
-{
-    return _DraggedColumn;
-}
-
-inline
-Real32 TableHeader::getDraggedDistance(void) const
-{
-    return _DraggedDistance;
-}
-
-inline
-void TableHeader::getHeaderBounds(const UInt32 ColumnIndex, Pnt2f& TopLeft, Pnt2f& BottomRight) const
-{
-    getColumnHeaders()[ColumnIndex]->getBounds(TopLeft, BottomRight);
-}
-
-inline
-Int32 TableHeader::getResizingColumn(void) const
-{
-    return _ResizingColumn;
-}
-
-inline
-void TableHeader::setDefaultRenderer(TableCellRendererPtr defaultRenderer)
-{
-    _DefaultTableHeaderRenderer = defaultRenderer;
-}
-
-inline
-void TableHeader::setDraggedColumn(TableColumnPtr aColumn)
-{
-    _DraggedColumn = aColumn;
-}
-
-inline
-void TableHeader::setDraggedDistance(const Real32& distance)
-{
-    _DraggedDistance = distance;
-}
-
-inline
-void TableHeader::setResizingColumn(Int32 aColumn)
-{
-    _ResizingColumn = aColumn;
-}
-
-inline
-TableHeader::ColumnModelListener::ColumnModelListener(TableHeader* TheTableHeader) :
-    _TableHeader(TheTableHeader)
+DefaultTableColumnModel::TableSelectionListener::TableSelectionListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel) :
+_DefaultTableColumnModel(TheDefaultTableColumnModel)
 {
 }
 
 inline
-TableHeader::MarginDraggedListener::MarginDraggedListener(TableHeader* TheTableHeader) :
-    _TableHeader(TheTableHeader)
+DefaultTableColumnModel::TableFieldChangeListener::TableFieldChangeListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel) :
+_DefaultTableColumnModel(TheDefaultTableColumnModel)
 {
 }
 
 OSG_END_NAMESPACE
 
-#define OSGTABLEHEADER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGDEFAULTTABLECOLUMNMODEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

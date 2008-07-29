@@ -46,13 +46,16 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGTableBase.h"
-#include "OSGTableColumnModel.h"
-#include "OSGTableModel.h"
-#include "OSGTableColumnModelListener.h"
-#include "OSGTableModelListener.h"
 #include "Editors/OSGCellEditorListener.h"
 #include "Component/List/OSGListSelectionListener.h"
+#include "Component/List/OSGListSelectionModel.h"
 #include "Event/OSGFocusListener.h"
+#include "OSGTableModelListener.h"
+#include "OSGTableColumnModelListener.h"
+#include "Editors/OSGTableCellEditor.h"
+#include "OSGTableCellRenderer.h"
+#include "OSGTableColumnFields.h"
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -195,7 +198,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     UInt32 getColumnCount(void) const;
 
     //Returns the TableColumnModel that contains all column information of this table.
-    TableColumnModelPtr getColumnModel(void) const;
+    //TableColumnModelPtr getColumnModel(void) const;
 
     //Returns the name of the column appearing in the view at column position column.
     SharedFieldPtr getColumnValue(const UInt32& column) const;
@@ -219,7 +222,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     ComponentPtr getEditorComponent(void) const;
 
     //Returns the TableModel that provides the data displayed by this JTable.
-    TableModelPtr getModel(void) const;
+    //TableModelPtr getModel(void) const;
 
     //Returns the number of rows in this table's model.
     UInt32 getRowCount(void) const;
@@ -294,7 +297,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void setCellSelectionEnabled(bool cellSelectionEnabled);
 
     //Sets the column model for this table to newModel and registers for listener notifications from the new column model.
-    void setColumnModel(TableColumnModelPtr columnModel);
+    //void setColumnModel(TableColumnModelPtr columnModel);
 
     //Sets whether the columns in this model can be selected.
     void setColumnSelectionAllowed(bool columnSelectionAllowed);
@@ -325,7 +328,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 
 
     //Sets the data model for this table to newModel and registers with it for listener notifications from the new data model.
-    void setModel(TableModelPtr dataModel);
+    //void setModel(TableModelPtr dataModel);
 
     //Sets the height for row to rowHeight, revalidates, and repaints.
     //void setRowHeight(const UInt32& row, const UInt32& rowHeight);
@@ -362,10 +365,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     virtual ~Table(void); 
 
     /*! \}                                                                 */
-
-    TableColumnModelPtr _ColumnModel;
-
-    TableModelPtr _Model;
 
     Int32 _EditingColumn;
 

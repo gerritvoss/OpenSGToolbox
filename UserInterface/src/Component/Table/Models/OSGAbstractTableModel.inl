@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,58 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_ABSTRACT_TABLE_MODEL_H_
-#define _OSG_UI_ABSTRACT_TABLE_MODEL_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "OSGTableModel.h"
-#include <set>
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public TableModel
-{
-protected:
-	typedef std::set<TableModelListenerPtr> TableModelListenerSet;
-    typedef TableModelListenerSet::iterator TableModelListenerSetItor;
-    typedef TableModelListenerSet::const_iterator TableModelListenerSetConstItor;
-	TableModelListenerSet _ModelListeners;
-
-	void produceContentsHeaderRowChanged(UInt32 FirstColumn, UInt32 LastColumn);
-	void produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
-	void produceIntervalAdded(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
-	void produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
-    
-public:
-
-    //Adds a listener to the list that is notified each time a change to the data model occurs.
-    virtual void addTableModelListener(TableModelListenerPtr l);
-    
-    //Removes a listener from the list that is notified each time a change to the data model occurs.
-    virtual void removeTableModelListener(TableModelListenerPtr l);
-    
-    //Returns the name of the column at columnIndex.
-    //virtual SharedFieldPtr getColumnValue(UInt32 columnIndex) const;
-    
-    //Returns true if the cell at rowIndex and columnIndex is editable.
-    virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const;
-    
-    //Sets the value in the cell at columnIndex and rowIndex to aValue.
-    virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex);
-    
-};
-
-typedef boost::intrusive_ptr<AbstractTableModel> AbstractTableModelPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractTableModel.inl"
-
-#endif /* _OSG_UI_ABSTRACT_TABLE_MODEL_H_ */
+#define OSGABSTRACTTABLEMODEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

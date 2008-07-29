@@ -103,6 +103,13 @@ SFTablePtr *TableHeaderBase::getSFTable(void)
     return &_sfTable;
 }
 
+//! Get the TableHeader::_sfColumnModel field.
+inline
+SFTableColumnModelPtr *TableHeaderBase::getSFColumnModel(void)
+{
+    return &_sfColumnModel;
+}
+
 //! Get the TableHeader::_sfReorderingAllowed field.
 inline
 SFBool *TableHeaderBase::getSFReorderingAllowed(void)
@@ -165,6 +172,27 @@ inline
 void TableHeaderBase::setTable(const TablePtr &value)
 {
     _sfTable.setValue(value);
+}
+
+//! Get the value of the TableHeader::_sfColumnModel field.
+inline
+TableColumnModelPtr &TableHeaderBase::getColumnModel(void)
+{
+    return _sfColumnModel.getValue();
+}
+
+//! Get the value of the TableHeader::_sfColumnModel field.
+inline
+const TableColumnModelPtr &TableHeaderBase::getColumnModel(void) const
+{
+    return _sfColumnModel.getValue();
+}
+
+//! Set the value of the TableHeader::_sfColumnModel field.
+inline
+void TableHeaderBase::setColumnModel(const TableColumnModelPtr &value)
+{
+    _sfColumnModel.setValue(value);
 }
 
 //! Get the value of the TableHeader::_sfReorderingAllowed field.

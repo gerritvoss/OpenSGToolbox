@@ -1448,26 +1448,6 @@
 					Name="Table"
 					>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\Table\OSGTable.cpp"
 						>
 					</File>
@@ -1524,10 +1504,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnModel.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.cpp"
 						>
 					</File>
@@ -1576,10 +1552,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableModel.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.cpp"
 						>
 					</File>
@@ -1596,74 +1568,78 @@
 						>
 					</File>
 					<Filter
-						Name="DefaultRenderers"
+						Name="ComponentGenerators"
 						>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultBoolTableCellRenderer.cpp"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultBoolTableCellRenderer.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultBoolTableCellRenderer.h"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultBoolTableCellRenderer.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultGLenumTableCellRenderer.cpp"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultGLenumTableCellRenderer.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultGLenumTableCellRenderer.h"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultGLenumTableCellRenderer.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultInt32TableCellRenderer.cpp"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultInt32TableCellRenderer.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultInt32TableCellRenderer.h"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultInt32TableCellRenderer.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultReal32TableCellRenderer.cpp"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultReal32TableCellRenderer.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultReal32TableCellRenderer.h"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultReal32TableCellRenderer.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultStringTableCellRenderer.cpp"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultStringTableCellRenderer.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultStringTableCellRenderer.h"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultStringTableCellRenderer.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderer.cpp"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultTableCellRenderer.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderer.h"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultTableCellRenderer.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderers.h"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultTableCellRenderer.inl"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableHeaderCellRenderer.cpp"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultTableCellRenderers.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableHeaderCellRenderer.h"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultTableHeaderCellRenderer.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultUInt32TableCellRenderer.cpp"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultTableHeaderCellRenderer.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultUInt32TableCellRenderer.h"
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultUInt32TableCellRenderer.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\ComponentGenerators\OSGDefaultUInt32TableCellRenderer.h"
 							>
 						</File>
 					</Filter>
@@ -1730,6 +1706,182 @@
 					<Filter
 						Name="Models"
 						>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableColumnModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableColumnModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableColumnModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableColumnModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableColumnModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableColumnModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableColumnModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableModel.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGAbstractTableModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGDefaultTableColumnModel.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGDefaultTableColumnModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGDefaultTableColumnModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGDefaultTableColumnModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGDefaultTableColumnModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGDefaultTableColumnModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGDefaultTableColumnModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableColumnModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableColumnModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableColumnModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableColumnModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableColumnModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableColumnModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableColumnModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Models\OSGTableModelFields.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter

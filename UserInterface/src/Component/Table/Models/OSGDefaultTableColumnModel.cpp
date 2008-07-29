@@ -48,8 +48,6 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDefaultTableColumnModel.h"
-#include "OSGTableColumnModelListener.h"
-#include "OSGTableColumnModelEvent.h"
 #include "Component/List/OSGListSelectionModel.h"
 #include "Component/List/OSGDefaultListSelectionModel.h"
 
@@ -59,8 +57,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::AbstractListModel
-A AbstractListModel. 
+/*! \class osg::DefaultTableColumnModel
+A UI DefaultTableColumnModel. 
 */
 
 /***************************************************************************\
@@ -70,11 +68,16 @@ A AbstractListModel.
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+
+void DefaultTableColumnModel::initMethod (void)
+{
+}
+
+
 ListSelectionModelPtr DefaultTableColumnModel::createSelectionModel(void)
 {
     return ListSelectionModelPtr(new DefaultListSelectionModel());
 }
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -83,7 +86,7 @@ void DefaultTableColumnModel::addColumn(const TableColumnPtr aColumn)
 {
     _Columns.push_back(aColumn);
     recalcWidthCache();
-    aColumn->addFieldChangeListener(this);
+    aColumn->addFieldChangeListener(&_TableFieldChangeListener);
     produceColumnAdded(_Columns.size());
 }
 
@@ -231,7 +234,7 @@ void DefaultTableColumnModel::removeColumn(TableColumnPtr column)
         //Erase
         _Columns.erase(Itor);
         recalcWidthCache();
-        column->removeFieldChangeListener(this);
+        column->removeFieldChangeListener(&_TableFieldChangeListener);
         produceColumnRemoved(FindIndex);
     }
     
@@ -252,12 +255,12 @@ void DefaultTableColumnModel::setSelectionModel(ListSelectionModelPtr newModel)
 {
     if(_SelectionModel != NULL)
     {
-        _SelectionModel->removeListSelectionListener(this);
+        _SelectionModel->removeListSelectionListener(&_TableSelectionListener);
     }
     _SelectionModel = newModel;
     if(_SelectionModel != NULL)
     {
-        _SelectionModel->addListSelectionListener(this);
+        _SelectionModel->addListSelectionListener(&_TableSelectionListener);
     }
 }
 
@@ -275,83 +278,6 @@ void DefaultTableColumnModel::recalcWidthCache(void)
         }
     }
 }
-
-void DefaultTableColumnModel::selectionChanged(const ListSelectionEvent& e)
-{
-    produceColumnSelectionChanged(e);
-}
-
-void DefaultTableColumnModel::fieldChanged(const FieldChangeEvent& e)
-{
-    if(e.getFieldDescription()->getFieldId() == TableColumn::PreferredWidthFieldId ||
-        e.getFieldDescription()->getFieldId() == TableColumn::WidthFieldId)
-    {
-        recalcWidthCache();
-    }
-}
-
-void DefaultTableColumnModel::addColumnModelListener(TableColumnModelListenerPtr l)
-{
-   _ModelListeners.insert(l);
-}
-
-void DefaultTableColumnModel::removeColumnModelListener(TableColumnModelListenerPtr l)
-{
-   TableColumnModelListenerSetItor EraseIter(_ModelListeners.find(l));
-   if(EraseIter != _ModelListeners.end())
-   {
-      _ModelListeners.erase(EraseIter);
-   }
-}
-
-void DefaultTableColumnModel::produceColumnAdded(const UInt32& ToIndex)
-{
-    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), 0, ToIndex, TableColumnModelEvent::COLUMN_ADDED, TableColumnModelPtr(this));
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnAdded(TheEvent);
-   }
-}
-void DefaultTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex)
-{
-    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), FromIndex, ToIndex, TableColumnModelEvent::COLUMN_MOVED, TableColumnModelPtr(this));
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnMoved(TheEvent);
-   }
-}
-
-void DefaultTableColumnModel::produceColumnRemoved(const UInt32& FromIndex)
-{
-    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), FromIndex, 0, TableColumnModelEvent::COLUMN_REMOVED, TableColumnModelPtr(this));
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnRemoved(TheEvent);
-   }
-}
-
-void DefaultTableColumnModel::produceColumnMarginChanged(void)
-{
-   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnMarginChanged(TheEvent);
-   }
-}
-
-void DefaultTableColumnModel::produceColumnSelectionChanged(const ListSelectionEvent& e)
-{
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnSelectionChanged(e);
-   }
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -359,18 +285,58 @@ void DefaultTableColumnModel::produceColumnSelectionChanged(const ListSelectionE
 /*----------------------- constructors & destructors ----------------------*/
 
 DefaultTableColumnModel::DefaultTableColumnModel(void) :
+    Inherited(),
     _ColumnMargin(1),
     _ColumnSelectionAllowed(true),
     _SelectionModel(),
-    _TotalColumnWidth(0)
+    _TotalColumnWidth(0),
+    _TableSelectionListener(DefaultTableColumnModelPtr(this)),
+    _TableFieldChangeListener(DefaultTableColumnModelPtr(this))
 {
 }
 
+DefaultTableColumnModel::DefaultTableColumnModel(const DefaultTableColumnModel &source) :
+    Inherited(source),
+    _ColumnMargin(source._ColumnMargin),
+    _ColumnSelectionAllowed(source._ColumnSelectionAllowed),
+    _SelectionModel(source._SelectionModel),
+    _TableSelectionListener(DefaultTableColumnModelPtr(this)),
+    _TableFieldChangeListener(DefaultTableColumnModelPtr(this))
+{
+}
 
 DefaultTableColumnModel::~DefaultTableColumnModel(void)
 {
 }
+
 /*----------------------------- class specific ----------------------------*/
+
+void DefaultTableColumnModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void DefaultTableColumnModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump DefaultTableColumnModel NI" << std::endl;
+}
+
+
+
+void DefaultTableColumnModel::TableSelectionListener::selectionChanged(const ListSelectionEvent& e)
+{
+    _DefaultTableColumnModel->produceColumnSelectionChanged(e);
+}
+
+void DefaultTableColumnModel::TableFieldChangeListener::fieldChanged(const FieldChangeEvent& e)
+{
+    if(e.getFieldDescription()->getFieldId() == TableColumn::PreferredWidthFieldId ||
+        e.getFieldDescription()->getFieldId() == TableColumn::WidthFieldId)
+    {
+        _DefaultTableColumnModel->recalcWidthCache();
+    }
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
@@ -382,6 +348,15 @@ DefaultTableColumnModel::~DefaultTableColumnModel(void)
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGDEFAULTTABLECOLUMNMODELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDEFAULTTABLECOLUMNMODELBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGDEFAULTTABLECOLUMNMODELFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

@@ -36,54 +36,49 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_ABSTRACT_TABLE_MODEL_H_
-#define _OSG_UI_ABSTRACT_TABLE_MODEL_H_
-
+#ifndef _OSGDEFAULTTABLECOLUMNMODEL_H_
+#define _OSGDEFAULTTABLECOLUMNMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGTableColumnModel.h"
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGDefaultTableColumnModelBase.h"
 #include "Component/List/OSGListSelectionListener.h"
 #include <OpenSG/Input/OSGFieldChangeListener.h>
-//#include <OpenSG/Input/OSGKeyListener.h>
-#include <set>
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public TableColumnModel, public ListSelectionListener, public FieldChangeListener
+
+/*! \brief DefaultTableColumnModel class. See \ref 
+           PageUserInterfaceDefaultTableColumnModel for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTableColumnModelBase
 {
-protected:
-    typedef std::vector<TableColumnPtr> TableColumnVector;
+  private:
 
-	typedef std::set<TableColumnModelListenerPtr> TableColumnModelListenerSet;
-    typedef TableColumnModelListenerSet::iterator TableColumnModelListenerSetItor;
-    typedef TableColumnModelListenerSet::const_iterator TableColumnModelListenerSetConstItor;
-	TableColumnModelListenerSet _ModelListeners;
+    typedef DefaultTableColumnModelBase Inherited;
 
-    void produceColumnAdded(const UInt32& ToIndex);
-    void produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex);
-    void produceColumnRemoved(const UInt32& FromIndex);
-    void produceColumnMarginChanged(void);
-    void produceColumnSelectionChanged(const ListSelectionEvent& e);
-    
-    void recalcWidthCache(void);
-    static ListSelectionModelPtr createSelectionModel(void);
+    /*==========================  PUBLIC  =================================*/
+  public:
 
-    UInt32 _ColumnMargin;
-    bool _ColumnSelectionAllowed;;
-    ListSelectionModelPtr _SelectionModel;
-    TableColumnVector _Columns;
-    UInt32 _TotalColumnWidth;
-public:
-    //Adds a listener for table column model events.
-    virtual void addColumnModelListener(TableColumnModelListenerPtr l);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-    //Removes a listener for table column model events.
-    virtual void removeColumnModelListener(TableColumnModelListenerPtr l);
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 
     //Appends aColumn to the end of the tableColumns array.
     virtual void addColumn(const TableColumnPtr aColumn);
@@ -133,19 +128,88 @@ public:
     //Sets the selection model.
     virtual void setSelectionModel(ListSelectionModelPtr newModel);
     
-    //A ListSelectionListener that forwards ListSelectionEvents when there is a column selection change
-    virtual void selectionChanged(const ListSelectionEvent& e);
     
-    virtual void fieldChanged(const FieldChangeEvent& e);
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+    typedef std::vector<TableColumnPtr> TableColumnVector;
 
-    
+    // Variables should all be in DefaultTableColumnModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
     DefaultTableColumnModel(void);
-    ~DefaultTableColumnModel(void);
+    DefaultTableColumnModel(const DefaultTableColumnModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DefaultTableColumnModel(void); 
+
+    /*! \}                                                                 */
+    
+    void recalcWidthCache(void);
+    static ListSelectionModelPtr createSelectionModel(void);
+
+    UInt32 _ColumnMargin;
+    bool _ColumnSelectionAllowed;;
+    ListSelectionModelPtr _SelectionModel;
+    TableColumnVector _Columns;
+    UInt32 _TotalColumnWidth;
+    
+    
+	class TableSelectionListener : public ListSelectionListener
+	{
+	public :
+		TableSelectionListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel);
+		
+        //A ListSelectionListener that forwards ListSelectionEvents when there is a column selection change
+        virtual void selectionChanged(const ListSelectionEvent& e);
+	protected :
+		DefaultTableColumnModelPtr _DefaultTableColumnModel;
+	};
+
+	friend class TableSelectionListener;
+
+	TableSelectionListener _TableSelectionListener;
+    
+	class TableFieldChangeListener : public FieldChangeListener
+	{
+	public :
+		TableFieldChangeListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel);
+		
+        virtual void fieldChanged(const FieldChangeEvent& e);
+	protected :
+		DefaultTableColumnModelPtr _DefaultTableColumnModel;
+	};
+
+	friend class TableFieldChangeListener;
+
+	TableFieldChangeListener _TableFieldChangeListener;
+
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class DefaultTableColumnModelBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const DefaultTableColumnModel &source);
 };
 
-typedef boost::intrusive_ptr<TableColumnModel> TableColumnModelPtr;
+typedef DefaultTableColumnModel *DefaultTableColumnModelP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_ABSTRACT_TABLE_MODEL_H_ */
+#include "OSGDefaultTableColumnModelBase.inl"
+#include "OSGDefaultTableColumnModel.inl"
 
+#define OSGDEFAULTTABLECOLUMNMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSGDEFAULTTABLECOLUMNMODEL_H_ */

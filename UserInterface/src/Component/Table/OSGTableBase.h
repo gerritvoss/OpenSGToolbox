@@ -68,6 +68,8 @@
 #include "Component/Container/OSGContainer.h" // Parent
 
 #include "Component/Table/OSGTableHeaderFields.h" // Header type
+#include "Models/OSGTableModelFields.h" // Model type
+#include "Models/OSGTableColumnModelFields.h" // ColumnModel type
 #include "Component/OSGComponent.h" // Table type
 #include <OpenSG/OSGBoolFields.h> // AutoCreateColumnsFromModel type
 #include <OpenSG/OSGUInt32Fields.h> // AutoResizeMode type
@@ -102,7 +104,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     enum
     {
         HeaderFieldId                     = Inherited::NextFieldId,
-        TableFieldId                      = HeaderFieldId                     + 1,
+        ModelFieldId                      = HeaderFieldId                     + 1,
+        ColumnModelFieldId                = ModelFieldId                      + 1,
+        TableFieldId                      = ColumnModelFieldId                + 1,
         AutoCreateColumnsFromModelFieldId = TableFieldId                      + 1,
         AutoResizeModeFieldId             = AutoCreateColumnsFromModelFieldId + 1,
         RowHeightFieldId                  = AutoResizeModeFieldId             + 1,
@@ -116,6 +120,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     };
 
     static const OSG::BitVector HeaderFieldMask;
+    static const OSG::BitVector ModelFieldMask;
+    static const OSG::BitVector ColumnModelFieldMask;
     static const OSG::BitVector TableFieldMask;
     static const OSG::BitVector AutoCreateColumnsFromModelFieldMask;
     static const OSG::BitVector AutoResizeModeFieldMask;
@@ -153,6 +159,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \{                                                                 */
 
            SFTableHeaderPtr    *getSFHeader         (void);
+           SFTableModelPtr     *getSFModel          (void);
+           SFTableColumnModelPtr *getSFColumnModel    (void);
            SFBool              *getSFAutoCreateColumnsFromModel(void);
            SFUInt32            *getSFAutoResizeMode (void);
            SFUInt32            *getSFRowHeight      (void);
@@ -165,6 +173,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
 
            TableHeaderPtr      &getHeader         (void);
      const TableHeaderPtr      &getHeader         (void) const;
+           TableModelPtr       &getModel          (void);
+     const TableModelPtr       &getModel          (void) const;
+           TableColumnModelPtr &getColumnModel    (void);
+     const TableColumnModelPtr &getColumnModel    (void) const;
            bool                &getAutoCreateColumnsFromModel(void);
      const bool                &getAutoCreateColumnsFromModel(void) const;
            UInt32              &getAutoResizeMode (void);
@@ -190,6 +202,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \{                                                                 */
 
      void setHeader         ( const TableHeaderPtr &value );
+     void setModel          ( const TableModelPtr &value );
+     void setColumnModel    ( const TableColumnModelPtr &value );
      void setAutoCreateColumnsFromModel( const bool &value );
      void setAutoResizeMode ( const UInt32 &value );
      void setRowHeight      ( const UInt32 &value );
@@ -242,6 +256,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \{                                                                 */
 
     SFTableHeaderPtr    _sfHeader;
+    SFTableModelPtr     _sfModel;
+    SFTableColumnModelPtr   _sfColumnModel;
     MFComponentPtr      _mfTable;
     SFBool              _sfAutoCreateColumnsFromModel;
     SFUInt32            _sfAutoResizeMode;

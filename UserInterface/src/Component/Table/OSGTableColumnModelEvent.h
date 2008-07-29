@@ -47,7 +47,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
-#include "OSGTableColumnModel.h"
+#include "Models/OSGTableColumnModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 	 

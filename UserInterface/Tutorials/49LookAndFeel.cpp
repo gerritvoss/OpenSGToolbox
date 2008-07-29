@@ -359,10 +359,23 @@ class TutorialMouseMotionListener : public MouseMotionListener
 
 class ExampleTableModel : public AbstractTableModel
 {
+  public:
+    typedef          AbstractTableModel Inherited;
+    typedef          ExampleTableModel Self;
+	typedef          FCPtr<Inherited::Ptr,  Self      > PtrType;
+
+	OSG_FIELD_CONTAINER_DECL(PtrType)
 private:
     // Creates two vectors to store column/cell values in
     std::vector<SharedFieldPtr> _ColumnValues;
     std::vector<SharedFieldPtr> _CellValues;
+
+	friend class FieldContainer;
+
+    ExampleTableModel &operator =(const ExampleTableModel &source)
+	{
+		return *this;
+	}
 public:
 
     // Creates some functions to do what the Table requires to be done
@@ -415,7 +428,15 @@ public:
 
     ******************************************************/
 
-    ExampleTableModel()
+	static FieldContainerType  _type;
+
+	ExampleTableModel(const ExampleTableModel& source) : Inherited(source),
+        _ColumnValues(source._ColumnValues),
+        _CellValues(source._CellValues)
+    {
+    }
+
+    ExampleTableModel() : Inherited()
     {
         // Creates the lists within column/cell values and adds data (1d representation of 2d array basically)
         _ColumnValues.push_back(SharedFieldPtr(new SFString("Column String")));
@@ -453,6 +474,19 @@ public:
     {
     }
 };
+
+FieldContainerType ExampleTableModel::_type("ExampleTableModel",
+                                     "AbstractTableModel",
+                                      NULL,
+                                      (PrototypeCreateF) &ExampleTableModel::createEmpty,
+                                      NULL,
+									  NULL,
+                                      0);
+
+OSG_FIELD_CONTAINER_INL_DEF(ExampleTableModel::Self, ExampleTableModel::PtrType)
+OSG_FIELD_CONTAINER_DEF(ExampleTableModel::Self, ExampleTableModel::PtrType)
+typedef ExampleTableModel::PtrType ExampleTableModelPtr;
+
 
 int main(int argc, char **argv)
 {
@@ -2200,10 +2234,10 @@ PanelPtr StatePanelCreator::createTablePanel(void)
 {
     // Create TablePtr
     TablePtr TheTable = Table::create();
-    TheTable->setModel(TableModelPtr(new ExampleTableModel()));
-    beginEditCP(TheTable, Table::PreferredSizeFieldMask);
+    beginEditCP(TheTable, Table::PreferredSizeFieldMask | Table::ModelFieldMask);
         TheTable->setPreferredSize(Vec2f(500, 500));
-    endEditCP(TheTable, Table::PreferredSizeFieldMask);
+        TheTable->setModel(ExampleTableModel::create());
+    endEditCP(TheTable, Table::PreferredSizeFieldMask | Table::ModelFieldMask);
     TheTable->updateLayout();
 
     /******************************************************

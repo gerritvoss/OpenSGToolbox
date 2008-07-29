@@ -39,25 +39,22 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+#include "Models/OSGTableColumnModel.h"
+#include "Models/OSGTableModel.h"
 
 OSG_BEGIN_NAMESPACE
 
 inline
 void Table::addColumn(TableColumnPtr aColumn)
 {
-    _ColumnModel->addColumn(aColumn);
-}
-
-inline
-TableColumnModelPtr Table::getColumnModel(void) const
-{
-    return _ColumnModel;
+    getColumnModel()->addColumn(aColumn);
 }
 
 inline
 bool Table::getColumnSelectionAllowed(void) const
 {
-    return _ColumnModel->getColumnSelectionAllowed();
+    return getColumnModel()->getColumnSelectionAllowed();
 }
 
 inline
@@ -79,27 +76,21 @@ ComponentPtr Table::getEditorComponent(void) const
 }
 
 inline
-TableModelPtr Table::getModel(void) const
-{
-    return _Model;
-}
-
-inline
 UInt32 Table::getRowCount(void) const
 {
-    return _Model->getRowCount();
+    return getModel()->getRowCount();
 }
 
 inline
 UInt32 Table::getColumnCount(void) const
 {
-    return _Model->getColumnCount();
+    return getModel()->getColumnCount();
 }
 
 inline
 SharedFieldPtr Table::getColumnValue(const UInt32& column) const
 {
-    return _Model->getColumnValue(column);
+    return getModel()->getColumnValue(column);
 }
 
 inline
@@ -125,19 +116,19 @@ ListSelectionModelPtr Table::getSelectionModel(void) const
 inline
 SharedFieldPtr Table::getValueAt(const UInt32& row, const UInt32& column) const
 {
-    return _Model->getValueAt(row, column);
+    return getModel()->getValueAt(row, column);
 }
 
 inline
 bool Table::isCellEditable(const UInt32& row, const UInt32& column) const
 {
-    return _Model->isCellEditable(row, column);
+    return getModel()->isCellEditable(row, column);
 }
 
 inline
 bool Table::isColumnSelected(const UInt32& column) const
 {
-    return _ColumnModel->getSelectionModel()->isSelectedIndex(column);
+    return getColumnModel()->getSelectionModel()->isSelectedIndex(column);
 }
 
 inline
@@ -155,9 +146,9 @@ bool Table::isRowSelected(const UInt32& row) const
 inline
 void Table::setColumnSelectionAllowed(bool columnSelectionAllowed)
 {
-    _ColumnModel->setColumnSelectionAllowed(columnSelectionAllowed);
+    getColumnModel()->setColumnSelectionAllowed(columnSelectionAllowed);
     _RowSelectionModel->clearSelection();
-    _ColumnModel->getSelectionModel()->clearSelection();
+    getColumnModel()->getSelectionModel()->clearSelection();
 }
 
 inline
@@ -175,7 +166,7 @@ void Table::setEditingRow(const Int32& aRow)
 inline
 const FieldType* Table::getColumnType(const UInt32& column)
 {
-    return _Model->getColumnType(column);
+    return getModel()->getColumnType(column);
 }
 
 inline
@@ -199,7 +190,7 @@ void Table::setRowSelectionInterval(const UInt32& index0, const UInt32& index1)
 inline
 void Table::setColumnSelectionInterval(const UInt32& index0, const UInt32& index1)
 {
-    _ColumnModel->getSelectionModel()->setSelectionInterval(index0, index1);
+    getColumnModel()->getSelectionModel()->setSelectionInterval(index0, index1);
 }
 
 inline
@@ -217,19 +208,19 @@ bool Table::isCellSelected(const UInt32& row, const UInt32& column) const
 inline
 void Table::moveColumn(const UInt32& column, const UInt32& targetColumn)
 {
-    _ColumnModel->moveColumn(column, targetColumn);
+    getColumnModel()->moveColumn(column, targetColumn);
 }
 
 inline
 void Table::removeColumn(TableColumnPtr aColumn)
 {
-    _ColumnModel->removeColumn(aColumn);
+    getColumnModel()->removeColumn(aColumn);
 }
 
 inline
 void Table::removeColumnSelectionInterval(const UInt32& index0, const UInt32& index1)
 {
-    _ColumnModel->getSelectionModel()->removeIndexInterval(index0, index1);
+    getColumnModel()->getSelectionModel()->removeIndexInterval(index0, index1);
 }
 
 inline
@@ -241,13 +232,13 @@ Int32 Table::getSelectedRow(void) const
 inline
 Int32 Table::getSelectedColumn(void) const
 {
-    return _ColumnModel->getSelectionModel()->getMinSelectionIndex();
+    return getColumnModel()->getSelectionModel()->getMinSelectionIndex();
 }
 
 inline
 void Table::addColumnSelectionInterval(const UInt32& index0, const UInt32& index1)
 {
-    _ColumnModel->getSelectionModel()->addSelectionInterval(index0, index1);
+    getColumnModel()->getSelectionModel()->addSelectionInterval(index0, index1);
 }
 
 inline
@@ -259,13 +250,13 @@ void Table::addRowSelectionInterval(const UInt32& index0, const UInt32& index1)
 inline
 void Table::setValueAt(SharedFieldPtr aValue, const UInt32& row, const UInt32& column)
 {
-    _Model->setValueAt(aValue, row, column);
+    getModel()->setValueAt(aValue, row, column);
 }
 
 inline
 Int32 Table::columnAtPoint(const Pnt2f& point)
 {
-    return _ColumnModel->getColumnIndexAtX(point.x());
+    return getColumnModel()->getColumnIndexAtX(point.x());
 }
 
 inline

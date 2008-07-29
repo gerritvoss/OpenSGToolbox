@@ -103,6 +103,20 @@ SFTableHeaderPtr *TableBase::getSFHeader(void)
     return &_sfHeader;
 }
 
+//! Get the Table::_sfModel field.
+inline
+SFTableModelPtr *TableBase::getSFModel(void)
+{
+    return &_sfModel;
+}
+
+//! Get the Table::_sfColumnModel field.
+inline
+SFTableColumnModelPtr *TableBase::getSFColumnModel(void)
+{
+    return &_sfColumnModel;
+}
+
 //! Get the Table::_mfTable field.
 inline
 MFComponentPtr *TableBase::getMFTable(void)
@@ -193,6 +207,48 @@ inline
 void TableBase::setHeader(const TableHeaderPtr &value)
 {
     _sfHeader.setValue(value);
+}
+
+//! Get the value of the Table::_sfModel field.
+inline
+TableModelPtr &TableBase::getModel(void)
+{
+    return _sfModel.getValue();
+}
+
+//! Get the value of the Table::_sfModel field.
+inline
+const TableModelPtr &TableBase::getModel(void) const
+{
+    return _sfModel.getValue();
+}
+
+//! Set the value of the Table::_sfModel field.
+inline
+void TableBase::setModel(const TableModelPtr &value)
+{
+    _sfModel.setValue(value);
+}
+
+//! Get the value of the Table::_sfColumnModel field.
+inline
+TableColumnModelPtr &TableBase::getColumnModel(void)
+{
+    return _sfColumnModel.getValue();
+}
+
+//! Get the value of the Table::_sfColumnModel field.
+inline
+const TableColumnModelPtr &TableBase::getColumnModel(void) const
+{
+    return _sfColumnModel.getValue();
+}
+
+//! Set the value of the Table::_sfColumnModel field.
+inline
+void TableBase::setColumnModel(const TableColumnModelPtr &value)
+{
+    _sfColumnModel.setValue(value);
 }
 
 //! Get the value of the Table::_sfAutoCreateColumnsFromModel field.

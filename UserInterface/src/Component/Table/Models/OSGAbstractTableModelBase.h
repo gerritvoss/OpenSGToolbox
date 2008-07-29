@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TableHeader
+ **     class AbstractTableModel
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTABLEHEADERBASE_H_
-#define _OSGTABLEHEADERBASE_H_
+#ifndef _OSGABSTRACTTABLEMODELBASE_H_
+#define _OSGABSTRACTTABLEMODELBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,58 +65,28 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGTableModel.h" // Parent
 
-#include "Component/Table/OSGTableFields.h" // Table type
-#include "Models/OSGTableColumnModelFields.h" // ColumnModel type
-#include <OpenSG/OSGBoolFields.h> // ReorderingAllowed type
-#include <OpenSG/OSGBoolFields.h> // ResizingAllowed type
-#include <OpenSG/OSGUInt32Fields.h> // ResizingCursorDriftAllowance type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DefaultMarginDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // Margins type
-#include "Component/OSGComponent.h" // ColumnHeaders type
 
-#include "OSGTableHeaderFields.h"
+#include "OSGAbstractTableModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class TableHeader;
+class AbstractTableModel;
 class BinaryDataHandler;
 
-//! \brief TableHeader Base Class.
+//! \brief AbstractTableModel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModelBase : public TableModel
 {
   private:
 
-    typedef Container    Inherited;
+    typedef TableModel    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TableHeaderPtr  Ptr;
-
-    enum
-    {
-        TableFieldId                        = Inherited::NextFieldId,
-        ColumnModelFieldId                  = TableFieldId                        + 1,
-        ReorderingAllowedFieldId            = ColumnModelFieldId                  + 1,
-        ResizingAllowedFieldId              = ReorderingAllowedFieldId            + 1,
-        ResizingCursorDriftAllowanceFieldId = ResizingAllowedFieldId              + 1,
-        DefaultMarginDrawObjectFieldId      = ResizingCursorDriftAllowanceFieldId + 1,
-        MarginsFieldId                      = DefaultMarginDrawObjectFieldId      + 1,
-        ColumnHeadersFieldId                = MarginsFieldId                      + 1,
-        NextFieldId                         = ColumnHeadersFieldId                + 1
-    };
-
-    static const OSG::BitVector TableFieldMask;
-    static const OSG::BitVector ColumnModelFieldMask;
-    static const OSG::BitVector ReorderingAllowedFieldMask;
-    static const OSG::BitVector ResizingAllowedFieldMask;
-    static const OSG::BitVector ResizingCursorDriftAllowanceFieldMask;
-    static const OSG::BitVector DefaultMarginDrawObjectFieldMask;
-    static const OSG::BitVector MarginsFieldMask;
-    static const OSG::BitVector ColumnHeadersFieldMask;
+    typedef AbstractTableModelPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -140,43 +110,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFTablePtr          *getSFTable          (void);
-           SFTableColumnModelPtr *getSFColumnModel    (void);
-           SFBool              *getSFReorderingAllowed(void);
-           SFBool              *getSFResizingAllowed(void);
-           SFUInt32            *getSFResizingCursorDriftAllowance(void);
-           SFUIDrawObjectCanvasPtr *getSFDefaultMarginDrawObject(void);
-
-           TablePtr            &getTable          (void);
-     const TablePtr            &getTable          (void) const;
-           TableColumnModelPtr &getColumnModel    (void);
-     const TableColumnModelPtr &getColumnModel    (void) const;
-           bool                &getReorderingAllowed(void);
-     const bool                &getReorderingAllowed(void) const;
-           bool                &getResizingAllowed(void);
-     const bool                &getResizingAllowed(void) const;
-           UInt32              &getResizingCursorDriftAllowance(void);
-     const UInt32              &getResizingCursorDriftAllowance(void) const;
-           UIDrawObjectCanvasPtr &getDefaultMarginDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDefaultMarginDrawObject(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setTable          ( const TablePtr &value );
-     void setColumnModel    ( const TableColumnModelPtr &value );
-     void setReorderingAllowed( const bool &value );
-     void setResizingAllowed( const bool &value );
-     void setResizingCursorDriftAllowance( const UInt32 &value );
-     void setDefaultMarginDrawObject( const UIDrawObjectCanvasPtr &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -193,73 +126,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  TableHeaderPtr      create          (void); 
-    static  TableHeaderPtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFTablePtr          _sfTable;
-    SFTableColumnModelPtr   _sfColumnModel;
-    SFBool              _sfReorderingAllowed;
-    SFBool              _sfResizingAllowed;
-    SFUInt32            _sfResizingCursorDriftAllowance;
-    SFUIDrawObjectCanvasPtr   _sfDefaultMarginDrawObject;
-    MFUIDrawObjectCanvasPtr   _mfMargins;
-    MFComponentPtr      _mfColumnHeaders;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TableHeaderBase(void);
-    TableHeaderBase(const TableHeaderBase &source);
+    AbstractTableModelBase(void);
+    AbstractTableModelBase(const AbstractTableModelBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableHeaderBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           MFUIDrawObjectCanvasPtr *getMFMargins        (void);
-           MFComponentPtr      *getMFColumnHeaders  (void);
-
-           UIDrawObjectCanvasPtr &getMargins        (UInt32 index);
-           MFUIDrawObjectCanvasPtr &getMargins        (void);
-     const MFUIDrawObjectCanvasPtr &getMargins        (void) const;
-           ComponentPtr        &getColumnHeaders  (UInt32 index);
-           MFComponentPtr      &getColumnHeaders  (void);
-     const MFComponentPtr      &getColumnHeaders  (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
+    virtual ~AbstractTableModelBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -267,13 +149,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TableHeaderBase *pOther,
+    void executeSyncImpl(      AbstractTableModelBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      TableHeaderBase *pOther,
+    void executeSyncImpl(      AbstractTableModelBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -298,12 +180,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TableHeaderBase &source);
+    void operator =(const AbstractTableModelBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -311,17 +192,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef TableHeaderBase *TableHeaderBaseP;
+typedef AbstractTableModelBase *AbstractTableModelBaseP;
 
-typedef osgIF<TableHeaderBase::isNodeCore,
-              CoredNodePtr<TableHeader>,
+typedef osgIF<AbstractTableModelBase::isNodeCore,
+              CoredNodePtr<AbstractTableModel>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TableHeaderNodePtr;
+              >::_IRet AbstractTableModelNodePtr;
 
-typedef RefPtr<TableHeaderPtr> TableHeaderRefPtr;
+typedef RefPtr<AbstractTableModelPtr> AbstractTableModelRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGTABLEHEADERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGABSTRACTTABLEMODELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGTABLEHEADERBASE_H_ */
+#endif /* _OSGABSTRACTTABLEMODELBASE_H_ */

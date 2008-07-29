@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  TableHeaderBase::TableFieldMask = 
     (TypeTraits<BitVector>::One << TableHeaderBase::TableFieldId);
 
+const OSG::BitVector  TableHeaderBase::ColumnModelFieldMask = 
+    (TypeTraits<BitVector>::One << TableHeaderBase::ColumnModelFieldId);
+
 const OSG::BitVector  TableHeaderBase::ReorderingAllowedFieldMask = 
     (TypeTraits<BitVector>::One << TableHeaderBase::ReorderingAllowedFieldId);
 
@@ -93,6 +96,9 @@ const OSG::BitVector TableHeaderBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var TablePtr        TableHeaderBase::_sfTable
+    
+*/
+/*! \var TableColumnModelPtr TableHeaderBase::_sfColumnModel
     
 */
 /*! \var bool            TableHeaderBase::_sfReorderingAllowed
@@ -123,6 +129,11 @@ FieldDescription *TableHeaderBase::_desc[] =
                      TableFieldId, TableFieldMask,
                      false,
                      (FieldAccessMethod) &TableHeaderBase::getSFTable),
+    new FieldDescription(SFTableColumnModelPtr::getClassType(), 
+                     "ColumnModel", 
+                     ColumnModelFieldId, ColumnModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableHeaderBase::getSFColumnModel),
     new FieldDescription(SFBool::getClassType(), 
                      "ReorderingAllowed", 
                      ReorderingAllowedFieldId, ReorderingAllowedFieldMask,
@@ -231,6 +242,7 @@ void TableHeaderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 TableHeaderBase::TableHeaderBase(void) :
     _sfTable                  (TablePtr(NullFC)), 
+    _sfColumnModel            (TableColumnModelPtr(NullFC)), 
     _sfReorderingAllowed      (bool(true)), 
     _sfResizingAllowed        (bool(true)), 
     _sfResizingCursorDriftAllowance(UInt32(1)), 
@@ -247,6 +259,7 @@ TableHeaderBase::TableHeaderBase(void) :
 
 TableHeaderBase::TableHeaderBase(const TableHeaderBase &source) :
     _sfTable                  (source._sfTable                  ), 
+    _sfColumnModel            (source._sfColumnModel            ), 
     _sfReorderingAllowed      (source._sfReorderingAllowed      ), 
     _sfResizingAllowed        (source._sfResizingAllowed        ), 
     _sfResizingCursorDriftAllowance(source._sfResizingCursorDriftAllowance), 
@@ -272,6 +285,11 @@ UInt32 TableHeaderBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TableFieldMask & whichField))
     {
         returnValue += _sfTable.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+    {
+        returnValue += _sfColumnModel.getBinSize();
     }
 
     if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
@@ -318,6 +336,11 @@ void TableHeaderBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTable.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+    {
+        _sfColumnModel.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
     {
         _sfReorderingAllowed.copyToBin(pMem);
@@ -359,6 +382,11 @@ void TableHeaderBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TableFieldMask & whichField))
     {
         _sfTable.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+    {
+        _sfColumnModel.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
@@ -404,6 +432,9 @@ void TableHeaderBase::executeSyncImpl(      TableHeaderBase *pOther,
     if(FieldBits::NoField != (TableFieldMask & whichField))
         _sfTable.syncWith(pOther->_sfTable);
 
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+        _sfColumnModel.syncWith(pOther->_sfColumnModel);
+
     if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
         _sfReorderingAllowed.syncWith(pOther->_sfReorderingAllowed);
 
@@ -434,6 +465,9 @@ void TableHeaderBase::executeSyncImpl(      TableHeaderBase *pOther,
 
     if(FieldBits::NoField != (TableFieldMask & whichField))
         _sfTable.syncWith(pOther->_sfTable);
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+        _sfColumnModel.syncWith(pOther->_sfColumnModel);
 
     if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
         _sfReorderingAllowed.syncWith(pOther->_sfReorderingAllowed);

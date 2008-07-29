@@ -96,30 +96,17 @@ TableColumnPtr TableHeader::columnAtPoint(const Pnt2f& point) const
 }
 
 
-void TableHeader::setColumnModel(TableColumnModelPtr columnModel)
-{
-    if(_ColumnModel.get() != NULL)
-    {
-        _ColumnModel->removeColumnModelListener(&_ColumnModelListener);
-    }
-    _ColumnModel = columnModel;
-    updateColumnHeadersComponents();
-    if(_ColumnModel.get() != NULL)
-    {
-        _ColumnModel->addColumnModelListener(&_ColumnModelListener);
-    }
-}
 
 void TableHeader::updateColumnHeadersComponents(void)
 {
-    if(_ColumnModel == NULL) return;
+    if(getColumnModel() == NullFC) return;
 
-    std::vector<UInt32> SelectedColumns = _ColumnModel->getSelectedColumns();
+    std::vector<UInt32> SelectedColumns = getColumnModel()->getSelectedColumns();
     std::vector<UInt32>::iterator SearchItor;
     bool isSelected(false);
     beginEditCP(TableHeaderPtr(this) , ColumnHeadersFieldMask);
         getColumnHeaders().clear();
-        for(UInt32 i(0) ; i<_ColumnModel->getColumnCount(); ++i)
+        for(UInt32 i(0) ; i<getColumnModel()->getColumnCount(); ++i)
         {
             SearchItor = std::find(SelectedColumns.begin(), SelectedColumns.end(), i);
             
@@ -127,7 +114,7 @@ void TableHeader::updateColumnHeadersComponents(void)
 
             //TODO: Add Column Focusing
             getColumnHeaders().push_back(
-            _DefaultTableHeaderRenderer->getTableCellRendererComponent(getTable(), _ColumnModel->getColumn(i)->getHeaderValue(), isSelected, false, 0, i)
+            _DefaultTableHeaderRenderer->getTableCellRendererComponent(getTable(), getColumnModel()->getColumn(i)->getHeaderValue(), isSelected, false, 0, i)
             );
         }
     endEditCP(TableHeaderPtr(this) , ColumnHeadersFieldMask);
@@ -160,7 +147,7 @@ void TableHeader::updateLayout(void)
     {
         beginEditCP(getColumnHeaders()[i], PositionFieldMask | SizeFieldMask);
             getColumnHeaders()[i]->setPosition( Pnt2f(BorderTopLeft.x() + CumulativeWidth, BorderTopLeft.y()) );
-            getColumnHeaders()[i]->setSize( Vec2f(_ColumnModel->getColumn(i)->getWidth(), getColumnHeaders()[i]->getPreferredSize().y()) );
+            getColumnHeaders()[i]->setSize( Vec2f(getColumnModel()->getColumn(i)->getWidth(), getColumnHeaders()[i]->getPreferredSize().y()) );
         endEditCP(getColumnHeaders()[i], PositionFieldMask | SizeFieldMask);
 
         Height = osgMax<UInt32>(Height, getColumnHeaders()[i]->getSize().y());
@@ -169,7 +156,7 @@ void TableHeader::updateLayout(void)
         //Add on the Margin
         if(i != getColumnHeaders().size()-1)
         {
-            CumulativeWidth += _ColumnModel->getColumnMargin();
+            CumulativeWidth += getColumnModel()->getColumnMargin();
         }
     }
     
@@ -207,14 +194,14 @@ void TableHeader::mousePressed(const MouseEvent& e)
         {
             CumulativeHeaderWidth += getColumnHeaders()[i]->getSize().x();
             if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
-               MousePosInComponent.x() <= CumulativeHeaderWidth + _ColumnModel->getColumnMargin() + getResizingCursorDriftAllowance())
+               MousePosInComponent.x() <= CumulativeHeaderWidth + getColumnModel()->getColumnMargin() + getResizingCursorDriftAllowance())
             {
                 getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_MarginDraggedListener));
                 getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_MarginDraggedListener));
                 _ResizingColumn = i;
                 return;
             }
-            CumulativeHeaderWidth += _ColumnModel->getColumnMargin();
+            CumulativeHeaderWidth += getColumnModel()->getColumnMargin();
         }
     }
     Inherited::mousePressed(e);
@@ -239,12 +226,12 @@ void TableHeader::checkMouseMargins(const MouseEvent& e)
         {
             CumulativeHeaderWidth += getColumnHeaders()[i]->getSize().x();
             if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
-               MousePosInComponent.x() <= CumulativeHeaderWidth + _ColumnModel->getColumnMargin() + getResizingCursorDriftAllowance())
+               MousePosInComponent.x() <= CumulativeHeaderWidth + getColumnModel()->getColumnMargin() + getResizingCursorDriftAllowance())
             {
                 getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
                 return;
             }
-            CumulativeHeaderWidth += _ColumnModel->getColumnMargin();
+            CumulativeHeaderWidth += getColumnModel()->getColumnMargin();
         }
     }
     getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
@@ -265,22 +252,21 @@ TableHeader::TableHeader(void) :
 
 TableHeader::TableHeader(const TableHeader &source) :
     Inherited(source),
-    _ColumnModel(source._ColumnModel),
     _DefaultTableHeaderRenderer(source._DefaultTableHeaderRenderer),
     _ColumnModelListener(this),
     _MarginDraggedListener(this)
 {
-    if(_ColumnModel.get() != NULL)
+    if(getColumnModel() != NullFC)
     {
-        _ColumnModel->addColumnModelListener(&_ColumnModelListener);
+        getColumnModel()->addColumnModelListener(&_ColumnModelListener);
     }
 }
 
 TableHeader::~TableHeader(void)
 {
-    if(_ColumnModel.get() != NULL)
+    if(getColumnModel() != NullFC)
     {
-        _ColumnModel->removeColumnModelListener(&_ColumnModelListener);
+        getColumnModel()->removeColumnModelListener(&_ColumnModelListener);
     }
 }
 
@@ -289,6 +275,20 @@ TableHeader::~TableHeader(void)
 void TableHeader::changed(BitVector whichField, UInt32 origin)
 {   
     Inherited::changed(whichField, origin);
+
+    if(whichField & ColumnModelFieldMask)
+    {
+        //if(_ColumnModel.get() != NULL)
+        //{
+        //    getColumnModel()->removeColumnModelListener(&_ColumnModelListener);
+        //}
+        //_ColumnModel = columnModel;
+        updateColumnHeadersComponents();
+        if(getColumnModel() != NullFC)
+        {
+            getColumnModel()->addColumnModelListener(&_ColumnModelListener);
+        }
+    }
 }
 
 void TableHeader::dump(      UInt32    , 
@@ -342,7 +342,7 @@ void TableHeader::MarginDraggedListener::mouseDragged(const MouseEvent& e)
 		Pnt2f MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(_TableHeader), e.getViewport());
 
 
-        TableColumnPtr TheColumn(_TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn));
+        TableColumnPtr TheColumn(_TableHeader->getColumnModel()->getColumn(_TableHeader->_ResizingColumn));
         Real32 NewWidth(MousePosInComponent.x() - _TableHeader->getColumnHeaders()[_TableHeader->_ResizingColumn]->getPosition().x());
 
         if(NewWidth <= 0 || NewWidth < TheColumn->getMinWidth())
