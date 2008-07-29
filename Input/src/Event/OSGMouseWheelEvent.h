@@ -33,13 +33,13 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGInputDef.h"
 
-#include "Event/OSGEvent.h"
+#include "Event/OSGInputEvent.h"
 #include <OpenSG/OSGVector.h>
 #include <OpenSG/OSGViewport.h>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING MouseWheelEvent : public Event
+class OSG_INPUTLIB_DLLMAPPING MouseWheelEvent : public InputEvent
 {
     /*=========================  PUBLIC  ===============================*/
   public:
@@ -52,7 +52,7 @@ class OSG_INPUTLIB_DLLMAPPING MouseWheelEvent : public Event
     Pnt2f getLocation(void) const;
     ViewportPtr getViewport(void) const;
     
-    MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType, Pnt2f Location, ViewportPtr TheViewport);
+    MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, Int32 WheelRotation, ScrollType TheScrollType, Pnt2f Location, ViewportPtr TheViewport);
     
     virtual const EventType &getType(void) const;
     

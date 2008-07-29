@@ -54,8 +54,8 @@ ViewportPtr MouseWheelEvent::getViewport(void) const
 }
 
 inline
-MouseWheelEvent::MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType, Pnt2f Location, ViewportPtr TheViewport)
-: Event(Source, TimeStamp),
+MouseWheelEvent::MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, Int32 WheelRotation, ScrollType TheScrollType, Pnt2f Location, ViewportPtr TheViewport)
+: InputEvent(Source, TimeStamp,Producer),
 _WheelRotation(WheelRotation),
 _ScrollType(TheScrollType),
 _Location(Location),

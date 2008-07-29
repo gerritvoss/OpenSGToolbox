@@ -33,14 +33,14 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGInputDef.h"
 
-#include "Event/OSGEvent.h"
+#include "Event/OSGInputEvent.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGWindow.h>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING KeyEvent : public Event
+class OSG_INPUTLIB_DLLMAPPING KeyEvent : public InputEvent
 {
   /*=========================  PUBLIC  ===============================*/
   public:
@@ -220,7 +220,7 @@ class OSG_INPUTLIB_DLLMAPPING KeyEvent : public Event
 	UChar8 getKeyChar(void) const;
 
     WindowPtr getWindow(void) const;
-    KeyEvent(FieldContainerPtr Source, Time TimeStamp, Key TheKey, UInt32 Modifiers, WindowPtr TheWindow);
+    KeyEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, Key TheKey, UInt32 Modifiers, WindowPtr TheWindow);
     
     virtual const EventType &getType(void) const;
     

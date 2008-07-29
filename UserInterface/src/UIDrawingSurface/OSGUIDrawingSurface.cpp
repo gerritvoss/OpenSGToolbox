@@ -281,7 +281,7 @@ void UIDrawingSurface::mouseClicked(const MouseEvent& e)
 	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
-	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(),e.getEventProducer(), e.getButton(), e.getClickCount(),
 		    ResultMouseLoc,e.getViewport());
 
 	    checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
@@ -302,7 +302,7 @@ void UIDrawingSurface::mouseEntered(const MouseEvent& e)
 	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
-		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(),e.getEventProducer(), e.getButton(), e.getClickCount(),
 			ResultMouseLoc,e.getViewport());
 
 		checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
@@ -314,7 +314,7 @@ void UIDrawingSurface::mouseExited(const MouseEvent& e)
 	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
-		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), e.getButton(), e.getClickCount(),
 			ResultMouseLoc,e.getViewport());
 
 		checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
@@ -326,7 +326,7 @@ void UIDrawingSurface::mousePressed(const MouseEvent& e)
 	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
-	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), e.getButton(), e.getClickCount(),
 		    ResultMouseLoc,e.getViewport());
 
 	    checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
@@ -351,7 +351,7 @@ void UIDrawingSurface::mouseReleased(const MouseEvent& e)
 	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
-	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), e.getButton(), e.getClickCount(),
 		    ResultMouseLoc,e.getViewport());
 
 	    checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
@@ -373,7 +373,7 @@ void UIDrawingSurface::mouseMoved(const MouseEvent& e)
 	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
-	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), e.getButton(), e.getClickCount(),
 		    ResultMouseLoc,e.getViewport());
 
 	    checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
@@ -394,7 +394,7 @@ void UIDrawingSurface::mouseDragged(const MouseEvent& e)
 	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
-	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), e.getButton(), e.getClickCount(),
 		    ResultMouseLoc,e.getViewport());
 
 	    checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
@@ -415,7 +415,7 @@ void UIDrawingSurface::mouseWheelMoved(const MouseWheelEvent& e)
 	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
-		MouseWheelEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getWheelRotation(), e.getScrollType(),
+		MouseWheelEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), e.getWheelRotation(), e.getScrollType(),
 			ResultMouseLoc,e.getViewport());
 
 	    checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
@@ -455,7 +455,7 @@ void UIDrawingSurface::keyTyped(const KeyEvent& e)
 	}
 }
 
-void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLocation, ViewportPtr TheViewport)
+void UIDrawingSurface::checkMouseEnterExit(const InputEvent& e, const Pnt2f& MouseLocation, ViewportPtr TheViewport)
 {
 	for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
 	{
@@ -466,7 +466,7 @@ void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLoc
 			{
 				//Mouse has exited the frame
 				getInternalWindows()[i]->setMouseContained(false);
-				MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
+				MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
 				getInternalWindows()[i]->mouseExited(ExitedEvent);
 			}
 		}
@@ -477,7 +477,7 @@ void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLoc
 			{
 				//Mouse has entered the frame
 			    getInternalWindows()[i]->setMouseContained(true);
-				MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation, TheViewport);
+				MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), MouseEvent::NO_BUTTON,0,MouseLocation, TheViewport);
 				getInternalWindows()[i]->mouseEntered(EnteredEvent);
 			}
 		}

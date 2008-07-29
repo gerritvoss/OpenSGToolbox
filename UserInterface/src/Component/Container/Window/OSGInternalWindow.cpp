@@ -194,11 +194,7 @@ void InternalWindow::close(void)
 
 bool InternalWindow::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
 {
-    if(!getFocusable())
-    {
-        return false;
-    }
-    else if(ComponentPtr(this) == NewFocusedComponent)
+	if(ComponentPtr(this) == NewFocusedComponent)
     {
 		return true;
     }
@@ -214,36 +210,30 @@ bool InternalWindow::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
 
 bool InternalWindow::takeFocus(bool Temporary)
 {
-    if(!getFocusable())
-    {
-        return false;
-    }
-    else
-    {
-		if(getFocused() &&
-		   getDrawingSurface() != NullFC &&
-		   getDrawingSurface()->getFocusedWindow() == InternalWindowPtr(this))
-		{
-			return true;
-		}
-        beginEditCP(InternalWindowPtr(this), FocusedFieldMask);
-           setFocused(true);
-        endEditCP(InternalWindowPtr(this), FocusedFieldMask);
-		if(Temporary || getDrawingSurface() == NullFC)
-		{
-            focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, NullFC));
-		}
-		else
-		{
-			if(getDrawingSurface()->getFocusedWindow() != NullFC)
-			{
-				getDrawingSurface()->getFocusedWindow()->giveFocus(InternalWindowPtr(this));
-			}
-		    getDrawingSurface()->setFocusedWindow(InternalWindowPtr(this));
-            focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getDrawingSurface()->getFocusedWindow()));
-		}
+    
+	if(getFocused() &&
+	   getDrawingSurface() != NullFC &&
+	   getDrawingSurface()->getFocusedWindow() == InternalWindowPtr(this))
+	{
 		return true;
-    }
+	}
+    beginEditCP(InternalWindowPtr(this), FocusedFieldMask);
+       setFocused(true);
+    endEditCP(InternalWindowPtr(this), FocusedFieldMask);
+	if(Temporary || getDrawingSurface() == NullFC)
+	{
+        focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, NullFC));
+	}
+	else
+	{
+		if(getDrawingSurface()->getFocusedWindow() != NullFC)
+		{
+			getDrawingSurface()->getFocusedWindow()->giveFocus(InternalWindowPtr(this));
+		}
+	    getDrawingSurface()->setFocusedWindow(InternalWindowPtr(this));
+        focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getDrawingSurface()->getFocusedWindow()));
+	}
+	return true;
 }
 
 InternalWindowPtr &InternalWindow::getParentWindow(void)

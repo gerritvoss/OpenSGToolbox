@@ -151,11 +151,12 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
-		name="Focusable"
-		type="bool"
+		name="TransferHandler"
+		type="TransferHandlerPtr"
 		cardinality="single"
 		visibility="external"
-		defaultValue="true"
+		defaultValue="NullFC"
+		header="DragAndDrop/OSGTransferHandlerFields.h"
 		access="public"
 	>
 	</Field>

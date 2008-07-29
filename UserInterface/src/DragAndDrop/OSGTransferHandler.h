@@ -36,40 +36,36 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGUIDRAWINGSURFACE_H_
-#define _OSGUIDRAWINGSURFACE_H_
+#ifndef _OSGTRANSFERHANDLER_H_
+#define _OSGTRANSFERHANDLER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "OSGUIDrawingSurfaceBase.h"
 
-
-#include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGMouseListener.h>
-#include <OpenSG/Input/OSGMouseWheelListener.h>
-#include <OpenSG/Input/OSGMouseMotionListener.h>
+#include "OSGTransferHandlerBase.h"
+#include "Component/OSGComponentFields.h"
+#include "OSGTransferableFields.h"
+#include "OSGDataFlavorFields.h"
+#include <OpenSG/Input/OSGInputEvent.h>
+#include <vector>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief UIDrawingSurface class. See \ref 
-           PageUserInterfaceUIDrawingSurface for a description.
+/*! \brief TransferHandler class. See \ref 
+           PageUserInterfaceTransferHandler for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurfaceBase,
-	public MouseListener,
-	public KeyListener,
-	public MouseWheelListener,
-	public MouseMotionListener
+class OSG_USERINTERFACELIB_DLLMAPPING TransferHandler : public TransferHandlerBase
 {
   private:
 
-    typedef UIDrawingSurfaceBase Inherited;
+    typedef TransferHandlerBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
+	  enum TranferActions{TRANSFER_NONE=0, TRANSFER_COPY=1, TRANSFER_MOVE=2, TRANSFER_COPY_AND_MOVE=3};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -88,59 +84,57 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
 
     /*! \}                                                                 */
 
+	//Indicates whether a component would accept an import of the given set of data flavors prior to actually attempting to import it.
+	virtual bool canImport(ComponentPtr comp, std::vector<DataFlavorPtr> transferFlavors) const = 0;
 
-    void detachFromEventProducer(void);
+	//Creates a Transferable to use as the source for a data transfer.
+	virtual TransferablePtr createTransferable(ComponentPtr c) const = 0;
 
-	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
+	//Causes the Swing drag support to be initiated.
+	virtual void exportAsDrag(ComponentPtr comp, const InputEvent& e, UInt32 action) const = 0;
 
-	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
+	//Invoked after data has been exported.
+	virtual void exportDone(ComponentPtr source, TransferablePtr data, UInt32 action) const = 0;
 
-	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+	//Causes a transfer from the given component to the given clipboard.
+	virtual void exportToClipboard(ComponentPtr comp, UInt32 action) const = 0;
 
-	//Key Events
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
+	//Returns an Action that behaves like a 'copy' operation.
+	//static Action getCopyAction(void) = 0;
 
-    virtual Pnt2f getMousePosition(void) const;
+	//Returns an Action that behaves like a 'cut' operation.
+	//static Action getCutAction(void) = 0;
 
-	virtual UInt32 getNumWindowLayers(void) const;
-	virtual Int32 getWindowLayer(InternalWindowPtr TheWindow) const;
-	virtual InternalWindowPtr getWindowAtLayer(const UInt32& Layer) const;
-	virtual void setWindowToLayer(InternalWindowPtr TheWindow, const UInt32& Layer);
-	virtual void moveWindowUp(InternalWindowPtr TheWindow);
-	virtual void moveWindowDown(InternalWindowPtr TheWindow);
-	virtual void moveWindowToTop(InternalWindowPtr TheWindow);
-	virtual void moveWindowToBottom(InternalWindowPtr TheWindow);
+	//Returns an Action that behaves like a 'paste' operation.
+	//static Action getPasteAction(void) = 0;
 
-	virtual void openWindow(InternalWindowPtr TheWindow, const Int32 Layer = -1);
-	virtual void closeWindow(InternalWindowPtr TheWindow);
-    /*=========================  PROTECTED  ===============================*/
+	//Returns the type of transfer actions supported by the source.
+	virtual UInt32 getSourceActions(ComponentPtr c) const = 0;
+
+	//Returns an object that establishes the look of a transfer.
+	virtual ComponentPtr getVisualRepresentation(TransferablePtr t) const = 0;
+
+	//Causes a transfer to a component from a clipboard or a DND drop operation.
+	virtual bool importData(ComponentPtr comp, TransferablePtr t) const = 0;
+
+  /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in UIDrawingSurfaceBase.
+    // Variables should all be in TransferHandlerBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    UIDrawingSurface(void);
-    UIDrawingSurface(const UIDrawingSurface &source);
+    TransferHandler(void);
+    TransferHandler(const TransferHandler &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIDrawingSurface(void); 
+    virtual ~TransferHandler(void); 
 
     /*! \}                                                                 */
     
@@ -148,25 +142,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
   private:
 
     friend class FieldContainer;
-    friend class UIDrawingSurfaceBase;
+    friend class TransferHandlerBase;
 
     static void initMethod(void);
 
-	void checkMouseEnterExit(const InputEvent& e, const Pnt2f& MouseLocation, ViewportPtr TheViewport);
-
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const UIDrawingSurface &source);
-	
+    void operator =(const TransferHandler &source);
 };
 
-typedef UIDrawingSurface *UIDrawingSurfaceP;
+typedef TransferHandler *TransferHandlerP;
 
 OSG_END_NAMESPACE
 
-#include "OSGUIDrawingSurfaceBase.inl"
-#include "OSGUIDrawingSurface.inl"
+#include "OSGTransferHandlerBase.inl"
+#include "OSGTransferHandler.inl"
 
-#define OSGUIDRAWINGSURFACE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGTRANSFERHANDLER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGUIDRAWINGSURFACE_H_ */
+#endif /* _OSGTRANSFERHANDLER_H_ */

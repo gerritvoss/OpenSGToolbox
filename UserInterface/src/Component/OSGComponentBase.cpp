@@ -110,8 +110,8 @@ const OSG::BitVector  ComponentBase::DisabledBorderFieldMask =
 const OSG::BitVector  ComponentBase::DisabledBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::DisabledBackgroundFieldId);
 
-const OSG::BitVector  ComponentBase::FocusableFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::FocusableFieldId);
+const OSG::BitVector  ComponentBase::TransferHandlerFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::TransferHandlerFieldId);
 
 const OSG::BitVector  ComponentBase::FocusedBorderFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::FocusedBorderFieldId);
@@ -210,7 +210,7 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var LayerPtr        ComponentBase::_sfDisabledBackground
     
 */
-/*! \var bool            ComponentBase::_sfFocusable
+/*! \var TransferHandlerPtr ComponentBase::_sfTransferHandler
     
 */
 /*! \var BorderPtr       ComponentBase::_sfFocusedBorder
@@ -338,11 +338,11 @@ FieldDescription *ComponentBase::_desc[] =
                      DisabledBackgroundFieldId, DisabledBackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFDisabledBackground),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Focusable", 
-                     FocusableFieldId, FocusableFieldMask,
+    new FieldDescription(SFTransferHandlerPtr::getClassType(), 
+                     "TransferHandler", 
+                     TransferHandlerFieldId, TransferHandlerFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentBase::getSFFocusable),
+                     (FieldAccessMethod) &ComponentBase::getSFTransferHandler),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "FocusedBorder", 
                      FocusedBorderFieldId, FocusedBorderFieldMask,
@@ -499,7 +499,7 @@ ComponentBase::ComponentBase(void) :
     _sfBackground             (LayerPtr(NullFC)), 
     _sfDisabledBorder         (BorderPtr(NullFC)), 
     _sfDisabledBackground     (LayerPtr(NullFC)), 
-    _sfFocusable              (bool(true)), 
+    _sfTransferHandler        (TransferHandlerPtr(NullFC)), 
     _sfFocusedBorder          (BorderPtr(NullFC)), 
     _sfFocusedBackground      (LayerPtr(NullFC)), 
     _sfRolloverBorder         (BorderPtr(NullFC)), 
@@ -539,7 +539,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfBackground             (source._sfBackground             ), 
     _sfDisabledBorder         (source._sfDisabledBorder         ), 
     _sfDisabledBackground     (source._sfDisabledBackground     ), 
-    _sfFocusable              (source._sfFocusable              ), 
+    _sfTransferHandler        (source._sfTransferHandler        ), 
     _sfFocusedBorder          (source._sfFocusedBorder          ), 
     _sfFocusedBackground      (source._sfFocusedBackground      ), 
     _sfRolloverBorder         (source._sfRolloverBorder         ), 
@@ -646,9 +646,9 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDisabledBackground.getBinSize();
     }
 
-    if(FieldBits::NoField != (FocusableFieldMask & whichField))
+    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
     {
-        returnValue += _sfFocusable.getBinSize();
+        returnValue += _sfTransferHandler.getBinSize();
     }
 
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
@@ -810,9 +810,9 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfDisabledBackground.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (FocusableFieldMask & whichField))
+    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
     {
-        _sfFocusable.copyToBin(pMem);
+        _sfTransferHandler.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
@@ -973,9 +973,9 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDisabledBackground.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (FocusableFieldMask & whichField))
+    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
     {
-        _sfFocusable.copyFromBin(pMem);
+        _sfTransferHandler.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
@@ -1108,8 +1108,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
         _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
 
-    if(FieldBits::NoField != (FocusableFieldMask & whichField))
-        _sfFocusable.syncWith(pOther->_sfFocusable);
+    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
+        _sfTransferHandler.syncWith(pOther->_sfTransferHandler);
 
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
         _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
@@ -1211,8 +1211,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
         _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
 
-    if(FieldBits::NoField != (FocusableFieldMask & whichField))
-        _sfFocusable.syncWith(pOther->_sfFocusable);
+    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
+        _sfTransferHandler.syncWith(pOther->_sfTransferHandler);
 
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
         _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
@@ -1365,9 +1365,9 @@ SFLayerPtr *ComponentBase::getSFDisabledBackground(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFBool *ComponentBase::getSFFocusable(void)
+SFTransferHandlerPtr *ComponentBase::getSFTransferHandler(void)
 {
-    return &_sfFocusable;
+    return &_sfTransferHandler;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
@@ -1732,21 +1732,21 @@ void ComponentBase::setDisabledBackground(const LayerPtr &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-bool &ComponentBase::getFocusable(void)
+TransferHandlerPtr &ComponentBase::getTransferHandler(void)
 {
-    return _sfFocusable.getValue();
+    return _sfTransferHandler.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const bool &ComponentBase::getFocusable(void) const
+const TransferHandlerPtr &ComponentBase::getTransferHandler(void) const
 {
-    return _sfFocusable.getValue();
+    return _sfTransferHandler.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setFocusable(const bool &value)
+void ComponentBase::setTransferHandler(const TransferHandlerPtr &value)
 {
-    _sfFocusable.setValue(value);
+    _sfTransferHandler.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING

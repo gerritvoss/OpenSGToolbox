@@ -70,8 +70,8 @@ ViewportPtr MouseEvent::getViewport(void) const
 }
 
 inline
-MouseEvent::MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport) 
-: Event(Source, TimeStamp), _Button(Button), _ClickCount(ClickCount), _Location(Location),
+MouseEvent::MouseEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport) 
+: InputEvent(Source, TimeStamp,Producer), _Button(Button), _ClickCount(ClickCount), _Location(Location),
    _Viewport(TheViewport)
 {}
 

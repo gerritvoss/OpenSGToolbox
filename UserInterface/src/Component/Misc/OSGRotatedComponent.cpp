@@ -352,7 +352,7 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
 				getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 			{
 				Pnt2f MouseLoc(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition());
-				MouseEvent e(NullFC,getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NullFC);
+				MouseEvent e(NullFC,getSystemTime() , getParentWindow()->getDrawingSurface()->getEventProducer(),MouseEvent::NO_BUTTON,0,MouseLoc, NullFC);
 				checkMouseEnterExit(e,e.getLocation(),getInternalComponent(),getInternalComponent()->isContained(MouseLoc, true),e.getViewport());
 			}
         }

@@ -82,7 +82,7 @@
 #include "Layer/OSGLayer.h" // Background type
 #include "Border/OSGBorder.h" // DisabledBorder type
 #include "Layer/OSGLayer.h" // DisabledBackground type
-#include <OpenSG/OSGBoolFields.h> // Focusable type
+#include "DragAndDrop/OSGTransferHandlerFields.h" // TransferHandler type
 #include "Border/OSGBorder.h" // FocusedBorder type
 #include "Layer/OSGLayer.h" // FocusedBackground type
 #include "Border/OSGBorder.h" // RolloverBorder type
@@ -136,8 +136,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
         BackgroundFieldId         = BorderFieldId             + 1,
         DisabledBorderFieldId     = BackgroundFieldId         + 1,
         DisabledBackgroundFieldId = DisabledBorderFieldId     + 1,
-        FocusableFieldId          = DisabledBackgroundFieldId + 1,
-        FocusedBorderFieldId      = FocusableFieldId          + 1,
+        TransferHandlerFieldId    = DisabledBackgroundFieldId + 1,
+        FocusedBorderFieldId      = TransferHandlerFieldId    + 1,
         FocusedBackgroundFieldId  = FocusedBorderFieldId      + 1,
         RolloverBorderFieldId     = FocusedBackgroundFieldId  + 1,
         RolloverBackgroundFieldId = RolloverBorderFieldId     + 1,
@@ -170,7 +170,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector BackgroundFieldMask;
     static const OSG::BitVector DisabledBorderFieldMask;
     static const OSG::BitVector DisabledBackgroundFieldMask;
-    static const OSG::BitVector FocusableFieldMask;
+    static const OSG::BitVector TransferHandlerFieldMask;
     static const OSG::BitVector FocusedBorderFieldMask;
     static const OSG::BitVector FocusedBackgroundFieldMask;
     static const OSG::BitVector RolloverBorderFieldMask;
@@ -225,7 +225,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       SFLayerPtr          *getSFBackground     (void);
     virtual       SFBorderPtr         *getSFDisabledBorder (void);
     virtual       SFLayerPtr          *getSFDisabledBackground(void);
-    virtual       SFBool              *getSFFocusable      (void);
+    virtual       SFTransferHandlerPtr *getSFTransferHandler(void);
     virtual       SFBorderPtr         *getSFFocusedBorder  (void);
     virtual       SFLayerPtr          *getSFFocusedBackground(void);
     virtual       SFBorderPtr         *getSFRolloverBorder (void);
@@ -268,8 +268,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual const BorderPtr           &getDisabledBorder (void) const;
     virtual       LayerPtr            &getDisabledBackground(void);
     virtual const LayerPtr            &getDisabledBackground(void) const;
-    virtual       bool                &getFocusable      (void);
-    virtual const bool                &getFocusable      (void) const;
+    virtual       TransferHandlerPtr  &getTransferHandler(void);
+    virtual const TransferHandlerPtr  &getTransferHandler(void) const;
     virtual       BorderPtr           &getFocusedBorder  (void);
     virtual const BorderPtr           &getFocusedBorder  (void) const;
     virtual       LayerPtr            &getFocusedBackground(void);
@@ -319,7 +319,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual void setBackground     ( const LayerPtr &value );
     virtual void setDisabledBorder ( const BorderPtr &value );
     virtual void setDisabledBackground( const LayerPtr &value );
-    virtual void setFocusable      ( const bool &value );
+    virtual void setTransferHandler( const TransferHandlerPtr &value );
     virtual void setFocusedBorder  ( const BorderPtr &value );
     virtual void setFocusedBackground( const LayerPtr &value );
     virtual void setRolloverBorder ( const BorderPtr &value );
@@ -376,7 +376,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     SFLayerPtr          _sfBackground;
     SFBorderPtr         _sfDisabledBorder;
     SFLayerPtr          _sfDisabledBackground;
-    SFBool              _sfFocusable;
+    SFTransferHandlerPtr   _sfTransferHandler;
     SFBorderPtr         _sfFocusedBorder;
     SFLayerPtr          _sfFocusedBackground;
     SFBorderPtr         _sfRolloverBorder;

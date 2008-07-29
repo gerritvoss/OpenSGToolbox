@@ -2,7 +2,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-EventType MouseWheelEvent::_Type("MouseWheelEvent", "EventType");
+EventType MouseWheelEvent::_Type("MouseWheelEvent", "InputEvent");
 
 const EventType &MouseWheelEvent::getType(void) const
 {

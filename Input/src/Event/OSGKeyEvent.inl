@@ -33,8 +33,8 @@ WindowPtr KeyEvent::getWindow(void) const
 }
 
 inline
-KeyEvent::KeyEvent(FieldContainerPtr Source, Time TimeStamp, Key TheKey, UInt32 Modifiers, WindowPtr TheWindow) :
-   Event(Source, TimeStamp),
+KeyEvent::KeyEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, Key TheKey, UInt32 Modifiers, WindowPtr TheWindow) :
+   InputEvent(Source, TimeStamp,Producer),
    _Key(TheKey),
    _Modifiers(Modifiers),
    _Window(TheWindow)

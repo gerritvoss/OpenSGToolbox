@@ -297,6 +297,18 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGInputEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGInputEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGInputEvent.inl"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGKeyAdapter.cpp"
 					>
 				</File>

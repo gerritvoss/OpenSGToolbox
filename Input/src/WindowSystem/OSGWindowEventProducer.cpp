@@ -272,7 +272,7 @@ void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), t, WindowEventProducerPtr(this), Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 	   
        MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
@@ -289,7 +289,7 @@ void WindowEventProducer::produceMouseEntered(const Pnt2f& Location)
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
        MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
@@ -305,11 +305,14 @@ void WindowEventProducer::produceMouseExited(const Pnt2f& Location)
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
        MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
-		  (*SetItor)->mouseExited(TheEvent);
+		   if(!TheEvent.isConsumed())
+		   {
+			   (*SetItor)->mouseExited(TheEvent);
+		   }
 	   }
    }
 }
@@ -324,11 +327,14 @@ void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), t, WindowEventProducerPtr(this), Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 	   MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
-		  (*SetItor)->mousePressed(TheEvent);
+		   if(!TheEvent.isConsumed())
+		   {
+				(*SetItor)->mousePressed(TheEvent);
+		   }
 	   }
    }
 }
@@ -342,11 +348,14 @@ void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Bu
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), t, WindowEventProducerPtr(this), Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 	   MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
-		  (*SetItor)->mouseReleased(TheEvent);
+		   if(!TheEvent.isConsumed())
+		   {
+				(*SetItor)->mouseReleased(TheEvent);
+		   }
 	   }
    }
    if(_ButtonClickMap[Button] == Location)
@@ -363,10 +372,13 @@ void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, con
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseWheelEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WheelRotation, TheScrollType, ViewportLocation, ResultViewport );
+	   MouseWheelEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), WheelRotation, TheScrollType, ViewportLocation, ResultViewport );
 	   for(MouseWheelListenerSetConstItor SetItor(_MouseWheelListeners.begin()) ; SetItor != _MouseWheelListeners.end() ; ++SetItor)
 	   {
-		  (*SetItor)->mouseWheelMoved(TheEvent);
+		   if(!TheEvent.isConsumed())
+		   {
+				(*SetItor)->mouseWheelMoved(TheEvent);
+		   }
 	   }
    }
 }
@@ -378,10 +390,13 @@ void WindowEventProducer::produceMouseMoved(const Pnt2f& Location)
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
-		  (*SetItor)->mouseMoved(TheEvent);
+		   if(!TheEvent.isConsumed())
+		   {
+				(*SetItor)->mouseMoved(TheEvent);
+		   }
 	   }
    }
 }
@@ -393,42 +408,54 @@ void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, 0, ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), Button, 0, ViewportLocation, ResultViewport );
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
-		  (*SetItor)->mouseDragged(TheEvent);
+		   if(!TheEvent.isConsumed())
+		   {
+				(*SetItor)->mouseDragged(TheEvent);
+		   }
 	   }
    }
 }
 
 void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
 {
-   KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), TheKey, Modifiers, getWindow() );
+   KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), TheKey, Modifiers, getWindow() );
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
-      (*SetItor)->keyPressed(TheEvent);
+		if(!TheEvent.isConsumed())
+		{
+			(*SetItor)->keyPressed(TheEvent);
+		}
    }
    produceKeyTyped(TheKey, Modifiers);
 }
 
 void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
 {
-   KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), TheKey, Modifiers, getWindow() );
+   KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), TheKey, Modifiers, getWindow() );
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
-      (*SetItor)->keyReleased(TheEvent);
+		if(!TheEvent.isConsumed())
+		{
+			(*SetItor)->keyReleased(TheEvent);
+		}
    }
 }
 
 void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
 {
-   KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), TheKey, Modifiers, getWindow() );
+   KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), TheKey, Modifiers, getWindow() );
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
-      (*SetItor)->keyTyped(TheEvent);
+		if(!TheEvent.isConsumed())
+		{
+			(*SetItor)->keyTyped(TheEvent);
+		}
    }
 }
 

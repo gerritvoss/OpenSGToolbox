@@ -728,11 +728,7 @@ void  Component::produceComponentDisabled(const ComponentEvent& e)
 
 bool Component::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
 {
-    if(!getFocusable())
-    {
-        return false;
-    }
-    else if(ComponentPtr(this) == NewFocusedComponent)
+	if(ComponentPtr(this) == NewFocusedComponent)
     {
 		return true;
     }
@@ -748,38 +744,32 @@ bool Component::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
 
 bool Component::takeFocus(bool Temporary)
 {
-    if(!getFocusable())
-    {
-        return false;
-    }
-    else
-    {
-		if(getFocused() &&
-		   getParentWindow() != NullFC &&
-		   getParentWindow()->getFocusedComponent() == ComponentPtr(this))
-		{
-			return true;
-		}
-        beginEditCP(ComponentPtr(this), FocusedFieldMask);
-           setFocused(true);
-        endEditCP(ComponentPtr(this), FocusedFieldMask);
-		if(Temporary || getParentWindow() == NullFC)
-		{
-            focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, NullFC));
-		}
-		else
-		{
-			if(getParentWindow()->getFocusedComponent() != NullFC)
-			{
-				getParentWindow()->getFocusedComponent()->giveFocus(ComponentPtr(this));
-			}
-		    getParentWindow()->setFocusedComponent(ComponentPtr(this));
-            focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getParentWindow()->getFocusedComponent()));
-			//beginEditCP(getParentWindow(), InternalWindow::FocusedComponentFieldMask);
-			//endEditCP(getParentWindow(), InternalWindow::FocusedComponentFieldMask);
-		}
+
+	if(getFocused() &&
+	   getParentWindow() != NullFC &&
+	   getParentWindow()->getFocusedComponent() == ComponentPtr(this))
+	{
 		return true;
-    }
+	}
+    beginEditCP(ComponentPtr(this), FocusedFieldMask);
+       setFocused(true);
+    endEditCP(ComponentPtr(this), FocusedFieldMask);
+	if(Temporary || getParentWindow() == NullFC)
+	{
+        focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, NullFC));
+	}
+	else
+	{
+		if(getParentWindow()->getFocusedComponent() != NullFC)
+		{
+			getParentWindow()->getFocusedComponent()->giveFocus(ComponentPtr(this));
+		}
+	    getParentWindow()->setFocusedComponent(ComponentPtr(this));
+        focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getParentWindow()->getFocusedComponent()));
+		//beginEditCP(getParentWindow(), InternalWindow::FocusedComponentFieldMask);
+		//endEditCP(getParentWindow(), InternalWindow::FocusedComponentFieldMask);
+	}
+	return true;
 }
 
 Real32 Component::getBaseline(const Real32& x, const Real32& y) const

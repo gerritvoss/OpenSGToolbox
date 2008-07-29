@@ -36,37 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGUIDRAWINGSURFACE_H_
-#define _OSGUIDRAWINGSURFACE_H_
+#ifndef _OSGDATAFLAVOR_H_
+#define _OSGDATAFLAVOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "OSGUIDrawingSurfaceBase.h"
 
-
-#include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGMouseListener.h>
-#include <OpenSG/Input/OSGMouseWheelListener.h>
-#include <OpenSG/Input/OSGMouseMotionListener.h>
+#include "OSGDataFlavorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief UIDrawingSurface class. See \ref 
-           PageUserInterfaceUIDrawingSurface for a description.
+/*! \brief DataFlavor class. See \ref 
+           PageUserInterfaceDataFlavor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurfaceBase,
-	public MouseListener,
-	public KeyListener,
-	public MouseWheelListener,
-	public MouseMotionListener
+class OSG_USERINTERFACELIB_DLLMAPPING DataFlavor : public DataFlavorBase
 {
   private:
 
-    typedef UIDrawingSurfaceBase Inherited;
+    typedef DataFlavorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -87,60 +77,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-
-    void detachFromEventProducer(void);
-
-	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
-
-	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
-
-	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
-
-	//Key Events
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
-
-    virtual Pnt2f getMousePosition(void) const;
-
-	virtual UInt32 getNumWindowLayers(void) const;
-	virtual Int32 getWindowLayer(InternalWindowPtr TheWindow) const;
-	virtual InternalWindowPtr getWindowAtLayer(const UInt32& Layer) const;
-	virtual void setWindowToLayer(InternalWindowPtr TheWindow, const UInt32& Layer);
-	virtual void moveWindowUp(InternalWindowPtr TheWindow);
-	virtual void moveWindowDown(InternalWindowPtr TheWindow);
-	virtual void moveWindowToTop(InternalWindowPtr TheWindow);
-	virtual void moveWindowToBottom(InternalWindowPtr TheWindow);
-
-	virtual void openWindow(InternalWindowPtr TheWindow, const Int32 Layer = -1);
-	virtual void closeWindow(InternalWindowPtr TheWindow);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in UIDrawingSurfaceBase.
+    // Variables should all be in DataFlavorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    UIDrawingSurface(void);
-    UIDrawingSurface(const UIDrawingSurface &source);
+    DataFlavor(void);
+    DataFlavor(const DataFlavor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIDrawingSurface(void); 
+    virtual ~DataFlavor(void); 
 
     /*! \}                                                                 */
     
@@ -148,25 +102,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
   private:
 
     friend class FieldContainer;
-    friend class UIDrawingSurfaceBase;
+    friend class DataFlavorBase;
 
     static void initMethod(void);
 
-	void checkMouseEnterExit(const InputEvent& e, const Pnt2f& MouseLocation, ViewportPtr TheViewport);
-
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const UIDrawingSurface &source);
-	
+    void operator =(const DataFlavor &source);
 };
 
-typedef UIDrawingSurface *UIDrawingSurfaceP;
+typedef DataFlavor *DataFlavorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGUIDrawingSurfaceBase.inl"
-#include "OSGUIDrawingSurface.inl"
+#include "OSGDataFlavorBase.inl"
+#include "OSGDataFlavor.inl"
 
-#define OSGUIDRAWINGSURFACE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDATAFLAVOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGUIDRAWINGSURFACE_H_ */
+#endif /* _OSGDATAFLAVOR_H_ */

@@ -3,7 +3,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-EventType KeyEvent::_Type("KeyEvent", "EventType");
+EventType KeyEvent::_Type("KeyEvent", "InputEvent");
 
 const EventType &KeyEvent::getType(void) const
 {

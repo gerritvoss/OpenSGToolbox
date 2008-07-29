@@ -303,7 +303,7 @@ void Container::produceMouseEnterOnComponent(const MouseEvent& e, ComponentPtr C
 	Comp->mouseEntered(e);
 }
 
-void Container::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport)
+void Container::checkMouseEnterExit(const InputEvent& e, const Pnt2f& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport)
 {
 	//Check if mouse is inside of this component
 	if(!isMouseContained)
@@ -311,7 +311,7 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLocation, 
 		if(Comp->getMouseContained())
 		{
 		    //Mouse has exited the component
-			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
+			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
 			produceMouseExitOnComponent(ExitedEvent, Comp);
 		}
 		Comp->setMouseContained(false);
@@ -321,7 +321,7 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLocation, 
 		if(!Comp->getMouseContained())
 		{
 			//Mouse has exited the frame
-			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
+			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), e.getEventProducer(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
 			produceMouseEnterOnComponent(EnteredEvent, Comp);
 		}
 		Comp->setMouseContained(true);
