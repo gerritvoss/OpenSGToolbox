@@ -501,14 +501,23 @@ void ComboBox::changed(BitVector whichField, UInt32 origin)
             getChildren().clear();
 			if(getExpandButton() != NullFC)
 			{
+                beginEditCP(getExpandButton(), Component::EnabledFieldMask);
+                    getExpandButton()->setEnabled(getEnabled());
+                endEditCP(getExpandButton(), Component::EnabledFieldMask);
 				getChildren().push_back(getExpandButton());
 			}
 			if(getEditable() && getEditor() != NullFC && getEditor()->getEditorComponent() != NullFC)
 			{
+                beginEditCP(getEditor()->getEditorComponent(), Component::EnabledFieldMask);
+                    getEditor()->getEditorComponent()->setEnabled(getEnabled());
+                endEditCP(getEditor()->getEditorComponent(), Component::EnabledFieldMask);
 				getChildren().push_back(getEditor()->getEditorComponent());
 			}
 			if(!getEditable() && getComponentGeneratorSelectedItem() != NullFC)
 			{
+                beginEditCP(getComponentGeneratorSelectedItem(), Component::EnabledFieldMask);
+                    getComponentGeneratorSelectedItem()->setEnabled(getEnabled());
+                endEditCP(getComponentGeneratorSelectedItem(), Component::EnabledFieldMask);
 				getChildren().push_back(getComponentGeneratorSelectedItem());
 			}
         endEditCP(ComboBoxPtr(this), ChildrenFieldMask);

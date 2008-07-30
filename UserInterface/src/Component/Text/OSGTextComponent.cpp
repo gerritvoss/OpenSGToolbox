@@ -149,12 +149,16 @@ Color4f TextComponent::getDrawnTextColor(void) const
 /*----------------------- constructors & destructors ----------------------*/
 
 TextComponent::TextComponent(void) :
-    Inherited()
+    Inherited(),
+        _TextSelectionStart(0),
+        _TextSelectionEnd(0)
 {
 }
 
 TextComponent::TextComponent(const TextComponent &source) :
-    Inherited(source)
+    Inherited(source),
+    _TextSelectionStart(0),
+    _TextSelectionEnd(0)
 {
 }
 

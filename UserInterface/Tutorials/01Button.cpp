@@ -276,7 +276,7 @@ int main(int argc, char **argv)
             ExampleButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
             ExampleButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
             ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            ExampleButton->setAlignment(1.0,0.0);
+            ExampleButton->setAlignment(Vec2f(1.0,0.0));
     endEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
         Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
             

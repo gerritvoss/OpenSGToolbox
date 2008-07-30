@@ -680,14 +680,16 @@ void Button::removeActionListener(ActionListenerPtr Listener)
 Button::Button(void) :
     Inherited(),
 		_ButtonArmedListener(ButtonPtr(this)),
-        _Armed(false)
+        _Armed(false),
+        _Active(false)
 {
 }
 
 Button::Button(const Button &source) :
     Inherited(source),
 		_ButtonArmedListener(ButtonPtr(this)),
-        _Armed(false)
+        _Armed(false),
+        _Active(false)
 {
 }
 

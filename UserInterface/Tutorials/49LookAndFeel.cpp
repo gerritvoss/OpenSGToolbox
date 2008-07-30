@@ -517,13 +517,19 @@ int main(int argc, char **argv)
 
 
     // Make Torus Node
-    NodePtr TorusGeometryNode = makeTorus(150, 600, 32, 32);
+    NodePtr SceneGeometryNode(NullFC);
+
+    SceneGeometryNode = SceneFileHandler::the().read(".//MesophyllCell.osb");
+    if(SceneGeometryNode == NullFC)
+    {
+        SceneGeometryNode = makeTorus(150, 600, 32, 32);
+    }
 
     // Make Main Scene Node and add the Torus
     scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
-        scene->addChild(TorusGeometryNode);
+        scene->addChild(SceneGeometryNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -623,7 +629,7 @@ int main(int argc, char **argv)
     //Make A 3D Rectangle to draw the UI on
     ExampleUIRectangle = UIRectangle::create();
     beginEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask);
-        ExampleUIRectangle->setPoint(Pnt3f(-640,-512,250));
+        ExampleUIRectangle->setPoint(Pnt3f(-640,-512,750));
         ExampleUIRectangle->setWidth(1280);
         ExampleUIRectangle->setHeight(1024);
     endEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask);
