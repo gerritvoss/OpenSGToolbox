@@ -146,26 +146,51 @@ FunctionIOTypeVector DataConverter::getOutputTypes(FunctionIOTypeVector& InputTy
 
 	//TODO: Implement
 	//1 UInt8 SFUInt8
+	else if(*getToType() == SFUInt8::getClassType())
+	{
+		//SFUInt8
+		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFUInt8::getClassType()));
+	}
 	//2 UInt8
 	//3 UInt8
 	//4 UInt8
 
 	//1 Int8 SFInt8
+	else if(*getToType() == SFUInt8::getClassType())
+	{
+		//SFInt8
+		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFUInt8::getClassType()));
+	}
 	//2 Int8
 	//3 Int8
 	//4 Int8
 	
 	//1 UInt16 SFInt16
+	else if(*getToType() == SFInt16::getClassType())
+	{
+		//SFInt16
+		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFInt16::getClassType()));
+	}
 	//2 UInt16
 	//3 UInt16
 	//4 UInt16
 	
 	//1 Int16 SFInt16
+	else if(*getToType() == SFInt16::getClassType())
+	{
+		//SFInt16
+		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFInt16::getClassType()));
+	}
 	//2 Int16
 	//3 Int16
 	//4 Int16
 	
 	//1 Real64 Time SFReal64
+	else if(*getToType() == SFReal64::getClassType())
+	{
+		//SFReal64
+		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFReal64::getClassType()));
+	}
 	//2 Real64
 	//3 Real64
 	//4 Real64
@@ -176,9 +201,29 @@ FunctionIOTypeVector DataConverter::getOutputTypes(FunctionIOTypeVector& InputTy
 	//4 Real128
 	
 	//1 Int32 SFInt32
+	else if(*getToType() == SFInt32::getClassType())
+	{
+		//SFInt32
+		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFInt32::getClassType()));
+	}
 	//1 UInt32
+	else if(*getToType() == SFUInt32::getClassType())
+	{
+		//SFUInt32
+		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFUInt32::getClassType()));
+	}
 	//1 Int64
+	else if(*getToType() == SFInt64::getClassType())
+	{
+		//SFInt64
+		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFInt64::getClassType()));
+	}
 	//1 UInt64
+	else if(*getToType() == SFUInt64::getClassType())
+	{
+		//SFUInt64
+		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFUInt64::getClassType()));
+	}
 
 	//MFInt8
 	//MFUInt8
@@ -198,39 +243,41 @@ FunctionIOTypeVector DataConverter::getOutputTypes(FunctionIOTypeVector& InputTy
 FunctionIOTypeVector DataConverter::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
-	
-	if(*getToType() == FieldDataTraits<Vec2f>::getType())
+
+	const TypeBase* TheType = getToType();
+
+	if(*TheType == FieldDataTraits<Vec2f>::getType())
 	{
 		//Vec2f
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt2f>::getType()));
 	}
-	else if(*getToType() == FieldDataTraits<Pnt2f>::getType())
+	else if(*TheType == FieldDataTraits<Pnt2f>::getType())
 	{
 		//Pnt2f
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec2f>::getType()));
 	}
-	else if(*getToType() == FieldDataTraits<Vec3f>::getType())
+	else if(*TheType == FieldDataTraits<Vec3f>::getType())
 	{
 		//Vec3f
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt3f>::getType()));
         // or
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Color3f>::getType()));
 	}
-	else if(*getToType() == FieldDataTraits<Pnt3f>::getType())
+	else if(*TheType == FieldDataTraits<Pnt3f>::getType())
 	{
 		//Pnt3f
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec3f>::getType()));
         // or
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Color3f>::getType()));
 	}
-	else if(*getToType() == FieldDataTraits<Color3f>::getType())
+	else if(*TheType == FieldDataTraits<Color3f>::getType())
 	{
 		//Color3f
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec3f>::getType()));
         // or
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt3f>::getType()));
 	}
-	else if(*getToType() == FieldDataTraits<Vec4f>::getType())
+	else if(*TheType == FieldDataTraits<Vec4f>::getType())
 	{
 		//Vec4f
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt4f>::getType()));
@@ -239,7 +286,7 @@ FunctionIOTypeVector DataConverter::getInputTypes(FunctionIOTypeVector& OutputTy
         // or
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Quaternion>::getType()));
 	}
-	else if(*getToType() == FieldDataTraits<Pnt4f>::getType())
+	else if(*TheType == FieldDataTraits<Pnt4f>::getType())
 	{
 		//Pnt4f
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec4f>::getType()));
@@ -248,16 +295,18 @@ FunctionIOTypeVector DataConverter::getInputTypes(FunctionIOTypeVector& OutputTy
         // or
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Quaternion>::getType()));
 	}
-	else if(*getToType() == FieldDataTraits<Color4f>::getType())
+	else if(*TheType == FieldDataTraits<Color4f>::getType())
 	{
 		//Color4f
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt4f>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt3f>::getType()));
         // or
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec4f>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec3f>::getType()));
         // or
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Quaternion>::getType()));
 	}
-	else if(*getToType() == FieldDataTraits<Quaternion>::getType())
+	else if(*TheType == FieldDataTraits<Quaternion>::getType())
 	{
 		//Quaternion
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt4f>::getType()));
@@ -266,46 +315,70 @@ FunctionIOTypeVector DataConverter::getInputTypes(FunctionIOTypeVector& OutputTy
         // or
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec4f>::getType()));
 	}
-	else if(*getToType() == MFReal32::getClassType())
+	else if(*TheType == MFReal32::getClassType())
 	{
 		//MFReal32
 	}
 
 	//TODO: Implement
 	//1 UInt8 SFUInt8
-	//2 UInt8
-	//3 UInt8
-	//4 UInt8
-
 	//1 Int8 SFInt8
-	//2 Int8
-	//3 Int8
-	//4 Int8
-	
 	//1 UInt16 SFInt16
-	//2 UInt16
-	//3 UInt16
-	//4 UInt16
-	
 	//1 Int16 SFInt16
-	//2 Int16
-	//3 Int16
-	//4 Int16
-	
 	//1 Real64 Time SFReal64
-	//2 Real64
-	//3 Real64
-	//4 Real64
-	
 	//1 Real128 SFReal128
-	//2 Real128
-	//3 Real128
-	//4 Real128
-	
 	//1 Int32 SFInt32
 	//1 UInt32
 	//1 Int64
 	//1 UInt64
+	else if(*TheType == FieldDataTraits<UInt8>::getType() ||
+		    *TheType == FieldDataTraits<UInt16>::getType() ||
+		    *TheType == FieldDataTraits<UInt32>::getType() ||
+		    *TheType == FieldDataTraits<UInt64>::getType() ||
+			*TheType == FieldDataTraits<Int8>::getType() ||
+		    *TheType == FieldDataTraits<Int16>::getType() ||
+		    *TheType == FieldDataTraits<Int32>::getType() ||
+		    *TheType == FieldDataTraits<Int64>::getType() ||
+		    *TheType == FieldDataTraits<Real32>::getType() ||
+		    *TheType == FieldDataTraits<Real64>::getType()
+		    )
+	{
+		//Numbers
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<UInt8>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<UInt16>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<UInt32>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<UInt64>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Int8>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Int16>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Int32>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Int64>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Real32>::getType()));
+		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Real64>::getType()));
+	}
+	//2 UInt8
+	//3 UInt8
+	//4 UInt8
+
+	//2 Int8
+	//3 Int8
+	//4 Int8
+	
+	//2 UInt16
+	//3 UInt16
+	//4 UInt16
+	
+	//2 Int16
+	//3 Int16
+	//4 Int16
+	
+	//2 Real64
+	//3 Real64
+	//4 Real64
+	
+	//2 Real128
+	//3 Real128
+	//4 Real128
+	
 
 	//MFInt8
 	//MFUInt8
@@ -563,6 +636,26 @@ FunctionIOParameterVector DataConverter::evaluate(FunctionIOParameterVector& Inp
 					     dynamic_cast<const FunctionIOData<Quaternion>* >(InputParameters[0].getDataPtr())->getData().y(),
 					     dynamic_cast<const FunctionIOData<Quaternion>* >(InputParameters[0].getDataPtr())->getData().z(),
 					     dynamic_cast<const FunctionIOData<Quaternion>* >(InputParameters[0].getDataPtr())->getData().w()
+			    ))));
+        }
+        else if(*(InputParameters[0].getDataPtr()->getType()) == FieldDataTraits<Vec3f>::getType())
+        {
+		    ResultVector.push_back(FunctionIOParameter(std::string("Value"),
+			    new FunctionIOData<Color4f>(
+			    Color4f(   dynamic_cast<const FunctionIOData<Vec3f>* >(InputParameters[0].getDataPtr())->getData().x(),
+					     dynamic_cast<const FunctionIOData<Vec3f>* >(InputParameters[0].getDataPtr())->getData().y(),
+					     dynamic_cast<const FunctionIOData<Vec3f>* >(InputParameters[0].getDataPtr())->getData().z(),
+					     1.0f
+			    ))));
+        }
+        else if(*(InputParameters[0].getDataPtr()->getType()) == FieldDataTraits<Pnt3f>::getType())
+        {
+		    ResultVector.push_back(FunctionIOParameter(std::string("Value"),
+			    new FunctionIOData<Color4f>(
+			    Color4f(   dynamic_cast<const FunctionIOData<Pnt3f>* >(InputParameters[0].getDataPtr())->getData().x(),
+					     dynamic_cast<const FunctionIOData<Pnt3f>* >(InputParameters[0].getDataPtr())->getData().y(),
+					     dynamic_cast<const FunctionIOData<Pnt3f>* >(InputParameters[0].getDataPtr())->getData().z(),
+					     1.0f
 			    ))));
         }
         else

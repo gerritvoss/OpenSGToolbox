@@ -457,14 +457,55 @@ FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParameterVector& Inpu
 	else if(*getToType() == FieldDataTraits<Color4f>::getType())
 	{
 		//Color4f
-		if(InputParameters.size() != 4){throw FunctionInputException();}
-		ResultVector.push_back(FunctionIOParameter(std::string("Value"),
-			new FunctionIOData<Color4f>(
-			Color4f(   dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[0].getDataPtr())->getData(),
-					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[1].getDataPtr())->getData(),
-					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[2].getDataPtr())->getData(),
-					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[3].getDataPtr())->getData()
-			))));
+		if(InputParameters.size() == 4)
+		{
+			ResultVector.push_back(FunctionIOParameter(std::string("Value"),
+				new FunctionIOData<Color4f>(
+				Color4f(   dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[0].getDataPtr())->getData(),
+						 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[1].getDataPtr())->getData(),
+						 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[2].getDataPtr())->getData(),
+						 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[3].getDataPtr())->getData()
+				))));
+		}
+		else if(InputParameters.size() == 2 &&
+			*(InputParameters[0].getDataPtr()->getType()) == FieldDataTraits<Vec3f >::getType() &&
+			*(InputParameters[1].getDataPtr()->getType()) == FieldDataTraits<Real32 >::getType())
+		{
+			ResultVector.push_back(FunctionIOParameter(std::string("Value"),
+				new FunctionIOData<Color4f>(
+				Color4f(   dynamic_cast<const FunctionIOData<Vec3f>* >(InputParameters[0].getDataPtr())->getData().x(),
+						 dynamic_cast<const FunctionIOData<Vec3f>* >(InputParameters[0].getDataPtr())->getData().y(),
+						 dynamic_cast<const FunctionIOData<Vec3f>* >(InputParameters[0].getDataPtr())->getData().z(),
+						 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[1].getDataPtr())->getData()
+				))));
+		}
+		else if(InputParameters.size() == 2 &&
+			*(InputParameters[0].getDataPtr()->getType()) == FieldDataTraits<Pnt3f >::getType() &&
+			*(InputParameters[1].getDataPtr()->getType()) == FieldDataTraits<Real32 >::getType())
+		{
+			ResultVector.push_back(FunctionIOParameter(std::string("Value"),
+				new FunctionIOData<Color4f>(
+				Color4f(   dynamic_cast<const FunctionIOData<Pnt3f>* >(InputParameters[0].getDataPtr())->getData().x(),
+						 dynamic_cast<const FunctionIOData<Pnt3f>* >(InputParameters[0].getDataPtr())->getData().y(),
+						 dynamic_cast<const FunctionIOData<Pnt3f>* >(InputParameters[0].getDataPtr())->getData().z(),
+						 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[1].getDataPtr())->getData()
+				))));
+		}
+		else if(InputParameters.size() == 1 &&
+			*(InputParameters[0].getDataPtr()->getType()) == FieldDataTraits<Pnt3f >::getType())
+		{
+			ResultVector.push_back(FunctionIOParameter(std::string("Value"),
+				new FunctionIOData<Color4f>(
+				Color4f(   dynamic_cast<const FunctionIOData<Pnt3f>* >(InputParameters[0].getDataPtr())->getData().x(),
+						 dynamic_cast<const FunctionIOData<Pnt3f>* >(InputParameters[0].getDataPtr())->getData().y(),
+						 dynamic_cast<const FunctionIOData<Pnt3f>* >(InputParameters[0].getDataPtr())->getData().z(),
+						 1.0f
+				))));
+		}
+		else
+		{
+			throw FunctionInputException();
+		}
 	}
 	else if(*getToType() == FieldDataTraits<Quaternion>::getType())
 	{

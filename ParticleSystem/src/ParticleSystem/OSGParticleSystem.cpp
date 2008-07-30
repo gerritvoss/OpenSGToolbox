@@ -150,7 +150,7 @@ void ParticleSystem::addAndExpandColors(const Color4f& Color)
 	{
 		getInternalColors().push_back(Color);
 	}
-	else if(getInternalColors().size())
+	else if(getInternalColors().size() == 1)
 	{
 		if(getInternalColors()[0] != Color)
 		{

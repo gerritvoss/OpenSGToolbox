@@ -153,6 +153,7 @@ FunctionPtr createExplosionPositionDistribution(void);
 FunctionPtr createExplosionVelocityDistribution(void);
 FunctionPtr createExplosion2PositionDistribution(void);
 FunctionPtr createExplosion2VelocityDistribution(void);
+FunctionPtr createExplosion2ColorDistribution(void);
 
 
 UInt32 CheckSystem = 1;
@@ -613,7 +614,7 @@ int main(int argc, char **argv)
 	beginEditCP(PSExplosion2MaterialChunk);
 		PSExplosion2MaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
 		PSExplosion2MaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSExplosion2MaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSExplosion2MaterialChunk->setSpecular(Color4f(0.9f,0.0f,0.0f,1.0f));
 		PSExplosion2MaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSExplosion2MaterialChunk);
 
@@ -1004,6 +1005,7 @@ int main(int argc, char **argv)
 		Explosion2BurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
 		Explosion2BurstGenerator->setBurstAmount(15.0);
 		Explosion2BurstGenerator->setVelocityFunction(createExplosion2VelocityDistribution());
+		Explosion2BurstGenerator->setColorFunction(createExplosion2ColorDistribution());
 	endEditCP(Explosion2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
 
 	//Attach the function objects the Affectors
@@ -1722,3 +1724,25 @@ FunctionPtr createExplosion2VelocityDistribution(void)
     return TheVelocityDistribution;
 }
 
+FunctionPtr createExplosion2ColorDistribution(void)
+{
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(Pnt3f(1.0,0.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,1.0,0.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheColor4fConverter = DataConverter::create();
+	beginEditCP(TheColor4fConverter);
+		TheColor4fConverter->setToType(&FieldDataTraits<Color4f>::getType());
+	endEditCP(TheColor4fConverter);
+
+	CompoundFunctionPtr TheColorDistribution = CompoundFunction::create();
+	beginEditCP(TheColorDistribution);
+		TheColorDistribution->getFunctions().push_back(TheLineDistribution);
+		TheColorDistribution->getFunctions().push_back(TheColor4fConverter);
+	endEditCP(TheColorDistribution);
+
+    return TheColorDistribution;
+}
