@@ -271,10 +271,9 @@ class TutorialParticleCollisionListener : public ParticleCollisionListener
 {
    virtual void particleCollision(const ParticleEvent& ParE, const CollisionEvent& ColE)
    {
-	   Real32 phi= osgacos((ParE.getVelocity().dot(ColE.getHitNormal()))/(ParE.getVelocity().length()*ColE.getHitNormal().length()));
+	   Real32 phi= osgacos((-ParE.getVelocity().dot(ColE.getHitNormal()))/(ParE.getVelocity().length()*ColE.getHitNormal().length()));
 	   
-		float degree = deg2rad(80.0);
-	   if( deg2rad(80.0) < phi)
+	   if( phi < deg2rad(80.0) )
 	   {
 		   ParE.getSystem()->killParticle(ParE.getIndex());
 	   }
@@ -425,6 +424,7 @@ int main(int argc, char **argv)
 	NodePtr EnvironmentNode = Node::create();
 	beginEditCP(EnvironmentNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 		EnvironmentNode->setCore(EnvironmentTransformCore);
+		//EnvironmentNode->addChild(SceneFileHandler::the().read("Data/Chloroplast.osb"));
 		EnvironmentNode->addChild(SceneFileHandler::the().read("Data/Chloroplast.osb"));
 	endEditCP(EnvironmentNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 

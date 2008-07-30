@@ -65,12 +65,24 @@ QuadParticleSystemDrawerPtr RocketParticleSystemDrawer;
 QuadParticleSystemDrawerPtr CircleParticleSystemDrawer;
 QuadParticleSystemDrawerPtr StarParticleSystemDrawer;
 QuadParticleSystemDrawerPtr ComStarParticleSystemDrawer;
+QuadParticleSystemDrawerPtr ExplosionParticleSystemDrawer;
+QuadParticleSystemDrawerPtr Explosion2ParticleSystemDrawer;
+
+QuadParticleSystemDrawerPtr Circle2ParticleSystemDrawer;
+QuadParticleSystemDrawerPtr Star2ParticleSystemDrawer;
+QuadParticleSystemDrawerPtr ComStar2ParticleSystemDrawer;
 
 
 ParticleSystemPtr RocketParticleSystem;
 ParticleSystemPtr CircleParticleSystem;
 ParticleSystemPtr StarParticleSystem;
 ParticleSystemPtr ComStarParticleSystem;
+ParticleSystemPtr ExplosionParticleSystem;
+ParticleSystemPtr Explosion2ParticleSystem;
+
+ParticleSystemPtr Circle2ParticleSystem;
+ParticleSystemPtr Star2ParticleSystem;
+ParticleSystemPtr ComStar2ParticleSystem;
 
 
 
@@ -78,6 +90,12 @@ BurstParticleGeneratorPtr RocketBurstGenerator;
 BurstParticleGeneratorPtr CircleBurstGenerator;
 BurstParticleGeneratorPtr StarBurstGenerator;
 BurstParticleGeneratorPtr ComStarBurstGenerator;
+BurstParticleGeneratorPtr ExplosionBurstGenerator;
+BurstParticleGeneratorPtr Explosion2BurstGenerator;
+
+BurstParticleGeneratorPtr Circle2BurstGenerator;
+BurstParticleGeneratorPtr Star2BurstGenerator;
+BurstParticleGeneratorPtr ComStar2BurstGenerator;
 
 
 AgeFadeParticleAffectorPtr CircleAgeFadeParticleAffector;
@@ -86,7 +104,19 @@ AgeFadeParticleAffectorPtr StarAgeFadeParticleAffector;
 AgeSizeParticleAffectorPtr StarAgeSizeParticleAffector;
 AgeFadeParticleAffectorPtr ComStarAgeFadeParticleAffector;
 AgeSizeParticleAffectorPtr ComStarAgeSizeParticleAffector;
+AgeFadeParticleAffectorPtr ExplosionAgeFadeParticleAffector;
+AgeSizeParticleAffectorPtr ExplosionAgeSizeParticleAffector;
+AgeFadeParticleAffectorPtr Explosion2AgeFadeParticleAffector;
+AgeSizeParticleAffectorPtr Explosion2AgeSizeParticleAffector;
 CollectiveGravityParticleSystemAffectorPtr StarCollectiveGravityParticleSystemAffector;
+
+
+AgeFadeParticleAffectorPtr Circle2AgeFadeParticleAffector;
+AgeSizeParticleAffectorPtr Circle2AgeSizeParticleAffector;
+AgeFadeParticleAffectorPtr Star2AgeFadeParticleAffector;
+AgeSizeParticleAffectorPtr Star2AgeSizeParticleAffector;
+AgeFadeParticleAffectorPtr ComStar2AgeFadeParticleAffector;
+AgeSizeParticleAffectorPtr ComStar2AgeSizeParticleAffector;
 
 
 ParticleSystemCorePtr PointParticleNodeCore;
@@ -94,6 +124,12 @@ ParticleSystemCorePtr PointParticleNodeCore;
 FunctionPtr CirclePositionDistribution;
 FunctionPtr StarPositionDistribution;
 FunctionPtr ComStarPositionDistribution;
+FunctionPtr ExplosionPositionDistribution;
+FunctionPtr Explosion2PositionDistribution;
+
+FunctionPtr Circle2PositionDistribution;
+FunctionPtr Star2PositionDistribution;
+FunctionPtr ComStar2PositionDistribution;
 
 FunctionPtr createPositionDistribution(void);
 FunctionPtr createLifespanDistribution(void);
@@ -107,10 +143,19 @@ FunctionPtr createComStarVelocityDistribution(void);
 FunctionPtr createComStarLifespanDistribution(void);
 FunctionPtr createComStarPositionDistribution(void);
 
+FunctionPtr createComStar2VelocityDistribution(void);
+FunctionPtr createComStar2PositionDistribution(void);
+FunctionPtr createSmoke2PositionDistribution(void);
+FunctionPtr createSmoke2VelocityDistribution(void);
+FunctionPtr createStar2VelocityDistribution(void);
+FunctionPtr createStar2PositionDistribution(void);
+FunctionPtr createExplosionPositionDistribution(void);
+FunctionPtr createExplosionVelocityDistribution(void);
+FunctionPtr createExplosion2PositionDistribution(void);
+FunctionPtr createExplosion2VelocityDistribution(void);
 
 
-
-
+UInt32 CheckSystem = 1;
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -124,9 +169,20 @@ public:
            ExitApp = true;
        }
 
-	   if(e.getKey() == KeyEvent::KEY_B)//generate particles when clicked
+	   switch(e.getKey())
 	   {
-		 
+	   case KeyEvent::KEY_1:
+		   CheckSystem = 1;
+		   break;
+	   case KeyEvent::KEY_2:
+		   CheckSystem = 2;
+		   break;
+	   case KeyEvent::KEY_3:
+		   CheckSystem = 3;
+		   break;
+	   case KeyEvent::KEY_4:
+	   CheckSystem = 4;
+	   break;
 	   }
    }
 
@@ -136,10 +192,7 @@ public:
 
    virtual void keyTyped(const KeyEvent& e)
    {
-	   if(e.getKey()== KeyEvent::KEY_1) // Use the Point Drawer
-	   {
-			
-	   }
+	  
 
    }
 };
@@ -231,43 +284,139 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
    {
     
 
-	beginEditCP(CirclePositionDistribution);
-		SphereDistribution3D::Ptr::dcast(CirclePositionDistribution)->setCenter(e.getPosition());
-    endEditCP(CirclePositionDistribution);
-
-	beginEditCP(StarPositionDistribution);
-		SphereDistribution3D::Ptr::dcast(StarPositionDistribution)->setCenter(e.getPosition());
-    endEditCP(StarPositionDistribution);
-
-	beginEditCP(ComStarPositionDistribution);
-		SphereDistribution3D::Ptr::dcast(ComStarPositionDistribution)->setCenter(e.getPosition());
-    endEditCP(ComStarPositionDistribution);
 	
-	   {
+	
+	  if(CheckSystem == 1)
+	  {
 
-		
+		 beginEditCP(CirclePositionDistribution);
+			SphereDistribution3D::Ptr::dcast(CirclePositionDistribution)->setCenter(e.getPosition());
+		endEditCP(CirclePositionDistribution);
+
+		beginEditCP(StarPositionDistribution);
+			SphereDistribution3D::Ptr::dcast(StarPositionDistribution)->setCenter(e.getPosition());
+		endEditCP(StarPositionDistribution);
+
+		beginEditCP(ComStarPositionDistribution);
+			SphereDistribution3D::Ptr::dcast(ComStarPositionDistribution)->setCenter(e.getPosition());
+		endEditCP(ComStarPositionDistribution);
+
 		//Attach the Affector to the Circle Particle System
 				beginEditCP(CircleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 					CircleParticleSystem->getGenerators().push_back(CircleBurstGenerator);
-					CircleParticleSystem->getAffectors().push_back(CircleAgeFadeParticleAffector);
-					CircleParticleSystem->getAffectors().push_back(CircleAgeSizeParticleAffector);
 				endEditCP(CircleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 		//Attach the Affector to the Star Particle System
 				beginEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 					StarParticleSystem->getGenerators().push_back(StarBurstGenerator);
-					StarParticleSystem->getAffectors().push_back(StarAgeFadeParticleAffector);
-					StarParticleSystem->getAffectors().push_back(StarAgeSizeParticleAffector);
-					//StarParticleSystem->getSystemAffectors().push_back(StarCollectiveGravityParticleSystemAffector);
 				endEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 		//Attach the Affector to the ComStar Particle System
 				beginEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 					ComStarParticleSystem->getGenerators().push_back(ComStarBurstGenerator);
-					ComStarParticleSystem->getAffectors().push_back(ComStarAgeFadeParticleAffector);
-					ComStarParticleSystem->getAffectors().push_back(ComStarAgeSizeParticleAffector);
 				endEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
-		
 	   }
-	   std::cout << "Rocket Died at: " << e.getPosition() << std::endl;
+
+	  if(CheckSystem == 2)
+	  {
+		beginEditCP(Circle2PositionDistribution);
+			SphereDistribution3D::Ptr::dcast(Circle2PositionDistribution)->setCenter(e.getPosition());
+		endEditCP(Circle2PositionDistribution);
+
+		beginEditCP(Star2PositionDistribution);
+			SphereDistribution3D::Ptr::dcast(Star2PositionDistribution)->setCenter(e.getPosition());
+		endEditCP(Star2PositionDistribution);
+
+		beginEditCP(ComStar2PositionDistribution);
+			SphereDistribution3D::Ptr::dcast(ComStar2PositionDistribution)->setCenter(e.getPosition());
+		endEditCP(ComStar2PositionDistribution);
+
+		   //Attach the Affector to the Circle2 Particle System
+				beginEditCP(Circle2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+					Circle2ParticleSystem->getGenerators().push_back(Circle2BurstGenerator);
+				endEditCP(Circle2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+		//Attach the Affector to the Star2 Particle System
+				beginEditCP(Star2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+					Star2ParticleSystem->getGenerators().push_back(Star2BurstGenerator);
+				endEditCP(Star2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+		//Attach the Affector to the ComStar2 Particle System
+				beginEditCP(ComStar2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+					ComStar2ParticleSystem->getGenerators().push_back(ComStar2BurstGenerator);
+				endEditCP(ComStar2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+		
+	  }
+	   if(CheckSystem == 3)
+	  {
+		beginEditCP(ExplosionPositionDistribution);
+			SphereDistribution3D::Ptr::dcast(ExplosionPositionDistribution)->setCenter(e.getPosition());
+		endEditCP(ExplosionPositionDistribution);	
+
+		//Attach the Affector to the explosion Particle System
+				beginEditCP(ExplosionParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+					ExplosionParticleSystem->getGenerators().push_back(ExplosionBurstGenerator);
+				endEditCP(ExplosionParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+	  }
+	  if(CheckSystem == 4)
+	  {
+		beginEditCP(Explosion2PositionDistribution);
+			DiscDistribution3D::Ptr::dcast(Explosion2PositionDistribution)->setCenter(e.getPosition());
+		endEditCP(Explosion2PositionDistribution);	
+
+		//Attach the Affector to the explosion Particle System
+				beginEditCP(Explosion2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+					Explosion2ParticleSystem->getGenerators().push_back(Explosion2BurstGenerator);
+				endEditCP(Explosion2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+	  
+	  }
+   }
+   virtual void particleStolen(const ParticleEvent& e)
+   {
+   }
+};
+
+class TutorialSecondaryParticleSystemListener : public ParticleSystemListener
+{
+  public:
+   virtual void systemUpdated(const ParticleSystemEvent& e)
+   {
+   }
+   virtual void particleGenerated(const ParticleEvent& e) 
+   {
+   }
+   virtual void particleKilled(const ParticleEvent& e)
+   {
+    
+
+	
+	
+	   {
+
+		/* beginEditCP(CirclePositionDistribution);
+			SphereDistribution3D::Ptr::dcast(CirclePositionDistribution)->setCenter(e.getPosition());
+		endEditCP(CirclePositionDistribution);
+*/
+		beginEditCP(StarPositionDistribution);
+			SphereDistribution3D::Ptr::dcast(StarPositionDistribution)->setCenter(e.getPosition());
+		endEditCP(StarPositionDistribution);
+
+		/*beginEditCP(ComStarPositionDistribution);
+			SphereDistribution3D::Ptr::dcast(ComStarPositionDistribution)->setCenter(e.getPosition());
+		endEditCP(ComStarPositionDistribution);
+*/
+		/*//Attach the Affector to the Circle Particle System
+				beginEditCP(CircleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+					CircleParticleSystem->getGenerators().push_back(CircleBurstGenerator);
+				endEditCP(CircleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+		*///Attach the Affector to the Star Particle System
+				beginEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+					StarParticleSystem->getGenerators().push_back(StarBurstGenerator);
+				endEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+		//Attach the Affector to the ComStar Particle System
+		/*		beginEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+					ComStarParticleSystem->getGenerators().push_back(ComStarBurstGenerator);
+				endEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+	   */
+	   }
+
+	  
    }
    virtual void particleStolen(const ParticleEvent& e)
    {
@@ -429,6 +578,52 @@ int main(int argc, char **argv)
 		PSComStarMaterial->addChunk(PSBlendChunk);
 	endEditCP(PSComStarMaterial, ChunkMaterial::ChunksFieldMask);
 
+	//exposion material
+	TextureChunkPtr ExplosionQuadTextureChunk = TextureChunk::create();
+    ImagePtr LoadedImage4 = ImageFileHandler::the().read("Data/fireworkcomstar.png");    
+    beginEditCP(ExplosionQuadTextureChunk, TextureChunk::ImageFieldMask);
+        ExplosionQuadTextureChunk->setImage(LoadedImage4);
+        ExplosionQuadTextureChunk->setEnvMode(GL_MODULATE);
+    endEditCP(ExplosionQuadTextureChunk, TextureChunk::ImageFieldMask);
+
+	MaterialChunkPtr PSExplosionMaterialChunk = MaterialChunk::create();
+	beginEditCP(PSExplosionMaterialChunk);
+		PSExplosionMaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSExplosionMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
+		PSExplosionMaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSExplosionMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+	endEditCP(PSExplosionMaterialChunk);
+
+	ChunkMaterialPtr PSExplosionMaterial = ChunkMaterial::create();
+	beginEditCP(PSExplosionMaterial, ChunkMaterial::ChunksFieldMask);
+		PSExplosionMaterial->addChunk(ExplosionQuadTextureChunk);
+		PSExplosionMaterial->addChunk(PSExplosionMaterialChunk);
+		PSExplosionMaterial->addChunk(PSBlendChunk);
+	endEditCP(PSExplosionMaterial, ChunkMaterial::ChunksFieldMask);
+
+	//exposion2 material
+	TextureChunkPtr Explosion2QuadTextureChunk = TextureChunk::create();
+    ImagePtr LoadedImage5 = ImageFileHandler::the().read("Data/fireworkmodel copy.png");    
+    beginEditCP(Explosion2QuadTextureChunk, TextureChunk::ImageFieldMask);
+        Explosion2QuadTextureChunk->setImage(LoadedImage5);
+        Explosion2QuadTextureChunk->setEnvMode(GL_MODULATE);
+    endEditCP(Explosion2QuadTextureChunk, TextureChunk::ImageFieldMask);
+
+	MaterialChunkPtr PSExplosion2MaterialChunk = MaterialChunk::create();
+	beginEditCP(PSExplosion2MaterialChunk);
+		PSExplosion2MaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSExplosion2MaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
+		PSExplosion2MaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSExplosion2MaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+	endEditCP(PSExplosion2MaterialChunk);
+
+	ChunkMaterialPtr PSExplosion2Material = ChunkMaterial::create();
+	beginEditCP(PSExplosion2Material, ChunkMaterial::ChunksFieldMask);
+		PSExplosion2Material->addChunk(Explosion2QuadTextureChunk);
+		PSExplosion2Material->addChunk(PSExplosion2MaterialChunk);
+		PSExplosion2Material->addChunk(PSBlendChunk);
+	endEditCP(PSExplosion2Material, ChunkMaterial::ChunksFieldMask);
+
 
 	//Particle System
 		//Rocket
@@ -437,6 +632,18 @@ int main(int argc, char **argv)
 
 	TutorialRocketParticleSystemListener TheRocketListener;
 	RocketParticleSystem->addParticleSystemListener(&TheRocketListener);
+
+	ExplosionParticleSystem = osg::ParticleSystem::create();
+	ExplosionParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+
+	TutorialSecondaryParticleSystemListener ExplosionListener;
+	ExplosionParticleSystem->addParticleSystemListener(&ExplosionListener);
+
+	Explosion2ParticleSystem = osg::ParticleSystem::create();
+	Explosion2ParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+
+	TutorialSecondaryParticleSystemListener Explosion2Listener;
+	Explosion2ParticleSystem->addParticleSystemListener(&Explosion2Listener);
 
 		//Circle
 	CircleParticleSystem = osg::ParticleSystem::create();
@@ -464,6 +671,37 @@ int main(int argc, char **argv)
 		
 		//ComStar
 	ComStarParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
+
+		//Explosion
+	ExplosionParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
+		//Explosion2
+	Explosion2ParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
+	
+			////////////////2ND GROUP///////////////
+	//Circle
+	Circle2ParticleSystem = osg::ParticleSystem::create();
+	Circle2ParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+
+		//Star
+	Star2ParticleSystem = osg::ParticleSystem::create();
+	Star2ParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+		
+		//ComStar
+	ComStar2ParticleSystem = osg::ParticleSystem::create();
+	ComStar2ParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+		
+
+
+	//Particle System Drawer
+		//Circle2
+	Circle2ParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
+	//CircleParticleSystemDrawer->setQuadSizeScaling(Vec2f(0.5f,0.5f));
+		
+		//Star2
+	Star2ParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
+		
+		//ComStar2
+	ComStar2ParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
 		
 	
 		
@@ -543,14 +781,19 @@ int main(int argc, char **argv)
 			CircleAgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
 			CircleAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
 	endEditCP(CircleAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
-   
+   //Attach the Affector to the Circle Particle System
+	beginEditCP(CircleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+		CircleParticleSystem->getAffectors().push_back(CircleAgeFadeParticleAffector);
+		CircleParticleSystem->getAffectors().push_back(CircleAgeSizeParticleAffector);
+	endEditCP(CircleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+	
 	ParticleSystemCorePtr CircleParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(CircleParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		CircleParticleNodeCore->setSystem(CircleParticleSystem);
 		CircleParticleNodeCore->setDrawer(CircleParticleSystemDrawer);
 		CircleParticleNodeCore->setMaterial(PSCircleMaterial);
     endEditCP(CircleParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
-    
+ 
 	NodePtr CircleParticleNode = osg::Node::create();
     beginEditCP(CircleParticleNode, Node::CoreFieldMask);
         CircleParticleNode->setCore(CircleParticleNodeCore);
@@ -575,8 +818,8 @@ int main(int argc, char **argv)
 		StarAgeFadeParticleAffector->setFadeInTime(3.0f);
 		StarAgeFadeParticleAffector->setFadeOutTime(5.0f);
 		StarAgeFadeParticleAffector->setStartAlpha(0.0f);
-		StarAgeFadeParticleAffector->setFadeToAlpha(1.0f);
-		StarAgeFadeParticleAffector->setEndAlpha(0.0f);	
+		StarAgeFadeParticleAffector->setFadeToAlpha(0.2f);
+		StarAgeFadeParticleAffector->setEndAlpha(1.0f);	
 	endEditCP(StarAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 
 	StarAgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
@@ -604,12 +847,12 @@ int main(int argc, char **argv)
 			StarAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
 	endEditCP(StarAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
    
-	/*//Create an CollectiveGravityParticleSystemAffector
-	CollectiveGravityParticleSystemAffectorPtr StarCollectiveGravityParticleSystemAffector = osg::CollectiveGravityParticleSystemAffector::create();
-	beginEditCP(StarCollectiveGravityParticleSystemAffector, CollectiveGravityParticleSystemAffector::ParticleMassFieldMask);
-		StarCollectiveGravityParticleSystemAffector->setParticleMass(10000000000.0f);
-	endEditCP(StarCollectiveGravityParticleSystemAffector, CollectiveGravityParticleSystemAffector::ParticleMassFieldMask);
-*/
+	
+	//Attach the Affector to the Star Particle System
+	beginEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+		StarParticleSystem->getAffectors().push_back(StarAgeSizeParticleAffector);
+	endEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+
 	ParticleSystemCorePtr StarParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(StarParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		StarParticleNodeCore->setSystem(StarParticleSystem);
@@ -632,16 +875,15 @@ int main(int argc, char **argv)
 		ComStarBurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
 		ComStarBurstGenerator->setBurstAmount(50.0);
 		ComStarBurstGenerator->setVelocityFunction(createComStarVelocityDistribution());
-		//ComStarBurstGenerator->setAccelerationFunction(createShrapnelAccelerationDistribution());
 	endEditCP(ComStarBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
 
 	//Attach the function objects the Affectors
 	ComStarAgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
 	beginEditCP(ComStarAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
-		ComStarAgeFadeParticleAffector->setFadeInTime(3.0f);
+		ComStarAgeFadeParticleAffector->setFadeInTime(2.0f);
 		ComStarAgeFadeParticleAffector->setFadeOutTime(5.0f);
 		ComStarAgeFadeParticleAffector->setStartAlpha(0.0f);
-		ComStarAgeFadeParticleAffector->setFadeToAlpha(1.0f);
+		ComStarAgeFadeParticleAffector->setFadeToAlpha(0.2f);
 		ComStarAgeFadeParticleAffector->setEndAlpha(0.0f);	
 	endEditCP(ComStarAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 
@@ -669,7 +911,12 @@ int main(int argc, char **argv)
 			ComStarAgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
 			ComStarAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
 	endEditCP(ComStarAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
-   
+   //Attach the Affector to the ComStar Particle System
+	beginEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+		ComStarParticleSystem->getAffectors().push_back(ComStarAgeFadeParticleAffector);
+		ComStarParticleSystem->getAffectors().push_back(ComStarAgeSizeParticleAffector);
+	endEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+
 	ParticleSystemCorePtr ComStarParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ComStarParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		ComStarParticleNodeCore->setSystem(ComStarParticleSystem);
@@ -682,6 +929,334 @@ int main(int argc, char **argv)
         ComStarParticleNode->setCore(ComStarParticleNodeCore);
     endEditCP(ComStarParticleNode, Node::CoreFieldMask);
 		//end/////////////////////
+
+	//Explosion
+	ExplosionBurstGenerator = osg::BurstParticleGenerator::create();
+			//Attach the function objects to the Generator
+	ExplosionPositionDistribution = createExplosionPositionDistribution();
+	beginEditCP(ExplosionBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+		ExplosionBurstGenerator->setPositionFunction(ExplosionPositionDistribution);
+		ExplosionBurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
+		ExplosionBurstGenerator->setBurstAmount(15.0);
+		ExplosionBurstGenerator->setVelocityFunction(createExplosionVelocityDistribution());
+	endEditCP(ExplosionBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+
+	//Attach the function objects the Affectors
+	ExplosionAgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
+	beginEditCP(ExplosionAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+		ExplosionAgeFadeParticleAffector->setFadeInTime(3.0f);
+		ExplosionAgeFadeParticleAffector->setFadeOutTime(5.0f);
+		ExplosionAgeFadeParticleAffector->setStartAlpha(0.0f);
+		ExplosionAgeFadeParticleAffector->setFadeToAlpha(0.2f);
+		ExplosionAgeFadeParticleAffector->setEndAlpha(1.0f);	
+	endEditCP(ExplosionAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+
+	ExplosionAgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
+	beginEditCP(ExplosionAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+			//ages
+			ExplosionAgeSizeParticleAffector->getAges().push_back(0.1);
+			ExplosionAgeSizeParticleAffector->getAges().push_back(0.2);
+			ExplosionAgeSizeParticleAffector->getAges().push_back(0.3);
+			ExplosionAgeSizeParticleAffector->getAges().push_back(0.4);
+			ExplosionAgeSizeParticleAffector->getAges().push_back(0.5);
+			ExplosionAgeSizeParticleAffector->getAges().push_back(0.6);
+			ExplosionAgeSizeParticleAffector->getAges().push_back(0.7);
+			ExplosionAgeSizeParticleAffector->getAges().push_back(0.8);
+			ExplosionAgeSizeParticleAffector->getAges().push_back(1.0);
+
+			//sizes
+			ExplosionAgeSizeParticleAffector->getSizes().push_back(Vec3f(0.5,0.5,0.5));
+			ExplosionAgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,1.0,1.0));
+			ExplosionAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,2.0,2.0));
+			ExplosionAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.5,2.5,2.5));
+			ExplosionAgeSizeParticleAffector->getSizes().push_back(Vec3f(3.0,3.0,3.0));
+			ExplosionAgeSizeParticleAffector->getSizes().push_back(Vec3f(3.5,3.5,3.5));
+			ExplosionAgeSizeParticleAffector->getSizes().push_back(Vec3f(4.0,4.0,4.0));
+			ExplosionAgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
+			ExplosionAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
+	endEditCP(ExplosionAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+   
+	
+	//Attach the Affector to the Explosion Particle System
+	beginEditCP(ExplosionParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+	//	ExplosionParticleSystem->getAffectors().push_back(ExplosionAgeSizeParticleAffector);
+	endEditCP(ExplosionParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+
+	ParticleSystemCorePtr ExplosionParticleNodeCore = osg::ParticleSystemCore::create();
+    beginEditCP(ExplosionParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+		ExplosionParticleNodeCore->setSystem(ExplosionParticleSystem);
+		ExplosionParticleNodeCore->setDrawer(ExplosionParticleSystemDrawer);
+		ExplosionParticleNodeCore->setMaterial(PSExplosionMaterial);
+    endEditCP(ExplosionParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+    
+	NodePtr ExplosionParticleNode = osg::Node::create();
+    beginEditCP(ExplosionParticleNode, Node::CoreFieldMask);
+        ExplosionParticleNode->setCore(ExplosionParticleNodeCore);
+    endEditCP(ExplosionParticleNode, Node::CoreFieldMask);
+		//end/////////////////////
+
+	//Explosion2
+	Explosion2BurstGenerator = osg::BurstParticleGenerator::create();
+			//Attach the function objects to the Generator
+	Explosion2PositionDistribution = createExplosion2PositionDistribution();
+	beginEditCP(Explosion2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+		Explosion2BurstGenerator->setPositionFunction(Explosion2PositionDistribution);
+		Explosion2BurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
+		Explosion2BurstGenerator->setBurstAmount(15.0);
+		Explosion2BurstGenerator->setVelocityFunction(createExplosion2VelocityDistribution());
+	endEditCP(Explosion2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+
+	//Attach the function objects the Affectors
+	Explosion2AgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
+	beginEditCP(Explosion2AgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+		Explosion2AgeFadeParticleAffector->setFadeInTime(3.0f);
+		Explosion2AgeFadeParticleAffector->setFadeOutTime(5.0f);
+		Explosion2AgeFadeParticleAffector->setStartAlpha(0.0f);
+		Explosion2AgeFadeParticleAffector->setFadeToAlpha(0.2f);
+		Explosion2AgeFadeParticleAffector->setEndAlpha(1.0f);	
+	endEditCP(Explosion2AgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+
+	Explosion2AgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
+	beginEditCP(Explosion2AgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+			//ages
+			Explosion2AgeSizeParticleAffector->getAges().push_back(0.1);
+			Explosion2AgeSizeParticleAffector->getAges().push_back(0.2);
+			Explosion2AgeSizeParticleAffector->getAges().push_back(0.3);
+			Explosion2AgeSizeParticleAffector->getAges().push_back(0.4);
+			Explosion2AgeSizeParticleAffector->getAges().push_back(0.5);
+			Explosion2AgeSizeParticleAffector->getAges().push_back(0.6);
+			Explosion2AgeSizeParticleAffector->getAges().push_back(0.7);
+			Explosion2AgeSizeParticleAffector->getAges().push_back(0.8);
+			Explosion2AgeSizeParticleAffector->getAges().push_back(1.0);
+
+			//sizes
+			Explosion2AgeSizeParticleAffector->getSizes().push_back(Vec3f(0.5,0.5,0.5));
+			Explosion2AgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,1.0,1.0));
+			Explosion2AgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,2.0,2.0));
+			Explosion2AgeSizeParticleAffector->getSizes().push_back(Vec3f(2.5,2.5,2.5));
+			Explosion2AgeSizeParticleAffector->getSizes().push_back(Vec3f(3.0,3.0,3.0));
+			Explosion2AgeSizeParticleAffector->getSizes().push_back(Vec3f(3.5,3.5,3.5));
+			Explosion2AgeSizeParticleAffector->getSizes().push_back(Vec3f(4.0,4.0,4.0));
+			Explosion2AgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
+			Explosion2AgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
+	endEditCP(Explosion2AgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+   
+	
+	//Attach the Affector to the Explosion2 Particle System
+	beginEditCP(Explosion2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+	//	Explosion2ParticleSystem->getAffectors().push_back(Explosion2AgeSizeParticleAffector);
+	endEditCP(Explosion2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+
+	ParticleSystemCorePtr Explosion2ParticleNodeCore = osg::ParticleSystemCore::create();
+    beginEditCP(Explosion2ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+		Explosion2ParticleNodeCore->setSystem(Explosion2ParticleSystem);
+		Explosion2ParticleNodeCore->setDrawer(Explosion2ParticleSystemDrawer);
+		Explosion2ParticleNodeCore->setMaterial(PSExplosion2Material);
+    endEditCP(Explosion2ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+    
+	NodePtr Explosion2ParticleNode = osg::Node::create();
+    beginEditCP(Explosion2ParticleNode, Node::CoreFieldMask);
+        Explosion2ParticleNode->setCore(Explosion2ParticleNodeCore);
+    endEditCP(Explosion2ParticleNode, Node::CoreFieldMask);
+		//end/////////////////////
+
+	////////////////////////2ND GROUP///////////////////////////////////
+
+	//Particle System Node    
+    
+		//Circle2
+	Circle2BurstGenerator = osg::BurstParticleGenerator::create();
+			//Attach the function objects to the Generator
+	Circle2PositionDistribution = createSmokePositionDistribution();
+	beginEditCP(Circle2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+		Circle2BurstGenerator->setPositionFunction(Circle2PositionDistribution);
+		Circle2BurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
+		Circle2BurstGenerator->setBurstAmount(50.0);
+		Circle2BurstGenerator->setVelocityFunction(createSmoke2VelocityDistribution());
+	endEditCP(Circle2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+
+	//Attach the function objects the Affectors
+	Circle2AgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
+	beginEditCP(Circle2AgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+		Circle2AgeFadeParticleAffector->setFadeInTime(3.0f);
+		Circle2AgeFadeParticleAffector->setFadeOutTime(5.0f);
+		Circle2AgeFadeParticleAffector->setStartAlpha(0.0f);
+		Circle2AgeFadeParticleAffector->setFadeToAlpha(1.0f);
+		Circle2AgeFadeParticleAffector->setEndAlpha(0.0f);	
+	endEditCP(Circle2AgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+
+	Circle2AgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
+	beginEditCP(Circle2AgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+			//ages
+			Circle2AgeSizeParticleAffector->getAges().push_back(0.1);
+			Circle2AgeSizeParticleAffector->getAges().push_back(0.2);
+			Circle2AgeSizeParticleAffector->getAges().push_back(0.3);
+			Circle2AgeSizeParticleAffector->getAges().push_back(0.4);
+			Circle2AgeSizeParticleAffector->getAges().push_back(0.5);
+			Circle2AgeSizeParticleAffector->getAges().push_back(0.6);
+			Circle2AgeSizeParticleAffector->getAges().push_back(0.7);
+			Circle2AgeSizeParticleAffector->getAges().push_back(0.8);
+			Circle2AgeSizeParticleAffector->getAges().push_back(1.0);
+
+			//sizes
+			Circle2AgeSizeParticleAffector->getSizes().push_back(Vec3f(0.5,0.5,0.5));
+			Circle2AgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,1.0,1.0));
+			Circle2AgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,2.0,2.0));
+			Circle2AgeSizeParticleAffector->getSizes().push_back(Vec3f(2.5,2.5,2.5));
+			Circle2AgeSizeParticleAffector->getSizes().push_back(Vec3f(3.0,3.0,3.0));
+			Circle2AgeSizeParticleAffector->getSizes().push_back(Vec3f(3.5,3.5,3.5));
+			Circle2AgeSizeParticleAffector->getSizes().push_back(Vec3f(4.0,4.0,4.0));
+			Circle2AgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
+			Circle2AgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
+	endEditCP(Circle2AgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+   
+	   //Attach the Affector to the Circle2 Particle System
+	beginEditCP(Circle2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+		Circle2ParticleSystem->getAffectors().push_back(Circle2AgeFadeParticleAffector);
+		Circle2ParticleSystem->getAffectors().push_back(Circle2AgeSizeParticleAffector);
+	endEditCP(Circle2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+	
+	ParticleSystemCorePtr Circle2ParticleNodeCore = osg::ParticleSystemCore::create();
+    beginEditCP(Circle2ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+		Circle2ParticleNodeCore->setSystem(Circle2ParticleSystem);
+		Circle2ParticleNodeCore->setDrawer(Circle2ParticleSystemDrawer);
+		Circle2ParticleNodeCore->setMaterial(PSCircleMaterial);
+    endEditCP(Circle2ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+ 
+	NodePtr Circle2ParticleNode = osg::Node::create();
+    beginEditCP(Circle2ParticleNode, Node::CoreFieldMask);
+        Circle2ParticleNode->setCore(Circle2ParticleNodeCore);
+    endEditCP(Circle2ParticleNode, Node::CoreFieldMask);
+		//end/////////////////////
+
+		//Star2
+	Star2BurstGenerator = osg::BurstParticleGenerator::create();
+			//Attach the function objects to the Generator
+	Star2PositionDistribution = createStar2PositionDistribution();
+	beginEditCP(Star2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+		Star2BurstGenerator->setPositionFunction(Star2PositionDistribution);
+		Star2BurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
+		Star2BurstGenerator->setBurstAmount(50.0);
+		Star2BurstGenerator->setVelocityFunction(createStar2VelocityDistribution());
+	endEditCP(Star2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+
+	//Attach the function objects the Affectors
+	Star2AgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
+	beginEditCP(Star2AgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+		Star2AgeFadeParticleAffector->setFadeInTime(3.0f);
+		Star2AgeFadeParticleAffector->setFadeOutTime(5.0f);
+		Star2AgeFadeParticleAffector->setStartAlpha(0.0f);
+		Star2AgeFadeParticleAffector->setFadeToAlpha(0.2f);
+		Star2AgeFadeParticleAffector->setEndAlpha(1.0f);	
+	endEditCP(Star2AgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+
+	Star2AgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
+	beginEditCP(Star2AgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+			//ages
+			Star2AgeSizeParticleAffector->getAges().push_back(0.1);
+			Star2AgeSizeParticleAffector->getAges().push_back(0.2);
+			Star2AgeSizeParticleAffector->getAges().push_back(0.3);
+			Star2AgeSizeParticleAffector->getAges().push_back(0.4);
+			Star2AgeSizeParticleAffector->getAges().push_back(0.5);
+			Star2AgeSizeParticleAffector->getAges().push_back(0.6);
+			Star2AgeSizeParticleAffector->getAges().push_back(0.7);
+			Star2AgeSizeParticleAffector->getAges().push_back(0.8);
+			Star2AgeSizeParticleAffector->getAges().push_back(1.0);
+
+			//sizes
+			Star2AgeSizeParticleAffector->getSizes().push_back(Vec3f(0.5,0.5,0.5));
+			Star2AgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,1.0,1.0));
+			Star2AgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,2.0,2.0));
+			Star2AgeSizeParticleAffector->getSizes().push_back(Vec3f(2.5,2.5,2.5));
+			Star2AgeSizeParticleAffector->getSizes().push_back(Vec3f(3.0,3.0,3.0));
+			Star2AgeSizeParticleAffector->getSizes().push_back(Vec3f(3.5,3.5,3.5));
+			Star2AgeSizeParticleAffector->getSizes().push_back(Vec3f(4.0,4.0,4.0));
+			Star2AgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
+			Star2AgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
+	endEditCP(Star2AgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+   
+	
+	//Attach the Affector to the Star2 Particle System
+	beginEditCP(Star2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+		Star2ParticleSystem->getAffectors().push_back(Star2AgeSizeParticleAffector);
+	endEditCP(Star2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+
+	ParticleSystemCorePtr Star2ParticleNodeCore = osg::ParticleSystemCore::create();
+    beginEditCP(Star2ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+		Star2ParticleNodeCore->setSystem(Star2ParticleSystem);
+		Star2ParticleNodeCore->setDrawer(Star2ParticleSystemDrawer);
+		Star2ParticleNodeCore->setMaterial(PSStarMaterial);
+    endEditCP(Star2ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+    
+	NodePtr Star2ParticleNode = osg::Node::create();
+    beginEditCP(Star2ParticleNode, Node::CoreFieldMask);
+        Star2ParticleNode->setCore(Star2ParticleNodeCore);
+    endEditCP(Star2ParticleNode, Node::CoreFieldMask);
+		//end/////////////////////
+
+		//ComStar2
+	ComStar2BurstGenerator = osg::BurstParticleGenerator::create();
+			//Attach the function objects to the Generator
+	ComStar2PositionDistribution = createComStar2PositionDistribution();
+	beginEditCP(ComStar2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+		ComStar2BurstGenerator->setPositionFunction(ComStar2PositionDistribution);
+		ComStar2BurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
+		ComStar2BurstGenerator->setBurstAmount(50.0);
+		ComStar2BurstGenerator->setVelocityFunction(createComStar2VelocityDistribution());
+	endEditCP(ComStar2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+
+	//Attach the function objects the Affectors
+	ComStar2AgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
+	beginEditCP(ComStar2AgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+		ComStar2AgeFadeParticleAffector->setFadeInTime(2.0f);
+		ComStar2AgeFadeParticleAffector->setFadeOutTime(5.0f);
+		ComStar2AgeFadeParticleAffector->setStartAlpha(0.0f);
+		ComStar2AgeFadeParticleAffector->setFadeToAlpha(0.2f);
+		ComStar2AgeFadeParticleAffector->setEndAlpha(0.0f);	
+	endEditCP(ComStar2AgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
+
+	ComStar2AgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
+	beginEditCP(ComStar2AgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+			//ages
+			ComStar2AgeSizeParticleAffector->getAges().push_back(0.1);
+			ComStar2AgeSizeParticleAffector->getAges().push_back(0.2);
+			ComStar2AgeSizeParticleAffector->getAges().push_back(0.3);
+			ComStar2AgeSizeParticleAffector->getAges().push_back(0.4);
+			ComStar2AgeSizeParticleAffector->getAges().push_back(0.5);
+			ComStar2AgeSizeParticleAffector->getAges().push_back(0.6);
+			ComStar2AgeSizeParticleAffector->getAges().push_back(0.7);
+			ComStar2AgeSizeParticleAffector->getAges().push_back(0.8);
+			ComStar2AgeSizeParticleAffector->getAges().push_back(1.0);
+
+			//sizes
+			ComStar2AgeSizeParticleAffector->getSizes().push_back(Vec3f(0.5,0.5,0.5));
+			ComStar2AgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,1.0,1.0));
+			ComStar2AgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,2.0,2.0));
+			ComStar2AgeSizeParticleAffector->getSizes().push_back(Vec3f(2.5,2.5,2.5));
+			ComStar2AgeSizeParticleAffector->getSizes().push_back(Vec3f(3.0,3.0,3.0));
+			ComStar2AgeSizeParticleAffector->getSizes().push_back(Vec3f(3.5,3.5,3.5));
+			ComStar2AgeSizeParticleAffector->getSizes().push_back(Vec3f(4.0,4.0,4.0));
+			ComStar2AgeSizeParticleAffector->getSizes().push_back(Vec3f(5.0,5.0,5.0));
+			ComStar2AgeSizeParticleAffector->getSizes().push_back(Vec3f(6.5,6.5,6.5));
+	endEditCP(ComStar2AgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
+   //Attach the Affector to the ComStar2 Particle System
+	beginEditCP(ComStar2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+		ComStar2ParticleSystem->getAffectors().push_back(ComStar2AgeFadeParticleAffector);
+		ComStar2ParticleSystem->getAffectors().push_back(ComStar2AgeSizeParticleAffector);
+	endEditCP(ComStar2ParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+
+	ParticleSystemCorePtr ComStar2ParticleNodeCore = osg::ParticleSystemCore::create();
+    beginEditCP(ComStar2ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+		ComStar2ParticleNodeCore->setSystem(ComStar2ParticleSystem);
+		ComStar2ParticleNodeCore->setDrawer(ComStar2ParticleSystemDrawer);
+		ComStar2ParticleNodeCore->setMaterial(PSComStarMaterial);
+    endEditCP(ComStar2ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+    
+	NodePtr ComStar2ParticleNode = osg::Node::create();
+    beginEditCP(ComStar2ParticleNode, Node::CoreFieldMask);
+        ComStar2ParticleNode->setCore(ComStar2ParticleNodeCore);
+    endEditCP(ComStar2ParticleNode, Node::CoreFieldMask);
+		//end/////////////////////
 	
 	
 
@@ -691,8 +1266,13 @@ int main(int argc, char **argv)
         scene->setCore(osg::Group::create());
         scene->addChild(RocketParticleNode);
 		scene->addChild(CircleParticleNode);
-		//scene->addChild(StarParticleNode);
+		scene->addChild(StarParticleNode);
 		scene->addChild(ComStarParticleNode);
+		scene->addChild(Circle2ParticleNode);
+		scene->addChild(Star2ParticleNode);
+		scene->addChild(ComStar2ParticleNode);
+		scene->addChild(ExplosionParticleNode);
+		scene->addChild(Explosion2ParticleNode);
 	endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
@@ -789,12 +1369,18 @@ FunctionPtr createSmokeLifespanDistribution(void)
 
 FunctionPtr createSmokeVelocityDistribution(void)
 {
-	 //Sphere Distribution
-    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
-    beginEditCP(TheLineDistribution);
- 		TheLineDistribution->setPoint1(Pnt3f(0.0,1.0,1.0));
-		TheLineDistribution->setPoint2(Pnt3f(0.0,1.0,3.0));
-    endEditCP(TheLineDistribution);
+	  //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(3.0);
+      TheSphereDistribution->setOuterRadius(10.0);
+      TheSphereDistribution->setMinTheta(-3.141950);
+      TheSphereDistribution->setMaxTheta(3.141950);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+    endEditCP(TheSphereDistribution);
 
 	DataConverterPtr TheVec3fConverter = DataConverter::create();
 	beginEditCP(TheVec3fConverter);
@@ -803,7 +1389,7 @@ FunctionPtr createSmokeVelocityDistribution(void)
 
 	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
 	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheSphereDistribution);
 		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
 	endEditCP(TheVelocityDistribution);
 
@@ -817,7 +1403,7 @@ FunctionPtr createStarPositionDistribution(void)
     beginEditCP(TheSphereDistribution);
       TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
       TheSphereDistribution->setInnerRadius(0.0);
-      TheSphereDistribution->setOuterRadius(4.0);
+      TheSphereDistribution->setOuterRadius(5.0);
       TheSphereDistribution->setMinTheta(0.0);
       TheSphereDistribution->setMaxTheta(6.283185);
       TheSphereDistribution->setMinZ(-1.0);
@@ -844,8 +1430,8 @@ FunctionPtr createStarVelocityDistribution(void)
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
- 		TheLineDistribution->setPoint1(Pnt3f(0.0,1.0,1.0));
-		TheLineDistribution->setPoint2(Pnt3f(0.0,1.0,3.0));
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,-1.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,-5.0,0.0));
     endEditCP(TheLineDistribution);
 
 	DataConverterPtr TheVec3fConverter = DataConverter::create();
@@ -869,7 +1455,7 @@ FunctionPtr createComStarPositionDistribution(void)
     beginEditCP(TheSphereDistribution);
       TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
       TheSphereDistribution->setInnerRadius(2.0);
-      TheSphereDistribution->setOuterRadius(4.0);
+      TheSphereDistribution->setOuterRadius(6.0);
       TheSphereDistribution->setMinTheta(0.0);
       TheSphereDistribution->setMaxTheta(6.283185);
       TheSphereDistribution->setMinZ(-1.0);
@@ -896,8 +1482,8 @@ FunctionPtr createComStarVelocityDistribution(void)
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
- 		TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,1.0));
-		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,3.0));
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,-1.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,-5.0,0.0));
     endEditCP(TheLineDistribution);
 
 	DataConverterPtr TheVec3fConverter = DataConverter::create();
@@ -913,3 +1499,226 @@ FunctionPtr createComStarVelocityDistribution(void)
 
     return TheVelocityDistribution;
 }
+
+
+
+FunctionPtr createSmoke2PositionDistribution(void)
+{
+    //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(0.0);
+      TheSphereDistribution->setOuterRadius(3.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(6.283185);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+    endEditCP(TheSphereDistribution);
+
+    return TheSphereDistribution;
+}
+
+
+
+FunctionPtr createSmoke2VelocityDistribution(void)
+{
+	  //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(3.0);
+      TheSphereDistribution->setOuterRadius(10.0);
+      TheSphereDistribution->setMinTheta(-3.141950);
+      TheSphereDistribution->setMaxTheta(3.141950);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+    endEditCP(TheSphereDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheSphereDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
+}
+
+FunctionPtr createStar2PositionDistribution(void)
+{
+     //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(0.0);
+      TheSphereDistribution->setOuterRadius(1.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(6.283185);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
+    endEditCP(TheSphereDistribution);
+
+    return TheSphereDistribution;
+}
+
+
+
+FunctionPtr createStar2VelocityDistribution(void)
+{
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,-1.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,-1.0,0.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
+}
+
+FunctionPtr createComStar2PositionDistribution(void)
+{
+    //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(2.0);
+      TheSphereDistribution->setOuterRadius(6.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(6.283185);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
+    endEditCP(TheSphereDistribution);
+
+    return TheSphereDistribution;
+}
+
+
+
+FunctionPtr createComStar2VelocityDistribution(void)
+{
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(Pnt3f(-1.0,0.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(-1.0,0.0,0.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
+}
+
+
+FunctionPtr createExplosionPositionDistribution(void)
+{
+    //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(0.0);
+      TheSphereDistribution->setOuterRadius(1.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(6.283185);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
+    endEditCP(TheSphereDistribution);
+
+    return TheSphereDistribution;
+}
+
+FunctionPtr createExplosionVelocityDistribution(void)
+{
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,-1.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,-1.0,0.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
+}
+
+
+FunctionPtr createExplosion2PositionDistribution(void)
+{
+   
+	//Disc Distribution
+    DiscDistribution3DPtr TheDiscDistribution = DiscDistribution3D::create();
+    beginEditCP(TheDiscDistribution);
+      TheDiscDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheDiscDistribution->setInnerRadius(10.0);
+      TheDiscDistribution->setOuterRadius(15.0);
+      TheDiscDistribution->setMinTheta(0.0);
+      TheDiscDistribution->setMaxTheta(6.283185307);
+      TheDiscDistribution->setNormal(Vec3f(0.0,1.0,0.0));
+      TheDiscDistribution->setSurfaceOrEdge(DiscDistribution3D::SURFACE);
+    endEditCP(TheDiscDistribution);
+
+
+    return TheDiscDistribution;
+}
+
+FunctionPtr createExplosion2VelocityDistribution(void)
+{
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,-1.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,-1.0,0.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
+}
+
