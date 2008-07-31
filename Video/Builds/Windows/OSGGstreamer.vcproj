@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgstreamer-0.10.lib gobject-2.0.lib glib-2.0.lib OSGBaseD.lib OSGSystemD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="Strmiids.lib ole32.lib OSGBaseD.lib OSGSystemD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -212,15 +212,23 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\..\src\OSGGStreamerManager.cpp"
+				RelativePath="..\..\src\DirectShowVideoGraph.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\OSGGStreamerManager.h"
+				RelativePath="..\..\src\DirectShowVideoGraph.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\OSGGStreamerManager.inl"
+				RelativePath="..\..\src\OSGDirectShowManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGDirectShowManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGDirectShowManager.inl"
 				>
 			</File>
 			<File

@@ -3,7 +3,7 @@
 #include <gst/gst.h>
 #include <iostream>
 
-
+#include <Dshow.h>
 OSG_BEGIN_NAMESPACE
 
 GStreamerManager *GStreamerManager::_the = NULL;
@@ -79,6 +79,7 @@ on_pad_added (GstElement *element,
               gpointer    data)
 {
   GstPad *sinkpad;
+  GstPad *videosrcpad;
   GstElement *decoder = (GstElement *) data;
 
   /* We can now link this pad with the vorbis-decoder sink pad */
@@ -93,9 +94,35 @@ on_pad_added (GstElement *element,
 
 void GStreamerManager::openVideo(std::string Path)
 {
+	GstElement *pipeline;
+	pipeline = gst_element_factory_make ("playbin", "player");
+
+	
+	g_object_set (G_OBJECT (pipeline), "uri", Path.c_str(), NULL);
+
+	gst_element_set_state (GST_ELEMENT (pipeline), GST_STATE_PLAYING);
+
+    GMainLoop *loop;
+	
+  loop = g_main_loop_new (NULL, FALSE);
+
+  GstBus *bus;
+  bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
+  gst_bus_add_watch (bus, bus_call, loop);
+  gst_object_unref (bus);
+	
+  g_main_loop_run (loop);
+
+  /* Out of the main loop, clean up nicely */
+  g_print ("Returned, stopping playback\n");
+  gst_element_set_state (pipeline, GST_STATE_NULL);
+
+  g_print ("Deleting pipeline\n");
+  gst_object_unref (GST_OBJECT (pipeline));
+
 }
 
-void GStreamerManager::doSomething(void)
+void GStreamerManager::openVideo2(std::string Path)
 {
     GMainLoop *loop;
 
@@ -118,13 +145,14 @@ void GStreamerManager::doSomething(void)
   /* Create gstreamer elements */
   pipeline = gst_pipeline_new ("audio-player");
   source   = gst_element_factory_make ("filesrc",       "file-source");
-  demuxer  = gst_element_factory_make ("oggdemux",      "ogg-demuxer");
-  decoder  = gst_element_factory_make ("vorbisdec",     "vorbis-decoder");
-  conv     = gst_element_factory_make ("audioconvert",  "converter");
+  demuxer  = gst_element_factory_make ("avidemux",      "avi-demuxer");
+  //decoder  = gst_element_factory_make ("vorbisdec",     "vorbis-decoder");
+  //conv     = gst_element_factory_make ("audioconvert",  "converter");
   //sink     = gst_element_factory_make ("autoaudiosink", "audio-output");
   sink     = gst_element_factory_make ("filesink", "audio-output");
 
-  if (!pipeline || !source || !demuxer || !decoder || !conv || !sink) {
+  //if (!pipeline || !source || !demuxer || !decoder || !conv || !sink) {
+  if (!pipeline || !source || !demuxer || !sink) {
     g_printerr ("One element could not be created. Exiting.\n");
     return;
   }
@@ -132,8 +160,8 @@ void GStreamerManager::doSomething(void)
   /* Set up the pipeline */
 
   /* we set the input filename to the source element */
-  std::string File("K:\\Documents and Settings\\David\\My Documents\\Downloads\\Test.ogg");
-  g_object_set (G_OBJECT (source), "location", File.c_str(), NULL);
+  //std::string File("K:\\Documents and Settings\\David\\My Documents\\Downloads\\Test.ogg");
+  g_object_set (G_OBJECT (source), "location", Path.c_str(), NULL);
   
   g_object_set (G_OBJECT (sink), "location", "Bla.raw", NULL);
 
@@ -145,13 +173,16 @@ void GStreamerManager::doSomething(void)
   /* we add all elements into the pipeline */
   /* file-source | ogg-demuxer | vorbis-decoder | converter | alsa-output */
   gst_bin_add_many (GST_BIN (pipeline),
-                    source, demuxer, decoder, conv, sink, NULL);
+                    //source, demuxer, decoder, conv, sink, NULL);
+                    source, demuxer, sink, NULL);
 
   /* we link the elements together */
   /* file-source -> ogg-demuxer ~> vorbis-decoder -> converter -> alsa-output */
   gst_element_link (source, demuxer);
-  gst_element_link_many (decoder, conv, sink, NULL);
-  g_signal_connect (demuxer, "pad-added", G_CALLBACK (on_pad_added), decoder);
+  //gst_element_link_many (decoder, conv, sink, NULL);
+  //gst_element_link_many (sink, NULL);
+  //g_signal_connect (demuxer, "pad-added", G_CALLBACK (on_pad_added), decoder);
+  g_signal_connect (demuxer, "pad-added", G_CALLBACK (on_pad_added), sink);
 
   /* note that the demuxer will be linked to the decoder dynamically.
      The reason is that Ogg may contain various streams (for example
@@ -179,6 +210,10 @@ void GStreamerManager::doSomething(void)
   gst_object_unref (GST_OBJECT (pipeline));
 
   //return 0;
+}
+
+void GStreamerManager::doSomething(void)
+{
 }
 /*-------------------------------------------------------------------------*/
 /*                            Constructors                                 */

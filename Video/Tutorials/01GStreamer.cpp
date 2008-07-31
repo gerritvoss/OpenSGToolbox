@@ -10,7 +10,7 @@
 //Dynamics Distributions
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGBaseFunctions.h>
-#include <OpenSG/Video/OSGGStreamerManager.h>
+#include <OpenSG/Video/OSGDirectShowManager.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -22,12 +22,13 @@ int main(int argc, char **argv)
 {
     //Init
     osgInit(argc, argv);
-    GStreamerManager::the()->init(argc, argv);
+    DirectShowManager::the()->init(argc, argv);
     
-    GStreamerManager::the()->doSomething();
+	DirectShowManager::the()->openVideo(std::string("C:\\Test.avi"));
+    //DirectShowManager::the()->openVideo(std::string("C:\\Documents and Settings\\David\\My Documents\\Work\\OpenSGToolbox\\Video\\Tutorials\\Test.ogg"));
 
     //DeInit
-    GStreamerManager::the()->exit();
+    DirectShowManager::the()->exit();
     osgExit();
 
     return 0;

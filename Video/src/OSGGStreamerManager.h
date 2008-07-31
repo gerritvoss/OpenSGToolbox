@@ -18,6 +18,7 @@ public:
 
     void doSomething(void);
 
+    void openVideo2(std::string Path);
     void openVideo(std::string Path);
 
 private:
