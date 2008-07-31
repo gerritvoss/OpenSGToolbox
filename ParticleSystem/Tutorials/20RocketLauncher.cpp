@@ -77,6 +77,7 @@ ParticleSystemPtr ShrapnelParticleSystem;
 ParticleSystemPtr FireballParticleSystem;
 ParticleSystemPtr HouseParticleSystem;
 
+
 BurstParticleGeneratorPtr ShrapnelBurstGenerator;
 RateParticleGeneratorPtr SmokeGenerator;
 BurstParticleGeneratorPtr FireballGenerator;
@@ -594,10 +595,10 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(RocketParticleNode);
-		scene->addChild(SmokeParticleNode);
-		scene->addChild(ShrapnelParticleNode);
+		//scene->addChild(SmokeParticleNode);
+		//scene->addChild(ShrapnelParticleNode);
 		scene->addChild(FireballParticleNode);
-		scene->addChild(EnvironmentNode);
+	//	scene->addChild(EnvironmentNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);

@@ -136,12 +136,14 @@ FunctionPtr createLifespanDistribution(void);
 FunctionPtr createSmokeVelocityDistribution(void);
 FunctionPtr createSmokeLifespanDistribution(void);
 FunctionPtr createSmokePositionDistribution(void);
+FunctionPtr createSmokeColorDistribution(void);
 FunctionPtr createStarVelocityDistribution(void);
 FunctionPtr createStarLifespanDistribution(void);
 FunctionPtr createStarPositionDistribution(void);
 FunctionPtr createComStarVelocityDistribution(void);
 FunctionPtr createComStarLifespanDistribution(void);
 FunctionPtr createComStarPositionDistribution(void);
+FunctionPtr createComStarColorDistribution(void);
 
 FunctionPtr createComStar2VelocityDistribution(void);
 FunctionPtr createComStar2PositionDistribution(void);
@@ -394,27 +396,27 @@ class TutorialSecondaryParticleSystemListener : public ParticleSystemListener
 			SphereDistribution3D::Ptr::dcast(CirclePositionDistribution)->setCenter(e.getPosition());
 		endEditCP(CirclePositionDistribution);
 */
-		beginEditCP(StarPositionDistribution);
+		/*beginEditCP(StarPositionDistribution);
 			SphereDistribution3D::Ptr::dcast(StarPositionDistribution)->setCenter(e.getPosition());
 		endEditCP(StarPositionDistribution);
-
-		/*beginEditCP(ComStarPositionDistribution);
+*/
+		beginEditCP(ComStarPositionDistribution);
 			SphereDistribution3D::Ptr::dcast(ComStarPositionDistribution)->setCenter(e.getPosition());
 		endEditCP(ComStarPositionDistribution);
-*/
+
 		/*//Attach the Affector to the Circle Particle System
 				beginEditCP(CircleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 					CircleParticleSystem->getGenerators().push_back(CircleBurstGenerator);
 				endEditCP(CircleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 		*///Attach the Affector to the Star Particle System
-				beginEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
+			/*	beginEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 					StarParticleSystem->getGenerators().push_back(StarBurstGenerator);
 				endEditCP(StarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask | ParticleSystem::SystemAffectorsFieldMask);
-		//Attach the Affector to the ComStar Particle System
-		/*		beginEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
+		*///Attach the Affector to the ComStar Particle System
+				beginEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 					ComStarParticleSystem->getGenerators().push_back(ComStarBurstGenerator);
 				endEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
-	   */
+	   
 	   }
 
 	  
@@ -475,8 +477,8 @@ int main(int argc, char **argv)
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
 		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSMaterialChunkChunk->setDiffuse(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSMaterialChunkChunk->setSpecular(Color4f(0.0f,0.0f,0.0f,1.0f));
 		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSMaterialChunkChunk);
 
@@ -497,9 +499,9 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSRocketMaterialChunk = MaterialChunk::create();
 	beginEditCP(PSRocketMaterialChunk);
-		PSRocketMaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSRocketMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSRocketMaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSRocketMaterialChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSRocketMaterialChunk->setDiffuse(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSRocketMaterialChunk->setSpecular(Color4f(0.0f,0.0f,0.0f,1.0f));
 		PSRocketMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSRocketMaterialChunk);
 
@@ -520,9 +522,9 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSCircleMaterialChunk = MaterialChunk::create();
 	beginEditCP(PSCircleMaterialChunk);
-		PSCircleMaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSCircleMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSCircleMaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSCircleMaterialChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSCircleMaterialChunk->setDiffuse(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSCircleMaterialChunk->setSpecular(Color4f(0.0f,0.0f,0.0f,1.0f));
 		PSCircleMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSCircleMaterialChunk);
 
@@ -543,9 +545,9 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSStarMaterialChunk = MaterialChunk::create();
 	beginEditCP(PSStarMaterialChunk);
-		PSStarMaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSStarMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSStarMaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSStarMaterialChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSStarMaterialChunk->setDiffuse(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSStarMaterialChunk->setSpecular(Color4f(0.0f,0.0f,0.0f,1.0f));
 		PSStarMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSStarMaterialChunk);
 
@@ -557,6 +559,10 @@ int main(int argc, char **argv)
 	endEditCP(PSStarMaterial, ChunkMaterial::ChunksFieldMask);
 
 		//ComStar material
+	BlendChunkPtr ComStarBlendChunk = BlendChunk::create();
+	ComStarBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+	ComStarBlendChunk->setDestFactor(GL_ONE);
+
 	TextureChunkPtr ComStarQuadTextureChunk = TextureChunk::create();
     ImagePtr LoadedImage2 = ImageFileHandler::the().read("Data/fireworkcomstar.png");    
     beginEditCP(ComStarQuadTextureChunk, TextureChunk::ImageFieldMask);
@@ -566,9 +572,9 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSComStarMaterialChunk = MaterialChunk::create();
 	beginEditCP(PSComStarMaterialChunk);
-		PSComStarMaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSComStarMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSComStarMaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSComStarMaterialChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSComStarMaterialChunk->setDiffuse(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSComStarMaterialChunk->setSpecular(Color4f(0.0f,0.0f,0.0f,1.0f));
 		PSComStarMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSComStarMaterialChunk);
 
@@ -576,12 +582,12 @@ int main(int argc, char **argv)
 	beginEditCP(PSComStarMaterial, ChunkMaterial::ChunksFieldMask);
 		PSComStarMaterial->addChunk(ComStarQuadTextureChunk);
 		PSComStarMaterial->addChunk(PSComStarMaterialChunk);
-		PSComStarMaterial->addChunk(PSBlendChunk);
+		PSComStarMaterial->addChunk(ComStarBlendChunk);
 	endEditCP(PSComStarMaterial, ChunkMaterial::ChunksFieldMask);
 
 	//exposion material
 	TextureChunkPtr ExplosionQuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage4 = ImageFileHandler::the().read("Data/fireworkcomstar.png");    
+    ImagePtr LoadedImage4 = ImageFileHandler::the().read("Data/fireworkstar.png");    
     beginEditCP(ExplosionQuadTextureChunk, TextureChunk::ImageFieldMask);
         ExplosionQuadTextureChunk->setImage(LoadedImage4);
         ExplosionQuadTextureChunk->setEnvMode(GL_MODULATE);
@@ -589,9 +595,9 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSExplosionMaterialChunk = MaterialChunk::create();
 	beginEditCP(PSExplosionMaterialChunk);
-		PSExplosionMaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSExplosionMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSExplosionMaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSExplosionMaterialChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSExplosionMaterialChunk->setDiffuse(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSExplosionMaterialChunk->setSpecular(Color4f(0.0f,0.0f,0.0f,1.0f));
 		PSExplosionMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSExplosionMaterialChunk);
 
@@ -612,9 +618,9 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSExplosion2MaterialChunk = MaterialChunk::create();
 	beginEditCP(PSExplosion2MaterialChunk);
-		PSExplosion2MaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSExplosion2MaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSExplosion2MaterialChunk->setSpecular(Color4f(0.9f,0.0f,0.0f,1.0f));
+		PSExplosion2MaterialChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSExplosion2MaterialChunk->setDiffuse(Color4f(1.0f,1.0f,1.0f,1.0f));
+		PSExplosion2MaterialChunk->setSpecular(Color4f(0.0f,0.0f,0.0f,1.0f));
 		PSExplosion2MaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSExplosion2MaterialChunk);
 
@@ -745,7 +751,7 @@ int main(int argc, char **argv)
 		CircleBurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
 		CircleBurstGenerator->setBurstAmount(50.0);
 		CircleBurstGenerator->setVelocityFunction(createSmokeVelocityDistribution());
-		//CircleBurstGenerator->setAccelerationFunction(createShrapnelAccelerationDistribution());
+		CircleBurstGenerator->setColorFunction(createSmokeColorDistribution());
 	endEditCP(CircleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
 
 	//Attach the function objects the Affectors
@@ -876,6 +882,7 @@ int main(int argc, char **argv)
 		ComStarBurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
 		ComStarBurstGenerator->setBurstAmount(50.0);
 		ComStarBurstGenerator->setVelocityFunction(createComStarVelocityDistribution());
+		ComStarBurstGenerator->setColorFunction(createComStarColorDistribution());
 	endEditCP(ComStarBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
 
 	//Attach the function objects the Affectors
@@ -884,7 +891,7 @@ int main(int argc, char **argv)
 		ComStarAgeFadeParticleAffector->setFadeInTime(2.0f);
 		ComStarAgeFadeParticleAffector->setFadeOutTime(5.0f);
 		ComStarAgeFadeParticleAffector->setStartAlpha(0.0f);
-		ComStarAgeFadeParticleAffector->setFadeToAlpha(0.2f);
+		ComStarAgeFadeParticleAffector->setFadeToAlpha(1.0f);
 		ComStarAgeFadeParticleAffector->setEndAlpha(0.0f);	
 	endEditCP(ComStarAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 
@@ -914,7 +921,7 @@ int main(int argc, char **argv)
 	endEditCP(ComStarAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
    //Attach the Affector to the ComStar Particle System
 	beginEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
-		ComStarParticleSystem->getAffectors().push_back(ComStarAgeFadeParticleAffector);
+		//ComStarParticleSystem->getAffectors().push_back(ComStarAgeFadeParticleAffector);
 		ComStarParticleSystem->getAffectors().push_back(ComStarAgeSizeParticleAffector);
 	endEditCP(ComStarParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 
@@ -940,6 +947,7 @@ int main(int argc, char **argv)
 		ExplosionBurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
 		ExplosionBurstGenerator->setBurstAmount(15.0);
 		ExplosionBurstGenerator->setVelocityFunction(createExplosionVelocityDistribution());
+		ExplosionBurstGenerator->setColorFunction(createSmokeColorDistribution());
 	endEditCP(ExplosionBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
 
 	//Attach the function objects the Affectors
@@ -948,8 +956,8 @@ int main(int argc, char **argv)
 		ExplosionAgeFadeParticleAffector->setFadeInTime(3.0f);
 		ExplosionAgeFadeParticleAffector->setFadeOutTime(5.0f);
 		ExplosionAgeFadeParticleAffector->setStartAlpha(0.0f);
-		ExplosionAgeFadeParticleAffector->setFadeToAlpha(0.2f);
-		ExplosionAgeFadeParticleAffector->setEndAlpha(1.0f);	
+		ExplosionAgeFadeParticleAffector->setFadeToAlpha(0.1f);
+		ExplosionAgeFadeParticleAffector->setEndAlpha(0.0f);	
 	endEditCP(ExplosionAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 
 	ExplosionAgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
@@ -1075,6 +1083,7 @@ int main(int argc, char **argv)
 		Circle2BurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
 		Circle2BurstGenerator->setBurstAmount(50.0);
 		Circle2BurstGenerator->setVelocityFunction(createSmoke2VelocityDistribution());
+		Circle2BurstGenerator->setColorFunction(createSmokeColorDistribution());
 	endEditCP(Circle2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
 
 	//Attach the function objects the Affectors
@@ -1205,6 +1214,7 @@ int main(int argc, char **argv)
 		ComStar2BurstGenerator->setLifespanFunction(createSmokeLifespanDistribution());
 		ComStar2BurstGenerator->setBurstAmount(50.0);
 		ComStar2BurstGenerator->setVelocityFunction(createComStar2VelocityDistribution());
+		ComStarBurstGenerator->setColorFunction(createComStarColorDistribution());
 	endEditCP(ComStar2BurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
 
 	//Attach the function objects the Affectors
@@ -1398,6 +1408,28 @@ FunctionPtr createSmokeVelocityDistribution(void)
     return TheVelocityDistribution;
 }
 
+FunctionPtr createSmokeColorDistribution(void)
+{
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(Pnt3f(10.0,0.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(10.0,0.0,0.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheColor4fConverter = DataConverter::create();
+	beginEditCP(TheColor4fConverter);
+		TheColor4fConverter->setToType(&FieldDataTraits<Color4f>::getType());
+	endEditCP(TheColor4fConverter);
+
+	CompoundFunctionPtr TheColorDistribution = CompoundFunction::create();
+	beginEditCP(TheColorDistribution);
+		TheColorDistribution->getFunctions().push_back(TheLineDistribution);
+		TheColorDistribution->getFunctions().push_back(TheColor4fConverter);
+	endEditCP(TheColorDistribution);
+
+    return TheColorDistribution;
+}
 FunctionPtr createStarPositionDistribution(void)
 {
     //Sphere Distribution
@@ -1730,7 +1762,30 @@ FunctionPtr createExplosion2ColorDistribution(void)
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
  		TheLineDistribution->setPoint1(Pnt3f(1.0,0.0,0.0));
-		TheLineDistribution->setPoint2(Pnt3f(0.0,1.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(1.0,0.0,0.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheColor4fConverter = DataConverter::create();
+	beginEditCP(TheColor4fConverter);
+		TheColor4fConverter->setToType(&FieldDataTraits<Color4f>::getType());
+	endEditCP(TheColor4fConverter);
+
+	CompoundFunctionPtr TheColorDistribution = CompoundFunction::create();
+	beginEditCP(TheColorDistribution);
+		TheColorDistribution->getFunctions().push_back(TheLineDistribution);
+		TheColorDistribution->getFunctions().push_back(TheColor4fConverter);
+	endEditCP(TheColorDistribution);
+
+    return TheColorDistribution;
+}
+
+FunctionPtr createComStarColorDistribution(void)
+{
+	 //Sphere Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(Pnt3f(0.5,0.5,1.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,1.0));
     endEditCP(TheLineDistribution);
 
 	DataConverterPtr TheColor4fConverter = DataConverter::create();
