@@ -110,6 +110,9 @@ const OSG::BitVector  ComponentBase::DisabledBorderFieldMask =
 const OSG::BitVector  ComponentBase::DisabledBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::DisabledBackgroundFieldId);
 
+const OSG::BitVector  ComponentBase::DragEnabledFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::DragEnabledFieldId);
+
 const OSG::BitVector  ComponentBase::TransferHandlerFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::TransferHandlerFieldId);
 
@@ -208,6 +211,9 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
     
 */
 /*! \var LayerPtr        ComponentBase::_sfDisabledBackground
+    
+*/
+/*! \var bool            ComponentBase::_sfDragEnabled
     
 */
 /*! \var TransferHandlerPtr ComponentBase::_sfTransferHandler
@@ -338,6 +344,11 @@ FieldDescription *ComponentBase::_desc[] =
                      DisabledBackgroundFieldId, DisabledBackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFDisabledBackground),
+    new FieldDescription(SFBool::getClassType(), 
+                     "DragEnabled", 
+                     DragEnabledFieldId, DragEnabledFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFDragEnabled),
     new FieldDescription(SFTransferHandlerPtr::getClassType(), 
                      "TransferHandler", 
                      TransferHandlerFieldId, TransferHandlerFieldMask,
@@ -499,6 +510,7 @@ ComponentBase::ComponentBase(void) :
     _sfBackground             (LayerPtr(NullFC)), 
     _sfDisabledBorder         (BorderPtr(NullFC)), 
     _sfDisabledBackground     (LayerPtr(NullFC)), 
+    _sfDragEnabled            (bool(false)), 
     _sfTransferHandler        (TransferHandlerPtr(NullFC)), 
     _sfFocusedBorder          (BorderPtr(NullFC)), 
     _sfFocusedBackground      (LayerPtr(NullFC)), 
@@ -539,6 +551,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfBackground             (source._sfBackground             ), 
     _sfDisabledBorder         (source._sfDisabledBorder         ), 
     _sfDisabledBackground     (source._sfDisabledBackground     ), 
+    _sfDragEnabled            (source._sfDragEnabled            ), 
     _sfTransferHandler        (source._sfTransferHandler        ), 
     _sfFocusedBorder          (source._sfFocusedBorder          ), 
     _sfFocusedBackground      (source._sfFocusedBackground      ), 
@@ -644,6 +657,11 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
     {
         returnValue += _sfDisabledBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
+    {
+        returnValue += _sfDragEnabled.getBinSize();
     }
 
     if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
@@ -810,6 +828,11 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfDisabledBackground.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
+    {
+        _sfDragEnabled.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
     {
         _sfTransferHandler.copyToBin(pMem);
@@ -973,6 +996,11 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDisabledBackground.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
+    {
+        _sfDragEnabled.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
     {
         _sfTransferHandler.copyFromBin(pMem);
@@ -1108,6 +1136,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
         _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
 
+    if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
+        _sfDragEnabled.syncWith(pOther->_sfDragEnabled);
+
     if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
         _sfTransferHandler.syncWith(pOther->_sfTransferHandler);
 
@@ -1210,6 +1241,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
         _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
+
+    if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
+        _sfDragEnabled.syncWith(pOther->_sfDragEnabled);
 
     if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
         _sfTransferHandler.syncWith(pOther->_sfTransferHandler);
@@ -1362,6 +1396,12 @@ OSG_USERINTERFACELIB_DLLMAPPING
 SFLayerPtr *ComponentBase::getSFDisabledBackground(void)
 {
     return &_sfDisabledBackground;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFBool *ComponentBase::getSFDragEnabled(void)
+{
+    return &_sfDragEnabled;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
@@ -1729,6 +1769,24 @@ OSG_USERINTERFACELIB_DLLMAPPING
 void ComponentBase::setDisabledBackground(const LayerPtr &value)
 {
     _sfDisabledBackground.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+bool &ComponentBase::getDragEnabled(void)
+{
+    return _sfDragEnabled.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const bool &ComponentBase::getDragEnabled(void) const
+{
+    return _sfDragEnabled.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setDragEnabled(const bool &value)
+{
+    _sfDragEnabled.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING

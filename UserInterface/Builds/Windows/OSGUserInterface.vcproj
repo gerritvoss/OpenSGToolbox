@@ -5563,6 +5563,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGDragGestureEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDragGestureEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDragGestureEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDragGestureListener.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGFocusEvent.cpp"
 					>
 				</File>
@@ -6020,6 +6036,18 @@
 				</File>
 				<File
 					RelativePath="..\..\src\DragAndDrop\OSGDataFlavorFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DragAndDrop\OSGDragGestureRecognizer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DragAndDrop\OSGDragGestureRecognizer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DragAndDrop\OSGDragGestureRecognizer.inl"
 					>
 				</File>
 				<File

@@ -65,7 +65,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TransferHandler : public TransferHandlerBa
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  enum TranferActions{TRANSFER_NONE=0, TRANSFER_COPY=1, TRANSFER_MOVE=2, TRANSFER_COPY_AND_MOVE=3};
+	  enum TranferActions{TRANSFER_NONE=0, TRANSFER_COPY=1, TRANSFER_MOVE=2, TRANSFER_COPY_OR_MOVE=3};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

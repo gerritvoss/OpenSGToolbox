@@ -155,6 +155,7 @@ void 	DefaultListSelectionModel::clearSelection(void)
 {
 	_RangeSelectionList.clear();
     updateMinMax();
+    _AnchorSelectionIndex = _LeadSelectionIndex = -1;
     produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), _MinSelectionIndex, _MaxSelectionIndex, _ValueIsAdjusting));
 }
 
