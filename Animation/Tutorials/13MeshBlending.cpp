@@ -420,21 +420,78 @@ int main(int argc, char **argv)
 	GeoPLengthsPtr lens = GeoPLengthsUI32::create();    
     beginEditCP(lens, GeoPLengthsUI32::GeoPropDataFieldMask);
     {
-        lens->addValue(8);
+        lens->addValue(52);
     }
     endEditCP  (lens, GeoPLengthsUI32::GeoPropDataFieldMask);
 	 GeoPositions3fPtr pnts = GeoPositions3f::create();
     beginEditCP(pnts, GeoPositions3f::GeoPropDataFieldMask);
     {
-		// the points of the triangles
-        pnts->addValue(Pnt3f( -0.5,  0, 0));
-        pnts->addValue(Pnt3f( 0.5,  0, 0));
-        pnts->addValue(Pnt3f( 0.5,  0, 0));
-        pnts->addValue(Pnt3f(-0.5,  0, 0));
-        pnts->addValue(Pnt3f( -0.5,  0, 0));
-        pnts->addValue(Pnt3f( 0.5,  0, 0));
-        pnts->addValue(Pnt3f( 0.5,  0, 0));
-        pnts->addValue(Pnt3f(-0.5,  0, 0));
+		// the points of the Quads
+        pnts->addValue(Pnt3f(-0.5,  0,  0));
+        pnts->addValue(Pnt3f( 0.5,  0,  0));
+        pnts->addValue(Pnt3f( 0.5,  0,  0));
+        pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+        pnts->addValue(Pnt3f(-0.5,  0,  0));
+        pnts->addValue(Pnt3f( 0.5,  0,  0));
+        pnts->addValue(Pnt3f( 0.5,  0,  0));
+        pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(0.5,  0,  0));
+		pnts->addValue(Pnt3f(-0.5,  0,  0));
+
     }
     endEditCP  (pnts, GeoPositions3f::GeoPropDataFieldMask);
     
@@ -446,10 +503,69 @@ int main(int argc, char **argv)
         norms->addValue(Vec3f( 0.0,1.0,0.0));
         norms->addValue(Vec3f( 0.0,1.0,0.0));
         norms->addValue(Vec3f( 0.0,1.0,0.0));
+
         norms->addValue(Vec3f( 0.0,1.0,0.0));
         norms->addValue(Vec3f( 0.0,1.0,0.0));
         norms->addValue(Vec3f( 0.0,1.0,0.0));
         norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		norms->addValue(Vec3f( 0.0,1.0,0.0));
+
+		
+
     endEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
 
 
@@ -517,10 +633,69 @@ int main(int argc, char **argv)
 		TheNewSkeletonGeometry->addBoneBlending(1,Torso,1.0f);
 		TheNewSkeletonGeometry->addBoneBlending(2,RightFemur,1.0f);
 		TheNewSkeletonGeometry->addBoneBlending(3,RightFemur,1.0f);
+
 		TheNewSkeletonGeometry->addBoneBlending(4,RightFemur,1.0f);
 		TheNewSkeletonGeometry->addBoneBlending(5,RightFemur,1.0f);
 		TheNewSkeletonGeometry->addBoneBlending(6,RightTibia,1.0f);
 		TheNewSkeletonGeometry->addBoneBlending(7,RightTibia,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(8,RightTibia,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(9,RightTibia,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(10,RightFeet,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(11,RightFeet,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(12,Torso,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(13,Torso,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(14,LeftFemur,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(15,LeftFemur,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(16,LeftFemur,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(17,LeftFemur,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(18,LeftTibia,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(19,LeftTibia,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(20,LeftTibia,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(21,LeftTibia,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(22,LeftFeet,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(23,LeftFeet,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(24,Torso,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(25,Torso,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(26,RightHumerus,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(27,RightHumerus,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(28,RightHumerus,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(29,RightHumerus,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(30,RightRadius,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(31,RightRadius,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(32,RightRadius,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(33,RightRadius,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(34,RightHand,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(35,RightHand,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(36,LeftHumerus,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(37,LeftHumerus,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(38,LeftRadius,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(39,LeftRadius,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(40,LeftRadius,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(41,LeftRadius,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(42,LeftHand,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(43,LeftHand,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(44,LeftHand,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(45,LeftHand,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(46,LeftHand,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(47,LeftHand,1.0f);
+
+		TheNewSkeletonGeometry->addBoneBlending(48,RightHand,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(49,RightHand,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(50,RightHand,1.0f);
+		TheNewSkeletonGeometry->addBoneBlending(51,RightHand,1.0f);
+
+
+		
     endEditCP(TheNewSkeletonGeometry);
 	
 	NodePtr MeshNode = osg::Node::create();
