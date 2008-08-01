@@ -426,7 +426,7 @@ int main(int argc, char **argv)
 	beginEditCP(EnvironmentNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 		EnvironmentNode->setCore(EnvironmentTransformCore);
 		//EnvironmentNode->addChild(SceneFileHandler::the().read("Data/Chloroplast.osb"));
-		EnvironmentNode->addChild(SceneFileHandler::the().read("Data/Chloroplast.osb"));
+		EnvironmentNode->addChild(SceneFileHandler::the().read("Data/house.obj"));
 	endEditCP(EnvironmentNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 		//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
@@ -557,7 +557,7 @@ int main(int argc, char **argv)
 	beginEditCP(FireballGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 		FireballGenerator->setPositionFunction(FireballPositionDistribution);
 		FireballGenerator->setLifespanFunction(createFireballLifespanDistribution());
-		FireballGenerator->setBurstAmount(400.0);
+		FireballGenerator->setBurstAmount(100.0);
 		FireballGenerator->setVelocityFunction(createFireballVelocityDistribution());
 		FireballGenerator->setAccelerationFunction(createFireballAccelerationDistribution());
 	endEditCP(FireballGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
@@ -595,10 +595,10 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(RocketParticleNode);
-		//scene->addChild(SmokeParticleNode);
-		//scene->addChild(ShrapnelParticleNode);
+		scene->addChild(SmokeParticleNode);
+		scene->addChild(ShrapnelParticleNode);
 		scene->addChild(FireballParticleNode);
-	//	scene->addChild(EnvironmentNode);
+		scene->addChild(EnvironmentNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
