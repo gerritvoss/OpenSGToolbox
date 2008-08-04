@@ -84,21 +84,26 @@ ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, Sha
 		return NullFC;
 	}
 
+	std::string ValueString;
+	if(Value->getType() == SFString::getClassType())
+	{
+        ValueString = static_cast<SFString*>(Value.get())->getValue();
+	}
+	else
+	{
+		Value->getValueByStr(ValueString);
+	}
+	return getListComponent(Parent, ValueString, Index, IsSelected, HasFocus);
+}
+
+ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+{
 	ComponentPtr TheComponent = Component::Ptr::dcast(getDrawObjectPrototype()->shallowCopy());
 
 	if(TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
 	{
-		std::string ValueString;
-		if(Value->getType() == SFString::getClassType())
-		{
-            ValueString = static_cast<SFString*>(Value.get())->getValue();
-		}
-		else
-		{
-			Value->getValueByStr(ValueString);
-		}
 		beginEditCP(TheComponent, TextComponent::TextFieldMask);
-			TextComponent::Ptr::dcast(TheComponent)->setText(ValueString);
+			TextComponent::Ptr::dcast(TheComponent)->setText(Value);
 		endEditCP(TheComponent, TextComponent::TextFieldMask);
 
 		if(IsSelected && HasFocus)

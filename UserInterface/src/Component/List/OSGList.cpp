@@ -490,7 +490,7 @@ void List::intervalRemoved(ListDataEvent e)
 		if(e.getIndex0() <= OldTopDrawnIndex)
 		{
 			//Pop From the front the number of items removed
-			for(UInt32 i(1) ; i<=NumRemoved ; ++i)
+			for(UInt32 i(1) ; i<=osgMin<Int32>(NumRemoved,OldBottomDrawnIndex-OldTopDrawnIndex) ; ++i)
 			{
 				cleanItem(0);
 				_DrawnIndices.pop_front();

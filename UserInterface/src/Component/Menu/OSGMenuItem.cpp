@@ -124,7 +124,7 @@ void MenuItem::mouseReleased(const MouseEvent& e)
        endEditCP(MenuItemPtr(this), SelectedFieldMask);
     }
     
-    Inherited::mouseReleased(e);
+    Component::mouseReleased(e);
 }
 
 MenuPtr MenuItem::getTopLevelMenu(void) const
