@@ -571,10 +571,10 @@ void DefaultListSelectionModel::decrementValuesAboveIndex(const UInt32& index, c
 DefaultListSelectionModel::DefaultListSelectionModel(void) :
 _SelectionMode(SINGLE_SELECTION)
 {
-	_AnchorSelectionIndex = 0;
-	_LeadSelectionIndex = 0;
-	_MaxSelectionIndex = 0;
-	_MinSelectionIndex = 0;
+	_AnchorSelectionIndex = -1;
+	_LeadSelectionIndex = -1;
+	_MaxSelectionIndex = -1;
+	_MinSelectionIndex = -1;
 	_ValueIsAdjusting = false;
 }
 DefaultListSelectionModel::~DefaultListSelectionModel(void)

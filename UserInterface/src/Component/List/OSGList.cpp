@@ -544,6 +544,8 @@ void List::intervalRemoved(ListDataEvent e)
 	}
 	
 	updatePreferredSize();
+    
+    getSelectionModel()->removeIndexInterval(e.getIndex0(), e.getIndex1());
 }
 
 void List::setSelectionModel(ListSelectionModelPtr SelectionModel)

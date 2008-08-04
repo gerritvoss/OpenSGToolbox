@@ -1022,6 +1022,11 @@ void InternalWindow::changed(BitVector whichField, UInt32 origin)
         endEditCP(getMenuBar(), MenuBar::ParentContainerFieldMask | MenuBar::ParentWindowFieldMask);
     }
 
+    if( (whichField & MenuBarFieldMask) || (whichField & TitlebarFieldMask))
+    {
+        updateLayout();
+    }
+
 	if( (whichField & TitleFieldMask) && getTitlebar() != NullFC)
 	{
 		getTitlebar()->setTitle(getTitle());
