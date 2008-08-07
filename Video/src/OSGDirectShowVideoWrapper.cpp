@@ -1,18 +1,90 @@
-#include "DirectShowVideoGraph.h"
+#include "OSGDirectShowVideoWrapper.h"
 
-bool VideoWrapper::loadVideoFile(const std::wstring& filename) {
+OSG_BEGIN_NAMESPACE
+
+bool DirectShowVideoWrapper::open(Path ThePath)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::seek(Real32 SeekPos)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::play(void)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::pause(void)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::unpause(void)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::pauseToggle(void)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::stop(void)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::close(void)
+{
+    //TODO: Implement
+    return false;
+}
+
+
+ImagePtr DirectShowVideoWrapper::getCurrentFrame(void)
+{
+    //TODO: Implement
+    return NullFC;
+}
+
+bool DirectShowVideoWrapper::loadVideoFile(const std::wstring& filename) {
     if (videoInitialized) {
         uninitVideo();
     }
 
-    // Create the main object that runs the graph
-    graphBuilder.CoCreateInstance(CLSID_CaptureGraphBuilder2);
+    HRESULT hr;
+    
+    hr = CoCreateInstance(CLSID_FilterGraph, NULL,
+    CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void **)&filterGraph);
 
-    filterGraph.CoCreateInstance(CLSID_FilterGraph);
+    if(SUCCEEDED(hr))
+    {
+        // Create the main object that runs the graph
+        hr = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL,
+            CLSCTX_INPROC_SERVER, IID_ICaptureGraphBuilder2,
+            (void **)&graphBuilder);
 
-    graphBuilder->SetFiltergraph(filterGraph);
+        if (SUCCEEDED(hr))
+        {
+            graphBuilder->SetFiltergraph(filterGraph);
+        }
+    }
+    else
+    {
+        return false;
+    }
 
-    CComPtr<IBaseFilter> sourceFilter;
+    IBaseFilter* sourceFilter;
 
     // This takes the absolute filename path and
     // Loads the appropriate file reader and splitter
@@ -23,8 +95,10 @@ bool VideoWrapper::loadVideoFile(const std::wstring& filename) {
     
     // Create the Sample Grabber which we will use
     // To take each frame for texture generation
-    CComPtr<IBaseFilter> grabberFilter;
-    grabberFilter.CoCreateInstance(CLSID_SampleGrabber);
+    IBaseFilter* grabberFilter;
+    hr = ::CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER,
+                        IID_IBaseFilter, (LPVOID *)&grabberFilter);
+
     grabberFilter->QueryInterface(IID_ISampleGrabber, reinterpret_cast<void**>(&sampleGrabber));
 
     filterGraph->AddFilter(grabberFilter, L"Sample Grabber");
@@ -53,8 +127,8 @@ bool VideoWrapper::loadVideoFile(const std::wstring& filename) {
     // But it allows the Sample Grabber to run
     // And it will keep proper playback timing
     // Unless specified otherwise.
-    CComPtr<IBaseFilter> nullRenderer;
-    nullRenderer.CoCreateInstance(CLSID_NullRenderer);
+    IBaseFilter* nullRenderer;
+    CoCreateInstance(CLSID_NullRenderer,   NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&nullRenderer);
 
     filterGraph->AddFilter(nullRenderer, L"Null Renderer");
 
@@ -86,7 +160,10 @@ bool VideoWrapper::loadVideoFile(const std::wstring& filename) {
     // Apart from making sure the source filter can load
     // This is the only failure point we care about unless
     // You need to do more extensive development and debugging.
-    CComQIPtr<IMediaControl> mediaControl(filterGraph);
+    IMediaControl* mediaControl;
+    hr = filterGraph->QueryInterface(IID_IMediaControl,
+(void**)&mediaControl);
+
     if (SUCCEEDED(mediaControl->Run())) {
         videoInitialized = true;
         return true;
@@ -97,11 +174,11 @@ bool VideoWrapper::loadVideoFile(const std::wstring& filename) {
 }
 
 /** For a later time but probably faster displays. */
-bool VideoWrapper::loadVideoCamera() {
+bool DirectShowVideoWrapper::loadVideoCamera() {
     return false;
 }
 
-TextureRef VideoWrapper::grabFrameTexture() {
+/*TextureRef DirectShowVideoWrapper::grabFrameTexture() {
     if (videoInitialized) {
         // Only need to do this once
         if (!frameBuffer) {
@@ -127,30 +204,33 @@ TextureRef VideoWrapper::grabFrameTexture() {
     }
 
     return NULL;
-}
+}*/
 
-void VideoWrapper::uninitVideo() {
+void DirectShowVideoWrapper::uninitVideo() {
     videoInitialized = false;
 
+    HRESULT hr;
     if (videoInitialized) {
-        sampleGrabber.Release();
-        CComQIPtr<IMediaControl> mediaControl(filterGraph);
+        sampleGrabber->Release();
+        IMediaControl* mediaControl;
+        hr = filterGraph->QueryInterface(IID_IMediaControl,
+    (void**)&mediaControl);
         mediaControl->Stop();
-        filterGraph.Release();
-        graphBuilder.Release();
+        filterGraph->Release();
+        graphBuilder->Release();
     }
 
     delete[] frameBuffer;
     frameBuffer = NULL;
 }
 
-bool VideoWrapper::ConnectPins(IBaseFilter* outputFilter,
+bool DirectShowVideoWrapper::ConnectPins(IBaseFilter* outputFilter,
                        unsigned int outputNum,
                        IBaseFilter* inputFilter,
                        unsigned int inputNum) {
 
-    CComPtr<IPin> inputPin;
-    CComPtr<IPin> outputPin;
+    IPin* inputPin;
+    IPin* outputPin;
 
     if (!outputFilter || !inputFilter) {
         return false;
@@ -166,12 +246,12 @@ bool VideoWrapper::ConnectPins(IBaseFilter* outputFilter,
     }
 }
 
-void VideoWrapper::FindPin(IBaseFilter* baseFilter,
+void DirectShowVideoWrapper::FindPin(IBaseFilter* baseFilter,
                    PIN_DIRECTION direction,
                    int pinNumber,
                    IPin** destPin) {
 
-    CComPtr<IEnumPins> enumPins;
+    IEnumPins* enumPins;
 
     *destPin = NULL;
 
@@ -195,3 +275,5 @@ void VideoWrapper::FindPin(IBaseFilter* baseFilter,
         }
     }
 }
+
+OSG_END_NAMESPACE

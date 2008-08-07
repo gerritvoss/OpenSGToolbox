@@ -1,23 +1,26 @@
-#ifndef _OPENSG_VIDEO_MANAGER_H_
-#define _OPENSG_VIDEO_MANAGER_H_
+#ifndef _OPENSG_DIRECT_SHOW_MANAGER_H_
+#define _OPENSG_DIRECT_SHOW_MANAGER_H_
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGVideoDef.h"
 
+#ifdef WIN32
+
+#include "OSGVideoManager.h"
 #include <string>
 #include <Dshow.h>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_VIDEOLIB_DLLMAPPING DirectShowManager
+class OSG_VIDEOLIB_DLLMAPPING DirectShowManager : public VideoManager
 {
 public:
-    static DirectShowManager *the(void);
+    static VideoManager *the(void);
 
-    void init(int   argc, char *argv[]);
-    void exit(void);
+    virtual void init(int   argc, char *argv[]);
+    virtual void exit(void);
 
-    void openVideo(std::string Path);
+    virtual VideoWrapperPtr createVideoWrapper(void) const;
 
 private:
     DirectShowManager(void);
@@ -27,16 +30,12 @@ private:
     DirectShowManager(const DirectShowManager &source);
     void operator =(const DirectShowManager &source);
 protected:
-	IGraphBuilder *pGraph;
-    IMediaControl *pControl;
-    IMediaEvent   *pEvent;
-
-    // Initialize the COM library.
-    HRESULT hr;
 };
 
 OSG_END_NAMESPACE
 
 
 #include "OSGDirectShowManager.inl"
+#endif
+
 #endif

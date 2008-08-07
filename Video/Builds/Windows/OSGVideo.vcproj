@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="OSGGStreamer"
+	Name="OSGVideo"
 	ProjectGUID="{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
@@ -212,14 +212,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\..\src\DirectShowVideoGraph.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\DirectShowVideoGraph.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\OSGDirectShowManager.cpp"
 				>
 			</File>
@@ -232,7 +224,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\OSGDirectShowVideoWrapper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGDirectShowVideoWrapper.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\OSGVideoDef.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGVideoManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGVideoManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGVideoWrapper.h"
 				>
 			</File>
 		</Filter>
