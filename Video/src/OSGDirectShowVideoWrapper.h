@@ -28,18 +28,6 @@ public:
     virtual bool close(void);
 
     virtual ImagePtr getCurrentFrame(void);
-private:
-    friend class DirectShowManager;
-
-    ICaptureGraphBuilder2* graphBuilder;
-    IFilterGraph2* filterGraph;
-    ISampleGrabber* sampleGrabber;
-    
-    bool videoInitialized;
-    int videoWidth;
-    int videoHeight;
-    long* frameBuffer;
-    long bufferSize;
 
     DirectShowVideoWrapper() {
         // This must be callled before 
@@ -53,6 +41,18 @@ private:
         // Technically, uninit ever init
         CoUninitialize();
     }
+private:
+
+    ICaptureGraphBuilder2* graphBuilder;
+    IFilterGraph2* filterGraph;
+    ISampleGrabber* sampleGrabber;
+    
+    bool videoInitialized;
+    int videoWidth;
+    int videoHeight;
+    long* frameBuffer;
+    long bufferSize;
+
 
     bool loadVideoFile(const std::wstring& filename);
 

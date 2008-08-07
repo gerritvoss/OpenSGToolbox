@@ -53,7 +53,24 @@ bool DirectShowVideoWrapper::close(void)
 
 ImagePtr DirectShowVideoWrapper::getCurrentFrame(void)
 {
-    //TODO: Implement
+    if (videoInitialized) {
+        // Only need to do this once
+        if (!frameBuffer) {
+            // The Sample Grabber requires an arbitrary buffer
+            // That we only know at runtime.
+            // (width * height * 3) bytes will not work.
+            sampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
+            frameBuffer = new long[bufferSize];
+        }
+        
+        sampleGrabber->GetCurrentBuffer(&bufferSize, (long*)frameBuffer);
+    
+        ImagePtr TheImage = Image::create();
+        TheImage->set(Image::OSG_RGB_PF,videoWidth,videoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
+
+        return TheImage;
+    }
+
     return NullFC;
 }
 
@@ -177,34 +194,6 @@ bool DirectShowVideoWrapper::loadVideoFile(const std::wstring& filename) {
 bool DirectShowVideoWrapper::loadVideoCamera() {
     return false;
 }
-
-/*TextureRef DirectShowVideoWrapper::grabFrameTexture() {
-    if (videoInitialized) {
-        // Only need to do this once
-        if (!frameBuffer) {
-            // The Sample Grabber requires an arbitrary buffer
-            // That we only know at runtime.
-            // (width * height * 3) bytes will not work.
-            sampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
-            frameBuffer = new long[bufferSize];
-        }
-        
-        sampleGrabber->GetCurrentBuffer(&bufferSize, (long*)frameBuffer);
-    
-        // G3D Texture creation for code simplification, the format is obvious.
-        return Texture::fromMemory(
-            "Video Frame",
-            (const uint8*)frameBuffer,
-            TextureFormat::RGB8,
-            videoWidth,
-            videoHeight,
-            TextureFormat::AUTO,
-            Texture::TILE,
-            Texture::BILINEAR_NO_MIPMAP);
-    }
-
-    return NULL;
-}*/
 
 void DirectShowVideoWrapper::uninitVideo() {
     videoInitialized = false;

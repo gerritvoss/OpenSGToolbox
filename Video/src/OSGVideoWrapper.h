@@ -6,6 +6,7 @@
 
 #include <OpenSG/Toolbox/OSGPathType.h>
 #include <OpenSG/OSGImage.h>
+#include <boost/shared_ptr.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -28,7 +29,7 @@ private:
 protected:
 };
 
-typedef VideoWrapper* VideoWrapperPtr;
+typedef boost::shared_ptr<VideoWrapper> VideoWrapperPtr;
 
 OSG_END_NAMESPACE
 

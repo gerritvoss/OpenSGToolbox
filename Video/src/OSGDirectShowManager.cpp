@@ -15,7 +15,7 @@ VideoManager *DirectShowManager::the(void)
 
 VideoWrapperPtr DirectShowManager::createVideoWrapper(void) const
 {
-    return new DirectShowVideoWrapper();
+    return VideoWrapperPtr(new DirectShowVideoWrapper());
 }
 
 void DirectShowManager::init(int   argc, char *argv[])

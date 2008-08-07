@@ -24,8 +24,9 @@ int main(int argc, char **argv)
     osgInit(argc, argv);
     getDefaultVideoManager()->init(argc, argv);
     
-	//getDefaultVideoManager()->openVideo(std::string("C:\\Test.avi"));
-    //DirectShowManager::the()->openVideo(std::string("C:\\Documents and Settings\\David\\My Documents\\Work\\OpenSGToolbox\\Video\\Tutorials\\Test.ogg"));
+    VideoWrapperPtr TheVideo = getDefaultVideoManager()->createVideoWrapper();
+    TheVideo->open(Path("C:\\Test.avi"));
+    TheVideo->close();
 
     //DeInit
     getDefaultVideoManager()->exit();
