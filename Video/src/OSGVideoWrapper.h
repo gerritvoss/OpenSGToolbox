@@ -17,6 +17,9 @@ public:
 
     virtual bool seek(Real32 SeekPos) = 0;
     virtual bool play(void) = 0;
+    virtual bool isPlaying(void) const = 0;
+    virtual bool isPaused(void) const = 0;
+    virtual bool isInitialized(void) const = 0;
     virtual bool pause(void) = 0;
     virtual bool unpause(void) = 0;
     virtual bool pauseToggle(void) = 0;

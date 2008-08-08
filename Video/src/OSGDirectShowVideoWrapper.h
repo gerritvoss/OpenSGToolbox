@@ -26,6 +26,9 @@ public:
     virtual bool pauseToggle(void);
     virtual bool stop(void);
     virtual bool close(void);
+    virtual bool isPlaying(void) const;
+    virtual bool isPaused(void) const;
+    virtual bool isInitialized(void) const;
 
     virtual ImagePtr getCurrentFrame(void);
 
@@ -42,6 +45,7 @@ public:
         CoUninitialize();
     }
 private:
+    std::wstring FromUtf8(const std::string& utf8string);
 
     ICaptureGraphBuilder2* graphBuilder;
     IFilterGraph2* filterGraph;
@@ -52,11 +56,6 @@ private:
     int videoHeight;
     long* frameBuffer;
     long bufferSize;
-
-
-    bool loadVideoFile(const std::wstring& filename);
-
-    bool loadVideoCamera();
 
     void uninitVideo();
 

@@ -1,80 +1,34 @@
 #include "OSGDirectShowVideoWrapper.h"
 
+#include <boost/archive/iterators/wchar_from_mb.hpp> 
+
 OSG_BEGIN_NAMESPACE
+
+bool DirectShowVideoWrapper::isPlaying(void) const
+{
+    //TODO: Implement
+    if(isInitialized())
+    {
+    }
+    return false;
+}
+
+bool DirectShowVideoWrapper::isPaused(void) const
+{
+    //TODO: Implement
+    if(isInitialized())
+    {
+    }
+    return false;
+}
+
+bool DirectShowVideoWrapper::isInitialized(void) const
+{
+    return videoInitialized;
+}
 
 bool DirectShowVideoWrapper::open(Path ThePath)
 {
-    //TODO: Implement
-    return false;
-}
-
-bool DirectShowVideoWrapper::seek(Real32 SeekPos)
-{
-    //TODO: Implement
-    return false;
-}
-
-bool DirectShowVideoWrapper::play(void)
-{
-    //TODO: Implement
-    return false;
-}
-
-bool DirectShowVideoWrapper::pause(void)
-{
-    //TODO: Implement
-    return false;
-}
-
-bool DirectShowVideoWrapper::unpause(void)
-{
-    //TODO: Implement
-    return false;
-}
-
-bool DirectShowVideoWrapper::pauseToggle(void)
-{
-    //TODO: Implement
-    return false;
-}
-
-bool DirectShowVideoWrapper::stop(void)
-{
-    //TODO: Implement
-    return false;
-}
-
-bool DirectShowVideoWrapper::close(void)
-{
-    //TODO: Implement
-    return false;
-}
-
-
-ImagePtr DirectShowVideoWrapper::getCurrentFrame(void)
-{
-    if (videoInitialized) {
-        // Only need to do this once
-        if (!frameBuffer) {
-            // The Sample Grabber requires an arbitrary buffer
-            // That we only know at runtime.
-            // (width * height * 3) bytes will not work.
-            sampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
-            frameBuffer = new long[bufferSize];
-        }
-        
-        sampleGrabber->GetCurrentBuffer(&bufferSize, (long*)frameBuffer);
-    
-        ImagePtr TheImage = Image::create();
-        TheImage->set(Image::OSG_RGB_PF,videoWidth,videoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
-
-        return TheImage;
-    }
-
-    return NullFC;
-}
-
-bool DirectShowVideoWrapper::loadVideoFile(const std::wstring& filename) {
     if (videoInitialized) {
         uninitVideo();
     }
@@ -103,10 +57,15 @@ bool DirectShowVideoWrapper::loadVideoFile(const std::wstring& filename) {
 
     IBaseFilter* sourceFilter;
 
+    typedef boost::archive::iterators::wchar_from_mb<const char *> translator;
+
+    std::wstring WideFileName;
+    WideFileName.assign(ThePath.string().begin(), ThePath.string().end());
+
     // This takes the absolute filename path and
     // Loads the appropriate file reader and splitter
     // Depending in the file type.
-    filterGraph->AddSourceFilter(filename.c_str(),
+    filterGraph->AddSourceFilter(WideFileName.c_str(),
                                  L"Video Source",
                                  &sourceFilter);
     
@@ -173,13 +132,25 @@ bool DirectShowVideoWrapper::loadVideoFile(const std::wstring& filename) {
         return false;
     }
 
+    return true;
+}
+
+bool DirectShowVideoWrapper::seek(Real32 SeekPos)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::play(void)
+{
     // Tell the whole graph to start sending video
     // Apart from making sure the source filter can load
     // This is the only failure point we care about unless
     // You need to do more extensive development and debugging.
+    HRESULT hr;
+
     IMediaControl* mediaControl;
-    hr = filterGraph->QueryInterface(IID_IMediaControl,
-(void**)&mediaControl);
+    hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
 
     if (SUCCEEDED(mediaControl->Run())) {
         videoInitialized = true;
@@ -190,9 +161,73 @@ bool DirectShowVideoWrapper::loadVideoFile(const std::wstring& filename) {
     }
 }
 
-/** For a later time but probably faster displays. */
-bool DirectShowVideoWrapper::loadVideoCamera() {
+bool DirectShowVideoWrapper::pause(void)
+{
+    if(isInitialized())
+    {
+        HRESULT hr;
+
+        IMediaControl* mediaControl;
+        hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
+
+        if (SUCCEEDED(mediaControl->Pause())) {
+            videoInitialized = true;
+            return true;
+        }
+    }
     return false;
+}
+
+bool DirectShowVideoWrapper::unpause(void)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::pauseToggle(void)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::stop(void)
+{
+    //TODO: Implement
+    return false;
+}
+
+bool DirectShowVideoWrapper::close(void)
+{
+    uninitVideo();
+    return true;
+}
+
+
+ImagePtr DirectShowVideoWrapper::getCurrentFrame(void)
+{
+    if (videoInitialized) {
+        // Only need to do this once
+        if (!frameBuffer) {
+            // The Sample Grabber requires an arbitrary buffer
+            // That we only know at runtime.
+            // (width * height * 3) bytes will not work.
+            sampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
+            if(bufferSize<=0)
+            {
+                return NullFC;
+            }
+            frameBuffer = new long[bufferSize];
+        }
+        
+        sampleGrabber->GetCurrentBuffer(&bufferSize, (long*)frameBuffer);
+    
+        ImagePtr TheImage = Image::create();
+        TheImage->set(Image::OSG_RGB_PF,videoWidth,videoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
+
+        return TheImage;
+    }
+
+    return NullFC;
 }
 
 void DirectShowVideoWrapper::uninitVideo() {
