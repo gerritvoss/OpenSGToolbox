@@ -1,18 +1,88 @@
-#ifndef _OPENSG_VIDEO_WRAPPER_H_
-#define _OPENSG_VIDEO_WRAPPER_H_
+/*---------------------------------------------------------------------------*\
+ *                     OpenSG ToolBox UserInterface                          *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                License                                    *
+ *                                                                           *
+ * This library is free software; you can redistribute it and/or modify it   *
+ * under the terms of the GNU Library General Public License as published    *
+ * by the Free Software Foundation, version 2.                               *
+ *                                                                           *
+ * This library is distributed in the hope that it will be useful, but       *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Library General Public License for more details.                          *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public         *
+ * License along with this library; if not, write to the Free Software       *
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGVIDEOWRAPPER_H_
+#define _OSGVIDEOWRAPPER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGVideoDef.h"
 
 #include <OpenSG/Toolbox/OSGPathType.h>
 #include <OpenSG/OSGImage.h>
-#include <boost/shared_ptr.hpp>
+#include <set>
+
+#include "Events/OSGVideoListener.h"
+#include "OSGVideoWrapperBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_VIDEOLIB_DLLMAPPING VideoWrapper
+/*! \brief VideoWrapper class. See \ref 
+           PageVideoVideoWrapper for a description.
+*/
+
+class OSG_VIDEOLIB_DLLMAPPING VideoWrapper : public VideoWrapperBase
 {
-public:
+  private:
+
+    typedef VideoWrapperBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
     virtual bool open(Path ThePath) = 0;
 
     virtual bool seek(Int64 SeekPos) = 0;
@@ -34,21 +104,68 @@ public:
     virtual ImagePtr getCurrentFrame(void) = 0;
     virtual bool updateImage(void) = 0;
 
-	ImagePtr getImage(void) const
-	{
-		return _VideoImage;
-	}
+	ImagePtr getImage(void) const;
 
 	//Events
-	//Paused, Unpaused, played, stopped, reached end, seeked, opened, closed
+    void addVideoListener(VideoListenerPtr Listener);
+    void removeVideoListener(VideoListenerPtr Listener);
+    /*=========================  PROTECTED  ===============================*/
+  protected:
 
-private:
-protected:
+    // Variables should all be in VideoWrapperBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    VideoWrapper(void);
+    VideoWrapper(const VideoWrapper &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~VideoWrapper(void); 
+
+    /*! \}                                                                 */
+    
 	ImagePtr _VideoImage;
+	
+	typedef std::set<VideoListenerPtr> VideoListenerSet;
+    typedef VideoListenerSet::iterator VideoListenerSetItor;
+    typedef VideoListenerSet::const_iterator VideoListenerSetConstItor;
+	
+    VideoListenerSet       _VideoListeners;
+
+	void producePaused(void) const;
+	void produceUnpaused(void) const;
+	void producePlayed(void) const;
+	void produceStopped(void) const;
+	void produceOpened(void) const;
+	void produceClosed(void) const;
+	void produceReachedEnd(void) const;
+	void produceSeeked(void) const;
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class VideoWrapperBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const VideoWrapper &source);
 };
 
-typedef boost::shared_ptr<VideoWrapper> VideoWrapperPtr;
+typedef VideoWrapper *VideoWrapperP;
 
 OSG_END_NAMESPACE
 
-#endif
+#include "OSGVideoWrapperBase.inl"
+#include "OSGVideoWrapper.inl"
+
+#define OSGVIDEOWRAPPER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSGVIDEOWRAPPER_H_ */

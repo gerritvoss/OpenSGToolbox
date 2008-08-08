@@ -1,8 +1,80 @@
+/*---------------------------------------------------------------------------*\
+ *                     OpenSG ToolBox UserInterface                          *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                License                                    *
+ *                                                                           *
+ * This library is free software; you can redistribute it and/or modify it   *
+ * under the terms of the GNU Library General Public License as published    *
+ * by the Free Software Foundation, version 2.                               *
+ *                                                                           *
+ * This library is distributed in the hope that it will be useful, but       *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Library General Public License for more details.                          *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public         *
+ * License along with this library; if not, write to the Free Software       *
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEVIDEOLIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGDirectShowVideoWrapper.h"
 
-#include <boost/archive/iterators/wchar_from_mb.hpp> 
-
 OSG_BEGIN_NAMESPACE
+
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::DirectShowVideoWrapper
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void DirectShowVideoWrapper::initMethod (void)
+{
+}
+
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
 Int64 DirectShowVideoWrapper::getPosition(void) const
 {
@@ -133,8 +205,6 @@ bool DirectShowVideoWrapper::open(Path ThePath)
 
     IBaseFilter* sourceFilter;
 
-    typedef boost::archive::iterators::wchar_from_mb<const char *> translator;
-
     std::wstring WideFileName;
     WideFileName.assign(ThePath.string().begin(), ThePath.string().end());
 
@@ -208,12 +278,13 @@ bool DirectShowVideoWrapper::open(Path ThePath)
         return false;
     }
 
+	videoInitialized = true;
+	produceOpened();
     return true;
 }
 
 bool DirectShowVideoWrapper::seek(Int64 SeekPos)
 {
-    //TODO: Implement
     if(isInitialized())
     {
 		HRESULT hr;
@@ -222,6 +293,7 @@ bool DirectShowVideoWrapper::seek(Int64 SeekPos)
 		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
 
 		if (SUCCEEDED(mediaSeeking->SetPositions(&SeekPos, AM_SEEKING_AbsolutePositioning, NULL, AM_SEEKING_NoPositioning))) {
+			produceSeeked();
 			return true;
 		} else {
 			return false;
@@ -232,8 +304,9 @@ bool DirectShowVideoWrapper::seek(Int64 SeekPos)
 
 bool DirectShowVideoWrapper::play(void)
 {
-    //if(isInitialized())
-    //{
+    if(isInitialized())
+    {
+		bool wasPaused(isPaused());
 		// Tell the whole graph to start sending video
 		// Apart from making sure the source filter can load
 		// This is the only failure point we care about unless
@@ -244,13 +317,17 @@ bool DirectShowVideoWrapper::play(void)
 		hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
 
 		if (SUCCEEDED(mediaControl->Run())) {
-			videoInitialized = true;
+			if(wasPaused)
+			{
+				produceUnpaused();
+			}
+			producePlayed();
 			return true;
 		} else {
 			uninitVideo();
 			return false;
 		}
-	//}
+	}
 }
 
 bool DirectShowVideoWrapper::pause(void)
@@ -263,6 +340,7 @@ bool DirectShowVideoWrapper::pause(void)
         hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
 
         if (SUCCEEDED(mediaControl->Pause())) {
+			producePaused();
             return true;
         }
     }
@@ -300,6 +378,7 @@ bool DirectShowVideoWrapper::stop(void)
         hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
 
         if (SUCCEEDED(mediaControl->Stop())) {
+			produceStopped();
             return true;
         }
     }
@@ -309,6 +388,7 @@ bool DirectShowVideoWrapper::stop(void)
 bool DirectShowVideoWrapper::close(void)
 {
     uninitVideo();
+	produceClosed();
     return true;
 }
 
@@ -445,5 +525,67 @@ void DirectShowVideoWrapper::FindPin(IBaseFilter* baseFilter,
         }
     }
 }
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+DirectShowVideoWrapper::DirectShowVideoWrapper(void) :
+    Inherited(),
+        videoInitialized(false),
+        frameBuffer(NULL)
+{
+}
+
+DirectShowVideoWrapper::DirectShowVideoWrapper(const DirectShowVideoWrapper &source) :
+    Inherited(source),
+        videoInitialized(false),
+        frameBuffer(NULL)
+{
+}
+
+DirectShowVideoWrapper::~DirectShowVideoWrapper(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void DirectShowVideoWrapper::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void DirectShowVideoWrapper::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump DirectShowVideoWrapper NI" << std::endl;
+}
+
+
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGDIRECTSHOWVIDEOWRAPPERBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDIRECTSHOWVIDEOWRAPPERBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGDIRECTSHOWVIDEOWRAPPERFIELDS_HEADER_CVSID;
+}
+
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
+

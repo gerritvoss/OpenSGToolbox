@@ -69,6 +69,51 @@ SimpleSceneManager *mgr;
 int setupGLUT( int *argc, char *argv[] );
 MaterialPtr createVideoMaterial(void);
 
+class TutorialVideoListener : public VideoListener
+{
+  public:
+  
+    virtual void paused(const VideoEvent& e)
+	{
+		std::cout << "Paused" << std::endl;
+	}
+
+    virtual void unpaused(const VideoEvent& e)
+	{
+		std::cout << "Unpaused" << std::endl;
+	}
+
+    virtual void played(const VideoEvent& e)
+	{
+		std::cout << "Played" << std::endl;
+	}
+
+    virtual void stopped(const VideoEvent& e)
+	{
+		std::cout << "Stopped" << std::endl;
+	}
+
+    virtual void opened(const VideoEvent& e)
+	{
+		std::cout << "Opened" << std::endl;
+	}
+
+    virtual void closed(const VideoEvent& e)
+	{
+		std::cout << "Closed" << std::endl;
+	}
+
+    virtual void reachedEnd(const VideoEvent& e)
+	{
+		std::cout << "Reached End" << std::endl;
+	}
+
+    virtual void seeked(const VideoEvent& e)
+	{
+		std::cout << "Seeked" << std::endl;
+	}
+
+};
 
 // Grab/update the image
 // This just update the image's data and tells the texture that it changed.
@@ -111,8 +156,7 @@ void display( void )
 void update(void)
 {
 	TheVideo->updateImage();
-	std::cout << TheVideo->getPosition() << " / " << TheVideo->getDuration() << std::endl;
-    glutPostRedisplay();
+	glutPostRedisplay();
 }
 
 // Initialize GLUT & OpenSG and set up the scene
@@ -124,10 +168,11 @@ int main(int argc, char **argv)
     
     TheVideo = getDefaultVideoManager()->createVideoWrapper();
     
-    if( TheVideo->open(Path("C:\\Test.avi")) )
-    {
-        TheVideo->play();
-    }
+    TheVideo->open(Path("C:\\Test.avi"));
+	TheVideo->pause();
+
+	TutorialVideoListener TheVideoListener;
+	TheVideo->addVideoListener(&TheVideoListener);
 
 
     // GLUT init
@@ -255,9 +300,6 @@ void keyboard(unsigned char k, int x, int y)
 			break;
 		case 's':
 			TheVideo->stop();
-			break;
-		case 'P':
-			TheVideo->play();
 			break;
 		case 'r':
 			TheVideo->stop();

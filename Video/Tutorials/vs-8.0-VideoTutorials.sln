@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01ParticleSystemDrawers", "01PlayVideo.vcproj", "{235CA62B-484B-4314-8516-F0F73247AC76}"
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01PlayVideo", "01PlayVideo.vcproj", "{235CA62B-484B-4314-8516-F0F73247AC76}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGVideo", "..\Builds\Windows\OSGVideo.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,10 @@ Global
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.Build.0 = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.ActiveCfg = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.Build.0 = Release|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.Build.0 = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.ActiveCfg = Release|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

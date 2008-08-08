@@ -73,11 +73,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Strmiids.lib ole32.lib OSGBaseD.lib OSGSystemD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="Strmiids.lib ole32.lib OSGBaseD.lib OSGSystemD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(BOOST_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(BOOST_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
@@ -164,11 +164,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Strmiids.lib ole32.lib OSGBase.lib OSGSystem.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="Strmiids.lib ole32.lib OSGBase.lib OSGSystem.lib OSGInput.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(BOOST_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(BOOST_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
@@ -232,6 +232,26 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\OSGDirectShowVideoWrapper.inl"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGDirectShowVideoWrapperBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGDirectShowVideoWrapperBase.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGDirectShowVideoWrapperBase.inl"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGDirectShowVideoWrapperFields.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\OSGVideoDef.h"
 				>
 			</File>
@@ -244,9 +264,53 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\OSGVideoWrapper.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\OSGVideoWrapper.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\src\OSGVideoWrapper.inl"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGVideoWrapperBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGVideoWrapperBase.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGVideoWrapperBase.inl"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\OSGVideoWrapperFields.h"
+				>
+			</File>
+			<Filter
+				Name="Events"
+				>
+				<File
+					RelativePath="..\..\src\Events\OSGVideoEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGVideoEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGVideoEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGVideoListener.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
