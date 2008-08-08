@@ -19,7 +19,7 @@ class OSG_VIDEOLIB_DLLMAPPING DirectShowVideoWrapper : public VideoWrapper
 public:
     virtual bool open(Path ThePath);
 
-    virtual bool seek(Real32 SeekPos);
+    virtual bool seek(Int64 SeekPos);
     virtual bool play(void);
     virtual bool pause(void);
     virtual bool unpause(void);
@@ -29,8 +29,13 @@ public:
     virtual bool isPlaying(void) const;
     virtual bool isPaused(void) const;
     virtual bool isInitialized(void) const;
+    virtual bool isStopped(void) const;
+	
+	virtual Int64 getPosition(void) const;
+	virtual Int64 getDuration(void) const;
 
     virtual ImagePtr getCurrentFrame(void);
+    virtual bool updateImage(void);
 
     DirectShowVideoWrapper() {
         // This must be callled before 

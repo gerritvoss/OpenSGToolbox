@@ -4,20 +4,96 @@
 
 OSG_BEGIN_NAMESPACE
 
-bool DirectShowVideoWrapper::isPlaying(void) const
+Int64 DirectShowVideoWrapper::getPosition(void) const
 {
-    //TODO: Implement
     if(isInitialized())
     {
+		HRESULT hr;
+
+		IMediaSeeking* mediaSeeking;
+		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
+
+		Int64 Result;
+		if (SUCCEEDED(mediaSeeking->GetCurrentPosition(&Result))) {
+			return Result;
+		} else {
+			return -1;
+		}
+	}
+	return -1;
+}
+
+Int64 DirectShowVideoWrapper::getDuration(void) const
+{
+    if(isInitialized())
+    {
+		HRESULT hr;
+
+		IMediaSeeking* mediaSeeking;
+		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
+
+		Int64 Result;
+		if (SUCCEEDED(mediaSeeking->GetDuration(&Result))) {
+			return Result;
+		} else {
+			return -1;
+		}
+	}
+	return -1;
+}
+
+bool DirectShowVideoWrapper::isPlaying(void) const
+{
+    if(isInitialized())
+    {
+		HRESULT hr;
+
+		IMediaControl* mediaControl;
+		hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
+
+		OAFilterState GraphState;
+		if (SUCCEEDED(mediaControl->GetState(0.1f, &GraphState))) {
+			return GraphState == State_Running;
+		} else {
+			return false;
+		}
+    }
+    return false;
+}
+bool DirectShowVideoWrapper::isStopped(void) const
+{
+    if(isInitialized())
+    {
+		HRESULT hr;
+
+		IMediaControl* mediaControl;
+		hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
+
+		OAFilterState GraphState;
+		if (SUCCEEDED(mediaControl->GetState(0.1f, &GraphState))) {
+			return GraphState == State_Stopped;
+		} else {
+			return false;
+		}
     }
     return false;
 }
 
 bool DirectShowVideoWrapper::isPaused(void) const
 {
-    //TODO: Implement
     if(isInitialized())
     {
+		HRESULT hr;
+
+		IMediaControl* mediaControl;
+		hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
+
+		OAFilterState GraphState;
+		if (SUCCEEDED(mediaControl->GetState(0.1f, &GraphState))) {
+			return GraphState == State_Paused;
+		} else {
+			return false;
+		}
     }
     return false;
 }
@@ -135,30 +211,46 @@ bool DirectShowVideoWrapper::open(Path ThePath)
     return true;
 }
 
-bool DirectShowVideoWrapper::seek(Real32 SeekPos)
+bool DirectShowVideoWrapper::seek(Int64 SeekPos)
 {
     //TODO: Implement
-    return false;
+    if(isInitialized())
+    {
+		HRESULT hr;
+
+		IMediaSeeking* mediaSeeking;
+		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
+
+		if (SUCCEEDED(mediaSeeking->SetPositions(&SeekPos, AM_SEEKING_AbsolutePositioning, NULL, AM_SEEKING_NoPositioning))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	return false;
 }
 
 bool DirectShowVideoWrapper::play(void)
 {
-    // Tell the whole graph to start sending video
-    // Apart from making sure the source filter can load
-    // This is the only failure point we care about unless
-    // You need to do more extensive development and debugging.
-    HRESULT hr;
+    //if(isInitialized())
+    //{
+		// Tell the whole graph to start sending video
+		// Apart from making sure the source filter can load
+		// This is the only failure point we care about unless
+		// You need to do more extensive development and debugging.
+		HRESULT hr;
 
-    IMediaControl* mediaControl;
-    hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
+		IMediaControl* mediaControl;
+		hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
 
-    if (SUCCEEDED(mediaControl->Run())) {
-        videoInitialized = true;
-        return true;
-    } else {
-        uninitVideo();
-        return false;
-    }
+		if (SUCCEEDED(mediaControl->Run())) {
+			videoInitialized = true;
+			return true;
+		} else {
+			uninitVideo();
+			return false;
+		}
+	//}
 }
 
 bool DirectShowVideoWrapper::pause(void)
@@ -171,7 +263,6 @@ bool DirectShowVideoWrapper::pause(void)
         hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
 
         if (SUCCEEDED(mediaControl->Pause())) {
-            videoInitialized = true;
             return true;
         }
     }
@@ -180,19 +271,38 @@ bool DirectShowVideoWrapper::pause(void)
 
 bool DirectShowVideoWrapper::unpause(void)
 {
-    //TODO: Implement
-    return false;
+    return play();
 }
 
 bool DirectShowVideoWrapper::pauseToggle(void)
 {
-    //TODO: Implement
+    if(isInitialized())
+    {
+		if(isPaused())
+		{
+			return unpause();
+		}
+		else
+		{
+			return pause();
+		}
+	}
     return false;
 }
 
 bool DirectShowVideoWrapper::stop(void)
 {
-    //TODO: Implement
+    if(isInitialized())
+    {
+        HRESULT hr;
+
+        IMediaControl* mediaControl;
+        hr = filterGraph->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
+
+        if (SUCCEEDED(mediaControl->Stop())) {
+            return true;
+        }
+    }
     return false;
 }
 
@@ -202,6 +312,42 @@ bool DirectShowVideoWrapper::close(void)
     return true;
 }
 
+bool DirectShowVideoWrapper::updateImage(void)
+{
+    if (videoInitialized) {
+        // Only need to do this once
+        if (!frameBuffer) {
+            // The Sample Grabber requires an arbitrary buffer
+            // That we only know at runtime.
+            // (width * height * 3) bytes will not work.
+            sampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
+            if(bufferSize<=0)
+            {
+                return NullFC;
+            }
+            frameBuffer = new long[bufferSize];
+        }
+        
+        sampleGrabber->GetCurrentBuffer(&bufferSize, (long*)frameBuffer);
+    
+		if(_VideoImage == NullFC ||
+		_VideoImage->getWidth() != videoWidth ||
+		_VideoImage->getHeight() != videoHeight)
+		{
+			_VideoImage = Image::create();
+			addRefCP(_VideoImage);
+			_VideoImage->set(Image::OSG_BGR_PF,videoWidth,videoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
+		}
+		else
+		{
+			_VideoImage->setData(reinterpret_cast<const UInt8*>(frameBuffer));		
+		}
+
+        return true;
+    }
+
+    return false;
+}
 
 ImagePtr DirectShowVideoWrapper::getCurrentFrame(void)
 {
@@ -222,7 +368,7 @@ ImagePtr DirectShowVideoWrapper::getCurrentFrame(void)
         sampleGrabber->GetCurrentBuffer(&bufferSize, (long*)frameBuffer);
     
         ImagePtr TheImage = Image::create();
-        TheImage->set(Image::OSG_RGB_PF,videoWidth,videoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
+        TheImage->set(Image::OSG_BGR_PF,videoWidth,videoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
 
         return TheImage;
     }
