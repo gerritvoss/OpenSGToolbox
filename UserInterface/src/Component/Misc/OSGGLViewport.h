@@ -90,6 +90,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
     virtual void mousePressed(const MouseEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
     virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    
+    void setMultipliers(Real32 YawMultiplier,Real32 PitchMultiplier,Real32 RollMultiplier);
+    void setClamps(Vec2f YawClamp,Vec2f PitchClamp,Vec2f RollClamp);
+    void setYaw(Real32 Yaw);
+    void setRoll(Real32 Roll);
+    void setPitch(Real32 Pitch);
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -115,6 +122,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
 
     RenderAction* _Action;
 	mutable Navigator _Navigator;
+    Matrix _DefaultView;
+    Real32 _Yaw, _Pitch, _Roll;
+    Real32 _InitialYaw, _InitialPitch, _InitialRoll;
+    Real32 _YawMultiplier, _PitchMultiplier, _RollMultiplier;
+    Vec2f _YawClamp, _PitchClamp, _RollClamp;
+
+    Pnt2f _InitialMousePos;
+
+    void updateView(void);
 
 	class MouseControlListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
 	{

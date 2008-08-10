@@ -164,6 +164,8 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     
     virtual void draw(void);
     virtual void update(void);
+    
+    virtual Vec2f getDesktopSize(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

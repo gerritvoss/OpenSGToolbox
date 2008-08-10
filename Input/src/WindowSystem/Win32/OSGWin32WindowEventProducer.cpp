@@ -202,7 +202,7 @@ void Win32WindowEventProducer::putClipboard(const std::string Value)
 			HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, (Value.size() + 1) * sizeof(char));
 			if(hglbCopy != NULL)
 			{
-				LPTSTR  lptstrCopy;
+				//LPTSTR  lptstrCopy;
                 void * buf = ::GlobalLock(hglbCopy);
                 ::memcpy(buf, (const void *)Value.c_str(), Value.length()+1);
                 ::GlobalUnlock(hglbCopy);
@@ -650,6 +650,23 @@ KeyEvent::Key Win32WindowEventProducer::determineKey(WPARAM key)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+
+Vec2f Win32WindowEventProducer::getDesktopSize(void) const
+{
+    DEVMODE dm;
+    // initialize the DEVMODE structure
+    ZeroMemory(&dm, sizeof(dm));
+    dm.dmSize = sizeof(dm);
+    if (0 != EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &dm))
+    {
+        return Vec2f(dm.dmPelsWidth,dm.dmPelsHeight);
+    }
+    else
+    {
+        return Vec2f(0.0f,0.0f);
+    }
+}
 
 void Win32WindowEventProducer::draw(void)
 {

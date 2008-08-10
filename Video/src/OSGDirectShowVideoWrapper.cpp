@@ -403,7 +403,13 @@ bool DirectShowVideoWrapper::updateImage(void)
             sampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
             if(bufferSize<=0)
             {
-                return NullFC;
+                std::cout << "bufferSize<=0" << std::endl;
+                return false;
+            }
+            if(bufferSize>10000000)
+            {
+                std::cout << "bufferSize>10000000" << std::endl;
+                return false;
             }
             frameBuffer = new long[bufferSize];
         }
@@ -420,7 +426,7 @@ bool DirectShowVideoWrapper::updateImage(void)
 		}
 		else
 		{
-			_VideoImage->setData(reinterpret_cast<const UInt8*>(frameBuffer));		
+            _VideoImage->setData(reinterpret_cast<const UInt8*>(frameBuffer));		
 		}
 
         return true;
@@ -536,6 +542,13 @@ DirectShowVideoWrapper::DirectShowVideoWrapper(void) :
         videoInitialized(false),
         frameBuffer(NULL)
 {
+    HRESULT hr;
+    hr = CoInitialize(NULL);
+    if (FAILED(hr))
+    {
+        printf("ERROR - Could not initialize COM library");
+        return;
+    }
 }
 
 DirectShowVideoWrapper::DirectShowVideoWrapper(const DirectShowVideoWrapper &source) :
@@ -543,10 +556,22 @@ DirectShowVideoWrapper::DirectShowVideoWrapper(const DirectShowVideoWrapper &sou
         videoInitialized(false),
         frameBuffer(NULL)
 {
+    HRESULT hr;
+    hr = CoInitialize(NULL);
+    if (FAILED(hr))
+    {
+        printf("ERROR - Could not initialize COM library");
+        return;
+    }
 }
 
 DirectShowVideoWrapper::~DirectShowVideoWrapper(void)
 {
+    if(frameBuffer != NULL)
+    {
+        delete [] frameBuffer;
+    }
+    CoUninitialize();
 }
 
 /*----------------------------- class specific ----------------------------*/

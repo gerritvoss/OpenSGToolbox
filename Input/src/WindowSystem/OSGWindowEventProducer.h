@@ -264,6 +264,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     //Set Reshape Callback Function
     virtual void setReshapeCallback(ReshapeCallbackFunc Callback);
 
+    virtual Vec2f getDesktopSize(void) const = 0;
+
 
     virtual void draw(void) = 0;
     virtual void update(void) = 0;

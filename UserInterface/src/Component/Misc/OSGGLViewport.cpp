@@ -48,7 +48,9 @@
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGBackground.h>
 #include <OpenSG/OSGCamera.h>
+#include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGPerspectiveCamera.h>
+#include <OpenSG/OSGMatrixUtility.h>
 #include "Component/Container/Window/OSGInternalWindow.h"
 
 #include "OSGGLViewport.h"
@@ -151,7 +153,10 @@ void GLViewport::drawInternal(const GraphicsPtr Graphics) const
 			endEditCP(getPort(), Viewport::LeftFieldMask | Viewport::RightFieldMask | Viewport::TopFieldMask | Viewport::BottomFieldMask);
 
 
-			_Navigator.updateCameraTransformation();
+            if(_Navigator.getMode() != Navigator::NONE)
+            {
+			    _Navigator.updateCameraTransformation();
+            }
 
 			beginEditCP(getPort(), Viewport::ParentFieldMask);
 				getPort()->setParent(getParentWindow()->getDrawingSurface()->getEventProducer()->getWindow());
@@ -199,36 +204,46 @@ void GLViewport::mousePressed(const MouseEvent& e)
 {
 	Inherited::mousePressed(e);
 	
-	UInt16 MouseButtons;
-	switch(e.getButton())
-	{
-	case MouseEvent::BUTTON1:
-		_MouseControlListener.setInitialMat(_Navigator.getMatrix());
-		_Navigator.buttonPress(Navigator::LEFT_MOUSE,e.getLocation().x(),e.getLocation().y());
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
-				
-		MouseButtons = 1;
-		break;
-	case MouseEvent::BUTTON2:
-		_MouseControlListener.setInitialMat(_Navigator.getMatrix());
-		_Navigator.buttonPress(Navigator::MIDDLE_MOUSE,e.getLocation().x(),e.getLocation().y());
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
-		MouseButtons = 2;
-		break;
-	case MouseEvent::BUTTON3:
-		_MouseControlListener.setInitialMat(_Navigator.getMatrix());
-		_Navigator.buttonPress(Navigator::RIGHT_MOUSE,e.getLocation().x(),e.getLocation().y());
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
-		MouseButtons = 4;
-		break;
-	}
-	_Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
+    if(_Navigator.getMode() != Navigator::NONE)
+    {
+	    UInt16 MouseButtons;
+	    switch(e.getButton())
+	    {
+	    case MouseEvent::BUTTON1:
+		    _MouseControlListener.setInitialMat(_Navigator.getMatrix());
+		    _Navigator.buttonPress(Navigator::LEFT_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+		    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+    				
+		    MouseButtons = 1;
+		    break;
+	    case MouseEvent::BUTTON2:
+		    _MouseControlListener.setInitialMat(_Navigator.getMatrix());
+		    _Navigator.buttonPress(Navigator::MIDDLE_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+		    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+		    MouseButtons = 2;
+		    break;
+	    case MouseEvent::BUTTON3:
+		    _MouseControlListener.setInitialMat(_Navigator.getMatrix());
+		    _Navigator.buttonPress(Navigator::RIGHT_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+		    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+		    MouseButtons = 4;
+		    break;
+	    }
+	    _Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
+    }
+    else
+    {
+        _InitialMousePos = e.getLocation();
+	    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+	    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+	    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+    }
 }
 
 void GLViewport::keyTyped(const KeyEvent& e)
@@ -281,6 +296,24 @@ void GLViewport::mouseWheelMoved(const MouseWheelEvent& e)
 	}
 }
 
+void GLViewport::lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up)
+{
+    if(_Navigator.getMode() == Navigator::NONE)
+    {
+        if(getPort()->getCamera()->getBeacon()->getCore()->getType().isDerivedFrom(Transform::getClassType()))
+        {
+            MatrixLookAt(_DefaultView, From, At, Up);
+            beginEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
+                Transform::Ptr::dcast(getPort()->getCamera()->getBeacon()->getCore())->setMatrix(_DefaultView);
+            endEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
+        }
+    }
+    else
+    {
+        _Navigator.set(From,At,Up);
+    }
+}
+
 void GLViewport::showAll(void)
 {
     if(getPort() == NullFC ||
@@ -291,7 +324,13 @@ void GLViewport::showAll(void)
 
 	//
 	::osg::showAll(getPort()->getCamera(), getPort()->getRoot());
-    _Navigator.set(getPort()->getCamera()->getBeacon()->getToWorld());
+    if(_Navigator.getMode() == Navigator::NONE)
+    {
+    }
+    else
+    {
+        _Navigator.set(getPort()->getCamera()->getBeacon()->getToWorld());
+    }
 
     Vec3f min,max;
     getPort()->getRoot()->getVolume().getBounds( min, max );
@@ -308,6 +347,58 @@ void GLViewport::showAll(void)
     _Navigator.setMotionFactor((d[0] + d[1] + d[2]) / 100.f);
 }
 
+void GLViewport::updateView(void)
+{
+    if(_Navigator.getMode() == Navigator::NONE)
+    {
+        if(getPort()->getCamera()->getBeacon()->getCore()->getType().isDerivedFrom(Transform::getClassType()))
+        {
+            Matrix View(_DefaultView);
+            Matrix YawRot, PitchRot, RollRot;
+            YawRot.setRotate(Quaternion(Vec3f(0.0,1.0,0.0),_Yaw));
+            PitchRot.setRotate(Quaternion(Vec3f(1.0,0.0,0.0),_Pitch));
+            RollRot.setRotate(Quaternion(Vec3f(0.0,0.0,1.0),_Roll));
+
+            View.mult(YawRot);
+            View.mult(PitchRot);
+            View.mult(RollRot);
+            beginEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
+                Transform::Ptr::dcast(getPort()->getCamera()->getBeacon()->getCore())->setMatrix(View);
+            endEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
+        }
+    }
+}
+
+void GLViewport::setMultipliers(Real32 YawMultiplier,Real32 PitchMultiplier,Real32 RollMultiplier)
+{
+    _YawMultiplier = YawMultiplier;
+    _PitchMultiplier = PitchMultiplier;
+    _RollMultiplier = RollMultiplier;
+}
+
+void GLViewport::setClamps(Vec2f YawClamp,Vec2f PitchClamp,Vec2f RollClamp)
+{
+    _YawClamp = YawClamp;
+    _PitchClamp = PitchClamp;
+    _RollClamp = RollClamp;
+}
+
+void GLViewport::setYaw(Real32 Yaw)
+{
+    _Yaw = osgClamp(_YawClamp.x(), Yaw, _YawClamp.y());
+}
+
+void GLViewport::setRoll(Real32 Roll)
+{
+    _Roll = osgClamp(_RollClamp.x(), Roll, _RollClamp.y());
+}
+
+void GLViewport::setPitch(Real32 Pitch)
+{
+    _Pitch = osgClamp(_PitchClamp.x(), Pitch, _PitchClamp.y());
+}
+
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -316,7 +407,11 @@ void GLViewport::showAll(void)
 
 GLViewport::GLViewport(void) :
     Inherited(),
-		_MouseControlListener(GLViewportPtr(this))
+		_MouseControlListener(GLViewportPtr(this)),
+        _Yaw(0.0f), _Pitch(0.0f), _Roll(0.0f),
+        _InitialYaw(0.0f), _InitialPitch(0.0f), _InitialRoll(0.0f),
+        _YawMultiplier(1.0f), _PitchMultiplier(1.0f), _RollMultiplier(1.0f),
+        _YawClamp(0.0f, 6.2831853f), _PitchClamp(0.0f, 6.2831853f), _RollClamp(0.0f, 6.2831853f)
 {
 	_Action = RenderAction::create();
 	_Navigator.setMode(Navigator::TRACKBALL);
@@ -325,7 +420,11 @@ GLViewport::GLViewport(void) :
 
 GLViewport::GLViewport(const GLViewport &source) :
     Inherited(source),
-		_MouseControlListener(GLViewportPtr(this))
+		_MouseControlListener(GLViewportPtr(this)),
+        _Yaw(0.0f), _Pitch(0.0f), _Roll(0.0f),
+        _InitialYaw(0.0f), _InitialPitch(0.0f), _InitialRoll(0.0f),
+        _YawMultiplier(0.1f), _PitchMultiplier(0.1f), _RollMultiplier(0.1f),
+        _YawClamp(0.0f, 6.2831853f), _PitchClamp(0.0f, 6.2831853f), _RollClamp(0.0f, 6.2831853f)
 {
 	_Action = RenderAction::create();
 	_Navigator.setMode(Navigator::TRACKBALL);
@@ -361,60 +460,75 @@ void GLViewport::dump(      UInt32    ,
 void GLViewport::MouseControlListener::mouseReleased(const MouseEvent& e)
 {
 	
-	UInt16 MouseButtons;
-	switch(e.getButton())
-	{
-	case MouseEvent::BUTTON1:
-		_GLViewport->_Navigator.buttonRelease(Navigator::LEFT_MOUSE,e.getLocation().x(),e.getLocation().y());
-		MouseButtons = 1;
-		break;
-	case MouseEvent::BUTTON2:
-		_GLViewport->_Navigator.buttonRelease(Navigator::MIDDLE_MOUSE,e.getLocation().x(),e.getLocation().y());
-		MouseButtons = 2;
-		break;
-	case MouseEvent::BUTTON3:
-		_GLViewport->_Navigator.buttonRelease(Navigator::RIGHT_MOUSE,e.getLocation().x(),e.getLocation().y());
-		MouseButtons = 4;
-		break;
-	case MouseEvent::BUTTON4:
-		MouseButtons = 8;
-		break;
-	case MouseEvent::BUTTON5:
-		_GLViewport->_Navigator.buttonRelease(Navigator::DOWN_MOUSE,e.getLocation().x(),e.getLocation().y());
-		MouseButtons = 16;
-		break;
-	}
-	_GLViewport->_Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
+    if(_GLViewport->_Navigator.getMode() != Navigator::NONE)
+    {
+	    UInt16 MouseButtons;
+	    switch(e.getButton())
+	    {
+	    case MouseEvent::BUTTON1:
+		    _GLViewport->_Navigator.buttonRelease(Navigator::LEFT_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    MouseButtons = 1;
+		    break;
+	    case MouseEvent::BUTTON2:
+		    _GLViewport->_Navigator.buttonRelease(Navigator::MIDDLE_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    MouseButtons = 2;
+		    break;
+	    case MouseEvent::BUTTON3:
+		    _GLViewport->_Navigator.buttonRelease(Navigator::RIGHT_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    MouseButtons = 4;
+		    break;
+	    case MouseEvent::BUTTON4:
+		    MouseButtons = 8;
+		    break;
+	    case MouseEvent::BUTTON5:
+		    _GLViewport->_Navigator.buttonRelease(Navigator::DOWN_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    MouseButtons = 16;
+		    break;
+	    }
+	    _GLViewport->_Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
 
-	_GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-	_GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-	_GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+	    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+	    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+	    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+    }
+    else
+    {
+    }
 }
 
 void GLViewport::MouseControlListener::mouseDragged(const MouseEvent& e)
 {
 
-	UInt16 MouseButtons;
-	switch(e.getButton())
-	{
-	case MouseEvent::BUTTON1:
-		MouseButtons = 1;
-		break;
-	case MouseEvent::BUTTON2:
-		MouseButtons = 2;
-		break;
-	case MouseEvent::BUTTON3:
-		MouseButtons = 4;
-		break;
-	case MouseEvent::BUTTON4:
-		MouseButtons = 8;
-		break;
-	case MouseEvent::BUTTON5:
-		MouseButtons = 16;
-		break;
-	}
-	_GLViewport->_Navigator.moveTo(e.getLocation().x(),e.getLocation().y());
-	_GLViewport->_Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
+    if(_GLViewport->_Navigator.getMode() != Navigator::NONE)
+    {
+	    UInt16 MouseButtons;
+	    switch(e.getButton())
+	    {
+	    case MouseEvent::BUTTON1:
+		    MouseButtons = 1;
+		    break;
+	    case MouseEvent::BUTTON2:
+		    MouseButtons = 2;
+		    break;
+	    case MouseEvent::BUTTON3:
+		    MouseButtons = 4;
+		    break;
+	    case MouseEvent::BUTTON4:
+		    MouseButtons = 8;
+		    break;
+	    case MouseEvent::BUTTON5:
+		    MouseButtons = 16;
+		    break;
+	    }
+	    _GLViewport->_Navigator.moveTo(e.getLocation().x(),e.getLocation().y());
+	    _GLViewport->_Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
+    }
+    else
+    {
+        _GLViewport->setYaw( _GLViewport->_InitialYaw + (_GLViewport->_InitialMousePos.x() - e.getLocation().x())*_GLViewport->_YawMultiplier );
+        _GLViewport->setPitch( _GLViewport->_InitialPitch + (_GLViewport->_InitialMousePos.y() - e.getLocation().y())*_GLViewport->_PitchMultiplier );
+        _GLViewport->updateView();
+    }
 }
 
 void GLViewport::MouseControlListener::setInitialMat(const Matrix& Mat)
@@ -424,13 +538,19 @@ void GLViewport::MouseControlListener::setInitialMat(const Matrix& Mat)
 
 void GLViewport::MouseControlListener::keyPressed(const KeyEvent& e)
 {
-	if(e.getKey() == KeyEvent::KEY_ESCAPE)
-	{
-		_GLViewport->_Navigator.set(_InitialMat);
-		_GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-		_GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-		_GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
-	}
+    if(_GLViewport->_Navigator.getMode() != Navigator::NONE)
+    {
+	    if(e.getKey() == KeyEvent::KEY_ESCAPE)
+	    {
+		    _GLViewport->_Navigator.set(_InitialMat);
+		    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+		    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+		    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+	    }
+    }
+    else
+    {
+    }
 }
 
 /*------------------------------------------------------------------------*/

@@ -188,6 +188,8 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     
     virtual void draw(void);
     virtual void update(void);
+    
+    virtual Vec2f getDesktopSize(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

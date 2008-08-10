@@ -279,7 +279,7 @@ void ScrollPanel::updateLayout(void)
         getHorizontalResizePolicy() == RESIZE_TO_VIEW)
     {
         Vec2f Size(getPreferredSize());
-        if(getVerticalResizePolicy() == RESIZE_TO_VIEW)
+        if(getView() != NullFC && getVerticalResizePolicy() == RESIZE_TO_VIEW)
         {
             Size[1] = getView()->getViewComponent()->getPreferredSize()[1];
             if(HorizontalScrollbarShown)
@@ -287,7 +287,7 @@ void ScrollPanel::updateLayout(void)
                Size[1] += getHorizontalScrollBar()->getSize()[1];
             }
         }
-        if(getHorizontalResizePolicy() == RESIZE_TO_VIEW)
+        if(getView() != NullFC && getHorizontalResizePolicy() == RESIZE_TO_VIEW)
         {
             Size[0] = getView()->getViewComponent()->getPreferredSize()[0];
             if(VerticalScrollbarShown)

@@ -323,7 +323,7 @@ std::string XMLFCFileType::getName(void) const
 											{
 												TheFilePath = FCFileHandler::the()->getRootFilePath() / TheFilePath;
 											}
-											static_cast<MFPath*>(TheField)->addValue(TheFilePath);
+											static_cast<MFPath*>(TheField)->push_back(TheFilePath);
 										}
 										else
 										{

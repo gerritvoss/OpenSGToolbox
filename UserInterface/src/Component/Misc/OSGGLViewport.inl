@@ -50,12 +50,6 @@ _GLViewport(TheGLViewport)
 }
 
 inline
-void GLViewport::lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up)
-{
-    _Navigator.set(From,At,Up);
-}
-
-inline
 void GLViewport::setMode(Navigator::Mode TheMode)
 {
     _Navigator.setMode(TheMode);

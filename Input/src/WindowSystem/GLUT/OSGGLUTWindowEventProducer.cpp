@@ -69,6 +69,7 @@ GLUTWindowEventProducer::GLUTWindowToProducerMap GLUTWindowEventProducer::_GLUTW
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+
 void GLUTWindowEventProducer::WindowEventLoopThread(void* args)
 {
     WindowEventLoopThreadArguments* Arguments(static_cast<WindowEventLoopThreadArguments*>(args));
@@ -264,6 +265,12 @@ Pnt2f GLUTWindowEventProducer::getMousePosition(void) const
 {
 	//TODO:Implement
 	return Pnt2f(0,0);
+}
+
+Vec2f GLUTWindowEventProducer::getDesktopSize(void) const
+{
+	//TODO:Implement
+    return Vec2f(0,0);
 }
 
 void GLUTWindowEventProducer::glutIdle(void)
