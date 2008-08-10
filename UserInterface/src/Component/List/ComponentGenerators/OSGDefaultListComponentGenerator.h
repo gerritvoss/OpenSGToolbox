@@ -80,6 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGenerator : public Def
     /*! \}                                                                 */
 	
 	virtual ComponentPtr getListComponent(ListPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus);
+	virtual ComponentPtr getListComponent(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -101,7 +102,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGenerator : public Def
     virtual ~DefaultListComponentGenerator(void); 
 
     /*! \}                                                                 */
-	virtual ComponentPtr getListComponent(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus);
 
     /*==========================  PRIVATE  ================================*/
   private:

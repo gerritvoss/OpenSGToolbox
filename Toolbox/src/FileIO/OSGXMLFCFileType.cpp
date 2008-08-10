@@ -293,7 +293,20 @@ std::string XMLFCFileType::getName(void) const
 							{
 								if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
 								{
-									TheField->pushValueByStr(FieldValue.c_str());
+									if(TheField->getType() == SFPath::getClassType())
+									{
+										//If the field type is a Path
+										Path TheFilePath(FieldValue.c_str());
+										if(!TheFilePath.has_root_path())
+										{
+											TheFilePath = FCFileHandler::the()->getRootFilePath() / TheFilePath;
+										}
+										static_cast<SFPath*>(TheField)->setValue(TheFilePath);
+									}
+									else
+									{
+										TheField->pushValueByStr(FieldValue.c_str());
+									}
 								}
 								else if(TheField->getCardinality() == FieldType::MULTI_FIELD &&
 									!FieldValue.empty())
@@ -302,7 +315,20 @@ std::string XMLFCFileType::getName(void) const
 									boost::algorithm::split( SplitVec, FieldValue, boost::algorithm::is_any_of(std::string(";")) );
 									for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
 									{
-										TheField->pushValueByStr(SplitVec[SplitIndex].c_str());
+										if(TheField->getType() == MFPath::getClassType())
+										{
+											//If the field type is a Path
+											Path TheFilePath(SplitVec[SplitIndex].c_str());
+											if(!TheFilePath.has_root_path())
+											{
+												TheFilePath = FCFileHandler::the()->getRootFilePath() / TheFilePath;
+											}
+											static_cast<MFPath*>(TheField)->addValue(TheFilePath);
+										}
+										else
+										{
+											TheField->pushValueByStr(SplitVec[SplitIndex].c_str());
+										}
 									}
 								}
 							}
