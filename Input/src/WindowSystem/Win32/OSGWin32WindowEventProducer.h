@@ -166,6 +166,11 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     virtual void update(void);
     
     virtual Vec2f getDesktopSize(void) const;
+
+	virtual std::vector<Path> openFileDialog(const std::string& WindowTitle,
+		std::vector<std::string> Filters,
+		const Path& InitialDir,
+		bool AllowMultiSelect);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

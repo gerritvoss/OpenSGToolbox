@@ -140,6 +140,15 @@ public:
             default:
                 break;
         }
+		if(e.getKey() == KeyEvent::KEY_O &&
+			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		{
+			std::vector<std::string> Filters;
+			WindowEventProducer::Ptr::dcast(e.getSource())->openFileDialog("Open A File, Yo?",
+				Filters,
+				Path("."),
+				false);
+		}
     }
     virtual void keyReleased(const KeyEvent& e)
     {

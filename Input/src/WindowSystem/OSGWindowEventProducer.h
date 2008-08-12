@@ -50,6 +50,7 @@
 #include <map>
 #include <OpenSG/OSGThread.h>
 #include <OpenSG/OSGRenderAction.h>
+#include <OpenSG/Toolbox/OSGPathType.h>
 
 #include "OSGWindowEventProducerBase.h"
 
@@ -265,6 +266,11 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     virtual void setReshapeCallback(ReshapeCallbackFunc Callback);
 
     virtual Vec2f getDesktopSize(void) const = 0;
+
+	virtual std::vector<Path> openFileDialog(const std::string& WindowTitle,
+		std::vector<std::string> Filters,
+		const Path& InitialDir,
+		bool AllowMultiSelect) = 0;
 
 
     virtual void draw(void) = 0;

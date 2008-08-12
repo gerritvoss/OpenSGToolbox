@@ -267,6 +267,16 @@ Pnt2f GLUTWindowEventProducer::getMousePosition(void) const
 	return Pnt2f(0,0);
 }
 
+std::vector<Path> GLUTWindowEventProducer::openFileDialog(const std::string& WindowTitle,
+	std::vector<std::string> Filters,
+	const Path& InitialDir,
+	bool AllowMultiSelect)
+{
+	//TODO: Implement
+	std::vector<Path> Result;
+	return Result;
+}
+
 Vec2f GLUTWindowEventProducer::getDesktopSize(void) const
 {
 	//TODO:Implement
