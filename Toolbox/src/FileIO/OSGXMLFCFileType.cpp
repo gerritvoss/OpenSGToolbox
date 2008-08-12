@@ -59,6 +59,7 @@
 
 
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <algorithm>
 
 OSG_BEGIN_NAMESPACE
@@ -530,6 +531,35 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 						OutputStream << "\"" << std::endl;
 				}
 			}
+			else if(TheField->getType() == SFPath::getClassType())
+			{
+				FieldValue.clear();
+				Path RootPath = boost::filesystem::system_complete(FCFileHandler::the()->getRootFilePath());
+				Path FilePath = boost::filesystem::system_complete(static_cast<SFPath*>(TheField)->getValue());
+				Path RelativePath = makeRelative(RootPath, FilePath);
+				FieldValue = RelativePath.string();//TheField->getValueByStr(FieldValue);
+				OutputStream << "\t\t" << Desc->getCName() << "=\"" << FieldValue << "\"" << std::endl;
+			}
+			else if(TheField->getType() == MFPath::getClassType())
+			{
+				OutputStream << "\t\t" << Desc->getCName() << "=\"" ;
+				Path RootPath = boost::filesystem::system_complete(FCFileHandler::the()->getRootFilePath());
+				Path FilePath;
+				Path RelativePath;
+				for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
+				{
+					FieldValue.clear();
+					FilePath = boost::filesystem::system_complete(static_cast<MFPath*>(TheField)->getValue(Index));
+					RelativePath = makeRelative(RootPath, FilePath);
+					FieldValue = RelativePath.string();
+					if(Index!=0)
+					{
+						OutputStream << ";";
+					}
+					OutputStream << FieldValue;
+				}
+				OutputStream << "\"" << std::endl;
+			}
 			else
 			{
 				if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
@@ -564,6 +594,29 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 	OutputStream << "</OSGFieldContainers>" << std::endl << std::endl;
 
 	return true;
+}
+
+Path XMLFCFileType::makeRelative(Path& Root, Path& ToPath)
+{
+	Path Result;
+	boost::filesystem::path::iterator RootIter = Root.begin();
+	boost::filesystem::path::iterator ToPathIter = ToPath.begin();
+
+	while(RootIter != Root.end() &&
+		  ToPathIter != ToPath.end() &&
+		  RootIter->compare(*ToPathIter) == 0)
+	{
+		++RootIter;
+		++ToPathIter;
+	}
+	
+	while(ToPathIter != ToPath.end())
+	{
+		Result = Result / *ToPathIter;
+		++ToPathIter;
+	}
+
+	return Result;
 }
 
 XMLFCFileType::FCPtrStore XMLFCFileType::getAllDependantFCs(FCPtrStore Containers, FCPtrStore IgnoreContainers, const FCTypeVector& IgnoreTypes) const

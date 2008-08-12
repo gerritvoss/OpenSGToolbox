@@ -86,6 +86,9 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapper : public VideoWrapperBase
     virtual bool open(Path ThePath) = 0;
 
     virtual bool seek(Int64 SeekPos) = 0;
+    virtual bool jump(Int64 Amount) = 0;
+    virtual bool setRate(Real32 Rate) = 0;
+    virtual Real32 getRate(void) const = 0;
     virtual bool play(void) = 0;
     virtual bool pause(void) = 0;
     virtual bool unpause(void) = 0;

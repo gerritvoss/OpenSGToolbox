@@ -330,6 +330,9 @@ bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, con
 	 std::string Extension(boost::filesystem::extension(FilePath));
 	 boost::algorithm::trim_if(Extension,boost::is_any_of("."));
 
+	 _RootFilePath = FilePath;
+     _RootFilePath.remove_leaf();
+
 	 //Get the FileType for this extension
 	 FCFileTypeP TheFileType(getFileType(Extension, FCFileType::OSG_WRITE_SUPPORTED));
 

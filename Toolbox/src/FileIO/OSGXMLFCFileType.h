@@ -71,6 +71,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
  
      /*=========================  PROTECTED  ===============================*/
    protected:
+	 static Path makeRelative(Path& Root, Path& ToPath);
 	 struct FCIdMapper;
 	 friend struct FCIdMapper;
 

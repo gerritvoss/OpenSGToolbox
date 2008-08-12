@@ -85,6 +85,9 @@ class OSG_VIDEOLIB_DLLMAPPING DirectShowVideoWrapper : public DirectShowVideoWra
     virtual bool open(Path ThePath);
 
     virtual bool seek(Int64 SeekPos);
+    virtual bool jump(Int64 Amount);
+    virtual bool setRate(Real32 Rate);
+    virtual Real32 getRate(void) const;
     virtual bool play(void);
     virtual bool pause(void);
     virtual bool unpause(void);

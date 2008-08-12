@@ -283,6 +283,64 @@ bool DirectShowVideoWrapper::open(Path ThePath)
     return true;
 }
 
+bool DirectShowVideoWrapper::setRate(Real32 Rate)
+{
+    if(isInitialized())
+    {
+		HRESULT hr;
+
+		IMediaSeeking* mediaSeeking;
+		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
+
+		if (SUCCEEDED(mediaSeeking->SetRate(Rate)))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return false;
+}
+
+Real32 DirectShowVideoWrapper::getRate(void) const
+{
+    if(isInitialized())
+    {
+		HRESULT hr;
+
+		IMediaSeeking* mediaSeeking;
+		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
+
+		double Rate;
+		if (SUCCEEDED(mediaSeeking->GetRate(&Rate)))
+		{
+			return static_cast<Real32>(Rate);
+		}
+	}
+	return 0.0;
+}
+
+bool DirectShowVideoWrapper::jump(Int64 Amount)
+{
+    if(isInitialized())
+    {
+		REFERENCE_TIME Position = getPosition() + Amount;
+		HRESULT hr;
+
+		IMediaSeeking* mediaSeeking;
+		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
+
+		if (SUCCEEDED(mediaSeeking->SetPositions(&Position, AM_SEEKING_AbsolutePositioning, NULL, AM_SEEKING_NoPositioning))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	return false;
+}
+
 bool DirectShowVideoWrapper::seek(Int64 SeekPos)
 {
     if(isInitialized())
