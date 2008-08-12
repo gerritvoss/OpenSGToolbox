@@ -158,6 +158,18 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     /*==========================  PUBLIC  =================================*/
   public:
 
+    class FileDialogFilter
+    {
+    public:
+        FileDialogFilter(const std::string& Name, const std::string& Filter);
+
+        const std::string& getName(void) const;
+        const std::string& getFilter(void) const;
+    private:
+        std::string _Name;
+        std::string _Filter;
+    };
+
 	enum CursorType {CURSOR_POINTER=0, CURSOR_HAND, CURSOR_I_BEAM, CURSOR_WAIT, CURSOR_RESIZE_W_TO_E, CURSOR_RESIZE_N_TO_S, CURSOR_RESIZE_NW_TO_SE, CURSOR_RESIZE_SW_TO_NE, CURSOR_RESIZE_ALL, CURSOR_NONE};
 
     struct CursorRegion
@@ -268,9 +280,16 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     virtual Vec2f getDesktopSize(void) const = 0;
 
 	virtual std::vector<Path> openFileDialog(const std::string& WindowTitle,
-		std::vector<std::string> Filters,
+		const std::vector<FileDialogFilter>& Filters,
 		const Path& InitialDir,
 		bool AllowMultiSelect) = 0;
+
+    virtual Path saveFileDialog(const std::string& DialogTitle,
+                    const std::vector<FileDialogFilter>& Filters,
+                    const Path& InitialFile,
+                    const Path& InitialDirectory,
+                    bool PromptForOverwrite
+                    ) = 0;
 
 
     virtual void draw(void) = 0;

@@ -143,11 +143,36 @@ public:
 		if(e.getKey() == KeyEvent::KEY_O &&
 			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
-			std::vector<std::string> Filters;
-			WindowEventProducer::Ptr::dcast(e.getSource())->openFileDialog("Open A File, Yo?",
+            std::vector<WindowEventProducer::FileDialogFilter> Filters;
+            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","*.CPP"));
+            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*.*"));
+
+			std::vector<Path> FilesToOpen;
+			FilesToOpen = WindowEventProducer::Ptr::dcast(e.getSource())->openFileDialog("Open A File, Yo?",
 				Filters,
-				Path("."),
+				Path(".."),
 				false);
+
+            std::cout << "Files to Open: "<< std::endl;
+            for(std::vector<Path>::iterator Itor(FilesToOpen.begin()) ; Itor != FilesToOpen.end(); ++Itor)
+            {
+                std::cout << Itor->string() << std::endl;
+            }
+		}
+		if(e.getKey() == KeyEvent::KEY_S &&
+			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		{
+			std::vector<WindowEventProducer::FileDialogFilter> Filters;
+            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","*.CPP"));
+            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*.*"));
+
+			Path SavePath = WindowEventProducer::Ptr::dcast(e.getSource())->saveFileDialog("Save A File, Yo?",
+				Filters,
+				Path(),
+				Path(".."),
+				true);
+            
+            std::cout << "File to Save: " << SavePath << std::endl;
 		}
     }
     virtual void keyReleased(const KeyEvent& e)

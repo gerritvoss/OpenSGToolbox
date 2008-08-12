@@ -326,17 +326,17 @@ bool DirectShowVideoWrapper::jump(Int64 Amount)
 {
     if(isInitialized())
     {
-		REFERENCE_TIME Position = getPosition() + Amount;
+		REFERENCE_TIME Position = (getDuration() *100) / 95;
 		HRESULT hr;
 
 		IMediaSeeking* mediaSeeking;
 		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
 
-		if (SUCCEEDED(mediaSeeking->SetPositions(&Position, AM_SEEKING_AbsolutePositioning, NULL, AM_SEEKING_NoPositioning))) {
-			return true;
-		} else {
-			return false;
-		}
+		//if (SUCCEEDED(mediaSeeking->SetPositions(&Position, AM_SEEKING_AbsolutePositioning, NULL, AM_SEEKING_NoPositioning))) {
+		//	return true;
+		//} else {
+		//	return false;
+		//}
 	}
 	return false;
 }

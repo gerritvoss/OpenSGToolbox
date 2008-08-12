@@ -240,6 +240,9 @@ void GLViewport::mousePressed(const MouseEvent& e)
     else
     {
         _InitialMousePos = e.getLocation();
+        _InitialYaw = _Yaw;
+        _InitialPitch = _Pitch;
+        _InitialRoll = _Roll;
 	    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
 	    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
 	    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
@@ -249,51 +252,77 @@ void GLViewport::mousePressed(const MouseEvent& e)
 void GLViewport::keyTyped(const KeyEvent& e)
 {
 	Inherited::keyTyped(e);
-	switch ( e.getKey() )
-	{
-	case KeyEvent::KEY_J:
-	case KeyEvent::KEY_LEFT:
-		_Navigator.keyPress(Navigator::LEFT,0,0);
-		break;
-	case KeyEvent::KEY_G:
-	case KeyEvent::KEY_RIGHT:
-			_Navigator.keyPress(Navigator::RIGHT,0,0);
-			break;
-	case KeyEvent::KEY_U:
-			_Navigator.keyPress(Navigator::LEFTROT,0,0);
-			break;
-	case KeyEvent::KEY_T:
-			_Navigator.keyPress(Navigator::RIGHTROT,0,0);
-			break;
-	case KeyEvent::KEY_Y:
-	case KeyEvent::KEY_UP:
-			_Navigator.keyPress(Navigator::FORWARDS,0,0);
-			break;
-	case KeyEvent::KEY_H:
-	case KeyEvent::KEY_DOWN:
-			_Navigator.keyPress(Navigator::BACKWARDS,0,0);
-			break;
-	}
+    if(_Navigator.getMode() != Navigator::NONE)
+    {
+	    switch ( e.getKey() )
+	    {
+	    case KeyEvent::KEY_J:
+	    case KeyEvent::KEY_LEFT:
+		    _Navigator.keyPress(Navigator::LEFT,0,0);
+		    break;
+	    case KeyEvent::KEY_G:
+	    case KeyEvent::KEY_RIGHT:
+			    _Navigator.keyPress(Navigator::RIGHT,0,0);
+			    break;
+	    case KeyEvent::KEY_U:
+			    _Navigator.keyPress(Navigator::LEFTROT,0,0);
+			    break;
+	    case KeyEvent::KEY_T:
+			    _Navigator.keyPress(Navigator::RIGHTROT,0,0);
+			    break;
+	    case KeyEvent::KEY_Y:
+	    case KeyEvent::KEY_UP:
+			    _Navigator.keyPress(Navigator::FORWARDS,0,0);
+			    break;
+	    case KeyEvent::KEY_H:
+	    case KeyEvent::KEY_DOWN:
+			    _Navigator.keyPress(Navigator::BACKWARDS,0,0);
+			    break;
+	    }
+    }
+    else
+    {
+	    switch ( e.getKey() )
+	    {
+        case KeyEvent::KEY_PLUS:
+        case KeyEvent::KEY_EQUALS:
+	    case KeyEvent::KEY_UP:
+		    setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()-_OffsetMultipliers.z() ));
+		    break;
+	    case KeyEvent::KEY_MINUS:
+        case KeyEvent::KEY_UNDERSCORE:
+	    case KeyEvent::KEY_DOWN:
+		    setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()+_OffsetMultipliers.z() ));
+		    break;
+        }
+    }
 }
 
 void GLViewport::mouseWheelMoved(const MouseWheelEvent& e)
 {
-	if(e.getUnitsToScroll() > 0)
-	{
-		for(UInt32 i(0) ; i<e.getUnitsToScroll() ;++i)
-		{
-			_Navigator.buttonPress(Navigator::UP_MOUSE,e.getLocation().x(),e.getLocation().y());
-			_Navigator.buttonRelease(Navigator::UP_MOUSE,e.getLocation().x(),e.getLocation().y());
-		}
-	}
-	else if(e.getUnitsToScroll() < 0)
-	{
-		for(UInt32 i(0) ; i<abs(e.getUnitsToScroll()) ;++i)
-		{
-			_Navigator.buttonPress(Navigator::DOWN_MOUSE,e.getLocation().x(),e.getLocation().y());
-			_Navigator.buttonRelease(Navigator::DOWN_MOUSE,e.getLocation().x(),e.getLocation().y());
-		}
-	}
+    if(_Navigator.getMode() != Navigator::NONE)
+    {
+	    if(e.getUnitsToScroll() > 0)
+	    {
+		    for(UInt32 i(0) ; i<e.getUnitsToScroll() ;++i)
+		    {
+			    _Navigator.buttonPress(Navigator::UP_MOUSE,e.getLocation().x(),e.getLocation().y());
+			    _Navigator.buttonRelease(Navigator::UP_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    }
+	    }
+	    else if(e.getUnitsToScroll() < 0)
+	    {
+		    for(UInt32 i(0) ; i<abs(e.getUnitsToScroll()) ;++i)
+		    {
+			    _Navigator.buttonPress(Navigator::DOWN_MOUSE,e.getLocation().x(),e.getLocation().y());
+			    _Navigator.buttonRelease(Navigator::DOWN_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    }
+	    }
+    }
+    else
+    {
+        setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()-(_OffsetMultipliers.z()*e.getUnitsToScroll()) ));
+    }
 }
 
 void GLViewport::lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up)
@@ -359,9 +388,13 @@ void GLViewport::updateView(void)
             PitchRot.setRotate(Quaternion(Vec3f(1.0,0.0,0.0),_Pitch));
             RollRot.setRotate(Quaternion(Vec3f(0.0,0.0,1.0),_Roll));
 
+            Matrix OffsetMat;
+            OffsetMat.setTranslate(_Offset);
+
             View.mult(YawRot);
             View.mult(PitchRot);
             View.mult(RollRot);
+            View.mult(OffsetMat);
             beginEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
                 Transform::Ptr::dcast(getPort()->getCamera()->getBeacon()->getCore())->setMatrix(View);
             endEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
@@ -398,6 +431,15 @@ void GLViewport::setPitch(Real32 Pitch)
     _Pitch = osgClamp(_PitchClamp.x(), Pitch, _PitchClamp.y());
 }
 
+void GLViewport::setOffset(const Vec3f& Offset)
+{
+    _Offset.setValues(
+        osgClamp(_MinOffset.x(), Offset.x(), _MaxOffset.x()),
+        osgClamp(_MinOffset.y(), Offset.y(), _MaxOffset.y()),
+        osgClamp(_MinOffset.z(), Offset.z(), _MaxOffset.z()));
+    
+    updateView();
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -411,7 +453,11 @@ GLViewport::GLViewport(void) :
         _Yaw(0.0f), _Pitch(0.0f), _Roll(0.0f),
         _InitialYaw(0.0f), _InitialPitch(0.0f), _InitialRoll(0.0f),
         _YawMultiplier(1.0f), _PitchMultiplier(1.0f), _RollMultiplier(1.0f),
-        _YawClamp(0.0f, 6.2831853f), _PitchClamp(0.0f, 6.2831853f), _RollClamp(0.0f, 6.2831853f)
+        _YawClamp(0.0f, 6.2831853f), _PitchClamp(0.0f, 6.2831853f), _RollClamp(0.0f, 6.2831853f),
+        _Offset(0.0f,0.0f,0.0f),
+        _OffsetMultipliers(0.0f,0.0f,0.0f),
+        _MinOffset(0.0f,0.0f,0.0f),
+        _MaxOffset(0.0f,0.0f,0.0f)
 {
 	_Action = RenderAction::create();
 	_Navigator.setMode(Navigator::TRACKBALL);
@@ -421,10 +467,14 @@ GLViewport::GLViewport(void) :
 GLViewport::GLViewport(const GLViewport &source) :
     Inherited(source),
 		_MouseControlListener(GLViewportPtr(this)),
-        _Yaw(0.0f), _Pitch(0.0f), _Roll(0.0f),
-        _InitialYaw(0.0f), _InitialPitch(0.0f), _InitialRoll(0.0f),
-        _YawMultiplier(0.1f), _PitchMultiplier(0.1f), _RollMultiplier(0.1f),
-        _YawClamp(0.0f, 6.2831853f), _PitchClamp(0.0f, 6.2831853f), _RollClamp(0.0f, 6.2831853f)
+        _Yaw(source._Yaw), _Pitch(source._Pitch), _Roll(source._Roll),
+        _InitialYaw(source._InitialYaw), _InitialPitch(source._InitialPitch), _InitialRoll(source._InitialRoll),
+        _YawMultiplier(source._YawMultiplier), _PitchMultiplier(source._PitchMultiplier), _RollMultiplier(source._RollMultiplier),
+        _YawClamp(source._YawClamp), _PitchClamp(source._PitchClamp), _RollClamp(source._RollClamp),
+        _Offset(source._Offset),
+        _OffsetMultipliers(source._OffsetMultipliers),
+        _MinOffset(source._MinOffset),
+        _MaxOffset(source._MaxOffset)
 {
 	_Action = RenderAction::create();
 	_Navigator.setMode(Navigator::TRACKBALL);

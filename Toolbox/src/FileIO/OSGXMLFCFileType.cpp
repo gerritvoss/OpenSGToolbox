@@ -549,7 +549,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 				for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
 				{
 					FieldValue.clear();
-					FilePath = boost::filesystem::system_complete(static_cast<MFPath*>(TheField)->getValue(Index));
+					FilePath = boost::filesystem::system_complete((*static_cast<MFPath*>(TheField))[Index]);
 					RelativePath = makeRelative(RootPath, FilePath);
 					FieldValue = RelativePath.string();
 					if(Index!=0)
@@ -594,29 +594,6 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 	OutputStream << "</OSGFieldContainers>" << std::endl << std::endl;
 
 	return true;
-}
-
-Path XMLFCFileType::makeRelative(Path& Root, Path& ToPath)
-{
-	Path Result;
-	boost::filesystem::path::iterator RootIter = Root.begin();
-	boost::filesystem::path::iterator ToPathIter = ToPath.begin();
-
-	while(RootIter != Root.end() &&
-		  ToPathIter != ToPath.end() &&
-		  RootIter->compare(*ToPathIter) == 0)
-	{
-		++RootIter;
-		++ToPathIter;
-	}
-	
-	while(ToPathIter != ToPath.end())
-	{
-		Result = Result / *ToPathIter;
-		++ToPathIter;
-	}
-
-	return Result;
 }
 
 XMLFCFileType::FCPtrStore XMLFCFileType::getAllDependantFCs(FCPtrStore Containers, FCPtrStore IgnoreContainers, const FCTypeVector& IgnoreTypes) const

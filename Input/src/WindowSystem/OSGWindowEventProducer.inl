@@ -7,6 +7,25 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+WindowEventProducer::FileDialogFilter::FileDialogFilter(const std::string& Name, const std::string& Filter) : 
+_Name(Name),
+_Filter(Filter)
+{
+}
+
+inline
+const std::string& WindowEventProducer::FileDialogFilter::getName(void) const
+{
+    return _Name;
+}
+
+inline
+const std::string& WindowEventProducer::FileDialogFilter::getFilter(void) const
+{
+    return _Filter;
+}
+
+inline
 RenderAction * WindowEventProducer::getRenderAction(void)
 {
 	return _RenderAction;

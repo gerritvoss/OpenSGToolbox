@@ -74,10 +74,7 @@ FCFileHandler* FCFileHandler::the(void)
 	{
 		_the = new FCFileHandler();
 	}
-	else
-	{
-		return _the;
-	}
+	return _the;
 }
 
 bool FCFileHandler::addFCFileType(FCFileTypeP FileType)

@@ -42,6 +42,24 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+void GLViewport::setOffsetMultipliers(const Vec3f& OffsetMultipliers)
+{
+    _OffsetMultipliers= OffsetMultipliers;
+}
+
+inline
+void GLViewport::setMinOffset(const Vec3f& MinOffset)
+{
+    _MinOffset = MinOffset;
+}
+
+inline
+void GLViewport::setMaxOffset(const Vec3f& MaxOffset)
+{
+    _MaxOffset = MaxOffset;
+}
+
 
 inline
 GLViewport::MouseControlListener::MouseControlListener(GLViewportPtr TheGLViewport) :

@@ -267,10 +267,21 @@ Pnt2f GLUTWindowEventProducer::getMousePosition(void) const
 	return Pnt2f(0,0);
 }
 
+Path GLUTWindowEventProducer::saveFileDialog(const std::string& DialogTitle,
+                const std::vector<FileDialogFilter>& Filters,
+                const Path& InitialFile,
+                const Path& InitialDirectory,
+                bool PromptForOverwrite
+                )
+{
+    Path Result;
+    return Result;
+}
+
 std::vector<Path> GLUTWindowEventProducer::openFileDialog(const std::string& WindowTitle,
-	std::vector<std::string> Filters,
-	const Path& InitialDir,
-	bool AllowMultiSelect)
+		const std::vector<FileDialogFilter>& Filters,
+		const Path& InitialDir,
+		bool AllowMultiSelect)
 {
 	//TODO: Implement
 	std::vector<Path> Result;

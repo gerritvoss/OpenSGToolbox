@@ -652,15 +652,98 @@ KeyEvent::Key Win32WindowEventProducer::determineKey(WPARAM key)
 \***************************************************************************/
 
 
-std::vector<Path> Win32WindowEventProducer::openFileDialog(const std::string& WindowTitle,
-	std::vector<std::string> Filters,
-	const Path& InitialDir,
-	bool AllowMultiSelect)
+Path Win32WindowEventProducer::saveFileDialog(const std::string& DialogTitle,
+                const std::vector<FileDialogFilter>& Filters,
+                const Path& InitialFile,
+                const Path& InitialDirectory,
+                bool PromptForOverwrite
+                )
 {
+    char FilterString[400];
+    UInt32 FilterSize(0);
+    for(std::vector<FileDialogFilter>::const_iterator Itor(Filters.begin()) ; Itor != Filters.end(); ++Itor)
+    {
+        for(UInt32 i(0) ; i<Itor->getName().size(); ++i)
+        {
+            FilterString[FilterSize] = Itor->getName()[i];
+            ++FilterSize;
+        }
+        FilterString[FilterSize] = '\0';
+        ++FilterSize;
+        for(UInt32 i(0) ; i<Itor->getFilter().size(); ++i)
+        {
+            FilterString[FilterSize] = Itor->getFilter()[i];
+            ++FilterSize;
+        }
+        FilterString[FilterSize] = '\0';
+        ++FilterSize;
+    }
+    FilterString[FilterSize] = '\0';
+    ++FilterSize;
+
+	LPSTR WindowTitleLPC = _strdup(DialogTitle.c_str());
+	LPSTR InitialDirLPC = _strdup(InitialDirectory.string().c_str());
+
+    Path Result;
+    OPENFILENAME ofn;       // common dialog box structure
+	char szFile[260];       // buffer for file name
+    szFile[0] = '\0'; 
+     
+	ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(OPENFILENAME); 
+    ofn.hwndOwner = WIN32Window::Ptr::dcast(getWindow())->getHwnd(); 
+    ofn.lpstrFilter = FilterString; 
+    ofn.lpstrFile= szFile; 
+    ofn.nMaxFile = sizeof(szFile)/ sizeof(*szFile); 
+	ofn.lpstrTitle = WindowTitleLPC;
+	ofn.lpstrInitialDir = InitialDirLPC;
+    ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT; 
+
+
+    char currentdir[200];
+    GetCurrentDirectory(sizeof(currentdir),currentdir);
+    if(GetSaveFileName(&ofn)==TRUE)
+    {
+        Result = Path(ofn.lpstrFile);
+    }
+    SetCurrentDirectory(currentdir);
+    
+	free(WindowTitleLPC);
+	free(InitialDirLPC);
+
+    return Result;
+}
+
+std::vector<Path> Win32WindowEventProducer::openFileDialog(const std::string& WindowTitle,
+		const std::vector<FileDialogFilter>& Filters,
+		const Path& InitialDir,
+		bool AllowMultiSelect)
+{
+    char FilterString[400];
+    UInt32 FilterSize(0);
+    for(std::vector<FileDialogFilter>::const_iterator Itor(Filters.begin()) ; Itor != Filters.end(); ++Itor)
+    {
+        for(UInt32 i(0) ; i<Itor->getName().size(); ++i)
+        {
+            FilterString[FilterSize] = Itor->getName()[i];
+            ++FilterSize;
+        }
+        FilterString[FilterSize] = '\0';
+        ++FilterSize;
+        for(UInt32 i(0) ; i<Itor->getFilter().size(); ++i)
+        {
+            FilterString[FilterSize] = Itor->getFilter()[i];
+            ++FilterSize;
+        }
+        FilterString[FilterSize] = '\0';
+        ++FilterSize;
+    }
+    FilterString[FilterSize] = '\0';
+    ++FilterSize;
+
 	LPSTR WindowTitleLPC = _strdup(WindowTitle.c_str());
 	LPSTR InitialDirLPC = _strdup(InitialDir.string().c_str());
 
-	//TODO: Implement
 	std::vector<Path> Result;
 
 	OPENFILENAME ofn;       // common dialog box structure
@@ -677,21 +760,28 @@ std::vector<Path> Win32WindowEventProducer::openFileDialog(const std::string& Wi
 	// use the contents of szFile to initialize itself.
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
+	ofn.lpstrFilter = FilterString;
 	ofn.nFilterIndex = 1;
-	ofn.lpstrFileTitle = WindowTitleLPC;
-	ofn.nMaxFileTitle = 0;
+	ofn.lpstrTitle = WindowTitleLPC;
 	ofn.lpstrInitialDir = InitialDirLPC;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
 	// Display the Open dialog box. 
+    
+    char currentdir[200];
+    GetCurrentDirectory(sizeof(currentdir),currentdir);
+
+    // GetOpenFileName stuffs
+
 
 	if (GetOpenFileName(&ofn)==TRUE)
 	{
+        Result.push_back(Path(ofn.lpstrFile));
 	}
 	else
 	{
 	}
+    SetCurrentDirectory(currentdir);
 
 	free(WindowTitleLPC);
 	free(InitialDirLPC);

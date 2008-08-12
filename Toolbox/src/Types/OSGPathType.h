@@ -28,6 +28,8 @@ typedef boost::filesystem::path Path;
 // The FieldDataTraits class contains the methods needed to implement
 // the features a Field data element needs to have
 
+Path OSG_TOOLBOXLIB_DLLMAPPING makeRelative(const Path& Root, const Path& ToPath);
+
 template <>
 struct FieldDataTraits<Path> : 
     public FieldTraitsRecurseBase<Path>

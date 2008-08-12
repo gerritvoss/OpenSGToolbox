@@ -97,6 +97,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
     void setRoll(Real32 Roll);
     void setPitch(Real32 Pitch);
 
+    void setOffset(const Vec3f& Offset);
+    void setOffsetMultipliers(const Vec3f& OffsetMultipliers);
+    void setMinOffset(const Vec3f& MinOffset);
+    void setMaxOffset(const Vec3f& MaxOffset);
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -127,6 +132,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
     Real32 _InitialYaw, _InitialPitch, _InitialRoll;
     Real32 _YawMultiplier, _PitchMultiplier, _RollMultiplier;
     Vec2f _YawClamp, _PitchClamp, _RollClamp;
+
+    Vec3f _Offset;
+    Vec3f _OffsetMultipliers;
+    Vec3f _MinOffset;
+    Vec3f _MaxOffset;
 
     Pnt2f _InitialMousePos;
 

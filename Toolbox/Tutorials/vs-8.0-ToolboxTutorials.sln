@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\Builds\Windows\OSGToolbox.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02FCFileTypeIO", "02FCFileTypeIO.vcproj", "{676FF377-479C-4FE9-BF91-DCF801D6AA0D}"
@@ -8,6 +8,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XXTesting", "XXTesting.vcproj", "{D01C7BCB-239D-48C5-8087-BA49A2B6313F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03XMLSceneLoader", "03XMLSceneLoader.vcproj", "{9FB0F158-174C-42DD-B162-C662B1BF1872}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04Xml2Osb", "04Xml2Osb.vcproj", "{38F0AC1E-0BF7-4EFE-9436-4DA199E42BFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{9FB0F158-174C-42DD-B162-C662B1BF1872}.Debug|Win32.Build.0 = Debug|Win32
 		{9FB0F158-174C-42DD-B162-C662B1BF1872}.Release|Win32.ActiveCfg = Release|Win32
 		{9FB0F158-174C-42DD-B162-C662B1BF1872}.Release|Win32.Build.0 = Release|Win32
+		{38F0AC1E-0BF7-4EFE-9436-4DA199E42BFE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{38F0AC1E-0BF7-4EFE-9436-4DA199E42BFE}.Debug|Win32.Build.0 = Debug|Win32
+		{38F0AC1E-0BF7-4EFE-9436-4DA199E42BFE}.Release|Win32.ActiveCfg = Release|Win32
+		{38F0AC1E-0BF7-4EFE-9436-4DA199E42BFE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
