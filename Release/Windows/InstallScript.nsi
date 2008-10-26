@@ -105,6 +105,20 @@ section "Release Libraries"
    
    #File "${InputDirName}\lib\OSG*[^D].lib"
    #File "${InputDirName}\lib\OSG*[^D].dll"
+   
+   File "${InputDirName}\lib\OSGAnimation.lib"
+   File "${InputDirName}\lib\OSGDynamics.lib"
+   File "${InputDirName}\lib\OSGInput.lib"
+   File "${InputDirName}\lib\OSGToolbox.lib"
+   File "${InputDirName}\lib\OSGParticleSystem.lib"
+   File "${InputDirName}\lib\OSGUserInterface.lib"
+   
+   File "${InputDirName}\lib\OSGAnimation.dll"
+   File "${InputDirName}\lib\OSGDynamics.dll"
+   File "${InputDirName}\lib\OSGInput.dll"
+   File "${InputDirName}\lib\OSGToolbox.dll"
+   File "${InputDirName}\lib\OSGParticleSystem.dll"
+   File "${InputDirName}\lib\OSGUserInterface.dll"
 sectionEnd
 
 section "Documentation"
