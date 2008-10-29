@@ -46,7 +46,7 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/ParticleSystem/OSGParticleSystem.h>
+#include "ParticleSystem/OSGParticleSystem.h"
 
 #include "OSGDistanceAttractRepelParticleAffector.h"
 

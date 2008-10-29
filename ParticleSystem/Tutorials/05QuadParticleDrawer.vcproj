@@ -162,7 +162,7 @@
 				OutputFile="$(ProjectName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)&quot;\lib"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""

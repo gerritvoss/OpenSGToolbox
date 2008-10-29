@@ -221,9 +221,9 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 		ExampleAgeFadeParticleAffector->setFadeInTime(1.0f);
 		ExampleAgeFadeParticleAffector->setFadeOutTime(1.0f);
-		ExampleAgeFadeParticleAffector->setStartAlpha(0.0f);
-		ExampleAgeFadeParticleAffector->setFadeToAlpha(1.0f);
-		ExampleAgeFadeParticleAffector->setEndAlpha(0.0f);	
+		ExampleAgeFadeParticleAffector->setStartAlpha(1.0f);
+		ExampleAgeFadeParticleAffector->setFadeToAlpha(0.0f);
+		ExampleAgeFadeParticleAffector->setEndAlpha(1.0f);	
 	endEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
 
 	beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
