@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Animation", "01Animation.vcproj", "{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
