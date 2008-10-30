@@ -166,7 +166,7 @@ int main(int argc, char **argv)
         objects in a grid, with user specified rows, 
         columns, and gap size (conceptually imagine that
         an invisible grid is drawn, and components are 
-        placed into that grid one per "box).
+        placed into that grid one per "box").
 
         Objects within the Grid Layout fill from left
         to right, and top to bottom, filling in each space
@@ -231,15 +231,15 @@ int main(int argc, char **argv)
 
     beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
         ExampleButton1->setPreferredSize(Vec2f(50,50));
-        ExampleButton1->setMaxSize(Vec2f(50,50));
+        ExampleButton1->setMaxSize(Vec2f(50,50));			//if MaxSize is commented out, this button then will revert to being the same size as the others in the grid.
     endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
 
     beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
-         ExampleButton2->setPreferredSize(Vec2f(200,100));
-    endEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
-     
-    beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
-         ExampleButton3->setPreferredSize(Vec2f(50,100));
+         ExampleButton2->setPreferredSize(Vec2f(200,100));	//<----
+    endEditCP(ExampleButton2, Button::PreferredSizeFieldMask);//  |
+															//    |
+    beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask);//|
+         ExampleButton3->setPreferredSize(Vec2f(50,100));		//Notice that even though these two differ in size they appear the same on the grid
     endEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
 
 
