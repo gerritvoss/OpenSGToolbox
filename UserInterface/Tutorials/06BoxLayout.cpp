@@ -211,8 +211,8 @@ int main(int argc, char **argv)
     BoxLayoutPtr MainInternalWindowLayout = osg::BoxLayout::create();
 
     beginEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask);
-	MainInternalWindowLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-        // MainInternalWindowLayout->setOrientation(HORIZONTAL_ORIENTATION);
+	MainInternalWindowLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);			//Make the swap to see what happens Between Vertical and Horizontal!
+	//MainInternalWindowLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
     endEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask); 
     
     /******************************************************
@@ -239,7 +239,7 @@ int main(int argc, char **argv)
     
     beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
         ExampleButton1->setPreferredSize(Vec2f(50,50));
-        ExampleButton1->setMaxSize(Vec2f(50, 50));
+        ExampleButton1->setMaxSize(Vec2f(50, 50));			//The max size determines how large this button can be even though the BoxLayout says otherwise.(comment out to see the difference)
     endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
 
     beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
