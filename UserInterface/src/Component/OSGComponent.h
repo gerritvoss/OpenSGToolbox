@@ -261,6 +261,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	bool _MouseInComponentLastMouse;
 
 	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
+	
+    virtual Pnt2f               getClipTopLeft    (void) const;
+    virtual Pnt2f               getClipBottomRight(void) const;
+    virtual void setClipTopLeft    (const Pnt2f &value);
+    virtual void setClipBottomRight(const Pnt2f &value);
+
     /*==========================  PRIVATE  ================================*/
   private:
 

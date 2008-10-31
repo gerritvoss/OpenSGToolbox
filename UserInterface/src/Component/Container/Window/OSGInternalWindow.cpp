@@ -1075,8 +1075,7 @@ void InternalWindow::changed(BitVector whichField, UInt32 origin)
 		}
 	}
 	
-    if( (whichField & ClipTopLeftFieldMask) ||
-		(whichField & ClipBottomRightFieldMask) )
+    if( whichField & ClipBoundsFieldMask)
 	{
 		if(getTitlebar() != NullFC)
 		{

@@ -140,13 +140,31 @@ void Container::getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 
 void Container::setAllInsets(Real32 Inset)
 {
-	beginEditCP(ContainerPtr(this), Container::LeftInsetFieldMask | Container::RightInsetFieldMask | Container::TopInsetFieldMask | Container::BottomInsetFieldMask);
-		setLeftInset(Inset);
-		setRightInset(Inset);
-		setTopInset(Inset);
-		setBottomInset(Inset);
-	endEditCP(ContainerPtr(this), Container::LeftInsetFieldMask | Container::RightInsetFieldMask | Container::TopInsetFieldMask | Container::BottomInsetFieldMask);
+	beginEditCP(ContainerPtr(this), Container::InsetFieldMask);
+		setInset(Vec4f(Inset,Inset,Inset,Inset));
+	endEditCP(ContainerPtr(this), Container::InsetFieldMask);
 }
+
+void Container::setLeftInset ( const Real32 &value )
+{
+	setInset(Vec4f(value, getInset()[1],getInset()[2], getInset()[3]));
+}
+
+void Container::setRightInset ( const Real32 &value )
+{
+	setInset(Vec4f(getInset()[0], value,getInset()[2], getInset()[3]));
+}
+
+void Container::setTopInset ( const Real32 &value )
+{
+	setInset(Vec4f(getInset()[0], getInset()[1],value, getInset()[3]));
+}
+
+void Container::setBottomInset ( const Real32 &value )
+{
+	setInset(Vec4f(getInset()[0], getInset()[1],getInset()[2], value));
+}
+
 
 void Container::drawInternal(const GraphicsPtr TheGraphics) const
 {
@@ -381,8 +399,7 @@ void Container::changed(BitVector whichField, UInt32 origin)
         endEditCP(getLayout(), Layout::ParentContainerFieldMask);
     }
     
-    if( (whichField & ClipTopLeftFieldMask) ||
-		(whichField & ClipBottomRightFieldMask) )
+    if( whichField & ClipBoundsFieldMask )
 	{
         //Set All of my children's parent to me
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
@@ -392,10 +409,7 @@ void Container::changed(BitVector whichField, UInt32 origin)
 	}
 
     if( (whichField & LayoutFieldMask) ||
-        (whichField & LeftInsetFieldMask) ||
-        (whichField & RightInsetFieldMask) ||
-        (whichField & TopInsetFieldMask) ||
-        (whichField & BottomInsetFieldMask) ||
+        (whichField & InsetFieldMask) ||
         (whichField & ChildrenFieldMask) ||
         (whichField & SizeFieldMask) ||
         (whichField & BorderFieldMask))

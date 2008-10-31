@@ -134,10 +134,10 @@ void PopupMenu::updateClipBounds(void)
 
 	//The Clip Bounds calculated are in my Parent Containers coordinate space
 	//Translate these bounds into my own coordinate space
-	beginEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+	beginEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
 		setClipTopLeft(TopLeft);
 		setClipBottomRight(BottomRight);
-	endEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+	endEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
 }
 
 void PopupMenu::addItem(MenuItemPtr Item)

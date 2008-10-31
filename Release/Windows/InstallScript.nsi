@@ -87,8 +87,25 @@ SectionGroup "Devolopment Files"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials"
       setOutPath $INSTDIR\Tutorials
       
+      #Create Tutorial Directory for each Library
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Toolbox"
+      CreateDirectory $INSTDIR\Tutorials\Toolbox
+      setOutPath $INSTDIR\Tutorials\Toolbox
+      File "${ProjectRootDirName}\Toolbox\Tutorials\*.exe"
+      File "${ProjectRootDirName}\Toolbox\Tutorials\*.cpp"
+      #File "${ProjectRootDirName}\Toolbox\Tutorials\*.h"
+      File "${ProjectRootDirName}\Toolbox\Tutorials\*.vcproj"
       
-      #File "${InputDirName}\lib\OSG*D.lib"
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Input"
+      CreateDirectory $INSTDIR\Tutorials\Input
+      setOutPath $INSTDIR\Tutorials\Input
+      File "${ProjectRootDirName}\Input\Tutorials\*.exe"
+      File "${ProjectRootDirName}\Input\Tutorials\*.cpp"
+      #File "${ProjectRootDirName}\Input\Tutorials\*.h"
+      File "${ProjectRootDirName}\Input\Tutorials\*.vcproj"
+      
+      
+      
    sectionEnd
 SectionGroupEnd
 

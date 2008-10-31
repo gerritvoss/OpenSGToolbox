@@ -107,6 +107,26 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Pnt2f Component::getClipTopLeft(void) const
+{
+	return Pnt2f(ComponentBase::getClipBounds()[0], ComponentBase::getClipBounds()[1]);
+}
+
+Pnt2f Component::getClipBottomRight(void) const
+{
+	return Pnt2f(ComponentBase::getClipBounds()[2], ComponentBase::getClipBounds()[3]);
+}
+
+void Component::setClipTopLeft    (const Pnt2f &value)
+{
+	setClipBounds(Pnt4f(value[0], value[1], ComponentBase::getClipBounds()[2],ComponentBase::getClipBounds()[3]));
+}
+
+void Component::setClipBottomRight(const Pnt2f &value)
+{
+	setClipBounds(Pnt4f(ComponentBase::getClipBounds()[0],ComponentBase::getClipBounds()[1], value[0], value[1]));
+}
+
 Pnt2f Component::getParentToLocal(const Pnt2f& Location)
 {
     return Location - getPosition();
@@ -474,10 +494,10 @@ void Component::updateClipBounds(void)
 	}
 	//The Clip Bounds calculated are in my Parent Containers coordinate space
 	//Translate these bounds into my own coordinate space
-	beginEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+	beginEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
 		setClipTopLeft(TopLeft);
 		setClipBottomRight(BottomRight);
-	endEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+	endEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
 }
 
 void Component::mouseClicked(const MouseEvent& e)

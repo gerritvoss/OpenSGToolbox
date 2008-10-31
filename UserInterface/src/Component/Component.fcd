@@ -22,20 +22,11 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
-		name="ClipTopLeft"
-		type="Pnt2f"
+		name="ClipBounds"
+		type="Pnt4f"
 		cardinality="single"
 		visibility="internal"
-		defaultValue="0,0"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="ClipBottomRight"
-		type="Pnt2f"
-		cardinality="single"
-		visibility="internal"
-		defaultValue="0,0"
+		defaultValue="0.0f,0.0f,0.0f,0.0f"
 		access="protected"
 	>
 	</Field>

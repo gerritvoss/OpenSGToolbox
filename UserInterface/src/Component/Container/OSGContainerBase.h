@@ -69,10 +69,7 @@
 
 #include "Component/OSGComponent.h" // Children type
 #include "Layout/OSGLayout.h" // Layout type
-#include <OpenSG/OSGUInt32Fields.h> // LeftInset type
-#include <OpenSG/OSGUInt32Fields.h> // RightInset type
-#include <OpenSG/OSGUInt32Fields.h> // TopInset type
-#include <OpenSG/OSGUInt32Fields.h> // BottomInset type
+#include <OpenSG/OSGVec4fFields.h> // Inset type
 
 #include "OSGContainerFields.h"
 
@@ -96,21 +93,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ContainerBase : public Component
 
     enum
     {
-        ChildrenFieldId    = Inherited::NextFieldId,
-        LayoutFieldId      = ChildrenFieldId    + 1,
-        LeftInsetFieldId   = LayoutFieldId      + 1,
-        RightInsetFieldId  = LeftInsetFieldId   + 1,
-        TopInsetFieldId    = RightInsetFieldId  + 1,
-        BottomInsetFieldId = TopInsetFieldId    + 1,
-        NextFieldId        = BottomInsetFieldId + 1
+        ChildrenFieldId = Inherited::NextFieldId,
+        LayoutFieldId   = ChildrenFieldId + 1,
+        InsetFieldId    = LayoutFieldId   + 1,
+        NextFieldId     = InsetFieldId    + 1
     };
 
     static const OSG::BitVector ChildrenFieldMask;
     static const OSG::BitVector LayoutFieldMask;
-    static const OSG::BitVector LeftInsetFieldMask;
-    static const OSG::BitVector RightInsetFieldMask;
-    static const OSG::BitVector TopInsetFieldMask;
-    static const OSG::BitVector BottomInsetFieldMask;
+    static const OSG::BitVector InsetFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,21 +130,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ContainerBase : public Component
 
            MFComponentPtr      *getMFChildren       (void);
            SFLayoutPtr         *getSFLayout         (void);
-           SFUInt32            *getSFLeftInset      (void);
-           SFUInt32            *getSFRightInset     (void);
-           SFUInt32            *getSFTopInset       (void);
-           SFUInt32            *getSFBottomInset    (void);
+           SFVec4f             *getSFInset          (void);
 
            LayoutPtr           &getLayout         (void);
      const LayoutPtr           &getLayout         (void) const;
-           UInt32              &getLeftInset      (void);
-     const UInt32              &getLeftInset      (void) const;
-           UInt32              &getRightInset     (void);
-     const UInt32              &getRightInset     (void) const;
-           UInt32              &getTopInset       (void);
-     const UInt32              &getTopInset       (void) const;
-           UInt32              &getBottomInset    (void);
-     const UInt32              &getBottomInset    (void) const;
+           Vec4f               &getInset          (void);
+     const Vec4f               &getInset          (void) const;
            ComponentPtr        &getChildren       (const UInt32 index);
            MFComponentPtr      &getChildren       (void);
      const MFComponentPtr      &getChildren       (void) const;
@@ -164,10 +146,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ContainerBase : public Component
     /*! \{                                                                 */
 
      void setLayout         ( const LayoutPtr &value );
-     void setLeftInset      ( const UInt32 &value );
-     void setRightInset     ( const UInt32 &value );
-     void setTopInset       ( const UInt32 &value );
-     void setBottomInset    ( const UInt32 &value );
+     void setInset          ( const Vec4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,10 +175,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ContainerBase : public Component
 
     MFComponentPtr      _mfChildren;
     SFLayoutPtr         _sfLayout;
-    SFUInt32            _sfLeftInset;
-    SFUInt32            _sfRightInset;
-    SFUInt32            _sfTopInset;
-    SFUInt32            _sfBottomInset;
+    SFVec4f             _sfInset;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

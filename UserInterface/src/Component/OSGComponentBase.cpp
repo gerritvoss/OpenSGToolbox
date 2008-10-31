@@ -68,11 +68,8 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  ComponentBase::PositionFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::PositionFieldId);
 
-const OSG::BitVector  ComponentBase::ClipTopLeftFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ClipTopLeftFieldId);
-
-const OSG::BitVector  ComponentBase::ClipBottomRightFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ClipBottomRightFieldId);
+const OSG::BitVector  ComponentBase::ClipBoundsFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ClipBoundsFieldId);
 
 const OSG::BitVector  ComponentBase::MinSizeFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::MinSizeFieldId);
@@ -171,10 +168,7 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var Pnt2f           ComponentBase::_sfPosition
     
 */
-/*! \var Pnt2f           ComponentBase::_sfClipTopLeft
-    
-*/
-/*! \var Pnt2f           ComponentBase::_sfClipBottomRight
+/*! \var Pnt4f           ComponentBase::_sfClipBounds
     
 */
 /*! \var Vec2f           ComponentBase::_sfMinSize
@@ -274,16 +268,11 @@ FieldDescription *ComponentBase::_desc[] =
                      PositionFieldId, PositionFieldMask,
                      true,
                      (FieldAccessMethod) &ComponentBase::getSFPosition),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "ClipTopLeft", 
-                     ClipTopLeftFieldId, ClipTopLeftFieldMask,
+    new FieldDescription(SFPnt4f::getClassType(), 
+                     "ClipBounds", 
+                     ClipBoundsFieldId, ClipBoundsFieldMask,
                      true,
-                     (FieldAccessMethod) &ComponentBase::getSFClipTopLeft),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "ClipBottomRight", 
-                     ClipBottomRightFieldId, ClipBottomRightFieldMask,
-                     true,
-                     (FieldAccessMethod) &ComponentBase::getSFClipBottomRight),
+                     (FieldAccessMethod) &ComponentBase::getSFClipBounds),
     new FieldDescription(SFVec2f::getClassType(), 
                      "MinSize", 
                      MinSizeFieldId, MinSizeFieldMask,
@@ -496,8 +485,7 @@ void ComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ComponentBase::ComponentBase(void) :
     _sfPosition               (Pnt2f(0,0)), 
-    _sfClipTopLeft            (Pnt2f(0,0)), 
-    _sfClipBottomRight        (Pnt2f(0,0)), 
+    _sfClipBounds             (Pnt4f(0.0f,0.0f,0.0f,0.0f)), 
     _sfMinSize                (Vec2f(0,0)), 
     _sfMaxSize                (Vec2f(32767,32767)), 
     _sfPreferredSize          (Vec2f(1,1)), 
@@ -537,8 +525,7 @@ ComponentBase::ComponentBase(void) :
 
 ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfPosition               (source._sfPosition               ), 
-    _sfClipTopLeft            (source._sfClipTopLeft            ), 
-    _sfClipBottomRight        (source._sfClipBottomRight        ), 
+    _sfClipBounds             (source._sfClipBounds             ), 
     _sfMinSize                (source._sfMinSize                ), 
     _sfMaxSize                (source._sfMaxSize                ), 
     _sfPreferredSize          (source._sfPreferredSize          ), 
@@ -589,14 +576,9 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfPosition.getBinSize();
     }
 
-    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
+    if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
     {
-        returnValue += _sfClipTopLeft.getBinSize();
-    }
-
-    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
-    {
-        returnValue += _sfClipBottomRight.getBinSize();
+        returnValue += _sfClipBounds.getBinSize();
     }
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
@@ -758,14 +740,9 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfPosition.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
+    if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
     {
-        _sfClipTopLeft.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
-    {
-        _sfClipBottomRight.copyToBin(pMem);
+        _sfClipBounds.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
@@ -926,14 +903,9 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfPosition.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
+    if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
     {
-        _sfClipTopLeft.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
-    {
-        _sfClipBottomRight.copyFromBin(pMem);
+        _sfClipBounds.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
@@ -1094,11 +1066,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (PositionFieldMask & whichField))
         _sfPosition.syncWith(pOther->_sfPosition);
 
-    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
-        _sfClipTopLeft.syncWith(pOther->_sfClipTopLeft);
-
-    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
-        _sfClipBottomRight.syncWith(pOther->_sfClipBottomRight);
+    if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
+        _sfClipBounds.syncWith(pOther->_sfClipBounds);
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
         _sfMinSize.syncWith(pOther->_sfMinSize);
@@ -1200,11 +1169,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (PositionFieldMask & whichField))
         _sfPosition.syncWith(pOther->_sfPosition);
 
-    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
-        _sfClipTopLeft.syncWith(pOther->_sfClipTopLeft);
-
-    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
-        _sfClipBottomRight.syncWith(pOther->_sfClipBottomRight);
+    if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
+        _sfClipBounds.syncWith(pOther->_sfClipBounds);
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
         _sfMinSize.syncWith(pOther->_sfMinSize);
@@ -1315,15 +1281,9 @@ SFPnt2f *ComponentBase::getSFPosition(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFPnt2f *ComponentBase::getSFClipTopLeft(void)
+SFPnt4f *ComponentBase::getSFClipBounds(void)
 {
-    return &_sfClipTopLeft;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFPnt2f *ComponentBase::getSFClipBottomRight(void)
-{
-    return &_sfClipBottomRight;
+    return &_sfClipBounds;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
@@ -1520,39 +1480,21 @@ void ComponentBase::setPosition(const Pnt2f &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Pnt2f &ComponentBase::getClipTopLeft(void)
+Pnt4f &ComponentBase::getClipBounds(void)
 {
-    return _sfClipTopLeft.getValue();
+    return _sfClipBounds.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const Pnt2f &ComponentBase::getClipTopLeft(void) const
+const Pnt4f &ComponentBase::getClipBounds(void) const
 {
-    return _sfClipTopLeft.getValue();
+    return _sfClipBounds.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setClipTopLeft(const Pnt2f &value)
+void ComponentBase::setClipBounds(const Pnt4f &value)
 {
-    _sfClipTopLeft.setValue(value);
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-Pnt2f &ComponentBase::getClipBottomRight(void)
-{
-    return _sfClipBottomRight.getValue();
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const Pnt2f &ComponentBase::getClipBottomRight(void) const
-{
-    return _sfClipBottomRight.getValue();
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setClipBottomRight(const Pnt2f &value)
-{
-    _sfClipBottomRight.setValue(value);
+    _sfClipBounds.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING

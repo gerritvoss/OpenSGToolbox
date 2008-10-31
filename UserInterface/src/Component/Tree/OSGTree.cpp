@@ -745,8 +745,7 @@ void Tree::changed(BitVector whichField, UInt32 origin)
         updatePreferredSize();
     }
     
-    if((whichField & Tree::ClipTopLeftFieldMask) ||
-       (whichField & Tree::ClipBottomRightFieldMask))
+    if(whichField & Tree::ClipBoundsFieldMask)
     {
         updateRowsDrawn();
     }

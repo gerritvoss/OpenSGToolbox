@@ -978,8 +978,7 @@ void List::changed(BitVector whichField, UInt32 origin)
 		updatePreferredSize();
     }
 	
-    if((whichField & List::ClipTopLeftFieldMask) ||
-       (whichField & List::ClipBottomRightFieldMask))
+    if(whichField & List::ClipBoundsFieldMask)
     {
         updateIndicesDrawn();
     }

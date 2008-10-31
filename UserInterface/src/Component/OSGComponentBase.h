@@ -68,8 +68,7 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGPnt2fFields.h> // Position type
-#include <OpenSG/OSGPnt2fFields.h> // ClipTopLeft type
-#include <OpenSG/OSGPnt2fFields.h> // ClipBottomRight type
+#include <OpenSG/OSGPnt4fFields.h> // ClipBounds type
 #include <OpenSG/OSGVec2fFields.h> // MinSize type
 #include <OpenSG/OSGVec2fFields.h> // MaxSize type
 #include <OpenSG/OSGVec2fFields.h> // PreferredSize type
@@ -123,9 +122,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     enum
     {
         PositionFieldId           = Inherited::NextFieldId,
-        ClipTopLeftFieldId        = PositionFieldId           + 1,
-        ClipBottomRightFieldId    = ClipTopLeftFieldId        + 1,
-        MinSizeFieldId            = ClipBottomRightFieldId    + 1,
+        ClipBoundsFieldId         = PositionFieldId           + 1,
+        MinSizeFieldId            = ClipBoundsFieldId         + 1,
         MaxSizeFieldId            = MinSizeFieldId            + 1,
         PreferredSizeFieldId      = MaxSizeFieldId            + 1,
         SizeFieldId               = PreferredSizeFieldId      + 1,
@@ -158,8 +156,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     };
 
     static const OSG::BitVector PositionFieldMask;
-    static const OSG::BitVector ClipTopLeftFieldMask;
-    static const OSG::BitVector ClipBottomRightFieldMask;
+    static const OSG::BitVector ClipBoundsFieldMask;
     static const OSG::BitVector MinSizeFieldMask;
     static const OSG::BitVector MaxSizeFieldMask;
     static const OSG::BitVector PreferredSizeFieldMask;
@@ -369,8 +366,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     SFPnt2f             _sfPosition;
-    SFPnt2f             _sfClipTopLeft;
-    SFPnt2f             _sfClipBottomRight;
+    SFPnt4f             _sfClipBounds;
     SFVec2f             _sfMinSize;
     SFVec2f             _sfMaxSize;
     SFVec2f             _sfPreferredSize;
@@ -421,21 +417,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-    virtual       SFPnt2f             *getSFClipTopLeft    (void);
-    virtual       SFPnt2f             *getSFClipBottomRight(void);
+    virtual       SFPnt4f             *getSFClipBounds     (void);
 
-    virtual       Pnt2f               &getClipTopLeft    (void);
-    virtual const Pnt2f               &getClipTopLeft    (void) const;
-    virtual       Pnt2f               &getClipBottomRight(void);
-    virtual const Pnt2f               &getClipBottomRight(void) const;
+    virtual       Pnt4f               &getClipBounds     (void);
+    virtual const Pnt4f               &getClipBounds     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-    virtual void setClipTopLeft    (const Pnt2f &value);
-    virtual void setClipBottomRight(const Pnt2f &value);
+    virtual void setClipBounds     (const Pnt4f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

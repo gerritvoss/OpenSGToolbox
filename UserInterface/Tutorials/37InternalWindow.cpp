@@ -135,6 +135,8 @@ int main(int argc, char **argv)
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
+
+	UInt32 foo = InternalWindow::getClassType().getNumFieldDescs();
     /******************************************************
 
                  Create an Button Component and
