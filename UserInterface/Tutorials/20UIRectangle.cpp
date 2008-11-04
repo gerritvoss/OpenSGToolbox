@@ -323,9 +323,13 @@ int main(int argc, char **argv)
 			normally.
 
 			-setPoint(Pnt3f): Determine the location
-				of the UIRectangle in 3 space.  Keep
+				of the UIRectangle in 3D space.  Keep
 				in mind that (0,0,0) is located 
-				directly 
+				directly in the center of the sceen.
+				(For our purposes it is the center 
+				of the tori.) The point is located
+				on the lower left corner of the 
+				rectangle.
 			-setWidth(float): Determine the Width
 				of the UIRectangle.  This may 
 				physically appear different depending
@@ -352,7 +356,7 @@ int main(int argc, char **argv)
     //Make A 3D Rectangle to draw the UI on
     UIRectanglePtr ExampleUIRectangle = UIRectangle::create();
     beginEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
-        ExampleUIRectangle->setPoint(Pnt3f(-250,-250,370));
+        ExampleUIRectangle->setPoint(Pnt3f(-250,-250,200));
         ExampleUIRectangle->setWidth(500.0);
         ExampleUIRectangle->setHeight(500.0);
         ExampleUIRectangle->setDrawingSurface(TutorialDrawingSurface);
