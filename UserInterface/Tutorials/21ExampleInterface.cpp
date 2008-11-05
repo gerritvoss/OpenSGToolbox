@@ -460,14 +460,14 @@ int main(int argc, char **argv)
         LeftPanelLabel1Font->setSize(50);
     endEditCP(LeftPanelLabel1Font, UIFont::SizeFieldMask);
 
-    beginEditCP(LeftPanelLabel1, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::HorizontalAlignmentFieldMask);
+    beginEditCP(LeftPanelLabel1, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::AlignmentFieldMask);
         LeftPanelLabel1->setBorders(emptyBorder);
         LeftPanelLabel1->setBackgrounds(GreyBackground);
         LeftPanelLabel1->setFont(LeftPanelLabel1Font);
         LeftPanelLabel1->setText("OSG Gui");
         LeftPanelLabel1->setPreferredSize(Vec2f(300, 100));
-		LeftPanelLabel1->setHorizontalAlignment(.5);
-	endEditCP(LeftPanelLabel1, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::HorizontalAlignmentFieldMask);
+		LeftPanelLabel1->setAlignment(Vec2f(0.0f, 0.5f));
+	endEditCP(LeftPanelLabel1, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::AlignmentFieldMask);
 
      /******************************************************
 
@@ -586,14 +586,14 @@ ComponentPtr createLeftPanelButtonPanel(void)
     // Create Label for this Panel
     LabelPtr LeftPanelButtonPanelLabel = osg::Label::create();
 
-    beginEditCP(LeftPanelButtonPanelLabel, Label::TextColorFieldMask | Label::BackgroundFieldMask | Label::PreferredSizeFieldMask | Label::TextFieldMask | Label::HorizontalAlignmentFieldMask);
+    beginEditCP(LeftPanelButtonPanelLabel, Label::TextColorFieldMask | Label::BackgroundFieldMask | Label::PreferredSizeFieldMask | Label::TextFieldMask | Label::AlignmentFieldMask);
         LeftPanelButtonPanelLabel->setTextColor(Color4f(1.0,1.0,1.0,1.0));
         LeftPanelButtonPanelLabel->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
         LeftPanelButtonPanelLabel->setBackground(createComplexBackground());
         LeftPanelButtonPanelLabel->setPreferredSize(Vec2f(100, 50));
         LeftPanelButtonPanelLabel->setText("Various Options");
-		LeftPanelButtonPanelLabel->setHorizontalAlignment(.5);
-	endEditCP(LeftPanelButtonPanelLabel, Label::TextColorFieldMask | Label::BackgroundFieldMask | Label::PreferredSizeFieldMask | Label::TextFieldMask | Label::HorizontalAlignmentFieldMask);
+		LeftPanelButtonPanelLabel->setAlignment(Vec2f(0.5,0.5));
+	endEditCP(LeftPanelButtonPanelLabel, Label::TextColorFieldMask | Label::BackgroundFieldMask | Label::PreferredSizeFieldMask | Label::TextFieldMask | Label::AlignmentFieldMask);
 
     // Create and edit the Panel buttons
     ButtonPtr LeftPanelButton1 = osg::Button::create();
@@ -871,11 +871,11 @@ ComponentPtr createRightPanelCheckPanel(void)
     CheckboxButtonPtr RightPanelCheck2 = osg::CheckboxButton::create();
     CheckboxButtonPtr RightPanelCheck3 = osg::CheckboxButton::create();
     CheckboxButtonPtr RightPanelCheck4 = osg::CheckboxButton::create();
-
+	//NOTE HorizontalAlignment needs to be changed to Alignment only with Vec2f arg
     beginEditCP(RightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck1->setText("Show Torus");
         RightPanelCheck1->setPreferredSize(Vec2f(125,50));
-        RightPanelCheck1->setHorizontalAlignment(0.0);
+        RightPanelCheck1->setAlignment(0.0);
     endEditCP(RightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         RightPanelCheck1->addButtonSelectedListener(&RightPanelCheck1Listener);
@@ -883,7 +883,7 @@ ComponentPtr createRightPanelCheckPanel(void)
     beginEditCP(RightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck2->setText("Show Box");
         RightPanelCheck2->setPreferredSize(Vec2f(125,50));
-        RightPanelCheck2->setHorizontalAlignment(0.0);
+        RightPanelCheck2->setAlignment(Vec2f (0.5,0.0));
     endEditCP(RightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         RightPanelCheck2->addButtonSelectedListener(&RightPanelCheck2Listener);
@@ -891,7 +891,7 @@ ComponentPtr createRightPanelCheckPanel(void)
     beginEditCP(RightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck3->setText("Show Sphere");
         RightPanelCheck3->setPreferredSize(Vec2f(125,50));
-        RightPanelCheck3->setHorizontalAlignment(0.0);
+        RightPanelCheck3->setAlignment(Vec2f(0.0,0.0));
     endEditCP(RightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         RightPanelCheck3->addButtonSelectedListener(&RightPanelCheck3Listener);
@@ -899,7 +899,7 @@ ComponentPtr createRightPanelCheckPanel(void)
     beginEditCP(RightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck4->setText("Show Cone");
         RightPanelCheck4->setPreferredSize(Vec2f(125,50));
-        RightPanelCheck4->setHorizontalAlignment(0.0);
+        RightPanelCheck4->setAlignment(Vec2f(0.0,0.0));
     endEditCP(RightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         RightPanelCheck4->addButtonSelectedListener(&RightPanelCheck4Listener);
