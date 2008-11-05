@@ -56,6 +56,7 @@
 #include <OpenSG/Input/OSGStringUtils.h>
 #include "Util/OSGUIDrawUtils.h"
 #include "Component/Scroll/OSGScrollBar.h"
+#include "Component/Container/OSGUIViewport.h"
 
 #include "LookAndFeel/OSGLookAndFeelManager.h"
 OSG_BEGIN_NAMESPACE
@@ -149,6 +150,55 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+Int32 TextArea::getCaretLine(void) const
+{
+	for(Int32 i = 0; i < _LineContents.size(); i++)//draw each line seperately
+	{
+		if((getCaretPosition() > _LineContents[i]._StartPosition && getCaretPosition() <= _LineContents[i]._EndPosition) ||
+			(i == _LineContents.size()-1 && getCaretPosition() == getText().size()))
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+bool TextArea::isLineVisible(const UInt32& line) const
+{
+	//Get the bounds of this line
+	Pnt2f TempTopLeft, TempBottomRight;
+	Vec2f Offset = Pnt2f(_LineContents[line]._LeftHorizontalOffset, _LineContents[line]._VerticalOffset);
+	getFont()->getBounds(_LineContents[line]._Contents, TempTopLeft, TempBottomRight);
+
+	TempTopLeft = TempTopLeft + Offset;
+	TempBottomRight = TempBottomRight + Offset;
+
+	Pnt2f ClipTopLeft, ClipBottomRight;
+	getClipBounds(ClipTopLeft, ClipBottomRight);
+
+	return (TempTopLeft.x() >= ClipTopLeft.x() &&
+		    TempTopLeft.y() >= ClipTopLeft.y() &&
+		    TempBottomRight.x() <= ClipBottomRight.x() &&
+		    TempBottomRight.y() <= ClipBottomRight.y());
+}
+
+void TextArea::scrollToLine(const UInt32& line)
+{
+	if(getParentContainer() != NullFC && getParentContainer()->getType().isDerivedFrom(UIViewport::getClassType()))
+	{
+		//Get the bounds of this line
+		Pnt2f TempTopLeft, TempBottomRight;
+		Vec2f Offset = Pnt2f(_LineContents[line]._LeftHorizontalOffset, _LineContents[line]._VerticalOffset);
+		getFont()->getBounds(_LineContents[line]._Contents, TempTopLeft, TempBottomRight);
+
+		TempTopLeft = TempTopLeft + Offset;
+		TempBottomRight = TempBottomRight + Offset;
+
+		UIViewportPtr::dcast(getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
+	}
+}
 
 void TextArea::focusGained(const FocusEvent& e)
 {
@@ -434,7 +484,7 @@ bool TextArea::getScrollableTracksViewportHeight(void)
 
 bool TextArea::getScrollableTracksViewportWidth(void)
 {
-    return getLineWrap();
+    return true;
 }
 
 Int32 TextArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
@@ -500,6 +550,7 @@ void TextArea::CaretUpdateListener::update(const UpdateEvent& e)
 
 void TextArea::changed(BitVector whichField, UInt32 origin)
 {
+
     if((whichField & TextFieldMask ||
        whichField & LineWrapFieldMask ||
        whichField & WrapStyleWordFieldMask ||
@@ -629,7 +680,7 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
         //Update my PreferredSize based on text
         Vec2f PreferredSize;
 		getFont()->getBounds(_LineContents.back()._Contents, TempTopLeft, TempBottomRight);
-        PreferredSize[0] = getSize().x();
+        PreferredSize[0] = getPreferredSize().x();
         PreferredSize[1] = osgMax<UInt32>(getMinSize().y(), _LineContents.back()._VerticalOffset + TempBottomRight.y());
         if(getPreferredSize() != PreferredSize)
         {
@@ -639,6 +690,16 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
         }
     }
     
+	if(whichField & CaretPositionFieldMask)
+	{
+		//Check to see if the caret is visible
+		Int32 CaretLine(getCaretLine());
+		if(CaretLine>=0 && !isLineVisible(CaretLine))
+		{
+			scrollToLine(CaretLine);
+		}
+	}
+
 	Inherited::changed(whichField, origin);
 }
 

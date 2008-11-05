@@ -113,6 +113,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
     virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+
+	virtual Int32 getCaretLine(void) const;
+
+	virtual bool isLineVisible(const UInt32& line) const;
+
+	virtual void scrollToLine(const UInt32& line);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

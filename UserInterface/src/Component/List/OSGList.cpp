@@ -435,6 +435,15 @@ void List::intervalAdded(ListDataEvent e)
 				_DrawnIndices.push_back(SlideDownList[i]);
 			}
 		}
+
+		if(_BottomDrawnIndex >= 0)
+		{
+			for(Int32 i(osgMax(e.getIndex0(),_TopDrawnIndex)) ; i<=_BottomDrawnIndex ; ++i)
+			{
+				updateItem(i);
+			}
+		}
+
 		beginEditCP(ListPtr(this), ChildrenFieldMask);
 			getChildren().clear();
 			for(UInt32 i(0) ; i<_DrawnIndices.size() ; ++i)
@@ -447,6 +456,7 @@ void List::intervalAdded(ListDataEvent e)
 			initItem(i);
 		}
 	}
+
 	
 	updatePreferredSize();
 }
@@ -524,7 +534,7 @@ void List::intervalRemoved(ListDataEvent e)
 		
 		if(NewBottomDrawnIndex >= 0)
 		{
-			for(Int32 i(e.getIndex0()) ; i<=e.getIndex1() ; ++i)
+			for(Int32 i(osgMax(e.getIndex0(),NewTopDrawnIndex)) ; i<=NewBottomDrawnIndex ; ++i)
 			{
 				updateItem(i);
 			}

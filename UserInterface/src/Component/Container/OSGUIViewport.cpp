@@ -76,6 +76,60 @@ void UIViewport::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void UIViewport::getViewBounds(Pnt2f& TopLeft, Pnt2f& BottomRight)
+{
+	Pnt2f InsetsTopLeft, InsetsBottomRight;
+	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+	TopLeft = getViewPosition();
+	BottomRight = TopLeft + (InsetsBottomRight - InsetsTopLeft);
+}
+
+void UIViewport::maximizeVisibility(const Pnt2f& TopLeft, const Pnt2f& BottomRight)
+{
+	//Scroll as little as possible until as much as can be is visible
+
+	Pnt2f ViewTopLeft, ViewBottomRight;
+	getViewBounds(ViewTopLeft,ViewBottomRight);
+
+	Pnt2f NewViewPosition(getViewPosition());
+
+	//Vertical
+	if(ViewTopLeft.y() > TopLeft.y())
+	{
+		//Scroll up
+		NewViewPosition[1] = TopLeft.y();
+
+	}
+	else if(ViewBottomRight.y() < BottomRight.y())
+	{
+		Pnt2f InsetsTopLeft, InsetsBottomRight;
+		getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+		//Scroll down
+		NewViewPosition[1] = BottomRight.y() - (InsetsBottomRight - InsetsTopLeft).y();
+	}
+
+	//Horizontal
+	if(ViewTopLeft.x() > TopLeft.x())
+	{
+		//Scroll left
+		NewViewPosition[0] = TopLeft.x();
+
+	}
+	else if(ViewBottomRight.x() < BottomRight.x())
+	{
+		Pnt2f InsetsTopLeft, InsetsBottomRight;
+		getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+		//Scroll right
+		NewViewPosition[0] = BottomRight.x() - (InsetsBottomRight - InsetsTopLeft).x();
+	}
+
+	beginEditCP(UIViewportPtr(this), ViewPositionFieldMask);
+		setViewPosition(NewViewPosition);
+	endEditCP(UIViewportPtr(this), ViewPositionFieldMask);
+}
+
 void UIViewport::removeChangeListener(ChangeListenerPtr Listener)
 {
    ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
@@ -91,10 +145,10 @@ void UIViewport::updateLayout(void)
     {
         Vec2f Size(getCorrectedViewSize());
         
-        beginEditCP(getViewComponent(), Component::SizeFieldMask | Component::PositionFieldMask);
-            getViewComponent()->setSize(Size);
+        beginEditCP(getViewComponent(), Component::PositionFieldMask);
             getViewComponent()->setPosition(-getViewPosition());
-        endEditCP(getViewComponent(), Component::SizeFieldMask | Component::PositionFieldMask);
+        endEditCP(getViewComponent(), Component::PositionFieldMask);
+		updateViewComponentSize();
         
         produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
     }
@@ -160,11 +214,7 @@ void UIViewport::changed(BitVector whichField, UInt32 origin)
 
     if((whichField & ViewSizeFieldMask) && getViewComponent() != NullFC)
     {
-		Vec2f Size(getCorrectedViewSize());
-        
-		beginEditCP(getViewComponent(), Component::SizeFieldMask);
-			getViewComponent()->setSize(Size);
-		endEditCP(getViewComponent(), Component::SizeFieldMask);
+		updateViewComponentSize();
         
 		produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
     }
@@ -189,21 +239,29 @@ void UIViewport::changed(BitVector whichField, UInt32 origin)
        getViewComponent() != NullFC &&
        (getViewComponent()->getScrollableTracksViewportHeight() || getViewComponent()->getScrollableTracksViewportWidth()))
     {
-        Vec2f Size(getViewComponent()->getPreferredSize());
-        
-        if(getViewComponent()->getScrollableTracksViewportHeight())
-        {
-            Size[1] = getSize().y();
-        }
-        
-        if(getViewComponent()->getScrollableTracksViewportWidth())
-        {
-            Size[0] = getSize().x();
-        }
-        beginEditCP(getViewComponent(), Component::SizeFieldMask);
-            getViewComponent()->setSize(Size);
-        endEditCP(getViewComponent(), Component::SizeFieldMask);
+		updateViewComponentSize();
     }
+}
+
+void UIViewport::updateViewComponentSize(void)
+{
+	Pnt2f InsetsTopLeft, InsetsBottomRight;
+	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+    Vec2f Size(getCorrectedViewSize());
+    
+    if(getViewComponent()->getScrollableTracksViewportHeight())
+    {
+        Size[1] = (InsetsBottomRight - InsetsTopLeft).y();
+    }
+    
+    if(getViewComponent()->getScrollableTracksViewportWidth())
+    {
+        Size[0] = (InsetsBottomRight - InsetsTopLeft).x();
+    }
+    beginEditCP(getViewComponent(), Component::SizeFieldMask);
+        getViewComponent()->setSize(Size);
+    endEditCP(getViewComponent(), Component::SizeFieldMask);
 }
 
 void UIViewport::dump(      UInt32    , 

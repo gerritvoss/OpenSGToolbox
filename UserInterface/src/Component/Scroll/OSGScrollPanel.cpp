@@ -188,6 +188,13 @@ void ScrollPanel::updateLayout(void)
         beginEditCP(getVerticalScrollBar(), ScrollBar::VisibleFieldMask);
             getVerticalScrollBar()->setVisible(false);
         endEditCP(getVerticalScrollBar(), ScrollBar::VisibleFieldMask);
+
+		if(getView() != NullFC)
+		{
+			beginEditCP(getView(), UIViewport::ViewPositionFieldMask);
+				getView()->setViewPosition(Pnt2f(getView()->getViewPosition().x(), 0.0f));
+			endEditCP(getView(), UIViewport::ViewPositionFieldMask);
+		}
     }
 
     bool HorizontalScrollbarShown;
@@ -207,6 +214,12 @@ void ScrollPanel::updateLayout(void)
         beginEditCP(getHorizontalScrollBar(), ScrollBar::VisibleFieldMask);
             getHorizontalScrollBar()->setVisible(false);
         endEditCP(getHorizontalScrollBar(), ScrollBar::VisibleFieldMask);
+		if(getView() != NullFC)
+		{
+			beginEditCP(getView(), UIViewport::ViewPositionFieldMask);
+				getView()->setViewPosition(Pnt2f(0.0f, getView()->getViewPosition().y()));
+			endEditCP(getView(), UIViewport::ViewPositionFieldMask);
+		}
     }
 
 	Pnt2f TopLeft, BottomRight;

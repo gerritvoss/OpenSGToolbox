@@ -86,6 +86,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewport : public UIViewportBase
 	void removeChangeListener(ChangeListenerPtr Listener);
     
     Vec2f getCorrectedViewSize(void) const;
+	void updateViewComponentSize(void);
+
+	void maximizeVisibility(const Pnt2f& TopLeft, const Pnt2f& BottomRight);
+	void getViewBounds(Pnt2f& TopLeft, Pnt2f& BottomRight);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

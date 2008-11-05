@@ -169,6 +169,7 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
 		}
 	}
 	
+	UInt32 NewCaretPosition(getCaretPosition());
 	if(e.getKey()== e.KEY_RIGHT ||e.getKey()== e.KEY_KEYPAD_RIGHT)
 	{
 		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
@@ -176,33 +177,33 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
 		{
 			if(_TextSelectionEnd > _TextSelectionStart && _TextSelectionEnd < getText().size() && getCaretPosition()>_TextSelectionStart)
 			{
-				setCaretPosition(getCaretPosition()+1);
-				_TextSelectionEnd=getCaretPosition();
+				NewCaretPosition = getCaretPosition()+1;
+				_TextSelectionEnd=NewCaretPosition;
 			}
 			else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition() < getText().size())
 			{
-				setCaretPosition(getCaretPosition()+1);
-				_TextSelectionStart = getCaretPosition();
+				NewCaretPosition = getCaretPosition()+1;
+				_TextSelectionStart = NewCaretPosition;
 			}
 			else if(getCaretPosition()< getText().size() && _TextSelectionEnd <=_TextSelectionStart )
 			{
-				_TextSelectionStart = getCaretPosition();
-				setCaretPosition(getCaretPosition()+1);
-				_TextSelectionEnd = getCaretPosition();
+				_TextSelectionStart = NewCaretPosition;
+				NewCaretPosition = getCaretPosition()+1;
+				_TextSelectionEnd = NewCaretPosition;
 			}
 		}
 		else if(_TextSelectionEnd > _TextSelectionStart)
 		{
 			//Caret is now the end of the selection
-			setCaretPosition(_TextSelectionEnd);
-			_TextSelectionStart = getCaretPosition();
+			NewCaretPosition = _TextSelectionEnd;
+			_TextSelectionStart = NewCaretPosition;
 		}
 		else if(getCaretPosition() < getText().size())
 		{
 			//increment the caret position
-			setCaretPosition(getCaretPosition()+1);
-			_TextSelectionStart = getCaretPosition();
-			_TextSelectionEnd = getCaretPosition();
+			NewCaretPosition = getCaretPosition()+1;
+			_TextSelectionStart = NewCaretPosition;
+			_TextSelectionEnd = NewCaretPosition;
 		}
 	}
 	if(e.getKey()== e.KEY_LEFT||e.getKey()== e.KEY_KEYPAD_LEFT)
@@ -213,35 +214,43 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
 		{
 			if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size() && getCaretPosition()>_TextSelectionStart && getCaretPosition()>0)
 			{
-				setCaretPosition(getCaretPosition()-1);
-				_TextSelectionEnd=getCaretPosition();
+				NewCaretPosition = getCaretPosition()-1;
+				_TextSelectionEnd=NewCaretPosition;
 			}
 			else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition()>0)
 			{
-				setCaretPosition(getCaretPosition()-1);
-				_TextSelectionStart = getCaretPosition();
+				NewCaretPosition = getCaretPosition()-1;
+				_TextSelectionStart = NewCaretPosition;
 			}
 			else if(_TextSelectionEnd <=_TextSelectionStart && getCaretPosition()>0 )
 			{
-				_TextSelectionEnd = getCaretPosition();
-				setCaretPosition(getCaretPosition()-1);
-				_TextSelectionStart = getCaretPosition();
+				_TextSelectionEnd = NewCaretPosition;
+				NewCaretPosition = getCaretPosition()-1;
+				_TextSelectionStart = NewCaretPosition;
 			}
 		}
 		else if(_TextSelectionEnd > _TextSelectionStart)
 		{
 			//Caret is now the start of the selection
-			setCaretPosition(_TextSelectionStart);
-			_TextSelectionEnd = getCaretPosition();
+			NewCaretPosition = _TextSelectionStart;
+			_TextSelectionEnd = NewCaretPosition;
 		}
 		else if(getCaretPosition() > 0)
 		{
 			//decrement the caret position
-			setCaretPosition(getCaretPosition()-1);
-			_TextSelectionStart = getCaretPosition();
+			NewCaretPosition = getCaretPosition()-1;
+			_TextSelectionStart = NewCaretPosition;
 			_TextSelectionEnd = _TextSelectionStart;
 		}
 	}
+	
+	if(NewCaretPosition != getCaretPosition())
+	{
+		beginEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
+			setCaretPosition(NewCaretPosition);
+		endEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
+	}
+
 	Inherited::keyTyped(e);
 }
 
