@@ -59,7 +59,7 @@
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
+#include "OSGGameDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -83,7 +83,7 @@ class BinaryDataHandler;
 
 //! \brief RubberBandCamera Base Class.
 
-class OSG_TOOLBOXLIB_DLLMAPPING RubberBandCameraBase : public CameraDecorator
+class OSG_GAMELIB_DLLMAPPING RubberBandCameraBase : public CameraDecorator
 {
   private:
 

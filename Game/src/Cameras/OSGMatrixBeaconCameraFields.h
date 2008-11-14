@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGAIRPLANECAMERAFIELDS_H_
-#define _OSGAIRPLANECAMERAFIELDS_H_
+#ifndef _OSGMATRIXBEACONCAMERAFIELDS_H_
+#define _OSGMATRIXBEACONCAMERAFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -58,31 +58,31 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGToolboxDef.h"
+#include "OSGGameDef.h"
 
 #include <OpenSG/OSGCameraFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class AirplaneCamera;
+class MatrixBeaconCamera;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AirplaneCameraPtr
+//! MatrixBeaconCameraPtr
 
-typedef FCPtr<CameraPtr, AirplaneCamera> AirplaneCameraPtr;
+typedef FCPtr<CameraPtr, MatrixBeaconCamera> MatrixBeaconCameraPtr;
 
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpToolboxFieldTraits
+/*! \ingroup GrpGameFieldTraits
  */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
 
 template <>
-struct FieldDataTraits<AirplaneCameraPtr> : 
-    public FieldTraitsRecurseMapper<AirplaneCameraPtr, true>
+struct FieldDataTraits<MatrixBeaconCameraPtr> : 
+    public FieldTraitsRecurseMapper<MatrixBeaconCameraPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<AirplaneCameraPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFAirplaneCameraPtr"; }
-    static const char *getMName(void) { return "MFAirplaneCameraPtr"; }
+    static const char *getSName(void) { return "SFMatrixBeaconCameraPtr"; }
+    static const char *getMName(void) { return "MFMatrixBeaconCameraPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AirplaneCameraPtr, true>
+/*! \class  FieldTraitsRecurseMapper<MatrixBeaconCameraPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -105,27 +105,27 @@ struct FieldDataTraits<AirplaneCameraPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpToolboxFieldSingle */
+/*! \ingroup GrpGameFieldSingle */
 
-typedef SField<AirplaneCameraPtr> SFAirplaneCameraPtr;
+typedef SField<MatrixBeaconCameraPtr> SFMatrixBeaconCameraPtr;
 #endif
 
-#ifndef OSG_COMPILEAIRPLANECAMERAINST
-OSG_DLLEXPORT_DECL1(SField, AirplaneCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMATRIXBEACONCAMERAINST
+OSG_DLLEXPORT_DECL1(SField, MatrixBeaconCameraPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpToolboxFieldMulti */
+/*! \ingroup GrpGameFieldMulti */
 
-typedef MField<AirplaneCameraPtr> MFAirplaneCameraPtr;
+typedef MField<MatrixBeaconCameraPtr> MFMatrixBeaconCameraPtr;
 #endif
 
-#ifndef OSG_COMPILEAIRPLANECAMERAINST
-OSG_DLLEXPORT_DECL1(MField, AirplaneCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMATRIXBEACONCAMERAINST
+OSG_DLLEXPORT_DECL1(MField, MatrixBeaconCameraPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGAIRPLANECAMERAFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGMATRIXBEACONCAMERAFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGAIRPLANECAMERAFIELDS_H_ */
+#endif /* _OSGMATRIXBEACONCAMERAFIELDS_H_ */

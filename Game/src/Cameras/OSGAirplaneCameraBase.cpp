@@ -45,110 +45,143 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class MatrixBeaconCamera!
+ **     class AirplaneCamera!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEMATRIXBEACONCAMERAINST
+#define OSG_COMPILEAIRPLANECAMERAINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMatrixBeaconCameraBase.h"
-#include "OSGMatrixBeaconCamera.h"
+#include "OSGAirplaneCameraBase.h"
+#include "OSGAirplaneCamera.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MatrixBeaconCameraBase::TransformationMatrixFieldMask = 
-    (TypeTraits<BitVector>::One << MatrixBeaconCameraBase::TransformationMatrixFieldId);
+const OSG::BitVector  AirplaneCameraBase::RollFieldMask = 
+    (TypeTraits<BitVector>::One << AirplaneCameraBase::RollFieldId);
 
-const OSG::BitVector MatrixBeaconCameraBase::MTInfluenceMask = 
+const OSG::BitVector  AirplaneCameraBase::PitchFieldMask = 
+    (TypeTraits<BitVector>::One << AirplaneCameraBase::PitchFieldId);
+
+const OSG::BitVector  AirplaneCameraBase::YawFieldMask = 
+    (TypeTraits<BitVector>::One << AirplaneCameraBase::YawFieldId);
+
+const OSG::BitVector  AirplaneCameraBase::PositionFieldMask = 
+    (TypeTraits<BitVector>::One << AirplaneCameraBase::PositionFieldId);
+
+const OSG::BitVector AirplaneCameraBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var Matrix          MatrixBeaconCameraBase::_sfTransformationMatrix
+/*! \var Real32          AirplaneCameraBase::_sfRoll
+    
+*/
+/*! \var Real32          AirplaneCameraBase::_sfPitch
+    
+*/
+/*! \var Real32          AirplaneCameraBase::_sfYaw
+    
+*/
+/*! \var Pnt3f           AirplaneCameraBase::_sfPosition
     
 */
 
-//! MatrixBeaconCamera description
+//! AirplaneCamera description
 
-FieldDescription *MatrixBeaconCameraBase::_desc[] = 
+FieldDescription *AirplaneCameraBase::_desc[] = 
 {
-    new FieldDescription(SFMatrix::getClassType(), 
-                     "TransformationMatrix", 
-                     TransformationMatrixFieldId, TransformationMatrixFieldMask,
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Roll", 
+                     RollFieldId, RollFieldMask,
                      false,
-                     (FieldAccessMethod) &MatrixBeaconCameraBase::getSFTransformationMatrix)
+                     (FieldAccessMethod) &AirplaneCameraBase::getSFRoll),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Pitch", 
+                     PitchFieldId, PitchFieldMask,
+                     false,
+                     (FieldAccessMethod) &AirplaneCameraBase::getSFPitch),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Yaw", 
+                     YawFieldId, YawFieldMask,
+                     false,
+                     (FieldAccessMethod) &AirplaneCameraBase::getSFYaw),
+    new FieldDescription(SFPnt3f::getClassType(), 
+                     "Position", 
+                     PositionFieldId, PositionFieldMask,
+                     false,
+                     (FieldAccessMethod) &AirplaneCameraBase::getSFPosition)
 };
 
 
-FieldContainerType MatrixBeaconCameraBase::_type(
-    "MatrixBeaconCamera",
+FieldContainerType AirplaneCameraBase::_type(
+    "AirplaneCamera",
     "Camera",
     NULL,
-    (PrototypeCreateF) &MatrixBeaconCameraBase::createEmpty,
-    MatrixBeaconCamera::initMethod,
+    (PrototypeCreateF) &AirplaneCameraBase::createEmpty,
+    AirplaneCamera::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(MatrixBeaconCameraBase, MatrixBeaconCameraPtr)
+//OSG_FIELD_CONTAINER_DEF(AirplaneCameraBase, AirplaneCameraPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MatrixBeaconCameraBase::getType(void) 
+FieldContainerType &AirplaneCameraBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &MatrixBeaconCameraBase::getType(void) const 
+const FieldContainerType &AirplaneCameraBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr MatrixBeaconCameraBase::shallowCopy(void) const 
+FieldContainerPtr AirplaneCameraBase::shallowCopy(void) const 
 { 
-    MatrixBeaconCameraPtr returnValue; 
+    AirplaneCameraPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const MatrixBeaconCamera *>(this)); 
+    newPtr(returnValue, dynamic_cast<const AirplaneCamera *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 MatrixBeaconCameraBase::getContainerSize(void) const 
+UInt32 AirplaneCameraBase::getContainerSize(void) const 
 { 
-    return sizeof(MatrixBeaconCamera); 
+    return sizeof(AirplaneCamera); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MatrixBeaconCameraBase::executeSync(      FieldContainer &other,
+void AirplaneCameraBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((MatrixBeaconCameraBase *) &other, whichField);
+    this->executeSyncImpl((AirplaneCameraBase *) &other, whichField);
 }
 #else
-void MatrixBeaconCameraBase::executeSync(      FieldContainer &other,
+void AirplaneCameraBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((MatrixBeaconCameraBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((AirplaneCameraBase *) &other, whichField, sInfo);
 }
-void MatrixBeaconCameraBase::execBeginEdit(const BitVector &whichField, 
+void AirplaneCameraBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void MatrixBeaconCameraBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void AirplaneCameraBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -161,8 +194,11 @@ void MatrixBeaconCameraBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-MatrixBeaconCameraBase::MatrixBeaconCameraBase(void) :
-    _sfTransformationMatrix   (), 
+AirplaneCameraBase::AirplaneCameraBase(void) :
+    _sfRoll                   (), 
+    _sfPitch                  (), 
+    _sfYaw                    (), 
+    _sfPosition               (), 
     Inherited() 
 {
 }
@@ -171,87 +207,153 @@ MatrixBeaconCameraBase::MatrixBeaconCameraBase(void) :
 #pragma warning (default : 383)
 #endif
 
-MatrixBeaconCameraBase::MatrixBeaconCameraBase(const MatrixBeaconCameraBase &source) :
-    _sfTransformationMatrix   (source._sfTransformationMatrix   ), 
+AirplaneCameraBase::AirplaneCameraBase(const AirplaneCameraBase &source) :
+    _sfRoll                   (source._sfRoll                   ), 
+    _sfPitch                  (source._sfPitch                  ), 
+    _sfYaw                    (source._sfYaw                    ), 
+    _sfPosition               (source._sfPosition               ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-MatrixBeaconCameraBase::~MatrixBeaconCameraBase(void)
+AirplaneCameraBase::~AirplaneCameraBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MatrixBeaconCameraBase::getBinSize(const BitVector &whichField)
+UInt32 AirplaneCameraBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (TransformationMatrixFieldMask & whichField))
+    if(FieldBits::NoField != (RollFieldMask & whichField))
     {
-        returnValue += _sfTransformationMatrix.getBinSize();
+        returnValue += _sfRoll.getBinSize();
+    }
+
+    if(FieldBits::NoField != (PitchFieldMask & whichField))
+    {
+        returnValue += _sfPitch.getBinSize();
+    }
+
+    if(FieldBits::NoField != (YawFieldMask & whichField))
+    {
+        returnValue += _sfYaw.getBinSize();
+    }
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        returnValue += _sfPosition.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void MatrixBeaconCameraBase::copyToBin(      BinaryDataHandler &pMem,
+void AirplaneCameraBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (TransformationMatrixFieldMask & whichField))
+    if(FieldBits::NoField != (RollFieldMask & whichField))
     {
-        _sfTransformationMatrix.copyToBin(pMem);
+        _sfRoll.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PitchFieldMask & whichField))
+    {
+        _sfPitch.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (YawFieldMask & whichField))
+    {
+        _sfYaw.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        _sfPosition.copyToBin(pMem);
     }
 
 
 }
 
-void MatrixBeaconCameraBase::copyFromBin(      BinaryDataHandler &pMem,
+void AirplaneCameraBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (TransformationMatrixFieldMask & whichField))
+    if(FieldBits::NoField != (RollFieldMask & whichField))
     {
-        _sfTransformationMatrix.copyFromBin(pMem);
+        _sfRoll.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PitchFieldMask & whichField))
+    {
+        _sfPitch.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (YawFieldMask & whichField))
+    {
+        _sfYaw.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        _sfPosition.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MatrixBeaconCameraBase::executeSyncImpl(      MatrixBeaconCameraBase *pOther,
+void AirplaneCameraBase::executeSyncImpl(      AirplaneCameraBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (TransformationMatrixFieldMask & whichField))
-        _sfTransformationMatrix.syncWith(pOther->_sfTransformationMatrix);
+    if(FieldBits::NoField != (RollFieldMask & whichField))
+        _sfRoll.syncWith(pOther->_sfRoll);
+
+    if(FieldBits::NoField != (PitchFieldMask & whichField))
+        _sfPitch.syncWith(pOther->_sfPitch);
+
+    if(FieldBits::NoField != (YawFieldMask & whichField))
+        _sfYaw.syncWith(pOther->_sfYaw);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pOther->_sfPosition);
 
 
 }
 #else
-void MatrixBeaconCameraBase::executeSyncImpl(      MatrixBeaconCameraBase *pOther,
+void AirplaneCameraBase::executeSyncImpl(      AirplaneCameraBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (TransformationMatrixFieldMask & whichField))
-        _sfTransformationMatrix.syncWith(pOther->_sfTransformationMatrix);
+    if(FieldBits::NoField != (RollFieldMask & whichField))
+        _sfRoll.syncWith(pOther->_sfRoll);
+
+    if(FieldBits::NoField != (PitchFieldMask & whichField))
+        _sfPitch.syncWith(pOther->_sfPitch);
+
+    if(FieldBits::NoField != (YawFieldMask & whichField))
+        _sfYaw.syncWith(pOther->_sfYaw);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pOther->_sfPosition);
 
 
 
 }
 
-void MatrixBeaconCameraBase::execBeginEditImpl (const BitVector &whichField, 
+void AirplaneCameraBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -270,11 +372,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MatrixBeaconCameraPtr>::_type("MatrixBeaconCameraPtr", "CameraPtr");
+DataType FieldDataTraits<AirplaneCameraPtr>::_type("AirplaneCameraPtr", "CameraPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(MatrixBeaconCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MatrixBeaconCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(AirplaneCameraPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(AirplaneCameraPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -291,10 +393,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(MatrixBeaconCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMATRIXBEACONCAMERABASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMATRIXBEACONCAMERABASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGAIRPLANECAMERABASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGAIRPLANECAMERABASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGMATRIXBEACONCAMERAFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGAIRPLANECAMERAFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

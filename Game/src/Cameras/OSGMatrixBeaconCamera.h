@@ -36,32 +36,28 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGRUBBERBANDCAMERA_H_
-#define _OSGRUBBERBANDCAMERA_H_
+#ifndef _OSGMATRIXBEACONCAMERA_H_
+#define _OSGMATRIXBEACONCAMERA_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
+#include "OSGGameDef.h"
 
-#include "OSGRubberBandCameraBase.h"
+#include "OSGMatrixBeaconCameraBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TOOLBOXLIB_DLLMAPPING RubberBandCamera : public RubberBandCameraBase
+class OSG_GAMELIB_DLLMAPPING MatrixBeaconCamera : public MatrixBeaconCameraBase
 {
   private:
 
-    typedef RubberBandCameraBase Inherited;
+    typedef MatrixBeaconCameraBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-
-    virtual void getViewing              (Matrix        &result, 
-                                           UInt32 width, UInt32 height);
-    void update              (Real32 Elps);
-    void setToBeacon(void);
+    virtual void getViewing( Matrix& result, UInt32 width, UInt32 height);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -79,49 +75,47 @@ class OSG_TOOLBOXLIB_DLLMAPPING RubberBandCamera : public RubberBandCameraBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void setBeacon     (     const NodePtr &       value    );
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in RubberBandCameraBase.
+    // Variables should all be in MatrixBeaconCameraBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    RubberBandCamera(void);
-    RubberBandCamera(const RubberBandCamera &source);
+    MatrixBeaconCamera(void);
+    MatrixBeaconCamera(const MatrixBeaconCamera &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RubberBandCamera(void); 
+    virtual ~MatrixBeaconCamera(void); 
 
     /*! \}                                                                 */
     
-    osg::Matrix _Matrix;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class RubberBandCameraBase;
+    friend class MatrixBeaconCameraBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const RubberBandCamera &source);
+    void operator =(const MatrixBeaconCamera &source);
 };
 
-typedef RubberBandCamera *RubberBandCameraP;
+typedef MatrixBeaconCamera *MatrixBeaconCameraP;
 
 OSG_END_NAMESPACE
 
-#include "OSGRubberBandCameraBase.inl"
-#include "OSGRubberBandCamera.inl"
+#include "OSGMatrixBeaconCameraBase.inl"
+#include "OSGMatrixBeaconCamera.inl"
 
-#define OSGRUBBERBANDCAMERA_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGMATRIXBEACONCAMERA_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGRUBBERBANDCAMERA_H_ */
+#endif /* _OSGMATRIXBEACONCAMERA_H_ */

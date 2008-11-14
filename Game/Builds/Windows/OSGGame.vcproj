@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="OSGToolbox"
-	ProjectGUID="{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
+	Name="OSGGame"
+	ProjectGUID="{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
 	>
@@ -30,7 +30,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Installing Includes"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Toolbox&#x0D;&#x0A;"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Game&#x0D;&#x0A;"
 				Outputs="include"
 			/>
 			<Tool
@@ -47,8 +47,8 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="$(BOOST_BASE_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\src"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILETOOLBOXLIB"
+				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEGAMELIB"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -75,11 +75,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGWindowWIN32D.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib OSGDynamicsD.lib OSGUserInterfaceD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;;$(BOOST_BASE_DIR)\lib"
+				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;$(BOOST_BASE_DIR)\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Toolbox&#x0D;&#x0A;"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Game&#x0D;&#x0A;"
 				Outputs="include"
 			/>
 			<Tool
@@ -140,8 +140,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(BOOST_BASE_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\src"
-				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILETOOLBOXLIB"
+				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
+				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEGAMELIB"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -167,11 +167,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib OSGDynamics.lib OSGUserInterface.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;;$(BOOST_BASE_DIR)\lib"
+				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;$(BOOST_BASE_DIR)\lib"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
@@ -215,186 +215,94 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\..\src\OSGToolboxDef.h"
+				RelativePath="..\..\src\OSGGameDef.h"
 				>
 			</File>
 			<Filter
-				Name="Util"
+				Name="Cameras"
 				>
 				<File
-					RelativePath="..\..\src\Util\OSGCameraUtils.cpp"
+					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGCameraUtils.h"
+					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGColorOperations.h"
+					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentBase.h"
+					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGGLenumUtils.cpp"
+					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGGLenumUtils.h"
+					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGInterpolations.h"
+					RelativePath="..\..\src\Cameras\OSGAirplaneCameraFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.cpp"
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.h"
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.inl"
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGMathUtils.cpp"
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGMathUtils.h"
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGPntOperations.h"
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGQuatOperations.h"
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGRandomPoolManager.cpp"
+					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGRandomPoolManager.h"
+					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGRandomPoolManager.inl"
+					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGSharedFieldPtr.h"
+					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGStringUtils.cpp"
+					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGStringUtils.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="FileIO"
-				>
-				<File
-					RelativePath="..\..\src\FileIO\OSGFCFileHandler.cpp"
+					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\FileIO\OSGFCFileHandler.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FileIO\OSGFCFileHandler.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FileIO\OSGFCFileType.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FileIO\OSGFCFileType.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FileIO\OSGFCFileType.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FileIO\OSGXMLFCFileType.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FileIO\OSGXMLFCFileType.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FileIO\OSGXMLFCFileType.inl"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Types"
-				>
-				<File
-					RelativePath="..\..\src\Types\OSGFieldContainerMapType.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Types\OSGFieldContainerMapType.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Types\OSGPathType.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Types\OSGPathType.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Types\OSGStringMapType.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Types\OSGStringMapType.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Attachments"
-				>
-				<File
-					RelativePath="..\..\src\Attachments\OSGFilePathAttachment.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Attachments\OSGFilePathAttachment.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Attachments\OSGFilePathAttachment.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentFields.h"
+					RelativePath="..\..\src\Cameras\OSGRubberBandCameraFields.h"
 					>
 				</File>
 			</Filter>

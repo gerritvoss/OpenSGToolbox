@@ -432,146 +432,146 @@ void RubberBandCameraBase::execBeginEditImpl (const BitVector &whichField,
 
 /*------------------------------ get -----------------------------------*/
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 SFReal32 *RubberBandCameraBase::getSFPositionConstant(void)
 {
     return &_sfPositionConstant;
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 SFReal32 *RubberBandCameraBase::getSFPositionLinear(void)
 {
     return &_sfPositionLinear;
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 SFReal32 *RubberBandCameraBase::getSFPositionQuadratic(void)
 {
     return &_sfPositionQuadratic;
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 SFReal32 *RubberBandCameraBase::getSFOrientationConstant(void)
 {
     return &_sfOrientationConstant;
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 SFReal32 *RubberBandCameraBase::getSFOrientationLinear(void)
 {
     return &_sfOrientationLinear;
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 SFReal32 *RubberBandCameraBase::getSFOrientationQuadratic(void)
 {
     return &_sfOrientationQuadratic;
 }
 
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 Real32 &RubberBandCameraBase::getPositionConstant(void)
 {
     return _sfPositionConstant.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 const Real32 &RubberBandCameraBase::getPositionConstant(void) const
 {
     return _sfPositionConstant.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 void RubberBandCameraBase::setPositionConstant(const Real32 &value)
 {
     _sfPositionConstant.setValue(value);
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 Real32 &RubberBandCameraBase::getPositionLinear(void)
 {
     return _sfPositionLinear.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 const Real32 &RubberBandCameraBase::getPositionLinear(void) const
 {
     return _sfPositionLinear.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 void RubberBandCameraBase::setPositionLinear(const Real32 &value)
 {
     _sfPositionLinear.setValue(value);
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 Real32 &RubberBandCameraBase::getPositionQuadratic(void)
 {
     return _sfPositionQuadratic.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 const Real32 &RubberBandCameraBase::getPositionQuadratic(void) const
 {
     return _sfPositionQuadratic.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 void RubberBandCameraBase::setPositionQuadratic(const Real32 &value)
 {
     _sfPositionQuadratic.setValue(value);
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 Real32 &RubberBandCameraBase::getOrientationConstant(void)
 {
     return _sfOrientationConstant.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 const Real32 &RubberBandCameraBase::getOrientationConstant(void) const
 {
     return _sfOrientationConstant.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 void RubberBandCameraBase::setOrientationConstant(const Real32 &value)
 {
     _sfOrientationConstant.setValue(value);
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 Real32 &RubberBandCameraBase::getOrientationLinear(void)
 {
     return _sfOrientationLinear.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 const Real32 &RubberBandCameraBase::getOrientationLinear(void) const
 {
     return _sfOrientationLinear.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 void RubberBandCameraBase::setOrientationLinear(const Real32 &value)
 {
     _sfOrientationLinear.setValue(value);
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 Real32 &RubberBandCameraBase::getOrientationQuadratic(void)
 {
     return _sfOrientationQuadratic.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 const Real32 &RubberBandCameraBase::getOrientationQuadratic(void) const
 {
     return _sfOrientationQuadratic.getValue();
 }
 
-OSG_TOOLBOXLIB_DLLMAPPING
+OSG_GAMELIB_DLLMAPPING
 void RubberBandCameraBase::setOrientationQuadratic(const Real32 &value)
 {
     _sfOrientationQuadratic.setValue(value);
@@ -591,8 +591,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<RubberBandCameraPtr>::_type("RubberBandCameraPtr", "CameraDecoratorPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(RubberBandCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RubberBandCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(RubberBandCameraPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(RubberBandCameraPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

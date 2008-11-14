@@ -59,7 +59,7 @@
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
+#include "OSGGameDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -78,7 +78,7 @@ class BinaryDataHandler;
 
 //! \brief MatrixBeaconCamera Base Class.
 
-class OSG_TOOLBOXLIB_DLLMAPPING MatrixBeaconCameraBase : public Camera
+class OSG_GAMELIB_DLLMAPPING MatrixBeaconCameraBase : public Camera
 {
   private:
 

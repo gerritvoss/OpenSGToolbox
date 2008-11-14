@@ -47,7 +47,7 @@
 #include <OpenSG/OSGQuaternion.h>
 
 #include "OSGRubberBandCamera.h"
-#include "Util/OSGQuatOperations.h"
+#include "OpenSG/Toolbox/OSGQuatOperations.h"
 
 OSG_USING_NAMESPACE
 
