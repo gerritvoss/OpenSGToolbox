@@ -93,6 +93,8 @@ def main():
        SedLicenseScript = "CleanUpToolboxLicense.sed"
    elif os.path.join("OpenSGToolbox","Animation", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpAnimationLicense.sed"
+   elif os.path.join("OpenSGToolbox","Game", "src") in sys.argv[1]:
+       SedLicenseScript = "CleanUpGameLicense.sed"
    else:
        SedLicenseScript = "CleanUpUILicense.sed"
    SedLicenseScriptPath = convertPathToOutput(os.path.join(GenFCsPyDir, SedLicenseScript))
