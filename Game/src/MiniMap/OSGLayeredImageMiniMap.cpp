@@ -78,6 +78,10 @@ void LayeredImageMiniMap::initMethod (void)
 
 void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 {
+	Pnt2f TopLeft, BottomRight;
+	getInsideBorderBounds(TopLeft,BottomRight);
+
+	Graphics->drawRect(TopLeft,BottomRight, Color4f(0.0,1.0,0.0,1.0), 1.0);
 }
 
 /*-------------------------------------------------------------------------*\

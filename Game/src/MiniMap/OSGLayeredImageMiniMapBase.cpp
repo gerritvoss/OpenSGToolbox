@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  LayeredImageMiniMapBase::OverlayFieldMask = 
     (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::OverlayFieldId);
 
+const OSG::BitVector  LayeredImageMiniMapBase::LayerTexturesFieldMask = 
+    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::LayerTexturesFieldId);
+
 const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var MiniMapOverlayPtr LayeredImageMiniMapBase::_mfOverlay
+    
+*/
+/*! \var TexturePtr      LayeredImageMiniMapBase::_mfLayerTextures
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *LayeredImageMiniMapBase::_desc[] =
                      "Overlay", 
                      OverlayFieldId, OverlayFieldMask,
                      false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getMFOverlay)
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getMFOverlay),
+    new FieldDescription(MFTexturePtr::getClassType(), 
+                     "LayerTextures", 
+                     LayerTexturesFieldId, LayerTexturesFieldMask,
+                     false,
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getMFLayerTextures)
 };
 
 
@@ -153,6 +164,7 @@ void LayeredImageMiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     Inherited::onDestroyAspect(uiId, uiAspect);
 
     _mfOverlay.terminateShare(uiAspect, this->getContainerSize());
+    _mfLayerTextures.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -164,6 +176,7 @@ void LayeredImageMiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 LayeredImageMiniMapBase::LayeredImageMiniMapBase(void) :
     _mfOverlay                (), 
+    _mfLayerTextures          (), 
     Inherited() 
 {
 }
@@ -174,6 +187,7 @@ LayeredImageMiniMapBase::LayeredImageMiniMapBase(void) :
 
 LayeredImageMiniMapBase::LayeredImageMiniMapBase(const LayeredImageMiniMapBase &source) :
     _mfOverlay                (source._mfOverlay                ), 
+    _mfLayerTextures          (source._mfLayerTextures          ), 
     Inherited                 (source)
 {
 }
@@ -195,6 +209,11 @@ UInt32 LayeredImageMiniMapBase::getBinSize(const BitVector &whichField)
         returnValue += _mfOverlay.getBinSize();
     }
 
+    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
+    {
+        returnValue += _mfLayerTextures.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +226,11 @@ void LayeredImageMiniMapBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (OverlayFieldMask & whichField))
     {
         _mfOverlay.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
+    {
+        _mfLayerTextures.copyToBin(pMem);
     }
 
 
@@ -222,6 +246,11 @@ void LayeredImageMiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfOverlay.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
+    {
+        _mfLayerTextures.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +263,9 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
 
     if(FieldBits::NoField != (OverlayFieldMask & whichField))
         _mfOverlay.syncWith(pOther->_mfOverlay);
+
+    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
+        _mfLayerTextures.syncWith(pOther->_mfLayerTextures);
 
 
 }
@@ -249,6 +281,9 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
     if(FieldBits::NoField != (OverlayFieldMask & whichField))
         _mfOverlay.syncWith(pOther->_mfOverlay, sInfo);
 
+    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
+        _mfLayerTextures.syncWith(pOther->_mfLayerTextures, sInfo);
+
 
 }
 
@@ -260,6 +295,9 @@ void LayeredImageMiniMapBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (OverlayFieldMask & whichField))
         _mfOverlay.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
+        _mfLayerTextures.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

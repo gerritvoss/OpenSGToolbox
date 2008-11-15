@@ -68,6 +68,7 @@
 #include "OSGMiniMap.h" // Parent
 
 #include "MiniMap/OSGMiniMapOverlay.h" // Overlay type
+#include <OpenSG/OSGTextureFields.h> // LayerTextures type
 
 #include "OSGLayeredImageMiniMapFields.h"
 
@@ -91,11 +92,13 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 
     enum
     {
-        OverlayFieldId = Inherited::NextFieldId,
-        NextFieldId    = OverlayFieldId + 1
+        OverlayFieldId       = Inherited::NextFieldId,
+        LayerTexturesFieldId = OverlayFieldId       + 1,
+        NextFieldId          = LayerTexturesFieldId + 1
     };
 
     static const OSG::BitVector OverlayFieldMask;
+    static const OSG::BitVector LayerTexturesFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,10 +126,14 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \{                                                                 */
 
            MFMiniMapOverlayPtr *getMFOverlay        (void);
+           MFTexturePtr        *getMFLayerTextures  (void);
 
            MiniMapOverlayPtr   &getOverlay        (const UInt32 index);
            MFMiniMapOverlayPtr &getOverlay        (void);
      const MFMiniMapOverlayPtr &getOverlay        (void) const;
+           TexturePtr          &getLayerTextures  (const UInt32 index);
+           MFTexturePtr        &getLayerTextures  (void);
+     const MFTexturePtr        &getLayerTextures  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \{                                                                 */
 
     MFMiniMapOverlayPtr   _mfOverlay;
+    MFTexturePtr        _mfLayerTextures;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

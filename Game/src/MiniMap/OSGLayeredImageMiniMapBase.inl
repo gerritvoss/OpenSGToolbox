@@ -103,6 +103,13 @@ MFMiniMapOverlayPtr *LayeredImageMiniMapBase::getMFOverlay(void)
     return &_mfOverlay;
 }
 
+//! Get the LayeredImageMiniMap::_mfLayerTextures field.
+inline
+MFTexturePtr *LayeredImageMiniMapBase::getMFLayerTextures(void)
+{
+    return &_mfLayerTextures;
+}
+
 
 
 //! Get the value of the \a index element the LayeredImageMiniMap::_mfOverlay field.
@@ -124,6 +131,27 @@ inline
 const MFMiniMapOverlayPtr &LayeredImageMiniMapBase::getOverlay(void) const
 {
     return _mfOverlay;
+}
+
+//! Get the value of the \a index element the LayeredImageMiniMap::_mfLayerTextures field.
+inline
+TexturePtr &LayeredImageMiniMapBase::getLayerTextures(const UInt32 index)
+{
+    return _mfLayerTextures[index];
+}
+
+//! Get the LayeredImageMiniMap::_mfLayerTextures field.
+inline
+MFTexturePtr &LayeredImageMiniMapBase::getLayerTextures(void)
+{
+    return _mfLayerTextures;
+}
+
+//! Get the LayeredImageMiniMap::_mfLayerTextures field.
+inline
+const MFTexturePtr &LayeredImageMiniMapBase::getLayerTextures(void) const
+{
+    return _mfLayerTextures;
 }
 
 OSG_END_NAMESPACE

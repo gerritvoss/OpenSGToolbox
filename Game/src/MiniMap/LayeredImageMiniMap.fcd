@@ -21,5 +21,14 @@ A LayeredImageMiniMap.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="LayerTextures"
+		type="TexturePtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
 
 </FieldContainer>
