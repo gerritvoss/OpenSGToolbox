@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,12 +67,8 @@
 
 #include <OpenSG/OSGCameraDecorator.h> // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // PositionConstant type
-#include <OpenSG/OSGReal32Fields.h> // PositionLinear type
-#include <OpenSG/OSGReal32Fields.h> // PositionQuadratic type
-#include <OpenSG/OSGReal32Fields.h> // OrientationConstant type
-#include <OpenSG/OSGReal32Fields.h> // OrientationLinear type
-#include <OpenSG/OSGReal32Fields.h> // OrientationQuadratic type
+#include <OpenSG/OSGVec3fFields.h> // PositionCoefficients type
+#include <OpenSG/OSGVec3fFields.h> // OrientationCoefficients type
 
 #include "OSGRubberBandCameraFields.h"
 
@@ -96,21 +92,13 @@ class OSG_GAMELIB_DLLMAPPING RubberBandCameraBase : public CameraDecorator
 
     enum
     {
-        PositionConstantFieldId     = Inherited::NextFieldId,
-        PositionLinearFieldId       = PositionConstantFieldId     + 1,
-        PositionQuadraticFieldId    = PositionLinearFieldId       + 1,
-        OrientationConstantFieldId  = PositionQuadraticFieldId    + 1,
-        OrientationLinearFieldId    = OrientationConstantFieldId  + 1,
-        OrientationQuadraticFieldId = OrientationLinearFieldId    + 1,
-        NextFieldId                 = OrientationQuadraticFieldId + 1
+        PositionCoefficientsFieldId    = Inherited::NextFieldId,
+        OrientationCoefficientsFieldId = PositionCoefficientsFieldId    + 1,
+        NextFieldId                    = OrientationCoefficientsFieldId + 1
     };
 
-    static const OSG::BitVector PositionConstantFieldMask;
-    static const OSG::BitVector PositionLinearFieldMask;
-    static const OSG::BitVector PositionQuadraticFieldMask;
-    static const OSG::BitVector OrientationConstantFieldMask;
-    static const OSG::BitVector OrientationLinearFieldMask;
-    static const OSG::BitVector OrientationQuadraticFieldMask;
+    static const OSG::BitVector PositionCoefficientsFieldMask;
+    static const OSG::BitVector OrientationCoefficientsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -137,37 +125,21 @@ class OSG_GAMELIB_DLLMAPPING RubberBandCameraBase : public CameraDecorator
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-    virtual       SFReal32            *getSFPositionConstant(void);
-    virtual       SFReal32            *getSFPositionLinear (void);
-    virtual       SFReal32            *getSFPositionQuadratic(void);
-    virtual       SFReal32            *getSFOrientationConstant(void);
-    virtual       SFReal32            *getSFOrientationLinear(void);
-    virtual       SFReal32            *getSFOrientationQuadratic(void);
+    virtual       SFVec3f             *getSFPositionCoefficients(void);
+    virtual       SFVec3f             *getSFOrientationCoefficients(void);
 
-    virtual       Real32              &getPositionConstant(void);
-    virtual const Real32              &getPositionConstant(void) const;
-    virtual       Real32              &getPositionLinear (void);
-    virtual const Real32              &getPositionLinear (void) const;
-    virtual       Real32              &getPositionQuadratic(void);
-    virtual const Real32              &getPositionQuadratic(void) const;
-    virtual       Real32              &getOrientationConstant(void);
-    virtual const Real32              &getOrientationConstant(void) const;
-    virtual       Real32              &getOrientationLinear(void);
-    virtual const Real32              &getOrientationLinear(void) const;
-    virtual       Real32              &getOrientationQuadratic(void);
-    virtual const Real32              &getOrientationQuadratic(void) const;
+    virtual       Vec3f               &getPositionCoefficients(void);
+    virtual const Vec3f               &getPositionCoefficients(void) const;
+    virtual       Vec3f               &getOrientationCoefficients(void);
+    virtual const Vec3f               &getOrientationCoefficients(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-    virtual void setPositionConstant( const Real32 &value );
-    virtual void setPositionLinear ( const Real32 &value );
-    virtual void setPositionQuadratic( const Real32 &value );
-    virtual void setOrientationConstant( const Real32 &value );
-    virtual void setOrientationLinear( const Real32 &value );
-    virtual void setOrientationQuadratic( const Real32 &value );
+    virtual void setPositionCoefficients( const Vec3f &value );
+    virtual void setOrientationCoefficients( const Vec3f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -210,12 +182,8 @@ class OSG_GAMELIB_DLLMAPPING RubberBandCameraBase : public CameraDecorator
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfPositionConstant;
-    SFReal32            _sfPositionLinear;
-    SFReal32            _sfPositionQuadratic;
-    SFReal32            _sfOrientationConstant;
-    SFReal32            _sfOrientationLinear;
-    SFReal32            _sfOrientationQuadratic;
+    SFVec3f             _sfPositionCoefficients;
+    SFVec3f             _sfOrientationCoefficients;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

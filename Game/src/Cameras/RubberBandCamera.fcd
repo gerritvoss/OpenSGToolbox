@@ -3,7 +3,7 @@
 <FieldContainer
 	name="RubberBandCamera"
 	parent="CameraDecorator"
-	library="Toolbox"
+	library="Game"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
@@ -13,48 +13,16 @@
 >
 Rubber Band Camera.
 	<Field
-		name="PositionConstant"
-		type="Real32"
+		name="PositionCoefficients"
+		type="Vec3f"
 		cardinality="single"
 		visibility="external"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="PositionLinear"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="PositionQuadratic"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="OrientationConstant"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="OrientationLinear"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="OrientationQuadratic"
-		type="Real32"
+		name="OrientationCoefficients"
+		type="Vec3f"
 		cardinality="single"
 		visibility="external"
 		access="public"

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,23 +64,11 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RubberBandCameraBase::PositionConstantFieldMask = 
-    (TypeTraits<BitVector>::One << RubberBandCameraBase::PositionConstantFieldId);
+const OSG::BitVector  RubberBandCameraBase::PositionCoefficientsFieldMask = 
+    (TypeTraits<BitVector>::One << RubberBandCameraBase::PositionCoefficientsFieldId);
 
-const OSG::BitVector  RubberBandCameraBase::PositionLinearFieldMask = 
-    (TypeTraits<BitVector>::One << RubberBandCameraBase::PositionLinearFieldId);
-
-const OSG::BitVector  RubberBandCameraBase::PositionQuadraticFieldMask = 
-    (TypeTraits<BitVector>::One << RubberBandCameraBase::PositionQuadraticFieldId);
-
-const OSG::BitVector  RubberBandCameraBase::OrientationConstantFieldMask = 
-    (TypeTraits<BitVector>::One << RubberBandCameraBase::OrientationConstantFieldId);
-
-const OSG::BitVector  RubberBandCameraBase::OrientationLinearFieldMask = 
-    (TypeTraits<BitVector>::One << RubberBandCameraBase::OrientationLinearFieldId);
-
-const OSG::BitVector  RubberBandCameraBase::OrientationQuadraticFieldMask = 
-    (TypeTraits<BitVector>::One << RubberBandCameraBase::OrientationQuadraticFieldId);
+const OSG::BitVector  RubberBandCameraBase::OrientationCoefficientsFieldMask = 
+    (TypeTraits<BitVector>::One << RubberBandCameraBase::OrientationCoefficientsFieldId);
 
 const OSG::BitVector RubberBandCameraBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -89,22 +77,10 @@ const OSG::BitVector RubberBandCameraBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Real32          RubberBandCameraBase::_sfPositionConstant
+/*! \var Vec3f           RubberBandCameraBase::_sfPositionCoefficients
     
 */
-/*! \var Real32          RubberBandCameraBase::_sfPositionLinear
-    
-*/
-/*! \var Real32          RubberBandCameraBase::_sfPositionQuadratic
-    
-*/
-/*! \var Real32          RubberBandCameraBase::_sfOrientationConstant
-    
-*/
-/*! \var Real32          RubberBandCameraBase::_sfOrientationLinear
-    
-*/
-/*! \var Real32          RubberBandCameraBase::_sfOrientationQuadratic
+/*! \var Vec3f           RubberBandCameraBase::_sfOrientationCoefficients
     
 */
 
@@ -112,36 +88,16 @@ const OSG::BitVector RubberBandCameraBase::MTInfluenceMask =
 
 FieldDescription *RubberBandCameraBase::_desc[] = 
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "PositionConstant", 
-                     PositionConstantFieldId, PositionConstantFieldMask,
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "PositionCoefficients", 
+                     PositionCoefficientsFieldId, PositionCoefficientsFieldMask,
                      false,
-                     (FieldAccessMethod) &RubberBandCameraBase::getSFPositionConstant),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "PositionLinear", 
-                     PositionLinearFieldId, PositionLinearFieldMask,
+                     (FieldAccessMethod) &RubberBandCameraBase::getSFPositionCoefficients),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "OrientationCoefficients", 
+                     OrientationCoefficientsFieldId, OrientationCoefficientsFieldMask,
                      false,
-                     (FieldAccessMethod) &RubberBandCameraBase::getSFPositionLinear),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "PositionQuadratic", 
-                     PositionQuadraticFieldId, PositionQuadraticFieldMask,
-                     false,
-                     (FieldAccessMethod) &RubberBandCameraBase::getSFPositionQuadratic),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "OrientationConstant", 
-                     OrientationConstantFieldId, OrientationConstantFieldMask,
-                     false,
-                     (FieldAccessMethod) &RubberBandCameraBase::getSFOrientationConstant),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "OrientationLinear", 
-                     OrientationLinearFieldId, OrientationLinearFieldMask,
-                     false,
-                     (FieldAccessMethod) &RubberBandCameraBase::getSFOrientationLinear),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "OrientationQuadratic", 
-                     OrientationQuadraticFieldId, OrientationQuadraticFieldMask,
-                     false,
-                     (FieldAccessMethod) &RubberBandCameraBase::getSFOrientationQuadratic)
+                     (FieldAccessMethod) &RubberBandCameraBase::getSFOrientationCoefficients)
 };
 
 
@@ -217,12 +173,8 @@ void RubberBandCameraBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 RubberBandCameraBase::RubberBandCameraBase(void) :
-    _sfPositionConstant       (), 
-    _sfPositionLinear         (), 
-    _sfPositionQuadratic      (), 
-    _sfOrientationConstant    (), 
-    _sfOrientationLinear      (), 
-    _sfOrientationQuadratic   (), 
+    _sfPositionCoefficients   (), 
+    _sfOrientationCoefficients(), 
     Inherited() 
 {
 }
@@ -232,12 +184,8 @@ RubberBandCameraBase::RubberBandCameraBase(void) :
 #endif
 
 RubberBandCameraBase::RubberBandCameraBase(const RubberBandCameraBase &source) :
-    _sfPositionConstant       (source._sfPositionConstant       ), 
-    _sfPositionLinear         (source._sfPositionLinear         ), 
-    _sfPositionQuadratic      (source._sfPositionQuadratic      ), 
-    _sfOrientationConstant    (source._sfOrientationConstant    ), 
-    _sfOrientationLinear      (source._sfOrientationLinear      ), 
-    _sfOrientationQuadratic   (source._sfOrientationQuadratic   ), 
+    _sfPositionCoefficients   (source._sfPositionCoefficients   ), 
+    _sfOrientationCoefficients(source._sfOrientationCoefficients), 
     Inherited                 (source)
 {
 }
@@ -254,34 +202,14 @@ UInt32 RubberBandCameraBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (PositionConstantFieldMask & whichField))
+    if(FieldBits::NoField != (PositionCoefficientsFieldMask & whichField))
     {
-        returnValue += _sfPositionConstant.getBinSize();
+        returnValue += _sfPositionCoefficients.getBinSize();
     }
 
-    if(FieldBits::NoField != (PositionLinearFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationCoefficientsFieldMask & whichField))
     {
-        returnValue += _sfPositionLinear.getBinSize();
-    }
-
-    if(FieldBits::NoField != (PositionQuadraticFieldMask & whichField))
-    {
-        returnValue += _sfPositionQuadratic.getBinSize();
-    }
-
-    if(FieldBits::NoField != (OrientationConstantFieldMask & whichField))
-    {
-        returnValue += _sfOrientationConstant.getBinSize();
-    }
-
-    if(FieldBits::NoField != (OrientationLinearFieldMask & whichField))
-    {
-        returnValue += _sfOrientationLinear.getBinSize();
-    }
-
-    if(FieldBits::NoField != (OrientationQuadraticFieldMask & whichField))
-    {
-        returnValue += _sfOrientationQuadratic.getBinSize();
+        returnValue += _sfOrientationCoefficients.getBinSize();
     }
 
 
@@ -293,34 +221,14 @@ void RubberBandCameraBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (PositionConstantFieldMask & whichField))
+    if(FieldBits::NoField != (PositionCoefficientsFieldMask & whichField))
     {
-        _sfPositionConstant.copyToBin(pMem);
+        _sfPositionCoefficients.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (PositionLinearFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationCoefficientsFieldMask & whichField))
     {
-        _sfPositionLinear.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (PositionQuadraticFieldMask & whichField))
-    {
-        _sfPositionQuadratic.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OrientationConstantFieldMask & whichField))
-    {
-        _sfOrientationConstant.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OrientationLinearFieldMask & whichField))
-    {
-        _sfOrientationLinear.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OrientationQuadraticFieldMask & whichField))
-    {
-        _sfOrientationQuadratic.copyToBin(pMem);
+        _sfOrientationCoefficients.copyToBin(pMem);
     }
 
 
@@ -331,34 +239,14 @@ void RubberBandCameraBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (PositionConstantFieldMask & whichField))
+    if(FieldBits::NoField != (PositionCoefficientsFieldMask & whichField))
     {
-        _sfPositionConstant.copyFromBin(pMem);
+        _sfPositionCoefficients.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (PositionLinearFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationCoefficientsFieldMask & whichField))
     {
-        _sfPositionLinear.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (PositionQuadraticFieldMask & whichField))
-    {
-        _sfPositionQuadratic.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OrientationConstantFieldMask & whichField))
-    {
-        _sfOrientationConstant.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OrientationLinearFieldMask & whichField))
-    {
-        _sfOrientationLinear.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (OrientationQuadraticFieldMask & whichField))
-    {
-        _sfOrientationQuadratic.copyFromBin(pMem);
+        _sfOrientationCoefficients.copyFromBin(pMem);
     }
 
 
@@ -371,23 +259,11 @@ void RubberBandCameraBase::executeSyncImpl(      RubberBandCameraBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (PositionConstantFieldMask & whichField))
-        _sfPositionConstant.syncWith(pOther->_sfPositionConstant);
+    if(FieldBits::NoField != (PositionCoefficientsFieldMask & whichField))
+        _sfPositionCoefficients.syncWith(pOther->_sfPositionCoefficients);
 
-    if(FieldBits::NoField != (PositionLinearFieldMask & whichField))
-        _sfPositionLinear.syncWith(pOther->_sfPositionLinear);
-
-    if(FieldBits::NoField != (PositionQuadraticFieldMask & whichField))
-        _sfPositionQuadratic.syncWith(pOther->_sfPositionQuadratic);
-
-    if(FieldBits::NoField != (OrientationConstantFieldMask & whichField))
-        _sfOrientationConstant.syncWith(pOther->_sfOrientationConstant);
-
-    if(FieldBits::NoField != (OrientationLinearFieldMask & whichField))
-        _sfOrientationLinear.syncWith(pOther->_sfOrientationLinear);
-
-    if(FieldBits::NoField != (OrientationQuadraticFieldMask & whichField))
-        _sfOrientationQuadratic.syncWith(pOther->_sfOrientationQuadratic);
+    if(FieldBits::NoField != (OrientationCoefficientsFieldMask & whichField))
+        _sfOrientationCoefficients.syncWith(pOther->_sfOrientationCoefficients);
 
 
 }
@@ -399,23 +275,11 @@ void RubberBandCameraBase::executeSyncImpl(      RubberBandCameraBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (PositionConstantFieldMask & whichField))
-        _sfPositionConstant.syncWith(pOther->_sfPositionConstant);
+    if(FieldBits::NoField != (PositionCoefficientsFieldMask & whichField))
+        _sfPositionCoefficients.syncWith(pOther->_sfPositionCoefficients);
 
-    if(FieldBits::NoField != (PositionLinearFieldMask & whichField))
-        _sfPositionLinear.syncWith(pOther->_sfPositionLinear);
-
-    if(FieldBits::NoField != (PositionQuadraticFieldMask & whichField))
-        _sfPositionQuadratic.syncWith(pOther->_sfPositionQuadratic);
-
-    if(FieldBits::NoField != (OrientationConstantFieldMask & whichField))
-        _sfOrientationConstant.syncWith(pOther->_sfOrientationConstant);
-
-    if(FieldBits::NoField != (OrientationLinearFieldMask & whichField))
-        _sfOrientationLinear.syncWith(pOther->_sfOrientationLinear);
-
-    if(FieldBits::NoField != (OrientationQuadraticFieldMask & whichField))
-        _sfOrientationQuadratic.syncWith(pOther->_sfOrientationQuadratic);
+    if(FieldBits::NoField != (OrientationCoefficientsFieldMask & whichField))
+        _sfOrientationCoefficients.syncWith(pOther->_sfOrientationCoefficients);
 
 
 
@@ -433,148 +297,52 @@ void RubberBandCameraBase::execBeginEditImpl (const BitVector &whichField,
 /*------------------------------ get -----------------------------------*/
 
 OSG_GAMELIB_DLLMAPPING
-SFReal32 *RubberBandCameraBase::getSFPositionConstant(void)
+SFVec3f *RubberBandCameraBase::getSFPositionCoefficients(void)
 {
-    return &_sfPositionConstant;
+    return &_sfPositionCoefficients;
 }
 
 OSG_GAMELIB_DLLMAPPING
-SFReal32 *RubberBandCameraBase::getSFPositionLinear(void)
+SFVec3f *RubberBandCameraBase::getSFOrientationCoefficients(void)
 {
-    return &_sfPositionLinear;
-}
-
-OSG_GAMELIB_DLLMAPPING
-SFReal32 *RubberBandCameraBase::getSFPositionQuadratic(void)
-{
-    return &_sfPositionQuadratic;
-}
-
-OSG_GAMELIB_DLLMAPPING
-SFReal32 *RubberBandCameraBase::getSFOrientationConstant(void)
-{
-    return &_sfOrientationConstant;
-}
-
-OSG_GAMELIB_DLLMAPPING
-SFReal32 *RubberBandCameraBase::getSFOrientationLinear(void)
-{
-    return &_sfOrientationLinear;
-}
-
-OSG_GAMELIB_DLLMAPPING
-SFReal32 *RubberBandCameraBase::getSFOrientationQuadratic(void)
-{
-    return &_sfOrientationQuadratic;
+    return &_sfOrientationCoefficients;
 }
 
 
 OSG_GAMELIB_DLLMAPPING
-Real32 &RubberBandCameraBase::getPositionConstant(void)
+Vec3f &RubberBandCameraBase::getPositionCoefficients(void)
 {
-    return _sfPositionConstant.getValue();
+    return _sfPositionCoefficients.getValue();
 }
 
 OSG_GAMELIB_DLLMAPPING
-const Real32 &RubberBandCameraBase::getPositionConstant(void) const
+const Vec3f &RubberBandCameraBase::getPositionCoefficients(void) const
 {
-    return _sfPositionConstant.getValue();
+    return _sfPositionCoefficients.getValue();
 }
 
 OSG_GAMELIB_DLLMAPPING
-void RubberBandCameraBase::setPositionConstant(const Real32 &value)
+void RubberBandCameraBase::setPositionCoefficients(const Vec3f &value)
 {
-    _sfPositionConstant.setValue(value);
+    _sfPositionCoefficients.setValue(value);
 }
 
 OSG_GAMELIB_DLLMAPPING
-Real32 &RubberBandCameraBase::getPositionLinear(void)
+Vec3f &RubberBandCameraBase::getOrientationCoefficients(void)
 {
-    return _sfPositionLinear.getValue();
+    return _sfOrientationCoefficients.getValue();
 }
 
 OSG_GAMELIB_DLLMAPPING
-const Real32 &RubberBandCameraBase::getPositionLinear(void) const
+const Vec3f &RubberBandCameraBase::getOrientationCoefficients(void) const
 {
-    return _sfPositionLinear.getValue();
+    return _sfOrientationCoefficients.getValue();
 }
 
 OSG_GAMELIB_DLLMAPPING
-void RubberBandCameraBase::setPositionLinear(const Real32 &value)
+void RubberBandCameraBase::setOrientationCoefficients(const Vec3f &value)
 {
-    _sfPositionLinear.setValue(value);
-}
-
-OSG_GAMELIB_DLLMAPPING
-Real32 &RubberBandCameraBase::getPositionQuadratic(void)
-{
-    return _sfPositionQuadratic.getValue();
-}
-
-OSG_GAMELIB_DLLMAPPING
-const Real32 &RubberBandCameraBase::getPositionQuadratic(void) const
-{
-    return _sfPositionQuadratic.getValue();
-}
-
-OSG_GAMELIB_DLLMAPPING
-void RubberBandCameraBase::setPositionQuadratic(const Real32 &value)
-{
-    _sfPositionQuadratic.setValue(value);
-}
-
-OSG_GAMELIB_DLLMAPPING
-Real32 &RubberBandCameraBase::getOrientationConstant(void)
-{
-    return _sfOrientationConstant.getValue();
-}
-
-OSG_GAMELIB_DLLMAPPING
-const Real32 &RubberBandCameraBase::getOrientationConstant(void) const
-{
-    return _sfOrientationConstant.getValue();
-}
-
-OSG_GAMELIB_DLLMAPPING
-void RubberBandCameraBase::setOrientationConstant(const Real32 &value)
-{
-    _sfOrientationConstant.setValue(value);
-}
-
-OSG_GAMELIB_DLLMAPPING
-Real32 &RubberBandCameraBase::getOrientationLinear(void)
-{
-    return _sfOrientationLinear.getValue();
-}
-
-OSG_GAMELIB_DLLMAPPING
-const Real32 &RubberBandCameraBase::getOrientationLinear(void) const
-{
-    return _sfOrientationLinear.getValue();
-}
-
-OSG_GAMELIB_DLLMAPPING
-void RubberBandCameraBase::setOrientationLinear(const Real32 &value)
-{
-    _sfOrientationLinear.setValue(value);
-}
-
-OSG_GAMELIB_DLLMAPPING
-Real32 &RubberBandCameraBase::getOrientationQuadratic(void)
-{
-    return _sfOrientationQuadratic.getValue();
-}
-
-OSG_GAMELIB_DLLMAPPING
-const Real32 &RubberBandCameraBase::getOrientationQuadratic(void) const
-{
-    return _sfOrientationQuadratic.getValue();
-}
-
-OSG_GAMELIB_DLLMAPPING
-void RubberBandCameraBase::setOrientationQuadratic(const Real32 &value)
-{
-    _sfOrientationQuadratic.setValue(value);
+    _sfOrientationCoefficients.setValue(value);
 }
 
 

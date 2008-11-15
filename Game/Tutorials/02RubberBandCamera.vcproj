@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="OSGGame"
-	ProjectGUID="{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
-	RootNamespace="OSGAnimation"
+	Name="02RubberBandCamera"
+	ProjectGUID="{77623743-1948-4AC4-8227-7FF6072BD16F}"
+	RootNamespace="02RubberBandCamera"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -17,21 +17,17 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
-			ConfigurationType="2"
+			OutputDirectory="Windows/Debug"
+			IntermediateDirectory="Windows/Debug"
+			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Installing Includes"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Game&#x0D;&#x0A;"
-				Outputs="include"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -44,13 +40,12 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEGAMELIB"
+				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\Builds\Windows\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG"
 				StringPooling="true"
-				MinimalRebuild="false"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="false"
@@ -75,15 +70,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib OSGDynamicsD.lib OSGUserInterfaceD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
-				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
-				LinkIncremental="2"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGUserInterfaceD.lib OSGInputD.lib OSGGameD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				OutputFile="$(ProjectName)D.exe"
+				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;$(BOOST_BASE_DIR)\lib"
+				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName)D.pdb"
 				SubSystem="1"
-				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
+				ImportLibrary="$(OutDir)/$(ProjectName)D.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -113,9 +108,9 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
-			ConfigurationType="2"
+			OutputDirectory="Windows\Release"
+			IntermediateDirectory="Windows\Release"
+			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="0"
 			>
@@ -124,8 +119,6 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Game&#x0D;&#x0A;"
-				Outputs="include"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -138,12 +131,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
-				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEGAMELIB"
+				AdditionalIncludeDirectories="$(BOOST_BASE_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\Builds\Windows\include"
+				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG"
 				StringPooling="true"
-				MinimalRebuild="false"
+				MinimalRebuild="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
@@ -167,18 +159,18 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib OSGDynamics.lib OSGUserInterface.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
-				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGUserInterface.lib OSGInput.lib OSGGame.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				OutputFile="$(ProjectName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;$(BOOST_BASE_DIR)\lib"
+				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
+				ImportLibrary="lib/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -215,69 +207,9 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\..\src\OSGGameDef.h"
+				RelativePath=".\02RubberBandCamera.cpp"
 				>
 			</File>
-			<Filter
-				Name="Cameras"
-				>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraFields.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

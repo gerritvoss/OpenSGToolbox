@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -60,7 +60,7 @@ class OSG_GAMELIB_DLLMAPPING RubberBandCamera : public RubberBandCameraBase
 
     virtual void getViewing              (Matrix        &result, 
                                            UInt32 width, UInt32 height);
-    void update              (Real32 Elps);
+    void update              (const Real32& Elps);
     void setToBeacon(void);
 
     /*---------------------------------------------------------------------*/

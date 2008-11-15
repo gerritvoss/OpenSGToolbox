@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,7 +98,7 @@ void RubberBandCamera::setBeacon     (     const NodePtr &       value    )
    }
 }
 
-void RubberBandCamera::update              (Real32 Elps)
+void RubberBandCamera::update(const Real32& Elps)
 {
    if (getBeacon() == NullFC)
    {
@@ -131,7 +131,7 @@ void RubberBandCamera::update              (Real32 Elps)
    //Position
    Vec3f Direction = (ToPosition - FromPosition);
    Real32 DirLength = Direction.length();
-   Real32 PullLength = (getPositionConstant() + DirLength*getPositionLinear() + DirLength*DirLength*getPositionQuadratic()) * Elps;
+   Real32 PullLength = (getPositionCoefficients()[0] + DirLength*getPositionCoefficients()[1] + DirLength*DirLength*getPositionCoefficients()[2]) * Elps;
    //Real32 DistanceTraveling = getPositionConstant() + Elps*getPositionLinear() + Elps*Elps*getPositionQuadratic();
    Vec3f Position;
 
@@ -149,7 +149,7 @@ void RubberBandCamera::update              (Real32 Elps)
    Real32 RotDirLength, Garbage;
    RotDirection.getValueAsAxisRad(Garbage, Garbage, Garbage, RotDirLength);
    
-   Real32 RotPullLength = (getOrientationConstant() + RotDirLength*getOrientationLinear() + RotDirLength*RotDirLength*getOrientationQuadratic()) * Elps;
+   Real32 RotPullLength = (getOrientationCoefficients()[0] + RotDirLength*getOrientationCoefficients()[1] + RotDirLength*RotDirLength*getOrientationCoefficients()[2]) * Elps;
 
    Quaternion Orientation;
 
