@@ -63,6 +63,10 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGPolygonUIDrawObject.h>
 #include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
 
+// MiniMap Headers
+#include <OpenSG/Game/OSGLayeredImageMiniMap.h>
+
+
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
@@ -131,10 +135,19 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
                                         Vec2f(550,550),
-                                        "OpenSG 01Button Window");
+                                        "OpenSG 01MiniMap Window");
 										
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+
+
+	// Make Layered Image Mini Map
+	LayeredImageMiniMapPtr MiniMap = osg::LayeredImageMiniMap::create();
+
+	// Setup the size and other preferences to the minimap
+	beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask);
+	    MiniMap->setPreferredSize(Pnt2f(150,150));
+	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask);
 
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
@@ -159,7 +172,8 @@ int main(int argc, char **argv)
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
+       MainInternalWindow->getChildren().push_back(MiniMap);
+	   MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
