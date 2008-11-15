@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="MiniMapIndicator"
+	parent="FieldContainer"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A MiniMapIndicator.
+</FieldContainer>

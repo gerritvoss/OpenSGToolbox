@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="LayeredImageMiniMap"
+	parent="MiniMap"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A LayeredImageMiniMap.
+	<Field
+		name="Overlay"
+		type="MiniMapOverlayPtr"
+		cardinality="multi"
+		visibility="external"
+		header="MiniMap/OSGMiniMapOverlay.h"
+		access="public"
+	>
+	</Field>
+
+</FieldContainer>

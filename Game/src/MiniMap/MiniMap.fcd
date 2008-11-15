@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="MiniMap"
+	parent="Component"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Minimap.
+	<Field
+		name="Transformation"
+		type="MiniMapTransformationPtr"
+		cardinality="single"
+		visibility="external"
+		header="MiniMap/OSGMiniMapTransformation.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Indicator"
+		type="MiniMapIndicatorPtr"
+		cardinality="multi"
+		visibility="external"
+		header="MiniMap/OSGMiniMapIndicator.h"
+		access="public"
+	>
+	</Field>
+
+</FieldContainer>
