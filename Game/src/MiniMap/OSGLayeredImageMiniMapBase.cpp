@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -80,7 +80,7 @@ const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask =
 /*! \var MiniMapOverlayPtr LayeredImageMiniMapBase::_mfOverlay
     
 */
-/*! \var TexturePtr      LayeredImageMiniMapBase::_mfLayerTextures
+/*! \var TextureChunkPtr LayeredImageMiniMapBase::_mfLayerTextures
     
 */
 
@@ -93,7 +93,7 @@ FieldDescription *LayeredImageMiniMapBase::_desc[] =
                      OverlayFieldId, OverlayFieldMask,
                      false,
                      (FieldAccessMethod) &LayeredImageMiniMapBase::getMFOverlay),
-    new FieldDescription(MFTexturePtr::getClassType(), 
+    new FieldDescription(MFTextureChunkPtr::getClassType(), 
                      "LayerTextures", 
                      LayerTexturesFieldId, LayerTexturesFieldMask,
                      false,

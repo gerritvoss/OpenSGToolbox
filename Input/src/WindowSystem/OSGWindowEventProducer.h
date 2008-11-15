@@ -298,6 +298,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     virtual bool attachWindow(void) = 0;
 
 	virtual UInt32 getKeyModifiers(void) const = 0;
+	virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const = 0;
     
 	virtual Pnt2f getMousePosition(void) const = 0;
 

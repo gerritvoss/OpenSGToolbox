@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,7 +68,7 @@
 #include "OSGMiniMap.h" // Parent
 
 #include "MiniMap/OSGMiniMapOverlay.h" // Overlay type
-#include <OpenSG/OSGTextureFields.h> // LayerTextures type
+#include <OpenSG/OSGTextureChunkFields.h> // LayerTextures type
 
 #include "OSGLayeredImageMiniMapFields.h"
 
@@ -126,14 +126,14 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \{                                                                 */
 
            MFMiniMapOverlayPtr *getMFOverlay        (void);
-           MFTexturePtr        *getMFLayerTextures  (void);
+           MFTextureChunkPtr   *getMFLayerTextures  (void);
 
            MiniMapOverlayPtr   &getOverlay        (const UInt32 index);
            MFMiniMapOverlayPtr &getOverlay        (void);
      const MFMiniMapOverlayPtr &getOverlay        (void) const;
-           TexturePtr          &getLayerTextures  (const UInt32 index);
-           MFTexturePtr        &getLayerTextures  (void);
-     const MFTexturePtr        &getLayerTextures  (void) const;
+           TextureChunkPtr     &getLayerTextures  (const UInt32 index);
+           MFTextureChunkPtr   &getLayerTextures  (void);
+     const MFTextureChunkPtr   &getLayerTextures  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -183,7 +183,7 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \{                                                                 */
 
     MFMiniMapOverlayPtr   _mfOverlay;
-    MFTexturePtr        _mfLayerTextures;
+    MFTextureChunkPtr   _mfLayerTextures;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

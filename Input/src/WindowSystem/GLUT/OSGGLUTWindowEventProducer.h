@@ -174,6 +174,7 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     virtual bool attachWindow(void);
 
 	virtual UInt32 getKeyModifiers(void) const;
+	virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const;
 	virtual Pnt2f getMousePosition(void) const;
 	
 	virtual std::string getClipboard(void) const;

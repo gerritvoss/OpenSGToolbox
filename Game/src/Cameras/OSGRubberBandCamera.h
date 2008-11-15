@@ -79,7 +79,6 @@ class OSG_GAMELIB_DLLMAPPING RubberBandCamera : public RubberBandCameraBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void setBeacon     (     const NodePtr &       value    );
     /*=========================  PROTECTED  ===============================*/
   protected:
 

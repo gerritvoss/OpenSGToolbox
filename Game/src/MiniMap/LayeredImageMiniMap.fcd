@@ -23,7 +23,7 @@ A LayeredImageMiniMap.
 	</Field>
 	<Field
 		name="LayerTextures"
-		type="TexturePtr"
+		type="TextureChunkPtr"
 		cardinality="multi"
 		visibility="external"
 		access="public"

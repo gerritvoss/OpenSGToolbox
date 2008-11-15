@@ -198,6 +198,12 @@ class OSG_INPUTLIB_DLLMAPPING KeyEvent : public InputEvent
          KEY_Y,
          KEY_Z
       };
+	  enum KeyState
+      {
+		  KEY_STATE_UP,
+		  KEY_STATE_DOWN,
+		  KEY_STATE_TOGGLED
+	  };
 
     struct ModifiedKey
     {

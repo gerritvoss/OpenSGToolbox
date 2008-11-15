@@ -267,6 +267,12 @@ Pnt2f GLUTWindowEventProducer::getMousePosition(void) const
 	return Pnt2f(0,0);
 }
 
+KeyEvent::KeyState GLUTWindowEventProducer::getKeyState(KeyEvent::Key TheKey) const
+{
+	//TODO:Implement
+	return KeyEvent::KEY_STATE_UP;
+}
+
 Path GLUTWindowEventProducer::saveFileDialog(const std::string& DialogTitle,
                 const std::vector<FileDialogFilter>& Filters,
                 const Path& InitialFile,

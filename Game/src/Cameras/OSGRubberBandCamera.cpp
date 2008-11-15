@@ -86,18 +86,6 @@ void RubberBandCamera::getViewing              (Matrix        &result,
    }
 }
 
-void RubberBandCamera::setBeacon     (     const NodePtr &       value    )
-{
-   if(getDecoratee() != osg::NullFC)
-   {
-      CameraDecorator::setBeacon(value);
-   }
-   else
-   {
-      Camera::setBeacon(value);
-   }
-}
-
 void RubberBandCamera::update(const Real32& Elps)
 {
    if (getBeacon() == NullFC)
@@ -166,13 +154,25 @@ void RubberBandCamera::update(const Real32& Elps)
 
 void RubberBandCamera::setToBeacon(void)
 {
-   Vec3f Position;
-   Quaternion Orientation;
+   //Get Transformation
+   osg::Matrix BeaconTransformation;
+   if(getDecoratee() != osg::NullFC)
+   {
+      getDecoratee()->getViewing(BeaconTransformation, 0, 0);
+   }
+   else
+   {
+      BeaconTransformation = getBeacon()->getToWorld();
+   }
+
+   //Get Beacon Position and Orientation
+   Vec3f ToPosition;
+   Quaternion ToOrientation;
    Vec3f Scale;
    Quaternion ScaleOrientation;
-   getBeacon()->getToWorld().getTransform(Position, Orientation, Scale, ScaleOrientation);
+   BeaconTransformation.getTransform(ToPosition, ToOrientation, Scale, ScaleOrientation);
 
-   _Matrix.setTransform(Position, Orientation);
+   _Matrix.setTransform(ToPosition, ToOrientation);
 }
 
 /***************************************************************************\

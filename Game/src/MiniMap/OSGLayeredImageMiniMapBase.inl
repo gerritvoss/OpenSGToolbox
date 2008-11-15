@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -105,7 +105,7 @@ MFMiniMapOverlayPtr *LayeredImageMiniMapBase::getMFOverlay(void)
 
 //! Get the LayeredImageMiniMap::_mfLayerTextures field.
 inline
-MFTexturePtr *LayeredImageMiniMapBase::getMFLayerTextures(void)
+MFTextureChunkPtr *LayeredImageMiniMapBase::getMFLayerTextures(void)
 {
     return &_mfLayerTextures;
 }
@@ -135,21 +135,21 @@ const MFMiniMapOverlayPtr &LayeredImageMiniMapBase::getOverlay(void) const
 
 //! Get the value of the \a index element the LayeredImageMiniMap::_mfLayerTextures field.
 inline
-TexturePtr &LayeredImageMiniMapBase::getLayerTextures(const UInt32 index)
+TextureChunkPtr &LayeredImageMiniMapBase::getLayerTextures(const UInt32 index)
 {
     return _mfLayerTextures[index];
 }
 
 //! Get the LayeredImageMiniMap::_mfLayerTextures field.
 inline
-MFTexturePtr &LayeredImageMiniMapBase::getLayerTextures(void)
+MFTextureChunkPtr &LayeredImageMiniMapBase::getLayerTextures(void)
 {
     return _mfLayerTextures;
 }
 
 //! Get the LayeredImageMiniMap::_mfLayerTextures field.
 inline
-const MFTexturePtr &LayeredImageMiniMapBase::getLayerTextures(void) const
+const MFTextureChunkPtr &LayeredImageMiniMapBase::getLayerTextures(void) const
 {
     return _mfLayerTextures;
 }
