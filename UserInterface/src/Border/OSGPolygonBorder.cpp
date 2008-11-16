@@ -46,6 +46,7 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/Toolbox/OSGMathUtils.h>
 
 #include "OSGPolygonBorder.h"
 
@@ -142,66 +143,64 @@ StencilChunkPtr PolygonBorder::getStenciledAreaTest(void)
 \***************************************************************************/
 void PolygonBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
-	/*Pnt2f p1,
-		p2;
-	UInt32 NumVertices(getVertices().size());
-		for(UInt32 i(0) ; i<2*NumVertices ; i=i+2)
-		{
-			g->drawQuad(getDrawnQuads()[i],getDrawnQuads()[i+1], getDrawnQuads()[i+2],getDrawnQuads()[i+3],
-				getColor(),
-				getColor(),
-				getColor(),
-				getColor(),
-				Opacity);
-		}*/
-	//****************
 	Int32 NumVertices(getVertices().size());
 	Pnt2f p1,
-		p2,
-		p3,
-		p4;
+		p2;
+	Pnt2f pi1,pi2;
+	Real32 t1,t2;
+
 	Vec2f Scale(Width,Height);
-	Vec2f QuadEdge, PrevEdge, NextEdge, BeginQuadDir,EndQuadDir, EdgeNormal;
-	glBegin(GL_QUADS);
-		for(Int32 i(0) ; i<NumVertices ; ++i)
+	Vec2f ThisEdge, NextEdge, ThisEdgeOffset, NextEdgeOffset;
+	glBegin(GL_QUAD_STRIP);
+		for(Int32 i(0) ; i<=NumVertices ; ++i)
 		{
-			//Quad i
-			QuadEdge=getVertices()[(i+1)%NumVertices]-getVertices()[i];
-			PrevEdge=getVertices()[i]-getVertices()[(i+NumVertices-1)%NumVertices];
+			//ThisEdge
+			if(i == 0)
+			{
+				ThisEdge=getVertices()[(i+1)%NumVertices]-getVertices()[i%NumVertices];
+				scaleUp(ThisEdge, Scale);
+				
+
+				ThisEdgeOffset.setValues(-ThisEdge.y(), ThisEdge.x());
+				ThisEdgeOffset.normalize();
+				ThisEdgeOffset *= getWidth();
+			}
+			else
+			{
+				ThisEdge = NextEdge;
+				ThisEdgeOffset = NextEdgeOffset;
+			}
+
+			//Next Edge
 			NextEdge=getVertices()[(i+2)%NumVertices]-getVertices()[(i+1)%NumVertices];
-
-			scaleUp(QuadEdge, Scale);
-			scaleUp(PrevEdge, Scale);
 			scaleUp(NextEdge, Scale);
-			//Calculate the direction for the begining of the quad
-			BeginQuadDir = QuadEdge - PrevEdge;
-			BeginQuadDir.normalize();
-			//Calculate the direction for the end of the quad
-			EndQuadDir = NextEdge - QuadEdge;
-			EndQuadDir.normalize();
-			p1 = getVertices()[i];
-			p4 = getVertices()[(i+1)%NumVertices];
-			scaleUp(p1, Scale);
-			scaleUp(p4, Scale);
-			EdgeNormal.setValues(-QuadEdge.y(), QuadEdge.x());
-			EdgeNormal.normalize();
-			EdgeNormal *= getWidth();
-			
-			p2 = p1 + BeginQuadDir*specialProject(BeginQuadDir, QuadEdge, EdgeNormal);
-			p3 = p4+ EndQuadDir*specialProject(EndQuadDir, QuadEdge, EdgeNormal);
 
-			//if(i==0)
-			//{
-				glVertex2fv(p1.getValues());
-				//glVertex2fv((p1 + BeginQuadDir*specialProject(BeginQuadDir, QuadEdge, EdgeNormal)).getValues());
-			//}
-			//glVertex2fv((p2+ EndQuadDir*specialProject(EndQuadDir, QuadEdge, EdgeNormal)).getValues());
+			//Next Edge Offset
+			NextEdgeOffset.setValues(-NextEdge.y(), NextEdge.x());
+			NextEdgeOffset.normalize();
+			NextEdgeOffset *= getWidth();
+
+			p2 = getVertices()[(i+1)%NumVertices];
+			scaleUp(p2, Scale);
+
+
+			//Find the intersecting point of the Offset Edges
+			pi1 = p2+ThisEdgeOffset;
+			pi2 = p2+NextEdgeOffset;
+			if(intersectLines(pi1,ThisEdge,pi2,NextEdge,t1,t2,p1) == -1)
+			{
+				//The edges are coincident
+				//Use pi1
+				p1 = pi1;
+			}
+			
+			
+			glVertex2fv(p1.getValues());
 			glVertex2fv(p2.getValues());
-			glVertex2fv(p3.getValues());
-			glVertex2fv(p4.getValues());
 		}
 		
 	glEnd();
+    activateInternalDrawConstraints(g,x,y,Width,Height);
 }
 
 void PolygonBorder::scaleUp(Pnt2f& TheVector, const Vec2f& Scale) const
@@ -213,11 +212,6 @@ void PolygonBorder::scaleUp(Vec2f& TheVector, const Vec2f& Scale) const
 {
 	TheVector[0] = TheVector[0] *Scale[0];
 	TheVector[1] = TheVector[1] *Scale[1];
-}
-
-Real32 PolygonBorder::specialProject(const Vec2f& a, const Vec2f& b, const Vec2f& c) const
-{
-	return c.length()/osgcos(1.5707963f - osgacos(a*b/(a.length()*b.length())));
 }
 
 void PolygonBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
@@ -237,11 +231,56 @@ void PolygonBorder::activateInternalDrawConstraints(const GraphicsPtr g, const R
     getStenciledAreaSetup()->activate(g->getDrawAction());
 
     glBegin(GL_POLYGON);
+		Pnt2f p1,
+			p2;
+		Pnt2f pi1,pi2;
+		Real32 t1,t2;
+
+		Vec2f Scale(Width,Height);
+		Vec2f ThisEdge, NextEdge, ThisEdgeOffset, NextEdgeOffset;
 		UInt32 NumVertices(getVertices().size());
-		for(UInt32 i(0) ; i<NumVertices ; ++i)
+		for(Int32 i(0) ; i<=NumVertices ; ++i)
 		{
-			glVertex2f(getVertices()[i].x()*Width, getVertices()[i].y()*Height);
-			glVertex2f(getVertices()[(i+1)%NumVertices].x()*Width, getVertices()[(i+1)%NumVertices].y()*Height);
+			//ThisEdge
+			if(i == 0)
+			{
+				ThisEdge=getVertices()[(i+1)%NumVertices]-getVertices()[i%NumVertices];
+				scaleUp(ThisEdge, Scale);
+				
+
+				ThisEdgeOffset.setValues(-ThisEdge.y(), ThisEdge.x());
+				ThisEdgeOffset.normalize();
+				ThisEdgeOffset *= getWidth();
+			}
+			else
+			{
+				ThisEdge = NextEdge;
+				ThisEdgeOffset = NextEdgeOffset;
+			}
+
+			//Next Edge
+			NextEdge=getVertices()[(i+2)%NumVertices]-getVertices()[(i+1)%NumVertices];
+			scaleUp(NextEdge, Scale);
+
+			//Next Edge Offset
+			NextEdgeOffset.setValues(-NextEdge.y(), NextEdge.x());
+			NextEdgeOffset.normalize();
+			NextEdgeOffset *= getWidth();
+
+			p2 = getVertices()[(i+1)%NumVertices];
+			scaleUp(p2, Scale);
+
+
+			//Find the intersecting point of the Offset Edges
+			pi1 = p2+ThisEdgeOffset;
+			pi2 = p2+NextEdgeOffset;
+			if(intersectLines(pi1,ThisEdge,pi2,NextEdge,t1,t2,p1) == -1)
+			{
+				//The edges are coincident
+				//Use pi1
+				p1 = pi1;
+			}
+			glVertex2fv(p1.getValues());
 		}
     glEnd();
 
@@ -252,7 +291,7 @@ void PolygonBorder::activateInternalDrawConstraints(const GraphicsPtr g, const R
     getColorMask()->deactivate(g->getDrawAction());
     
     //Setup testing against the stencil stencil buffer
-    //getStenciledAreaTest()->activate(g->getDrawAction());
+    getStenciledAreaTest()->activate(g->getDrawAction());
 
 	if(DepthTextEnabled) {glEnable(GL_DEPTH_TEST);}
 }
@@ -329,21 +368,21 @@ void PolygonBorder::changed(BitVector whichField, UInt32 origin)
 	if(whichField & VerticesFieldMask)
 	{
 		Int32 NumVertices(getVertices().size());
-		Vec2f QuadEdge, PrevEdge, NextEdge, BeginQuadDir,EndQuadDir;
+		Vec2f ThisEdge, PrevEdge, NextEdge, BeginQuadDir,EndQuadDir;
 		beginEditCP(PolygonBorderPtr(this), DrawnQuadsFieldMask);
 			getDrawnQuads().clear();
 			for(Int32 i(0) ; i<NumVertices ; ++i)
 			{
 				//Quad i
-				QuadEdge=getVertices()[(i+1)%NumVertices]-getVertices()[i];
+				ThisEdge=getVertices()[(i+1)%NumVertices]-getVertices()[i];
 				PrevEdge=getVertices()[i]-getVertices()[(i+NumVertices-1)%NumVertices];
 				NextEdge=getVertices()[(i+1)%NumVertices]-getVertices()[(i+2)%NumVertices];
 
 				//Calculate the direction for the begining of the quad
-				BeginQuadDir = QuadEdge - PrevEdge;
+				BeginQuadDir = ThisEdge - PrevEdge;
 				BeginQuadDir.normalize();
 				//Calculate the direction for the end of the quad
-				EndQuadDir = NextEdge - QuadEdge;
+				EndQuadDir = NextEdge - ThisEdge;
 				EndQuadDir.normalize();
 
 				getDrawnQuads().push_back(getVertices()[i] + BeginQuadDir);

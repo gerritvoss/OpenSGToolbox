@@ -118,7 +118,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonBorder : public PolygonBorderBase
 
 	void scaleUp(Pnt2f& TheVector, const Vec2f& Scale) const;
 	void scaleUp(Vec2f& TheVector, const Vec2f& Scale) const;
-	Real32 specialProject(const Vec2f& a, const Vec2f& b, const Vec2f& c) const;
     
     /*==========================  PRIVATE  ================================*/
   private:
