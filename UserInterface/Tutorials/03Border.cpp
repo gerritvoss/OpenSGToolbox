@@ -432,9 +432,29 @@ int main(int argc, char **argv)
     beginEditCP(ExamplePolygonBorder, PolygonBorder::ColorFieldMask | PolygonBorder::WidthFieldMask | PolygonBorder::VerticesFieldMask );
         ExamplePolygonBorder->setWidth(4.0f);
         ExamplePolygonBorder->setColor(Color4f(1.0, 0.0, 0.0, 1.0));
+        //ExamplePolygonBorder->getVertices().push_back(Vec2f(0.2, 0.2));
+        //ExamplePolygonBorder->getVertices().push_back(Vec2f(1.0, 0.0));
+        //ExamplePolygonBorder->getVertices().push_back(Vec2f(0.0, 1.0));
+		
         ExamplePolygonBorder->getVertices().push_back(Vec2f(0.0, 0.0));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.4, 0.1));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.5, 0.0));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.6, 0.1));
+		
         ExamplePolygonBorder->getVertices().push_back(Vec2f(1.0, 0.0));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.9, 0.4));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(1.0, 0.5));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.9, 0.6));
+		
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(1.0, 1.0));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.6, 0.9));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.5, 1.0));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.4, 0.9));
+		
         ExamplePolygonBorder->getVertices().push_back(Vec2f(0.0, 1.0));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.1, 0.6));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.0, 0.5));
+        ExamplePolygonBorder->getVertices().push_back(Vec2f(0.1, 0.4));
     endEditCP(ExamplePolygonBorder, PolygonBorder::ColorFieldMask | PolygonBorder::WidthFieldMask | PolygonBorder::VerticesFieldMask );
 
     /******************************************************
@@ -539,8 +559,7 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePolygonBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
         ExamplePolygonBorderButton->setPreferredSize(Vec2f(100,50));
-        ExamplePolygonBorderButton->setText("Polygon Border");
-        ExamplePolygonBorderButton->setBackgrounds(NullFC);
+        ExamplePolygonBorderButton->setText("Polygon Border");    
         ExamplePolygonBorderButton->setBorder(ExamplePolygonBorder);
         ExamplePolygonBorderButton->setActiveBorder(ExamplePolygonBorder);
         ExamplePolygonBorderButton->setRolloverBorder(ExamplePolygonBorder);
