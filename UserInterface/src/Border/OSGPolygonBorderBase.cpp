@@ -73,6 +73,9 @@ const OSG::BitVector  PolygonBorderBase::ColorFieldMask =
 const OSG::BitVector  PolygonBorderBase::VerticesFieldMask = 
     (TypeTraits<BitVector>::One << PolygonBorderBase::VerticesFieldId);
 
+const OSG::BitVector  PolygonBorderBase::DrawnQuadsFieldMask = 
+    (TypeTraits<BitVector>::One << PolygonBorderBase::DrawnQuadsFieldId);
+
 const OSG::BitVector PolygonBorderBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,9 @@ const OSG::BitVector PolygonBorderBase::MTInfluenceMask =
     
 */
 /*! \var Pnt2f           PolygonBorderBase::_mfVertices
+    
+*/
+/*! \var Pnt2f           PolygonBorderBase::_mfDrawnQuads
     
 */
 
@@ -108,7 +114,12 @@ FieldDescription *PolygonBorderBase::_desc[] =
                      "Vertices", 
                      VerticesFieldId, VerticesFieldMask,
                      false,
-                     (FieldAccessMethod) &PolygonBorderBase::getMFVertices)
+                     (FieldAccessMethod) &PolygonBorderBase::getMFVertices),
+    new FieldDescription(MFPnt2f::getClassType(), 
+                     "DrawnQuads", 
+                     DrawnQuadsFieldId, DrawnQuadsFieldMask,
+                     false,
+                     (FieldAccessMethod) &PolygonBorderBase::getMFDrawnQuads)
 };
 
 
@@ -175,6 +186,7 @@ void PolygonBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     Inherited::onDestroyAspect(uiId, uiAspect);
 
     _mfVertices.terminateShare(uiAspect, this->getContainerSize());
+    _mfDrawnQuads.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -188,6 +200,7 @@ PolygonBorderBase::PolygonBorderBase(void) :
     _sfWidth                  (Real32(1)), 
     _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
     _mfVertices               (), 
+    _mfDrawnQuads             (), 
     Inherited() 
 {
 }
@@ -200,6 +213,7 @@ PolygonBorderBase::PolygonBorderBase(const PolygonBorderBase &source) :
     _sfWidth                  (source._sfWidth                  ), 
     _sfColor                  (source._sfColor                  ), 
     _mfVertices               (source._mfVertices               ), 
+    _mfDrawnQuads             (source._mfDrawnQuads             ), 
     Inherited                 (source)
 {
 }
@@ -231,6 +245,11 @@ UInt32 PolygonBorderBase::getBinSize(const BitVector &whichField)
         returnValue += _mfVertices.getBinSize();
     }
 
+    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
+    {
+        returnValue += _mfDrawnQuads.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -253,6 +272,11 @@ void PolygonBorderBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (VerticesFieldMask & whichField))
     {
         _mfVertices.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
+    {
+        _mfDrawnQuads.copyToBin(pMem);
     }
 
 
@@ -278,6 +302,11 @@ void PolygonBorderBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfVertices.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
+    {
+        _mfDrawnQuads.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -296,6 +325,9 @@ void PolygonBorderBase::executeSyncImpl(      PolygonBorderBase *pOther,
 
     if(FieldBits::NoField != (VerticesFieldMask & whichField))
         _mfVertices.syncWith(pOther->_mfVertices);
+
+    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
+        _mfDrawnQuads.syncWith(pOther->_mfDrawnQuads);
 
 
 }
@@ -317,6 +349,9 @@ void PolygonBorderBase::executeSyncImpl(      PolygonBorderBase *pOther,
     if(FieldBits::NoField != (VerticesFieldMask & whichField))
         _mfVertices.syncWith(pOther->_mfVertices, sInfo);
 
+    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
+        _mfDrawnQuads.syncWith(pOther->_mfDrawnQuads, sInfo);
+
 
 }
 
@@ -328,6 +363,9 @@ void PolygonBorderBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (VerticesFieldMask & whichField))
         _mfVertices.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
+        _mfDrawnQuads.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

@@ -142,20 +142,82 @@ StencilChunkPtr PolygonBorder::getStenciledAreaTest(void)
 \***************************************************************************/
 void PolygonBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
-	Pnt2f p1,
+	/*Pnt2f p1,
 		p2;
 	UInt32 NumVertices(getVertices().size());
-		for(UInt32 i(0) ; i<NumVertices ; ++i)
+		for(UInt32 i(0) ; i<2*NumVertices ; i=i+2)
 		{
-			p1.setValues(getVertices()[i].x()*Width, getVertices()[i].y()*Height);
-			p2.setValues(getVertices()[(i+1)%NumVertices].x()*Width, getVertices()[(i+1)%NumVertices].y()*Height);
-			g->drawQuad(p1,p2, p2+Vec2f(1.0,1.0),p1+Vec2f(1.0,1.0),
+			g->drawQuad(getDrawnQuads()[i],getDrawnQuads()[i+1], getDrawnQuads()[i+2],getDrawnQuads()[i+3],
 				getColor(),
 				getColor(),
 				getColor(),
 				getColor(),
 				Opacity);
+		}*/
+	//****************
+	Int32 NumVertices(getVertices().size());
+	Pnt2f p1,
+		p2,
+		p3,
+		p4;
+	Vec2f Scale(Width,Height);
+	Vec2f QuadEdge, PrevEdge, NextEdge, BeginQuadDir,EndQuadDir, EdgeNormal;
+	glBegin(GL_QUADS);
+		for(Int32 i(0) ; i<NumVertices ; ++i)
+		{
+			//Quad i
+			QuadEdge=getVertices()[(i+1)%NumVertices]-getVertices()[i];
+			PrevEdge=getVertices()[i]-getVertices()[(i+NumVertices-1)%NumVertices];
+			NextEdge=getVertices()[(i+2)%NumVertices]-getVertices()[(i+1)%NumVertices];
+
+			scaleUp(QuadEdge, Scale);
+			scaleUp(PrevEdge, Scale);
+			scaleUp(NextEdge, Scale);
+			//Calculate the direction for the begining of the quad
+			BeginQuadDir = QuadEdge - PrevEdge;
+			BeginQuadDir.normalize();
+			//Calculate the direction for the end of the quad
+			EndQuadDir = NextEdge - QuadEdge;
+			EndQuadDir.normalize();
+			p1 = getVertices()[i];
+			p4 = getVertices()[(i+1)%NumVertices];
+			scaleUp(p1, Scale);
+			scaleUp(p4, Scale);
+			EdgeNormal.setValues(-QuadEdge.y(), QuadEdge.x());
+			EdgeNormal.normalize();
+			EdgeNormal *= getWidth();
+			
+			p2 = p1 + BeginQuadDir*specialProject(BeginQuadDir, QuadEdge, EdgeNormal);
+			p3 = p4+ EndQuadDir*specialProject(EndQuadDir, QuadEdge, EdgeNormal);
+
+			//if(i==0)
+			//{
+				glVertex2fv(p1.getValues());
+				//glVertex2fv((p1 + BeginQuadDir*specialProject(BeginQuadDir, QuadEdge, EdgeNormal)).getValues());
+			//}
+			//glVertex2fv((p2+ EndQuadDir*specialProject(EndQuadDir, QuadEdge, EdgeNormal)).getValues());
+			glVertex2fv(p2.getValues());
+			glVertex2fv(p3.getValues());
+			glVertex2fv(p4.getValues());
 		}
+		
+	glEnd();
+}
+
+void PolygonBorder::scaleUp(Pnt2f& TheVector, const Vec2f& Scale) const
+{
+	TheVector[0] = TheVector[0] *Scale[0];
+	TheVector[1] = TheVector[1] *Scale[1];
+}
+void PolygonBorder::scaleUp(Vec2f& TheVector, const Vec2f& Scale) const
+{
+	TheVector[0] = TheVector[0] *Scale[0];
+	TheVector[1] = TheVector[1] *Scale[1];
+}
+
+Real32 PolygonBorder::specialProject(const Vec2f& a, const Vec2f& b, const Vec2f& c) const
+{
+	return c.length()/osgcos(1.5707963f - osgacos(a*b/(a.length()*b.length())));
 }
 
 void PolygonBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
@@ -190,7 +252,7 @@ void PolygonBorder::activateInternalDrawConstraints(const GraphicsPtr g, const R
     getColorMask()->deactivate(g->getDrawAction());
     
     //Setup testing against the stencil stencil buffer
-    getStenciledAreaTest()->activate(g->getDrawAction());
+    //getStenciledAreaTest()->activate(g->getDrawAction());
 
 	if(DepthTextEnabled) {glEnable(GL_DEPTH_TEST);}
 }
@@ -263,6 +325,37 @@ PolygonBorder::~PolygonBorder(void)
 void PolygonBorder::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & VerticesFieldMask)
+	{
+		Int32 NumVertices(getVertices().size());
+		Vec2f QuadEdge, PrevEdge, NextEdge, BeginQuadDir,EndQuadDir;
+		beginEditCP(PolygonBorderPtr(this), DrawnQuadsFieldMask);
+			getDrawnQuads().clear();
+			for(Int32 i(0) ; i<NumVertices ; ++i)
+			{
+				//Quad i
+				QuadEdge=getVertices()[(i+1)%NumVertices]-getVertices()[i];
+				PrevEdge=getVertices()[i]-getVertices()[(i+NumVertices-1)%NumVertices];
+				NextEdge=getVertices()[(i+1)%NumVertices]-getVertices()[(i+2)%NumVertices];
+
+				//Calculate the direction for the begining of the quad
+				BeginQuadDir = QuadEdge - PrevEdge;
+				BeginQuadDir.normalize();
+				//Calculate the direction for the end of the quad
+				EndQuadDir = NextEdge - QuadEdge;
+				EndQuadDir.normalize();
+
+				getDrawnQuads().push_back(getVertices()[i] + BeginQuadDir);
+				getDrawnQuads().push_back(getVertices()[i]);
+				if(i==0)
+				{
+					getDrawnQuads().push_back(getVertices()[(i+1)%NumVertices]);
+					getDrawnQuads().push_back(getVertices()[(i+1)%NumVertices]+ EndQuadDir);
+				}
+			}
+		endEditCP(PolygonBorderPtr(this), DrawnQuadsFieldMask);
+	}
 }
 
 void PolygonBorder::dump(      UInt32    , 

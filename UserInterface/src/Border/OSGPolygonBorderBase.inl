@@ -117,6 +117,13 @@ MFPnt2f *PolygonBorderBase::getMFVertices(void)
     return &_mfVertices;
 }
 
+//! Get the PolygonBorder::_mfDrawnQuads field.
+inline
+MFPnt2f *PolygonBorderBase::getMFDrawnQuads(void)
+{
+    return &_mfDrawnQuads;
+}
+
 
 //! Get the value of the PolygonBorder::_sfWidth field.
 inline
@@ -180,6 +187,27 @@ inline
 const MFPnt2f &PolygonBorderBase::getVertices(void) const
 {
     return _mfVertices;
+}
+
+//! Get the value of the \a index element the PolygonBorder::_mfDrawnQuads field.
+inline
+Pnt2f &PolygonBorderBase::getDrawnQuads(const UInt32 index)
+{
+    return _mfDrawnQuads[index];
+}
+
+//! Get the PolygonBorder::_mfDrawnQuads field.
+inline
+MFPnt2f &PolygonBorderBase::getDrawnQuads(void)
+{
+    return _mfDrawnQuads;
+}
+
+//! Get the PolygonBorder::_mfDrawnQuads field.
+inline
+const MFPnt2f &PolygonBorderBase::getDrawnQuads(void) const
+{
+    return _mfDrawnQuads;
 }
 
 OSG_END_NAMESPACE

@@ -70,6 +70,7 @@
 #include <OpenSG/OSGReal32Fields.h> // Width type
 #include <OpenSG/OSGColor4fFields.h> // Color type
 #include <OpenSG/OSGPnt2fFields.h> // Vertices type
+#include <OpenSG/OSGPnt2fFields.h> // DrawnQuads type
 
 #include "OSGPolygonBorderFields.h"
 
@@ -93,15 +94,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonBorderBase : public Border
 
     enum
     {
-        WidthFieldId    = Inherited::NextFieldId,
-        ColorFieldId    = WidthFieldId    + 1,
-        VerticesFieldId = ColorFieldId    + 1,
-        NextFieldId     = VerticesFieldId + 1
+        WidthFieldId      = Inherited::NextFieldId,
+        ColorFieldId      = WidthFieldId      + 1,
+        VerticesFieldId   = ColorFieldId      + 1,
+        DrawnQuadsFieldId = VerticesFieldId   + 1,
+        NextFieldId       = DrawnQuadsFieldId + 1
     };
 
     static const OSG::BitVector WidthFieldMask;
     static const OSG::BitVector ColorFieldMask;
     static const OSG::BitVector VerticesFieldMask;
+    static const OSG::BitVector DrawnQuadsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -192,6 +195,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonBorderBase : public Border
     SFReal32            _sfWidth;
     SFColor4f           _sfColor;
     MFPnt2f             _mfVertices;
+    MFPnt2f             _mfDrawnQuads;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -207,6 +211,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonBorderBase : public Border
     /*! \{                                                                 */
 
     virtual ~PolygonBorderBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           MFPnt2f             *getMFDrawnQuads     (void);
+
+           Pnt2f               &getDrawnQuads     (UInt32 index);
+           MFPnt2f             &getDrawnQuads     (void);
+     const MFPnt2f             &getDrawnQuads     (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
