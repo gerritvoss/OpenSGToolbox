@@ -1,3 +1,29 @@
+/*---------------------------------------------------------------------------*\
+ *                        OpenSG ToolBox Toolbox                             *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                License                                    *
+ *                                                                           *
+ * This library is free software; you can redistribute it and/or modify it   *
+ * under the terms of the GNU Library General Public License as published    *
+ * by the Free Software Foundation, version 2.                               *
+ *                                                                           *
+ * This library is distributed in the hope that it will be useful, but       *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Library General Public License for more details.                          *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public         *
+ * License along with this library; if not, write to the Free Software       *
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 #ifndef _OPENSG_TOOLBOX_MATH_UTILS_H_
 #define _OPENSG_TOOLBOX_MATH_UTILS_H_
 
@@ -28,6 +54,31 @@ template <class FloatTypeT>
 bool isEqual(FloatTypeT Left, FloatTypeT Right, FloatTypeT ERR = REAL32_COMPARE_ERROR)
 {
 	return osgabs<FloatTypeT>(Left - Right) > ERR;
+}
+
+template<class ValueTypeT, class StorageInterfaceT>
+Int8 intersectLines(const osg::PointInterface<ValueTypeT, StorageInterfaceT>& p1,
+			    const osg::VectorInterface<ValueTypeT, StorageInterfaceT>& v1,
+			    const osg::PointInterface<ValueTypeT, StorageInterfaceT>& p2,
+			    const osg::VectorInterface<ValueTypeT, StorageInterfaceT>& v2,
+				ValueTypeT& t1, ValueTypeT& t2,
+				osg::PointInterface<ValueTypeT, StorageInterfaceT>& intersect)
+{
+
+	switch( solveLinearSystem2(v1.x(),-v2.x(),v1.y(),-v2.y(),p2.x()-p1.x(),p2.y()-p1.y(),t1,t2) )
+	{
+	case -1:
+		intersect = p1;
+		return -1;
+		break;
+	case 0:
+		return 0;
+		break;
+	case 1:
+		intersect = p1 + t1*v1;
+		return 1;
+		break;
+	}
 }
 
 template<class ValueTypeT, class StorageInterfaceT>
@@ -98,9 +149,9 @@ Int8 solveLinearSystem2(FloatTypeT A11, FloatTypeT A12, FloatTypeT A21, FloatTyp
 		}
 	}
 	
-	FloatTypeT DetA1= (B1*A22)-(B2*A21);
+	FloatTypeT DetA1= (B1*A22)-(B2*A12);
 	
-	FloatTypeT DetA2= (A11*B2)-(A12*B1);
+	FloatTypeT DetA2= (A11*B2)-(A21*B1);
 
 
 	X1 = DetA1/DetA;
