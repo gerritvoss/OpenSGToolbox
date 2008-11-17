@@ -99,13 +99,13 @@ TreePath VariableHeightTreeModelLayout::getPathForRow(const UInt32& row) const
 	return TreePath(SharedFieldPtr());
 }
 
-UInt32 VariableHeightTreeModelLayout::getPreferredHeight(void) const
+Real32 VariableHeightTreeModelLayout::getPreferredHeight(void) const
 {
 	//TODO: Implement
 	return 0;
 }
 
-UInt32 VariableHeightTreeModelLayout::getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const
+Real32 VariableHeightTreeModelLayout::getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	//TODO: Implement
 	return 0;
@@ -162,7 +162,7 @@ void VariableHeightTreeModelLayout::setRootVisible(bool rootVisible)
 	//TODO:Implement
 }
 
-void VariableHeightTreeModelLayout::setRowHeight(const UInt32& rowHeight)
+void VariableHeightTreeModelLayout::setRowHeight(const Real32& rowHeight)
 {
 	//TODO:Implement
 }

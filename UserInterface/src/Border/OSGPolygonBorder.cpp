@@ -143,63 +143,65 @@ StencilChunkPtr PolygonBorder::getStenciledAreaTest(void)
 \***************************************************************************/
 void PolygonBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
-	Int32 NumVertices(getVertices().size());
-	Pnt2f p1,
-		p2;
-	Pnt2f pi1,pi2;
-	Real32 t1,t2;
+	if(getWidth() > 0.0)
+	{
+		Int32 NumVertices(getVertices().size());
+		Pnt2f p1,
+			p2;
+		Pnt2f pi1,pi2;
+		Real32 t1,t2;
 
-	Vec2f Scale(Width,Height);
-	Vec2f ThisEdge, NextEdge, ThisEdgeOffset, NextEdgeOffset;
-	glBegin(GL_QUAD_STRIP);
-		for(Int32 i(0) ; i<=NumVertices ; ++i)
-		{
-			//ThisEdge
-			if(i == 0)
+		Vec2f Scale(Width,Height);
+		Vec2f ThisEdge, NextEdge, ThisEdgeOffset, NextEdgeOffset;
+		glBegin(GL_QUAD_STRIP);
+			for(Int32 i(0) ; i<=NumVertices ; ++i)
 			{
-				ThisEdge=getVertices()[(i+1)%NumVertices]-getVertices()[i%NumVertices];
-				scaleUp(ThisEdge, Scale);
+				//ThisEdge
+				if(i == 0)
+				{
+					ThisEdge=getVertices()[(i+1)%NumVertices]-getVertices()[i%NumVertices];
+					scaleUp(ThisEdge, Scale);
+					
+
+					ThisEdgeOffset.setValues(-ThisEdge.y(), ThisEdge.x());
+					ThisEdgeOffset.normalize();
+					ThisEdgeOffset *= getWidth();
+				}
+				else
+				{
+					ThisEdge = NextEdge;
+					ThisEdgeOffset = NextEdgeOffset;
+				}
+
+				//Next Edge
+				NextEdge=getVertices()[(i+2)%NumVertices]-getVertices()[(i+1)%NumVertices];
+				scaleUp(NextEdge, Scale);
+
+				//Next Edge Offset
+				NextEdgeOffset.setValues(-NextEdge.y(), NextEdge.x());
+				NextEdgeOffset.normalize();
+				NextEdgeOffset *= getWidth();
+
+				p2 = getVertices()[(i+1)%NumVertices];
+				scaleUp(p2, Scale);
+
+
+				//Find the intersecting point of the Offset Edges
+				pi1 = p2+ThisEdgeOffset;
+				pi2 = p2+NextEdgeOffset;
+				if(intersectLines(pi1,ThisEdge,pi2,NextEdge,t1,t2,p1) == -1)
+				{
+					//The edges are coincident
+					//Use pi1
+					p1 = pi1;
+				}
 				
-
-				ThisEdgeOffset.setValues(-ThisEdge.y(), ThisEdge.x());
-				ThisEdgeOffset.normalize();
-				ThisEdgeOffset *= getWidth();
+				
+				glVertex2fv(p1.getValues());
+				glVertex2fv(p2.getValues());
 			}
-			else
-			{
-				ThisEdge = NextEdge;
-				ThisEdgeOffset = NextEdgeOffset;
-			}
-
-			//Next Edge
-			NextEdge=getVertices()[(i+2)%NumVertices]-getVertices()[(i+1)%NumVertices];
-			scaleUp(NextEdge, Scale);
-
-			//Next Edge Offset
-			NextEdgeOffset.setValues(-NextEdge.y(), NextEdge.x());
-			NextEdgeOffset.normalize();
-			NextEdgeOffset *= getWidth();
-
-			p2 = getVertices()[(i+1)%NumVertices];
-			scaleUp(p2, Scale);
-
-
-			//Find the intersecting point of the Offset Edges
-			pi1 = p2+ThisEdgeOffset;
-			pi2 = p2+NextEdgeOffset;
-			if(intersectLines(pi1,ThisEdge,pi2,NextEdge,t1,t2,p1) == -1)
-			{
-				//The edges are coincident
-				//Use pi1
-				p1 = pi1;
-			}
-			
-			
-			glVertex2fv(p1.getValues());
-			glVertex2fv(p2.getValues());
-		}
-		
-	glEnd();
+		glEnd();
+	}
     activateInternalDrawConstraints(g,x,y,Width,Height);
 }
 

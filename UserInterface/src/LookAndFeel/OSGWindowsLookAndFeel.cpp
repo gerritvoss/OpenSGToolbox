@@ -3499,7 +3499,6 @@ void WindowsLookAndFeel::init(void)
 
         WindowsRotatedComponent->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
 	endEditCP(WindowsRotatedComponent);
-
     
 	//************************** List *****************************
 	//Windows RotatedComponentBorder
@@ -4346,13 +4345,17 @@ void WindowsLookAndFeel::init(void)
     
     UIDrawObjectCanvasPtr WindowsExpandedNonLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
 
-    LabelPtr WindowsDefaultTreeComponentGeneratorNodeLabelPrototype = Label::create();
+    //LabelPtr WindowsDefaultTreeComponentGeneratorNodeLabelPrototype = Label::create();
+    LabelPtr WindowsDefaultTreeComponentGeneratorNodeLabelPrototype = WindowsDefaultListComponentGeneratorComponentPrototype;
 
-    ColorLayerPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = ColorLayer::create();
+    //ColorLayerPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = ColorLayer::create();
+    LayerPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = WindowsDefaultListComponentGeneratorSelectedBackground;
 
-    ColorLayerPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = ColorLayer::create();
+    //ColorLayerPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = ColorLayer::create();
+    LayerPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = WindowsEmptyBackground;
 
-    LineBorderPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = LineBorder::create();
+    //LineBorderPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = LineBorder::create();
+    BorderPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = WindowsDefaultListComponentGeneratorSelectedBorder;
 
     PanelPtr WindowsDefaultTreeComponentGeneratorPanelPrototype = Panel::create();
     beginEditCP(WindowsDefaultTreeComponentGeneratorPanelPrototype);

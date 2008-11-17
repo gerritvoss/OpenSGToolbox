@@ -111,10 +111,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	virtual TreePath getPathForRow(const UInt32& row) const = 0;
 
 	//Returns the preferred height.
-	virtual UInt32 getPreferredHeight(void) const = 0;
+	virtual Real32 getPreferredHeight(void) const = 0;
 
 	//Returns the preferred width for the passed in region.
-	virtual UInt32 getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const = 0;
+	virtual Real32 getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const = 0;
 
 	//Number of rows being displayed.
 	virtual UInt32 getRowCount(void) const = 0;
@@ -123,7 +123,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	virtual Int32 getRowForPath(const TreePath& path) const = 0;
 
 	//Returns the height of each row.
-	virtual UInt32 getRowHeight(void) const = 0;
+	virtual Real32 getRowHeight(void) const = 0;
+
+	//Returns the offset of each depth.
+	virtual Real32 getDepthOffset(void) const = 0;
 
 	//Returns the model used to maintain the selection.
 	virtual TreeSelectionModelPtr getSelectionModel(void) const = 0;
@@ -169,7 +172,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	virtual void setRootVisible(bool rootVisible) = 0;
 
 	//Sets the height of each cell.
-	virtual void setRowHeight(const UInt32& rowHeight) = 0;
+	virtual void setRowHeight(const Real32& rowHeight) = 0;
+
+	//Sets the offset of each depth.
+	virtual void setDepthOffset(const Real32& depthOffset) = 0;
 
 	//Sets the TreeSelectionModel used to manage the selection to new LSM.
 	virtual void setSelectionModel(TreeSelectionModelPtr newLSM) = 0;

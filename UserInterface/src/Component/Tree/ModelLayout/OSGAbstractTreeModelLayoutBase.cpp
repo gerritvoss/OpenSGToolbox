@@ -70,6 +70,9 @@ const OSG::BitVector  AbstractTreeModelLayoutBase::RootVisibleInternalFieldMask 
 const OSG::BitVector  AbstractTreeModelLayoutBase::RowHeightInternalFieldMask = 
     (TypeTraits<BitVector>::One << AbstractTreeModelLayoutBase::RowHeightInternalFieldId);
 
+const OSG::BitVector  AbstractTreeModelLayoutBase::DepthOffsetInternalFieldMask = 
+    (TypeTraits<BitVector>::One << AbstractTreeModelLayoutBase::DepthOffsetInternalFieldId);
+
 const OSG::BitVector AbstractTreeModelLayoutBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -80,8 +83,11 @@ const OSG::BitVector AbstractTreeModelLayoutBase::MTInfluenceMask =
 /*! \var bool            AbstractTreeModelLayoutBase::_sfRootVisibleInternal
     Is the tree model root visible.
 */
-/*! \var Int32           AbstractTreeModelLayoutBase::_sfRowHeightInternal
+/*! \var Real32          AbstractTreeModelLayoutBase::_sfRowHeightInternal
     The Row Height.
+*/
+/*! \var Real32          AbstractTreeModelLayoutBase::_sfDepthOffsetInternal
+    The Depth Offset.
 */
 
 //! AbstractTreeModelLayout description
@@ -93,11 +99,16 @@ FieldDescription *AbstractTreeModelLayoutBase::_desc[] =
                      RootVisibleInternalFieldId, RootVisibleInternalFieldMask,
                      false,
                      (FieldAccessMethod) &AbstractTreeModelLayoutBase::getSFRootVisibleInternal),
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "RowHeightInternal", 
                      RowHeightInternalFieldId, RowHeightInternalFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractTreeModelLayoutBase::getSFRowHeightInternal)
+                     (FieldAccessMethod) &AbstractTreeModelLayoutBase::getSFRowHeightInternal),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "DepthOffsetInternal", 
+                     DepthOffsetInternalFieldId, DepthOffsetInternalFieldMask,
+                     false,
+                     (FieldAccessMethod) &AbstractTreeModelLayoutBase::getSFDepthOffsetInternal)
 };
 
 
@@ -165,7 +176,8 @@ void AbstractTreeModelLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(void) :
     _sfRootVisibleInternal    (bool(false)), 
-    _sfRowHeightInternal      (Int32(13)), 
+    _sfRowHeightInternal      (Real32(13.0)), 
+    _sfDepthOffsetInternal    (Real32(13.0)), 
     Inherited() 
 {
 }
@@ -177,6 +189,7 @@ AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(void) :
 AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(const AbstractTreeModelLayoutBase &source) :
     _sfRootVisibleInternal    (source._sfRootVisibleInternal    ), 
     _sfRowHeightInternal      (source._sfRowHeightInternal      ), 
+    _sfDepthOffsetInternal    (source._sfDepthOffsetInternal    ), 
     Inherited                 (source)
 {
 }
@@ -203,6 +216,11 @@ UInt32 AbstractTreeModelLayoutBase::getBinSize(const BitVector &whichField)
         returnValue += _sfRowHeightInternal.getBinSize();
     }
 
+    if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
+    {
+        returnValue += _sfDepthOffsetInternal.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -220,6 +238,11 @@ void AbstractTreeModelLayoutBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
     {
         _sfRowHeightInternal.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
+    {
+        _sfDepthOffsetInternal.copyToBin(pMem);
     }
 
 
@@ -240,6 +263,11 @@ void AbstractTreeModelLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfRowHeightInternal.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
+    {
+        _sfDepthOffsetInternal.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -256,6 +284,9 @@ void AbstractTreeModelLayoutBase::executeSyncImpl(      AbstractTreeModelLayoutB
     if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
         _sfRowHeightInternal.syncWith(pOther->_sfRowHeightInternal);
 
+    if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
+        _sfDepthOffsetInternal.syncWith(pOther->_sfDepthOffsetInternal);
+
 
 }
 #else
@@ -271,6 +302,9 @@ void AbstractTreeModelLayoutBase::executeSyncImpl(      AbstractTreeModelLayoutB
 
     if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
         _sfRowHeightInternal.syncWith(pOther->_sfRowHeightInternal);
+
+    if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
+        _sfDepthOffsetInternal.syncWith(pOther->_sfDepthOffsetInternal);
 
 
 

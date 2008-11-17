@@ -486,7 +486,8 @@ void Tree::updateEntireTree(void)
     //Remove the previous drawn rows
 
     //Determine the drawn rows
-    getDrawnRows(_TopDrawnRow, _BottomDrawnRow);
+    //getDrawnRows(_TopDrawnRow, _BottomDrawnRow);
+	//updateRowsDrawn();
 
     //create the drawn components for these rows
 }
@@ -662,12 +663,12 @@ void Tree::updateDrawnRow(const UInt32& Row)
 void Tree::updateLayout(void)
 {
     //Update the Position and Size of all the Drawn Rows
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
     {
-        beginEditCP(getChildren(i), Component::PositionFieldMask | Component::SizeFieldMask);
-            getChildren(i)->setPosition(Pnt2f(0, getModelLayout()->getRowHeight()*(i+_TopDrawnRow)));
-            getChildren(i)->setSize(Vec2f(getSize().x(), getModelLayout()->getRowHeight()));
-        endEditCP(getChildren(i), Component::PositionFieldMask | Component::SizeFieldMask);
+        beginEditCP(_DrawnRows[i], Component::PositionFieldMask | Component::SizeFieldMask);
+		_DrawnRows[i]->setPosition(Pnt2f((getPathForRow(_TopDrawnRow+i).getDepth()-1) * getModelLayout()->getDepthOffset(), getModelLayout()->getRowHeight()*(i+_TopDrawnRow)));
+            _DrawnRows[i]->setSize(Vec2f(getSize().x()-_DrawnRows[i]->getPosition().x(), getModelLayout()->getRowHeight()));
+        endEditCP(_DrawnRows[i], Component::PositionFieldMask | Component::SizeFieldMask);
     }
 }
 
@@ -723,6 +724,13 @@ Tree::Tree(const Tree &source) :
         _TopDrawnRow(-1),
         _BottomDrawnRow(-1)
 {
+    if(getModelLayout() != NullFC)
+    {
+        beginEditCP(TreePtr(this), ModelLayoutFieldMask);
+			setModelLayout(TreeModelLayout::Ptr::dcast(getModelLayout()->shallowCopy()));
+        endEditCP(TreePtr(this), ModelLayoutFieldMask);
+		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
+    }
 }
 
 Tree::~Tree(void)

@@ -106,21 +106,21 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
 
     //Create the Label
     LabelPtr TheLabel = Label::Ptr::dcast(getNodeLabelPrototype()->shallowCopy());
-    beginEditCP(TheLabel, Label::TextFieldMask | Label::TextColorFieldMask | Label::BorderFieldMask | Label::BackgroundFieldMask);
+    beginEditCP(TheLabel, Label::TextFieldMask | Label::TextColorFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
         if(IsSelected)
         {
             TheLabel->setTextColor(getSelectedTextColor());
-            TheLabel->setBackground(getSelectedBackground());
-            TheLabel->setBorder(getSelectedBorder());
+            TheLabel->setBackgrounds(getSelectedBackground());
+            TheLabel->setBorders(getSelectedBorder());
         }
         else
         {
             TheLabel->setTextColor(getNonSelectedTextColor());
-            TheLabel->setBackground(getNonSelectedBackground());
-            TheLabel->setBorder(EmptyBorder::create());
+            TheLabel->setBackgrounds(getNonSelectedBackground());
+            TheLabel->setBorders(EmptyBorder::create());
         }
         TheLabel->setText(LabelText);
-    endEditCP(TheLabel, Label::TextFieldMask | Label::TextColorFieldMask | Label::BorderFieldMask | Label::BackgroundFieldMask);
+    endEditCP(TheLabel, Label::TextFieldMask | Label::TextColorFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
 
     //Create the panel, set its children and layout

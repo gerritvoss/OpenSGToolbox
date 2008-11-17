@@ -68,7 +68,8 @@
 #include "OSGTreeModelLayout.h" // Parent
 
 #include <OpenSG/OSGBoolFields.h> // RootVisibleInternal type
-#include <OpenSG/OSGInt32Fields.h> // RowHeightInternal type
+#include <OpenSG/OSGReal32Fields.h> // RowHeightInternal type
+#include <OpenSG/OSGReal32Fields.h> // DepthOffsetInternal type
 
 #include "OSGAbstractTreeModelLayoutFields.h"
 
@@ -94,11 +95,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayoutBase : public TreeM
     {
         RootVisibleInternalFieldId = Inherited::NextFieldId,
         RowHeightInternalFieldId   = RootVisibleInternalFieldId + 1,
-        NextFieldId                = RowHeightInternalFieldId   + 1
+        DepthOffsetInternalFieldId = RowHeightInternalFieldId   + 1,
+        NextFieldId                = DepthOffsetInternalFieldId + 1
     };
 
     static const OSG::BitVector RootVisibleInternalFieldMask;
     static const OSG::BitVector RowHeightInternalFieldMask;
+    static const OSG::BitVector DepthOffsetInternalFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -146,7 +149,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayoutBase : public TreeM
     /*! \{                                                                 */
 
     SFBool              _sfRootVisibleInternal;
-    SFInt32             _sfRowHeightInternal;
+    SFReal32            _sfRowHeightInternal;
+    SFReal32            _sfDepthOffsetInternal;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -169,12 +173,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayoutBase : public TreeM
     /*! \{                                                                 */
 
            SFBool              *getSFRootVisibleInternal(void);
-           SFInt32             *getSFRowHeightInternal(void);
+           SFReal32            *getSFRowHeightInternal(void);
+           SFReal32            *getSFDepthOffsetInternal(void);
 
            bool                &getRootVisibleInternal(void);
      const bool                &getRootVisibleInternal(void) const;
-           Int32               &getRowHeightInternal(void);
-     const Int32               &getRowHeightInternal(void) const;
+           Real32              &getRowHeightInternal(void);
+     const Real32              &getRowHeightInternal(void) const;
+           Real32              &getDepthOffsetInternal(void);
+     const Real32              &getDepthOffsetInternal(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,7 +189,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayoutBase : public TreeM
     /*! \{                                                                 */
 
      void setRootVisibleInternal(const bool &value);
-     void setRowHeightInternal(const Int32 &value);
+     void setRowHeightInternal(const Real32 &value);
+     void setDepthOffsetInternal(const Real32 &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

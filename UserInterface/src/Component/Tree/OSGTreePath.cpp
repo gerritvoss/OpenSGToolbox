@@ -127,7 +127,10 @@ TreePath::TreePath(const std::vector<SharedFieldPtr>& path, const UInt32& length
     if(path.size() > 0)
     {
         _Path = path;
-        _Path.pop_back();
+		if(_Path.size() > length)
+		{
+			_Path.resize(length);
+		}
     }
 }
 
@@ -190,18 +193,18 @@ bool TreePath::operator<(const TreePath& RightPath) const
 
 TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const
 {
-    UInt32 Index(0);
+    UInt32 Depth(1);
     
-    while( Index < getDepth() &&
-           Index < aTreePath.getDepth() &&
-           TreePath(_Path, Index) == TreePath(aTreePath._Path, Index) )
+    while( Depth < getDepth() &&
+           Depth < aTreePath.getDepth() &&
+           TreePath(_Path, Depth) == TreePath(aTreePath._Path, Depth) )
     {
-        ++Index;
+        ++Depth;
     }
 
-    if(Index > 0)
+    if(Depth > 0)
     {
-        return TreePath(_Path, Index);
+        return TreePath(_Path, Depth-1);
     }
     else
     {

@@ -91,10 +91,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public Var
 	virtual TreePath getPathForRow(const UInt32& row) const;
 
 	//Returns the preferred height.
-	virtual UInt32 getPreferredHeight(void) const;
+	virtual Real32 getPreferredHeight(void) const;
 
 	//Returns the preferred width for the passed in region.
-	virtual UInt32 getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+	virtual Real32 getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
 	//Number of rows being displayed.
 	virtual UInt32 getRowCount(void) const;
@@ -130,7 +130,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public Var
 	virtual void setRootVisible(bool rootVisible);
 
 	//Sets the height of each cell.
-	virtual void setRowHeight(const UInt32& rowHeight);
+	virtual void setRowHeight(const Real32& rowHeight);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

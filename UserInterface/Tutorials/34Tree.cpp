@@ -102,7 +102,6 @@ public:
 };
 
 DefaultTreeModel TheTreeModel;
-FixedHeightTreeModelLayoutPtr TheTreeLayout;
 
 class CreateNodeButtonActionListener : public ActionListener
 {
@@ -208,10 +207,6 @@ int main(int argc, char **argv)
     //Tree Model
     TheTreeModel.setRoot(ANode);
 
-    //TreeLayout
-    TheTreeLayout = FixedHeightTreeModelLayout::create();
-    TheTreeLayout->setModel(&TheTreeModel);
-
     std::string TempString;
 
     std::vector<DefaultMutableTreeNodePtr> TreePreorderSequence;
@@ -244,55 +239,56 @@ int main(int argc, char **argv)
     }
     std::cout << std::endl;
 
-    //Layout Expansion
-    TheTreeLayout->setExpanded(ANode->getTreePath(), true);
     
-    std::cout << "Row Count: " << TheTreeLayout->getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTreeLayout->getRowCount() ; ++i)
-    {
-        TheTreeLayout->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
-        std::cout << TempString << " ";
-    }
-    std::cout << std::endl;
-    
-    TheTreeModel.insertNodeInto(JNode, ANode, ANode->getChildCount());
-    TheTreeLayout->setExpanded(ANode->getTreePath(), false);
-    TheTreeLayout->setExpanded(ANode->getTreePath(), true);
-
-    std::cout << "Row Count: " << TheTreeLayout->getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTreeLayout->getRowCount() ; ++i)
-    {
-        TheTreeLayout->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
-        std::cout << TempString << " ";
-    }
-    std::cout << std::endl;
-
-    TheTreeLayout->setExpanded(BNode->getTreePath(), true);
-    std::cout << "Row Count: " << TheTreeLayout->getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTreeLayout->getRowCount() ; ++i)
-    {
-        TheTreeLayout->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
-        std::cout << TempString << " ";
-    }
-    std::cout << std::endl;
-    
-    TheTreeLayout->setExpanded(DNode->getTreePath(), true);
-    std::cout << "Row Count: " << TheTreeLayout->getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTreeLayout->getRowCount() ; ++i)
-    {
-        TheTreeLayout->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
-        std::cout << TempString << " ";
-    }
-    std::cout << std::endl;
-
     //Create the Tree
     TreePtr TheTree = Tree::create();
 
     beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
-        TheTree->setPreferredSize(Vec2f(100, 300));
+        TheTree->setPreferredSize(Vec2f(100, 500));
     endEditCP(TheTree, Tree::PreferredSizeFieldMask);
     TheTree->setModel(&TheTreeModel);
+
+    //Layout Expansion
+    TheTree->expandPath(ANode->getTreePath());
+    
+    std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)
+    {
+        TheTree->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        std::cout << TempString << " ";
+    }
+    std::cout << std::endl;
+
+    TheTreeModel.insertNodeInto(JNode, ANode, ANode->getChildCount());
+	TheTree->collapsePath(ANode->getTreePath());
+    TheTree->expandPath(ANode->getTreePath());
+
+    std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)
+    {
+        TheTree->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        std::cout << TempString << " ";
+    }
+    std::cout << std::endl;
+
     TheTree->expandPath(BNode->getTreePath());
+    std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)
+    {
+        TheTree->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        std::cout << TempString << " ";
+    }
+    std::cout << std::endl;
+    
+    TheTree->expandPath(DNode->getTreePath());
+    std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)
+    {
+        TheTree->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        std::cout << TempString << " ";
+    }
+    std::cout << std::endl;
+
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
     ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
@@ -332,6 +328,8 @@ int main(int argc, char **argv)
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(TheTree);
+       MainInternalWindow->getChildren().push_back(CreateNodeButton);
+       MainInternalWindow->getChildren().push_back(RemoveNodeButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));

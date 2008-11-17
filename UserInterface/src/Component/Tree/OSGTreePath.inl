@@ -75,7 +75,7 @@ UInt32 TreePath::getPathCount(void) const
 inline
 UInt32 TreePath::getDepth(void) const
 {
-    return _Path.size() - 1;
+    return _Path.size();
 }
 
 inline

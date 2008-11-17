@@ -102,7 +102,7 @@ TreeModelPtr AbstractTreeModelLayout::getModel(void) const
 
 //AbstractLayoutCache.NodeDimensions AbstractTreeModelLayout::getNodeDimensions(void) const;
 
-UInt32 AbstractTreeModelLayout::getPreferredHeight(void) const
+Real32 AbstractTreeModelLayout::getPreferredHeight(void) const
 {
 	if(isFixedRowHeight())
 	{
@@ -115,15 +115,27 @@ UInt32 AbstractTreeModelLayout::getPreferredHeight(void) const
 	}
 }
 
-UInt32 AbstractTreeModelLayout::getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const
+Real32 AbstractTreeModelLayout::getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	//TODO: Implement
 	return 0;
 }
 
-UInt32 AbstractTreeModelLayout::getRowHeight(void) const
+Real32 AbstractTreeModelLayout::getRowHeight(void) const
 {
 	return getRowHeightInternal();
+}
+
+Real32 AbstractTreeModelLayout::getDepthOffset(void) const
+{
+	return getDepthOffsetInternal();
+}
+
+void AbstractTreeModelLayout::setDepthOffset(const Real32& depthOffset)
+{
+    beginEditCP(AbstractTreeModelLayoutPtr(this), DepthOffsetInternalFieldMask);
+		setDepthOffsetInternal(depthOffset);
+    endEditCP(AbstractTreeModelLayoutPtr(this), DepthOffsetInternalFieldMask);
 }
 
 TreeSelectionModelPtr AbstractTreeModelLayout::getSelectionModel(void) const
@@ -182,7 +194,7 @@ void AbstractTreeModelLayout::setRootVisible(bool rootVisible)
     endEditCP(AbstractTreeModelLayoutPtr(this), RootVisibleInternalFieldMask);
 }
 
-void AbstractTreeModelLayout::setRowHeight(const UInt32& rowHeight)
+void AbstractTreeModelLayout::setRowHeight(const Real32& rowHeight)
 {
     beginEditCP(AbstractTreeModelLayoutPtr(this), RowHeightInternalFieldMask);
     setRowHeightInternal(rowHeight);
@@ -441,8 +453,8 @@ bool AbstractTreeModelLayout::TreePathPreorderLessThan::operator()(const TreePat
         return false;
     }
 
-    UInt32 LeftNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent(),LeftPath.getPathComponent(CommonAncestor.getDepth() + 1)));
-    UInt32 RightNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent(),RightPath.getPathComponent(CommonAncestor.getDepth() + 1)));
+    UInt32 LeftNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent(),LeftPath.getPathComponent(CommonAncestor.getDepth())));
+    UInt32 RightNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent(),RightPath.getPathComponent(CommonAncestor.getDepth())));
 
     return LeftNextDownAncestorIndex < RightNextDownAncestorIndex;
 

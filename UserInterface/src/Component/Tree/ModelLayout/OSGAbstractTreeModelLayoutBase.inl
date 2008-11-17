@@ -79,9 +79,16 @@ SFBool *AbstractTreeModelLayoutBase::getSFRootVisibleInternal(void)
 
 //! Get the AbstractTreeModelLayout::_sfRowHeightInternal field.
 inline
-SFInt32 *AbstractTreeModelLayoutBase::getSFRowHeightInternal(void)
+SFReal32 *AbstractTreeModelLayoutBase::getSFRowHeightInternal(void)
 {
     return &_sfRowHeightInternal;
+}
+
+//! Get the AbstractTreeModelLayout::_sfDepthOffsetInternal field.
+inline
+SFReal32 *AbstractTreeModelLayoutBase::getSFDepthOffsetInternal(void)
+{
+    return &_sfDepthOffsetInternal;
 }
 
 
@@ -108,23 +115,44 @@ void AbstractTreeModelLayoutBase::setRootVisibleInternal(const bool &value)
 
 //! Get the value of the AbstractTreeModelLayout::_sfRowHeightInternal field.
 inline
-Int32 &AbstractTreeModelLayoutBase::getRowHeightInternal(void)
+Real32 &AbstractTreeModelLayoutBase::getRowHeightInternal(void)
 {
     return _sfRowHeightInternal.getValue();
 }
 
 //! Get the value of the AbstractTreeModelLayout::_sfRowHeightInternal field.
 inline
-const Int32 &AbstractTreeModelLayoutBase::getRowHeightInternal(void) const
+const Real32 &AbstractTreeModelLayoutBase::getRowHeightInternal(void) const
 {
     return _sfRowHeightInternal.getValue();
 }
 
 //! Set the value of the AbstractTreeModelLayout::_sfRowHeightInternal field.
 inline
-void AbstractTreeModelLayoutBase::setRowHeightInternal(const Int32 &value)
+void AbstractTreeModelLayoutBase::setRowHeightInternal(const Real32 &value)
 {
     _sfRowHeightInternal.setValue(value);
+}
+
+//! Get the value of the AbstractTreeModelLayout::_sfDepthOffsetInternal field.
+inline
+Real32 &AbstractTreeModelLayoutBase::getDepthOffsetInternal(void)
+{
+    return _sfDepthOffsetInternal.getValue();
+}
+
+//! Get the value of the AbstractTreeModelLayout::_sfDepthOffsetInternal field.
+inline
+const Real32 &AbstractTreeModelLayoutBase::getDepthOffsetInternal(void) const
+{
+    return _sfDepthOffsetInternal.getValue();
+}
+
+//! Set the value of the AbstractTreeModelLayout::_sfDepthOffsetInternal field.
+inline
+void AbstractTreeModelLayoutBase::setDepthOffsetInternal(const Real32 &value)
+{
+    _sfDepthOffsetInternal.setValue(value);
 }
 
 

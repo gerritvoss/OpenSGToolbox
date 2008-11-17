@@ -98,13 +98,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 	//virtual AbstractLayoutCache.NodeDimensions getNodeDimensions(void) const;
 
 	//Returns the preferred height.
-	virtual UInt32 getPreferredHeight(void) const;
+	virtual Real32 getPreferredHeight(void) const;
 
 	//Returns the preferred width for the passed in region.
-	virtual UInt32 getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+	virtual Real32 getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
 	//Returns the height of each row.
-	virtual UInt32 getRowHeight(void) const;
+	virtual Real32 getRowHeight(void) const;
+
+	virtual Real32 getDepthOffset(void) const;
 
 	//Returns the model used to maintain the selection.
 	virtual TreeSelectionModelPtr getSelectionModel(void) const;
@@ -132,7 +134,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 	virtual void setRootVisible(bool rootVisible);
 
 	//Sets the height of each cell.
-	virtual void setRowHeight(const UInt32& rowHeight);
+	virtual void setRowHeight(const Real32& rowHeight);
+
+	//Sets the offset of each depth.
+	virtual void setDepthOffset(const Real32& depthOffset);
 
 	//Sets the TreeSelectionModel used to manage the selection to new LSM.
 	virtual void setSelectionModel(TreeSelectionModelPtr newLSM);
