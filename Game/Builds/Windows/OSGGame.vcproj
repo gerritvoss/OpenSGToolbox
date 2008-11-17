@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="OSGGame"
-	ProjectGUID="{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
+	ProjectGUID="{CB86A053-7D62-40D1-AB65-09219633C40F}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
 	>
