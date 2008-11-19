@@ -146,8 +146,10 @@ int main(int argc, char **argv)
 
 	// Setup the size and other preferences to the minimap
 	beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask);
-	    MiniMap->setPreferredSize(Pnt2f(150,150));
+	    MiniMap->setPreferredSize(Pnt2f(50,50));
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask);
+
+	MiniMap->insertImage("level1.jpg");
 
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
