@@ -44,6 +44,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/Toolbox/OSGTextureUtils.h>
 
 #include "OSGImageComponent.h"
 #include "Util/OSGUIDrawUtils.h"
@@ -298,20 +299,6 @@ void ImageComponent::setFocusedImage(ImagePtr Image)
 			getFocusedTexture()->setImage(Image);
 		endEditCP(getFocusedTexture(), TextureChunk::ImageFieldMask);
 	}
-}
-
-TextureChunkPtr ImageComponent::createTexture(ImagePtr Image)
-{
-	TextureChunkPtr TexChunk = TextureChunk::create();
-	beginEditCP(TexChunk, TextureChunk::ImageFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::EnvModeFieldMask);
-		TexChunk->setMinFilter(GL_LINEAR_MIPMAP_LINEAR);
-		TexChunk->setMagFilter(GL_LINEAR);
-		TexChunk->setWrapS(GL_CLAMP);
-		TexChunk->setWrapT(GL_CLAMP);
-		TexChunk->setEnvMode(GL_MODULATE);
-		TexChunk->setImage(Image);
-	endEditCP(TexChunk, TextureChunk::ImageFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::EnvModeFieldMask);
-	return TexChunk;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

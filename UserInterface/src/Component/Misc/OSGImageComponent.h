@@ -91,7 +91,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponent : public ImageComponentBase
 	void setFocusedImage(const char *fileName, const char *mimeType = 0);
     /*=========================  PROTECTED  ===============================*/
   protected:
-    TextureChunkPtr createTexture(ImagePtr Image);
 
     // Variables should all be in ImageComponentBase.
 
