@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric langkamp					 *
+ *					Authors: David Kabala, Eric Langkamp					 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -49,6 +49,8 @@
 
 #include "OSGLayeredImageMiniMap.h"
 
+#include <OpenSG/Toolbox/OSGTextureUtils.h>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -71,17 +73,82 @@ void LayeredImageMiniMap::initMethod (void)
 {
 }
 
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+void LayeredImageMiniMap::removeTexture(UInt32 index)
+{
+	if(index > getLayerTextures().size())
+	{
+		return;
+	}
+
+	MFTextureChunkPtr::iterator RemoveIter(getLayerTextures().begin());
+
+	for( UInt32 i(0) ; i<index; ++i)
+	{
+		++RemoveIter;
+	}
+
+	getLayerTextures().erase(RemoveIter);
+}
+
+void LayeredImageMiniMap::insertImage(UInt32 index, ImagePtr Image) // meant to insert new image at given index
+{
+	TextureChunkPtr Tex;
+	Tex = createTexture(Image);
+	
+	if(index > getLayerTextures().size())
+	{
+		getLayerTextures().push_back(Tex);
+		return;
+	}
+
+	MFTextureChunkPtr::iterator AddIter(getLayerTextures().begin());
+
+	for( UInt32 i(0) ; i<index; ++i)
+	{
+		++AddIter;
+	}
+
+	getLayerTextures().insert(AddIter, Tex);
+}
+
+
+void LayeredImageMiniMap::setImage(UInt32 index, ImagePtr Image) // Overwrites the image at that location 
+{
+	if(index > getLayerTextures().size())
+	{
+		return;
+	}
+	
+	beginEditCP(getLayerTextures()[index], TextureChunk::ImageFieldMask);
+		getLayerTextures()[index]->setImage(Image);
+	endEditCP(getLayerTextures()[index], TextureChunk::ImageFieldMask);
+}
+
+void LayeredImageMiniMap::insertImage(ImagePtr Image) // Image is pushed onto the back of the stack
+{
+	TextureChunkPtr Tex;
+	Tex = createTexture(Image);
+
+	getLayerTextures().push_back(Tex);
+}
+
 void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 {
-	Pnt2f TopLeft, BottomRight;
-	getInsideBorderBounds(TopLeft,BottomRight);
+   Pnt2f TopLeft, BottomRight;
+   getInsideBorderBounds(TopLeft, BottomRight);
+   Vec2f ComponentSize(BottomRight-TopLeft);
 
-	Graphics->drawRect(TopLeft,BottomRight, Color4f(0.0,1.0,0.0,1.0), 1.0);
+   Graphics->drawQuad(TopLeft,
+	                     TopLeft + Vec2f(ComponentSize.x(),0.0f),
+						 BottomRight,
+						 TopLeft + Vec2f(0.0f, ComponentSize.y()),
+						 Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
+						 Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity() );
 }
 
 /*-------------------------------------------------------------------------*\

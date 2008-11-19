@@ -39,8 +39,26 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGImageFileHandler.h>
 
 OSG_BEGIN_NAMESPACE
+
+inline
+void LayeredImageMiniMap::setImage(UInt32 index, const char *fileName, const char *mimeType)
+{
+	setImage(index, ImageFileHandler::the().read(fileName, mimeType));
+}
+inline
+void LayeredImageMiniMap::insertImage(const char *fileName, const char *mimeType)
+{
+	insertImage(ImageFileHandler::the().read(fileName, mimeType));
+}
+
+inline
+void LayeredImageMiniMap::insertImage(UInt32 index, const char *fileName, const char *mimeType)
+{
+	insertImage(index, ImageFileHandler::the().read(fileName, mimeType));
+}
 
 OSG_END_NAMESPACE
 

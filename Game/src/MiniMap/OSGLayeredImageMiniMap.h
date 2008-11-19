@@ -76,6 +76,18 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+	
+	void removeTexture(UInt32 index);
+
+	void insertImage(ImagePtr Image);
+	void insertImage(const char *fileName, const char *mimeType = 0);
+
+	void insertImage(UInt32 index, ImagePtr Image);
+	void insertImage(UInt32 index, const char *fileName, const char *mimeType = 0);
+
+	void setImage(UInt32 index, ImagePtr Image);
+	void setImage(UInt32 index, const char *fileName, const char *mimeType = 0);
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
