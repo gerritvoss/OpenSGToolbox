@@ -297,6 +297,14 @@
 					RelativePath="..\..\src\Util\OSGStringUtils.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGTextureUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGTextureUtils.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="FileIO"
