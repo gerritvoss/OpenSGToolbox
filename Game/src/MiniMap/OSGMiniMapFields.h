@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGGameDef.h"
 
-#include <OpenSG/UserInterface/OSGComponentFields.h>
+#include <OpenSG/UserInterface/OSGContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class MiniMap;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! MiniMapPtr
 
-typedef FCPtr<ComponentPtr, MiniMap> MiniMapPtr;
+typedef FCPtr<ContainerPtr, MiniMap> MiniMapPtr;
 
 #endif
 

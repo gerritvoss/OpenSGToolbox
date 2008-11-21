@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -77,11 +77,53 @@ SFMiniMapTransformationPtr *MiniMapBase::getSFTransformation(void)
     return &_sfTransformation;
 }
 
-//! Get the MiniMap::_mfIndicator field.
+//! Get the MiniMap::_mfIndicators field.
 inline
-MFMiniMapIndicatorPtr *MiniMapBase::getMFIndicator(void)
+MFMiniMapIndicatorPtr *MiniMapBase::getMFIndicators(void)
 {
-    return &_mfIndicator;
+    return &_mfIndicators;
+}
+
+//! Get the MiniMap::_sfViewPortIndicator field.
+inline
+SFMiniMapIndicatorPtr *MiniMapBase::getSFViewPortIndicator(void)
+{
+    return &_sfViewPortIndicator;
+}
+
+//! Get the MiniMap::_sfMapOrientation field.
+inline
+SFQuaternion *MiniMapBase::getSFMapOrientation(void)
+{
+    return &_sfMapOrientation;
+}
+
+//! Get the MiniMap::_sfLockMapOrientation field.
+inline
+SFBool *MiniMapBase::getSFLockMapOrientation(void)
+{
+    return &_sfLockMapOrientation;
+}
+
+//! Get the MiniMap::_sfMapScale field.
+inline
+SFUInt32 *MiniMapBase::getSFMapScale(void)
+{
+    return &_sfMapScale;
+}
+
+//! Get the MiniMap::_sfMapScaleParameter field.
+inline
+SFVec3f *MiniMapBase::getSFMapScaleParameter(void)
+{
+    return &_sfMapScaleParameter;
+}
+
+//! Get the MiniMap::_sfMapScene field.
+inline
+SFNodePtr *MiniMapBase::getSFMapScene(void)
+{
+    return &_sfMapScene;
 }
 
 
@@ -106,26 +148,152 @@ void MiniMapBase::setTransformation(const MiniMapTransformationPtr &value)
     _sfTransformation.setValue(value);
 }
 
-
-//! Get the value of the \a index element the MiniMap::_mfIndicator field.
+//! Get the value of the MiniMap::_sfViewPortIndicator field.
 inline
-MiniMapIndicatorPtr &MiniMapBase::getIndicator(const UInt32 index)
+MiniMapIndicatorPtr &MiniMapBase::getViewPortIndicator(void)
 {
-    return _mfIndicator[index];
+    return _sfViewPortIndicator.getValue();
 }
 
-//! Get the MiniMap::_mfIndicator field.
+//! Get the value of the MiniMap::_sfViewPortIndicator field.
 inline
-MFMiniMapIndicatorPtr &MiniMapBase::getIndicator(void)
+const MiniMapIndicatorPtr &MiniMapBase::getViewPortIndicator(void) const
 {
-    return _mfIndicator;
+    return _sfViewPortIndicator.getValue();
 }
 
-//! Get the MiniMap::_mfIndicator field.
+//! Set the value of the MiniMap::_sfViewPortIndicator field.
 inline
-const MFMiniMapIndicatorPtr &MiniMapBase::getIndicator(void) const
+void MiniMapBase::setViewPortIndicator(const MiniMapIndicatorPtr &value)
 {
-    return _mfIndicator;
+    _sfViewPortIndicator.setValue(value);
+}
+
+//! Get the value of the MiniMap::_sfMapOrientation field.
+inline
+Quaternion &MiniMapBase::getMapOrientation(void)
+{
+    return _sfMapOrientation.getValue();
+}
+
+//! Get the value of the MiniMap::_sfMapOrientation field.
+inline
+const Quaternion &MiniMapBase::getMapOrientation(void) const
+{
+    return _sfMapOrientation.getValue();
+}
+
+//! Set the value of the MiniMap::_sfMapOrientation field.
+inline
+void MiniMapBase::setMapOrientation(const Quaternion &value)
+{
+    _sfMapOrientation.setValue(value);
+}
+
+//! Get the value of the MiniMap::_sfLockMapOrientation field.
+inline
+bool &MiniMapBase::getLockMapOrientation(void)
+{
+    return _sfLockMapOrientation.getValue();
+}
+
+//! Get the value of the MiniMap::_sfLockMapOrientation field.
+inline
+const bool &MiniMapBase::getLockMapOrientation(void) const
+{
+    return _sfLockMapOrientation.getValue();
+}
+
+//! Set the value of the MiniMap::_sfLockMapOrientation field.
+inline
+void MiniMapBase::setLockMapOrientation(const bool &value)
+{
+    _sfLockMapOrientation.setValue(value);
+}
+
+//! Get the value of the MiniMap::_sfMapScale field.
+inline
+UInt32 &MiniMapBase::getMapScale(void)
+{
+    return _sfMapScale.getValue();
+}
+
+//! Get the value of the MiniMap::_sfMapScale field.
+inline
+const UInt32 &MiniMapBase::getMapScale(void) const
+{
+    return _sfMapScale.getValue();
+}
+
+//! Set the value of the MiniMap::_sfMapScale field.
+inline
+void MiniMapBase::setMapScale(const UInt32 &value)
+{
+    _sfMapScale.setValue(value);
+}
+
+//! Get the value of the MiniMap::_sfMapScaleParameter field.
+inline
+Vec3f &MiniMapBase::getMapScaleParameter(void)
+{
+    return _sfMapScaleParameter.getValue();
+}
+
+//! Get the value of the MiniMap::_sfMapScaleParameter field.
+inline
+const Vec3f &MiniMapBase::getMapScaleParameter(void) const
+{
+    return _sfMapScaleParameter.getValue();
+}
+
+//! Set the value of the MiniMap::_sfMapScaleParameter field.
+inline
+void MiniMapBase::setMapScaleParameter(const Vec3f &value)
+{
+    _sfMapScaleParameter.setValue(value);
+}
+
+//! Get the value of the MiniMap::_sfMapScene field.
+inline
+NodePtr &MiniMapBase::getMapScene(void)
+{
+    return _sfMapScene.getValue();
+}
+
+//! Get the value of the MiniMap::_sfMapScene field.
+inline
+const NodePtr &MiniMapBase::getMapScene(void) const
+{
+    return _sfMapScene.getValue();
+}
+
+//! Set the value of the MiniMap::_sfMapScene field.
+inline
+void MiniMapBase::setMapScene(const NodePtr &value)
+{
+    _sfMapScene.setValue(value);
+}
+
+
+//! Get the value of the \a index element the MiniMap::_mfIndicators field.
+inline
+MiniMapIndicatorPtr &MiniMapBase::getIndicators(const UInt32 index)
+{
+    return _mfIndicators[index];
+}
+
+//! Get the MiniMap::_mfIndicators field.
+inline
+MFMiniMapIndicatorPtr &MiniMapBase::getIndicators(void)
+{
+    return _mfIndicators;
+}
+
+//! Get the MiniMap::_mfIndicators field.
+inline
+const MFMiniMapIndicatorPtr &MiniMapBase::getIndicators(void) const
+{
+    return _mfIndicators;
 }
 
 OSG_END_NAMESPACE

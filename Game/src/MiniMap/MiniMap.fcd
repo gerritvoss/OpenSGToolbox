@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="MiniMap"
-	parent="Component"
+	parent="Container"
 	library="Game"
 	pointerfieldtypes="both"
 	structure="abstract"
@@ -23,7 +23,7 @@ A Minimap.
 	>
 	</Field>
 	<Field
-		name="Indicator"
+		name="Indicators"
 		type="MiniMapIndicatorPtr"
 		cardinality="multi"
 		visibility="external"
@@ -31,5 +31,56 @@ A Minimap.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="ViewPortIndicator"
+		type="MiniMapIndicatorPtr"
+		cardinality="single"
+		visibility="external"
+		header="MiniMap/OSGMiniMapIndicator.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MapOrientation"
+		type="Quaternion"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="LockMapOrientation"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MapScale"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MapScaleParameter"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MapScene"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+
 
 </FieldContainer>

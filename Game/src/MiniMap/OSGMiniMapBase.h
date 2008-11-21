@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,10 +65,16 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/UserInterface/OSGComponent.h> // Parent
+#include <OpenSG/UserInterface/OSGContainer.h> // Parent
 
 #include "MiniMap/OSGMiniMapTransformation.h" // Transformation type
-#include "MiniMap/OSGMiniMapIndicator.h" // Indicator type
+#include "MiniMap/OSGMiniMapIndicator.h" // Indicators type
+#include "MiniMap/OSGMiniMapIndicator.h" // ViewPortIndicator type
+#include <OpenSG/OSGQuaternionFields.h> // MapOrientation type
+#include <OpenSG/OSGBoolFields.h> // LockMapOrientation type
+#include <OpenSG/OSGUInt32Fields.h> // MapScale type
+#include <OpenSG/OSGVec3fFields.h> // MapScaleParameter type
+#include <OpenSG/OSGNodeFields.h> // MapScene type
 
 #include "OSGMiniMapFields.h"
 
@@ -79,11 +85,11 @@ class BinaryDataHandler;
 
 //! \brief MiniMap Base Class.
 
-class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Component
+class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 {
   private:
 
-    typedef Component    Inherited;
+    typedef Container    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -92,13 +98,25 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Component
 
     enum
     {
-        TransformationFieldId = Inherited::NextFieldId,
-        IndicatorFieldId      = TransformationFieldId + 1,
-        NextFieldId           = IndicatorFieldId      + 1
+        TransformationFieldId     = Inherited::NextFieldId,
+        IndicatorsFieldId         = TransformationFieldId     + 1,
+        ViewPortIndicatorFieldId  = IndicatorsFieldId         + 1,
+        MapOrientationFieldId     = ViewPortIndicatorFieldId  + 1,
+        LockMapOrientationFieldId = MapOrientationFieldId     + 1,
+        MapScaleFieldId           = LockMapOrientationFieldId + 1,
+        MapScaleParameterFieldId  = MapScaleFieldId           + 1,
+        MapSceneFieldId           = MapScaleParameterFieldId  + 1,
+        NextFieldId               = MapSceneFieldId           + 1
     };
 
     static const OSG::BitVector TransformationFieldMask;
-    static const OSG::BitVector IndicatorFieldMask;
+    static const OSG::BitVector IndicatorsFieldMask;
+    static const OSG::BitVector ViewPortIndicatorFieldMask;
+    static const OSG::BitVector MapOrientationFieldMask;
+    static const OSG::BitVector LockMapOrientationFieldMask;
+    static const OSG::BitVector MapScaleFieldMask;
+    static const OSG::BitVector MapScaleParameterFieldMask;
+    static const OSG::BitVector MapSceneFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -126,13 +144,31 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Component
     /*! \{                                                                 */
 
            SFMiniMapTransformationPtr *getSFTransformation (void);
-           MFMiniMapIndicatorPtr *getMFIndicator      (void);
+           MFMiniMapIndicatorPtr *getMFIndicators     (void);
+           SFMiniMapIndicatorPtr *getSFViewPortIndicator(void);
+           SFQuaternion        *getSFMapOrientation (void);
+           SFBool              *getSFLockMapOrientation(void);
+           SFUInt32            *getSFMapScale       (void);
+           SFVec3f             *getSFMapScaleParameter(void);
+           SFNodePtr           *getSFMapScene       (void);
 
            MiniMapTransformationPtr &getTransformation (void);
      const MiniMapTransformationPtr &getTransformation (void) const;
-           MiniMapIndicatorPtr &getIndicator      (const UInt32 index);
-           MFMiniMapIndicatorPtr &getIndicator      (void);
-     const MFMiniMapIndicatorPtr &getIndicator      (void) const;
+           MiniMapIndicatorPtr &getViewPortIndicator(void);
+     const MiniMapIndicatorPtr &getViewPortIndicator(void) const;
+           Quaternion          &getMapOrientation (void);
+     const Quaternion          &getMapOrientation (void) const;
+           bool                &getLockMapOrientation(void);
+     const bool                &getLockMapOrientation(void) const;
+           UInt32              &getMapScale       (void);
+     const UInt32              &getMapScale       (void) const;
+           Vec3f               &getMapScaleParameter(void);
+     const Vec3f               &getMapScaleParameter(void) const;
+           NodePtr             &getMapScene       (void);
+     const NodePtr             &getMapScene       (void) const;
+           MiniMapIndicatorPtr &getIndicators     (const UInt32 index);
+           MFMiniMapIndicatorPtr &getIndicators     (void);
+     const MFMiniMapIndicatorPtr &getIndicators     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,6 +176,12 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Component
     /*! \{                                                                 */
 
      void setTransformation ( const MiniMapTransformationPtr &value );
+     void setViewPortIndicator( const MiniMapIndicatorPtr &value );
+     void setMapOrientation ( const Quaternion &value );
+     void setLockMapOrientation( const bool &value );
+     void setMapScale       ( const UInt32 &value );
+     void setMapScaleParameter( const Vec3f &value );
+     void setMapScene       ( const NodePtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -167,7 +209,13 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Component
     /*! \{                                                                 */
 
     SFMiniMapTransformationPtr   _sfTransformation;
-    MFMiniMapIndicatorPtr   _mfIndicator;
+    MFMiniMapIndicatorPtr   _mfIndicators;
+    SFMiniMapIndicatorPtr   _sfViewPortIndicator;
+    SFQuaternion        _sfMapOrientation;
+    SFBool              _sfLockMapOrientation;
+    SFUInt32            _sfMapScale;
+    SFVec3f             _sfMapScaleParameter;
+    SFNodePtr           _sfMapScene;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

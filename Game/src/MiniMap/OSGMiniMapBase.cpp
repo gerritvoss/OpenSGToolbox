@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,8 +67,26 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  MiniMapBase::TransformationFieldMask = 
     (TypeTraits<BitVector>::One << MiniMapBase::TransformationFieldId);
 
-const OSG::BitVector  MiniMapBase::IndicatorFieldMask = 
-    (TypeTraits<BitVector>::One << MiniMapBase::IndicatorFieldId);
+const OSG::BitVector  MiniMapBase::IndicatorsFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::IndicatorsFieldId);
+
+const OSG::BitVector  MiniMapBase::ViewPortIndicatorFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::ViewPortIndicatorFieldId);
+
+const OSG::BitVector  MiniMapBase::MapOrientationFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::MapOrientationFieldId);
+
+const OSG::BitVector  MiniMapBase::LockMapOrientationFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::LockMapOrientationFieldId);
+
+const OSG::BitVector  MiniMapBase::MapScaleFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::MapScaleFieldId);
+
+const OSG::BitVector  MiniMapBase::MapScaleParameterFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::MapScaleParameterFieldId);
+
+const OSG::BitVector  MiniMapBase::MapSceneFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::MapSceneFieldId);
 
 const OSG::BitVector MiniMapBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -80,7 +98,25 @@ const OSG::BitVector MiniMapBase::MTInfluenceMask =
 /*! \var MiniMapTransformationPtr MiniMapBase::_sfTransformation
     
 */
-/*! \var MiniMapIndicatorPtr MiniMapBase::_mfIndicator
+/*! \var MiniMapIndicatorPtr MiniMapBase::_mfIndicators
+    
+*/
+/*! \var MiniMapIndicatorPtr MiniMapBase::_sfViewPortIndicator
+    
+*/
+/*! \var Quaternion      MiniMapBase::_sfMapOrientation
+    
+*/
+/*! \var bool            MiniMapBase::_sfLockMapOrientation
+    
+*/
+/*! \var UInt32          MiniMapBase::_sfMapScale
+    
+*/
+/*! \var Vec3f           MiniMapBase::_sfMapScaleParameter
+    
+*/
+/*! \var NodePtr         MiniMapBase::_sfMapScene
     
 */
 
@@ -94,16 +130,46 @@ FieldDescription *MiniMapBase::_desc[] =
                      false,
                      (FieldAccessMethod) &MiniMapBase::getSFTransformation),
     new FieldDescription(MFMiniMapIndicatorPtr::getClassType(), 
-                     "Indicator", 
-                     IndicatorFieldId, IndicatorFieldMask,
+                     "Indicators", 
+                     IndicatorsFieldId, IndicatorsFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getMFIndicator)
+                     (FieldAccessMethod) &MiniMapBase::getMFIndicators),
+    new FieldDescription(SFMiniMapIndicatorPtr::getClassType(), 
+                     "ViewPortIndicator", 
+                     ViewPortIndicatorFieldId, ViewPortIndicatorFieldMask,
+                     false,
+                     (FieldAccessMethod) &MiniMapBase::getSFViewPortIndicator),
+    new FieldDescription(SFQuaternion::getClassType(), 
+                     "MapOrientation", 
+                     MapOrientationFieldId, MapOrientationFieldMask,
+                     false,
+                     (FieldAccessMethod) &MiniMapBase::getSFMapOrientation),
+    new FieldDescription(SFBool::getClassType(), 
+                     "LockMapOrientation", 
+                     LockMapOrientationFieldId, LockMapOrientationFieldMask,
+                     false,
+                     (FieldAccessMethod) &MiniMapBase::getSFLockMapOrientation),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "MapScale", 
+                     MapScaleFieldId, MapScaleFieldMask,
+                     false,
+                     (FieldAccessMethod) &MiniMapBase::getSFMapScale),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "MapScaleParameter", 
+                     MapScaleParameterFieldId, MapScaleParameterFieldMask,
+                     false,
+                     (FieldAccessMethod) &MiniMapBase::getSFMapScaleParameter),
+    new FieldDescription(SFNodePtr::getClassType(), 
+                     "MapScene", 
+                     MapSceneFieldId, MapSceneFieldMask,
+                     false,
+                     (FieldAccessMethod) &MiniMapBase::getSFMapScene)
 };
 
 
 FieldContainerType MiniMapBase::_type(
     "MiniMap",
-    "Component",
+    "Container",
     NULL,
     NULL, 
     MiniMap::initMethod,
@@ -154,7 +220,7 @@ void MiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfIndicator.terminateShare(uiAspect, this->getContainerSize());
+    _mfIndicators.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -166,7 +232,13 @@ void MiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 MiniMapBase::MiniMapBase(void) :
     _sfTransformation         (MiniMapTransformationPtr(NullFC)), 
-    _mfIndicator              (), 
+    _mfIndicators             (), 
+    _sfViewPortIndicator      (), 
+    _sfMapOrientation         (), 
+    _sfLockMapOrientation     (), 
+    _sfMapScale               (), 
+    _sfMapScaleParameter      (), 
+    _sfMapScene               (), 
     Inherited() 
 {
 }
@@ -177,7 +249,13 @@ MiniMapBase::MiniMapBase(void) :
 
 MiniMapBase::MiniMapBase(const MiniMapBase &source) :
     _sfTransformation         (source._sfTransformation         ), 
-    _mfIndicator              (source._mfIndicator              ), 
+    _mfIndicators             (source._mfIndicators             ), 
+    _sfViewPortIndicator      (source._sfViewPortIndicator      ), 
+    _sfMapOrientation         (source._sfMapOrientation         ), 
+    _sfLockMapOrientation     (source._sfLockMapOrientation     ), 
+    _sfMapScale               (source._sfMapScale               ), 
+    _sfMapScaleParameter      (source._sfMapScaleParameter      ), 
+    _sfMapScene               (source._sfMapScene               ), 
     Inherited                 (source)
 {
 }
@@ -199,9 +277,39 @@ UInt32 MiniMapBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTransformation.getBinSize();
     }
 
-    if(FieldBits::NoField != (IndicatorFieldMask & whichField))
+    if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
     {
-        returnValue += _mfIndicator.getBinSize();
+        returnValue += _mfIndicators.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
+    {
+        returnValue += _sfViewPortIndicator.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
+    {
+        returnValue += _sfMapOrientation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LockMapOrientationFieldMask & whichField))
+    {
+        returnValue += _sfLockMapOrientation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MapScaleFieldMask & whichField))
+    {
+        returnValue += _sfMapScale.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MapScaleParameterFieldMask & whichField))
+    {
+        returnValue += _sfMapScaleParameter.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MapSceneFieldMask & whichField))
+    {
+        returnValue += _sfMapScene.getBinSize();
     }
 
 
@@ -218,9 +326,39 @@ void MiniMapBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTransformation.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (IndicatorFieldMask & whichField))
+    if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
     {
-        _mfIndicator.copyToBin(pMem);
+        _mfIndicators.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
+    {
+        _sfViewPortIndicator.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
+    {
+        _sfMapOrientation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LockMapOrientationFieldMask & whichField))
+    {
+        _sfLockMapOrientation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MapScaleFieldMask & whichField))
+    {
+        _sfMapScale.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MapScaleParameterFieldMask & whichField))
+    {
+        _sfMapScaleParameter.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MapSceneFieldMask & whichField))
+    {
+        _sfMapScene.copyToBin(pMem);
     }
 
 
@@ -236,9 +374,39 @@ void MiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTransformation.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (IndicatorFieldMask & whichField))
+    if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
     {
-        _mfIndicator.copyFromBin(pMem);
+        _mfIndicators.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
+    {
+        _sfViewPortIndicator.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
+    {
+        _sfMapOrientation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LockMapOrientationFieldMask & whichField))
+    {
+        _sfLockMapOrientation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MapScaleFieldMask & whichField))
+    {
+        _sfMapScale.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MapScaleParameterFieldMask & whichField))
+    {
+        _sfMapScaleParameter.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MapSceneFieldMask & whichField))
+    {
+        _sfMapScene.copyFromBin(pMem);
     }
 
 
@@ -254,8 +422,26 @@ void MiniMapBase::executeSyncImpl(      MiniMapBase *pOther,
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
         _sfTransformation.syncWith(pOther->_sfTransformation);
 
-    if(FieldBits::NoField != (IndicatorFieldMask & whichField))
-        _mfIndicator.syncWith(pOther->_mfIndicator);
+    if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
+        _mfIndicators.syncWith(pOther->_mfIndicators);
+
+    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
+        _sfViewPortIndicator.syncWith(pOther->_sfViewPortIndicator);
+
+    if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
+        _sfMapOrientation.syncWith(pOther->_sfMapOrientation);
+
+    if(FieldBits::NoField != (LockMapOrientationFieldMask & whichField))
+        _sfLockMapOrientation.syncWith(pOther->_sfLockMapOrientation);
+
+    if(FieldBits::NoField != (MapScaleFieldMask & whichField))
+        _sfMapScale.syncWith(pOther->_sfMapScale);
+
+    if(FieldBits::NoField != (MapScaleParameterFieldMask & whichField))
+        _sfMapScaleParameter.syncWith(pOther->_sfMapScaleParameter);
+
+    if(FieldBits::NoField != (MapSceneFieldMask & whichField))
+        _sfMapScene.syncWith(pOther->_sfMapScene);
 
 
 }
@@ -270,9 +456,27 @@ void MiniMapBase::executeSyncImpl(      MiniMapBase *pOther,
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
         _sfTransformation.syncWith(pOther->_sfTransformation);
 
+    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
+        _sfViewPortIndicator.syncWith(pOther->_sfViewPortIndicator);
 
-    if(FieldBits::NoField != (IndicatorFieldMask & whichField))
-        _mfIndicator.syncWith(pOther->_mfIndicator, sInfo);
+    if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
+        _sfMapOrientation.syncWith(pOther->_sfMapOrientation);
+
+    if(FieldBits::NoField != (LockMapOrientationFieldMask & whichField))
+        _sfLockMapOrientation.syncWith(pOther->_sfLockMapOrientation);
+
+    if(FieldBits::NoField != (MapScaleFieldMask & whichField))
+        _sfMapScale.syncWith(pOther->_sfMapScale);
+
+    if(FieldBits::NoField != (MapScaleParameterFieldMask & whichField))
+        _sfMapScaleParameter.syncWith(pOther->_sfMapScaleParameter);
+
+    if(FieldBits::NoField != (MapSceneFieldMask & whichField))
+        _sfMapScene.syncWith(pOther->_sfMapScene);
+
+
+    if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
+        _mfIndicators.syncWith(pOther->_mfIndicators, sInfo);
 
 
 }
@@ -283,8 +487,8 @@ void MiniMapBase::execBeginEditImpl (const BitVector &whichField,
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (IndicatorFieldMask & whichField))
-        _mfIndicator.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
+        _mfIndicators.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -299,7 +503,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MiniMapPtr>::_type("MiniMapPtr", "ComponentPtr");
+DataType FieldDataTraits<MiniMapPtr>::_type("MiniMapPtr", "ContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(MiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING);
