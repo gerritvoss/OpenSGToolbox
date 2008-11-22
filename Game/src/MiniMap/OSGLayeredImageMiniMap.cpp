@@ -77,6 +77,21 @@ void LayeredImageMiniMap::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void LayeredImageMiniMap::setScale(UInt32 WorldSizeZ, UInt32 WorldSizeX, UInt32 MapSizeY, UInt32 MapSizeX)
+{
+	setMapScaleX(MapSizeY / WorldSizeZ); //For scaling the width of the map
+
+	setMapScaleY(MapSizeX / WorldSizeX); //For scaling the length of the map
+}
+
+void LayeredImageMiniMap::setCharacterPosition(Pnt2f Position)
+{
+	Position[0] = Position[0] * getMapScaleX();
+	Position[1] = Position[1] * getMapScaleY();
+
+	setMapLocationPtr(Position);
+}
+
 
 void LayeredImageMiniMap::removeTexture(UInt32 index)
 {
@@ -149,6 +164,8 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 						 TopLeft + Vec2f(0.0f, ComponentSize.y()),
 						 Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
 						 Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity() );
+   
+   Graphics->drawDisc(getMapLocationPtr(),4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
 }
 
 /*-------------------------------------------------------------------------*\

@@ -88,6 +88,11 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 	void setImage(UInt32 index, ImagePtr Image);
 	void setImage(UInt32 index, const char *fileName, const char *mimeType = 0);
 
+	void setScale(UInt32 WorldSizeZ, UInt32 WorldSizeX, UInt32 MapSizeY, UInt32 MapSizeX);
+
+	void setCharacterPosition(Pnt2f Position);
+
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
