@@ -131,6 +131,13 @@ SFPnt2f *LayeredImageMiniMapBase::getSFMapLocationPtr(void)
     return &_sfMapLocationPtr;
 }
 
+//! Get the LayeredImageMiniMap::_sfStartPositionPtr field.
+inline
+SFPnt2f *LayeredImageMiniMapBase::getSFStartPositionPtr(void)
+{
+    return &_sfStartPositionPtr;
+}
+
 
 //! Get the value of the LayeredImageMiniMap::_sfMapScaleX field.
 inline
@@ -193,6 +200,27 @@ inline
 void LayeredImageMiniMapBase::setMapLocationPtr(const Pnt2f &value)
 {
     _sfMapLocationPtr.setValue(value);
+}
+
+//! Get the value of the LayeredImageMiniMap::_sfStartPositionPtr field.
+inline
+Pnt2f &LayeredImageMiniMapBase::getStartPositionPtr(void)
+{
+    return _sfStartPositionPtr.getValue();
+}
+
+//! Get the value of the LayeredImageMiniMap::_sfStartPositionPtr field.
+inline
+const Pnt2f &LayeredImageMiniMapBase::getStartPositionPtr(void) const
+{
+    return _sfStartPositionPtr.getValue();
+}
+
+//! Set the value of the LayeredImageMiniMap::_sfStartPositionPtr field.
+inline
+void LayeredImageMiniMapBase::setStartPositionPtr(const Pnt2f &value)
+{
+    _sfStartPositionPtr.setValue(value);
 }
 
 

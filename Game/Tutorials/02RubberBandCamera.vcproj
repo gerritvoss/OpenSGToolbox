@@ -207,7 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\01MiniMap.cpp"
+				RelativePath=".\02MiniMap.cpp"
 				>
 			</File>
 		</Filter>

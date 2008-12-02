@@ -334,7 +334,6 @@ public:
 			   BoxTransform->setMatrix(NewTransform);
 		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
 	   }
-		
 	}
 };
 
@@ -392,7 +391,7 @@ int main(int argc, char **argv)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr BoxGeometryNode = makeBox(0.5,0.5,0.5,2,2,2);
+    NodePtr BoxGeometryNode = makeBox(0.5,0.5,0.5,50,2,2);
 
 	//Set the Camera Beacon Node
 	Matrix Offset;
@@ -458,6 +457,8 @@ int main(int argc, char **argv)
 
     while(!ExitApp)
     {
+		std::cout<<BoxGeometryNode->getToWorld()<<std::endl;
+		system("cls");
         TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
     }

@@ -90,7 +90,9 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 
 	void setScale(UInt32 WorldSizeZ, UInt32 WorldSizeX, UInt32 MapSizeY, UInt32 MapSizeX);
 
-	void setCharacterPosition(Pnt2f Position);
+	void setCharacterPosition(osg::Matrix Position);
+
+	void setStartLocation(Pnt2f MapSizeXY, Real32 CharacterXAlignment, Real32 CharacterYAlignment);
 
 
     /*! \}                                                                 */

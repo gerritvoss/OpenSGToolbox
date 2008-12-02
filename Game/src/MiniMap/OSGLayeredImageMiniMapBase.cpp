@@ -79,6 +79,9 @@ const OSG::BitVector  LayeredImageMiniMapBase::MapScaleYFieldMask =
 const OSG::BitVector  LayeredImageMiniMapBase::MapLocationPtrFieldMask = 
     (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::MapLocationPtrFieldId);
 
+const OSG::BitVector  LayeredImageMiniMapBase::StartPositionPtrFieldMask = 
+    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::StartPositionPtrFieldId);
+
 const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -99,6 +102,9 @@ const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask =
     
 */
 /*! \var Pnt2f           LayeredImageMiniMapBase::_sfMapLocationPtr
+    
+*/
+/*! \var Pnt2f           LayeredImageMiniMapBase::_sfStartPositionPtr
     
 */
 
@@ -130,7 +136,12 @@ FieldDescription *LayeredImageMiniMapBase::_desc[] =
                      "mapLocationPtr", 
                      MapLocationPtrFieldId, MapLocationPtrFieldMask,
                      false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFMapLocationPtr)
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFMapLocationPtr),
+    new FieldDescription(SFPnt2f::getClassType(), 
+                     "startPositionPtr", 
+                     StartPositionPtrFieldId, StartPositionPtrFieldMask,
+                     false,
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFStartPositionPtr)
 };
 
 
@@ -213,6 +224,7 @@ LayeredImageMiniMapBase::LayeredImageMiniMapBase(void) :
     _sfMapScaleX              (), 
     _sfMapScaleY              (), 
     _sfMapLocationPtr         (), 
+    _sfStartPositionPtr       (), 
     Inherited() 
 {
 }
@@ -227,6 +239,7 @@ LayeredImageMiniMapBase::LayeredImageMiniMapBase(const LayeredImageMiniMapBase &
     _sfMapScaleX              (source._sfMapScaleX              ), 
     _sfMapScaleY              (source._sfMapScaleY              ), 
     _sfMapLocationPtr         (source._sfMapLocationPtr         ), 
+    _sfStartPositionPtr       (source._sfStartPositionPtr       ), 
     Inherited                 (source)
 {
 }
@@ -268,6 +281,11 @@ UInt32 LayeredImageMiniMapBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMapLocationPtr.getBinSize();
     }
 
+    if(FieldBits::NoField != (StartPositionPtrFieldMask & whichField))
+    {
+        returnValue += _sfStartPositionPtr.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -300,6 +318,11 @@ void LayeredImageMiniMapBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MapLocationPtrFieldMask & whichField))
     {
         _sfMapLocationPtr.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StartPositionPtrFieldMask & whichField))
+    {
+        _sfStartPositionPtr.copyToBin(pMem);
     }
 
 
@@ -335,6 +358,11 @@ void LayeredImageMiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMapLocationPtr.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (StartPositionPtrFieldMask & whichField))
+    {
+        _sfStartPositionPtr.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -360,6 +388,9 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
     if(FieldBits::NoField != (MapLocationPtrFieldMask & whichField))
         _sfMapLocationPtr.syncWith(pOther->_sfMapLocationPtr);
 
+    if(FieldBits::NoField != (StartPositionPtrFieldMask & whichField))
+        _sfStartPositionPtr.syncWith(pOther->_sfStartPositionPtr);
+
 
 }
 #else
@@ -378,6 +409,9 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
 
     if(FieldBits::NoField != (MapLocationPtrFieldMask & whichField))
         _sfMapLocationPtr.syncWith(pOther->_sfMapLocationPtr);
+
+    if(FieldBits::NoField != (StartPositionPtrFieldMask & whichField))
+        _sfStartPositionPtr.syncWith(pOther->_sfStartPositionPtr);
 
 
     if(FieldBits::NoField != (OverlayFieldMask & whichField))

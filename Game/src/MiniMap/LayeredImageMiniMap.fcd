@@ -53,6 +53,14 @@ A LayeredImageMiniMap.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="startPositionPtr"
+		type="Pnt2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 
 
 

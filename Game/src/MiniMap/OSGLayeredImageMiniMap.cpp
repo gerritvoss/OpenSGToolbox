@@ -84,12 +84,24 @@ void LayeredImageMiniMap::setScale(UInt32 WorldSizeZ, UInt32 WorldSizeX, UInt32 
 	setMapScaleY(MapSizeX / WorldSizeX); //For scaling the length of the map
 }
 
-void LayeredImageMiniMap::setCharacterPosition(Pnt2f Position)
+void LayeredImageMiniMap::setStartLocation(Pnt2f MapSizeXY, Real32 CharacterXAlignment, Real32 CharacterYAlignment)
 {
-	Position[0] = Position[0] * getMapScaleX();
-	Position[1] = Position[1] * getMapScaleY();
+	setStartPositionPtr(Pnt2f(MapSizeXY.x() * CharacterXAlignment, MapSizeXY.y() * CharacterYAlignment));
+}
 
-	setMapLocationPtr(Position);
+void LayeredImageMiniMap::setCharacterPosition(osg::Matrix Position)
+{
+	Pnt2f Location;
+	Vec3f xyz;
+	Vec3f scale;
+	Quaternion rotation, Orientation;
+
+	Position.getTransform(xyz,rotation,scale,Orientation);
+
+	
+	Location.setValues((xyz.x() * getMapScaleX()) + getStartPositionPtr().x(), (xyz.z() * getMapScaleY()) + getStartPositionPtr().y());
+	
+	setMapLocationPtr(Location);
 }
 
 
