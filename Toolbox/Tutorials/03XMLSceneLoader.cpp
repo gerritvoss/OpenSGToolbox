@@ -32,6 +32,11 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
+int SelectedRootNode;
+int SelectedCamera;
+std::vector<NodePtr> RootNodes;
+std::vector<CameraPtr> Cameras;
+
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
 
@@ -40,9 +45,8 @@ int setupGLUT( int *argc, char *argv[] );
 // names are handled as simple attachments, get the header for that
 #include <OpenSG/OSGSimpleAttachments.h>
 
-void printAllStatDescs(void);
-NodePtr Load(std::string FilePath);
-NodePtr LoadXML(std::string FilePath);
+void Load(std::string FilePath, std::vector<NodePtr>& RootNodes, std::vector<CameraPtr>& Cameras);
+void LoadXML(std::string FilePath, std::vector<NodePtr>& RootNodes, std::vector<CameraPtr>& Cameras);
 bool isFileXML(std::string FilePath);
 
 // Initialize GLUT & OpenSG and set up the scene
@@ -50,7 +54,6 @@ int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
-    printAllStatDescs();
 
     // GLUT init
     int winid = setupGLUT(&argc, argv);
@@ -61,8 +64,6 @@ int main(int argc, char **argv)
     gwin->init();
 
     // load the scene
-
-    NodePtr scene;
     
     if(argc < 2)
     {
@@ -89,13 +90,19 @@ int main(int argc, char **argv)
             FWARNING(("%s\n", *it));
         }
 
-        scene = makeTorus(.5, 2, 16, 16);
+        RootNodes.push_back( makeTorus(.5, 2, 16, 16) );
         glutSetWindowTitle("No file Loaded");
     }
     else
     {
         glutSetWindowTitle(argv[1]);
-        scene = Load(std::string(argv[1]));
+        Load(std::string(argv[1]), RootNodes, Cameras);
+
+		if(RootNodes.size() < 1)
+		{
+			std::cout << "There are no root nodes defined." << std::endl;
+			return 0;
+		}
     }
 
     //Create Statistics Foreground
@@ -133,12 +140,16 @@ int main(int argc, char **argv)
         TheStatForeground->addElement(RenderAction::statNTexBytes, "%d bytes of texture used");
     endEditCP(TheStatForeground);
 
+	//Set up Selection
+	SelectedRootNode = 0;
+	SelectedCamera = -1;
+
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // tell the manager what to manage
     mgr->setWindow(gwin );
-    mgr->setRoot  (scene);
+    mgr->setRoot  (RootNodes[SelectedRootNode]);
     mgr->turnHeadlightOff();
 
     beginEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
@@ -226,6 +237,29 @@ void keyboard(unsigned char k, int , int )
             mgr->setNavigationMode(Navigator::TRACKBALL);
         }
         break;
+        case 'r':   
+        {
+			SelectedRootNode = (SelectedRootNode+1)%RootNodes.size();
+			if(SelectedRootNode == -1) {SelectedRootNode = 0;}
+			mgr->setRoot  (RootNodes[SelectedRootNode]);
+        }
+        break;
+        case 'c':   
+        {
+			if(Cameras.size() > 0)
+			{
+				SelectedCamera = (SelectedCamera+1)%Cameras.size();
+				if(Cameras[SelectedCamera]->getType().isDerivedFrom(PerspectiveCamera::getClassType()))
+				{
+					mgr->setCamera(PerspectiveCamera::Ptr::dcast(Cameras[SelectedCamera]));
+				}
+				else
+				{
+					std::cout << "Cannont switch to a non-perspective camera.  This needs to be implemented." << std::endl;
+				}
+			}
+        }
+        break;
 
         case 'h':
             if(mgr->getHeadlightState())
@@ -240,7 +274,7 @@ void keyboard(unsigned char k, int , int )
     }
 }
 
-NodePtr Load(std::string FilePath)
+void Load(std::string FilePath, std::vector<NodePtr>& RootNodes, std::vector<CameraPtr>& Cameras)
 {
     /*
         All scene file loading is handled via the SceneFileHandler.
@@ -251,22 +285,26 @@ NodePtr Load(std::string FilePath)
     
     if(isFileXML(FilePath))
     {
-        LoadedScene = LoadXML(FilePath);
+        LoadXML(FilePath, RootNodes, Cameras);
     }
     else
     {
-        LoadedScene = SceneFileHandler::the().read(FilePath.c_str());
+		SceneFileHandler::FCPtrStore Roots = SceneFileHandler::the().readTopNodes(FilePath.c_str());
+		for(unsigned int i(0) ; i<Roots.size() ; ++i)
+		{
+			RootNodes.push_back(Node::Ptr::dcast(Roots[i]));
+		}
     }
     
     Time end = getSystemTime();
 
     std::cerr << "Took " << end-start << " to load" << std::endl;
-
-    return LoadedScene;
 }
 
-NodePtr LoadXML(std::string FilePath)
+void LoadXML(std::string FilePath, std::vector<NodePtr>& RootNodes, std::vector<CameraPtr>& Cameras)
 {
+	RootNodes.clear();
+	Cameras.clear();
     std::cout << "Loading xml File: " << FilePath << std::endl;
 
 	FCFileType::FCPtrStore NewContainers;
@@ -279,11 +317,13 @@ NodePtr LoadXML(std::string FilePath)
         if( (*Itor)->getType() == Node::getClassType() &&
             Node::Ptr::dcast(*Itor)->getParent() == NullFC)
         {
-            return Node::Ptr::dcast(*Itor);
+            RootNodes.push_back(Node::Ptr::dcast(*Itor));
         }
+		else if( (*Itor)->getType().isDerivedFrom( Camera::getClassType() ))
+		{
+            Cameras.push_back(Camera::Ptr::dcast(*Itor));
+		}
     }
-
-    return NullFC;
 }
 
 bool isFileXML(std::string FilePath)
@@ -295,7 +335,7 @@ bool isFileXML(std::string FilePath)
     return Extension.compare("xml") == 0;
 }
 
-void printAllStatDescs(void)
+/*void printAllStatDescs(void)
 {
     UInt32 NumOfStatDescs(StatElemDesc<StatIntElem>::getNumOfDescs());
     std::cout << "Number of StatIntElem Stat Descriptions: "<< NumOfStatDescs << std::endl;
@@ -304,7 +344,7 @@ void printAllStatDescs(void)
     {
         std::cout << i << " : " << StatElemDesc<StatIntElem>::getDesc(i)->getName() << std::endl;
     }
-}
+}*/
 
 // setup the GLUT library which handles the windows for us
 int setupGLUT(int *argc, char *argv[])
