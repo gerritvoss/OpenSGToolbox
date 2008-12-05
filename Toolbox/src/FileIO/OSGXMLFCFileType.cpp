@@ -218,7 +218,8 @@ std::string XMLFCFileType::getName(void) const
 					{
 						std::string FieldName = AttributeIterator->first;
 						if(FieldName.compare(FieldContainerIDXMLToken) == 0 ||
-						   FieldName.compare(FieldContainerIDXMLToken) == 0)
+						   FieldName.compare(NameAttachmentXMLToken) == 0 ||
+						   FieldName.compare(FileAttachmentXMLToken) == 0)
 						{
 							continue;
 						}

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="OSGToolbox"
-	ProjectGUID="{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
+	ProjectGUID="{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
 	>
