@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Animation", "01Animation.vcproj", "{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Bui
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10SkeletonDrawer", "10SkeletonDrawer.vcproj", "{919E4AE1-FA11-45F6-A1DB-7003C8CD3207}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11BoneAnimation", "11BoneAnimation.vcproj", "{54E379D2-C481-48F7-932F-A0689899664C}"
 EndProject
@@ -47,10 +47,10 @@ Global
 		{919E4AE1-FA11-45F6-A1DB-7003C8CD3207}.Debug|Win32.Build.0 = Debug|Win32
 		{919E4AE1-FA11-45F6-A1DB-7003C8CD3207}.Release|Win32.ActiveCfg = Release|Win32
 		{919E4AE1-FA11-45F6-A1DB-7003C8CD3207}.Release|Win32.Build.0 = Release|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.Build.0 = Debug|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.ActiveCfg = Release|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.Build.0 = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.Build.0 = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.ActiveCfg = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.Build.0 = Release|Win32
 		{54E379D2-C481-48F7-932F-A0689899664C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{54E379D2-C481-48F7-932F-A0689899664C}.Debug|Win32.Build.0 = Debug|Win32
 		{54E379D2-C481-48F7-932F-A0689899664C}.Release|Win32.ActiveCfg = Release|Win32
