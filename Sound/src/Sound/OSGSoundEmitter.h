@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGSoundDef.h"
 
 #include "OSGSoundEmitterBase.h"
 

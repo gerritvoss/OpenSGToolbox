@@ -9,7 +9,7 @@
 //---------------------------------------------------------------------------
 
 #if defined(WIN32) && defined(OSG_BUILD_DLL)
-#   if defined(OSG_COMPILESOUNDINST) || defined(OSG_COMPILESOUNDLIB)
+#   ifdef OSG_COMPILESOUNDLIB
 #       define OSG_SOUNDLIB_DLLMAPPING     __declspec(dllexport)
 #       define OSG_SOUNDLIB_DLLTMPLMAPPING __declspec(dllexport)
 #   else
