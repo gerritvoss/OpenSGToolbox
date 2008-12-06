@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib OSGDynamicsD.lib OSGUserInterfaceD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib OSGDynamics.lib OSGUserInterface.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -277,6 +277,26 @@
 					RelativePath="..\..\src\Sound\OSGSoundFields.h"
 					>
 				</File>
+				<Filter
+					Name="Events"
+					>
+					<File
+						RelativePath="..\..\src\Sound\Events\OSGSoundEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Sound\Events\OSGSoundEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Sound\Events\OSGSoundEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Sound\Events\OSGSoundListener.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>
