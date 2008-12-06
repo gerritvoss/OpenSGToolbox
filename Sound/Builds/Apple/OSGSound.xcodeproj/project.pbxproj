@@ -1,0 +1,1517 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		C997E4D30DE7556C00509C0E /* Includes Install Aggregate */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C997E4D40DE7558B00509C0E /* Build configuration list for PBXAggregateTarget "Includes Install Aggregate" */;
+			buildPhases = (
+			);
+			dependencies = (
+				C9A468DF0DEC84A3008213FF /* PBXTargetDependency */,
+				C9A468FC0DEC851E008213FF /* PBXTargetDependency */,
+				C9A469090DEC8553008213FF /* PBXTargetDependency */,
+				C997E4D90DE755A500509C0E /* PBXTargetDependency */,
+				C9A469160DEC85A3008213FF /* PBXTargetDependency */,
+				C9A4691B0DEC85D4008213FF /* PBXTargetDependency */,
+				C997E4DB0DE755AA00509C0E /* PBXTargetDependency */,
+			);
+			name = "Includes Install Aggregate";
+			productName = "Includes Install Aggregate";
+		};
+		D437832B0CF0B17E0062E3A4 /* OSGToolbox Aggregate */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D43783360CF0B2110062E3A4 /* Build configuration list for PBXAggregateTarget "OSGToolbox Aggregate" */;
+			buildPhases = (
+			);
+			dependencies = (
+				D437832D0CF0B1890062E3A4 /* PBXTargetDependency */,
+				D43783810CF0BF320062E3A4 /* PBXTargetDependency */,
+				D437838A0CF0C07C0062E3A4 /* PBXTargetDependency */,
+			);
+			name = "OSGToolbox Aggregate";
+			productName = "OSG Toolbox Aggregate";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		C99435A40E09917600668726 /* OSGFilePathAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435600E09917500668726 /* OSGFilePathAttachment.cpp */; };
+		C99435A50E09917600668726 /* OSGFilePathAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435610E09917500668726 /* OSGFilePathAttachment.h */; };
+		C99435A60E09917600668726 /* OSGFilePathAttachmentBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435630E09917500668726 /* OSGFilePathAttachmentBase.cpp */; };
+		C99435A70E09917600668726 /* OSGFilePathAttachmentBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435640E09917500668726 /* OSGFilePathAttachmentBase.h */; };
+		C99435A80E09917600668726 /* OSGFilePathAttachmentFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435660E09917500668726 /* OSGFilePathAttachmentFields.h */; };
+		C99435A90E09917600668726 /* OSGAirplaneCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994356A0E09917600668726 /* OSGAirplaneCamera.cpp */; };
+		C99435AA0E09917600668726 /* OSGAirplaneCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = C994356B0E09917600668726 /* OSGAirplaneCamera.h */; };
+		C99435AB0E09917600668726 /* OSGAirplaneCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994356D0E09917600668726 /* OSGAirplaneCameraBase.cpp */; };
+		C99435AC0E09917600668726 /* OSGAirplaneCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C994356E0E09917600668726 /* OSGAirplaneCameraBase.h */; };
+		C99435AD0E09917600668726 /* OSGAirplaneCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435700E09917600668726 /* OSGAirplaneCameraFields.h */; };
+		C99435AE0E09917600668726 /* OSGMatrixBeaconCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435710E09917600668726 /* OSGMatrixBeaconCamera.cpp */; };
+		C99435AF0E09917600668726 /* OSGMatrixBeaconCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435720E09917600668726 /* OSGMatrixBeaconCamera.h */; };
+		C99435B00E09917600668726 /* OSGMatrixBeaconCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435740E09917600668726 /* OSGMatrixBeaconCameraBase.cpp */; };
+		C99435B10E09917600668726 /* OSGMatrixBeaconCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435750E09917600668726 /* OSGMatrixBeaconCameraBase.h */; };
+		C99435B20E09917600668726 /* OSGMatrixBeaconCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435770E09917600668726 /* OSGMatrixBeaconCameraFields.h */; };
+		C99435B30E09917600668726 /* OSGRubberBandCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435780E09917600668726 /* OSGRubberBandCamera.cpp */; };
+		C99435B40E09917600668726 /* OSGRubberBandCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435790E09917600668726 /* OSGRubberBandCamera.h */; };
+		C99435B50E09917600668726 /* OSGRubberBandCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994357B0E09917600668726 /* OSGRubberBandCameraBase.cpp */; };
+		C99435B60E09917600668726 /* OSGRubberBandCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C994357C0E09917600668726 /* OSGRubberBandCameraBase.h */; };
+		C99435B70E09917600668726 /* OSGRubberBandCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C994357E0E09917600668726 /* OSGRubberBandCameraFields.h */; };
+		C99435B80E09917600668726 /* OSGBinFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435810E09917600668726 /* OSGBinFCFileType.cpp */; };
+		C99435B90E09917600668726 /* OSGBinFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435820E09917600668726 /* OSGBinFCFileType.h */; };
+		C99435BA0E09917600668726 /* OSGFCFileHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435840E09917600668726 /* OSGFCFileHandler.cpp */; };
+		C99435BB0E09917600668726 /* OSGFCFileHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435850E09917600668726 /* OSGFCFileHandler.h */; };
+		C99435BC0E09917600668726 /* OSGFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435870E09917600668726 /* OSGFCFileType.cpp */; };
+		C99435BD0E09917600668726 /* OSGFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435880E09917600668726 /* OSGFCFileType.h */; };
+		C99435BE0E09917600668726 /* OSGXMLFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994358A0E09917600668726 /* OSGXMLFCFileType.cpp */; };
+		C99435BF0E09917600668726 /* OSGXMLFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = C994358B0E09917600668726 /* OSGXMLFCFileType.h */; };
+		C99435C00E09917600668726 /* OSGToolboxDef.h in Headers */ = {isa = PBXBuildFile; fileRef = C994358D0E09917600668726 /* OSGToolboxDef.h */; };
+		C99435C10E09917600668726 /* OSGFieldContainerMapType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994358F0E09917600668726 /* OSGFieldContainerMapType.cpp */; };
+		C99435C20E09917600668726 /* OSGFieldContainerMapType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435900E09917600668726 /* OSGFieldContainerMapType.h */; };
+		C99435C30E09917600668726 /* OSGPathType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435910E09917600668726 /* OSGPathType.cpp */; };
+		C99435C40E09917600668726 /* OSGPathType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435920E09917600668726 /* OSGPathType.h */; };
+		C99435C50E09917600668726 /* OSGStringMapType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435930E09917600668726 /* OSGStringMapType.cpp */; };
+		C99435C60E09917600668726 /* OSGStringMapType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435940E09917600668726 /* OSGStringMapType.h */; };
+		C99435C70E09917600668726 /* OSGCameraUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435960E09917600668726 /* OSGCameraUtils.cpp */; };
+		C99435C80E09917600668726 /* OSGCameraUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435970E09917600668726 /* OSGCameraUtils.h */; };
+		C99435C90E09917600668726 /* OSGColorOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435980E09917600668726 /* OSGColorOperations.h */; };
+		C99435CA0E09917600668726 /* OSGGLenumUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435990E09917600668726 /* OSGGLenumUtils.cpp */; };
+		C99435CB0E09917600668726 /* OSGGLenumUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C994359A0E09917600668726 /* OSGGLenumUtils.h */; };
+		C99435CC0E09917600668726 /* OSGIntrusivePtrImplBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994359B0E09917600668726 /* OSGIntrusivePtrImplBase.cpp */; };
+		C99435CD0E09917600668726 /* OSGIntrusivePtrImplBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C994359C0E09917600668726 /* OSGIntrusivePtrImplBase.h */; };
+		C99435CE0E09917600668726 /* OSGPntOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = C994359E0E09917600668726 /* OSGPntOperations.h */; };
+		C99435CF0E09917600668726 /* OSGQuatOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = C994359F0E09917600668726 /* OSGQuatOperations.h */; };
+		C99435D00E09917600668726 /* OSGRandomPoolManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435A00E09917600668726 /* OSGRandomPoolManager.cpp */; };
+		C99435D10E09917600668726 /* OSGRandomPoolManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435A10E09917600668726 /* OSGRandomPoolManager.h */; };
+		C99435D20E09917600668726 /* OSGSharedFieldPtr.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435A30E09917600668726 /* OSGSharedFieldPtr.h */; };
+		C99435D30E09917600668726 /* OSGFilePathAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435600E09917500668726 /* OSGFilePathAttachment.cpp */; };
+		C99435D40E09917600668726 /* OSGFilePathAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435610E09917500668726 /* OSGFilePathAttachment.h */; };
+		C99435D50E09917600668726 /* OSGFilePathAttachmentBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435630E09917500668726 /* OSGFilePathAttachmentBase.cpp */; };
+		C99435D60E09917600668726 /* OSGFilePathAttachmentBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435640E09917500668726 /* OSGFilePathAttachmentBase.h */; };
+		C99435D70E09917600668726 /* OSGFilePathAttachmentFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435660E09917500668726 /* OSGFilePathAttachmentFields.h */; };
+		C99435D80E09917600668726 /* OSGAirplaneCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994356A0E09917600668726 /* OSGAirplaneCamera.cpp */; };
+		C99435D90E09917600668726 /* OSGAirplaneCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = C994356B0E09917600668726 /* OSGAirplaneCamera.h */; };
+		C99435DA0E09917600668726 /* OSGAirplaneCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994356D0E09917600668726 /* OSGAirplaneCameraBase.cpp */; };
+		C99435DB0E09917600668726 /* OSGAirplaneCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C994356E0E09917600668726 /* OSGAirplaneCameraBase.h */; };
+		C99435DC0E09917600668726 /* OSGAirplaneCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435700E09917600668726 /* OSGAirplaneCameraFields.h */; };
+		C99435DD0E09917600668726 /* OSGMatrixBeaconCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435710E09917600668726 /* OSGMatrixBeaconCamera.cpp */; };
+		C99435DE0E09917600668726 /* OSGMatrixBeaconCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435720E09917600668726 /* OSGMatrixBeaconCamera.h */; };
+		C99435DF0E09917600668726 /* OSGMatrixBeaconCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435740E09917600668726 /* OSGMatrixBeaconCameraBase.cpp */; };
+		C99435E00E09917600668726 /* OSGMatrixBeaconCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435750E09917600668726 /* OSGMatrixBeaconCameraBase.h */; };
+		C99435E10E09917600668726 /* OSGMatrixBeaconCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435770E09917600668726 /* OSGMatrixBeaconCameraFields.h */; };
+		C99435E20E09917600668726 /* OSGRubberBandCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435780E09917600668726 /* OSGRubberBandCamera.cpp */; };
+		C99435E30E09917600668726 /* OSGRubberBandCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435790E09917600668726 /* OSGRubberBandCamera.h */; };
+		C99435E40E09917600668726 /* OSGRubberBandCameraBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994357B0E09917600668726 /* OSGRubberBandCameraBase.cpp */; };
+		C99435E50E09917600668726 /* OSGRubberBandCameraBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C994357C0E09917600668726 /* OSGRubberBandCameraBase.h */; };
+		C99435E60E09917600668726 /* OSGRubberBandCameraFields.h in Headers */ = {isa = PBXBuildFile; fileRef = C994357E0E09917600668726 /* OSGRubberBandCameraFields.h */; };
+		C99435E70E09917600668726 /* OSGBinFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435810E09917600668726 /* OSGBinFCFileType.cpp */; };
+		C99435E80E09917600668726 /* OSGBinFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435820E09917600668726 /* OSGBinFCFileType.h */; };
+		C99435E90E09917600668726 /* OSGFCFileHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435840E09917600668726 /* OSGFCFileHandler.cpp */; };
+		C99435EA0E09917600668726 /* OSGFCFileHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435850E09917600668726 /* OSGFCFileHandler.h */; };
+		C99435EB0E09917600668726 /* OSGFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435870E09917600668726 /* OSGFCFileType.cpp */; };
+		C99435EC0E09917600668726 /* OSGFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435880E09917600668726 /* OSGFCFileType.h */; };
+		C99435ED0E09917600668726 /* OSGXMLFCFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994358A0E09917600668726 /* OSGXMLFCFileType.cpp */; };
+		C99435EE0E09917600668726 /* OSGXMLFCFileType.h in Headers */ = {isa = PBXBuildFile; fileRef = C994358B0E09917600668726 /* OSGXMLFCFileType.h */; };
+		C99435EF0E09917600668726 /* OSGToolboxDef.h in Headers */ = {isa = PBXBuildFile; fileRef = C994358D0E09917600668726 /* OSGToolboxDef.h */; };
+		C99435F00E09917600668726 /* OSGFieldContainerMapType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994358F0E09917600668726 /* OSGFieldContainerMapType.cpp */; };
+		C99435F10E09917600668726 /* OSGFieldContainerMapType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435900E09917600668726 /* OSGFieldContainerMapType.h */; };
+		C99435F20E09917600668726 /* OSGPathType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435910E09917600668726 /* OSGPathType.cpp */; };
+		C99435F30E09917600668726 /* OSGPathType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435920E09917600668726 /* OSGPathType.h */; };
+		C99435F40E09917600668726 /* OSGStringMapType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435930E09917600668726 /* OSGStringMapType.cpp */; };
+		C99435F50E09917600668726 /* OSGStringMapType.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435940E09917600668726 /* OSGStringMapType.h */; };
+		C99435F60E09917600668726 /* OSGCameraUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435960E09917600668726 /* OSGCameraUtils.cpp */; };
+		C99435F70E09917600668726 /* OSGCameraUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435970E09917600668726 /* OSGCameraUtils.h */; };
+		C99435F80E09917600668726 /* OSGColorOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435980E09917600668726 /* OSGColorOperations.h */; };
+		C99435F90E09917600668726 /* OSGGLenumUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435990E09917600668726 /* OSGGLenumUtils.cpp */; };
+		C99435FA0E09917600668726 /* OSGGLenumUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C994359A0E09917600668726 /* OSGGLenumUtils.h */; };
+		C99435FB0E09917600668726 /* OSGIntrusivePtrImplBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994359B0E09917600668726 /* OSGIntrusivePtrImplBase.cpp */; };
+		C99435FC0E09917600668726 /* OSGIntrusivePtrImplBase.h in Headers */ = {isa = PBXBuildFile; fileRef = C994359C0E09917600668726 /* OSGIntrusivePtrImplBase.h */; };
+		C99435FD0E09917600668726 /* OSGPntOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = C994359E0E09917600668726 /* OSGPntOperations.h */; };
+		C99435FE0E09917600668726 /* OSGQuatOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = C994359F0E09917600668726 /* OSGQuatOperations.h */; };
+		C99435FF0E09917600668726 /* OSGRandomPoolManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99435A00E09917600668726 /* OSGRandomPoolManager.cpp */; };
+		C99436000E09917600668726 /* OSGRandomPoolManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435A10E09917600668726 /* OSGRandomPoolManager.h */; };
+		C99436010E09917600668726 /* OSGSharedFieldPtr.h in Headers */ = {isa = PBXBuildFile; fileRef = C99435A30E09917600668726 /* OSGSharedFieldPtr.h */; };
+		D42BACE00DE4A6980052520E /* 02FCFileTypeIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42BACDF0DE4A6980052520E /* 02FCFileTypeIO.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C997E4D80DE755A500509C0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C997E4D70DE7558C00509C0E;
+			remoteInfo = "Make Toolbox Directory";
+		};
+		C997E4DA0DE755AA00509C0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D43783460CF0B5090062E3A4;
+			remoteInfo = "OSGToolbox install Shell Script";
+		};
+		C9A468DE0DEC84A3008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A468DA0DEC8470008213FF;
+			remoteInfo = "Make include Directory";
+		};
+		C9A468FB0DEC851E008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A468F10DEC8502008213FF;
+			remoteInfo = "Make lib Directory";
+		};
+		C9A469080DEC8553008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A468FE0DEC8536008213FF;
+			remoteInfo = "Make OpenSG Directory";
+		};
+		C9A469150DEC85A3008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A4690A0DEC8569008213FF;
+			remoteInfo = "Make Input Directory";
+		};
+		C9A4691A0DEC85D4008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9A469180DEC85BB008213FF;
+			remoteInfo = "Build UserInterface Directory";
+		};
+		C9A469520DEC8F33008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC09C05546B4700DB518D;
+			remoteInfo = "OSGToolbox Dynamic Library";
+		};
+		C9A469540DEC8F3A008213FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C997E4D30DE7556C00509C0E;
+			remoteInfo = "Includes Install Aggregate";
+		};
+		D437832C0CF0B1890062E3A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC09C05546B4700DB518D;
+			remoteInfo = "Xcode OSGToolbox";
+		};
+		D43783800CF0BF320062E3A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D437835E0CF0BED30062E3A4;
+			remoteInfo = "OSGToolbox Static Library";
+		};
+		D43783890CF0C07C0062E3A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D43783460CF0B5090062E3A4;
+			remoteInfo = "OSGToolbox install Shell Script";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C994355F0E09917500668726 /* FilePathAttachment.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FilePathAttachment.fcd; path = ../../src/Attachments/FilePathAttachment.fcd; sourceTree = SOURCE_ROOT; };
+		C99435600E09917500668726 /* OSGFilePathAttachment.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFilePathAttachment.cpp; path = ../../src/Attachments/OSGFilePathAttachment.cpp; sourceTree = SOURCE_ROOT; };
+		C99435610E09917500668726 /* OSGFilePathAttachment.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFilePathAttachment.h; path = ../../src/Attachments/OSGFilePathAttachment.h; sourceTree = SOURCE_ROOT; };
+		C99435620E09917500668726 /* OSGFilePathAttachment.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFilePathAttachment.inl; path = ../../src/Attachments/OSGFilePathAttachment.inl; sourceTree = SOURCE_ROOT; };
+		C99435630E09917500668726 /* OSGFilePathAttachmentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFilePathAttachmentBase.cpp; path = ../../src/Attachments/OSGFilePathAttachmentBase.cpp; sourceTree = SOURCE_ROOT; };
+		C99435640E09917500668726 /* OSGFilePathAttachmentBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFilePathAttachmentBase.h; path = ../../src/Attachments/OSGFilePathAttachmentBase.h; sourceTree = SOURCE_ROOT; };
+		C99435650E09917500668726 /* OSGFilePathAttachmentBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFilePathAttachmentBase.inl; path = ../../src/Attachments/OSGFilePathAttachmentBase.inl; sourceTree = SOURCE_ROOT; };
+		C99435660E09917500668726 /* OSGFilePathAttachmentFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFilePathAttachmentFields.h; path = ../../src/Attachments/OSGFilePathAttachmentFields.h; sourceTree = SOURCE_ROOT; };
+		C99435680E09917600668726 /* AirplaneCamera.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = AirplaneCamera.fcd; path = ../../src/Cameras/AirplaneCamera.fcd; sourceTree = SOURCE_ROOT; };
+		C99435690E09917600668726 /* MatrixBeaconCamera.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = MatrixBeaconCamera.fcd; path = ../../src/Cameras/MatrixBeaconCamera.fcd; sourceTree = SOURCE_ROOT; };
+		C994356A0E09917600668726 /* OSGAirplaneCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGAirplaneCamera.cpp; path = ../../src/Cameras/OSGAirplaneCamera.cpp; sourceTree = SOURCE_ROOT; };
+		C994356B0E09917600668726 /* OSGAirplaneCamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGAirplaneCamera.h; path = ../../src/Cameras/OSGAirplaneCamera.h; sourceTree = SOURCE_ROOT; };
+		C994356C0E09917600668726 /* OSGAirplaneCamera.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGAirplaneCamera.inl; path = ../../src/Cameras/OSGAirplaneCamera.inl; sourceTree = SOURCE_ROOT; };
+		C994356D0E09917600668726 /* OSGAirplaneCameraBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGAirplaneCameraBase.cpp; path = ../../src/Cameras/OSGAirplaneCameraBase.cpp; sourceTree = SOURCE_ROOT; };
+		C994356E0E09917600668726 /* OSGAirplaneCameraBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGAirplaneCameraBase.h; path = ../../src/Cameras/OSGAirplaneCameraBase.h; sourceTree = SOURCE_ROOT; };
+		C994356F0E09917600668726 /* OSGAirplaneCameraBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGAirplaneCameraBase.inl; path = ../../src/Cameras/OSGAirplaneCameraBase.inl; sourceTree = SOURCE_ROOT; };
+		C99435700E09917600668726 /* OSGAirplaneCameraFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGAirplaneCameraFields.h; path = ../../src/Cameras/OSGAirplaneCameraFields.h; sourceTree = SOURCE_ROOT; };
+		C99435710E09917600668726 /* OSGMatrixBeaconCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMatrixBeaconCamera.cpp; path = ../../src/Cameras/OSGMatrixBeaconCamera.cpp; sourceTree = SOURCE_ROOT; };
+		C99435720E09917600668726 /* OSGMatrixBeaconCamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMatrixBeaconCamera.h; path = ../../src/Cameras/OSGMatrixBeaconCamera.h; sourceTree = SOURCE_ROOT; };
+		C99435730E09917600668726 /* OSGMatrixBeaconCamera.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGMatrixBeaconCamera.inl; path = ../../src/Cameras/OSGMatrixBeaconCamera.inl; sourceTree = SOURCE_ROOT; };
+		C99435740E09917600668726 /* OSGMatrixBeaconCameraBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGMatrixBeaconCameraBase.cpp; path = ../../src/Cameras/OSGMatrixBeaconCameraBase.cpp; sourceTree = SOURCE_ROOT; };
+		C99435750E09917600668726 /* OSGMatrixBeaconCameraBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMatrixBeaconCameraBase.h; path = ../../src/Cameras/OSGMatrixBeaconCameraBase.h; sourceTree = SOURCE_ROOT; };
+		C99435760E09917600668726 /* OSGMatrixBeaconCameraBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGMatrixBeaconCameraBase.inl; path = ../../src/Cameras/OSGMatrixBeaconCameraBase.inl; sourceTree = SOURCE_ROOT; };
+		C99435770E09917600668726 /* OSGMatrixBeaconCameraFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGMatrixBeaconCameraFields.h; path = ../../src/Cameras/OSGMatrixBeaconCameraFields.h; sourceTree = SOURCE_ROOT; };
+		C99435780E09917600668726 /* OSGRubberBandCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGRubberBandCamera.cpp; path = ../../src/Cameras/OSGRubberBandCamera.cpp; sourceTree = SOURCE_ROOT; };
+		C99435790E09917600668726 /* OSGRubberBandCamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGRubberBandCamera.h; path = ../../src/Cameras/OSGRubberBandCamera.h; sourceTree = SOURCE_ROOT; };
+		C994357A0E09917600668726 /* OSGRubberBandCamera.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGRubberBandCamera.inl; path = ../../src/Cameras/OSGRubberBandCamera.inl; sourceTree = SOURCE_ROOT; };
+		C994357B0E09917600668726 /* OSGRubberBandCameraBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGRubberBandCameraBase.cpp; path = ../../src/Cameras/OSGRubberBandCameraBase.cpp; sourceTree = SOURCE_ROOT; };
+		C994357C0E09917600668726 /* OSGRubberBandCameraBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGRubberBandCameraBase.h; path = ../../src/Cameras/OSGRubberBandCameraBase.h; sourceTree = SOURCE_ROOT; };
+		C994357D0E09917600668726 /* OSGRubberBandCameraBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGRubberBandCameraBase.inl; path = ../../src/Cameras/OSGRubberBandCameraBase.inl; sourceTree = SOURCE_ROOT; };
+		C994357E0E09917600668726 /* OSGRubberBandCameraFields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGRubberBandCameraFields.h; path = ../../src/Cameras/OSGRubberBandCameraFields.h; sourceTree = SOURCE_ROOT; };
+		C994357F0E09917600668726 /* RubberBandCamera.fcd */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = RubberBandCamera.fcd; path = ../../src/Cameras/RubberBandCamera.fcd; sourceTree = SOURCE_ROOT; };
+		C99435810E09917600668726 /* OSGBinFCFileType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGBinFCFileType.cpp; path = ../../src/FileIO/OSGBinFCFileType.cpp; sourceTree = SOURCE_ROOT; };
+		C99435820E09917600668726 /* OSGBinFCFileType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGBinFCFileType.h; path = ../../src/FileIO/OSGBinFCFileType.h; sourceTree = SOURCE_ROOT; };
+		C99435830E09917600668726 /* OSGBinFCFileType.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGBinFCFileType.inl; path = ../../src/FileIO/OSGBinFCFileType.inl; sourceTree = SOURCE_ROOT; };
+		C99435840E09917600668726 /* OSGFCFileHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFCFileHandler.cpp; path = ../../src/FileIO/OSGFCFileHandler.cpp; sourceTree = SOURCE_ROOT; };
+		C99435850E09917600668726 /* OSGFCFileHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFCFileHandler.h; path = ../../src/FileIO/OSGFCFileHandler.h; sourceTree = SOURCE_ROOT; };
+		C99435860E09917600668726 /* OSGFCFileHandler.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFCFileHandler.inl; path = ../../src/FileIO/OSGFCFileHandler.inl; sourceTree = SOURCE_ROOT; };
+		C99435870E09917600668726 /* OSGFCFileType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFCFileType.cpp; path = ../../src/FileIO/OSGFCFileType.cpp; sourceTree = SOURCE_ROOT; };
+		C99435880E09917600668726 /* OSGFCFileType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFCFileType.h; path = ../../src/FileIO/OSGFCFileType.h; sourceTree = SOURCE_ROOT; };
+		C99435890E09917600668726 /* OSGFCFileType.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGFCFileType.inl; path = ../../src/FileIO/OSGFCFileType.inl; sourceTree = SOURCE_ROOT; };
+		C994358A0E09917600668726 /* OSGXMLFCFileType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGXMLFCFileType.cpp; path = ../../src/FileIO/OSGXMLFCFileType.cpp; sourceTree = SOURCE_ROOT; };
+		C994358B0E09917600668726 /* OSGXMLFCFileType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGXMLFCFileType.h; path = ../../src/FileIO/OSGXMLFCFileType.h; sourceTree = SOURCE_ROOT; };
+		C994358C0E09917600668726 /* OSGXMLFCFileType.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGXMLFCFileType.inl; path = ../../src/FileIO/OSGXMLFCFileType.inl; sourceTree = SOURCE_ROOT; };
+		C994358D0E09917600668726 /* OSGToolboxDef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGToolboxDef.h; path = ../../src/OSGToolboxDef.h; sourceTree = SOURCE_ROOT; };
+		C994358F0E09917600668726 /* OSGFieldContainerMapType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGFieldContainerMapType.cpp; path = ../../src/Types/OSGFieldContainerMapType.cpp; sourceTree = SOURCE_ROOT; };
+		C99435900E09917600668726 /* OSGFieldContainerMapType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGFieldContainerMapType.h; path = ../../src/Types/OSGFieldContainerMapType.h; sourceTree = SOURCE_ROOT; };
+		C99435910E09917600668726 /* OSGPathType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGPathType.cpp; path = ../../src/Types/OSGPathType.cpp; sourceTree = SOURCE_ROOT; };
+		C99435920E09917600668726 /* OSGPathType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGPathType.h; path = ../../src/Types/OSGPathType.h; sourceTree = SOURCE_ROOT; };
+		C99435930E09917600668726 /* OSGStringMapType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGStringMapType.cpp; path = ../../src/Types/OSGStringMapType.cpp; sourceTree = SOURCE_ROOT; };
+		C99435940E09917600668726 /* OSGStringMapType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGStringMapType.h; path = ../../src/Types/OSGStringMapType.h; sourceTree = SOURCE_ROOT; };
+		C99435960E09917600668726 /* OSGCameraUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGCameraUtils.cpp; path = ../../src/Util/OSGCameraUtils.cpp; sourceTree = SOURCE_ROOT; };
+		C99435970E09917600668726 /* OSGCameraUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGCameraUtils.h; path = ../../src/Util/OSGCameraUtils.h; sourceTree = SOURCE_ROOT; };
+		C99435980E09917600668726 /* OSGColorOperations.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGColorOperations.h; path = ../../src/Util/OSGColorOperations.h; sourceTree = SOURCE_ROOT; };
+		C99435990E09917600668726 /* OSGGLenumUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGGLenumUtils.cpp; path = ../../src/Util/OSGGLenumUtils.cpp; sourceTree = SOURCE_ROOT; };
+		C994359A0E09917600668726 /* OSGGLenumUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGGLenumUtils.h; path = ../../src/Util/OSGGLenumUtils.h; sourceTree = SOURCE_ROOT; };
+		C994359B0E09917600668726 /* OSGIntrusivePtrImplBase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGIntrusivePtrImplBase.cpp; path = ../../src/Util/OSGIntrusivePtrImplBase.cpp; sourceTree = SOURCE_ROOT; };
+		C994359C0E09917600668726 /* OSGIntrusivePtrImplBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGIntrusivePtrImplBase.h; path = ../../src/Util/OSGIntrusivePtrImplBase.h; sourceTree = SOURCE_ROOT; };
+		C994359D0E09917600668726 /* OSGIntrusivePtrImplBase.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGIntrusivePtrImplBase.inl; path = ../../src/Util/OSGIntrusivePtrImplBase.inl; sourceTree = SOURCE_ROOT; };
+		C994359E0E09917600668726 /* OSGPntOperations.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGPntOperations.h; path = ../../src/Util/OSGPntOperations.h; sourceTree = SOURCE_ROOT; };
+		C994359F0E09917600668726 /* OSGQuatOperations.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGQuatOperations.h; path = ../../src/Util/OSGQuatOperations.h; sourceTree = SOURCE_ROOT; };
+		C99435A00E09917600668726 /* OSGRandomPoolManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSGRandomPoolManager.cpp; path = ../../src/Util/OSGRandomPoolManager.cpp; sourceTree = SOURCE_ROOT; };
+		C99435A10E09917600668726 /* OSGRandomPoolManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGRandomPoolManager.h; path = ../../src/Util/OSGRandomPoolManager.h; sourceTree = SOURCE_ROOT; };
+		C99435A20E09917600668726 /* OSGRandomPoolManager.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = OSGRandomPoolManager.inl; path = ../../src/Util/OSGRandomPoolManager.inl; sourceTree = SOURCE_ROOT; };
+		C99435A30E09917600668726 /* OSGSharedFieldPtr.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OSGSharedFieldPtr.h; path = ../../src/Util/OSGSharedFieldPtr.h; sourceTree = SOURCE_ROOT; };
+		D42BACDF0DE4A6980052520E /* 02FCFileTypeIO.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = 02FCFileTypeIO.cpp; path = ../../Tutorials/02FCFileTypeIO.cpp; sourceTree = SOURCE_ROOT; };
+		D487D1520DE4848A000A36D3 /* 02FCFileTypeIOD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 02FCFileTypeIOD; sourceTree = BUILT_PRODUCTS_DIR; };
+		D487D15B0DE48515000A36D3 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
+		D487D15D0DE4852D000A36D3 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		D487D15F0DE4853B000A36D3 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /Developer/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
+		D4BE40040CF0D5930046BAE7 /* libOSGToolboxD.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGToolboxD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4DD00950CF0CC3900F00431 /* libOSGToolboxD.a */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOSGToolboxD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC09B05546B4700DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D43783710CF0BED30062E3A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D487D1500DE4848A000A36D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DDFF38A45A11DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D4DD00950CF0CC3900F00431 /* libOSGToolboxD.a */,
+				D4BE40040CF0D5930046BAE7 /* libOSGToolboxD.dylib */,
+				D487D1520DE4848A000A36D3 /* 02FCFileTypeIOD */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* OSGToolbox */ = {
+			isa = PBXGroup;
+			children = (
+				D487D15F0DE4853B000A36D3 /* QuickTime.framework */,
+				D487D15D0DE4852D000A36D3 /* Carbon.framework */,
+				D487D15B0DE48515000A36D3 /* AGL.framework */,
+				08FB77ACFE841707C02AAC07 /* Source */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DDFF38A45A11DB9C8B /* Products */,
+			);
+			name = OSGToolbox;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77ACFE841707C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				C994355D0E09917500668726 /* src */,
+				D487D1A30DE485F2000A36D3 /* 02FCFileTypeIO */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		C994355D0E09917500668726 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				C994355E0E09917500668726 /* Attachments */,
+				C99435670E09917500668726 /* Cameras */,
+				C99435800E09917600668726 /* FileIO */,
+				C994358D0E09917600668726 /* OSGToolboxDef.h */,
+				C994358E0E09917600668726 /* Types */,
+				C99435950E09917600668726 /* Util */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = SOURCE_ROOT;
+		};
+		C994355E0E09917500668726 /* Attachments */ = {
+			isa = PBXGroup;
+			children = (
+				C994355F0E09917500668726 /* FilePathAttachment.fcd */,
+				C99435600E09917500668726 /* OSGFilePathAttachment.cpp */,
+				C99435610E09917500668726 /* OSGFilePathAttachment.h */,
+				C99435620E09917500668726 /* OSGFilePathAttachment.inl */,
+				C99435630E09917500668726 /* OSGFilePathAttachmentBase.cpp */,
+				C99435640E09917500668726 /* OSGFilePathAttachmentBase.h */,
+				C99435650E09917500668726 /* OSGFilePathAttachmentBase.inl */,
+				C99435660E09917500668726 /* OSGFilePathAttachmentFields.h */,
+			);
+			name = Attachments;
+			path = ../../src/Attachments;
+			sourceTree = SOURCE_ROOT;
+		};
+		C99435670E09917500668726 /* Cameras */ = {
+			isa = PBXGroup;
+			children = (
+				C99435680E09917600668726 /* AirplaneCamera.fcd */,
+				C99435690E09917600668726 /* MatrixBeaconCamera.fcd */,
+				C994356A0E09917600668726 /* OSGAirplaneCamera.cpp */,
+				C994356B0E09917600668726 /* OSGAirplaneCamera.h */,
+				C994356C0E09917600668726 /* OSGAirplaneCamera.inl */,
+				C994356D0E09917600668726 /* OSGAirplaneCameraBase.cpp */,
+				C994356E0E09917600668726 /* OSGAirplaneCameraBase.h */,
+				C994356F0E09917600668726 /* OSGAirplaneCameraBase.inl */,
+				C99435700E09917600668726 /* OSGAirplaneCameraFields.h */,
+				C99435710E09917600668726 /* OSGMatrixBeaconCamera.cpp */,
+				C99435720E09917600668726 /* OSGMatrixBeaconCamera.h */,
+				C99435730E09917600668726 /* OSGMatrixBeaconCamera.inl */,
+				C99435740E09917600668726 /* OSGMatrixBeaconCameraBase.cpp */,
+				C99435750E09917600668726 /* OSGMatrixBeaconCameraBase.h */,
+				C99435760E09917600668726 /* OSGMatrixBeaconCameraBase.inl */,
+				C99435770E09917600668726 /* OSGMatrixBeaconCameraFields.h */,
+				C99435780E09917600668726 /* OSGRubberBandCamera.cpp */,
+				C99435790E09917600668726 /* OSGRubberBandCamera.h */,
+				C994357A0E09917600668726 /* OSGRubberBandCamera.inl */,
+				C994357B0E09917600668726 /* OSGRubberBandCameraBase.cpp */,
+				C994357C0E09917600668726 /* OSGRubberBandCameraBase.h */,
+				C994357D0E09917600668726 /* OSGRubberBandCameraBase.inl */,
+				C994357E0E09917600668726 /* OSGRubberBandCameraFields.h */,
+				C994357F0E09917600668726 /* RubberBandCamera.fcd */,
+			);
+			name = Cameras;
+			path = ../../src/Cameras;
+			sourceTree = SOURCE_ROOT;
+		};
+		C99435800E09917600668726 /* FileIO */ = {
+			isa = PBXGroup;
+			children = (
+				C99435810E09917600668726 /* OSGBinFCFileType.cpp */,
+				C99435820E09917600668726 /* OSGBinFCFileType.h */,
+				C99435830E09917600668726 /* OSGBinFCFileType.inl */,
+				C99435840E09917600668726 /* OSGFCFileHandler.cpp */,
+				C99435850E09917600668726 /* OSGFCFileHandler.h */,
+				C99435860E09917600668726 /* OSGFCFileHandler.inl */,
+				C99435870E09917600668726 /* OSGFCFileType.cpp */,
+				C99435880E09917600668726 /* OSGFCFileType.h */,
+				C99435890E09917600668726 /* OSGFCFileType.inl */,
+				C994358A0E09917600668726 /* OSGXMLFCFileType.cpp */,
+				C994358B0E09917600668726 /* OSGXMLFCFileType.h */,
+				C994358C0E09917600668726 /* OSGXMLFCFileType.inl */,
+			);
+			name = FileIO;
+			path = ../../src/FileIO;
+			sourceTree = SOURCE_ROOT;
+		};
+		C994358E0E09917600668726 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				C994358F0E09917600668726 /* OSGFieldContainerMapType.cpp */,
+				C99435900E09917600668726 /* OSGFieldContainerMapType.h */,
+				C99435910E09917600668726 /* OSGPathType.cpp */,
+				C99435920E09917600668726 /* OSGPathType.h */,
+				C99435930E09917600668726 /* OSGStringMapType.cpp */,
+				C99435940E09917600668726 /* OSGStringMapType.h */,
+			);
+			name = Types;
+			path = ../../src/Types;
+			sourceTree = SOURCE_ROOT;
+		};
+		C99435950E09917600668726 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				C99435960E09917600668726 /* OSGCameraUtils.cpp */,
+				C99435970E09917600668726 /* OSGCameraUtils.h */,
+				C99435980E09917600668726 /* OSGColorOperations.h */,
+				C99435990E09917600668726 /* OSGGLenumUtils.cpp */,
+				C994359A0E09917600668726 /* OSGGLenumUtils.h */,
+				C994359B0E09917600668726 /* OSGIntrusivePtrImplBase.cpp */,
+				C994359C0E09917600668726 /* OSGIntrusivePtrImplBase.h */,
+				C994359D0E09917600668726 /* OSGIntrusivePtrImplBase.inl */,
+				C994359E0E09917600668726 /* OSGPntOperations.h */,
+				C994359F0E09917600668726 /* OSGQuatOperations.h */,
+				C99435A00E09917600668726 /* OSGRandomPoolManager.cpp */,
+				C99435A10E09917600668726 /* OSGRandomPoolManager.h */,
+				C99435A20E09917600668726 /* OSGRandomPoolManager.inl */,
+				C99435A30E09917600668726 /* OSGSharedFieldPtr.h */,
+			);
+			name = Util;
+			path = ../../src/Util;
+			sourceTree = SOURCE_ROOT;
+		};
+		D487D1A30DE485F2000A36D3 /* 02FCFileTypeIO */ = {
+			isa = PBXGroup;
+			children = (
+				D42BACDF0DE4A6980052520E /* 02FCFileTypeIO.cpp */,
+			);
+			name = 02FCFileTypeIO;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC09905546B4700DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C99435A50E09917600668726 /* OSGFilePathAttachment.h in Headers */,
+				C99435A70E09917600668726 /* OSGFilePathAttachmentBase.h in Headers */,
+				C99435A80E09917600668726 /* OSGFilePathAttachmentFields.h in Headers */,
+				C99435AA0E09917600668726 /* OSGAirplaneCamera.h in Headers */,
+				C99435AC0E09917600668726 /* OSGAirplaneCameraBase.h in Headers */,
+				C99435AD0E09917600668726 /* OSGAirplaneCameraFields.h in Headers */,
+				C99435AF0E09917600668726 /* OSGMatrixBeaconCamera.h in Headers */,
+				C99435B10E09917600668726 /* OSGMatrixBeaconCameraBase.h in Headers */,
+				C99435B20E09917600668726 /* OSGMatrixBeaconCameraFields.h in Headers */,
+				C99435B40E09917600668726 /* OSGRubberBandCamera.h in Headers */,
+				C99435B60E09917600668726 /* OSGRubberBandCameraBase.h in Headers */,
+				C99435B70E09917600668726 /* OSGRubberBandCameraFields.h in Headers */,
+				C99435B90E09917600668726 /* OSGBinFCFileType.h in Headers */,
+				C99435BB0E09917600668726 /* OSGFCFileHandler.h in Headers */,
+				C99435BD0E09917600668726 /* OSGFCFileType.h in Headers */,
+				C99435BF0E09917600668726 /* OSGXMLFCFileType.h in Headers */,
+				C99435C00E09917600668726 /* OSGToolboxDef.h in Headers */,
+				C99435C20E09917600668726 /* OSGFieldContainerMapType.h in Headers */,
+				C99435C40E09917600668726 /* OSGPathType.h in Headers */,
+				C99435C60E09917600668726 /* OSGStringMapType.h in Headers */,
+				C99435C80E09917600668726 /* OSGCameraUtils.h in Headers */,
+				C99435C90E09917600668726 /* OSGColorOperations.h in Headers */,
+				C99435CB0E09917600668726 /* OSGGLenumUtils.h in Headers */,
+				C99435CD0E09917600668726 /* OSGIntrusivePtrImplBase.h in Headers */,
+				C99435CE0E09917600668726 /* OSGPntOperations.h in Headers */,
+				C99435CF0E09917600668726 /* OSGQuatOperations.h in Headers */,
+				C99435D10E09917600668726 /* OSGRandomPoolManager.h in Headers */,
+				C99435D20E09917600668726 /* OSGSharedFieldPtr.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D437835F0CF0BED30062E3A4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C99435D40E09917600668726 /* OSGFilePathAttachment.h in Headers */,
+				C99435D60E09917600668726 /* OSGFilePathAttachmentBase.h in Headers */,
+				C99435D70E09917600668726 /* OSGFilePathAttachmentFields.h in Headers */,
+				C99435D90E09917600668726 /* OSGAirplaneCamera.h in Headers */,
+				C99435DB0E09917600668726 /* OSGAirplaneCameraBase.h in Headers */,
+				C99435DC0E09917600668726 /* OSGAirplaneCameraFields.h in Headers */,
+				C99435DE0E09917600668726 /* OSGMatrixBeaconCamera.h in Headers */,
+				C99435E00E09917600668726 /* OSGMatrixBeaconCameraBase.h in Headers */,
+				C99435E10E09917600668726 /* OSGMatrixBeaconCameraFields.h in Headers */,
+				C99435E30E09917600668726 /* OSGRubberBandCamera.h in Headers */,
+				C99435E50E09917600668726 /* OSGRubberBandCameraBase.h in Headers */,
+				C99435E60E09917600668726 /* OSGRubberBandCameraFields.h in Headers */,
+				C99435E80E09917600668726 /* OSGBinFCFileType.h in Headers */,
+				C99435EA0E09917600668726 /* OSGFCFileHandler.h in Headers */,
+				C99435EC0E09917600668726 /* OSGFCFileType.h in Headers */,
+				C99435EE0E09917600668726 /* OSGXMLFCFileType.h in Headers */,
+				C99435EF0E09917600668726 /* OSGToolboxDef.h in Headers */,
+				C99435F10E09917600668726 /* OSGFieldContainerMapType.h in Headers */,
+				C99435F30E09917600668726 /* OSGPathType.h in Headers */,
+				C99435F50E09917600668726 /* OSGStringMapType.h in Headers */,
+				C99435F70E09917600668726 /* OSGCameraUtils.h in Headers */,
+				C99435F80E09917600668726 /* OSGColorOperations.h in Headers */,
+				C99435FA0E09917600668726 /* OSGGLenumUtils.h in Headers */,
+				C99435FC0E09917600668726 /* OSGIntrusivePtrImplBase.h in Headers */,
+				C99435FD0E09917600668726 /* OSGPntOperations.h in Headers */,
+				C99435FE0E09917600668726 /* OSGQuatOperations.h in Headers */,
+				C99436000E09917600668726 /* OSGRandomPoolManager.h in Headers */,
+				C99436010E09917600668726 /* OSGSharedFieldPtr.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXLegacyTarget section */
+		C997E4D70DE7558C00509C0E /* Make Toolbox Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG/Toolbox";
+			buildConfigurationList = C997E4DF0DE755C800509C0E /* Build configuration list for PBXLegacyTarget "Make Toolbox Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make Toolbox Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make Toolbox Directory";
+		};
+		C9A468DA0DEC8470008213FF /* Make include Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include";
+			buildConfigurationList = C9A468E40DEC84AC008213FF /* Build configuration list for PBXLegacyTarget "Make include Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make include Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make include Directory";
+		};
+		C9A468E70DEC84D9008213FF /* Make Apple Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/";
+			buildConfigurationList = C9A468EE0DEC84F5008213FF /* Build configuration list for PBXLegacyTarget "Make Apple Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make Apple Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make Apple Directory";
+		};
+		C9A468F10DEC8502008213FF /* Make lib Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/lib";
+			buildConfigurationList = C9A468F70DEC8511008213FF /* Build configuration list for PBXLegacyTarget "Make lib Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make lib Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make lib Directory";
+		};
+		C9A468FE0DEC8536008213FF /* Make OpenSG Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG";
+			buildConfigurationList = C9A469040DEC853C008213FF /* Build configuration list for PBXLegacyTarget "Make OpenSG Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make OpenSG Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make OpenSG Directory";
+		};
+		C9A4690A0DEC8569008213FF /* Make Input Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG/Input";
+			buildConfigurationList = C9A469100DEC8570008213FF /* Build configuration list for PBXLegacyTarget "Make Input Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Make Input Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Make Input Directory";
+		};
+		C9A469180DEC85BB008213FF /* Build UserInterface Directory */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/MakeDir.sh $(INSTALL_DIR)/include/OpenSG/UserInterface";
+			buildConfigurationList = C9A469210DEC85E0008213FF /* Build configuration list for PBXLegacyTarget "Build UserInterface Directory" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "Build UserInterface Directory";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Build UserInterface Directory";
+		};
+		D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(COMMON_DIR)/CopyIncludes.sh $(COMMON_DIR) $(SRC_DIR) $(INSTALL_DIR)/include/OpenSG/$(LIB_INCLUDE_DIR_NAME) ";
+			buildConfigurationList = D43783470CF0B5CE0062E3A4 /* Build configuration list for PBXLegacyTarget "OSGToolbox install Shell Script" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = .;
+			dependencies = (
+			);
+			name = "OSGToolbox install Shell Script";
+			passBuildSettingsInEnvironment = 1;
+			productName = "OSGToolbox install Shell Script";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB916008733D950010E9CD /* Build configuration list for PBXNativeTarget "OSGToolbox Dynamic Library" */;
+			buildPhases = (
+				D2AAC09905546B4700DB518D /* Headers */,
+				D2AAC09B05546B4700DB518D /* Frameworks */,
+				D2AAC09A05546B4700DB518D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OSGToolbox Dynamic Library";
+			productName = libOSGToolbox;
+			productReference = D4BE40040CF0D5930046BAE7 /* libOSGToolboxD.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		D437835E0CF0BED30062E3A4 /* OSGToolbox Static Library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D437837C0CF0BED30062E3A4 /* Build configuration list for PBXNativeTarget "OSGToolbox Static Library" */;
+			buildPhases = (
+				D437835F0CF0BED30062E3A4 /* Headers */,
+				D43783710CF0BED30062E3A4 /* Frameworks */,
+				D43783720CF0BED30062E3A4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OSGToolbox Static Library";
+			productName = libOSGToolbox;
+			productReference = D4DD00950CF0CC3900F00431 /* libOSGToolboxD.a */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		D487D1510DE4848A000A36D3 /* 02FCFileTypeIO */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D487D1540DE484BA000A36D3 /* Build configuration list for PBXNativeTarget "02FCFileTypeIO" */;
+			buildPhases = (
+				D487D14F0DE4848A000A36D3 /* Sources */,
+				D487D1500DE4848A000A36D3 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C9A469530DEC8F33008213FF /* PBXTargetDependency */,
+				C9A469550DEC8F3A008213FF /* PBXTargetDependency */,
+			);
+			name = 02FCFileTypeIO;
+			productName = Untitled;
+			productReference = D487D1520DE4848A000A36D3 /* 02FCFileTypeIOD */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB916408733D950010E9CD /* Build configuration list for PBXProject "OSGToolbox" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* OSGToolbox */;
+			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
+			projectDirPath = "";
+			targets = (
+				D437832B0CF0B17E0062E3A4 /* OSGToolbox Aggregate */,
+				D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */,
+				D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */,
+				D437835E0CF0BED30062E3A4 /* OSGToolbox Static Library */,
+				D487D1510DE4848A000A36D3 /* 02FCFileTypeIO */,
+				C997E4D30DE7556C00509C0E /* Includes Install Aggregate */,
+				C997E4D70DE7558C00509C0E /* Make Toolbox Directory */,
+				C9A468DA0DEC8470008213FF /* Make include Directory */,
+				C9A468E70DEC84D9008213FF /* Make Apple Directory */,
+				C9A468F10DEC8502008213FF /* Make lib Directory */,
+				C9A468FE0DEC8536008213FF /* Make OpenSG Directory */,
+				C9A4690A0DEC8569008213FF /* Make Input Directory */,
+				C9A469180DEC85BB008213FF /* Build UserInterface Directory */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC09A05546B4700DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C99435A40E09917600668726 /* OSGFilePathAttachment.cpp in Sources */,
+				C99435A60E09917600668726 /* OSGFilePathAttachmentBase.cpp in Sources */,
+				C99435A90E09917600668726 /* OSGAirplaneCamera.cpp in Sources */,
+				C99435AB0E09917600668726 /* OSGAirplaneCameraBase.cpp in Sources */,
+				C99435AE0E09917600668726 /* OSGMatrixBeaconCamera.cpp in Sources */,
+				C99435B00E09917600668726 /* OSGMatrixBeaconCameraBase.cpp in Sources */,
+				C99435B30E09917600668726 /* OSGRubberBandCamera.cpp in Sources */,
+				C99435B50E09917600668726 /* OSGRubberBandCameraBase.cpp in Sources */,
+				C99435B80E09917600668726 /* OSGBinFCFileType.cpp in Sources */,
+				C99435BA0E09917600668726 /* OSGFCFileHandler.cpp in Sources */,
+				C99435BC0E09917600668726 /* OSGFCFileType.cpp in Sources */,
+				C99435BE0E09917600668726 /* OSGXMLFCFileType.cpp in Sources */,
+				C99435C10E09917600668726 /* OSGFieldContainerMapType.cpp in Sources */,
+				C99435C30E09917600668726 /* OSGPathType.cpp in Sources */,
+				C99435C50E09917600668726 /* OSGStringMapType.cpp in Sources */,
+				C99435C70E09917600668726 /* OSGCameraUtils.cpp in Sources */,
+				C99435CA0E09917600668726 /* OSGGLenumUtils.cpp in Sources */,
+				C99435CC0E09917600668726 /* OSGIntrusivePtrImplBase.cpp in Sources */,
+				C99435D00E09917600668726 /* OSGRandomPoolManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D43783720CF0BED30062E3A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C99435D30E09917600668726 /* OSGFilePathAttachment.cpp in Sources */,
+				C99435D50E09917600668726 /* OSGFilePathAttachmentBase.cpp in Sources */,
+				C99435D80E09917600668726 /* OSGAirplaneCamera.cpp in Sources */,
+				C99435DA0E09917600668726 /* OSGAirplaneCameraBase.cpp in Sources */,
+				C99435DD0E09917600668726 /* OSGMatrixBeaconCamera.cpp in Sources */,
+				C99435DF0E09917600668726 /* OSGMatrixBeaconCameraBase.cpp in Sources */,
+				C99435E20E09917600668726 /* OSGRubberBandCamera.cpp in Sources */,
+				C99435E40E09917600668726 /* OSGRubberBandCameraBase.cpp in Sources */,
+				C99435E70E09917600668726 /* OSGBinFCFileType.cpp in Sources */,
+				C99435E90E09917600668726 /* OSGFCFileHandler.cpp in Sources */,
+				C99435EB0E09917600668726 /* OSGFCFileType.cpp in Sources */,
+				C99435ED0E09917600668726 /* OSGXMLFCFileType.cpp in Sources */,
+				C99435F00E09917600668726 /* OSGFieldContainerMapType.cpp in Sources */,
+				C99435F20E09917600668726 /* OSGPathType.cpp in Sources */,
+				C99435F40E09917600668726 /* OSGStringMapType.cpp in Sources */,
+				C99435F60E09917600668726 /* OSGCameraUtils.cpp in Sources */,
+				C99435F90E09917600668726 /* OSGGLenumUtils.cpp in Sources */,
+				C99435FB0E09917600668726 /* OSGIntrusivePtrImplBase.cpp in Sources */,
+				C99435FF0E09917600668726 /* OSGRandomPoolManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D487D14F0DE4848A000A36D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D42BACE00DE4A6980052520E /* 02FCFileTypeIO.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C997E4D90DE755A500509C0E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C997E4D70DE7558C00509C0E /* Make Toolbox Directory */;
+			targetProxy = C997E4D80DE755A500509C0E /* PBXContainerItemProxy */;
+		};
+		C997E4DB0DE755AA00509C0E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */;
+			targetProxy = C997E4DA0DE755AA00509C0E /* PBXContainerItemProxy */;
+		};
+		C9A468DF0DEC84A3008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A468DA0DEC8470008213FF /* Make include Directory */;
+			targetProxy = C9A468DE0DEC84A3008213FF /* PBXContainerItemProxy */;
+		};
+		C9A468FC0DEC851E008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A468F10DEC8502008213FF /* Make lib Directory */;
+			targetProxy = C9A468FB0DEC851E008213FF /* PBXContainerItemProxy */;
+		};
+		C9A469090DEC8553008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A468FE0DEC8536008213FF /* Make OpenSG Directory */;
+			targetProxy = C9A469080DEC8553008213FF /* PBXContainerItemProxy */;
+		};
+		C9A469160DEC85A3008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A4690A0DEC8569008213FF /* Make Input Directory */;
+			targetProxy = C9A469150DEC85A3008213FF /* PBXContainerItemProxy */;
+		};
+		C9A4691B0DEC85D4008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9A469180DEC85BB008213FF /* Build UserInterface Directory */;
+			targetProxy = C9A4691A0DEC85D4008213FF /* PBXContainerItemProxy */;
+		};
+		C9A469530DEC8F33008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */;
+			targetProxy = C9A469520DEC8F33008213FF /* PBXContainerItemProxy */;
+		};
+		C9A469550DEC8F3A008213FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C997E4D30DE7556C00509C0E /* Includes Install Aggregate */;
+			targetProxy = C9A469540DEC8F3A008213FF /* PBXContainerItemProxy */;
+		};
+		D437832D0CF0B1890062E3A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC09C05546B4700DB518D /* OSGToolbox Dynamic Library */;
+			targetProxy = D437832C0CF0B1890062E3A4 /* PBXContainerItemProxy */;
+		};
+		D43783810CF0BF320062E3A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D437835E0CF0BED30062E3A4 /* OSGToolbox Static Library */;
+			targetProxy = D43783800CF0BF320062E3A4 /* PBXContainerItemProxy */;
+		};
+		D437838A0CF0C07C0062E3A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D43783460CF0B5090062E3A4 /* OSGToolbox install Shell Script */;
+			targetProxy = D43783890CF0C07C0062E3A4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB916108733D950010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/dbg";
+				DEPLOYMENT_LOCATION = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/dbg",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				OBJROOT = ..;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
+				PRELINK_LIBS = "";
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)D";
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Debug;
+		};
+		1DEB916208733D950010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/opt";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				OBJROOT = ..;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = "non-global";
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Release;
+		};
+		1DEB916508733D950010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BOOST_BASE_DIR = "/Users/dtnaylor/Work/boost_1_35_0/Boost-1_35_0-InstallOSX";
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/dbg";
+				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)/dbg";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				OSGROOT = "/Users/dtnaylor/Work/OpenSG/OpenSG-1.8-OSX-Install";
+				OSG_TOOLBOX_DIR = /Users/dtnaylor/Work/OpenSGToolbox/OpenSGToolbox;
+				OSG_TOOLBOX_LIB_NAME = Toolbox;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ..;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB916608733D950010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				BOOST_BASE_DIR = "/Users/dtnaylor/Work/boost_1_35_0/Boost-1_35_0-InstallOSX";
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/opt";
+				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)/opt";
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				OSGROOT = "/Users/dtnaylor/Work/OpenSG/OpenSG-1.8-OSX-Install";
+				OSG_TOOLBOX_DIR = /Users/dtnaylor/Work/OpenSGToolbox/OpenSGToolbox;
+				OSG_TOOLBOX_LIB_NAME = Toolbox;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SEPARATE_STRIP = YES;
+				SYMROOT = ..;
+			};
+			name = Release;
+		};
+		C997E4D50DE7558B00509C0E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Includes Install Aggregate";
+			};
+			name = Debug;
+		};
+		C997E4D60DE7558B00509C0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Includes Install Aggregate";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C997E4E00DE755C800509C0E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make Toolbox Directory";
+			};
+			name = Debug;
+		};
+		C997E4E10DE755C800509C0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make Toolbox Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A468E50DEC84AC008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make include Directory";
+			};
+			name = Debug;
+		};
+		C9A468E60DEC84AC008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make include Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A468EF0DEC84F5008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make Apple Directory";
+			};
+			name = Debug;
+		};
+		C9A468F00DEC84F5008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make Apple Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A468F80DEC8511008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make lib Directory";
+			};
+			name = Debug;
+		};
+		C9A468F90DEC8511008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make lib Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A469050DEC853C008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make OpenSG Directory";
+			};
+			name = Debug;
+		};
+		C9A469060DEC853C008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make OpenSG Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A469110DEC8570008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make Input Directory";
+			};
+			name = Debug;
+		};
+		C9A469120DEC8570008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make Input Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C9A469220DEC85E0008213FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Build UserInterface Directory";
+			};
+			name = Debug;
+		};
+		C9A469230DEC85E0008213FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Build UserInterface Directory";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		D43783370CF0B2110062E3A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "OSG Toolbox Aggregate";
+			};
+			name = Debug;
+		};
+		D43783380CF0B2110062E3A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "OSG Toolbox Aggregate";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		D43783480CF0B5CE0062E3A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				LIB_INCLUDE_DIR_NAME = "$(OSG_TOOLBOX_LIB_NAME)";
+				PRODUCT_NAME = Product;
+				SRC_DIR = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src";
+			};
+			name = Debug;
+		};
+		D43783490CF0B5CE0062E3A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMMON_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Common";
+				INSTALL_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple";
+				LIB_INCLUDE_DIR_NAME = "$(OSG_TOOLBOX_LIB_NAME)";
+				PRODUCT_NAME = Product;
+				SRC_DIR = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src";
+			};
+			name = Release;
+		};
+		D437837D0CF0BED30062E3A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/dbg";
+				DEPLOYMENT_LOCATION = NO;
+				EXECUTABLE_EXTENSION = a;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/dbg",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ..;
+				OTHER_LDFLAGS = "";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
+				PRELINK_LIBS = "";
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)D";
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Debug;
+		};
+		D437837E0CF0BED30062E3A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/opt";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				EXECUTABLE_EXTENSION = a;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/src",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ..;
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "libOSG$(OSG_TOOLBOX_LIB_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = "non-global";
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/Builds/Apple/lib";
+			};
+			name = Release;
+		};
+		D487D1550DE484BA000A36D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/dbg",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/lib",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGToolboxD",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = 02FCFileTypeIOD;
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/Tutorials";
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		D487D1560DE484BA000A36D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.3.9.sdk/System/Library/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = (
+					"$(OSGROOT)/include",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/include",
+					"$(BOOST_BASE_DIR)/include",
+				);
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(OSGROOT)/lib/opt",
+					"$(OSG_TOOLBOX_DIR)/Builds/Apple/lib",
+					"$(BOOST_BASE_DIR)/lib",
+				);
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = (
+					"-lOSGBase",
+					"-lOSGSystem",
+					"-lOSGToolbox",
+					"-lboost_filesystem-mt-1_35",
+					"-lboost_system-mt-1_35",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = 02FCFileTypeIO;
+				SYMROOT = "$(OSG_TOOLBOX_DIR)/$(OSG_TOOLBOX_LIB_NAME)/Tutorials";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB916008733D950010E9CD /* Build configuration list for PBXNativeTarget "OSGToolbox Dynamic Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB916108733D950010E9CD /* Debug */,
+				1DEB916208733D950010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB916408733D950010E9CD /* Build configuration list for PBXProject "OSGToolbox" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB916508733D950010E9CD /* Debug */,
+				1DEB916608733D950010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C997E4D40DE7558B00509C0E /* Build configuration list for PBXAggregateTarget "Includes Install Aggregate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C997E4D50DE7558B00509C0E /* Debug */,
+				C997E4D60DE7558B00509C0E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C997E4DF0DE755C800509C0E /* Build configuration list for PBXLegacyTarget "Make Toolbox Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C997E4E00DE755C800509C0E /* Debug */,
+				C997E4E10DE755C800509C0E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A468E40DEC84AC008213FF /* Build configuration list for PBXLegacyTarget "Make include Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A468E50DEC84AC008213FF /* Debug */,
+				C9A468E60DEC84AC008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A468EE0DEC84F5008213FF /* Build configuration list for PBXLegacyTarget "Make Apple Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A468EF0DEC84F5008213FF /* Debug */,
+				C9A468F00DEC84F5008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A468F70DEC8511008213FF /* Build configuration list for PBXLegacyTarget "Make lib Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A468F80DEC8511008213FF /* Debug */,
+				C9A468F90DEC8511008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A469040DEC853C008213FF /* Build configuration list for PBXLegacyTarget "Make OpenSG Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A469050DEC853C008213FF /* Debug */,
+				C9A469060DEC853C008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A469100DEC8570008213FF /* Build configuration list for PBXLegacyTarget "Make Input Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A469110DEC8570008213FF /* Debug */,
+				C9A469120DEC8570008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A469210DEC85E0008213FF /* Build configuration list for PBXLegacyTarget "Build UserInterface Directory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9A469220DEC85E0008213FF /* Debug */,
+				C9A469230DEC85E0008213FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D43783360CF0B2110062E3A4 /* Build configuration list for PBXAggregateTarget "OSGToolbox Aggregate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D43783370CF0B2110062E3A4 /* Debug */,
+				D43783380CF0B2110062E3A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D43783470CF0B5CE0062E3A4 /* Build configuration list for PBXLegacyTarget "OSGToolbox install Shell Script" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D43783480CF0B5CE0062E3A4 /* Debug */,
+				D43783490CF0B5CE0062E3A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D437837C0CF0BED30062E3A4 /* Build configuration list for PBXNativeTarget "OSGToolbox Static Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D437837D0CF0BED30062E3A4 /* Debug */,
+				D437837E0CF0BED30062E3A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D487D1540DE484BA000A36D3 /* Build configuration list for PBXNativeTarget "02FCFileTypeIO" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D487D1550DE484BA000A36D3 /* Debug */,
+				D487D1560DE484BA000A36D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

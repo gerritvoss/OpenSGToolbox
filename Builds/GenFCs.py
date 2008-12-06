@@ -95,6 +95,8 @@ def main():
        SedLicenseScript = "CleanUpAnimationLicense.sed"
    elif os.path.join("OpenSGToolbox","Game", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpGameLicense.sed"
+   elif os.path.join("OpenSGToolbox","Sound", "src") in sys.argv[1]:
+       SedLicenseScript = "CleanUpSoundLicense.sed"
    else:
        SedLicenseScript = "CleanUpUILicense.sed"
    SedLicenseScriptPath = convertPathToOutput(os.path.join(GenFCsPyDir, SedLicenseScript))
