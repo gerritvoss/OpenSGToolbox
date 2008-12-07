@@ -213,7 +213,8 @@ std::vector<FunctionConnections::EvaluationResult> FunctionConnections::evaluate
         FunctionEvaluations.clear();
         for(UInt32 i(0) ; i<CurFunctions.size() ; ++i)
         {
-            FunctionEvaluations.push_back(CurFunctions[i]->evaluate(FunctionIOParameterVector()));
+            FunctionIOParameterVector Params;
+            FunctionEvaluations.push_back(CurFunctions[i]->evaluate(Params));
         }
         
         NextFunctions.clear();
