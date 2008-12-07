@@ -1,36 +1,33 @@
 ###
 
-LIB_NAME = OSGToolbox
-LIB_INCLUDE_DIR_NAME = Toolbox
+LIB_NAME = OSGGame
+LIB_INCLUDE_DIR_NAME = Game
 
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Types:$(srcdir)/Util:$(srcdir)/Cameras:$(srcdir)/FileIO:
+VPATH = $(srcdir)/:$(srcdir)/MiniMap:$(srcdir)/Cameras:
 
 
 #.SUFFIX = .cpp .o
 
-EXTRA_CCFLAGS = -I$(srcdir)
+EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include
 EXTRA_LDFLAGS = -lboost_filesystem
 
-OBJECTS = OSGStringMapType.o \
-	OSGPathType.o \
-	OSGFieldContainerMapType.o \
-	OSGIntrusivePtrImplBase.o \
-	OSGRandomPoolManager.o \
-	OSGCameraUtils.o \
-	OSGGLenumUtils.o \
-	OSGAirplaneCamera.o \
-	OSGMatrixBeaconCameraBase.o \
-	OSGMatrixBeaconCamera.o \
-	OSGRubberBandCamera.o \
-	OSGRubberBandCameraBase.o \
+OBJECTS = OSGMiniMapBase.o \
+	OSGMiniMapOverlayBase.o \
+	OSGLayeredImageMiniMap.o \
+	OSGMiniMapTransformation.o \
+	OSGMiniMapIndicator.o \
+	OSGMiniMap.o \
+	OSGMiniMapOverlay.o \
+	OSGLayeredImageMiniMapBase.o \
+	OSGMiniMapTransformationBase.o \
+	OSGMiniMapIndicatorBase.o \
 	OSGAirplaneCameraBase.o \
-	OSGBinFCFileType.o \
-	OSGFCFileHandler.o \
-	OSGFCFileType.o \
-	OSGXMLFCFileType.o
+	OSGAirplaneCamera.o \
+	OSGRubberBandCameraBase.o \
+	OSGRubberBandCamera.o
         
         
 include $(commondir)/CommonMake.mk

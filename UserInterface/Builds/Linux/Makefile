@@ -6,29 +6,20 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Background:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Event:$(srcdir)/Component:$(srcdir)/Component/Container:$(srcdir)/Component/Container/Toolbar:$(srcdir)/Component/Container/ColorChooser:$(srcdir)/Component/Container/Window:$(srcdir)/Component/Container/Window/Dialog:$(srcdir)/Component/Slider:$(srcdir)/Component/Text:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Table/Editors:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Misc:$(srcdir)/Component/Scroll:$(srcdir)/Component/Tree:$(srcdir)/Component/Tree/Selection:$(srcdir)/Component/Tree/ComponentGenerators:$(srcdir)/Component/Tree/ModelLayout:$(srcdir)/Component/Tree/Model:$(srcdir)/Component/Tree/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/ComboBox/Models:$(srcdir)/Component/ComboBox/ComponentGenerators:$(srcdir)/Component/List:$(srcdir)/Component/List/Models:$(srcdir)/Component/List/ComponentGenerators:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/Editors:$(srcdir)/Border:$(srcdir)/Layout:$(srcdir)/Layout/Spring:$(srcdir)/Util:$(srcdir)/UndoableEdit:$(srcdir)/ComponentGenerators:$(srcdir)/Models:$(srcdir)/Models/SelectionModels:
+VPATH = $(srcdir)/:$(srcdir)/DragAndDrop:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Event:$(srcdir)/Component:$(srcdir)/Component/Container:$(srcdir)/Component/Container/Toolbar:$(srcdir)/Component/Container/ColorChooser:$(srcdir)/Component/Container/Window:$(srcdir)/Component/Container/Window/Dialog:$(srcdir)/Component/Slider:$(srcdir)/Component/Text:$(srcdir)/Component/Table:$(srcdir)/Component/Table/Models:$(srcdir)/Component/Table/Editors:$(srcdir)/Component/Table/ComponentGenerators:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Misc:$(srcdir)/Component/Scroll:$(srcdir)/Component/Tree:$(srcdir)/Component/Tree/Selection:$(srcdir)/Component/Tree/ComponentGenerators:$(srcdir)/Component/Tree/ModelLayout:$(srcdir)/Component/Tree/Model:$(srcdir)/Component/Tree/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/ComboBox/Models:$(srcdir)/Component/ComboBox/ComponentGenerators:$(srcdir)/Component/List:$(srcdir)/Component/List/Models:$(srcdir)/Component/List/ComponentGenerators:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Dynamics:$(srcdir)/Component/Dynamics/IOTabGenerators:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/Editors:$(srcdir)/Border:$(srcdir)/Layout:$(srcdir)/Layout/Spring:$(srcdir)/Util:$(srcdir)/UndoableEdit:$(srcdir)/ComponentGenerators:$(srcdir)/Models:$(srcdir)/Models/SelectionModels:$(srcdir)/Layer:
 
 
 #.SUFFIX = .o .o
 
 EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include
 
-OBJECTS = OSGGradientUIBackgroundBase.o \
-	OSGPatternUIBackgroundBase.o \
-	OSGCompoundUIBackgroundBase.o \
-	OSGMaterialUIBackgroundBase.o \
-	OSGTextureUIBackgroundBase.o \
-	OSGGradientUIBackground.o \
-	OSGUIBackgroundBase.o \
-	OSGPatternUIBackground.o \
-	OSGCompoundUIBackground.o \
-	OSGEmptyUIBackgroundBase.o \
-	OSGMaterialUIBackground.o \
-	OSGTextureUIBackground.o \
-	OSGColorUIBackgroundBase.o \
-	OSGUIBackground.o \
-	OSGEmptyUIBackground.o \
-	OSGColorUIBackground.o \
+OBJECTS = OSGTransferableBase.o \
+	OSGDragGestureRecognizer.o \
+	OSGTransferable.o \
+	OSGTransferHandlerBase.o \
+	OSGDataFlavorBase.o \
+	OSGTransferHandler.o \
+	OSGDataFlavor.o \
 	OSGGraphics2D.o \
 	OSGGraphics3DExtrude.o \
 	OSGGraphicsBase.o \
@@ -64,6 +55,7 @@ OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGAdjustmentEvent.o \
 	OSGFocusEvent.o \
 	OSGDialogEvent.o \
+	OSGDragGestureEvent.o \
 	OSGComponentBase.o \
 	OSGComponent.o \
 	OSGTabPanel.o \
@@ -112,8 +104,6 @@ OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGEditableTextComponentBase.o \
 	OSGEditableTextComponent.o \
 	OSGTableHeaderBase.o \
-	OSGDefaultTableColumnModel.o \
-	OSGAbstractTableModel.o \
 	OSGTableColumn.o \
 	OSGTable.o \
 	OSGTableColumnModelEvent.o \
@@ -121,6 +111,20 @@ OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGTableColumnBase.o \
 	OSGTableModelEvent.o \
 	OSGTableBase.o \
+	OSGDefaultTableColumnModel.o \
+	OSGAbstractTableModel.o \
+	OSGTableModelBase.o \
+	OSGAbstractTableColumnModelBase.o \
+	OSGTableColumnModel.o \
+	OSGDefaultTableColumnModelBase.o \
+	OSGAbstractTableModelBase.o \
+	OSGTableModel.o \
+	OSGAbstractTableColumnModel.o \
+	OSGTableColumnModelBase.o \
+	OSGTableCellEditorBase.o \
+	OSGTableCellEditor.o \
+	OSGDefaultTableCellEditorBase.o \
+	OSGDefaultTableCellEditor.o \
 	OSGDefaultUInt32TableCellRenderer.o \
 	OSGDefaultGLenumTableCellRenderer.o \
 	OSGDefaultTableHeaderCellRenderer.o \
@@ -129,10 +133,6 @@ OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGDefaultInt32TableCellRenderer.o \
 	OSGDefaultStringTableCellRenderer.o \
 	OSGDefaultTableCellRenderer.o \
-	OSGTableCellEditorBase.o \
-	OSGTableCellEditor.o \
-	OSGDefaultTableCellEditorBase.o \
-	OSGDefaultTableCellEditor.o \
 	OSGProgressBar.o \
 	OSGProgressBarBase.o \
 	OSGToolTipBase.o \
@@ -217,6 +217,10 @@ OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGDefaultMutableComboBoxModelBase.o \
 	OSGMutableComboBoxModel.o \
 	OSGAbstractComboBoxModelBase.o \
+	OSGFieldContainerComboBoxModelBase.o \
+	OSGDerivedFieldContainerComboBoxModel.o \
+	OSGDerivedFieldContainerComboBoxModelBase.o \
+	OSGFieldContainerComboBoxModel.o \
 	OSGComboBoxComponentGeneratorBase.o \
 	OSGDefaultComboBoxComponentGeneratorBase.o \
 	OSGComboBoxComponentGenerator.o \
@@ -258,6 +262,14 @@ OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGSpinnerListEditor.o \
 	OSGSpinnerEditor.o \
 	OSGSpinnerEditorBase.o \
+	OSGFunctionComponentPanel.o \
+	OSGFunctionComponentBase.o \
+	OSGFunctionComponent.o \
+	OSGFunctionComponentPanelBase.o \
+	OSGDefaultFunctionComponentIOTabComponentGenerator.o \
+	OSGFunctionComponentIOTabComponentGeneratorBase.o \
+	OSGFunctionComponentIOTabComponentGenerator.o \
+	OSGDefaultFunctionComponentIOTabComponentGeneratorBase.o \
 	OSGUIDrawingSurfaceBase.o \
 	OSGUIDrawingSurface.o \
 	OSGUIDrawingSurfaceMouseTransformFunctorBase.o \
@@ -307,6 +319,8 @@ OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGShadowBorder.o \
 	OSGWindowBorderBase.o \
 	OSGWindowBorder.o \
+	OSGPolygonBorderBase.o \
+	OSGPolygonBorder.o \
 	OSGFlowLayoutBase.o \
 	OSGCardLayout.o \
 	OSGBoxLayoutConstraints.o \
@@ -388,7 +402,23 @@ OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGSingleSelectionModelBase.o \
 	OSGSingleSelectionModel.o \
 	OSGDefaultSingleSelectionModelBase.o \
-	OSGDefaultSingleSelectionModel.o
+	OSGDefaultSingleSelectionModel.o \
+	OSGMaterialLayerBase.o \
+	OSGEmptyLayerBase.o \
+	OSGMaterialLayer.o \
+	OSGColorLayerBase.o \
+	OSGLayerBase.o \
+	OSGCompoundLayerBase.o \
+	OSGGradientLayerBase.o \
+	OSGTextureLayerBase.o \
+	OSGEmptyLayer.o \
+	OSGPatternLayerBase.o \
+	OSGColorLayer.o \
+	OSGLayer.o \
+	OSGCompoundLayer.o \
+	OSGGradientLayer.o \
+	OSGTextureLayer.o \
+	OSGPatternLayer.o
         
         
 include $(commondir)/CommonMake.mk

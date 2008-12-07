@@ -139,14 +139,16 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container,
     endEditCP(PathAttachment, FilePathAttachment::PathFieldMask);
 }
 
-bool FilePathAttachment::loadFromFilePath(AttachmentContainerPtr&  container)
+bool FilePathAttachment::loadFromFilePath(AttachmentContainerPtr  container)
 {
 	const Path* LoadFilePath = FilePathAttachment::getFilePath(container);
 	if(LoadFilePath != NULL && boost::filesystem::exists(*LoadFilePath))
 	{
 		if(container->getType().isDerivedFrom(Image::getClassType()))
 		{
-			ImageFileHandler::the().read(Image::Ptr::dcast(container),LoadFilePath->string().c_str());
+         ImagePtr TheImage;
+			ImageFileHandler::the().read(TheImage,LoadFilePath->string().c_str());
+         container = TheImage;
 		}
 		else if(container->getType().isDerivedFrom(Node::getClassType()))
 		{

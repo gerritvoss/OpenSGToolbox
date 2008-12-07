@@ -111,7 +111,13 @@ OBJECTS = OSGGeometryAnimationBase.o \
 	OSGSkeletonBase.o \
 	OSGSkeletonDrawableBase.o \
 	OSGBone.o \
-	OSGSkeleton.o
+	OSGSkeleton.o \
+	OSGHingedBoneBase.o \
+	OSGSkeletonBlendedGeometryBase.o \
+	OSGSkeletonAnimation.o \
+	OSGHingedBone.o \
+	OSGSkeletonBlendedGeometry.o \
+	OSGSkeletonAnimationBase.o
         
         
 include $(commondir)/CommonMake.mk

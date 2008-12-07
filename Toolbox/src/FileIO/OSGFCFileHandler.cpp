@@ -265,7 +265,7 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 
      //Get the Parent Directory Path of the file
      _RootFilePath = FilePath;
-     _RootFilePath.remove_leaf();
+     _RootFilePath.remove_filename();
 
 	 //Get the FileType for this extension
 	 FCFileTypeP TheFileType(getFileType(Extension, FCFileType::OSG_READ_SUPPORTED));

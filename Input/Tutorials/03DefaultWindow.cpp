@@ -172,7 +172,7 @@ public:
 				Path(".."),
 				true);
             
-            std::cout << "File to Save: " << SavePath << std::endl;
+            std::cout << "File to Save: " << SavePath.string() << std::endl;
 		}
     }
     virtual void keyReleased(const KeyEvent& e)

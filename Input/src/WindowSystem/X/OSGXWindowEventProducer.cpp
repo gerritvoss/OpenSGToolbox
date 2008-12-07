@@ -50,7 +50,7 @@
 #define OSG_COMPILEINPUTLIB
 
 #include <X11/cursorfont.h>
-
+#include <X11/keysym.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -927,14 +927,14 @@ Path XWindowEventProducer::saveFileDialog(const std::string& DialogTitle,
                 )
 {
     //TODO: Implement
-    sPath Result;
+    Path Result;
     return Result;
 }
 
 KeyEvent::KeyState XWindowEventProducer::getKeyState(KeyEvent::Key TheKey) const
 {
     //TODO: Implement
-    return KeyEvent::KEY_NONE;
+    return KeyEvent::KEY_STATE_UP;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

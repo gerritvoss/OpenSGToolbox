@@ -11,7 +11,7 @@ VPATH = $(srcdir)/:$(srcdir)/Utils:$(srcdir)/Event:$(srcdir)/WindowSystem:$(srcd
 
 #.SUFFIX = .o .o
 
-EXTRA_CCFLAGS = -I$(srcdir)
+EXTRA_CCFLAGS = -I$(srcdir)  -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
 
 OBJECTS = OSGStringUtils.o \
 	OSGMouseAdapter.o \
@@ -31,10 +31,11 @@ OBJECTS = OSGStringUtils.o \
 	OSGMouseWheelEventProducer.o \
 	OSGMouseMotionEventProducer.o \
 	OSGUpdateEvent.o \
+	OSGInputEvent.o \
 	OSGWindowUtils.o \
 	OSGWindowEventProducerFactory.o \
-	OSGWindowEventProducer.o \
 	OSGWindowEventProducerBase.o \
+	OSGWindowEventProducer.o \
 	OSGXWindowEventProducer.o \
 	OSGXWindowEventProducerBase.o \
 	OSGGLUTWindowEventProducer.o \

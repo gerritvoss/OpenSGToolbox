@@ -1,36 +1,24 @@
 ###
 
-LIB_NAME = OSGToolbox
-LIB_INCLUDE_DIR_NAME = Toolbox
+LIB_NAME = OSGSound
+LIB_INCLUDE_DIR_NAME = Sound
 
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Types:$(srcdir)/Util:$(srcdir)/Cameras:$(srcdir)/FileIO:
+VPATH = $(srcdir)/:$(srcdir)/Sound:$(srcdir)/Sound/Events:
 
 
 #.SUFFIX = .cpp .o
 
 EXTRA_CCFLAGS = -I$(srcdir)
-EXTRA_LDFLAGS = -lboost_filesystem
+EXTRA_LDFLAGS = 
 
-OBJECTS = OSGStringMapType.o \
-	OSGPathType.o \
-	OSGFieldContainerMapType.o \
-	OSGIntrusivePtrImplBase.o \
-	OSGRandomPoolManager.o \
-	OSGCameraUtils.o \
-	OSGGLenumUtils.o \
-	OSGAirplaneCamera.o \
-	OSGMatrixBeaconCameraBase.o \
-	OSGMatrixBeaconCamera.o \
-	OSGRubberBandCamera.o \
-	OSGRubberBandCameraBase.o \
-	OSGAirplaneCameraBase.o \
-	OSGBinFCFileType.o \
-	OSGFCFileHandler.o \
-	OSGFCFileType.o \
-	OSGXMLFCFileType.o
+OBJECTS = OSGSound.o \
+	OSGSoundEmitterBase.o \
+	OSGSoundEmitter.o \
+	OSGSoundBase.o \
+	OSGSoundEvent.o
         
         
 include $(commondir)/CommonMake.mk
