@@ -930,6 +930,12 @@ Path XWindowEventProducer::saveFileDialog(const std::string& DialogTitle,
     sPath Result;
     return Result;
 }
+
+KeyEvent::KeyState XWindowEventProducer::getKeyState(KeyEvent::Key TheKey) const
+{
+    //TODO: Implement
+    return KeyEvent::KEY_NONE;
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

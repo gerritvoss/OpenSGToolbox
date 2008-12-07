@@ -140,6 +140,8 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     virtual bool getDrawBorder(void);
     
 	 virtual UInt32 getKeyModifiers(void) const;
+     
+	virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const;
     
 	 virtual Pnt2f getMousePosition(void) const;
     
