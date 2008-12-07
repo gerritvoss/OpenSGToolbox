@@ -902,6 +902,34 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
       }
 }
 
+
+Vec2f XWindowEventProducer::getDesktopSize(void) const
+{
+    //TODO: Implement
+    return Vec2f(0.0f,0.0f);
+}
+
+std::vector<Path> XWindowEventProducer::openFileDialog(const std::string& WindowTitle,
+		const std::vector<FileDialogFilter>& Filters,
+		const Path& InitialDir,
+		bool AllowMultiSelect)
+{
+    //TODO: Implement
+    std::vector<Path> Result;
+    return Result;
+}
+
+Path XWindowEventProducer::saveFileDialog(const std::string& DialogTitle,
+                const std::vector<FileDialogFilter>& Filters,
+                const Path& InitialFile,
+                const Path& InitialDirectory,
+                bool PromptForOverwrite
+                )
+{
+    //TODO: Implement
+    sPath Result;
+    return Result;
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

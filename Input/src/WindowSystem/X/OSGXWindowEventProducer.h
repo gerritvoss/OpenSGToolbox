@@ -159,6 +159,20 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     
     virtual void draw(void);
     virtual void update(void);
+    
+    virtual Vec2f getDesktopSize(void) const;
+
+	virtual std::vector<Path> openFileDialog(const std::string& WindowTitle,
+		const std::vector<FileDialogFilter>& Filters,
+		const Path& InitialDir,
+		bool AllowMultiSelect);
+
+    virtual Path saveFileDialog(const std::string& DialogTitle,
+                    const std::vector<FileDialogFilter>& Filters,
+                    const Path& InitialFile,
+                    const Path& InitialDirectory,
+                    bool PromptForOverwrite
+                    );
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
