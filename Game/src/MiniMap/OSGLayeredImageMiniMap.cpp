@@ -82,7 +82,9 @@ void LayeredImageMiniMap::setCharacterTexture(ImagePtr Image)
 	TextureChunkPtr tex;
 	tex = createTexture(Image);
 
-	setCharacterImage(tex);
+	beginEditCP(LayeredImageMiniMapPtr(this), CharacterImageFieldMask);
+		setCharacterImage(tex);
+	endEditCP(LayeredImageMiniMapPtr(this), CharacterImageFieldMask);
 }
 
 void LayeredImageMiniMap::setScale(UInt32 WorldSizeZ, UInt32 WorldSizeX, UInt32 MapSizeY, UInt32 MapSizeX)
@@ -187,13 +189,16 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 						 TopLeft + Vec2f(0.0f, ComponentSize.y()),
 						 Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
 						 Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity() );
-   
-//   if(getCharacterImage() == NULL)
+
+   if(getCharacterImage() == NullFC)
 		Graphics->drawDisc(getMapLocationPtr(),4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
-//   else
- //  {
-//	   Graphics->drawQuad(getMapLocationPtr(),getMapLocationPtr()+ Vec2f(20.0f,0.0f),getMapLocationPtr()+ Vec2f(20.0f,20.0f),getMapLocationPtr() + Vec2f(0.0f, 20.0f),Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f),Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity());
-//   }
+   else
+   {
+	   Vec2f Size(20.0,20.0);
+	   Pnt2f AlignedPosition = getMapLocationPtr() - 0.5f*Size;
+	   Graphics->drawQuad(AlignedPosition,AlignedPosition+ Vec2f(Size.x(),0.0f),AlignedPosition+ Size,AlignedPosition + Vec2f(0.0f, Size.y()),Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f),Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getCharacterImage(), getOpacity());
+   }
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

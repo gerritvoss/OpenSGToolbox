@@ -487,10 +487,11 @@ int main(int argc, char **argv)
 	    MiniMap->setPreferredSize(Pnt2f(450,450));
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask);
 
-	MiniMap->insertImage("level1.jpg");
+	MiniMap->insertImage(Path("./level1.jpg").string().c_str());
 	MiniMap->setScale(10,10,100,100);					//Scale Must be before the setCharacterPosition call because it uses the scale set
 	MiniMap->setOpacity(.4);
 	MiniMap->setStartLocation(Pnt2f(450,450),0.5,0.5);
+	MiniMap->setCharacterTexture(ImageFileHandler::the().read(Path("./Ship.JPG").string().c_str()));
 
 	 // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
