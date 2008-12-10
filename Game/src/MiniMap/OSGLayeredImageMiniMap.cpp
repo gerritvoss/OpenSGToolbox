@@ -109,8 +109,14 @@ void LayeredImageMiniMap::setCharacterPosition(osg::Matrix Position)
 	Position.getTransform(xyz,rotation,scale,Orientation);
 
 	getCharacterRotation() = rotation;
+
+	Matrix Transform;
+	//Transform.setTransform(Vec3f(getStartPositionPtr().x(),getStartPositionPtr().y(),0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),1.570796f), Vec3f(getMapScaleX(), getMapScaleY(), 1.0));
 	
 	Location.setValues((xyz.x() * getMapScaleX()) + getStartPositionPtr().x(), (xyz.z() * getMapScaleY()) + getStartPositionPtr().y());
+
+	//Transform.multFullMatrixPnt(xyz);
+	//Location.setValues(xyz.x(), xyz.y());
 	
 	setMapLocationPtr(Location);
 }
