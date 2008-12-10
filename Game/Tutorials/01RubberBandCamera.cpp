@@ -457,8 +457,6 @@ int main(int argc, char **argv)
 
     while(!ExitApp)
     {
-		std::cout<<BoxGeometryNode->getToWorld()<<std::endl;
-		system("cls");
         TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
     }

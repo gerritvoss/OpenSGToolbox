@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="01MiniMap"
-	ProjectGUID="{77623743-1948-4AC4-8227-7FF6072BD16F}"
+	Name="02MiniMap"
+	ProjectGUID="{3BF16424-AB24-4672-83B6-00BBA7A35301}"
 	RootNamespace="02RubberBandCamera"
 	Keyword="Win32Proj"
 	>
