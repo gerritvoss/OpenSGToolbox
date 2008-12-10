@@ -138,6 +138,20 @@ SFPnt2f *LayeredImageMiniMapBase::getSFStartPositionPtr(void)
     return &_sfStartPositionPtr;
 }
 
+//! Get the LayeredImageMiniMap::_sfCharacterImage field.
+inline
+SFTextureChunkPtr *LayeredImageMiniMapBase::getSFCharacterImage(void)
+{
+    return &_sfCharacterImage;
+}
+
+//! Get the LayeredImageMiniMap::_sfCharacterRotation field.
+inline
+SFQuaternion *LayeredImageMiniMapBase::getSFCharacterRotation(void)
+{
+    return &_sfCharacterRotation;
+}
+
 
 //! Get the value of the LayeredImageMiniMap::_sfMapScaleX field.
 inline
@@ -221,6 +235,48 @@ inline
 void LayeredImageMiniMapBase::setStartPositionPtr(const Pnt2f &value)
 {
     _sfStartPositionPtr.setValue(value);
+}
+
+//! Get the value of the LayeredImageMiniMap::_sfCharacterImage field.
+inline
+TextureChunkPtr &LayeredImageMiniMapBase::getCharacterImage(void)
+{
+    return _sfCharacterImage.getValue();
+}
+
+//! Get the value of the LayeredImageMiniMap::_sfCharacterImage field.
+inline
+const TextureChunkPtr &LayeredImageMiniMapBase::getCharacterImage(void) const
+{
+    return _sfCharacterImage.getValue();
+}
+
+//! Set the value of the LayeredImageMiniMap::_sfCharacterImage field.
+inline
+void LayeredImageMiniMapBase::setCharacterImage(const TextureChunkPtr &value)
+{
+    _sfCharacterImage.setValue(value);
+}
+
+//! Get the value of the LayeredImageMiniMap::_sfCharacterRotation field.
+inline
+Quaternion &LayeredImageMiniMapBase::getCharacterRotation(void)
+{
+    return _sfCharacterRotation.getValue();
+}
+
+//! Get the value of the LayeredImageMiniMap::_sfCharacterRotation field.
+inline
+const Quaternion &LayeredImageMiniMapBase::getCharacterRotation(void) const
+{
+    return _sfCharacterRotation.getValue();
+}
+
+//! Set the value of the LayeredImageMiniMap::_sfCharacterRotation field.
+inline
+void LayeredImageMiniMapBase::setCharacterRotation(const Quaternion &value)
+{
+    _sfCharacterRotation.setValue(value);
 }
 
 

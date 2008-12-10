@@ -73,6 +73,8 @@
 #include <OpenSG/OSGUInt32Fields.h> // MapScaleY type
 #include <OpenSG/OSGPnt2fFields.h> // MapLocationPtr type
 #include <OpenSG/OSGPnt2fFields.h> // StartPositionPtr type
+#include <OpenSG/OSGTextureChunkFields.h> // CharacterImage type
+#include <OpenSG/OSGQuaternionFields.h> // CharacterRotation type
 
 #include "OSGLayeredImageMiniMapFields.h"
 
@@ -96,13 +98,15 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 
     enum
     {
-        OverlayFieldId          = Inherited::NextFieldId,
-        LayerTexturesFieldId    = OverlayFieldId          + 1,
-        MapScaleXFieldId        = LayerTexturesFieldId    + 1,
-        MapScaleYFieldId        = MapScaleXFieldId        + 1,
-        MapLocationPtrFieldId   = MapScaleYFieldId        + 1,
-        StartPositionPtrFieldId = MapLocationPtrFieldId   + 1,
-        NextFieldId             = StartPositionPtrFieldId + 1
+        OverlayFieldId           = Inherited::NextFieldId,
+        LayerTexturesFieldId     = OverlayFieldId           + 1,
+        MapScaleXFieldId         = LayerTexturesFieldId     + 1,
+        MapScaleYFieldId         = MapScaleXFieldId         + 1,
+        MapLocationPtrFieldId    = MapScaleYFieldId         + 1,
+        StartPositionPtrFieldId  = MapLocationPtrFieldId    + 1,
+        CharacterImageFieldId    = StartPositionPtrFieldId  + 1,
+        CharacterRotationFieldId = CharacterImageFieldId    + 1,
+        NextFieldId              = CharacterRotationFieldId + 1
     };
 
     static const OSG::BitVector OverlayFieldMask;
@@ -111,6 +115,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     static const OSG::BitVector MapScaleYFieldMask;
     static const OSG::BitVector MapLocationPtrFieldMask;
     static const OSG::BitVector StartPositionPtrFieldMask;
+    static const OSG::BitVector CharacterImageFieldMask;
+    static const OSG::BitVector CharacterRotationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,6 +149,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
            SFUInt32            *getSFMapScaleY      (void);
            SFPnt2f             *getSFMapLocationPtr (void);
            SFPnt2f             *getSFStartPositionPtr(void);
+           SFTextureChunkPtr   *getSFCharacterImage (void);
+           SFQuaternion        *getSFCharacterRotation(void);
 
            UInt32              &getMapScaleX      (void);
      const UInt32              &getMapScaleX      (void) const;
@@ -152,6 +160,10 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
      const Pnt2f               &getMapLocationPtr (void) const;
            Pnt2f               &getStartPositionPtr(void);
      const Pnt2f               &getStartPositionPtr(void) const;
+           TextureChunkPtr     &getCharacterImage (void);
+     const TextureChunkPtr     &getCharacterImage (void) const;
+           Quaternion          &getCharacterRotation(void);
+     const Quaternion          &getCharacterRotation(void) const;
            MiniMapOverlayPtr   &getOverlay        (const UInt32 index);
            MFMiniMapOverlayPtr &getOverlay        (void);
      const MFMiniMapOverlayPtr &getOverlay        (void) const;
@@ -168,6 +180,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
      void setMapScaleY      ( const UInt32 &value );
      void setMapLocationPtr ( const Pnt2f &value );
      void setStartPositionPtr( const Pnt2f &value );
+     void setCharacterImage ( const TextureChunkPtr &value );
+     void setCharacterRotation( const Quaternion &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -216,6 +230,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     SFUInt32            _sfMapScaleY;
     SFPnt2f             _sfMapLocationPtr;
     SFPnt2f             _sfStartPositionPtr;
+    SFTextureChunkPtr   _sfCharacterImage;
+    SFQuaternion        _sfCharacterRotation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

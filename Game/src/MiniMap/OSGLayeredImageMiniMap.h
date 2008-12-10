@@ -94,6 +94,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 
 	void setStartLocation(Pnt2f MapSizeXY, Real32 CharacterXAlignment, Real32 CharacterYAlignment);
 
+	void setCharacterTexture(ImagePtr Image);
+
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

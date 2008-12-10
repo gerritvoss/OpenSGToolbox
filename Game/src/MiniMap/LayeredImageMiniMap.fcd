@@ -61,6 +61,22 @@ A LayeredImageMiniMap.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="CharacterImage"
+		type="TextureChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="CharacterRotation"
+		type="Quaternion"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 
 
 

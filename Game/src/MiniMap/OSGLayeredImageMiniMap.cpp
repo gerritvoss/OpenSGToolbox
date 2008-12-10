@@ -77,6 +77,14 @@ void LayeredImageMiniMap::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void LayeredImageMiniMap::setCharacterTexture(ImagePtr Image)
+{
+	TextureChunkPtr tex;
+	tex = createTexture(Image);
+
+	setCharacterImage(tex);
+}
+
 void LayeredImageMiniMap::setScale(UInt32 WorldSizeZ, UInt32 WorldSizeX, UInt32 MapSizeY, UInt32 MapSizeX)
 {
 	setMapScaleX(MapSizeY / WorldSizeZ); //For scaling the width of the map
@@ -98,6 +106,7 @@ void LayeredImageMiniMap::setCharacterPosition(osg::Matrix Position)
 
 	Position.getTransform(xyz,rotation,scale,Orientation);
 
+	getCharacterRotation() = rotation;
 	
 	Location.setValues((xyz.x() * getMapScaleX()) + getStartPositionPtr().x(), (xyz.z() * getMapScaleY()) + getStartPositionPtr().y());
 	
@@ -170,6 +179,8 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
    getInsideBorderBounds(TopLeft, BottomRight);
    Vec2f ComponentSize(BottomRight-TopLeft);
 
+   
+
    Graphics->drawQuad(TopLeft,
 	                     TopLeft + Vec2f(ComponentSize.x(),0.0f),
 						 BottomRight,
@@ -177,8 +188,12 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 						 Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
 						 Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity() );
    
-   Graphics->drawDisc(getMapLocationPtr(),4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
-}
+//   if(getCharacterImage() == NULL)
+		Graphics->drawDisc(getMapLocationPtr(),4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
+//   else
+ //  {
+//	   Graphics->drawQuad(getMapLocationPtr(),getMapLocationPtr()+ Vec2f(20.0f,0.0f),getMapLocationPtr()+ Vec2f(20.0f,20.0f),getMapLocationPtr() + Vec2f(0.0f, 20.0f),Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f),Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity());
+//   }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

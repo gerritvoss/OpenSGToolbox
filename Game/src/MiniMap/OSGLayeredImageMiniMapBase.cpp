@@ -82,6 +82,12 @@ const OSG::BitVector  LayeredImageMiniMapBase::MapLocationPtrFieldMask =
 const OSG::BitVector  LayeredImageMiniMapBase::StartPositionPtrFieldMask = 
     (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::StartPositionPtrFieldId);
 
+const OSG::BitVector  LayeredImageMiniMapBase::CharacterImageFieldMask = 
+    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::CharacterImageFieldId);
+
+const OSG::BitVector  LayeredImageMiniMapBase::CharacterRotationFieldMask = 
+    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::CharacterRotationFieldId);
+
 const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -105,6 +111,12 @@ const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask =
     
 */
 /*! \var Pnt2f           LayeredImageMiniMapBase::_sfStartPositionPtr
+    
+*/
+/*! \var TextureChunkPtr LayeredImageMiniMapBase::_sfCharacterImage
+    
+*/
+/*! \var Quaternion      LayeredImageMiniMapBase::_sfCharacterRotation
     
 */
 
@@ -141,7 +153,17 @@ FieldDescription *LayeredImageMiniMapBase::_desc[] =
                      "startPositionPtr", 
                      StartPositionPtrFieldId, StartPositionPtrFieldMask,
                      false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFStartPositionPtr)
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFStartPositionPtr),
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "CharacterImage", 
+                     CharacterImageFieldId, CharacterImageFieldMask,
+                     false,
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFCharacterImage),
+    new FieldDescription(SFQuaternion::getClassType(), 
+                     "CharacterRotation", 
+                     CharacterRotationFieldId, CharacterRotationFieldMask,
+                     false,
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFCharacterRotation)
 };
 
 
@@ -225,6 +247,8 @@ LayeredImageMiniMapBase::LayeredImageMiniMapBase(void) :
     _sfMapScaleY              (), 
     _sfMapLocationPtr         (), 
     _sfStartPositionPtr       (), 
+    _sfCharacterImage         (), 
+    _sfCharacterRotation      (), 
     Inherited() 
 {
 }
@@ -240,6 +264,8 @@ LayeredImageMiniMapBase::LayeredImageMiniMapBase(const LayeredImageMiniMapBase &
     _sfMapScaleY              (source._sfMapScaleY              ), 
     _sfMapLocationPtr         (source._sfMapLocationPtr         ), 
     _sfStartPositionPtr       (source._sfStartPositionPtr       ), 
+    _sfCharacterImage         (source._sfCharacterImage         ), 
+    _sfCharacterRotation      (source._sfCharacterRotation      ), 
     Inherited                 (source)
 {
 }
@@ -286,6 +312,16 @@ UInt32 LayeredImageMiniMapBase::getBinSize(const BitVector &whichField)
         returnValue += _sfStartPositionPtr.getBinSize();
     }
 
+    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
+    {
+        returnValue += _sfCharacterImage.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
+    {
+        returnValue += _sfCharacterRotation.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -323,6 +359,16 @@ void LayeredImageMiniMapBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (StartPositionPtrFieldMask & whichField))
     {
         _sfStartPositionPtr.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
+    {
+        _sfCharacterImage.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
+    {
+        _sfCharacterRotation.copyToBin(pMem);
     }
 
 
@@ -363,6 +409,16 @@ void LayeredImageMiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfStartPositionPtr.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
+    {
+        _sfCharacterImage.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
+    {
+        _sfCharacterRotation.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -391,6 +447,12 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
     if(FieldBits::NoField != (StartPositionPtrFieldMask & whichField))
         _sfStartPositionPtr.syncWith(pOther->_sfStartPositionPtr);
 
+    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
+        _sfCharacterImage.syncWith(pOther->_sfCharacterImage);
+
+    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
+        _sfCharacterRotation.syncWith(pOther->_sfCharacterRotation);
+
 
 }
 #else
@@ -412,6 +474,12 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
 
     if(FieldBits::NoField != (StartPositionPtrFieldMask & whichField))
         _sfStartPositionPtr.syncWith(pOther->_sfStartPositionPtr);
+
+    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
+        _sfCharacterImage.syncWith(pOther->_sfCharacterImage);
+
+    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
+        _sfCharacterRotation.syncWith(pOther->_sfCharacterRotation);
 
 
     if(FieldBits::NoField != (OverlayFieldMask & whichField))
