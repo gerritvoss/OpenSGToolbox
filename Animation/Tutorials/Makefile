@@ -133,7 +133,7 @@ endif
 
 CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGANIMATIONROOT)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGANIMATIONROOT)/lib -lOSGAnimation$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT)
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGANIMATIONROOT)/lib -lOSGAnimation$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT) -lOSGToolbox$(DGB_OPT_EXT) -L$(BOOST_BASE_DIR)/lib -lboost_filesystem -lboost_system
 
 
 # all tutorials in this directory

@@ -11,7 +11,7 @@ VPATH = $(srcdir)/:$(srcdir)/DragAndDrop:$(srcdir)/Graphics:$(srcdir)/Graphics/U
 
 #.SUFFIX = .o .o
 
-EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include
+EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
 
 OBJECTS = OSGTransferableBase.o \
 	OSGDragGestureRecognizer.o \

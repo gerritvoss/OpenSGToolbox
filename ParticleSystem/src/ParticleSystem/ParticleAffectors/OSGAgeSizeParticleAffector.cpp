@@ -114,7 +114,7 @@ bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInd
 			//{
 				time = (time - getAges(i-1))/(getAges(i)-getAges(i-1));
 
-				lerp<Vec3f>(getSizes(i-1),getSizes(i),time,size);
+				lerp(getSizes(i-1),getSizes(i),time,size);
 				System->setSize(size,ParticleIndex);
 			//}
 		}

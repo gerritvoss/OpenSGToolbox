@@ -11,7 +11,7 @@ VPATH = $(srcdir)/:$(srcdir)/Distributions:$(srcdir)/Distributions/1D:$(srcdir)/
 
 #.SUFFIX = .o .o
 
-EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include -I../../../../External/Boost
+EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
 
 OBJECTS = OSGSegmentDistribution1D.o \
 	OSGSegmentSetDistribution1DBase.o \

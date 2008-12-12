@@ -11,7 +11,7 @@ VPATH = $(srcdir)/:$(srcdir)/Sound:$(srcdir)/Sound/Events:
 
 #.SUFFIX = .cpp .o
 
-EXTRA_CCFLAGS = -I$(srcdir)
+EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include
 EXTRA_LDFLAGS = 
 
 OBJECTS = OSGSound.o \
