@@ -50,6 +50,8 @@
 
 // MiniMap Headers
 #include <OpenSG/Game/OSGLayeredImageMiniMap.h>
+#include <OpenSG/Game/OSGMiniMapIndicator.h>
+#include <OpenSG/Game/OSGMiniMapMatrixTransformation.h>
 
 
 // Activate the OpenSG namespace
@@ -482,15 +484,31 @@ int main(int argc, char **argv)
 
 	LayeredImageMiniMapPtr MiniMap = osg::LayeredImageMiniMap::create();
 
+	//World to MiniMap Transformation
+	MiniMapMatrixTransformationPtr WorldToMiniMapTransformation = MiniMapMatrixTransformation::create();
+	Matrix Transform;
+	Transform.setTransform(Vec3f(450*0.5,450*0.5,0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),deg2rad(-90.0)), Vec3f(100/10, 1.0, 100/10));
+	beginEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
+		WorldToMiniMapTransformation->setTransformation(Transform);
+	endEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
+
+	//Create the Viewpoint Indicator
+	MiniMapIndicatorPtr ViewpointIndicator = MiniMapIndicator::create();
+
+	beginEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask);
+		ViewpointIndicator->setLocation(BoxNode);
+	endEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask);
+	
+
 	// Setup the size and other preferences to the minimap
-	beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask);
+	beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask);
 	    MiniMap->setPreferredSize(Pnt2f(450,450));
-	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask);
+	    MiniMap->setViewPointIndicator(ViewpointIndicator);
+		MiniMap->setTransformation(WorldToMiniMapTransformation);
+	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask);
 
 	MiniMap->insertImage(Path("./level1.jpg").string().c_str());
-	MiniMap->setScale(10,10,100,100);					//Scale Must be before the setCharacterPosition call because it uses the scale set
 	MiniMap->setOpacity(.4);
-	MiniMap->setStartLocation(Pnt2f(450,450),0.5,0.5);
 	MiniMap->setCharacterTexture(ImageFileHandler::the().read(Path("./Ship.JPG").string().c_str()));
 
 	 // Create the Graphics
@@ -549,10 +567,6 @@ int main(int argc, char **argv)
 
     while(!ExitApp)
     {
-		MiniMap->setCharacterPosition(BoxGeometryNode->getToWorld());
-		std::cout<<BoxGeometryNode->getToWorld()<<std::endl<<std::endl;
-		std::cout<<MiniMap->getMapLocationPtr()<<std::endl;
-		system("cls");
         TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
     }

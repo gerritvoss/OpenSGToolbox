@@ -27,16 +27,16 @@ A Minimap.
 		type="MiniMapIndicatorPtr"
 		cardinality="multi"
 		visibility="external"
-		header="MiniMap/OSGMiniMapIndicator.h"
+		header="MiniMap/Indicators/OSGMiniMapIndicator.h"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="ViewPortIndicator"
+		name="ViewPointIndicator"
 		type="MiniMapIndicatorPtr"
 		cardinality="single"
 		visibility="external"
-		header="MiniMap/OSGMiniMapIndicator.h"
+		header="MiniMap/Indicators/OSGMiniMapIndicator.h"
 		access="public"
 	>
 	</Field>

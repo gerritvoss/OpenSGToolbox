@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="MiniMapIndicator"
+	parent="FieldContainer"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="false"
+>
+A MiniMapIndicator.
+	<Field
+		name="Generator"
+		type="ComponentGeneratorPtr"
+		cardinality="single"
+        visibility="external"
+        header="OpenSG/UserInterface/OSGComponentGeneratorFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+    </Field>
+	<Field
+		name="Location"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

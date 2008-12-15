@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMiniMapIndicator.h"
+#include "OSGMiniMapMatrixTransformation.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::MiniMapIndicator
-A MiniMapIndicator. 
+/*! \class osg::MiniMapMatrixTransformation
+A MiniMapMatrixTransformation. 	
 */
 
 /***************************************************************************\
@@ -67,7 +67,7 @@ A MiniMapIndicator.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MiniMapIndicator::initMethod (void)
+void MiniMapMatrixTransformation::initMethod (void)
 {
 }
 
@@ -76,37 +76,56 @@ void MiniMapIndicator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void MiniMapMatrixTransformation::transform(Pnt3f& p)
+{
+	getTransformation().mult(p);
+}
+
+void MiniMapMatrixTransformation::transform(Vec3f& v)
+{
+	getTransformation().mult(v);
+}
+
+void MiniMapMatrixTransformation::transform(Quaternion& r)
+{
+	Matrix RotMat;
+	r.getValue(RotMat);
+	RotMat.mult(getTransformation());
+
+	r.setValue(RotMat);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-MiniMapIndicator::MiniMapIndicator(void) :
+MiniMapMatrixTransformation::MiniMapMatrixTransformation(void) :
     Inherited()
 {
 }
 
-MiniMapIndicator::MiniMapIndicator(const MiniMapIndicator &source) :
+MiniMapMatrixTransformation::MiniMapMatrixTransformation(const MiniMapMatrixTransformation &source) :
     Inherited(source)
 {
 }
 
-MiniMapIndicator::~MiniMapIndicator(void)
+MiniMapMatrixTransformation::~MiniMapMatrixTransformation(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void MiniMapIndicator::changed(BitVector whichField, UInt32 origin)
+void MiniMapMatrixTransformation::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void MiniMapIndicator::dump(      UInt32    , 
+void MiniMapMatrixTransformation::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump MiniMapIndicator NI" << std::endl;
+    SLOG << "Dump MiniMapMatrixTransformation NI" << std::endl;
 }
 
 
@@ -124,10 +143,10 @@ void MiniMapIndicator::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMINIMAPINDICATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMINIMAPINDICATORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGMINIMAPMATRIXTRANSFORMATIONBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGMINIMAPMATRIXTRANSFORMATIONBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGMINIMAPINDICATORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGMINIMAPMATRIXTRANSFORMATIONFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

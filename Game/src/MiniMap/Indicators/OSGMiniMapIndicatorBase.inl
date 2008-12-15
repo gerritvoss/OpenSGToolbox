@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,6 +96,62 @@ MiniMapIndicatorPtr MiniMapIndicatorBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the MiniMapIndicator::_sfGenerator field.
+inline
+SFComponentGeneratorPtr *MiniMapIndicatorBase::getSFGenerator(void)
+{
+    return &_sfGenerator;
+}
+
+//! Get the MiniMapIndicator::_sfLocation field.
+inline
+SFNodePtr *MiniMapIndicatorBase::getSFLocation(void)
+{
+    return &_sfLocation;
+}
+
+
+//! Get the value of the MiniMapIndicator::_sfGenerator field.
+inline
+ComponentGeneratorPtr &MiniMapIndicatorBase::getGenerator(void)
+{
+    return _sfGenerator.getValue();
+}
+
+//! Get the value of the MiniMapIndicator::_sfGenerator field.
+inline
+const ComponentGeneratorPtr &MiniMapIndicatorBase::getGenerator(void) const
+{
+    return _sfGenerator.getValue();
+}
+
+//! Set the value of the MiniMapIndicator::_sfGenerator field.
+inline
+void MiniMapIndicatorBase::setGenerator(const ComponentGeneratorPtr &value)
+{
+    _sfGenerator.setValue(value);
+}
+
+//! Get the value of the MiniMapIndicator::_sfLocation field.
+inline
+NodePtr &MiniMapIndicatorBase::getLocation(void)
+{
+    return _sfLocation.getValue();
+}
+
+//! Get the value of the MiniMapIndicator::_sfLocation field.
+inline
+const NodePtr &MiniMapIndicatorBase::getLocation(void) const
+{
+    return _sfLocation.getValue();
+}
+
+//! Set the value of the MiniMapIndicator::_sfLocation field.
+inline
+void MiniMapIndicatorBase::setLocation(const NodePtr &value)
+{
+    _sfLocation.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

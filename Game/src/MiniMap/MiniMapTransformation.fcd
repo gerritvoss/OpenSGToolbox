@@ -5,7 +5,7 @@
 	parent="FieldContainer"
 	library="Game"
 	pointerfieldtypes="both"
-	structure="concrete"
+	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"

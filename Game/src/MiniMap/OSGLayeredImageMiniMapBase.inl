@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -110,34 +110,6 @@ MFTextureChunkPtr *LayeredImageMiniMapBase::getMFLayerTextures(void)
     return &_mfLayerTextures;
 }
 
-//! Get the LayeredImageMiniMap::_sfMapScaleX field.
-inline
-SFUInt32 *LayeredImageMiniMapBase::getSFMapScaleX(void)
-{
-    return &_sfMapScaleX;
-}
-
-//! Get the LayeredImageMiniMap::_sfMapScaleY field.
-inline
-SFUInt32 *LayeredImageMiniMapBase::getSFMapScaleY(void)
-{
-    return &_sfMapScaleY;
-}
-
-//! Get the LayeredImageMiniMap::_sfMapLocationPtr field.
-inline
-SFPnt2f *LayeredImageMiniMapBase::getSFMapLocationPtr(void)
-{
-    return &_sfMapLocationPtr;
-}
-
-//! Get the LayeredImageMiniMap::_sfStartPositionPtr field.
-inline
-SFPnt2f *LayeredImageMiniMapBase::getSFStartPositionPtr(void)
-{
-    return &_sfStartPositionPtr;
-}
-
 //! Get the LayeredImageMiniMap::_sfCharacterImage field.
 inline
 SFTextureChunkPtr *LayeredImageMiniMapBase::getSFCharacterImage(void)
@@ -152,90 +124,6 @@ SFQuaternion *LayeredImageMiniMapBase::getSFCharacterRotation(void)
     return &_sfCharacterRotation;
 }
 
-
-//! Get the value of the LayeredImageMiniMap::_sfMapScaleX field.
-inline
-UInt32 &LayeredImageMiniMapBase::getMapScaleX(void)
-{
-    return _sfMapScaleX.getValue();
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfMapScaleX field.
-inline
-const UInt32 &LayeredImageMiniMapBase::getMapScaleX(void) const
-{
-    return _sfMapScaleX.getValue();
-}
-
-//! Set the value of the LayeredImageMiniMap::_sfMapScaleX field.
-inline
-void LayeredImageMiniMapBase::setMapScaleX(const UInt32 &value)
-{
-    _sfMapScaleX.setValue(value);
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfMapScaleY field.
-inline
-UInt32 &LayeredImageMiniMapBase::getMapScaleY(void)
-{
-    return _sfMapScaleY.getValue();
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfMapScaleY field.
-inline
-const UInt32 &LayeredImageMiniMapBase::getMapScaleY(void) const
-{
-    return _sfMapScaleY.getValue();
-}
-
-//! Set the value of the LayeredImageMiniMap::_sfMapScaleY field.
-inline
-void LayeredImageMiniMapBase::setMapScaleY(const UInt32 &value)
-{
-    _sfMapScaleY.setValue(value);
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfMapLocationPtr field.
-inline
-Pnt2f &LayeredImageMiniMapBase::getMapLocationPtr(void)
-{
-    return _sfMapLocationPtr.getValue();
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfMapLocationPtr field.
-inline
-const Pnt2f &LayeredImageMiniMapBase::getMapLocationPtr(void) const
-{
-    return _sfMapLocationPtr.getValue();
-}
-
-//! Set the value of the LayeredImageMiniMap::_sfMapLocationPtr field.
-inline
-void LayeredImageMiniMapBase::setMapLocationPtr(const Pnt2f &value)
-{
-    _sfMapLocationPtr.setValue(value);
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfStartPositionPtr field.
-inline
-Pnt2f &LayeredImageMiniMapBase::getStartPositionPtr(void)
-{
-    return _sfStartPositionPtr.getValue();
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfStartPositionPtr field.
-inline
-const Pnt2f &LayeredImageMiniMapBase::getStartPositionPtr(void) const
-{
-    return _sfStartPositionPtr.getValue();
-}
-
-//! Set the value of the LayeredImageMiniMap::_sfStartPositionPtr field.
-inline
-void LayeredImageMiniMapBase::setStartPositionPtr(const Pnt2f &value)
-{
-    _sfStartPositionPtr.setValue(value);
-}
 
 //! Get the value of the LayeredImageMiniMap::_sfCharacterImage field.
 inline

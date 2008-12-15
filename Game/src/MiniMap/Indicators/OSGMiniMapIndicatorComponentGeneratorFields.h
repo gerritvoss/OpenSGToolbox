@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGMINIMAPINDICATORFIELDS_H_
-#define _OSGMINIMAPINDICATORFIELDS_H_
+#ifndef _OSGMINIMAPINDICATORCOMPONENTGENERATORFIELDS_H_
+#define _OSGMINIMAPINDICATORCOMPONENTGENERATORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGGameDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include <OpenSG/UserInterface/OSGComponentGeneratorFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class MiniMapIndicator;
+class MiniMapIndicatorComponentGenerator;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MiniMapIndicatorPtr
+//! MiniMapIndicatorComponentGeneratorPtr
 
-typedef FCPtr<FieldContainerPtr, MiniMapIndicator> MiniMapIndicatorPtr;
+typedef FCPtr<ComponentGeneratorPtr, MiniMapIndicatorComponentGenerator> MiniMapIndicatorComponentGeneratorPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<FieldContainerPtr, MiniMapIndicator> MiniMapIndicatorPtr;
 #endif
 
 template <>
-struct FieldDataTraits<MiniMapIndicatorPtr> : 
-    public FieldTraitsRecurseMapper<MiniMapIndicatorPtr, true>
+struct FieldDataTraits<MiniMapIndicatorComponentGeneratorPtr> : 
+    public FieldTraitsRecurseMapper<MiniMapIndicatorComponentGeneratorPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<MiniMapIndicatorPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFMiniMapIndicatorPtr"; }
-    static const char *getMName(void) { return "MFMiniMapIndicatorPtr"; }
+    static const char *getSName(void) { return "SFMiniMapIndicatorComponentGeneratorPtr"; }
+    static const char *getMName(void) { return "MFMiniMapIndicatorComponentGeneratorPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MiniMapIndicatorPtr, true>
+/*! \class  FieldTraitsRecurseMapper<MiniMapIndicatorComponentGeneratorPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<MiniMapIndicatorPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldSingle */
 
-typedef SField<MiniMapIndicatorPtr> SFMiniMapIndicatorPtr;
+typedef SField<MiniMapIndicatorComponentGeneratorPtr> SFMiniMapIndicatorComponentGeneratorPtr;
 #endif
 
-#ifndef OSG_COMPILEMINIMAPINDICATORINST
-OSG_DLLEXPORT_DECL1(SField, MiniMapIndicatorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMINIMAPINDICATORCOMPONENTGENERATORINST
+OSG_DLLEXPORT_DECL1(SField, MiniMapIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldMulti */
 
-typedef MField<MiniMapIndicatorPtr> MFMiniMapIndicatorPtr;
+typedef MField<MiniMapIndicatorComponentGeneratorPtr> MFMiniMapIndicatorComponentGeneratorPtr;
 #endif
 
-#ifndef OSG_COMPILEMINIMAPINDICATORINST
-OSG_DLLEXPORT_DECL1(MField, MiniMapIndicatorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMINIMAPINDICATORCOMPONENTGENERATORINST
+OSG_DLLEXPORT_DECL1(MField, MiniMapIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGMINIMAPINDICATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGMINIMAPINDICATORCOMPONENTGENERATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGMINIMAPINDICATORFIELDS_H_ */
+#endif /* _OSGMINIMAPINDICATORCOMPONENTGENERATORFIELDS_H_ */

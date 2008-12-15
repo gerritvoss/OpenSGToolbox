@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultMiniMapIndicatorComponentGenerator"
+	parent="MiniMapIndicatorComponentGenerator"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="false"
+>
+A UI DefaultMiniMapIndicator ComponentGenerator.
+	<Field
+		name="ImageComponentPrototype"
+		type="ImageComponentPtr"
+		cardinality="single"
+		visibility="external"
+		header="OpenSG/UserInterface/OSGImageComponentFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+</FieldContainer>

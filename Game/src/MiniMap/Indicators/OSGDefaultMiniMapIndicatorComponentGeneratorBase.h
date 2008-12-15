@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class MiniMapIndicator
+ **     class DefaultMiniMapIndicatorComponentGenerator
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGMINIMAPINDICATORBASE_H_
-#define _OSGMINIMAPINDICATORBASE_H_
+#ifndef _OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATORBASE_H_
+#define _OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,28 +65,37 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include "OSGMiniMapIndicatorComponentGenerator.h" // Parent
 
+#include <OpenSG/UserInterface/OSGImageComponentFields.h> // ImageComponentPrototype type
 
-#include "OSGMiniMapIndicatorFields.h"
+#include "OSGDefaultMiniMapIndicatorComponentGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class MiniMapIndicator;
+class DefaultMiniMapIndicatorComponentGenerator;
 class BinaryDataHandler;
 
-//! \brief MiniMapIndicator Base Class.
+//! \brief DefaultMiniMapIndicatorComponentGenerator Base Class.
 
-class OSG_GAMELIB_DLLMAPPING MiniMapIndicatorBase : public FieldContainer
+class OSG_GAMELIB_DLLMAPPING DefaultMiniMapIndicatorComponentGeneratorBase : public MiniMapIndicatorComponentGenerator
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef MiniMapIndicatorComponentGenerator    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef MiniMapIndicatorPtr  Ptr;
+    typedef DefaultMiniMapIndicatorComponentGeneratorPtr  Ptr;
+
+    enum
+    {
+        ImageComponentPrototypeFieldId = Inherited::NextFieldId,
+        NextFieldId                    = ImageComponentPrototypeFieldId + 1
+    };
+
+    static const OSG::BitVector ImageComponentPrototypeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +119,23 @@ class OSG_GAMELIB_DLLMAPPING MiniMapIndicatorBase : public FieldContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFImageComponentPtr *getSFImageComponentPrototype(void);
+
+           ImageComponentPtr   &getImageComponentPrototype(void);
+     const ImageComponentPtr   &getImageComponentPrototype(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setImageComponentPrototype( const ImageComponentPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -130,8 +156,8 @@ class OSG_GAMELIB_DLLMAPPING MiniMapIndicatorBase : public FieldContainer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  MiniMapIndicatorPtr      create          (void); 
-    static  MiniMapIndicatorPtr      createEmpty     (void); 
+    static  DefaultMiniMapIndicatorComponentGeneratorPtr      create          (void); 
+    static  DefaultMiniMapIndicatorComponentGeneratorPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -146,18 +172,25 @@ class OSG_GAMELIB_DLLMAPPING MiniMapIndicatorBase : public FieldContainer
   protected:
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFImageComponentPtr   _sfImageComponentPrototype;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    MiniMapIndicatorBase(void);
-    MiniMapIndicatorBase(const MiniMapIndicatorBase &source);
+    DefaultMiniMapIndicatorComponentGeneratorBase(void);
+    DefaultMiniMapIndicatorComponentGeneratorBase(const DefaultMiniMapIndicatorComponentGeneratorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MiniMapIndicatorBase(void); 
+    virtual ~DefaultMiniMapIndicatorComponentGeneratorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -165,13 +198,13 @@ class OSG_GAMELIB_DLLMAPPING MiniMapIndicatorBase : public FieldContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      MiniMapIndicatorBase *pOther,
+    void executeSyncImpl(      DefaultMiniMapIndicatorComponentGeneratorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      MiniMapIndicatorBase *pOther,
+    void executeSyncImpl(      DefaultMiniMapIndicatorComponentGeneratorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -196,11 +229,12 @@ class OSG_GAMELIB_DLLMAPPING MiniMapIndicatorBase : public FieldContainer
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const MiniMapIndicatorBase &source);
+    void operator =(const DefaultMiniMapIndicatorComponentGeneratorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -208,17 +242,17 @@ class OSG_GAMELIB_DLLMAPPING MiniMapIndicatorBase : public FieldContainer
 //---------------------------------------------------------------------------
 
 
-typedef MiniMapIndicatorBase *MiniMapIndicatorBaseP;
+typedef DefaultMiniMapIndicatorComponentGeneratorBase *DefaultMiniMapIndicatorComponentGeneratorBaseP;
 
-typedef osgIF<MiniMapIndicatorBase::isNodeCore,
-              CoredNodePtr<MiniMapIndicator>,
+typedef osgIF<DefaultMiniMapIndicatorComponentGeneratorBase::isNodeCore,
+              CoredNodePtr<DefaultMiniMapIndicatorComponentGenerator>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet MiniMapIndicatorNodePtr;
+              >::_IRet DefaultMiniMapIndicatorComponentGeneratorNodePtr;
 
-typedef RefPtr<MiniMapIndicatorPtr> MiniMapIndicatorRefPtr;
+typedef RefPtr<DefaultMiniMapIndicatorComponentGeneratorPtr> DefaultMiniMapIndicatorComponentGeneratorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGMINIMAPINDICATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGMINIMAPINDICATORBASE_H_ */
+#endif /* _OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATORBASE_H_ */

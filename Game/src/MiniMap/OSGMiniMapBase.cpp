@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,8 +70,8 @@ const OSG::BitVector  MiniMapBase::TransformationFieldMask =
 const OSG::BitVector  MiniMapBase::IndicatorsFieldMask = 
     (TypeTraits<BitVector>::One << MiniMapBase::IndicatorsFieldId);
 
-const OSG::BitVector  MiniMapBase::ViewPortIndicatorFieldMask = 
-    (TypeTraits<BitVector>::One << MiniMapBase::ViewPortIndicatorFieldId);
+const OSG::BitVector  MiniMapBase::ViewPointIndicatorFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::ViewPointIndicatorFieldId);
 
 const OSG::BitVector  MiniMapBase::MapOrientationFieldMask = 
     (TypeTraits<BitVector>::One << MiniMapBase::MapOrientationFieldId);
@@ -101,7 +101,7 @@ const OSG::BitVector MiniMapBase::MTInfluenceMask =
 /*! \var MiniMapIndicatorPtr MiniMapBase::_mfIndicators
     
 */
-/*! \var MiniMapIndicatorPtr MiniMapBase::_sfViewPortIndicator
+/*! \var MiniMapIndicatorPtr MiniMapBase::_sfViewPointIndicator
     
 */
 /*! \var Quaternion      MiniMapBase::_sfMapOrientation
@@ -135,10 +135,10 @@ FieldDescription *MiniMapBase::_desc[] =
                      false,
                      (FieldAccessMethod) &MiniMapBase::getMFIndicators),
     new FieldDescription(SFMiniMapIndicatorPtr::getClassType(), 
-                     "ViewPortIndicator", 
-                     ViewPortIndicatorFieldId, ViewPortIndicatorFieldMask,
+                     "ViewPointIndicator", 
+                     ViewPointIndicatorFieldId, ViewPointIndicatorFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFViewPortIndicator),
+                     (FieldAccessMethod) &MiniMapBase::getSFViewPointIndicator),
     new FieldDescription(SFQuaternion::getClassType(), 
                      "MapOrientation", 
                      MapOrientationFieldId, MapOrientationFieldMask,
@@ -233,7 +233,7 @@ void MiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 MiniMapBase::MiniMapBase(void) :
     _sfTransformation         (MiniMapTransformationPtr(NullFC)), 
     _mfIndicators             (), 
-    _sfViewPortIndicator      (), 
+    _sfViewPointIndicator     (), 
     _sfMapOrientation         (), 
     _sfLockMapOrientation     (), 
     _sfMapScale               (), 
@@ -250,7 +250,7 @@ MiniMapBase::MiniMapBase(void) :
 MiniMapBase::MiniMapBase(const MiniMapBase &source) :
     _sfTransformation         (source._sfTransformation         ), 
     _mfIndicators             (source._mfIndicators             ), 
-    _sfViewPortIndicator      (source._sfViewPortIndicator      ), 
+    _sfViewPointIndicator     (source._sfViewPointIndicator     ), 
     _sfMapOrientation         (source._sfMapOrientation         ), 
     _sfLockMapOrientation     (source._sfLockMapOrientation     ), 
     _sfMapScale               (source._sfMapScale               ), 
@@ -282,9 +282,9 @@ UInt32 MiniMapBase::getBinSize(const BitVector &whichField)
         returnValue += _mfIndicators.getBinSize();
     }
 
-    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
+    if(FieldBits::NoField != (ViewPointIndicatorFieldMask & whichField))
     {
-        returnValue += _sfViewPortIndicator.getBinSize();
+        returnValue += _sfViewPointIndicator.getBinSize();
     }
 
     if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
@@ -331,9 +331,9 @@ void MiniMapBase::copyToBin(      BinaryDataHandler &pMem,
         _mfIndicators.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
+    if(FieldBits::NoField != (ViewPointIndicatorFieldMask & whichField))
     {
-        _sfViewPortIndicator.copyToBin(pMem);
+        _sfViewPointIndicator.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
@@ -379,9 +379,9 @@ void MiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfIndicators.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
+    if(FieldBits::NoField != (ViewPointIndicatorFieldMask & whichField))
     {
-        _sfViewPortIndicator.copyFromBin(pMem);
+        _sfViewPointIndicator.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
@@ -425,8 +425,8 @@ void MiniMapBase::executeSyncImpl(      MiniMapBase *pOther,
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
         _mfIndicators.syncWith(pOther->_mfIndicators);
 
-    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
-        _sfViewPortIndicator.syncWith(pOther->_sfViewPortIndicator);
+    if(FieldBits::NoField != (ViewPointIndicatorFieldMask & whichField))
+        _sfViewPointIndicator.syncWith(pOther->_sfViewPointIndicator);
 
     if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
         _sfMapOrientation.syncWith(pOther->_sfMapOrientation);
@@ -456,8 +456,8 @@ void MiniMapBase::executeSyncImpl(      MiniMapBase *pOther,
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
         _sfTransformation.syncWith(pOther->_sfTransformation);
 
-    if(FieldBits::NoField != (ViewPortIndicatorFieldMask & whichField))
-        _sfViewPortIndicator.syncWith(pOther->_sfViewPortIndicator);
+    if(FieldBits::NoField != (ViewPointIndicatorFieldMask & whichField))
+        _sfViewPointIndicator.syncWith(pOther->_sfViewPointIndicator);
 
     if(FieldBits::NoField != (MapOrientationFieldMask & whichField))
         _sfMapOrientation.syncWith(pOther->_sfMapOrientation);

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,8 +68,8 @@
 #include <OpenSG/UserInterface/OSGContainer.h> // Parent
 
 #include "MiniMap/OSGMiniMapTransformation.h" // Transformation type
-#include "MiniMap/OSGMiniMapIndicator.h" // Indicators type
-#include "MiniMap/OSGMiniMapIndicator.h" // ViewPortIndicator type
+#include "MiniMap/Indicators/OSGMiniMapIndicator.h" // Indicators type
+#include "MiniMap/Indicators/OSGMiniMapIndicator.h" // ViewPointIndicator type
 #include <OpenSG/OSGQuaternionFields.h> // MapOrientation type
 #include <OpenSG/OSGBoolFields.h> // LockMapOrientation type
 #include <OpenSG/OSGUInt32Fields.h> // MapScale type
@@ -100,8 +100,8 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
     {
         TransformationFieldId     = Inherited::NextFieldId,
         IndicatorsFieldId         = TransformationFieldId     + 1,
-        ViewPortIndicatorFieldId  = IndicatorsFieldId         + 1,
-        MapOrientationFieldId     = ViewPortIndicatorFieldId  + 1,
+        ViewPointIndicatorFieldId = IndicatorsFieldId         + 1,
+        MapOrientationFieldId     = ViewPointIndicatorFieldId + 1,
         LockMapOrientationFieldId = MapOrientationFieldId     + 1,
         MapScaleFieldId           = LockMapOrientationFieldId + 1,
         MapScaleParameterFieldId  = MapScaleFieldId           + 1,
@@ -111,7 +111,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 
     static const OSG::BitVector TransformationFieldMask;
     static const OSG::BitVector IndicatorsFieldMask;
-    static const OSG::BitVector ViewPortIndicatorFieldMask;
+    static const OSG::BitVector ViewPointIndicatorFieldMask;
     static const OSG::BitVector MapOrientationFieldMask;
     static const OSG::BitVector LockMapOrientationFieldMask;
     static const OSG::BitVector MapScaleFieldMask;
@@ -145,7 +145,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 
            SFMiniMapTransformationPtr *getSFTransformation (void);
            MFMiniMapIndicatorPtr *getMFIndicators     (void);
-           SFMiniMapIndicatorPtr *getSFViewPortIndicator(void);
+           SFMiniMapIndicatorPtr *getSFViewPointIndicator(void);
            SFQuaternion        *getSFMapOrientation (void);
            SFBool              *getSFLockMapOrientation(void);
            SFUInt32            *getSFMapScale       (void);
@@ -154,8 +154,8 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 
            MiniMapTransformationPtr &getTransformation (void);
      const MiniMapTransformationPtr &getTransformation (void) const;
-           MiniMapIndicatorPtr &getViewPortIndicator(void);
-     const MiniMapIndicatorPtr &getViewPortIndicator(void) const;
+           MiniMapIndicatorPtr &getViewPointIndicator(void);
+     const MiniMapIndicatorPtr &getViewPointIndicator(void) const;
            Quaternion          &getMapOrientation (void);
      const Quaternion          &getMapOrientation (void) const;
            bool                &getLockMapOrientation(void);
@@ -176,7 +176,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
     /*! \{                                                                 */
 
      void setTransformation ( const MiniMapTransformationPtr &value );
-     void setViewPortIndicator( const MiniMapIndicatorPtr &value );
+     void setViewPointIndicator( const MiniMapIndicatorPtr &value );
      void setMapOrientation ( const Quaternion &value );
      void setLockMapOrientation( const bool &value );
      void setMapScale       ( const UInt32 &value );
@@ -210,7 +210,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 
     SFMiniMapTransformationPtr   _sfTransformation;
     MFMiniMapIndicatorPtr   _mfIndicators;
-    SFMiniMapIndicatorPtr   _sfViewPortIndicator;
+    SFMiniMapIndicatorPtr   _sfViewPointIndicator;
     SFQuaternion        _sfMapOrientation;
     SFBool              _sfLockMapOrientation;
     SFUInt32            _sfMapScale;

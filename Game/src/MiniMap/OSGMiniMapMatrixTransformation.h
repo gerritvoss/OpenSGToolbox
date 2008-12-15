@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,28 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLAYEREDIMAGEMINIMAP_H_
-#define _OSGLAYEREDIMAGEMINIMAP_H_
+#ifndef _OSGMINIMAPMATRIXTRANSFORMATION_H_
+#define _OSGMINIMAPMATRIXTRANSFORMATION_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
 
-#include "OSGLayeredImageMiniMapBase.h"
+#include "OSGMiniMapMatrixTransformationBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief LayeredImageMiniMap class. See \ref 
-           PageUserInterfaceLayeredImageMiniMap for a description.
+/*! \brief MiniMapMatrixTransformation class. See \ref 
+           PageGameMiniMapMatrixTransformation for a description.
 */
 
-class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBase
+class OSG_GAMELIB_DLLMAPPING MiniMapMatrixTransformation : public MiniMapMatrixTransformationBase
 {
   private:
 
-    typedef LayeredImageMiniMapBase Inherited;
+    typedef MiniMapMatrixTransformationBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -77,71 +76,51 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-	
-	void removeTexture(UInt32 index);
-
-	void insertImage(ImagePtr Image);
-	void insertImage(const char *fileName, const char *mimeType = 0);
-
-	void insertImage(UInt32 index, ImagePtr Image);
-	void insertImage(UInt32 index, const char *fileName, const char *mimeType = 0);
-
-	void setImage(UInt32 index, ImagePtr Image);
-	void setImage(UInt32 index, const char *fileName, const char *mimeType = 0);
-
-	void setCharacterTexture(ImagePtr Image);
-
-
     /*! \}                                                                 */
+	virtual void transform(Pnt3f& p);
+	virtual void transform(Vec3f& v);
+	virtual void transform(Quaternion& r);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in LayeredImageMiniMapBase.
+    // Variables should all be in MiniMapMatrixTransformationBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    LayeredImageMiniMap(void);
-    LayeredImageMiniMap(const LayeredImageMiniMap &source);
+    MiniMapMatrixTransformation(void);
+    MiniMapMatrixTransformation(const MiniMapMatrixTransformation &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LayeredImageMiniMap(void); 
+    virtual ~MiniMapMatrixTransformation(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
-	virtual void updateAllTransformations(void);
-
-	Pnt2f ViewPointLocation;
-	Quaternion ViewPointOrientation;
-
-	std::vector<Pnt2f> InidicatorLocations;
-	std::vector<Quaternion> InidicatorOrientations;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class LayeredImageMiniMapBase;
+    friend class MiniMapMatrixTransformationBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const LayeredImageMiniMap &source);
+    void operator =(const MiniMapMatrixTransformation &source);
 };
 
-typedef LayeredImageMiniMap *LayeredImageMiniMapP;
+typedef MiniMapMatrixTransformation *MiniMapMatrixTransformationP;
 
 OSG_END_NAMESPACE
 
-#include "OSGLayeredImageMiniMapBase.inl"
-#include "OSGLayeredImageMiniMap.inl"
+#include "OSGMiniMapMatrixTransformationBase.inl"
+#include "OSGMiniMapMatrixTransformation.inl"
 
-#define OSGLAYEREDIMAGEMINIMAP_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGMINIMAPMATRIXTRANSFORMATION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGLAYEREDIMAGEMINIMAP_H_ */
+#endif /* _OSGMINIMAPMATRIXTRANSFORMATION_H_ */

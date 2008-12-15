@@ -47,10 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGLayeredImageMiniMap.h"
-#include "MiniMap/Indicators/OSGMiniMapIndicator.h"
-
-#include <OpenSG/Toolbox/OSGTextureUtils.h>
+#include "OSGMiniMapIndicator.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::LayeredImageMiniMap
-A LayeredImageMiniMap. 	
+/*! \class osg::MiniMapIndicator
+A MiniMapIndicator. 
 */
 
 /***************************************************************************\
@@ -70,140 +67,30 @@ A LayeredImageMiniMap.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LayeredImageMiniMap::initMethod (void)
+void MiniMapIndicator::initMethod (void)
 {
 }
+
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LayeredImageMiniMap::setCharacterTexture(ImagePtr Image)
+void MiniMapIndicator::getTransformation(Pnt3f& Location, Quaternion& Rotation) const
 {
-	TextureChunkPtr tex;
-	tex = createTexture(Image);
-
-	beginEditCP(LayeredImageMiniMapPtr(this), CharacterImageFieldMask);
-		setCharacterImage(tex);
-	endEditCP(LayeredImageMiniMapPtr(this), CharacterImageFieldMask);
-}
-
-void LayeredImageMiniMap::updateAllTransformations(void)
-{
-	//Viewpoint Indicator
-	Pnt3f p;
-	Quaternion r;
-
-	getViewPointIndicator()->getTransformation(p,r);
-	
-	getTransformation()->transform(p);
-	getTransformation()->transform(r);
-
-
-	ViewPointLocation.setValues(p.x(), p.y());
-	ViewPointOrientation = r;
-
-	//All other Indicators
-	InidicatorLocations.resize(getIndicators().size());
-	InidicatorOrientations.resize(getIndicators().size());
-	for(UInt32 i(0) ; i<getIndicators().size() ; ++i)
+	if(getLocation() != NullFC)
 	{
-		getIndicators(i)->getTransformation(p,r);
-		
-		getTransformation()->transform(p);
-		getTransformation()->transform(r);
-
-
-		InidicatorLocations[i].setValues(p.x(), p.y());
-		InidicatorOrientations[i] = r;
+		Vec3f Translation, Scale;
+		Quaternion ScaleOrientation;
+		Matrix Transformation;
+		getLocation()->getToWorld(Transformation);
+		Transformation.getTransform(Translation,Rotation,Scale,ScaleOrientation);
+		Location.setValue(Translation.getValues());
 	}
-}
-
-
-void LayeredImageMiniMap::removeTexture(UInt32 index)
-{
-	if(index > getLayerTextures().size())
+	else
 	{
-		return;
+		SWARNING << "MiniMapIndicator: Location is Null." << std::endl;
 	}
-
-	MFTextureChunkPtr::iterator RemoveIter(getLayerTextures().begin());
-
-	for( UInt32 i(0) ; i<index; ++i)
-	{
-		++RemoveIter;
-	}
-
-	getLayerTextures().erase(RemoveIter);
-}
-
-void LayeredImageMiniMap::insertImage(UInt32 index, ImagePtr Image) // meant to insert new image at given index
-{
-	TextureChunkPtr Tex;
-	Tex = createTexture(Image);
-	
-	if(index > getLayerTextures().size())
-	{
-		getLayerTextures().push_back(Tex);
-		return;
-	}
-
-	MFTextureChunkPtr::iterator AddIter(getLayerTextures().begin());
-
-	for( UInt32 i(0) ; i<index; ++i)
-	{
-		++AddIter;
-	}
-
-	getLayerTextures().insert(AddIter, Tex);
-}
-
-
-void LayeredImageMiniMap::setImage(UInt32 index, ImagePtr Image) // Overwrites the image at that location 
-{
-	if(index > getLayerTextures().size())
-	{
-		return;
-	}
-	
-	beginEditCP(getLayerTextures()[index], TextureChunk::ImageFieldMask);
-		getLayerTextures()[index]->setImage(Image);
-	endEditCP(getLayerTextures()[index], TextureChunk::ImageFieldMask);
-}
-
-void LayeredImageMiniMap::insertImage(ImagePtr Image) // Image is pushed onto the back of the stack
-{
-	TextureChunkPtr Tex;
-	Tex = createTexture(Image);
-
-	getLayerTextures().push_back(Tex);
-}
-
-void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
-{
-	const_cast<LayeredImageMiniMap*>(this)->updateAllTransformations();
-
-   Pnt2f TopLeft, BottomRight;
-   getInsideBorderBounds(TopLeft, BottomRight);
-   Vec2f ComponentSize(BottomRight-TopLeft);
-
-   
-
-   Graphics->drawQuad(TopLeft,
-	                     TopLeft + Vec2f(ComponentSize.x(),0.0f),
-						 BottomRight,
-						 TopLeft + Vec2f(0.0f, ComponentSize.y()),
-						 Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
-						 Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity() );
-
-   if(getCharacterImage() == NullFC)
-		Graphics->drawDisc(ViewPointLocation,4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
-   else
-   {
-	   Vec2f Size(20.0,20.0);
-	   Pnt2f AlignedPosition = ViewPointLocation - 0.5f*Size;
-	   Graphics->drawQuad(AlignedPosition,AlignedPosition+ Vec2f(Size.x(),0.0f),AlignedPosition+ Size,AlignedPosition + Vec2f(0.0f, Size.y()),Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f),Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getCharacterImage(), getOpacity());
-   }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -212,31 +99,31 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
-LayeredImageMiniMap::LayeredImageMiniMap(void) :
+MiniMapIndicator::MiniMapIndicator(void) :
     Inherited()
 {
 }
 
-LayeredImageMiniMap::LayeredImageMiniMap(const LayeredImageMiniMap &source) :
+MiniMapIndicator::MiniMapIndicator(const MiniMapIndicator &source) :
     Inherited(source)
 {
 }
 
-LayeredImageMiniMap::~LayeredImageMiniMap(void)
+MiniMapIndicator::~MiniMapIndicator(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void LayeredImageMiniMap::changed(BitVector whichField, UInt32 origin)
+void MiniMapIndicator::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void LayeredImageMiniMap::dump(      UInt32    , 
+void MiniMapIndicator::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump LayeredImageMiniMap NI" << std::endl;
+    SLOG << "Dump MiniMapIndicator NI" << std::endl;
 }
 
 
@@ -254,10 +141,10 @@ void LayeredImageMiniMap::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLAYEREDIMAGEMINIMAPBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLAYEREDIMAGEMINIMAPBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGMINIMAPINDICATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGMINIMAPINDICATORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGLAYEREDIMAGEMINIMAPFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGMINIMAPINDICATORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

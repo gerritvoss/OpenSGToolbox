@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -84,11 +84,11 @@ MFMiniMapIndicatorPtr *MiniMapBase::getMFIndicators(void)
     return &_mfIndicators;
 }
 
-//! Get the MiniMap::_sfViewPortIndicator field.
+//! Get the MiniMap::_sfViewPointIndicator field.
 inline
-SFMiniMapIndicatorPtr *MiniMapBase::getSFViewPortIndicator(void)
+SFMiniMapIndicatorPtr *MiniMapBase::getSFViewPointIndicator(void)
 {
-    return &_sfViewPortIndicator;
+    return &_sfViewPointIndicator;
 }
 
 //! Get the MiniMap::_sfMapOrientation field.
@@ -148,25 +148,25 @@ void MiniMapBase::setTransformation(const MiniMapTransformationPtr &value)
     _sfTransformation.setValue(value);
 }
 
-//! Get the value of the MiniMap::_sfViewPortIndicator field.
+//! Get the value of the MiniMap::_sfViewPointIndicator field.
 inline
-MiniMapIndicatorPtr &MiniMapBase::getViewPortIndicator(void)
+MiniMapIndicatorPtr &MiniMapBase::getViewPointIndicator(void)
 {
-    return _sfViewPortIndicator.getValue();
+    return _sfViewPointIndicator.getValue();
 }
 
-//! Get the value of the MiniMap::_sfViewPortIndicator field.
+//! Get the value of the MiniMap::_sfViewPointIndicator field.
 inline
-const MiniMapIndicatorPtr &MiniMapBase::getViewPortIndicator(void) const
+const MiniMapIndicatorPtr &MiniMapBase::getViewPointIndicator(void) const
 {
-    return _sfViewPortIndicator.getValue();
+    return _sfViewPointIndicator.getValue();
 }
 
-//! Set the value of the MiniMap::_sfViewPortIndicator field.
+//! Set the value of the MiniMap::_sfViewPointIndicator field.
 inline
-void MiniMapBase::setViewPortIndicator(const MiniMapIndicatorPtr &value)
+void MiniMapBase::setViewPointIndicator(const MiniMapIndicatorPtr &value)
 {
-    _sfViewPortIndicator.setValue(value);
+    _sfViewPointIndicator.setValue(value);
 }
 
 //! Get the value of the MiniMap::_sfMapOrientation field.

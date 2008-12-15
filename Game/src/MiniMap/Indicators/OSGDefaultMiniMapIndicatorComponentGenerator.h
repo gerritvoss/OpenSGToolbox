@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,28 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLAYEREDIMAGEMINIMAP_H_
-#define _OSGLAYEREDIMAGEMINIMAP_H_
+#ifndef _OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATOR_H_
+#define _OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
 
-#include "OSGLayeredImageMiniMapBase.h"
+#include "OSGDefaultMiniMapIndicatorComponentGeneratorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief LayeredImageMiniMap class. See \ref 
-           PageUserInterfaceLayeredImageMiniMap for a description.
+/*! \brief DefaultMiniMapIndicatorComponentGenerator class. See \ref 
+           PageGameDefaultMiniMapIndicatorComponentGenerator for a description.
 */
 
-class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBase
+class OSG_GAMELIB_DLLMAPPING DefaultMiniMapIndicatorComponentGenerator : public DefaultMiniMapIndicatorComponentGeneratorBase
 {
   private:
 
-    typedef LayeredImageMiniMapBase Inherited;
+    typedef DefaultMiniMapIndicatorComponentGeneratorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -77,71 +76,49 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-	
-	void removeTexture(UInt32 index);
-
-	void insertImage(ImagePtr Image);
-	void insertImage(const char *fileName, const char *mimeType = 0);
-
-	void insertImage(UInt32 index, ImagePtr Image);
-	void insertImage(UInt32 index, const char *fileName, const char *mimeType = 0);
-
-	void setImage(UInt32 index, ImagePtr Image);
-	void setImage(UInt32 index, const char *fileName, const char *mimeType = 0);
-
-	void setCharacterTexture(ImagePtr Image);
-
-
     /*! \}                                                                 */
+	virtual ComponentPtr getMiniMapComponent(MiniMapPtr Parent, bool IsSelected, bool HasFocus);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in LayeredImageMiniMapBase.
+    // Variables should all be in DefaultMiniMapIndicatorComponentGeneratorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    LayeredImageMiniMap(void);
-    LayeredImageMiniMap(const LayeredImageMiniMap &source);
+    DefaultMiniMapIndicatorComponentGenerator(void);
+    DefaultMiniMapIndicatorComponentGenerator(const DefaultMiniMapIndicatorComponentGenerator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LayeredImageMiniMap(void); 
+    virtual ~DefaultMiniMapIndicatorComponentGenerator(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
-	virtual void updateAllTransformations(void);
-
-	Pnt2f ViewPointLocation;
-	Quaternion ViewPointOrientation;
-
-	std::vector<Pnt2f> InidicatorLocations;
-	std::vector<Quaternion> InidicatorOrientations;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class LayeredImageMiniMapBase;
+    friend class DefaultMiniMapIndicatorComponentGeneratorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const LayeredImageMiniMap &source);
+    void operator =(const DefaultMiniMapIndicatorComponentGenerator &source);
 };
 
-typedef LayeredImageMiniMap *LayeredImageMiniMapP;
+typedef DefaultMiniMapIndicatorComponentGenerator *DefaultMiniMapIndicatorComponentGeneratorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGLayeredImageMiniMapBase.inl"
-#include "OSGLayeredImageMiniMap.inl"
+#include "OSGDefaultMiniMapIndicatorComponentGeneratorBase.inl"
+#include "OSGDefaultMiniMapIndicatorComponentGenerator.inl"
 
-#define OSGLAYEREDIMAGEMINIMAP_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGLAYEREDIMAGEMINIMAP_H_ */
+#endif /* _OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATOR_H_ */

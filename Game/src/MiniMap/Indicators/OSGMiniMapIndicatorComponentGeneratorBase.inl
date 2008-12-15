@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -44,88 +42,37 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class MiniMapIndicatorComponentGenerator!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGMINIMAPFIELDS_H_
-#define _OSGMINIMAPFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGGameDef.h"
-
-#include <OpenSG/UserInterface/OSGContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class MiniMap;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MiniMapPtr
-
-typedef FCPtr<ContainerPtr, MiniMap> MiniMapPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpGameFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<MiniMapPtr> : 
-    public FieldTraitsRecurseMapper<MiniMapPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &MiniMapIndicatorComponentGeneratorBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
-
-    static DataType   &getType (void) { return _type;        }
-
-    static const char *getSName(void) { return "SFMiniMapPtr"; }
-    static const char *getMName(void) { return "MFMiniMapPtr"; }
-};
-
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MiniMapPtr, true>
-    \hideinhierarchy
- */
-#endif
-
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+//! access the numerical type of the class
+inline
+OSG::UInt32 MiniMapIndicatorComponentGeneratorBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpGameFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<MiniMapPtr> SFMiniMapPtr;
-#endif
 
-#ifndef OSG_COMPILEMINIMAPINST
-OSG_DLLEXPORT_DECL1(SField, MiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING)
-#endif
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpGameFieldMulti */
-
-typedef MField<MiniMapPtr> MFMiniMapPtr;
-#endif
-
-#ifndef OSG_COMPILEMINIMAPINST
-OSG_DLLEXPORT_DECL1(MField, MiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING)
-#endif
 
 OSG_END_NAMESPACE
 
-#define OSGMINIMAPFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGMINIMAPINDICATORCOMPONENTGENERATORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
-#endif /* _OSGMINIMAPFIELDS_H_ */

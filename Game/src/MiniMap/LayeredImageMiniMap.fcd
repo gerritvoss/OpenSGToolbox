@@ -30,38 +30,6 @@ A LayeredImageMiniMap.
 	>
 	</Field>
 	<Field
-		name="MapScaleX"
-		type="UInt32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="MapScaleY"
-		type="UInt32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="mapLocationPtr"
-		type="Pnt2f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="startPositionPtr"
-		type="Pnt2f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="CharacterImage"
 		type="TextureChunkPtr"
 		cardinality="single"
@@ -69,15 +37,4 @@ A LayeredImageMiniMap.
 		access="public"
 	>
 	</Field>
-	<Field
-		name="CharacterRotation"
-		type="Quaternion"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-
-
-
 </FieldContainer>

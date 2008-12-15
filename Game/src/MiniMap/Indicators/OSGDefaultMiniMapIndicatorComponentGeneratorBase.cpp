@@ -45,81 +45,110 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class MiniMapTransformation!
+ **     class DefaultMiniMapIndicatorComponentGenerator!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEMINIMAPTRANSFORMATIONINST
+#define OSG_COMPILEDEFAULTMINIMAPINDICATORCOMPONENTGENERATORINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMiniMapTransformationBase.h"
-#include "OSGMiniMapTransformation.h"
+#include "OSGDefaultMiniMapIndicatorComponentGeneratorBase.h"
+#include "OSGDefaultMiniMapIndicatorComponentGenerator.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector MiniMapTransformationBase::MTInfluenceMask = 
+const OSG::BitVector  DefaultMiniMapIndicatorComponentGeneratorBase::ImageComponentPrototypeFieldMask = 
+    (TypeTraits<BitVector>::One << DefaultMiniMapIndicatorComponentGeneratorBase::ImageComponentPrototypeFieldId);
+
+const OSG::BitVector DefaultMiniMapIndicatorComponentGeneratorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
+// Field descriptions
 
-FieldContainerType MiniMapTransformationBase::_type(
-    "MiniMapTransformation",
-    "FieldContainer",
-    NULL,
-    NULL, 
-    MiniMapTransformation::initMethod,
-    NULL,
-    0);
+/*! \var ImageComponentPtr DefaultMiniMapIndicatorComponentGeneratorBase::_sfImageComponentPrototype
+    
+*/
 
-//OSG_FIELD_CONTAINER_DEF(MiniMapTransformationBase, MiniMapTransformationPtr)
+//! DefaultMiniMapIndicatorComponentGenerator description
+
+FieldDescription *DefaultMiniMapIndicatorComponentGeneratorBase::_desc[] = 
+{
+    new FieldDescription(SFImageComponentPtr::getClassType(), 
+                     "ImageComponentPrototype", 
+                     ImageComponentPrototypeFieldId, ImageComponentPrototypeFieldMask,
+                     false,
+                     (FieldAccessMethod) &DefaultMiniMapIndicatorComponentGeneratorBase::getSFImageComponentPrototype)
+};
+
+
+FieldContainerType DefaultMiniMapIndicatorComponentGeneratorBase::_type(
+    "DefaultMiniMapIndicatorComponentGenerator",
+    "MiniMapIndicatorComponentGenerator",
+    NULL,
+    (PrototypeCreateF) &DefaultMiniMapIndicatorComponentGeneratorBase::createEmpty,
+    DefaultMiniMapIndicatorComponentGenerator::initMethod,
+    _desc,
+    sizeof(_desc));
+
+//OSG_FIELD_CONTAINER_DEF(DefaultMiniMapIndicatorComponentGeneratorBase, DefaultMiniMapIndicatorComponentGeneratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MiniMapTransformationBase::getType(void) 
+FieldContainerType &DefaultMiniMapIndicatorComponentGeneratorBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &MiniMapTransformationBase::getType(void) const 
+const FieldContainerType &DefaultMiniMapIndicatorComponentGeneratorBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 MiniMapTransformationBase::getContainerSize(void) const 
+FieldContainerPtr DefaultMiniMapIndicatorComponentGeneratorBase::shallowCopy(void) const 
 { 
-    return sizeof(MiniMapTransformation); 
+    DefaultMiniMapIndicatorComponentGeneratorPtr returnValue; 
+
+    newPtr(returnValue, dynamic_cast<const DefaultMiniMapIndicatorComponentGenerator *>(this)); 
+
+    return returnValue; 
+}
+
+UInt32 DefaultMiniMapIndicatorComponentGeneratorBase::getContainerSize(void) const 
+{ 
+    return sizeof(DefaultMiniMapIndicatorComponentGenerator); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MiniMapTransformationBase::executeSync(      FieldContainer &other,
+void DefaultMiniMapIndicatorComponentGeneratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((MiniMapTransformationBase *) &other, whichField);
+    this->executeSyncImpl((DefaultMiniMapIndicatorComponentGeneratorBase *) &other, whichField);
 }
 #else
-void MiniMapTransformationBase::executeSync(      FieldContainer &other,
+void DefaultMiniMapIndicatorComponentGeneratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((MiniMapTransformationBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((DefaultMiniMapIndicatorComponentGeneratorBase *) &other, whichField, sInfo);
 }
-void MiniMapTransformationBase::execBeginEdit(const BitVector &whichField, 
+void DefaultMiniMapIndicatorComponentGeneratorBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void MiniMapTransformationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void DefaultMiniMapIndicatorComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -132,7 +161,8 @@ void MiniMapTransformationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-MiniMapTransformationBase::MiniMapTransformationBase(void) :
+DefaultMiniMapIndicatorComponentGeneratorBase::DefaultMiniMapIndicatorComponentGeneratorBase(void) :
+    _sfImageComponentPrototype(ImageComponentPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -141,65 +171,87 @@ MiniMapTransformationBase::MiniMapTransformationBase(void) :
 #pragma warning (default : 383)
 #endif
 
-MiniMapTransformationBase::MiniMapTransformationBase(const MiniMapTransformationBase &source) :
+DefaultMiniMapIndicatorComponentGeneratorBase::DefaultMiniMapIndicatorComponentGeneratorBase(const DefaultMiniMapIndicatorComponentGeneratorBase &source) :
+    _sfImageComponentPrototype(source._sfImageComponentPrototype), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-MiniMapTransformationBase::~MiniMapTransformationBase(void)
+DefaultMiniMapIndicatorComponentGeneratorBase::~DefaultMiniMapIndicatorComponentGeneratorBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MiniMapTransformationBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultMiniMapIndicatorComponentGeneratorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
+    {
+        returnValue += _sfImageComponentPrototype.getBinSize();
+    }
 
 
     return returnValue;
 }
 
-void MiniMapTransformationBase::copyToBin(      BinaryDataHandler &pMem,
+void DefaultMiniMapIndicatorComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
+    {
+        _sfImageComponentPrototype.copyToBin(pMem);
+    }
+
 
 }
 
-void MiniMapTransformationBase::copyFromBin(      BinaryDataHandler &pMem,
+void DefaultMiniMapIndicatorComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
+    {
+        _sfImageComponentPrototype.copyFromBin(pMem);
+    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MiniMapTransformationBase::executeSyncImpl(      MiniMapTransformationBase *pOther,
+void DefaultMiniMapIndicatorComponentGeneratorBase::executeSyncImpl(      DefaultMiniMapIndicatorComponentGeneratorBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
+        _sfImageComponentPrototype.syncWith(pOther->_sfImageComponentPrototype);
+
 
 }
 #else
-void MiniMapTransformationBase::executeSyncImpl(      MiniMapTransformationBase *pOther,
+void DefaultMiniMapIndicatorComponentGeneratorBase::executeSyncImpl(      DefaultMiniMapIndicatorComponentGeneratorBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
+        _sfImageComponentPrototype.syncWith(pOther->_sfImageComponentPrototype);
+
 
 
 }
 
-void MiniMapTransformationBase::execBeginEditImpl (const BitVector &whichField, 
+void DefaultMiniMapIndicatorComponentGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -218,11 +270,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MiniMapTransformationPtr>::_type("MiniMapTransformationPtr", "FieldContainerPtr");
+DataType FieldDataTraits<DefaultMiniMapIndicatorComponentGeneratorPtr>::_type("DefaultMiniMapIndicatorComponentGeneratorPtr", "MiniMapIndicatorComponentGeneratorPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(MiniMapTransformationPtr, OSG_GAMELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MiniMapTransformationPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(DefaultMiniMapIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(DefaultMiniMapIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -239,10 +291,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(MiniMapTransformationPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMINIMAPTRANSFORMATIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMINIMAPTRANSFORMATIONBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGMINIMAPTRANSFORMATIONFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDEFAULTMINIMAPINDICATORCOMPONENTGENERATORFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

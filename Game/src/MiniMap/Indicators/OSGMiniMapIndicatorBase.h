@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class LayeredImageMiniMap
+ **     class MiniMapIndicator
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGLAYEREDIMAGEMINIMAPBASE_H_
-#define _OSGLAYEREDIMAGEMINIMAPBASE_H_
+#ifndef _OSGMINIMAPINDICATORBASE_H_
+#define _OSGMINIMAPINDICATORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,46 +65,40 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGMiniMap.h" // Parent
+#include <OpenSG/OSGFieldContainer.h> // Parent
 
-#include "MiniMap/OSGMiniMapOverlay.h" // Overlay type
-#include <OpenSG/OSGTextureChunkFields.h> // LayerTextures type
-#include <OpenSG/OSGTextureChunkFields.h> // CharacterImage type
-#include <OpenSG/OSGQuaternionFields.h> // CharacterRotation type
+#include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // Generator type
+#include <OpenSG/OSGNodeFields.h> // Location type
 
-#include "OSGLayeredImageMiniMapFields.h"
+#include "OSGMiniMapIndicatorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class LayeredImageMiniMap;
+class MiniMapIndicator;
 class BinaryDataHandler;
 
-//! \brief LayeredImageMiniMap Base Class.
+//! \brief MiniMapIndicator Base Class.
 
-class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
+class OSG_GAMELIB_DLLMAPPING MiniMapIndicatorBase : public FieldContainer
 {
   private:
 
-    typedef MiniMap    Inherited;
+    typedef FieldContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef LayeredImageMiniMapPtr  Ptr;
+    typedef MiniMapIndicatorPtr  Ptr;
 
     enum
     {
-        OverlayFieldId           = Inherited::NextFieldId,
-        LayerTexturesFieldId     = OverlayFieldId           + 1,
-        CharacterImageFieldId    = LayerTexturesFieldId     + 1,
-        CharacterRotationFieldId = CharacterImageFieldId    + 1,
-        NextFieldId              = CharacterRotationFieldId + 1
+        GeneratorFieldId = Inherited::NextFieldId,
+        LocationFieldId  = GeneratorFieldId + 1,
+        NextFieldId      = LocationFieldId  + 1
     };
 
-    static const OSG::BitVector OverlayFieldMask;
-    static const OSG::BitVector LayerTexturesFieldMask;
-    static const OSG::BitVector CharacterImageFieldMask;
-    static const OSG::BitVector CharacterRotationFieldMask;
+    static const OSG::BitVector GeneratorFieldMask;
+    static const OSG::BitVector LocationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,29 +125,21 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFMiniMapOverlayPtr *getMFOverlay        (void);
-           MFTextureChunkPtr   *getMFLayerTextures  (void);
-           SFTextureChunkPtr   *getSFCharacterImage (void);
-           SFQuaternion        *getSFCharacterRotation(void);
+           SFComponentGeneratorPtr *getSFGenerator      (void);
+           SFNodePtr           *getSFLocation       (void);
 
-           TextureChunkPtr     &getCharacterImage (void);
-     const TextureChunkPtr     &getCharacterImage (void) const;
-           Quaternion          &getCharacterRotation(void);
-     const Quaternion          &getCharacterRotation(void) const;
-           MiniMapOverlayPtr   &getOverlay        (const UInt32 index);
-           MFMiniMapOverlayPtr &getOverlay        (void);
-     const MFMiniMapOverlayPtr &getOverlay        (void) const;
-           TextureChunkPtr     &getLayerTextures  (const UInt32 index);
-           MFTextureChunkPtr   &getLayerTextures  (void);
-     const MFTextureChunkPtr   &getLayerTextures  (void) const;
+           ComponentGeneratorPtr &getGenerator      (void);
+     const ComponentGeneratorPtr &getGenerator      (void) const;
+           NodePtr             &getLocation       (void);
+     const NodePtr             &getLocation       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCharacterImage ( const TextureChunkPtr &value );
-     void setCharacterRotation( const Quaternion &value );
+     void setGenerator      ( const ComponentGeneratorPtr &value );
+     void setLocation       ( const NodePtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -177,8 +163,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  LayeredImageMiniMapPtr      create          (void); 
-    static  LayeredImageMiniMapPtr      createEmpty     (void); 
+    static  MiniMapIndicatorPtr      create          (void); 
+    static  MiniMapIndicatorPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -196,25 +182,23 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFMiniMapOverlayPtr   _mfOverlay;
-    MFTextureChunkPtr   _mfLayerTextures;
-    SFTextureChunkPtr   _sfCharacterImage;
-    SFQuaternion        _sfCharacterRotation;
+    SFComponentGeneratorPtr   _sfGenerator;
+    SFNodePtr           _sfLocation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    LayeredImageMiniMapBase(void);
-    LayeredImageMiniMapBase(const LayeredImageMiniMapBase &source);
+    MiniMapIndicatorBase(void);
+    MiniMapIndicatorBase(const MiniMapIndicatorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LayeredImageMiniMapBase(void); 
+    virtual ~MiniMapIndicatorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,13 +206,13 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      LayeredImageMiniMapBase *pOther,
+    void executeSyncImpl(      MiniMapIndicatorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      LayeredImageMiniMapBase *pOther,
+    void executeSyncImpl(      MiniMapIndicatorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -258,7 +242,7 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const LayeredImageMiniMapBase &source);
+    void operator =(const MiniMapIndicatorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -266,17 +250,17 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 //---------------------------------------------------------------------------
 
 
-typedef LayeredImageMiniMapBase *LayeredImageMiniMapBaseP;
+typedef MiniMapIndicatorBase *MiniMapIndicatorBaseP;
 
-typedef osgIF<LayeredImageMiniMapBase::isNodeCore,
-              CoredNodePtr<LayeredImageMiniMap>,
+typedef osgIF<MiniMapIndicatorBase::isNodeCore,
+              CoredNodePtr<MiniMapIndicator>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet LayeredImageMiniMapNodePtr;
+              >::_IRet MiniMapIndicatorNodePtr;
 
-typedef RefPtr<LayeredImageMiniMapPtr> LayeredImageMiniMapRefPtr;
+typedef RefPtr<MiniMapIndicatorPtr> MiniMapIndicatorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGLAYEREDIMAGEMINIMAPBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGMINIMAPINDICATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGLAYEREDIMAGEMINIMAPBASE_H_ */
+#endif /* _OSGMINIMAPINDICATORBASE_H_ */

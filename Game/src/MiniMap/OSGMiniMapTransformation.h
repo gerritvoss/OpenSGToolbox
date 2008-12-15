@@ -46,6 +46,7 @@
 #include "OSGGameDef.h"
 
 #include "OSGMiniMapTransformationBase.h"
+#include <OpenSG/OSGQuaternion.h>
 #include <OpenSG/UserInterface/OSGChangeListener.h>
 #include <set>
 
@@ -83,6 +84,11 @@ class OSG_GAMELIB_DLLMAPPING MiniMapTransformation : public MiniMapTransformatio
 	virtual void addChangeListener(ChangeListenerPtr Listener);
 
 	virtual void removeChangeListener(ChangeListenerPtr Listener);
+
+	virtual void transform(Pnt3f& p) = 0;
+	virtual void transform(Vec3f& v) = 0;
+	virtual void transform(Quaternion& r) = 0;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

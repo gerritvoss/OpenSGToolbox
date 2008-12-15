@@ -146,7 +146,7 @@ void MiniMap::changed(BitVector whichField, UInt32 origin)
 	
 	if((whichField & TransformationFieldMask) ||
 		(whichField & IndicatorsFieldMask) ||
-		(whichField & ViewPortIndicatorFieldMask))
+		(whichField & ViewPointIndicatorFieldMask))
 	{
 		updateAllTransformations();
 	}

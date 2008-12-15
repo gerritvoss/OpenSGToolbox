@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGGameDef.h"
 
+#include <OpenSG/OSGQuaternion.h>
 #include "OSGMiniMapIndicatorBase.h"
 
 OSG_BEGIN_NAMESPACE
@@ -78,6 +79,8 @@ class OSG_GAMELIB_DLLMAPPING MiniMapIndicator : public MiniMapIndicatorBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+	void getTransformation(Pnt3f& Location, Quaternion& Rotation) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

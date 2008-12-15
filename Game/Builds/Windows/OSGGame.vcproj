@@ -338,31 +338,31 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\MiniMap\OSGMiniMapIndicator.cpp"
+					RelativePath="..\..\src\MiniMap\OSGMiniMapMatrixTransformation.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\MiniMap\OSGMiniMapIndicator.h"
+					RelativePath="..\..\src\MiniMap\OSGMiniMapMatrixTransformation.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\MiniMap\OSGMiniMapIndicator.inl"
+					RelativePath="..\..\src\MiniMap\OSGMiniMapMatrixTransformation.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\MiniMap\OSGMiniMapIndicatorBase.cpp"
+					RelativePath="..\..\src\MiniMap\OSGMiniMapMatrixTransformationBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\MiniMap\OSGMiniMapIndicatorBase.h"
+					RelativePath="..\..\src\MiniMap\OSGMiniMapMatrixTransformationBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\MiniMap\OSGMiniMapIndicatorBase.inl"
+					RelativePath="..\..\src\MiniMap\OSGMiniMapMatrixTransformationBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\MiniMap\OSGMiniMapIndicatorFields.h"
+					RelativePath="..\..\src\MiniMap\OSGMiniMapMatrixTransformationFields.h"
 					>
 				</File>
 				<File
@@ -438,6 +438,94 @@
 					</File>
 					<File
 						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapListener.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Indicators"
+					>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGDefaultMiniMapIndicatorComponentGenerator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGDefaultMiniMapIndicatorComponentGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGDefaultMiniMapIndicatorComponentGenerator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGDefaultMiniMapIndicatorComponentGeneratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGDefaultMiniMapIndicatorComponentGeneratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGDefaultMiniMapIndicatorComponentGeneratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGDefaultMiniMapIndicatorComponentGeneratorFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorComponentGenerator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorComponentGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorComponentGenerator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorComponentGeneratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorComponentGeneratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorComponentGeneratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorComponentGeneratorFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Indicators\OSGMiniMapIndicatorFields.h"
 						>
 					</File>
 				</Filter>
