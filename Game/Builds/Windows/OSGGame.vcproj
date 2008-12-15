@@ -382,7 +382,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\MiniMap\osgminimapoverlaybase.h"
+					RelativePath="..\..\src\MiniMap\OSGMiniMapOverlayBase.h"
 					>
 				</File>
 				<File
@@ -390,7 +390,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\MiniMap\osgminimapoverlayfields.h"
+					RelativePath="..\..\src\MiniMap\OSGMiniMapOverlayFields.h"
 					>
 				</File>
 				<File
