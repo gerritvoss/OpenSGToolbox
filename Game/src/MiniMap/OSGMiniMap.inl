@@ -42,6 +42,19 @@
 
 OSG_BEGIN_NAMESPACE
 
+
+inline
+void MiniMap::addMiniMapListener(MiniMapListenerPtr Listener)
+{
+   _MiniMapListeners.insert(Listener);
+}
+
+inline
+MiniMap::TransformationChangedListener::TransformationChangedListener(MiniMapPtr TheMiniMap) :
+_MiniMap(TheMiniMap)
+{
+}
+
 OSG_END_NAMESPACE
 
 #define OSGMINIMAP_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

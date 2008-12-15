@@ -45,6 +45,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGMiniMapBase.h"
+#include "MiniMap/Events/OSGMiniMapListener.h"
+#include <OpenSG/UserInterface/OSGChangeListener.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,6 +79,10 @@ class OSG_GAMELIB_DLLMAPPING MiniMap : public MiniMapBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    void addMiniMapListener(MiniMapListenerPtr Listener);
+    void removeMiniMapListener(MiniMapListenerPtr Listener);
+	
+	virtual void mousePressed(const MouseEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -97,7 +103,29 @@ class OSG_GAMELIB_DLLMAPPING MiniMap : public MiniMapBase
     virtual ~MiniMap(void); 
 
     /*! \}                                                                 */
+    virtual void locationSelected(const MiniMapEvent& e);
+	virtual void updateAllTransformations(void);
     
+	typedef std::set<MiniMapListenerPtr> MiniMapListenerSet;
+    typedef MiniMapListenerSet::iterator MiniMapListenerSetItor;
+    typedef MiniMapListenerSet::const_iterator MiniMapListenerSetConstItor;
+	
+    MiniMapListenerSet       _MiniMapListeners;
+    virtual void produceLocationSelected(void);
+	
+	class TransformationChangedListener : public ChangeListener
+	{
+	public :
+		TransformationChangedListener(MiniMapPtr TheMiniMap);
+		
+		virtual void stateChanged(const ChangeEvent& e);
+	protected :
+		MiniMapPtr _MiniMap;
+	};
+
+	friend class TransformationChangedListener;
+
+	TransformationChangedListener _TransformationChangedListener;
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -421,6 +421,26 @@
 					RelativePath="..\..\src\MiniMap\OSGMiniMapTransformationFields.h"
 					>
 				</File>
+				<Filter
+					Name="Events"
+					>
+					<File
+						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapListener.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

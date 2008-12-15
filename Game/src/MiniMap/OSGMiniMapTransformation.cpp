@@ -76,9 +76,28 @@ void MiniMapTransformation::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void MiniMapTransformation::removeChangeListener(ChangeListenerPtr Listener)
+{
+   ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
+   if(EraseIter != _ChangeListeners.end())
+   {
+      _ChangeListeners.erase(EraseIter);
+   }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+
+void MiniMapTransformation::produceStateChanged(const ChangeEvent& e)
+{
+    ChangeListenerSet ListenerSet(_ChangeListeners);
+    for(ChangeListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+	    (*SetItor)->stateChanged(e);
+    }
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 

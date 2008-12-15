@@ -45,6 +45,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGMiniMapTransformationBase.h"
+#include <OpenSG/UserInterface/OSGChangeListener.h>
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,6 +79,9 @@ class OSG_GAMELIB_DLLMAPPING MiniMapTransformation : public MiniMapTransformatio
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual void addChangeListener(ChangeListenerPtr Listener);
+
+	virtual void removeChangeListener(ChangeListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -97,6 +102,12 @@ class OSG_GAMELIB_DLLMAPPING MiniMapTransformation : public MiniMapTransformatio
     virtual ~MiniMapTransformation(void); 
 
     /*! \}                                                                 */
+	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
+    typedef ChangeListenerSet::iterator ChangeListenerSetItor;
+    typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
+	
+    ChangeListenerSet       _ChangeListeners;
+    void produceStateChanged(const ChangeEvent& e);
     
     /*==========================  PRIVATE  ================================*/
   private:

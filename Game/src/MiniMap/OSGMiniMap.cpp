@@ -76,19 +76,55 @@ void MiniMap::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void MiniMap::mousePressed(const MouseEvent& e)
+{
+	produceLocationSelected();
+	Inherited::mousePressed(e);
+}
+
+void MiniMap::removeMiniMapListener(MiniMapListenerPtr Listener)
+{
+   MiniMapListenerSetItor EraseIter(_MiniMapListeners.find(Listener));
+   if(EraseIter != _MiniMapListeners.end())
+   {
+      _MiniMapListeners.erase(EraseIter);
+   }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void MiniMap::updateAllTransformations(void)
+{
+}
+
+void MiniMap::locationSelected(const MiniMapEvent& e)
+{
+}
+
+void MiniMap::produceLocationSelected(void)
+{
+	MiniMapEvent e(MiniMapPtr(this), getTimeStamp());
+    locationSelected(e);
+	MiniMapListenerSet Listeners(_MiniMapListeners);
+    for(MiniMapListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->locationSelected(e);
+    }
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 MiniMap::MiniMap(void) :
-    Inherited()
+    Inherited(),
+		_TransformationChangedListener(MiniMapPtr(this))
 {
 }
 
 MiniMap::MiniMap(const MiniMap &source) :
-    Inherited(source)
+    Inherited(source),
+		_TransformationChangedListener(MiniMapPtr(this))
 {
 }
 
@@ -101,6 +137,19 @@ MiniMap::~MiniMap(void)
 void MiniMap::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if((whichField & TransformationFieldMask) &&
+		getTransformation() != NullFC)
+	{
+		getTransformation()->addChangeListener(&_TransformationChangedListener);
+	}
+	
+	if((whichField & TransformationFieldMask) ||
+		(whichField & IndicatorsFieldMask) ||
+		(whichField & ViewPortIndicatorFieldMask))
+	{
+		updateAllTransformations();
+	}
 }
 
 void MiniMap::dump(      UInt32    , 
@@ -109,6 +158,11 @@ void MiniMap::dump(      UInt32    ,
     SLOG << "Dump MiniMap NI" << std::endl;
 }
 
+
+void MiniMap::TransformationChangedListener::stateChanged(const ChangeEvent& e)
+{
+	_MiniMap->updateAllTransformations();
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *   contact: dkabala@vrac.iastate.edu                                       *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * by the Free Software Foundation, version 3.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,31 +24,31 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGMINIMAPLISTENER_H_
+#define _OSGMINIMAPLISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGGameDef.h"
+
+#include <OpenSG/Input/OSGEventListener.h>
+#include "OSGMiniMapEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void MiniMapTransformation::addChangeListener(ChangeListenerPtr Listener)
+class OSG_GAMELIB_DLLMAPPING MiniMapListener : public EventListener
 {
-   _ChangeListeners.insert(Listener);
-}
+   /*=========================  PUBLIC  ===============================*/
+public:
+
+   virtual void locationSelected(const MiniMapEvent& e) = 0;
+};
+
+typedef MiniMapListener* MiniMapListenerPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGMINIMAPTRANSFORMATION_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-
+#endif /* _OSGMINIMAPLISTENER_H_ */
