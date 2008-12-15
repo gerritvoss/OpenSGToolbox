@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGGameDef.h"
 
 #include "OSGMiniMapBase.h"
 #include "MiniMap/Events/OSGMiniMapListener.h"
