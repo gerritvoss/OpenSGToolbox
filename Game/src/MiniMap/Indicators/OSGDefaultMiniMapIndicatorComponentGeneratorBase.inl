@@ -96,33 +96,33 @@ DefaultMiniMapIndicatorComponentGeneratorPtr DefaultMiniMapIndicatorComponentGen
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DefaultMiniMapIndicatorComponentGenerator::_sfImageComponentPrototype field.
+//! Get the DefaultMiniMapIndicatorComponentGenerator::_sfComponentPrototype field.
 inline
-SFImageComponentPtr *DefaultMiniMapIndicatorComponentGeneratorBase::getSFImageComponentPrototype(void)
+SFComponentPtr *DefaultMiniMapIndicatorComponentGeneratorBase::getSFComponentPrototype(void)
 {
-    return &_sfImageComponentPrototype;
+    return &_sfComponentPrototype;
 }
 
 
-//! Get the value of the DefaultMiniMapIndicatorComponentGenerator::_sfImageComponentPrototype field.
+//! Get the value of the DefaultMiniMapIndicatorComponentGenerator::_sfComponentPrototype field.
 inline
-ImageComponentPtr &DefaultMiniMapIndicatorComponentGeneratorBase::getImageComponentPrototype(void)
+ComponentPtr &DefaultMiniMapIndicatorComponentGeneratorBase::getComponentPrototype(void)
 {
-    return _sfImageComponentPrototype.getValue();
+    return _sfComponentPrototype.getValue();
 }
 
-//! Get the value of the DefaultMiniMapIndicatorComponentGenerator::_sfImageComponentPrototype field.
+//! Get the value of the DefaultMiniMapIndicatorComponentGenerator::_sfComponentPrototype field.
 inline
-const ImageComponentPtr &DefaultMiniMapIndicatorComponentGeneratorBase::getImageComponentPrototype(void) const
+const ComponentPtr &DefaultMiniMapIndicatorComponentGeneratorBase::getComponentPrototype(void) const
 {
-    return _sfImageComponentPrototype.getValue();
+    return _sfComponentPrototype.getValue();
 }
 
-//! Set the value of the DefaultMiniMapIndicatorComponentGenerator::_sfImageComponentPrototype field.
+//! Set the value of the DefaultMiniMapIndicatorComponentGenerator::_sfComponentPrototype field.
 inline
-void DefaultMiniMapIndicatorComponentGeneratorBase::setImageComponentPrototype(const ImageComponentPtr &value)
+void DefaultMiniMapIndicatorComponentGeneratorBase::setComponentPrototype(const ComponentPtr &value)
 {
-    _sfImageComponentPrototype.setValue(value);
+    _sfComponentPrototype.setValue(value);
 }
 
 

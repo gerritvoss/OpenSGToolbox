@@ -13,11 +13,11 @@
 >
 A UI DefaultMiniMapIndicator ComponentGenerator.
 	<Field
-		name="ImageComponentPrototype"
-		type="ImageComponentPtr"
+		name="ComponentPrototype"
+		type="ComponentPtr"
 		cardinality="single"
 		visibility="external"
-		header="OpenSG/UserInterface/OSGImageComponentFields.h"
+		header="OpenSG/UserInterface/OSGComponentFields.h"
 		defaultValue="NullFC"
 	>
 	</Field>

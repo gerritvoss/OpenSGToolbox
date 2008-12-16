@@ -67,7 +67,7 @@
 
 #include "OSGMiniMapIndicatorComponentGenerator.h" // Parent
 
-#include <OpenSG/UserInterface/OSGImageComponentFields.h> // ImageComponentPrototype type
+#include <OpenSG/UserInterface/OSGComponentFields.h> // ComponentPrototype type
 
 #include "OSGDefaultMiniMapIndicatorComponentGeneratorFields.h"
 
@@ -91,11 +91,11 @@ class OSG_GAMELIB_DLLMAPPING DefaultMiniMapIndicatorComponentGeneratorBase : pub
 
     enum
     {
-        ImageComponentPrototypeFieldId = Inherited::NextFieldId,
-        NextFieldId                    = ImageComponentPrototypeFieldId + 1
+        ComponentPrototypeFieldId = Inherited::NextFieldId,
+        NextFieldId               = ComponentPrototypeFieldId + 1
     };
 
-    static const OSG::BitVector ImageComponentPrototypeFieldMask;
+    static const OSG::BitVector ComponentPrototypeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +122,17 @@ class OSG_GAMELIB_DLLMAPPING DefaultMiniMapIndicatorComponentGeneratorBase : pub
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFImageComponentPtr *getSFImageComponentPrototype(void);
+           SFComponentPtr      *getSFComponentPrototype(void);
 
-           ImageComponentPtr   &getImageComponentPrototype(void);
-     const ImageComponentPtr   &getImageComponentPrototype(void) const;
+           ComponentPtr        &getComponentPrototype(void);
+     const ComponentPtr        &getComponentPrototype(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setImageComponentPrototype( const ImageComponentPtr &value );
+     void setComponentPrototype( const ComponentPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ class OSG_GAMELIB_DLLMAPPING DefaultMiniMapIndicatorComponentGeneratorBase : pub
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFImageComponentPtr   _sfImageComponentPrototype;
+    SFComponentPtr      _sfComponentPrototype;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

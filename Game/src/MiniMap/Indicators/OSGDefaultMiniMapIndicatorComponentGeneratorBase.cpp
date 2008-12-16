@@ -64,8 +64,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DefaultMiniMapIndicatorComponentGeneratorBase::ImageComponentPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultMiniMapIndicatorComponentGeneratorBase::ImageComponentPrototypeFieldId);
+const OSG::BitVector  DefaultMiniMapIndicatorComponentGeneratorBase::ComponentPrototypeFieldMask = 
+    (TypeTraits<BitVector>::One << DefaultMiniMapIndicatorComponentGeneratorBase::ComponentPrototypeFieldId);
 
 const OSG::BitVector DefaultMiniMapIndicatorComponentGeneratorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -74,7 +74,7 @@ const OSG::BitVector DefaultMiniMapIndicatorComponentGeneratorBase::MTInfluenceM
 
 // Field descriptions
 
-/*! \var ImageComponentPtr DefaultMiniMapIndicatorComponentGeneratorBase::_sfImageComponentPrototype
+/*! \var ComponentPtr    DefaultMiniMapIndicatorComponentGeneratorBase::_sfComponentPrototype
     
 */
 
@@ -82,11 +82,11 @@ const OSG::BitVector DefaultMiniMapIndicatorComponentGeneratorBase::MTInfluenceM
 
 FieldDescription *DefaultMiniMapIndicatorComponentGeneratorBase::_desc[] = 
 {
-    new FieldDescription(SFImageComponentPtr::getClassType(), 
-                     "ImageComponentPrototype", 
-                     ImageComponentPrototypeFieldId, ImageComponentPrototypeFieldMask,
+    new FieldDescription(SFComponentPtr::getClassType(), 
+                     "ComponentPrototype", 
+                     ComponentPrototypeFieldId, ComponentPrototypeFieldMask,
                      false,
-                     (FieldAccessMethod) &DefaultMiniMapIndicatorComponentGeneratorBase::getSFImageComponentPrototype)
+                     (FieldAccessMethod) &DefaultMiniMapIndicatorComponentGeneratorBase::getSFComponentPrototype)
 };
 
 
@@ -162,7 +162,7 @@ void DefaultMiniMapIndicatorComponentGeneratorBase::onDestroyAspect(UInt32 uiId,
 #endif
 
 DefaultMiniMapIndicatorComponentGeneratorBase::DefaultMiniMapIndicatorComponentGeneratorBase(void) :
-    _sfImageComponentPrototype(ImageComponentPtr(NullFC)), 
+    _sfComponentPrototype     (ComponentPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -172,7 +172,7 @@ DefaultMiniMapIndicatorComponentGeneratorBase::DefaultMiniMapIndicatorComponentG
 #endif
 
 DefaultMiniMapIndicatorComponentGeneratorBase::DefaultMiniMapIndicatorComponentGeneratorBase(const DefaultMiniMapIndicatorComponentGeneratorBase &source) :
-    _sfImageComponentPrototype(source._sfImageComponentPrototype), 
+    _sfComponentPrototype     (source._sfComponentPrototype     ), 
     Inherited                 (source)
 {
 }
@@ -189,9 +189,9 @@ UInt32 DefaultMiniMapIndicatorComponentGeneratorBase::getBinSize(const BitVector
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
     {
-        returnValue += _sfImageComponentPrototype.getBinSize();
+        returnValue += _sfComponentPrototype.getBinSize();
     }
 
 
@@ -203,9 +203,9 @@ void DefaultMiniMapIndicatorComponentGeneratorBase::copyToBin(      BinaryDataHa
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
     {
-        _sfImageComponentPrototype.copyToBin(pMem);
+        _sfComponentPrototype.copyToBin(pMem);
     }
 
 
@@ -216,9 +216,9 @@ void DefaultMiniMapIndicatorComponentGeneratorBase::copyFromBin(      BinaryData
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
     {
-        _sfImageComponentPrototype.copyFromBin(pMem);
+        _sfComponentPrototype.copyFromBin(pMem);
     }
 
 
@@ -231,8 +231,8 @@ void DefaultMiniMapIndicatorComponentGeneratorBase::executeSyncImpl(      Defaul
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
-        _sfImageComponentPrototype.syncWith(pOther->_sfImageComponentPrototype);
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
+        _sfComponentPrototype.syncWith(pOther->_sfComponentPrototype);
 
 
 }
@@ -244,8 +244,8 @@ void DefaultMiniMapIndicatorComponentGeneratorBase::executeSyncImpl(      Defaul
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ImageComponentPrototypeFieldMask & whichField))
-        _sfImageComponentPrototype.syncWith(pOther->_sfImageComponentPrototype);
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
+        _sfComponentPrototype.syncWith(pOther->_sfComponentPrototype);
 
 
 

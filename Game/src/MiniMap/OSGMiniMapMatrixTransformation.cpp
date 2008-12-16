@@ -92,7 +92,9 @@ void MiniMapMatrixTransformation::transform(Quaternion& r)
 	r.getValue(RotMat);
 	RotMat.mult(getTransformation());
 
-	r.setValue(RotMat);
+	Vec3f tempVec;
+	Quaternion tempQuat;
+	RotMat.getTransform(tempVec,r,tempVec,tempQuat);
 }
 
 /*-------------------------------------------------------------------------*\

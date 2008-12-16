@@ -46,6 +46,7 @@
 #define OSG_COMPILEGAMELIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/UserInterface/OSGComponent.h>
 
 #include "OSGDefaultMiniMapIndicatorComponentGenerator.h"
 
@@ -78,7 +79,14 @@ void DefaultMiniMapIndicatorComponentGenerator::initMethod (void)
 
 ComponentPtr DefaultMiniMapIndicatorComponentGenerator::getMiniMapComponent(MiniMapPtr Parent, bool IsSelected, bool HasFocus)
 {
-	return NullFC;
+	if(getComponentPrototype() != NullFC)
+	{
+		return Component::Ptr::dcast(getComponentPrototype()->shallowCopy());
+	}
+	else
+	{
+		return NullFC;
+	}
 }
 
 /*-------------------------------------------------------------------------*\

@@ -47,11 +47,13 @@
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGPolygonUIDrawObject.h>
 #include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
+#include <OpenSG/UserInterface/OSGImageComponent.h>
 
 // MiniMap Headers
 #include <OpenSG/Game/OSGLayeredImageMiniMap.h>
 #include <OpenSG/Game/OSGMiniMapIndicator.h>
 #include <OpenSG/Game/OSGMiniMapMatrixTransformation.h>
+#include <OpenSG/Game/OSGDefaultMiniMapIndicatorComponentGenerator.h>
 
 
 // Activate the OpenSG namespace
@@ -492,12 +494,33 @@ int main(int argc, char **argv)
 		WorldToMiniMapTransformation->setTransformation(Transform);
 	endEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
 
+	//Create the Viewpoint Component
+	ImageComponentPtr ViewPointComponentPrototype = ImageComponent::create();
+	beginEditCP(ViewPointComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+		ViewPointComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
+		ViewPointComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
+		ViewPointComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
+	endEditCP(ViewPointComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+	ImagePtr ShipImage = ImageFileHandler::the().read(Path("./Ship.JPG").string().c_str());
+	ViewPointComponentPrototype->setImage(ShipImage);
+	ViewPointComponentPrototype->setRolloverImage(ShipImage);
+	ViewPointComponentPrototype->setDisabledImage(ShipImage);
+	ViewPointComponentPrototype->setFocusedImage(ShipImage);
+
+	//Create the Viewpoint Component Generator
+	DefaultMiniMapIndicatorComponentGeneratorPtr ShipComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
+	beginEditCP(ShipComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+		ShipComponentGenerator->setComponentPrototype(ViewPointComponentPrototype);
+	endEditCP(ShipComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+
+
 	//Create the Viewpoint Indicator
 	MiniMapIndicatorPtr ViewpointIndicator = MiniMapIndicator::create();
 
-	beginEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask);
+	beginEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+		ViewpointIndicator->setGenerator(ShipComponentGenerator);
 		ViewpointIndicator->setLocation(BoxNode);
-	endEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask);
+	endEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 	
 
 	// Setup the size and other preferences to the minimap
@@ -509,7 +532,7 @@ int main(int argc, char **argv)
 
 	MiniMap->insertImage(Path("./level1.jpg").string().c_str());
 	MiniMap->setOpacity(.4);
-	MiniMap->setCharacterTexture(ImageFileHandler::the().read(Path("./Ship.JPG").string().c_str()));
+	MiniMap->setCharacterTexture(ShipImage);
 
 	 // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
