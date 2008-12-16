@@ -346,7 +346,7 @@ public:
 	   {
 		   Matrix TranslateTransform;
 		   //TranslateTransform.setTranslate(-TranslateAmount,0.0f,0.0f);
-		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()));
+		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()));
 		   Matrix NewTransform(BoxTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
@@ -359,7 +359,7 @@ public:
 	   {
 		   Matrix TranslateTransform;
 		   //TranslateTransform.setTranslate(TranslateAmount,0.0f,0.0f);
-		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()));
+		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()));
 		   Matrix NewTransform(BoxTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
@@ -532,7 +532,6 @@ int main(int argc, char **argv)
 
 	MiniMap->insertImage(Path("./level1.jpg").string().c_str());
 	MiniMap->setOpacity(.4);
-	MiniMap->setCharacterTexture(ShipImage);
 
 	 // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();

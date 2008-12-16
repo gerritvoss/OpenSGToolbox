@@ -69,7 +69,7 @@
 
 #include "MiniMap/OSGMiniMapOverlay.h" // Overlay type
 #include <OpenSG/OSGTextureChunkFields.h> // LayerTextures type
-#include <OpenSG/OSGTextureChunkFields.h> // CharacterImage type
+#include <OpenSG/OSGImageFields.h> // CharacterImage type
 #include <OpenSG/OSGQuaternionFields.h> // CharacterRotation type
 
 #include "OSGLayeredImageMiniMapFields.h"
@@ -133,11 +133,11 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 
            MFMiniMapOverlayPtr *getMFOverlay        (void);
            MFTextureChunkPtr   *getMFLayerTextures  (void);
-           SFTextureChunkPtr   *getSFCharacterImage (void);
+           SFImagePtr          *getSFCharacterImage (void);
            SFQuaternion        *getSFCharacterRotation(void);
 
-           TextureChunkPtr     &getCharacterImage (void);
-     const TextureChunkPtr     &getCharacterImage (void) const;
+           ImagePtr            &getCharacterImage (void);
+     const ImagePtr            &getCharacterImage (void) const;
            Quaternion          &getCharacterRotation(void);
      const Quaternion          &getCharacterRotation(void) const;
            MiniMapOverlayPtr   &getOverlay        (const UInt32 index);
@@ -152,7 +152,7 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCharacterImage ( const TextureChunkPtr &value );
+     void setCharacterImage ( const ImagePtr &value );
      void setCharacterRotation( const Quaternion &value );
 
     /*! \}                                                                 */
@@ -198,7 +198,7 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 
     MFMiniMapOverlayPtr   _mfOverlay;
     MFTextureChunkPtr   _mfLayerTextures;
-    SFTextureChunkPtr   _sfCharacterImage;
+    SFImagePtr          _sfCharacterImage;
     SFQuaternion        _sfCharacterRotation;
 
     /*! \}                                                                 */

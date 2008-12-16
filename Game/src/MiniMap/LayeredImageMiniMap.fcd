@@ -31,7 +31,7 @@ A LayeredImageMiniMap.
 	</Field>
 	<Field
 		name="CharacterImage"
-		type="TextureChunkPtr"
+		type="ImagePtr"
 		cardinality="single"
 		visibility="external"
 		access="public"

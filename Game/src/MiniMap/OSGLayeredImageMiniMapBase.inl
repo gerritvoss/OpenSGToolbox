@@ -112,7 +112,7 @@ MFTextureChunkPtr *LayeredImageMiniMapBase::getMFLayerTextures(void)
 
 //! Get the LayeredImageMiniMap::_sfCharacterImage field.
 inline
-SFTextureChunkPtr *LayeredImageMiniMapBase::getSFCharacterImage(void)
+SFImagePtr *LayeredImageMiniMapBase::getSFCharacterImage(void)
 {
     return &_sfCharacterImage;
 }
@@ -127,21 +127,21 @@ SFQuaternion *LayeredImageMiniMapBase::getSFCharacterRotation(void)
 
 //! Get the value of the LayeredImageMiniMap::_sfCharacterImage field.
 inline
-TextureChunkPtr &LayeredImageMiniMapBase::getCharacterImage(void)
+ImagePtr &LayeredImageMiniMapBase::getCharacterImage(void)
 {
     return _sfCharacterImage.getValue();
 }
 
 //! Get the value of the LayeredImageMiniMap::_sfCharacterImage field.
 inline
-const TextureChunkPtr &LayeredImageMiniMapBase::getCharacterImage(void) const
+const ImagePtr &LayeredImageMiniMapBase::getCharacterImage(void) const
 {
     return _sfCharacterImage.getValue();
 }
 
 //! Set the value of the LayeredImageMiniMap::_sfCharacterImage field.
 inline
-void LayeredImageMiniMapBase::setCharacterImage(const TextureChunkPtr &value)
+void LayeredImageMiniMapBase::setCharacterImage(const ImagePtr &value)
 {
     _sfCharacterImage.setValue(value);
 }

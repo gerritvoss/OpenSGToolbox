@@ -89,7 +89,7 @@ const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask =
 /*! \var TextureChunkPtr LayeredImageMiniMapBase::_mfLayerTextures
     
 */
-/*! \var TextureChunkPtr LayeredImageMiniMapBase::_sfCharacterImage
+/*! \var ImagePtr        LayeredImageMiniMapBase::_sfCharacterImage
     
 */
 /*! \var Quaternion      LayeredImageMiniMapBase::_sfCharacterRotation
@@ -110,7 +110,7 @@ FieldDescription *LayeredImageMiniMapBase::_desc[] =
                      LayerTexturesFieldId, LayerTexturesFieldMask,
                      false,
                      (FieldAccessMethod) &LayeredImageMiniMapBase::getMFLayerTextures),
-    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+    new FieldDescription(SFImagePtr::getClassType(), 
                      "CharacterImage", 
                      CharacterImageFieldId, CharacterImageFieldMask,
                      false,
