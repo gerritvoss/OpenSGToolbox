@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="OSGSound"
-	ProjectGUID="{CB86A053-7D62-40D1-AB65-09219633C40F}"
+	ProjectGUID="{63064F35-1605-4FEC-895E-D27E9448F7EF}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
 	>
