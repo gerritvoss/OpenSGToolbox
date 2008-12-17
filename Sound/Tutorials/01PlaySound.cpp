@@ -18,9 +18,6 @@ helpful tips and incites into the workings of MiniMap
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
 
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
-
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGNode.h>
@@ -34,13 +31,6 @@ helpful tips and incites into the workings of MiniMap
 // Input
 #include <OpenSG/Input/OSGWindowUtils.h>
 
-// UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -52,20 +42,6 @@ bool ExitApp = false;
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-
-// Button Headers
-
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGColorLayer.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGPolygonUIDrawObject.h>
-#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
-
-// MiniMap Headers
-#include <OpenSG/Game/OSGLayeredImageMiniMap.h>
-
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -135,79 +111,12 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
                                         Vec2f(550,550),
-                                        "OpenSG 01MiniMap Window");
+                                        "OpenSG 01PlaySound Window");
 										
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-
-	// Make Layered Image Mini Map
-	LayeredImageMiniMapPtr MiniMap = osg::LayeredImageMiniMap::create();
-
-	// Setup the size and other preferences to the minimap
-	beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask);
-	    MiniMap->setPreferredSize(Pnt2f(450,450));
-	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask);
-
-	MiniMap->insertImage("level1.jpg");
-	MiniMap->setScale(100,100,100,100);					//Scale Must be before the setCharacterPosition call because it uses the scale set
-//	MiniMap->setCharacterPosition(Pnt2f(200,200));
-
-    // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
-        scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-
-    // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
-
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
- 
- 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(MiniMap);
-	   MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-
-    // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-        TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
-	
-	// Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
-
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-
-    mgr->setRoot(scene);
-
-    // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    mgr->setRoot(TorusGeometryNode);
 
     // Show the whole Scene
     mgr->showAll();

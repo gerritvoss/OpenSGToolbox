@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGSound", "..\Builds\Windows\OSGSound.vcproj", "{CB86A053-7D62-40D1-AB65-09219633C40F}"
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGSound", "..\Builds\Windows\OSGSound.vcproj", "{63064F35-1605-4FEC-895E-D27E9448F7EF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01PlaySound", "01PlaySound.vcproj", "{3BF16424-AB24-4672-83B6-00BBA7A35301}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +13,18 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CB86A053-7D62-40D1-AB65-09219633C40F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{CB86A053-7D62-40D1-AB65-09219633C40F}.Debug|Win32.Build.0 = Debug|Win32
-		{CB86A053-7D62-40D1-AB65-09219633C40F}.Release|Win32.ActiveCfg = Release|Win32
-		{CB86A053-7D62-40D1-AB65-09219633C40F}.Release|Win32.Build.0 = Release|Win32
+		{63064F35-1605-4FEC-895E-D27E9448F7EF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{63064F35-1605-4FEC-895E-D27E9448F7EF}.Debug|Win32.Build.0 = Debug|Win32
+		{63064F35-1605-4FEC-895E-D27E9448F7EF}.Release|Win32.ActiveCfg = Release|Win32
+		{63064F35-1605-4FEC-895E-D27E9448F7EF}.Release|Win32.Build.0 = Release|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.ActiveCfg = Debug|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.Build.0 = Debug|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.ActiveCfg = Release|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.Build.0 = Release|Win32
+		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Debug|Win32.Build.0 = Debug|Win32
+		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Release|Win32.ActiveCfg = Release|Win32
+		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
