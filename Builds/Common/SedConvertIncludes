@@ -1,9 +1,0 @@
-/#include "OSG.*Def.h"/ {
-h
-}
-
-/\"[^\"]*OSG\([^\"]*\)\"/ {
-G
-s-\"[^\"]*OSG\([^\"]*\)\".*\n#include "OSG\(.*\)Def.h"-\<OpenSG/\2/OSG\1\>-
-}
-

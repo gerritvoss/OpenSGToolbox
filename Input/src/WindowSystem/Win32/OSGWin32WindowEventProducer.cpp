@@ -1102,8 +1102,6 @@ std::vector<Path> Win32WindowEventProducer::openFileDialog(const std::string& Wi
 
 	OPENFILENAME ofn;       // common dialog box structure
 	char szFile[260];       // buffer for file name
-	HWND hwnd;              // owner window
-	HANDLE hf;              // file handle
 
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -1449,7 +1447,7 @@ void Win32WindowEventProducer::setVisible(bool Visible)
 //Get the Window Visible
 bool Win32WindowEventProducer::getVisible(void) const
 {
-   return IsWindowVisible(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
+   return static_cast<bool>(IsWindowVisible(WIN32Window::Ptr::dcast(getWindow())->getHwnd()));
 }
 
 //Set the Window Iconify
@@ -1468,7 +1466,7 @@ void Win32WindowEventProducer::setIconify(bool Iconify)
 //Get the Window Iconify
 bool Win32WindowEventProducer::getIconify(void) const
 {
-   return IsIconic(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
+   return static_cast<bool>(IsIconic(WIN32Window::Ptr::dcast(getWindow())->getHwnd()));
 }
 
 //Fullscreen
