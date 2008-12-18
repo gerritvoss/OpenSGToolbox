@@ -1,7 +1,5 @@
 
 echo off
-if not %~z1==0 (
-     echo %~f2\%~nx3>>"%~f4"
-     )
-GOTO :eof
+     "%~dp0\..\..\External\GnuWin32\bin\sed" -f "%~f3" "%~f2" > "%~f1\%~nx2"
+     echo Copied "%~f2"
 
