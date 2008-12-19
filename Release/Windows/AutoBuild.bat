@@ -1,12 +1,20 @@
 echo off
+
+:These variables need to be changed to their respective locations for the machine this installer will be run on
+:Location of subversion client svn.exe
 set SUBVERSION_PATH=C:\Program Files\SlikSvn\bin
+:Location of NSIS compiler makensis.exe
+set NSIS_PATH=C:\Program Files\NSIS
+:Location of Visual Studio Console command devenv.com
+set VS_PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE
+
+
 set REPOSITORY_URL=https://subversion.vrac.iastate.edu/Subversion/OpenSGToolbox/svn/OpenSGToolbox
 set PROJECT_DIR=OpenSGToolbox
 set BUILD_DIR=Builds\Windows
-set VS_PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE
 set SOLUTION_NAME=vs-8.0-OpenSGToolbox.sln
 
-set LIBRARY_BUILD_ORDER=(Toolbox Input Sound Animation Dynamics ParticleSystem UserInterface)
+set LIBRARY_BUILD_ORDER=(Toolbox Input Sound Animation Dynamics ParticleSystem UserInterface Game)
 set LIBRARY_BUILD_CONFIGURATIONS=(Debug Release)
 
 :Setup the Directory
@@ -34,6 +42,9 @@ FOR %%p in %LIBRARY_BUILD_ORDER% DO (
 )
 
 :Build the Installer
+pushd Release\Windows
+"%NSIS_PATH%\makensis.exe" /V 2 InstallScript.nsi
+popd
 
 :Move back to original Directory
 popd
