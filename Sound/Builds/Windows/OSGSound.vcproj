@@ -246,6 +246,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Sound\OSGSoundChannel.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundChannel.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundChannel.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundChannelBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundChannelBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundChannelBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundChannelFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Sound\OSGSoundEmitter.cpp"
 					>
 				</File>
@@ -275,6 +303,34 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Sound\OSGSoundFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundManager.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundManagerBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundManagerBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundManagerBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundManagerFields.h"
 					>
 				</File>
 				<Filter

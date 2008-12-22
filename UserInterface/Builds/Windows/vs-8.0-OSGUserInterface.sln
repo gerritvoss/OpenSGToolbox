@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "OSGUserInterface.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "OSGUserInterface.vcproj", "{A1522E75-3430-4B6C-883C-935732C315D3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393} = {61151B1E-8A6D-465E-8C71-7E1578BA2393}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Button", "..\..\Tutorials\01Button.vcproj", "{7ED2AADB-F12D-4C2F-8070-8FA5CCDA1E40}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Button", "..\..\Tutorials\01Button.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
 	EndProjectSection
@@ -62,20 +62,22 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XXTesting", "..\..\Tutorial
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "23SplitPanel", "..\..\Tutorials\23SplitPanel.vcproj", "{133F7124-4AD0-49AD-91D0-7A9710399199}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\..\..\Dynamics\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1522E75-3430-4B6C-883C-935732C315D3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A1522E75-3430-4B6C-883C-935732C315D3}.Debug|Win32.Build.0 = Debug|Win32
+		{A1522E75-3430-4B6C-883C-935732C315D3}.Release|Win32.ActiveCfg = Release|Win32
+		{A1522E75-3430-4B6C-883C-935732C315D3}.Release|Win32.Build.0 = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.Build.0 = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.ActiveCfg = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.Build.0 = Release|Win32
-		{7ED2AADB-F12D-4C2F-8070-8FA5CCDA1E40}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7ED2AADB-F12D-4C2F-8070-8FA5CCDA1E40}.Debug|Win32.Build.0 = Debug|Win32
-		{7ED2AADB-F12D-4C2F-8070-8FA5CCDA1E40}.Release|Win32.ActiveCfg = Release|Win32
-		{7ED2AADB-F12D-4C2F-8070-8FA5CCDA1E40}.Release|Win32.Build.0 = Release|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.ActiveCfg = Debug|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.Build.0 = Debug|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.ActiveCfg = Release|Win32
@@ -172,6 +174,10 @@ Global
 		{133F7124-4AD0-49AD-91D0-7A9710399199}.Debug|Win32.Build.0 = Debug|Win32
 		{133F7124-4AD0-49AD-91D0-7A9710399199}.Release|Win32.ActiveCfg = Release|Win32
 		{133F7124-4AD0-49AD-91D0-7A9710399199}.Release|Win32.Build.0 = Release|Win32
+		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.Build.0 = Debug|Win32
+		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.ActiveCfg = Release|Win32
+		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

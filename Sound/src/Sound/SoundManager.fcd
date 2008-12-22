@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SoundManager"
+	parent="AttachmentContainer"
+	library="Sound"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	useLocalIncludes="true"
+>
+A SoundManager Interface.
+</FieldContainer>

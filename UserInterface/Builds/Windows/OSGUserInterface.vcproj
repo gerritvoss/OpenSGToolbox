@@ -5627,6 +5627,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGMessageDialogEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMessageDialogEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMessageDialogEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMessageDialogListener.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGPopupMenuEvent.cpp"
 					>
 				</File>
