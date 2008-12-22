@@ -113,8 +113,21 @@ void LayeredImageMiniMap::updateAllTransformations(void)
     if(_RotatedIndicator != NullFC)
     {
         //Update Rotation Angle
+        Vec3f MapXAxis(1.0f,0.0f,0.0f), ViewPointXAxis;
+        ViewPointOrientation.multVec(MapXAxis,ViewPointXAxis);
+        Quaternion Rot(MapXAxis, ViewPointXAxis);
+
+        Vec3f Axis;
+        Real32 Angle;
+        Rot.getValueAsAxisRad(Axis,Angle);
+        
+        if(Axis.y()<0.0f)
+        {
+            Angle = -Angle;
+        }
+
         beginEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
-           _RotatedIndicator->setAngle(3.14157/4);
+           _RotatedIndicator->setAngle(Angle);
         endEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
 
         //Update Rotated Component Position
