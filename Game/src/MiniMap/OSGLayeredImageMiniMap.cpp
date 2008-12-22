@@ -48,11 +48,12 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGLayeredImageMiniMap.h"
+#include "MiniMap/Indicators/OSGMiniMapIndicator.h"
+#include "MiniMap/Indicators/OSGMiniMapIndicatorComponentGenerator.h"
 
 #include <OpenSG/Toolbox/OSGTextureUtils.h>
-
-
-
+#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
+#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,44 +80,50 @@ void LayeredImageMiniMap::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-
-void LayeredImageMiniMap::setScale(UInt32 WorldSizeZ, UInt32 WorldSizeX, UInt32 MapSizeY, UInt32 MapSizeX)
+void LayeredImageMiniMap::updateAllTransformations(void)
 {
-	setMapScaleX(MapSizeY / WorldSizeZ); //For scaling the width of the map
+	//Viewpoint Indicator
+	Pnt3f p;
+	Quaternion r;
 
-	setMapScaleY(MapSizeX / WorldSizeX); //For scaling the length of the map
-}
-
-void LayeredImageMiniMap::setStartLocation(Pnt2f MapSizeXY, Real32 CharacterXAlignment, Real32 CharacterYAlignment)
-{
-	setStartPositionPtr(Pnt2f(MapSizeXY.x() * CharacterXAlignment, MapSizeXY.y() * CharacterYAlignment));
-}
-
-void LayeredImageMiniMap::setCharacterPosition(osg::Matrix Position)
-{
-	Pnt2f Location;
-	Vec3f xyz;
-	Vec3f scale;
-	Quaternion rotation, Orientation;
-
-	Position.getTransform(xyz,rotation,scale,Orientation);
-
-	getCharacterRotation() = rotation;
-
-	Matrix Transform;
-	Transform.setTransform(Vec3f(getStartPositionPtr().x(),getStartPositionPtr().y(),0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),-1.570796f), Vec3f(getMapScaleX(), 1.0, getMapScaleY()));
+	getViewPointIndicator()->getTransformation(p,r);
 	
-	//Location.setValues((xyz.x() * getMapScaleX()) + getStartPositionPtr().x(), (xyz.z() * getMapScaleY()) + getStartPositionPtr().y());
+	getTransformation()->transform(p);
+	getTransformation()->transform(r);
 
-	Transform.multFullMatrixPnt(xyz);
-	Location.setValues(xyz.x(), xyz.y());
-	
-	setMapLocationPtr(Location);
+
+	ViewPointLocation.setValues(p.x(), p.y());
+	ViewPointOrientation = r;
+
+	//All other Indicators
+	InidicatorLocations.resize(getIndicators().size());
+	InidicatorOrientations.resize(getIndicators().size());
+	for(UInt32 i(0) ; i<getIndicators().size() ; ++i)
+	{
+		getIndicators(i)->getTransformation(p,r);
+		
+		getTransformation()->transform(p);
+		getTransformation()->transform(r);
+
+
 		InidicatorLocations[i].setValues(p.x(), p.y());
 		InidicatorOrientations[i] = r;
 	}
-	setCharacterRotation(rotation);
+	
+    if(_RotatedIndicator != NullFC)
+    {
+        //Update Rotation Angle
+        beginEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
+           _RotatedIndicator->setAngle(3.14157/4);
+        endEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
+
+        //Update Rotated Component Position
+        AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::Ptr::dcast(_RotatedIndicator->getConstraints());
+        Pnt2f AlignedPosition = ViewPointLocation - 0.5f*_RotatedIndicator->getSize();
+        beginEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+            RotatedComponentConstraints->setPosition(AlignedPosition);
+        endEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+    }
 }
 
 
@@ -179,13 +186,13 @@ void LayeredImageMiniMap::insertImage(ImagePtr Image) // Image is pushed onto th
 	getLayerTextures().push_back(Tex);
 }
 
-
 void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 {
+	const_cast<LayeredImageMiniMap*>(this)->updateAllTransformations();
+
    Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
    Vec2f ComponentSize(BottomRight-TopLeft);
-   Quaternion rotate = getCharacterRotation();
 
    
 
@@ -197,20 +204,11 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 						 Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity() );
 
    if(getCharacterImage() == NullFC)
-		Graphics->drawDisc(getMapLocationPtr(),4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
-   else
    {
-	   Vec2f Size(20.0,20.0);
-	   Real32 PI(3.14159); 
-	   Pnt2f AlignedPosition = getMapLocationPtr() - 0.5f*Size;
-	   beginEditCP(_MapRotateComponent, RotatedComponent::AngleFieldMask | RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask);
-		   _MapRotateComponent->setAngle(PI/4);
-		   _MapRotateComponent->setInternalComponent(_IndicatorImageComponent);
-	       _MapRotateComponent->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
-	   endEditCP(_MapRotateComponent, RotatedComponent::AngleFieldMask | RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask);
-	   _MapRotateComponent->setPosition(AlignedPosition);
-	   //std::cout<<rotate<<std::endl;
+		Graphics->drawDisc(ViewPointLocation,4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
    }
+
+   Container::drawInternal(Graphics);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -219,23 +217,44 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 
 void LayeredImageMiniMap::setupDrawInternals(void)
 {
-	_IndicatorImageComponent = osg::ImageComponent::create();
-	_IndicatorImageComponent->ImageComponent::setImage(getCharacterImage());
-	_MapRotateComponent = RotatedComponent::create();
-}
+    if(getViewPointIndicator() != NullFC && getViewPointIndicator()->getGenerator() != NullFC)
+    {
+		if(getViewPointIndicator()->getGenerator()->getType().isDerivedFrom(MiniMapIndicatorComponentGenerator::getClassType()))
+        {
+            _ViewpointIndicatorComponent = MiniMapIndicatorComponentGenerator::Ptr::dcast(getViewPointIndicator()->getGenerator())->getMiniMapComponent(LayeredImageMiniMapPtr(this), false, false);
+        }
+        else
+        {
+            _ViewpointIndicatorComponent = getViewPointIndicator()->getGenerator()->getComponent(LayeredImageMiniMapPtr(this),SharedFieldPtr(), 0, 0,false, false);
+        }
+        
 
+        AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::create();
+        _RotatedIndicator = RotatedComponent::create();
+        beginEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
+            _RotatedIndicator->setInternalComponent(_ViewpointIndicatorComponent);
+            _RotatedIndicator->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
+            _RotatedIndicator->setConstraints(RotatedComponentConstraints);
+        endEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
+
+        AbsoluteLayoutPtr MiniMapLayout = AbsoluteLayout::create();
+	    beginEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
+		    getChildren().clear();
+		    getChildren().push_back(_RotatedIndicator);
+            setLayout(MiniMapLayout);
+	    endEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
+    }
+}
 /*----------------------- constructors & destructors ----------------------*/
 
 LayeredImageMiniMap::LayeredImageMiniMap(void) :
     Inherited()
 {
-	setupDrawInternals();
 }
 
 LayeredImageMiniMap::LayeredImageMiniMap(const LayeredImageMiniMap &source) :
     Inherited(source)
 {
-	setupDrawInternals();
 }
 
 LayeredImageMiniMap::~LayeredImageMiniMap(void)
@@ -247,6 +266,12 @@ LayeredImageMiniMap::~LayeredImageMiniMap(void)
 void LayeredImageMiniMap::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if((whichField & IndicatorsFieldMask) || 
+	   (whichField & ViewPointIndicatorFieldMask))
+	{
+		setupDrawInternals();
+	}
 }
 
 void LayeredImageMiniMap::dump(      UInt32    , 

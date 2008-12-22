@@ -46,22 +46,9 @@
 #include "OSGGameDef.h"
 
 #include "OSGLayeredImageMiniMapBase.h"
-
-//rotation headers
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGColorLayer.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
+#include <OpenSG/UserInterface/OSGComponent.h>
 #include <OpenSG/UserInterface/OSGRotatedComponent.h>
-#include <OpenSG/Input/OSGUpdateListener.h>
 
-#include <OpenSG/UserInterface/OSGImageComponent.h>
-#include <OpenSG/OSGImage.h>
-
-
-#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -105,15 +92,7 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 	void setImage(UInt32 index, ImagePtr Image);
 	void setImage(UInt32 index, const char *fileName, const char *mimeType = 0);
 
-	void setScale(UInt32 WorldSizeZ, UInt32 WorldSizeX, UInt32 MapSizeY, UInt32 MapSizeX);
-
-	void setCharacterPosition(osg::Matrix Position);
-
-	void setStartLocation(Pnt2f MapSizeXY, Real32 CharacterXAlignment, Real32 CharacterYAlignment);
-
 	void setCharacterTexture(ImagePtr Image);
-
-	//ComponentPtr createIndicator();
 
 
     /*! \}                                                                 */
@@ -138,21 +117,19 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+    
+	virtual void updateAllTransformations(void);
 
 	void setupDrawInternals(void);
-    
-	RotatedComponentPtr _MapRotateComponent;
-	PanelPtr _MapPanelComponent;
-	AbsoluteLayoutPtr _MapPanelLayout;
-	ComponentPtr _MapImageComponent;
-	ImageComponentPtr _IndicatorImageComponent;
-
-	virtual void updateAllTransformations(void);
 
 	Pnt2f ViewPointLocation;
 	Quaternion ViewPointOrientation;
 
 	std::vector<Pnt2f> InidicatorLocations;
+	std::vector<Quaternion> InidicatorOrientations;
+
+	RotatedComponentPtr _RotatedIndicator;
+	ComponentPtr        _ViewpointIndicatorComponent;
     /*==========================  PRIVATE  ================================*/
   private:
 
