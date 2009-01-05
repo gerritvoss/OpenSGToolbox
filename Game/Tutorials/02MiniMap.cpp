@@ -368,6 +368,30 @@ public:
 			   BoxTransform->setMatrix(NewTransform);
 		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
 	   }
+        if(TheEventProducer->getKeyState(KeyEvent::KEY_W) == KeyEvent::KEY_STATE_DOWN)
+	   {
+		   Matrix TranslateTransform;
+		   TranslateTransform.setTranslate(0.0f,TranslateAmount*e.getElapsedTime(),0.0f);
+		   Matrix NewTransform(BoxTransform->getMatrix());
+
+		   NewTransform.mult(TranslateTransform);
+
+		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
+			   BoxTransform->setMatrix(NewTransform);
+		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+	   }
+         if(TheEventProducer->getKeyState(KeyEvent::KEY_S) == KeyEvent::KEY_STATE_DOWN)
+	   {
+		   Matrix TranslateTransform;
+		   TranslateTransform.setTranslate(0.0f,-TranslateAmount*e.getElapsedTime(),0.0f);
+		   Matrix NewTransform(BoxTransform->getMatrix());
+
+		   NewTransform.mult(TranslateTransform);
+
+		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
+			   BoxTransform->setMatrix(NewTransform);
+		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+	   }
 	}
 };
 
@@ -530,7 +554,16 @@ int main(int argc, char **argv)
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask);
 
-	MiniMap->insertImage(Path("./level1.jpg").string().c_str());
+	MiniMap->insertLayer(Path("./level1.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./level2.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./level3.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./level4.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./level5.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./level6.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./level7.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./level8.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./level9.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./level10.jpg").string().c_str(), .3);
 	MiniMap->setOpacity(.4);
 
 	 // Create the Graphics
@@ -585,7 +618,6 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     //mgr->showAll();
-
 
     while(!ExitApp)
     {

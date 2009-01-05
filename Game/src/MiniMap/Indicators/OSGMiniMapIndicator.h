@@ -98,7 +98,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapIndicator : public MiniMapIndicatorBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MiniMapIndicator(void); 
+    virtual ~MiniMapIndicator(void);
 
     /*! \}                                                                 */
     

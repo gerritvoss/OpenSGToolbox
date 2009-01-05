@@ -26,15 +26,24 @@ A LayeredImageMiniMap.
 		type="TextureChunkPtr"
 		cardinality="multi"
 		visibility="external"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
-		name="CharacterImage"
-		type="ImagePtr"
+		name="LayerDistances"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="StationaryIndicator"
+		type="bool"
 		cardinality="single"
 		visibility="external"
 		access="public"
 	>
+
 	</Field>
 </FieldContainer>

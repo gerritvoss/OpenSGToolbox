@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -110,61 +110,40 @@ MFTextureChunkPtr *LayeredImageMiniMapBase::getMFLayerTextures(void)
     return &_mfLayerTextures;
 }
 
-//! Get the LayeredImageMiniMap::_sfCharacterImage field.
+//! Get the LayeredImageMiniMap::_mfLayerDistances field.
 inline
-SFImagePtr *LayeredImageMiniMapBase::getSFCharacterImage(void)
+MFReal32 *LayeredImageMiniMapBase::getMFLayerDistances(void)
 {
-    return &_sfCharacterImage;
+    return &_mfLayerDistances;
 }
 
-//! Get the LayeredImageMiniMap::_sfCharacterRotation field.
+//! Get the LayeredImageMiniMap::_sfStationaryIndicator field.
 inline
-SFQuaternion *LayeredImageMiniMapBase::getSFCharacterRotation(void)
+SFBool *LayeredImageMiniMapBase::getSFStationaryIndicator(void)
 {
-    return &_sfCharacterRotation;
+    return &_sfStationaryIndicator;
 }
 
 
-//! Get the value of the LayeredImageMiniMap::_sfCharacterImage field.
+//! Get the value of the LayeredImageMiniMap::_sfStationaryIndicator field.
 inline
-ImagePtr &LayeredImageMiniMapBase::getCharacterImage(void)
+bool &LayeredImageMiniMapBase::getStationaryIndicator(void)
 {
-    return _sfCharacterImage.getValue();
+    return _sfStationaryIndicator.getValue();
 }
 
-//! Get the value of the LayeredImageMiniMap::_sfCharacterImage field.
+//! Get the value of the LayeredImageMiniMap::_sfStationaryIndicator field.
 inline
-const ImagePtr &LayeredImageMiniMapBase::getCharacterImage(void) const
+const bool &LayeredImageMiniMapBase::getStationaryIndicator(void) const
 {
-    return _sfCharacterImage.getValue();
+    return _sfStationaryIndicator.getValue();
 }
 
-//! Set the value of the LayeredImageMiniMap::_sfCharacterImage field.
+//! Set the value of the LayeredImageMiniMap::_sfStationaryIndicator field.
 inline
-void LayeredImageMiniMapBase::setCharacterImage(const ImagePtr &value)
+void LayeredImageMiniMapBase::setStationaryIndicator(const bool &value)
 {
-    _sfCharacterImage.setValue(value);
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfCharacterRotation field.
-inline
-Quaternion &LayeredImageMiniMapBase::getCharacterRotation(void)
-{
-    return _sfCharacterRotation.getValue();
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfCharacterRotation field.
-inline
-const Quaternion &LayeredImageMiniMapBase::getCharacterRotation(void) const
-{
-    return _sfCharacterRotation.getValue();
-}
-
-//! Set the value of the LayeredImageMiniMap::_sfCharacterRotation field.
-inline
-void LayeredImageMiniMapBase::setCharacterRotation(const Quaternion &value)
-{
-    _sfCharacterRotation.setValue(value);
+    _sfStationaryIndicator.setValue(value);
 }
 
 
@@ -208,6 +187,27 @@ inline
 const MFTextureChunkPtr &LayeredImageMiniMapBase::getLayerTextures(void) const
 {
     return _mfLayerTextures;
+}
+
+//! Get the value of the \a index element the LayeredImageMiniMap::_mfLayerDistances field.
+inline
+Real32 &LayeredImageMiniMapBase::getLayerDistances(const UInt32 index)
+{
+    return _mfLayerDistances[index];
+}
+
+//! Get the LayeredImageMiniMap::_mfLayerDistances field.
+inline
+MFReal32 &LayeredImageMiniMapBase::getLayerDistances(void)
+{
+    return _mfLayerDistances;
+}
+
+//! Get the LayeredImageMiniMap::_mfLayerDistances field.
+inline
+const MFReal32 &LayeredImageMiniMapBase::getLayerDistances(void) const
+{
+    return _mfLayerDistances;
 }
 
 OSG_END_NAMESPACE

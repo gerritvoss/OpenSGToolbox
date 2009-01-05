@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,8 +69,8 @@
 
 #include "MiniMap/OSGMiniMapOverlay.h" // Overlay type
 #include <OpenSG/OSGTextureChunkFields.h> // LayerTextures type
-#include <OpenSG/OSGImageFields.h> // CharacterImage type
-#include <OpenSG/OSGQuaternionFields.h> // CharacterRotation type
+#include <OpenSG/OSGReal32Fields.h> // LayerDistances type
+#include <OpenSG/OSGBoolFields.h> // StationaryIndicator type
 
 #include "OSGLayeredImageMiniMapFields.h"
 
@@ -94,17 +94,17 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 
     enum
     {
-        OverlayFieldId           = Inherited::NextFieldId,
-        LayerTexturesFieldId     = OverlayFieldId           + 1,
-        CharacterImageFieldId    = LayerTexturesFieldId     + 1,
-        CharacterRotationFieldId = CharacterImageFieldId    + 1,
-        NextFieldId              = CharacterRotationFieldId + 1
+        OverlayFieldId             = Inherited::NextFieldId,
+        LayerTexturesFieldId       = OverlayFieldId             + 1,
+        LayerDistancesFieldId      = LayerTexturesFieldId       + 1,
+        StationaryIndicatorFieldId = LayerDistancesFieldId      + 1,
+        NextFieldId                = StationaryIndicatorFieldId + 1
     };
 
     static const OSG::BitVector OverlayFieldMask;
     static const OSG::BitVector LayerTexturesFieldMask;
-    static const OSG::BitVector CharacterImageFieldMask;
-    static const OSG::BitVector CharacterRotationFieldMask;
+    static const OSG::BitVector LayerDistancesFieldMask;
+    static const OSG::BitVector StationaryIndicatorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -132,28 +132,20 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \{                                                                 */
 
            MFMiniMapOverlayPtr *getMFOverlay        (void);
-           MFTextureChunkPtr   *getMFLayerTextures  (void);
-           SFImagePtr          *getSFCharacterImage (void);
-           SFQuaternion        *getSFCharacterRotation(void);
+           SFBool              *getSFStationaryIndicator(void);
 
-           ImagePtr            &getCharacterImage (void);
-     const ImagePtr            &getCharacterImage (void) const;
-           Quaternion          &getCharacterRotation(void);
-     const Quaternion          &getCharacterRotation(void) const;
+           bool                &getStationaryIndicator(void);
+     const bool                &getStationaryIndicator(void) const;
            MiniMapOverlayPtr   &getOverlay        (const UInt32 index);
            MFMiniMapOverlayPtr &getOverlay        (void);
      const MFMiniMapOverlayPtr &getOverlay        (void) const;
-           TextureChunkPtr     &getLayerTextures  (const UInt32 index);
-           MFTextureChunkPtr   &getLayerTextures  (void);
-     const MFTextureChunkPtr   &getLayerTextures  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCharacterImage ( const ImagePtr &value );
-     void setCharacterRotation( const Quaternion &value );
+     void setStationaryIndicator( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,8 +190,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 
     MFMiniMapOverlayPtr   _mfOverlay;
     MFTextureChunkPtr   _mfLayerTextures;
-    SFImagePtr          _sfCharacterImage;
-    SFQuaternion        _sfCharacterRotation;
+    MFReal32            _mfLayerDistances;
+    SFBool              _sfStationaryIndicator;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -215,6 +207,27 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \{                                                                 */
 
     virtual ~LayeredImageMiniMapBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           MFTextureChunkPtr   *getMFLayerTextures  (void);
+           MFReal32            *getMFLayerDistances (void);
+
+           TextureChunkPtr     &getLayerTextures  (UInt32 index);
+           MFTextureChunkPtr   &getLayerTextures  (void);
+     const MFTextureChunkPtr   &getLayerTextures  (void) const;
+           Real32              &getLayerDistances (UInt32 index);
+           MFReal32            &getLayerDistances (void);
+     const MFReal32            &getLayerDistances (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

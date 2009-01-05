@@ -140,24 +140,27 @@ void LayeredImageMiniMap::updateAllTransformations(void)
 }
 
 
-void LayeredImageMiniMap::removeTexture(UInt32 index)
+void LayeredImageMiniMap::removeLayer(UInt32 index)
 {
 	if(index > getLayerTextures().size())
 	{
 		return;
 	}
 
-	MFTextureChunkPtr::iterator RemoveIter(getLayerTextures().begin());
+	MFTextureChunkPtr::iterator TexturesRemoveIter(getLayerTextures().begin());
+	MFReal32::iterator DistancesRemoveIter(getLayerDistances().begin());
 
 	for( UInt32 i(0) ; i<index; ++i)
 	{
-		++RemoveIter;
+		++TexturesRemoveIter;
+		++DistancesRemoveIter;
 	}
 
-	getLayerTextures().erase(RemoveIter);
+	getLayerTextures().erase(TexturesRemoveIter);
+    getLayerDistances().erase(DistancesRemoveIter);
 }
 
-void LayeredImageMiniMap::insertImage(UInt32 index, ImagePtr Image) // meant to insert new image at given index
+void LayeredImageMiniMap::insertLayer(UInt32 index, Real32 DistanceFromPrevious, ImagePtr Image) // meant to insert new image at given index
 {
 	TextureChunkPtr Tex;
 	Tex = createTexture(Image);
@@ -168,18 +171,22 @@ void LayeredImageMiniMap::insertImage(UInt32 index, ImagePtr Image) // meant to 
 		return;
 	}
 
-	MFTextureChunkPtr::iterator AddIter(getLayerTextures().begin());
+	MFTextureChunkPtr::iterator TexturesAddIter(getLayerTextures().begin());
+	MFReal32::iterator DistancesAddIter(getLayerDistances().begin());
 
 	for( UInt32 i(0) ; i<index; ++i)
 	{
-		++AddIter;
+		++TexturesAddIter;
+		++DistancesAddIter;
 	}
 
-	getLayerTextures().insert(AddIter, Tex);
+
+	getLayerTextures().insert(TexturesAddIter, Tex);
+    getLayerDistances().insert(DistancesAddIter, DistanceFromPrevious);
 }
 
 
-void LayeredImageMiniMap::setImage(UInt32 index, ImagePtr Image) // Overwrites the image at that location 
+void LayeredImageMiniMap::setLayer(UInt32 index, Real32 DistanceFromPrevious, ImagePtr Image) // Overwrites the image at that location 
 {
 	if(index > getLayerTextures().size())
 	{
@@ -189,14 +196,21 @@ void LayeredImageMiniMap::setImage(UInt32 index, ImagePtr Image) // Overwrites t
 	beginEditCP(getLayerTextures()[index], TextureChunk::ImageFieldMask);
 		getLayerTextures()[index]->setImage(Image);
 	endEditCP(getLayerTextures()[index], TextureChunk::ImageFieldMask);
+    
+	beginEditCP(LayeredImageMiniMapPtr(this), LayerDistancesFieldMask);
+        getLayerDistances()[index] = DistanceFromPrevious;
+	endEditCP(LayeredImageMiniMapPtr(this), LayerDistancesFieldMask);
 }
 
-void LayeredImageMiniMap::insertImage(ImagePtr Image) // Image is pushed onto the back of the stack
+void LayeredImageMiniMap::insertLayer(ImagePtr Image, Real32 DistanceFromPrevious) // Image is pushed onto the back of the stack
 {
 	TextureChunkPtr Tex;
 	Tex = createTexture(Image);
 
-	getLayerTextures().push_back(Tex);
+	beginEditCP(LayeredImageMiniMapPtr(this), LayerTexturesFieldMask | LayerDistancesFieldMask);
+	    getLayerTextures().push_back(Tex);
+	    getLayerDistances().push_back(DistanceFromPrevious);
+	endEditCP(LayeredImageMiniMapPtr(this), LayerTexturesFieldMask | LayerDistancesFieldMask);
 }
 
 void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
@@ -206,17 +220,56 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
    Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
    Vec2f ComponentSize(BottomRight-TopLeft);
-
    
+   Pnt3f p;
+   Quaternion r;
 
-   Graphics->drawQuad(TopLeft,
-	                     TopLeft + Vec2f(ComponentSize.x(),0.0f),
-						 BottomRight,
-						 TopLeft + Vec2f(0.0f, ComponentSize.y()),
-						 Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
-						 Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity() );
+   getViewPointIndicator()->getTransformation(p,r);
 
-   if(getCharacterImage() == NullFC)
+   if(getLayerTextures().getSize() > 1)
+   {
+       UInt32 currentLayerIndex = -1;
+       if(p.y() < (getLayerDistances().getValue(0) + (getLayerDistances().getValue(1) * 0.5)))
+           currentLayerIndex = 0;
+
+       UInt32 index = 1;
+       Real32 lowerDistance = getLayerDistances().getValue(0);
+       
+       std::cout<<p.y()<<std::endl;
+       system("cls");
+
+       while(currentLayerIndex == -1)
+       {
+           
+           if(getLayerTextures().size() > 2 && p.y() >= (lowerDistance + (getLayerDistances().getValue(index) * 0.5)) && p.y() < (lowerDistance + getLayerDistances().getValue(index) + (lowerDistance + (getLayerDistances().getValue(index + 1) * 0.5))))
+               currentLayerIndex = index;
+           else if(getLayerTextures().getSize() > index + 2)
+           {
+               lowerDistance += getLayerDistances().getValue(index);
+               index++;
+           }
+           else
+               currentLayerIndex = index + 1;
+       }
+       Graphics->drawQuad(TopLeft,
+	                         TopLeft + Vec2f(ComponentSize.x(),0.0f),
+						     BottomRight,
+						     TopLeft + Vec2f(0.0f, ComponentSize.y()),
+						     Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
+						     Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().getValue(currentLayerIndex), getOpacity() );
+   }
+   else
+   {
+
+       Graphics->drawQuad(TopLeft,
+	                         TopLeft + Vec2f(ComponentSize.x(),0.0f),
+						     BottomRight,
+						     TopLeft + Vec2f(0.0f, ComponentSize.y()),
+						     Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
+						     Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity() );
+   }
+
+   if(getViewPointIndicator() == NullFC)
    {
 		Graphics->drawDisc(ViewPointLocation,4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
    }

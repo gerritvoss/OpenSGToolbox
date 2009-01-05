@@ -44,20 +44,20 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void LayeredImageMiniMap::setImage(UInt32 index, const char *fileName, const char *mimeType)
+void LayeredImageMiniMap::setLayer(UInt32 index, Real32 DistanceFromPrevious, const char *fileName, const char *mimeType)
 {
-	setImage(index, ImageFileHandler::the().read(fileName, mimeType));
+	setLayer(index, DistanceFromPrevious, ImageFileHandler::the().read(fileName, mimeType));
 }
 inline
-void LayeredImageMiniMap::insertImage(const char *fileName, const char *mimeType)
+void LayeredImageMiniMap::insertLayer(const char *fileName, Real32 DistanceFromPrevious, const char *mimeType)
 {
-	insertImage(ImageFileHandler::the().read(fileName, mimeType));
+	insertLayer(ImageFileHandler::the().read(fileName, mimeType), DistanceFromPrevious);
 }
 
 inline
-void LayeredImageMiniMap::insertImage(UInt32 index, const char *fileName, const char *mimeType)
+void LayeredImageMiniMap::insertLayer(UInt32 index, Real32 DistanceFromPrevious, const char *fileName, const char *mimeType)
 {
-	insertImage(index, ImageFileHandler::the().read(fileName, mimeType));
+	insertLayer(index, DistanceFromPrevious, ImageFileHandler::the().read(fileName, mimeType));
 }
 
 OSG_END_NAMESPACE

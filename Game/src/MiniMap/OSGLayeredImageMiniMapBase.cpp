@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,11 +70,11 @@ const OSG::BitVector  LayeredImageMiniMapBase::OverlayFieldMask =
 const OSG::BitVector  LayeredImageMiniMapBase::LayerTexturesFieldMask = 
     (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::LayerTexturesFieldId);
 
-const OSG::BitVector  LayeredImageMiniMapBase::CharacterImageFieldMask = 
-    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::CharacterImageFieldId);
+const OSG::BitVector  LayeredImageMiniMapBase::LayerDistancesFieldMask = 
+    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::LayerDistancesFieldId);
 
-const OSG::BitVector  LayeredImageMiniMapBase::CharacterRotationFieldMask = 
-    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::CharacterRotationFieldId);
+const OSG::BitVector  LayeredImageMiniMapBase::StationaryIndicatorFieldMask = 
+    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::StationaryIndicatorFieldId);
 
 const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -89,10 +89,10 @@ const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask =
 /*! \var TextureChunkPtr LayeredImageMiniMapBase::_mfLayerTextures
     
 */
-/*! \var ImagePtr        LayeredImageMiniMapBase::_sfCharacterImage
+/*! \var Real32          LayeredImageMiniMapBase::_mfLayerDistances
     
 */
-/*! \var Quaternion      LayeredImageMiniMapBase::_sfCharacterRotation
+/*! \var bool            LayeredImageMiniMapBase::_sfStationaryIndicator
     
 */
 
@@ -110,16 +110,16 @@ FieldDescription *LayeredImageMiniMapBase::_desc[] =
                      LayerTexturesFieldId, LayerTexturesFieldMask,
                      false,
                      (FieldAccessMethod) &LayeredImageMiniMapBase::getMFLayerTextures),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "CharacterImage", 
-                     CharacterImageFieldId, CharacterImageFieldMask,
+    new FieldDescription(MFReal32::getClassType(), 
+                     "LayerDistances", 
+                     LayerDistancesFieldId, LayerDistancesFieldMask,
                      false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFCharacterImage),
-    new FieldDescription(SFQuaternion::getClassType(), 
-                     "CharacterRotation", 
-                     CharacterRotationFieldId, CharacterRotationFieldMask,
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getMFLayerDistances),
+    new FieldDescription(SFBool::getClassType(), 
+                     "StationaryIndicator", 
+                     StationaryIndicatorFieldId, StationaryIndicatorFieldMask,
                      false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFCharacterRotation)
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFStationaryIndicator)
 };
 
 
@@ -187,6 +187,7 @@ void LayeredImageMiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
     _mfOverlay.terminateShare(uiAspect, this->getContainerSize());
     _mfLayerTextures.terminateShare(uiAspect, this->getContainerSize());
+    _mfLayerDistances.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -199,8 +200,8 @@ void LayeredImageMiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 LayeredImageMiniMapBase::LayeredImageMiniMapBase(void) :
     _mfOverlay                (), 
     _mfLayerTextures          (), 
-    _sfCharacterImage         (), 
-    _sfCharacterRotation      (), 
+    _mfLayerDistances         (), 
+    _sfStationaryIndicator    (), 
     Inherited() 
 {
 }
@@ -212,8 +213,8 @@ LayeredImageMiniMapBase::LayeredImageMiniMapBase(void) :
 LayeredImageMiniMapBase::LayeredImageMiniMapBase(const LayeredImageMiniMapBase &source) :
     _mfOverlay                (source._mfOverlay                ), 
     _mfLayerTextures          (source._mfLayerTextures          ), 
-    _sfCharacterImage         (source._sfCharacterImage         ), 
-    _sfCharacterRotation      (source._sfCharacterRotation      ), 
+    _mfLayerDistances         (source._mfLayerDistances         ), 
+    _sfStationaryIndicator    (source._sfStationaryIndicator    ), 
     Inherited                 (source)
 {
 }
@@ -240,14 +241,14 @@ UInt32 LayeredImageMiniMapBase::getBinSize(const BitVector &whichField)
         returnValue += _mfLayerTextures.getBinSize();
     }
 
-    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
+    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
     {
-        returnValue += _sfCharacterImage.getBinSize();
+        returnValue += _mfLayerDistances.getBinSize();
     }
 
-    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
+    if(FieldBits::NoField != (StationaryIndicatorFieldMask & whichField))
     {
-        returnValue += _sfCharacterRotation.getBinSize();
+        returnValue += _sfStationaryIndicator.getBinSize();
     }
 
 
@@ -269,14 +270,14 @@ void LayeredImageMiniMapBase::copyToBin(      BinaryDataHandler &pMem,
         _mfLayerTextures.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
+    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
     {
-        _sfCharacterImage.copyToBin(pMem);
+        _mfLayerDistances.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
+    if(FieldBits::NoField != (StationaryIndicatorFieldMask & whichField))
     {
-        _sfCharacterRotation.copyToBin(pMem);
+        _sfStationaryIndicator.copyToBin(pMem);
     }
 
 
@@ -297,14 +298,14 @@ void LayeredImageMiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfLayerTextures.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
+    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
     {
-        _sfCharacterImage.copyFromBin(pMem);
+        _mfLayerDistances.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
+    if(FieldBits::NoField != (StationaryIndicatorFieldMask & whichField))
     {
-        _sfCharacterRotation.copyFromBin(pMem);
+        _sfStationaryIndicator.copyFromBin(pMem);
     }
 
 
@@ -323,11 +324,11 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
     if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
         _mfLayerTextures.syncWith(pOther->_mfLayerTextures);
 
-    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
-        _sfCharacterImage.syncWith(pOther->_sfCharacterImage);
+    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
+        _mfLayerDistances.syncWith(pOther->_mfLayerDistances);
 
-    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
-        _sfCharacterRotation.syncWith(pOther->_sfCharacterRotation);
+    if(FieldBits::NoField != (StationaryIndicatorFieldMask & whichField))
+        _sfStationaryIndicator.syncWith(pOther->_sfStationaryIndicator);
 
 
 }
@@ -339,11 +340,8 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (CharacterImageFieldMask & whichField))
-        _sfCharacterImage.syncWith(pOther->_sfCharacterImage);
-
-    if(FieldBits::NoField != (CharacterRotationFieldMask & whichField))
-        _sfCharacterRotation.syncWith(pOther->_sfCharacterRotation);
+    if(FieldBits::NoField != (StationaryIndicatorFieldMask & whichField))
+        _sfStationaryIndicator.syncWith(pOther->_sfStationaryIndicator);
 
 
     if(FieldBits::NoField != (OverlayFieldMask & whichField))
@@ -351,6 +349,9 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
 
     if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
         _mfLayerTextures.syncWith(pOther->_mfLayerTextures, sInfo);
+
+    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
+        _mfLayerDistances.syncWith(pOther->_mfLayerDistances, sInfo);
 
 
 }
@@ -366,6 +367,9 @@ void LayeredImageMiniMapBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
         _mfLayerTextures.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
+        _mfLayerDistances.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

@@ -81,18 +81,16 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
                       const BitVector  bvFlags  = 0) const;
 
 	
-	void removeTexture(UInt32 index);
+	void removeLayer(UInt32 index);
 
-	void insertImage(ImagePtr Image);
-	void insertImage(const char *fileName, const char *mimeType = 0);
+	void insertLayer(ImagePtr Image, Real32 DistanceFromPrevious);
+	void insertLayer(const char *fileName, Real32 DistanceFromPrevious, const char *mimeType = 0);
 
-	void insertImage(UInt32 index, ImagePtr Image);
-	void insertImage(UInt32 index, const char *fileName, const char *mimeType = 0);
+	void insertLayer(UInt32 index, Real32 DistanceFromPrevious, ImagePtr Image);
+	void insertLayer(UInt32 index, Real32 DistanceFromPrevious, const char *fileName, const char *mimeType = 0);
 
-	void setImage(UInt32 index, ImagePtr Image);
-	void setImage(UInt32 index, const char *fileName, const char *mimeType = 0);
-
-	void setCharacterTexture(ImagePtr Image);
+	void setLayer(UInt32 index, Real32 DistanceFromPrevious, ImagePtr Image);
+	void setLayer(UInt32 index, Real32 DistanceFromPrevious, const char *fileName, const char *mimeType = 0);
 
 
     /*! \}                                                                 */
