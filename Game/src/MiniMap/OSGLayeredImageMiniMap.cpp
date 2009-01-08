@@ -54,6 +54,7 @@
 #include <OpenSG/Toolbox/OSGTextureUtils.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
+#include <OpenSG/UserInterface/OSGImageComponent.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -137,12 +138,62 @@ void LayeredImageMiniMap::updateAllTransformations(void)
 
         //Update Rotated Component Position
         AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::Ptr::dcast(_RotatedIndicator->getConstraints());
-        Pnt2f AlignedPosition = ViewPointLocation - 0.5f*_RotatedIndicator->getSize();
+        Pnt2f AlignedPosition = Pnt2f(ViewPointLocation.x()*getSize().x(),ViewPointLocation.y()*getSize().y()) - 0.5f*_RotatedIndicator->getSize();
         beginEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
             RotatedComponentConstraints->setPosition(AlignedPosition);
         endEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
         }
     }
+
+	if(_MapImageComponent != NullFC)
+	{
+		//Update Map Image Component
+		Pnt3f ViewPoint;
+		Quaternion ViewOrientation;
+
+		getViewPointIndicator()->getTransformation(ViewPoint,ViewOrientation);
+
+		if(getLayerTextures().getSize() > 1)
+		{
+		   _DrawnLayerIndex = -1;
+		   if(ViewPoint.y() < (getLayerDistances().getValue(0) + (getLayerDistances().getValue(1) * 0.5)))
+		   {
+			   _DrawnLayerIndex = 0;
+		   }
+
+		   UInt32 index = 1;
+		   Real32 lowerDistance = getLayerDistances().getValue(0);
+
+		   while(_DrawnLayerIndex == -1)
+		   {
+		       
+			   if(getLayerTextures().size() > 2 && ViewPoint.y() >= (lowerDistance + (getLayerDistances().getValue(index) * 0.5)) && ViewPoint.y() < (lowerDistance + getLayerDistances().getValue(index) + (lowerDistance + (getLayerDistances().getValue(index + 1) * 0.5))))
+			   {
+				   _DrawnLayerIndex = index;
+			   }
+			   else if(getLayerTextures().getSize() > index + 2)
+			   {
+				   lowerDistance += getLayerDistances().getValue(index);
+				   index++;
+			   }
+			   else
+			   {
+				   _DrawnLayerIndex = index + 1;
+			   }
+		   }
+		}
+		else
+		{
+		   _DrawnLayerIndex = 0;
+		}
+	
+		beginEditCP(_MapImageComponent , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
+			_MapImageComponent->setTexture(getLayerTextures(_DrawnLayerIndex));
+			_MapImageComponent->setRolloverTexture(getLayerTextures(_DrawnLayerIndex));
+			_MapImageComponent->setDisabledTexture(getLayerTextures(_DrawnLayerIndex));
+			_MapImageComponent->setFocusedTexture(getLayerTextures(_DrawnLayerIndex));
+		endEditCP(_MapImageComponent , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
+	}
 }
 
 
@@ -223,64 +274,7 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 {
 	const_cast<LayeredImageMiniMap*>(this)->updateAllTransformations();
 
-   Pnt2f TopLeft, BottomRight;
-   getInsideBorderBounds(TopLeft, BottomRight);
-   Vec2f ComponentSize(BottomRight-TopLeft);
-   
-   Pnt3f p;
-   Quaternion r;
-
-   getViewPointIndicator()->getTransformation(p,r);
-
-   if(getLayerTextures().getSize() > 1)
-   {
-       UInt32 currentLayerIndex = -1;
-       if(p.y() < (getLayerDistances().getValue(0) + (getLayerDistances().getValue(1) * 0.5)))
-           currentLayerIndex = 0;
-
-       UInt32 index = 1;
-       Real32 lowerDistance = getLayerDistances().getValue(0);
-
-       while(currentLayerIndex == -1)
-       {
-           
-           if(getLayerTextures().size() > 2 && p.y() >= (lowerDistance + (getLayerDistances().getValue(index) * 0.5)) && p.y() < (lowerDistance + getLayerDistances().getValue(index) + (lowerDistance + (getLayerDistances().getValue(index + 1) * 0.5))))
-               currentLayerIndex = index;
-           else if(getLayerTextures().getSize() > index + 2)
-           {
-               lowerDistance += getLayerDistances().getValue(index);
-               index++;
-           }
-           else
-               currentLayerIndex = index + 1;
-       }
-       if(!getStationaryIndicator())
-       {
-           Graphics->drawQuad(TopLeft,
-	                         TopLeft + Vec2f(ComponentSize.x(),0.0f),
-						     BottomRight,
-						     TopLeft + Vec2f(0.0f, ComponentSize.y()),
-						     Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
-						     Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().getValue(currentLayerIndex), getOpacity() );
-       }
-   }
-   else
-   {
-
-       Graphics->drawQuad(TopLeft,
-	                         TopLeft + Vec2f(ComponentSize.x(),0.0f),
-						     BottomRight,
-						     TopLeft + Vec2f(0.0f, ComponentSize.y()),
-						     Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
-						     Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().front(), getOpacity() );
-   }
-
-   if(getViewPointIndicator() == NullFC)
-   {
-		Graphics->drawDisc(ViewPointLocation,4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
-   }
-
-   Container::drawInternal(Graphics);
+	Container::drawInternal(Graphics);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -301,38 +295,76 @@ void LayeredImageMiniMap::setupDrawInternals(void)
         {
             _ViewpointIndicatorComponent = getViewPointIndicator()->getGenerator()->getComponent(LayeredImageMiniMapPtr(this),SharedFieldPtr(), 0, 0,false, false);
         }
-        
-
-        
-        _RotatedIndicator = RotatedComponent::create();
-        beginEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
-            _RotatedIndicator->setInternalComponent(_ViewpointIndicatorComponent);
-            _RotatedIndicator->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
-            _RotatedIndicator->setConstraints(RotatedComponentConstraints);
-        endEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
-
-        AbsoluteLayoutPtr MiniMapLayout = AbsoluteLayout::create();
-	    beginEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
-		    getChildren().clear();
-		    getChildren().push_back(_RotatedIndicator);
-            setLayout(MiniMapLayout);
-	    endEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
+		beginEditCP(_ViewpointIndicatorComponent, Component::OpacityFieldMask);
+			_ViewpointIndicatorComponent->setOpacity(getOpacity());
+		endEditCP(_ViewpointIndicatorComponent, Component::OpacityFieldMask);
     }
-	if(_MapImageComponent == NullFC)
+	if(_MapImageComponent == NullFC && !_mfLayerTextures.empty())
 	{
-		_MapComponent = Ptr::dcast(_MapImageComponent);
-		_RotatedMap = RotatedComponent::create();
+		//AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::create();
+
+		_MapImageComponent = ImageComponent::create();
+		Pnt2f TopLeft, BottomRight;
+		getInsideBorderBounds(TopLeft, BottomRight);
+		beginEditCP(_MapImageComponent, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask | Component::OpacityFieldMask);
+			if(getLockMapOrientation())
+			{
+				//_MapImageComponent->setPreferredSize(getUnlockedMapSize());
+			}
+			else
+			{
+				_MapImageComponent->setPreferredSize(getSize());
+			}
+			_MapImageComponent->setScale(ImageComponent::SCALE_MIN_AXIS);
+			_MapImageComponent->setAlignment(Vec2f(0.5,0.5));
+			_MapImageComponent->setOpacity(getOpacity());
+		endEditCP(_MapImageComponent, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask | Component::OpacityFieldMask);
+		/*_RotatedMap = RotatedComponent::create();
 		beginEditCP(_RotatedMap, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
             _RotatedMap->setInternalComponent(_ViewpointIndicatorComponent);
             _RotatedMap->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
             _RotatedMap->setConstraints(RotatedComponentConstraints);
-        endEditCP(_RotatedMap, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
+        endEditCP(_RotatedMap, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);*/
+		
 	}
-	else if(!_mfLayerTextures.empty())
-	{
-		_MapImageComponent = ImageComponent::create();
-	}
-	
+
+    _RotatedIndicator = RotatedComponent::create();
+    beginEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
+		if(!getLockMapOrientation())
+		{
+			_RotatedIndicator->setInternalComponent(_ViewpointIndicatorComponent);
+		}
+		else
+		{
+			_RotatedIndicator->setInternalComponent(_MapImageComponent);
+		}
+        _RotatedIndicator->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
+        _RotatedIndicator->setConstraints(RotatedComponentConstraints);
+    endEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
+
+    AbsoluteLayoutPtr MiniMapLayout = AbsoluteLayout::create();
+    beginEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
+	    getChildren().clear();
+		if(!getLockMapOrientation())
+		{
+			if(_MapImageComponent != NullFC)
+			{
+				getChildren().push_back(_MapImageComponent);
+			}
+		}
+		else
+		{
+			if(_ViewpointIndicatorComponent != NullFC)
+			{
+				getChildren().push_back(_ViewpointIndicatorComponent);
+			}
+		}
+		if(_RotatedIndicator != NullFC)
+		{
+			getChildren().push_back(_RotatedIndicator);
+		}
+        setLayout(MiniMapLayout);
+    endEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
 }
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -357,9 +389,36 @@ void LayeredImageMiniMap::changed(BitVector whichField, UInt32 origin)
     Inherited::changed(whichField, origin);
 
 	if((whichField & IndicatorsFieldMask) || 
-	   (whichField & ViewPointIndicatorFieldMask))
+	   (whichField & ViewPointIndicatorFieldMask) || 
+	   (whichField & LayerTexturesFieldMask))
 	{
 		setupDrawInternals();
+	}
+
+	if((whichField & SizeFieldMask) && _MapImageComponent != NullFC)
+	{
+		if(!getLockMapOrientation())
+		{
+			beginEditCP(_MapImageComponent, ImageComponent::PreferredSizeFieldMask);
+				_MapImageComponent->setPreferredSize(getSize());
+			endEditCP(_MapImageComponent, ImageComponent::PreferredSizeFieldMask);
+		}
+	}
+
+	if((whichField & OpacityFieldMask))
+	{
+		if(_MapImageComponent != NullFC)
+		{
+			beginEditCP(_MapImageComponent, OpacityFieldMask);
+				_MapImageComponent->setOpacity(getOpacity());
+			endEditCP(_MapImageComponent, OpacityFieldMask);
+		}
+		if(_ViewpointIndicatorComponent != NullFC)
+		{
+			beginEditCP(_ViewpointIndicatorComponent, OpacityFieldMask);
+				_ViewpointIndicatorComponent->setOpacity(getOpacity());
+			endEditCP(_ViewpointIndicatorComponent, OpacityFieldMask);
+		}
 	}
 }
 

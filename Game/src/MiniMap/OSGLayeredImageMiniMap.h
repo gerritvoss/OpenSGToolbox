@@ -132,6 +132,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 	RotatedComponentPtr _RotatedMap;
 	ComponentPtr        _MapComponent;
 	ImageComponentPtr	_MapImageComponent;
+
+	Int32 _DrawnLayerIndex;
     /*==========================  PRIVATE  ================================*/
   private:
 

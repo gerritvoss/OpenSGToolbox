@@ -44,7 +44,8 @@
 #include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorLayer.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGBorderLayout.h>
+#include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGPolygonUIDrawObject.h>
 #include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
 #include <OpenSG/UserInterface/OSGImageComponent.h>
@@ -513,7 +514,7 @@ int main(int argc, char **argv)
 	//World to MiniMap Transformation
 	MiniMapMatrixTransformationPtr WorldToMiniMapTransformation = MiniMapMatrixTransformation::create();
 	Matrix Transform;
-	Transform.setTransform(Vec3f(450*0.5,450*0.5,0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),deg2rad(-90.0)), Vec3f(100/10, 1.0, 100/10));
+	Transform.setTransform(Vec3f(0.5,0.5,0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),deg2rad(-90.0)), Vec3f(0.07, 1.0, 0.07));
 	beginEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
 		WorldToMiniMapTransformation->setTransformation(Transform);
 	endEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
@@ -548,11 +549,19 @@ int main(int argc, char **argv)
 	
 
 	// Setup the size and other preferences to the minimap
-	beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask);
+    BorderLayoutConstraintsPtr MiniMapConstraints = osg::BorderLayoutConstraints::create();
+	beginEditCP(MiniMapConstraints, BorderLayoutConstraints::RegionFieldMask);
+		MiniMapConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	endEditCP(MiniMapConstraints, BorderLayoutConstraints::RegionFieldMask);
+	 
+	beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask);
 	    MiniMap->setPreferredSize(Pnt2f(450,450));
 	    MiniMap->setViewPointIndicator(ViewpointIndicator);
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
-	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask);
+		MiniMap->setOpacity(.4);
+		MiniMap->setConstraints(MiniMapConstraints);
+		MiniMap->setLockMapOrientation(false);
+	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask);
 
 	MiniMap->insertLayer(Path("./level1.jpg").string().c_str(), .3);
     MiniMap->insertLayer(Path("./level2.jpg").string().c_str(), .3);
@@ -564,7 +573,6 @@ int main(int argc, char **argv)
     MiniMap->insertLayer(Path("./level8.jpg").string().c_str(), .3);
     MiniMap->insertLayer(Path("./level9.jpg").string().c_str(), .3);
     MiniMap->insertLayer(Path("./level10.jpg").string().c_str(), .3);
-	MiniMap->setOpacity(.4);
 
 	 // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
@@ -580,7 +588,7 @@ int main(int argc, char **argv)
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
     endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    LayoutPtr MainInternalWindowLayout = osg::BorderLayout::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 	   MainInternalWindow->getChildren().push_back(MiniMap);
 	   MainInternalWindow->setLayout(MainInternalWindowLayout);
