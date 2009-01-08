@@ -71,8 +71,6 @@
 #include <OpenSG/OSGTextureChunkFields.h> // LayerTextures type
 #include <OpenSG/OSGReal32Fields.h> // LayerDistances type
 #include <OpenSG/OSGBoolFields.h> // StationaryIndicator type
-#include <OpenSG/OSGRotatedComponentFields.h> // RotatedMap type
-#include <OpenSG/OSGComponentFields.h> // MapImageComponent type
 
 #include "OSGLayeredImageMiniMapFields.h"
 
@@ -139,15 +137,9 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 
            MFMiniMapOverlayPtr *getMFOverlay        (void);
            SFBool              *getSFStationaryIndicator(void);
-           SFRotatedComponentPtr *getSFRotatedMap     (void);
-           SFComponentPtr      *getSFMapImageComponent(void);
 
            bool                &getStationaryIndicator(void);
      const bool                &getStationaryIndicator(void) const;
-           RotatedComponentPtr &getRotatedMap     (void);
-     const RotatedComponentPtr &getRotatedMap     (void) const;
-           ComponentPtr        &getMapImageComponent(void);
-     const ComponentPtr        &getMapImageComponent(void) const;
            MiniMapOverlayPtr   &getOverlay        (const UInt32 index);
            MFMiniMapOverlayPtr &getOverlay        (void);
      const MFMiniMapOverlayPtr &getOverlay        (void) const;
@@ -158,8 +150,6 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \{                                                                 */
 
      void setStationaryIndicator( const bool &value );
-     void setRotatedMap     ( const RotatedComponentPtr &value );
-     void setMapImageComponent( const ComponentPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,8 +196,6 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     MFTextureChunkPtr   _mfLayerTextures;
     MFReal32            _mfLayerDistances;
     SFBool              _sfStationaryIndicator;
-    SFRotatedComponentPtr   _sfRotatedMap;
-    SFComponentPtr      _sfMapImageComponent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -47,6 +47,7 @@
 
 #include "OSGLayeredImageMiniMapBase.h"
 #include <OpenSG/UserInterface/OSGComponent.h>
+#include <OpenSG/UserInterface/OSGImageComponent.h>
 #include <OpenSG/UserInterface/OSGRotatedComponent.h>
 
 
@@ -128,6 +129,9 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 
 	RotatedComponentPtr _RotatedIndicator;
 	ComponentPtr        _ViewpointIndicatorComponent;
+	RotatedComponentPtr _RotatedMap;
+	ComponentPtr        _MapComponent;
+	ImageComponentPtr	_MapImageComponent;
     /*==========================  PRIVATE  ================================*/
   private:
 

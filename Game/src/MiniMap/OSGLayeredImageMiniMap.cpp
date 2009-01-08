@@ -279,8 +279,6 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
    {
 		Graphics->drawDisc(ViewPointLocation,4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
    }
-   
-   std::cout<<getStationaryIndicator()<<std::endl;
 
    Container::drawInternal(Graphics);
 }
@@ -291,6 +289,8 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 
 void LayeredImageMiniMap::setupDrawInternals(void)
 {
+	AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::create();
+
     if(getViewPointIndicator() != NullFC && getViewPointIndicator()->getGenerator() != NullFC)
     {
 		if(getViewPointIndicator()->getGenerator()->getType().isDerivedFrom(MiniMapIndicatorComponentGenerator::getClassType()))
@@ -303,7 +303,7 @@ void LayeredImageMiniMap::setupDrawInternals(void)
         }
         
 
-        AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::create();
+        
         _RotatedIndicator = RotatedComponent::create();
         beginEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
             _RotatedIndicator->setInternalComponent(_ViewpointIndicatorComponent);
@@ -318,6 +318,21 @@ void LayeredImageMiniMap::setupDrawInternals(void)
             setLayout(MiniMapLayout);
 	    endEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
     }
+	if(_MapImageComponent == NullFC)
+	{
+		_MapComponent = Ptr::dcast(_MapImageComponent);
+		_RotatedMap = RotatedComponent::create();
+		beginEditCP(_RotatedMap, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
+            _RotatedMap->setInternalComponent(_ViewpointIndicatorComponent);
+            _RotatedMap->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
+            _RotatedMap->setConstraints(RotatedComponentConstraints);
+        endEditCP(_RotatedMap, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
+	}
+	else if(!_mfLayerTextures.empty())
+	{
+		_MapImageComponent = ImageComponent::create();
+	}
+	
 }
 /*----------------------- constructors & destructors ----------------------*/
 

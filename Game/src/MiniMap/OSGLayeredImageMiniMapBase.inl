@@ -123,22 +123,6 @@ SFBool *LayeredImageMiniMapBase::getSFStationaryIndicator(void)
 {
     return &_sfStationaryIndicator;
 }
-
-//! Get the LayeredImageMiniMap::_sfRotatedMap field.
-inline
-SFRotatedComponentPtr *LayeredImageMiniMapBase::getSFRotatedMap(void)
-{
-    return &_sfRotatedMap;
-}
-
-//! Get the LayeredImageMiniMap::_sfMapImageComponent field.
-inline
-SFComponentPtr *LayeredImageMiniMapBase::getSFMapImageComponent(void)
-{
-    return &_sfMapImageComponent;
-}
-
-
 //! Get the value of the LayeredImageMiniMap::_sfStationaryIndicator field.
 inline
 bool &LayeredImageMiniMapBase::getStationaryIndicator(void)
@@ -158,48 +142,6 @@ inline
 void LayeredImageMiniMapBase::setStationaryIndicator(const bool &value)
 {
     _sfStationaryIndicator.setValue(value);
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfRotatedMap field.
-inline
-RotatedComponentPtr &LayeredImageMiniMapBase::getRotatedMap(void)
-{
-    return _sfRotatedMap.getValue();
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfRotatedMap field.
-inline
-const RotatedComponentPtr &LayeredImageMiniMapBase::getRotatedMap(void) const
-{
-    return _sfRotatedMap.getValue();
-}
-
-//! Set the value of the LayeredImageMiniMap::_sfRotatedMap field.
-inline
-void LayeredImageMiniMapBase::setRotatedMap(const RotatedComponentPtr &value)
-{
-    _sfRotatedMap.setValue(value);
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfMapImageComponent field.
-inline
-ComponentPtr &LayeredImageMiniMapBase::getMapImageComponent(void)
-{
-    return _sfMapImageComponent.getValue();
-}
-
-//! Get the value of the LayeredImageMiniMap::_sfMapImageComponent field.
-inline
-const ComponentPtr &LayeredImageMiniMapBase::getMapImageComponent(void) const
-{
-    return _sfMapImageComponent.getValue();
-}
-
-//! Set the value of the LayeredImageMiniMap::_sfMapImageComponent field.
-inline
-void LayeredImageMiniMapBase::setMapImageComponent(const ComponentPtr &value)
-{
-    _sfMapImageComponent.setValue(value);
 }
 
 

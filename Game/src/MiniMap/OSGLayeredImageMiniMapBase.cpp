@@ -131,17 +131,7 @@ FieldDescription *LayeredImageMiniMapBase::_desc[] =
                      "StationaryIndicator", 
                      StationaryIndicatorFieldId, StationaryIndicatorFieldMask,
                      false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFStationaryIndicator),
-    new FieldDescription(SFRotatedComponentPtr::getClassType(), 
-                     "RotatedMap", 
-                     RotatedMapFieldId, RotatedMapFieldMask,
-                     false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFRotatedMap),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "MapImageComponent", 
-                     MapImageComponentFieldId, MapImageComponentFieldMask,
-                     false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFMapImageComponent)
+                     (FieldAccessMethod) &LayeredImageMiniMapBase::getSFStationaryIndicator)
 };
 
 
@@ -224,8 +214,6 @@ LayeredImageMiniMapBase::LayeredImageMiniMapBase(void) :
     _mfLayerTextures          (), 
     _mfLayerDistances         (), 
     _sfStationaryIndicator    (), 
-    _sfRotatedMap             (), 
-    _sfMapImageComponent      (), 
     Inherited() 
 {
 }
@@ -239,8 +227,6 @@ LayeredImageMiniMapBase::LayeredImageMiniMapBase(const LayeredImageMiniMapBase &
     _mfLayerTextures          (source._mfLayerTextures          ), 
     _mfLayerDistances         (source._mfLayerDistances         ), 
     _sfStationaryIndicator    (source._sfStationaryIndicator    ), 
-    _sfRotatedMap             (source._sfRotatedMap             ), 
-    _sfMapImageComponent      (source._sfMapImageComponent      ), 
     Inherited                 (source)
 {
 }
@@ -277,16 +263,6 @@ UInt32 LayeredImageMiniMapBase::getBinSize(const BitVector &whichField)
         returnValue += _sfStationaryIndicator.getBinSize();
     }
 
-    if(FieldBits::NoField != (RotatedMapFieldMask & whichField))
-    {
-        returnValue += _sfRotatedMap.getBinSize();
-    }
-
-    if(FieldBits::NoField != (MapImageComponentFieldMask & whichField))
-    {
-        returnValue += _sfMapImageComponent.getBinSize();
-    }
-
 
     return returnValue;
 }
@@ -316,17 +292,6 @@ void LayeredImageMiniMapBase::copyToBin(      BinaryDataHandler &pMem,
         _sfStationaryIndicator.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (RotatedMapFieldMask & whichField))
-    {
-        _sfRotatedMap.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (MapImageComponentFieldMask & whichField))
-    {
-        _sfMapImageComponent.copyToBin(pMem);
-    }
-
-
 }
 
 void LayeredImageMiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
@@ -354,17 +319,6 @@ void LayeredImageMiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfStationaryIndicator.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (RotatedMapFieldMask & whichField))
-    {
-        _sfRotatedMap.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (MapImageComponentFieldMask & whichField))
-    {
-        _sfMapImageComponent.copyFromBin(pMem);
-    }
-
-
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
@@ -385,12 +339,6 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
 
     if(FieldBits::NoField != (StationaryIndicatorFieldMask & whichField))
         _sfStationaryIndicator.syncWith(pOther->_sfStationaryIndicator);
-
-    if(FieldBits::NoField != (RotatedMapFieldMask & whichField))
-        _sfRotatedMap.syncWith(pOther->_sfRotatedMap);
-
-    if(FieldBits::NoField != (MapImageComponentFieldMask & whichField))
-        _sfMapImageComponent.syncWith(pOther->_sfMapImageComponent);
 
 
 }
