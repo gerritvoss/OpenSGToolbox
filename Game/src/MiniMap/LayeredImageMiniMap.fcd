@@ -44,6 +44,23 @@ A LayeredImageMiniMap.
 		visibility="external"
 		access="public"
 	>
-
 	</Field>
+	<Field
+		name="RotatedMap"
+		type="RotatedComponentPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MapImageComponent"
+		type="ComponentPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+
 </FieldContainer>

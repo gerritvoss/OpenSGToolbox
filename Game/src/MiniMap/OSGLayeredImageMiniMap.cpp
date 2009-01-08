@@ -126,6 +126,11 @@ void LayeredImageMiniMap::updateAllTransformations(void)
             Angle = -Angle;
         }
 
+        if(getStationaryIndicator())
+        {
+        }
+        else
+        {
         beginEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
            _RotatedIndicator->setAngle(Angle);
         endEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
@@ -136,6 +141,7 @@ void LayeredImageMiniMap::updateAllTransformations(void)
         beginEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
             RotatedComponentConstraints->setPosition(AlignedPosition);
         endEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+        }
     }
 }
 
@@ -234,9 +240,6 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 
        UInt32 index = 1;
        Real32 lowerDistance = getLayerDistances().getValue(0);
-       
-       std::cout<<p.y()<<std::endl;
-       system("cls");
 
        while(currentLayerIndex == -1)
        {
@@ -251,12 +254,15 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
            else
                currentLayerIndex = index + 1;
        }
-       Graphics->drawQuad(TopLeft,
+       if(!getStationaryIndicator())
+       {
+           Graphics->drawQuad(TopLeft,
 	                         TopLeft + Vec2f(ComponentSize.x(),0.0f),
 						     BottomRight,
 						     TopLeft + Vec2f(0.0f, ComponentSize.y()),
 						     Vec2f(0.0f,0.0f),Vec2f(1.0f,0.0f), 
 						     Vec2f(1.0f,1.0f), Vec2f(0.0f,1.0f), getLayerTextures().getValue(currentLayerIndex), getOpacity() );
+       }
    }
    else
    {
@@ -273,6 +279,8 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
    {
 		Graphics->drawDisc(ViewPointLocation,4.0,4.0,0.0,7.0,10.0,Color4f(1.0,0.0,0.0,1.0),Color4f(1.0,1.0,1.0,1.0),1.0);
    }
+   
+   std::cout<<getStationaryIndicator()<<std::endl;
 
    Container::drawInternal(Graphics);
 }
