@@ -75,58 +75,6 @@ void RadioButton::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
-{
-	Pnt2f TopLeft, BottomRight;
-	Vec2f drawObjectSize;
-	Pnt2f TempPos;
-
-    Pnt2f InnerComponentsPosition(0,0);
-    Vec2f InnerComponentsSize(0,0);
-
-    UInt32 DrawnComponentToTextGap(2);
-
-	getInsideBorderBounds(TopLeft, BottomRight);
-
-    Pnt2f TextTopLeft, TextBottomRight;
-    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-    Vec2f TextBounds( TextBottomRight - TextTopLeft);
-	if(TextBounds.x()>0)
-    {
-	    InnerComponentsSize[0] += TextBounds.x();
-	}
-   
-    UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
-    if(DrawnDrawObject != NullFC)
-    {
-	    Pnt2f drawObjectTopLeft;
-	    Pnt2f drawObjectBottomRight;
-        DrawnDrawObject->getDrawObjectBounds(drawObjectTopLeft, drawObjectBottomRight);
-        drawObjectSize = drawObjectBottomRight-drawObjectTopLeft;
-		
-        InnerComponentsSize[0] += drawObjectSize.x() + DrawnComponentToTextGap;
-	    
-	}
-    else
-    {
-        drawObjectSize.setValues(0,0);
-    }
-    InnerComponentsSize[1] = osgMax(drawObjectSize.y(), TextBounds.y());
-    InnerComponentsPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, InnerComponentsSize,getAlignment().y(), getAlignment().x());
-    
-    if(DrawnDrawObject != NullFC)
-    {
-        beginEditCP(DrawnDrawObject, PositionFieldMask);
-            DrawnDrawObject->setPosition( calculateAlignment(InnerComponentsPosition, InnerComponentsSize,drawObjectSize,0.5,0.0 ) );
-	    endEditCP(DrawnDrawObject, PositionFieldMask);
-        DrawnDrawObject->draw(TheGraphics);
-    }
-
-    TheGraphics->drawText(calculateAlignment(InnerComponentsPosition + Vec2f(drawObjectSize.x()+ DrawnComponentToTextGap,0), InnerComponentsSize-Vec2f(drawObjectSize.x()+ DrawnComponentToTextGap,0),TextBounds,0.5,0.0 )
-        ,   getText(), getFont(), getDrawnTextColor(), getOpacity());
-
-}
-
 UIDrawObjectCanvasPtr RadioButton::getDrawnDrawObject(void) const
 {
     if(getEnabled())

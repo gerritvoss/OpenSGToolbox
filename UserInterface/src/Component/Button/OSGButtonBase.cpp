@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -121,6 +121,12 @@ const OSG::BitVector  ButtonBase::RolloverDrawObjectFieldMask =
 const OSG::BitVector  ButtonBase::DisabledDrawObjectFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::DisabledDrawObjectFieldId);
 
+const OSG::BitVector  ButtonBase::DrawObjectToTextAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::DrawObjectToTextAlignmentFieldId);
+
+const OSG::BitVector  ButtonBase::DrawObjectToTextPaddingFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::DrawObjectToTextPaddingFieldId);
+
 const OSG::BitVector ButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -183,6 +189,12 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
     
 */
 /*! \var UIDrawObjectCanvasPtr ButtonBase::_sfDisabledDrawObject
+    
+*/
+/*! \var UInt32          ButtonBase::_sfDrawObjectToTextAlignment
+    
+*/
+/*! \var Real32          ButtonBase::_sfDrawObjectToTextPadding
     
 */
 
@@ -284,7 +296,17 @@ FieldDescription *ButtonBase::_desc[] =
                      "DisabledDrawObject", 
                      DisabledDrawObjectFieldId, DisabledDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFDisabledDrawObject)
+                     (FieldAccessMethod) &ButtonBase::getSFDisabledDrawObject),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "DrawObjectToTextAlignment", 
+                     DrawObjectToTextAlignmentFieldId, DrawObjectToTextAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFDrawObjectToTextAlignment),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "DrawObjectToTextPadding", 
+                     DrawObjectToTextPaddingFieldId, DrawObjectToTextPaddingFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFDrawObjectToTextPadding)
 };
 
 
@@ -379,6 +401,8 @@ ButtonBase::ButtonBase(void) :
     _sfFocusedDrawObject      (UIDrawObjectCanvasPtr(NullFC)), 
     _sfRolloverDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
     _sfDisabledDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfDrawObjectToTextAlignment(UInt32(Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT)), 
+    _sfDrawObjectToTextPadding(Real32(2.0)), 
     Inherited() 
 {
 }
@@ -407,6 +431,8 @@ ButtonBase::ButtonBase(const ButtonBase &source) :
     _sfFocusedDrawObject      (source._sfFocusedDrawObject      ), 
     _sfRolloverDrawObject     (source._sfRolloverDrawObject     ), 
     _sfDisabledDrawObject     (source._sfDisabledDrawObject     ), 
+    _sfDrawObjectToTextAlignment(source._sfDrawObjectToTextAlignment), 
+    _sfDrawObjectToTextPadding(source._sfDrawObjectToTextPadding), 
     Inherited                 (source)
 {
 }
@@ -518,6 +544,16 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDisabledDrawObject.getBinSize();
     }
 
+    if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfDrawObjectToTextAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
+    {
+        returnValue += _sfDrawObjectToTextPadding.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -620,6 +656,16 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
     {
         _sfDisabledDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
+    {
+        _sfDrawObjectToTextAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
+    {
+        _sfDrawObjectToTextPadding.copyToBin(pMem);
     }
 
 
@@ -725,6 +771,16 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDisabledDrawObject.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
+    {
+        _sfDrawObjectToTextAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
+    {
+        _sfDrawObjectToTextPadding.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -792,6 +848,12 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
         _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
 
+    if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
+        _sfDrawObjectToTextAlignment.syncWith(pOther->_sfDrawObjectToTextAlignment);
+
+    if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
+        _sfDrawObjectToTextPadding.syncWith(pOther->_sfDrawObjectToTextPadding);
+
 
 }
 #else
@@ -858,6 +920,12 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
 
     if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
         _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
+
+    if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
+        _sfDrawObjectToTextAlignment.syncWith(pOther->_sfDrawObjectToTextAlignment);
+
+    if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
+        _sfDrawObjectToTextPadding.syncWith(pOther->_sfDrawObjectToTextPadding);
 
 
 

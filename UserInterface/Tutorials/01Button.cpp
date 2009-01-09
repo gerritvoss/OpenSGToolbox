@@ -313,12 +313,16 @@ int main(int argc, char **argv)
 
     //Button with Image
     ButtonPtr ExampleDrawObjectButton = osg::Button::create();
+    beginEditCP(ExampleDrawObjectButton, Button::DrawObjectToTextAlignmentFieldMask | Button::TextFieldMask);
+	    ExampleDrawObjectButton->setDrawObjectToTextAlignment(Button::ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT);
+        ExampleDrawObjectButton->setText("Icon");
+    endEditCP(ExampleDrawObjectButton, Button::DrawObjectToTextAlignmentFieldMask | Button::TextFieldMask);
 
-    ExampleDrawObjectButton->setImage(std::string("Data/ComponentTransform.png"));
-    ExampleDrawObjectButton->setActiveImage(std::string("Data/ComponentTransform.png"));
-    ExampleDrawObjectButton->setFocusedImage(std::string("Data/ComponentTransform.png"));
-    ExampleDrawObjectButton->setRolloverImage(std::string("Data/ComponentTransform.png"));
-    ExampleDrawObjectButton->setDisabledImage(std::string("Data/ComponentTransform.png"));
+    ExampleDrawObjectButton->setImage(std::string("Data/Icon.png"));
+    ExampleDrawObjectButton->setActiveImage(std::string("Data/Icon.png"));
+    ExampleDrawObjectButton->setFocusedImage(std::string("Data/Icon.png"));
+    ExampleDrawObjectButton->setRolloverImage(std::string("Data/Icon.png"));
+    ExampleDrawObjectButton->setDisabledImage(std::string("Data/Icon.png"));
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

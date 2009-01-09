@@ -273,44 +273,119 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
    UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
    if(DrawnDrawObject != NullFC)
    {
-      //Calculate Alignment
-      Pnt2f AlignedPosition;
+	  //Get the Draw Object Size
       Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
-      DrawnDrawObject->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+      DrawnDrawObject->getDrawObjectBounds(DrawObjectTopLeft, DrawObjectBottomRight);
 
-      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getAlignment().y(), getAlignment().x());
+	  if(getText() != "" && getFont() != NullFC)
+	  {
+		  //Draw both the text and Draw Object
 
-      //If active then translate the Text by the Active Offset
-      AlignedPosition = AlignedPosition + getDrawnOffset();
+		  //Get the Text Size
+		  Pnt2f TextTopLeft, TextBottomRight;
+		  getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+
+		  Vec2f InternalsSize;
+		  if(getDrawObjectToTextAlignment() == ALIGN_DRAW_OBJECT_LEFT_OF_TEXT || 
+			 getDrawObjectToTextAlignment() == ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT)
+		  {
+			  InternalsSize.setValues((TextBottomRight.x()-TextTopLeft.x()) + (DrawObjectBottomRight.x()-DrawObjectTopLeft.x()) + getDrawObjectToTextPadding(),
+				  osgMax((TextBottomRight.y()-TextTopLeft.y()), (DrawObjectBottomRight.y()-DrawObjectTopLeft.y())));
+		  }
+		  else
+		  {
+			  InternalsSize.setValues(osgMax((TextBottomRight.x()-TextTopLeft.x()), (DrawObjectBottomRight.x()-DrawObjectTopLeft.x())),
+				  (TextBottomRight.y()-TextTopLeft.y()) + (DrawObjectBottomRight.y()-DrawObjectTopLeft.y()) + getDrawObjectToTextPadding());
+		  }
+
+		  Pnt2f InternalAlignment;
+          InternalAlignment = calculateAlignment(TopLeft, (BottomRight-TopLeft), InternalsSize,getAlignment().y(), getAlignment().x());
+
+		  //Draw Object Alignment
+          Pnt2f DrawObjectAlignedPosition;
+		  switch(getDrawObjectToTextAlignment())
+		  {
+		  case ALIGN_DRAW_OBJECT_LEFT_OF_TEXT:
+			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (DrawObjectBottomRight - DrawObjectTopLeft),0.5f, 0.0);
+			  break;
+		  case ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT:
+			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (DrawObjectBottomRight - DrawObjectTopLeft),0.5f, 1.0);
+			  break;
+		  case ALIGN_DRAW_OBJECT_ABOVE_TEXT:
+			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (DrawObjectBottomRight - DrawObjectTopLeft),0.0f, 0.5);
+			  break;
+		  case ALIGN_DRAW_OBJECT_BELOW_TEXT:
+			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (DrawObjectBottomRight - DrawObjectTopLeft),1.0f, 0.5);
+			  break;
+		  }
+          //If active then translate the Text by the Active Offset
+          DrawObjectAlignedPosition = DrawObjectAlignedPosition + getDrawnOffset();
+
+          beginEditCP(DrawnDrawObject, PositionFieldMask);
+			  DrawnDrawObject->setPosition( DrawObjectAlignedPosition );
+          endEditCP(DrawnDrawObject, PositionFieldMask);
+
+		  //Text Alignment
+          Pnt2f TextAlignedPosition;
+		  switch(getDrawObjectToTextAlignment())
+		  {
+		  case ALIGN_DRAW_OBJECT_LEFT_OF_TEXT:
+			  TextAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (TextBottomRight - TextTopLeft),0.5f, 1.0);
+			  break;
+		  case ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT:
+			  TextAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (TextBottomRight - TextTopLeft),0.5f, 0.0);
+			  break;
+		  case ALIGN_DRAW_OBJECT_ABOVE_TEXT:
+			  TextAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (TextBottomRight - TextTopLeft),1.0f, 0.5);
+			  break;
+		  case ALIGN_DRAW_OBJECT_BELOW_TEXT:
+			  TextAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (TextBottomRight - TextTopLeft),0.0f, 0.5);
+			  break;
+		  }
+
+		  Button::drawText(TheGraphics, TextAlignedPosition);
+	  }
+	  else
+	  {
+	      //Just Draw the Draw Object
+          Pnt2f AlignedPosition;
+          AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getAlignment().y(), getAlignment().x());
+
+          //If active then translate the Text by the Active Offset
+          AlignedPosition = AlignedPosition + getDrawnOffset();
+
+          beginEditCP(DrawnDrawObject, PositionFieldMask);
+			  DrawnDrawObject->setPosition( AlignedPosition );
+          endEditCP(DrawnDrawObject, PositionFieldMask);
+	  }
 
 	  //Draw the DrawnDrawObject
-        beginEditCP(DrawnDrawObject, PositionFieldMask);
-            DrawnDrawObject->setPosition( AlignedPosition );
-        endEditCP(DrawnDrawObject, PositionFieldMask);
-
-        DrawnDrawObject->draw(TheGraphics);
+      DrawnDrawObject->draw(TheGraphics);
 
    }
-   Button::drawText(TheGraphics, TopLeft, BottomRight);
+   else
+   {
+	   //Just Draw the Text
+       Pnt2f AlignedPosition;
+       Pnt2f TextTopLeft, TextBottomRight;
+       getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+
+       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getAlignment().y(), getAlignment().x());
+
+	   Button::drawText(TheGraphics, AlignedPosition);
+   }
 }
 
-void Button::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight) const
+void Button::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const
 {
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
    {
       //Calculate Alignment
-      Pnt2f AlignedPosition;
-      Pnt2f TextTopLeft, TextBottomRight;
-      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-
-      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getAlignment().y(), getAlignment().x());
-
-      //If active then translate the Text by the Active Offset
-      AlignedPosition = AlignedPosition + getDrawnOffset();
+      Pnt2f Position =  TopLeft + getDrawnOffset();
 
 	  //Draw the Text
-      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
+      TheGraphics->drawText(Position, getText(), getFont(), getDrawnTextColor(), getOpacity());
    }
 }
 

@@ -61,6 +61,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+	enum DrawObjectToTextAlignment{ALIGN_DRAW_OBJECT_LEFT_OF_TEXT=0, ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT, ALIGN_DRAW_OBJECT_ABOVE_TEXT, ALIGN_DRAW_OBJECT_BELOW_TEXT};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -138,7 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     virtual void mousePressedActionPreformed(const ActionEvent& e);
 
 	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
-	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight) const;
+	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const;
     virtual Color4f getDrawnTextColor(void) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual LayerPtr getDrawnBackground(void) const;

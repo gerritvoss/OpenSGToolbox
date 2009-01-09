@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -227,6 +227,20 @@ inline
 SFUIDrawObjectCanvasPtr *ButtonBase::getSFDisabledDrawObject(void)
 {
     return &_sfDisabledDrawObject;
+}
+
+//! Get the Button::_sfDrawObjectToTextAlignment field.
+inline
+SFUInt32 *ButtonBase::getSFDrawObjectToTextAlignment(void)
+{
+    return &_sfDrawObjectToTextAlignment;
+}
+
+//! Get the Button::_sfDrawObjectToTextPadding field.
+inline
+SFReal32 *ButtonBase::getSFDrawObjectToTextPadding(void)
+{
+    return &_sfDrawObjectToTextPadding;
 }
 
 
@@ -627,6 +641,48 @@ inline
 void ButtonBase::setDisabledDrawObject(const UIDrawObjectCanvasPtr &value)
 {
     _sfDisabledDrawObject.setValue(value);
+}
+
+//! Get the value of the Button::_sfDrawObjectToTextAlignment field.
+inline
+UInt32 &ButtonBase::getDrawObjectToTextAlignment(void)
+{
+    return _sfDrawObjectToTextAlignment.getValue();
+}
+
+//! Get the value of the Button::_sfDrawObjectToTextAlignment field.
+inline
+const UInt32 &ButtonBase::getDrawObjectToTextAlignment(void) const
+{
+    return _sfDrawObjectToTextAlignment.getValue();
+}
+
+//! Set the value of the Button::_sfDrawObjectToTextAlignment field.
+inline
+void ButtonBase::setDrawObjectToTextAlignment(const UInt32 &value)
+{
+    _sfDrawObjectToTextAlignment.setValue(value);
+}
+
+//! Get the value of the Button::_sfDrawObjectToTextPadding field.
+inline
+Real32 &ButtonBase::getDrawObjectToTextPadding(void)
+{
+    return _sfDrawObjectToTextPadding.getValue();
+}
+
+//! Get the value of the Button::_sfDrawObjectToTextPadding field.
+inline
+const Real32 &ButtonBase::getDrawObjectToTextPadding(void) const
+{
+    return _sfDrawObjectToTextPadding.getValue();
+}
+
+//! Set the value of the Button::_sfDrawObjectToTextPadding field.
+inline
+void ButtonBase::setDrawObjectToTextPadding(const Real32 &value)
+{
+    _sfDrawObjectToTextPadding.setValue(value);
 }
 
 

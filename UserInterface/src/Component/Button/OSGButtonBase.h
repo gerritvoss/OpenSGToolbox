@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -86,6 +86,8 @@
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
+#include <OpenSG/OSGUInt32Fields.h> // DrawObjectToTextAlignment type
+#include <OpenSG/OSGReal32Fields.h> // DrawObjectToTextPadding type
 
 #include "OSGButtonFields.h"
 
@@ -128,7 +130,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
         FocusedDrawObjectFieldId           = ActiveDrawObjectFieldId            + 1,
         RolloverDrawObjectFieldId          = FocusedDrawObjectFieldId           + 1,
         DisabledDrawObjectFieldId          = RolloverDrawObjectFieldId          + 1,
-        NextFieldId                        = DisabledDrawObjectFieldId          + 1
+        DrawObjectToTextAlignmentFieldId   = DisabledDrawObjectFieldId          + 1,
+        DrawObjectToTextPaddingFieldId     = DrawObjectToTextAlignmentFieldId   + 1,
+        NextFieldId                        = DrawObjectToTextPaddingFieldId     + 1
     };
 
     static const OSG::BitVector FontFieldMask;
@@ -150,6 +154,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     static const OSG::BitVector FocusedDrawObjectFieldMask;
     static const OSG::BitVector RolloverDrawObjectFieldMask;
     static const OSG::BitVector DisabledDrawObjectFieldMask;
+    static const OSG::BitVector DrawObjectToTextAlignmentFieldMask;
+    static const OSG::BitVector DrawObjectToTextPaddingFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -195,6 +201,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
            SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void);
            SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
            SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
+           SFUInt32            *getSFDrawObjectToTextAlignment(void);
+           SFReal32            *getSFDrawObjectToTextPadding(void);
 
            UIFontPtr           &getFont           (void);
      const UIFontPtr           &getFont           (void) const;
@@ -234,6 +242,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
            UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
      const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
+           UInt32              &getDrawObjectToTextAlignment(void);
+     const UInt32              &getDrawObjectToTextAlignment(void) const;
+           Real32              &getDrawObjectToTextPadding(void);
+     const Real32              &getDrawObjectToTextPadding(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -259,6 +271,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      void setFocusedDrawObject( const UIDrawObjectCanvasPtr &value );
      void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
      void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDrawObjectToTextAlignment( const UInt32 &value );
+     void setDrawObjectToTextPadding( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -320,6 +334,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     SFUIDrawObjectCanvasPtr   _sfFocusedDrawObject;
     SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
     SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
+    SFUInt32            _sfDrawObjectToTextAlignment;
+    SFReal32            _sfDrawObjectToTextPadding;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

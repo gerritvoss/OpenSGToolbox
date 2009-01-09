@@ -180,4 +180,22 @@ A UI Button.
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="DrawObjectToTextAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DrawObjectToTextPadding"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="2.0"
+		access="public"
+	>
+	</Field>
 </FieldContainer>
