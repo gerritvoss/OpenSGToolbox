@@ -116,6 +116,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     bool getActive(void) const;
     void setActive(bool Value);
 
+	virtual void setBorders(BorderPtr TheBorder);
+
+	virtual void setBackgrounds(LayerPtr TheBackground);
+    
+	virtual void setForegrounds(LayerPtr TheForeground);
+    
+    virtual void setTextColors( const Color4f &value );
     /*=========================  PROTECTED  ===============================*/
   protected:
 

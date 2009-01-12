@@ -76,6 +76,34 @@ void Button::initMethod (void)
 {
 }
 
+    
+void Button::setTextColors( const Color4f &value )
+{
+    setTextColor(value);
+    setDisabledTextColor(value);
+    setRolloverTextColor(value);
+    setFocusedTextColor(value);
+    setActiveTextColor(value);
+}
+
+void Button::setBorders(BorderPtr TheBorder)
+{
+    Inherited::setBorders(TheBorder);
+    setActiveBorder(TheBorder);
+}
+
+void Button::setBackgrounds(LayerPtr TheBackground)
+{
+    Inherited::setBackgrounds(TheBackground);
+    setActiveBackground(TheBackground);
+}
+
+void Button::setForegrounds(LayerPtr TheForeground)
+{
+    Inherited::setForegrounds(TheForeground);
+    setActiveForeground(TheForeground);
+}
+
 UIDrawObjectCanvasPtr Button::createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture, Vec2f Size)
 {
     UIDrawObjectCanvasPtr DrawObjectCanvas = UIDrawObjectCanvas::create();

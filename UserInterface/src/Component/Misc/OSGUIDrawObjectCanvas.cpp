@@ -136,10 +136,8 @@ void UIDrawObjectCanvas::changed(BitVector whichField, UInt32 origin)
 	
 	if( (whichField & DrawObjectsFieldMask) )
     {
-		Pnt2f TopLeft, BottomRight;
-		getDrawObjectBounds(TopLeft, BottomRight);
 		beginEditCP(UIDrawObjectCanvasPtr(this), PreferredSizeFieldMask);
-			setPreferredSize(BottomRight - TopLeft);
+			setPreferredSize(getRequestedSize());
 		endEditCP(UIDrawObjectCanvasPtr(this), PreferredSizeFieldMask);
     }
 }
