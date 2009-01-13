@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,6 +65,8 @@
 #include <Component/Scroll/OSGScrollPanel.h>   // HorizontalScrollBarDisplayPolicy default header
 #include <Component/Scroll/OSGScrollPanel.h>   // VerticalResizePolicy default header
 #include <Component/Scroll/OSGScrollPanel.h>   // HorizontalResizePolicy default header
+#include <Component/Scroll/OSGScrollPanel.h>   // VerticalScrollBarAlignment default header
+#include <Component/Scroll/OSGScrollPanel.h>   // HorizontalScrollBarAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -88,6 +90,12 @@ const OSG::BitVector  ScrollPanelBase::VerticalResizePolicyFieldMask =
 
 const OSG::BitVector  ScrollPanelBase::HorizontalResizePolicyFieldMask = 
     (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalResizePolicyFieldId);
+
+const OSG::BitVector  ScrollPanelBase::VerticalScrollBarAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalScrollBarAlignmentFieldId);
+
+const OSG::BitVector  ScrollPanelBase::HorizontalScrollBarAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalScrollBarAlignmentFieldId);
 
 const OSG::BitVector ScrollPanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -115,6 +123,12 @@ const OSG::BitVector ScrollPanelBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          ScrollPanelBase::_sfHorizontalResizePolicy
+    
+*/
+/*! \var UInt32          ScrollPanelBase::_sfVerticalScrollBarAlignment
+    
+*/
+/*! \var UInt32          ScrollPanelBase::_sfHorizontalScrollBarAlignment
     
 */
 
@@ -156,7 +170,17 @@ FieldDescription *ScrollPanelBase::_desc[] =
                      "HorizontalResizePolicy", 
                      HorizontalResizePolicyFieldId, HorizontalResizePolicyFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalResizePolicy)
+                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalResizePolicy),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "VerticalScrollBarAlignment", 
+                     VerticalScrollBarAlignmentFieldId, VerticalScrollBarAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollPanelBase::getSFVerticalScrollBarAlignment),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "HorizontalScrollBarAlignment", 
+                     HorizontalScrollBarAlignmentFieldId, HorizontalScrollBarAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalScrollBarAlignment)
 };
 
 
@@ -239,6 +263,8 @@ ScrollPanelBase::ScrollPanelBase(void) :
     _sfHorizontalScrollBarDisplayPolicy(UInt32(ScrollPanel::SCROLLBAR_AS_NEEDED)), 
     _sfVerticalResizePolicy   (UInt32(ScrollPanel::NO_RESIZE)), 
     _sfHorizontalResizePolicy (UInt32(ScrollPanel::NO_RESIZE)), 
+    _sfVerticalScrollBarAlignment(UInt32(ScrollPanel::SCROLLBAR_ALIGN_RIGHT)), 
+    _sfHorizontalScrollBarAlignment(UInt32(ScrollPanel::SCROLLBAR_ALIGN_BOTTOM)), 
     Inherited() 
 {
 }
@@ -255,6 +281,8 @@ ScrollPanelBase::ScrollPanelBase(const ScrollPanelBase &source) :
     _sfHorizontalScrollBarDisplayPolicy(source._sfHorizontalScrollBarDisplayPolicy), 
     _sfVerticalResizePolicy   (source._sfVerticalResizePolicy   ), 
     _sfHorizontalResizePolicy (source._sfHorizontalResizePolicy ), 
+    _sfVerticalScrollBarAlignment(source._sfVerticalScrollBarAlignment), 
+    _sfHorizontalScrollBarAlignment(source._sfHorizontalScrollBarAlignment), 
     Inherited                 (source)
 {
 }
@@ -306,6 +334,16 @@ UInt32 ScrollPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfHorizontalResizePolicy.getBinSize();
     }
 
+    if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfVerticalScrollBarAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalScrollBarAlignment.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -348,6 +386,16 @@ void ScrollPanelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
     {
         _sfHorizontalResizePolicy.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
+    {
+        _sfVerticalScrollBarAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalScrollBarAlignment.copyToBin(pMem);
     }
 
 
@@ -393,6 +441,16 @@ void ScrollPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfHorizontalResizePolicy.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
+    {
+        _sfVerticalScrollBarAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalScrollBarAlignment.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -424,6 +482,12 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
     if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
         _sfHorizontalResizePolicy.syncWith(pOther->_sfHorizontalResizePolicy);
 
+    if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
+        _sfVerticalScrollBarAlignment.syncWith(pOther->_sfVerticalScrollBarAlignment);
+
+    if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
+        _sfHorizontalScrollBarAlignment.syncWith(pOther->_sfHorizontalScrollBarAlignment);
+
 
 }
 #else
@@ -454,6 +518,12 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
 
     if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
         _sfHorizontalResizePolicy.syncWith(pOther->_sfHorizontalResizePolicy);
+
+    if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
+        _sfVerticalScrollBarAlignment.syncWith(pOther->_sfVerticalScrollBarAlignment);
+
+    if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
+        _sfHorizontalScrollBarAlignment.syncWith(pOther->_sfHorizontalScrollBarAlignment);
 
 
 

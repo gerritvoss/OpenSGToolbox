@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -74,6 +74,8 @@
 #include <OpenSG/OSGUInt32Fields.h> // HorizontalScrollBarDisplayPolicy type
 #include <OpenSG/OSGUInt32Fields.h> // VerticalResizePolicy type
 #include <OpenSG/OSGUInt32Fields.h> // HorizontalResizePolicy type
+#include <OpenSG/OSGUInt32Fields.h> // VerticalScrollBarAlignment type
+#include <OpenSG/OSGUInt32Fields.h> // HorizontalScrollBarAlignment type
 
 #include "OSGScrollPanelFields.h"
 
@@ -104,7 +106,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
         HorizontalScrollBarDisplayPolicyFieldId = VerticalScrollBarDisplayPolicyFieldId   + 1,
         VerticalResizePolicyFieldId             = HorizontalScrollBarDisplayPolicyFieldId + 1,
         HorizontalResizePolicyFieldId           = VerticalResizePolicyFieldId             + 1,
-        NextFieldId                             = HorizontalResizePolicyFieldId           + 1
+        VerticalScrollBarAlignmentFieldId       = HorizontalResizePolicyFieldId           + 1,
+        HorizontalScrollBarAlignmentFieldId     = VerticalScrollBarAlignmentFieldId       + 1,
+        NextFieldId                             = HorizontalScrollBarAlignmentFieldId     + 1
     };
 
     static const OSG::BitVector ViewFieldMask;
@@ -114,6 +118,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     static const OSG::BitVector HorizontalScrollBarDisplayPolicyFieldMask;
     static const OSG::BitVector VerticalResizePolicyFieldMask;
     static const OSG::BitVector HorizontalResizePolicyFieldMask;
+    static const OSG::BitVector VerticalScrollBarAlignmentFieldMask;
+    static const OSG::BitVector HorizontalScrollBarAlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -144,6 +150,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
            SFUInt32            *getSFHorizontalScrollBarDisplayPolicy(void);
            SFUInt32            *getSFVerticalResizePolicy(void);
            SFUInt32            *getSFHorizontalResizePolicy(void);
+           SFUInt32            *getSFVerticalScrollBarAlignment(void);
+           SFUInt32            *getSFHorizontalScrollBarAlignment(void);
 
            UInt32              &getVerticalScrollBarDisplayPolicy(void);
      const UInt32              &getVerticalScrollBarDisplayPolicy(void) const;
@@ -153,6 +161,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
      const UInt32              &getVerticalResizePolicy(void) const;
            UInt32              &getHorizontalResizePolicy(void);
      const UInt32              &getHorizontalResizePolicy(void) const;
+           UInt32              &getVerticalScrollBarAlignment(void);
+     const UInt32              &getVerticalScrollBarAlignment(void) const;
+           UInt32              &getHorizontalScrollBarAlignment(void);
+     const UInt32              &getHorizontalScrollBarAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -163,6 +175,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
      void setHorizontalScrollBarDisplayPolicy( const UInt32 &value );
      void setVerticalResizePolicy( const UInt32 &value );
      void setHorizontalResizePolicy( const UInt32 &value );
+     void setVerticalScrollBarAlignment( const UInt32 &value );
+     void setHorizontalScrollBarAlignment( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -212,6 +226,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     SFUInt32            _sfHorizontalScrollBarDisplayPolicy;
     SFUInt32            _sfVerticalResizePolicy;
     SFUInt32            _sfHorizontalResizePolicy;
+    SFUInt32            _sfVerticalScrollBarAlignment;
+    SFUInt32            _sfHorizontalScrollBarAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

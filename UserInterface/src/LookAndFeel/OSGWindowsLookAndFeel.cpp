@@ -401,6 +401,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsButton->setDisabledTextColor(WindowsDisabledTextColor);
         
         WindowsButton->setActiveOffset(Vec2f(2,2));
+        WindowsButton->setDrawObjectToTextAlignment(Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT);
+        WindowsButton->setDrawObjectToTextPadding(4.0f);
 	endEditCP(WindowsButton);
 
 	//************************** Label*****************************
@@ -1509,6 +1511,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsCheckboxButton->setDisabledTextColor(WindowsDisabledTextColor);
         
         WindowsCheckboxButton->setActiveOffset(Vec2f(0,0));
+        WindowsCheckboxButton->setDrawObjectToTextAlignment(Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT);
+        WindowsCheckboxButton->setDrawObjectToTextPadding(3.0f);
 	endEditCP(WindowsCheckboxButton);
 
 	//************************** Radio Button Component *****************************
@@ -1732,6 +1736,9 @@ void WindowsLookAndFeel::init(void)
 		WindowsRadioButton->setDisabledTextColor(WindowsDisabledTextColor);
 
         WindowsRadioButton->setActiveOffset(Vec2f(0,0));
+        WindowsRadioButton->setDrawObjectToTextAlignment(Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT);
+        WindowsRadioButton->setDrawObjectToTextPadding(3.0f);
+
 	endEditCP(WindowsRadioButton);
 
 	/********Toggle Button********/
@@ -1774,6 +1781,9 @@ void WindowsLookAndFeel::init(void)
 		WindowsToggleButton->setDisabledTextColor(WindowsDisabledTextColor);
         
         WindowsToggleButton->setActiveOffset(Vec2f(2,2));
+        WindowsToggleButton->setDrawObjectToTextAlignment(Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT);
+        WindowsToggleButton->setDrawObjectToTextPadding(4.0f);
+
 	endEditCP(WindowsToggleButton);
 
 	/********Text Field********/
@@ -3432,6 +3442,10 @@ void WindowsLookAndFeel::init(void)
 
         //Horizontal Scroll Bar
         WindowsScrollPanel->setHorizontalScrollBarDisplayPolicy(ScrollPanel::SCROLLBAR_AS_NEEDED);
+
+        
+        WindowsScrollPanel->setVerticalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_LEFT);
+        WindowsScrollPanel->setHorizontalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_BOTTOM);
 	endEditCP(WindowsScrollPanel);
 
 	//************************** UIViewport *****************************
@@ -4334,10 +4348,68 @@ void WindowsLookAndFeel::init(void)
     endEditCP(WindowsDefaultTreeCellEditor);
     
 	//************************** DefaultTreeComponentGenerator *****************************
+    LineBorderPtr WindowsTreeComponentExpandingBorder = LineBorder::create();
+	beginEditCP(WindowsTreeComponentExpandingBorder);
+		WindowsTreeComponentExpandingBorder->setWidth(1.0);
+		WindowsTreeComponentExpandingBorder->setColor(Color4f(0.545, 0.545, 0.835, 1.0));
+	endEditCP(WindowsTreeComponentExpandingBorder);
+    
+	GradientLayerPtr WindowsTreeComponentExpandingBackground = GradientLayer::create();
+	beginEditCP(WindowsTreeComponentExpandingBackground);
+		WindowsTreeComponentExpandingBackground->getColors().push_back(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsTreeComponentExpandingBackground->getStops().push_back(0.0);
+		WindowsTreeComponentExpandingBackground->getColors().push_back(Color4f(.75, .75, .75, 1.0));
+		WindowsTreeComponentExpandingBackground->getStops().push_back(1.0);
+		WindowsTreeComponentExpandingBackground->setStartPosition(Vec2f(0.0f,0.0f));
+		WindowsTreeComponentExpandingBackground->setEndPosition(Vec2f(0.0f,1.0f));
+	endEditCP(WindowsTreeComponentExpandingBackground);
+
+    //Expanded Draw Object
+	RectUIDrawObjectPtr ExpanedDrawObject = RectUIDrawObject::create();
+	beginEditCP(ExpanedDrawObject);
+		ExpanedDrawObject->setTopLeft(Pnt2f(1,4));
+		ExpanedDrawObject->setBottomRight(Pnt2f(6,5));
+		ExpanedDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
+		ExpanedDrawObject->setOpacity(1.0);
+	endEditCP(ExpanedDrawObject);
 
     UIDrawObjectCanvasPtr WindowsExpandedDrawObject = UIDrawObjectCanvas::create();
+    beginEditCP(WindowsExpandedDrawObject);
+		//Border
+		WindowsExpandedDrawObject->setBorders(WindowsTreeComponentExpandingBorder);
+		
+		//Background
+		WindowsExpandedDrawObject->setBackgrounds(WindowsTreeComponentExpandingBackground);
+
+        WindowsExpandedDrawObject->setPreferredSize(Vec2f(9.0f,9.0f));
+        WindowsExpandedDrawObject->setMaxSize(Vec2f(9.0f,9.0f));
+        WindowsExpandedDrawObject->setMinSize(Vec2f(9.0f,9.0f));
+        
+        WindowsExpandedDrawObject->getDrawObjects().push_back(ExpanedDrawObject);
+    endEditCP(WindowsExpandedDrawObject);
     
+	RectUIDrawObjectPtr NotExpanedDrawObject = RectUIDrawObject::create();
+	beginEditCP(NotExpanedDrawObject);
+		NotExpanedDrawObject->setTopLeft(Pnt2f(4,1));
+		NotExpanedDrawObject->setBottomRight(Pnt2f(5,6));
+		NotExpanedDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
+		NotExpanedDrawObject->setOpacity(1.0);
+	endEditCP(NotExpanedDrawObject);
+
     UIDrawObjectCanvasPtr WindowsNotExpandedDrawObjectPrototype = UIDrawObjectCanvas::create();
+    beginEditCP(WindowsNotExpandedDrawObjectPrototype);
+		//Border
+		WindowsNotExpandedDrawObjectPrototype->setBorders(WindowsTreeComponentExpandingBorder);
+		
+		//Background
+		WindowsNotExpandedDrawObjectPrototype->setBackgrounds(WindowsTreeComponentExpandingBackground);
+        
+        WindowsNotExpandedDrawObjectPrototype->setPreferredSize(Vec2f(9.0f,9.0f));
+        WindowsNotExpandedDrawObjectPrototype->setMaxSize(Vec2f(9.0f,9.0f));
+        WindowsNotExpandedDrawObjectPrototype->setMinSize(Vec2f(9.0f,9.0f));
+        WindowsNotExpandedDrawObjectPrototype->getDrawObjects().push_back(ExpanedDrawObject);
+        WindowsNotExpandedDrawObjectPrototype->getDrawObjects().push_back(NotExpanedDrawObject);
+    endEditCP(WindowsNotExpandedDrawObjectPrototype);
     
     UIDrawObjectCanvasPtr WindowsLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
     

@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -143,6 +143,20 @@ inline
 SFUInt32 *ScrollPanelBase::getSFHorizontalResizePolicy(void)
 {
     return &_sfHorizontalResizePolicy;
+}
+
+//! Get the ScrollPanel::_sfVerticalScrollBarAlignment field.
+inline
+SFUInt32 *ScrollPanelBase::getSFVerticalScrollBarAlignment(void)
+{
+    return &_sfVerticalScrollBarAlignment;
+}
+
+//! Get the ScrollPanel::_sfHorizontalScrollBarAlignment field.
+inline
+SFUInt32 *ScrollPanelBase::getSFHorizontalScrollBarAlignment(void)
+{
+    return &_sfHorizontalScrollBarAlignment;
 }
 
 
@@ -291,6 +305,48 @@ inline
 void ScrollPanelBase::setHorizontalResizePolicy(const UInt32 &value)
 {
     _sfHorizontalResizePolicy.setValue(value);
+}
+
+//! Get the value of the ScrollPanel::_sfVerticalScrollBarAlignment field.
+inline
+UInt32 &ScrollPanelBase::getVerticalScrollBarAlignment(void)
+{
+    return _sfVerticalScrollBarAlignment.getValue();
+}
+
+//! Get the value of the ScrollPanel::_sfVerticalScrollBarAlignment field.
+inline
+const UInt32 &ScrollPanelBase::getVerticalScrollBarAlignment(void) const
+{
+    return _sfVerticalScrollBarAlignment.getValue();
+}
+
+//! Set the value of the ScrollPanel::_sfVerticalScrollBarAlignment field.
+inline
+void ScrollPanelBase::setVerticalScrollBarAlignment(const UInt32 &value)
+{
+    _sfVerticalScrollBarAlignment.setValue(value);
+}
+
+//! Get the value of the ScrollPanel::_sfHorizontalScrollBarAlignment field.
+inline
+UInt32 &ScrollPanelBase::getHorizontalScrollBarAlignment(void)
+{
+    return _sfHorizontalScrollBarAlignment.getValue();
+}
+
+//! Get the value of the ScrollPanel::_sfHorizontalScrollBarAlignment field.
+inline
+const UInt32 &ScrollPanelBase::getHorizontalScrollBarAlignment(void) const
+{
+    return _sfHorizontalScrollBarAlignment.getValue();
+}
+
+//! Set the value of the ScrollPanel::_sfHorizontalScrollBarAlignment field.
+inline
+void ScrollPanelBase::setHorizontalScrollBarAlignment(const UInt32 &value)
+{
+    _sfHorizontalScrollBarAlignment.setValue(value);
 }
 
 

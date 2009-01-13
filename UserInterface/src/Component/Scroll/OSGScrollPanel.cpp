@@ -226,20 +226,55 @@ void ScrollPanel::updateLayout(void)
 	getInsideInsetsBounds(TopLeft, BottomRight);
 
     Vec2f ViewportSize(BottomRight - TopLeft);
+    Pnt2f ViewportPosition(TopLeft);
 
     //Set the ScrollBar Position and Sizes
     if(VerticalScrollbarShown && HorizontalScrollbarShown)
     {
+        Vec2f VerticalScrollbarSize(getVerticalScrollBar()->getPreferredSize().x(), (BottomRight.y() - TopLeft.y() - getHorizontalScrollBar()->getPreferredSize().y())),
+              HorizontalScrollbarSize((BottomRight.x() - TopLeft.x() - getVerticalScrollBar()->getPreferredSize().x()), getHorizontalScrollBar()->getPreferredSize().y());
+
+        Pnt2f VerticalScrollbarPosition,
+              HorizontalScrollbarPosition;
+
+        if(getVerticalScrollBarAlignment() == SCROLLBAR_ALIGN_LEFT &&
+           getHorizontalScrollBarAlignment() == SCROLLBAR_ALIGN_TOP)
+        {
+            VerticalScrollbarPosition.setValues(TopLeft.x(), BottomRight.y() - VerticalScrollbarSize.y());
+            HorizontalScrollbarPosition.setValues(BottomRight.x() - HorizontalScrollbarSize.x(), TopLeft.y());
+            ViewportPosition = TopLeft + Vec2f(VerticalScrollbarSize.x(), HorizontalScrollbarSize.y());
+        }
+        else if(getVerticalScrollBarAlignment() == SCROLLBAR_ALIGN_LEFT &&
+           getHorizontalScrollBarAlignment() == SCROLLBAR_ALIGN_BOTTOM)
+        {
+            VerticalScrollbarPosition = TopLeft;
+            HorizontalScrollbarPosition = BottomRight - HorizontalScrollbarSize;
+            ViewportPosition = TopLeft + Vec2f(VerticalScrollbarSize.x(), 0.0f);
+        }
+        else if(getVerticalScrollBarAlignment() == SCROLLBAR_ALIGN_RIGHT &&
+           getHorizontalScrollBarAlignment() == SCROLLBAR_ALIGN_TOP)
+        {
+            VerticalScrollbarPosition = BottomRight - VerticalScrollbarSize;
+            HorizontalScrollbarPosition = TopLeft;
+            ViewportPosition = TopLeft + Vec2f(0.0f, HorizontalScrollbarSize.y());
+        }
+        else if(getVerticalScrollBarAlignment() == SCROLLBAR_ALIGN_RIGHT &&
+           getHorizontalScrollBarAlignment() == SCROLLBAR_ALIGN_BOTTOM)
+        {
+            VerticalScrollbarPosition.setValues(BottomRight.x() - VerticalScrollbarSize.x(), TopLeft.y());
+            HorizontalScrollbarPosition.setValues(TopLeft.x(), BottomRight.y() - HorizontalScrollbarSize.y());
+            ViewportPosition = TopLeft;
+        }
         //Vertical
         beginEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
-            getVerticalScrollBar()->setSize(Vec2f(getVerticalScrollBar()->getPreferredSize().x(), (BottomRight.y() - TopLeft.y() - getHorizontalScrollBar()->getPreferredSize().y()) ));
-            getVerticalScrollBar()->setPosition(Pnt2f(BottomRight.x() - getVerticalScrollBar()->getSize().x(), TopLeft.y()));
+            getVerticalScrollBar()->setSize(VerticalScrollbarSize);
+            getVerticalScrollBar()->setPosition(VerticalScrollbarPosition);
         endEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
 
         //Horizontal
         beginEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
-            getHorizontalScrollBar()->setSize(Vec2f((BottomRight.x() - TopLeft.x() - getVerticalScrollBar()->getPreferredSize().x()), getHorizontalScrollBar()->getPreferredSize().y()) );
-            getHorizontalScrollBar()->setPosition(Pnt2f(TopLeft.x(), BottomRight.y() - getHorizontalScrollBar()->getSize().y()));
+            getHorizontalScrollBar()->setSize(HorizontalScrollbarSize);
+            getHorizontalScrollBar()->setPosition(HorizontalScrollbarPosition);
         endEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
 
         ViewportSize = ViewportSize - Vec2f(getVerticalScrollBar()->getSize().x(), getHorizontalScrollBar()->getSize().y());
@@ -248,7 +283,16 @@ void ScrollPanel::updateLayout(void)
     {
         beginEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
             getVerticalScrollBar()->setSize(Vec2f(getVerticalScrollBar()->getPreferredSize().x(), (BottomRight.y() - TopLeft.y()) ));
-            getVerticalScrollBar()->setPosition(BottomRight-getVerticalScrollBar()->getSize());
+            if(getVerticalScrollBarAlignment() == SCROLLBAR_ALIGN_LEFT)
+            {
+                getVerticalScrollBar()->setPosition(TopLeft);
+                ViewportPosition = TopLeft+Vec2f(getVerticalScrollBar()->getSize().x(),0.0f);
+            }
+            else
+            {
+                getVerticalScrollBar()->setPosition(BottomRight-getVerticalScrollBar()->getSize());
+                ViewportPosition = TopLeft;
+            }
         endEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
         ViewportSize = ViewportSize - Vec2f(getVerticalScrollBar()->getSize().x(), 0);
     }
@@ -256,7 +300,16 @@ void ScrollPanel::updateLayout(void)
     {
         beginEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
             getHorizontalScrollBar()->setSize(Vec2f((BottomRight.x() - TopLeft.x()), getHorizontalScrollBar()->getPreferredSize().y()) );
-            getHorizontalScrollBar()->setPosition(BottomRight-getHorizontalScrollBar()->getSize());
+            if(getHorizontalScrollBarAlignment() == SCROLLBAR_ALIGN_TOP)
+            {
+                getHorizontalScrollBar()->setPosition(TopLeft);
+                ViewportPosition = TopLeft+Vec2f(0.0f,getVerticalScrollBar()->getSize().y());
+            }
+            else
+            {
+                getHorizontalScrollBar()->setPosition(BottomRight-getHorizontalScrollBar()->getSize());
+                ViewportPosition = TopLeft;
+            }
         endEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
         ViewportSize = ViewportSize - Vec2f(0, getHorizontalScrollBar()->getSize().y());
     }
@@ -265,7 +318,7 @@ void ScrollPanel::updateLayout(void)
     if(getView() != NullFC)
     {
 		UInt32 FieldsToChange(0);
-		if(getView()->getPosition() != Pnt2f(0,0))
+		if(getView()->getPosition() != ViewportPosition)
 		{
 			FieldsToChange |= UIViewport::PositionFieldMask;
 		}
@@ -275,9 +328,9 @@ void ScrollPanel::updateLayout(void)
 		}
         beginEditCP(getView(), FieldsToChange);
 		
-			if(getView()->getPosition() != Pnt2f(0,0))
+			if(getView()->getPosition() != ViewportPosition)
 			{
-				getView()->setPosition(Pnt2f(0,0));
+				getView()->setPosition(ViewportPosition);
 			}
 			if(getView()->getSize() != ViewportSize)
 			{

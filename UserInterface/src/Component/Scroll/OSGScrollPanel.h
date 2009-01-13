@@ -66,6 +66,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
   public:
       enum ScrollBarDisplayPolicy{SCROLLBAR_AS_NEEDED=0,SCROLLBAR_AS_ALWAYS,SCROLLBAR_AS_NEVER};
       enum ResizePolicy{NO_RESIZE=0,RESIZE_TO_VIEW};
+      enum HorizontalAlign{SCROLLBAR_ALIGN_TOP=0,SCROLLBAR_ALIGN_BOTTOM};
+      enum VerticalAlign{SCROLLBAR_ALIGN_LEFT=0,SCROLLBAR_ALIGN_RIGHT};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

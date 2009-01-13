@@ -82,4 +82,24 @@ A UI ScrollPanel
 		defaultValue="ScrollPanel::NO_RESIZE"
 	>
 	</Field>
+	<Field
+		name="VerticalScrollBarAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultHeader="Component/Scroll/OSGScrollPanel.h"
+		defaultValue="ScrollPanel::SCROLLBAR_ALIGN_RIGHT"
+	>
+	</Field>
+	<Field
+		name="HorizontalScrollBarAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultHeader="Component/Scroll/OSGScrollPanel.h"
+		defaultValue="ScrollPanel::SCROLLBAR_ALIGN_BOTTOM"
+	>
+	</Field>
 </FieldContainer>

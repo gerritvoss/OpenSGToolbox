@@ -76,24 +76,7 @@ void Canvas::initMethod (void)
 
 void Canvas::drawInternal(const GraphicsPtr TheGraphics) const
 {
-
-   Pnt2f TopLeft, BottomRight;
-   getInsideBorderBounds(TopLeft, BottomRight);
-
-	/*MFPnt2f polygon;
-	polygon.push_back(Pnt2f(120,120));
-	polygon.push_back(Pnt2f(120,0));
-	polygon.push_back(Pnt2f(180,120));
-	polygon.push_back(Pnt2f(170,230));
-	polygon.push_back(Pnt2f(130,180));
-
-	TheGraphics->drawPolygon( polygon, Color4f(0.0f,1.0f,1.0f,0.5));*/
-
-   //TheGraphics->drawLine(Pnt2f( 50,50), Pnt2f(150,150),5.0, Color4f(1.0,0.0,0.0,1.0),1.0);
-   
-   TheGraphics->drawDisc(Pnt2f(100,100), 50,50, 0.0, 3.14159, 24, Color4f(0.0,0.0,1.0,1.0), Color4f(0.0,0.0,1.0,1.0),1.0);
-   TheGraphics->drawArc(Pnt2f(100,100), 50,50, 0.0, 3.14159,3.0, 24, Color4f(1.0,1.0,1.0,1.0),1.0);
-   //TheGraphics->drawText(Pnt2f(10,150), std::string("Eat my shorts foo!"), TheFont, Color4f(1.0,0.0,0.0,1.0), 1.0);
+    //Do Nothing
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
