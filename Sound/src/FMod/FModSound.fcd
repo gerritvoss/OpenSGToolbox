@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FModSound"
+	parent="Sound"
+	library="Sound"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	useLocalIncludes="true"
+>
+A FMod Sound Interface.
+</FieldContainer>
