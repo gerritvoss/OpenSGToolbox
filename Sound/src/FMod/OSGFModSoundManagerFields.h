@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGFMODSOUNDFIELDS_H_
-#define _OSGFMODSOUNDFIELDS_H_
+#ifndef _OSGFMODSOUNDMANAGERFIELDS_H_
+#define _OSGFMODSOUNDMANAGERFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGSoundDef.h"
 
-#include <Sound/OSGSoundFields.h>
+#include <OSGSoundManagerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class FModSound;
+class FModSoundManager;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! FModSoundPtr
+//! FModSoundManagerPtr
 
-typedef FCPtr<SoundPtr, FModSound> FModSoundPtr;
+typedef FCPtr<SoundManagerPtr, FModSoundManager> FModSoundManagerPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<SoundPtr, FModSound> FModSoundPtr;
 #endif
 
 template <>
-struct FieldDataTraits<FModSoundPtr> : 
-    public FieldTraitsRecurseMapper<FModSoundPtr, true>
+struct FieldDataTraits<FModSoundManagerPtr> : 
+    public FieldTraitsRecurseMapper<FModSoundManagerPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<FModSoundPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFFModSoundPtr"; }
-    static const char *getMName(void) { return "MFFModSoundPtr"; }
+    static const char *getSName(void) { return "SFFModSoundManagerPtr"; }
+    static const char *getMName(void) { return "MFFModSoundManagerPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<FModSoundPtr, true>
+/*! \class  FieldTraitsRecurseMapper<FModSoundManagerPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<FModSoundPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpSoundFieldSingle */
 
-typedef SField<FModSoundPtr> SFFModSoundPtr;
+typedef SField<FModSoundManagerPtr> SFFModSoundManagerPtr;
 #endif
 
-#ifndef OSG_COMPILEFMODSOUNDINST
-OSG_DLLEXPORT_DECL1(SField, FModSoundPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEFMODSOUNDMANAGERINST
+OSG_DLLEXPORT_DECL1(SField, FModSoundManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpSoundFieldMulti */
 
-typedef MField<FModSoundPtr> MFFModSoundPtr;
+typedef MField<FModSoundManagerPtr> MFFModSoundManagerPtr;
 #endif
 
-#ifndef OSG_COMPILEFMODSOUNDINST
-OSG_DLLEXPORT_DECL1(MField, FModSoundPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEFMODSOUNDMANAGERINST
+OSG_DLLEXPORT_DECL1(MField, FModSoundManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGFMODSOUNDFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGFMODSOUNDMANAGERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGFMODSOUNDFIELDS_H_ */
+#endif /* _OSGFMODSOUNDMANAGERFIELDS_H_ */

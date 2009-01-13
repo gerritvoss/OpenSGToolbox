@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGSoundDef.h"
 
-#include <OSGSoundChannelFields.h>
+#include <Sound/OSGSoundChannelFields.h>
 
 OSG_BEGIN_NAMESPACE
 

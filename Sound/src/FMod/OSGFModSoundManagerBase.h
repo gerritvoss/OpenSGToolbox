@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class FModSoundChannel
+ **     class FModSoundManager
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGFMODSOUNDCHANNELBASE_H_
-#define _OSGFMODSOUNDCHANNELBASE_H_
+#ifndef _OSGFMODSOUNDMANAGERBASE_H_
+#define _OSGFMODSOUNDMANAGERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,28 +65,28 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <Sound/OSGSoundChannel.h> // Parent
+#include <OSGSoundManager.h> // Parent
 
 
-#include "OSGFModSoundChannelFields.h"
+#include "OSGFModSoundManagerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class FModSoundChannel;
+class FModSoundManager;
 class BinaryDataHandler;
 
-//! \brief FModSoundChannel Base Class.
+//! \brief FModSoundManager Base Class.
 
-class OSG_SOUNDLIB_DLLMAPPING FModSoundChannelBase : public SoundChannel
+class OSG_SOUNDLIB_DLLMAPPING FModSoundManagerBase : public SoundManager
 {
   private:
 
-    typedef SoundChannel    Inherited;
+    typedef SoundManager    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef FModSoundChannelPtr  Ptr;
+    typedef FModSoundManagerPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -130,8 +130,8 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundChannelBase : public SoundChannel
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  FModSoundChannelPtr      create          (void); 
-    static  FModSoundChannelPtr      createEmpty     (void); 
+    static  FModSoundManagerPtr      create          (void); 
+    static  FModSoundManagerPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -149,15 +149,15 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundChannelBase : public SoundChannel
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    FModSoundChannelBase(void);
-    FModSoundChannelBase(const FModSoundChannelBase &source);
+    FModSoundManagerBase(void);
+    FModSoundManagerBase(const FModSoundManagerBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FModSoundChannelBase(void); 
+    virtual ~FModSoundManagerBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -165,13 +165,13 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundChannelBase : public SoundChannel
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      FModSoundChannelBase *pOther,
+    void executeSyncImpl(      FModSoundManagerBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      FModSoundChannelBase *pOther,
+    void executeSyncImpl(      FModSoundManagerBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -200,7 +200,7 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundChannelBase : public SoundChannel
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const FModSoundChannelBase &source);
+    void operator =(const FModSoundManagerBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -208,17 +208,17 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundChannelBase : public SoundChannel
 //---------------------------------------------------------------------------
 
 
-typedef FModSoundChannelBase *FModSoundChannelBaseP;
+typedef FModSoundManagerBase *FModSoundManagerBaseP;
 
-typedef osgIF<FModSoundChannelBase::isNodeCore,
-              CoredNodePtr<FModSoundChannel>,
+typedef osgIF<FModSoundManagerBase::isNodeCore,
+              CoredNodePtr<FModSoundManager>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet FModSoundChannelNodePtr;
+              >::_IRet FModSoundManagerNodePtr;
 
-typedef RefPtr<FModSoundChannelPtr> FModSoundChannelRefPtr;
+typedef RefPtr<FModSoundManagerPtr> FModSoundManagerRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGFMODSOUNDCHANNELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGFMODSOUNDMANAGERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGFMODSOUNDCHANNELBASE_H_ */
+#endif /* _OSGFMODSOUNDMANAGERBASE_H_ */
