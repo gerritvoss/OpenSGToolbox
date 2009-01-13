@@ -149,7 +149,7 @@ void GLViewport::drawInternal(const GraphicsPtr Graphics) const
 			
 		
 			beginEditCP(getPort(), Viewport::LeftFieldMask | Viewport::RightFieldMask | Viewport::TopFieldMask | Viewport::BottomFieldMask);
-				getPort()->setSize(InsideInsetTopLeftToWindow.x(), InsideInsetBottomRightToWindow.y(), InsideInsetBottomRightToWindow.x(), InsideInsetTopLeftToWindow.y());
+				getPort()->setSize(InsideInsetTopLeftToWindow.x(), InsideInsetBottomRightToWindow.y()+1, InsideInsetBottomRightToWindow.x()-1, InsideInsetTopLeftToWindow.y());
 			endEditCP(getPort(), Viewport::LeftFieldMask | Viewport::RightFieldMask | Viewport::TopFieldMask | Viewport::BottomFieldMask);
 
 
@@ -335,6 +335,11 @@ void GLViewport::lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up)
             beginEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
                 Transform::Ptr::dcast(getPort()->getCamera()->getBeacon()->getCore())->setMatrix(_DefaultView);
             endEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
+
+			//Extract the new yaw pitch and roll
+			setYaw(0.0);
+			setPitch(0.0);
+			setRoll(0.0);
         }
     }
     else
@@ -537,13 +542,13 @@ void GLViewport::MouseControlListener::mouseReleased(const MouseEvent& e)
 	    }
 	    _GLViewport->_Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
 
-	    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-	    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-	    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
     }
     else
     {
     }
+    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
 }
 
 void GLViewport::MouseControlListener::mouseDragged(const MouseEvent& e)

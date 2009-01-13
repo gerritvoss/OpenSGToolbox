@@ -386,6 +386,10 @@ bool DirectShowVideoWrapper::play(void)
 			return false;
 		}
 	}
+	else
+	{
+		return false;
+	}
 }
 
 bool DirectShowVideoWrapper::pause(void)
