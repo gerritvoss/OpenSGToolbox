@@ -719,10 +719,18 @@ void TabPanel::mouseWheelMoved(const MouseWheelEvent& e)
     {
         isContained = getTabs()[i]->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
+		if(isContained)
+		{
+			getTabs()[i]->mouseWheelMoved(e);
+		}
     }
 
     isContained = getTabContents()[getSelectedIndex()]->isContained(e.getLocation(), true);
 	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getSelectedIndex()],isContained,e.getViewport());
+	if(isContained)
+	{
+		getTabContents()[getSelectedIndex()]->mouseWheelMoved(e);
+	}
 
 	Component::mouseWheelMoved(e);
 }

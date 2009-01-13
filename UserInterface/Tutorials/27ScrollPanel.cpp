@@ -286,13 +286,13 @@ int main(int argc, char **argv)
 
     ScrollBarPtr ExampleVerticalScrollBar = ScrollBar::create();
     //ExampleScrollPanel->getHorizontalScrollBar()
-    beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
+    beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::EnabledFieldMask | ScrollBar::UnitIncrementFieldMask | ScrollBar::BlockIncrementFieldMask);
         ExampleVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
         ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
         ExampleVerticalScrollBar->setEnabled(false);
         ExampleVerticalScrollBar->setUnitIncrement(10);
         ExampleVerticalScrollBar->setBlockIncrement(100);
-    endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
+		endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::EnabledFieldMask | ScrollBar::UnitIncrementFieldMask | ScrollBar::BlockIncrementFieldMask);
     ExampleVerticalScrollBar->setModel(&TheBoundedRangeModel);
 
     ScrollBarPtr ExampleHorizontalScrollBar = ScrollBar::create();

@@ -594,6 +594,58 @@ void ScrollBar::changed(BitVector whichField, UInt32 origin)
     {
         getHorizontalScrollField()->addMousePressedActionListener(&_ScrollFieldListener);
     }
+
+	if(whichField & EnabledFieldMask)
+	{
+		if(getVerticalMinButton() != NullFC)
+		{
+			beginEditCP(getVerticalMinButton(), Button::EnabledFieldMask);
+				getVerticalMinButton()->setEnabled(getEnabled());
+			endEditCP(getVerticalMinButton(), Button::EnabledFieldMask);
+		}
+		if(getVerticalMaxButton() != NullFC)
+		{
+			beginEditCP(getVerticalMaxButton(), Button::EnabledFieldMask);
+				getVerticalMaxButton()->setEnabled(getEnabled());
+			endEditCP(getVerticalMaxButton(), Button::EnabledFieldMask);
+		}
+		if(getVerticalScrollBar() != NullFC)
+		{
+			beginEditCP(getVerticalScrollBar(), Button::EnabledFieldMask);
+				getVerticalScrollBar()->setEnabled(getEnabled());
+			endEditCP(getVerticalScrollBar(), Button::EnabledFieldMask);
+		}
+		if(getVerticalScrollField() != NullFC)
+		{
+			beginEditCP(getVerticalScrollField(), Button::EnabledFieldMask);
+				getVerticalScrollField()->setEnabled(getEnabled());
+			endEditCP(getVerticalScrollField(), Button::EnabledFieldMask);
+		}
+		if(getHorizontalMinButton() != NullFC)
+		{
+			beginEditCP(getHorizontalMinButton(), Button::EnabledFieldMask);
+				getHorizontalMinButton()->setEnabled(getEnabled());
+			endEditCP(getHorizontalMinButton(), Button::EnabledFieldMask);
+		}
+		if(getHorizontalMaxButton() != NullFC)
+		{
+			beginEditCP(getHorizontalMaxButton(), Button::EnabledFieldMask);
+				getHorizontalMaxButton()->setEnabled(getEnabled());
+			endEditCP(getHorizontalMaxButton(), Button::EnabledFieldMask);
+		}
+		if(getHorizontalScrollBar() != NullFC)
+		{
+			beginEditCP(getHorizontalScrollBar(), Button::EnabledFieldMask);
+				getHorizontalScrollBar()->setEnabled(getEnabled());
+			endEditCP(getHorizontalScrollBar(), Button::EnabledFieldMask);
+		}
+		if(getHorizontalScrollField() != NullFC)
+		{
+			beginEditCP(getHorizontalScrollField(), Button::EnabledFieldMask);
+				getHorizontalScrollField()->setEnabled(getEnabled());
+			endEditCP(getHorizontalScrollField(), Button::EnabledFieldMask);
+		}
+	}
 }
 
 void ScrollBar::dump(      UInt32    , 
