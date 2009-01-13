@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OSGSoundManager.h> // Parent
+#include <Sound/OSGSoundManager.h> // Parent
 
 
 #include "OSGFModSoundManagerFields.h"

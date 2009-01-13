@@ -77,6 +77,9 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public SoundManagerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+	virtual void init(void) = 0;
+	virtual void uninit(void) = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

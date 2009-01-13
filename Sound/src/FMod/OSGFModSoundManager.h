@@ -60,7 +60,8 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public FModSoundManagerBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-
+	virtual void init(void) ;
+	virtual void uninit(void);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
