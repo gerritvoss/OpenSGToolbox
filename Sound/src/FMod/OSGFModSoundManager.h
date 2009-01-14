@@ -46,6 +46,10 @@
 
 #include "OSGFModSoundManagerBase.h"
 
+//fmod include files
+#include "fmod.hpp"
+#include "fmod_errors.h"
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief FModSoundManager class. See \ref 

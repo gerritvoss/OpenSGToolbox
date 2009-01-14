@@ -78,6 +78,7 @@ void FModSoundManager::initMethod (void)
 
 void FModSoundManager::init(void)
 {
+	result = FMOD::System_Create(&this->system);
 }
 
 void FModSoundManager::uninit(void)

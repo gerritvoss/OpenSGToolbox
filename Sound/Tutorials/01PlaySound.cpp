@@ -1,5 +1,5 @@
 /*************************************************
-Welcome to the 01MiniMap tutorial.  This Tutorial
+Welcome to the Playsound tutorial.  This Tutorial
 is simply a test of the Mini Map at it's current state.
 Once the Mini Map section of the game library has been
 completed this tutorial will also be furnished with 
