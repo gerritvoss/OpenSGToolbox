@@ -62,6 +62,9 @@
 
 #include <Sound/OSGSoundFields.h>
 
+#include "fmod_event.hpp"
+#include "fmod_errors.h"
+
 OSG_BEGIN_NAMESPACE
 
 class FModSound;

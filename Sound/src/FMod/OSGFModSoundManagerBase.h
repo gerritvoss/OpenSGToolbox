@@ -68,7 +68,8 @@
 #include <Sound/OSGSoundManager.h> // Parent
 
 //FMOD INCLUDE Files
-#include "fmod.hpp"
+//#include "fmod.hpp"
+#include "fmod_event.hpp"
 #include "fmod_errors.h"
 
 #include "OSGFModSoundManagerFields.h"
@@ -148,7 +149,8 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManagerBase : public SoundManager
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-	  FMOD::System *system;
+	  FMOD::EventSystem *eventSystem;
+	  
 	  FMOD_RESULT result;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */

@@ -29,8 +29,8 @@
 /*---------------------------------------------------------------------------*\
  *                                Changes                                    *
  *                                                                           *
- *                                                                           *
- *                                                                           *
+ * This is a wrapper class for FMOD::Event class, it provide basic operations*
+ * such as start/stop playing sound/music and get the current status.        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -61,6 +61,11 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
     /*==========================  PUBLIC  =================================*/
   public:
 
+	/**
+	* return the underlying Fmod Event object
+	*/
+	  FMOD::Event*& getFmodEvent();
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -78,6 +83,7 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in FModSoundBase.

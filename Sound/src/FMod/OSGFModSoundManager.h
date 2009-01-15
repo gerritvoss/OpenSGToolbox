@@ -28,9 +28,9 @@
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
  *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
+ *   This class is a wrapper for FMOD::EventSystem class, it provides basic  *
+ *   Operation such as loading an an FMod event data base, and loading evnets*
+ *   in the database provided.                                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFModSoundManagerBase.h"
+#include "OSGFModSound.h"
 
 //fmod include files
 #include "fmod.hpp"
@@ -64,8 +65,35 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public FModSoundManagerBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+	/**
+	* default initialization with out loading the .FEV file, 
+	* to load .FEV and set the path to the file and .FSB file, use init(char*, char* int);
+	*/
 	virtual void init(void) ;
+
+	/**
+	* release the fmod eventsystem object
+	*/
 	virtual void uninit(void);
+	
+	/**
+	* return the underlying fmod eventsystem object
+	*/
+	FMOD::EventSystem* getFMODEventSystem();
+
+	/**
+	* return the result of previous operation
+	*/
+	FMOD_RESULT getFmodResult();
+
+
+	/**
+	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
+	* @param path, the path in the .FEV file to locate the specific FMod event instance
+	*/
+	FModSoundPtr getSound(const char* path);
+
+	virtual void init(const char* mediaPath, const char* eventFile, const int max_channel = 64);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

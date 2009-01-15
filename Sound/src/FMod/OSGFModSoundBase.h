@@ -70,6 +70,11 @@
 
 #include "OSGFModSoundFields.h"
 
+
+//fmod
+#include "fmod_event.hpp"
+#include "fmod_errors.h"
+
 OSG_BEGIN_NAMESPACE
 
 class FModSound;
@@ -148,6 +153,10 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundBase : public Sound
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
+
+	FMOD::Event* event;
+	FMOD::EventParameter* primaryParam;
+
 
     FModSoundBase(void);
     FModSoundBase(const FModSoundBase &source);

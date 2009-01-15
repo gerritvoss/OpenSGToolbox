@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFModSoundManager.h"
+#include "OSGFModSound.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,12 +79,48 @@ void FModSoundManager::initMethod (void)
 
 void FModSoundManager::init(void)
 {
-	result = FMOD::System_Create(&this->system);
+	if (!eventSystem){
+		result = FMOD::EventSystem_Create(&this->eventSystem);
+		result = eventSystem->init(64, FMOD_INIT_NORMAL, 0, FMOD_EVENT_INIT_NORMAL);
+	}
 }
 
 void FModSoundManager::uninit(void)
-{
+{	
+	if (eventSystem)
+		eventSystem->release();
+	eventSystem = NULL;
 }
+
+FMOD_RESULT FModSoundManager::getFmodResult(){
+	return result;
+}
+
+FMOD::EventSystem* FModSoundManager::getFMODEventSystem()
+{
+	return eventSystem;
+}
+
+void FModSoundManager::init(const char* mediaPath, const char* eventFile, const int max_channel){
+	if (!eventSystem){
+		result = FMOD::EventSystem_Create(&this->eventSystem);
+		result = eventSystem->init(max_channel, FMOD_INIT_NORMAL, 0, FMOD_EVENT_INIT_NORMAL);
+	}
+	result = eventSystem->setMediaPath(mediaPath);
+	result = eventSystem->load(eventFile, 0, 0);
+}
+
+
+
+FModSoundPtr FModSoundManager::getSound(const char* path){
+	if (!eventSystem)
+		return (FModSoundPtr)NULL;
+	FModSoundPtr s = FModSound::create();
+	FMOD::Event*& e = s->getFmodEvent();
+	result = eventSystem->getEvent(path, FMOD_EVENT_DEFAULT, &e);
+	return s;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -92,7 +129,8 @@ void FModSoundManager::uninit(void)
 
 FModSoundManager::FModSoundManager(void) :
     Inherited()
-{
+{	
+	eventSystem = NULL;
 }
 
 FModSoundManager::FModSoundManager(const FModSoundManager &source) :
@@ -102,6 +140,7 @@ FModSoundManager::FModSoundManager(const FModSoundManager &source) :
 
 FModSoundManager::~FModSoundManager(void)
 {
+	uninit();
 }
 
 /*----------------------------- class specific ----------------------------*/

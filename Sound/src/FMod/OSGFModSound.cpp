@@ -71,7 +71,9 @@ void FModSound::initMethod (void)
 {
 }
 
-
+FMOD::Event*& FModSound::getFmodEvent(){
+	return event;
+}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -85,6 +87,7 @@ void FModSound::initMethod (void)
 FModSound::FModSound(void) :
     Inherited()
 {
+	event = NULL;
 }
 
 FModSound::FModSound(const FModSound &source) :
