@@ -31,6 +31,10 @@ helpful tips and incites into the workings of MiniMap
 // Input
 #include <OpenSG/Input/OSGWindowUtils.h>
 
+//fmod wrapper
+#include <OpenSG/Sound/OSGFModSoundManager.h>
+#include <OpenSG/Sound/OSGFModSound.h>
+
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -121,14 +125,21 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
+	//fmod wrapper
+	FModSoundManagerPtr soundManager = FModSoundManager::create();
+	soundManager->init(".\\","test.fev");
+	FModSoundPtr sound = soundManager->getSound(0);
+	
+	sound->getFmodEvent()->start();
 
     while(!ExitApp)
     {
         TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
     }
+	sound->getFmodEvent()->stop();
     osgExit();
-
+	
     return 0;
 }
 

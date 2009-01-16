@@ -93,6 +93,11 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public FModSoundManagerBase
 	*/
 	FModSoundPtr getSound(const char* path);
 
+	/**
+	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
+	* @param id, id from the Fmod designer, which can be found in the optional output .h and text file
+	*/
+	FModSoundPtr getSound(const int id);
 	virtual void init(const char* mediaPath, const char* eventFile, const int max_channel = 64);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

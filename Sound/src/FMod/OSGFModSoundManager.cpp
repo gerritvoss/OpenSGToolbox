@@ -102,7 +102,7 @@ FMOD::EventSystem* FModSoundManager::getFMODEventSystem()
 }
 
 void FModSoundManager::init(const char* mediaPath, const char* eventFile, const int max_channel){
-	if (!eventSystem){
+	if (1 || !eventSystem){
 		result = FMOD::EventSystem_Create(&this->eventSystem);
 		result = eventSystem->init(max_channel, FMOD_INIT_NORMAL, 0, FMOD_EVENT_INIT_NORMAL);
 	}
@@ -118,6 +118,15 @@ FModSoundPtr FModSoundManager::getSound(const char* path){
 	FModSoundPtr s = FModSound::create();
 	FMOD::Event*& e = s->getFmodEvent();
 	result = eventSystem->getEvent(path, FMOD_EVENT_DEFAULT, &e);
+	return s;
+}
+
+FModSoundPtr FModSoundManager::getSound(const int id){
+	if (!eventSystem)
+		return (FModSoundPtr)NULL;
+	FModSoundPtr s = FModSound::create();
+	FMOD::Event*& e = s->getFmodEvent();
+	result = eventSystem->getEventBySystemID(id, FMOD_EVENT_DEFAULT, &e);
 	return s;
 }
 

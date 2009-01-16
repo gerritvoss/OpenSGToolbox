@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="fmod_event.lib fmodex_vc.lib OSGBaseD.lib OSGSystemD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="fmod_event.lib fmodexp_vc.lib OSGBaseD.lib OSGSystemD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -140,7 +140,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
+				AdditionalIncludeDirectories="&quot;$(FMOD_DESIGNER_BASE_DIR)\inc&quot;;&quot;$(FMOD_BASE_DIR)\inc&quot;;&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILESOUNDLIB"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -167,11 +167,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="fmodex_vc.lib fmod_event.lib OSGBase.lib OSGSystem.lib OSGInput.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;$(BOOST_BASE_DIR)\lib"
+				AdditionalLibraryDirectories="&quot;$(FMOD_DESIGNER_BASE_DIR)\lib&quot;;&quot;$(FMOD_BASE_DIR)\lib&quot;;..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
