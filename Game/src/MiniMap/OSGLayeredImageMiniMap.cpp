@@ -315,7 +315,7 @@ void LayeredImageMiniMap::setupDrawInternals(void)
 			{
 				_MapImageComponent->setPreferredSize(getSize());
 			}
-			_MapImageComponent->setScale(ImageComponent::SCALE_MIN_AXIS);
+			_MapImageComponent->setScale(ImageComponent::SCALE_STRETCH);
 			_MapImageComponent->setAlignment(Vec2f(0.5,0.5));
 			_MapImageComponent->setOpacity(getOpacity());
 		endEditCP(_MapImageComponent, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask | Component::OpacityFieldMask);
