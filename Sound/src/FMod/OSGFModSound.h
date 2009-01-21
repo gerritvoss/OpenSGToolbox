@@ -83,7 +83,22 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+	virtual void play(void);
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ stop playing the sound object                                   */
 
+	virtual void stop(void);
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ seek to position at pos sec                                     */
+
+	virtual void seek(float pos);
+
+	 /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
   protected:
 
     // Variables should all be in FModSoundBase.

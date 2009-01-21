@@ -67,9 +67,10 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public FModSoundManagerBase
   public:
 	/**
 	* default initialization with out loading the .FEV file, 
-	* to load .FEV and set the path to the file and .FSB file, use init(char*, char* int);
+	* to load .FEV and set the path to the file and .FSB file
+	* typical use: init(const char* mediaPath, const char* mediaFile, const int maxChannel);
 	*/
-	virtual void init(void) ;
+	virtual void init(const char* arg, ...);
 
 	/**
 	* release the fmod eventsystem object
@@ -91,14 +92,16 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public FModSoundManagerBase
 	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
 	* @param path, the path in the .FEV file to locate the specific FMod event instance
 	*/
-	FModSoundPtr getSound(const char* path);
+	SoundPtr getSound(const char* name);
 
 	/**
 	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
 	* @param id, id from the Fmod designer, which can be found in the optional output .h and text file
 	*/
-	FModSoundPtr getSound(const int id);
-	virtual void init(const char* mediaPath, const char* eventFile, const int max_channel = 64);
+	SoundPtr getSound(const int id);
+	
+
+	void update(const Real32& elps);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

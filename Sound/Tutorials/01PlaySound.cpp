@@ -126,18 +126,19 @@ int main(int argc, char **argv)
     mgr->showAll();
 
 	//fmod wrapper
-	FModSoundManagerPtr soundManager = FModSoundManager::create();
-	soundManager->init(".\\","test.fev");
-	FModSoundPtr sound = soundManager->getSound(0);
+	SoundManagerPtr soundManager = FModSoundManager::create();
+	//initialization, args: media path, media filename, max_channel
+	soundManager->init(".\\","test.fev", 64);
+	SoundPtr sound = soundManager->getSound(0);
 	
-	sound->getFmodEvent()->start();
+	sound->play();
 
     while(!ExitApp)
     {
         TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
     }
-	sound->getFmodEvent()->stop();
+	sound->stop();
     osgExit();
 	
     return 0;

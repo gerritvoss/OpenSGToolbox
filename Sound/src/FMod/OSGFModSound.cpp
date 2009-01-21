@@ -74,6 +74,25 @@ void FModSound::initMethod (void)
 FMOD::Event*& FModSound::getFmodEvent(){
 	return event;
 }
+
+void FModSound::play(void){
+	event->start();
+}
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ stop playing the sound object                                   */
+
+void FModSound::stop(void){
+	event->stop();
+}
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ seek to position at pos sec                                     */
+
+void FModSound::seek(float pos){}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -111,6 +130,7 @@ void FModSound::dump(      UInt32    ,
 {
     SLOG << "Dump FModSound NI" << std::endl;
 }
+
 
 
 /*------------------------------------------------------------------------*/

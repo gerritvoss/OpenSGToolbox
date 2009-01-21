@@ -77,12 +77,22 @@ void FModSoundManager::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void FModSoundManager::init(void)
-{
-	if (!eventSystem){
-		result = FMOD::EventSystem_Create(&this->eventSystem);
-		result = eventSystem->init(64, FMOD_INIT_NORMAL, 0, FMOD_EVENT_INIT_NORMAL);
-	}
+
+
+void FModSoundManager::init(const char* arg, ...){
+	va_list listPointer;
+	va_start(listPointer, arg);
+	const char* mediaPath = arg;
+	const char* mediaFile = va_arg(listPointer, const char*);
+	const int maxChannel = va_arg(listPointer, const int);
+	
+	va_end(listPointer);
+	result = FMOD::EventSystem_Create(&this->eventSystem);
+	result = eventSystem->init(maxChannel, FMOD_INIT_NORMAL, 0, FMOD_EVENT_INIT_NORMAL);
+	
+	result = eventSystem->setMediaPath(mediaPath);
+	result = eventSystem->load(mediaFile, 0, 0);
+
 }
 
 void FModSoundManager::uninit(void)
@@ -101,18 +111,9 @@ FMOD::EventSystem* FModSoundManager::getFMODEventSystem()
 	return eventSystem;
 }
 
-void FModSoundManager::init(const char* mediaPath, const char* eventFile, const int max_channel){
-	if (1 || !eventSystem){
-		result = FMOD::EventSystem_Create(&this->eventSystem);
-		result = eventSystem->init(max_channel, FMOD_INIT_NORMAL, 0, FMOD_EVENT_INIT_NORMAL);
-	}
-	result = eventSystem->setMediaPath(mediaPath);
-	result = eventSystem->load(eventFile, 0, 0);
-}
 
 
-
-FModSoundPtr FModSoundManager::getSound(const char* path){
+SoundPtr FModSoundManager::getSound(const char* path){
 	if (!eventSystem)
 		return (FModSoundPtr)NULL;
 	FModSoundPtr s = FModSound::create();
@@ -121,7 +122,9 @@ FModSoundPtr FModSoundManager::getSound(const char* path){
 	return s;
 }
 
-FModSoundPtr FModSoundManager::getSound(const int id){
+void FModSoundManager::update(const Real32& elps){}
+
+SoundPtr FModSoundManager::getSound(const int id){
 	if (!eventSystem)
 		return (FModSoundPtr)NULL;
 	FModSoundPtr s = FModSound::create();

@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSoundManagerBase.h"
+#include "OSGSound.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,8 +79,14 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public SoundManagerBase
 
     /*! \}                                                                 */
 
-	virtual void init(void) = 0;
+	virtual void init(const char* arg, ...) = 0;
 	virtual void uninit(void) = 0;
+
+	virtual void update(const Real32& elps) = 0;
+
+	virtual SoundPtr getSound(const int id) = 0;
+	virtual SoundPtr getSound(const char* name) = 0;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

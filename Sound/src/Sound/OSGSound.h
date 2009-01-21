@@ -77,6 +77,25 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ start playing the sound object                                  */
+
+	virtual void play(void) = 0;
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ stop playing the sound object                                   */
+
+	virtual void stop(void) = 0;
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ seek to position at pos sec                                     */
+
+	virtual void seek(float pos) = 0;
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
