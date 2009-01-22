@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class StubManager
+ **     class StubSoundManager
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGSTUBMANAGERBASE_H_
-#define _OSGSTUBMANAGERBASE_H_
+#ifndef _OSGSTUBSOUNDMANAGERBASE_H_
+#define _OSGSTUBSOUNDMANAGERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -68,16 +68,16 @@
 #include <Sound/OSGSoundManager.h> // Parent
 
 
-#include "OSGStubManagerFields.h"
+#include "OSGStubSoundManagerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class StubManager;
+class StubSoundManager;
 class BinaryDataHandler;
 
-//! \brief StubManager Base Class.
+//! \brief StubSoundManager Base Class.
 
-class OSG_SOUNDLIB_DLLMAPPING StubManagerBase : public SoundManager
+class OSG_SOUNDLIB_DLLMAPPING StubSoundManagerBase : public SoundManager
 {
   private:
 
@@ -86,7 +86,7 @@ class OSG_SOUNDLIB_DLLMAPPING StubManagerBase : public SoundManager
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef StubManagerPtr  Ptr;
+    typedef StubSoundManagerPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -130,8 +130,8 @@ class OSG_SOUNDLIB_DLLMAPPING StubManagerBase : public SoundManager
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  StubManagerPtr      create          (void); 
-    static  StubManagerPtr      createEmpty     (void); 
+    static  StubSoundManagerPtr      create          (void); 
+    static  StubSoundManagerPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -149,15 +149,15 @@ class OSG_SOUNDLIB_DLLMAPPING StubManagerBase : public SoundManager
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    StubManagerBase(void);
-    StubManagerBase(const StubManagerBase &source);
+    StubSoundManagerBase(void);
+    StubSoundManagerBase(const StubSoundManagerBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~StubManagerBase(void); 
+    virtual ~StubSoundManagerBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -165,13 +165,13 @@ class OSG_SOUNDLIB_DLLMAPPING StubManagerBase : public SoundManager
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      StubManagerBase *pOther,
+    void executeSyncImpl(      StubSoundManagerBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      StubManagerBase *pOther,
+    void executeSyncImpl(      StubSoundManagerBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -200,7 +200,7 @@ class OSG_SOUNDLIB_DLLMAPPING StubManagerBase : public SoundManager
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const StubManagerBase &source);
+    void operator =(const StubSoundManagerBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -208,17 +208,17 @@ class OSG_SOUNDLIB_DLLMAPPING StubManagerBase : public SoundManager
 //---------------------------------------------------------------------------
 
 
-typedef StubManagerBase *StubManagerBaseP;
+typedef StubSoundManagerBase *StubSoundManagerBaseP;
 
-typedef osgIF<StubManagerBase::isNodeCore,
-              CoredNodePtr<StubManager>,
+typedef osgIF<StubSoundManagerBase::isNodeCore,
+              CoredNodePtr<StubSoundManager>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet StubManagerNodePtr;
+              >::_IRet StubSoundManagerNodePtr;
 
-typedef RefPtr<StubManagerPtr> StubManagerRefPtr;
+typedef RefPtr<StubSoundManagerPtr> StubSoundManagerRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSTUBMANAGERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGSTUBSOUNDMANAGERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGSTUBMANAGERBASE_H_ */
+#endif /* _OSGSTUBSOUNDMANAGERBASE_H_ */

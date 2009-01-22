@@ -45,90 +45,90 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class StubManager!
+ **     class StubSoundManager!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILESTUBMANAGERINST
+#define OSG_COMPILESTUBSOUNDMANAGERINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGStubManagerBase.h"
-#include "OSGStubManager.h"
+#include "OSGStubSoundManagerBase.h"
+#include "OSGStubSoundManager.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector StubManagerBase::MTInfluenceMask = 
+const OSG::BitVector StubSoundManagerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 
-FieldContainerType StubManagerBase::_type(
-    "StubManager",
+FieldContainerType StubSoundManagerBase::_type(
+    "StubSoundManager",
     "SoundManager",
     NULL,
-    (PrototypeCreateF) &StubManagerBase::createEmpty,
-    StubManager::initMethod,
+    (PrototypeCreateF) &StubSoundManagerBase::createEmpty,
+    StubSoundManager::initMethod,
     NULL,
     0);
 
-//OSG_FIELD_CONTAINER_DEF(StubManagerBase, StubManagerPtr)
+//OSG_FIELD_CONTAINER_DEF(StubSoundManagerBase, StubSoundManagerPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &StubManagerBase::getType(void) 
+FieldContainerType &StubSoundManagerBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &StubManagerBase::getType(void) const 
+const FieldContainerType &StubSoundManagerBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr StubManagerBase::shallowCopy(void) const 
+FieldContainerPtr StubSoundManagerBase::shallowCopy(void) const 
 { 
-    StubManagerPtr returnValue; 
+    StubSoundManagerPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const StubManager *>(this)); 
+    newPtr(returnValue, dynamic_cast<const StubSoundManager *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 StubManagerBase::getContainerSize(void) const 
+UInt32 StubSoundManagerBase::getContainerSize(void) const 
 { 
-    return sizeof(StubManager); 
+    return sizeof(StubSoundManager); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void StubManagerBase::executeSync(      FieldContainer &other,
+void StubSoundManagerBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((StubManagerBase *) &other, whichField);
+    this->executeSyncImpl((StubSoundManagerBase *) &other, whichField);
 }
 #else
-void StubManagerBase::executeSync(      FieldContainer &other,
+void StubSoundManagerBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((StubManagerBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((StubSoundManagerBase *) &other, whichField, sInfo);
 }
-void StubManagerBase::execBeginEdit(const BitVector &whichField, 
+void StubSoundManagerBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void StubManagerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void StubSoundManagerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -141,7 +141,7 @@ void StubManagerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-StubManagerBase::StubManagerBase(void) :
+StubSoundManagerBase::StubSoundManagerBase(void) :
     Inherited() 
 {
 }
@@ -150,20 +150,20 @@ StubManagerBase::StubManagerBase(void) :
 #pragma warning (default : 383)
 #endif
 
-StubManagerBase::StubManagerBase(const StubManagerBase &source) :
+StubSoundManagerBase::StubSoundManagerBase(const StubSoundManagerBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-StubManagerBase::~StubManagerBase(void)
+StubSoundManagerBase::~StubSoundManagerBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 StubManagerBase::getBinSize(const BitVector &whichField)
+UInt32 StubSoundManagerBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,7 +171,7 @@ UInt32 StubManagerBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void StubManagerBase::copyToBin(      BinaryDataHandler &pMem,
+void StubSoundManagerBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -179,7 +179,7 @@ void StubManagerBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void StubManagerBase::copyFromBin(      BinaryDataHandler &pMem,
+void StubSoundManagerBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -188,7 +188,7 @@ void StubManagerBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void StubManagerBase::executeSyncImpl(      StubManagerBase *pOther,
+void StubSoundManagerBase::executeSyncImpl(      StubSoundManagerBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -197,7 +197,7 @@ void StubManagerBase::executeSyncImpl(      StubManagerBase *pOther,
 
 }
 #else
-void StubManagerBase::executeSyncImpl(      StubManagerBase *pOther,
+void StubSoundManagerBase::executeSyncImpl(      StubSoundManagerBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -208,7 +208,7 @@ void StubManagerBase::executeSyncImpl(      StubManagerBase *pOther,
 
 }
 
-void StubManagerBase::execBeginEditImpl (const BitVector &whichField, 
+void StubSoundManagerBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -227,11 +227,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<StubManagerPtr>::_type("StubManagerPtr", "SoundManagerPtr");
+DataType FieldDataTraits<StubSoundManagerPtr>::_type("StubSoundManagerPtr", "SoundManagerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(StubManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(StubManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(StubSoundManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(StubSoundManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -248,10 +248,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(StubManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSTUBMANAGERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSTUBMANAGERBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGSTUBSOUNDMANAGERBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSTUBSOUNDMANAGERBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGSTUBMANAGERFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGSTUBSOUNDMANAGERFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

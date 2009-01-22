@@ -36,135 +36,116 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
-
-#include <stdlib.h>
-#include <stdio.h>
-
-#define OSG_COMPILESOUNDLIB
+#ifndef _OSGSTUBSOUNDMANAGER_H_
+#define _OSGSTUBSOUNDMANAGER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGStubManager.h"
+#include "OSGStubSoundManagerBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::StubManager
-A Stub SoundManager Interface.
+/*! \brief StubSoundManager class. See \ref 
+           PageSoundStubSoundManager for a description.
 */
 
-/***************************************************************************\
- *                           Class variables                               *
-\***************************************************************************/
-
-/***************************************************************************\
- *                           Class methods                                 *
-\***************************************************************************/
-
-void StubManager::initMethod (void)
+class OSG_SOUNDLIB_DLLMAPPING StubSoundManager : public StubSoundManagerBase
 {
-}
+  private:
 
+    typedef StubSoundManagerBase Inherited;
 
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
+    /*==========================  PUBLIC  =================================*/
+  public:
 
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
-/*----------------------- constructors & destructors ----------------------*/
-
-StubManager::StubManager(void) :
-    Inherited()
-{
-}
-
-StubManager::StubManager(const StubManager &source) :
-    Inherited(source)
-{
-}
-
-StubManager::~StubManager(void)
-{
-}
-
-
-/**
-	* default initialization with out loading the .FEV file, 
-	* to load .FEV and set the path to the file and .FSB file
-	* typical use: init(const char* mediaPath, const char* mediaFile, const int maxChannel);
-	*/
-void StubManager::init(const char* arg, ...){}
+	 virtual void init(const char* arg, ...);
 
 	/**
 	* release the fmod eventsystem object
 	*/
-void StubManager::uninit(void){}
+	virtual void uninit(void);
+
 
 	/**
 	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
 	* @param path, the path in the .FEV file to locate the specific FMod event instance
 	*/
-SoundPtr StubManager::getSound(const char* name){
-	return (SoundPtr)NULL;
-}
+	SoundPtr getSound(const char* name);
 
 	/**
 	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
 	* @param id, id from the Fmod designer, which can be found in the optional output .h and text file
 	*/
-SoundPtr StubManager::getSound(const int id){
-	return (SoundPtr)NULL;
-}
+	SoundPtr getSound(const int id);
 	
+	/**
+	* update the listener's properties
+	* Pnt3f &listener's postition
+	* 
+	*/
+	void setListenerProperties(const Pnt3f &lstnrPos, ...);
+	void update(const Real32& elps);
 
-void StubManager::update(const Real32& elps){}
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-/*----------------------------- class specific ----------------------------*/
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
 
-void StubManager::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
 
-void StubManager::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump StubManager NI" << std::endl;
-}
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
 
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
+    // Variables should all be in StubSoundManagerBase.
 
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
 
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
+    StubSoundManager(void);
+    StubSoundManager(const StubSoundManager &source);
 
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSTUBMANAGERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSTUBMANAGERBASE_INLINE_CVSID;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
 
-    static Char8 cvsid_fields_hpp[] = OSGSTUBMANAGERFIELDS_HEADER_CVSID;
-}
+    virtual ~StubSoundManager(void); 
 
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class StubSoundManagerBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const StubSoundManager &source);
+};
+
+typedef StubSoundManager *StubSoundManagerP;
 
 OSG_END_NAMESPACE
 
+#include "OSGStubSoundManagerBase.inl"
+#include "OSGStubSoundManager.inl"
+
+#define OSGSTUBSOUNDMANAGER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSGSTUBSOUNDMANAGER_H_ */

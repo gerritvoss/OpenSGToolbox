@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="StubManager"
+	name="StubSoundManager"
 	parent="SoundManager"
 	library="Sound"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
 	useLocalIncludes="true"
 >
-A FMod SoundManager Interface.
+A stub SoundManager Interface.
 </FieldContainer>

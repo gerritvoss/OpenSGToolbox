@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGSTUBMANAGERFIELDS_H_
-#define _OSGSTUBMANAGERFIELDS_H_
+#ifndef _OSGSTUBSOUNDMANAGERFIELDS_H_
+#define _OSGSTUBSOUNDMANAGERFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,12 +64,12 @@
 
 OSG_BEGIN_NAMESPACE
 
-class StubManager;
+class StubSoundManager;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! StubManagerPtr
+//! StubSoundManagerPtr
 
-typedef FCPtr<SoundManagerPtr, StubManager> StubManagerPtr;
+typedef FCPtr<SoundManagerPtr, StubSoundManager> StubSoundManagerPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<SoundManagerPtr, StubManager> StubManagerPtr;
 #endif
 
 template <>
-struct FieldDataTraits<StubManagerPtr> : 
-    public FieldTraitsRecurseMapper<StubManagerPtr, true>
+struct FieldDataTraits<StubSoundManagerPtr> : 
+    public FieldTraitsRecurseMapper<StubSoundManagerPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<StubManagerPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFStubManagerPtr"; }
-    static const char *getMName(void) { return "MFStubManagerPtr"; }
+    static const char *getSName(void) { return "SFStubSoundManagerPtr"; }
+    static const char *getMName(void) { return "MFStubSoundManagerPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<StubManagerPtr, true>
+/*! \class  FieldTraitsRecurseMapper<StubSoundManagerPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<StubManagerPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpSoundFieldSingle */
 
-typedef SField<StubManagerPtr> SFStubManagerPtr;
+typedef SField<StubSoundManagerPtr> SFStubSoundManagerPtr;
 #endif
 
-#ifndef OSG_COMPILESTUBMANAGERINST
-OSG_DLLEXPORT_DECL1(SField, StubManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILESTUBSOUNDMANAGERINST
+OSG_DLLEXPORT_DECL1(SField, StubSoundManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpSoundFieldMulti */
 
-typedef MField<StubManagerPtr> MFStubManagerPtr;
+typedef MField<StubSoundManagerPtr> MFStubSoundManagerPtr;
 #endif
 
-#ifndef OSG_COMPILESTUBMANAGERINST
-OSG_DLLEXPORT_DECL1(MField, StubManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILESTUBSOUNDMANAGERINST
+OSG_DLLEXPORT_DECL1(MField, StubSoundManagerPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGSTUBMANAGERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGSTUBSOUNDMANAGERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGSTUBMANAGERFIELDS_H_ */
+#endif /* _OSGSTUBSOUNDMANAGERFIELDS_H_ */
