@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGFModSound.h"
+#include "OSGStubManager.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::FModSound
-A FMod Sound Interface. 
+/*! \class osg::StubManager
+A Stub SoundManager Interface.
 */
 
 /***************************************************************************\
@@ -67,80 +67,10 @@ A FMod Sound Interface.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void FModSound::initMethod (void)
+void StubManager::initMethod (void)
 {
 }
 
-FMOD::Event*& FModSound::getFmodEvent(){
-	return event;
-}
-
-void FModSound::play(void){
-	event->start();
-}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ stop playing the sound object                                   */
-
-void FModSound::stop(void){
-	event->stop();
-}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ seek to position at pos sec                                     */
-
-void FModSound::seek(float pos){}
-	
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
-
-void FModSound::setPosition(const Pnt3f &pos){
-	FMOD_VECTOR curPos;
-	FMOD_VECTOR curVec;
-	event->get3DAttributes(&curPos, &curVec);
-	curPos.x = pos[0];
-	curPos.y = pos[1];
-	curPos.z = pos[2];
-	event->set3DAttributes(&curPos, &curVec);
-}
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
-
-void FModSound::setVelocity(const Vec3f &vec){
-	FMOD_VECTOR curPos;
-	FMOD_VECTOR curVec;
-	event->get3DAttributes(&curPos, &curVec);
-	curVec.x = vec[0];
-	curVec.y = vec[1];
-	curVec.z = vec[2];
-	event->set3DAttributes(&curPos, &curVec);
-}
-/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ get the volumne  of the sound between 0 and 1.0                 */
-
-float FModSound::getVolume(){
-	float v;
-	event->getVolume(&v);
-	return v;
-}
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound between 0 and 1.0                 */
-
-void FModSound::setVolume(const float volume){
-	event->setVolume(volume);
-}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -152,34 +82,64 @@ void FModSound::setVolume(const float volume){
 
 /*----------------------- constructors & destructors ----------------------*/
 
-FModSound::FModSound(void) :
+StubManager::StubManager(void) :
     Inherited()
 {
-	event = NULL;
 }
 
-FModSound::FModSound(const FModSound &source) :
+StubManager::StubManager(const StubManager &source) :
     Inherited(source)
 {
 }
 
-FModSound::~FModSound(void)
+StubManager::~StubManager(void)
 {
 }
 
+
+/**
+	* default initialization with out loading the .FEV file, 
+	* to load .FEV and set the path to the file and .FSB file
+	* typical use: init(const char* mediaPath, const char* mediaFile, const int maxChannel);
+	*/
+void StubManager::init(const char* arg, ...){}
+
+	/**
+	* release the fmod eventsystem object
+	*/
+void StubManager::uninit(void){}
+
+	/**
+	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
+	* @param path, the path in the .FEV file to locate the specific FMod event instance
+	*/
+SoundPtr StubManager::getSound(const char* name){
+	return (SoundPtr)NULL;
+}
+
+	/**
+	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
+	* @param id, id from the Fmod designer, which can be found in the optional output .h and text file
+	*/
+SoundPtr StubManager::getSound(const int id){
+	return (SoundPtr)NULL;
+}
+	
+
+void StubManager::update(const Real32& elps){}
+
 /*----------------------------- class specific ----------------------------*/
 
-void FModSound::changed(BitVector whichField, UInt32 origin)
+void StubManager::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void FModSound::dump(      UInt32    , 
+void StubManager::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump FModSound NI" << std::endl;
+    SLOG << "Dump StubManager NI" << std::endl;
 }
-
 
 
 /*------------------------------------------------------------------------*/
@@ -196,10 +156,10 @@ void FModSound::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGFMODSOUNDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGFMODSOUNDBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGSTUBMANAGERBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSTUBMANAGERBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGFMODSOUNDFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGSTUBMANAGERFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

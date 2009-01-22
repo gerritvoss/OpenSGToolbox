@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,28 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSOUND_H_
-#define _OSGSOUND_H_
+#ifndef _OSGSTUBMANAGER_H_
+#define _OSGSTUBMANAGER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGSoundDef.h"
 
-#include "OSGSoundBase.h"
+#include "OSGStubManagerBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Sound class. See \ref 
-           PageSoundSound for a description.
+/*! \brief StubManager class. See \ref 
+           PageSoundStubManager for a description.
 */
 
-class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
+class OSG_SOUNDLIB_DLLMAPPING StubManager : public StubManagerBase
 {
   private:
 
-    typedef SoundBase Inherited;
+    typedef StubManagerBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -77,72 +76,51 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ start playing the sound object                                  */
+	/**
+	* default initialization with out loading the .FEV file, 
+	* to load .FEV and set the path to the file and .FSB file
+	* typical use: init(const char* mediaPath, const char* mediaFile, const int maxChannel);
+	*/
+	virtual void init(const char* arg, ...);
 
-	virtual void play(void) = 0;
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ stop playing the sound object                                   */
+	/**
+	* release the fmod eventsystem object
+	*/
+	virtual void uninit(void);
 
-	virtual void stop(void) = 0;
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ seek to position at pos sec                                     */
+	/**
+	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
+	* @param path, the path in the .FEV file to locate the specific FMod event instance
+	*/
+	SoundPtr getSound(const char* name);
 
-	virtual void seek(float pos) = 0;
+	/**
+	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
+	* @param id, id from the Fmod designer, which can be found in the optional output .h and text file
+	*/
+	SoundPtr getSound(const int id);
+	
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
-
-	virtual void setPosition(const Pnt3f &pos) = 0;
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound                                   */
-
-	virtual void setVelocity(const Vec3f &vec) = 0;
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ get the volumne  of the sound between 0 and 1.0                 */
-
-	virtual float getVolume() = 0;
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound between 0 and 1.0                 */
-
-	virtual void setVolume(const float volume) = 0;
-
+	void update(const Real32& elps);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in SoundBase.
+    // Variables should all be in StubManagerBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Sound(void);
-    Sound(const Sound &source);
+    StubManager(void);
+    StubManager(const StubManager &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Sound(void); 
+    virtual ~StubManager(void); 
 
     /*! \}                                                                 */
     
@@ -150,22 +128,22 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
   private:
 
     friend class FieldContainer;
-    friend class SoundBase;
+    friend class StubManagerBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Sound &source);
+    void operator =(const StubManager &source);
 };
 
-typedef Sound *SoundP;
+typedef StubManager *StubManagerP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSoundBase.inl"
-#include "OSGSound.inl"
+#include "OSGStubManagerBase.inl"
+#include "OSGStubManager.inl"
 
-#define OSGSOUND_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGSTUBMANAGER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSOUND_H_ */
+#endif /* _OSGSTUBMANAGER_H_ */

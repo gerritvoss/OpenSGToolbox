@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGFModSound.h"
+#include "OSGStubSoundChannel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::FModSound
-A FMod Sound Interface. 
+/*! \class osg::StubSoundChannel
+A stub SoundChannel Interface.
 */
 
 /***************************************************************************\
@@ -67,80 +67,10 @@ A FMod Sound Interface.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void FModSound::initMethod (void)
+void StubSoundChannel::initMethod (void)
 {
 }
 
-FMOD::Event*& FModSound::getFmodEvent(){
-	return event;
-}
-
-void FModSound::play(void){
-	event->start();
-}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ stop playing the sound object                                   */
-
-void FModSound::stop(void){
-	event->stop();
-}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ seek to position at pos sec                                     */
-
-void FModSound::seek(float pos){}
-	
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
-
-void FModSound::setPosition(const Pnt3f &pos){
-	FMOD_VECTOR curPos;
-	FMOD_VECTOR curVec;
-	event->get3DAttributes(&curPos, &curVec);
-	curPos.x = pos[0];
-	curPos.y = pos[1];
-	curPos.z = pos[2];
-	event->set3DAttributes(&curPos, &curVec);
-}
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
-
-void FModSound::setVelocity(const Vec3f &vec){
-	FMOD_VECTOR curPos;
-	FMOD_VECTOR curVec;
-	event->get3DAttributes(&curPos, &curVec);
-	curVec.x = vec[0];
-	curVec.y = vec[1];
-	curVec.z = vec[2];
-	event->set3DAttributes(&curPos, &curVec);
-}
-/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ get the volumne  of the sound between 0 and 1.0                 */
-
-float FModSound::getVolume(){
-	float v;
-	event->getVolume(&v);
-	return v;
-}
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound between 0 and 1.0                 */
-
-void FModSound::setVolume(const float volume){
-	event->setVolume(volume);
-}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -152,34 +82,32 @@ void FModSound::setVolume(const float volume){
 
 /*----------------------- constructors & destructors ----------------------*/
 
-FModSound::FModSound(void) :
+StubSoundChannel::StubSoundChannel(void) :
     Inherited()
 {
-	event = NULL;
 }
 
-FModSound::FModSound(const FModSound &source) :
+StubSoundChannel::StubSoundChannel(const StubSoundChannel &source) :
     Inherited(source)
 {
 }
 
-FModSound::~FModSound(void)
+StubSoundChannel::~StubSoundChannel(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void FModSound::changed(BitVector whichField, UInt32 origin)
+void StubSoundChannel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void FModSound::dump(      UInt32    , 
+void StubSoundChannel::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump FModSound NI" << std::endl;
+    SLOG << "Dump StubSoundChannel NI" << std::endl;
 }
-
 
 
 /*------------------------------------------------------------------------*/
@@ -196,10 +124,10 @@ void FModSound::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGFMODSOUNDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGFMODSOUNDBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGSTUBSOUNDCHANNELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSTUBSOUNDCHANNELBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGFMODSOUNDFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGSTUBSOUNDCHANNELFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

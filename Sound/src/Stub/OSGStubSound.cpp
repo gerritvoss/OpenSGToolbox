@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,136 +36,155 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSOUND_H_
-#define _OSGSOUND_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILESOUNDLIB
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGSoundDef.h"
 
-#include "OSGSoundBase.h"
+#include "OSGStubSound.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Sound class. See \ref 
-           PageSoundSound for a description.
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::StubSound
+A stub Sound Interface.
 */
 
-class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void StubSound::initMethod (void)
 {
-  private:
+}
 
-    typedef SoundBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
-  public:
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ start playing the sound object                                  */
-
-	virtual void play(void) = 0;
+void StubSound::play(void){
+}
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{ stop playing the sound object                                   */
 
-	virtual void stop(void) = 0;
+void StubSound::stop(void){
+	
+}
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{ seek to position at pos sec                                     */
 
-	virtual void seek(float pos) = 0;
+void StubSound::seek(float pos){}
+	
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ set the position of the sound                                   */
+
+void StubSound::setPosition(const Pnt3f &pos){
+	
+}
 
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{ set the position of the sound                                   */
 
-	virtual void setPosition(const Pnt3f &pos) = 0;
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound                                   */
-
-	virtual void setVelocity(const Vec3f &vec) = 0;
-
-	/*! \}                                                                 */
+void StubSound::setVelocity(const Vec3f &vec){
+	
+}
+/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{ get the volumne  of the sound between 0 and 1.0                 */
 
-	virtual float getVolume() = 0;
+float StubSound::getVolume(){
+	return 0;
+}
 
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{ set the velocity of the sound between 0 and 1.0                 */
 
-	virtual void setVolume(const float volume) = 0;
+void StubSound::setVolume(const float volume){
+	
+}
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+/*----------------------- constructors & destructors ----------------------*/
 
-    // Variables should all be in SoundBase.
+StubSound::StubSound(void) :
+    Inherited()
+{
+}
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
+StubSound::StubSound(const StubSound &source) :
+    Inherited(source)
+{
+}
 
-    Sound(void);
-    Sound(const Sound &source);
+StubSound::~StubSound(void)
+{
+}
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
+/*----------------------------- class specific ----------------------------*/
 
-    virtual ~Sound(void); 
+void StubSound::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+void StubSound::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump StubSound NI" << std::endl;
+}
 
-    friend class FieldContainer;
-    friend class SoundBase;
 
-    static void initMethod(void);
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    // prohibit default functions (move to 'public' if you need one)
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    void operator =(const Sound &source);
-};
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-typedef Sound *SoundP;
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGSTUBSOUNDBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSTUBSOUNDBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGSTUBSOUNDFIELDS_HEADER_CVSID;
+}
+
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#include "OSGSoundBase.inl"
-#include "OSGSound.inl"
-
-#define OSGSOUND_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGSOUND_H_ */

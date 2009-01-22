@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="StubSoundChannel"
+	parent="SoundChannel"
+	library="Sound"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A stub SoundChannel Interface.
+</FieldContainer>

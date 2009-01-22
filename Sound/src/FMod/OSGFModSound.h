@@ -81,8 +81,7 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
+   
 	virtual void play(void);
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -97,6 +96,34 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
 
 	virtual void seek(float pos);
 
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ set the position of the sound                                   */
+
+	virtual void setPosition(const Pnt3f &pos);
+
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ set the 3d velocity of the sound                                */
+
+	virtual void setVelocity(const Vec3f &pos);
+
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ get the volumne  of the sound between 0 and 1.0                 */
+
+	virtual float getVolume();
+
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{ set the velocity of the sound between 0 and 1.0                 */
+
+	virtual void setVolume(const float volume);
+	
 	 /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
