@@ -446,34 +446,6 @@
 				Name="Stub"
 				>
 				<File
-					RelativePath="..\..\src\Stub\OSGStubManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubManager.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubManager.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubManagerBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubManagerBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubManagerBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubManagerFields.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Stub\OSGStubSound.cpp"
 					>
 				</File>
@@ -527,6 +499,34 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Stub\OSGStubSoundFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubSoundManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubSoundManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubSoundManager.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubSoundManagerBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubSoundManagerBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubSoundManagerBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubSoundManagerFields.h"
 					>
 				</File>
 			</Filter>

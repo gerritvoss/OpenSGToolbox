@@ -154,7 +154,27 @@ FModSoundManager::~FModSoundManager(void)
 {
 	uninit();
 }
+void FModSoundManager::setListenerProperties(const Pnt3f &lstnrPos, ...){
+ //todo
+	va_list list;
+	va_start(list, lstnrPos);
+		
+	FMOD_VECTOR pos, vel, forwardDir, upDir;
 
+	pos.x = lstnrPos[0]; pos.y = lstnrPos[1]; pos.z = lstnrPos[2];
+
+	const Vec3f vvel = va_arg(list, const Vec3f);
+	vel.x = vvel[0]; vel.y = vvel[1]; vel.z = vvel[2];
+	
+	const Vec3f fd = va_arg(list, const Vec3f);
+	forwardDir.x = fd[0]; forwardDir.y = fd[1]; forwardDir.z = fd[2];
+
+	const Vec3f ud = va_arg(list, const Vec3f);
+	upDir.x = fd[0]; upDir.y = fd[1]; upDir.z = fd[2];
+
+
+	this->eventSystem->set3DListenerAttributes(1, &pos, &vel, &forwardDir, &upDir);
+}
 /*----------------------------- class specific ----------------------------*/
 
 void FModSoundManager::changed(BitVector whichField, UInt32 origin)

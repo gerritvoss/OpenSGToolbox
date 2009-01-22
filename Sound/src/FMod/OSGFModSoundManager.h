@@ -100,7 +100,12 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public FModSoundManagerBase
 	*/
 	SoundPtr getSound(const int id);
 	
-
+	/**
+	* update the listener's properties
+	* Pnt3f &listener's postition
+	* 
+	*/
+	void setListenerProperties(const Pnt3f &lstnrPos, ...);
 	void update(const Real32& elps);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

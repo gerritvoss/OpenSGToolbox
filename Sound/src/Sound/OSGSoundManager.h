@@ -82,7 +82,16 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public SoundManagerBase
 	virtual void init(const char* arg, ...) = 0;
 	virtual void uninit(void) = 0;
 
+	/**
+	* update the sound system with current elapsed time
+	*/
 	virtual void update(const Real32& elps) = 0;
+
+	/**
+	* update listener's property, actual argument depends on the extended class
+	*/
+
+	virtual void setListenerProperties(const Pnt3f &lstnrPos, ...) = 0;
 
 	virtual SoundPtr getSound(const int id) = 0;
 	virtual SoundPtr getSound(const char* name) = 0;
