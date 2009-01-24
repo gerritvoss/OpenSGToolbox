@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -124,6 +124,13 @@ inline
 SFNodePtr *MiniMapBase::getSFMapScene(void)
 {
     return &_sfMapScene;
+}
+
+//! Get the MiniMap::_sfUnlockedMapSize field.
+inline
+SFVec2f *MiniMapBase::getSFUnlockedMapSize(void)
+{
+    return &_sfUnlockedMapSize;
 }
 
 
@@ -272,6 +279,27 @@ inline
 void MiniMapBase::setMapScene(const NodePtr &value)
 {
     _sfMapScene.setValue(value);
+}
+
+//! Get the value of the MiniMap::_sfUnlockedMapSize field.
+inline
+Vec2f &MiniMapBase::getUnlockedMapSize(void)
+{
+    return _sfUnlockedMapSize.getValue();
+}
+
+//! Get the value of the MiniMap::_sfUnlockedMapSize field.
+inline
+const Vec2f &MiniMapBase::getUnlockedMapSize(void) const
+{
+    return _sfUnlockedMapSize.getValue();
+}
+
+//! Set the value of the MiniMap::_sfUnlockedMapSize field.
+inline
+void MiniMapBase::setUnlockedMapSize(const Vec2f &value)
+{
+    _sfUnlockedMapSize.setValue(value);
 }
 
 

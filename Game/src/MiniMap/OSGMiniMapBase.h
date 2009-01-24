@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -75,6 +75,7 @@
 #include <OpenSG/OSGUInt32Fields.h> // MapScale type
 #include <OpenSG/OSGVec3fFields.h> // MapScaleParameter type
 #include <OpenSG/OSGNodeFields.h> // MapScene type
+#include <OpenSG/OSGVec2fFields.h> // UnlockedMapSize type
 
 #include "OSGMiniMapFields.h"
 
@@ -106,7 +107,8 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
         MapScaleFieldId           = LockMapOrientationFieldId + 1,
         MapScaleParameterFieldId  = MapScaleFieldId           + 1,
         MapSceneFieldId           = MapScaleParameterFieldId  + 1,
-        NextFieldId               = MapSceneFieldId           + 1
+        UnlockedMapSizeFieldId    = MapSceneFieldId           + 1,
+        NextFieldId               = UnlockedMapSizeFieldId    + 1
     };
 
     static const OSG::BitVector TransformationFieldMask;
@@ -117,6 +119,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
     static const OSG::BitVector MapScaleFieldMask;
     static const OSG::BitVector MapScaleParameterFieldMask;
     static const OSG::BitVector MapSceneFieldMask;
+    static const OSG::BitVector UnlockedMapSizeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -151,6 +154,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
            SFUInt32            *getSFMapScale       (void);
            SFVec3f             *getSFMapScaleParameter(void);
            SFNodePtr           *getSFMapScene       (void);
+           SFVec2f             *getSFUnlockedMapSize(void);
 
            MiniMapTransformationPtr &getTransformation (void);
      const MiniMapTransformationPtr &getTransformation (void) const;
@@ -166,6 +170,8 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
      const Vec3f               &getMapScaleParameter(void) const;
            NodePtr             &getMapScene       (void);
      const NodePtr             &getMapScene       (void) const;
+           Vec2f               &getUnlockedMapSize(void);
+     const Vec2f               &getUnlockedMapSize(void) const;
            MiniMapIndicatorPtr &getIndicators     (const UInt32 index);
            MFMiniMapIndicatorPtr &getIndicators     (void);
      const MFMiniMapIndicatorPtr &getIndicators     (void) const;
@@ -182,6 +188,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
      void setMapScale       ( const UInt32 &value );
      void setMapScaleParameter( const Vec3f &value );
      void setMapScene       ( const NodePtr &value );
+     void setUnlockedMapSize( const Vec2f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -216,6 +223,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
     SFUInt32            _sfMapScale;
     SFVec3f             _sfMapScaleParameter;
     SFNodePtr           _sfMapScene;
+    SFVec2f             _sfUnlockedMapSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

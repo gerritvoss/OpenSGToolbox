@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -88,6 +88,9 @@ const OSG::BitVector  MiniMapBase::MapScaleParameterFieldMask =
 const OSG::BitVector  MiniMapBase::MapSceneFieldMask = 
     (TypeTraits<BitVector>::One << MiniMapBase::MapSceneFieldId);
 
+const OSG::BitVector  MiniMapBase::UnlockedMapSizeFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::UnlockedMapSizeFieldId);
+
 const OSG::BitVector MiniMapBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -117,6 +120,9 @@ const OSG::BitVector MiniMapBase::MTInfluenceMask =
     
 */
 /*! \var NodePtr         MiniMapBase::_sfMapScene
+    
+*/
+/*! \var Vec2f           MiniMapBase::_sfUnlockedMapSize
     
 */
 
@@ -163,7 +169,12 @@ FieldDescription *MiniMapBase::_desc[] =
                      "MapScene", 
                      MapSceneFieldId, MapSceneFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFMapScene)
+                     (FieldAccessMethod) &MiniMapBase::getSFMapScene),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "UnlockedMapSize", 
+                     UnlockedMapSizeFieldId, UnlockedMapSizeFieldMask,
+                     false,
+                     (FieldAccessMethod) &MiniMapBase::getSFUnlockedMapSize)
 };
 
 
@@ -239,6 +250,7 @@ MiniMapBase::MiniMapBase(void) :
     _sfMapScale               (), 
     _sfMapScaleParameter      (), 
     _sfMapScene               (), 
+    _sfUnlockedMapSize        (), 
     Inherited() 
 {
 }
@@ -256,6 +268,7 @@ MiniMapBase::MiniMapBase(const MiniMapBase &source) :
     _sfMapScale               (source._sfMapScale               ), 
     _sfMapScaleParameter      (source._sfMapScaleParameter      ), 
     _sfMapScene               (source._sfMapScene               ), 
+    _sfUnlockedMapSize        (source._sfUnlockedMapSize        ), 
     Inherited                 (source)
 {
 }
@@ -312,6 +325,11 @@ UInt32 MiniMapBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMapScene.getBinSize();
     }
 
+    if(FieldBits::NoField != (UnlockedMapSizeFieldMask & whichField))
+    {
+        returnValue += _sfUnlockedMapSize.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -359,6 +377,11 @@ void MiniMapBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MapSceneFieldMask & whichField))
     {
         _sfMapScene.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UnlockedMapSizeFieldMask & whichField))
+    {
+        _sfUnlockedMapSize.copyToBin(pMem);
     }
 
 
@@ -409,6 +432,11 @@ void MiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMapScene.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (UnlockedMapSizeFieldMask & whichField))
+    {
+        _sfUnlockedMapSize.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -443,6 +471,9 @@ void MiniMapBase::executeSyncImpl(      MiniMapBase *pOther,
     if(FieldBits::NoField != (MapSceneFieldMask & whichField))
         _sfMapScene.syncWith(pOther->_sfMapScene);
 
+    if(FieldBits::NoField != (UnlockedMapSizeFieldMask & whichField))
+        _sfUnlockedMapSize.syncWith(pOther->_sfUnlockedMapSize);
+
 
 }
 #else
@@ -473,6 +504,9 @@ void MiniMapBase::executeSyncImpl(      MiniMapBase *pOther,
 
     if(FieldBits::NoField != (MapSceneFieldMask & whichField))
         _sfMapScene.syncWith(pOther->_sfMapScene);
+
+    if(FieldBits::NoField != (UnlockedMapSizeFieldMask & whichField))
+        _sfUnlockedMapSize.syncWith(pOther->_sfUnlockedMapSize);
 
 
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))

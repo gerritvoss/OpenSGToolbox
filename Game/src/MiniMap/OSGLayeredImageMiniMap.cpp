@@ -307,9 +307,9 @@ void LayeredImageMiniMap::setupDrawInternals(void)
 		Pnt2f TopLeft, BottomRight;
 		getInsideBorderBounds(TopLeft, BottomRight);
 		beginEditCP(_MapImageComponent, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask | Component::OpacityFieldMask);
-			if(getLockMapOrientation())
+			if(!getLockMapOrientation()) //if map is set to turn
 			{
-				//_MapImageComponent->setPreferredSize(getUnlockedMapSize());
+				_MapImageComponent->setPreferredSize(getUnlockedMapSize());
 			}
 			else
 			{
@@ -330,11 +330,11 @@ void LayeredImageMiniMap::setupDrawInternals(void)
 
     _RotatedIndicator = RotatedComponent::create();
     beginEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
-		if(!getLockMapOrientation())
+		if(getLockMapOrientation())
 		{
 			_RotatedIndicator->setInternalComponent(_ViewpointIndicatorComponent);
 		}
-		else
+		else        //if map is set to turn
 		{
 			_RotatedIndicator->setInternalComponent(_MapImageComponent);
 		}
@@ -345,14 +345,14 @@ void LayeredImageMiniMap::setupDrawInternals(void)
     AbsoluteLayoutPtr MiniMapLayout = AbsoluteLayout::create();
     beginEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
 	    getChildren().clear();
-		if(!getLockMapOrientation())
+		if(getLockMapOrientation())
 		{
 			if(_MapImageComponent != NullFC)
 			{
 				getChildren().push_back(_MapImageComponent);
 			}
 		}
-		else
+		else        //if map is set to turn
 		{
 			if(_ViewpointIndicatorComponent != NullFC)
 			{
@@ -397,7 +397,7 @@ void LayeredImageMiniMap::changed(BitVector whichField, UInt32 origin)
 
 	if((whichField & SizeFieldMask) && _MapImageComponent != NullFC)
 	{
-		if(!getLockMapOrientation())
+		if(getLockMapOrientation())
 		{
 			beginEditCP(_MapImageComponent, ImageComponent::PreferredSizeFieldMask);
 				_MapImageComponent->setPreferredSize(getSize());

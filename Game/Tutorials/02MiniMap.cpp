@@ -554,14 +554,15 @@ int main(int argc, char **argv)
 		MiniMapConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 	endEditCP(MiniMapConstraints, BorderLayoutConstraints::RegionFieldMask);
 	 
-	beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask);
+    beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask);
 	    MiniMap->setPreferredSize(Pnt2f(450,450));
 	    MiniMap->setViewPointIndicator(ViewpointIndicator);
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
 		MiniMap->setOpacity(.4);
 		MiniMap->setConstraints(MiniMapConstraints);
 		MiniMap->setLockMapOrientation(false);
-	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask);
+        MiniMap->setUnlockedMapSize(Vec2f(1000,1000));
+	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask);
 
 	MiniMap->insertLayer(Path("./level1.jpg").string().c_str(), .3);
     MiniMap->insertLayer(Path("./level2.jpg").string().c_str(), .3);

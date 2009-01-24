@@ -80,6 +80,14 @@ A Minimap.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="UnlockedMapSize"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 
 
 
