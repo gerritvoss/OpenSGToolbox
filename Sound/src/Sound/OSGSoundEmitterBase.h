@@ -69,6 +69,7 @@
 
 
 #include "OSGSoundEmitterFields.h"
+#include "OSGSound.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -88,7 +89,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
 
     typedef SoundEmitterPtr  Ptr;
 
-
+	
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -97,8 +98,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
-
-    /*! \}                                                                 */
+	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
@@ -112,7 +112,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
-
+	
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
@@ -151,18 +151,20 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
 
     SoundEmitterBase(void);
     SoundEmitterBase(const SoundEmitterBase &source);
-
+	
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
-
+	
     virtual ~SoundEmitterBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
+	SoundPtr	sound;
+	
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
     void executeSyncImpl(      SoundEmitterBase *pOther,
@@ -197,7 +199,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
     friend class FieldContainer;
 
     static FieldContainerType  _type;
-
+	
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SoundEmitterBase &source);

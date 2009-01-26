@@ -90,6 +90,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
 
 
     static const OSG::BitVector MTInfluenceMask;
+	static const OSG::BitVector SoundMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */

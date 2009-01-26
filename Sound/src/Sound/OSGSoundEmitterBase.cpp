@@ -91,8 +91,7 @@ FieldContainerType &SoundEmitterBase::getType(void)
 const FieldContainerType &SoundEmitterBase::getType(void) const 
 {
     return _type;
-} 
-
+}
 
 FieldContainerPtr SoundEmitterBase::shallowCopy(void) const 
 { 
