@@ -102,10 +102,13 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public FModSoundManagerBase
 	
 	/**
 	* update the listener's properties
-	* Pnt3f &listener's postition
-	* 
+	* Pnt3f &position
+	* Vec3f &velocity
+	* Vec3f &forward direction
+	* Vec3f &up direction
 	*/
-	void setListenerProperties(const Pnt3f &lstnrPos, ...);
+	//void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
+	void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
 	void update(const Real32& elps);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

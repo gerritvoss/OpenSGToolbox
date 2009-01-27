@@ -7,7 +7,7 @@ helpful tips and incites into the workings of MiniMap
 
 *************************************************/
 
-
+#define DISTANCEFACTOR 1.0f
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -124,21 +124,73 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
+/*
+	*/
+	
+#if 0
+	FMOD_EVENTSYSTEM  *eventsystem;
+    FMOD_EVENT        *event;
+    FMOD_RESULT        result;
+    //int                key;
+	result = FMOD_EventSystem_Create(&eventsystem);
+    result = FMOD_EventSystem_Init(eventsystem, 64, FMOD_INIT_NORMAL, 0, FMOD_EVENT_INIT_NORMAL);
+    result = FMOD_EventSystem_SetMediaPath(eventsystem, ".\\");
+    result = FMOD_EventSystem_Load(eventsystem, "test.fev", 0, 0);
+    result = FMOD_EventSystem_GetEventBySystemID(eventsystem, 0, FMOD_EVENT_DEFAULT, &event);
+	{
+	FMOD_EventSystem_Set3DNumListeners(eventsystem, 1);
+	FMOD_VECTOR *pos = new FMOD_VECTOR();
+	FMOD_VECTOR *vel = new FMOD_VECTOR();
+	FMOD_VECTOR *frwrd = new FMOD_VECTOR();
+	FMOD_VECTOR *up = new FMOD_VECTOR();
+	
+	frwrd->x = 0;frwrd->y = 0;frwrd->z = -1;
+	up->x = 0;up->y = 1;up->z = 0;
 
+	FMOD_EventSystem_Set3DListenerAttributes(eventsystem, 0, pos,  vel, frwrd, up);
+	}
+	{
+	FMOD_VECTOR *pos = new FMOD_VECTOR();
+	FMOD_VECTOR *vel = new FMOD_VECTOR();
+	pos->x = 10;pos->y = 0;pos->z = -1;
+	
+	FMOD_Event_Set3DAttributes(event, pos, vel, 0);
+	}
+
+
+	//result = FMOD_System_Set3DSettings(eventsystem, 1.0, DISTANCEFACTOR, 1.0f);
+	FMOD_Event_Start(event);
+#else
 	//fmod wrapper
 	SoundManagerPtr soundManager = FModSoundManager::create();
 	//initialization, args: media path, media filename, max_channel
 	soundManager->init(".\\","test.fev", 64);
 	SoundPtr sound = soundManager->getSound(0);
 	
+	Pnt3f position(0, 0, 0);
+	Vec3f velocity(0, 0, 0);
+	Vec3f foward(0, 0, -1);
+	Vec3f up(0, 1, 0);
+	
+	soundManager->setListenerProperties(position, velocity, foward, up);
+	//FModSoundPtr fmodSound = (FModSoundPtr)sound;
+	
+	Pnt3f pos(10, 0, 0);
+	
+	sound->setVelocity(velocity);
 	sound->play();
+	sound->setPosition(pos);
+#endif
 
     while(!ExitApp)
     {
         TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
+		soundManager->update(0);
+		
     }
 	sound->stop();
+	//FMOD_Event_Stop(event, 1);
     osgExit();
 	
     return 0;

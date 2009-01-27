@@ -92,7 +92,7 @@ void FModSoundManager::init(const char* arg, ...){
 	
 	result = eventSystem->setMediaPath(mediaPath);
 	result = eventSystem->load(mediaFile, 0, 0);
-
+	result = eventSystem->set3DNumListeners(1);
 }
 
 void FModSoundManager::uninit(void)
@@ -117,22 +117,25 @@ SoundPtr FModSoundManager::getSound(const char* path){
 	if (!eventSystem)
 		return (FModSoundPtr)NULL;
 	FModSoundPtr s = FModSound::create();
-	FMOD::Event*& e = s->getFmodEvent();
+	FMOD::Event* e;
 	result = eventSystem->getEvent(path, FMOD_EVENT_DEFAULT, &e);
+	s->setFModEvent(e);
 	return s;
 }
-
-void FModSoundManager::update(const Real32& elps){}
 
 SoundPtr FModSoundManager::getSound(const int id){
 	if (!eventSystem)
 		return (FModSoundPtr)NULL;
 	FModSoundPtr s = FModSound::create();
-	FMOD::Event*& e = s->getFmodEvent();
+	FMOD::Event* e;
 	result = eventSystem->getEventBySystemID(id, FMOD_EVENT_DEFAULT, &e);
+	s->setFModEvent(e);
 	return s;
 }
 
+void FModSoundManager::update(const Real32& elps){
+	eventSystem->update();
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -154,26 +157,14 @@ FModSoundManager::~FModSoundManager(void)
 {
 	uninit();
 }
-void FModSoundManager::setListenerProperties(const Pnt3f &lstnrPos, ...){
- //todo
-	va_list list;
-	va_start(list, lstnrPos);
-		
+void FModSoundManager::setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up){	
 	FMOD_VECTOR pos, vel, forwardDir, upDir;
-
 	pos.x = lstnrPos[0]; pos.y = lstnrPos[1]; pos.z = lstnrPos[2];
+	vel.x = velocity[0]; vel.y = velocity[1]; vel.z = velocity[2];
+	forwardDir.x = forward[0]; forwardDir.y = forward[1]; forwardDir.z = forward[2];
+	upDir.x = up[0]; upDir.y = up[1]; upDir.z = up[2];
 
-	const Vec3f vvel = va_arg(list, const Vec3f);
-	vel.x = vvel[0]; vel.y = vvel[1]; vel.z = vvel[2];
-	
-	const Vec3f fd = va_arg(list, const Vec3f);
-	forwardDir.x = fd[0]; forwardDir.y = fd[1]; forwardDir.z = fd[2];
-
-	const Vec3f ud = va_arg(list, const Vec3f);
-	upDir.x = fd[0]; upDir.y = fd[1]; upDir.z = fd[2];
-
-
-	this->eventSystem->set3DListenerAttributes(1, &pos, &vel, &forwardDir, &upDir);
+	this->eventSystem->set3DListenerAttributes(0, &pos, &vel, &forwardDir, &upDir);
 }
 /*----------------------------- class specific ----------------------------*/
 

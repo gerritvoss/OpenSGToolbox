@@ -96,6 +96,9 @@ SoundManager::~SoundManager(void)
 {
 }
 
+void SoundManager::setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up){
+
+}
 /*----------------------------- class specific ----------------------------*/
 
 void SoundManager::changed(BitVector whichField, UInt32 origin)

@@ -75,6 +75,9 @@ FMOD::Event*& FModSound::getFmodEvent(){
 	return event;
 }
 
+void FModSound::setFModEvent(FMOD::Event* event){
+	this->event = event;
+}
 void FModSound::play(void){
 	event->start();
 }

@@ -65,6 +65,7 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
 	* return the underlying Fmod Event object
 	*/
 	  FMOD::Event*& getFmodEvent();
+	  void setFModEvent(FMOD::Event* event);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

@@ -91,8 +91,9 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public SoundManagerBase
 	* update listener's property, actual argument depends on the extended class
 	*/
 
-	virtual void setListenerProperties(const Pnt3f &lstnrPos, ...) = 0;
-
+	//virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up) = 0;
+	virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
+	
 	virtual SoundPtr getSound(const int id) = 0;
 	virtual SoundPtr getSound(const char* name) = 0;
 
