@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,9 +67,9 @@
 
 #include <OpenSG/OSGNodeCore.h> // Parent
 
+#include "OSGSound.h" // Sound type
 
 #include "OSGSoundEmitterFields.h"
-#include "OSGSound.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -89,7 +89,15 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
 
     typedef SoundEmitterPtr  Ptr;
 
-	
+    enum
+    {
+        SoundFieldId = Inherited::NextFieldId,
+        NextFieldId  = SoundFieldId + 1
+    };
+
+    static const OSG::BitVector SoundFieldMask;
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -98,7 +106,8 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
-	/*! \}                                                                 */
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
@@ -110,9 +119,26 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFSoundPtr          *getSFSound          (void);
+
+           SoundPtr            &getSound          (void);
+     const SoundPtr            &getSound          (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setSound          ( const SoundPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
-	
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
@@ -146,25 +172,30 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
   protected:
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFSoundPtr          _sfSound;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
     SoundEmitterBase(void);
     SoundEmitterBase(const SoundEmitterBase &source);
-	
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
-	
+
     virtual ~SoundEmitterBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
-	SoundPtr	sound;
-	
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
     void executeSyncImpl(      SoundEmitterBase *pOther,
@@ -198,8 +229,9 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitterBase : public NodeCore
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
-	
+
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SoundEmitterBase &source);

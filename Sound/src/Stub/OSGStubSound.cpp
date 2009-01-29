@@ -103,6 +103,7 @@ void StubSound::setPosition(const Pnt3f &pos){
 	
 }
 
+void StubSound::update(){}
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */

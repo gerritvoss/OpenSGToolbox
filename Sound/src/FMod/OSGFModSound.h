@@ -81,7 +81,6 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
-
    
 	virtual void play(void);
 	/*! \}                                                                 */
@@ -154,6 +153,7 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
     friend class FModSoundBase;
 
     static void initMethod(void);
+	void update();
 
     // prohibit default functions (move to 'public' if you need one)
 

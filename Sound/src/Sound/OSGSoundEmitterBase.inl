@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,6 +96,34 @@ SoundEmitterPtr SoundEmitterBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the SoundEmitter::_sfSound field.
+inline
+SFSoundPtr *SoundEmitterBase::getSFSound(void)
+{
+    return &_sfSound;
+}
+
+
+//! Get the value of the SoundEmitter::_sfSound field.
+inline
+SoundPtr &SoundEmitterBase::getSound(void)
+{
+    return _sfSound.getValue();
+}
+
+//! Get the value of the SoundEmitter::_sfSound field.
+inline
+const SoundPtr &SoundEmitterBase::getSound(void) const
+{
+    return _sfSound.getValue();
+}
+
+//! Set the value of the SoundEmitter::_sfSound field.
+inline
+void SoundEmitterBase::setSound(const SoundPtr &value)
+{
+    _sfSound.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

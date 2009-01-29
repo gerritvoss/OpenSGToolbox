@@ -34,15 +34,20 @@ helpful tips and incites into the workings of MiniMap
 //fmod wrapper
 #include <OpenSG/Sound/OSGFModSoundManager.h>
 #include <OpenSG/Sound/OSGFModSound.h>
+#include <OpenSG/Sound/OSGSoundEmitter.h>
 
+
+#define PI 3.1415926
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 bool ExitApp = false;
-
+bool pauseSound;
+SoundPtr sound;
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
@@ -57,6 +62,17 @@ public:
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
+       }
+
+	   if(e.getKey() == KeyEvent::KEY_P)
+       {
+		   if (!pauseSound){
+				pauseSound = true;
+				sound->stop();
+		   } else {
+				pauseSound = false;
+				sound->play();
+		   }
        }
    }
 
@@ -83,6 +99,50 @@ public:
     }
 };
 
+    /******************************************************
+
+             Create ActionListeners to let the 
+			 Mouse change viewing angle and move
+			 UIRectangle around.
+
+    ******************************************************/
+
+class TutorialMouseListener : public MouseListener
+{
+  public:
+    virtual void mouseClicked(const MouseEvent& e)
+    {
+    }
+    virtual void mouseEntered(const MouseEvent& e)
+    {
+    }
+    virtual void mouseExited(const MouseEvent& e)
+    {
+    }
+    virtual void mousePressed(const MouseEvent& e)
+    {
+            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+    }
+    virtual void mouseReleased(const MouseEvent& e)
+    {
+           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+    }
+};
+
+class TutorialMouseMotionListener : public MouseMotionListener
+{
+  public:
+    virtual void mouseMoved(const MouseEvent& e)
+    {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+    }
+
+    virtual void mouseDragged(const MouseEvent& e)
+    {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+    }
+};
+
 
 int main(int argc, char **argv)
 {
@@ -90,7 +150,7 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
 
 	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
@@ -102,6 +162,11 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
+    TutorialMouseListener TheTutorialMouseListener;
+    TutorialMouseMotionListener TheTutorialMouseMotionListener;
+    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
+
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
@@ -118,9 +183,103 @@ int main(int argc, char **argv)
                                         "OpenSG 01PlaySound Window");
 										
     // Make Torus Node (creates Torus in background of scene)
+#if 0
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
-
     mgr->setRoot(TorusGeometryNode);
+
+#else
+	NodePtr root = makeSphere(3, 6);
+	NodePtr planet = makeSphere(3, 3);
+    NodePtr moon = makeSphere(2,1);
+	
+	NodePtr rootTransformNode = Node::create();
+    NodePtr planetTransformNode = Node::create();
+    NodePtr moonTransformNode = Node::create();
+
+	TransformPtr rootTransform = Transform::create();
+    TransformPtr planetTransform = Transform::create();
+    TransformPtr moonTransform = Transform::create();
+
+    Matrix l,m,n;
+	Quaternion p(Vec3f(0,0,1), PI/2), q(Vec3f(0,0,1), 0);
+	
+	l.setIdentity();
+	m.setIdentity();
+	m.setTranslate(Vec3f(0, 20, 0));
+
+    n.setIdentity();
+	n.setTranslate(Vec3f(0, 8, 0));
+
+	
+	beginEditCP(rootTransform, Transform::MatrixFieldMask);
+
+        rootTransform->setMatrix(l);
+
+    endEditCP(rootTransform, Transform::MatrixFieldMask);
+
+
+    beginEditCP(planetTransform, Transform::MatrixFieldMask);
+
+        planetTransform->setMatrix(m);
+
+    endEditCP(planetTransform, Transform::MatrixFieldMask);
+	
+
+    beginEditCP(moonTransform, Transform::MatrixFieldMask);
+
+        moonTransform->setMatrix(n);
+
+    endEditCP(moonTransform, Transform::MatrixFieldMask);
+
+	
+
+    //Insert the cores into the apropiate nodes and add the geometry
+
+	beginEditCP(rootTransformNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+        rootTransformNode->setCore(rootTransform);
+
+        rootTransformNode->addChild(root);
+
+    endEditCP(planetTransformNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+
+    beginEditCP(planetTransformNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+        planetTransformNode->setCore(planetTransform);
+
+        planetTransformNode->addChild(planet);
+
+    endEditCP(planetTransformNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+	
+
+    beginEditCP(moonTransformNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+        moonTransformNode->setCore(moonTransform);
+
+		moonTransformNode->addChild(moon);
+
+    endEditCP(moonTransformNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+
+    //add the planet to the sun
+	beginEditCP(root, Node::ChildrenFieldMask | Node::CoreFieldMask);
+
+        root->addChild(planetTransformNode);
+
+    endEditCP(rootTransform, Node::ChildrenFieldMask);
+	
+
+    //add the moon to the planet
+    beginEditCP(planet, Node::ChildrenFieldMask);
+
+        planet->addChild(moonTransformNode);
+
+    endEditCP(planet, Node::ChildrenFieldMask);
+
+	mgr->setRoot(rootTransformNode);
+#endif
 
     // Show the whole Scene
     mgr->showAll();
@@ -165,7 +324,7 @@ int main(int argc, char **argv)
 	SoundManagerPtr soundManager = FModSoundManager::create();
 	//initialization, args: media path, media filename, max_channel
 	soundManager->init(".\\","test.fev", 64);
-	SoundPtr sound = soundManager->getSound(0);
+	sound = soundManager->getSound(0);
 	
 	Pnt3f position(0, 0, 0);
 	Vec3f velocity(0, 0, 0);
@@ -180,14 +339,49 @@ int main(int argc, char **argv)
 	sound->setVelocity(velocity);
 	sound->play();
 	sound->setPosition(pos);
-#endif
 
+	SoundEmitterPtr soundEmitter = SoundEmitter::create();
+	soundEmitter->setSound(sound);
+	CameraPtr cam = mgr->getCamera();
+
+	NodePtr soundNode = Node::create();
+	beginEditCP(soundNode, Node::CoreFieldMask);
+		soundNode->setCore(soundEmitter);
+	endEditCP(soundNode, Node::CoreFieldMask);
+
+	beginEditCP(planet, Node::ChildrenFieldMask);
+		planet->addChild(soundNode);
+	endEditCP(planet, Node::ChildrenFieldMask);
+
+#endif
+	float r = 0;
     while(!ExitApp)
     {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-		soundManager->update(0);
+		r += PI/200; //rotation speed
+		if (r>PI *2) r = 0;
+
+		beginEditCP(planetTransform, Transform::MatrixFieldMask);
+			q.setValueAsAxisRad(Vec3f(0,0,1), r * 2);
+			m.setRotate(q);
+			planetTransform->setMatrix(m);
+		endEditCP(planetTransform, Transform::MatrixFieldMask);
+
+		beginEditCP(rootTransform, Transform::MatrixFieldMask);
+			p.setValueAsAxisRad(Vec3f(0,0,1), r);
+			n.setRotate(p);
+			rootTransform->setMatrix(n);
+		endEditCP(rootTransform, Transform::MatrixFieldMask);
 		
+#if 1
+		Matrix wm; 
+		soundNode->getToWorld(wm);
+		Pnt3f wp, origin(0, 0, 0);
+		wm.mult(origin, wp);
+		sound->setPosition(wp);
+#endif
+		TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
+		soundManager->update(0);		
     }
 	sound->stop();
 	//FMOD_Event_Stop(event, 1);

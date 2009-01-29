@@ -76,17 +76,11 @@ void SoundEmitter::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void SoundEmitter::setSound(const SoundPtr sound){
-	//beginEditCP(this->getPtr(), SoundEmitter::SoundMask);
-		this->sound = sound;
-	//endEditCP((this->getPtr(), SoundEmitter::SoundMask);
-}
-SoundPtr SoundEmitter::getSound()const{
-	return this->sound;
-}
+//void SoundEmitter::update(){
+	//assert(get
+//	this->getParents(0);
 
-void SoundEmitter::update(){
-}
+//}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

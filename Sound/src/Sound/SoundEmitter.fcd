@@ -8,7 +8,17 @@
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
 	useLocalIncludes="true"
 >
 A SoundEmitter Core.
+	<Field
+		name="Sound"
+		type="SoundPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

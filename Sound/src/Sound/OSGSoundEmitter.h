@@ -69,13 +69,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitter : public SoundEmitterBase
     virtual void changed(BitVector  whichField, 
                          UInt32     origin    );
 
-	static const OSG::BitVector SoundMask;
-	/** get/set default sound
-	*/
-	void setSound(const SoundPtr sound);
-	SoundPtr getSound()const;
-
-	void update();
+	//void update(const Real32& elps);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -111,6 +111,9 @@ void FModSound::setPosition(const Pnt3f &pos){
 	event->set3DAttributes(&curPos, &curVec);
 }
 
+void FModSound::update(){
+	
+}
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */

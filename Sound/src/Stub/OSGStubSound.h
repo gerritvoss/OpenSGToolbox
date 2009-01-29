@@ -146,6 +146,7 @@ class OSG_SOUNDLIB_DLLMAPPING StubSound : public StubSoundBase
     friend class StubSoundBase;
 
     static void initMethod(void);
+	void update();
 
     // prohibit default functions (move to 'public' if you need one)
 

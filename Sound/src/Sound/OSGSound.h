@@ -151,8 +151,8 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
 
     friend class FieldContainer;
     friend class SoundBase;
-
     static void initMethod(void);
+	virtual void update() = 0;
 
     // prohibit default functions (move to 'public' if you need one)
 

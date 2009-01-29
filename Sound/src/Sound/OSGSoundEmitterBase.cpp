@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  SoundEmitterBase::SoundFieldMask = 
+    (TypeTraits<BitVector>::One << SoundEmitterBase::SoundFieldId);
+
 const OSG::BitVector SoundEmitterBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var SoundPtr        SoundEmitterBase::_sfSound
+    
+*/
+
+//! SoundEmitter description
+
+FieldDescription *SoundEmitterBase::_desc[] = 
+{
+    new FieldDescription(SFSoundPtr::getClassType(), 
+                     "Sound", 
+                     SoundFieldId, SoundFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundEmitterBase::getSFSound)
+};
 
 
 FieldContainerType SoundEmitterBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType SoundEmitterBase::_type(
     NULL,
     (PrototypeCreateF) &SoundEmitterBase::createEmpty,
     SoundEmitter::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(SoundEmitterBase, SoundEmitterPtr)
 
@@ -91,7 +111,8 @@ FieldContainerType &SoundEmitterBase::getType(void)
 const FieldContainerType &SoundEmitterBase::getType(void) const 
 {
     return _type;
-}
+} 
+
 
 FieldContainerPtr SoundEmitterBase::shallowCopy(void) const 
 { 
@@ -141,6 +162,7 @@ void SoundEmitterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SoundEmitterBase::SoundEmitterBase(void) :
+    _sfSound                  (SoundPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -150,6 +172,7 @@ SoundEmitterBase::SoundEmitterBase(void) :
 #endif
 
 SoundEmitterBase::SoundEmitterBase(const SoundEmitterBase &source) :
+    _sfSound                  (source._sfSound                  ), 
     Inherited                 (source)
 {
 }
@@ -166,6 +189,11 @@ UInt32 SoundEmitterBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (SoundFieldMask & whichField))
+    {
+        returnValue += _sfSound.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -175,6 +203,11 @@ void SoundEmitterBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (SoundFieldMask & whichField))
+    {
+        _sfSound.copyToBin(pMem);
+    }
+
 
 }
 
@@ -182,6 +215,11 @@ void SoundEmitterBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (SoundFieldMask & whichField))
+    {
+        _sfSound.copyFromBin(pMem);
+    }
 
 
 }
@@ -193,6 +231,9 @@ void SoundEmitterBase::executeSyncImpl(      SoundEmitterBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (SoundFieldMask & whichField))
+        _sfSound.syncWith(pOther->_sfSound);
+
 
 }
 #else
@@ -202,6 +243,9 @@ void SoundEmitterBase::executeSyncImpl(      SoundEmitterBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (SoundFieldMask & whichField))
+        _sfSound.syncWith(pOther->_sfSound);
 
 
 
