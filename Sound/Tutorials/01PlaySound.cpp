@@ -47,7 +47,7 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 
 bool ExitApp = false;
 bool pauseSound;
-SoundPtr sound, sound2;
+SoundPtr sound, sound2, sound3;
 float rpm; //sound parameter
 float volume = 1;
 
@@ -114,6 +114,12 @@ public:
        {
 		  
 		   sound2->play();
+       }
+
+	   if(e.getKey() == KeyEvent::KEY_C)
+       {
+		  
+		   sound3->play();
        }
 
    }
@@ -368,6 +374,7 @@ int main(int argc, char **argv)
 	soundManager->init(".\\","test.fev", 64);
 	sound = soundManager->getSound(0);
 	sound2 = soundManager->getSound(1);
+	sound3 = soundManager->getSound(2);
 	
 	Pnt3f position(0, 0, 0);
 	Vec3f velocity(0, 0, 0);
@@ -421,6 +428,21 @@ int main(int argc, char **argv)
 	endEditCP(moon, Node::ChildrenFieldMask);
 #endif
 
+	SoundEmitterPtr soundEmitter3 = SoundEmitter::create();
+	beginEditCP(soundEmitter3, SoundEmitter::SoundFieldMask);
+		soundEmitter3->setSound(sound3);
+	endEditCP(soundEmitter3, SoundEmitter::SoundFieldMask);
+
+	soundEmitter3->attachUpdateListener(TutorialWindowEventProducer);
+	
+	NodePtr soundNode3 = Node::create();
+	beginEditCP(soundNode3, Node::CoreFieldMask);
+		soundNode3->setCore(soundEmitter3);
+	endEditCP(soundNode3, Node::CoreFieldMask);
+
+	beginEditCP(root, Node::ChildrenFieldMask);
+		moon->addChild(soundNode3);
+	endEditCP(root, Node::ChildrenFieldMask);
 #endif
 	float r = 0;
     while(!ExitApp)
