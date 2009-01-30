@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01ParticleSystemDrawers", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\..\Dynamics\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02DynamicDistributions", "02DynamicDistributions.vcproj", "{B901669A-0006-4A63-BD8E-E0BF63966DA7}"
 EndProject
@@ -71,10 +71,10 @@ Global
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.Build.0 = Debug|Win32
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.ActiveCfg = Release|Win32
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.Build.0 = Release|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.Build.0 = Debug|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.ActiveCfg = Release|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.Build.0 = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.Build.0 = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.ActiveCfg = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.Build.0 = Release|Win32
 		{B901669A-0006-4A63-BD8E-E0BF63966DA7}.Debug|Win32.ActiveCfg = Debug|Win32
 		{B901669A-0006-4A63-BD8E-E0BF63966DA7}.Debug|Win32.Build.0 = Debug|Win32
 		{B901669A-0006-4A63-BD8E-E0BF63966DA7}.Release|Win32.ActiveCfg = Release|Win32
