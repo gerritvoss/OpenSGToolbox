@@ -178,6 +178,7 @@ FModSound::~FModSound(void)
 void FModSound::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	printf("here\n");
 }
 
 void FModSound::dump(      UInt32    , 

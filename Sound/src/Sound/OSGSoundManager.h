@@ -94,8 +94,16 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public SoundManagerBase
 	//virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up) = 0;
 	virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
 	
+
+	//create a new sound object by its integer id
 	virtual SoundPtr getSound(const int id) = 0;
+
+	//create a new sound object by its name
 	virtual SoundPtr getSound(const char* name) = 0;
+
+	//create a NodePtr that contain a sound emitter core
+	virtual NodePtr getSoundNode(const int id);
+	virtual NodePtr getSoundNode(const char* name);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

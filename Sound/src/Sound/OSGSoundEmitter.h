@@ -46,6 +46,8 @@
 #include "OSGSoundDef.h"
 
 #include "OSGSoundEmitterBase.h"
+#include <OpenSG/Input/OSGUpdateListener.h>
+#include <OpenSG/Input/OSGWindowEventProducerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +71,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitter : public SoundEmitterBase
     virtual void changed(BitVector  whichField, 
                          UInt32     origin    );
 
-	//void update(const Real32& elps);
+	void update(const Real32& elps);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -78,6 +80,9 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitter : public SoundEmitterBase
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+
+    bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
+    void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
@@ -98,6 +103,21 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitter : public SoundEmitterBase
     /*! \{                                                                 */
 
     virtual ~SoundEmitter(void); 
+
+	class SystemUpdateListener : public UpdateListener
+	{
+	public:
+		SystemUpdateListener(SoundEmitterPtr TheSystem);
+        virtual void update(const UpdateEvent& e);
+	private:
+		SoundEmitterPtr _System;
+	};
+
+	friend class SystemUpdateListener;
+
+	SystemUpdateListener _SystemUpdateListener;
+	
+    virtual void update(const Time& elps);
 
     /*! \}                                                                 */
     

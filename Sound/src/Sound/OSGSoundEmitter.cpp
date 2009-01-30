@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSoundEmitter.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,20 +81,53 @@ void SoundEmitter::initMethod (void)
 	//assert(get
 //	this->getParents(0);
 
+
+bool SoundEmitter::attachUpdateListener(WindowEventProducerPtr UpdateProducer)
+{
+    if(UpdateProducer == NullFC)
+    {
+        return false;
+    }
+
+    UpdateProducer->addUpdateListener(&_SystemUpdateListener);
+
+    return true;
+}
+
+void SoundEmitter::dettachUpdateListener(WindowEventProducerPtr UpdateProducer)
+{
+    if(UpdateProducer != NullFC)
+    {
+        UpdateProducer->removeUpdateListener(&_SystemUpdateListener);
+    }
+}
 //}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void SoundEmitter::update(const Time& elps)
+{
+	assert(getParents().size() == 1 && "A Sound Emitter NodeCore MUST have 1 and only 1 parent.");
+	Matrix wm;
+	getParents()[0]->getToWorld(wm);
+	Pnt3f wp, origin(0, 0, 0);
+	wm.mult(origin, wp);
+	this->getSound()->setPosition(wp);
+	printf("%d %d %d\n", wp[0], wp[1], wp[2]);
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 SoundEmitter::SoundEmitter(void) :
-    Inherited()
+    Inherited(),
+    _SystemUpdateListener(SoundEmitterPtr(this))
 {
 }
 
 SoundEmitter::SoundEmitter(const SoundEmitter &source) :
-    Inherited(source)
+    Inherited(source),
+    _SystemUpdateListener(SoundEmitterPtr(this))
 {
 }
 
@@ -117,6 +151,11 @@ void SoundEmitter::dump(      UInt32    ,
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
+
+void SoundEmitter::SystemUpdateListener::update(const UpdateEvent& e)
+{
+    _System->update(e.getElapsedTime());
+}
 
 #ifdef OSG_SGI_CC
 #pragma set woff 1174

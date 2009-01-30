@@ -49,6 +49,9 @@
 
 #include "OSGSoundManager.h"
 
+#include "OSGSoundEmitter.h"
+
+#include "OSGSound.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -112,6 +115,28 @@ void SoundManager::dump(      UInt32    ,
     SLOG << "Dump SoundManager NI" << std::endl;
 }
 
+
+//create a NodePtr that contain a sound emitter core
+NodePtr SoundManager::getSoundNode(const int id){
+	NodePtr node = Node::create();
+	SoundEmitterPtr emitter = SoundEmitter::create();
+	SoundPtr sound = this->getSound(id);
+	emitter->setSound(sound);
+	beginEditCP(node, Node::CoreFieldMask);
+	node->setCore(emitter);
+	endEditCP(node, Node::CoreFieldMask);
+	return node;
+}
+NodePtr SoundManager::getSoundNode(const char* name){
+	NodePtr node = Node::create();
+	SoundEmitterPtr emitter = SoundEmitter::create();
+	SoundPtr sound = this->getSound(name);
+	emitter->setSound(sound);
+	beginEditCP(node, Node::CoreFieldMask);
+	node->setCore(emitter);
+	endEditCP(node, Node::CoreFieldMask);
+	return node;
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

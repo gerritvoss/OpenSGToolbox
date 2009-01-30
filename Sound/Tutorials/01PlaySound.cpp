@@ -341,7 +341,12 @@ int main(int argc, char **argv)
 	sound->setPosition(pos);
 
 	SoundEmitterPtr soundEmitter = SoundEmitter::create();
-	soundEmitter->setSound(sound);
+	beginEditCP(soundEmitter, SoundEmitter::SoundFieldMask);
+		soundEmitter->setSound(sound);
+	endEditCP(soundEmitter, SoundEmitter::SoundFieldMask);
+
+	soundEmitter->attachUpdateListener(TutorialWindowEventProducer);
+
 	CameraPtr cam = mgr->getCamera();
 
 	NodePtr soundNode = Node::create();
@@ -372,7 +377,7 @@ int main(int argc, char **argv)
 			rootTransform->setMatrix(n);
 		endEditCP(rootTransform, Transform::MatrixFieldMask);
 		
-#if 1
+#if 0
 		Matrix wm; 
 		soundNode->getToWorld(wm);
 		Pnt3f wp, origin(0, 0, 0);
