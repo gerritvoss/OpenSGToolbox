@@ -47,9 +47,9 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 
 bool ExitApp = false;
 bool pauseSound;
-SoundPtr sound;
+SoundPtr sound, sound2;
 float rpm; //sound parameter
-float volume;
+float volume = 1;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -108,6 +108,12 @@ public:
 		   if (volume < 0)
 			   volume = 0;
 		   sound->setVolume(volume);
+       }
+
+	   if(e.getKey() == KeyEvent::KEY_D)
+       {
+		  
+		   sound2->play();
        }
 
    }
@@ -361,6 +367,7 @@ int main(int argc, char **argv)
 	//initialization, args: media path, media filename, max_channel
 	soundManager->init(".\\","test.fev", 64);
 	sound = soundManager->getSound(0);
+	sound2 = soundManager->getSound(1);
 	
 	Pnt3f position(0, 0, 0);
 	Vec3f velocity(0, 0, 0);
@@ -390,11 +397,29 @@ int main(int argc, char **argv)
 	beginEditCP(soundNode, Node::CoreFieldMask);
 		soundNode->setCore(soundEmitter);
 	endEditCP(soundNode, Node::CoreFieldMask);
-	
+
 	//NodePtr soundNode = soundManager->getSoundNode(0);
 	beginEditCP(planet, Node::ChildrenFieldMask);
 		planet->addChild(soundNode);
 	endEditCP(planet, Node::ChildrenFieldMask);
+
+#if 1
+	SoundEmitterPtr soundEmitter2 = SoundEmitter::create();
+	beginEditCP(soundEmitter2, SoundEmitter::SoundFieldMask);
+		soundEmitter2->setSound(sound2);
+	endEditCP(soundEmitter2, SoundEmitter::SoundFieldMask);
+
+	soundEmitter2->attachUpdateListener(TutorialWindowEventProducer);
+	
+	NodePtr soundNode2 = Node::create();
+	beginEditCP(soundNode2, Node::CoreFieldMask);
+		soundNode2->setCore(soundEmitter2);
+	endEditCP(soundNode2, Node::CoreFieldMask);
+
+	beginEditCP(moon, Node::ChildrenFieldMask);
+		moon->addChild(soundNode2);
+	endEditCP(moon, Node::ChildrenFieldMask);
+#endif
 
 #endif
 	float r = 0;
@@ -415,13 +440,6 @@ int main(int argc, char **argv)
 			rootTransform->setMatrix(n);
 		endEditCP(rootTransform, Transform::MatrixFieldMask);
 		
-#if 0
-		Matrix wm; 
-		soundNode->getToWorld(wm);
-		Pnt3f wp, origin(0, 0, 0);
-		wm.mult(origin, wp);
-		sound->setPosition(wp);
-#endif
 		TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
 		soundManager->update(0);		
