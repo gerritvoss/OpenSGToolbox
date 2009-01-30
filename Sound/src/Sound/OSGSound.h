@@ -124,6 +124,9 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
 
 	virtual void setVolume(const float volume) = 0;
 
+	virtual float getParameter(const int) = 0;
+	virtual void setParameter(const int, const float) = 0;
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -153,7 +156,7 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
     friend class SoundBase;
     static void initMethod(void);
 	virtual void update() = 0;
-
+	
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const Sound &source);

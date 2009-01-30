@@ -148,6 +148,29 @@ void FModSound::setVolume(const float volume){
 	event->setVolume(volume);
 }
 
+
+float FModSound::getParameter(const int index){
+	FMOD::EventParameter *p;
+	float param, min, max;
+	int result = event->getParameterByIndex(index, &p);
+	if (result != FMOD_OK)
+		return -1;
+	p->getValue(&param);
+	p->getRange(&min, &max);
+	param = (param - min) / (max - min); //normalize to between zero and one
+	return param;
+}
+void FModSound::setParameter(const int index, const float pp){
+	FMOD::EventParameter *p;
+	float param = pp, min, max;
+	int result = event->getParameterByIndex(index, &p);
+	if (result != FMOD_OK)
+		return ;
+	p->getRange(&min, &max);
+	param = param * (max - min) + min; //normalize to between native range
+	p->setValue(param);
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -90,7 +90,6 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
 
 
     static const OSG::BitVector MTInfluenceMask;
-	static const OSG::BitVector SoundMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */

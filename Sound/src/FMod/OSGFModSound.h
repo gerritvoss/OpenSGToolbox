@@ -123,6 +123,10 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
     /*! \{ set the velocity of the sound between 0 and 1.0                 */
 
 	virtual void setVolume(const float volume);
+
+	virtual float getParameter(const int);
+	virtual void setParameter(const int, const float);
+
 	
 	 /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

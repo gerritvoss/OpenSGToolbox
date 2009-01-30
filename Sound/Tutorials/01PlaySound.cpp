@@ -48,6 +48,8 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 bool ExitApp = false;
 bool pauseSound;
 SoundPtr sound;
+float rpm; //sound parameter
+
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
@@ -73,6 +75,22 @@ public:
 				pauseSound = false;
 				sound->play();
 		   }
+       }
+
+	   if(e.getKey() == KeyEvent::KEY_A)
+       {
+		   rpm+=.01;
+		   if (rpm > 1)
+			   rpm = 1;
+		   sound->setParameter(0, rpm);
+       }
+
+	   if(e.getKey() == KeyEvent::KEY_Z)
+       {
+		   rpm-=.01;
+		   if (rpm < 0)
+			   rpm = 0;
+		   sound->setParameter(0, rpm);
        }
    }
 

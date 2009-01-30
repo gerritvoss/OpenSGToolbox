@@ -130,6 +130,8 @@ class OSG_SOUNDLIB_DLLMAPPING StubSound : public StubSoundBase
     StubSound(void);
     StubSound(const StubSound &source);
 
+	float getParameter(const int){ return -1;}
+	void setParameter(const int, const float){}
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
