@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,15 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+//#include <OpenSG/OSGWindowEventProducer.h> // WindowEventProducer type
+#include <OpenSG/Input/OSGWindowAdapter.h>
+
+// The general scene file loading handler
+#include <OpenSG/OSGSceneFileHandler.h>
+
+// Input
+#include <OpenSG/Input/OSGWindowUtils.h>
+
 
 #include "OSGSoundManagerFields.h"
 
@@ -87,6 +96,14 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManagerBase : public AttachmentContainer
   public:
 
     typedef SoundManagerPtr  Ptr;
+
+    enum
+    {
+        WindowEventProducerFieldId = Inherited::NextFieldId,
+        NextFieldId                = WindowEventProducerFieldId + 1
+    };
+
+    static const OSG::BitVector WindowEventProducerFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +127,23 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManagerBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFWindowEventProducerPtr *getSFWindowEventProducer(void);
+
+           WindowEventProducerPtr &getWindowEventProducer(void);
+     const WindowEventProducerPtr &getWindowEventProducer(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setWindowEventProducer( const WindowEventProducerPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -129,6 +163,13 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManagerBase : public AttachmentContainer
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFWindowEventProducerPtr   _sfWindowEventProducer;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -180,6 +221,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManagerBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

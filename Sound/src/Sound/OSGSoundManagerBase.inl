@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,34 @@ OSG::UInt32 SoundManagerBase::getClassTypeId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the SoundManager::_sfWindowEventProducer field.
+inline
+SFWindowEventProducerPtr *SoundManagerBase::getSFWindowEventProducer(void)
+{
+    return &_sfWindowEventProducer;
+}
+
+
+//! Get the value of the SoundManager::_sfWindowEventProducer field.
+inline
+WindowEventProducerPtr &SoundManagerBase::getWindowEventProducer(void)
+{
+    return _sfWindowEventProducer.getValue();
+}
+
+//! Get the value of the SoundManager::_sfWindowEventProducer field.
+inline
+const WindowEventProducerPtr &SoundManagerBase::getWindowEventProducer(void) const
+{
+    return _sfWindowEventProducer.getValue();
+}
+
+//! Set the value of the SoundManager::_sfWindowEventProducer field.
+inline
+void SoundManagerBase::setWindowEventProducer(const WindowEventProducerPtr &value)
+{
+    _sfWindowEventProducer.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

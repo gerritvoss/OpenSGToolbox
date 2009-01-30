@@ -114,7 +114,6 @@ void SoundEmitter::update(const Time& elps)
 	Pnt3f wp, origin(0, 0, 0);
 	wm.mult(origin, wp);
 	this->getSound()->setPosition(wp);
-	printf("%d %d %d\n", wp[0], wp[1], wp[2]);
 }
 
 /*----------------------- constructors & destructors ----------------------*/

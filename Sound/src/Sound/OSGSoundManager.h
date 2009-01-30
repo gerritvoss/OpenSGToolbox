@@ -46,6 +46,7 @@
 
 #include "OSGSoundManagerBase.h"
 #include "OSGSound.h"
+#include "OSGSoundEmitter.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -102,8 +103,8 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public SoundManagerBase
 	virtual SoundPtr getSound(const char* name) = 0;
 
 	//create a NodePtr that contain a sound emitter core
-	virtual NodePtr getSoundNode(const int id);
-	virtual NodePtr getSoundNode(const char* name);
+	virtual SoundEmitterPtr getSoundEmitter(const int id);
+	virtual SoundEmitterPtr getSoundEmitter(const char* name);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  SoundManagerBase::WindowEventProducerFieldMask = 
+    (TypeTraits<BitVector>::One << SoundManagerBase::WindowEventProducerFieldId);
+
 const OSG::BitVector SoundManagerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var WindowEventProducerPtr SoundManagerBase::_sfWindowEventProducer
+    
+*/
+
+//! SoundManager description
+
+FieldDescription *SoundManagerBase::_desc[] = 
+{
+    new FieldDescription(SFWindowEventProducerPtr::getClassType(), 
+                     "WindowEventProducer", 
+                     WindowEventProducerFieldId, WindowEventProducerFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundManagerBase::getSFWindowEventProducer)
+};
 
 
 FieldContainerType SoundManagerBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType SoundManagerBase::_type(
     NULL,
     NULL, 
     SoundManager::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(SoundManagerBase, SoundManagerPtr)
 
@@ -133,6 +153,7 @@ void SoundManagerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SoundManagerBase::SoundManagerBase(void) :
+    _sfWindowEventProducer    (), 
     Inherited() 
 {
 }
@@ -142,6 +163,7 @@ SoundManagerBase::SoundManagerBase(void) :
 #endif
 
 SoundManagerBase::SoundManagerBase(const SoundManagerBase &source) :
+    _sfWindowEventProducer    (source._sfWindowEventProducer    ), 
     Inherited                 (source)
 {
 }
@@ -158,6 +180,11 @@ UInt32 SoundManagerBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (WindowEventProducerFieldMask & whichField))
+    {
+        returnValue += _sfWindowEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -167,6 +194,11 @@ void SoundManagerBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (WindowEventProducerFieldMask & whichField))
+    {
+        _sfWindowEventProducer.copyToBin(pMem);
+    }
+
 
 }
 
@@ -174,6 +206,11 @@ void SoundManagerBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (WindowEventProducerFieldMask & whichField))
+    {
+        _sfWindowEventProducer.copyFromBin(pMem);
+    }
 
 
 }
@@ -185,6 +222,9 @@ void SoundManagerBase::executeSyncImpl(      SoundManagerBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (WindowEventProducerFieldMask & whichField))
+        _sfWindowEventProducer.syncWith(pOther->_sfWindowEventProducer);
+
 
 }
 #else
@@ -194,6 +234,9 @@ void SoundManagerBase::executeSyncImpl(      SoundManagerBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (WindowEventProducerFieldMask & whichField))
+        _sfWindowEventProducer.syncWith(pOther->_sfWindowEventProducer);
 
 
 

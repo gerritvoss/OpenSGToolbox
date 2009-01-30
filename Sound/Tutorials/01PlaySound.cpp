@@ -346,14 +346,16 @@ int main(int argc, char **argv)
 	endEditCP(soundEmitter, SoundEmitter::SoundFieldMask);
 
 	soundEmitter->attachUpdateListener(TutorialWindowEventProducer);
-
+	//soundManager->setWindowEventProducer(TutorialWindowEventProducer);
 	CameraPtr cam = mgr->getCamera();
 
+	
 	NodePtr soundNode = Node::create();
 	beginEditCP(soundNode, Node::CoreFieldMask);
 		soundNode->setCore(soundEmitter);
 	endEditCP(soundNode, Node::CoreFieldMask);
-
+	
+	//NodePtr soundNode = soundManager->getSoundNode(0);
 	beginEditCP(planet, Node::ChildrenFieldMask);
 		planet->addChild(soundNode);
 	endEditCP(planet, Node::ChildrenFieldMask);
