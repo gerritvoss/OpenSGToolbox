@@ -49,6 +49,7 @@ bool ExitApp = false;
 bool pauseSound;
 SoundPtr sound;
 float rpm; //sound parameter
+float volume;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -92,6 +93,23 @@ public:
 			   rpm = 0;
 		   sound->setParameter(0, rpm);
        }
+
+	   if(e.getKey() == KeyEvent::KEY_S)
+       {
+		   volume+=.01;
+		   if (volume > 1)
+			   volume = 1;
+		   sound->setVolume(volume);
+       }
+	
+	   if(e.getKey() == KeyEvent::KEY_X)
+       {
+		   volume-=.01;
+		   if (volume < 0)
+			   volume = 0;
+		   sound->setVolume(volume);
+       }
+
    }
 
    virtual void keyReleased(const KeyEvent& e)
