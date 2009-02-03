@@ -299,6 +299,25 @@ UndoableEditPtr UndoManager::editToBeUndone(void) const
 	return UndoableEditPtr(NULL);
 }
 
+void UndoManager::undoOrRedoTo(const UInt32& index)
+{
+	if(index <= _Edits.size())
+	{
+		bool done = false;
+		while(_IndexOfNextAdd != index)
+		{
+			if(_IndexOfNextAdd >= index)
+			{
+				undo();
+			}
+			else
+			{
+				redo();
+			}
+		}
+	}
+}
+
 void UndoManager::redoTo(UndoableEditPtr edit)
 {
 	bool done = false;

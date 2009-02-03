@@ -131,6 +131,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UndoManager : public CompoundUndoableEdit,
 	//Undo or redo as appropriate.
 	void undoOrRedo(void);
 
+	
+	void undoOrRedoTo(const UInt32& index);
 
 	//Redoes all changes from indexOfNextAdd to edit.
 	void redoTo(UndoableEditPtr edit);
