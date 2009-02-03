@@ -110,6 +110,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics3DExtrude : public Graphics3DExtru
 	virtual void drawTextUnderline(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const;
 
 	virtual Real32 getClipPlaneOffset(void) const;
+
+    virtual void incrDrawBounderiesNesting(void);
+    virtual void decrDrawBounderiesNestring(void);
+
+    virtual void initAddDrawBounderies(void);
+    virtual void uninitAddDrawBounderies(void);
+    virtual void initRemoveDrawBounderies(void);
+    virtual void uninitRemoveDrawBounderies(void);
+    
+    virtual void activateDrawBounderiesTest(void);
+    virtual void deactivateDrawBounderiesTest(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

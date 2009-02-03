@@ -46,8 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGPolygonBorderBase.h"
-#include <OpenSG/OSGColorMaskChunk.h>
-#include <OpenSG/OSGStencilChunk.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -105,16 +103,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonBorder : public PolygonBorderBase
     virtual ~PolygonBorder(void); 
 
     /*! \}                                                                 */
-    
-    static ColorMaskChunkPtr getColorMask(void);
-    static StencilChunkPtr getStenciledAreaSetup(void);
-    static StencilChunkPtr getStenciledAreaCleanup(void);
-    static StencilChunkPtr getStenciledAreaTest(void);
-
-    static ColorMaskChunkPtr _ColorMask;
-    static StencilChunkPtr _StenciledAreaSetup;
-    static StencilChunkPtr _StenciledAreaCleanup;
-    static StencilChunkPtr _StenciledAreaTest;
 
 	void scaleUp(Pnt2f& TheVector, const Vec2f& Scale) const;
 	void scaleUp(Vec2f& TheVector, const Vec2f& Scale) const;

@@ -6,7 +6,6 @@
 	ProjectGUID="{A1522E75-3430-4B6C-883C-935732C315D3}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -83,8 +82,6 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
 				TargetMachine="1"
 			/>
@@ -105,6 +102,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -177,8 +177,6 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
 				TargetMachine="1"
 			/>
@@ -199,6 +197,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -5219,6 +5220,18 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Util\OSGLineUtils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGNumberRangeSet.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGNumberRangeSet.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGNumberRangeSet.inl"
 					>
 				</File>
 				<File

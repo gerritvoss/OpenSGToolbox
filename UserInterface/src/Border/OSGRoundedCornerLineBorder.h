@@ -44,8 +44,6 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include <OpenSG/OSGColorMaskChunk.h>
-#include <OpenSG/OSGStencilChunk.h>
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGRoundedCornerLineBorderBase.h"
@@ -106,18 +104,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING RoundedCornerLineBorder : public RoundedCo
     virtual ~RoundedCornerLineBorder(void); 
 
     /*! \}                                                                 */
-
-    static ColorMaskChunkPtr getColorMask(void);
-    static StencilChunkPtr getStenciledAreaSetup(void);
-    static StencilChunkPtr getStenciledAreaCleanup(void);
-    static StencilChunkPtr getStenciledAreaTest(void);
-
-    static ColorMaskChunkPtr _ColorMask;
-    static StencilChunkPtr _StenciledAreaSetup;
-    static StencilChunkPtr _StenciledAreaCleanup;
-    static StencilChunkPtr _StenciledAreaTest;
-
-    static UInt32 _StencilNesting;
     
     /*==========================  PRIVATE  ================================*/
   private:

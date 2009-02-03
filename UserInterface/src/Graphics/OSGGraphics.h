@@ -80,6 +80,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics : public GraphicsBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual void incrDrawBounderiesNesting(void) = 0;
+    virtual void decrDrawBounderiesNestring(void) = 0;
+
+    virtual void initAddDrawBounderies(void) = 0;
+    virtual void uninitAddDrawBounderies(void) = 0;
+    virtual void initRemoveDrawBounderies(void) = 0;
+    virtual void uninitRemoveDrawBounderies(void) = 0;
+    
+    virtual void activateDrawBounderiesTest(void) = 0;
+    virtual void deactivateDrawBounderiesTest(void) = 0;
+
+
 	
 	virtual void drawRect(const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Color4f& Color, const Real32& Opacity) const = 0;
 

@@ -64,11 +64,6 @@ UI Line Border.
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
-ColorMaskChunkPtr RoundedCornerLineBorder::_ColorMask = NullFC;
-StencilChunkPtr RoundedCornerLineBorder::_StenciledAreaSetup = NullFC;
-StencilChunkPtr RoundedCornerLineBorder::_StenciledAreaCleanup = NullFC;
-StencilChunkPtr RoundedCornerLineBorder::_StenciledAreaTest = NullFC;
-UInt32 RoundedCornerLineBorder::_StencilNesting = 0;
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -77,64 +72,6 @@ UInt32 RoundedCornerLineBorder::_StencilNesting = 0;
 void RoundedCornerLineBorder::initMethod (void)
 {
 }
-
-ColorMaskChunkPtr RoundedCornerLineBorder::getColorMask(void)
-{
-    if(_ColorMask == NullFC)
-    {
-        _ColorMask = ColorMaskChunk::create();
-        beginEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
-            _ColorMask->setMask(false, false, false,false);
-        endEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
-    }
-    return _ColorMask;
-}
-
-StencilChunkPtr RoundedCornerLineBorder::getStenciledAreaSetup(void)
-{
-    if(_StenciledAreaSetup == NullFC)
-    {
-        _StenciledAreaSetup = StencilChunk::create();
-        beginEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-            _StenciledAreaSetup->setStencilFunc(GL_ALWAYS);
-            _StenciledAreaSetup->setStencilOpFail(GL_REPLACE);
-            _StenciledAreaSetup->setStencilOpZFail(GL_REPLACE);
-            _StenciledAreaSetup->setStencilOpZPass(GL_REPLACE);
-        endEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-    }
-    return _StenciledAreaSetup;
-}
-
-StencilChunkPtr RoundedCornerLineBorder::getStenciledAreaCleanup(void)
-{
-    if(_StenciledAreaCleanup == NullFC)
-    {
-        _StenciledAreaCleanup = StencilChunk::create();
-        beginEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-            _StenciledAreaCleanup->setStencilFunc(GL_ALWAYS);
-            _StenciledAreaCleanup->setStencilOpFail(GL_REPLACE);
-            _StenciledAreaCleanup->setStencilOpZFail(GL_REPLACE);
-            _StenciledAreaCleanup->setStencilOpZPass(GL_REPLACE);
-        endEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-    }
-    return _StenciledAreaCleanup;
-}
-
-StencilChunkPtr RoundedCornerLineBorder::getStenciledAreaTest(void)
-{
-    if(_StenciledAreaTest == NullFC)
-    {
-        _StenciledAreaTest = StencilChunk::create();
-        beginEditCP(_StenciledAreaTest, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-            _StenciledAreaTest->setStencilFunc(GL_EQUAL);
-            _StenciledAreaTest->setStencilOpFail(GL_KEEP);
-            _StenciledAreaTest->setStencilOpZFail(GL_KEEP);
-            _StenciledAreaTest->setStencilOpZPass(GL_KEEP);
-        endEditCP(_StenciledAreaTest, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-    }
-    return _StenciledAreaTest;
-}
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -164,18 +101,12 @@ void RoundedCornerLineBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,
 
 void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
-    ++_StencilNesting;
+    g->incrDrawBounderiesNesting();
 
 	GLenum DepthTextEnabled = glIsEnabled(GL_DEPTH_TEST);
 	glDisable(GL_DEPTH_TEST);
-    //Mask the RGBA channels
-    getColorMask()->activate(g->getDrawAction());
 
-    //Setup to draw to the stencil buffer
-    beginEditCP(getStenciledAreaSetup(), StencilChunk::StencilValueFieldMask);
-        getStenciledAreaSetup()->setStencilValue(_StencilNesting);
-    endEditCP(getStenciledAreaSetup(), StencilChunk::StencilValueFieldMask);
-    getStenciledAreaSetup()->activate(g->getDrawAction());
+    g->initAddDrawBounderies();
 
     glBegin(GL_QUADS);
        glVertex2s(x-1,y+getCornerRadius()-1);
@@ -194,14 +125,9 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr 
 	g->drawDisc(Pnt2f(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 0, 1.57079633, 10, getColor(), getColor(), 1.0);
 	g->drawDisc(Pnt2f(x+Width-getCornerRadius(), y+getCornerRadius()),        getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 4.71238898,6.28318531, 10, getColor(), getColor(), 1.0);
 
-    //Unset drawing to the stencil buffer
-    getStenciledAreaSetup()->deactivate(g->getDrawAction());
+    g->uninitAddDrawBounderies();
 
-    //Setup to draw to the stencil buffer
-    beginEditCP(getStenciledAreaCleanup(), StencilChunk::StencilValueFieldMask);
-        getStenciledAreaCleanup()->setStencilValue(_StencilNesting-1);
-    endEditCP(getStenciledAreaCleanup(), StencilChunk::StencilValueFieldMask);
-    getStenciledAreaCleanup()->activate(g->getDrawAction());
+    g->initRemoveDrawBounderies();
 
 	//Special case if the Graphics are 3dExtrude
 	if(g->getType().isDerivedFrom(Graphics3DExtrude::getClassType()))
@@ -260,35 +186,17 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr 
 		g->drawRect(Pnt2f(x+getCornerRadius(), y+Height-getWidth()), Pnt2f(x+Width-getCornerRadius(), y+Height+1), getColor(), 1.0);
 	}
 
-    //Unset drawing to the stencil buffer
-    getStenciledAreaCleanup()->deactivate(g->getDrawAction());
-
-    //Unmask the RGBA channels
-    getColorMask()->deactivate(g->getDrawAction());
-    
-    //Setup testing against the stencil stencil buffer
-    beginEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
-        getStenciledAreaTest()->setStencilValue(_StencilNesting);
-    endEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
-    getStenciledAreaTest()->activate(g->getDrawAction());
+    g->uninitRemoveDrawBounderies();
+    g->activateDrawBounderiesTest();
 
 	if(DepthTextEnabled) {glEnable(GL_DEPTH_TEST);}
 }
 
 void RoundedCornerLineBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
-    --_StencilNesting;
-    //Unset testing against the stencil stencil buffer
-    getStenciledAreaTest()->deactivate(g->getDrawAction());
-    
-    //Mask the RGBA channels
-    getColorMask()->activate(g->getDrawAction());
+    g->decrDrawBounderiesNestring();
 
-    //Setup to draw to the stencil buffer
-    beginEditCP(getStenciledAreaCleanup(), StencilChunk::StencilValueFieldMask);
-        getStenciledAreaCleanup()->setStencilValue(_StencilNesting);
-    endEditCP(getStenciledAreaCleanup(), StencilChunk::StencilValueFieldMask);
-    getStenciledAreaCleanup()->activate(g->getDrawAction());
+    g->initRemoveDrawBounderies();
 
     glBegin(GL_QUADS);
        glVertex2s(x-2,y-2);
@@ -297,22 +205,9 @@ void RoundedCornerLineBorder::deactivateInternalDrawConstraints(const GraphicsPt
        glVertex2s(x-2,y+Height+2);
     glEnd();
 
-    //Unset drawing to the stencil buffer
-    getStenciledAreaCleanup()->deactivate(g->getDrawAction());
+    g->uninitRemoveDrawBounderies();
 
-    //Unmask the RGBA channels
-    getColorMask()->deactivate(g->getDrawAction());
-
-    if(_StencilNesting > 0)
-    {
-        beginEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
-            getStenciledAreaTest()->setStencilValue(_StencilNesting);
-        endEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
-
-        //Reset testing against the stencil stencil buffer
-        getStenciledAreaTest()->activate(g->getDrawAction());
-    }
-    
+    g->deactivateDrawBounderiesTest();
 }
 
 bool RoundedCornerLineBorder::isContained(const Pnt2f& p, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const

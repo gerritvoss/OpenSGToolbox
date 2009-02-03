@@ -46,6 +46,8 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGGraphics2DBase.h"
+#include <OpenSG/OSGColorMaskChunk.h>
+#include <OpenSG/OSGStencilChunk.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -107,6 +109,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2D : public Graphics2DBase
 	virtual void drawTextUnderline(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const;
    
 	virtual Real32 getClipPlaneOffset(void) const;
+
+    virtual void incrDrawBounderiesNesting(void);
+    virtual void decrDrawBounderiesNestring(void);
+
+    virtual void initAddDrawBounderies(void);
+    virtual void uninitAddDrawBounderies(void);
+    virtual void initRemoveDrawBounderies(void);
+    virtual void uninitRemoveDrawBounderies(void);
+    
+    virtual void activateDrawBounderiesTest(void);
+    virtual void deactivateDrawBounderiesTest(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -128,6 +141,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2D : public Graphics2DBase
 
     /*! \}                                                                 */
     
+    static ColorMaskChunkPtr createColorMask(void);
+    static StencilChunkPtr createStenciledAreaSetup(void);
+    static StencilChunkPtr createStenciledAreaCleanup(void);
+    static StencilChunkPtr createStenciledAreaTest(void);
+    
+    ColorMaskChunkPtr getColorMask(void);
+    StencilChunkPtr getStenciledAreaSetup(void);
+    StencilChunkPtr getStenciledAreaCleanup(void);
+    StencilChunkPtr getStenciledAreaTest(void);
+
+    ColorMaskChunkPtr _ColorMask;
+    StencilChunkPtr _StenciledAreaSetup;
+    StencilChunkPtr _StenciledAreaCleanup;
+    StencilChunkPtr _StenciledAreaTest;
+    
+    UInt32 _StencilNesting;
     /*==========================  PRIVATE  ================================*/
   private:
 

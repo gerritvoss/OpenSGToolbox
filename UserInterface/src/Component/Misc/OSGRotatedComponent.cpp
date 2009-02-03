@@ -91,12 +91,31 @@ void RotatedComponent::drawInternal(const GraphicsPtr TheGraphics) const
 {
     if(getInternalComponent() != NullFC)
     {
+        Pnt2f TopLeft, BottomRight;
+        getInsideInsetsBounds(TopLeft, BottomRight);
+
+        TheGraphics->incrDrawBounderiesNesting();
+        
+        TheGraphics->initAddDrawBounderies();
+        TheGraphics->drawRect(TopLeft, BottomRight,Color4f(0.0f,0.0f,0.0f,1.0f),1.0);
+        TheGraphics->uninitAddDrawBounderies();
+
+        TheGraphics->activateDrawBounderiesTest();
+        
+        
         glPushMatrix();
         glTranslatef(static_cast<Real32>(getSize().x())/2.0,static_cast<Real32>(getSize().y())/2.0,0.0);
         glRotatef(-osgrad2degree(getAngle()), 0.0,0.0,1.0);
         glTranslatef(-static_cast<Real32>(getInternalComponent()->getSize().x())/2.0,-static_cast<Real32>(getInternalComponent()->getSize().y())/2.0,0.0);
         getInternalComponent()->draw(TheGraphics);
         glPopMatrix();
+
+
+        TheGraphics->decrDrawBounderiesNestring();
+        TheGraphics->initRemoveDrawBounderies();
+        TheGraphics->drawRect(TopLeft, BottomRight,Color4f(0.0f,0.0f,0.0f,1.0f),1.0);
+        TheGraphics->uninitRemoveDrawBounderies();
+        TheGraphics->activateDrawBounderiesTest();
     }
 }
 

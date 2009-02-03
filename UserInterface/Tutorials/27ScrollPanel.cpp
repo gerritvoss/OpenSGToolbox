@@ -172,7 +172,7 @@ int main(int argc, char **argv)
     beginEditCP(ScrollPanelUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
         ScrollPanelUIViewport->setViewComponent(ExampleViewablePanel);
         ScrollPanelUIViewport->setViewPosition(Pnt2f(150,150));
-        ScrollPanelUIViewport->setPreferredSize(Vec2f(100,100));
+        ScrollPanelUIViewport->setPreferredSize(Vec2f(200,200));
     endEditCP(ScrollPanelUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
 
        /******************************************************
@@ -207,8 +207,11 @@ int main(int argc, char **argv)
     
 	ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
     beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2f(100,150));
-        ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        ExampleScrollPanel->setPreferredSize(Vec2f(100,100));
+        ExampleScrollPanel->setVerticalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_LEFT);
+        ExampleScrollPanel->setHorizontalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_BOTTOM);
+        
+        //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     

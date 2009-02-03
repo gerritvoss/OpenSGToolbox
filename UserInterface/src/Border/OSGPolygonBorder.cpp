@@ -63,10 +63,6 @@ UI Polygon Border.
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
-ColorMaskChunkPtr PolygonBorder::_ColorMask = NullFC;
-StencilChunkPtr PolygonBorder::_StenciledAreaSetup = NullFC;
-StencilChunkPtr PolygonBorder::_StenciledAreaCleanup = NullFC;
-StencilChunkPtr PolygonBorder::_StenciledAreaTest = NullFC;
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -74,68 +70,6 @@ StencilChunkPtr PolygonBorder::_StenciledAreaTest = NullFC;
 
 void PolygonBorder::initMethod (void)
 {
-}
-ColorMaskChunkPtr PolygonBorder::getColorMask(void)
-{
-    if(_ColorMask == NullFC)
-    {
-        _ColorMask = ColorMaskChunk::create();
-        beginEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
-            _ColorMask->setMask(false, false, false,false);
-        endEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
-    }
-    return _ColorMask;
-}
-
-StencilChunkPtr PolygonBorder::getStenciledAreaSetup(void)
-{
-    if(_StenciledAreaSetup == NullFC)
-    {
-        _StenciledAreaSetup = StencilChunk::create();
-        beginEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-            _StenciledAreaSetup->setStencilFunc(GL_ALWAYS);
-            _StenciledAreaSetup->setStencilValue(1);
-            _StenciledAreaSetup->setStencilMask(UInt32(0xFFFFFFFF));
-            _StenciledAreaSetup->setStencilOpFail(GL_REPLACE);
-            _StenciledAreaSetup->setStencilOpZFail(GL_REPLACE);
-            _StenciledAreaSetup->setStencilOpZPass(GL_REPLACE);
-        endEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-    }
-    return _StenciledAreaSetup;
-}
-
-StencilChunkPtr PolygonBorder::getStenciledAreaCleanup(void)
-{
-    if(_StenciledAreaCleanup == NullFC)
-    {
-        _StenciledAreaCleanup = StencilChunk::create();
-        beginEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-            _StenciledAreaCleanup->setStencilFunc(GL_ALWAYS);
-            _StenciledAreaCleanup->setStencilValue(0);
-            _StenciledAreaCleanup->setStencilMask(UInt32(0xFFFFFFFF));
-            _StenciledAreaCleanup->setStencilOpFail(GL_ZERO);
-            _StenciledAreaCleanup->setStencilOpZFail(GL_ZERO);
-            _StenciledAreaCleanup->setStencilOpZPass(GL_ZERO);
-        endEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-    }
-    return _StenciledAreaCleanup;
-}
-
-StencilChunkPtr PolygonBorder::getStenciledAreaTest(void)
-{
-    if(_StenciledAreaTest == NullFC)
-    {
-        _StenciledAreaTest = StencilChunk::create();
-        beginEditCP(_StenciledAreaTest, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-            _StenciledAreaTest->setStencilFunc(GL_EQUAL);
-            _StenciledAreaTest->setStencilValue(1);
-            _StenciledAreaTest->setStencilMask(UInt32(0xFFFFFFFF));
-            _StenciledAreaTest->setStencilOpFail(GL_KEEP);
-            _StenciledAreaTest->setStencilOpZFail(GL_KEEP);
-            _StenciledAreaTest->setStencilOpZPass(GL_KEEP);
-        endEditCP(_StenciledAreaTest, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-    }
-    return _StenciledAreaTest;
 }
 
 /***************************************************************************\
@@ -226,11 +160,10 @@ void PolygonBorder::activateInternalDrawConstraints(const GraphicsPtr g, const R
 {
 	GLenum DepthTextEnabled = glIsEnabled(GL_DEPTH_TEST);
 	glDisable(GL_DEPTH_TEST);
-    //Mask the RGBA channels
-    getColorMask()->activate(g->getDrawAction());
 
-    //Setup to draw to the stencil buffer
-    getStenciledAreaSetup()->activate(g->getDrawAction());
+    g->incrDrawBounderiesNesting();
+    
+    g->initAddDrawBounderies();
 
     glBegin(GL_POLYGON);
 		Pnt2f p1,
@@ -286,28 +219,18 @@ void PolygonBorder::activateInternalDrawConstraints(const GraphicsPtr g, const R
 		}
     glEnd();
 
-    //Unset drawing to the stencil buffer
-    getStenciledAreaSetup()->deactivate(g->getDrawAction());
-
-    //Unset Color Mask
-    getColorMask()->deactivate(g->getDrawAction());
+    g->uninitAddDrawBounderies();
     
-    //Setup testing against the stencil stencil buffer
-    getStenciledAreaTest()->activate(g->getDrawAction());
+    g->activateDrawBounderiesTest();
 
 	if(DepthTextEnabled) {glEnable(GL_DEPTH_TEST);}
 }
 
 void PolygonBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
-    //Unset testing against the stencil stencil buffer
-    getStenciledAreaTest()->deactivate(g->getDrawAction());
-    
-    //Mask the RGBA channels
-    getColorMask()->activate(g->getDrawAction());
+    g->decrDrawBounderiesNestring();
 
-    //Setup to draw to the stencil buffer
-    getStenciledAreaCleanup()->activate(g->getDrawAction());
+    g->initRemoveDrawBounderies();
 
     glBegin(GL_QUADS);
        glVertex2s(x-2,y-2);
@@ -316,11 +239,9 @@ void PolygonBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const
        glVertex2s(x-2,y+Height+2);
     glEnd();
 
-    //Unset drawing to the stencil buffer
-    getStenciledAreaCleanup()->deactivate(g->getDrawAction());
-
-    //Unmask the RGBA channels
-    getColorMask()->deactivate(g->getDrawAction());
+    g->uninitRemoveDrawBounderies();
+    
+    g->deactivateDrawBounderiesTest();
 }
 
 bool PolygonBorder::isContained(const Pnt2f& p, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const

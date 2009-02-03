@@ -74,6 +74,53 @@ void Graphics2D::initMethod (void)
 {
 }
 
+ColorMaskChunkPtr Graphics2D::createColorMask(void)
+{
+    ColorMaskChunkPtr _ColorMask = ColorMaskChunk::create();
+    beginEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
+        _ColorMask->setMask(false, false, false,false);
+    endEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
+    return _ColorMask;
+}
+
+StencilChunkPtr Graphics2D::createStenciledAreaSetup(void)
+{
+    StencilChunkPtr _StenciledAreaSetup = StencilChunk::create();
+    beginEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+        _StenciledAreaSetup->setStencilFunc(GL_ALWAYS);
+        _StenciledAreaSetup->setStencilOpFail(GL_REPLACE);
+        _StenciledAreaSetup->setStencilOpZFail(GL_REPLACE);
+        _StenciledAreaSetup->setStencilOpZPass(GL_REPLACE);
+        _StenciledAreaSetup->setStencilMask(UInt32(0xFFFFFFFF));
+    endEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+    return _StenciledAreaSetup;
+}
+
+StencilChunkPtr Graphics2D::createStenciledAreaCleanup(void)
+{
+    StencilChunkPtr _StenciledAreaCleanup = StencilChunk::create();
+    beginEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+        _StenciledAreaCleanup->setStencilFunc(GL_ALWAYS);
+        _StenciledAreaCleanup->setStencilOpFail(GL_REPLACE);
+        _StenciledAreaCleanup->setStencilOpZFail(GL_REPLACE);
+        _StenciledAreaCleanup->setStencilOpZPass(GL_REPLACE);
+        _StenciledAreaCleanup->setStencilMask(UInt32(0xFFFFFFFF));
+    endEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+    return _StenciledAreaCleanup;
+}
+
+StencilChunkPtr Graphics2D::createStenciledAreaTest(void)
+{
+    StencilChunkPtr _StenciledAreaTest = StencilChunk::create();
+    beginEditCP(_StenciledAreaTest, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+        _StenciledAreaTest->setStencilFunc(GL_EQUAL);
+        _StenciledAreaTest->setStencilOpFail(GL_KEEP);
+        _StenciledAreaTest->setStencilOpZFail(GL_KEEP);
+        _StenciledAreaTest->setStencilOpZPass(GL_KEEP);
+        _StenciledAreaTest->setStencilMask(UInt32(0xFFFFFFFF));
+    endEditCP(_StenciledAreaTest, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+    return _StenciledAreaTest;
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -86,6 +133,9 @@ Real32 Graphics2D::getClipPlaneOffset(void) const
 
 void Graphics2D::preDraw()
 {
+    //Reset the Stencil Nesting
+    _StencilNesting = 0;
+
    glPushAttrib(GL_LIGHTING_BIT | GL_POLYGON_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT);
    
 	getUIDepth()->activate(getDrawAction());
@@ -517,6 +567,129 @@ void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, const UIF
 
     glEnd();
 }
+
+ColorMaskChunkPtr Graphics2D::getColorMask(void)
+{
+    if(_ColorMask == NullFC)
+    {
+        _ColorMask = createColorMask();
+        addRefCP(_ColorMask);
+    }
+    return _ColorMask;
+}
+
+StencilChunkPtr Graphics2D::getStenciledAreaSetup(void)
+{
+    if(_StenciledAreaSetup == NullFC)
+    {
+        _StenciledAreaSetup = createStenciledAreaSetup();
+        addRefCP(_StenciledAreaSetup);
+    }
+    return _StenciledAreaSetup;
+}
+
+StencilChunkPtr Graphics2D::getStenciledAreaCleanup(void)
+{
+    if(_StenciledAreaCleanup == NullFC)
+    {
+        _StenciledAreaCleanup = createStenciledAreaCleanup();
+        addRefCP(_StenciledAreaCleanup);
+    }
+    return _StenciledAreaCleanup;
+}
+
+StencilChunkPtr Graphics2D::getStenciledAreaTest(void)
+{
+    if(_StenciledAreaTest == NullFC)
+    {
+        _StenciledAreaTest = createStenciledAreaTest();
+        addRefCP(_StenciledAreaTest);
+    }
+    return _StenciledAreaTest;
+}
+
+void Graphics2D::incrDrawBounderiesNesting(void)
+{
+    ++_StencilNesting;
+}
+
+void Graphics2D::decrDrawBounderiesNestring(void)
+{
+    if(_StencilNesting != 0)
+    {
+        --_StencilNesting;
+    }
+}
+
+void Graphics2D::initAddDrawBounderies(void)
+{
+    //Mask the RGBA channels
+    getColorMask()->activate(getDrawAction());
+
+    //Setup to draw to the stencil buffer
+    beginEditCP(getStenciledAreaSetup(), StencilChunk::StencilValueFieldMask);
+        getStenciledAreaSetup()->setStencilValue(_StencilNesting);
+    endEditCP(getStenciledAreaSetup(), StencilChunk::StencilValueFieldMask);
+    getStenciledAreaSetup()->activate(getDrawAction());
+}
+
+void Graphics2D::uninitAddDrawBounderies(void)
+{
+    //Unset drawing to the stencil buffer
+    getStenciledAreaSetup()->deactivate(getDrawAction());
+
+    //Unmask the RGBA channels
+    getColorMask()->deactivate(getDrawAction());
+}
+
+void Graphics2D::initRemoveDrawBounderies(void)
+{
+    //Mask the RGBA channels
+    getColorMask()->activate(getDrawAction());
+
+    //Setup to draw to the stencil buffer
+    beginEditCP(getStenciledAreaCleanup(), StencilChunk::StencilValueFieldMask);
+        getStenciledAreaCleanup()->setStencilValue(_StencilNesting-1);
+    endEditCP(getStenciledAreaCleanup(), StencilChunk::StencilValueFieldMask);
+    getStenciledAreaCleanup()->activate(getDrawAction());
+}
+
+void Graphics2D::uninitRemoveDrawBounderies(void)
+{
+    //Unset drawing to the stencil buffer
+    getStenciledAreaCleanup()->deactivate(getDrawAction());
+
+    //Unmask the RGBA channels
+    getColorMask()->deactivate(getDrawAction());
+}
+
+void Graphics2D::activateDrawBounderiesTest(void)
+{
+    //Setup testing against the stencil stencil buffer
+    beginEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
+        getStenciledAreaTest()->setStencilValue(_StencilNesting);
+    endEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
+    getStenciledAreaTest()->activate(getDrawAction());
+}
+
+void Graphics2D::deactivateDrawBounderiesTest(void)
+{
+    if(_StencilNesting > 0)
+    {
+        beginEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
+            getStenciledAreaTest()->setStencilValue(_StencilNesting);
+        endEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
+
+        //Reset testing against the stencil stencil buffer
+        getStenciledAreaTest()->activate(getDrawAction());
+    }
+    else
+    {
+        //Unset testing against the stencil stencil buffer
+        getStenciledAreaTest()->deactivate(getDrawAction());
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -549,6 +722,10 @@ Graphics2D::Graphics2D(const Graphics2D &source) :
 
 Graphics2D::~Graphics2D(void)
 {
+    subRefCP(_ColorMask);
+    subRefCP(_StenciledAreaSetup);
+    subRefCP(_StenciledAreaCleanup);
+    subRefCP(_StenciledAreaTest);
 }
 
 /*----------------------------- class specific ----------------------------*/

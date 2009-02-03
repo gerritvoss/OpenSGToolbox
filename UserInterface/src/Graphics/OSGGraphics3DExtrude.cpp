@@ -736,6 +736,39 @@ void Graphics3DExtrude::drawCharacters( const TextLayoutResult& layoutResult, co
 
     glEnd();
 }
+
+void Graphics3DExtrude::incrDrawBounderiesNesting(void)
+{
+}
+
+void Graphics3DExtrude::decrDrawBounderiesNestring(void)
+{
+}
+
+void Graphics3DExtrude::initAddDrawBounderies(void)
+{
+}
+
+void Graphics3DExtrude::uninitAddDrawBounderies(void)
+{
+}
+
+void Graphics3DExtrude::initRemoveDrawBounderies(void)
+{
+}
+
+void Graphics3DExtrude::uninitRemoveDrawBounderies(void)
+{
+}
+
+void Graphics3DExtrude::activateDrawBounderiesTest(void)
+{
+}
+
+void Graphics3DExtrude::deactivateDrawBounderiesTest(void)
+{
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
