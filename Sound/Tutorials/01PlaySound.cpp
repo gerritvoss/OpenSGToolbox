@@ -373,7 +373,7 @@ int main(int argc, char **argv)
 	//initialization, args: media path, media filename, max_channel
 	soundManager->init(".\\","test.fev", 64);
 	sound = soundManager->getSound(0);
-	sound2 = soundManager->getSound(1);
+	sound2 = soundManager->getSound(0);
 	sound3 = soundManager->getSound(2);
 	
 	Pnt3f position(0, 0, 0);
