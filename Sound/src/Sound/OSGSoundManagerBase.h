@@ -67,15 +67,8 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-//#include <OpenSG/OSGWindowEventProducer.h> // WindowEventProducer type
-#include <OpenSG/Input/OSGWindowAdapter.h>
-
-// The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
-
-// Input
-#include <OpenSG/Input/OSGWindowUtils.h>
-
+#include <OpenSG/Input/OSGWindowUtils.h> // WindowEventProducer type
+#include <OpenSG/OSGCamera.h> // Camera type
 
 #include "OSGSoundManagerFields.h"
 
@@ -100,10 +93,12 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManagerBase : public AttachmentContainer
     enum
     {
         WindowEventProducerFieldId = Inherited::NextFieldId,
-        NextFieldId                = WindowEventProducerFieldId + 1
+        CameraFieldId              = WindowEventProducerFieldId + 1,
+        NextFieldId                = CameraFieldId              + 1
     };
 
     static const OSG::BitVector WindowEventProducerFieldMask;
+    static const OSG::BitVector CameraFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,9 +126,12 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManagerBase : public AttachmentContainer
     /*! \{                                                                 */
 
            SFWindowEventProducerPtr *getSFWindowEventProducer(void);
+           SFCameraPtr         *getSFCamera         (void);
 
            WindowEventProducerPtr &getWindowEventProducer(void);
      const WindowEventProducerPtr &getWindowEventProducer(void) const;
+           CameraPtr           &getCamera         (void);
+     const CameraPtr           &getCamera         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -141,6 +139,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManagerBase : public AttachmentContainer
     /*! \{                                                                 */
 
      void setWindowEventProducer( const WindowEventProducerPtr &value );
+     void setCamera         ( const CameraPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -168,6 +167,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManagerBase : public AttachmentContainer
     /*! \{                                                                 */
 
     SFWindowEventProducerPtr   _sfWindowEventProducer;
+    SFCameraPtr         _sfCamera;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  SoundManagerBase::WindowEventProducerFieldMask = 
     (TypeTraits<BitVector>::One << SoundManagerBase::WindowEventProducerFieldId);
 
+const OSG::BitVector  SoundManagerBase::CameraFieldMask = 
+    (TypeTraits<BitVector>::One << SoundManagerBase::CameraFieldId);
+
 const OSG::BitVector SoundManagerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector SoundManagerBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var WindowEventProducerPtr SoundManagerBase::_sfWindowEventProducer
+    
+*/
+/*! \var CameraPtr       SoundManagerBase::_sfCamera
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *SoundManagerBase::_desc[] =
                      "WindowEventProducer", 
                      WindowEventProducerFieldId, WindowEventProducerFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundManagerBase::getSFWindowEventProducer)
+                     (FieldAccessMethod) &SoundManagerBase::getSFWindowEventProducer),
+    new FieldDescription(SFCameraPtr::getClassType(), 
+                     "Camera", 
+                     CameraFieldId, CameraFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundManagerBase::getSFCamera)
 };
 
 
@@ -153,7 +164,8 @@ void SoundManagerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SoundManagerBase::SoundManagerBase(void) :
-    _sfWindowEventProducer    (), 
+    _sfWindowEventProducer    (WindowEventProducerPtr(NullFC)), 
+    _sfCamera                 (CameraPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -164,6 +176,7 @@ SoundManagerBase::SoundManagerBase(void) :
 
 SoundManagerBase::SoundManagerBase(const SoundManagerBase &source) :
     _sfWindowEventProducer    (source._sfWindowEventProducer    ), 
+    _sfCamera                 (source._sfCamera                 ), 
     Inherited                 (source)
 {
 }
@@ -185,6 +198,11 @@ UInt32 SoundManagerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfWindowEventProducer.getBinSize();
     }
 
+    if(FieldBits::NoField != (CameraFieldMask & whichField))
+    {
+        returnValue += _sfCamera.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -197,6 +215,11 @@ void SoundManagerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (WindowEventProducerFieldMask & whichField))
     {
         _sfWindowEventProducer.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CameraFieldMask & whichField))
+    {
+        _sfCamera.copyToBin(pMem);
     }
 
 
@@ -212,6 +235,11 @@ void SoundManagerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfWindowEventProducer.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (CameraFieldMask & whichField))
+    {
+        _sfCamera.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -225,6 +253,9 @@ void SoundManagerBase::executeSyncImpl(      SoundManagerBase *pOther,
     if(FieldBits::NoField != (WindowEventProducerFieldMask & whichField))
         _sfWindowEventProducer.syncWith(pOther->_sfWindowEventProducer);
 
+    if(FieldBits::NoField != (CameraFieldMask & whichField))
+        _sfCamera.syncWith(pOther->_sfCamera);
+
 
 }
 #else
@@ -237,6 +268,9 @@ void SoundManagerBase::executeSyncImpl(      SoundManagerBase *pOther,
 
     if(FieldBits::NoField != (WindowEventProducerFieldMask & whichField))
         _sfWindowEventProducer.syncWith(pOther->_sfWindowEventProducer);
+
+    if(FieldBits::NoField != (CameraFieldMask & whichField))
+        _sfCamera.syncWith(pOther->_sfCamera);
 
 
 

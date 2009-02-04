@@ -77,6 +77,13 @@ SFWindowEventProducerPtr *SoundManagerBase::getSFWindowEventProducer(void)
     return &_sfWindowEventProducer;
 }
 
+//! Get the SoundManager::_sfCamera field.
+inline
+SFCameraPtr *SoundManagerBase::getSFCamera(void)
+{
+    return &_sfCamera;
+}
+
 
 //! Get the value of the SoundManager::_sfWindowEventProducer field.
 inline
@@ -97,6 +104,27 @@ inline
 void SoundManagerBase::setWindowEventProducer(const WindowEventProducerPtr &value)
 {
     _sfWindowEventProducer.setValue(value);
+}
+
+//! Get the value of the SoundManager::_sfCamera field.
+inline
+CameraPtr &SoundManagerBase::getCamera(void)
+{
+    return _sfCamera.getValue();
+}
+
+//! Get the value of the SoundManager::_sfCamera field.
+inline
+const CameraPtr &SoundManagerBase::getCamera(void) const
+{
+    return _sfCamera.getValue();
+}
+
+//! Set the value of the SoundManager::_sfCamera field.
+inline
+void SoundManagerBase::setCamera(const CameraPtr &value)
+{
+    _sfCamera.setValue(value);
 }
 
 

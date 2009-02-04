@@ -86,12 +86,38 @@ void Sound::initMethod (void)
 Sound::Sound(void) :
     Inherited()
 {
+	for (int i = 0; i < 20; i++){
+		listeners[i] = NULL;
+	}
 }
 
 Sound::Sound(const Sound &source) :
     Inherited(source)
 {
+	for (int i = 0; i < 20; i++){
+		listeners[i] = NULL;
+	}
 }
+
+
+void Sound::addSoundListener(SoundListenerPtr listener){
+	for (int i = 0; i < 20; i++){
+		if (!listeners[i]){
+			listeners[i] = listener;
+			return;
+		}
+	}
+}
+
+void Sound::removeSoundListener(SoundListenerPtr listener){
+	for (int i = 0; i < 20; i++){
+		if (listeners[i] && (listeners[i] == listener)){
+			listeners[i] = NULL;
+			return;
+		}
+	}
+}
+
 
 Sound::~Sound(void)
 {

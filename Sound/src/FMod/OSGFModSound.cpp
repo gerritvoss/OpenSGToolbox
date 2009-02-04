@@ -48,8 +48,35 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFModSound.h"
+#include "Sound/Events/OSGSoundListener.h"
+#include "Sound/Events/OSGSoundEvent.h"
 
 OSG_BEGIN_NAMESPACE
+
+
+/************************fmod callback ************************************/
+FMOD_RESULT  F_CALLBACK  fmod_callback(
+	FMOD_EVENT *  event, 
+	FMOD_EVENT_CALLBACKTYPE  type, 
+	void *  param1, 
+	void *  param2, 
+	void *  userdata){
+	FModSound* sound = (FModSound*)userdata;
+	for (int i = 0; i < 20; i++){
+		if (!sound->listeners[i]) continue;
+		SoundListenerPtr listener = sound->listeners[i];
+		
+		NodePtr n = Node::create();
+//		SoundEvent sEvent(n, Time());
+		switch (type){
+			case (FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_START):
+				//listener->soundPlayed(
+				break;
+		}
+	
+	}
+	return FMOD_OK;
+}
 
 /***************************************************************************\
  *                            Description                                  *
@@ -77,6 +104,7 @@ FMOD::Event*& FModSound::getFmodEvent(){
 
 void FModSound::setFModEvent(FMOD::Event* event){
 	this->event = event;
+	event->setCallback(fmod_callback, this);
 }
 void FModSound::play(void){
 	event->start();
@@ -194,6 +222,7 @@ FModSound::FModSound(const FModSound &source) :
 
 FModSound::~FModSound(void)
 {
+	
 }
 
 /*----------------------------- class specific ----------------------------*/

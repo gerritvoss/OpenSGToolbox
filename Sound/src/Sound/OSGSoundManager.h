@@ -43,7 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-
+#include <OpenSG/OSGCamera.h>
 #include "OSGSoundManagerBase.h"
 #include "OSGSound.h"
 #include "OSGSoundEmitter.h"
@@ -114,6 +114,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public SoundManagerBase
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
+
 
     SoundManager(void);
     SoundManager(const SoundManager &source);

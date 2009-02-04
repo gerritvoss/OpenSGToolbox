@@ -46,6 +46,10 @@
 #include "OSGSoundDef.h"
 
 #include "OSGSoundBase.h"
+#include "Sound/Events/OSGSoundListener.h"
+
+#include "fmod.hpp"
+#include "fmod_errors.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,6 +62,7 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
   private:
 
     typedef SoundBase Inherited;
+	
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -69,6 +74,11 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
     virtual void changed(BitVector  whichField, 
                          UInt32     origin    );
 
+	virtual void addSoundListener(SoundListenerPtr listener);
+
+	virtual void removeSoundListener(SoundListenerPtr listener);
+
+	
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
@@ -139,6 +149,7 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
 
     Sound(void);
     Sound(const Sound &source);
+	SoundListenerPtr listeners[20];
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -156,6 +167,7 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
     friend class SoundBase;
     static void initMethod(void);
 	virtual void update() = 0;
+	
 	
     // prohibit default functions (move to 'public' if you need one)
 

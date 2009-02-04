@@ -46,6 +46,7 @@
 
 #include "OSGFModSoundBase.h"
 
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief FModSound class. See \ref 
@@ -61,6 +62,8 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
     /*==========================  PUBLIC  =================================*/
   public:
 
+	friend FMOD_RESULT  F_CALLBACK fmod_callback(FMOD_EVENT *  event, 	FMOD_EVENT_CALLBACKTYPE  type, 	void *  param1, 	void *  param2, 	void *  userdata);
+	
 	/**
 	* return the underlying Fmod Event object
 	*/

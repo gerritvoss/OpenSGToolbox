@@ -30,6 +30,7 @@ helpful tips and incites into the workings of MiniMap
 
 // Input
 #include <OpenSG/Input/OSGWindowUtils.h>
+#include <OpenSG/OSGViewport.h>
 
 //fmod wrapper
 #include <OpenSG/Sound/OSGFModSoundManager.h>
@@ -465,6 +466,22 @@ int main(int argc, char **argv)
 		TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
 		soundManager->update(0);		
+
+		Matrix camW2S;
+		ViewportPtr vp = Viewport::create();
+		cam->getWorldToScreen(camW2S, *vp);
+		camW2S.invert();
+		Pnt3f org(0, 0, 0);
+		camW2S.mult(org);
+		printf("position: %8f, %8f, %8f\r\n", org[0], org[1], org[2]);
+
+		Vec3f up(0, 1, 0);
+		camW2S.mult(up);
+		printf("up: %8f, %8f, %8f\r\n", up[0], up[1], up[2]);
+
+		Vec3f forward(0, 0, -1);
+		camW2S.mult(forward);
+		printf("forward: %8f, %8f, %8f\r\n", forward[0], forward[1], forward[2]);
     }
 	sound->stop();
 	//FMOD_Event_Stop(event, 1);
