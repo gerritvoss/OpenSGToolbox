@@ -123,6 +123,7 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 
 	Pnt2f ViewPointLocation;
 	Quaternion ViewPointOrientation;
+    Pnt2f LockedIndicatorLocation;
 
 	std::vector<Pnt2f> InidicatorLocations;
 	std::vector<Quaternion> InidicatorOrientations;

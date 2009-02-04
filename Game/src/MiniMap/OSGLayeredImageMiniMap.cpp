@@ -145,11 +145,15 @@ void LayeredImageMiniMap::updateAllTransformations(void)
         //Update Rotated Component Position
         AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::Ptr::dcast(_RotatedIndicator->getConstraints());
         Pnt2f AlignedPosition;
-        if(getLockMapOrientation())
+        if(!getLockMapOrientation())    //When map is Unlocked
         {
-            AlignedPosition = Pnt2f(ViewPointLocation.x()*getSize().x(),ViewPointLocation.y()*getSize().y()) - 0.5f*_RotatedIndicator->getSize();
+            Vec2f RotatedViewpoint((ViewPointLocation.x()-0.5f)*getUnlockedMapSize().x(),(ViewPointLocation.y()-0.5f)*getUnlockedMapSize().y());
+            
+            RotatedViewpoint.setValues(RotatedViewpoint.x()*osgcos(Angle)-RotatedViewpoint.y()*osgsin(Angle), RotatedViewpoint.x()*osgsin(Angle)+RotatedViewpoint.y()*osgcos(Angle));
+            
+            AlignedPosition = -0.5f*Pnt2f(_RotatedIndicator->getSize()) + 0.5f*getSize() - RotatedViewpoint;
         }
-        else    //still is not right and needs some serious attention
+        else
         {
             AlignedPosition = Pnt2f(ViewPointLocation.x()*getSize().x(),ViewPointLocation.y()*getSize().y()) - 0.5f*_RotatedIndicator->getSize();
         }
@@ -311,6 +315,12 @@ void LayeredImageMiniMap::drawInternal(const GraphicsPtr Graphics) const
 void LayeredImageMiniMap::setupDrawInternals(void)
 {
 	AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::create();
+    
+    if(_RotatedIndicator != NullFC)
+    {
+       LockedIndicatorLocation = Pnt2f(ViewPointLocation.x()*getSize().x(),ViewPointLocation.y()*getSize().y()) - 0.5f*_RotatedIndicator->getSize();
+
+    }
 
     if(getViewPointIndicator() != NullFC && getViewPointIndicator()->getGenerator() != NullFC)
     {
