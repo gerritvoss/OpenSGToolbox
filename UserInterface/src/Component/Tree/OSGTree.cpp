@@ -49,10 +49,15 @@
 
 #include "OSGTree.h"
 #include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
+#include "Component/Tree/Selection/OSGDefaultTreeSelectionModel.h"
 #include "Component/Container/OSGUIViewport.h"
 
 #include "Component/Tree/ComponentGenerators/OSGDefaultTreeComponentGenerator.h"
 #include "Component/Scroll/OSGScrollBar.h"
+#include "Util/OSGUIDrawUtils.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,6 +85,95 @@ void Tree::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+
+void Tree::mousePressed(const MouseEvent& e)
+{
+    Pnt2f PointInCompSpace(DrawingSurfaceToComponent(e.getLocation(),ComponentPtr(this)));
+
+    //Determine the row the mouse is located
+    Int32 Row = getRowForLocation(PointInCompSpace);
+
+    if(Row >= 0 && Row < getRowCount())
+    {
+		if(getParentWindow() != NullFC &&
+		   getParentWindow()->getDrawingSurface() != NullFC &&
+		   getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+		{
+			if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+			{
+				getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionRow(), Row);
+			}
+			else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+			{
+				getSelectionModel()->removeSelectionRow(Row);// this toggles the interval
+			}
+			else
+			{
+				getSelectionModel()->setSelectionRow(Row);
+			}
+		}
+    }
+	Container::mousePressed(e);
+}
+
+void Tree::keyTyped(const KeyEvent& e)
+{
+	bool UpdateSelectionIndex(false);
+	Int32 ListIndex(0);
+	switch(e.getKey())
+	{
+	case KeyEvent::KEY_UP:
+	case KeyEvent::KEY_DOWN:
+	case KeyEvent::KEY_RIGHT:
+	case KeyEvent::KEY_LEFT:
+			//ListIndex = osgMax(_FocusedIndex-1,0);
+			//UpdateSelectionIndex = true;
+		break;
+	case KeyEvent::KEY_ENTER:
+		if (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		{
+		//	getSelectionModel()->removeSelectionInterval(_FocusedIndex,_FocusedIndex);// this toggles the interval
+		}
+		else
+		{
+		//	getSelectionModel()->setSelectionInterval(_FocusedIndex, _FocusedIndex);
+		}
+		break;
+	case KeyEvent::KEY_HOME:
+		//ListIndex = 0;
+		UpdateSelectionIndex = true;
+		break;
+	case KeyEvent::KEY_END:
+		//ListIndex = getModel()->getSize()-1;
+		UpdateSelectionIndex = true;
+		break;
+	case KeyEvent::KEY_PAGE_UP:
+		//ListIndex = osgMax(_FocusedIndex-(_BottomDrawnIndex - _TopDrawnIndex),0);
+		UpdateSelectionIndex = true;
+		break;
+	case KeyEvent::KEY_PAGE_DOWN:
+		//ListIndex = osgMin<Int32>(_FocusedIndex+(_BottomDrawnIndex - _TopDrawnIndex), getModel()->getSize()-1);
+		UpdateSelectionIndex = true;
+		break;
+	}
+	
+	if(UpdateSelectionIndex)
+	{
+		/*focusIndex(ListIndex);
+		getSelectionModel()->setLeadSelectionIndex(ListIndex);
+		if (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		{
+			getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), ListIndex);
+		}
+		else
+		{
+			getSelectionModel()->setAnchorSelectionIndex(ListIndex);
+		}*/
+	}
+
+	Component::keyTyped(e);
+}
 
 void Tree::addSelectionInterval(const UInt32& index0, const UInt32& index1)
 {
@@ -120,12 +214,12 @@ TreePath Tree::getAnchorSelectionPath(void) const
     return TreePath(SharedFieldPtr());
 }
 
-TreePath Tree::getClosestPathForLocation(const UInt32& x, const UInt32& y) const
+TreePath Tree::getClosestPathForLocation(const Pnt2f& Loc) const
 {
     //TODO:Implement
     if(getModelLayout() != NullFC)
     {
-        return getModelLayout()->getPathClosestTo(x,y);
+        return getModelLayout()->getPathClosestTo(Loc);
     }
     else
     {
@@ -133,11 +227,11 @@ TreePath Tree::getClosestPathForLocation(const UInt32& x, const UInt32& y) const
     }
 }
 
-Int32 Tree::getClosestRowForLocation(const UInt32& x, const UInt32& y) const
+Int32 Tree::getClosestRowForLocation(const Pnt2f& Loc) const
 {
     if(getModelLayout() != NullFC)
     {
-        return getModelLayout()->getRowForPath(getClosestPathForLocation(x,y));
+        return getModelLayout()->getRowForPath(getClosestPathForLocation(Loc));
     }
     else
     {
@@ -154,11 +248,11 @@ TreePath Tree::getEditingPath(void) const
 
 
 
-TreePath Tree::getPathForLocation(const UInt32& x, const UInt32& y) const
+TreePath Tree::getPathForLocation(const Pnt2f& Loc) const
 {
     if(getModelLayout() != NullFC)
     {
-        return getModelLayout()->getPathClosestTo(x,y);
+        return getModelLayout()->getPathClosestTo(Loc);
     }
     else
     {
@@ -167,11 +261,11 @@ TreePath Tree::getPathForLocation(const UInt32& x, const UInt32& y) const
     //TODO:Implement
 }
 
-Int32 Tree::getRowForLocation(const UInt32& x, const UInt32& y) const
+Int32 Tree::getRowForLocation(const Pnt2f& Loc) const
 {
     if(getModelLayout() != NullFC)
     {
-        return getModelLayout()->getRowForPath(getClosestPathForLocation(x,y));
+        return getModelLayout()->getRowForPath(getClosestPathForLocation(Loc));
     }
     else
     {
@@ -291,6 +385,10 @@ void Tree::setSelectionModel(TreeSelectionModelPtr selectionModel)
     if(_SelectionModel != NULL)
     {
         _SelectionModel->addTreeSelectionListener(&_SelectionListener);
+        if(getModelLayout() != NullFC)
+        {
+            _SelectionModel->setRowMapper(getModelLayout());
+        }
     }
 }
 
@@ -564,23 +662,21 @@ void Tree::updateRowsDrawn(void)
           NewBottomDrawnRow;
     getDrawnRows(NewTopDrawnRow, NewBottomDrawnRow);
 
-    if(NewTopDrawnRow > _TopDrawnRow)
+    if(_TopDrawnRow != -1 && NewTopDrawnRow > _TopDrawnRow)
     {
         //Remove all of the Drawn rows above NewTopDrawnRow
-        for(Int32 i(_TopDrawnRow) ; i<osgMin(NewTopDrawnRow, _BottomDrawnRow) ; ++i)
+        for(Int32 i(_TopDrawnRow) ; i<osgMin(NewTopDrawnRow, _BottomDrawnRow+1) ; ++i)
         {
             _DrawnRows.pop_front();
-            std::cout << "Front Popped" << std::endl;
         }
     }
 
-    if(NewBottomDrawnRow < _BottomDrawnRow)
+    if(_BottomDrawnRow != -1 && NewBottomDrawnRow < _BottomDrawnRow)
     {
         //Remove all of the Drawn rows below NewBottomDrawnRow
         for(Int32 i(osgMax(NewBottomDrawnRow+1, _TopDrawnRow)) ; i<=_BottomDrawnRow ; ++i)
         {
             _DrawnRows.pop_back();
-            std::cout << "Back Popped" << std::endl;
         }
     }
 
@@ -593,7 +689,6 @@ void Tree::updateRowsDrawn(void)
             for(Int32 i(osgMin(_TopDrawnRow-1, NewBottomDrawnRow)) ; i>=NewTopDrawnRow ; --i)
             {
                 _DrawnRows.push_front(createRowComponent(i));
-                std::cout << "Front Pushed" << std::endl;
             }
         }
     }
@@ -606,7 +701,6 @@ void Tree::updateRowsDrawn(void)
             for(Int32 i(osgMax(NewTopDrawnRow, _BottomDrawnRow+1)) ; i<=NewBottomDrawnRow ; ++i)
             {
                 _DrawnRows.push_back(createRowComponent(i));
-                std::cout << "Back Pushed" << std::endl;
             }
         }
     }
@@ -655,8 +749,14 @@ ComponentPtr Tree::createRowComponent(const UInt32& Row)
 
 void Tree::updateDrawnRow(const UInt32& Row)
 {
-    if(Row >= 0)
+    if(Row >= _TopDrawnRow &&
+       Row <= _BottomDrawnRow)
     {
+        _DrawnRows[Row-_TopDrawnRow] = createRowComponent(Row);
+        //TODO: Optimize this!!!!!!!
+        beginEditCP(TreePtr(this), ChildrenFieldMask);
+            getChildren().setValue(_DrawnRows[Row-_TopDrawnRow],Row-_TopDrawnRow);
+        endEditCP(TreePtr(this), ChildrenFieldMask);
     }
 }
 
@@ -678,8 +778,8 @@ void Tree::getDrawnRows(Int32& Beginning, Int32& End) const
     Pnt2f ClipTopLeft, ClipBottomRight;
     getClipBounds(ClipTopLeft, ClipBottomRight);
 
-    Beginning = getRowForLocation(ClipTopLeft.x(), ClipTopLeft.y());
-    End = getRowForLocation(ClipBottomRight.x(), ClipBottomRight.y());
+    Beginning = getRowForLocation(ClipTopLeft);
+    End = getRowForLocation(ClipBottomRight);
 }
 
 void Tree::updatePreferredSize(void)
@@ -705,19 +805,27 @@ void Tree::updatePreferredSize(void)
 Tree::Tree(void) :
     Inherited(),
         _Model(NULL),
-        _SelectionModel(NULL),
+        _SelectionModel(new DefaultTreeSelectionModel()),
         _ModelListener(TreePtr(this)),
         _SelectionListener(TreePtr(this)),
 		_ModelLayoutListener(TreePtr(this)),
         _TopDrawnRow(-1),
         _BottomDrawnRow(-1)
 {
+    if(_SelectionModel != NULL)
+    {
+        _SelectionModel->addTreeSelectionListener(&_SelectionListener);
+        if(getModelLayout() != NullFC)
+        {
+            _SelectionModel->setRowMapper(getModelLayout());
+        }
+    }
 }
 
 Tree::Tree(const Tree &source) :
     Inherited(source),
         _Model(source._Model),
-        _SelectionModel(source._SelectionModel),
+        _SelectionModel(new DefaultTreeSelectionModel()),
         _ModelListener(TreePtr(this)),
         _SelectionListener(TreePtr(this)),
 		_ModelLayoutListener(TreePtr(this)),
@@ -731,10 +839,19 @@ Tree::Tree(const Tree &source) :
         endEditCP(TreePtr(this), ModelLayoutFieldMask);
 		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
     }
+    if(_SelectionModel != NULL)
+    {
+        _SelectionModel->addTreeSelectionListener(&_SelectionListener);
+        if(getModelLayout() != NullFC)
+        {
+            _SelectionModel->setRowMapper(getModelLayout());
+        }
+    }
 }
 
 Tree::~Tree(void)
 {
+    delete _SelectionModel;
 }
 
 /*----------------------------- class specific ----------------------------*/
@@ -749,6 +866,7 @@ void Tree::changed(BitVector whichField, UInt32 origin)
         //Set the model used by the ModelLayout
         getModelLayout()->setModel(_Model);
 		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
+        _SelectionModel->setRowMapper(getModelLayout());
         updateEntireTree();
         updatePreferredSize();
     }
@@ -796,9 +914,30 @@ void Tree::ModelListener::treeStructureChanged(TreeModelEvent e)
     _Tree->updatePreferredSize();
 }
 
-void Tree::SelectionListener::valueChanged(TreeSelectionEvent e)
+void Tree::SelectionListener::selectionAdded(TreeSelectionEvent e)
 {
-    //TODO: Implement
+    for(UInt32 i(0) ; i<e.getElementsChanged().size() ; ++i)
+    {
+        for(UInt32 j(e.getElementsChanged()[i].getMin()) ; 
+            j<=e.getElementsChanged()[i].getMax() ;
+            ++j)
+        {
+            _Tree->updateDrawnRow(j);
+        }
+    }
+}
+
+void Tree::SelectionListener::selectionRemoved(TreeSelectionEvent e)
+{
+    for(UInt32 i(0) ; i<e.getElementsChanged().size() ; ++i)
+    {
+        for(UInt32 j(e.getElementsChanged()[i].getMin()) ; 
+            j<=e.getElementsChanged()[i].getMax() ;
+            ++j)
+        {
+            _Tree->updateDrawnRow(j);
+        }
+    }
 }
 
 void Tree::ModelLayoutListener::treeCollapsed(const TreeModelLayoutEvent& event)

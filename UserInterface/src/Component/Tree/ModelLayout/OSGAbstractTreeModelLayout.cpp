@@ -85,9 +85,9 @@ void AbstractTreeModelLayout::removeTreeModelLayoutListener(TreeModelLayoutListe
    }
 }
 
-std::vector<UInt32> AbstractTreeModelLayout::getRowsForPaths(std::vector<TreePath> paths) const
+std::vector<Int32> AbstractTreeModelLayout::getRowsForPaths(const std::vector<TreePath>& paths) const
 {
-	std::vector<UInt32> Result;
+	std::vector<Int32> Result;
 	for(UInt32 i(0) ; i<paths.size() ; ++i)
 	{
 		Result.push_back(this->getRowForPath(paths[i]));

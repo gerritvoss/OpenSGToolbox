@@ -85,7 +85,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FixedHeightTreeModelLayout : public FixedH
 	virtual bool isVisible(const TreePath& path) const;
 
 	//Returns the path to the node that is closest to x,y.
-	virtual TreePath getPathClosestTo(const UInt32& x, const UInt32& y) const;
+	virtual TreePath getPathClosestTo(const Pnt2f& Loc) const;
 
 	//Returns the path for passed in row.
 	virtual TreePath getPathForRow(const UInt32& row) const;

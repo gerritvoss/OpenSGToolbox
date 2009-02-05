@@ -89,7 +89,7 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
     BoxLayoutPtr TheLayout = BoxLayout::create();
     beginEditCP(TheLayout, BoxLayout::OrientationFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
 		TheLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
-        TheLayout->setComponentAlignment(0.0f);
+        TheLayout->setComponentAlignment(0.5f);
         TheLayout->setMinorAxisAlignment(0.5f);
     endEditCP(TheLayout, BoxLayout::OrientationFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
 
@@ -106,25 +106,42 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
 
     //Create the Label
     LabelPtr TheLabel = Label::Ptr::dcast(getNodeLabelPrototype()->shallowCopy());
-    beginEditCP(TheLabel, Label::TextFieldMask | Label::TextColorFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+    beginEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
         if(IsSelected)
         {
-            TheLabel->setTextColor(getSelectedTextColor());
+            TheLabel->setTextColors(getSelectedTextColor());
             TheLabel->setBackgrounds(getSelectedBackground());
             TheLabel->setBorders(getSelectedBorder());
         }
         else
         {
-            TheLabel->setTextColor(getNonSelectedTextColor());
+            TheLabel->setTextColors(getNonSelectedTextColor());
             TheLabel->setBackgrounds(getNonSelectedBackground());
             TheLabel->setBorders(EmptyBorder::create());
         }
         TheLabel->setText(LabelText);
-    endEditCP(TheLabel, Label::TextFieldMask | Label::TextColorFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
-
+    endEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
     //Create the panel, set its children and layout
     PanelPtr ThePanel = Panel::Ptr::dcast(getNodePanelPrototype()->shallowCopy());
+
+    //If node is not a leaf expanded
+    if(!Leaf)
+    {
+        UIDrawObjectCanvasPtr ExpandedCanvas;
+        if(Expanded)
+        {
+            ExpandedCanvas = UIDrawObjectCanvas::Ptr::dcast(getExpandedDrawObjectPrototype()->shallowCopy());
+        }
+        else
+        {
+            ExpandedCanvas = UIDrawObjectCanvas::Ptr::dcast(getNotExpandedDrawObjectPrototype()->shallowCopy());
+        }
+        beginEditCP(ThePanel, Panel::ChildrenFieldMask);
+            ThePanel->getChildren().push_back(ExpandedCanvas);
+        endEditCP(ThePanel, Panel::ChildrenFieldMask);
+    }
+
     beginEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
         ThePanel->setLayout(TheLayout);
         ThePanel->getChildren().push_back(TheLabel);

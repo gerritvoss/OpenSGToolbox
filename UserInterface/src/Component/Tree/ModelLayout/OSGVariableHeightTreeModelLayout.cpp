@@ -87,7 +87,7 @@ bool VariableHeightTreeModelLayout::isVisible(const TreePath& path) const
 	return false;
 }
 
-TreePath VariableHeightTreeModelLayout::getPathClosestTo(const UInt32& x, const UInt32& y) const
+TreePath VariableHeightTreeModelLayout::getPathClosestTo(const Pnt2f& Loc) const
 {
 	//TODO:Implement
 	return TreePath(SharedFieldPtr());

@@ -86,7 +86,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
     virtual void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
 
 	//Returns the rows that the TreePath instances in path are being displayed at.
-	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> paths) const;
+	virtual std::vector<Int32> getRowsForPaths(const std::vector<TreePath>& paths) const;
     
     //Returns true if the children of the path are visible
 	virtual bool areChildrenVisible(const TreePath& path) const;

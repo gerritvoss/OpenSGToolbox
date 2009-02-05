@@ -44,8 +44,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeSelectionListener : public EventListen
 {
     /*=========================  PUBLIC  ===============================*/
 public:
-    //Called whenever the value of the selection changes.
-	virtual void valueChanged(TreeSelectionEvent e) = 0;
+    //Called whenever elements are added to the selection
+	virtual void selectionAdded(TreeSelectionEvent e) = 0;
+    //Called whenever elements are removed to the selection
+	virtual void selectionRemoved(TreeSelectionEvent e) = 0;
 };
 
 typedef TreeSelectionListener* TreeSelectionListenerPtr;

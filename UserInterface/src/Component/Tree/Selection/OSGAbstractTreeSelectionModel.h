@@ -70,22 +70,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeSelectionModel : public TreeSe
 	//Removes a ChangeListener from the listener list.
 	virtual void removeChangeListener(ChangeListenerPtr listener);
   protected:
-
-    /*==========================  PRIVATE  ================================*/
-  private:
 	typedef std::set<TreeSelectionListenerPtr> TreeSelectionListenerSet;
 	typedef TreeSelectionListenerSet::iterator TreeSelectionListenerSetIter;
 	typedef TreeSelectionListenerSet::const_iterator TreeSelectionListenerSetConstIter;
 	TreeSelectionListenerSet _SelectionListeners;
 
-	void produceValueChanged(std::vector<TreePath> Paths, std::vector<bool> IsNew, TreePath NewLeadSelectionPath, TreePath OldLeadSelectionPath);
+	void produceSelectionAdded(const std::vector<NumberRange>& ElementsAdded, Int32 NewLeadSelectionPath, Int32 OldLeadSelectionPath);
+	void produceSelectionRemoved(const std::vector<NumberRange>& ElementsRemoved, Int32 NewLeadSelectionPath, Int32 OldLeadSelectionPath);
 	
 	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
 	typedef ChangeListenerSet::iterator ChangeListenerSetIter;
 	typedef ChangeListenerSet::const_iterator ChangeListenerSetConstIter;
 	ChangeListenerSet _ChangeListeners;
 	
-	void produceStateChanged(void);
+	//void produceStateChanged(void);
+
+    /*==========================  PRIVATE  ================================*/
+  private:
 };
 
 typedef AbstractTreeSelectionModel *AbstractTreeSelectionModelPtr;

@@ -16,33 +16,21 @@ const EventType &TreeSelectionEvent::getType(void) const
 }
 
 inline
-TreePath TreeSelectionEvent::getNewLeadSelectionPath(void) const
+Int32 TreeSelectionEvent::getNewLeadSelectionPath(void) const
 {
 	return _NewLeadSelectionPath;
 }
 
 inline
-TreePath TreeSelectionEvent::getOldLeadSelectionPath(void) const
+Int32 TreeSelectionEvent::getOldLeadSelectionPath(void) const
 {
 	return _OldLeadSelectionPath;
 }
 
 inline
-TreePath TreeSelectionEvent::getPath(void) const
+const std::vector<NumberRange>& TreeSelectionEvent::getElementsChanged(void) const
 {
-	return _Path.front();
-}
-
-inline
-std::vector<TreePath> TreeSelectionEvent::getPaths(void) const
-{
-	return _Path;
-}
-
-inline
-bool TreeSelectionEvent::isAddedPath(void) const
-{
-	return _IsPathNew.front();
+	return _ElementsChanged;
 }
 
 OSG_END_NAMESPACE

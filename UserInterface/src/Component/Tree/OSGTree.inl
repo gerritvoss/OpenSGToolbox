@@ -184,7 +184,7 @@ std::vector<TreePath> Tree::getSelectionPaths(void) const
 }
 
 inline
-std::vector<UInt32> Tree::getSelectionRows(void) const
+std::vector<Int32> Tree::getSelectionRows(void) const
 {
     return _SelectionModel->getSelectionRows();
 }

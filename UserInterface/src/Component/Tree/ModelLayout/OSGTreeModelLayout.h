@@ -105,10 +105,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	//virtual AbstractLayoutCache.NodeDimensions getNodeDimensions(void) const = 0;
 
 	//Returns the path to the node that is closest to x,y.
-	virtual TreePath getPathClosestTo(const UInt32& x, const UInt32& y) const = 0;
-
-	//Returns the path for passed in row.
-	virtual TreePath getPathForRow(const UInt32& row) const = 0;
+	virtual TreePath getPathClosestTo(const Pnt2f& Loc) const = 0;
 
 	//Returns the preferred height.
 	virtual Real32 getPreferredHeight(void) const = 0;
@@ -118,9 +115,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 
 	//Number of rows being displayed.
 	virtual UInt32 getRowCount(void) const = 0;
-
-	//Returns the row that the last item identified in path is visible at.
-	virtual Int32 getRowForPath(const TreePath& path) const = 0;
 
 	//Returns the height of each row.
 	virtual Real32 getRowHeight(void) const = 0;

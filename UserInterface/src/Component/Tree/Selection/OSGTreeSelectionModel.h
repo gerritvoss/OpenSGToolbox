@@ -67,9 +67,11 @@ public:
 
 	//Adds path to the current selection.
 	virtual void addSelectionPath(TreePath path) = 0;
+	virtual void addSelectionRow(Int32 Row) = 0;
 
 	//Adds paths to the current selection.
 	virtual void addSelectionPaths(std::vector<TreePath> paths) = 0;
+	virtual void addSelectionRows(std::vector<Int32> Rows) = 0;
 
 	//Adds x to the list of listeners that are notified each time the set of selected TreePaths changes.
 	virtual void addTreeSelectionListener(TreeSelectionListenerPtr x) = 0;
@@ -81,13 +83,19 @@ public:
 	virtual TreePath getLeadSelectionPath(void) const = 0;
 
 	//Returns the lead selection index.
-	virtual UInt32 getLeadSelectionRow(void) const = 0;
+	virtual Int32 getLeadSelectionRow(void) const = 0;
+
+	//Returns the Anchor Path
+	virtual TreePath getAnchorSelectionPath(void) const = 0;
+
+	//Returns the anchor selection index.
+	virtual Int32 getAnchorSelectionRow(void) const = 0;
 
 	//Returns the largest value obtained from the TreeRowMapper for the current set of selected TreePaths.
-	virtual UInt32 getMaxSelectionRow(void) const = 0;
+	virtual Int32 getMaxSelectionRow(void) const = 0;
 
 	//Returns the smallest value obtained from the TreeRowMapper for the current set of selected TreePaths.
-	virtual UInt32 getMinSelectionRow(void) const = 0;
+	virtual Int32 getMinSelectionRow(void) const = 0;
 
 	//Returns the TreeRowMapper instance that is able to map a TreePath to a row.
 	virtual TreeRowMapperPtr getRowMapper(void) const = 0;
@@ -100,18 +108,19 @@ public:
 
 	//Returns the first path in the selection.
 	virtual TreePath getSelectionPath(void) const = 0;
+	virtual Int32 getSelectionRow(void) const = 0;
 
 	//Returns the paths in the selection.
 	virtual std::vector<TreePath> getSelectionPaths(void) const = 0;
 
 	//Returns all of the currently selected rows.
-	virtual std::vector<UInt32> getSelectionRows(void) const = 0;
+	virtual std::vector<Int32> getSelectionRows(void) const = 0;
 
 	//Returns true if the path, path, is in the current selection.
 	virtual bool isPathSelected(TreePath path) const = 0;
 
 	//Returns true if the row identified by row is selected.
-	virtual bool isRowSelected(const UInt32& row) const = 0;
+	virtual bool isRowSelected(const Int32& row) const = 0;
 
 	//Returns true if the selection is currently empty.
 	virtual bool isSelectionEmpty(void) const = 0;
@@ -121,15 +130,17 @@ public:
 
 	//Removes path from the selection.
 	virtual void removeSelectionPath(TreePath path) = 0;
+	virtual void removeSelectionRow(Int32 Row) = 0;
 
 	//Removes paths from the selection.
 	virtual void removeSelectionPaths(std::vector<TreePath> paths) = 0;
+	virtual void removeSelectionRows(std::vector<Int32> Rows) = 0;
 
 	//Removes x from the list of listeners that are notified each time the set of selected TreePaths changes.
 	virtual void removeTreeSelectionListener(TreeSelectionListenerPtr x) = 0;
 
 	//Updates this object's mapping from TreePaths to rows.
-	virtual void resetRowSelection(void) = 0;
+	//virtual void resetRowSelection(void) = 0;
 
 	//Sets the TreeRowMapper instance.
 	virtual void setRowMapper(TreeRowMapperPtr newMapper) = 0;
@@ -139,9 +150,14 @@ public:
 
 	//Sets the selection to path.
 	virtual void setSelectionPath(TreePath path) = 0;
+	virtual void setSelectionRow(Int32 Row) = 0;
 
 	//Sets the selection to path.
 	virtual void setSelectionPaths(std::vector<TreePath> paths) = 0;
+	virtual void setSelectionRows(std::vector<Int32> Rows) = 0;
+
+    //Sets the selection to the Interval from StartRow to EndRow
+    virtual void setSelectionInterval(const Int32& StartRow, const Int32& EndRow) = 0;
 };
 
 typedef TreeSelectionModel* TreeSelectionModelPtr;

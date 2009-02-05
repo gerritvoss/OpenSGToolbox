@@ -108,23 +108,23 @@ void AbstractTreeSelectionModel::removeChangeListener(ChangeListenerPtr listener
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractTreeSelectionModel::produceValueChanged(std::vector<TreePath> Paths, std::vector<bool> IsNew, TreePath NewLeadSelectionPath, TreePath OldLeadSelectionPath)
+void AbstractTreeSelectionModel::produceSelectionAdded(const std::vector<NumberRange>& ElementsAdded, Int32 NewLeadSelectionPath, Int32 OldLeadSelectionPath)
 {
-	TreeSelectionEvent TheEvent(NullFC, getSystemTime(), Paths, IsNew, NewLeadSelectionPath, OldLeadSelectionPath);
+    TreeSelectionEvent TheEvent(NullFC, getSystemTime(), ElementsAdded, NewLeadSelectionPath, OldLeadSelectionPath);
 	TreeSelectionListenerSet ModelListenerSet(_SelectionListeners);
 	for(TreeSelectionListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
 	{
-		(*SetItor)->valueChanged(TheEvent);
+		(*SetItor)->selectionAdded(TheEvent);
 	}
 }
 
-void AbstractTreeSelectionModel::produceStateChanged(void)
+void AbstractTreeSelectionModel::produceSelectionRemoved(const std::vector<NumberRange>& ElementsRemoved, Int32 NewLeadSelectionPath, Int32 OldLeadSelectionPath)
 {
-	ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
-	ChangeListenerSet ListenerSet(_ChangeListeners);
-	for(ChangeListenerSetConstIter SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    TreeSelectionEvent TheEvent(NullFC, getSystemTime(), ElementsRemoved, NewLeadSelectionPath, OldLeadSelectionPath);
+	TreeSelectionListenerSet ModelListenerSet(_SelectionListeners);
+	for(TreeSelectionListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
 	{
-	  (*SetItor)->stateChanged(TheEvent);
+		(*SetItor)->selectionRemoved(TheEvent);
 	}
 }
 

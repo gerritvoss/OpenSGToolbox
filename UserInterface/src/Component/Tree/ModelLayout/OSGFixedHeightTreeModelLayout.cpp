@@ -86,10 +86,10 @@ bool FixedHeightTreeModelLayout::isVisible(const TreePath& path) const
     return _VisiblePathSet.find(path) != _VisiblePathSet.end();
 }
 
-TreePath FixedHeightTreeModelLayout::getPathClosestTo(const UInt32& x, const UInt32& y) const
+TreePath FixedHeightTreeModelLayout::getPathClosestTo(const Pnt2f& Loc) const
 {
     //Determine the row
-    UInt32 Row(osgMin<UInt32>(y/getRowHeight(),getRowCount()-1));
+    UInt32 Row(osgMin<UInt32>(Loc.y()/getRowHeight(),getRowCount()-1));
 
     //Get the Path for that row
 	return getPathForRow(Row);

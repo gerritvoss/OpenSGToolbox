@@ -86,6 +86,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    
+    virtual void mousePressed(const MouseEvent& e);
+	virtual void keyTyped(const KeyEvent& e);
+
     void addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
 
     void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
@@ -151,10 +155,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     TreePath getAnchorSelectionPath(void) const;
 
     //Returns the path to the node that is closest to x,y.
-    TreePath getClosestPathForLocation(const UInt32& x, const UInt32& y) const;
+    TreePath getClosestPathForLocation(const Pnt2f& Loc) const;
 
     //Returns the row to the node that is closest to x,y.
-    Int32 getClosestRowForLocation(const UInt32& x, const UInt32& y) const;
+    Int32 getClosestRowForLocation(const Pnt2f& Loc) const;
 
     //Returns the path to the element that is currently being edited.
     TreePath getEditingPath(void) const;
@@ -187,7 +191,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     //Rectangle getPathBounds(TreePath path) const;
 
     //Returns the path for the node at the specified location.
-    TreePath getPathForLocation(const UInt32& x, const UInt32& y) const;
+    TreePath getPathForLocation(const Pnt2f& Loc) const;
 
     //Returns the path for the specified row.
     TreePath getPathForRow(const UInt32& row) const;
@@ -199,7 +203,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     Int32 getRowCount(void) const;
 
     //Returns the row for the specified location.
-    Int32 getRowForLocation(const UInt32& x, const UInt32& y) const;
+    Int32 getRowForLocation(const Pnt2f& Loc) const;
 
     //Returns the row that displays the node identified by the specified path.
     Int32 getRowForPath(const TreePath& path) const;
@@ -217,7 +221,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     std::vector<TreePath> getSelectionPaths(void) const;
 
     //Returns all of the currently selected rows.
-    std::vector<UInt32> getSelectionRows(void) const;
+    std::vector<Int32> getSelectionRows(void) const;
 
     //Returns the number of rows that are displayed in the display area.
     Int32 getVisibleRowCount(void) const;
@@ -404,7 +408,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 	public :
 		SelectionListener(TreePtr TheTree);
 		
-	    virtual void valueChanged(TreeSelectionEvent e);
+        //Called whenever elements are added to the selection
+	    virtual void selectionAdded(TreeSelectionEvent e);
+        //Called whenever elements are removed to the selection
+	    virtual void selectionRemoved(TreeSelectionEvent e);
 	protected :
 		TreePtr _Tree;
 	};

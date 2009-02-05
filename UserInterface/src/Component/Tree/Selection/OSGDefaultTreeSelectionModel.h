@@ -48,7 +48,7 @@
 #include "OSGAbstractTreeSelectionModel.h"
 #include "Component/Tree/OSGTreeRowMapper.h"
 #include <vector>
-#include <list>
+#include "Util/OSGNumberRangeSet.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
@@ -65,12 +65,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 
 	//Adds path to the current selection.
 	virtual void addSelectionPath(TreePath path);
+	virtual void addSelectionRow(Int32 Row);
 
 	//Adds paths to the current selection.
 	virtual void addSelectionPaths(std::vector<TreePath> paths);
-
-	//Changes the values of _AnchorSelectionIndex, _LeadSelectionIndex, _MaxSelectionIndex, and _MinSelectionIndex to current values of selection.
-	virtual void changeValues(std::vector<TreePath> paths);
+	virtual void addSelectionRows(std::vector<Int32> Rows);
 
 	//Empties the current selection.
 	virtual void clearSelection(void);
@@ -79,13 +78,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 	virtual TreePath getLeadSelectionPath(void) const;
 
 	//Returns the lead selection index.
-	virtual UInt32 getLeadSelectionRow(void) const;
+	virtual Int32 getLeadSelectionRow(void) const;
+
+	//Returns the Anchor Path
+	virtual TreePath getAnchorSelectionPath(void) const;
+
+	//Returns the anchor selection index.
+	virtual Int32 getAnchorSelectionRow(void) const;
 
 	//Returns the largest value obtained from the TreeRowMapper for the current set of selected TreePaths.
-	virtual UInt32 getMaxSelectionRow(void) const;
+	virtual Int32 getMaxSelectionRow(void) const;
 
 	//Returns the smallest value obtained from the TreeRowMapper for the current set of selected TreePaths.
-	virtual UInt32 getMinSelectionRow(void) const;
+	virtual Int32 getMinSelectionRow(void) const;
 
 	//Returns the TreeRowMapper instance that is able to map a TreePath to a row.
 	virtual TreeRowMapperPtr getRowMapper(void) const;
@@ -98,33 +103,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 
 	//Returns the first path in the selection.
 	virtual TreePath getSelectionPath(void) const;
+	virtual Int32 getSelectionRow(void) const;
 
 	//Returns the paths in the selection.
 	virtual std::vector<TreePath> getSelectionPaths(void) const;
 
 	//Returns all of the currently selected rows.
-	virtual std::vector<UInt32> getSelectionRows(void) const;
+	virtual std::vector<Int32> getSelectionRows(void) const;
 
 	//Returns true if the path, path, is in the current selection.
 	virtual bool isPathSelected(std::vector<TreePath> path) const;
-
-	//Returns true if paths is Contiguous
-	virtual bool arePathsContiguous(const std::vector<TreePath>& paths) const;
-
-	//Returns true if paths1 is Contiguous with paths2
-	virtual bool arePathsContiguous(const std::vector<TreePath>& paths1, const std::vector<TreePath>& paths2) const;
+	virtual bool isPathSelected(TreePath path) const;
 
 	//Returns true if the row identified by row is selected.
-	virtual bool isRowSelected(const UInt32& row) const;
+	virtual bool isRowSelected(const Int32& row) const;
 
 	//Returns true if the selection is currently empty.
 	virtual bool isSelectionEmpty(void) const;
 
 	//Removes path from the selection.
 	virtual void removeSelectionPath(TreePath path);
+	virtual void removeSelectionRow(Int32 Row);
 
 	//Removes paths from the selection.
 	virtual void removeSelectionPaths(std::vector<TreePath> paths);
+	virtual void removeSelectionRows(std::vector<Int32> Rows);
 
 	//Updates this object's mapping from TreePaths to rows.
 	//virtual void resetRowSelection(void);
@@ -137,23 +140,30 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 
 	//Sets the selection to path.
 	virtual void setSelectionPath(TreePath path);
+	virtual void setSelectionRow(Int32 Row);
 
 	//Sets the selection to path.
 	virtual void setSelectionPaths(std::vector<TreePath> paths);
+	virtual void setSelectionRows(std::vector<Int32> Rows);
+
+    //Sets the selection to the Interval from StartRow to EndRow
+    virtual void setSelectionInterval(const Int32& StartRow, const Int32& EndRow);
+
 
   protected:
-	  typedef std::vector<TreePath> SelectionVector;
-	  typedef SelectionVector::const_iterator SelectionVectorConstItor;
-	  
-	  SelectionVector _Selection;
+    void updateMinMax(void);
+    void produceEvents(const NumberSet& PreSelectedSet, const NumberSet& PostSelectedSet, Int32 OldLeadSelectionIndex);
+	NumberSet _SelectionNumberSet;
 
-	  UInt32	_SelectionMode;
-	  UInt32 	_LeadSelectionIndex;
-	  UInt32 	_MaxSelectionIndex;
-	  UInt32 	_MinSelectionIndex;
+    TreeSelectionMode _SelectionMode;
+    Int32 	_AnchorSelectionIndex;
+    Int32 	_LeadSelectionIndex;
+    Int32 	_MaxSelectionIndex;
+    Int32 	_MinSelectionIndex;
+    bool 	_ValueIsAdjusting;
 
-	  TreeRowMapperPtr _TreeRowMapper;
-	  TreePathPtr _TreePath;
+    TreeRowMapperPtr _TreeRowMapper;
+    TreePathPtr _TreePath;
 
     /*==========================  PRIVATE  ================================*/
   private:

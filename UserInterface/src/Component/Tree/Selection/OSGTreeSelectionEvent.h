@@ -34,7 +34,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
-#include "Component/Tree/OSGTreePath.h"
+#include "Util/OSGNumberRangeSet.h"
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
@@ -49,38 +49,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeSelectionEvent : public Event
 	//Object cloneWithSource(Object newSource) const;
 
 	//Returns the current lead path.
-	TreePath getNewLeadSelectionPath(void) const;
+	Int32 getNewLeadSelectionPath(void) const;
 
-	//Returns the path that was previously the lead path.
-	TreePath getOldLeadSelectionPath(void) const;
+    //Returns the path that was previously the lead path.
+	Int32 getOldLeadSelectionPath(void) const;
 
-	//Returns the first path element.
-	TreePath getPath(void) const;
-
-	//Returns the paths that have been added or removed from the selection.
-	std::vector<TreePath> getPaths(void) const;
-
-	//Returns true if the first path element has been added to the selection, a return value of false means the first path has been removed from the selection.
-	bool isAddedPath(void) const;
-
-	//Returns true if the path identified by index was added to the selection.
-	bool isAddedPath(const UInt32& index) const;
-
-	//Returns true if the path identified by path was added to the selection.
-	bool isAddedPath(const TreePath& path) const;
+    //Returns a vector of the the elements changed
+	const std::vector<NumberRange>& getElementsChanged(void) const;
     
     virtual const EventType &getType(void) const;
     
     static const EventType &getClassType(void);
     
-	TreeSelectionEvent(FieldContainerPtr Source, Time TimeStamp, TreePath Path, bool IsNew, TreePath NewLeadSelectionPath, TreePath OldLeadSelectionPath);
-	
-	TreeSelectionEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<TreePath> Paths, std::vector<bool> IsNew, TreePath NewLeadSelectionPath, TreePath OldLeadSelectionPath);
+	TreeSelectionEvent(FieldContainerPtr Source, Time TimeStamp, const std::vector<NumberRange>& ElementsChanged, Int32 NewLeadSelectionPath, Int32 OldLeadSelectionPath);
   protected:
-     TreePath _NewLeadSelectionPath;
-     TreePath _OldLeadSelectionPath;
-     std::vector<TreePath> _Path;
-     std::vector<bool> _IsPathNew;
+     Int32 _NewLeadSelectionPath;
+     Int32 _OldLeadSelectionPath;
+     std::vector<NumberRange> _ElementsChanged;
   private:
      static EventType _Type;
     
