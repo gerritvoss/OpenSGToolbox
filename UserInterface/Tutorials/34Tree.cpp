@@ -96,6 +96,10 @@ public:
 };
 
 DefaultTreeModel TheTreeModel;
+TreePtr TheTree;
+ToggleButtonPtr SingleSelectionButton;
+ToggleButtonPtr SingleIntervalSelectionButton;
+ToggleButtonPtr MultipleIntervalSelectionButton;
 
 class CreateNodeButtonActionListener : public ActionListener
 {
@@ -106,6 +110,7 @@ public:
         DefaultMutableTreeNodePtr NewNode = DefaultMutableTreeNode::create() ;
         NewNode->setUserObject(SharedFieldPtr(new SFString("New Node")));
 
+        //TheTree->
         TheTreeModel.insertNodeInto(NewNode,MutableTreeNode::Ptr::dcast(TheTreeModel.getRootNode()),3);
     }
 };
@@ -119,11 +124,6 @@ public:
         TheTreeModel.removeNodeFromParent(MutableTreeNode::Ptr::dcast(TheTreeModel.getRootNode()->getChildAt(0)));
     }
 };
-
-TreePtr TheTree;
-ToggleButtonPtr SingleSelectionButton;
-ToggleButtonPtr SingleIntervalSelectionButton;
-ToggleButtonPtr MultipleIntervalSelectionButton;
 
 class SingleSelectionButtonSelectedListener : public ButtonSelectedListener
 {
@@ -362,7 +362,7 @@ int main(int argc, char **argv)
     ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
     beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
         ExampleScrollPanel->setPreferredSize(Vec2s(200,300));
-        ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     ExampleScrollPanel->setViewComponent(TheTree);
@@ -428,7 +428,7 @@ int main(int argc, char **argv)
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(TheTree);
+       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
        MainInternalWindow->getChildren().push_back(SingleSelectionButton);
        MainInternalWindow->getChildren().push_back(SingleIntervalSelectionButton);
        MainInternalWindow->getChildren().push_back(MultipleIntervalSelectionButton);
@@ -437,7 +437,7 @@ int main(int argc, char **argv)
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);

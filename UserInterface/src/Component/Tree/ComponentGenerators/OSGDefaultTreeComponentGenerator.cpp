@@ -86,13 +86,13 @@ void DefaultTreeComponentGenerator::initMethod (void)
 ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
     //Setup the layout
-    BoxLayoutPtr TheLayout = BoxLayout::create();
+    /*BoxLayoutPtr TheLayout = BoxLayout::create();
     beginEditCP(TheLayout, BoxLayout::OrientationFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
 		TheLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
         TheLayout->setComponentAlignment(0.5f);
         TheLayout->setMinorAxisAlignment(0.5f);
     endEditCP(TheLayout, BoxLayout::OrientationFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
-
+*/
     //Get the text for the label
     std::string LabelText("");
     if(Value->getType() == SFString::getClassType())
@@ -123,15 +123,15 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
     endEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
     //Create the panel, set its children and layout
-    PanelPtr ThePanel = Panel::Ptr::dcast(getNodePanelPrototype()->shallowCopy());
+    /*PanelPtr ThePanel = Panel::Ptr::dcast(getNodePanelPrototype()->shallowCopy());
 
 
     beginEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
         ThePanel->setLayout(TheLayout);
         ThePanel->getChildren().push_back(TheLabel);
-    endEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+    endEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);*/
 
-    return ThePanel;
+    return TheLabel;
 }
 
 ComponentPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)

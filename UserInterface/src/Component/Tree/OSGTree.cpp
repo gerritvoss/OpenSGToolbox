@@ -388,7 +388,6 @@ void Tree::setModel(TreeModelPtr newModel)
     }
 
     updateEntireTree();
-    updatePreferredSize();
 }
 
 void Tree::setSelectionInterval(const Int32& index0, const Int32& index1)
@@ -601,6 +600,7 @@ void Tree::updateChangedPath(const TreePath& Path)
 void Tree::updateEntireTree(void)
 {
     //TODO:Implement
+    updatePreferredSize();
 
     //Remove the previous drawn rows
 
@@ -631,18 +631,18 @@ void Tree::updateInsertedRows(const UInt32& Begining, const UInt32& NumInsertedR
     }
     else if(Begining <= NewBottomDrawnRow)
     {
-        std::vector<TreeRowComponents> RowsPushedDown;
-        Int32 NumToPop(_BottomDrawnRow - Begining + 1);
+        std::deque<TreeRowComponents> RowsPushedDown;
+        Int32 NumToPop(_BottomDrawnRow - Begining +1);
         for(Int32 i(0) ; i<NumToPop ; ++i)
         {
-            RowsPushedDown.push_back(_DrawnRows.back());
+            RowsPushedDown.push_front(_DrawnRows.back());
             _DrawnRows.pop_back();
         }
         for(Int32 i(0) ; i<NumInsertedRows ; ++i)
         {
             _DrawnRows.push_back(createRowComponent(Begining+i));
         }
-        for(Int32 i(RowsPushedDown.size()-1) ; i>=0 ; --i)
+        for(Int32 i(0) ; i<RowsPushedDown.size() ; ++i)
         {
             _DrawnRows.push_back(RowsPushedDown[i]);
         }
@@ -657,11 +657,21 @@ void Tree::updateInsertedRows(const UInt32& Begining, const UInt32& NumInsertedR
     _BottomDrawnRow = NewBottomDrawnRow;
 
     updateChildren();
+    updatePreferredSize();
 }
 
 void Tree::updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRows)
 {
-    //TODO:Implement
+    Int32 NewTopDrawnRow,
+          NewBottomDrawnRow;
+    getDrawnRows(NewTopDrawnRow, NewBottomDrawnRow);
+
+
+    _TopDrawnRow = NewTopDrawnRow;
+    _BottomDrawnRow = NewBottomDrawnRow;
+
+    updateChildren();
+    updatePreferredSize();
 }
 
 void Tree::updateRows(const UInt32& Begining, const UInt32& NumRows)
@@ -845,7 +855,8 @@ void Tree::updateExpandedPath(const TreePath& Path)
     if(Row>=0 && Row <= _BottomDrawnRow)
     {
         _DrawnRows[Row-_TopDrawnRow] =createRowComponent(Row);
-        updatePreferredSize();
+        UInt32 VisibleChildren = getModelLayout()->getVisibleChildCount(Path);
+        updateInsertedRows(Row+1,VisibleChildren);
     }
 }
 
@@ -855,7 +866,8 @@ void Tree::updateCollapsedPath(const TreePath& Path)
     if(Row>=0 && Row <= _BottomDrawnRow)
     {
         _DrawnRows[Row-_TopDrawnRow] =createRowComponent(Row);
-        updatePreferredSize();
+        UInt32 VisibleChildren = getModelLayout()->getVisibleChildCount(Path);
+        updateRemovedRows(Row+1,VisibleChildren);
     }
 }
 
@@ -931,7 +943,6 @@ void Tree::changed(BitVector whichField, UInt32 origin)
 		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
         _SelectionModel->setRowMapper(getModelLayout());
         updateEntireTree();
-        updatePreferredSize();
     }
     
     if(whichField & Tree::ClipBoundsFieldMask)
@@ -962,7 +973,6 @@ void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
             _Tree->updateInsertedRows(InsertedRow, 1);
         }
     }
-    _Tree->updatePreferredSize();
 }
 
 void Tree::ModelListener::treeNodesRemoved(TreeModelEvent e)
