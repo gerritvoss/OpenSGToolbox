@@ -134,6 +134,29 @@ SoundPtr FModSoundManager::getSound(const int id){
 }
 
 void FModSoundManager::update(const Real32& elps){
+	//setup listener's position and orientation as camera's
+	Matrix camW2S;
+	CameraPtr cam = this->getCamera();
+	cam->getViewing(camW2S, 0, 0);
+	Pnt3f org(0, 0, 0);
+	camW2S.mult(org);
+	//printf("position: %8f, %8f, %8f\r\n", org[0], org[1], org[2]);
+
+	Vec3f up(0, 1, 0);
+	camW2S.mult(up);
+	//printf("up: %8f, %8f, %8f\r\n", up[0], up[1], up[2]);
+
+	Vec3f forward(0, 0, -1);
+	camW2S.mult(forward);
+	//printf("forward: %8f, %8f, %8f\r\n", forward[0], forward[1], forward[2]);
+	FMOD_VECTOR f_pos, f_vel, f_up, f_forward;
+	f_pos.x = org[0]; f_pos.y = org[1]; f_pos.z = org[2];
+	f_vel.x = 0; f_vel.y = 0; f_vel.z = 0;
+	f_up.x = up[0]; f_up.y = up[1]; f_up.z = up[2];
+	f_forward.x = forward[0]; f_forward.y = forward[1]; f_forward.z = forward[2];
+
+	eventSystem->set3DListenerAttributes(0, &f_pos, &f_vel, &f_forward, &f_up);
+	//call FMOD's update
 	eventSystem->update();
 }
 /*-------------------------------------------------------------------------*\

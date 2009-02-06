@@ -66,8 +66,6 @@ FMOD_RESULT  F_CALLBACK  fmod_callback(
 		if (!sound->listeners[i]) continue;
 		SoundListenerPtr listener = sound->listeners[i];
 		
-		NodePtr n = Node::create();
-//		SoundEvent sEvent(n, Time());
 		switch (type){
 			case (FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_START):
 				//listener->soundPlayed(

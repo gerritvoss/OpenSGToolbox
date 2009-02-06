@@ -40,7 +40,8 @@
 #include "OSGSoundEvent.h"
 
 OSG_BEGIN_NAMESPACE
-
+//const SoundEvent& e
+class SoundEvent;
 class OSG_SOUNDLIB_DLLMAPPING SoundListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
