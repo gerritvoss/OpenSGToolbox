@@ -96,6 +96,24 @@ void Tree::mousePressed(const MouseEvent& e)
 
     if(Row >= 0 && Row < getRowCount())
     {
+        for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
+        {
+            if(_DrawnRows[i]._ExpandedComponent != NullFC &&
+               _DrawnRows[i]._Row == Row &&
+               _DrawnRows[i]._ExpandedComponent->isContained(e.getLocation()))
+            {
+                if(isExpanded(Row))
+                {
+                    collapseRow(Row);
+                }
+                else
+                {
+                    expandRow(Row);
+                }
+                //toggle the expansion of this node
+                return;
+            }
+        }
 		if(getParentWindow() != NullFC &&
 		   getParentWindow()->getDrawingSurface() != NullFC &&
 		   getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
@@ -653,7 +671,14 @@ void Tree::updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRow
 
 void Tree::updateRows(const UInt32& Begining, const UInt32& NumRows)
 {
-    //TODO:Implement
+    for(UInt32 i(Begining) ; i<Begining+NumRows ; ++i)
+    {
+        if(i>=_TopDrawnRow && i<=_BottomDrawnRow)
+        {
+            _DrawnRows[i-_TopDrawnRow] =createRowComponent(i);
+        }
+    }
+    updateChildren();
 }
 
 void Tree::updateRowsDrawn(void)
@@ -729,11 +754,12 @@ Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
             return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false),
-                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false));
+                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false),
+                Row);
         }
         else
         {
-            return TreeRowComponents(NullFC, getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false));
+            return TreeRowComponents(NullFC, getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false),Row);
         }
     }
     else
@@ -816,6 +842,26 @@ void Tree::updatePreferredSize(void)
             setPreferredSize(Vec2f(0,0));
         }
     endEditCP(TreePtr(this), PreferredSizeFieldMask);
+}
+
+void Tree::updateExpandedPath(const TreePath& Path)
+{
+    Int32 Row(getModelLayout()->getRowForPath(Path));
+    if(Row>=0 && Row <= _BottomDrawnRow)
+    {
+        _DrawnRows[Row-_TopDrawnRow] =createRowComponent(Row);
+        updatePreferredSize();
+    }
+}
+
+void Tree::updateCollapsedPath(const TreePath& Path)
+{
+    Int32 Row(getModelLayout()->getRowForPath(Path));
+    if(Row>=0 && Row <= _BottomDrawnRow)
+    {
+        _DrawnRows[Row-_TopDrawnRow] =createRowComponent(Row);
+        updatePreferredSize();
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -962,33 +1008,31 @@ void Tree::SelectionListener::selectionRemoved(TreeSelectionEvent e)
     }
 }
 
-void Tree::ModelLayoutListener::treeCollapsed(const TreeModelLayoutEvent& event)
+void Tree::ModelLayoutListener::treeCollapsed(const TreeModelLayoutEvent& e)
 {
-    //TODO: Implement
-    _Tree->updatePreferredSize();
+    _Tree->updateCollapsedPath(e.getPath());
 }
 
-void Tree::ModelLayoutListener::treeExpanded(const TreeModelLayoutEvent& event)
+void Tree::ModelLayoutListener::treeExpanded(const TreeModelLayoutEvent& e)
 {
-    //TODO: Implement
-    _Tree->updatePreferredSize();
+    _Tree->updateExpandedPath(e.getPath());
 }
 
-void Tree::ModelLayoutListener::treeWillCollapse(const TreeModelLayoutEvent& event)
-{
-    //TODO: Implement
-}
-
-void Tree::ModelLayoutListener::treeWillExpand(const TreeModelLayoutEvent& event)
+void Tree::ModelLayoutListener::treeWillCollapse(const TreeModelLayoutEvent& e)
 {
     //TODO: Implement
 }
 
-Tree::TreeRowComponents::TreeRowComponents(void) :  _ExpandedComponent(NullFC), _ValueComponent(NullFC)
+void Tree::ModelLayoutListener::treeWillExpand(const TreeModelLayoutEvent& e)
+{
+    //TODO: Implement
+}
+
+Tree::TreeRowComponents::TreeRowComponents(void) :  _ExpandedComponent(NullFC), _ValueComponent(NullFC), _Row(-1)
 {
 }
 
-Tree::TreeRowComponents::TreeRowComponents(ComponentPtr ExpandedComponent, ComponentPtr ValueComponent) :  _ExpandedComponent(ExpandedComponent), _ValueComponent(ValueComponent)
+Tree::TreeRowComponents::TreeRowComponents(ComponentPtr ExpandedComponent, ComponentPtr ValueComponent, Int32 Row) :  _ExpandedComponent(ExpandedComponent), _ValueComponent(ValueComponent), _Row(Row)
 {
 }
 

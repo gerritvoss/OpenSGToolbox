@@ -426,16 +426,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 		ModelLayoutListener(TreePtr TheTree);
 		
 		//Called whenever an item in the tree has been collapsed.
-		virtual void treeCollapsed(const TreeModelLayoutEvent& event);
+		virtual void treeCollapsed(const TreeModelLayoutEvent& e);
 
 		//Called whenever an item in the tree has been expanded.
-		virtual void treeExpanded(const TreeModelLayoutEvent& event);
+		virtual void treeExpanded(const TreeModelLayoutEvent& e);
 
 		//Invoked whenever a node in the tree is about to be collapsed.
-		virtual void treeWillCollapse(const TreeModelLayoutEvent& event);
+		virtual void treeWillCollapse(const TreeModelLayoutEvent& e);
 
 		//Invoked whenever a node in the tree is about to be expanded.
-		virtual void treeWillExpand(const TreeModelLayoutEvent& event);
+		virtual void treeWillExpand(const TreeModelLayoutEvent& e);
 
 	protected :
 		TreePtr _Tree;
@@ -498,6 +498,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     void updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRows);
 
     void updateRows(const UInt32& Begining, const UInt32& NumRows);
+
+    void updateExpandedPath(const TreePath& Path);
+    void updateCollapsedPath(const TreePath& Path);
     void updateChildren(void);
     
     void updateRowsDrawn(void);
@@ -505,8 +508,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     struct TreeRowComponents
     {
         TreeRowComponents(void);
-        TreeRowComponents(ComponentPtr ExpandedComponent, ComponentPtr ValueComponent);
+        TreeRowComponents(ComponentPtr ExpandedComponent, ComponentPtr ValueComponent, Int32 Row);
         ComponentPtr _ExpandedComponent, _ValueComponent;
+        Int32 _Row;
     };
 
     TreeRowComponents createRowComponent(const UInt32& Row);
