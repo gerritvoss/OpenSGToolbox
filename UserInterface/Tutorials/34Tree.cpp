@@ -328,8 +328,8 @@ int main(int argc, char **argv)
     std::cout << std::endl;
 
     TheTreeModel.insertNodeInto(JNode, ANode, ANode->getChildCount());
-	TheTree->collapsePath(ANode->getTreePath());
-    TheTree->expandPath(ANode->getTreePath());
+	//TheTree->collapsePath(ANode->getTreePath());
+    //TheTree->expandPath(ANode->getTreePath());
 
     std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
     for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)
