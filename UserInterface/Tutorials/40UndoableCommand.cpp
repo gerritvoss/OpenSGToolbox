@@ -398,17 +398,26 @@ public:
 
 	virtual void stateChanged(const ChangeEvent& e)
 	{
-		UndoRedoListModel->clear();
+		while(UndoRedoListModel->getSize() > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
+		{
+			UndoRedoListModel->popBack();
+		}
+
+		//Resize
+		while(UndoRedoListModel->getSize()-1 < TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
+		{
+			UndoRedoListModel->pushBack(SharedFieldPtr(new SFString("")));
+		}
 
 		UInt32 UndoCount(TheUndoManager->numberOfUndos());
 		for(UInt32 i(0) ; i<UndoCount ; ++i)
 		{
-			UndoRedoListModel->pushFront(SharedFieldPtr(new SFString(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
+			UndoRedoListModel->set(i+1, SharedFieldPtr(new SFString(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
 		}
 		UInt32 RedoCount(TheUndoManager->numberOfRedos());
 		for(UInt32 i(0) ; i<RedoCount ; ++i)
 		{
-			UndoRedoListModel->pushBack(SharedFieldPtr(new SFString(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
+			UndoRedoListModel->set(i+TheUndoManager->numberOfUndos()+1, SharedFieldPtr(new SFString(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
 		}
 
 		if((UndoCount == 0 && UndoButton->getEnabled()) ||
@@ -438,12 +447,10 @@ class UndoRedoListListener: public ListSelectionListener
     {
 		if(!UndoRedoList->getSelectionModel()->isSelectionEmpty())
         {
-			/*Int32 ListSelectedIndex(UndoRedoList->getSelectionModel()->getAnchorSelectionIndex());
-			UInt32 UndoCount(TheUndoManager->numberOfUndos());
+			Int32 ListSelectedIndex(UndoRedoList->getSelectionModel()->getAnchorSelectionIndex());
 
-			std::cout << "Selected Index: " << ListSelectedIndex << std::endl;
 
-			TheUndoManager->undoTo(TheUndoManager->editToBeUndone(UndoCount-ListSelectedIndex-1));*/
+			TheUndoManager->undoOrRedoTo(ListSelectedIndex);
         }
     }
 };
