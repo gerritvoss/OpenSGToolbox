@@ -310,7 +310,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     void setModel(TreeModelPtr newModel);
 
     //Selects the nodes between index0 and index1, inclusive.
-    void setSelectionInterval(const UInt32& index0, const UInt32& index1);
+    void setSelectionInterval(const Int32& index0, const Int32& index1);
 
     //Sets the tree's selection model.
     void setSelectionModel(TreeSelectionModelPtr selectionModel);

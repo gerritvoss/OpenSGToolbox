@@ -121,6 +121,7 @@ void Tree::mousePressed(const MouseEvent& e)
 			if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 			{
 				getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionRow(), Row);
+				getSelectionModel()->setLeadSelectionRow(Row);
 			}
 			else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 			{
@@ -133,10 +134,12 @@ void Tree::mousePressed(const MouseEvent& e)
                 {
 				    getSelectionModel()->addSelectionRow(Row);
                 }
+				getSelectionModel()->setAnchorSelectionRow(Row);
 			}
 			else
 			{
 				getSelectionModel()->setSelectionRow(Row);
+				getSelectionModel()->setAnchorSelectionRow(Row);
 			}
 		}
     }
@@ -388,17 +391,9 @@ void Tree::setModel(TreeModelPtr newModel)
     updatePreferredSize();
 }
 
-void Tree::setSelectionInterval(const UInt32& index0, const UInt32& index1)
+void Tree::setSelectionInterval(const Int32& index0, const Int32& index1)
 {
-    //Get all of the Paths coresponding to this row interval
-    std::vector<TreePath> Paths;
-    UInt32 MinIndex(osgMin(index0,index1)), MaxIndex(osgMax(index0,index1));
-    for(UInt32 i(MinIndex) ; i<=MaxIndex ; ++i)
-    {
-        Paths.push_back(getModelLayout()->getPathForRow(i));
-    }
-
-    setSelectionPaths(Paths);
+	_SelectionModel->setSelectionInterval(index0,index1);
 }
 
 void Tree::setSelectionModel(TreeSelectionModelPtr selectionModel)

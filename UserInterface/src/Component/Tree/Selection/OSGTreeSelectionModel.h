@@ -79,6 +79,18 @@ public:
 	//Empties the current selection.
 	virtual void clearSelection(void) = 0;
 
+	//Sets the Lead Selection Path
+	virtual void setLeadSelectionPath(const TreePath& path) = 0;
+
+	//Sets the Lead Selection Row
+	virtual void setLeadSelectionRow(Int32 Row) = 0;
+
+	//Sets the Anchor Selection Path
+	virtual void setAnchorSelectionPath(const TreePath& path) = 0;
+
+	//Sets the Anchor Selection Row
+	virtual void setAnchorSelectionRow(Int32 Row) = 0;
+
 	//Returns the last path that was added.
 	virtual TreePath getLeadSelectionPath(void) const = 0;
 
@@ -157,7 +169,7 @@ public:
 	virtual void setSelectionRows(std::vector<Int32> Rows) = 0;
 
     //Sets the selection to the Interval from StartRow to EndRow
-    virtual void setSelectionInterval(const Int32& StartRow, const Int32& EndRow) = 0;
+    virtual void setSelectionInterval(const Int32& index0, const Int32& index1) = 0;
 };
 
 typedef TreeSelectionModel* TreeSelectionModelPtr;

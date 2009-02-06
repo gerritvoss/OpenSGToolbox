@@ -72,6 +72,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 	//Empties the current selection.
 	virtual void clearSelection(void);
 
+	//Sets the Lead Selection Path
+	virtual void setLeadSelectionPath(const TreePath& path);
+
+	//Sets the Lead Selection Row
+	virtual void setLeadSelectionRow(Int32 Row);
+
+	//Sets the Anchor Selection Path
+	virtual void setAnchorSelectionPath(const TreePath& path);
+
+	//Sets the Anchor Selection Row
+	virtual void setAnchorSelectionRow(Int32 Row);
+
 	//Returns the last path that was added.
 	virtual TreePath getLeadSelectionPath(void) const;
 
@@ -145,7 +157,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 	virtual void setSelectionRows(std::vector<Int32> Rows);
 
     //Sets the selection to the Interval from StartRow to EndRow
-    virtual void setSelectionInterval(const Int32& StartRow, const Int32& EndRow);
+    virtual void setSelectionInterval(const Int32& index0, const Int32& index1);
 
 
   protected:
@@ -154,6 +166,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
     void updateMinMax(void);
     Int32 getMinRow(const std::set<TreePath>& PathSet) const;
     Int32 getMaxRow(const std::set<TreePath>& PathSet) const;
+    std::set<TreePath> getMinimumContiguousSelection(const std::set<TreePath>& PathSet) const;
+
     void produceEvents(const std::set<TreePath>& PreSelectedSet, const std::set<TreePath>& PostSelectedSet, Int32 OldLeadSelectionIndex);
     std::set<TreePath> _SelectionSet;
 

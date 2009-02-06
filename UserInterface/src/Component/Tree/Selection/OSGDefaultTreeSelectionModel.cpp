@@ -179,8 +179,7 @@ void DefaultTreeSelectionModel::addSelectionPaths(std::vector<TreePath> paths)
         case CONTIGUOUS_TREE_SELECTION:
             _SelectionSet.insert(paths.begin(), paths.end());
             //Get the Minimum Contiguous Section
-            //TODO: Implement
-            assert(false && "Not Implemented");
+			_SelectionSet = getMinimumContiguousSelection(_SelectionSet);
             break;
         case DISCONTIGUOUS_TREE_SELECTION:
             _SelectionSet.insert(paths.begin(), paths.end());
@@ -189,8 +188,6 @@ void DefaultTreeSelectionModel::addSelectionPaths(std::vector<TreePath> paths)
 
         updateMinMax();
         Int32 OldLeadSelectionIndex(_LeadSelectionIndex);
-        _LeadSelectionIndex = _MinSelectionIndex;
-        _AnchorSelectionIndex = _MaxSelectionIndex;
         produceEvents(PreSelectedSet, _SelectionSet, OldLeadSelectionIndex);
     }
 }
@@ -207,8 +204,6 @@ void DefaultTreeSelectionModel::clearSelection(void)
 
     updateMinMax();
     Int32 OldLeadSelectionIndex(_LeadSelectionIndex);
-    _LeadSelectionIndex = _MinSelectionIndex;
-    _AnchorSelectionIndex = _MaxSelectionIndex;
     produceEvents(PreSelectedSet, _SelectionSet, OldLeadSelectionIndex);
 }
 
@@ -366,15 +361,12 @@ void DefaultTreeSelectionModel::removeSelectionPaths(std::vector<TreePath> paths
             break;
         case CONTIGUOUS_TREE_SELECTION:
             //Get the Minimum Contiguous Section
-            //TODO: Implement
-            assert(false && "Not Implemented");
+			_SelectionSet = getMinimumContiguousSelection(_SelectionSet);
             break;
         }
 
         updateMinMax();
         Int32 OldLeadSelectionIndex(_LeadSelectionIndex);
-        _LeadSelectionIndex = _MinSelectionIndex;
-        _AnchorSelectionIndex = _MaxSelectionIndex;
         produceEvents(PreSelectedSet, _SelectionSet, OldLeadSelectionIndex);
     }
 }
@@ -413,8 +405,7 @@ void DefaultTreeSelectionModel::setSelectionMode(const UInt32& mode)
 				break;
 			case CONTIGUOUS_TREE_SELECTION:
                 //Get the Minimum Contiguous Section
-                //TODO: Implement
-                assert(false && "Not Implemented");
+				_SelectionSet = getMinimumContiguousSelection(_SelectionSet);
                 break;
         }
 
@@ -423,8 +414,6 @@ void DefaultTreeSelectionModel::setSelectionMode(const UInt32& mode)
 		// update indices
         updateMinMax();
         Int32 OldLeadSelectionIndex(_LeadSelectionIndex);
-        _LeadSelectionIndex = _MinSelectionIndex;
-        _AnchorSelectionIndex = _MaxSelectionIndex;
         
         //Produce Events
         produceEvents(PreSelectedSet, _SelectionSet, OldLeadSelectionIndex);
@@ -445,6 +434,7 @@ void DefaultTreeSelectionModel::setSelectionPaths(std::vector<TreePath> paths)
     if(!paths.empty())
     {
         std::set<TreePath> PreSelectedSet(_SelectionSet);
+        Int32 OldLeadSelectionIndex(_LeadSelectionIndex);
         
         switch(getSelectionMode())
         {
@@ -463,8 +453,9 @@ void DefaultTreeSelectionModel::setSelectionPaths(std::vector<TreePath> paths)
             break;
         case CONTIGUOUS_TREE_SELECTION:
             //Get the Minimum Contiguous Section
-            //TODO: Implement
-            assert(false && "Not Implemented");
+			_SelectionSet.clear();
+            _SelectionSet.insert(paths.begin(), paths.end());
+			_SelectionSet = getMinimumContiguousSelection(_SelectionSet);
             break;
         case DISCONTIGUOUS_TREE_SELECTION:
             _SelectionSet.clear();
@@ -473,9 +464,6 @@ void DefaultTreeSelectionModel::setSelectionPaths(std::vector<TreePath> paths)
         }
 
         updateMinMax();
-        Int32 OldLeadSelectionIndex(_LeadSelectionIndex);
-        _LeadSelectionIndex = _MinSelectionIndex;
-        _AnchorSelectionIndex = _MaxSelectionIndex;
         produceEvents(PreSelectedSet, _SelectionSet, OldLeadSelectionIndex);
     }
 }
@@ -486,15 +474,65 @@ void DefaultTreeSelectionModel::setSelectionInterval(const Int32& index0, const 
         index1 >= 0)
     {
         std::vector<TreePath> Paths;
-        for(Int32 i(osgMin(index0, index1)) ; i<=osgMax(index0, index1) ; ++i)
-        {
-            Paths.push_back(getRowMapper()->getPathForRow(i));
-        }
+		if(index0 < index1 )
+		{
+			for(Int32 i(index0) ; i<=index1 ; ++i)
+			{
+				Paths.push_back(getRowMapper()->getPathForRow(i));
+			}
+		}
+		else
+		{
+			for(Int32 i(index0) ; i>=index1 ; --i)
+			{
+				Paths.push_back(getRowMapper()->getPathForRow(i));
+			}
+		}
 
         setSelectionPaths(Paths);
     }
 }
 
+
+std::set<TreePath> DefaultTreeSelectionModel::getMinimumContiguousSelection(const std::set<TreePath>& PathSet) const
+{
+	std::set<TreePath> Result;
+	NumberSet RowSet;
+
+    toRowNumberSet(RowSet, PathSet);
+
+	if(RowSet.size() > 0)
+	{
+		NumberRange MinimumSection(RowSet.front());
+		for(Int32 i(MinimumSection.getMin()) ; i<= MinimumSection.getMax() ; ++i)
+		{
+			Result.insert(getRowMapper()->getPathForRow(i));
+		}
+	}
+
+	return Result;
+}
+
+
+void DefaultTreeSelectionModel::setLeadSelectionPath(const TreePath& path)
+{
+	setLeadSelectionRow(getRowMapper()->getRowForPath(path));
+}
+
+void DefaultTreeSelectionModel::setLeadSelectionRow(Int32 Row)
+{
+	_LeadSelectionIndex = Row;
+}
+
+void DefaultTreeSelectionModel::setAnchorSelectionPath(const TreePath& path)
+{
+	setAnchorSelectionRow(getRowMapper()->getRowForPath(path));
+}
+
+void DefaultTreeSelectionModel::setAnchorSelectionRow(Int32 Row)
+{
+	_AnchorSelectionIndex = Row;
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

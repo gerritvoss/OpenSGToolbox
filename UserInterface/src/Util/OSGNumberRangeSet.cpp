@@ -392,7 +392,7 @@ void NumberSet::collapseIntersectingRanges(void)
     NextListItor = ++_List.begin();
     while (NextListItor != _List.end())
     {
-        if(ListItor->getMax() >= NextListItor->getMin())
+        if(ListItor->getMax() >= NextListItor->getMin()-1)
         {
             NextListItor->setMin(osgMin(ListItor->getMin(), NextListItor->getMin()));
             NextListItor->setMax(osgMax(ListItor->getMax(), NextListItor->getMax()));
