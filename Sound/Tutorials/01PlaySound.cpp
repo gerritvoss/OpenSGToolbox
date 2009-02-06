@@ -37,6 +37,7 @@ helpful tips and incites into the workings of MiniMap
 #include <OpenSG/Sound/OSGFModSound.h>
 #include <OpenSG/Sound/OSGSoundEmitter.h>
 
+#include <OpenSG/Sound/OSGSoundListener.h>
 
 #define PI 3.1415926
 // Activate the OpenSG namespace
@@ -190,6 +191,16 @@ class TutorialMouseMotionListener : public MouseMotionListener
     {
             mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
     }
+};
+
+class TutorialSoundEventListener : public SoundListener{
+	void soundPlayed(const SoundEvent& e){
+		printf("Sound played\n");
+	}
+	void soundStopped(const SoundEvent& e){
+		printf("Sound stopped\n");
+	}
+	
 };
 
 
@@ -377,6 +388,7 @@ int main(int argc, char **argv)
 	sound2 = soundManager->getSound(0);
 	sound3 = soundManager->getSound(2);
 	
+#if 0
 	Pnt3f position(0, 0, 0);
 	Vec3f velocity(0, 0, 0);
 	Vec3f foward(0, 0, -1);
@@ -388,9 +400,12 @@ int main(int argc, char **argv)
 	Pnt3f pos(10, 0, 0);
 	
 	sound->setVelocity(velocity);
-	sound->play();
 	sound->setPosition(pos);
-
+#endif
+	sound->play();
+	
+	TutorialSoundEventListener* soundListener = new TutorialSoundEventListener();
+	sound2->addSoundListener(soundListener);
 	SoundEmitterPtr soundEmitter = SoundEmitter::create();
 	beginEditCP(soundEmitter, SoundEmitter::SoundFieldMask);
 		soundEmitter->setSound(sound);

@@ -65,13 +65,16 @@ FMOD_RESULT  F_CALLBACK  fmod_callback(
 	for (int i = 0; i < 20; i++){
 		if (!sound->listeners[i]) continue;
 		SoundListenerPtr listener = sound->listeners[i];
-		
+		SoundPtr soundPtr(sound);
+		SoundEvent event(soundPtr, Time(), soundPtr);
 		switch (type){
 			case (FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_START):
-				//listener->soundPlayed(
+				listener->soundPlayed(event);
+				break;
+			case (FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_END):
+				listener->soundEnded(event);
 				break;
 		}
-	
 	}
 	return FMOD_OK;
 }
