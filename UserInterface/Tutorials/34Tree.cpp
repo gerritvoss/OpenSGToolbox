@@ -8,18 +8,11 @@
 // Text,and adding a Button to a Scene.  Also note that clicking
 // the Button causes it to appear pressed
 
-
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -40,6 +33,7 @@
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGToggleButton.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -126,6 +120,80 @@ public:
     }
 };
 
+TreePtr TheTree;
+ToggleButtonPtr SingleSelectionButton;
+ToggleButtonPtr SingleIntervalSelectionButton;
+ToggleButtonPtr MultipleIntervalSelectionButton;
+
+class SingleSelectionButtonSelectedListener : public ButtonSelectedListener
+{
+public:
+
+   virtual void buttonSelected(const ButtonSelectedEvent& e)
+    {
+
+        beginEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
+            SingleIntervalSelectionButton->setSelected(false);
+        endEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
+
+        beginEditCP(MultipleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
+            MultipleIntervalSelectionButton->setSelected(false);
+        endEditCP(MultipleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
+
+        TheTree->getSelectionModel()->setSelectionMode(TreeSelectionModel::SINGLE_TREE_SELECTION);
+        
+    }
+      virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   {
+   }
+
+};
+
+class SingleIntervalSelectionButtonSelectedListener : public ButtonSelectedListener
+{
+public:
+
+   virtual void buttonSelected(const ButtonSelectedEvent& e)
+    {
+        beginEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
+            SingleSelectionButton->setSelected(false);
+        endEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
+
+        beginEditCP(MultipleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
+            MultipleIntervalSelectionButton->setSelected(false);
+        endEditCP(MultipleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
+
+        TheTree->getSelectionModel()->setSelectionMode(TreeSelectionModel::CONTIGUOUS_TREE_SELECTION);
+    }
+
+   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   {
+
+   }
+};
+
+class MultipleIntervalSelectionButtonSelectedListener : public ButtonSelectedListener
+{
+public:
+
+   virtual void buttonSelected(const ButtonSelectedEvent& e)
+    {    
+        beginEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
+            SingleSelectionButton->setSelected(false);
+        endEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
+
+        beginEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
+            SingleIntervalSelectionButton->setSelected(false);
+        endEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
+
+        TheTree->getSelectionModel()->setSelectionMode(TreeSelectionModel::DISCONTIGUOUS_TREE_SELECTION);
+    }
+
+   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   {
+   }
+
+};
 int main(int argc, char **argv)
 {
     // OSG init
@@ -241,7 +309,7 @@ int main(int argc, char **argv)
 
     
     //Create the Tree
-    TreePtr TheTree = Tree::create();
+    TheTree = Tree::create();
 
     beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
         TheTree->setPreferredSize(Vec2f(100, 500));
@@ -299,6 +367,39 @@ int main(int argc, char **argv)
     endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     ExampleScrollPanel->setViewComponent(TheTree);
 
+    /******************************************************
+
+            Create and edit some ToggleButtons to
+			allow for dynamically changing
+			List selection options.           
+
+    ******************************************************/
+    SingleSelectionButton = ToggleButton::create();
+    SingleIntervalSelectionButton = ToggleButton::create();
+    MultipleIntervalSelectionButton = ToggleButton::create();
+
+    beginEditCP(SingleSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
+        SingleSelectionButton->setText("Single Selection");
+        SingleSelectionButton->setPreferredSize(Vec2f(160, 50));
+        SingleSelectionButton->setSelected(true);
+    endEditCP(SingleSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
+    SingleSelectionButtonSelectedListener TheSingleSelectionButtonSelectedListener;
+    SingleSelectionButton->addButtonSelectedListener(&TheSingleSelectionButtonSelectedListener);
+    
+    beginEditCP(SingleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
+        SingleIntervalSelectionButton->setText("Single Interval Selection");
+        SingleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
+    endEditCP(SingleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
+    SingleIntervalSelectionButtonSelectedListener TheSingleIntervalSelectionButtonSelectedListener;
+    SingleIntervalSelectionButton->addButtonSelectedListener(&TheSingleIntervalSelectionButtonSelectedListener);
+    
+    beginEditCP(MultipleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
+        MultipleIntervalSelectionButton->setText("Multiple Interval Selection");
+        MultipleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
+    endEditCP(MultipleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
+    MultipleIntervalSelectionButtonSelectedListener TheMultipleIntervalSelectionButtonSelectedListener;
+    MultipleIntervalSelectionButton->addButtonSelectedListener(&TheMultipleIntervalSelectionButtonSelectedListener);
+
     //Create Node Button
     ButtonPtr CreateNodeButton = Button::create();
 
@@ -328,6 +429,9 @@ int main(int argc, char **argv)
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(TheTree);
+       MainInternalWindow->getChildren().push_back(SingleSelectionButton);
+       MainInternalWindow->getChildren().push_back(SingleIntervalSelectionButton);
+       MainInternalWindow->getChildren().push_back(MultipleIntervalSelectionButton);
        MainInternalWindow->getChildren().push_back(CreateNodeButton);
        MainInternalWindow->getChildren().push_back(RemoveNodeButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);

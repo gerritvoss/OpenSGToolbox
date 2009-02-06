@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGUIDrawObjectCanvasBase.h"
 #include "OSGUIDrawObjectCanvas.h"
 
@@ -66,6 +66,9 @@ OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  UIDrawObjectCanvasBase::DrawObjectsFieldMask = 
     (TypeTraits<BitVector>::One << UIDrawObjectCanvasBase::DrawObjectsFieldId);
+
+const OSG::BitVector  UIDrawObjectCanvasBase::UsePreferredSizeAsRequestedFieldMask = 
+    (TypeTraits<BitVector>::One << UIDrawObjectCanvasBase::UsePreferredSizeAsRequestedFieldId);
 
 const OSG::BitVector UIDrawObjectCanvasBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -77,6 +80,9 @@ const OSG::BitVector UIDrawObjectCanvasBase::MTInfluenceMask =
 /*! \var UIDrawObjectPtr UIDrawObjectCanvasBase::_mfDrawObjects
     
 */
+/*! \var bool            UIDrawObjectCanvasBase::_sfUsePreferredSizeAsRequested
+    
+*/
 
 //! UIDrawObjectCanvas description
 
@@ -86,7 +92,12 @@ FieldDescription *UIDrawObjectCanvasBase::_desc[] =
                      "DrawObjects", 
                      DrawObjectsFieldId, DrawObjectsFieldMask,
                      false,
-                     (FieldAccessMethod) &UIDrawObjectCanvasBase::getMFDrawObjects)
+                     (FieldAccessMethod) &UIDrawObjectCanvasBase::getMFDrawObjects),
+    new FieldDescription(SFBool::getClassType(), 
+                     "UsePreferredSizeAsRequested", 
+                     UsePreferredSizeAsRequestedFieldId, UsePreferredSizeAsRequestedFieldMask,
+                     false,
+                     (FieldAccessMethod) &UIDrawObjectCanvasBase::getSFUsePreferredSizeAsRequested)
 };
 
 
@@ -164,6 +175,7 @@ void UIDrawObjectCanvasBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 UIDrawObjectCanvasBase::UIDrawObjectCanvasBase(void) :
     _mfDrawObjects            (), 
+    _sfUsePreferredSizeAsRequested(bool(false)), 
     Inherited() 
 {
 }
@@ -174,6 +186,7 @@ UIDrawObjectCanvasBase::UIDrawObjectCanvasBase(void) :
 
 UIDrawObjectCanvasBase::UIDrawObjectCanvasBase(const UIDrawObjectCanvasBase &source) :
     _mfDrawObjects            (source._mfDrawObjects            ), 
+    _sfUsePreferredSizeAsRequested(source._sfUsePreferredSizeAsRequested), 
     Inherited                 (source)
 {
 }
@@ -195,6 +208,11 @@ UInt32 UIDrawObjectCanvasBase::getBinSize(const BitVector &whichField)
         returnValue += _mfDrawObjects.getBinSize();
     }
 
+    if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
+    {
+        returnValue += _sfUsePreferredSizeAsRequested.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +225,11 @@ void UIDrawObjectCanvasBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DrawObjectsFieldMask & whichField))
     {
         _mfDrawObjects.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
+    {
+        _sfUsePreferredSizeAsRequested.copyToBin(pMem);
     }
 
 
@@ -222,6 +245,11 @@ void UIDrawObjectCanvasBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfDrawObjects.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
+    {
+        _sfUsePreferredSizeAsRequested.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -235,6 +263,9 @@ void UIDrawObjectCanvasBase::executeSyncImpl(      UIDrawObjectCanvasBase *pOthe
     if(FieldBits::NoField != (DrawObjectsFieldMask & whichField))
         _mfDrawObjects.syncWith(pOther->_mfDrawObjects);
 
+    if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
+        _sfUsePreferredSizeAsRequested.syncWith(pOther->_sfUsePreferredSizeAsRequested);
+
 
 }
 #else
@@ -244,6 +275,9 @@ void UIDrawObjectCanvasBase::executeSyncImpl(      UIDrawObjectCanvasBase *pOthe
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
+        _sfUsePreferredSizeAsRequested.syncWith(pOther->_sfUsePreferredSizeAsRequested);
 
 
     if(FieldBits::NoField != (DrawObjectsFieldMask & whichField))

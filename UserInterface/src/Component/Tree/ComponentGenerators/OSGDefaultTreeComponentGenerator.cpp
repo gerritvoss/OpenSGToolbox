@@ -125,6 +125,17 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
     //Create the panel, set its children and layout
     PanelPtr ThePanel = Panel::Ptr::dcast(getNodePanelPrototype()->shallowCopy());
 
+
+    beginEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+        ThePanel->setLayout(TheLayout);
+        ThePanel->getChildren().push_back(TheLabel);
+    endEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+
+    return ThePanel;
+}
+
+ComponentPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+{
     //If node is not a leaf expanded
     if(!Leaf)
     {
@@ -137,19 +148,11 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
         {
             ExpandedCanvas = UIDrawObjectCanvas::Ptr::dcast(getNotExpandedDrawObjectPrototype()->shallowCopy());
         }
-        beginEditCP(ThePanel, Panel::ChildrenFieldMask);
-            ThePanel->getChildren().push_back(ExpandedCanvas);
-        endEditCP(ThePanel, Panel::ChildrenFieldMask);
+        return ExpandedCanvas;
     }
-
-    beginEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
-        ThePanel->setLayout(TheLayout);
-        ThePanel->getChildren().push_back(TheLabel);
-    endEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
-
-    //TODO: Implement
-    return ThePanel;
+    return NullFC;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

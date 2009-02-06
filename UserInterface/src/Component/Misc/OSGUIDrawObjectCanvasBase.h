@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,6 +68,7 @@
 #include "Component/OSGComponent.h" // Parent
 
 #include "Graphics/UIDrawObjects/OSGUIDrawObject.h" // DrawObjects type
+#include <OpenSG/OSGBoolFields.h> // UsePreferredSizeAsRequested type
 
 #include "OSGUIDrawObjectCanvasFields.h"
 
@@ -91,11 +92,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
 
     enum
     {
-        DrawObjectsFieldId = Inherited::NextFieldId,
-        NextFieldId        = DrawObjectsFieldId + 1
+        DrawObjectsFieldId                 = Inherited::NextFieldId,
+        UsePreferredSizeAsRequestedFieldId = DrawObjectsFieldId                 + 1,
+        NextFieldId                        = UsePreferredSizeAsRequestedFieldId + 1
     };
 
     static const OSG::BitVector DrawObjectsFieldMask;
+    static const OSG::BitVector UsePreferredSizeAsRequestedFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,7 +126,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
     /*! \{                                                                 */
 
            MFUIDrawObjectPtr   *getMFDrawObjects    (void);
+           SFBool              *getSFUsePreferredSizeAsRequested(void);
 
+           bool                &getUsePreferredSizeAsRequested(void);
+     const bool                &getUsePreferredSizeAsRequested(void) const;
            UIDrawObjectPtr     &getDrawObjects    (const UInt32 index);
            MFUIDrawObjectPtr   &getDrawObjects    (void);
      const MFUIDrawObjectPtr   &getDrawObjects    (void) const;
@@ -133,6 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setUsePreferredSizeAsRequested( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
     /*! \{                                                                 */
 
     MFUIDrawObjectPtr   _mfDrawObjects;
+    SFBool              _sfUsePreferredSizeAsRequested;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -106,7 +106,15 @@ void Tree::mousePressed(const MouseEvent& e)
 			}
 			else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 			{
-				getSelectionModel()->removeSelectionRow(Row);// this toggles the interval
+                // this toggles the interval
+                if(getSelectionModel()->isRowSelected(Row))
+                {
+    				getSelectionModel()->removeSelectionRow(Row);
+                }
+                else
+                {
+				    getSelectionModel()->addSelectionRow(Row);
+                }
 			}
 			else
 			{
@@ -610,7 +618,7 @@ void Tree::updateInsertedRows(const UInt32& Begining, const UInt32& NumInsertedR
     }
     else if(Begining <= NewBottomDrawnRow)
     {
-        std::vector<ComponentPtr> RowsPushedDown;
+        std::vector<TreeRowComponents> RowsPushedDown;
         Int32 NumToPop(_BottomDrawnRow - Begining + 1);
         for(Int32 i(0) ; i<NumToPop ; ++i)
         {
@@ -635,15 +643,7 @@ void Tree::updateInsertedRows(const UInt32& Begining, const UInt32& NumInsertedR
     _TopDrawnRow = NewTopDrawnRow;
     _BottomDrawnRow = NewBottomDrawnRow;
 
-    beginEditCP(TreePtr(this), ChildrenFieldMask);
-        getChildren().clear();
-        for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
-        {
-            getChildren().push_back(_DrawnRows[i]);
-        }
-    endEditCP(TreePtr(this), ChildrenFieldMask);
-
-    updateLayout();
+    updateChildren();
 }
 
 void Tree::updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRows)
@@ -708,16 +708,10 @@ void Tree::updateRowsDrawn(void)
     _TopDrawnRow = NewTopDrawnRow;
     _BottomDrawnRow = NewBottomDrawnRow;
 
-    beginEditCP(TreePtr(this), ChildrenFieldMask);
-        getChildren().clear();
-        for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
-        {
-            getChildren().push_back(_DrawnRows[i]);
-        }
-    endEditCP(TreePtr(this), ChildrenFieldMask);
+    updateChildren();
 }
 
-ComponentPtr Tree::createRowComponent(const UInt32& Row)
+Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
 {
     if(getCellGenerator() != NullFC)
     {
@@ -734,16 +728,17 @@ ComponentPtr Tree::createRowComponent(const UInt32& Row)
         }
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
-            return TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false);
+            return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false),
+                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false));
         }
         else
         {
-            return getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false);
+            return TreeRowComponents(NullFC, getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false));
         }
     }
     else
     {
-        return NullFC;
+        return TreeRowComponents();
     }
 }
 
@@ -753,11 +748,30 @@ void Tree::updateDrawnRow(const UInt32& Row)
        Row <= _BottomDrawnRow)
     {
         _DrawnRows[Row-_TopDrawnRow] = createRowComponent(Row);
+        updateChildren();
         //TODO: Optimize this!!!!!!!
-        beginEditCP(TreePtr(this), ChildrenFieldMask);
-            getChildren().setValue(_DrawnRows[Row-_TopDrawnRow],Row-_TopDrawnRow);
-        endEditCP(TreePtr(this), ChildrenFieldMask);
+        //beginEditCP(TreePtr(this), ChildrenFieldMask);
+        //    getChildren().setValue(_DrawnRows[Row-_TopDrawnRow]._ValueComponent,Row-_TopDrawnRow);
+        //endEditCP(TreePtr(this), ChildrenFieldMask);
     }
+}
+
+void Tree::updateChildren(void)
+{
+    beginEditCP(TreePtr(this), ChildrenFieldMask);
+        getChildren().clear();
+        for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
+        {
+            if(_DrawnRows[i]._ExpandedComponent != NullFC)
+            {
+                getChildren().push_back(_DrawnRows[i]._ExpandedComponent);
+            }
+        }
+        for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
+        {
+            getChildren().push_back(_DrawnRows[i]._ValueComponent);
+        }
+    endEditCP(TreePtr(this), ChildrenFieldMask);
 }
 
 void Tree::updateLayout(void)
@@ -765,10 +779,18 @@ void Tree::updateLayout(void)
     //Update the Position and Size of all the Drawn Rows
     for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
     {
-        beginEditCP(_DrawnRows[i], Component::PositionFieldMask | Component::SizeFieldMask);
-		_DrawnRows[i]->setPosition(Pnt2f((getPathForRow(_TopDrawnRow+i).getDepth()-1) * getModelLayout()->getDepthOffset(), getModelLayout()->getRowHeight()*(i+_TopDrawnRow)));
-            _DrawnRows[i]->setSize(Vec2f(getSize().x()-_DrawnRows[i]->getPosition().x(), getModelLayout()->getRowHeight()));
-        endEditCP(_DrawnRows[i], Component::PositionFieldMask | Component::SizeFieldMask);
+        Pnt2f RowTopLeft((getPathForRow(_TopDrawnRow+i).getDepth()-1) * getModelLayout()->getDepthOffset(), getModelLayout()->getRowHeight()*(i+_TopDrawnRow));
+        if(_DrawnRows[i]._ExpandedComponent != NullFC)
+        {
+            beginEditCP(_DrawnRows[i]._ExpandedComponent, Component::PositionFieldMask | Component::SizeFieldMask);
+                _DrawnRows[i]._ExpandedComponent->setSize(_DrawnRows[i]._ExpandedComponent->getRequestedSize());
+		        _DrawnRows[i]._ExpandedComponent->setPosition(RowTopLeft-Vec2f(_DrawnRows[i]._ExpandedComponent->getSize().x(), -0.5f*(getModelLayout()->getRowHeight()-_DrawnRows[i]._ExpandedComponent->getSize().y())));
+            endEditCP(_DrawnRows[i]._ExpandedComponent, Component::PositionFieldMask | Component::SizeFieldMask);
+        }
+        beginEditCP(_DrawnRows[i]._ValueComponent, Component::PositionFieldMask | Component::SizeFieldMask);
+            _DrawnRows[i]._ValueComponent->setPosition(RowTopLeft);
+            _DrawnRows[i]._ValueComponent->setSize(Vec2f(getSize().x()-_DrawnRows[i]._ValueComponent->getPosition().x(), getModelLayout()->getRowHeight()));
+        endEditCP(_DrawnRows[i]._ValueComponent, Component::PositionFieldMask | Component::SizeFieldMask);
     }
 }
 
@@ -960,6 +982,14 @@ void Tree::ModelLayoutListener::treeWillCollapse(const TreeModelLayoutEvent& eve
 void Tree::ModelLayoutListener::treeWillExpand(const TreeModelLayoutEvent& event)
 {
     //TODO: Implement
+}
+
+Tree::TreeRowComponents::TreeRowComponents(void) :  _ExpandedComponent(NullFC), _ValueComponent(NullFC)
+{
+}
+
+Tree::TreeRowComponents::TreeRowComponents(ComponentPtr ExpandedComponent, ComponentPtr ValueComponent) :  _ExpandedComponent(ExpandedComponent), _ValueComponent(ValueComponent)
+{
 }
 
 /*------------------------------------------------------------------------*/

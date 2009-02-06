@@ -88,6 +88,18 @@ void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2f& TopLeft, Pnt2f& BottomRight)
 	}
 }
 
+Vec2f UIDrawObjectCanvas::getRequestedSize(void) const
+{
+    if(getUsePreferredSizeAsRequested())
+    {
+        return getPreferredSize();
+    }
+    else
+    {
+        return Inherited::getRequestedSize();
+    }
+}
+
 Vec2f UIDrawObjectCanvas::getContentRequestedSize(void) const
 {
     Pnt2f TopLeft, BottomRight;

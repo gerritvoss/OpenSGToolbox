@@ -47,8 +47,6 @@
 
 #include "OSGAbstractTreeSelectionModel.h"
 #include "Component/Tree/OSGTreeRowMapper.h"
-#include <vector>
-#include "Util/OSGNumberRangeSet.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
@@ -151,9 +149,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 
 
   protected:
+    void toRowNumberSet(NumberSet& Result, const std::set<TreePath>& PathSet) const;
+    
     void updateMinMax(void);
-    void produceEvents(const NumberSet& PreSelectedSet, const NumberSet& PostSelectedSet, Int32 OldLeadSelectionIndex);
-	NumberSet _SelectionNumberSet;
+    Int32 getMinRow(const std::set<TreePath>& PathSet) const;
+    Int32 getMaxRow(const std::set<TreePath>& PathSet) const;
+    void produceEvents(const std::set<TreePath>& PreSelectedSet, const std::set<TreePath>& PostSelectedSet, Int32 OldLeadSelectionIndex);
+    std::set<TreePath> _SelectionSet;
 
     TreeSelectionMode _SelectionMode;
     Int32 	_AnchorSelectionIndex;

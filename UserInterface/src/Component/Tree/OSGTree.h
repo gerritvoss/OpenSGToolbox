@@ -498,10 +498,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     void updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRows);
 
     void updateRows(const UInt32& Begining, const UInt32& NumRows);
+    void updateChildren(void);
     
     void updateRowsDrawn(void);
 
-    ComponentPtr createRowComponent(const UInt32& Row);
+    struct TreeRowComponents
+    {
+        TreeRowComponents(void);
+        TreeRowComponents(ComponentPtr ExpandedComponent, ComponentPtr ValueComponent);
+        ComponentPtr _ExpandedComponent, _ValueComponent;
+    };
+
+    TreeRowComponents createRowComponent(const UInt32& Row);
     void updateDrawnRow(const UInt32& Row);
     void updatePreferredSize(void);
 
@@ -510,7 +518,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     Int32 _TopDrawnRow,
           _BottomDrawnRow;
 
-    std::deque<ComponentPtr> _DrawnRows;
+
+    std::deque<TreeRowComponents> _DrawnRows;
 
     /*==========================  PRIVATE  ================================*/
   private:

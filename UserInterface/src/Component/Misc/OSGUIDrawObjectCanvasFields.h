@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -55,7 +55,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"

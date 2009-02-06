@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -49,7 +49,7 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -103,6 +103,34 @@ MFUIDrawObjectPtr *UIDrawObjectCanvasBase::getMFDrawObjects(void)
     return &_mfDrawObjects;
 }
 
+//! Get the UIDrawObjectCanvas::_sfUsePreferredSizeAsRequested field.
+inline
+SFBool *UIDrawObjectCanvasBase::getSFUsePreferredSizeAsRequested(void)
+{
+    return &_sfUsePreferredSizeAsRequested;
+}
+
+
+//! Get the value of the UIDrawObjectCanvas::_sfUsePreferredSizeAsRequested field.
+inline
+bool &UIDrawObjectCanvasBase::getUsePreferredSizeAsRequested(void)
+{
+    return _sfUsePreferredSizeAsRequested.getValue();
+}
+
+//! Get the value of the UIDrawObjectCanvas::_sfUsePreferredSizeAsRequested field.
+inline
+const bool &UIDrawObjectCanvasBase::getUsePreferredSizeAsRequested(void) const
+{
+    return _sfUsePreferredSizeAsRequested.getValue();
+}
+
+//! Set the value of the UIDrawObjectCanvas::_sfUsePreferredSizeAsRequested field.
+inline
+void UIDrawObjectCanvasBase::setUsePreferredSizeAsRequested(const bool &value)
+{
+    _sfUsePreferredSizeAsRequested.setValue(value);
+}
 
 
 //! Get the value of the \a index element the UIDrawObjectCanvas::_mfDrawObjects field.

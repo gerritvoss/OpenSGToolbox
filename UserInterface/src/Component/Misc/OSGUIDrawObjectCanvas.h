@@ -79,6 +79,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvas : public UIDrawObjectCa
     /*! \}                                                                 */
 	virtual void getDrawObjectBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 	virtual Vec2f getContentRequestedSize(void) const;
+	virtual Vec2f getRequestedSize(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

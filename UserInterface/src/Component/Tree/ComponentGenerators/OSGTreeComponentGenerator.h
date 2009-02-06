@@ -79,6 +79,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeComponentGenerator : public TreeCompon
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual ComponentPtr getTreeExpandedComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus) = 0;
     
 	virtual ComponentPtr getTreeComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus) = 0;
     

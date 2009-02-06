@@ -4367,8 +4367,8 @@ void WindowsLookAndFeel::init(void)
     //Expanded Draw Object
 	RectUIDrawObjectPtr ExpanedDrawObject = RectUIDrawObject::create();
 	beginEditCP(ExpanedDrawObject);
-		ExpanedDrawObject->setTopLeft(Pnt2f(1,4));
-		ExpanedDrawObject->setBottomRight(Pnt2f(6,5));
+		ExpanedDrawObject->setTopLeft(Pnt2f(2,4));
+		ExpanedDrawObject->setBottomRight(Pnt2f(7,5));
 		ExpanedDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		ExpanedDrawObject->setOpacity(1.0);
 	endEditCP(ExpanedDrawObject);
@@ -4386,12 +4386,13 @@ void WindowsLookAndFeel::init(void)
         WindowsExpandedDrawObject->setMinSize(Vec2f(9.0f,9.0f));
         
         WindowsExpandedDrawObject->getDrawObjects().push_back(ExpanedDrawObject);
+        WindowsExpandedDrawObject->setUsePreferredSizeAsRequested(true);
     endEditCP(WindowsExpandedDrawObject);
     
 	RectUIDrawObjectPtr NotExpanedDrawObject = RectUIDrawObject::create();
 	beginEditCP(NotExpanedDrawObject);
-		NotExpanedDrawObject->setTopLeft(Pnt2f(4,1));
-		NotExpanedDrawObject->setBottomRight(Pnt2f(5,6));
+		NotExpanedDrawObject->setTopLeft(Pnt2f(4,2));
+		NotExpanedDrawObject->setBottomRight(Pnt2f(5,7));
 		NotExpanedDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		NotExpanedDrawObject->setOpacity(1.0);
 	endEditCP(NotExpanedDrawObject);
@@ -4409,6 +4410,7 @@ void WindowsLookAndFeel::init(void)
         WindowsNotExpandedDrawObjectPrototype->setMinSize(Vec2f(9.0f,9.0f));
         WindowsNotExpandedDrawObjectPrototype->getDrawObjects().push_back(ExpanedDrawObject);
         WindowsNotExpandedDrawObjectPrototype->getDrawObjects().push_back(NotExpanedDrawObject);
+        WindowsNotExpandedDrawObjectPrototype->setUsePreferredSizeAsRequested(true);
     endEditCP(WindowsNotExpandedDrawObjectPrototype);
     
     UIDrawObjectCanvasPtr WindowsLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
