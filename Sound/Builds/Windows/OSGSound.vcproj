@@ -222,6 +222,34 @@
 				Name="Sound"
 				>
 				<File
+					RelativePath="..\..\src\Sound\OSGDialogCoordinator.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGDialogCoordinator.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGDialogCoordinator.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGDialogCoordinatorBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGDialogCoordinatorBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGDialogCoordinatorBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGDialogCoordinatorFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Sound\OSGSound.cpp"
 					>
 				</File>
