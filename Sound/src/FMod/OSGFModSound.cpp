@@ -71,6 +71,7 @@ FMOD_RESULT  F_CALLBACK  fmod_callback(
 			case (FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_START):
 				listener->soundPlayed(event);
 				break;
+			case (FMOD_EVENT_CALLBACKTYPE_EVENTFINISHED):
 			case (FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_END):
 				listener->soundEnded(event);
 				break;

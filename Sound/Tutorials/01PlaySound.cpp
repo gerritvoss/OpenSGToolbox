@@ -197,7 +197,7 @@ class TutorialSoundEventListener : public SoundListener{
 	void soundPlayed(const SoundEvent& e){
 		printf("Sound played\n");
 	}
-	void soundStopped(const SoundEvent& e){
+	void soundEnded(const SoundEvent& e){
 		printf("Sound stopped\n");
 	}
 	
@@ -383,7 +383,7 @@ int main(int argc, char **argv)
 	//fmod wrapper
 	SoundManagerPtr soundManager = FModSoundManager::create();
 	//initialization, args: media path, media filename, max_channel
-	soundManager->init(".\\","test.fev", 64);
+	soundManager->init(".\\","metablast.fev", 64);
 	sound = soundManager->getSound(0);
 	sound2 = soundManager->getSound(0);
 	sound3 = soundManager->getSound(2);
