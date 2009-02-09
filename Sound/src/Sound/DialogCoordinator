@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DialogCoordinator"
+	parent="AttachmentContainer"
+	library="Sound"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A dialog coordiantor that runs on a text script to coordinate the dialog lines of single or multiple voices/sounds
+</FieldContainer>
