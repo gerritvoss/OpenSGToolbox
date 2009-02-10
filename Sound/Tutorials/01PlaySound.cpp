@@ -38,6 +38,7 @@ helpful tips and incites into the workings of MiniMap
 #include <OpenSG/Sound/OSGSoundEmitter.h>
 
 #include <OpenSG/Sound/OSGSoundListener.h>
+#include <OpenSG/Sound/OSGDialogCoordinator.h>
 
 //metablast sound definition header file
 #include "metablast.h"
@@ -60,6 +61,25 @@ float volume = 1;
 void display(void);
 void reshape(Vec2f Size);
 
+
+//global variables
+NodePtr root;
+NodePtr planet;
+NodePtr moon;
+	
+NodePtr rootTransformNode;
+NodePtr planetTransformNode;
+NodePtr moonTransformNode;
+
+TransformPtr rootTransform;
+TransformPtr planetTransform;
+TransformPtr moonTransform;
+
+Matrix l,m,n;
+Quaternion p, q;
+
+SoundManagerPtr soundManager;
+DialogCoordinatorPtr coor;
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
@@ -207,64 +227,23 @@ class TutorialSoundEventListener : public SoundListener{
 };
 
 
-int main(int argc, char **argv)
-{
-    // OSG init
-    osgInit(argc,argv);
-
-    // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
-
-    //Add Window Listener
-    TutorialMouseListener TheTutorialMouseListener;
-    TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
-    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
-
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
-    TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
-
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-    // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+NodePtr setupScene(){
+	root = makeSphere(3, 6);
+	planet = makeSphere(3, 3);
+    moon = makeSphere(2,1);
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
-                                        "OpenSG 01PlaySound Window");
-										
-    // Make Torus Node (creates Torus in background of scene)
-#if 0
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
-    mgr->setRoot(TorusGeometryNode);
+	rootTransformNode = Node::create();
+    planetTransformNode = Node::create();
+    moonTransformNode = Node::create();
 
-#else
-	NodePtr root = makeSphere(3, 6);
-	NodePtr planet = makeSphere(3, 3);
-    NodePtr moon = makeSphere(2,1);
+	rootTransform = Transform::create();
+    planetTransform = Transform::create();
+    moonTransform = Transform::create();
+
+    
 	
-	NodePtr rootTransformNode = Node::create();
-    NodePtr planetTransformNode = Node::create();
-    NodePtr moonTransformNode = Node::create();
-
-	TransformPtr rootTransform = Transform::create();
-    TransformPtr planetTransform = Transform::create();
-    TransformPtr moonTransform = Transform::create();
-
-    Matrix l,m,n;
-	Quaternion p(Vec3f(0,0,1), PI/2), q(Vec3f(0,0,1), 0);
+	p=Quaternion(Vec3f(0,0,1), PI/2);
+	q=Quaternion (Vec3f(0,0,1), 0);
 	
 	l.setIdentity();
 	m.setIdentity();
@@ -341,130 +320,102 @@ int main(int argc, char **argv)
 
     endEditCP(planet, Node::ChildrenFieldMask);
 
-	mgr->setRoot(rootTransformNode);
-#endif
+	return rootTransformNode;
+}
+
+
+void setupSound(){
+	//fmod wrapper
+	soundManager = FModSoundManager::create();  //create default sound manager
+	soundManager->init(".\\","metablast.fev", 64); //initialization, args: media path, media filename, max_channel
+	soundManager->setCamera(mgr->getCamera());  //for updating viwer/listener's position, velocity and orientation
+	soundManager->setWindowEventProducer(TutorialWindowEventProducer); //for automatic updates
+
+
+	SoundEmitterPtr clara=SoundEmitter::create(); //sound emitter 1
+	SoundEmitterPtr sam=SoundEmitter::create();   //sound emitter 2
+	
+	clara->attachUpdateListener(TutorialWindowEventProducer);
+	sam->attachUpdateListener(TutorialWindowEventProducer);
+
+	//create node for the soundemitter and attach to existing nodes
+	NodePtr soundNode1 = Node::create();
+	beginEditCP(soundNode1, Node::CoreFieldMask);
+		soundNode1->setCore(clara);
+	endEditCP(soundNode1, Node::CoreFieldMask);
+
+	NodePtr soundNode2 = Node::create();
+	beginEditCP(soundNode2, Node::CoreFieldMask);
+		soundNode2->setCore(sam);
+	endEditCP(soundNode2, Node::CoreFieldMask);
+
+	beginEditCP(planet, Node::ChildrenFieldMask);
+		planet->addChild(soundNode2);
+	endEditCP(planet, Node::ChildrenFieldMask);
+
+	beginEditCP(root, Node::ChildrenFieldMask);
+		root->addChild(soundNode1);
+	endEditCP(root, Node::ChildrenFieldMask);
+
+	//create dialog cooridnator
+	coor = DialogCoordinator::create();
+	coor->setSoundManager(soundManager);
+	coor->addSoundEmitter(clara, 'c', EVENTID_METABLAST_ROOT_DIALOG_CHLOROPLAST_CLARA_1C);
+	coor->addSoundEmitter(sam, 's', EVENTID_METABLAST_ROOT_DIALOG_CHLOROPLAST_SAM_2S);
+	               //12345678901234567890
+	coor->setScript("cscccscscscscscscssc");
+
+	coor->start();
+}
+int main(int argc, char **argv)
+{
+    // OSG init
+    osgInit(argc,argv);
+
+    // Set up Window
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+
+	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
+		TutorialWindowEventProducer->setUseCallbackForDraw(true);
+		TutorialWindowEventProducer->setUseCallbackForReshape(true);
+	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
+
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
+
+    //Add Window Listener
+    TutorialMouseListener TheTutorialMouseListener;
+    TutorialMouseMotionListener TheTutorialMouseMotionListener;
+    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
+
+    TutorialWindowListener TheTutorialWindowListener;
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+
+    // Create the SimpleSceneManager helper
+    mgr = new SimpleSceneManager;
+
+    // Tell the Manager what to manage
+    mgr->setWindow(MainWindow);
+	
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
+                                        "OpenSG 01PlaySound Window");
+										
+    //setup scene
+
+
+	mgr->setRoot(setupScene());
+	setupSound();
 
     // Show the whole Scene
     mgr->showAll();
-/*
-	*/
-	
-#if 0
-	FMOD_EVENTSYSTEM  *eventsystem;
-    FMOD_EVENT        *event;
-    FMOD_RESULT        result;
-    //int                key;
-	result = FMOD_EventSystem_Create(&eventsystem);
-    result = FMOD_EventSystem_Init(eventsystem, 64, FMOD_INIT_NORMAL, 0, FMOD_EVENT_INIT_NORMAL);
-    result = FMOD_EventSystem_SetMediaPath(eventsystem, ".\\");
-    result = FMOD_EventSystem_Load(eventsystem, "test.fev", 0, 0);
-    result = FMOD_EventSystem_GetEventBySystemID(eventsystem, 0, FMOD_EVENT_DEFAULT, &event);
-	{
-	FMOD_EventSystem_Set3DNumListeners(eventsystem, 1);
-	FMOD_VECTOR *pos = new FMOD_VECTOR();
-	FMOD_VECTOR *vel = new FMOD_VECTOR();
-	FMOD_VECTOR *frwrd = new FMOD_VECTOR();
-	FMOD_VECTOR *up = new FMOD_VECTOR();
-	
-	frwrd->x = 0;frwrd->y = 0;frwrd->z = -1;
-	up->x = 0;up->y = 1;up->z = 0;
-
-	FMOD_EventSystem_Set3DListenerAttributes(eventsystem, 0, pos,  vel, frwrd, up);
-	}
-	{
-	FMOD_VECTOR *pos = new FMOD_VECTOR();
-	FMOD_VECTOR *vel = new FMOD_VECTOR();
-	pos->x = 10;pos->y = 0;pos->z = -1;
-	
-	FMOD_Event_Set3DAttributes(event, pos, vel, 0);
-	}
-
-
-	//result = FMOD_System_Set3DSettings(eventsystem, 1.0, DISTANCEFACTOR, 1.0f);
-	FMOD_Event_Start(event);
-#else
-	//fmod wrapper
-	SoundManagerPtr soundManager = FModSoundManager::create();
-	//initialization, args: media path, media filename, max_channel
-	soundManager->init(".\\","metablast.fev", 64);
-	sound = soundManager->getSound(0);
-	sound2 = soundManager->getSound(0);
-	sound3 = soundManager->getSound(2);
-	
-#if 0
-	Pnt3f position(0, 0, 0);
-	Vec3f velocity(0, 0, 0);
-	Vec3f foward(0, 0, -1);
-	Vec3f up(0, 1, 0);
-	
-	soundManager->setListenerProperties(position, velocity, foward, up);
-	//FModSoundPtr fmodSound = (FModSoundPtr)sound;
-	
-	Pnt3f pos(10, 0, 0);
-	
-	sound->setVelocity(velocity);
-	sound->setPosition(pos);
-#endif
-	sound->play();
-	
-	TutorialSoundEventListener* soundListener = new TutorialSoundEventListener();
-	sound2->addSoundListener(soundListener);
-	SoundEmitterPtr soundEmitter = SoundEmitter::create();
-	beginEditCP(soundEmitter, SoundEmitter::SoundFieldMask);
-		soundEmitter->setSound(sound);
-	endEditCP(soundEmitter, SoundEmitter::SoundFieldMask);
-
-	soundEmitter->attachUpdateListener(TutorialWindowEventProducer);
-	//soundManager->setWindowEventProducer(TutorialWindowEventProducer);
-	CameraPtr cam = mgr->getCamera();
 
 	
-	NodePtr soundNode = Node::create();
-	beginEditCP(soundNode, Node::CoreFieldMask);
-		soundNode->setCore(soundEmitter);
-	endEditCP(soundNode, Node::CoreFieldMask);
-
-	//NodePtr soundNode = soundManager->getSoundNode(0);
-	beginEditCP(planet, Node::ChildrenFieldMask);
-		planet->addChild(soundNode);
-	endEditCP(planet, Node::ChildrenFieldMask);
-
-#if 1
-	SoundEmitterPtr soundEmitter2 = SoundEmitter::create();
-	beginEditCP(soundEmitter2, SoundEmitter::SoundFieldMask);
-		soundEmitter2->setSound(sound2);
-	endEditCP(soundEmitter2, SoundEmitter::SoundFieldMask);
-
-	soundEmitter2->attachUpdateListener(TutorialWindowEventProducer);
-	
-	NodePtr soundNode2 = Node::create();
-	beginEditCP(soundNode2, Node::CoreFieldMask);
-		soundNode2->setCore(soundEmitter2);
-	endEditCP(soundNode2, Node::CoreFieldMask);
-
-	beginEditCP(moon, Node::ChildrenFieldMask);
-		moon->addChild(soundNode2);
-	endEditCP(moon, Node::ChildrenFieldMask);
-#endif
-
-	SoundEmitterPtr soundEmitter3 = SoundEmitter::create();
-	beginEditCP(soundEmitter3, SoundEmitter::SoundFieldMask);
-		soundEmitter3->setSound(sound3);
-	endEditCP(soundEmitter3, SoundEmitter::SoundFieldMask);
-
-	soundEmitter3->attachUpdateListener(TutorialWindowEventProducer);
-	
-	NodePtr soundNode3 = Node::create();
-	beginEditCP(soundNode3, Node::CoreFieldMask);
-		soundNode3->setCore(soundEmitter3);
-	endEditCP(soundNode3, Node::CoreFieldMask);
-
-	beginEditCP(root, Node::ChildrenFieldMask);
-		moon->addChild(soundNode3);
-	endEditCP(root, Node::ChildrenFieldMask);
-#endif
 	float r = 0;
-	soundManager->setCamera(mgr->getCamera());
     while(!ExitApp)
     {
 		r += PI/200; //rotation speed
@@ -486,7 +437,6 @@ int main(int argc, char **argv)
         TutorialWindowEventProducer->draw();
 		soundManager->update(0);		
     }
-	sound->stop();
 	//FMOD_Event_Stop(event, 1);
     osgExit();
 	

@@ -210,6 +210,10 @@
 				RelativePath=".\01PlaySound.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\metablast.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

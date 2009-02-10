@@ -93,6 +93,7 @@ void DialogCoordinator::setScript(const char* script){
 	this->script = (char*)malloc(len + 1);
 	memcpy(this->script, script, len);
 	this->script[len] = 0; //null terminated
+	scriptPos = 0;
 }
 
 void DialogCoordinator::setSoundManager(SoundManagerPtr soundManager){
@@ -100,19 +101,23 @@ void DialogCoordinator::setSoundManager(SoundManagerPtr soundManager){
 }
 
 void DialogCoordinator::loadNext(int index){
+	if (index < 0) return;
 	SoundEmitterPtr emitter = emitters[index];
-#if 0
-	SoundPtr curSound = emitter->getSound();
-	if (curSound != NULL){
-		delete curSound;
-	}
-#endif
 	SoundPtr newSound = this->soundManager->getSound(currentLine[index]++);
+	newSound->addSoundListener(this);
 	beginEditCP(emitter, SoundEmitter::SoundFieldMask);
 		emitter->setSound(newSound);			
 	endEditCP(emitter, SoundEmitter::SoundFieldMask);
+	newSound->play();
 }
 
+void DialogCoordinator::soundEnded(const SoundEvent& e){
+	int i = getNext();
+	e.getSound().dump();
+	if (i<0) return;
+	loadNext(i);
+//	emitters[i]->getSound()->play();
+}
 void DialogCoordinator::start(){
 /*
 	for (int i = 0; i < sizeof(emitters) / sizeof(SoundEmitterPtr); i++){
@@ -122,18 +127,19 @@ void DialogCoordinator::start(){
 */
 	int i = getNext();
 	loadNext(i);
-	emitters[i]->getSound()->play();
+//	emitters[i]->getSound()->play();
 }
 
 
 int DialogCoordinator::getNext(){
 	char c = script[scriptPos];
+	if (!script[scriptPos]) return -1; //ended
 	if (c >='a' && c<='z'){
 		for (int i = 0;  i < sizeof(emitters) / sizeof(SoundEmitterPtr); i++){
 			if (c == roles[i]){
 				scriptPos++;
-				//here for further scri[t implemetation
-
+				//here for further script implemetation
+				printf("%c\n", c);
 				return i;
 			}
 		}
@@ -164,7 +170,7 @@ DialogCoordinator::DialogCoordinator(const DialogCoordinator &source) :
 
 DialogCoordinator::~DialogCoordinator(void)
 {
-	free(script);
+	//free(script);
 }
 
 /*----------------------------- class specific ----------------------------*/

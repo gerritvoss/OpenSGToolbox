@@ -108,6 +108,8 @@ void SoundEmitter::dettachUpdateListener(WindowEventProducerPtr UpdateProducer)
 
 void SoundEmitter::update(const Time& elps)
 {
+	if (!getSound())
+		return; //empty sound, do nothing
 	assert(getParents().size() == 1 && "A Sound Emitter NodeCore MUST have 1 and only 1 parent.");
 	Matrix wm;
 	getParents()[0]->getToWorld(wm);
@@ -132,6 +134,7 @@ SoundEmitter::SoundEmitter(const SoundEmitter &source) :
 
 SoundEmitter::~SoundEmitter(void)
 {
+	
 }
 
 /*----------------------------- class specific ----------------------------*/
