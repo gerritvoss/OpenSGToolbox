@@ -39,6 +39,9 @@ helpful tips and incites into the workings of MiniMap
 
 #include <OpenSG/Sound/OSGSoundListener.h>
 
+//metablast sound definition header file
+#include "metablast.h"
+
 #define PI 3.1415926
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
