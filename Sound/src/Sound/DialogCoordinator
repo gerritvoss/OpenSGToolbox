@@ -11,5 +11,5 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A dialog coordiantor that runs on a text script to coordinate the dialog lines of single or multiple voices/sounds
+dialog coordinating for scripted dialog
 </FieldContainer>
