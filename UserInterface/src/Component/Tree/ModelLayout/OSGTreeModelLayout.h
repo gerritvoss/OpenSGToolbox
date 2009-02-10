@@ -89,6 +89,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 
     virtual void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener) = 0;
 
+	//Adds a listener for the TreeModelEvent posted after the tree changes.
+	virtual void addTreeModelListener(TreeModelListenerPtr l) = 0;
+
+	//Removes a listener previously added with addTreeModelListener.
+	virtual void removeTreeModelListener(TreeModelListenerPtr l) = 0;
+
 	//Returns a rectangle giving the bounds needed to draw path.
 	virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, TreePath path, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn) const = 0;
 

@@ -85,6 +85,20 @@ void AbstractTreeModelLayout::removeTreeModelLayoutListener(TreeModelLayoutListe
    }
 }
 
+void AbstractTreeModelLayout::addTreeModelListener(TreeModelListenerPtr l)
+{
+    _ModelListeners.insert(l);
+}
+
+void AbstractTreeModelLayout::removeTreeModelListener(TreeModelListenerPtr l)
+{
+   TreeModelListenerSetIter EraseIter(_ModelListeners.find(l));
+   if(EraseIter != _ModelListeners.end())
+   {
+      _ModelListeners.erase(EraseIter);
+   }
+}
+
 std::vector<Int32> AbstractTreeModelLayout::getRowsForPaths(const std::vector<TreePath>& paths) const
 {
 	std::vector<Int32> Result;
@@ -307,25 +321,7 @@ void AbstractTreeModelLayout::insertVisiblePath(const TreePath& Path)
 
 void AbstractTreeModelLayout::removeVisiblePath(const TreePath& Path)
 {
-    std::string TempString;
-    std::cout << "removeVisiblePath: Path: ";
-    for(UInt32 i(0) ; i<Path.getPath().size() ; ++i)
-    {
-        Path.getPath()[i]->getValueByStr(TempString);
-        std::cout << TempString << " - ";
-    }
-    std::cout << std::endl;
-
-    std::cout << "removeVisiblePath: VisibleSet: ";
-    for(TreePathSetItor i(_VisiblePathSet.begin()) ; i!=_VisiblePathSet.end() ; ++i)
-    {
-        i->getLastPathComponent()->getValueByStr(TempString);
-        std::cout << TempString << ", ";
-    }
-    std::cout << std::endl;
-
     TreePathPreorderLessThan temp(_TreeModel);
-    std::cout << temp.operator ()(Path,Path) << " : " << temp.operator ()(Path,Path) << std::endl;
 
     _VisiblePathSet.erase(_VisiblePathSet.find(Path));
 	//Remove all visible decendents of Path
@@ -381,6 +377,41 @@ void AbstractTreeModelLayout::getVisibleDecendants(const TreePath& Path, std::ve
     }
 }
 
+void AbstractTreeModelLayout::produceTreeNodesChanged(const TreeModelEvent& e)
+{
+   TreeModelListenerSet ModelListenerSet(_ModelListeners);
+   for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->treeNodesChanged(e);
+   }
+}
+
+void AbstractTreeModelLayout::produceTreeNodesInserted(const TreeModelEvent& e)
+{
+   TreeModelListenerSet ModelListenerSet(_ModelListeners);
+   for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->treeNodesInserted(e);
+   }
+}
+
+void AbstractTreeModelLayout::produceTreeNodesRemoved(const TreeModelEvent& e)
+{
+   TreeModelListenerSet ModelListenerSet(_ModelListeners);
+   for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->treeNodesRemoved(e);
+   }
+}
+
+void AbstractTreeModelLayout::produceTreeStructureChanged(const TreeModelEvent& e)
+{
+   TreeModelListenerSet ModelListenerSet(_ModelListeners);
+   for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->treeStructureChanged(e);
+   }
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -502,7 +533,8 @@ void AbstractTreeModelLayout::ModelListener::treeNodesChanged(TreeModelEvent e)
     //This event inidicates changes that are not structural
     //So there are no changes to the Layout
 
-    //Do nothing
+    //Pass the event along
+    _AbstractTreeModelLayout->produceTreeNodesChanged(e);
 }
 
 void AbstractTreeModelLayout::ModelListener::treeNodesInserted(TreeModelEvent e)
@@ -516,6 +548,7 @@ void AbstractTreeModelLayout::ModelListener::treeNodesInserted(TreeModelEvent e)
             _AbstractTreeModelLayout->insertVisiblePath( e.getTreePath().pathByAddingChild(e.getChildren()[i]) );
         }
     }
+    _AbstractTreeModelLayout->produceTreeNodesInserted(e);
 }
 
 void AbstractTreeModelLayout::ModelListener::treeNodesRemoved(TreeModelEvent e)
@@ -531,6 +564,7 @@ void AbstractTreeModelLayout::ModelListener::treeNodesRemoved(TreeModelEvent e)
             _AbstractTreeModelLayout->removeExpandedPath( e.getTreePath().pathByAddingChild(e.getChildren()[i]) );
         }
     }
+    _AbstractTreeModelLayout->produceTreeNodesRemoved(e);
 }
 
 void AbstractTreeModelLayout::ModelListener::treeStructureChanged(TreeModelEvent e)
@@ -543,6 +577,7 @@ void AbstractTreeModelLayout::ModelListener::treeStructureChanged(TreeModelEvent
         _AbstractTreeModelLayout->setExpanded(e.getPath(), false);
         _AbstractTreeModelLayout->setExpanded(e.getPath(), true);
     }
+    _AbstractTreeModelLayout->produceTreeStructureChanged(e);
 }
 
 /*------------------------------------------------------------------------*/

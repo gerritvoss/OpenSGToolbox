@@ -73,6 +73,37 @@ A DefaultTreeModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
+ModelTreeNodePtr DefaultTreeModel::getNodeForPath(const TreePath& ThePath) const
+{
+    if(ThePath.getPathCount()<1)
+    {
+        return NullFC;
+    }
+
+    ModelTreeNodePtr Result(_Root);
+
+    UInt32 i(0);
+    while(i<ThePath.getPathCount()-1 && Result != NullFC && ThePath.getPathComponent(i) == Result->getUserObject())
+    {
+        ++i;
+        for(UInt32 j(0) ; j<Result->getChildCount() ; ++j)
+        {
+            if(Result->getChildAt(j)->getUserObject() == ThePath.getPathComponent(i))
+            {
+                Result = Result->getChildAt(j);
+                break;
+            }
+        }
+        if(Result->getUserObject() != ThePath.getPathComponent(i))
+        {
+            Result = NullFC;
+        }
+    }
+
+
+    return Result;
+}
+
 SharedFieldPtr DefaultTreeModel::getChild(SharedFieldPtr parent, const UInt32& index) const
 {
     return _Root->getNodeFromUserObject(parent)->getChildAt(index)->getUserObject();

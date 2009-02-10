@@ -35,6 +35,8 @@
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGToggleButton.h>
 
+#include <sstream>
+
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -107,11 +109,21 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        DefaultMutableTreeNodePtr NewNode = DefaultMutableTreeNode::create() ;
-        NewNode->setUserObject(SharedFieldPtr(new SFString("New Node")));
+        static char NodeName('K');
 
-        //TheTree->
-        TheTreeModel.insertNodeInto(NewNode,MutableTreeNode::Ptr::dcast(TheTreeModel.getRootNode()),3);
+        DefaultMutableTreeNodePtr NewNode = DefaultMutableTreeNode::create() ;
+
+        std::ostringstream outStream;
+        outStream << NodeName;
+        NewNode->setUserObject(SharedFieldPtr(new SFString(outStream.str())));
+        NodeName = static_cast<char>(static_cast<unsigned int>(NodeName) + 1);
+
+        ModelTreeNodePtr SelectedNode(TheTreeModel.getNodeForPath(TheTree->getSelectionPath()));
+        
+        if(SelectedNode != NullFC)
+        {
+            TheTreeModel.insertNodeInto(NewNode,MutableTreeNode::Ptr::dcast(SelectedNode),0);
+        }
     }
 };
 
@@ -328,8 +340,6 @@ int main(int argc, char **argv)
     std::cout << std::endl;
 
     TheTreeModel.insertNodeInto(JNode, ANode, ANode->getChildCount());
-	//TheTree->collapsePath(ANode->getTreePath());
-    //TheTree->expandPath(ANode->getTreePath());
 
     std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
     for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)

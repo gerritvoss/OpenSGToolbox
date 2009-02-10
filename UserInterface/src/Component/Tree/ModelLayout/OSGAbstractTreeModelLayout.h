@@ -85,6 +85,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
     virtual void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
 
+	//Adds a listener for the TreeModelEvent posted after the tree changes.
+	virtual void addTreeModelListener(TreeModelListenerPtr l);
+
+	//Removes a listener previously added with addTreeModelListener.
+	virtual void removeTreeModelListener(TreeModelListenerPtr l);
+
 	//Returns the rows that the TreePath instances in path are being displayed at.
 	virtual std::vector<Int32> getRowsForPaths(const std::vector<TreePath>& paths) const;
     
@@ -239,6 +245,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
     void removeVisiblePath(const TreePath& Path);
     void removeExpandedPath(const TreePath& Path);
     void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const;
+    
+    typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
+	typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
+	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
+	TreeModelListenerSet _ModelListeners;
+
+	void produceTreeNodesChanged(const TreeModelEvent& e);
+	void produceTreeNodesInserted(const TreeModelEvent& e);
+	void produceTreeNodesRemoved(const TreeModelEvent& e);
+	void produceTreeStructureChanged(const TreeModelEvent& e);
+
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -177,7 +177,7 @@ void AbstractTreeModelLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(void) :
     _sfRootVisibleInternal    (bool(false)), 
     _sfRowHeightInternal      (Real32(13.0)), 
-    _sfDepthOffsetInternal    (Real32(13.0)), 
+    _sfDepthOffsetInternal    (Real32(15.0)), 
     Inherited() 
 {
 }

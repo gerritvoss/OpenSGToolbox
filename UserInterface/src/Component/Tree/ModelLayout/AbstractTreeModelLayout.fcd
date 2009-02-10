@@ -37,7 +37,7 @@ A UI Abstract Tree Model Layout.
 		type="Real32"
 		cardinality="single"
       visibility="external"
-		defaultValue="13.0"
+		defaultValue="15.0"
 		access="protected"
 	>
    The Depth Offset.

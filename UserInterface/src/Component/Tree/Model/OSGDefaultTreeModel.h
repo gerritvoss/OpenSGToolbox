@@ -120,6 +120,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeMode
 
     //Get the ModelTreeNodePtr to the Root Node
     ModelTreeNodePtr getRootNode(void) const;
+    
+    //Get the Node for the given path
+    ModelTreeNodePtr getNodeForPath(const TreePath& ThePath) const;
 
   protected:
       ModelTreeNodePtr _Root;
