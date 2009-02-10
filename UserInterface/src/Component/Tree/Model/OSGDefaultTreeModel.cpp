@@ -152,17 +152,32 @@ void DefaultTreeModel::insertNodeInto(MutableTreeNodePtr newChild, MutableTreeNo
     std::vector<UInt32> Indices;
     Indices.push_back(index);
     nodesWereInserted(parent, Indices);
+	if(parent->getChildCount() == 1)
+	{
+		nodeChanged(parent);
+	}
 }
 
 void DefaultTreeModel::nodeChanged(ModelTreeNodePtr node)
 {
-    //TODO:Implement
+	if(node->getParent() != NullFC)
+	{
+		std::vector<UInt32> childIndices;
+		childIndices.push_back(node->getParent()->getIndex(node));
+		nodesChanged(node->getParent(), childIndices);
+	}
 }
 
 void DefaultTreeModel::nodesChanged(ModelTreeNodePtr node, std::vector<UInt32> childIndices)
 {
-    //TODO:Implement
-    //produceTreeNodesChanged();
+    std::vector<SharedFieldPtr> ChildUserObjects;
+
+    for(UInt32 i(0) ; i< childIndices.size() ; ++i)
+    {
+        ChildUserObjects.push_back(node->getChildAt(childIndices[i])->getUserObject());
+    }
+
+    produceTreeNodesChanged(node->getPath(), childIndices, ChildUserObjects);
 }
 
 void DefaultTreeModel::nodeStructureChanged(ModelTreeNodePtr node)
@@ -194,6 +209,10 @@ void DefaultTreeModel::removeNodeFromParent(MutableTreeNodePtr node)
 
     node->removeFromParent();
     produceTreeNodesRemoved(Parent->getPath(), ChildIndicies, Children);
+	if(Parent->getChildCount() == 0)
+	{
+		nodeChanged(Parent);
+	}
 }
 
 void DefaultTreeModel::setRoot(ModelTreeNodePtr root)

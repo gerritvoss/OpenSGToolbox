@@ -95,6 +95,15 @@ SharedFieldPtr DefaultListModel::getElementAt(UInt32 index) const
 	}
 }
  
+void DefaultListModel::set(UInt32 Index, SharedFieldPtr v)
+{
+	if(Index < _FieldList.size())
+	{
+		_FieldList[Index] = v;
+		produceListDataContentsChanged(DefaultListModelPtr(this),Index,Index);
+	}
+}
+
 void DefaultListModel::pushBack(SharedFieldPtr f)
 {
 	_FieldList.push_back(f);

@@ -47,6 +47,8 @@
 
 #include "OSGDefaultListModelBase.h"
 
+#include <deque>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief DefaultListModel class. See \ref 
@@ -83,7 +85,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListModel : public DefaultListModel
 
 	
 
-    typedef std::list<SharedFieldPtr> FieldList;
+    typedef std::deque<SharedFieldPtr> FieldList;
 	void pushBack(SharedFieldPtr f);
 	void popBack(void);
 
@@ -93,6 +95,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListModel : public DefaultListModel
 	void insert(UInt32 Index, SharedFieldPtr f);
 	
 	void erase(UInt32 Index);
+	void set(UInt32 Index, SharedFieldPtr v);
 	void clear(void);
     /*=========================  PROTECTED  ===============================*/
   protected:

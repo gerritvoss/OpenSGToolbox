@@ -133,7 +133,12 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        TheTreeModel.removeNodeFromParent(MutableTreeNode::Ptr::dcast(TheTreeModel.getRootNode()->getChildAt(0)));
+        ModelTreeNodePtr SelectedNode(TheTreeModel.getNodeForPath(TheTree->getSelectionPath()));
+        
+        if(SelectedNode != NullFC)
+        {
+            TheTreeModel.removeNodeFromParent(MutableTreeNode::Ptr::dcast(SelectedNode));
+        }
     }
 };
 
@@ -270,11 +275,11 @@ int main(int argc, char **argv)
 
     //A
     ANode->insert(BNode);
-    ANode->insert(CNode);
+    //ANode->insert(CNode);
     
     //B
     BNode->insert(DNode);
-    BNode->insert(ENode);
+    /*BNode->insert(ENode);
     
     //C
     CNode->insert(FNode);
@@ -284,8 +289,6 @@ int main(int argc, char **argv)
     DNode->insert(HNode);
     DNode->insert(INode);
 
-    //Tree Model
-    TheTreeModel.setRoot(ANode);
 
     std::string TempString;
 
@@ -317,8 +320,10 @@ int main(int argc, char **argv)
         BreadthFirstSequence[i]->getUserObject()->getValueByStr(TempString);
         std::cout << TempString << ", ";
     }
-    std::cout << std::endl;
+    std::cout << std::endl;*/
 
+    //Tree Model
+    TheTreeModel.setRoot(ANode);
     
     //Create the Tree
     TheTree = Tree::create();
@@ -330,43 +335,6 @@ int main(int argc, char **argv)
 
     //Layout Expansion
     TheTree->expandPath(ANode->getTreePath());
-    
-    std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)
-    {
-        TheTree->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
-        std::cout << TempString << " ";
-    }
-    std::cout << std::endl;
-
-    TheTreeModel.insertNodeInto(JNode, ANode, ANode->getChildCount());
-
-    std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)
-    {
-        TheTree->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
-        std::cout << TempString << " ";
-    }
-    std::cout << std::endl;
-
-    TheTree->expandPath(BNode->getTreePath());
-    std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)
-    {
-        TheTree->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
-        std::cout << TempString << " ";
-    }
-    std::cout << std::endl;
-    
-    TheTree->expandPath(DNode->getTreePath());
-    std::cout << "Row Count: " << TheTree->getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTree->getRowCount() ; ++i)
-    {
-        TheTree->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
-        std::cout << TempString << " ";
-    }
-    std::cout << std::endl;
-
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
     ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();

@@ -276,6 +276,11 @@ void Tree::keyTyped(const KeyEvent& e)
 	Component::keyTyped(e);
 }
 
+void Tree::focusLost(const FocusEvent& e)
+{
+	//getSelectionModel()->clearSelection();
+}
+
 void Tree::addSelectionInterval(const UInt32& index0, const UInt32& index1)
 {
     //Get all of the Paths coresponding to this row interval
@@ -1075,7 +1080,15 @@ void Tree::dump(      UInt32    ,
 
 void Tree::ModelListener::treeNodesChanged(TreeModelEvent e)
 {
-    //TODO: Implement
+    Int32 Row(-1);
+    for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+    {
+        Row = _Tree->getModelLayout()->getRowForPath(e.getTreePath().pathByAddingChild(e.getChildren()[i]));
+        if(Row != -1)
+        {
+            _Tree->updateRows(Row, 1);
+        }
+    }
 }
 
 void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
@@ -1093,8 +1106,15 @@ void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
 
 void Tree::ModelListener::treeNodesRemoved(TreeModelEvent e)
 {
-    //TODO: Implement
-    _Tree->updatePreferredSize();
+    Int32 RemovedRow(-1);
+    for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+    {
+        RemovedRow = _Tree->getModelLayout()->getRowForPath(e.getTreePath().pathByAddingChild(e.getChildren()[i]));
+        if(RemovedRow != -1)
+        {
+            _Tree->updateRemovedRows(RemovedRow, 1);
+        }
+    }
 }
 
 void Tree::ModelListener::treeStructureChanged(TreeModelEvent e)

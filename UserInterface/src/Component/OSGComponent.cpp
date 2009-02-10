@@ -398,13 +398,18 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 	if (!getVisible())
 		return;
 
+	float TransMat[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
     //Translate to my position
     glTranslatef(getPosition().x(), getPosition().y(), 0);
+	glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
 
 	if(!setupClipping(TheGraphics))
 	{
 		//Translate to my position
+	    glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
 		glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+	    glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
 		return;
 	}
 
@@ -418,6 +423,8 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 
     //Draw Internal
     drawInternal(TheGraphics);
+
+	glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
     
 	//Draw My Foreground
 	drawForeground(TheGraphics, getDrawnForeground());
@@ -433,14 +440,14 @@ void Component::draw(const GraphicsPtr TheGraphics) const
     glTranslatef(-getPosition().x(), -getPosition().y(), 0);
     
     //Set Clipping to initial settings
-    if(getClipping())
-    {
+    //if(getClipping())
+    //{
 		//TODO:Fix
         //if(!WasClippPlane0Enabled){glDisable(GL_CLIP_PLANE0);}
         //if(!WasClippPlane1Enabled){glDisable(GL_CLIP_PLANE1);}
         //if(!WasClippPlane2Enabled){glDisable(GL_CLIP_PLANE2);}
         //if(!WasClippPlane3Enabled){glDisable(GL_CLIP_PLANE3);}
-    }
+    //}
 }
 
 

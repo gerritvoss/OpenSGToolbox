@@ -89,6 +89,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     
     virtual void mousePressed(const MouseEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
+	virtual void focusLost(const FocusEvent& e);
 
     void addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
 

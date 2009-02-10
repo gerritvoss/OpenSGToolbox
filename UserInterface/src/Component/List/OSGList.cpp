@@ -261,7 +261,6 @@ void List::mousePressed(const MouseEvent& e)
 			takeFocus(true);
 			//if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
 			//{
-				focusIndex(getListIndexFromDrawnIndex(i));
 				if(getParentWindow() != NullFC &&
 				   getParentWindow()->getDrawingSurface() != NullFC &&
 				   getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
@@ -279,6 +278,7 @@ void List::mousePressed(const MouseEvent& e)
 						getSelectionModel()->setSelectionInterval(getListIndexFromDrawnIndex(i),getListIndexFromDrawnIndex(i));
 					}
 				}
+				focusIndex(getListIndexFromDrawnIndex(i));
 			//}
 			getChildren()[i]->mousePressed(e);
 			break;
@@ -377,17 +377,21 @@ void List::updateIndiciesDrawnFromModel(void)
 
 void List::contentsChanged(ListDataEvent e)
 {
-	if(getModel() != NULL &&
-		getModel()->getSize() != getChildren().size())
+	if(getModel() != NULL)
 	{
-		updateIndiciesDrawnFromModel();
-        
-		updatePreferredSize();
+		if(_BottomDrawnIndex >= 0)
+		{
+			for(Int32 i(osgMax(e.getIndex0(),_TopDrawnIndex)) ; i<=osgMin(e.getIndex1(),_BottomDrawnIndex) ; ++i)
+			{
+				updateItem(i);
+			}
+		}
 	}
 }
 
 void List::intervalAdded(ListDataEvent e)
 {
+	updatePreferredSize();
 	UInt32 NumInserted(e.getIndex1() - e.getIndex0() + 1);
 
 	getSelectionModel()->incrementValuesAboveIndex(e.getIndex0(), NumInserted);
@@ -458,7 +462,6 @@ void List::intervalAdded(ListDataEvent e)
 	}
 
 	
-	updatePreferredSize();
 }
 
 void List::intervalRemoved(ListDataEvent e)

@@ -119,6 +119,7 @@ TreePath ModelTreeNode::getPath(void) const
         Node = Node->getParent();
     }
 
+	std::reverse(Path.begin(), Path.end());
     return TreePath(Path);
 }
 /*-------------------------------------------------------------------------*\
