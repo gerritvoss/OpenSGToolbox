@@ -546,6 +546,14 @@ int main(int argc, char **argv)
 		ViewpointIndicator->setGenerator(ShipComponentGenerator);
 		ViewpointIndicator->setLocation(BoxNode);
 	endEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+
+	//Other Indicators
+	MiniMapIndicatorPtr TorusIndicator = MiniMapIndicator::create();
+
+	beginEditCP(TorusIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+		TorusIndicator->setGenerator(ShipComponentGenerator);
+		TorusIndicator->setLocation(TorusGeometryNode);
+	endEditCP(TorusIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 	
 
 	// Setup the size and other preferences to the minimap
@@ -554,15 +562,16 @@ int main(int argc, char **argv)
 		MiniMapConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 	endEditCP(MiniMapConstraints, BorderLayoutConstraints::RegionFieldMask);
 	 
-    beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask);
+    beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 	    MiniMap->setPreferredSize(Pnt2f(450,450));
 	    MiniMap->setViewPointIndicator(ViewpointIndicator);
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
 		MiniMap->setOpacity(.4);
 		MiniMap->setConstraints(MiniMapConstraints);
-		MiniMap->setLockMapOrientation(false);
+		MiniMap->setLockMapOrientation(true);
         MiniMap->setUnlockedMapSize(Vec2f(1000,1000));
-	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask);
+		MiniMap->getIndicators().push_back(TorusIndicator);
+	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 
 	MiniMap->insertLayer(Path("./level1.jpg").string().c_str(), .3);
     MiniMap->insertLayer(Path("./level2.jpg").string().c_str(), .3);

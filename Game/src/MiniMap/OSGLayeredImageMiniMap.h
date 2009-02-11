@@ -49,6 +49,7 @@
 #include <OpenSG/UserInterface/OSGComponent.h>
 #include <OpenSG/UserInterface/OSGImageComponent.h>
 #include <OpenSG/UserInterface/OSGRotatedComponent.h>
+#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
 
 
 OSG_BEGIN_NAMESPACE
@@ -133,6 +134,15 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 	RotatedComponentPtr _RotatedMap;
 	ComponentPtr        _MapComponent;
 	ImageComponentPtr	_MapImageComponent;
+
+	struct IndicatorComponent
+	{
+		RotatedComponentPtr _RotatedComponent;
+		ComponentPtr        _IndicatorComponent;
+		AbsoluteLayoutConstraintsPtr _RotatedComponentConstraints;
+	};
+
+	std::vector<IndicatorComponent> _IndicatorComponents;
 
 	Int32 _DrawnLayerIndex;
     /*==========================  PRIVATE  ================================*/
