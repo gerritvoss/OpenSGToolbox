@@ -102,6 +102,7 @@ void DialogCoordinator::setSoundManager(SoundManagerPtr soundManager){
 
 void DialogCoordinator::loadNext(int index){
 	if (index < 0) return;
+	printf("index: %d\n", index);
 	SoundEmitterPtr emitter = emitters[index];
 	SoundPtr newSound = this->soundManager->getSound(currentLine[index]++);
 	newSound->addSoundListener(this);
@@ -111,23 +112,18 @@ void DialogCoordinator::loadNext(int index){
 	newSound->play();
 }
 
+void DialogCoordinator::soundPlayed(const SoundEvent& e){
+	//printf(">>here\n");
+}
+
 void DialogCoordinator::soundEnded(const SoundEvent& e){
 	int i = getNext();
-	e.getSound().dump();
 	if (i<0) return;
 	loadNext(i);
-//	emitters[i]->getSound()->play();
 }
 void DialogCoordinator::start(){
-/*
-	for (int i = 0; i < sizeof(emitters) / sizeof(SoundEmitterPtr); i++){
-		if (emitters[i])
-			loadNext(i);
-	}
-*/
 	int i = getNext();
 	loadNext(i);
-//	emitters[i]->getSound()->play();
 }
 
 

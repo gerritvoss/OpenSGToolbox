@@ -72,7 +72,9 @@ class OSG_SOUNDLIB_DLLMAPPING DialogCoordinator : public DialogCoordinatorBase,
     virtual void changed(BitVector  whichField, 
                          UInt32     origin    );
 
-	void soundEnded(const SoundEvent& e);
+	virtual void soundEnded(const SoundEvent& e);
+
+	virtual void soundPlayed(const SoundEvent& e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */

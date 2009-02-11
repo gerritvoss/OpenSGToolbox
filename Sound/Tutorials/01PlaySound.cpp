@@ -335,6 +335,9 @@ void setupSound(){
 	SoundEmitterPtr clara=SoundEmitter::create(); //sound emitter 1
 	SoundEmitterPtr sam=SoundEmitter::create();   //sound emitter 2
 	
+	SoundPtr theme = soundManager->getSound(EVENTID_METABLAST_ROOT_THEME_CHLOROPLAST_CHLOROPLAST);
+	theme->play();
+	
 	clara->attachUpdateListener(TutorialWindowEventProducer);
 	sam->attachUpdateListener(TutorialWindowEventProducer);
 
