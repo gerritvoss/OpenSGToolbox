@@ -640,9 +640,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::getAllDependantFCs(FCPtrStore Container
 							TheContainer.insert(static_cast<SFFieldContainerPtr *>(TheField)->getValue());
                             
                             AllContainers.insert(static_cast<SFFieldContainerPtr *>(TheField)->getValue());
-							IgnoreContainers.insert(static_cast<SFFieldContainerPtr *>(TheField)->getValue());
+							IgnoreContainers.insert(Containers.begin(), Containers.end());
 						
-                            FCPtrStore NewContainers(getAllDependantFCs(TheContainer, AllContainers, IgnoreTypes));
+                            FCPtrStore NewContainers(getAllDependantFCs(TheContainer, IgnoreContainers, IgnoreTypes));
 
 							AllContainers.insert(NewContainers.begin(), NewContainers.end());
 							IgnoreContainers.insert(NewContainers.begin(), NewContainers.end());
@@ -661,9 +661,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::getAllDependantFCs(FCPtrStore Container
 								TheContainer.insert(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i));
                             	
                                 AllContainers.insert(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i));
-							    IgnoreContainers.insert(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i));
+								IgnoreContainers.insert(Containers.begin(), Containers.end());
 
-                                FCPtrStore NewContainers(getAllDependantFCs(TheContainer, AllContainers, IgnoreTypes));
+                                FCPtrStore NewContainers(getAllDependantFCs(TheContainer, IgnoreContainers, IgnoreTypes));
 
 								AllContainers.insert(NewContainers.begin(), NewContainers.end());
 								IgnoreContainers.insert(NewContainers.begin(), NewContainers.end());
