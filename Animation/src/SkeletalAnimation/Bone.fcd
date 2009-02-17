@@ -57,7 +57,7 @@
 		name="InternalRelativeTransformation"
 		type="Matrix"
 		cardinality="single"
-		visibility="external"
+		visibility="internal"
 		access="protected"
 	>
 	</Field>
@@ -65,7 +65,7 @@
 		name="InternalAbsoluteTransformation"
 		type="Matrix"
 		cardinality="single"
-		visibility="external"
+		visibility="internal"
 		access="protected"
 	>
 	</Field>

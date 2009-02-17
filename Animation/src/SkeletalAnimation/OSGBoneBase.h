@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -236,9 +236,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
 
            BonePtr             &getInternalParent (void);
      const BonePtr             &getInternalParent (void) const;
-           Matrix              &getInternalRelativeTransformation(void);//field for relative transformation
+           Matrix              &getInternalRelativeTransformation(void);
      const Matrix              &getInternalRelativeTransformation(void) const;
-           Matrix              &getInternalAbsoluteTransformation(void); // field for absolute transformation
+           Matrix              &getInternalAbsoluteTransformation(void);
      const Matrix              &getInternalAbsoluteTransformation(void) const;
            BonePtr             &getInternalChildren(UInt32 index);
            MFBonePtr           &getInternalChildren(void);

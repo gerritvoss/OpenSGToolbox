@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -146,12 +146,12 @@ FieldDescription *BoneBase::_desc[] =
     new FieldDescription(SFMatrix::getClassType(), 
                      "InternalRelativeTransformation", 
                      InternalRelativeTransformationFieldId, InternalRelativeTransformationFieldMask,
-                     false,
+                     true,
                      (FieldAccessMethod) &BoneBase::getSFInternalRelativeTransformation),
     new FieldDescription(SFMatrix::getClassType(), 
                      "InternalAbsoluteTransformation", 
                      InternalAbsoluteTransformationFieldId, InternalAbsoluteTransformationFieldMask,
-                     false,
+                     true,
                      (FieldAccessMethod) &BoneBase::getSFInternalAbsoluteTransformation)
 };
 
@@ -231,7 +231,7 @@ void BoneBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 BoneBase::BoneBase(void) :
     _sfRotation               (), 
     _sfTranslation            (), 
-    _sfLength                 (),// 
+    _sfLength                 (), 
     _mfInternalChildren       (), 
     _sfInternalParent         (), 
     _sfInternalRelativeTransformation(), 
