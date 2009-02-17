@@ -337,6 +337,7 @@ void setupSound(){
 	
 	SoundPtr theme = soundManager->getSound(EVENTID_METABLAST_ROOT_THEME_CHLOROPLAST_CHLOROPLAST);
 	theme->play();
+	theme->setVolume(.05);
 	
 	clara->attachUpdateListener(TutorialWindowEventProducer);
 	sam->attachUpdateListener(TutorialWindowEventProducer);
