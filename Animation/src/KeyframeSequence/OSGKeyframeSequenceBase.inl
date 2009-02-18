@@ -70,7 +70,35 @@ OSG::UInt32 KeyframeSequenceBase::getClassTypeId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the KeyframeSequence::_mfInternalKeys field.
+inline
+MFReal32 *KeyframeSequenceBase::getMFInternalKeys(void)
+{
+    return &_mfInternalKeys;
+}
 
+
+
+//! Get the value of the \a index element the KeyframeSequence::_mfInternalKeys field.
+inline
+Real32 &KeyframeSequenceBase::getInternalKeys(const UInt32 index)
+{
+    return _mfInternalKeys[index];
+}
+
+//! Get the KeyframeSequence::_mfInternalKeys field.
+inline
+MFReal32 &KeyframeSequenceBase::getInternalKeys(void)
+{
+    return _mfInternalKeys;
+}
+
+//! Get the KeyframeSequence::_mfInternalKeys field.
+inline
+const MFReal32 &KeyframeSequenceBase::getInternalKeys(void) const
+{
+    return _mfInternalKeys;
+}
 
 OSG_END_NAMESPACE
 

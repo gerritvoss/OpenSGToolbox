@@ -87,13 +87,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
     bool animate(const osg::InterpolationType& InterpType,
                  const osg::ValueReplacementPolicy& ReplacementPolicy,
                  const osg::UInt32& Cycling,
-                 const osg::Real32& Time,
-                 const osg::Real32& PrevTime,
+                 const osg::Real32& time,
+                 const osg::Real32& prevTime,
                  osg::Field& Result);
     
-    virtual UInt32 numCyclesCompleted(const Real32& Time) const;
+    virtual UInt32 numCyclesCompleted(const Real32& time) const;
     
     virtual Real32 getLength(void) const;
+
+    virtual const DataType &getDataType(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

@@ -52,9 +52,6 @@
 #include "OSGBone.h"
 #include "OSGSkeleton.h"
 #include "Animators/OSGKeyframeAnimator.h"
-#include "KeyframeSequence/OSGKeyframeSequenceQuaternion.h"
-#include "KeyframeSequence/OSGKeyframeSequenceReal32.h"
-#include "KeyframeSequence/OSGKeyframeSequenceVec3f.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -168,7 +165,7 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 void SkeletonAnimation::addRotationAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone)
 {
 	if(TheAnimator != NullFC && TheBone != NullFC && 
-		TheAnimator->getValues()->getType() == KeyframeSequenceQuaternion::getClassType())
+        TheAnimator->getDataType() == FieldDataTraits<Quaternion>::getType())
 	{
 		beginEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::RotationAnimatorsFieldMask | SkeletonAnimation::RotationAnimatorBonesFieldMask);
 			getRotationAnimators().push_back(TheAnimator);
@@ -185,7 +182,7 @@ void SkeletonAnimation::addRotationAnimator(KeyframeAnimatorPtr TheAnimator, Bon
 void SkeletonAnimation::addTranslationAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone)
 {
 	if(TheAnimator != NullFC && TheBone != NullFC && 
-		TheAnimator->getValues()->getType() == KeyframeSequenceVec3f::getClassType())
+		TheAnimator->getDataType() == FieldDataTraits<Vec3f>::getType())
 	{
 		beginEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::TranslationAnimatorsFieldMask | SkeletonAnimation::TranslationAnimatorBonesFieldMask);
 			getTranslationAnimators().push_back(TheAnimator);
@@ -202,7 +199,7 @@ void SkeletonAnimation::addTranslationAnimator(KeyframeAnimatorPtr TheAnimator, 
 void SkeletonAnimation::addLengthAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone)
 {
 	if(TheAnimator != NullFC && TheBone != NullFC && 
-		TheAnimator->getValues()->getType() == KeyframeSequenceReal32::getClassType())
+		TheAnimator->getDataType() == FieldDataTraits<Real32>::getType())
 	{
 		beginEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::LengthAnimatorsFieldMask | SkeletonAnimation::LengthAnimatorBonesFieldMask);
 			getLengthAnimators().push_back(TheAnimator);

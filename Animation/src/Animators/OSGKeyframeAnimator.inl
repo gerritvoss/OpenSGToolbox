@@ -42,16 +42,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline UInt32 KeyframeAnimator::numCyclesCompleted(const Real32& Time) const
-{
-   return static_cast<UInt32>( osg::osgfloor( Time / getLength() ) );
-}
-    
-inline Real32 KeyframeAnimator::getLength(void) const
-{
-   return getKeys().back();
-}
-
 OSG_END_NAMESPACE
 
 #define OSGKEYFRAMEANIMATOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

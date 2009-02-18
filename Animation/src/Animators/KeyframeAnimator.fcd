@@ -13,19 +13,11 @@
 >
 Keyframe Animator Class.
 	<Field
-		name="Values"
+		name="KeyframeSequence"
 		type="KeyframeSequencePtr"
 		cardinality="single"
 		visibility="external"
 		header="KeyframeSequence/OSGKeyframeSequence.h"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Keys"
-		type="Real32"
-		cardinality="multi"
-		visibility="external"
 		access="public"
 	>
 	</Field>

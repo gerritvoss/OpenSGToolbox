@@ -1,10 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Animation", "01Animation.vcproj", "{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
-	EndProjectSection
-EndProject
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGAnimation", "..\Builds\Windows\OSGAnimation.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02GeometryAnimation", "02GeometryAnimation.vcproj", "{E5397FC4-F931-4C04-8417-5BA7135EA840}"
@@ -23,14 +18,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13MeshBlending", "13MeshBle
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14SkeletonLoader", "14SkeletonLoader.vcproj", "{F2B687AC-DE9D-486D-B17C-33F1D93C51E7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Animation", "01Animation.vcproj", "{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Release|Win32.ActiveCfg = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.Build.0 = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.ActiveCfg = Release|Win32
@@ -67,6 +62,10 @@ Global
 		{F2B687AC-DE9D-486D-B17C-33F1D93C51E7}.Debug|Win32.Build.0 = Debug|Win32
 		{F2B687AC-DE9D-486D-B17C-33F1D93C51E7}.Release|Win32.ActiveCfg = Release|Win32
 		{F2B687AC-DE9D-486D-B17C-33F1D93C51E7}.Release|Win32.Build.0 = Release|Win32
+		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Debug|Win32.Build.0 = Debug|Win32
+		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Release|Win32.ActiveCfg = Release|Win32
+		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

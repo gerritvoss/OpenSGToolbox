@@ -78,9 +78,11 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animator : public AnimatorBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual UInt32 numCyclesCompleted(const Real32& Time) const = 0;
+    virtual UInt32 numCyclesCompleted(const Real32& time) const = 0;
     
     virtual Real32 getLength(void) const = 0;
+
+    virtual const DataType &getDataType(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

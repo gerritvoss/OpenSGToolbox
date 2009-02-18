@@ -64,20 +64,40 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  KeyframeSequenceBase::InternalKeysFieldMask = 
+    (TypeTraits<BitVector>::One << KeyframeSequenceBase::InternalKeysFieldId);
+
 const OSG::BitVector KeyframeSequenceBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
+// Field descriptions
+
+/*! \var Real32          KeyframeSequenceBase::_mfInternalKeys
+    
+*/
+
+//! KeyframeSequence description
+
+FieldDescription *KeyframeSequenceBase::_desc[] = 
+{
+    new FieldDescription(MFReal32::getClassType(), 
+                     "InternalKeys", 
+                     InternalKeysFieldId, InternalKeysFieldMask,
+                     false,
+                     (FieldAccessMethod) &KeyframeSequenceBase::getMFInternalKeys)
+};
+
 
 FieldContainerType KeyframeSequenceBase::_type(
     "KeyframeSequence",
-    "FieldContainer",
+    "Attachment",
     NULL,
     NULL, 
     KeyframeSequence::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(KeyframeSequenceBase, KeyframeSequencePtr)
 
@@ -123,6 +143,7 @@ void KeyframeSequenceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfInternalKeys.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -133,6 +154,7 @@ void KeyframeSequenceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 KeyframeSequenceBase::KeyframeSequenceBase(void) :
+    _mfInternalKeys           (), 
     Inherited() 
 {
 }
@@ -142,6 +164,7 @@ KeyframeSequenceBase::KeyframeSequenceBase(void) :
 #endif
 
 KeyframeSequenceBase::KeyframeSequenceBase(const KeyframeSequenceBase &source) :
+    _mfInternalKeys           (source._mfInternalKeys           ), 
     Inherited                 (source)
 {
 }
@@ -158,6 +181,11 @@ UInt32 KeyframeSequenceBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
+    {
+        returnValue += _mfInternalKeys.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -167,6 +195,11 @@ void KeyframeSequenceBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
+    {
+        _mfInternalKeys.copyToBin(pMem);
+    }
+
 
 }
 
@@ -174,6 +207,11 @@ void KeyframeSequenceBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
+    {
+        _mfInternalKeys.copyFromBin(pMem);
+    }
 
 
 }
@@ -184,6 +222,9 @@ void KeyframeSequenceBase::executeSyncImpl(      KeyframeSequenceBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
+
+    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
+        _mfInternalKeys.syncWith(pOther->_mfInternalKeys);
 
 
 }
@@ -196,6 +237,9 @@ void KeyframeSequenceBase::executeSyncImpl(      KeyframeSequenceBase *pOther,
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
 
+    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
+        _mfInternalKeys.syncWith(pOther->_mfInternalKeys, sInfo);
+
 
 }
 
@@ -204,6 +248,9 @@ void KeyframeSequenceBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
+        _mfInternalKeys.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -218,7 +265,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<KeyframeSequencePtr>::_type("KeyframeSequencePtr", "FieldContainerPtr");
+DataType FieldDataTraits<KeyframeSequencePtr>::_type("KeyframeSequencePtr", "AttachmentPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(KeyframeSequencePtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);

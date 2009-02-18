@@ -25,8 +25,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 #include "OSGGLenumUtils.h"
+#include <assert.h>
 
 OSG_BEGIN_NAMESPACE
+
+GLenum fromString(const std::string& value)
+{
+    assert(false && "Not implemented.");
+    return 0x0;
+}
 
 std::string toString(const GLenum& value)
 {

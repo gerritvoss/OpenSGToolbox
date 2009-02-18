@@ -51,6 +51,8 @@ Field Animation Class.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="LINEAR_INTERPOLATION"
+		defaultHeader="Interpolation/OSGKeyframeInterpolations.h"
 	>
 	</Field>
 	<Field
@@ -59,6 +61,8 @@ Field Animation Class.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="OVERWRITE"
+		defaultHeader="Interpolation/OSGKeyframeInterpolations.h"
 	>
 	</Field>
 </FieldContainer>

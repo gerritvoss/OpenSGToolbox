@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGAnimationDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include <OpenSG/OSGAttachmentFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class KeyframeSequence;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! KeyframeSequencePtr
 
-typedef FCPtr<FieldContainerPtr, KeyframeSequence> KeyframeSequencePtr;
+typedef FCPtr<AttachmentPtr, KeyframeSequence> KeyframeSequencePtr;
 
 #endif
 

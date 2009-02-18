@@ -79,6 +79,66 @@ void KeyframeAnimator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+bool KeyframeAnimator::animate(const osg::InterpolationType& InterpType,
+           const osg::ValueReplacementPolicy& ReplacementPolicy,
+           const osg::UInt32& Cycling,
+           const osg::Real32& time,
+           const osg::Real32& prevTime,
+           osg::Field& Result)
+{
+   if(Result.getCardinality() != osg::FieldType::SINGLE_FIELD)
+   {
+      SWARNING << "Result Field must be an SField NOT an MField." << std::endl;
+      return false;
+   }
+   if( getKeyframeSequence() != NullFC)
+   {
+      return getKeyframeSequence()->interpolate(InterpType, time, prevTime, ReplacementPolicy, Cycling, Result);
+   }
+   else
+   {
+      return false;
+   }
+}
+
+UInt32 KeyframeAnimator::numCyclesCompleted(const Real32& time) const
+{
+    Real32 Length(getLength());
+    if(Length == 0.0f)
+    {
+        return 0;
+    }
+    else
+    {
+        return static_cast<UInt32>( osg::osgfloor( time / Length ) );
+    }
+}
+    
+Real32 KeyframeAnimator::getLength(void) const
+{
+    if(getKeyframeSequence()->getSize() > 0)
+    {
+        return getKeyframeSequence()->getKeys().back();
+    }
+    else
+    {
+        return 0.0f;
+    }
+}
+
+const DataType &KeyframeAnimator::getDataType(void) const
+{
+   if( getKeyframeSequence() != NullFC)
+   {
+      return getKeyframeSequence()->getDataType();
+   }
+   else
+   {
+      return DataType("","");
+   }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -112,29 +172,6 @@ void KeyframeAnimator::dump(      UInt32    ,
     SLOG << "Dump KeyframeAnimator NI" << std::endl;
 }
 
-
-bool KeyframeAnimator::animate(const osg::InterpolationType& InterpType,
-           const osg::ValueReplacementPolicy& ReplacementPolicy,
-           const osg::UInt32& Cycling,
-           const osg::Real32& Time,
-           const osg::Real32& PrevTime,
-           osg::Field& Result)
-{
-   if(Result.getCardinality() != osg::FieldType::SINGLE_FIELD)
-   {
-      SWARNING << "Result Field must be an SField NOT an MField." << std::endl;
-      return false;
-   }
-   osg::InterpolationFactory::InterpFunc Func( osg::InterpolationFactory::the()->getFunc(InterpType, Result.getType().getId()) );
-   if( Func != NULL)
-   {
-      return Func(getValues(), getKeys(), Cycling, Time, PrevTime, ReplacementPolicy, Result );
-   }
-   else
-   {
-      return false;
-   }
-}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

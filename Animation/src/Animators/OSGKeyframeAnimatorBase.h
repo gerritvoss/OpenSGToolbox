@@ -67,8 +67,7 @@
 
 #include "OSGAnimator.h" // Parent
 
-#include "KeyframeSequence/OSGKeyframeSequence.h" // Values type
-#include <OpenSG/OSGReal32Fields.h> // Keys type
+#include "KeyframeSequence/OSGKeyframeSequence.h" // KeyframeSequence type
 
 #include "OSGKeyframeAnimatorFields.h"
 
@@ -92,13 +91,11 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimatorBase : public Animator
 
     enum
     {
-        ValuesFieldId = Inherited::NextFieldId,
-        KeysFieldId   = ValuesFieldId + 1,
-        NextFieldId   = KeysFieldId   + 1
+        KeyframeSequenceFieldId = Inherited::NextFieldId,
+        NextFieldId             = KeyframeSequenceFieldId + 1
     };
 
-    static const OSG::BitVector ValuesFieldMask;
-    static const OSG::BitVector KeysFieldMask;
+    static const OSG::BitVector KeyframeSequenceFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,21 +122,17 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimatorBase : public Animator
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFKeyframeSequencePtr *getSFValues         (void);
-           MFReal32            *getMFKeys           (void);
+           SFKeyframeSequencePtr *getSFKeyframeSequence(void);
 
-           KeyframeSequencePtr &getValues         (void);
-     const KeyframeSequencePtr &getValues         (void) const;
-           Real32              &getKeys           (const UInt32 index);
-           MFReal32            &getKeys           (void);
-     const MFReal32            &getKeys           (void) const;
+           KeyframeSequencePtr &getKeyframeSequence(void);
+     const KeyframeSequencePtr &getKeyframeSequence(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setValues         ( const KeyframeSequencePtr &value );
+     void setKeyframeSequence( const KeyframeSequencePtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,8 +175,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimatorBase : public Animator
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFKeyframeSequencePtr   _sfValues;
-    MFReal32            _mfKeys;
+    SFKeyframeSequencePtr   _sfKeyframeSequence;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

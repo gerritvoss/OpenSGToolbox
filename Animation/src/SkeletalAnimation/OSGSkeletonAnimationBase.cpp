@@ -61,7 +61,7 @@
 #include "OSGSkeletonAnimationBase.h"
 #include "OSGSkeletonAnimation.h"
 
-#include <OpenSG/Toolbox/OSGInterpolations.h>   // InterpolationType default header
+#include "Interpolation/OSGKeyframeInterpolations.h"   // InterpolationType default header
 
 OSG_BEGIN_NAMESPACE
 

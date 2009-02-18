@@ -96,63 +96,35 @@ KeyframeAnimatorPtr KeyframeAnimatorBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the KeyframeAnimator::_sfValues field.
+//! Get the KeyframeAnimator::_sfKeyframeSequence field.
 inline
-SFKeyframeSequencePtr *KeyframeAnimatorBase::getSFValues(void)
+SFKeyframeSequencePtr *KeyframeAnimatorBase::getSFKeyframeSequence(void)
 {
-    return &_sfValues;
-}
-
-//! Get the KeyframeAnimator::_mfKeys field.
-inline
-MFReal32 *KeyframeAnimatorBase::getMFKeys(void)
-{
-    return &_mfKeys;
+    return &_sfKeyframeSequence;
 }
 
 
-//! Get the value of the KeyframeAnimator::_sfValues field.
+//! Get the value of the KeyframeAnimator::_sfKeyframeSequence field.
 inline
-KeyframeSequencePtr &KeyframeAnimatorBase::getValues(void)
+KeyframeSequencePtr &KeyframeAnimatorBase::getKeyframeSequence(void)
 {
-    return _sfValues.getValue();
+    return _sfKeyframeSequence.getValue();
 }
 
-//! Get the value of the KeyframeAnimator::_sfValues field.
+//! Get the value of the KeyframeAnimator::_sfKeyframeSequence field.
 inline
-const KeyframeSequencePtr &KeyframeAnimatorBase::getValues(void) const
+const KeyframeSequencePtr &KeyframeAnimatorBase::getKeyframeSequence(void) const
 {
-    return _sfValues.getValue();
+    return _sfKeyframeSequence.getValue();
 }
 
-//! Set the value of the KeyframeAnimator::_sfValues field.
+//! Set the value of the KeyframeAnimator::_sfKeyframeSequence field.
 inline
-void KeyframeAnimatorBase::setValues(const KeyframeSequencePtr &value)
+void KeyframeAnimatorBase::setKeyframeSequence(const KeyframeSequencePtr &value)
 {
-    _sfValues.setValue(value);
+    _sfKeyframeSequence.setValue(value);
 }
 
-
-//! Get the value of the \a index element the KeyframeAnimator::_mfKeys field.
-inline
-Real32 &KeyframeAnimatorBase::getKeys(const UInt32 index)
-{
-    return _mfKeys[index];
-}
-
-//! Get the KeyframeAnimator::_mfKeys field.
-inline
-MFReal32 &KeyframeAnimatorBase::getKeys(void)
-{
-    return _mfKeys;
-}
-
-//! Get the KeyframeAnimator::_mfKeys field.
-inline
-const MFReal32 &KeyframeAnimatorBase::getKeys(void) const
-{
-    return _mfKeys;
-}
 
 OSG_END_NAMESPACE
 

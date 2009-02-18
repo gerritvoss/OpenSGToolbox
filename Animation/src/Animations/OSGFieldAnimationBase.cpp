@@ -61,6 +61,8 @@
 #include "OSGFieldAnimationBase.h"
 #include "OSGFieldAnimation.h"
 
+#include <Interpolation/OSGKeyframeInterpolations.h>   // InterpolationType default header
+#include <Interpolation/OSGKeyframeInterpolations.h>   // ReplacementPolicy default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -221,8 +223,8 @@ FieldAnimationBase::FieldAnimationBase(void) :
     _sfContainer              (), 
     _sfFieldName              (), 
     _sfFieldId                (), 
-    _sfInterpolationType      (), 
-    _sfReplacementPolicy      (), 
+    _sfInterpolationType      (UInt32(LINEAR_INTERPOLATION)), 
+    _sfReplacementPolicy      (UInt32(OVERWRITE)), 
     Inherited() 
 {
 }

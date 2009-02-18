@@ -76,21 +76,21 @@ osg::Color3<ValueTypeT> operator*(const osg::Color3<ValueTypeT>& lValue, const V
 /**
  * \brief Multiplies a Color by a scalar value.
  */
-template<class ValueTypeT>
-inline osg::Color3<ValueTypeT> operator*(const ValueTypeT& lValue, const osg::Color3<ValueTypeT>& rValue)
+template<class ValueTypeT, class ScalarTypeT>
+inline osg::Color3<ValueTypeT> operator*(const ScalarTypeT& lValue, const osg::Color3<ValueTypeT>& rValue)
 {
-   return rValue * lValue;
+   return rValue * static_cast<ValueTypeT>(lValue);
 }
 
 /**
  * \brief Divides a Color by a scalar value.
  */
-template<class ValueTypeT>
-osg::Color3<ValueTypeT> operator/(const osg::Color3<ValueTypeT>& lValue, const ValueTypeT& rValue)
+template<class ValueTypeT, class ScalarTypeT>
+osg::Color3<ValueTypeT> operator/(const osg::Color3<ValueTypeT>& lValue, const ScalarTypeT& rValue)
 {
-   osg::Color3<ValueTypeT> Result(lValue.red() / rValue,
-                                  lValue.green() / rValue,
-                                  lValue.blue() / rValue
+   osg::Color3<ValueTypeT> Result(lValue.red() / static_cast<ValueTypeT>(rValue),
+                                  lValue.green() / static_cast<ValueTypeT>(rValue),
+                                  lValue.blue() / static_cast<ValueTypeT>(rValue)
                                   );
    return Result;
 }
@@ -127,36 +127,34 @@ osg::Color4<ValueTypeT> operator-(const osg::Color4<ValueTypeT>& lValue, const o
 /**
  * \brief Multiplies a color by a scalar value.
  */
-template<class ValueTypeT>
-osg::Color4<ValueTypeT> operator*(const osg::Color4<ValueTypeT>& lValue, const ValueTypeT& rValue)
+inline osg::Color4f operator*(const osg::Color4f& lValue, const Real32& rValue)
 {
-   osg::Color4<ValueTypeT> Result(lValue.red() * rValue,
+   return Color4f(lValue.red() * rValue,
                                   lValue.green() * rValue,
                                   lValue.blue() * rValue,
                                   lValue.alpha() * rValue
                                   );
-   return Result;
 }
 
 /**
  * \brief Multiplies a color by a scalar value.
  */
-template<class ValueTypeT>
-inline osg::Color4<ValueTypeT> operator*(const ValueTypeT& lValue, const osg::Color4<ValueTypeT>& rValue)
+template<class ValueTypeT, class ScalarTypeT>
+inline osg::Color4<ValueTypeT> operator*(const ScalarTypeT& lValue, const osg::Color4<ValueTypeT>& rValue)
 {
-   return rValue * lValue;
+   return rValue * static_cast<ValueTypeT>(lValue);
 }
 
 /**
  * \brief Divides a color by a scalar value.
  */
-template<class ValueTypeT>
-osg::Color4<ValueTypeT> operator/(const osg::Color4<ValueTypeT>& lValue, const ValueTypeT& rValue)
+template<class ValueTypeT, class ScalarTypeT>
+osg::Color4<ValueTypeT> operator/(const osg::Color4<ValueTypeT>& lValue, const ScalarTypeT& rValue)
 {
-   osg::Color4<ValueTypeT> Result(lValue.red() / rValue,
-                                  lValue.green() / rValue,
-                                  lValue.blue() / rValue,
-                                  lValue.alpha() / rValue
+   osg::Color4<ValueTypeT> Result(lValue.red() / static_cast<ValueTypeT>(rValue),
+                                  lValue.green() / static_cast<ValueTypeT>(rValue),
+                                  lValue.blue() / static_cast<ValueTypeT>(rValue),
+                                  lValue.alpha() / static_cast<ValueTypeT>(rValue)
                                   );
    return Result;
 }

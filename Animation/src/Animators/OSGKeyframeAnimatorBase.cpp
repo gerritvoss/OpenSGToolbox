@@ -64,11 +64,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  KeyframeAnimatorBase::ValuesFieldMask = 
-    (TypeTraits<BitVector>::One << KeyframeAnimatorBase::ValuesFieldId);
-
-const OSG::BitVector  KeyframeAnimatorBase::KeysFieldMask = 
-    (TypeTraits<BitVector>::One << KeyframeAnimatorBase::KeysFieldId);
+const OSG::BitVector  KeyframeAnimatorBase::KeyframeSequenceFieldMask = 
+    (TypeTraits<BitVector>::One << KeyframeAnimatorBase::KeyframeSequenceFieldId);
 
 const OSG::BitVector KeyframeAnimatorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -77,10 +74,7 @@ const OSG::BitVector KeyframeAnimatorBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var KeyframeSequencePtr KeyframeAnimatorBase::_sfValues
-    
-*/
-/*! \var Real32          KeyframeAnimatorBase::_mfKeys
+/*! \var KeyframeSequencePtr KeyframeAnimatorBase::_sfKeyframeSequence
     
 */
 
@@ -89,15 +83,10 @@ const OSG::BitVector KeyframeAnimatorBase::MTInfluenceMask =
 FieldDescription *KeyframeAnimatorBase::_desc[] = 
 {
     new FieldDescription(SFKeyframeSequencePtr::getClassType(), 
-                     "Values", 
-                     ValuesFieldId, ValuesFieldMask,
+                     "KeyframeSequence", 
+                     KeyframeSequenceFieldId, KeyframeSequenceFieldMask,
                      false,
-                     (FieldAccessMethod) &KeyframeAnimatorBase::getSFValues),
-    new FieldDescription(MFReal32::getClassType(), 
-                     "Keys", 
-                     KeysFieldId, KeysFieldMask,
-                     false,
-                     (FieldAccessMethod) &KeyframeAnimatorBase::getMFKeys)
+                     (FieldAccessMethod) &KeyframeAnimatorBase::getSFKeyframeSequence)
 };
 
 
@@ -163,7 +152,6 @@ void KeyframeAnimatorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfKeys.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -174,8 +162,7 @@ void KeyframeAnimatorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 KeyframeAnimatorBase::KeyframeAnimatorBase(void) :
-    _sfValues                 (), 
-    _mfKeys                   (), 
+    _sfKeyframeSequence       (), 
     Inherited() 
 {
 }
@@ -185,8 +172,7 @@ KeyframeAnimatorBase::KeyframeAnimatorBase(void) :
 #endif
 
 KeyframeAnimatorBase::KeyframeAnimatorBase(const KeyframeAnimatorBase &source) :
-    _sfValues                 (source._sfValues                 ), 
-    _mfKeys                   (source._mfKeys                   ), 
+    _sfKeyframeSequence       (source._sfKeyframeSequence       ), 
     Inherited                 (source)
 {
 }
@@ -203,14 +189,9 @@ UInt32 KeyframeAnimatorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ValuesFieldMask & whichField))
+    if(FieldBits::NoField != (KeyframeSequenceFieldMask & whichField))
     {
-        returnValue += _sfValues.getBinSize();
-    }
-
-    if(FieldBits::NoField != (KeysFieldMask & whichField))
-    {
-        returnValue += _mfKeys.getBinSize();
+        returnValue += _sfKeyframeSequence.getBinSize();
     }
 
 
@@ -222,14 +203,9 @@ void KeyframeAnimatorBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ValuesFieldMask & whichField))
+    if(FieldBits::NoField != (KeyframeSequenceFieldMask & whichField))
     {
-        _sfValues.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (KeysFieldMask & whichField))
-    {
-        _mfKeys.copyToBin(pMem);
+        _sfKeyframeSequence.copyToBin(pMem);
     }
 
 
@@ -240,14 +216,9 @@ void KeyframeAnimatorBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ValuesFieldMask & whichField))
+    if(FieldBits::NoField != (KeyframeSequenceFieldMask & whichField))
     {
-        _sfValues.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (KeysFieldMask & whichField))
-    {
-        _mfKeys.copyFromBin(pMem);
+        _sfKeyframeSequence.copyFromBin(pMem);
     }
 
 
@@ -260,11 +231,8 @@ void KeyframeAnimatorBase::executeSyncImpl(      KeyframeAnimatorBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ValuesFieldMask & whichField))
-        _sfValues.syncWith(pOther->_sfValues);
-
-    if(FieldBits::NoField != (KeysFieldMask & whichField))
-        _mfKeys.syncWith(pOther->_mfKeys);
+    if(FieldBits::NoField != (KeyframeSequenceFieldMask & whichField))
+        _sfKeyframeSequence.syncWith(pOther->_sfKeyframeSequence);
 
 
 }
@@ -276,12 +244,9 @@ void KeyframeAnimatorBase::executeSyncImpl(      KeyframeAnimatorBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ValuesFieldMask & whichField))
-        _sfValues.syncWith(pOther->_sfValues);
+    if(FieldBits::NoField != (KeyframeSequenceFieldMask & whichField))
+        _sfKeyframeSequence.syncWith(pOther->_sfKeyframeSequence);
 
-
-    if(FieldBits::NoField != (KeysFieldMask & whichField))
-        _mfKeys.syncWith(pOther->_mfKeys, sInfo);
 
 
 }
@@ -291,9 +256,6 @@ void KeyframeAnimatorBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (KeysFieldMask & whichField))
-        _mfKeys.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

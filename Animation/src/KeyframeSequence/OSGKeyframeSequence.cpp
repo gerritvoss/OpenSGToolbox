@@ -43,18 +43,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define OSG_COMPILEANIMATIONLIB
+
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGKeyframeSequence.h"
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
  *                            Description                                  *
 \***************************************************************************/
 
 /*! \class osg::KeyframeSequence
-KeyframeSequence is the base class of all Keyframe Sequences.
+KeyframeSequence is the base class of all Keyframe Sequences. 
 */
 
 /***************************************************************************\
@@ -73,6 +75,46 @@ void KeyframeSequence::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+bool KeyframeSequence::interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result)
+{
+    RawInterpFuncion InterpFunc(getRawInterpFuncion(Type));
+    if(InterpFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Interpolation function of type: " << Type << std::endl;
+        return false;
+    }
+    ReplacementFuncion ReplaceFunc(getReplacementFuncion());
+    if(ReplaceFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Replacement function." << std::endl;
+        return false;
+    }
+
+    return ReplaceFunc(InterpFunc, time, prevTime, ReplacePolicy, isCyclic, Result);
+}
+
+RawInterpFuncion KeyframeSequence::getRawInterpFuncion(const InterpolationType& Type)
+{
+    switch(Type)
+    {
+    case STEP_INTERPOLATION:
+        return getStepInterpFuncion();
+        break;
+    case LINEAR_INTERPOLATION:
+        return getLinearInterpFuncion();
+        break;
+    case LINEAR_NORMAL_INTERPOLATION:
+        return getLinearNormalInterpFuncion();
+        break;
+    case CUBIC_INTERPOLATION:
+        return getCubicInterpFuncion();
+        break;
+    default:
+        return RawInterpFuncion();
+        break;
+    }
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -121,7 +163,7 @@ void KeyframeSequence::dump(      UInt32    ,
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.19 2003/05/05 10:05:28 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
     static Char8 cvsid_hpp       [] = OSGKEYFRAMESEQUENCEBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGKEYFRAMESEQUENCEBASE_INLINE_CVSID;
 
@@ -131,4 +173,6 @@ namespace
 #ifdef __sgi
 #pragma reset woff 1174
 #endif
+
+OSG_END_NAMESPACE
 

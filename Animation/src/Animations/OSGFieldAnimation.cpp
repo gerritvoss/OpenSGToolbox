@@ -97,6 +97,14 @@ bool FieldAnimation::update(const AnimationAdvancerPtr& advancer)
          return true;
       }
    }
+   Field& TheField(*getContainer()->getField( getFieldId() ));
+
+   //Check if it's the right type
+   if(TheField.getContentType() != getAnimator()->getDataType())
+   {
+         SWARNING << "The data type of the field connected to this animation, " << TheField.getContentType().getCName() << ", is not the same data type that the animator works on, " << getAnimator()->getDataType().getCName() << "."  << std::endl;
+         return true;
+   }
    
    //Check if the Animation Time is past the end
    if(advancer->getValue() >= getAnimator()->getLength())
@@ -123,7 +131,7 @@ bool FieldAnimation::update(const AnimationAdvancerPtr& advancer)
                getCycling(), 
                advancer->getValue(),
                advancer->getPrevValue(),
-               *getContainer()->getField( getFieldId() )) )
+               TheField) )
    {
       osg::endEditCP(getContainer(), getContainer()->getType().getFieldDescription(getFieldId())->getFieldMask());
    }

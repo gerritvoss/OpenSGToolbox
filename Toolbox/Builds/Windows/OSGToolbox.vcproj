@@ -6,7 +6,6 @@
 	ProjectGUID="{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -84,8 +83,6 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
 				TargetMachine="1"
 			/>
@@ -106,6 +103,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -178,8 +178,6 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
 				TargetMachine="1"
 			/>
@@ -200,6 +198,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -230,6 +231,14 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Util\OSGColorOperations.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGFieldContainerUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGFieldContainerUtils.h"
 					>
 				</File>
 				<File

@@ -43,6 +43,8 @@ OSG_BEGIN_NAMESPACE
  */
 std::string OSG_TOOLBOXLIB_DLLMAPPING toString(const GLenum& value);
 
+GLenum OSG_TOOLBOXLIB_DLLMAPPING fromString(const std::string& value);
+
 OSG_END_NAMESPACE
 
 #endif

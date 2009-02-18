@@ -42,6 +42,12 @@ osg::PointInterface<ValueTypeT, StorageInterfaceT> operator+(const osg::PointInt
    return Result;
 }
 
+template<class ScalarValueTypeT, class ValueTypeT, class StorageInterfaceT>
+osg::PointInterface<ValueTypeT, StorageInterfaceT> operator*(const ScalarValueTypeT& lValue, const osg::PointInterface<ValueTypeT, StorageInterfaceT>& rValue)
+{
+   return rValue * static_cast<ValueTypeT>(lValue);
+}
+
 OSG_END_NAMESPACE
 
 #endif

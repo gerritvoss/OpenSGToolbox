@@ -39,13 +39,9 @@
 #include <OpenSG/OSGQuaternion.h>
 
 #include "OSGQuatOperations.h"
-#include "OSGColorOperations.h"
 #include "OSGPntOperations.h"
 
 OSG_BEGIN_NAMESPACE
-
-enum InterpolationType {LINEAR_INTERPOLATION=0, CUBIC_INTERPOLATION=1, STEP_INTERPOLATION=2, LINEAR_NORMAL_INTERPOLATION=3};
-enum ValueReplacementPolicy {OVERWRITE=0, ADDITIVE_ABSOLUTE=1, ADDITIVE_SINCE_LAST=2};
 
 //Generic Lerp
 template <class FieldTypeT>
@@ -53,6 +49,13 @@ inline void lerp( const FieldTypeT& From, const FieldTypeT& To, const osg::Real3
 {
    //Return the linearly interpolated value
    Result = ( From + ( (To - From) * t ) );
+}
+
+template <class FieldTypeT>
+inline FieldTypeT lerp( const FieldTypeT& From, const FieldTypeT& To, const osg::Real32& t)
+{
+   //Return the linearly interpolated value
+   return ( From + ( (To - From) * t ) );
 }
 
 //Generic Normal Lerp
@@ -70,7 +73,32 @@ inline void lerpNormal( const FieldTypeT& From, const FieldTypeT& To, const osg:
    Rotation.multVec(From,Result);
 }
 
+//Generic Normal Lerp
+template <class FieldTypeT>
+inline FieldTypeT lerpNormal( const FieldTypeT& From, const FieldTypeT& To, const osg::Real32& t )
+{
+    Quaternion::VectorType Result;
+   //Create the Quaternion Representing int rotation from
+   //Vec From to Vec To
+   Quaternion Rotation(From, To);
+
+   //Scale the angle to t, which is our lerp amount
+   Rotation.scaleAngle(t);
+
+   //Rotate the Resulting Vector by the Quaternion
+   Rotation.multVec(From,Result);
+   return FieldTypeT(Result.getValues());
+}
+
 //Matrix Lerp
+template<class ValueTypeT>
+inline osg::TransformationMatrix<ValueTypeT> lerp(  const osg::TransformationMatrix<ValueTypeT>& From, const osg::TransformationMatrix<ValueTypeT>& To, const osg::Real32& t)
+{
+    osg::TransformationMatrix<ValueTypeT> Result;
+    lerp(From,To,t,Result);
+    return Result;
+}
+
 template<class ValueTypeT>
 void  lerp(  const osg::TransformationMatrix<ValueTypeT>& From, const osg::TransformationMatrix<ValueTypeT>& To, const osg::Real32& t, osg::TransformationMatrix<ValueTypeT>& Result )
 {
@@ -117,64 +145,70 @@ void  lerp(  const osg::TransformationMatrix<ValueTypeT>& From, const osg::Trans
 
 //Generic Spline
 template <class FieldTypeT>
-void spline( const std::vector<FieldTypeT>& V, const std::vector<osg::Real32>& t, const osg::Real32& s, FieldTypeT& Result )
+FieldTypeT spline( const std::vector<FieldTypeT>& V, const std::vector<Real32>& t, const Real32& s )
 {
    osg::UInt8 i(1);
    //Set up the Blend Function
-   osg::Vec4f S1(s*s*s, s*s, s, 1.0);
+   osg::VectorInterface<Real32, VecStorage4<Real32> > S1(s*s*s, s*s, s, (Real32)1.0);
    
    //std::cout << "S: " << S1 << std::endl;
    
-   osg::Vec4f H1( 2.0, -3.0, 0.0, 1.0);
-   osg::Vec4f H2(-2.0,  3.0, 0.0, 0.0);
-   osg::Vec4f H3( 1.0, -2.0, 1.0, 0.0);
-   osg::Vec4f H4( 1.0, -1.0, 0.0, 0.0);
+   osg::VectorInterface<Real32, VecStorage4<Real32> > H1( (Real32)2.0, (Real32)-3.0, (Real32)0.0, (Real32)1.0);
+   osg::VectorInterface<Real32, VecStorage4<Real32> > H2( (Real32)-2.0,(Real32)3.0,  (Real32)0.0, (Real32)0.0);
+   osg::VectorInterface<Real32, VecStorage4<Real32> > H3( (Real32)1.0, (Real32)-2.0, (Real32)1.0, (Real32)0.0);
+   osg::VectorInterface<Real32, VecStorage4<Real32> > H4( (Real32)1.0, (Real32)-1.0, (Real32)0.0, (Real32)0.0);
    
-   osg::Vec4f S2;
+   osg::VectorInterface<Real32, VecStorage4<Real32> > S2;
    S2[0] = S1.dot(H1);
    S2[1] = S1.dot(H2);
    S2[2] = S1.dot(H3);
    S2[3] = S1.dot(H4);
    
    //Setup the Tangent Vectors
-   FieldTypeT Ti = (V[i+1]-V[i-1]) * 0.5f;
+   FieldTypeT Ti = (V[i+1]-V[i-1]) * (Real32)0.5;
    //std::cout << "Ti: " << Ti << std::endl;
-   FieldTypeT Tiplus1 = (V[i+2]-V[i]) * 0.5f;
+   FieldTypeT Tiplus1 = (V[i+2]-V[i]) * (Real32)0.5;
    //std::cout << "Ti+1: " << Tiplus1 << std::endl;
    
    //Get the Scaling values
-   osg::Real32 Fnegi;
+   Real32 Fnegi;
    if(t[i-1] == t[i+1])
    {
-      Fnegi = 0.0;
+      Fnegi = (Real32)0.0;
    }
    else
    {
-      Fnegi = ( 2.0 * (t[i+1] - t[i])/(t[i+1] - t[i-1]) );
+      Fnegi = ( (Real32)2.0 * (t[i+1] - t[i])/(t[i+1] - t[i-1]) );
    }
    //std::cout << "F-i: " << Fnegi << std::endl;
    
-   osg::Real32 Fposiplus1;
+   Real32 Fposiplus1;
    if(t[i+2] == t[i])
    {
-      Fposiplus1 = 0.0;
+      Fposiplus1 = (Real32)0.0;
    }
    else
    {
-      Fposiplus1 = ( 2.0 * (t[i+1] - t[i])/(t[i+2] - t[i]) );
+      Fposiplus1 = ( (Real32)2.0 * (t[i+1] - t[i])/(t[i+2] - t[i]) );
    }
    //std::cout << "F+i+1: " << Fposiplus1 << std::endl;
          
    //Return the sline
-   Result = S2[0] * V[i]
+   return S2[0] * V[i]
          + S2[1] * V[i+1]
          + S2[2] * (Fnegi * Ti)
          + S2[3] * (Fposiplus1 * Tiplus1);
 }
 
+template <class FieldTypeT>
+inline void spline( const std::vector<FieldTypeT>& V, const std::vector<osg::Real32>& t, const osg::Real32& s, FieldTypeT& Result )
+{
+    Result = spline(V,t,s); 
+}
+
 //Squad
 template <class ValueTypeT>
-inline void squad( const std::vector<osg::QuaternionBase<ValueTypeT> >& Q, const std::vector<osg::Real32>& t, const osg::Real32& s, osg::QuaternionBase<ValueTypeT>& Result )
+inline osg::QuaternionBase<ValueTypeT> squad( const std::vector<osg::QuaternionBase<ValueTypeT> >& Q, const std::vector<osg::Real32>& t, const osg::Real32& s)
 {
    osg::UInt8 i(1);
    
@@ -217,10 +251,25 @@ inline void squad( const std::vector<osg::QuaternionBase<ValueTypeT> >& Q, const
    osg::QuaternionBase<ValueTypeT> biplus1 = Q[i+1] * osg::exp( (osg::log(osg::inverse(Q[i])*Q[i+1]) - TanOutgoingplus1)/static_cast<ValueTypeT>(2.0) );
    
    //slerps
-   Result = osg::slerp( osg::slerp(Q[i], Q[i+1], s), osg::slerp(ai, biplus1, s), (static_cast<ValueTypeT>(2.0)*s*(static_cast<ValueTypeT>(1.0)-s)) );
+   return osg::slerp( osg::slerp(Q[i], Q[i+1], s), osg::slerp(ai, biplus1, s), (static_cast<ValueTypeT>(2.0)*s*(static_cast<ValueTypeT>(1.0)-s)) );
 }
 
+template <class ValueTypeT>
+inline void squad( const std::vector<osg::QuaternionBase<ValueTypeT> >& Q, const std::vector<osg::Real32>& t, const osg::Real32& s, osg::QuaternionBase<ValueTypeT>& Result )
+{
+    Result = squad(Q,t,s);
+}
+
+
 //Matrix Spline
+template<class ValueTypeT>
+inline osg::TransformationMatrix<ValueTypeT> spline( const std::vector<osg::TransformationMatrix<ValueTypeT> >& V, const std::vector<osg::Real32>& t, const osg::Real32& s)
+{
+    osg::TransformationMatrix<ValueTypeT> Result;
+    spline(V,t,s,Result);
+    return Result;
+}
+
 template <class ValueTypeT>
 inline void spline( const std::vector<osg::TransformationMatrix<ValueTypeT> >& V, const std::vector<osg::Real32>& t, const osg::Real32& s, osg::TransformationMatrix<ValueTypeT>& Result )
 {

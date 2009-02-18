@@ -30,11 +30,9 @@
 #include <OpenSG/Animation/OSGKeyframeSequence.h>
 #include <OpenSG/Animation/OSGFieldAnimation.h>
 #include <OpenSG/Animation/OSGKeyframeAnimator.h>
-#include <OpenSG/Animation/OSGKeyframeSequenceVec3f.h>
-#include <OpenSG/Animation/OSGKeyframeSequenceQuaternion.h>
 #include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
 #include <OpenSG/OSGSimpleAttachments.h>
-#include <OpenSG/Animation/OSGKeyframeSequenceReal32.h>
+#include <OpenSG/Animation/OSGKeyframeSequences.h>
 
 
 
@@ -320,46 +318,36 @@ void setupAnimation(BonePtr TheBone,BonePtr TheChildBone,BonePtr TheBoneLength )
 {
 
    //Quaternion
-   osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeRotationsSequencePtr RotationKeyframes = osg::KeyframeRotationsSequenceQuat::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.0));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.5*osg::Pi));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),osg::Pi));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),1.5*osg::Pi));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),2.0*osg::Pi));
+   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.0),0.0f);
+   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.5*osg::Pi),2.0f);
+   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),osg::Pi),4.0f);
+   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),1.5*osg::Pi),6.0f);
+   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),2.0*osg::Pi),8.0f);
 
 
    //Length
-   osg::KeyframeSequencePtr LengthKeyframeSequence = osg::KeyframeSequenceReal32::create();
+   osg::KeyframeNumbersSequencePtr LengthKeyframeSequence = osg::KeyframeNumbersSequenceReal32::create();
    
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(0.7);
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(20.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(0.7);
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(99.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(LengthKeyframeSequence)->getValues().push_back(0.7);
+   LengthKeyframeSequence->addKeyframe(0.7,0.0f);
+   LengthKeyframeSequence->addKeyframe(20.2,0.0f);
+   LengthKeyframeSequence->addKeyframe(0.7,4.0f);
+   LengthKeyframeSequence->addKeyframe(99.0,6.0f);
+   LengthKeyframeSequence->addKeyframe(0.7,8.0f);
    
 
 
    //Animator
    osg::AnimatorPtr Animator = osg::KeyframeAnimator::create();
    osg::beginEditCP(Animator);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->setValues(KeyframeSequence);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(8.0);
+      osg::KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(RotationKeyframes);
    osg::endEditCP(Animator);
    
    //Animator
    osg::AnimatorPtr LengthAnimator = osg::KeyframeAnimator::create();
    osg::beginEditCP(LengthAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->setValues(LengthKeyframeSequence);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->getKeys().push_back(8.0);
+      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->setKeyframeSequence(LengthKeyframeSequence);
    osg::endEditCP(LengthAnimator);
          
    //Animated Object

@@ -24,14 +24,16 @@
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 
-#include <OpenSG/OSGTime.h>
+/*#include <OpenSG/OSGTime.h>
 #include <OpenSG/Animation/OSGAnimation.h>
 #include <OpenSG/Animation/OSGKeyframeSequence.h>
 #include <OpenSG/Animation/OSGFieldAnimation.h>
 #include <OpenSG/Animation/OSGKeyframeAnimator.h>
 #include <OpenSG/Animation/OSGKeyframeSequenceVec3f.h>
 #include <OpenSG/Animation/OSGKeyframeSequenceQuaternion.h>
-#include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
+#include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>*/
+
+#include <OpenSG/OSGSimpleMaterial.h>
 
 #include <OpenSG/OSGComponentTransform.h>
 #include <OpenSG/OSGTransform.h>
@@ -40,11 +42,13 @@
 
 #include <OpenSG/OSGFieldContainerFactory.h>
 #include <OpenSG/OSGSimpleAttachments.h>
-#include <OpenSG/OSGStatElemDesc.h>
 
-// the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
 
+#include <OpenSG/Animation/OSGKeyframeSequences.h>
+#include <OpenSG/Animation/OSGKeyframeAnimator.h>
+#include <OpenSG/Animation/OSGFieldAnimation.h>
+#include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -53,16 +57,15 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
-osg::Time TimeLastIdle;
-osg::AnimationPtr TheAnimation;
-osg::AnimationAdvancerPtr TheAnimationAdvancer;
+Time TimeLastIdle;
+AnimationPtr TheAnimation;
+AnimationAdvancerPtr TheAnimationAdvancer;
+MaterialPtr TheTorusMaterial;
 
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
 void setupAnimation(void);
 void display(void);
-
-FieldContainerPtr getFieldContainer(const Char8 *szTypeName, const std::string &namestring);
 
 class NamedNodeFinder
 {
@@ -123,21 +126,37 @@ int main(int argc, char **argv)
 
 
     //Make Torus Node
-    NodePtr TorusNode = osg::Node::create();
-    osg::ComponentTransformPtr TorusNodeTrans;
-    TorusNodeTrans = osg::ComponentTransform::create();
-    osg::setName(TorusNodeTrans, std::string("TorusNodeTransformationCore"));
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodePtr TorusNode = Node::create();
+    ComponentTransformPtr TorusNodeTrans;
+    TorusNodeTrans = ComponentTransform::create();
+    setName(TorusNodeTrans, std::string("TorusNodeTransformationCore"));
+    
+    
+
+    //Torus Material
+    TheTorusMaterial = SimpleMaterial::create();
+
+    //Torus Geometry
+    GeometryPtr TorusGeometry = makeTorusGeo(.5, 2, 16, 16);
+    beginEditCP(TorusGeometry);
+        TorusGeometry->setMaterial(TheTorusMaterial);
+    endEditCP  (TorusGeometry);
+    
+    NodePtr TorusGeometryNode = Node::create();
+    beginEditCP(TorusGeometryNode, Node::CoreFieldMask);
+        TorusGeometryNode->setCore(TorusGeometry);
+    endEditCP  (TorusGeometryNode, Node::CoreFieldMask);
+
     beginEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
         TorusNode->setCore(TorusNodeTrans);
         TorusNode->addChild(TorusGeometryNode);
     endEditCP  (TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     //Make Main Scene Node
-    NodePtr scene = osg::Node::create();
-    osg::ComponentTransformPtr Trans;
-    Trans = osg::ComponentTransform::create();
-    osg::setName(Trans, std::string("MainTransformationCore"));
+    NodePtr scene = Node::create();
+    ComponentTransformPtr Trans;
+    Trans = ComponentTransform::create();
+    setName(Trans, std::string("MainTransformationCore"));
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     {
         scene->setCore(Trans);
@@ -159,10 +178,8 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    TimeLastIdle = osg::getSystemTime();
+    TimeLastIdle = getSystemTime();
     TheAnimation->start();
-
-    //osg::StatElemDescBase::printAll();
     
 
     // GLUT main loop
@@ -177,16 +194,14 @@ int main(int argc, char **argv)
 
 void idle(void)
 {
-   osg::Time Now = osg::getSystemTime();
-   osg::Time Elps(Now - TimeLastIdle);
+   Time Now = getSystemTime();
+   Time Elps(Now - TimeLastIdle);
    TimeLastIdle = Now;
    
-   osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(Elps);
+   ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(Elps);
 
    TheAnimation->update(TheAnimationAdvancer);
 
-   //std::cout << "Time: " << TheAnimation->getTime() << std::endl;
-   //std::cout << "Trans: " << Trans->getScale() << std::endl;
    glutPostRedisplay();
 }
 
@@ -232,6 +247,26 @@ void keyboard(unsigned char k, int x, int y)
             exit(0);
         }
         break;
+        case 's':
+            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(STEP_INTERPOLATION);
+            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+            break;
+        case 'l':
+            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
+            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+            break;
+        case 'c':
+            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
+            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+            break;
+        case 'n':
+            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_NORMAL_INTERPOLATION);
+            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+            break;
     }
 }
 
@@ -256,123 +291,115 @@ int setupGLUT(int *argc, char *argv[])
 
 void setupAnimation(void)
 {
+    //Color Animation
+    KeyframeColorsSequencePtr ColorKeyframes = KeyframeColorsSequence3f::create();
+    ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),0.0f);
+    ColorKeyframes->addKeyframe(Color4f(0.0f,1.0f,0.0f,1.0f),2.0f);
+    ColorKeyframes->addKeyframe(Color4f(0.0f,0.0f,1.0f,1.0f),4.0f);
+    ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),6.0f);
+
+    KeyframeVectorsSequencePtr VectorKeyframes = KeyframeVectorsSequence3f::create();
+    VectorKeyframes->addKeyframe(Vec3f(0.0f,0.0f,0.0f),0.0f);
+    VectorKeyframes->addKeyframe(Vec3f(0.0f,1.0f,0.0f),1.0f);
+    VectorKeyframes->addKeyframe(Vec3f(1.0f,1.0f,0.0f),2.0f);
+    VectorKeyframes->addKeyframe(Vec3f(1.0f,0.0f,0.0f),3.0f);
+    VectorKeyframes->addKeyframe(Vec3f(0.0f,0.0f,0.0f),4.0f);
+    
+    KeyframeRotationsSequencePtr RotationKeyframes = KeyframeRotationsSequenceQuat::create();
+    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0),0.0f);
+    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5),1.0f);
+    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0),2.0f);
+    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5),3.0f);
+    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0),4.0f);
+    
+    //Animator
+    AnimatorPtr Animator = KeyframeAnimator::create();
+    beginEditCP(KeyframeAnimatorPtr::dcast(Animator), KeyframeAnimator::KeyframeSequenceFieldMask);
+        KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(ColorKeyframes);
+    endEditCP(KeyframeAnimatorPtr::dcast(Animator), KeyframeAnimator::KeyframeSequenceFieldMask);
+         
+    //Animated Object
+    //FieldContainerPtr AnimatedObject = getFieldContainer("ComponentTransform",std::string("TorusNodeTransformationCore"));
+    FieldContainerPtr AnimatedObject = TheTorusMaterial;
+    
+    //Animation
+    TheAnimation = FieldAnimation::create();
+    beginEditCP(TheAnimation);
+        FieldAnimationPtr::dcast(TheAnimation)->setAnimator(Animator);
+        FieldAnimationPtr::dcast(TheAnimation)->setContainer(AnimatedObject);
+        FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("diffuse") );
+        //FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("rotation") );
+        FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
+        FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
+    endEditCP(TheAnimation);
+
+    //Animation Advancer
+    TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();
+    beginEditCP(TheAnimationAdvancer);
+    ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
+    beginEditCP(TheAnimationAdvancer);
    
    /*//Real32
-   osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceReal32::create();
-   osg::SFReal32 IntValue;
+   KeyframeSequencePtr KeyframeSequence = KeyframeSequenceReal32::create();
+   SFReal32 IntValue;
    
-   osg::KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(3.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(5.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(10.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(7.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(3.0);*/
+   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(3.0);
+   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(5.0);
+   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(10.0);
+   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(7.0);
+   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(3.0);*/
    
    
    //Vector
-   /*osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceVec3f::create();
+   /*KeyframeSequencePtr KeyframeSequence = KeyframeSequenceVec3f::create();
    
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,-1.5,0.0));
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,1.5,0.0));
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(1.5,1.5,0.0));
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(1.5,-1.5,0.0));
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,-1.5,0.0));*/
+   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(-1.5,-1.5,0.0));
+   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(-1.5,1.5,0.0));
+   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(1.5,1.5,0.0));
+   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(1.5,-1.5,0.0));
+   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(-1.5,-1.5,0.0));*/
          
    //Point
-   /*osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequencePnt3f::create();
-   osg::SFPnt3f IntValue;
+   /*KeyframeSequencePtr KeyframeSequence = KeyframeSequencePnt3f::create();
+   SFPnt3f IntValue;
    
-   osg::beginEditCP(KeyframeSequence);
-      osg::KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Pnt3f(3.0,0.0,0.0));
-      osg::KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Pnt3f(5.0,0.0,0.0));
-      osg::KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Pnt3f(7.0,0.0,0.0));
-      osg::KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Pnt3f(10.0,0.0,0.0));
-      osg::KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Pnt3f(3.0,0.0,0.0));
-   osg::endEditCP(KeyframeSequence);*/
+   beginEditCP(KeyframeSequence);
+      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(3.0,0.0,0.0));
+      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(5.0,0.0,0.0));
+      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(7.0,0.0,0.0));
+      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(10.0,0.0,0.0));
+      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(3.0,0.0,0.0));
+   endEditCP(KeyframeSequence);*/
    
    /*//Matrix
-   osg::MFMatrix KeyValues;
-   osg::Matrix IntValue;
+   MFMatrix KeyValues;
+   Matrix IntValue;
    
-   KeyValues.push_back(osg::Matrix());
-   KeyValues.push_back(osg::Matrix());
-   KeyValues.push_back(osg::Matrix());
-   KeyValues.push_back(osg::Matrix());
-   KeyValues.push_back(osg::Matrix());*/
+   KeyValues.push_back(Matrix());
+   KeyValues.push_back(Matrix());
+   KeyValues.push_back(Matrix());
+   KeyValues.push_back(Matrix());
+   KeyValues.push_back(Matrix());*/
          
    //Color
-   /*osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceColor3f::create();
-   osg::SFColor3f IntValue;
+   /*KeyframeSequencePtr KeyframeSequence = KeyframeSequenceColor3f::create();
+   SFColor3f IntValue;
    
-   osg::beginEditCP(KeyframeSequence);
-      osg::KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Color3f(1.0,0.0,0.0));
-      osg::KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Color3f(1.0,1.0,0.0));
-      osg::KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Color3f(1.0,1.0,1.0));
-      osg::KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Color3f(1.0,0.0,1.0));
-      osg::KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Color3f(1.0,0.0,0.0));
-   osg::endEditCP(KeyframeSequence);*/
+   beginEditCP(KeyframeSequence);
+      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,0.0,0.0));
+      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,1.0,0.0));
+      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,1.0,1.0));
+      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,0.0,1.0));
+      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,0.0,0.0));
+   endEditCP(KeyframeSequence);
          
    //Quaternion
-   osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceQuaternion::create();
+   KeyframeSequencePtr KeyframeSequence = KeyframeSequenceQuaternion::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.0));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.5*osg::Pi));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),osg::Pi));
-   osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),1.5*osg::Pi));
- //  osg::KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),2.0*osg::Pi));
-   
-   //Animator
-   osg::AnimatorPtr Animator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(Animator);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->setValues(KeyframeSequence);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->getKeys().push_back(8.0);
-   osg::endEditCP(Animator);
-         
-   //Animated Object
-   osg::FieldContainerPtr AnimatedObject = getFieldContainer("ComponentTransform",std::string("TorusNodeTransformationCore"));
-   
-   //Animation
-   TheAnimation = osg::FieldAnimation::create();
-   osg::beginEditCP(TheAnimation);
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setAnimator(Animator);
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setContainer(AnimatedObject);
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("rotation") );
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(osg::CUBIC_INTERPOLATION);
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
-   osg::endEditCP(TheAnimation);
-
-   //Animation Advancer
-   TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
-   osg::beginEditCP(TheAnimationAdvancer);
-   osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
-   osg::beginEditCP(TheAnimationAdvancer);
-}
-
-osg::FieldContainerPtr getFieldContainer(const osg::Char8 *szTypeName, const std::string &namestring)
-{
-   const osg::FieldContainerType * TheFieldType( osg::FieldContainerFactory::the()->findType(szTypeName) );
-   if(TheFieldType == NULL)
-   {
-      std::cout << "The " << szTypeName << " Field type is not defined." << std::endl;
-   }
-
-   const std::vector<osg::FieldContainerPtr>* FCStore(	osg::FieldContainerFactory::the()->getFieldContainerStore () );
-
-   std::vector<osg::FieldContainerPtr>::const_iterator FCStoreIter;
-   for(FCStoreIter = FCStore->begin() ; FCStoreIter != FCStore->end() ; ++FCStoreIter)
-   {
-      if( (*FCStoreIter) != osg::NullFC && (*FCStoreIter)->getType() == (*TheFieldType) )
-      {
-         const osg::Char8 *Name( osg::getName(osg::AttachmentContainerPtr::dcast(*FCStoreIter)) );
-         if(Name != NULL && namestring.compare(Name) == 0)
-         {
-            return (*FCStoreIter);
-         }
-      }
-   }
-
-   return osg::NullFC;
+   KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),0.0));
+   KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),0.5*Pi));
+   KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),Pi));
+   KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),1.5*Pi));
+ //  KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),2.0*Pi));
+   */
 }

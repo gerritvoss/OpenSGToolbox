@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="KeyframeSequence"
-	parent="FieldContainer"
+	parent="Attachment"
 	library="Animation"
 	pointerfieldtypes="both"
 	structure="abstract"
@@ -12,4 +12,12 @@
 	useLocalIncludes="true"
 >
 KeyframeSequence is the base class of all Keyframe Sequences.
+	<Field
+		name="InternalKeys"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
 </FieldContainer>

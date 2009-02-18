@@ -65,8 +65,9 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include <OpenSG/OSGAttachment.h> // Parent
 
+#include <OpenSG/OSGReal32Fields.h> // InternalKeys type
 
 #include "OSGKeyframeSequenceFields.h"
 
@@ -77,16 +78,24 @@ class BinaryDataHandler;
 
 //! \brief KeyframeSequence Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceBase : public FieldContainer
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceBase : public Attachment
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef Attachment    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef KeyframeSequencePtr  Ptr;
+
+    enum
+    {
+        InternalKeysFieldId = Inherited::NextFieldId,
+        NextFieldId         = InternalKeysFieldId + 1
+    };
+
+    static const OSG::BitVector InternalKeysFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -130,6 +139,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceBase : public FieldContainer
   protected:
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    MFReal32            _mfInternalKeys;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
@@ -142,6 +158,23 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceBase : public FieldContainer
     /*! \{                                                                 */
 
     virtual ~KeyframeSequenceBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           MFReal32            *getMFInternalKeys   (void);
+
+           Real32              &getInternalKeys   (UInt32 index);
+           MFReal32            &getInternalKeys   (void);
+     const MFReal32            &getInternalKeys   (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -180,6 +213,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceBase : public FieldContainer
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

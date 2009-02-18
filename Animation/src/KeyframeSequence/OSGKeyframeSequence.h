@@ -43,11 +43,15 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
 
 #include "OSGKeyframeSequenceBase.h"
+#include "Interpolation/OSGKeyframeInterpolations.h"
 
 OSG_BEGIN_NAMESPACE
+
+/*! \brief KeyframeSequence class. See \ref 
+           PageAnimationKeyframeSequence for a description.
+*/
 
 class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
 {
@@ -74,8 +78,39 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    Real32 getKey(UInt32 index);
+
+    Real32 getKey(UInt32 index) const;
+
+    void getKey( Real32 &val, UInt32 index);
+
+    void getKey( Real32 &val, UInt32 index) const;
+
+    const MFReal32 &getKeys(void) const;
+
+    virtual UInt32  getSize      (void) const = 0;
+    virtual UInt32  size         (void) const = 0;
+    
+    virtual void        clear    (      void               )       = 0;
+    virtual void        resize   (      size_t      newsize)       = 0;
+    virtual void        shrink   (void                     )       = 0;
+
+    bool interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result);
+    
+    virtual const osg::Field& getKeyValues(void) const = 0;
+    
+    virtual const DataType &getDataType(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
+
+    virtual RawInterpFuncion getStepInterpFuncion(void) = 0;
+    virtual RawInterpFuncion getLinearInterpFuncion(void) = 0;
+    virtual RawInterpFuncion getCubicInterpFuncion(void) = 0;
+    virtual RawInterpFuncion getLinearNormalInterpFuncion(void) = 0;
+    virtual ReplacementFuncion getReplacementFuncion(void) = 0;
+
+    RawInterpFuncion getRawInterpFuncion(const InterpolationType& Type);
 
     // Variables should all be in KeyframeSequenceBase.
 
