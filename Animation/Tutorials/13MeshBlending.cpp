@@ -27,14 +27,11 @@
 
 // FROM ANIMATION.CPP
 #include <OpenSG/OSGTime.h>
-#include <OpenSG/Animation/OSGKeyframeSequence.h>
+#include <OpenSG/Animation/OSGKeyframeSequences.h>
 #include <OpenSG/Animation/OSGFieldAnimation.h>
 #include <OpenSG/Animation/OSGKeyframeAnimator.h>
-#include <OpenSG/Animation/OSGKeyframeSequenceVec3f.h>
-#include <OpenSG/Animation/OSGKeyframeSequenceQuaternion.h>
 #include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
 #include <OpenSG/OSGSimpleAttachments.h>
-#include <OpenSG/Animation/OSGKeyframeSequenceReal32.h>
 #include <OpenSG/Animation/OSGSkeletonAnimation.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGBone.h>
@@ -757,7 +754,6 @@ void reshape(Vec2f Size)
 }
 
 
-
 void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeftHand,BonePtr TheLeftFemur,BonePtr TheRightHumerus,BonePtr TheRightRadius,BonePtr TheRightHand,BonePtr TheRightFemur,BonePtr TheTorso, SkeletonPtr TheSkeleton)
 {
  
@@ -766,46 +762,36 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 /*================================================================================================*/
 /*                                       TORSO                                                    */
  //Length
-   osg::KeyframeSequencePtr TorsoLenghtFrame = osg::KeyframeSequenceReal32::create();
+   osg::KeyframeNumbersSequencePtr TorsoLenghtFrame = osg::KeyframeNumbersSequenceReal32::create();
    
-   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(15.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(10.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(15.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(10.0);
-   osg::KeyframeSequenceReal32Ptr::dcast(TorsoLenghtFrame)->getValues().push_back(15.0);
+   TorsoLenghtFrame->addKeyframe(15.0f,0.0f);
+   TorsoLenghtFrame->addKeyframe(10.0f,3.0f);
+   TorsoLenghtFrame->addKeyframe(15.0f,4.0f);
+   TorsoLenghtFrame->addKeyframe(10.0f,5.0f);
+   TorsoLenghtFrame->addKeyframe(15.0f,6.0f);
 
   //Length Animator
    osg::KeyframeAnimatorPtr TorsoLengthAnimator = osg::KeyframeAnimator::create();
    osg::beginEditCP(TorsoLengthAnimator);
-      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->setValues(TorsoLenghtFrame);
-      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(3.0);
-      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(5.0);
-      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->getKeys().push_back(6.0);
+      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->setKeyframeSequence(TorsoLenghtFrame);
    osg::endEditCP(TorsoLengthAnimator);
 
 /*================================================================================================*/
 /*                                    LEFT HUMERUS                                                */
  //Quaternion
-   osg::KeyframeSequencePtr LeftHumerusKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeRotationsSequencePtr LeftHumerusKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(130.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.5)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.5)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(130.0)));
+   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(130.0)), 0.0f);
+   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.5)) , 2.0f);
+   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)) , 4.0f);
+   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.5)) , 5.0f);
+   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(130.0)), 6.0f);
 
-//Rotation Animator
-   osg::KeyframeAnimatorPtr  LeftHumerusAnimator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(LeftHumerusAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->setValues(LeftHumerusKeyFrame);
-      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->getKeys().push_back(8.0);
-   osg::endEditCP(LeftHumerusAnimator);
+    //Rotation Animator
+    osg::KeyframeAnimatorPtr  LeftHumerusAnimator = osg::KeyframeAnimator::create();
+    osg::beginEditCP(LeftHumerusAnimator);
+      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->setKeyframeSequence(LeftHumerusKeyFrame);
+    osg::endEditCP(LeftHumerusAnimator);
 
 
 
@@ -816,24 +802,19 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 /*                                    LEFT RADIUS                                                 */
 
 //Quaternion
-   osg::KeyframeSequencePtr LeftRadiusKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeRotationsSequencePtr LeftRadiusKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)) , 0.0f);
+   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)) , 2.0f);
+   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 4.0f);
+   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 5.0f);
+   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 6.0f);
 
 
    //Rotation Animator
    osg::KeyframeAnimatorPtr LeftRadiusAnimator = osg::KeyframeAnimator::create();
    osg::beginEditCP(LeftRadiusAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->setValues(LeftRadiusKeyFrame);
-      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->getKeys().push_back(8.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->setKeyframeSequence(LeftRadiusKeyFrame);
    osg::endEditCP(LeftRadiusAnimator);
 
 
@@ -844,24 +825,19 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 /*                                    LEFT HAND                                                   */
 
 //Quaternion
-   osg::KeyframeSequencePtr  LeftHandKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeRotationsSequencePtr  LeftHandKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(70.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(70.0)), 0.0f);
+   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)) , 2.0f);
+   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)) , 4.0f);
+   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)) , 5.0f);
+   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)) , 6.0f);
 
 
    //Rotation Animator
    osg::KeyframeAnimatorPtr  LeftHandAnimator= osg::KeyframeAnimator::create();
    osg::beginEditCP(LeftHandAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->setValues(LeftHandKeyFrame);
-      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->getKeys().push_back(8.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->setKeyframeSequence(LeftHandKeyFrame);
    osg::endEditCP(LeftHandAnimator);
 
 
@@ -870,24 +846,19 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 /*                                    LEFT FEMUR                                                  */
 
  //Quaternion
-   osg::KeyframeSequencePtr  LeftFemurKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeRotationsSequencePtr  LeftFemurKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(5.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(LeftFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)));
+   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)), 0.0f);
+   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)), 2.0f);
+   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(5.0)) , 4.0f);
+   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)), 5.0f);
+   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)), 6.0f);
 
 
    //Rotation Animator
    osg::KeyframeAnimatorPtr  LeftFemurAnimator = osg::KeyframeAnimator::create();
    osg::beginEditCP(LeftFemurAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->setValues(LeftFemurKeyFrame);
-      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->getKeys().push_back(8.0);
+      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->setKeyframeSequence(LeftFemurKeyFrame);
    osg::endEditCP(LeftFemurAnimator);
 
 
@@ -907,24 +878,19 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 /*                                    RIGHT HUMERUS                                               */
 
  //Quaternion
-   osg::KeyframeSequencePtr  RightHumerusKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeRotationsSequencePtr  RightHumerusKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-130.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.5)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.5)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHumerusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-130.0)));
+   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-130.0)), 0.0f);
+   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.5)) , 2.0f);
+   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)) , 4.0f);
+   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.5)) , 5.0f);
+   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-130.0)), 6.0f);
 
 
    //Rotation Animator
    osg::KeyframeAnimatorPtr RightHumerusAnimator = osg::KeyframeAnimator::create();
    osg::beginEditCP(RightHumerusAnimator);
-      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->setValues(RightHumerusKeyFrame);
-      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->getKeys().push_back(8.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->setKeyframeSequence(RightHumerusKeyFrame);
    osg::endEditCP(RightHumerusAnimator);
 
 
@@ -934,24 +900,19 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 /*                                    RIGHT RADIUS                                                */
 
 //Quaternion
-   osg::KeyframeSequencePtr  RightRadiusKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeRotationsSequencePtr  RightRadiusKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightRadiusKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)), 0.0f);
+   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)), 2.0f);
+   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 4.0f);
+   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 5.0f);
+   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 6.0f);
 
 
    //Rotation Animator
    osg::KeyframeAnimatorPtr  RightRadiusAnimator= osg::KeyframeAnimator::create();
    osg::beginEditCP(RightRadiusAnimator);
-      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->setValues(RightRadiusKeyFrame);
-      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->getKeys().push_back(8.0);
+      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->setKeyframeSequence(RightRadiusKeyFrame);
    osg::endEditCP(RightRadiusAnimator);
 
 
@@ -961,24 +922,19 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 /*                                     RIGHT HAND                                                 */
 
  //Quaternion
-   osg::KeyframeSequencePtr RightHandKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeRotationsSequencePtr RightHandKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-70.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightHandKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)));
+   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-70.0)), 0.0f);
+   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 2.0f);
+   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 4.0f);
+   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 5.0f);
+   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 6.0f);
 
 
    //Rotation Animator
    osg::KeyframeAnimatorPtr RightHandAnimator = osg::KeyframeAnimator::create();
    osg::beginEditCP(RightHandAnimator);
-      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->setValues(RightHandKeyFrame);
-      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->getKeys().push_back(8.0);
+      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->setKeyframeSequence(RightHandKeyFrame);
    osg::endEditCP(RightHandAnimator);
 
 
@@ -988,24 +944,19 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 /*                                     RIGHT FEMUR                                                */
 
  //Quaternion
-   osg::KeyframeSequencePtr RightFemurKeyFrame = osg::KeyframeSequenceQuaternion::create();
+   osg::KeyframeRotationsSequencePtr RightFemurKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
    
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-5.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)));
-   osg::KeyframeSequenceQuaternionPtr::dcast(RightFemurKeyFrame)->getValues().push_back(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)));
+   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)), 0.0f);
+   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)), 2.0f);
+   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-5.0)) , 4.0f);
+   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)), 5.0f);
+   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)), 6.0f);
 
 
    //Rotation Animator
    osg::KeyframeAnimatorPtr RightFemurAnimator = osg::KeyframeAnimator::create();
    osg::beginEditCP(RightFemurAnimator);
-      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->setValues(RightFemurKeyFrame);
-      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(0.0);
-      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(2.0);
-      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(4.0);
-      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(6.0);
-      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->getKeys().push_back(8.0);
+      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->setKeyframeSequence(RightFemurKeyFrame);
    osg::endEditCP(RightFemurAnimator);
 
 
@@ -1025,7 +976,6 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
    
 //  Skeleton Animation
    TheSkeletonAnimation = osg::SkeletonAnimation::create();
-   beginEditCP(TheSkeletonAnimation);
    osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftHumerusAnimator, TheLeftHumerus);
    osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftRadiusAnimator,  TheLeftRadius);
    osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftHandAnimator,    TheLeftHand);
@@ -1035,7 +985,6 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
    osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightHandAnimator,   TheRightHand);
    osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightFemurAnimator,  TheRightFemur);
    osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addLengthAnimator  (TorsoLengthAnimator, TheTorso);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->setSkeleton(TheSkeleton);
-   endEditCP(TheSkeletonAnimation);
+
 
 }
