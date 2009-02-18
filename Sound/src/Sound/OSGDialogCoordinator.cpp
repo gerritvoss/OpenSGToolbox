@@ -77,15 +77,24 @@ void DialogCoordinator::initMethod (void)
 \***************************************************************************/
 
 void DialogCoordinator::addSoundEmitter(const SoundEmitterPtr emitter, const char role,
-										const int startDialogID){
+										const int startDialogID, const char* scriptFile){
 	for (int i = 0; i < sizeof(emitters) / sizeof(SoundEmitterPtr); i++){
 		if (!this->emitters[i]){
 			emitters[i] = emitter;
 			roles[i] = role;
 			currentLine[i] = startDialogID;
+			if (scriptFile){
+				strcpy(this->scriptFile[i], scriptFile);
+				fid[i] = fopen(scriptFile, "r");
+			} else {
+				this->scriptFile[i][0] = 0;
+				fid[i] = 0;
+			}
 			return;
 		}
 	}
+	
+
 }
 
 void DialogCoordinator::setScript(const char* script){
@@ -100,9 +109,18 @@ void DialogCoordinator::setSoundManager(SoundManagerPtr soundManager){
 	this->soundManager=soundManager;
 }
 
+
 void DialogCoordinator::loadNext(int index){
 	if (index < 0) return;
-	printf("index: %d\n", index);
+	//printf("index: %d\n", index);
+	if (fid[index]){
+		char line[256];
+		fscanf(fid[index], "%s", &line);
+		for (int i = 0; i < strlen(line); i++)
+			if (line[i] == '_') 
+				line[i] = ' ';
+		printf("%s\n", line);
+	}
 	SoundEmitterPtr emitter = emitters[index];
 	SoundPtr newSound = this->soundManager->getSound(currentLine[index]++);
 	newSound->addSoundListener(this);

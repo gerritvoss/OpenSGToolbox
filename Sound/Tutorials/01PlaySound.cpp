@@ -364,8 +364,8 @@ void setupSound(){
 	//create dialog cooridnator
 	coor = DialogCoordinator::create();
 	coor->setSoundManager(soundManager);
-	coor->addSoundEmitter(clara, 'c', EVENTID_METABLAST_ROOT_DIALOG_CHLOROPLAST_CLARA_1C);
-	coor->addSoundEmitter(sam, 's', EVENTID_METABLAST_ROOT_DIALOG_CHLOROPLAST_SAM_2S);
+	coor->addSoundEmitter(clara, 'c', EVENTID_METABLAST_ROOT_DIALOG_CHLOROPLAST_CLARA_1C, "clara_chloroplast.txt");
+	coor->addSoundEmitter(sam, 's', EVENTID_METABLAST_ROOT_DIALOG_CHLOROPLAST_SAM_2S, "sam_chloroplast.txt"); 
 	               //12345678901234567890
 	coor->setScript("cscccscscscscscscssc");
 

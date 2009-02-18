@@ -83,7 +83,7 @@ class OSG_SOUNDLIB_DLLMAPPING DialogCoordinator : public DialogCoordinatorBase,
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-	virtual void addSoundEmitter(const SoundEmitterPtr emitter, const char role, const int startDialogID);
+	virtual void addSoundEmitter(const SoundEmitterPtr emitter, const char role, const int startDialogID, const char* scriptFile = NULL);
 	virtual void setScript(const char* script);
 	virtual void start();
 	virtual int getScriptPos();
@@ -93,6 +93,8 @@ class OSG_SOUNDLIB_DLLMAPPING DialogCoordinator : public DialogCoordinatorBase,
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+	char scriptFile[20][64];
+	FILE *fid[20];
 	int numSoundEmitter;
 	SoundEmitterPtr emitters[20]; //sound emitter for voices
 	char roles[20]; //character designation, c for clara, s for sam, low cases
