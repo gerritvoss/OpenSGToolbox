@@ -71,13 +71,19 @@ void ShaderAnimation::initMethod (void)
 {
 }
 
-bool ShaderAnimation::update(const AnimationAdvancerPtr& advancer)
+
+Real32 ShaderAnimation::getLength(void) const
+{
+    return getAnimator()->getLength();
+}
+
+void ShaderAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 {
    //Check if the Shader Container has been defined
    if(getShaderContainer() == osg::NullFC)
    {
       SWARNING << "There is no Shader Chunk defined."  << std::endl;
-      return false;
+      return;
    }
    //Check if the Parameter has been found
    if(getParameter() == osg::NullFC)
@@ -98,13 +104,13 @@ bool ShaderAnimation::update(const AnimationAdvancerPtr& advancer)
       if(getParameter() == osg::NullFC)
       {
          SWARNING << "Could not find Parameter "<< getParameterName() << " in Shader Chunk: " << getShaderContainer()->getTypeName()  << std::endl;
-         return true;
+         return;
       }
       FieldDescription * f = getParameter()->getType().findFieldDescription("value");
       if( f == NULL )
       {
          SWARNING << "Could not find Field "<<"value" << " in Field Container " << getParameter()->getTypeName()  << std::endl;
-         return true;
+         return;
       }
       beginEditCP(ShaderAnimationPtr(this), ParameterFieldIdFieldMask);
          setParameterFieldId( f->getFieldId() );
@@ -112,23 +118,7 @@ bool ShaderAnimation::update(const AnimationAdvancerPtr& advancer)
       if(getParameterFieldId() == 0)
       {
          SWARNING << "Could not find Field "<< "value" << " in Field Container " << getParameter()->getTypeName()  << std::endl;
-         return true;
-      }
-   }
-   
-   //Check if the Animation Time is past the end
-   if(advancer->getValue() >= getAnimator()->getLength())
-   {
-      //Update the number of cycles completed
-      beginEditCP(ShaderAnimationPtr(this), CyclesFieldMask);
-         setCycles( getAnimator()->numCyclesCompleted( advancer->getValue() ) );
-      endEditCP(ShaderAnimationPtr(this), CyclesFieldMask);
-      
-      //Check if the Animation has completed it's number of cycles
-      if(getCycling() > 0 && getCycles() >= getCycling())
-      {
-         //Time = getAnimator()->getLength();
-         //PrevTime = getAnimator()->getLength();
+         return;
       }
    }
    
@@ -140,8 +130,8 @@ bool ShaderAnimation::update(const AnimationAdvancerPtr& advancer)
          static_cast<osg::InterpolationType>(getInterpolationType()), 
          static_cast<osg::ValueReplacementPolicy>(getReplacementPolicy()), 
          getCycling(),
-         advancer->getValue(),
-         advancer->getPrevValue(),
+         t,
+         prev_t,
          *getParameter()->getField( getParameterFieldId() )) )
    {
       osg::endEditCP(getParameter());
@@ -152,9 +142,6 @@ bool ShaderAnimation::update(const AnimationAdvancerPtr& advancer)
       osg::endEditNotChangedCP(getParameter());
       osg::endEditNotChangedCP(getShaderContainer(), osg::ShaderParameterChunk::ParametersFieldMask);
    }
-   
-   //Return true if the animation has completed its number of cycles, false otherwise
-   return (getCycling() > 0 && getCycles() >= getCycling());
 }
 
 /***************************************************************************\

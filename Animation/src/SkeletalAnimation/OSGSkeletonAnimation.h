@@ -77,7 +77,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool update(const AnimationAdvancerPtr& advancer);
+    virtual Real32 getLength(void) const;
 
 	void addRotationAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone);
 	void addTranslationAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone);
@@ -103,6 +103,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
     virtual ~SkeletonAnimation(void); 
 
     /*! \}                                                                 */
+    virtual void internalUpdate(const Real32& t, const Real32 prev_t);
     
     /*==========================  PRIVATE  ================================*/
   private:

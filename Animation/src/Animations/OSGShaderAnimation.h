@@ -75,7 +75,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING ShaderAnimation : public ShaderAnimationBase
 
     /*! \}                                                                 */
     
-    virtual bool update(const AnimationAdvancerPtr& advancer);
+    virtual Real32 getLength(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -96,6 +96,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING ShaderAnimation : public ShaderAnimationBase
     virtual ~ShaderAnimation(void); 
 
     /*! \}                                                                 */
+    virtual void internalUpdate(const Real32& t, const Real32 prev_t);
     
     /*==========================  PRIVATE  ================================*/
   private:

@@ -101,19 +101,6 @@ bool KeyframeAnimator::animate(const osg::InterpolationType& InterpType,
       return false;
    }
 }
-
-UInt32 KeyframeAnimator::numCyclesCompleted(const Real32& time) const
-{
-    Real32 Length(getLength());
-    if(Length == 0.0f)
-    {
-        return 0;
-    }
-    else
-    {
-        return static_cast<UInt32>( osg::osgfloor( time / Length ) );
-    }
-}
     
 Real32 KeyframeAnimator::getLength(void) const
 {

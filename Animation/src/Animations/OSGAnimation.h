@@ -47,6 +47,8 @@
 
 #include "OSGAnimationBase.h"
 #include "Animations/Advancers/OSGAnimationAdvancer.h"
+#include "Events/OSGAnimationListener.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,12 +83,22 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
     /*! \}                                                                 */
     
     virtual void start(void);
-    
-    virtual void reset(void);
+
+    virtual void pause(void);
+    virtual void unpause(void);
+    virtual void pauseToggle(void);
+    virtual bool isPaused(void);
+    virtual bool isRunning(void);
     
     virtual void stop(void);
     
-    virtual bool update(const AnimationAdvancerPtr& advancer)=0;
+    virtual bool update(const AnimationAdvancerPtr& advancer);
+
+    void addAnimationListener(AnimationListenerPtr Listener);
+
+    void removeAnimationListener(AnimationListenerPtr Listener);
+
+    virtual Real32 getLength(void) const = 0;
     
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -109,8 +121,26 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
 
     /*! \}                                                                 */
     
+   void produceAnimationStarted(void);
+   void produceAnimationStopped(void);
+   void produceAnimationPaused(void);
+   void produceAnimationUnpaused(void);
+   void produceAnimationEnded(void);
+   void produceAnimationCycled(void);
+
+   bool _IsPaused;
+   bool _IsRunning;
+
+    virtual void internalUpdate(const Real32& t, const Real32 prev_t)=0;
+
     /*==========================  PRIVATE  ================================*/
   private:
+
+	typedef std::set<AnimationListenerPtr> AnimationListenerSet;
+    typedef AnimationListenerSet::iterator AnimationListenerSetItor;
+    typedef AnimationListenerSet::const_iterator AnimationListenerSetConstItor;
+	
+    AnimationListenerSet       _AnimationListeners;
 
     friend class FieldContainer;
     friend class AnimationBase;

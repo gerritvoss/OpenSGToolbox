@@ -79,7 +79,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimation : public FieldAnimationBase
 
     /*! \}                                                                 */
     
-    virtual bool update(const AnimationAdvancerPtr& advancer);
+    virtual Real32 getLength(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -101,6 +101,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimation : public FieldAnimationBase
 
     /*! \}                                                                 */
     
+    virtual void internalUpdate(const Real32& t, const Real32 prev_t);
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -72,21 +72,25 @@ void FieldAnimation::initMethod (void)
 {
 }
 
+Real32 FieldAnimation::getLength(void) const
+{
+    return getAnimator()->getLength();
+}
 
-bool FieldAnimation::update(const AnimationAdvancerPtr& advancer)
+void FieldAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 {
    if(getFieldId() == 0)
    {
       if(getContainer() == osg::NullFC)
       {
          SWARNING << "There is no Field Container defined to Animate"  << std::endl;
-         return true;
+         return;
       }
       FieldDescription * f = getContainer()->getType().findFieldDescription(getFieldName().c_str());
       if( f == NULL )
       {
          SWARNING << "Could not find Field "<< getFieldName() << " in Field Container " << getContainer()->getTypeName()  << std::endl;
-         return true;
+         return;
       }
       beginEditCP(FieldAnimationPtr(this), FieldIdFieldMask);
          setFieldId( f->getFieldId() );
@@ -94,7 +98,7 @@ bool FieldAnimation::update(const AnimationAdvancerPtr& advancer)
       if(getFieldId() == 0)
       {
          SWARNING << "Could not find Field "<< getFieldName() << " in Field Container " << getContainer()->getTypeName()  << std::endl;
-         return true;
+         return;
       }
    }
    Field& TheField(*getContainer()->getField( getFieldId() ));
@@ -103,23 +107,7 @@ bool FieldAnimation::update(const AnimationAdvancerPtr& advancer)
    if(TheField.getContentType() != getAnimator()->getDataType())
    {
          SWARNING << "The data type of the field connected to this animation, " << TheField.getContentType().getCName() << ", is not the same data type that the animator works on, " << getAnimator()->getDataType().getCName() << "."  << std::endl;
-         return true;
-   }
-   
-   //Check if the Animation Time is past the end
-   if(advancer->getValue() >= getAnimator()->getLength())
-   {
-      //Update the number of cycles completed
-      beginEditCP(FieldAnimationPtr(this), CyclesFieldMask);
-         setCycles( getAnimator()->numCyclesCompleted( advancer->getValue() ) );
-      endEditCP(FieldAnimationPtr(this), CyclesFieldMask);
-      
-      //Check if the Animation has completed it's number of cycles
-      if(getCycling() > 0 && getCycles() >= getCycling())
-      {
-         //Time = getAnimator()->getLength();
-         //PrevTime = getAnimator()->getLength();
-      }
+         return;
    }
 
    //Update the Field Container
@@ -129,8 +117,8 @@ bool FieldAnimation::update(const AnimationAdvancerPtr& advancer)
                static_cast<osg::InterpolationType>(getInterpolationType()), 
                static_cast<osg::ValueReplacementPolicy>(getReplacementPolicy()),
                getCycling(), 
-               advancer->getValue(),
-               advancer->getPrevValue(),
+               t,
+               prev_t,
                TheField) )
    {
       osg::endEditCP(getContainer(), getContainer()->getType().getFieldDescription(getFieldId())->getFieldMask());
@@ -139,9 +127,6 @@ bool FieldAnimation::update(const AnimationAdvancerPtr& advancer)
    {
       osg::endEditNotChangedCP(getContainer(), getContainer()->getType().getFieldDescription(getFieldId())->getFieldMask());
    }
-   
-   //Return true if the animation has completed its number of cycles, false otherwise
-   return (getCycling() > 0 && getCycles() >= getCycling());
 }
 
 /***************************************************************************\

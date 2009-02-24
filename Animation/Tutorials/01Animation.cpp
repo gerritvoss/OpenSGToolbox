@@ -45,13 +45,6 @@
 // with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-
-Time TimeLastIdle;
-AnimationPtr TheAnimation;
-AnimationAdvancerPtr TheAnimationAdvancer;
-MaterialPtr TheTorusMaterial;
 
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
@@ -99,6 +92,46 @@ class NamedNodeFinder
     NodePtr  _found;
     std::string  *_name;
 };
+
+
+class TutorialAnimationListener : public AnimationListener
+{
+public:
+   virtual void animationStarted(const AnimationEvent& e)
+   {
+   }
+
+   virtual void animationStopped(const AnimationEvent& e)
+   {
+   }
+
+   virtual void animationPaused(const AnimationEvent& e)
+   {
+   }
+
+   virtual void animationUnpaused(const AnimationEvent& e)
+   {
+   }
+
+   virtual void animationEnded(const AnimationEvent& e)
+   {
+   }
+
+   virtual void animationCycled(const AnimationEvent& e)
+   {
+       std::cout << "Animation Cycled.  Cycle Count: " << e.getAnimation()->getCycles() << std::endl;
+   }
+
+};
+
+// The SimpleSceneManager to manage simple applications
+SimpleSceneManager *mgr;
+
+Time TimeLastIdle;
+AnimationPtr TheAnimation;
+TutorialAnimationListener TheAnimationListener;
+AnimationAdvancerPtr TheAnimationAdvancer;
+MaterialPtr TheTorusMaterial;
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -323,6 +356,9 @@ void setupAnimation(void)
         FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
         FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
     endEditCP(TheAnimation);
+
+    //Animation Listener
+    TheAnimation->addAnimationListener(&TheAnimationListener);
 
     //Animation Advancer
     TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();

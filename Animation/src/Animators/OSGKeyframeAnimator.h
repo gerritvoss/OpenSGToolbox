@@ -91,8 +91,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
                  const osg::Real32& prevTime,
                  osg::Field& Result);
     
-    virtual UInt32 numCyclesCompleted(const Real32& time) const;
-    
     virtual Real32 getLength(void) const;
 
     virtual const DataType &getDataType(void) const;

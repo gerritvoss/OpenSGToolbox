@@ -80,7 +80,27 @@ void SkeletonAnimation::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
+Real32 SkeletonAnimation::getLength(void) const
+{
+    Real32 MaxLength(0.0f);
+	
+    for(UInt32 i(0) ; i<getRotationAnimators().size() ; ++i)
+	{
+        MaxLength = osgMax(MaxLength,getRotationAnimators()[i]->getLength());
+    }
+    for(UInt32 i(0) ; i<getTranslationAnimators().size() ; ++i)
+	{
+        MaxLength = osgMax(MaxLength,getTranslationAnimators()[i]->getLength());
+    }
+    for(UInt32 i(0) ; i<getLengthAnimators().size() ; ++i)
+	{
+        MaxLength = osgMax(MaxLength,getLengthAnimators()[i]->getLength());
+    }
+
+    return MaxLength;
+}
+
+void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 {
 	//Apply all of the Rotation Animators
 	for(UInt32 i(0) ; i<getRotationAnimators().size() ; ++i)
@@ -92,8 +112,8 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 				   static_cast<osg::InterpolationType>(getInterpolationType()), 
 				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
 				   -1, 
-				   advancer->getValue(),
-				   advancer->getPrevValue(),
+				   t,
+				   prev_t,
 				   *getRotationAnimatorBones(i)->getField( RotationFieldId )) )
 	   {
 		  osg::endEditCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask());
@@ -105,9 +125,9 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 	}
 
 
-//==================================================================================================================
-//Apply all of the Length Animators
-//==================================================================================================================
+    //==================================================================================================================
+    //Apply all of the Length Animators
+    //==================================================================================================================
 	for(UInt32 i(0) ; i<getLengthAnimators().size() ; ++i)
 	{
 		UInt32 LengthFieldId = Bone::getClassType().findFieldDescription("Length")->getFieldId();
@@ -117,8 +137,8 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 				   static_cast<osg::InterpolationType>(getInterpolationType()), 
 				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
 				   -1, 
-				   advancer->getValue(),
-				   advancer->getPrevValue(),
+				   t,
+				   prev_t,
 				   *getLengthAnimatorBones(i)->getField( LengthFieldId )) )
 	   {
 		  osg::endEditCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(LengthFieldId)->getFieldMask());
@@ -129,9 +149,9 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 	   }
 	}
 
-//==================================================================================================================
-//Apply all of the Translation Animators
-//==================================================================================================================
+    //==================================================================================================================
+    //Apply all of the Translation Animators
+    //==================================================================================================================
 	for(UInt32 i(0) ; i<getTranslationAnimators().size() ; ++i)
 	{
 		UInt32 TranslationFieldId = Bone::getClassType().findFieldDescription("Translation")->getFieldId();
@@ -141,8 +161,8 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
 				   static_cast<osg::InterpolationType>(getInterpolationType()), 
 				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
 				   -1, 
-				   advancer->getValue(),
-				   advancer->getPrevValue(),
+				   t,
+				   prev_t,
 				   *getTranslationAnimatorBones(i)->getField( TranslationFieldId )) )
 	   {
 		  osg::endEditCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(TranslationFieldId)->getFieldMask());
@@ -157,7 +177,6 @@ bool SkeletonAnimation::update(const AnimationAdvancerPtr& advancer)
     {
         getSkeleton()->skeletonUpdated();
     }
-	return false;
 }
 //===============================================================================================================
 // END HERE

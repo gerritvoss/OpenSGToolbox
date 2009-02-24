@@ -67,29 +67,167 @@ Animation is the base class of all Animation
  *                           Class methods                                 *
 \***************************************************************************/
 
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
 void Animation::initMethod (void)
 {
 
 }
 
 void Animation::start(void)
-{
-   setCycles( 0 );
-}
-
-void Animation::reset(void)
-{
-   setCycles( 0 );
+{   
+    if(!_IsRunning)
+    {
+        _IsRunning = true;
+        produceAnimationStarted();
+    }
 }
 
 void Animation::stop(void)
 {
-   setCycles( 0 );
+    if(!_IsRunning)
+    {
+        _IsRunning = false;
+        produceAnimationStopped();
+    }
+    beginEditCP(AnimationPtr(this), CyclesFieldMask);
+        setCycles( 0 );
+    endEditCP(AnimationPtr(this), CyclesFieldMask);
 }
 
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
+bool Animation::update(const AnimationAdvancerPtr& advancer)
+{
+    Real32 Length(getLength()),
+           t(advancer->getValue());
+    
+    UInt32 PreUpdateCycleCount(getCycles());
+    //Check if the Animation Time is past the end
+    if(t >= Length)
+    {
+        //Update the number of cycles completed
+        beginEditCP(AnimationPtr(this), CyclesFieldMask);
+            setCycles( (Length <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / Length ) )) );
+        endEditCP(AnimationPtr(this), CyclesFieldMask);
+    }
+
+    //Internal Update
+    internalUpdate(t, advancer->getPrevValue());
+
+    //If the number of cycles has changed
+    if(getCycles() != PreUpdateCycleCount)
+    {
+        produceAnimationCycled();
+    }
+
+    //Return true if the animation has completed its number of cycles, false otherwise
+    return (getCycling() > 0 && getCycles() >= getCycling());
+}
+
+void Animation::pause(void)
+{
+    _IsPaused = true;
+    produceAnimationPaused();
+}
+
+void Animation::unpause(void)
+{
+    _IsPaused = false;
+    produceAnimationUnpaused();
+}
+
+void Animation::pauseToggle(void)
+{
+    if(_IsPaused)
+    {
+        unpause();
+    }
+    else
+    {
+        pause();
+    }
+}
+
+bool Animation::isPaused(void)
+{
+    return _IsPaused;
+}
+
+bool Animation::isRunning(void)
+{
+    return _IsRunning;
+}
+
+void Animation::removeAnimationListener(AnimationListenerPtr Listener)
+{
+   AnimationListenerSetItor EraseIter(_AnimationListeners.find(Listener));
+   if(EraseIter != _AnimationListeners.end())
+   {
+      _AnimationListeners.erase(EraseIter);
+   }
+}
+
+void Animation::produceAnimationStarted(void)
+{
+    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+	AnimationListenerSet Listeners(_AnimationListeners);
+    for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->animationStarted(e);
+    }
+}
+
+void Animation::produceAnimationStopped(void)
+{
+    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+	AnimationListenerSet Listeners(_AnimationListeners);
+    for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->animationStopped(e);
+    }
+}
+
+void Animation::produceAnimationPaused(void)
+{
+    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+	AnimationListenerSet Listeners(_AnimationListeners);
+    for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->animationPaused(e);
+    }
+}
+
+void Animation::produceAnimationUnpaused(void)
+{
+    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+	AnimationListenerSet Listeners(_AnimationListeners);
+    for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->animationUnpaused(e);
+    }
+}
+
+void Animation::produceAnimationEnded(void)
+{
+    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+	AnimationListenerSet Listeners(_AnimationListeners);
+    for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->animationEnded(e);
+    }
+}
+
+void Animation::produceAnimationCycled(void)
+{
+    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+	AnimationListenerSet Listeners(_AnimationListeners);
+    for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->animationCycled(e);
+    }
+}
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -98,12 +236,12 @@ void Animation::stop(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 Animation::Animation(void) :
-    Inherited()
+    Inherited(), _IsPaused(false),_IsRunning(false)
 {
 }
 
 Animation::Animation(const Animation &source) :
-    Inherited(source)
+    Inherited(source), _IsPaused(false),_IsRunning(false)
 {
 }
 
