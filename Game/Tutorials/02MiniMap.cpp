@@ -549,7 +549,6 @@ int main(int argc, char **argv)
 
 	//Other Indicators
 	MiniMapIndicatorPtr TorusIndicator = MiniMapIndicator::create();
-
 	beginEditCP(TorusIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 		TorusIndicator->setGenerator(ShipComponentGenerator);
 		TorusIndicator->setLocation(TorusGeometryNode);
@@ -568,7 +567,7 @@ int main(int argc, char **argv)
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
 		MiniMap->setOpacity(.4);
 		MiniMap->setConstraints(MiniMapConstraints);
-		MiniMap->setLockMapOrientation(true);
+		MiniMap->setLockMapOrientation(false);
         MiniMap->setUnlockedMapSize(Vec2f(1000,1000));
 		MiniMap->getIndicators().push_back(TorusIndicator);
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
