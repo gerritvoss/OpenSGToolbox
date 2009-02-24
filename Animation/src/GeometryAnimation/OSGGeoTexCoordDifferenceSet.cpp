@@ -74,7 +74,8 @@ void GeoTexCoordDifferenceSet::initMethod (void)
 GeoTexCoordDifferenceSetPtr GeoTexCoordDifferenceSet::create(const GeoTexCoordsPtr BaseTexCoords, const GeoTexCoordsPtr ToTexCoords)
 {
    //Check that both TexCoord Containers have the same number of Values
-   if(BaseTexCoords->getSize() != ToTexCoords->getSize())
+   if(BaseTexCoords == NullFC || ToTexCoords == NullFC ||
+      BaseTexCoords->getSize() != ToTexCoords->getSize())
    {
       return NullFC;
    }

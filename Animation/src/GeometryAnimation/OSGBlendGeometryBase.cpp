@@ -88,6 +88,18 @@ const OSG::BitVector  BlendGeometryBase::BaseTexCoords2FieldMask =
 const OSG::BitVector  BlendGeometryBase::BaseTexCoords3FieldMask = 
     (TypeTraits<BitVector>::One << BlendGeometryBase::BaseTexCoords3FieldId);
 
+const OSG::BitVector  BlendGeometryBase::BaseTexCoords4FieldMask = 
+    (TypeTraits<BitVector>::One << BlendGeometryBase::BaseTexCoords4FieldId);
+
+const OSG::BitVector  BlendGeometryBase::BaseTexCoords5FieldMask = 
+    (TypeTraits<BitVector>::One << BlendGeometryBase::BaseTexCoords5FieldId);
+
+const OSG::BitVector  BlendGeometryBase::BaseTexCoords6FieldMask = 
+    (TypeTraits<BitVector>::One << BlendGeometryBase::BaseTexCoords6FieldId);
+
+const OSG::BitVector  BlendGeometryBase::BaseTexCoords7FieldMask = 
+    (TypeTraits<BitVector>::One << BlendGeometryBase::BaseTexCoords7FieldId);
+
 const OSG::BitVector  BlendGeometryBase::GeoPositionDifferenceSetsFieldMask = 
     (TypeTraits<BitVector>::One << BlendGeometryBase::GeoPositionDifferenceSetsFieldId);
 
@@ -111,6 +123,18 @@ const OSG::BitVector  BlendGeometryBase::GeoTexCoord2DifferenceSetsFieldMask =
 
 const OSG::BitVector  BlendGeometryBase::GeoTexCoord3DifferenceSetsFieldMask = 
     (TypeTraits<BitVector>::One << BlendGeometryBase::GeoTexCoord3DifferenceSetsFieldId);
+
+const OSG::BitVector  BlendGeometryBase::GeoTexCoord4DifferenceSetsFieldMask = 
+    (TypeTraits<BitVector>::One << BlendGeometryBase::GeoTexCoord4DifferenceSetsFieldId);
+
+const OSG::BitVector  BlendGeometryBase::GeoTexCoord5DifferenceSetsFieldMask = 
+    (TypeTraits<BitVector>::One << BlendGeometryBase::GeoTexCoord5DifferenceSetsFieldId);
+
+const OSG::BitVector  BlendGeometryBase::GeoTexCoord6DifferenceSetsFieldMask = 
+    (TypeTraits<BitVector>::One << BlendGeometryBase::GeoTexCoord6DifferenceSetsFieldId);
+
+const OSG::BitVector  BlendGeometryBase::GeoTexCoord7DifferenceSetsFieldMask = 
+    (TypeTraits<BitVector>::One << BlendGeometryBase::GeoTexCoord7DifferenceSetsFieldId);
 
 const OSG::BitVector  BlendGeometryBase::BlendAmountsFieldMask = 
     (TypeTraits<BitVector>::One << BlendGeometryBase::BlendAmountsFieldId);
@@ -146,6 +170,18 @@ const OSG::BitVector BlendGeometryBase::MTInfluenceMask =
 /*! \var GeoTexCoordsPtr BlendGeometryBase::_sfBaseTexCoords3
     
 */
+/*! \var GeoTexCoordsPtr BlendGeometryBase::_sfBaseTexCoords4
+    
+*/
+/*! \var GeoTexCoordsPtr BlendGeometryBase::_sfBaseTexCoords5
+    
+*/
+/*! \var GeoTexCoordsPtr BlendGeometryBase::_sfBaseTexCoords6
+    
+*/
+/*! \var GeoTexCoordsPtr BlendGeometryBase::_sfBaseTexCoords7
+    
+*/
 /*! \var GeoPositionDifferenceSetPtr BlendGeometryBase::_mfGeoPositionDifferenceSets
     
 */
@@ -168,6 +204,18 @@ const OSG::BitVector BlendGeometryBase::MTInfluenceMask =
     
 */
 /*! \var GeoTexCoordDifferenceSetPtr BlendGeometryBase::_mfGeoTexCoord3DifferenceSets
+    
+*/
+/*! \var GeoTexCoordDifferenceSetPtr BlendGeometryBase::_mfGeoTexCoord4DifferenceSets
+    
+*/
+/*! \var GeoTexCoordDifferenceSetPtr BlendGeometryBase::_mfGeoTexCoord5DifferenceSets
+    
+*/
+/*! \var GeoTexCoordDifferenceSetPtr BlendGeometryBase::_mfGeoTexCoord6DifferenceSets
+    
+*/
+/*! \var GeoTexCoordDifferenceSetPtr BlendGeometryBase::_mfGeoTexCoord7DifferenceSets
     
 */
 /*! \var Real32          BlendGeometryBase::_mfBlendAmounts
@@ -218,6 +266,26 @@ FieldDescription *BlendGeometryBase::_desc[] =
                      BaseTexCoords3FieldId, BaseTexCoords3FieldMask,
                      false,
                      (FieldAccessMethod) &BlendGeometryBase::getSFBaseTexCoords3),
+    new FieldDescription(SFGeoTexCoordsPtr::getClassType(), 
+                     "BaseTexCoords4", 
+                     BaseTexCoords4FieldId, BaseTexCoords4FieldMask,
+                     false,
+                     (FieldAccessMethod) &BlendGeometryBase::getSFBaseTexCoords4),
+    new FieldDescription(SFGeoTexCoordsPtr::getClassType(), 
+                     "BaseTexCoords5", 
+                     BaseTexCoords5FieldId, BaseTexCoords5FieldMask,
+                     false,
+                     (FieldAccessMethod) &BlendGeometryBase::getSFBaseTexCoords5),
+    new FieldDescription(SFGeoTexCoordsPtr::getClassType(), 
+                     "BaseTexCoords6", 
+                     BaseTexCoords6FieldId, BaseTexCoords6FieldMask,
+                     false,
+                     (FieldAccessMethod) &BlendGeometryBase::getSFBaseTexCoords6),
+    new FieldDescription(SFGeoTexCoordsPtr::getClassType(), 
+                     "BaseTexCoords7", 
+                     BaseTexCoords7FieldId, BaseTexCoords7FieldMask,
+                     false,
+                     (FieldAccessMethod) &BlendGeometryBase::getSFBaseTexCoords7),
     new FieldDescription(MFGeoPositionDifferenceSetPtr::getClassType(), 
                      "GeoPositionDifferenceSets", 
                      GeoPositionDifferenceSetsFieldId, GeoPositionDifferenceSetsFieldMask,
@@ -258,6 +326,26 @@ FieldDescription *BlendGeometryBase::_desc[] =
                      GeoTexCoord3DifferenceSetsFieldId, GeoTexCoord3DifferenceSetsFieldMask,
                      false,
                      (FieldAccessMethod) &BlendGeometryBase::getMFGeoTexCoord3DifferenceSets),
+    new FieldDescription(MFGeoTexCoordDifferenceSetPtr::getClassType(), 
+                     "GeoTexCoord4DifferenceSets", 
+                     GeoTexCoord4DifferenceSetsFieldId, GeoTexCoord4DifferenceSetsFieldMask,
+                     false,
+                     (FieldAccessMethod) &BlendGeometryBase::getMFGeoTexCoord4DifferenceSets),
+    new FieldDescription(MFGeoTexCoordDifferenceSetPtr::getClassType(), 
+                     "GeoTexCoord5DifferenceSets", 
+                     GeoTexCoord5DifferenceSetsFieldId, GeoTexCoord5DifferenceSetsFieldMask,
+                     false,
+                     (FieldAccessMethod) &BlendGeometryBase::getMFGeoTexCoord5DifferenceSets),
+    new FieldDescription(MFGeoTexCoordDifferenceSetPtr::getClassType(), 
+                     "GeoTexCoord6DifferenceSets", 
+                     GeoTexCoord6DifferenceSetsFieldId, GeoTexCoord6DifferenceSetsFieldMask,
+                     false,
+                     (FieldAccessMethod) &BlendGeometryBase::getMFGeoTexCoord6DifferenceSets),
+    new FieldDescription(MFGeoTexCoordDifferenceSetPtr::getClassType(), 
+                     "GeoTexCoord7DifferenceSets", 
+                     GeoTexCoord7DifferenceSetsFieldId, GeoTexCoord7DifferenceSetsFieldMask,
+                     false,
+                     (FieldAccessMethod) &BlendGeometryBase::getMFGeoTexCoord7DifferenceSets),
     new FieldDescription(MFReal32::getClassType(), 
                      "BlendAmounts", 
                      BlendAmountsFieldId, BlendAmountsFieldMask,
@@ -336,6 +424,10 @@ void BlendGeometryBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     _mfGeoTexCoord1DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
     _mfGeoTexCoord2DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
     _mfGeoTexCoord3DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
+    _mfGeoTexCoord4DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
+    _mfGeoTexCoord5DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
+    _mfGeoTexCoord6DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
+    _mfGeoTexCoord7DifferenceSets.terminateShare(uiAspect, this->getContainerSize());
     _mfBlendAmounts.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
@@ -355,6 +447,10 @@ BlendGeometryBase::BlendGeometryBase(void) :
     _sfBaseTexCoords1         (), 
     _sfBaseTexCoords2         (), 
     _sfBaseTexCoords3         (), 
+    _sfBaseTexCoords4         (), 
+    _sfBaseTexCoords5         (), 
+    _sfBaseTexCoords6         (), 
+    _sfBaseTexCoords7         (), 
     _mfGeoPositionDifferenceSets(), 
     _mfGeoNormalDifferenceSets(), 
     _mfGeoColorDifferenceSets (), 
@@ -363,6 +459,10 @@ BlendGeometryBase::BlendGeometryBase(void) :
     _mfGeoTexCoord1DifferenceSets(), 
     _mfGeoTexCoord2DifferenceSets(), 
     _mfGeoTexCoord3DifferenceSets(), 
+    _mfGeoTexCoord4DifferenceSets(), 
+    _mfGeoTexCoord5DifferenceSets(), 
+    _mfGeoTexCoord6DifferenceSets(), 
+    _mfGeoTexCoord7DifferenceSets(), 
     _mfBlendAmounts           (), 
     Inherited() 
 {
@@ -381,6 +481,10 @@ BlendGeometryBase::BlendGeometryBase(const BlendGeometryBase &source) :
     _sfBaseTexCoords1         (source._sfBaseTexCoords1         ), 
     _sfBaseTexCoords2         (source._sfBaseTexCoords2         ), 
     _sfBaseTexCoords3         (source._sfBaseTexCoords3         ), 
+    _sfBaseTexCoords4         (source._sfBaseTexCoords4         ), 
+    _sfBaseTexCoords5         (source._sfBaseTexCoords5         ), 
+    _sfBaseTexCoords6         (source._sfBaseTexCoords6         ), 
+    _sfBaseTexCoords7         (source._sfBaseTexCoords7         ), 
     _mfGeoPositionDifferenceSets(source._mfGeoPositionDifferenceSets), 
     _mfGeoNormalDifferenceSets(source._mfGeoNormalDifferenceSets), 
     _mfGeoColorDifferenceSets (source._mfGeoColorDifferenceSets ), 
@@ -389,6 +493,10 @@ BlendGeometryBase::BlendGeometryBase(const BlendGeometryBase &source) :
     _mfGeoTexCoord1DifferenceSets(source._mfGeoTexCoord1DifferenceSets), 
     _mfGeoTexCoord2DifferenceSets(source._mfGeoTexCoord2DifferenceSets), 
     _mfGeoTexCoord3DifferenceSets(source._mfGeoTexCoord3DifferenceSets), 
+    _mfGeoTexCoord4DifferenceSets(source._mfGeoTexCoord4DifferenceSets), 
+    _mfGeoTexCoord5DifferenceSets(source._mfGeoTexCoord5DifferenceSets), 
+    _mfGeoTexCoord6DifferenceSets(source._mfGeoTexCoord6DifferenceSets), 
+    _mfGeoTexCoord7DifferenceSets(source._mfGeoTexCoord7DifferenceSets), 
     _mfBlendAmounts           (source._mfBlendAmounts           ), 
     Inherited                 (source)
 {
@@ -446,6 +554,26 @@ UInt32 BlendGeometryBase::getBinSize(const BitVector &whichField)
         returnValue += _sfBaseTexCoords3.getBinSize();
     }
 
+    if(FieldBits::NoField != (BaseTexCoords4FieldMask & whichField))
+    {
+        returnValue += _sfBaseTexCoords4.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BaseTexCoords5FieldMask & whichField))
+    {
+        returnValue += _sfBaseTexCoords5.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BaseTexCoords6FieldMask & whichField))
+    {
+        returnValue += _sfBaseTexCoords6.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BaseTexCoords7FieldMask & whichField))
+    {
+        returnValue += _sfBaseTexCoords7.getBinSize();
+    }
+
     if(FieldBits::NoField != (GeoPositionDifferenceSetsFieldMask & whichField))
     {
         returnValue += _mfGeoPositionDifferenceSets.getBinSize();
@@ -484,6 +612,26 @@ UInt32 BlendGeometryBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (GeoTexCoord3DifferenceSetsFieldMask & whichField))
     {
         returnValue += _mfGeoTexCoord3DifferenceSets.getBinSize();
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord4DifferenceSetsFieldMask & whichField))
+    {
+        returnValue += _mfGeoTexCoord4DifferenceSets.getBinSize();
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord5DifferenceSetsFieldMask & whichField))
+    {
+        returnValue += _mfGeoTexCoord5DifferenceSets.getBinSize();
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord6DifferenceSetsFieldMask & whichField))
+    {
+        returnValue += _mfGeoTexCoord6DifferenceSets.getBinSize();
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord7DifferenceSetsFieldMask & whichField))
+    {
+        returnValue += _mfGeoTexCoord7DifferenceSets.getBinSize();
     }
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
@@ -540,6 +688,26 @@ void BlendGeometryBase::copyToBin(      BinaryDataHandler &pMem,
         _sfBaseTexCoords3.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (BaseTexCoords4FieldMask & whichField))
+    {
+        _sfBaseTexCoords4.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BaseTexCoords5FieldMask & whichField))
+    {
+        _sfBaseTexCoords5.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BaseTexCoords6FieldMask & whichField))
+    {
+        _sfBaseTexCoords6.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BaseTexCoords7FieldMask & whichField))
+    {
+        _sfBaseTexCoords7.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (GeoPositionDifferenceSetsFieldMask & whichField))
     {
         _mfGeoPositionDifferenceSets.copyToBin(pMem);
@@ -578,6 +746,26 @@ void BlendGeometryBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (GeoTexCoord3DifferenceSetsFieldMask & whichField))
     {
         _mfGeoTexCoord3DifferenceSets.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord4DifferenceSetsFieldMask & whichField))
+    {
+        _mfGeoTexCoord4DifferenceSets.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord5DifferenceSetsFieldMask & whichField))
+    {
+        _mfGeoTexCoord5DifferenceSets.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord6DifferenceSetsFieldMask & whichField))
+    {
+        _mfGeoTexCoord6DifferenceSets.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord7DifferenceSetsFieldMask & whichField))
+    {
+        _mfGeoTexCoord7DifferenceSets.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
@@ -633,6 +821,26 @@ void BlendGeometryBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfBaseTexCoords3.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (BaseTexCoords4FieldMask & whichField))
+    {
+        _sfBaseTexCoords4.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BaseTexCoords5FieldMask & whichField))
+    {
+        _sfBaseTexCoords5.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BaseTexCoords6FieldMask & whichField))
+    {
+        _sfBaseTexCoords6.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BaseTexCoords7FieldMask & whichField))
+    {
+        _sfBaseTexCoords7.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (GeoPositionDifferenceSetsFieldMask & whichField))
     {
         _mfGeoPositionDifferenceSets.copyFromBin(pMem);
@@ -671,6 +879,26 @@ void BlendGeometryBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (GeoTexCoord3DifferenceSetsFieldMask & whichField))
     {
         _mfGeoTexCoord3DifferenceSets.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord4DifferenceSetsFieldMask & whichField))
+    {
+        _mfGeoTexCoord4DifferenceSets.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord5DifferenceSetsFieldMask & whichField))
+    {
+        _mfGeoTexCoord5DifferenceSets.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord6DifferenceSetsFieldMask & whichField))
+    {
+        _mfGeoTexCoord6DifferenceSets.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GeoTexCoord7DifferenceSetsFieldMask & whichField))
+    {
+        _mfGeoTexCoord7DifferenceSets.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
@@ -712,6 +940,18 @@ void BlendGeometryBase::executeSyncImpl(      BlendGeometryBase *pOther,
     if(FieldBits::NoField != (BaseTexCoords3FieldMask & whichField))
         _sfBaseTexCoords3.syncWith(pOther->_sfBaseTexCoords3);
 
+    if(FieldBits::NoField != (BaseTexCoords4FieldMask & whichField))
+        _sfBaseTexCoords4.syncWith(pOther->_sfBaseTexCoords4);
+
+    if(FieldBits::NoField != (BaseTexCoords5FieldMask & whichField))
+        _sfBaseTexCoords5.syncWith(pOther->_sfBaseTexCoords5);
+
+    if(FieldBits::NoField != (BaseTexCoords6FieldMask & whichField))
+        _sfBaseTexCoords6.syncWith(pOther->_sfBaseTexCoords6);
+
+    if(FieldBits::NoField != (BaseTexCoords7FieldMask & whichField))
+        _sfBaseTexCoords7.syncWith(pOther->_sfBaseTexCoords7);
+
     if(FieldBits::NoField != (GeoPositionDifferenceSetsFieldMask & whichField))
         _mfGeoPositionDifferenceSets.syncWith(pOther->_mfGeoPositionDifferenceSets);
 
@@ -735,6 +975,18 @@ void BlendGeometryBase::executeSyncImpl(      BlendGeometryBase *pOther,
 
     if(FieldBits::NoField != (GeoTexCoord3DifferenceSetsFieldMask & whichField))
         _mfGeoTexCoord3DifferenceSets.syncWith(pOther->_mfGeoTexCoord3DifferenceSets);
+
+    if(FieldBits::NoField != (GeoTexCoord4DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord4DifferenceSets.syncWith(pOther->_mfGeoTexCoord4DifferenceSets);
+
+    if(FieldBits::NoField != (GeoTexCoord5DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord5DifferenceSets.syncWith(pOther->_mfGeoTexCoord5DifferenceSets);
+
+    if(FieldBits::NoField != (GeoTexCoord6DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord6DifferenceSets.syncWith(pOther->_mfGeoTexCoord6DifferenceSets);
+
+    if(FieldBits::NoField != (GeoTexCoord7DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord7DifferenceSets.syncWith(pOther->_mfGeoTexCoord7DifferenceSets);
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
         _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts);
@@ -773,6 +1025,18 @@ void BlendGeometryBase::executeSyncImpl(      BlendGeometryBase *pOther,
     if(FieldBits::NoField != (BaseTexCoords3FieldMask & whichField))
         _sfBaseTexCoords3.syncWith(pOther->_sfBaseTexCoords3);
 
+    if(FieldBits::NoField != (BaseTexCoords4FieldMask & whichField))
+        _sfBaseTexCoords4.syncWith(pOther->_sfBaseTexCoords4);
+
+    if(FieldBits::NoField != (BaseTexCoords5FieldMask & whichField))
+        _sfBaseTexCoords5.syncWith(pOther->_sfBaseTexCoords5);
+
+    if(FieldBits::NoField != (BaseTexCoords6FieldMask & whichField))
+        _sfBaseTexCoords6.syncWith(pOther->_sfBaseTexCoords6);
+
+    if(FieldBits::NoField != (BaseTexCoords7FieldMask & whichField))
+        _sfBaseTexCoords7.syncWith(pOther->_sfBaseTexCoords7);
+
 
     if(FieldBits::NoField != (GeoPositionDifferenceSetsFieldMask & whichField))
         _mfGeoPositionDifferenceSets.syncWith(pOther->_mfGeoPositionDifferenceSets, sInfo);
@@ -797,6 +1061,18 @@ void BlendGeometryBase::executeSyncImpl(      BlendGeometryBase *pOther,
 
     if(FieldBits::NoField != (GeoTexCoord3DifferenceSetsFieldMask & whichField))
         _mfGeoTexCoord3DifferenceSets.syncWith(pOther->_mfGeoTexCoord3DifferenceSets, sInfo);
+
+    if(FieldBits::NoField != (GeoTexCoord4DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord4DifferenceSets.syncWith(pOther->_mfGeoTexCoord4DifferenceSets, sInfo);
+
+    if(FieldBits::NoField != (GeoTexCoord5DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord5DifferenceSets.syncWith(pOther->_mfGeoTexCoord5DifferenceSets, sInfo);
+
+    if(FieldBits::NoField != (GeoTexCoord6DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord6DifferenceSets.syncWith(pOther->_mfGeoTexCoord6DifferenceSets, sInfo);
+
+    if(FieldBits::NoField != (GeoTexCoord7DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord7DifferenceSets.syncWith(pOther->_mfGeoTexCoord7DifferenceSets, sInfo);
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
         _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts, sInfo);
@@ -833,6 +1109,18 @@ void BlendGeometryBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (GeoTexCoord3DifferenceSetsFieldMask & whichField))
         _mfGeoTexCoord3DifferenceSets.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (GeoTexCoord4DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord4DifferenceSets.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (GeoTexCoord5DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord5DifferenceSets.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (GeoTexCoord6DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord6DifferenceSets.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (GeoTexCoord7DifferenceSetsFieldMask & whichField))
+        _mfGeoTexCoord7DifferenceSets.beginEdit(uiAspect, uiContainerSize);
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
         _mfBlendAmounts.beginEdit(uiAspect, uiContainerSize);

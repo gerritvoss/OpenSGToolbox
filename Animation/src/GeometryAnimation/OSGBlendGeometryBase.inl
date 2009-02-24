@@ -152,6 +152,34 @@ SFGeoTexCoordsPtr *BlendGeometryBase::getSFBaseTexCoords3(void)
     return &_sfBaseTexCoords3;
 }
 
+//! Get the BlendGeometry::_sfBaseTexCoords4 field.
+inline
+SFGeoTexCoordsPtr *BlendGeometryBase::getSFBaseTexCoords4(void)
+{
+    return &_sfBaseTexCoords4;
+}
+
+//! Get the BlendGeometry::_sfBaseTexCoords5 field.
+inline
+SFGeoTexCoordsPtr *BlendGeometryBase::getSFBaseTexCoords5(void)
+{
+    return &_sfBaseTexCoords5;
+}
+
+//! Get the BlendGeometry::_sfBaseTexCoords6 field.
+inline
+SFGeoTexCoordsPtr *BlendGeometryBase::getSFBaseTexCoords6(void)
+{
+    return &_sfBaseTexCoords6;
+}
+
+//! Get the BlendGeometry::_sfBaseTexCoords7 field.
+inline
+SFGeoTexCoordsPtr *BlendGeometryBase::getSFBaseTexCoords7(void)
+{
+    return &_sfBaseTexCoords7;
+}
+
 //! Get the BlendGeometry::_mfGeoPositionDifferenceSets field.
 inline
 MFGeoPositionDifferenceSetPtr *BlendGeometryBase::getMFGeoPositionDifferenceSets(void)
@@ -206,6 +234,34 @@ inline
 MFGeoTexCoordDifferenceSetPtr *BlendGeometryBase::getMFGeoTexCoord3DifferenceSets(void)
 {
     return &_mfGeoTexCoord3DifferenceSets;
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord4DifferenceSets field.
+inline
+MFGeoTexCoordDifferenceSetPtr *BlendGeometryBase::getMFGeoTexCoord4DifferenceSets(void)
+{
+    return &_mfGeoTexCoord4DifferenceSets;
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord5DifferenceSets field.
+inline
+MFGeoTexCoordDifferenceSetPtr *BlendGeometryBase::getMFGeoTexCoord5DifferenceSets(void)
+{
+    return &_mfGeoTexCoord5DifferenceSets;
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord6DifferenceSets field.
+inline
+MFGeoTexCoordDifferenceSetPtr *BlendGeometryBase::getMFGeoTexCoord6DifferenceSets(void)
+{
+    return &_mfGeoTexCoord6DifferenceSets;
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord7DifferenceSets field.
+inline
+MFGeoTexCoordDifferenceSetPtr *BlendGeometryBase::getMFGeoTexCoord7DifferenceSets(void)
+{
+    return &_mfGeoTexCoord7DifferenceSets;
 }
 
 //! Get the BlendGeometry::_mfBlendAmounts field.
@@ -384,6 +440,90 @@ void BlendGeometryBase::setBaseTexCoords3(const GeoTexCoordsPtr &value)
     _sfBaseTexCoords3.setValue(value);
 }
 
+//! Get the value of the BlendGeometry::_sfBaseTexCoords4 field.
+inline
+GeoTexCoordsPtr &BlendGeometryBase::getBaseTexCoords4(void)
+{
+    return _sfBaseTexCoords4.getValue();
+}
+
+//! Get the value of the BlendGeometry::_sfBaseTexCoords4 field.
+inline
+const GeoTexCoordsPtr &BlendGeometryBase::getBaseTexCoords4(void) const
+{
+    return _sfBaseTexCoords4.getValue();
+}
+
+//! Set the value of the BlendGeometry::_sfBaseTexCoords4 field.
+inline
+void BlendGeometryBase::setBaseTexCoords4(const GeoTexCoordsPtr &value)
+{
+    _sfBaseTexCoords4.setValue(value);
+}
+
+//! Get the value of the BlendGeometry::_sfBaseTexCoords5 field.
+inline
+GeoTexCoordsPtr &BlendGeometryBase::getBaseTexCoords5(void)
+{
+    return _sfBaseTexCoords5.getValue();
+}
+
+//! Get the value of the BlendGeometry::_sfBaseTexCoords5 field.
+inline
+const GeoTexCoordsPtr &BlendGeometryBase::getBaseTexCoords5(void) const
+{
+    return _sfBaseTexCoords5.getValue();
+}
+
+//! Set the value of the BlendGeometry::_sfBaseTexCoords5 field.
+inline
+void BlendGeometryBase::setBaseTexCoords5(const GeoTexCoordsPtr &value)
+{
+    _sfBaseTexCoords5.setValue(value);
+}
+
+//! Get the value of the BlendGeometry::_sfBaseTexCoords6 field.
+inline
+GeoTexCoordsPtr &BlendGeometryBase::getBaseTexCoords6(void)
+{
+    return _sfBaseTexCoords6.getValue();
+}
+
+//! Get the value of the BlendGeometry::_sfBaseTexCoords6 field.
+inline
+const GeoTexCoordsPtr &BlendGeometryBase::getBaseTexCoords6(void) const
+{
+    return _sfBaseTexCoords6.getValue();
+}
+
+//! Set the value of the BlendGeometry::_sfBaseTexCoords6 field.
+inline
+void BlendGeometryBase::setBaseTexCoords6(const GeoTexCoordsPtr &value)
+{
+    _sfBaseTexCoords6.setValue(value);
+}
+
+//! Get the value of the BlendGeometry::_sfBaseTexCoords7 field.
+inline
+GeoTexCoordsPtr &BlendGeometryBase::getBaseTexCoords7(void)
+{
+    return _sfBaseTexCoords7.getValue();
+}
+
+//! Get the value of the BlendGeometry::_sfBaseTexCoords7 field.
+inline
+const GeoTexCoordsPtr &BlendGeometryBase::getBaseTexCoords7(void) const
+{
+    return _sfBaseTexCoords7.getValue();
+}
+
+//! Set the value of the BlendGeometry::_sfBaseTexCoords7 field.
+inline
+void BlendGeometryBase::setBaseTexCoords7(const GeoTexCoordsPtr &value)
+{
+    _sfBaseTexCoords7.setValue(value);
+}
+
 
 //! Get the value of the \a index element the BlendGeometry::_mfGeoPositionDifferenceSets field.
 inline
@@ -551,6 +691,90 @@ inline
 const MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord3DifferenceSets(void) const
 {
     return _mfGeoTexCoord3DifferenceSets;
+}
+
+//! Get the value of the \a index element the BlendGeometry::_mfGeoTexCoord4DifferenceSets field.
+inline
+GeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord4DifferenceSets(const UInt32 index)
+{
+    return _mfGeoTexCoord4DifferenceSets[index];
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord4DifferenceSets field.
+inline
+MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord4DifferenceSets(void)
+{
+    return _mfGeoTexCoord4DifferenceSets;
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord4DifferenceSets field.
+inline
+const MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord4DifferenceSets(void) const
+{
+    return _mfGeoTexCoord4DifferenceSets;
+}
+
+//! Get the value of the \a index element the BlendGeometry::_mfGeoTexCoord5DifferenceSets field.
+inline
+GeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord5DifferenceSets(const UInt32 index)
+{
+    return _mfGeoTexCoord5DifferenceSets[index];
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord5DifferenceSets field.
+inline
+MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord5DifferenceSets(void)
+{
+    return _mfGeoTexCoord5DifferenceSets;
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord5DifferenceSets field.
+inline
+const MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord5DifferenceSets(void) const
+{
+    return _mfGeoTexCoord5DifferenceSets;
+}
+
+//! Get the value of the \a index element the BlendGeometry::_mfGeoTexCoord6DifferenceSets field.
+inline
+GeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord6DifferenceSets(const UInt32 index)
+{
+    return _mfGeoTexCoord6DifferenceSets[index];
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord6DifferenceSets field.
+inline
+MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord6DifferenceSets(void)
+{
+    return _mfGeoTexCoord6DifferenceSets;
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord6DifferenceSets field.
+inline
+const MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord6DifferenceSets(void) const
+{
+    return _mfGeoTexCoord6DifferenceSets;
+}
+
+//! Get the value of the \a index element the BlendGeometry::_mfGeoTexCoord7DifferenceSets field.
+inline
+GeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord7DifferenceSets(const UInt32 index)
+{
+    return _mfGeoTexCoord7DifferenceSets[index];
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord7DifferenceSets field.
+inline
+MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord7DifferenceSets(void)
+{
+    return _mfGeoTexCoord7DifferenceSets;
+}
+
+//! Get the BlendGeometry::_mfGeoTexCoord7DifferenceSets field.
+inline
+const MFGeoTexCoordDifferenceSetPtr &BlendGeometryBase::getGeoTexCoord7DifferenceSets(void) const
+{
+    return _mfGeoTexCoord7DifferenceSets;
 }
 
 //! Get the value of the \a index element the BlendGeometry::_mfBlendAmounts field.

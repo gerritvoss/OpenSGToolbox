@@ -74,7 +74,8 @@ void GeoPositionDifferenceSet::initMethod (void)
 GeoPositionDifferenceSetPtr GeoPositionDifferenceSet::create(const GeoPositionsPtr BasePositions, const GeoPositionsPtr ToPositions)
 {
    //Check that both Position Containers have the same number of Values
-   if(BasePositions->getSize() != ToPositions->getSize())
+   if(BasePositions == NullFC || ToPositions == NullFC ||
+      BasePositions->getSize() != ToPositions->getSize())
    {
       return NullFC;
    }

@@ -16,7 +16,7 @@
 		type="GeoPositionsPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -24,7 +24,7 @@
 		type="GeoNormalsPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -32,7 +32,7 @@
 		type="GeoColorsPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -40,7 +40,7 @@
 		type="GeoColorsPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -48,7 +48,7 @@
 		type="GeoTexCoordsPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -56,7 +56,7 @@
 		type="GeoTexCoordsPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -64,7 +64,7 @@
 		type="GeoTexCoordsPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -72,7 +72,39 @@
 		type="GeoTexCoordsPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="BaseTexCoords4"
+		type="GeoTexCoordsPtr"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="BaseTexCoords5"
+		type="GeoTexCoordsPtr"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="BaseTexCoords6"
+		type="GeoTexCoordsPtr"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="BaseTexCoords7"
+		type="GeoTexCoordsPtr"
+		cardinality="single"
+		visibility="external"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -81,7 +113,7 @@
 		cardinality="multi"
 		visibility="external"
 		header="GeometryAnimation/OSGGeoPositionDifferenceSet.h"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -90,7 +122,7 @@
 		cardinality="multi"
 		visibility="external"
 		header="GeometryAnimation/OSGGeoNormalDifferenceSet.h"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -99,7 +131,7 @@
 		cardinality="multi"
 		visibility="external"
 		header="GeometryAnimation/OSGGeoColorDifferenceSet.h"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -108,7 +140,7 @@
 		cardinality="multi"
 		visibility="external"
 		header="GeometryAnimation/OSGGeoColorDifferenceSet.h"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -117,7 +149,7 @@
 		cardinality="multi"
 		visibility="external"
 		header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -126,7 +158,7 @@
 		cardinality="multi"
 		visibility="external"
 		header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -135,7 +167,7 @@
 		cardinality="multi"
 		visibility="external"
 		header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -144,7 +176,43 @@
 		cardinality="multi"
 		visibility="external"
 		header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
-		access="public"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="GeoTexCoord4DifferenceSets"
+		type="GeoTexCoordDifferenceSetPtr"
+		cardinality="multi"
+		visibility="external"
+		header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="GeoTexCoord5DifferenceSets"
+		type="GeoTexCoordDifferenceSetPtr"
+		cardinality="multi"
+		visibility="external"
+		header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="GeoTexCoord6DifferenceSets"
+		type="GeoTexCoordDifferenceSetPtr"
+		cardinality="multi"
+		visibility="external"
+		header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="GeoTexCoord7DifferenceSets"
+		type="GeoTexCoordDifferenceSetPtr"
+		cardinality="multi"
+		visibility="external"
+		header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -152,7 +220,7 @@
 		type="Real32"
 		cardinality="multi"
 		visibility="external"
-		access="public"
+		access="protected"
 	>
 	</Field>
 </FieldContainer>

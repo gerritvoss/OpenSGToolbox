@@ -74,7 +74,8 @@ void GeoNormalDifferenceSet::initMethod (void)
 GeoNormalDifferenceSetPtr GeoNormalDifferenceSet::create(const GeoNormalsPtr BaseNormals, const GeoNormalsPtr ToNormals)
 {
    //Check that both Normal Containers have the same number of Values
-   if(BaseNormals->getSize() != ToNormals->getSize())
+   if(BaseNormals == NullFC || ToNormals == NullFC ||
+      BaseNormals->getSize() != ToNormals->getSize())
    {
       return NullFC;
    }

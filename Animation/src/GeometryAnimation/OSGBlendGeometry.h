@@ -74,6 +74,12 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometry : public BlendGeometryBase
 
     /*! \}                                                                 */
     static  BlendGeometryPtr      create          (const GeometryPtr Geo); 
+    void setBaseGeometry(const GeometryPtr Geo);
+    void addBlendGeometry(const GeometryPtr Geo, Real32 b = 0.0f);
+    void removeBlendGeometry(UInt32 GeoIndex);
+
+    UInt32 getNumBlendGeometries(void) const;
+    void setBlendAmount(UInt32 GeoIndex, Real32 b);
     
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -84,10 +90,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometry : public BlendGeometryBase
     void recalculateColors(void);
     void recalculateSecondaryColors(void);
     
-    void recalculateTexCoords(void);
-    void recalculateTexCoords1(void);
-    void recalculateTexCoords2(void);
-    void recalculateTexCoords3(void);
+    void recalculateTexCoords(UInt32 CoordNum);
 
     // Variables should all be in BlendGeometryBase.
 

@@ -24,15 +24,6 @@
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 
-/*#include <OpenSG/OSGTime.h>
-#include <OpenSG/Animation/OSGAnimation.h>
-#include <OpenSG/Animation/OSGKeyframeSequence.h>
-#include <OpenSG/Animation/OSGFieldAnimation.h>
-#include <OpenSG/Animation/OSGKeyframeAnimator.h>
-#include <OpenSG/Animation/OSGKeyframeSequenceVec3f.h>
-#include <OpenSG/Animation/OSGKeyframeSequenceQuaternion.h>
-#include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>*/
-
 #include <OpenSG/OSGSimpleMaterial.h>
 
 #include <OpenSG/OSGComponentTransform.h>

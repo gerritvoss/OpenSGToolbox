@@ -73,7 +73,7 @@ OSG_USING_NAMESPACE
 
 void BlendGeometry::initMethod (void)
 {
-    /*DrawAction::registerEnterDefault(getClassType(),
+    DrawAction::registerEnterDefault(getClassType(),
         osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
               CNodePtr, Action *>(&BlendGeometry::drawActionHandler));
 
@@ -83,46 +83,296 @@ void BlendGeometry::initMethod (void)
 
     RenderAction::registerEnterDefault(getClassType(),
         osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
-              CNodePtr, Action *>(&BlendGeometry::renderActionHandler));*/
+              CNodePtr, Action *>(&BlendGeometry::renderActionHandler));
 }
 
 BlendGeometryPtr BlendGeometry::create (const GeometryPtr Geo)
 {
    BlendGeometryPtr Result = BlendGeometryBase::create();
-   GeometryPtr BaseGeometryCopy = osg::GeometryPtr::dcast( deepClone(Geo, "Material") );
-   
-   //Create a clone of the Geometry
-   Result->setPositions( BaseGeometryCopy->getPositions() );
-   Result->setNormals( BaseGeometryCopy->getNormals() );
-   Result->setTypes( BaseGeometryCopy->getTypes() );
-   Result->setLengths( BaseGeometryCopy->getLengths() );
-   Result->setColors( BaseGeometryCopy->getColors() );
-   Result->setSecondaryColors( BaseGeometryCopy->getSecondaryColors() );
-   Result->setIndices( BaseGeometryCopy->getIndices() );
-   Result->getIndexMapping() = BaseGeometryCopy->getIndexMapping();
-   Result->setTexCoords( BaseGeometryCopy->getTexCoords());
-   Result->setTexCoords1( BaseGeometryCopy->getTexCoords1() );
-   Result->setTexCoords2( BaseGeometryCopy->getTexCoords2() );
-   Result->setTexCoords3( BaseGeometryCopy->getTexCoords3() );
-   Result->setMaterial(BaseGeometryCopy->getMaterial());
-
-   //Get cloned copies of the Geometric properties that can be blended
-   Result->setBasePositions( osg::GeoPositionsPtr::dcast( deepClone(Geo->getPositions()) ) );
-   Result->setBaseNormals( osg::GeoNormalsPtr::dcast( deepClone(Geo->getNormals()) ) );
-   Result->setBaseColors( osg::GeoColorsPtr::dcast( deepClone(Geo->getColors()) ) );
-   Result->setBaseSecondaryColors( osg::GeoColorsPtr::dcast( deepClone(Geo->getSecondaryColors()) ) );
-   Result->setBaseTexCoords( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords()) ) );
-   Result->setBaseTexCoords1( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords1()) ) );
-   Result->setBaseTexCoords2( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords2()) ) );
-   Result->setBaseTexCoords3( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords3()) ) );
-
-   Result->setDlistCache(false);
-   
+   Result->setBaseGeometry(Geo);
    return Result;
 }
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void BlendGeometry::setBaseGeometry(const GeometryPtr Geo)
+{
+   GeometryPtr BaseGeometryCopy = osg::GeometryPtr::dcast( deepClone(Geo, "Material") );
+   
+   //Create a clone of the Geometry
+   beginEditCP(BlendGeometryPtr(this));
+       setPositions( BaseGeometryCopy->getPositions() );
+       setNormals( BaseGeometryCopy->getNormals() );
+       setTypes( BaseGeometryCopy->getTypes() );
+       setLengths( BaseGeometryCopy->getLengths() );
+       setColors( BaseGeometryCopy->getColors() );
+       setSecondaryColors( BaseGeometryCopy->getSecondaryColors() );
+       setIndices( BaseGeometryCopy->getIndices() );
+       getIndexMapping() = BaseGeometryCopy->getIndexMapping();
+       setTexCoords( BaseGeometryCopy->getTexCoords());
+       setTexCoords1( BaseGeometryCopy->getTexCoords1() );
+       setTexCoords2( BaseGeometryCopy->getTexCoords2() );
+       setTexCoords3( BaseGeometryCopy->getTexCoords3() );
+       setTexCoords4( BaseGeometryCopy->getTexCoords4() );
+       setTexCoords5( BaseGeometryCopy->getTexCoords5() );
+       setTexCoords6( BaseGeometryCopy->getTexCoords6() );
+       setTexCoords7( BaseGeometryCopy->getTexCoords7() );
+       setMaterial(BaseGeometryCopy->getMaterial());
+
+       //Get cloned copies of the Geometric properties that can be blended
+       setBasePositions( osg::GeoPositionsPtr::dcast( deepClone(Geo->getPositions()) ) );
+       setBaseNormals( osg::GeoNormalsPtr::dcast( deepClone(Geo->getNormals()) ) );
+       setBaseColors( osg::GeoColorsPtr::dcast( deepClone(Geo->getColors()) ) );
+       setBaseSecondaryColors( osg::GeoColorsPtr::dcast( deepClone(Geo->getSecondaryColors()) ) );
+       setBaseTexCoords( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords()) ) );
+       setBaseTexCoords1( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords1()) ) );
+       setBaseTexCoords2( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords2()) ) );
+       setBaseTexCoords3( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords3()) ) );
+       setBaseTexCoords4( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords4()) ) );
+       setBaseTexCoords5( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords5()) ) );
+       setBaseTexCoords6( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords6()) ) );
+       setBaseTexCoords7( osg::GeoTexCoordsPtr::dcast( deepClone(Geo->getTexCoords7()) ) );
+
+       //Clear out all of the Difference Sets
+       getGeoPositionDifferenceSets().clear();
+       getGeoNormalDifferenceSets().clear();
+       getGeoColorDifferenceSets().clear();
+       getGeoSecondaryColorDifferenceSets().clear();
+       getGeoTexCoordDifferenceSets().clear();
+       getGeoTexCoord1DifferenceSets().clear();
+       getGeoTexCoord2DifferenceSets().clear();
+       getGeoTexCoord3DifferenceSets().clear();
+       getGeoTexCoord4DifferenceSets().clear();
+       getGeoTexCoord5DifferenceSets().clear();
+       getGeoTexCoord6DifferenceSets().clear();
+       getGeoTexCoord7DifferenceSets().clear();
+
+       getBlendAmounts().clear();
+
+       setDlistCache(false);
+    endEditCP(BlendGeometryPtr(this));
+}
+
+void BlendGeometry::addBlendGeometry(const GeometryPtr Geo, Real32 b)
+{
+    if(Geo != NullFC)
+    {
+        //Create the difference sets and add them
+        beginEditCP(BlendGeometryPtr(this), GeoPositionDifferenceSetsFieldMask |
+                                            GeoNormalDifferenceSetsFieldMask |
+                                            GeoColorDifferenceSetsFieldMask |
+                                            GeoSecondaryColorDifferenceSetsFieldMask |
+                                            GeoTexCoordDifferenceSetsFieldMask |
+                                            GeoTexCoord1DifferenceSetsFieldMask |
+                                            GeoTexCoord2DifferenceSetsFieldMask |
+                                            GeoTexCoord3DifferenceSetsFieldMask |
+                                            GeoTexCoord4DifferenceSetsFieldMask |
+                                            GeoTexCoord5DifferenceSetsFieldMask |
+                                            GeoTexCoord6DifferenceSetsFieldMask |
+                                            GeoTexCoord7DifferenceSetsFieldMask |
+                                            BlendAmountsFieldMask);
+            //Positions Difference Set
+            GeoPositionDifferenceSetPtr PositionsDiffSet = GeoPositionDifferenceSet::create( getBasePositions(), Geo->getPositions() );
+            if(PositionsDiffSet != NullFC)
+            {
+                getGeoPositionDifferenceSets().push_back(PositionsDiffSet);
+            }
+
+            //Normals Difference Set
+            GeoNormalDifferenceSetPtr NormalsDiffSet = GeoNormalDifferenceSet::create( getBaseNormals(), Geo->getNormals() );
+            if(NormalsDiffSet != NullFC)
+            {
+                getGeoNormalDifferenceSets().push_back(NormalsDiffSet);
+            }
+
+            //Colors Difference Set
+            GeoColorDifferenceSetPtr ColorsDiffSet = GeoColorDifferenceSet::create( getBaseColors(), Geo->getColors() );
+            if(ColorsDiffSet != NullFC)
+            {
+                getGeoColorDifferenceSets().push_back(ColorsDiffSet);
+            }
+
+            //SecondaryColors Difference Set
+            GeoColorDifferenceSetPtr SecColorsDiffSet = GeoColorDifferenceSet::create( getBaseSecondaryColors(), Geo->getSecondaryColors() );
+            if(SecColorsDiffSet != NullFC)
+            {
+                getGeoSecondaryColorDifferenceSets().push_back(SecColorsDiffSet);
+            }
+
+            //TexCoords Difference Set
+            GeoTexCoordDifferenceSetPtr TexCoordsDiffSet = GeoTexCoordDifferenceSet::create( getBaseTexCoords(), Geo->getTexCoords() );
+            if(TexCoordsDiffSet != NullFC)
+            {
+                getGeoTexCoordDifferenceSets().push_back(TexCoordsDiffSet);
+            }
+
+            //TexCoord1 Difference Set
+            GeoTexCoordDifferenceSetPtr TexCoord1sDiffSet = GeoTexCoordDifferenceSet::create( getBaseTexCoords1(), Geo->getTexCoords1() );
+            if(TexCoord1sDiffSet != NullFC)
+            {
+                getGeoTexCoord1DifferenceSets().push_back(TexCoord1sDiffSet);
+            }
+
+            //TexCoord2 Difference Set
+            GeoTexCoordDifferenceSetPtr TexCoord2sDiffSet = GeoTexCoordDifferenceSet::create( getBaseTexCoords2(), Geo->getTexCoords2() );
+            if(TexCoord2sDiffSet != NullFC)
+            {
+                getGeoTexCoord2DifferenceSets().push_back(TexCoord2sDiffSet);
+            }
+
+            //TexCoord3 Difference Set
+            GeoTexCoordDifferenceSetPtr TexCoord3DiffSet = GeoTexCoordDifferenceSet::create( getBaseTexCoords3(), Geo->getTexCoords3() );
+            if(TexCoord3DiffSet != NullFC)
+            {
+                getGeoTexCoord3DifferenceSets().push_back(TexCoord3DiffSet);
+            }
+
+            //TexCoord4 Difference Set
+            GeoTexCoordDifferenceSetPtr TexCoord4DiffSet = GeoTexCoordDifferenceSet::create( getBaseTexCoords4(), Geo->getTexCoords4() );
+            if(TexCoord4DiffSet != NullFC)
+            {
+                getGeoTexCoord4DifferenceSets().push_back(TexCoord4DiffSet);
+            }
+
+            //TexCoord5 Difference Set
+            GeoTexCoordDifferenceSetPtr TexCoord5DiffSet = GeoTexCoordDifferenceSet::create( getBaseTexCoords5(), Geo->getTexCoords5() );
+            if(TexCoord5DiffSet != NullFC)
+            {
+                getGeoTexCoord5DifferenceSets().push_back(TexCoord5DiffSet);
+            }
+
+            //TexCoord6 Difference Set
+            GeoTexCoordDifferenceSetPtr TexCoord6DiffSet = GeoTexCoordDifferenceSet::create( getBaseTexCoords6(), Geo->getTexCoords6() );
+            if(TexCoord6DiffSet != NullFC)
+            {
+                getGeoTexCoord6DifferenceSets().push_back(TexCoord6DiffSet);
+            }
+
+            //TexCoord7 Difference Set
+            GeoTexCoordDifferenceSetPtr TexCoord7DiffSet = GeoTexCoordDifferenceSet::create( getBaseTexCoords7(), Geo->getTexCoords7() );
+            if(TexCoord7DiffSet != NullFC)
+            {
+                getGeoTexCoord7DifferenceSets().push_back(TexCoord7DiffSet);
+            }
+
+            getBlendAmounts().push_back(b);
+
+        endEditCP(BlendGeometryPtr(this), GeoPositionDifferenceSetsFieldMask |
+                                            GeoNormalDifferenceSetsFieldMask |
+                                            GeoColorDifferenceSetsFieldMask |
+                                            GeoSecondaryColorDifferenceSetsFieldMask |
+                                            GeoTexCoordDifferenceSetsFieldMask |
+                                            GeoTexCoord1DifferenceSetsFieldMask |
+                                            GeoTexCoord2DifferenceSetsFieldMask |
+                                            GeoTexCoord3DifferenceSetsFieldMask |
+                                            GeoTexCoord4DifferenceSetsFieldMask |
+                                            GeoTexCoord5DifferenceSetsFieldMask |
+                                            GeoTexCoord6DifferenceSetsFieldMask |
+                                            GeoTexCoord7DifferenceSetsFieldMask |
+                                            BlendAmountsFieldMask);
+    }
+}
+
+void BlendGeometry::removeBlendGeometry(UInt32 GeoIndex)
+{
+    if(GeoIndex < getNumBlendGeometries())
+    {
+        beginEditCP(BlendGeometryPtr(this), GeoPositionDifferenceSetsFieldMask |
+                                            GeoNormalDifferenceSetsFieldMask |
+                                            GeoColorDifferenceSetsFieldMask |
+                                            GeoSecondaryColorDifferenceSetsFieldMask |
+                                            GeoTexCoordDifferenceSetsFieldMask |
+                                            GeoTexCoord1DifferenceSetsFieldMask |
+                                            GeoTexCoord2DifferenceSetsFieldMask |
+                                            GeoTexCoord3DifferenceSetsFieldMask |
+                                            GeoTexCoord4DifferenceSetsFieldMask |
+                                            GeoTexCoord5DifferenceSetsFieldMask |
+                                            GeoTexCoord6DifferenceSetsFieldMask |
+                                            GeoTexCoord7DifferenceSetsFieldMask |
+                                            BlendAmountsFieldMask);
+
+        if(GeoIndex < getGeoPositionDifferenceSets().size())
+        {
+            getGeoPositionDifferenceSets().erase((getGeoPositionDifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoNormalDifferenceSets().size())
+        {
+            getGeoNormalDifferenceSets().erase((getGeoNormalDifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoColorDifferenceSets().size())
+        {
+            getGeoColorDifferenceSets().erase((getGeoColorDifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoSecondaryColorDifferenceSets().size())
+        {
+            getGeoSecondaryColorDifferenceSets().erase((getGeoSecondaryColorDifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoTexCoordDifferenceSets().size())
+        {
+            getGeoTexCoordDifferenceSets().erase((getGeoTexCoordDifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoTexCoord1DifferenceSets().size())
+        {
+            getGeoTexCoord1DifferenceSets().erase((getGeoTexCoord1DifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoTexCoord2DifferenceSets().size())
+        {
+            getGeoTexCoord2DifferenceSets().erase((getGeoTexCoord2DifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoTexCoord3DifferenceSets().size())
+        {
+            getGeoTexCoord3DifferenceSets().erase((getGeoTexCoord3DifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoTexCoord4DifferenceSets().size())
+        {
+            getGeoTexCoord4DifferenceSets().erase((getGeoTexCoord4DifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoTexCoord5DifferenceSets().size())
+        {
+            getGeoTexCoord5DifferenceSets().erase((getGeoTexCoord5DifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoTexCoord6DifferenceSets().size())
+        {
+            getGeoTexCoord6DifferenceSets().erase((getGeoTexCoord6DifferenceSets().begin() + GeoIndex));
+        }
+        if(GeoIndex < getGeoTexCoord7DifferenceSets().size())
+        {
+            getGeoTexCoord7DifferenceSets().erase((getGeoTexCoord7DifferenceSets().begin() + GeoIndex));
+        }
+        getBlendAmounts().erase((getBlendAmounts().begin() + GeoIndex));
+
+        endEditCP(BlendGeometryPtr(this), GeoPositionDifferenceSetsFieldMask |
+                                            GeoNormalDifferenceSetsFieldMask |
+                                            GeoColorDifferenceSetsFieldMask |
+                                            GeoSecondaryColorDifferenceSetsFieldMask |
+                                            GeoTexCoordDifferenceSetsFieldMask |
+                                            GeoTexCoord1DifferenceSetsFieldMask |
+                                            GeoTexCoord2DifferenceSetsFieldMask |
+                                            GeoTexCoord3DifferenceSetsFieldMask |
+                                            GeoTexCoord4DifferenceSetsFieldMask |
+                                            GeoTexCoord5DifferenceSetsFieldMask |
+                                            GeoTexCoord6DifferenceSetsFieldMask |
+                                            GeoTexCoord7DifferenceSetsFieldMask |
+                                            BlendAmountsFieldMask);
+
+    }
+}
+
+UInt32 BlendGeometry::getNumBlendGeometries(void) const
+{
+    return getBlendAmounts().size();
+}
+
+void BlendGeometry::setBlendAmount(UInt32 GeoIndex, Real32 b)
+{
+    if(GeoIndex < getNumBlendGeometries())
+    {
+        beginEditCP(BlendGeometryPtr(this), BlendAmountsFieldMask);
+            getBlendAmounts()[GeoIndex] = b;
+        endEditCP(BlendGeometryPtr(this), BlendAmountsFieldMask);
+    }
+}
 
 void BlendGeometry::recalculatePositions(void)
 {
@@ -151,10 +401,6 @@ void BlendGeometry::recalculatePositions(void)
          {
             //Blend each DiffSet that has an alternet Position
             Index = getGeoPositionDifferenceSets()[j]->getIndices()->getValue(CurDiffSetIndicies[j]);
-            //while(Index < i && )
-            //{
-            //    Index = getGeoPositionDifferenceSets()[j]->getIndices()->getValue(CurDiffSetIndicies[j]);
-            //} 
             if( Index == i )
             {
                Result = Result + ( BlendAmount * (getGeoPositionDifferenceSets()[j]->getPositions()->getValue(CurDiffSetIndicies[j]) - getBasePositions()->getValue(i)) );
@@ -219,26 +465,17 @@ void BlendGeometry::recalculateNormals(void)
 
 void BlendGeometry::recalculateColors(void)
 {
+    //TODO: Implement
 }
 
 void BlendGeometry::recalculateSecondaryColors(void)
 {
+    //TODO: Implement
 }
 
-void BlendGeometry::recalculateTexCoords(void)
+void BlendGeometry::recalculateTexCoords(UInt32 CoordNum)
 {
-}
-
-void BlendGeometry::recalculateTexCoords1(void)
-{
-}
-
-void BlendGeometry::recalculateTexCoords2(void)
-{
-}
-
-void BlendGeometry::recalculateTexCoords3(void)
-{
+    //TODO: Implement
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -273,6 +510,10 @@ void BlendGeometry::changed(BitVector whichField, UInt32 origin)
    bool shouldRecalculateTexCoords1 = false;
    bool shouldRecalculateTexCoords2 = false;
    bool shouldRecalculateTexCoords3 = false;
+   bool shouldRecalculateTexCoords4 = false;
+   bool shouldRecalculateTexCoords5 = false;
+   bool shouldRecalculateTexCoords6 = false;
+   bool shouldRecalculateTexCoords7 = false;
 
    if(whichField & BlendAmountsFieldMask)
    {
@@ -285,6 +526,10 @@ void BlendGeometry::changed(BitVector whichField, UInt32 origin)
       shouldRecalculateTexCoords1 = true;
       shouldRecalculateTexCoords2 = true;
       shouldRecalculateTexCoords3 = true;
+        shouldRecalculateTexCoords4 = true;
+        shouldRecalculateTexCoords5 = true;
+        shouldRecalculateTexCoords6 = true;
+        shouldRecalculateTexCoords7 = true;
    }
    else
    {
@@ -328,6 +573,26 @@ void BlendGeometry::changed(BitVector whichField, UInt32 origin)
       {
          shouldRecalculateTexCoords3 = true;
       }
+      if(whichField & BaseTexCoords4FieldMask ||
+         whichField & GeoTexCoord4DifferenceSetsFieldMask)
+      {
+         shouldRecalculateTexCoords4 = true;
+      }
+      if(whichField & BaseTexCoords5FieldMask ||
+         whichField & GeoTexCoord5DifferenceSetsFieldMask)
+      {
+         shouldRecalculateTexCoords5 = true;
+      }
+      if(whichField & BaseTexCoords6FieldMask ||
+         whichField & GeoTexCoord6DifferenceSetsFieldMask)
+      {
+         shouldRecalculateTexCoords6 = true;
+      }
+      if(whichField & BaseTexCoords7FieldMask ||
+         whichField & GeoTexCoord7DifferenceSetsFieldMask)
+      {
+         shouldRecalculateTexCoords7 = true;
+      }
    }
 
    //Updating Blended Geometry
@@ -356,19 +621,35 @@ void BlendGeometry::changed(BitVector whichField, UInt32 origin)
    }
    if(shouldRecalculateTexCoords)
    {
-      recalculateTexCoords();
+      recalculateTexCoords(0);
    }
    if(shouldRecalculateTexCoords1)
    {
-      recalculateTexCoords1();
+      recalculateTexCoords(1);
    }
    if(shouldRecalculateTexCoords2)
    {
-      recalculateTexCoords2();
+      recalculateTexCoords(2);
    }
    if(shouldRecalculateTexCoords3)
    {
-      recalculateTexCoords3();
+      recalculateTexCoords(3);
+   }
+   if(shouldRecalculateTexCoords4)
+   {
+      recalculateTexCoords(4);
+   }
+   if(shouldRecalculateTexCoords5)
+   {
+      recalculateTexCoords(5);
+   }
+   if(shouldRecalculateTexCoords6)
+   {
+      recalculateTexCoords(6);
+   }
+   if(shouldRecalculateTexCoords7)
+   {
+      recalculateTexCoords(7);
    }
 
    Inherited::changed(whichField, origin);

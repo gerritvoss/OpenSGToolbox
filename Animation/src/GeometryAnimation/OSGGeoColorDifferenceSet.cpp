@@ -74,7 +74,8 @@ void GeoColorDifferenceSet::initMethod (void)
 GeoColorDifferenceSetPtr GeoColorDifferenceSet::create(const GeoColorsPtr BaseColors, const GeoColorsPtr ToColors)
 {
    //Check that both Color Containers have the same number of Values
-   if(BaseColors->getSize() != ToColors->getSize())
+   if(BaseColors == NullFC || ToColors == NullFC ||
+      BaseColors->getSize() != ToColors->getSize())
    {
       return NullFC;
    }

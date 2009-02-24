@@ -75,6 +75,10 @@
 #include <OpenSG/OSGGeoTexCoordsFields.h> // BaseTexCoords1 type
 #include <OpenSG/OSGGeoTexCoordsFields.h> // BaseTexCoords2 type
 #include <OpenSG/OSGGeoTexCoordsFields.h> // BaseTexCoords3 type
+#include <OpenSG/OSGGeoTexCoordsFields.h> // BaseTexCoords4 type
+#include <OpenSG/OSGGeoTexCoordsFields.h> // BaseTexCoords5 type
+#include <OpenSG/OSGGeoTexCoordsFields.h> // BaseTexCoords6 type
+#include <OpenSG/OSGGeoTexCoordsFields.h> // BaseTexCoords7 type
 #include "GeometryAnimation/OSGGeoPositionDifferenceSet.h" // GeoPositionDifferenceSets type
 #include "GeometryAnimation/OSGGeoNormalDifferenceSet.h" // GeoNormalDifferenceSets type
 #include "GeometryAnimation/OSGGeoColorDifferenceSet.h" // GeoColorDifferenceSets type
@@ -83,6 +87,10 @@
 #include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord1DifferenceSets type
 #include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord2DifferenceSets type
 #include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord3DifferenceSets type
+#include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord4DifferenceSets type
+#include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord5DifferenceSets type
+#include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord6DifferenceSets type
+#include "GeometryAnimation/OSGGeoTexCoordDifferenceSet.h" // GeoTexCoord7DifferenceSets type
 #include <OpenSG/OSGReal32Fields.h> // BlendAmounts type
 
 #include "OSGBlendGeometryFields.h"
@@ -115,7 +123,11 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
         BaseTexCoords1FieldId                  = BaseTexCoordsFieldId                   + 1,
         BaseTexCoords2FieldId                  = BaseTexCoords1FieldId                  + 1,
         BaseTexCoords3FieldId                  = BaseTexCoords2FieldId                  + 1,
-        GeoPositionDifferenceSetsFieldId       = BaseTexCoords3FieldId                  + 1,
+        BaseTexCoords4FieldId                  = BaseTexCoords3FieldId                  + 1,
+        BaseTexCoords5FieldId                  = BaseTexCoords4FieldId                  + 1,
+        BaseTexCoords6FieldId                  = BaseTexCoords5FieldId                  + 1,
+        BaseTexCoords7FieldId                  = BaseTexCoords6FieldId                  + 1,
+        GeoPositionDifferenceSetsFieldId       = BaseTexCoords7FieldId                  + 1,
         GeoNormalDifferenceSetsFieldId         = GeoPositionDifferenceSetsFieldId       + 1,
         GeoColorDifferenceSetsFieldId          = GeoNormalDifferenceSetsFieldId         + 1,
         GeoSecondaryColorDifferenceSetsFieldId = GeoColorDifferenceSetsFieldId          + 1,
@@ -123,7 +135,11 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
         GeoTexCoord1DifferenceSetsFieldId      = GeoTexCoordDifferenceSetsFieldId       + 1,
         GeoTexCoord2DifferenceSetsFieldId      = GeoTexCoord1DifferenceSetsFieldId      + 1,
         GeoTexCoord3DifferenceSetsFieldId      = GeoTexCoord2DifferenceSetsFieldId      + 1,
-        BlendAmountsFieldId                    = GeoTexCoord3DifferenceSetsFieldId      + 1,
+        GeoTexCoord4DifferenceSetsFieldId      = GeoTexCoord3DifferenceSetsFieldId      + 1,
+        GeoTexCoord5DifferenceSetsFieldId      = GeoTexCoord4DifferenceSetsFieldId      + 1,
+        GeoTexCoord6DifferenceSetsFieldId      = GeoTexCoord5DifferenceSetsFieldId      + 1,
+        GeoTexCoord7DifferenceSetsFieldId      = GeoTexCoord6DifferenceSetsFieldId      + 1,
+        BlendAmountsFieldId                    = GeoTexCoord7DifferenceSetsFieldId      + 1,
         NextFieldId                            = BlendAmountsFieldId                    + 1
     };
 
@@ -135,6 +151,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     static const OSG::BitVector BaseTexCoords1FieldMask;
     static const OSG::BitVector BaseTexCoords2FieldMask;
     static const OSG::BitVector BaseTexCoords3FieldMask;
+    static const OSG::BitVector BaseTexCoords4FieldMask;
+    static const OSG::BitVector BaseTexCoords5FieldMask;
+    static const OSG::BitVector BaseTexCoords6FieldMask;
+    static const OSG::BitVector BaseTexCoords7FieldMask;
     static const OSG::BitVector GeoPositionDifferenceSetsFieldMask;
     static const OSG::BitVector GeoNormalDifferenceSetsFieldMask;
     static const OSG::BitVector GeoColorDifferenceSetsFieldMask;
@@ -143,6 +163,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     static const OSG::BitVector GeoTexCoord1DifferenceSetsFieldMask;
     static const OSG::BitVector GeoTexCoord2DifferenceSetsFieldMask;
     static const OSG::BitVector GeoTexCoord3DifferenceSetsFieldMask;
+    static const OSG::BitVector GeoTexCoord4DifferenceSetsFieldMask;
+    static const OSG::BitVector GeoTexCoord5DifferenceSetsFieldMask;
+    static const OSG::BitVector GeoTexCoord6DifferenceSetsFieldMask;
+    static const OSG::BitVector GeoTexCoord7DifferenceSetsFieldMask;
     static const OSG::BitVector BlendAmountsFieldMask;
 
 
@@ -164,87 +188,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFGeoPositionsPtr   *getSFBasePositions  (void);
-           SFGeoNormalsPtr     *getSFBaseNormals    (void);
-           SFGeoColorsPtr      *getSFBaseColors     (void);
-           SFGeoColorsPtr      *getSFBaseSecondaryColors(void);
-           SFGeoTexCoordsPtr   *getSFBaseTexCoords  (void);
-           SFGeoTexCoordsPtr   *getSFBaseTexCoords1 (void);
-           SFGeoTexCoordsPtr   *getSFBaseTexCoords2 (void);
-           SFGeoTexCoordsPtr   *getSFBaseTexCoords3 (void);
-           MFGeoPositionDifferenceSetPtr *getMFGeoPositionDifferenceSets(void);
-           MFGeoNormalDifferenceSetPtr *getMFGeoNormalDifferenceSets(void);
-           MFGeoColorDifferenceSetPtr *getMFGeoColorDifferenceSets(void);
-           MFGeoColorDifferenceSetPtr *getMFGeoSecondaryColorDifferenceSets(void);
-           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoordDifferenceSets(void);
-           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord1DifferenceSets(void);
-           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord2DifferenceSets(void);
-           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord3DifferenceSets(void);
-           MFReal32            *getMFBlendAmounts   (void);
-
-           GeoPositionsPtr     &getBasePositions  (void);
-     const GeoPositionsPtr     &getBasePositions  (void) const;
-           GeoNormalsPtr       &getBaseNormals    (void);
-     const GeoNormalsPtr       &getBaseNormals    (void) const;
-           GeoColorsPtr        &getBaseColors     (void);
-     const GeoColorsPtr        &getBaseColors     (void) const;
-           GeoColorsPtr        &getBaseSecondaryColors(void);
-     const GeoColorsPtr        &getBaseSecondaryColors(void) const;
-           GeoTexCoordsPtr     &getBaseTexCoords  (void);
-     const GeoTexCoordsPtr     &getBaseTexCoords  (void) const;
-           GeoTexCoordsPtr     &getBaseTexCoords1 (void);
-     const GeoTexCoordsPtr     &getBaseTexCoords1 (void) const;
-           GeoTexCoordsPtr     &getBaseTexCoords2 (void);
-     const GeoTexCoordsPtr     &getBaseTexCoords2 (void) const;
-           GeoTexCoordsPtr     &getBaseTexCoords3 (void);
-     const GeoTexCoordsPtr     &getBaseTexCoords3 (void) const;
-           GeoPositionDifferenceSetPtr &getGeoPositionDifferenceSets(const UInt32 index);
-           MFGeoPositionDifferenceSetPtr &getGeoPositionDifferenceSets(void);
-     const MFGeoPositionDifferenceSetPtr &getGeoPositionDifferenceSets(void) const;
-           GeoNormalDifferenceSetPtr &getGeoNormalDifferenceSets(const UInt32 index);
-           MFGeoNormalDifferenceSetPtr &getGeoNormalDifferenceSets(void);
-     const MFGeoNormalDifferenceSetPtr &getGeoNormalDifferenceSets(void) const;
-           GeoColorDifferenceSetPtr &getGeoColorDifferenceSets(const UInt32 index);
-           MFGeoColorDifferenceSetPtr &getGeoColorDifferenceSets(void);
-     const MFGeoColorDifferenceSetPtr &getGeoColorDifferenceSets(void) const;
-           GeoColorDifferenceSetPtr &getGeoSecondaryColorDifferenceSets(const UInt32 index);
-           MFGeoColorDifferenceSetPtr &getGeoSecondaryColorDifferenceSets(void);
-     const MFGeoColorDifferenceSetPtr &getGeoSecondaryColorDifferenceSets(void) const;
-           GeoTexCoordDifferenceSetPtr &getGeoTexCoordDifferenceSets(const UInt32 index);
-           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoordDifferenceSets(void);
-     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoordDifferenceSets(void) const;
-           GeoTexCoordDifferenceSetPtr &getGeoTexCoord1DifferenceSets(const UInt32 index);
-           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord1DifferenceSets(void);
-     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord1DifferenceSets(void) const;
-           GeoTexCoordDifferenceSetPtr &getGeoTexCoord2DifferenceSets(const UInt32 index);
-           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord2DifferenceSets(void);
-     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord2DifferenceSets(void) const;
-           GeoTexCoordDifferenceSetPtr &getGeoTexCoord3DifferenceSets(const UInt32 index);
-           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord3DifferenceSets(void);
-     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord3DifferenceSets(void) const;
-           Real32              &getBlendAmounts   (const UInt32 index);
-           MFReal32            &getBlendAmounts   (void);
-     const MFReal32            &getBlendAmounts   (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setBasePositions  ( const GeoPositionsPtr &value );
-     void setBaseNormals    ( const GeoNormalsPtr &value );
-     void setBaseColors     ( const GeoColorsPtr &value );
-     void setBaseSecondaryColors( const GeoColorsPtr &value );
-     void setBaseTexCoords  ( const GeoTexCoordsPtr &value );
-     void setBaseTexCoords1 ( const GeoTexCoordsPtr &value );
-     void setBaseTexCoords2 ( const GeoTexCoordsPtr &value );
-     void setBaseTexCoords3 ( const GeoTexCoordsPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -295,6 +238,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     SFGeoTexCoordsPtr   _sfBaseTexCoords1;
     SFGeoTexCoordsPtr   _sfBaseTexCoords2;
     SFGeoTexCoordsPtr   _sfBaseTexCoords3;
+    SFGeoTexCoordsPtr   _sfBaseTexCoords4;
+    SFGeoTexCoordsPtr   _sfBaseTexCoords5;
+    SFGeoTexCoordsPtr   _sfBaseTexCoords6;
+    SFGeoTexCoordsPtr   _sfBaseTexCoords7;
     MFGeoPositionDifferenceSetPtr   _mfGeoPositionDifferenceSets;
     MFGeoNormalDifferenceSetPtr   _mfGeoNormalDifferenceSets;
     MFGeoColorDifferenceSetPtr   _mfGeoColorDifferenceSets;
@@ -303,6 +250,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord1DifferenceSets;
     MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord2DifferenceSets;
     MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord3DifferenceSets;
+    MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord4DifferenceSets;
+    MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord5DifferenceSets;
+    MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord6DifferenceSets;
+    MFGeoTexCoordDifferenceSetPtr   _mfGeoTexCoord7DifferenceSets;
     MFReal32            _mfBlendAmounts;
 
     /*! \}                                                                 */
@@ -319,6 +270,119 @@ class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
     /*! \{                                                                 */
 
     virtual ~BlendGeometryBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFGeoPositionsPtr   *getSFBasePositions  (void);
+           SFGeoNormalsPtr     *getSFBaseNormals    (void);
+           SFGeoColorsPtr      *getSFBaseColors     (void);
+           SFGeoColorsPtr      *getSFBaseSecondaryColors(void);
+           SFGeoTexCoordsPtr   *getSFBaseTexCoords  (void);
+           SFGeoTexCoordsPtr   *getSFBaseTexCoords1 (void);
+           SFGeoTexCoordsPtr   *getSFBaseTexCoords2 (void);
+           SFGeoTexCoordsPtr   *getSFBaseTexCoords3 (void);
+           SFGeoTexCoordsPtr   *getSFBaseTexCoords4 (void);
+           SFGeoTexCoordsPtr   *getSFBaseTexCoords5 (void);
+           SFGeoTexCoordsPtr   *getSFBaseTexCoords6 (void);
+           SFGeoTexCoordsPtr   *getSFBaseTexCoords7 (void);
+           MFGeoPositionDifferenceSetPtr *getMFGeoPositionDifferenceSets(void);
+           MFGeoNormalDifferenceSetPtr *getMFGeoNormalDifferenceSets(void);
+           MFGeoColorDifferenceSetPtr *getMFGeoColorDifferenceSets(void);
+           MFGeoColorDifferenceSetPtr *getMFGeoSecondaryColorDifferenceSets(void);
+           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoordDifferenceSets(void);
+           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord1DifferenceSets(void);
+           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord2DifferenceSets(void);
+           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord3DifferenceSets(void);
+           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord4DifferenceSets(void);
+           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord5DifferenceSets(void);
+           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord6DifferenceSets(void);
+           MFGeoTexCoordDifferenceSetPtr *getMFGeoTexCoord7DifferenceSets(void);
+           MFReal32            *getMFBlendAmounts   (void);
+
+           GeoPositionsPtr     &getBasePositions  (void);
+     const GeoPositionsPtr     &getBasePositions  (void) const;
+           GeoNormalsPtr       &getBaseNormals    (void);
+     const GeoNormalsPtr       &getBaseNormals    (void) const;
+           GeoColorsPtr        &getBaseColors     (void);
+     const GeoColorsPtr        &getBaseColors     (void) const;
+           GeoColorsPtr        &getBaseSecondaryColors(void);
+     const GeoColorsPtr        &getBaseSecondaryColors(void) const;
+           GeoTexCoordsPtr     &getBaseTexCoords  (void);
+     const GeoTexCoordsPtr     &getBaseTexCoords  (void) const;
+           GeoTexCoordsPtr     &getBaseTexCoords1 (void);
+     const GeoTexCoordsPtr     &getBaseTexCoords1 (void) const;
+           GeoTexCoordsPtr     &getBaseTexCoords2 (void);
+     const GeoTexCoordsPtr     &getBaseTexCoords2 (void) const;
+           GeoTexCoordsPtr     &getBaseTexCoords3 (void);
+     const GeoTexCoordsPtr     &getBaseTexCoords3 (void) const;
+           GeoTexCoordsPtr     &getBaseTexCoords4 (void);
+     const GeoTexCoordsPtr     &getBaseTexCoords4 (void) const;
+           GeoTexCoordsPtr     &getBaseTexCoords5 (void);
+     const GeoTexCoordsPtr     &getBaseTexCoords5 (void) const;
+           GeoTexCoordsPtr     &getBaseTexCoords6 (void);
+     const GeoTexCoordsPtr     &getBaseTexCoords6 (void) const;
+           GeoTexCoordsPtr     &getBaseTexCoords7 (void);
+     const GeoTexCoordsPtr     &getBaseTexCoords7 (void) const;
+           GeoPositionDifferenceSetPtr &getGeoPositionDifferenceSets(UInt32 index);
+           MFGeoPositionDifferenceSetPtr &getGeoPositionDifferenceSets(void);
+     const MFGeoPositionDifferenceSetPtr &getGeoPositionDifferenceSets(void) const;
+           GeoNormalDifferenceSetPtr &getGeoNormalDifferenceSets(UInt32 index);
+           MFGeoNormalDifferenceSetPtr &getGeoNormalDifferenceSets(void);
+     const MFGeoNormalDifferenceSetPtr &getGeoNormalDifferenceSets(void) const;
+           GeoColorDifferenceSetPtr &getGeoColorDifferenceSets(UInt32 index);
+           MFGeoColorDifferenceSetPtr &getGeoColorDifferenceSets(void);
+     const MFGeoColorDifferenceSetPtr &getGeoColorDifferenceSets(void) const;
+           GeoColorDifferenceSetPtr &getGeoSecondaryColorDifferenceSets(UInt32 index);
+           MFGeoColorDifferenceSetPtr &getGeoSecondaryColorDifferenceSets(void);
+     const MFGeoColorDifferenceSetPtr &getGeoSecondaryColorDifferenceSets(void) const;
+           GeoTexCoordDifferenceSetPtr &getGeoTexCoordDifferenceSets(UInt32 index);
+           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoordDifferenceSets(void);
+     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoordDifferenceSets(void) const;
+           GeoTexCoordDifferenceSetPtr &getGeoTexCoord1DifferenceSets(UInt32 index);
+           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord1DifferenceSets(void);
+     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord1DifferenceSets(void) const;
+           GeoTexCoordDifferenceSetPtr &getGeoTexCoord2DifferenceSets(UInt32 index);
+           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord2DifferenceSets(void);
+     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord2DifferenceSets(void) const;
+           GeoTexCoordDifferenceSetPtr &getGeoTexCoord3DifferenceSets(UInt32 index);
+           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord3DifferenceSets(void);
+     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord3DifferenceSets(void) const;
+           GeoTexCoordDifferenceSetPtr &getGeoTexCoord4DifferenceSets(UInt32 index);
+           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord4DifferenceSets(void);
+     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord4DifferenceSets(void) const;
+           GeoTexCoordDifferenceSetPtr &getGeoTexCoord5DifferenceSets(UInt32 index);
+           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord5DifferenceSets(void);
+     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord5DifferenceSets(void) const;
+           GeoTexCoordDifferenceSetPtr &getGeoTexCoord6DifferenceSets(UInt32 index);
+           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord6DifferenceSets(void);
+     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord6DifferenceSets(void) const;
+           GeoTexCoordDifferenceSetPtr &getGeoTexCoord7DifferenceSets(UInt32 index);
+           MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord7DifferenceSets(void);
+     const MFGeoTexCoordDifferenceSetPtr &getGeoTexCoord7DifferenceSets(void) const;
+           Real32              &getBlendAmounts   (UInt32 index);
+           MFReal32            &getBlendAmounts   (void);
+     const MFReal32            &getBlendAmounts   (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setBasePositions  (const GeoPositionsPtr &value);
+     void setBaseNormals    (const GeoNormalsPtr &value);
+     void setBaseColors     (const GeoColorsPtr &value);
+     void setBaseSecondaryColors(const GeoColorsPtr &value);
+     void setBaseTexCoords  (const GeoTexCoordsPtr &value);
+     void setBaseTexCoords1 (const GeoTexCoordsPtr &value);
+     void setBaseTexCoords2 (const GeoTexCoordsPtr &value);
+     void setBaseTexCoords3 (const GeoTexCoordsPtr &value);
+     void setBaseTexCoords4 (const GeoTexCoordsPtr &value);
+     void setBaseTexCoords5 (const GeoTexCoordsPtr &value);
+     void setBaseTexCoords6 (const GeoTexCoordsPtr &value);
+     void setBaseTexCoords7 (const GeoTexCoordsPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
