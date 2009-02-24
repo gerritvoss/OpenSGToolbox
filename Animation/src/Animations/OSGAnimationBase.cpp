@@ -96,7 +96,7 @@ FieldDescription *AnimationBase::_desc[] =
     new FieldDescription(SFReal32::getClassType(), 
                      "Cycles", 
                      CyclesFieldId, CyclesFieldMask,
-                     false,
+                     true,
                      (FieldAccessMethod) &AnimationBase::getSFCycles)
 };
 
@@ -164,8 +164,8 @@ void AnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 AnimationBase::AnimationBase(void) :
-    _sfCycling                (), 
-    _sfCycles                 (), 
+    _sfCycling                (Int32(-1)), 
+    _sfCycles                 (Real32(0)), 
     Inherited() 
 {
 }

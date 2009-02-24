@@ -149,11 +149,6 @@ int main(int argc, char **argv)
     gwin->init();
 
 
-    //Make Torus Node
-    NodePtr TorusNode = Node::create();
-    ComponentTransformPtr TorusNodeTrans;
-    TorusNodeTrans = ComponentTransform::create();
-    setName(TorusNodeTrans, std::string("TorusNodeTransformationCore"));
     
     
 
@@ -170,6 +165,12 @@ int main(int argc, char **argv)
     beginEditCP(TorusGeometryNode, Node::CoreFieldMask);
         TorusGeometryNode->setCore(TorusGeometry);
     endEditCP  (TorusGeometryNode, Node::CoreFieldMask);
+
+    //Make Torus Node
+    NodePtr TorusNode = Node::create();
+    TransformPtr TorusNodeTrans;
+    TorusNodeTrans = Transform::create();
+    setName(TorusNodeTrans, std::string("TorusNodeTransformationCore"));
 
     beginEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
         TorusNode->setCore(TorusNodeTrans);
@@ -315,13 +316,14 @@ int setupGLUT(int *argc, char *argv[])
 
 void setupAnimation(void)
 {
-    //Color Animation
+    //Color Keyframe Sequence
     KeyframeColorsSequencePtr ColorKeyframes = KeyframeColorsSequence3f::create();
     ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),0.0f);
     ColorKeyframes->addKeyframe(Color4f(0.0f,1.0f,0.0f,1.0f),2.0f);
     ColorKeyframes->addKeyframe(Color4f(0.0f,0.0f,1.0f,1.0f),4.0f);
     ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),6.0f);
 
+	//Vector Keyframe Sequence
     KeyframeVectorsSequencePtr VectorKeyframes = KeyframeVectorsSequence3f::create();
     VectorKeyframes->addKeyframe(Vec3f(0.0f,0.0f,0.0f),0.0f);
     VectorKeyframes->addKeyframe(Vec3f(0.0f,1.0f,0.0f),1.0f);
@@ -329,30 +331,46 @@ void setupAnimation(void)
     VectorKeyframes->addKeyframe(Vec3f(1.0f,0.0f,0.0f),3.0f);
     VectorKeyframes->addKeyframe(Vec3f(0.0f,0.0f,0.0f),4.0f);
     
+	//Rotation Keyframe Sequence
     KeyframeRotationsSequencePtr RotationKeyframes = KeyframeRotationsSequenceQuat::create();
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0),0.0f);
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5),1.0f);
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0),2.0f);
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5),3.0f);
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0),4.0f);
+
+	//Transformation Keyframe Sequence
+    KeyframeTransformationsSequencePtr TransformationKeyframes = KeyframeTransformationsSequence44f::create();
+	Matrix TempMat;
+	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
+    TransformationKeyframes->addKeyframe(TempMat,0.0f);
+	TempMat.setTransform(Vec3f(0.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5));
+    TransformationKeyframes->addKeyframe(TempMat,1.0f);
+	TempMat.setTransform(Vec3f(1.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0));
+    TransformationKeyframes->addKeyframe(TempMat,2.0f);
+	TempMat.setTransform(Vec3f(1.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5));
+    TransformationKeyframes->addKeyframe(TempMat,3.0f);
+	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
+    TransformationKeyframes->addKeyframe(TempMat,4.0f);
     
     //Animator
     AnimatorPtr Animator = KeyframeAnimator::create();
     beginEditCP(KeyframeAnimatorPtr::dcast(Animator), KeyframeAnimator::KeyframeSequenceFieldMask);
-        KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(ColorKeyframes);
+        //KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(ColorKeyframes);
+        KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(TransformationKeyframes);
     endEditCP(KeyframeAnimatorPtr::dcast(Animator), KeyframeAnimator::KeyframeSequenceFieldMask);
          
     //Animated Object
-    //FieldContainerPtr AnimatedObject = getFieldContainer("ComponentTransform",std::string("TorusNodeTransformationCore"));
-    FieldContainerPtr AnimatedObject = TheTorusMaterial;
+    FieldContainerPtr AnimatedObject = getFieldContainer("Transform",std::string("TorusNodeTransformationCore"));
+    //FieldContainerPtr AnimatedObject = TheTorusMaterial;
     
     //Animation
     TheAnimation = FieldAnimation::create();
     beginEditCP(TheAnimation);
         FieldAnimationPtr::dcast(TheAnimation)->setAnimator(Animator);
         FieldAnimationPtr::dcast(TheAnimation)->setContainer(AnimatedObject);
-        FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("diffuse") );
-        //FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("rotation") );
+        //FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("diffuse") );
+        FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("matrix") );
         FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
         FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
     endEditCP(TheAnimation);
@@ -365,68 +383,4 @@ void setupAnimation(void)
     beginEditCP(TheAnimationAdvancer);
     ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
     beginEditCP(TheAnimationAdvancer);
-   
-   /*//Real32
-   KeyframeSequencePtr KeyframeSequence = KeyframeSequenceReal32::create();
-   SFReal32 IntValue;
-   
-   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(3.0);
-   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(5.0);
-   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(10.0);
-   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(7.0);
-   KeyframeSequenceReal32Ptr::dcast(KeyframeSequence)->getValues().push_back(3.0);*/
-   
-   
-   //Vector
-   /*KeyframeSequencePtr KeyframeSequence = KeyframeSequenceVec3f::create();
-   
-   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(-1.5,-1.5,0.0));
-   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(-1.5,1.5,0.0));
-   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(1.5,1.5,0.0));
-   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(1.5,-1.5,0.0));
-   KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(Vec3f(-1.5,-1.5,0.0));*/
-         
-   //Point
-   /*KeyframeSequencePtr KeyframeSequence = KeyframeSequencePnt3f::create();
-   SFPnt3f IntValue;
-   
-   beginEditCP(KeyframeSequence);
-      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(3.0,0.0,0.0));
-      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(5.0,0.0,0.0));
-      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(7.0,0.0,0.0));
-      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(10.0,0.0,0.0));
-      KeyframeSequencePnt3fPtr::dcast(KeyframeSequence)->getValues().push_back(Pnt3f(3.0,0.0,0.0));
-   endEditCP(KeyframeSequence);*/
-   
-   /*//Matrix
-   MFMatrix KeyValues;
-   Matrix IntValue;
-   
-   KeyValues.push_back(Matrix());
-   KeyValues.push_back(Matrix());
-   KeyValues.push_back(Matrix());
-   KeyValues.push_back(Matrix());
-   KeyValues.push_back(Matrix());*/
-         
-   //Color
-   /*KeyframeSequencePtr KeyframeSequence = KeyframeSequenceColor3f::create();
-   SFColor3f IntValue;
-   
-   beginEditCP(KeyframeSequence);
-      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,0.0,0.0));
-      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,1.0,0.0));
-      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,1.0,1.0));
-      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,0.0,1.0));
-      KeyframeSequenceColor3fPtr::dcast(KeyframeSequence)->getValues().push_back(Color3f(1.0,0.0,0.0));
-   endEditCP(KeyframeSequence);
-         
-   //Quaternion
-   KeyframeSequencePtr KeyframeSequence = KeyframeSequenceQuaternion::create();
-   
-   KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),0.0));
-   KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),0.5*Pi));
-   KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),Pi));
-   KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),1.5*Pi));
- //  KeyframeSequenceQuaternionPtr::dcast(KeyframeSequence)->getValues().push_back(Quaternion(Vec3f(0.0,1.0,0.0),2.0*Pi));
-   */
 }

@@ -18,14 +18,16 @@ Animation is the base class of all Animation
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="-1"
 	>
 	</Field>
 	<Field
 		name="Cycles"
 		type="Real32"
 		cardinality="single"
-		visibility="external"
+		visibility="internal"
 		access="public"
+        defaultValue="0"
 	>
 	</Field>
 </FieldContainer>
