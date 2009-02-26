@@ -238,6 +238,9 @@ SceneManager *mgr;
 
 //Camera Beacon
 TransformPtr CameraBeaconTransform;
+TransformPtr ViewpointTransform;
+TransformPtr TorusTransform;
+TransformPtr SphereTransform;
 TransformPtr BoxTransform;
 RubberBandCameraPtr RubberCamera;
 
@@ -299,99 +302,99 @@ public:
 		{
 		   Matrix TranslateTransform;
 		   TranslateTransform.setTranslate(-TranslateAmount*e.getElapsedTime(),0.0f,0.0f);
-		   Matrix NewTransform(BoxTransform->getMatrix());
+		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
 
-		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-			   BoxTransform->setMatrix(NewTransform);
-		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+			   ViewpointTransform->setMatrix(NewTransform);
+		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 		}
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_RIGHT) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
 		   TranslateTransform.setTranslate(TranslateAmount*e.getElapsedTime(),0.0f,0.0f);
-		   Matrix NewTransform(BoxTransform->getMatrix());
+		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
 
-		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-			   BoxTransform->setMatrix(NewTransform);
-		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+			   ViewpointTransform->setMatrix(NewTransform);
+		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_UP) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
 		   TranslateTransform.setTranslate(0.0f,0.0f,-TranslateAmount*e.getElapsedTime());
-		   Matrix NewTransform(BoxTransform->getMatrix());
+		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
 
-		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-			   BoxTransform->setMatrix(NewTransform);
-		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+			   ViewpointTransform->setMatrix(NewTransform);
+		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_DOWN) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
 		   TranslateTransform.setTranslate(0.0f,0.0f,TranslateAmount*e.getElapsedTime());
-		   Matrix NewTransform(BoxTransform->getMatrix());
+		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
 
-		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-			   BoxTransform->setMatrix(NewTransform);
-		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+			   ViewpointTransform->setMatrix(NewTransform);
+		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_A) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
 		   //TranslateTransform.setTranslate(-TranslateAmount,0.0f,0.0f);
 		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()));
-		   Matrix NewTransform(BoxTransform->getMatrix());
+		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
 
-		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-			   BoxTransform->setMatrix(NewTransform);
-		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+			   ViewpointTransform->setMatrix(NewTransform);
+		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_D) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
 		   //TranslateTransform.setTranslate(TranslateAmount,0.0f,0.0f);
 		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()));
-		   Matrix NewTransform(BoxTransform->getMatrix());
+		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
 
-		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-			   BoxTransform->setMatrix(NewTransform);
-		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+			   ViewpointTransform->setMatrix(NewTransform);
+		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
         if(TheEventProducer->getKeyState(KeyEvent::KEY_W) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
 		   TranslateTransform.setTranslate(0.0f,TranslateAmount*e.getElapsedTime(),0.0f);
-		   Matrix NewTransform(BoxTransform->getMatrix());
+		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
 
-		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-			   BoxTransform->setMatrix(NewTransform);
-		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+			   ViewpointTransform->setMatrix(NewTransform);
+		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
          if(TheEventProducer->getKeyState(KeyEvent::KEY_S) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
 		   TranslateTransform.setTranslate(0.0f,-TranslateAmount*e.getElapsedTime(),0.0f);
-		   Matrix NewTransform(BoxTransform->getMatrix());
+		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
 
-		   beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-			   BoxTransform->setMatrix(NewTransform);
-		   endEditCP(BoxTransform, Transform::MatrixFieldMask);
+		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+			   ViewpointTransform->setMatrix(NewTransform);
+		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
 	}
 };
@@ -443,13 +446,58 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(700,850),
-                                        "OpenSG 02MiniMap");
+                                        "OpenSG 02LayeredImageMiniMap");
 										
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodePtr TorusGeometryNode = makeTorus(.25, 1, 16, 16);
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodePtr BoxGeometryNode = makeBox(0.5,0.5,0.5,50,2,2);
+	Matrix TorusTransMatrix;
+	TorusTransMatrix.setTransform(Vec3f(0.0,0.0,0.0));
+	TorusTransform = Transform::create();
+    beginEditCP(TorusTransform, Transform::MatrixFieldMask);
+		TorusTransform->setMatrix(TorusTransMatrix);
+    endEditCP(TorusTransform, Transform::MatrixFieldMask);
+
+	NodePtr TorusNode = Node::create();
+    beginEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        TorusNode->setCore(TorusTransform);
+        TorusNode->addChild(TorusGeometryNode);
+    endEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+	
+    // Make Sphere Node
+    NodePtr SphereGeometryNode = makeSphere(2,1.0f);
+
+	Matrix SphereTransMatrix;
+	SphereTransMatrix.setTransform(Vec3f(3.0,0.0,0.0));
+	SphereTransform = Transform::create();
+    beginEditCP(SphereTransform, Transform::MatrixFieldMask);
+		SphereTransform->setMatrix(SphereTransMatrix);
+    endEditCP(SphereTransform, Transform::MatrixFieldMask);
+
+	NodePtr SphereNode = Node::create();
+    beginEditCP(SphereNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        SphereNode->setCore(SphereTransform);
+        SphereNode->addChild(SphereGeometryNode);
+    endEditCP(SphereNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+	
+    // Make Cylinder Node
+    NodePtr CylinderGeometryNode = makeBox(0.5,0.5,0.5,2,2,2);//makeCylinder(1.0,0.25,2,true,true,true);
+
+    // Make Box Node
+    NodePtr BoxGeometryNode = makeBox(1.5,1.5,1.5,2,2,2);
+
+	Matrix BoxTransMatrix;
+	BoxTransMatrix.setTransform(Vec3f(-3.0,0.0,0.0));
+	BoxTransform = Transform::create();
+    beginEditCP(BoxTransform, Transform::MatrixFieldMask);
+		BoxTransform->setMatrix(BoxTransMatrix);
+    endEditCP(BoxTransform, Transform::MatrixFieldMask);
+
+	NodePtr BoxNode = Node::create();
+    beginEditCP(BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        BoxNode->setCore(BoxTransform);
+        BoxNode->addChild(BoxGeometryNode);
+    endEditCP(BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	//Set the Camera Beacon Node
 	Matrix Offset;
@@ -465,21 +513,23 @@ int main(int argc, char **argv)
         CameraBeaconNode->setCore(CameraBeaconTransform);
     endEditCP(CameraBeaconNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	//Set the Box Transform Node
-	BoxTransform = Transform::create();
-	NodePtr BoxNode = Node::create();
-    beginEditCP(BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        BoxNode->setCore(BoxTransform);
-        BoxNode->addChild(BoxGeometryNode);
-        BoxNode->addChild(CameraBeaconNode);
-    endEditCP(BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+	//Set the Viewpoint Transform Node
+	ViewpointTransform = Transform::create();
+	NodePtr ViewpointGeomtryNode = Node::create();
+    beginEditCP(ViewpointGeomtryNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        ViewpointGeomtryNode->setCore(ViewpointTransform);
+        ViewpointGeomtryNode->addChild(CylinderGeometryNode);
+        ViewpointGeomtryNode->addChild(CameraBeaconNode);
+    endEditCP(ViewpointGeomtryNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
-        scene->addChild(TorusGeometryNode);
+        scene->addChild(TorusNode);
+        scene->addChild(SphereNode);
         scene->addChild(BoxNode);
+        scene->addChild(ViewpointGeomtryNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	//Set the Root node to the Scene Manager
@@ -538,21 +588,91 @@ int main(int argc, char **argv)
 		ShipComponentGenerator->setComponentPrototype(ViewPointComponentPrototype);
 	endEditCP(ShipComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
 
+	//Create the Torus Node Indicator Prototype
+	ImageComponentPtr TorusNodeComponentPrototype = ImageComponent::create();
+	beginEditCP(TorusNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+		TorusNodeComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
+		TorusNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
+		TorusNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
+	endEditCP(TorusNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+	ImagePtr TorusImage = ImageFileHandler::the().read(Path("./TorusNode.jpg").string().c_str());
+	TorusNodeComponentPrototype->setImage(TorusImage);
+	TorusNodeComponentPrototype->setRolloverImage(TorusImage);
+	TorusNodeComponentPrototype->setDisabledImage(TorusImage);
+	TorusNodeComponentPrototype->setFocusedImage(TorusImage);
+
+	//Create the Torus Component Generator
+	DefaultMiniMapIndicatorComponentGeneratorPtr TorusComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
+	beginEditCP(TorusComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+		TorusComponentGenerator->setComponentPrototype(TorusNodeComponentPrototype);
+	endEditCP(TorusComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+	
+	//Create the Sphere Node Indicator Prototype
+	ImageComponentPtr SphereNodeComponentPrototype = ImageComponent::create();
+	beginEditCP(SphereNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+		SphereNodeComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
+		SphereNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
+		SphereNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
+	endEditCP(SphereNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+	ImagePtr SphereImage = ImageFileHandler::the().read(Path("./SphereNode.jpg").string().c_str());
+	SphereNodeComponentPrototype->setImage(SphereImage);
+	SphereNodeComponentPrototype->setRolloverImage(SphereImage);
+	SphereNodeComponentPrototype->setDisabledImage(SphereImage);
+	SphereNodeComponentPrototype->setFocusedImage(SphereImage);
+
+	//Create the Sphere Component Generator
+	DefaultMiniMapIndicatorComponentGeneratorPtr SphereComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
+	beginEditCP(SphereComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+		SphereComponentGenerator->setComponentPrototype(SphereNodeComponentPrototype);
+	endEditCP(SphereComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+	
+	//Create the Box Node Indicator Prototype
+	ImageComponentPtr BoxNodeComponentPrototype = ImageComponent::create();
+	beginEditCP(BoxNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+		BoxNodeComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
+		BoxNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
+		BoxNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
+	endEditCP(BoxNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+	ImagePtr BoxImage = ImageFileHandler::the().read(Path("./BoxNode.jpg").string().c_str());
+	BoxNodeComponentPrototype->setImage(BoxImage);
+	BoxNodeComponentPrototype->setRolloverImage(BoxImage);
+	BoxNodeComponentPrototype->setDisabledImage(BoxImage);
+	BoxNodeComponentPrototype->setFocusedImage(BoxImage);
+
+	//Create the Box Component Generator
+	DefaultMiniMapIndicatorComponentGeneratorPtr BoxComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
+	beginEditCP(BoxComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+		BoxComponentGenerator->setComponentPrototype(BoxNodeComponentPrototype);
+	endEditCP(BoxComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+
 
 	//Create the Viewpoint Indicator
 	MiniMapIndicatorPtr ViewpointIndicator = MiniMapIndicator::create();
 
 	beginEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 		ViewpointIndicator->setGenerator(ShipComponentGenerator);
-		ViewpointIndicator->setLocation(BoxNode);
+		ViewpointIndicator->setLocation(ViewpointGeomtryNode);
 	endEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 
 	//Other Indicators
 	MiniMapIndicatorPtr TorusIndicator = MiniMapIndicator::create();
 	beginEditCP(TorusIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-		TorusIndicator->setGenerator(ShipComponentGenerator);
+		TorusIndicator->setGenerator(TorusComponentGenerator);
 		TorusIndicator->setLocation(TorusGeometryNode);
 	endEditCP(TorusIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+	
+	MiniMapIndicatorPtr SphereIndicator = MiniMapIndicator::create();
+	beginEditCP(SphereIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+		SphereIndicator->setGenerator(SphereComponentGenerator);
+		SphereIndicator->setLocation(SphereGeometryNode);
+	endEditCP(SphereIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+	
+	MiniMapIndicatorPtr BoxIndicator = MiniMapIndicator::create();
+	beginEditCP(BoxIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+		BoxIndicator->setGenerator(BoxComponentGenerator);
+		BoxIndicator->setLocation(BoxGeometryNode);
+	endEditCP(BoxIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+
 	
 
 	// Setup the size and other preferences to the minimap
@@ -570,6 +690,8 @@ int main(int argc, char **argv)
 		MiniMap->setLockMapOrientation(false);
         MiniMap->setUnlockedMapSize(Vec2f(1000,1000));
 		MiniMap->getIndicators().push_back(TorusIndicator);
+		MiniMap->getIndicators().push_back(SphereIndicator);
+		MiniMap->getIndicators().push_back(BoxIndicator);
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 
 	MiniMap->insertLayer(Path("./level1.jpg").string().c_str(), .3);

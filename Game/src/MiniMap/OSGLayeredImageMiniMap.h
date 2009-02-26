@@ -132,7 +132,7 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 	RotatedComponentPtr _RotatedIndicator;
 	ComponentPtr        _ViewpointIndicatorComponent;
 	RotatedComponentPtr _RotatedMap;
-	ComponentPtr        _MapComponent;
+	ContainerPtr        _MapComponent;
 	ImageComponentPtr	_MapImageComponent;
 
 	struct IndicatorComponent
