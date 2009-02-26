@@ -77,6 +77,7 @@ void PolygonBorder::initMethod (void)
 \***************************************************************************/
 void PolygonBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
+	deactivateInternalDrawConstraints(g,x,y,Width,Height);
 	if(getWidth() > 0.0)
 	{
 		Int32 NumVertices(getVertices().size());
@@ -136,7 +137,6 @@ void PolygonBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , c
 			}
 		glEnd();
 	}
-    activateInternalDrawConstraints(g,x,y,Width,Height);
 }
 
 void PolygonBorder::scaleUp(Pnt2f& TheVector, const Vec2f& Scale) const

@@ -78,6 +78,8 @@ void RoundedCornerLineBorder::initMethod (void)
 
 void RoundedCornerLineBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
+	deactivateInternalDrawConstraints(g,x,y,Width,Height);
+
 	//draw corners
 	g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 3.14159265, 4.71238898, 10, getColor(), getColor(), Opacity);
 	g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 1.57079633, 3.14159265, 10, getColor(), getColor(), Opacity);
@@ -89,8 +91,6 @@ void RoundedCornerLineBorder::draw(const GraphicsPtr g, const Real32 x, const Re
 	g->drawRect(Pnt2f(x+getCornerRadius(), y), Pnt2f(x+Width-getCornerRadius(), y+getWidth()), getColor(), Opacity);
 	g->drawRect(Pnt2f(x+Width-getWidth(), y+getCornerRadius()), Pnt2f(x+Width, y+Height-getCornerRadius()), getColor(), Opacity);
 	g->drawRect(Pnt2f(x+getCornerRadius(), y+Height-getWidth()), Pnt2f(x+Width-getCornerRadius(), y+Height), getColor(), Opacity);
-
-    activateInternalDrawConstraints(g,x,y,Width,Height);
 }
 
 void RoundedCornerLineBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
@@ -102,9 +102,6 @@ void RoundedCornerLineBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,
 void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     g->incrDrawBounderiesNesting();
-
-	GLenum DepthTextEnabled = glIsEnabled(GL_DEPTH_TEST);
-	glDisable(GL_DEPTH_TEST);
 
     g->initAddDrawBounderies();
 
@@ -188,8 +185,6 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr 
 
     g->uninitRemoveDrawBounderies();
     g->activateDrawBounderiesTest();
-
-	if(DepthTextEnabled) {glEnable(GL_DEPTH_TEST);}
 }
 
 void RoundedCornerLineBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const

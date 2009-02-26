@@ -727,7 +727,9 @@ void InternalWindow::mouseWheelMoved(const MouseWheelEvent& e)
 
 void InternalWindow::drawInternal(const GraphicsPtr TheGraphics) const
 {
-    //If I have a Titlebar then Draw it
+    Inherited::drawInternal(TheGraphics);
+
+    //If I have an active TitleBar then draw it
     if(getDrawDecorations() && getDrawTitlebar() && getTitlebar() != NullFC)
     {
         getTitlebar()->draw(TheGraphics);
@@ -738,8 +740,11 @@ void InternalWindow::drawInternal(const GraphicsPtr TheGraphics) const
     {
         getMenuBar()->draw(TheGraphics);
     }
+}
 
-    Inherited::drawInternal(TheGraphics);
+void InternalWindow::draw(const GraphicsPtr TheGraphics) const
+{
+	Inherited::draw(TheGraphics);
         
     //If I have an active tooltip then draw it
     if(getActiveToolTip() != NullFC)
@@ -752,7 +757,6 @@ void InternalWindow::drawInternal(const GraphicsPtr TheGraphics) const
     {
         getActivePopupMenus()[i]->draw(TheGraphics);
     }
-
 
 }
 

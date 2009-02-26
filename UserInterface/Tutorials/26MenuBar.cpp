@@ -296,26 +296,11 @@ int main(int argc, char **argv)
 
     ******************************************************/
     // Creates two Backgrounds
-    EmptyLayerPtr EmptyMenuBarBackground = osg::EmptyLayer::create();
-    ColorLayerPtr ColorMenuBarBackground = osg::ColorLayer::create();
 
     MenuBarPtr MainMenuBar = MenuBar::create();
     // Adds the two Menus to the MainMenuBar
     MainMenuBar->addMenu(FileMenu);
     MainMenuBar->addMenu(EditMenu);
-
-    // Adds Backgrounds to Menus and MenuBar
-    beginEditCP(FileMenu, MenuItem::BackgroundFieldMask);
-        FileMenu->setBackground(EmptyMenuBarBackground);
-    beginEditCP(FileMenu, MenuItem::BackgroundFieldMask);
-
-    beginEditCP(EditMenu, MenuItem::BackgroundFieldMask);
-        EditMenu->setBackground(EmptyMenuBarBackground);
-    beginEditCP(EditMenu, MenuItem::BackgroundFieldMask);
-
-    beginEditCP(MainMenuBar, MenuItem::BackgroundFieldMask);
-        MainMenuBar->setBackground(ColorMenuBarBackground);
-    beginEditCP(MainMenuBar, MenuItem::BackgroundFieldMask);
     
     // Create two Labels
     LabelPtr ExampleLabel1 = osg::Label::create();

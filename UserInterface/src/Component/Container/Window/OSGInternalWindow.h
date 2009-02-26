@@ -137,6 +137,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	virtual void open(void);
 
 	virtual void close(void);
+
+	virtual void draw(const GraphicsPtr TheGraphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

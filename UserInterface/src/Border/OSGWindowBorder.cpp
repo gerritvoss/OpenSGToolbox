@@ -79,7 +79,6 @@ void WindowBorder::initMethod (void)
 
 void WindowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
-	getOuterBorder()->draw(g, x, y, Width, Height, Opacity);
 
 	Real32 LeftIn, RightIn, BottomIn, UpperIn;
     getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
@@ -88,7 +87,8 @@ void WindowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , co
 		UpperIn += getTitlebar()->getSize().y();
 	}
 	getInnerBorder()->draw(g, x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn, Opacity);
-	
+	getOuterBorder()->draw(g, x, y, Width, Height, Opacity);
+
 }
 
 void WindowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
@@ -107,7 +107,7 @@ void WindowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bot
 	}
 }
 
-void WindowBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void WindowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
 	Real32 LeftIn, RightIn, BottomIn, UpperIn;
 	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
@@ -115,8 +115,8 @@ void WindowBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const 
 	{
 		UpperIn += getTitlebar()->getSize().y();
 	}
-    getInnerBorder()->deactivateInternalDrawConstraints(g,x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn);
-    getOuterBorder()->deactivateInternalDrawConstraints(g, x, y, Width, Height);
+    getOuterBorder()->activateInternalDrawConstraints(g, x, y, Width, Height);
+    getInnerBorder()->activateInternalDrawConstraints(g,x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn);
 }
 
 bool WindowBorder::isContained(const Pnt2f& p, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const

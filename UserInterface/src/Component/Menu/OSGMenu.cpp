@@ -109,11 +109,11 @@ void Menu::setPopupVisible(bool Visible)
         beginEditCP(getInternalPopupMenu(), PopupMenu::PositionFieldMask);
             if(getTopLevelMenu())
             {
-                getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2f(0,0),MenuPtr(this)) + Vec2f(0,getSize().y()));        
+                getInternalPopupMenu()->setPosition(ComponentToDrawingSurface(Pnt2f(0,0),MenuPtr(this)) + Vec2f(0,getSize().y()));        
             }
             else
             {
-                getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2f(0,0),MenuPtr(this)) + Vec2f(getSize().x(),0));
+                getInternalPopupMenu()->setPosition(ComponentToDrawingSurface(Pnt2f(0,0),MenuPtr(this)) + Vec2f(getSize().x(),0));
             }
         endEditCP(getInternalPopupMenu(), PopupMenu::PositionFieldMask);
         beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);

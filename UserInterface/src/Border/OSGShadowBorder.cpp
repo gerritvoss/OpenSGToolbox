@@ -78,6 +78,31 @@ void ShadowBorder::initMethod (void)
 
 void ShadowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
+	//Draw the Inside Border
+    getInsideBorder()->draw(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset(), Opacity);
+
+
+}
+
+void ShadowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
+{
+    if(getInsideBorder() != NullFC)
+    {
+        getInsideBorder()->getInsets(Left, Right, Top, Bottom);
+    }
+    else
+    {
+        SWARNING << "Warning: ShadowBorder::getInsets: InsideBorder is NULL." << std::endl;
+        Left = Right = Top = Bottom = 0.0f;
+    }
+    Left +=getLeftOffset();
+    Right +=getRightOffset();
+    Top +=getTopOffset();
+    Bottom +=getBottomOffset();
+}
+
+void ShadowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+{
     //Determine TopLeft and BottomRight of the Shadow
     Pnt2f ShadowTopLeft,
           ShadowBottomRight;
@@ -108,25 +133,25 @@ void ShadowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , co
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowTopLeft.y()),
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     Pnt2f(ShadowTopLeft.x(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
-                    getEdgeColor(), getEdgeColor(), getInternalColor(), getEdgeColor(), Opacity);
+                    getEdgeColor(), getEdgeColor(), getInternalColor(), getEdgeColor(), 1.0f);
         //TopRight
         g->drawQuad(Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowTopLeft.y()),
                     Pnt2f(ShadowBottomRight.x(),ShadowTopLeft.y()),
                     Pnt2f(ShadowBottomRight.x(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
-                    getEdgeColor(), getEdgeColor(), getEdgeColor(), getInternalColor(), Opacity);
+                    getEdgeColor(), getEdgeColor(), getEdgeColor(), getInternalColor(), 1.0f);
         //BottomRight
         g->drawQuad(Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x(),ShadowBottomRight.y()),
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowBottomRight.y()),
-                    getInternalColor(), getEdgeColor(), getEdgeColor(), getEdgeColor(), Opacity);
+                    getInternalColor(), getEdgeColor(), getEdgeColor(), getEdgeColor(), 1.0f);
         //BottomLeft
         g->drawQuad(Pnt2f(ShadowTopLeft.x(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowBottomRight.y()),
                     Pnt2f(ShadowTopLeft.x(),ShadowBottomRight.y()),
-                    getEdgeColor(), getInternalColor(), getEdgeColor(), getEdgeColor(), Opacity);
+                    getEdgeColor(), getInternalColor(), getEdgeColor(), getEdgeColor(), 1.0f);
 
         //Rectangles
         //Top
@@ -134,27 +159,27 @@ void ShadowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , co
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowTopLeft.y()),
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
-                    getEdgeColor(), getEdgeColor(), getInternalColor(), getInternalColor(), Opacity);
+                    getEdgeColor(), getEdgeColor(), getInternalColor(), getInternalColor(), 1.0f);
         //Bottom
         g->drawQuad(Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowBottomRight.y()),
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowBottomRight.y()),
-                    getInternalColor(), getInternalColor(), getEdgeColor(), getEdgeColor(), Opacity);
+                    getInternalColor(), getInternalColor(), getEdgeColor(), getEdgeColor(), 1.0f);
         //Left
         g->drawQuad(Pnt2f(ShadowTopLeft.x(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowTopLeft.x(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
-                    getEdgeColor(), getInternalColor(), getInternalColor(), getEdgeColor(), Opacity);
+                    getEdgeColor(), getInternalColor(), getInternalColor(), getEdgeColor(), 1.0f);
         //Right
         g->drawQuad(Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
-                    getInternalColor(), getEdgeColor(), getEdgeColor(), getInternalColor(), Opacity);
+                    getInternalColor(), getEdgeColor(), getEdgeColor(), getInternalColor(), 1.0f);
         //Center
-	    g->drawRect(ShadowTopLeft+Vec2f(getInternalToEdgeColorLength(),getInternalToEdgeColorLength()), ShadowBottomRight-Vec2f(getInternalToEdgeColorLength(),getInternalToEdgeColorLength()), getInternalColor(), Opacity);
+	    g->drawRect(ShadowTopLeft+Vec2f(getInternalToEdgeColorLength(),getInternalToEdgeColorLength()), ShadowBottomRight-Vec2f(getInternalToEdgeColorLength(),getInternalToEdgeColorLength()), getInternalColor(), 1.0f);
     }
     else
     {
@@ -164,25 +189,25 @@ void ShadowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , co
         g->drawComplexDisc(ShadowTopLeft + Vec2f(getCornerRadius(),getCornerRadius()),
             InternalCornerRadius,getCornerRadius(),
             3.14159265, 4.71238898, 10,
-            getInternalColor(), getEdgeColor(), Opacity
+            getInternalColor(), getEdgeColor(), 1.0f
             );
         //TopRight
         g->drawComplexDisc(Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowTopLeft.y() + getCornerRadius()),
             InternalCornerRadius,getCornerRadius(),
             4.71238898,6.28318531, 10,
-            getInternalColor(), getEdgeColor(), Opacity
+            getInternalColor(), getEdgeColor(), 1.0f
             );
         //BottomRight
         g->drawComplexDisc(Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowBottomRight.y() - getCornerRadius()),
             InternalCornerRadius,getCornerRadius(),
             0.0, 1.57079633, 10,
-            getInternalColor(), getEdgeColor(), Opacity
+            getInternalColor(), getEdgeColor(), 1.0f
             );
         //BottomLeft
         g->drawComplexDisc(Pnt2f(ShadowTopLeft.x()+getCornerRadius(), ShadowBottomRight.y() - getCornerRadius()),
             InternalCornerRadius,getCornerRadius(),
             1.57079633, 3.14159265, 10,
-            getInternalColor(), getEdgeColor(), Opacity
+            getInternalColor(), getEdgeColor(), 1.0f
             );
         //Rectangles
         //Top
@@ -190,28 +215,28 @@ void ShadowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , co
                     Pnt2f(ShadowBottomRight.x()-getCornerRadius(),ShadowTopLeft.y()),
                     Pnt2f(ShadowBottomRight.x()-getCornerRadius(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     Pnt2f(ShadowTopLeft.x()+getCornerRadius(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
-                    getEdgeColor(), getEdgeColor(), getInternalColor(), getInternalColor(), Opacity);
+                    getEdgeColor(), getEdgeColor(), getInternalColor(), getInternalColor(), 1.0f);
         
         //Bottom
         g->drawQuad(Pnt2f(ShadowTopLeft.x()+getCornerRadius(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x()-getCornerRadius(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x()-getCornerRadius(),ShadowBottomRight.y()),
                     Pnt2f(ShadowTopLeft.x()+getCornerRadius(),ShadowBottomRight.y()),
-                    getInternalColor(), getInternalColor(), getEdgeColor(), getEdgeColor(), Opacity);
+                    getInternalColor(), getInternalColor(), getEdgeColor(), getEdgeColor(), 1.0f);
         //Left
         g->drawQuad(Pnt2f(ShadowTopLeft.x(),ShadowTopLeft.y()+getCornerRadius()),
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowTopLeft.y()+getCornerRadius()),
                     Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(),ShadowBottomRight.y()-getCornerRadius()),
                     Pnt2f(ShadowTopLeft.x(),ShadowBottomRight.y()-getCornerRadius()),
-                    getEdgeColor(), getInternalColor(), getInternalColor(), getEdgeColor(), Opacity);
+                    getEdgeColor(), getInternalColor(), getInternalColor(), getEdgeColor(), 1.0f);
         //Right
         g->drawQuad(Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowTopLeft.y()+getCornerRadius()),
                     Pnt2f(ShadowBottomRight.x(),ShadowTopLeft.y()+getCornerRadius()),
                     Pnt2f(ShadowBottomRight.x(),ShadowBottomRight.y()-getCornerRadius()),
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowBottomRight.y()-getCornerRadius()),
-                    getInternalColor(), getEdgeColor(), getEdgeColor(), getInternalColor(), Opacity);
+                    getInternalColor(), getEdgeColor(), getEdgeColor(), getInternalColor(), 1.0f);
         //Center
-	    g->drawRect(ShadowTopLeft+Vec2f(getCornerRadius(),getCornerRadius()), ShadowBottomRight-Vec2f(getCornerRadius(),getCornerRadius()), getInternalColor(), Opacity);
+	    g->drawRect(ShadowTopLeft+Vec2f(getCornerRadius(),getCornerRadius()), ShadowBottomRight-Vec2f(getCornerRadius(),getCornerRadius()), getInternalColor(), 1.0f);
 
         if(getInternalToEdgeColorLength() < getCornerRadius())
         {
@@ -219,70 +244,47 @@ void ShadowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , co
             g->drawDisc(ShadowTopLeft + Vec2f(getCornerRadius(),getCornerRadius()),
                 InternalCornerRadius,InternalCornerRadius,
                 3.14159265, 4.71238898, 10,
-                getInternalColor(), getInternalColor(), Opacity
+                getInternalColor(), getInternalColor(), 1.0f
                 );
             //TopRight
             g->drawDisc(Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowTopLeft.y() + getCornerRadius()),
                 InternalCornerRadius,InternalCornerRadius,
                 4.71238898,6.28318531, 10,
-                getInternalColor(), getInternalColor(), Opacity
+                getInternalColor(), getInternalColor(), 1.0f
                 );
             //BottomRight
             g->drawDisc(Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowBottomRight.y() - getCornerRadius()),
                 InternalCornerRadius,InternalCornerRadius,
                 0.0, 1.57079633, 10,
-                getInternalColor(), getInternalColor(), Opacity
+                getInternalColor(), getInternalColor(), 1.0f
                 );
             //BottomLeft
             g->drawDisc(Pnt2f(ShadowTopLeft.x()+getCornerRadius(), ShadowBottomRight.y() - getCornerRadius()),
                 InternalCornerRadius,InternalCornerRadius,
                 1.57079633, 3.14159265, 10,
-                getInternalColor(), getInternalColor(), Opacity
+                getInternalColor(), getInternalColor(), 1.0f
                 );
             //Top
             g->drawRect(Pnt2f(ShadowTopLeft.x()+getCornerRadius(), ShadowTopLeft.y()+getInternalToEdgeColorLength()), 
                         Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowTopLeft.y()+getCornerRadius()),
-                        getInternalColor(), Opacity);
+                        getInternalColor(), 1.0f);
             //Bottom
             g->drawRect(Pnt2f(ShadowTopLeft.x()+getCornerRadius(), ShadowBottomRight.y()-getCornerRadius()), 
                         Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowBottomRight.y()-getInternalToEdgeColorLength()),
-                        getInternalColor(), Opacity);
+                        getInternalColor(), 1.0f);
             //Left
             g->drawRect(Pnt2f(ShadowTopLeft.x()+getInternalToEdgeColorLength(), ShadowTopLeft.y()+getCornerRadius()), 
                         Pnt2f(ShadowTopLeft.x()+getCornerRadius(), ShadowBottomRight.y()-getCornerRadius()),
-                        getInternalColor(), Opacity);
+                        getInternalColor(), 1.0f);
             //Right
             g->drawRect(Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowTopLeft.y()+getCornerRadius()), 
                         Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(), ShadowBottomRight.y()-getCornerRadius()),
-                        getInternalColor(), Opacity);
+                        getInternalColor(), 1.0f);
         }
     
     }
-    //Draw the Inside Border
-    getInsideBorder()->draw(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset(), Opacity);
 
-}
-
-void ShadowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
-{
-    if(getInsideBorder() != NullFC)
-    {
-        getInsideBorder()->getInsets(Left, Right, Top, Bottom);
-    }
-    else
-    {
-        SWARNING << "Warning: ShadowBorder::getInsets: InsideBorder is NULL." << std::endl;
-        Left = Right = Top = Bottom = 0.0f;
-    }
-    Left +=getLeftOffset();
-    Right +=getRightOffset();
-    Top +=getTopOffset();
-    Bottom +=getBottomOffset();
-}
-
-void ShadowBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
-{
-    getInsideBorder()->deactivateInternalDrawConstraints(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset());
+    getInsideBorder()->activateInternalDrawConstraints(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset());
 }
 
 bool ShadowBorder::isContained(const Pnt2f& p, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const

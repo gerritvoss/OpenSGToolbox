@@ -127,7 +127,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
 
     /*! \}                                                                 */
     
-	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual LayerPtr getDrawnBackground(void) const;
     virtual LayerPtr getDrawnForeground(void) const;

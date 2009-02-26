@@ -353,37 +353,35 @@ void Component::drawForeground(const GraphicsPtr TheGraphics, const LayerPtr For
 
 bool Component::setupClipping(const GraphicsPtr Graphics) const
 {
-    //Get Clipping initial settings
-    //bool WasClippingEnabled = glIsEnabled(GL_SCISSOR_TEST);
-    GLboolean WasClippPlane0Enabled = glIsEnabled(GL_CLIP_PLANE0);
-    GLboolean WasClippPlane1Enabled = glIsEnabled(GL_CLIP_PLANE1);
-    GLboolean WasClippPlane2Enabled = glIsEnabled(GL_CLIP_PLANE2);
-    GLboolean WasClippPlane3Enabled = glIsEnabled(GL_CLIP_PLANE3);
+
     if(getClipping())
-    {
+    {    
+		//Get Clipping initial settings
+		Pnt2f ClipTopLeft,ClipBottomRight;
+		getClipBounds(ClipTopLeft,ClipBottomRight);
+
+		Vec4d LeftPlaneEquation(1.0,0.0,0.0,-ClipTopLeft.x()+ Graphics->getClipPlaneOffset()),
+		  RightPlaneEquation(-1.0,0.0,0.0,ClipBottomRight.x() + Graphics->getClipPlaneOffset()),
+		  TopPlaneEquation(0.0,1.0,0.0,-ClipTopLeft.y() + Graphics->getClipPlaneOffset()),
+		  BottomPlaneEquation(0.0,-1.0,0.0,ClipBottomRight.y() + Graphics->getClipPlaneOffset());
+
         //glClipPlane
         //Clip with the Intersection of this components RenderingSurface bounds
         //and its parents RenderingSurface bounds
-        Pnt2f ClipTopLeft,ClipBottomRight;
-		getClipBounds(ClipTopLeft,ClipBottomRight);
         if(ClipBottomRight.x()-ClipTopLeft.x() <= 0 || ClipBottomRight.y()-ClipTopLeft.y()<= 0)
         {
-            return false;
+			return false;
         }
 
-        if(!WasClippPlane0Enabled) { glEnable(GL_CLIP_PLANE0); }
-        if(!WasClippPlane1Enabled) { glEnable(GL_CLIP_PLANE1); }
-        if(!WasClippPlane2Enabled) { glEnable(GL_CLIP_PLANE2); }
-        if(!WasClippPlane3Enabled) { glEnable(GL_CLIP_PLANE3); }
+        if(!glIsEnabled(GL_CLIP_PLANE0)) { glEnable(GL_CLIP_PLANE0); }
+        if(!glIsEnabled(GL_CLIP_PLANE1)) { glEnable(GL_CLIP_PLANE1); }
+        if(!glIsEnabled(GL_CLIP_PLANE2)) { glEnable(GL_CLIP_PLANE2); }
+        if(!glIsEnabled(GL_CLIP_PLANE3)) { glEnable(GL_CLIP_PLANE3); }
         
         //Clip Plane Equations
         //Clip Planes get transformed by the ModelViewMatrix when set
         //So we can rely on the fact that our current coordinate space
         //is relative to the this components position
-		Vec4d LeftPlaneEquation(1.0,0.0,0.0,-ClipTopLeft.x()+ Graphics->getClipPlaneOffset()),
-              RightPlaneEquation(-1.0,0.0,0.0,ClipBottomRight.x() + Graphics->getClipPlaneOffset()),
-              TopPlaneEquation(0.0,1.0,0.0,-ClipTopLeft.y() + Graphics->getClipPlaneOffset()),
-              BottomPlaneEquation(0.0,-1.0,0.0,ClipBottomRight.y() + Graphics->getClipPlaneOffset());
         
         glClipPlane(GL_CLIP_PLANE0,LeftPlaneEquation.getValues());
         glClipPlane(GL_CLIP_PLANE1,RightPlaneEquation.getValues());
@@ -398,24 +396,22 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 	if (!getVisible())
 		return;
 
-	float TransMat[16];
-	glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
     //Translate to my position
     glTranslatef(getPosition().x(), getPosition().y(), 0);
-	glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
 
 	if(!setupClipping(TheGraphics))
 	{
 		//Translate to my position
-	    glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
 		glTranslatef(-getPosition().x(), -getPosition().y(), 0);
-	    glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
 		return;
 	}
 
-	//Draw My Border
+	//Activate My Border Drawing constraints
     BorderPtr DrawnBorder = getDrawnBorder();
-	drawBorder(TheGraphics, DrawnBorder);
+    if(DrawnBorder != NullFC)
+    {
+        DrawnBorder->activateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
+    }
 
     
 	//Draw My Background
@@ -423,31 +419,18 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 
     //Draw Internal
     drawInternal(TheGraphics);
-
-	glGetFloatv(GL_MODELVIEW_MATRIX, TransMat);
     
 	//Draw My Foreground
 	drawForeground(TheGraphics, getDrawnForeground());
     
-    //Deactivate Border Drawing Constrants
-    if(DrawnBorder != NullFC)
-    {
-        DrawnBorder->deactivateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
-    }
+    //Set Clipping to initial settings
+	setupClipping(TheGraphics);
 
+	//Draw Border
+	drawBorder(TheGraphics, DrawnBorder);
 
     //Undo the Translation to Component Space
     glTranslatef(-getPosition().x(), -getPosition().y(), 0);
-    
-    //Set Clipping to initial settings
-    //if(getClipping())
-    //{
-		//TODO:Fix
-        //if(!WasClippPlane0Enabled){glDisable(GL_CLIP_PLANE0);}
-        //if(!WasClippPlane1Enabled){glDisable(GL_CLIP_PLANE1);}
-        //if(!WasClippPlane2Enabled){glDisable(GL_CLIP_PLANE2);}
-        //if(!WasClippPlane3Enabled){glDisable(GL_CLIP_PLANE3);}
-    //}
 }
 
 
@@ -532,7 +515,7 @@ void Component::mousePressed(const MouseEvent& e)
 	    beginEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	       getPopupMenu()->setInvoker(ComponentPtr(this));
 	       getPopupMenu()->setVisible(true);
-	       getPopupMenu()->setPosition(DrawingSurfaceToComponent(e.getLocation(),getParentWindow()));
+	       getPopupMenu()->setPosition(e.getLocation());
 	    endEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	    
         beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
@@ -1000,12 +983,12 @@ void Component::ComponentUpdater::update(const UpdateEvent& e)
             if(_Component->getParentWindow() != NullFC &&
                _Component->getParentWindow()->getDrawingSurface() != NullFC)
             {
-                TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(
+                TheToolTip->setPosition(ComponentToDrawingSurface(_Component->getToolTipLocation(
                     _Component->getParentWindow()->getDrawingSurface()->getMousePosition()), _Component));
             }
             else
             {
-                TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(Pnt2f(0,0)),_Component));
+                TheToolTip->setPosition(ComponentToDrawingSurface(_Component->getToolTipLocation(Pnt2f(0,0)),_Component));
             }
             TheToolTip->setText(_Component->getToolTipText());
         endEditCP(TheToolTip, ToolTip::TippedComponentFieldMask | ToolTip::PositionFieldMask | ToolTip::TextFieldMask);

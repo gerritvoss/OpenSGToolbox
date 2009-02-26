@@ -169,16 +169,6 @@ LayerPtr AbstractWindow::getDrawnForeground(void) const
 	}
 }
 
-void AbstractWindow::drawInternal(const GraphicsPtr TheGraphics) const
-{
-    Inherited::drawInternal(TheGraphics);
-        
-    //If I have an active TitleBar then draw it
-	if(getDrawDecorations() && getDrawTitlebar())
-	{
-	}
-}
-
 
 void AbstractWindow::produceWindowOpened(void)
 {

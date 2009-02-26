@@ -293,7 +293,7 @@ void ComboBox::showPopup(void)
     beginEditCP(getComboListPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
        getComboListPopupMenu()->setInvoker(ComponentPtr(this));
        getComboListPopupMenu()->setVisible(true);
-       getComboListPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentPtr(this)));
+       getComboListPopupMenu()->setPosition(ComponentToDrawingSurface(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentPtr(this)));
 	   getComboListPopupMenu()->setSelection(getModel()->getSelectedItemIndex());
     endEditCP(getComboListPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
     

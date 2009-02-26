@@ -88,9 +88,9 @@ StencilChunkPtr Graphics2D::createStenciledAreaSetup(void)
     StencilChunkPtr _StenciledAreaSetup = StencilChunk::create();
     beginEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
         _StenciledAreaSetup->setStencilFunc(GL_ALWAYS);
-        _StenciledAreaSetup->setStencilOpFail(GL_REPLACE);
-        _StenciledAreaSetup->setStencilOpZFail(GL_REPLACE);
-        _StenciledAreaSetup->setStencilOpZPass(GL_REPLACE);
+        _StenciledAreaSetup->setStencilOpFail(GL_INCR);
+        _StenciledAreaSetup->setStencilOpZFail(GL_INCR);
+        _StenciledAreaSetup->setStencilOpZPass(GL_INCR);
         _StenciledAreaSetup->setStencilMask(UInt32(0xFFFFFFFF));
     endEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
     return _StenciledAreaSetup;
@@ -101,9 +101,9 @@ StencilChunkPtr Graphics2D::createStenciledAreaCleanup(void)
     StencilChunkPtr _StenciledAreaCleanup = StencilChunk::create();
     beginEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
         _StenciledAreaCleanup->setStencilFunc(GL_ALWAYS);
-        _StenciledAreaCleanup->setStencilOpFail(GL_REPLACE);
-        _StenciledAreaCleanup->setStencilOpZFail(GL_REPLACE);
-        _StenciledAreaCleanup->setStencilOpZPass(GL_REPLACE);
+        _StenciledAreaCleanup->setStencilOpFail(GL_DECR);
+        _StenciledAreaCleanup->setStencilOpZFail(GL_DECR);
+        _StenciledAreaCleanup->setStencilOpZPass(GL_DECR);
         _StenciledAreaCleanup->setStencilMask(UInt32(0xFFFFFFFF));
     endEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
     return _StenciledAreaCleanup;
@@ -113,7 +113,7 @@ StencilChunkPtr Graphics2D::createStenciledAreaTest(void)
 {
     StencilChunkPtr _StenciledAreaTest = StencilChunk::create();
     beginEditCP(_StenciledAreaTest, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
-        _StenciledAreaTest->setStencilFunc(GL_EQUAL);
+        _StenciledAreaTest->setStencilFunc(GL_LEQUAL);
         _StenciledAreaTest->setStencilOpFail(GL_KEEP);
         _StenciledAreaTest->setStencilOpZFail(GL_KEEP);
         _StenciledAreaTest->setStencilOpZPass(GL_KEEP);
@@ -163,6 +163,8 @@ void Graphics2D::preDraw()
 	{
 		glEnable(GL_POLYGON_SMOOTH);
 	}
+	glClearStencil(0);
+	glClear(GL_STENCIL_BUFFER_BIT);
 }
 
 void Graphics2D::postDraw()
