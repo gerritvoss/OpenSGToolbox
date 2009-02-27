@@ -115,7 +115,7 @@ public:
 
         std::ostringstream outStream;
         outStream << NodeName;
-        NewNode->setUserObject(SharedFieldPtr(new SFString(outStream.str())));
+        NewNode->setUserObject(boost::any(outStream.str()));
         NodeName = static_cast<char>(static_cast<unsigned int>(NodeName) + 1);
 
         ModelTreeNodePtr SelectedNode(TheTreeModel.getNodeForPath(TheTree->getSelectionPath()));
@@ -262,16 +262,16 @@ int main(int argc, char **argv)
     DefaultMutableTreeNodePtr INode = DefaultMutableTreeNode::create() ;
     DefaultMutableTreeNodePtr JNode = DefaultMutableTreeNode::create() ;
 
-    ANode->setUserObject(SharedFieldPtr(new SFString("A")));
-    BNode->setUserObject(SharedFieldPtr(new SFString("B")));
-    CNode->setUserObject(SharedFieldPtr(new SFString("C")));
-    DNode->setUserObject(SharedFieldPtr(new SFString("D")));
-    ENode->setUserObject(SharedFieldPtr(new SFString("E")));
-    FNode->setUserObject(SharedFieldPtr(new SFString("F")));
-    GNode->setUserObject(SharedFieldPtr(new SFString("G")));
-    HNode->setUserObject(SharedFieldPtr(new SFString("H")));
-    INode->setUserObject(SharedFieldPtr(new SFString("I")));
-    JNode->setUserObject(SharedFieldPtr(new SFString("J")));
+    ANode->setUserObject(boost::any(std::string("A")));
+    BNode->setUserObject(boost::any(std::string("B")));
+    CNode->setUserObject(boost::any(std::string("C")));
+    DNode->setUserObject(boost::any(std::string("D")));
+    ENode->setUserObject(boost::any(std::string("E")));
+    FNode->setUserObject(boost::any(std::string("F")));
+    GNode->setUserObject(boost::any(std::string("G")));
+    HNode->setUserObject(boost::any(std::string("H")));
+    INode->setUserObject(boost::any(std::string("I")));
+    JNode->setUserObject(boost::any(std::string("J")));
 
     //A
     ANode->insert(BNode);

@@ -45,25 +45,30 @@
  
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
 
+#include <OpenSG/OSGBaseTypes.h>
 #include <vector>
+
 
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING TreePath
 {
-private:
-protected:
-	//Primarily provided for subclasses that represent paths in a different manner.
-	TreePath(void);
-
-	//Constructs a new TreePath, which is the path identified by parent ending in lastElement.
-	TreePath(TreePath parent, SharedFieldPtr lastElement);
-
-	std::vector<SharedFieldPtr> _Path;
 
 public:
+    struct NodePairType
+    {
+        boost::any _NodeValue;
+        UInt32     _NodeIndex;
+
+        NodePairType(const boost::any& Value, UInt32 Index);
+        NodePairType(const NodePairType& Value);
+        NodePairType(void);
+    };
+
+    typedef std::vector<NodePairType> PathVectorType;
+
 	//Tests two TreePaths for equality by checking each element of the paths for equality.
 	bool operator==(const TreePath& Right) const;
 
@@ -71,8 +76,14 @@ public:
 
     bool operator<(const TreePath& RightPath) const;
 
+    bool operator>(const TreePath& RightPath) const;
+
+    bool operator<=(const TreePath& RightPath) const;
+
+    bool operator>=(const TreePath& RightPath) const;
+
 	//Returns the last component of this path.
-	SharedFieldPtr getLastPathComponent(void) const;
+	NodePairType getLastPathComponent(void) const;
 
 	//Returns a path containing all the elements of this object, except the last path component.
 	TreePath getParentPath(void) const;
@@ -81,10 +92,10 @@ public:
 	TreePath getHighestDepthAncestor(const TreePath& aTreePath) const;
 
 	//Returns an ordered array of Objects containing the components of this TreePath.
-	std::vector<SharedFieldPtr> getPath(void) const;
+	PathVectorType getPath(void) const;
 
 	//Returns the path component at the specified index.
-	SharedFieldPtr getPathComponent(const UInt32& Index) const;
+	NodePairType getPathComponent(const UInt32& Index) const;
 
 	//Returns the number of elements in the path.
 	UInt32 getPathCount(void) const;
@@ -96,17 +107,24 @@ public:
 	bool isDescendant(TreePath aTreePath) const;
 
 	//Returns a new path containing all the elements of this object plus child.
-	TreePath pathByAddingChild(SharedFieldPtr child) const;
+	TreePath pathByAddingChild(const boost::any& child, UInt32 childIndex) const;
+
+    TreePath(void);
 
 	//Constructs a TreePath containing only a single element.
-	TreePath(SharedFieldPtr singlePath);
+	TreePath(const boost::any& singlePath, UInt32 childIndex = 0);
 
 	//Constructs a path from an array of Objects, uniquely identifying the path from the root of the tree to a specific node, as returned by the tree's data model.
-	TreePath(const std::vector<SharedFieldPtr>& path);
+	TreePath(const PathVectorType& path);
 
 
 	//Constructs a new TreePath with the identified path components of length length.
-	TreePath(const std::vector<SharedFieldPtr>& path, const UInt32& length);
+	TreePath(const PathVectorType& path, const UInt32& length);
+
+private:
+protected:
+
+	PathVectorType _Path;
 };
 
 typedef TreePath* TreePathPtr;

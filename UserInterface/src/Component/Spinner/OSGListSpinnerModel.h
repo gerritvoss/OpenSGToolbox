@@ -55,37 +55,37 @@ OSG_BEGIN_NAMESPACE
 class OSG_USERINTERFACELIB_DLLMAPPING ListSpinnerModel : public AbstractSpinnerModel
 {
 public:
-    typedef std::list<SharedFieldPtr> FieldList;
-    typedef FieldList::iterator FieldListIter;
+    typedef std::list<boost::any> AnyList;
+    typedef AnyList::iterator AnyListIter;
     
     //Return the object in the sequence that comes after the object returned by getValue().
-    virtual SharedFieldPtr getNextValue(void);
+    virtual boost::any getNextValue(void);
     
     //Return the object in the sequence that comes before the object returned by getValue().
-    virtual SharedFieldPtr getPreviousValue(void);
+    virtual boost::any getPreviousValue(void);
     
     //The current element of the sequence.
-    virtual SharedFieldPtr getValue(void);
+    virtual boost::any getValue(void);
     
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
-    virtual void setValue(SharedFieldPtr value);
+    virtual void setValue(const boost::any& value);
 
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
     virtual void setValue(const std::string& value);
     
     //Changes the list that defines this sequence and resets the index of the models value to zero.
-    void setList(const FieldList& list);
+    void setList(const AnyList& list);
     
     //Returns the List that defines the sequence for this model.
-    FieldList getList(void) const;
+    AnyList getList(void) const;
 	
 	virtual std::string getModelName(void) const;
 
 	static std::string getClassModelName(void);
     
 protected:
-    FieldList _List;
-    FieldListIter _CurrentListValue;
+    AnyList _List;
+    AnyListIter _CurrentListValue;
 };
 
 typedef boost::intrusive_ptr<ListSpinnerModel> ListSpinnerModelPtr;

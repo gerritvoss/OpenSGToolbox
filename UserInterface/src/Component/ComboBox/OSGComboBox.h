@@ -53,7 +53,7 @@
 #include "Event/OSGActionListener.h"
 #include "Event/OSGButtonSelectedListener.h"
 #include "OSGComboBoxSelectionListener.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -123,16 +123,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	void removePopupMenuListener(PopupMenuListenerPtr Listener);
 
 	//Adds an item to the item list.
-	void addItem(SharedFieldPtr anObject);
+	void addItem(const boost::any& anObject);
 
 	//Initializes the editor with the specified item.
-	void configureEditor(ComboBoxEditorPtr anEditor, SharedFieldPtr anItem);
+	void configureEditor(ComboBoxEditorPtr anEditor, const boost::any& anItem);
 
 	//Returns the action command that is included in the event sent to action listeners.
 	std::string getActionCommand(void) const;
 
 	//Returns the list item at the specified index.
-	SharedFieldPtr getItemAt(const UInt32& index) const;
+	boost::any getItemAt(const UInt32& index) const;
 
 	//Returns the number of items in the list.
 	UInt32 getItemCount(void) const;
@@ -144,7 +144,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	UInt32 getSelectedIndex(void) const;
 
 	//Returns the current selected item.
-	SharedFieldPtr getSelectedItem(void) const;
+	boost::any getSelectedItem(void) const;
 
 	//Returns an array containing the selected item.
 	//Object[] getSelectedObjects(void) const;
@@ -153,7 +153,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	void hidePopup(void);
 
 	//Inserts an item into the item list at a given index.
-	void insertItemAt(SharedFieldPtr anObject, const UInt32& index);
+	void insertItemAt(const boost::any& anObject, const UInt32& index);
 
 	//Determines the visibility of the popup.
 	bool isPopupVisible(void) const;
@@ -165,7 +165,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	void removeAllItems(void);
 
 	//Removes an item from the item list.
-	void removeItem(SharedFieldPtr anObject);
+	void removeItem(const boost::any& anObject);
 
 	//Removes the item at anIndex This method works only if the JComboBox uses a mutable data model.
 	void removeItemAt(const UInt32& anIndex);
@@ -186,7 +186,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	void setSelectedIndex(const UInt32& anIndex);
 
 	//Sets the selected item in the combo box display area to the object in the argument.
-	void setSelectedItem(SharedFieldPtr anObject);
+	void setSelectedItem(const boost::any& anObject);
 
 	//Causes the combo box to display its popup window.
 	void showPopup(void);

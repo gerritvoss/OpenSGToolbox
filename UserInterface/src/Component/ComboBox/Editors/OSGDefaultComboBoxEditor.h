@@ -89,13 +89,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComb
 	virtual ComponentPtr getEditorComponent(void);
 
 	//Return the edited item
-	virtual SharedFieldPtr getItem(void);
+	virtual boost::any getItem(void);
 
 	//Ask the editor to start editing and to select everything
 	virtual void selectAll(void);
 
 	//Set the item that should be edited.
-	virtual void setItem(SharedFieldPtr anObject);
+	virtual void setItem(const boost::any& anObject);
 	
     /*=========================  PROTECTED  ===============================*/
   protected:

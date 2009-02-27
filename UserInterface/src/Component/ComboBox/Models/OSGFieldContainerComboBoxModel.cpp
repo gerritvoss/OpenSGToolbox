@@ -82,17 +82,17 @@ UInt32 FieldContainerComboBoxModel::getSize(void) const
 	return _FieldList.size();
 }
 
-SharedFieldPtr FieldContainerComboBoxModel::getElementAt(UInt32 index) const
+boost::any FieldContainerComboBoxModel::getElementAt(UInt32 index) const
 {
    return _FieldList[index];
 }
 
-SharedFieldPtr FieldContainerComboBoxModel::getSelectedItem(void) const
+boost::any FieldContainerComboBoxModel::getSelectedItem(void) const
 {
 	if(_SelectedIndex < 0 ||
 	   _SelectedIndex >= _FieldList.size())
 	{
-		return SharedFieldPtr();
+        return boost::any();
 	}
 	else
 	{
@@ -119,17 +119,25 @@ void FieldContainerComboBoxModel::setSelectedItem(const Int32& index)
 	}
 }
 
-void FieldContainerComboBoxModel::setSelectedItem(SharedFieldPtr anObject)
+void FieldContainerComboBoxModel::setSelectedItem(const boost::any& anObject)
 {
 	if(getSize() != 0)
 	{
 		Int32 PreviousIndex(_SelectedIndex);
 
 		UInt32 index(0);
-		while(index < _FieldList.size() && _FieldList[index] != anObject)
-		{
-			++index;
-		}
+        try
+        {
+            while(index < _FieldList.size() && 
+                boost::any_cast<FieldContainerType>(_FieldList[index]) != boost::any_cast<FieldContainerType>(anObject))
+		    {
+			    ++index;
+		    }
+        }
+        catch(boost::bad_any_cast &)
+        {
+            return;
+        }
 
 		if(index < _FieldList.size())
 		{
@@ -181,7 +189,7 @@ void FieldContainerComboBoxModel::changed(BitVector whichField, UInt32 origin)
             if(FoundType != NULL && (getIncludeAbstract() || !FoundType->isAbstract()))
             {
 
-                 _FieldList.push_back(SharedFieldPtr(new SFString(FoundType->getCName())));
+                _FieldList.push_back(boost::any(std::string(FoundType->getCName())));
             }
         }
         produceListDataContentsChanged(FieldContainerComboBoxModelPtr(this), 0, _FieldList.size());

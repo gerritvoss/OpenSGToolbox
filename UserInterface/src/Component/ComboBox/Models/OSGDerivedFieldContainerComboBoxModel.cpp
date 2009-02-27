@@ -81,17 +81,17 @@ UInt32 DerivedFieldContainerComboBoxModel::getSize(void) const
 	return _FieldList.size();
 }
 
-SharedFieldPtr DerivedFieldContainerComboBoxModel::getElementAt(UInt32 index) const
+boost::any DerivedFieldContainerComboBoxModel::getElementAt(UInt32 index) const
 {
    return _FieldList[index];
 }
 
-SharedFieldPtr DerivedFieldContainerComboBoxModel::getSelectedItem(void) const
+boost::any DerivedFieldContainerComboBoxModel::getSelectedItem(void) const
 {
 	if(_SelectedIndex < 0 ||
 	   _SelectedIndex >= _FieldList.size())
 	{
-		return SharedFieldPtr();
+        return boost::any();
 	}
 	else
 	{
@@ -118,17 +118,25 @@ void DerivedFieldContainerComboBoxModel::setSelectedItem(const Int32& index)
 	}
 }
 
-void DerivedFieldContainerComboBoxModel::setSelectedItem(SharedFieldPtr anObject)
+void DerivedFieldContainerComboBoxModel::setSelectedItem(const boost::any& anObject)
 {
 	if(getSize() != 0)
 	{
 		Int32 PreviousIndex(_SelectedIndex);
 
 		UInt32 index(0);
-		while(index < _FieldList.size() && _FieldList[index] != anObject)
-		{
-			++index;
-		}
+        try
+        {
+            while(index < _FieldList.size() && 
+                boost::any_cast<std::string>(_FieldList[index]).compare( boost::any_cast<std::string>(anObject)) != 0)
+		    {
+			    ++index;
+		    }
+        }
+        catch(boost::bad_any_cast &)
+        {
+            return;
+        }
 
 		if(index < _FieldList.size())
 		{
@@ -204,7 +212,7 @@ void DerivedFieldContainerComboBoxModel::changed(BitVector whichField, UInt32 or
 
         for(UInt32 i(0) ; i<getInternalFieldContainerTypes().size() ; ++i)
         {
-            _FieldList.push_back(SharedFieldPtr(new SFString(FieldContainerFactory::the()->findType(getInternalFieldContainerTypes()[i])->getCName())));
+            _FieldList.push_back(boost::any(std::string(FieldContainerFactory::the()->findType(getInternalFieldContainerTypes()[i])->getCName())));
         }
 
         produceListDataContentsChanged(DerivedFieldContainerComboBoxModelPtr(this), 0, _FieldList.size());

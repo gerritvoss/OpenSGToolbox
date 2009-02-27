@@ -377,7 +377,7 @@ void LayeredImageMiniMap::setupDrawInternals(void)
         }
         else
         {
-            _ViewpointIndicatorComponent = getViewPointIndicator()->getGenerator()->getComponent(LayeredImageMiniMapPtr(this),SharedFieldPtr(), 0, 0,false, false);
+            _ViewpointIndicatorComponent = getViewPointIndicator()->getGenerator()->getComponent(LayeredImageMiniMapPtr(this),boost::any(), 0, 0,false, false);
         }
         beginEditCP(_ViewpointIndicatorComponent, Component::OpacityFieldMask | Component::ConstraintsFieldMask);
             _ViewpointIndicatorComponent->setOpacity(getOpacity());
@@ -438,7 +438,7 @@ void LayeredImageMiniMap::setupDrawInternals(void)
         }
         else
         {
-            _IndicatorComponents[i]._IndicatorComponent = getIndicators(i)->getGenerator()->getComponent(LayeredImageMiniMapPtr(this),SharedFieldPtr(), 0, 0,false, false);
+            _IndicatorComponents[i]._IndicatorComponent = getIndicators(i)->getGenerator()->getComponent(LayeredImageMiniMapPtr(this),boost::any(), 0, 0,false, false);
         }
 
         beginEditCP(_IndicatorComponents[i]._IndicatorComponent, OpacityFieldMask);

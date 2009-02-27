@@ -83,7 +83,7 @@ bool AbstractTableModel::isCellEditable(UInt32 rowIndex, UInt32 columnIndex) con
     return false;
 }
 
-void AbstractTableModel::setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex)
+void AbstractTableModel::setValueAt(const boost::any& aValue, UInt32 rowIndex, UInt32 columnIndex)
 {
     //Abstract Model defaults to not allow editing
     //So do nothing

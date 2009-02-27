@@ -294,10 +294,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGSharedFieldPtr.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Util\OSGStringUtils.cpp"
 					>
 				</File>

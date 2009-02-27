@@ -4329,12 +4329,12 @@ void WindowsLookAndFeel::init(void)
         WindowsTable->setGridColor(Color4f(0.0,0.0,0.0,1.0));
         WindowsTable->setColumnModel(DefaultTableColumnModel::create());
 
-        WindowsTable->setDefaultRenderer(&SFGLenum::getClassType(), TableCellRendererPtr(new DefaultGLenumTableCellRenderer()));
-        WindowsTable->setDefaultRenderer(&SFString::getClassType(), TableCellRendererPtr(new DefaultStringTableCellRenderer()));
-        WindowsTable->setDefaultRenderer(&SFBool::getClassType(), TableCellRendererPtr(new DefaultBoolTableCellRenderer()));
-        WindowsTable->setDefaultRenderer(&SFInt32::getClassType(), TableCellRendererPtr(new DefaultInt32TableCellRenderer()));
-        WindowsTable->setDefaultRenderer(&SFUInt32::getClassType(), TableCellRendererPtr(new DefaultUInt32TableCellRenderer()));
-        WindowsTable->setDefaultRenderer(&SFReal32::getClassType(), TableCellRendererPtr(new DefaultReal32TableCellRenderer()));
+        WindowsTable->setDefaultRenderer(typeid(GLenum), TableCellRendererPtr(new DefaultGLenumTableCellRenderer()));
+        WindowsTable->setDefaultRenderer(typeid(std::string), TableCellRendererPtr(new DefaultStringTableCellRenderer()));
+        WindowsTable->setDefaultRenderer(typeid(bool), TableCellRendererPtr(new DefaultBoolTableCellRenderer()));
+        WindowsTable->setDefaultRenderer(typeid(Int32), TableCellRendererPtr(new DefaultInt32TableCellRenderer()));
+        WindowsTable->setDefaultRenderer(typeid(UInt32), TableCellRendererPtr(new DefaultUInt32TableCellRenderer()));
+        WindowsTable->setDefaultRenderer(typeid(Real32), TableCellRendererPtr(new DefaultReal32TableCellRenderer()));
 		
 	endEditCP(WindowsTable);
     

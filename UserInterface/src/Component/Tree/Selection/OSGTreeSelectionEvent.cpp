@@ -1,7 +1,5 @@
 #include "OSGTreeSelectionEvent.h"
 
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
-
 #include <stdexcept>
 
 OSG_BEGIN_NAMESPACE

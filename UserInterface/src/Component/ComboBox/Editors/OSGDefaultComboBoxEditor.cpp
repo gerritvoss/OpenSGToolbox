@@ -49,6 +49,7 @@
 
 #include "OSGDefaultComboBoxEditor.h"
 #include "Component/Text/OSGTextField.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -98,9 +99,9 @@ ComponentPtr DefaultComboBoxEditor::getEditorComponent(void)
 	return getEditor();
 }
 
-SharedFieldPtr DefaultComboBoxEditor::getItem(void)
+boost::any DefaultComboBoxEditor::getItem(void)
 {
-	return SharedFieldPtr(new SFString(getEditor()->getText()));
+    return boost::any(getEditor()->getText());
 }
 
 void DefaultComboBoxEditor::selectAll(void)
@@ -112,18 +113,18 @@ void DefaultComboBoxEditor::selectAll(void)
 	}
 }
 
-void DefaultComboBoxEditor::setItem(SharedFieldPtr anObject)
+void DefaultComboBoxEditor::setItem(const boost::any& anObject)
 {	
 	//Update the text of the TextField to this new Item
 	std::string TheText;
-	if(anObject->getType() == SFString::getClassType())
-	{
-        TheText = static_cast<SFString*>(anObject.get())->getValue();
-	}
-	else
-	{
-		anObject->getValueByStr(TheText);
-	}
+    try
+    {
+        TheText = lexical_cast(anObject);
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        //Could not convert to string
+    }
 	beginEditCP(getEditor(), TextField::TextFieldMask);
 		getEditor()->setText(TheText);
 	endEditCP(getEditor(), TextField::TextFieldMask);

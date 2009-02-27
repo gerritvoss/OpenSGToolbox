@@ -47,6 +47,7 @@
 
 #include "Component/Tree/Model/OSGTreeModel.h"
 #include <set>
+#include <vector>
 
 OSG_BEGIN_NAMESPACE
 
@@ -70,10 +71,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public TreeModel
 	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
 	TreeModelListenerSet _ModelListeners;
 
-	void produceTreeNodesChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-	void produceTreeNodesInserted(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-	void produceTreeNodesRemoved(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-	void produceTreeStructureChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
+	void produceTreeNodesChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<boost::any> Children);
+	void produceTreeNodesInserted(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<boost::any> Children);
+	void produceTreeNodesRemoved(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<boost::any> Children);
+	void produceTreeStructureChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<boost::any> Children);
     /*==========================  PRIVATE  ================================*/
   private:
 };

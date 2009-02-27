@@ -43,7 +43,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-SharedFieldPtr TreePath::getLastPathComponent(void) const
+TreePath::NodePairType TreePath::getLastPathComponent(void) const
 {
 	return _Path.back();
 }
@@ -55,13 +55,13 @@ TreePath TreePath::getParentPath(void) const
 }
 
 inline
-std::vector<SharedFieldPtr> TreePath::getPath(void) const
+TreePath::PathVectorType TreePath::getPath(void) const
 {
 	return _Path;
 }
 
 inline
-SharedFieldPtr TreePath::getPathComponent(const UInt32& Index) const
+TreePath::NodePairType TreePath::getPathComponent(const UInt32& Index) const
 {
 	return _Path[Index];
 }
@@ -82,6 +82,42 @@ inline
 bool TreePath::operator!=(const TreePath& Right) const
 {
     return !(operator==(Right));
+}
+
+inline
+bool TreePath::operator<=(const TreePath& RightPath) const
+{
+    return (operator==(RightPath) || operator<(RightPath));
+}
+
+inline
+bool TreePath::operator>(const TreePath& RightPath) const
+{
+    return !operator<=(RightPath);
+}
+
+inline
+bool TreePath::operator>=(const TreePath& RightPath) const
+{
+    return (operator==(RightPath) || operator>(RightPath));
+}
+
+inline
+TreePath::NodePairType::NodePairType(const boost::any& Value, UInt32 Index)
+: _NodeValue(Value), _NodeIndex(Index)
+{
+}
+
+inline
+TreePath::NodePairType::NodePairType(const NodePairType& Value)
+: _NodeValue(Value._NodeValue), _NodeIndex(Value._NodeIndex)
+{
+}
+
+inline
+TreePath::NodePairType::NodePairType(void)
+: _NodeValue(), _NodeIndex(0)
+{
 }
 
 OSG_END_NAMESPACE

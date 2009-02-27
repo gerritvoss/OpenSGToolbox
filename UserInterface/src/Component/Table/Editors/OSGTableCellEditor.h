@@ -79,7 +79,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : public TableCellEditorBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column) = 0;
+	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column) = 0;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

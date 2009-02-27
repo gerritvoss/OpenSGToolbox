@@ -9,17 +9,11 @@
 // the Button causes it to appear pressed
 
 
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -406,18 +400,18 @@ public:
 		//Resize
 		while(UndoRedoListModel->getSize()-1 < TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 		{
-			UndoRedoListModel->pushBack(SharedFieldPtr(new SFString("")));
+			UndoRedoListModel->pushBack(boost::any(std::string("")));
 		}
 
 		UInt32 UndoCount(TheUndoManager->numberOfUndos());
 		for(UInt32 i(0) ; i<UndoCount ; ++i)
 		{
-			UndoRedoListModel->set(i+1, SharedFieldPtr(new SFString(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
+			UndoRedoListModel->set(i+1, boost::any(std::string(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
 		}
 		UInt32 RedoCount(TheUndoManager->numberOfRedos());
 		for(UInt32 i(0) ; i<RedoCount ; ++i)
 		{
-			UndoRedoListModel->set(i+TheUndoManager->numberOfUndos()+1, SharedFieldPtr(new SFString(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
+			UndoRedoListModel->set(i+TheUndoManager->numberOfUndos()+1, boost::any(std::string(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
 		}
 
 		if((UndoCount == 0 && UndoButton->getEnabled()) ||
@@ -571,7 +565,7 @@ int main(int argc, char **argv)
 
 	//UndoList
 	UndoRedoListModel = DefaultListModel::create();
-    UndoRedoListModel->pushBack(SharedFieldPtr(new SFString("Top")));
+    UndoRedoListModel->pushBack(boost::any(std::string("Top")));
 	ListSelectionModelPtr UndoRedoListSelectionModel(new DefaultListSelectionModel());
 
 	UndoRedoList = List::create();

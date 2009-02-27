@@ -95,19 +95,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
     SpinnerModelPtr getModel(void) const;
 
     //Returns the object in the sequence that comes after the object returned by getValue().
-    SharedFieldPtr getNextValue(void);
+    boost::any getNextValue(void);
 
     //Returns the object in the sequence that comes before the object returned by getValue().
-    SharedFieldPtr getPreviousValue(void);
+    boost::any getPreviousValue(void);
 
     //Returns the current value of the model, typically this value is displayed by the editor.
-    SharedFieldPtr getValue(void);
+    boost::any getValue(void);
 
     //Changes the model that represents the value of this spinner.
     void setModel(SpinnerModelPtr model);
 
     //Changes current value of the model, typically this value is displayed by the editor.
-    void setValue(SharedFieldPtr value);
+    void setValue(const boost::any& value);
 
 	//Set whether or not this Editor is Editable
 	//This is only relevent when the Editor is a derived class of SpinnerEditor

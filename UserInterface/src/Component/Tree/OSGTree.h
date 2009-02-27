@@ -168,7 +168,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     //Enumeration getExpandedDescendants(TreePath parent) const;
 
     //Returns the last path component in the first node of the current selection.
-    SharedFieldPtr getLastSelectedPathComponent(void) const;
+    boost::any getLastSelectedPathComponent(void) const;
 
     //Returns the path identified as the lead.
     TreePath getLeadSelectionPath(void) const;

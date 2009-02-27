@@ -80,7 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxModel : public ComboBoxModelBase
 
     /*! \}                                                                 */
 	//Returns the selected item
-	virtual SharedFieldPtr getSelectedItem(void) const = 0;
+    virtual boost::any getSelectedItem(void) const = 0;
 
 	//Returns the selected item Index
 	virtual Int32 getSelectedItemIndex(void) const = 0;
@@ -89,7 +89,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxModel : public ComboBoxModelBase
 	virtual void setSelectedItem(const Int32& index) = 0;
 	
 	//Set the selected item.
-	virtual void setSelectedItem(SharedFieldPtr anObject) = 0;
+	virtual void setSelectedItem(const boost::any& anObject) = 0;
 	
 	virtual void addSelectionListener(ComboBoxSelectionListenerPtr l) = 0;
 

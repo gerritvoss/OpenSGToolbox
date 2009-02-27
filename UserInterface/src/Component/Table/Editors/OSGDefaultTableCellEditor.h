@@ -82,15 +82,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTab
 
     /*! \}                                                                 */
     
-	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column);
+	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column);
 
-    virtual ComponentPtr getCellEditor(SharedFieldPtr Value, bool IsSelected);
+    virtual ComponentPtr getCellEditor(const boost::any& Value, bool IsSelected);
 
     //Tells the editor to cancel editing and not accept any partially edited value.
     virtual void cancelCellEditing(void);
 
     //Returns the value contained in the editor.
-    virtual SharedFieldPtr getCellEditorValue(void) const;
+    virtual boost::any getCellEditorValue(void) const;
 
     //Asks the editor if it can start editing using anEvent.
     virtual bool isCellEditable(const Event& anEvent) const;
@@ -142,7 +142,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTab
 
 	DefaultStringEditorListener _DefaultStringEditorListener;
     
-    mutable ::boost::shared_ptr<SFString> _Value;
+    mutable std::string _Value;
     /*==========================  PRIVATE  ================================*/
   private:
 

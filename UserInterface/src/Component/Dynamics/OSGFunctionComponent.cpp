@@ -536,7 +536,7 @@ void FunctionComponent::updateTabs(void)
                 }
                 else
                 {
-                    TabComponent = getInputTabComponentGenerator()->getComponent(FunctionComponentPtr(this),SharedFieldPtr(),i,0,false,false);
+                    TabComponent = getInputTabComponentGenerator()->getComponent(FunctionComponentPtr(this),boost::any(),i,0,false,false);
                 }
                 if(TabComponent != NullFC)
                 {
@@ -562,7 +562,7 @@ void FunctionComponent::updateTabs(void)
                 }
                 else
                 {
-                    TabComponent = getOutputTabComponentGenerator()->getComponent(FunctionComponentPtr(this),SharedFieldPtr(),i,0,false,false);
+                    TabComponent = getOutputTabComponentGenerator()->getComponent(FunctionComponentPtr(this),boost::any(),i,0,false,false);
                 }
                 if(TabComponent != NullFC)
                 {

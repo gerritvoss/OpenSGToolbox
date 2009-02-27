@@ -46,9 +46,10 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGTableModelBase.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
 
 #include "Component/Table/OSGTableModelListener.h"
+#include <typeinfo.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -91,22 +92,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModel : public TableModelBase
     virtual UInt32 getColumnCount(void) const = 0;
     
     //Returns the name of the column at columnIndex.
-    virtual SharedFieldPtr getColumnValue(UInt32 columnIndex) const = 0;
+    virtual boost::any getColumnValue(UInt32 columnIndex) const = 0;
     
     //Returns the number of rows in the model.
     virtual UInt32 getRowCount(void) const = 0;
     
     //Returns the value for the cell at columnIndex and rowIndex.
-    virtual SharedFieldPtr getValueAt(UInt32 rowIndex, UInt32 columnIndex) const = 0;
+    virtual boost::any getValueAt(UInt32 rowIndex, UInt32 columnIndex) const = 0;
     
     //Returns true if the cell at rowIndex and columnIndex is editable.
     virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const = 0;
     
     //Sets the value in the cell at columnIndex and rowIndex to aValue.
-    virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex) = 0;
+    virtual void setValueAt(const boost::any& aValue, UInt32 rowIndex, UInt32 columnIndex) = 0;
 
     //Returns the most specific superclass for all the cell values in the column.
-    virtual const FieldType* getColumnType(const UInt32& columnIndex) = 0;
+    virtual const std::type_info& getColumnType(const UInt32& columnIndex) = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

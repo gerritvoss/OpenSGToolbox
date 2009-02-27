@@ -45,7 +45,6 @@
  
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 #include "OSGTreeSelectionListener.h"
 

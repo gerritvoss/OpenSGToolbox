@@ -52,13 +52,13 @@ UInt32 ComboBox::getSelectedIndex(void) const
 }
 
 inline
-SharedFieldPtr ComboBox::getSelectedItem(void) const
+boost::any ComboBox::getSelectedItem(void) const
 {
 	return getModel()->getSelectedItem();
 }
 
 inline
-SharedFieldPtr ComboBox::getItemAt(const UInt32& index) const
+boost::any ComboBox::getItemAt(const UInt32& index) const
 {
 	return getModel()->getElementAt(index);
 }
@@ -82,7 +82,7 @@ void ComboBox::setSelectedIndex(const UInt32& anIndex)
 }
 
 inline
-void ComboBox::setSelectedItem(SharedFieldPtr anObject)
+void ComboBox::setSelectedItem(const boost::any& anObject)
 {
 	getModel()->setSelectedItem(anObject);
 }

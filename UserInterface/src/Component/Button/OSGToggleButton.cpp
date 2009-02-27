@@ -109,7 +109,7 @@ ToggleButton::~ToggleButton(void)
 
 BorderPtr ToggleButton::getDrawnBorder(void) const
 {
-	if(getSelected())
+	if(getSelected() && getEnabled())
 	{
 		return getActiveBorder();
 	}
@@ -133,7 +133,7 @@ Vec2f ToggleButton::getDrawnOffset(void) const
 
 LayerPtr ToggleButton::getDrawnBackground(void) const
 {
-	if(getSelected())
+	if(getSelected() && getEnabled())
 	{
 		return getActiveBackground();
 	}
@@ -144,7 +144,7 @@ LayerPtr ToggleButton::getDrawnBackground(void) const
 }
 LayerPtr ToggleButton::getDrawnForeground(void) const
 {
-	if(getSelected())
+	if(getSelected() && getEnabled())
 	{
 		return getActiveForeground();
 	}
@@ -156,7 +156,7 @@ LayerPtr ToggleButton::getDrawnForeground(void) const
 
 Color4f ToggleButton::getDrawnTextColor(void) const
 {
-	if(getSelected())
+	if(getSelected() && getEnabled())
 	{
 		return getActiveTextColor();
 	}

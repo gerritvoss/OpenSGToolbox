@@ -118,7 +118,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	virtual void setParent(MutableTreeNodePtr newParent);
 
 	//Resets the user object of the receiver to object.
-	virtual void setUserObject(SharedFieldPtr object);
+	virtual void setUserObject(const boost::any& object);
 
 	
 	
@@ -189,10 +189,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	UInt32 getSiblingCount(void) const;
 
 	//Returns this node's user object.
-	virtual SharedFieldPtr getUserObject(void) const;
+	virtual boost::any getUserObject(void) const;
 
 	//Returns the user object path, from the root, to get to this node.
-	std::vector<SharedFieldPtr> getUserObjectPath(void) const;
+	std::vector<boost::any> getUserObjectPath(void) const;
 
 	//Returns true if anotherNode is an ancestor of this node -- if it is this node, this node's parent, or an ancestor of this node's parent.
 	bool isNodeAncestor(MutableTreeNodePtr anotherNode) const;
@@ -247,7 +247,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 
     /*! \}                                                                 */
 
-	SharedFieldPtr _UserObject;
+	boost::any _UserObject;
     
     /*==========================  PRIVATE  ================================*/
   private:

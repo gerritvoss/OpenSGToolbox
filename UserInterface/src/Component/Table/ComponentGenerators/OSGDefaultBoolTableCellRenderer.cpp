@@ -75,15 +75,29 @@ A DefaultBoolTableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultBoolTableCellRenderer::getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentPtr DefaultBoolTableCellRenderer::getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
-	if(value == NULL){
+	if(value.empty()){
 		return NullFC;
 	}
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 		std::string tempString;
-		static_cast<SFBool*>(value.get())->getValueByStr(tempString);
+        try
+        {
+            if(boost::any_cast<bool>(value))
+            {
+                tempString = "True";
+            }
+            else
+            {
+                tempString = "False";
+            }
+        }
+        catch (boost::bad_any_cast &)
+        {
+            //Not a bool
+        }
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);

@@ -60,22 +60,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeMode
   public:
 
 	//Returns the child of parent at index index in the parent's child array.
-	virtual SharedFieldPtr getChild(SharedFieldPtr parent, const UInt32& index) const;
+	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const;
 
 	//Returns the number of children of parent.
-	virtual UInt32 getChildCount(SharedFieldPtr parent) const;
+	virtual UInt32 getChildCount(const boost::any& parent) const;
 
 	//Returns the index of child in parent.
-	virtual UInt32 getIndexOfChild(SharedFieldPtr parent, SharedFieldPtr child) const;
+	virtual UInt32 getIndexOfChild(const boost::any& parent, const boost::any& child) const;
 
 	//Returns the root of the tree.
-	virtual SharedFieldPtr getRoot(void) const;
+	virtual boost::any getRoot(void) const;
 
 	//Returns true if node is a leaf.
-	virtual bool isLeaf(SharedFieldPtr node) const;
+	virtual bool isLeaf(const boost::any& node) const;
 
 	//Messaged when the user has altered the value for the item identified by path to newValue.
-	virtual void valueForPathChanged(TreePath path, SharedFieldPtr newValue);
+	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
 
 
 
@@ -101,7 +101,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeMode
     void nodesWereInserted(ModelTreeNodePtr node, std::vector<UInt32> childIndices);
 
     //Invoke this method after you've removed some TreeNodes from node.
-    void nodesWereRemoved(ModelTreeNodePtr node, std::vector<UInt32> childIndices, std::vector<SharedFieldPtr> removedChildren);
+    void nodesWereRemoved(ModelTreeNodePtr node, std::vector<UInt32> childIndices, std::vector<boost::any> removedChildren);
 
     //Invoke this method if you've modified the TreeNodes upon which this model depends.
     void reload(void);

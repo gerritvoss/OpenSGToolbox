@@ -90,13 +90,13 @@ bool VariableHeightTreeModelLayout::isVisible(const TreePath& path) const
 TreePath VariableHeightTreeModelLayout::getPathClosestTo(const Pnt2f& Loc) const
 {
 	//TODO:Implement
-	return TreePath(SharedFieldPtr());
+	return TreePath();
 }
 
 TreePath VariableHeightTreeModelLayout::getPathForRow(const UInt32& row) const
 {
 	//TODO:Implement
-	return TreePath(SharedFieldPtr());
+	return TreePath();
 }
 
 Real32 VariableHeightTreeModelLayout::getPreferredHeight(void) const

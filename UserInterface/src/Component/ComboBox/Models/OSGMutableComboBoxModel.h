@@ -79,13 +79,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MutableComboBoxModel : public MutableCombo
 
     /*! \}                                                                 */
 	//Adds an item at the end of the model.
-	virtual void addElement(SharedFieldPtr obj) = 0;
+	virtual void addElement(const boost::any& obj) = 0;
 
 	//Adds an item at a specific index.
-	virtual void insertElementAt(SharedFieldPtr obj, const UInt32& index) = 0;
+	virtual void insertElementAt(const boost::any& obj, const UInt32& index) = 0;
 
 	//Removes an item from the model.
-	virtual void removeElement(SharedFieldPtr obj) = 0;
+	virtual void removeElement(const boost::any& obj) = 0;
 
 	//Removes an item at a specific index.
 	virtual void removeElementAt(const UInt32& index) = 0;

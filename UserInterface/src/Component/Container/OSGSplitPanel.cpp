@@ -287,6 +287,28 @@ void SplitPanel::changed(BitVector whichField, UInt32 origin)
     {
         updateChildren();
     }
+    if( ((whichField & DividerDrawObjectFieldMask) ||
+        (whichField & OrientationFieldMask) ||
+        (whichField & ExpandableFieldMask)) && getDividerDrawObject() != NullFC)
+    {
+        beginEditCP(getDividerDrawObject(),Component::CursorFieldMask);
+            if(!getExpandable())
+            {
+                getDividerDrawObject()->setCursor(WindowEventProducer::CURSOR_POINTER);
+            }
+            else
+            {
+                if(getOrientation() == SplitPanel::HORIZONTAL_ORIENTATION)
+                {
+                    getDividerDrawObject()->setCursor(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
+                }
+                else
+                {
+                    getDividerDrawObject()->setCursor(WindowEventProducer::CURSOR_RESIZE_N_TO_S);
+                }
+            }
+        endEditCP(getDividerDrawObject(),Component::CursorFieldMask);
+    }
 }
 
 void SplitPanel::dump(      UInt32    , 
@@ -331,13 +353,15 @@ void SplitPanel::DividerListener::mouseExited(const MouseEvent& e)
 }
 void SplitPanel::DividerListener::mousePressed(const MouseEvent& e)
 {
-	if (_SplitPanel->getExpandable())
+	if (e.getButton() == MouseEvent::BUTTON1 &&
+        _SplitPanel->getExpandable() &&
+        _SplitPanel->getParentWindow() != NullFC)
 	{
-		if(_SplitPanel->getParentWindow() != NullFC)
-		{
-			_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
-            _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_SplitPanel->_DividerDraggedListener));
-		}
+		_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
+        _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_SplitPanel->_DividerDraggedListener));
+        beginEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
+            _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setLockCursor(true);
+        endEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
 	}
 }
 void SplitPanel::DividerListener::mouseReleased(const MouseEvent& e)
@@ -368,11 +392,14 @@ void SplitPanel::DividerDraggedListener::mousePressed(const MouseEvent& e)
 }
 void SplitPanel::DividerDraggedListener::mouseReleased(const MouseEvent& e)
 {
-	if(_SplitPanel->getParentWindow() != NullFC)
+    if(e.getButton() == MouseEvent::BUTTON1 && _SplitPanel->getParentWindow() != NullFC)
 	{
 		_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
 		_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
-	}
+        beginEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
+            _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setLockCursor(false);
+        endEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
+    }
 }
 void SplitPanel::DividerDraggedListener::mouseMoved(const MouseEvent& e)
 {

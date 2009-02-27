@@ -82,31 +82,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableComboBoxModel : public Defau
 
 	virtual UInt32 getSize(void) const;
 
-	virtual SharedFieldPtr getElementAt(UInt32 index) const;
+    virtual boost::any getElementAt(UInt32 index) const;
 
 	//Returns the selected item
-	virtual SharedFieldPtr getSelectedItem(void) const;
+    virtual boost::any getSelectedItem(void) const;
 
 	//Set the selected item.
 	virtual void setSelectedItem(const Int32& index);
 	
 	//Set the selected item.
-	virtual void setSelectedItem(SharedFieldPtr anObject);
+	virtual void setSelectedItem(const boost::any& anObject);
 	
 	//Returns the selected item Index
 	virtual Int32 getSelectedItemIndex(void) const;
 
 	//Adds an item at the end of the model.
-	void addElement(SharedFieldPtr anObject);
+	void addElement(const boost::any& anObject);
 
 	//Adds an item at a specific index.
-	void insertElementAt(SharedFieldPtr anObject, const UInt32& index);
+	void insertElementAt(const boost::any& anObject, const UInt32& index);
 
 	//Empties the list.
 	void removeAllElements(void);
 
 	//Removes an item from the model.
-	void removeElement(SharedFieldPtr anObject);
+	void removeElement(const boost::any& anObject);
 
 	//Removes an item at a specific index.
 	void removeElementAt(const UInt32& index);
@@ -130,7 +130,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableComboBoxModel : public Defau
     virtual ~DefaultMutableComboBoxModel(void); 
 
     /*! \}                                                                 */
-	std::vector<SharedFieldPtr> _FieldList;
+	std::vector<boost::any> _FieldList;
 	Int32 _SelectedIndex;
     
     /*==========================  PRIVATE  ================================*/

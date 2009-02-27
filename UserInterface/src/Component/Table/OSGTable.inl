@@ -88,7 +88,7 @@ UInt32 Table::getColumnCount(void) const
 }
 
 inline
-SharedFieldPtr Table::getColumnValue(const UInt32& column) const
+boost::any Table::getColumnValue(const UInt32& column) const
 {
     return getModel()->getColumnValue(column);
 }
@@ -114,7 +114,7 @@ ListSelectionModelPtr Table::getSelectionModel(void) const
 }
 
 inline
-SharedFieldPtr Table::getValueAt(const UInt32& row, const UInt32& column) const
+boost::any Table::getValueAt(const UInt32& row, const UInt32& column) const
 {
     return getModel()->getValueAt(row, column);
 }
@@ -164,21 +164,21 @@ void Table::setEditingRow(const Int32& aRow)
 }
 
 inline
-const FieldType* Table::getColumnType(const UInt32& column)
+const std::type_info& Table::getColumnType(const UInt32& column)
 {
     return getModel()->getColumnType(column);
 }
 
 inline
-void Table::setDefaultEditor(const FieldType* columnType, TableCellEditorPtr editor)
+void Table::setDefaultEditor(const std::type_info& TheType, TableCellEditorPtr editor)
 {
-    _DefaultCellEditorByTypeMap[columnType] = editor;
+    _DefaultCellEditorByTypeMap[std::string(TheType.raw_name())] = editor;
 }
 
 inline
-void Table::setDefaultRenderer(const FieldType* columnType, TableCellRendererPtr renderer)
+void Table::setDefaultRenderer(const std::type_info& TheType, TableCellRendererPtr renderer)
 {
-    _DefaultCellRendererByTypeMap[columnType] = renderer;
+    _DefaultCellRendererByTypeMap[std::string(TheType.raw_name())] = renderer;
 }
 
 inline
@@ -248,7 +248,7 @@ void Table::addRowSelectionInterval(const UInt32& index0, const UInt32& index1)
 }
 
 inline
-void Table::setValueAt(SharedFieldPtr aValue, const UInt32& row, const UInt32& column)
+void Table::setValueAt(const boost::any& aValue, const UInt32& row, const UInt32& column)
 {
     getModel()->setValueAt(aValue, row, column);
 }
@@ -257,12 +257,6 @@ inline
 Int32 Table::columnAtPoint(const Pnt2f& point)
 {
     return getColumnModel()->getColumnIndexAtX(point.x());
-}
-
-inline
-bool Table::FieldTypePtrComparitor::operator()(const FieldType* s1, const FieldType* s2) const
-{
-    return s1->getId() < s2->getId();
 }
 
 OSG_END_NAMESPACE

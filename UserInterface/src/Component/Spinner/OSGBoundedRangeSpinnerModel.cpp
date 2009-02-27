@@ -113,7 +113,7 @@ void BoundedRangeSpinnerModel::setValue(Int32 newValue)
 	dettachListenersFromModels();
 
 	_TheBoundedRangeModel->setValue(newValue);
-	_TheSpinnerModel->setValue(SharedFieldPtr(new SFInt32(newValue)));
+    _TheSpinnerModel->setValue(boost::any(newValue));
 
 	attachListenersToModels();
 
@@ -205,7 +205,7 @@ void BoundedRangeSpinnerModel::BoundedRangeModelChangeListener::stateChanged(con
 
 	_BoundedRangeSpinnerModel->_TheSpinnerModel->setMinimum(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getMinimum());
 	_BoundedRangeSpinnerModel->_TheSpinnerModel->setMaximum(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getMaximum());
-	_BoundedRangeSpinnerModel->_TheSpinnerModel->setValue(SharedFieldPtr(new SFInt32(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getValue())));
+    _BoundedRangeSpinnerModel->_TheSpinnerModel->setValue(boost::any(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getValue()));
 
 	_BoundedRangeSpinnerModel->attachListenersToModels();
 	_BoundedRangeSpinnerModel->produceStateChanged();

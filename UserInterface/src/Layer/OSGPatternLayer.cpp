@@ -109,9 +109,6 @@ void PatternLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
 	Vec2f TopLeftTexCoords(0.0f,0.0f);
 	Vec2f BottomRightTexCoords(1.0f,1.0f);
 
-	GLenum WrapS;
-	GLenum WrapT;
-
 	Real32 RepeatHorizontal;
 	switch(getHorizontalRepeat())
 	{

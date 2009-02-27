@@ -87,9 +87,11 @@ std::vector<ModelTreeNodePtr> ModelTreeNode::getChildren(void) const
     return Result;
 }
 
-ModelTreeNodePtr ModelTreeNode::getNodeFromUserObject(SharedFieldPtr object)
+ModelTreeNodePtr ModelTreeNode::getNodeFromUserObject(const boost::any& object)
 {
-    if(object == getUserObject())
+    assert(false);
+    return NullFC;
+    /*if(object == getUserObject())
     {
         return ModelTreeNodePtr(this);
     }
@@ -105,12 +107,12 @@ ModelTreeNodePtr ModelTreeNode::getNodeFromUserObject(SharedFieldPtr object)
             }
         }
         return NullFC;
-    }
+    }*/
 }
 
 TreePath ModelTreeNode::getPath(void) const
 {
-    std::vector<SharedFieldPtr> Path;
+    std::vector<boost::any> Path;
 
     ModelTreeNodePtr Node(this);
     while(Node != NullFC)

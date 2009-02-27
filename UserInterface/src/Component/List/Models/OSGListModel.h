@@ -47,7 +47,7 @@
 
 #include "OSGListModelBase.h"
 
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
 OSG_BEGIN_NAMESPACE
 
 /*! \brief ListModel class. See \ref 
@@ -83,7 +83,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListModel : public ListModelBase
 
     /*! \}                                                                 */
 	virtual UInt32 getSize(void) const = 0;
-	virtual SharedFieldPtr getElementAt(UInt32 index) const = 0;
+    virtual boost::any getElementAt(UInt32 index) const = 0;
 
 	virtual void addListDataListener(ListDataListenerPtr l) = 0;
 	virtual void removeListDataListener(ListDataListenerPtr l) = 0;

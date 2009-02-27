@@ -67,16 +67,16 @@ public:
     NumberSpinnerModel(const NumberType& value);
     
     //Return the object in the sequence that comes after the object returned by getValue().
-    virtual SharedFieldPtr getNextValue(void);
+    virtual boost::any getNextValue(void);
     
     //Return the object in the sequence that comes before the object returned by getValue().
-    virtual SharedFieldPtr getPreviousValue(void);
+    virtual boost::any getPreviousValue(void);
     
     //The current element of the sequence.
-    virtual SharedFieldPtr getValue(void);
+    virtual boost::any getValue(void);
     
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner
-    virtual void setValue(SharedFieldPtr value);
+    virtual void setValue(const boost::any& value);
     
     virtual void setValue(const std::string& value);
     
@@ -105,7 +105,7 @@ public:
 
 
 protected:
-    SharedFieldPtr _Value;
+    boost::any _Value;
     NumberType _Maximum;
     NumberType _Minimum;
     NumberType _StepSize;

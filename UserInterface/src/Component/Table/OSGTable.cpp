@@ -471,7 +471,7 @@ void Table::updateItem(const UInt32& index)
     }
     else //Non-Editing Cell
     {
-        SharedFieldPtr CellValue = getModel()->getValueAt(Row, Column);
+        boost::any CellValue = getModel()->getValueAt(Row, Column);
     
         getChildren()[index] = getCellRenderer(Row, Column)->getTableCellRendererComponent(TablePtr(this), CellValue, isSelected(Row, Column), PrevComponent->getFocused(), Row, Column);
     }
@@ -626,7 +626,7 @@ void Table::updateTableComponents(void)
     {
         return;
     }
-    SharedFieldPtr CellValue;
+    boost::any CellValue;
 
     beginEditCP(TablePtr(this), TableFieldMask);
     getTable().clear();
@@ -869,9 +869,13 @@ TableCellEditorPtr Table::getCellEditor(const UInt32& row, const UInt32& column)
     {
         return getColumnModel()->getColumn(column)->getCellEditor();
     }
-    else
+    else if(getModel()->getColumnType(column) != typeid(void))
     {
         return getDefaultEditor(getModel()->getColumnType(column));
+    }
+    else
+    {
+        return getDefaultEditor(getModel()->getValueAt(row,column).type());
     }
 }
 
@@ -881,13 +885,13 @@ TableCellRendererPtr Table::getCellRenderer(const UInt32& row, const UInt32& col
     {
         return getColumnModel()->getColumn(column)->getCellRenderer();
     }
-    else if(getModel()->getColumnType(column) != NULL)
+    else if(getModel()->getColumnType(column) != typeid(void))
     {
         return getDefaultRenderer(getModel()->getColumnType(column));
     }
     else
     {
-        return getDefaultRenderer(&(getModel()->getValueAt(row,column)->getType()));
+        return getDefaultRenderer(getModel()->getValueAt(row,column).type());
     }
 }
 
@@ -987,34 +991,40 @@ void Table::setShowGrid(bool showGrid)
     endEditCP(TablePtr(this), ShowHorizontalLinesFieldMask | ShowVerticalLinesFieldMask);
 }
 
-TableCellEditorPtr Table::getDefaultEditor(const FieldType* columnType) const
+TableCellEditorPtr Table::getDefaultEditor(const std::type_info& TheType) const
 {
-    CellEditorByTypeMap::const_iterator FindItor(_DefaultCellEditorByTypeMap.find(columnType));
+    CellEditorByTypeMap::const_iterator FindItor(_DefaultCellEditorByTypeMap.find(std::string(TheType.raw_name())));
     if(FindItor != _DefaultCellEditorByTypeMap.end())
     {
         return (*FindItor).second;
     }
     else
     {
-        if(columnType != NULL)
+        SWARNING << "No Default Table Cell Editor for type: " << TheType.name() << "." << std::endl;
+        if(_DefaultCellEditor == NullFC)
         {
-            SWARNING << "No Default Table Cell Editor for type: " << columnType->getCName() << "." << std::endl;
+            _DefaultCellEditor = DefaultTableCellEditor::create();
+            addRefCP(_DefaultCellEditor);
         }
-        return TableCellEditorPtr(DefaultTableCellEditor::create());
+        return _DefaultCellEditor;
     }
 }
 
-TableCellRendererPtr Table::getDefaultRenderer(const FieldType* columnType) const
+TableCellRendererPtr Table::getDefaultRenderer(const std::type_info& TheType) const
 {
-    CellRendererByTypeMap::const_iterator FindItor(_DefaultCellRendererByTypeMap.find(columnType));
+    CellRendererByTypeMap::const_iterator FindItor(_DefaultCellRendererByTypeMap.find(std::string(TheType.raw_name())));
     if(FindItor != _DefaultCellRendererByTypeMap.end())
     {
         return (*FindItor).second;
     }
     else
     {
-        SWARNING << "No Default Table Cell Renderer for type: " << columnType->getCName() << "." << std::endl;
-        return TableCellRendererPtr(new DefaultTableCellRenderer());
+        SWARNING << "No Default Table Cell Renderer for type: " << TheType.name() << "." << std::endl;
+        if(_DefaultCellRenderer == NULL)
+        {
+            _DefaultCellRenderer = new DefaultTableCellRenderer();
+        }
+        return _DefaultCellRenderer;
     }
 }
 
@@ -1114,6 +1124,10 @@ Table::Table(const Table &source) :
 
 Table::~Table(void)
 {
+    if(_DefaultCellEditor != NullFC)
+    {
+        subRefCP(_DefaultCellEditor);
+    }
 }
 
 /*----------------------------- class specific ----------------------------*/

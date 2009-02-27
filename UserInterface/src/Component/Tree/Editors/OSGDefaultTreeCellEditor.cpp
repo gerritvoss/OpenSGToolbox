@@ -50,6 +50,7 @@
 
 #include "OSGDefaultTreeCellEditor.h"
 #include "Component/Text/OSGTextField.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,21 +79,27 @@ void DefaultTreeCellEditor::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTreeCellEditor::getTreeCellEditorComponent(TreePtr TheTree, SharedFieldPtr Value, bool IsSelected, bool IsExpanded, UInt32 row)
+ComponentPtr DefaultTreeCellEditor::getTreeCellEditorComponent(TreePtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row)
 {
-    _EditingValue = SharedFieldPtr(FieldFactory::the().createField(Value->getType().getId()));
-    _EditingValue->setAbstrValue( *(Value.get()) );
+    _EditingValue = Value;
 
-	if(_EditingValue == NULL){
+	if(_EditingValue.empty()){
 		return NullFC;
 	}
 
-    if(_EditingValue->getType() == SFString::getClassType())
+    if(_EditingValue.type() == typeid(std::string))
     {
         //Use String Text Field As Editing Component
 	    beginEditCP(getDefaultStringEditor(), TextField::TextFieldMask | TextField::CaretPositionFieldMask);
 		    std::string tempString;
-			tempString = dynamic_cast<SFString*>(_EditingValue.get())->getValue();
+            try
+            {
+                tempString = lexical_cast(_EditingValue);
+            }
+            catch (boost::bad_lexical_cast &)
+            {
+                //Could not convert to string
+            }
 		    getDefaultStringEditor()->setText(tempString);
 		    getDefaultStringEditor()->selectAll();
 		    getDefaultStringEditor()->setCaretPosition(getDefaultStringEditor()->getText().size());
@@ -109,7 +116,6 @@ ComponentPtr DefaultTreeCellEditor::getTreeCellEditorComponent(TreePtr TheTree, 
         //Use Default Text Field As Editing Component
 	    beginEditCP(getDefaultEditor(), TextField::TextFieldMask | TextField::CaretPositionFieldMask);
 		    std::string tempString;
-			_EditingValue->getValueByStr(tempString);
 		    getDefaultEditor()->setText(tempString);
 		    getDefaultEditor()->selectAll();
 		    getDefaultEditor()->setCaretPosition(getDefaultEditor()->getText().size());
@@ -123,14 +129,14 @@ ComponentPtr DefaultTreeCellEditor::getTreeCellEditorComponent(TreePtr TheTree, 
     }
 }
 
-ComponentPtr DefaultTreeCellEditor::getCellEditor(SharedFieldPtr Value, bool IsSelected)
+ComponentPtr DefaultTreeCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
 {
     return getTreeCellEditorComponent(NullFC, Value, IsSelected, false, 0);
 }
 
 void DefaultTreeCellEditor::cancelCellEditing(void)
 {
-    if(_EditingValue->getType() == SFString::getClassType())
+    if(_EditingValue.type() == typeid(std::string))
     {
         getDefaultStringEditor()->removeActionListener(&_DefaultTextFieldEditorListener);
         getDefaultStringEditor()->removeFocusListener(&_DefaultTextFieldEditorListener);
@@ -146,15 +152,15 @@ void DefaultTreeCellEditor::cancelCellEditing(void)
     Inherited::cancelCellEditing();
 }
 
-SharedFieldPtr DefaultTreeCellEditor::getCellEditorValue(void) const
+boost::any DefaultTreeCellEditor::getCellEditorValue(void) const
 {
-    if(_EditingValue->getType() == SFString::getClassType())
+    if(_EditingValue.type() == typeid(std::string))
     {
-        dynamic_cast<SFString*>(_EditingValue.get())->setValue(getDefaultStringEditor()->getText());
+        _EditingValue = boost::any(getDefaultStringEditor()->getText());
     }
     else
     {
-        _EditingValue->pushValueByStr(getDefaultStringEditor()->getText().c_str());
+        _EditingValue = boost::any();
     }
     return _EditingValue;
 }
@@ -180,7 +186,7 @@ bool DefaultTreeCellEditor::shouldSelectCell(const Event& anEvent) const
 
 bool DefaultTreeCellEditor::stopCellEditing(void)
 {
-    if(_EditingValue->getType() == SFString::getClassType())
+    if(_EditingValue.type() == typeid(std::string))
     {
         getDefaultStringEditor()->removeActionListener(&_DefaultTextFieldEditorListener);
         getDefaultStringEditor()->removeFocusListener(&_DefaultTextFieldEditorListener);
@@ -198,7 +204,7 @@ bool DefaultTreeCellEditor::stopCellEditing(void)
 
 ComponentPtr DefaultTreeCellEditor::getComponent(void) const
 {
-    if(_EditingValue->getType() == SFString::getClassType())
+    if(_EditingValue.type() == typeid(std::string))
     {
         return getDefaultStringEditor();
     }

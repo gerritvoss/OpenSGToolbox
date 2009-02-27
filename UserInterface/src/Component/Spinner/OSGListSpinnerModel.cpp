@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGListSpinnerModel.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,18 +82,18 @@ std::string ListSpinnerModel::getModelName(void) const
 	return getClassModelName();
 }
 
-void ListSpinnerModel::setList(const FieldList& list)
+void ListSpinnerModel::setList(const AnyList& list)
 {
     _List = list;
     _CurrentListValue = _List.begin();
     produceStateChanged();
 }
 
-SharedFieldPtr ListSpinnerModel::getNextValue(void)
+boost::any ListSpinnerModel::getNextValue(void)
 {
     if(_CurrentListValue == (--_List.end()))
     {
-        return SharedFieldPtr();
+        return boost::any();
     }
     else
     {
@@ -100,11 +101,11 @@ SharedFieldPtr ListSpinnerModel::getNextValue(void)
     }
 }
 
-SharedFieldPtr ListSpinnerModel::getPreviousValue(void)
+boost::any ListSpinnerModel::getPreviousValue(void)
 {
     if(_CurrentListValue == _List.begin())
     {
-        return SharedFieldPtr();
+        return boost::any();
     }
     else
     {
@@ -112,34 +113,30 @@ SharedFieldPtr ListSpinnerModel::getPreviousValue(void)
     }
 }
 
-SharedFieldPtr ListSpinnerModel::getValue(void)
+boost::any ListSpinnerModel::getValue(void)
 {
     return (*_CurrentListValue);
 }
 
-void ListSpinnerModel::setValue(SharedFieldPtr value)
+void ListSpinnerModel::setValue(const boost::any& value)
 {
-    FieldListIter SearchIter(std::find(_List.begin(), _List.end(), value));
-
-    if(SearchIter != _List.end())
-    {
-        _CurrentListValue = SearchIter;
-        produceStateChanged();
-    }
-    else
-    {
-        throw IllegalArgumentException();
-    }
-
+    assert(false);
 }
 
 void ListSpinnerModel::setValue(const std::string& value)
 {
-	FieldListIter SearchIter;
+	AnyListIter SearchIter;
     for(SearchIter = _List.begin() ; SearchIter!=_List.end() ; ++SearchIter)
     {
         std::string FieldString;
-        (*SearchIter)->getValueByStr(FieldString);
+        try
+        {
+            FieldString = lexical_cast(*SearchIter);
+        }
+        catch (boost::bad_lexical_cast &)
+        {
+            //Could not convert to string
+        }
         if(FieldString.compare(value) == 0)
         {
             break;

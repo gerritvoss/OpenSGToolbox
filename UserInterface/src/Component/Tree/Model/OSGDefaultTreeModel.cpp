@@ -75,7 +75,9 @@ A DefaultTreeModel.
 
 ModelTreeNodePtr DefaultTreeModel::getNodeForPath(const TreePath& ThePath) const
 {
-    if(ThePath.getPathCount()<1)
+    assert(false);
+    return NullFC;
+    /*if(ThePath.getPathCount()<1)
     {
         return NullFC;
     }
@@ -101,31 +103,31 @@ ModelTreeNodePtr DefaultTreeModel::getNodeForPath(const TreePath& ThePath) const
     }
 
 
-    return Result;
+    return Result;*/
 }
 
-SharedFieldPtr DefaultTreeModel::getChild(SharedFieldPtr parent, const UInt32& index) const
+boost::any DefaultTreeModel::getChild(const boost::any& parent, const UInt32& index) const
 {
     return _Root->getNodeFromUserObject(parent)->getChildAt(index)->getUserObject();
 }
 
-UInt32 DefaultTreeModel::getChildCount(SharedFieldPtr parent) const
+UInt32 DefaultTreeModel::getChildCount(const boost::any& parent) const
 {
     return _Root->getNodeFromUserObject(parent)->getChildCount();
 }
 
-UInt32 DefaultTreeModel::getIndexOfChild(SharedFieldPtr parent, SharedFieldPtr child) const
+UInt32 DefaultTreeModel::getIndexOfChild(const boost::any& parent, const boost::any& child) const
 {
     ModelTreeNodePtr ParentNode(_Root->getNodeFromUserObject(parent));
     return ParentNode->getIndex(ParentNode->getNodeFromUserObject(child));
 }
 
-SharedFieldPtr DefaultTreeModel::getRoot(void) const
+boost::any DefaultTreeModel::getRoot(void) const
 {
     return _Root->getUserObject();
 }
 
-bool DefaultTreeModel::isLeaf(SharedFieldPtr node) const
+bool DefaultTreeModel::isLeaf(const boost::any& node) const
 {
     if(_AskAllowsChilren)
     {
@@ -137,7 +139,7 @@ bool DefaultTreeModel::isLeaf(SharedFieldPtr node) const
     }
 }
 
-void DefaultTreeModel::valueForPathChanged(TreePath path, SharedFieldPtr newValue)
+void DefaultTreeModel::valueForPathChanged(TreePath path, const boost::any& newValue)
 {
     //Do nothing for the default Tree Model
 }
@@ -170,7 +172,7 @@ void DefaultTreeModel::nodeChanged(ModelTreeNodePtr node)
 
 void DefaultTreeModel::nodesChanged(ModelTreeNodePtr node, std::vector<UInt32> childIndices)
 {
-    std::vector<SharedFieldPtr> ChildUserObjects;
+    std::vector<boost::any> ChildUserObjects;
 
     for(UInt32 i(0) ; i< childIndices.size() ; ++i)
     {
@@ -188,7 +190,7 @@ void DefaultTreeModel::nodeStructureChanged(ModelTreeNodePtr node)
 
 void DefaultTreeModel::nodesWereInserted(ModelTreeNodePtr node, std::vector<UInt32> childIndices)
 {
-    std::vector<SharedFieldPtr> InstertedChildUserObjects;
+    std::vector<boost::any> InstertedChildUserObjects;
 
     for(UInt32 i(0) ; i< childIndices.size() ; ++i)
     {
@@ -204,7 +206,7 @@ void DefaultTreeModel::removeNodeFromParent(MutableTreeNodePtr node)
     std::vector<UInt32> ChildIndicies;
     ChildIndicies.push_back(Parent->getIndex(node));
     
-    std::vector<SharedFieldPtr> Children;
+    std::vector<boost::any> Children;
     Children.push_back(node->getUserObject());
 
     node->removeFromParent();

@@ -5,18 +5,11 @@
 // 
 // Includes: Font and Label creation and settings
 
-
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -155,7 +148,7 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
 
 	OSG_FIELD_CONTAINER_DECL(PtrType)
 	
-	virtual ComponentPtr getListComponent(ListPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus)
+	virtual ComponentPtr getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
     {
         // Create using the DefaultListComponentGenerator a
         // Label (its default) with the Font name as its text
@@ -167,13 +160,12 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
 
         std::string FontFamilyString;
         // Converts the Fontname to correct type
-        if(Value->getType() == SFString::getClassType())
+        try
         {
-            FontFamilyString = dynamic_cast<SFString*>(Value.get())->getValue();
+            FontFamilyString = boost::any_cast<std::string>(Value);
         }
-        else
+        catch(boost::bad_any_cast &)
         {
-            // Gives a default Value
             FontFamilyString = "Times New Roman";
         }
         
@@ -237,10 +229,13 @@ class FontListListener: public ListSelectionListener
         if(!FontList->getSelectionModel()->isSelectionEmpty())
         {
             std::string ValueStr("");
-            SharedFieldPtr Value(FontList->getValueAtIndex(FontList->getSelectionModel()->getAnchorSelectionIndex()));
-            if(Value->getType() == SFString::getClassType())
+            
+            try
             {
-                ValueStr = dynamic_cast<SFString*>(Value.get())->getValue();
+                ValueStr = boost::any_cast<std::string>(FontList->getValueAtIndex(FontList->getSelectionModel()->getAnchorSelectionIndex()));
+            }
+            catch(boost::bad_any_cast &)
+            {
             }
             // Output selected font
             std::cout << "Setting Font: " << ValueStr << std::endl;
@@ -430,7 +425,7 @@ int main(int argc, char **argv)
     for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
     {
         // Add the Fonts to the List
-        ListModel->pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
+        ListModel->pushBack(boost::any((*FontMapItor).first));
     }
 
     // Creates ComponentGenerator

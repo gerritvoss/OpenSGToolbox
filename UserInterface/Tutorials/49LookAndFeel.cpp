@@ -7,18 +7,11 @@
 // Text,and adding a Button to a Scene.  Also note that clicking
 // the Button causes it to appear pressed
 
-
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -367,8 +360,8 @@ class ExampleTableModel : public AbstractTableModel
 	OSG_FIELD_CONTAINER_DECL(PtrType)
 private:
     // Creates two vectors to store column/cell values in
-    std::vector<SharedFieldPtr> _ColumnValues;
-    std::vector<SharedFieldPtr> _CellValues;
+    std::vector<boost::any> _ColumnValues;
+    std::vector<boost::any> _CellValues;
 
 	friend class FieldContainer;
 
@@ -385,7 +378,7 @@ public:
         return _ColumnValues.size();
     }
     
-    virtual SharedFieldPtr getColumnValue(UInt32 columnIndex) const
+    virtual boost::any getColumnValue(UInt32 columnIndex) const
     {
         return _ColumnValues[columnIndex];
     }
@@ -395,7 +388,7 @@ public:
         return _CellValues.size() / _ColumnValues.size();
     }
     
-    virtual SharedFieldPtr getValueAt(UInt32 rowIndex, UInt32 columnIndex) const
+    virtual boost::any getValueAt(UInt32 rowIndex, UInt32 columnIndex) const
     {
         return _CellValues[rowIndex*_ColumnValues.size() + columnIndex];
     }
@@ -406,20 +399,18 @@ public:
         return columnIndex == 0;
     }
     
-    virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex)
+    virtual void setValueAt(const boost::any& aValue, UInt32 rowIndex, UInt32 columnIndex)
     {
         // 
-        if(columnIndex == 0 && aValue->getType() == SFString::getClassType())
+        if(columnIndex == 0 && aValue.type() == typeid(std::string))
         {
-            std::string TempString;
-            aValue->getValueByStr(TempString);
-            static_cast<SFString*>(_CellValues[rowIndex*getColumnCount() + columnIndex].get())->setValue(static_cast<SFString*>(aValue.get())->getValue());
+            _CellValues[rowIndex*getColumnCount() + columnIndex] = aValue;
         }
     }
 
-    virtual const FieldType* getColumnType(const UInt32& columnIndex)
+    virtual const std::type_info& getColumnType(const UInt32& columnIndex)
     {
-        return NULL;
+        return typeid(void);
     }
 
     /******************************************************
@@ -439,35 +430,35 @@ public:
     ExampleTableModel() : Inherited()
     {
         // Creates the lists within column/cell values and adds data (1d representation of 2d array basically)
-        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column String")));
-        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column Integer")));
-        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column GLenum")));
-        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column Boolean")));
-        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column Pnt3f")));
+        _ColumnValues.push_back(boost::any(std::string("Column String")));
+        _ColumnValues.push_back(boost::any(std::string("Column Integer")));
+        _ColumnValues.push_back(boost::any(std::string("Column GLenum")));
+        _ColumnValues.push_back(boost::any(std::string("Column Boolean")));
+        _ColumnValues.push_back(boost::any(std::string("Column Pnt3f")));
         
-        _CellValues.push_back(SharedFieldPtr(new SFString("A")));
-        _CellValues.push_back(SharedFieldPtr(new SFInt32(1)));
-        _CellValues.push_back(SharedFieldPtr(new SFGLenum(GL_SRC_ALPHA)));
-        _CellValues.push_back(SharedFieldPtr(new SFBool(true)));
-        _CellValues.push_back(SharedFieldPtr(new SFPnt3f(Pnt3f(1.0,0.0,0.0))));
+        _CellValues.push_back(boost::any(std::string("A")));
+        _CellValues.push_back(boost::any(Int32(1)));
+        _CellValues.push_back(boost::any(GLenum(GL_SRC_ALPHA)));
+        _CellValues.push_back(boost::any(bool(true)));
+        _CellValues.push_back(boost::any(Pnt3f(1.0,0.0,0.0)));
         
-        _CellValues.push_back(SharedFieldPtr(new SFString("B")));
-        _CellValues.push_back(SharedFieldPtr(new SFInt32(2)));
-        _CellValues.push_back(SharedFieldPtr(new SFGLenum(GL_NICEST)));
-        _CellValues.push_back(SharedFieldPtr(new SFBool(false)));
-        _CellValues.push_back(SharedFieldPtr(new SFPnt3f(Pnt3f(0.0,1.0,0.0))));
+        _CellValues.push_back(boost::any(std::string("B")));
+        _CellValues.push_back(boost::any(Int32(2)));
+        _CellValues.push_back(boost::any(GLenum(GL_NICEST)));
+        _CellValues.push_back(boost::any(bool(false)));
+        _CellValues.push_back(boost::any(Pnt3f(0.0,1.0,0.0)));
         
-        _CellValues.push_back(SharedFieldPtr(new SFString("C")));
-        _CellValues.push_back(SharedFieldPtr(new SFInt32(3)));
-        _CellValues.push_back(SharedFieldPtr(new SFGLenum(GL_CCW)));
-        _CellValues.push_back(SharedFieldPtr(new SFBool(true)));
-        _CellValues.push_back(SharedFieldPtr(new SFPnt3f(Pnt3f(0.0,0.0,1.0))));
+        _CellValues.push_back(boost::any(std::string("C")));
+        _CellValues.push_back(boost::any(Int32(3)));
+        _CellValues.push_back(boost::any(GLenum(GL_CCW)));
+        _CellValues.push_back(boost::any(bool(true)));
+        _CellValues.push_back(boost::any(Pnt3f(0.0,0.0,1.0)));
 
-        _CellValues.push_back(SharedFieldPtr(new SFString("D")));
-        _CellValues.push_back(SharedFieldPtr(new SFInt32(4)));
-        _CellValues.push_back(SharedFieldPtr(new SFGLenum(GL_CW)));
-        _CellValues.push_back(SharedFieldPtr(new SFBool(false)));
-        _CellValues.push_back(SharedFieldPtr(new SFPnt3f(Pnt3f(1.0,1.0,1.0))));
+        _CellValues.push_back(boost::any(std::string("D")));
+        _CellValues.push_back(boost::any(Int32(4)));
+        _CellValues.push_back(boost::any(GLenum(GL_CW)));
+        _CellValues.push_back(boost::any(bool(false)));
+        _CellValues.push_back(boost::any(Pnt3f(1.0,1.0,1.0)));
     }
 
     ~ExampleTableModel()
@@ -1395,19 +1386,19 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     inactiveSpinnerModel->setMaximum(10);
     inactiveSpinnerModel->setMinimum(-10);
     inactiveSpinnerModel->setStepSize(1);
-    inactiveSpinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
+    inactiveSpinnerModel->setValue(boost::any(Int32(0)));
     activeSpinnerModel->setMaximum(10);
     activeSpinnerModel->setMinimum(-10);
     activeSpinnerModel->setStepSize(1);
-    activeSpinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
+    activeSpinnerModel->setValue(boost::any(Int32(0)));
     disabledInactiveSpinnerModel->setMaximum(10);
     disabledInactiveSpinnerModel->setMinimum(-10);
     disabledInactiveSpinnerModel->setStepSize(1);
-    disabledInactiveSpinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
+    disabledInactiveSpinnerModel->setValue(boost::any(Int32(0)));
     disabledActiveSpinnerModel->setMaximum(10);
     disabledActiveSpinnerModel->setMinimum(-10);
     disabledActiveSpinnerModel->setStepSize(1);
-    disabledActiveSpinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
+    disabledActiveSpinnerModel->setValue(boost::any(Int32(0)));
     inactiveSpinner->setModel(inactiveSpinnerModel);
     activeSpinner->setModel(activeSpinnerModel);
     disabledInactiveSpinner->setModel(disabledInactiveSpinnerModel);
@@ -1448,31 +1439,31 @@ PanelPtr StatePanelCreator::createStatePanel(void)
 
 	// Create Models
 	editableComboBoxModel = DefaultMutableComboBoxModel::create();
-	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Editable")));
-	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("These")));
-	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Can")));
-	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Be")));
-	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Typed")));
-	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Over")));
+	editableComboBoxModel->addElement(boost::any(std::string("Editable")));
+	editableComboBoxModel->addElement(boost::any(std::string("These")));
+	editableComboBoxModel->addElement(boost::any(std::string("Can")));
+	editableComboBoxModel->addElement(boost::any(std::string("Be")));
+	editableComboBoxModel->addElement(boost::any(std::string("Typed")));
+	editableComboBoxModel->addElement(boost::any(std::string("Over")));
 	
 
 	noneditableComboBoxModel = DefaultMutableComboBoxModel::create();
-	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Noneditable")));
-	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("These")));
-	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Can")));
-	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("NOT")));
-	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Be")));
-	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Typed")));
-	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Over")));
+	noneditableComboBoxModel->addElement(boost::any(std::string("Noneditable")));
+	noneditableComboBoxModel->addElement(boost::any(std::string("These")));
+	noneditableComboBoxModel->addElement(boost::any(std::string("Can")));
+	noneditableComboBoxModel->addElement(boost::any(std::string("NOT")));
+	noneditableComboBoxModel->addElement(boost::any(std::string("Be")));
+	noneditableComboBoxModel->addElement(boost::any(std::string("Typed")));
+	noneditableComboBoxModel->addElement(boost::any(std::string("Over")));
 
 
 	// Create simple Models for disabled ComboBoxes
 	disabledEditableComboBoxModel = DefaultMutableComboBoxModel::create();
-	disabledEditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Editable")));
+	disabledEditableComboBoxModel->addElement(boost::any(std::string("Editable")));
 
 
 	disabledNoneditableComboBoxModel = DefaultMutableComboBoxModel::create();
-	disabledNoneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Noneditable")));
+	disabledNoneditableComboBoxModel->addElement(boost::any(std::string("Noneditable")));
 
 
     beginEditCP(editableComboBox, ComboBox::ConstraintsFieldMask | ComboBox::ModelFieldMask);
@@ -2188,21 +2179,21 @@ PanelPtr StatePanelCreator::createListPanel(void)
 {
     // Add data to it
 	_ExampleListModel = DefaultListModel::create();
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Red")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Green")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Blue")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Orange")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Purple")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Yellow")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("White")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Black")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Gray")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Brown")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Indigo")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Pink")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Violet")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Mauve")));
-    _ExampleListModel->pushBack(SharedFieldPtr(new SFString("Peach")));
+    _ExampleListModel->pushBack(boost::any(std::string("Red")));
+    _ExampleListModel->pushBack(boost::any(std::string("Green")));
+    _ExampleListModel->pushBack(boost::any(std::string("Blue")));
+    _ExampleListModel->pushBack(boost::any(std::string("Orange")));
+    _ExampleListModel->pushBack(boost::any(std::string("Purple")));
+    _ExampleListModel->pushBack(boost::any(std::string("Yellow")));
+    _ExampleListModel->pushBack(boost::any(std::string("White")));
+    _ExampleListModel->pushBack(boost::any(std::string("Black")));
+    _ExampleListModel->pushBack(boost::any(std::string("Gray")));
+    _ExampleListModel->pushBack(boost::any(std::string("Brown")));
+    _ExampleListModel->pushBack(boost::any(std::string("Indigo")));
+    _ExampleListModel->pushBack(boost::any(std::string("Pink")));
+    _ExampleListModel->pushBack(boost::any(std::string("Violet")));
+    _ExampleListModel->pushBack(boost::any(std::string("Mauve")));
+    _ExampleListModel->pushBack(boost::any(std::string("Peach")));
     
     ListPtr ExampleList = List::create();
 	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);

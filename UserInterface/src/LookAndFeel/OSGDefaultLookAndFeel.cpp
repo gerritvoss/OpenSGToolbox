@@ -1852,12 +1852,12 @@ void DefaultLookAndFeel::init(void)
         DefaultTable->setShowVerticalLines(true);
         DefaultTable->setGridColor(Color4f(0.0,0.0,0.0,1.0));
 
-        DefaultTable->setDefaultRenderer(&SFGLenum::getClassType(), TableCellRendererPtr(new DefaultGLenumTableCellRenderer()));
-        DefaultTable->setDefaultRenderer(&SFString::getClassType(), TableCellRendererPtr(new DefaultStringTableCellRenderer()));
-        DefaultTable->setDefaultRenderer(&SFBool::getClassType(), TableCellRendererPtr(new DefaultBoolTableCellRenderer()));
-        DefaultTable->setDefaultRenderer(&SFInt32::getClassType(), TableCellRendererPtr(new DefaultInt32TableCellRenderer()));
-        DefaultTable->setDefaultRenderer(&SFUInt32::getClassType(), TableCellRendererPtr(new DefaultUInt32TableCellRenderer()));
-        DefaultTable->setDefaultRenderer(&SFReal32::getClassType(), TableCellRendererPtr(new DefaultReal32TableCellRenderer()));
+        DefaultTable->setDefaultRenderer(typeid(GLenum), TableCellRendererPtr(new DefaultGLenumTableCellRenderer()));
+        DefaultTable->setDefaultRenderer(typeid(std::string), TableCellRendererPtr(new DefaultStringTableCellRenderer()));
+        DefaultTable->setDefaultRenderer(typeid(bool), TableCellRendererPtr(new DefaultBoolTableCellRenderer()));
+        DefaultTable->setDefaultRenderer(typeid(Int32), TableCellRendererPtr(new DefaultInt32TableCellRenderer()));
+        DefaultTable->setDefaultRenderer(typeid(UInt32), TableCellRendererPtr(new DefaultUInt32TableCellRenderer()));
+        DefaultTable->setDefaultRenderer(typeid(Real32), TableCellRendererPtr(new DefaultReal32TableCellRenderer()));
 		
 	endEditCP(DefaultTable);
 	

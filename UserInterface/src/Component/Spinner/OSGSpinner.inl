@@ -67,25 +67,25 @@ SpinnerModelPtr Spinner::getModel(void) const
 }
 
 inline
-SharedFieldPtr Spinner::getNextValue(void)
+boost::any Spinner::getNextValue(void)
 {
     return _Model->getNextValue();
 }
 
 inline
-SharedFieldPtr Spinner::getPreviousValue(void)
+boost::any Spinner::getPreviousValue(void)
 {
     return _Model->getPreviousValue();
 }
 
 inline
-SharedFieldPtr Spinner::getValue(void)
+boost::any Spinner::getValue(void)
 {
     return _Model->getValue();
 }
 
 inline
-void Spinner::setValue(SharedFieldPtr value)
+void Spinner::setValue(const boost::any& value)
 {
     _Model->setValue(value);
 }

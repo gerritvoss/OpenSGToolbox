@@ -279,8 +279,8 @@ void Spinner::dump(      UInt32    ,
 
 void Spinner::NextButtonActionListener::actionPerformed(const ActionEvent& e)
 {
-    SharedFieldPtr NewValue(_Spinner->getNextValue());
-    if(NewValue != SharedFieldPtr())
+    boost::any NewValue(_Spinner->getNextValue());
+    if(!NewValue.empty())
     {
         _Spinner->setValue(NewValue);
     }
@@ -288,8 +288,8 @@ void Spinner::NextButtonActionListener::actionPerformed(const ActionEvent& e)
 
 void Spinner::PreviousButtonActionListener::actionPerformed(const ActionEvent& e)
 {
-    SharedFieldPtr NewValue(_Spinner->getPreviousValue());
-    if(NewValue != SharedFieldPtr())
+    const boost::any& NewValue(_Spinner->getPreviousValue());
+    if(!NewValue.empty())
     {
         _Spinner->setValue(NewValue);
     }

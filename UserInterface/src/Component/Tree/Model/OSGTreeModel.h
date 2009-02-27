@@ -45,7 +45,8 @@
  
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
+#include <OpenSG/OSGBaseTypes.h>
 
 OSG_BEGIN_NAMESPACE
 class TreeModelListener;
@@ -65,22 +66,22 @@ public:
 	virtual void removeTreeModelListener(TreeModelListenerPtr l) = 0;
 
 	//Returns the child of parent at index index in the parent's child array.
-	virtual SharedFieldPtr getChild(SharedFieldPtr parent, const UInt32& index) const = 0;
+	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const = 0;
 
 	//Returns the number of children of parent.
-	virtual UInt32 getChildCount(SharedFieldPtr parent) const = 0;
+	virtual UInt32 getChildCount(const boost::any& parent) const = 0;
 
 	//Returns the index of child in parent.
-	virtual UInt32 getIndexOfChild(SharedFieldPtr parent, SharedFieldPtr child) const = 0;
+	virtual UInt32 getIndexOfChild(const boost::any& parent, const boost::any& child) const = 0;
 
 	//Returns the root of the tree.
-	virtual SharedFieldPtr getRoot(void) const = 0;
+	virtual boost::any getRoot(void) const = 0;
 
 	//Returns true if node is a leaf.
-	virtual bool isLeaf(SharedFieldPtr node) const = 0;
+	virtual bool isLeaf(const boost::any& node) const = 0;
 
 	//Messaged when the user has altered the value for the item identified by path to newValue.
-	virtual void valueForPathChanged(TreePath path, SharedFieldPtr newValue) = 0;
+	virtual void valueForPathChanged(TreePath path, const boost::any& newValue) = 0;
 };
 
 typedef TreeModel* TreeModelPtr;

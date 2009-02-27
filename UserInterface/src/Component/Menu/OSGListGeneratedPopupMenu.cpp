@@ -52,6 +52,7 @@
 #include "OSGComponentMenuItem.h"
 #include "Component/List/Models/OSGListModel.h" // Model type
 #include "ComponentGenerators/OSGComponentGenerator.h" // CellGenerator type
+#include <OpenSG/Toolbox/OSGStringUtils.h> // CellGenerator type
 
 OSG_BEGIN_NAMESPACE
 
@@ -159,14 +160,14 @@ void ListGeneratedPopupMenu::updateMenuItems(void)
 					//Generate the Menu Item
 					Item = MenuItem::create();
 					std::string TheText;
-					if(getModel()->getElementAt(i)->getType() == SFString::getClassType())
-					{
-						TheText = dynamic_cast<SFString*>(getModel()->getElementAt(i).get())->getValue();
-					}
-					else
-					{
-						getModel()->getElementAt(i)->getValueByStr(TheText);
-					}
+                    try
+                    {
+                        TheText = lexical_cast(getModel()->getElementAt(i));
+                    }
+                    catch (boost::bad_lexical_cast &)
+                    {
+                        //Could not convert to a string
+                    }
 					beginEditCP(Item, MenuItem::TextFieldMask);
 						MenuItem::Ptr::dcast(Item)->setText(TheText);
 					endEditCP(Item, MenuItem::TextFieldMask);

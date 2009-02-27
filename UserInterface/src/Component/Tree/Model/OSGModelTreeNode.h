@@ -47,7 +47,7 @@
 
 #include "OSGModelTreeNodeBase.h"
 #include "Component/Tree/OSGTreePath.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
@@ -104,13 +104,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ModelTreeNode : public ModelTreeNodeBase
 	virtual bool isLeaf(void) const = 0;
 
 	//Resets the user object of the receiver to object.
-	virtual void setUserObject(SharedFieldPtr object) = 0;
+	virtual void setUserObject(const boost::any& object) = 0;
     
 	//Returns this node's user object.
-	virtual SharedFieldPtr getUserObject(void) const = 0;
+	virtual boost::any getUserObject(void) const = 0;
     
     //Find the decendent node that uses object as it's UserObject
-    ModelTreeNodePtr getNodeFromUserObject(SharedFieldPtr object);
+    ModelTreeNodePtr getNodeFromUserObject(const boost::any& object);
 
     //Get the Path from the Root to this node
     TreePath getPath(void) const;

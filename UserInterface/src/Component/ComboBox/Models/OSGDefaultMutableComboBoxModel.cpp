@@ -82,17 +82,17 @@ UInt32 DefaultMutableComboBoxModel::getSize(void) const
 	return _FieldList.size();
 }
 
-SharedFieldPtr DefaultMutableComboBoxModel::getElementAt(UInt32 index) const
+boost::any DefaultMutableComboBoxModel::getElementAt(UInt32 index) const
 {
    return _FieldList[index];
 }
 
-SharedFieldPtr DefaultMutableComboBoxModel::getSelectedItem(void) const
+boost::any DefaultMutableComboBoxModel::getSelectedItem(void) const
 {
 	if(_SelectedIndex < 0 ||
 	   _SelectedIndex >= _FieldList.size())
 	{
-		return SharedFieldPtr();
+        return boost::any();
 	}
 	else
 	{
@@ -119,9 +119,10 @@ void DefaultMutableComboBoxModel::setSelectedItem(const Int32& index)
 	}
 }
 
-void DefaultMutableComboBoxModel::setSelectedItem(SharedFieldPtr anObject)
+void DefaultMutableComboBoxModel::setSelectedItem(const boost::any& anObject)
 {
-	if(getSize() != 0)
+    assert(false);
+	/*if(getSize() != 0)
 	{
 		Int32 PreviousIndex(_SelectedIndex);
 
@@ -145,22 +146,20 @@ void DefaultMutableComboBoxModel::setSelectedItem(SharedFieldPtr anObject)
 			produceSelectionChanged(DefaultMutableComboBoxModelPtr(this), _SelectedIndex, PreviousIndex);
 		}
 	}
+    */
 }
 
-void DefaultMutableComboBoxModel::addElement(SharedFieldPtr anObject)
+void DefaultMutableComboBoxModel::addElement(const boost::any& anObject)
 {
 	_FieldList.push_back(anObject);
 	produceListDataIntervalAdded(DefaultMutableComboBoxModelPtr(this),_FieldList.size()-1,_FieldList.size()-1);
 }
 
-void DefaultMutableComboBoxModel::insertElementAt(SharedFieldPtr anObject, const UInt32& index)
+void DefaultMutableComboBoxModel::insertElementAt(const boost::any& anObject, const UInt32& index)
 {
 	if(index < _FieldList.size())
 	{
-		std::vector<SharedFieldPtr>::iterator InsertItor(_FieldList.begin());
-		for(UInt32 i(0); i<index ; ++i ) ++InsertItor;
-
-		_FieldList.insert(InsertItor, anObject);
+		_FieldList.insert(_FieldList.begin()+index, anObject);
 		produceListDataIntervalAdded(DefaultMutableComboBoxModelPtr(this),index,index);
 	}
 	else
@@ -176,16 +175,17 @@ void DefaultMutableComboBoxModel::removeAllElements(void)
 	produceListDataIntervalRemoved(DefaultMutableComboBoxModelPtr(this),0,Size-1);
 }
 
-void DefaultMutableComboBoxModel::removeElement(SharedFieldPtr anObject)
+void DefaultMutableComboBoxModel::removeElement(const boost::any& anObject)
 {
-	std::vector<SharedFieldPtr>::iterator SearchItor(std::find(_FieldList.begin(), _FieldList.end(), anObject));
+    assert(false);
+	/*std::vector<boost::any>::iterator SearchItor(std::find(_FieldList.begin(), _FieldList.end(), anObject));
 
 	if(SearchItor != _FieldList.end())
 	{
 		UInt32 Index(SearchItor - _FieldList.begin());
 		_FieldList.erase(SearchItor);
 		produceListDataIntervalRemoved(DefaultMutableComboBoxModelPtr(this),Index,Index);
-	}
+	}*/
 
 
 }
@@ -194,10 +194,7 @@ void DefaultMutableComboBoxModel::removeElementAt(const UInt32& index)
 {
 	if(index < _FieldList.size())
 	{
-		std::vector<SharedFieldPtr>::iterator RemoveItor(_FieldList.begin());
-		for(UInt32 i(0); i<index ; ++i ) ++RemoveItor;
-
-		_FieldList.erase(RemoveItor);
+		_FieldList.erase(_FieldList.begin()+index);
 		produceListDataIntervalRemoved(DefaultMutableComboBoxModelPtr(this),index,index);
 	}
 }

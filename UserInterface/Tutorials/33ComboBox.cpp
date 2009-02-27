@@ -8,18 +8,11 @@
 // Text,and adding a Button to a Scene.  Also note that clicking
 // the Button causes it to appear pressed
 
-
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -144,14 +137,14 @@ int main(int argc, char **argv)
     ******************************************************/   
 
 	DefaultMutableComboBoxModelPtr ExampleComboBoxModel = DefaultMutableComboBoxModel::create();
-	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Red")));
-	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Green")));
-	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Blue")));
-	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Brown")));
-	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Yellow")));
-	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Orange")));
-	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Violet")));
-	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Black")));
+	ExampleComboBoxModel->addElement(boost::any(std::string("Red")));
+	ExampleComboBoxModel->addElement(boost::any(std::string("Green")));
+	ExampleComboBoxModel->addElement(boost::any(std::string("Blue")));
+	ExampleComboBoxModel->addElement(boost::any(std::string("Brown")));
+	ExampleComboBoxModel->addElement(boost::any(std::string("Yellow")));
+	ExampleComboBoxModel->addElement(boost::any(std::string("Orange")));
+	ExampleComboBoxModel->addElement(boost::any(std::string("Violet")));
+	ExampleComboBoxModel->addElement(boost::any(std::string("Black")));
 
 	/******************************************************
             

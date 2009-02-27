@@ -106,7 +106,7 @@ void Tree::expandRow(const UInt32& row)
 }
 
 inline
-SharedFieldPtr Tree::getLastSelectedPathComponent(void) const
+boost::any Tree::getLastSelectedPathComponent(void) const
 {
     return getModelLayout()->getPathForRow(_SelectionModel->getMaxSelectionRow()).getLastPathComponent();
 }

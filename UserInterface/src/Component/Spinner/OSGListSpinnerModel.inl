@@ -43,7 +43,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-ListSpinnerModel::FieldList ListSpinnerModel::getList(void) const
+ListSpinnerModel::AnyList ListSpinnerModel::getList(void) const
 {
     return _List;
 }

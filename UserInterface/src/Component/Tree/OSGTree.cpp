@@ -186,7 +186,7 @@ void Tree::keyTyped(const KeyEvent& e)
             }
             else if(getModel()->getChildCount(SelectedPath.getLastPathComponent()) > 0)
             {
-                TreePath ToPath = SelectedPath.pathByAddingChild(getModel()->getChild(SelectedPath.getLastPathComponent(), 0));
+                TreePath ToPath = SelectedPath.pathByAddingChild(getModel()->getChild(SelectedPath.getLastPathComponent()._NodeValue, 0), 0);
                 getSelectionModel()->setSelectionPath(ToPath);
                 scrollPathToVisible(ToPath);
             }
@@ -317,7 +317,7 @@ void Tree::cancelEditing(void)
 TreePath Tree::getAnchorSelectionPath(void) const
 {
     //TODO:Implement
-    return TreePath(SharedFieldPtr());
+    return TreePath();
 }
 
 TreePath Tree::getClosestPathForLocation(const Pnt2f& Loc) const
@@ -329,7 +329,7 @@ TreePath Tree::getClosestPathForLocation(const Pnt2f& Loc) const
     }
     else
     {
-        return TreePath(SharedFieldPtr());
+        return TreePath();
     }
 }
 
@@ -348,7 +348,7 @@ Int32 Tree::getClosestRowForLocation(const Pnt2f& Loc) const
 TreePath Tree::getEditingPath(void) const
 {
     //TODO:Implement
-    return TreePath(SharedFieldPtr());
+    return TreePath();
 }
 
 
@@ -361,7 +361,7 @@ TreePath Tree::getPathForLocation(const Pnt2f& Loc) const
     }
     else
     {
-        return TreePath(SharedFieldPtr());
+        return TreePath();
     }
 }
 
@@ -1083,7 +1083,7 @@ void Tree::ModelListener::treeNodesChanged(TreeModelEvent e)
     Int32 Row(-1);
     for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
     {
-        Row = _Tree->getModelLayout()->getRowForPath(e.getTreePath().pathByAddingChild(e.getChildren()[i]));
+        Row = _Tree->getModelLayout()->getRowForPath(e.getPath().pathByAddingChild(e.getChildren()[i], e.getChildIndices()[i]));
         if(Row != -1)
         {
             _Tree->updateRows(Row, 1);
@@ -1096,7 +1096,7 @@ void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
     Int32 InsertedRow(-1);
     for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
     {
-        InsertedRow = _Tree->getModelLayout()->getRowForPath(e.getTreePath().pathByAddingChild(e.getChildren()[i]));
+        InsertedRow = _Tree->getModelLayout()->getRowForPath(e.getPath().pathByAddingChild(e.getChildren()[i], e.getChildIndices()[i]));
         if(InsertedRow != -1)
         {
             _Tree->updateInsertedRows(InsertedRow, 1);
@@ -1109,7 +1109,7 @@ void Tree::ModelListener::treeNodesRemoved(TreeModelEvent e)
     Int32 RemovedRow(-1);
     for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
     {
-        RemovedRow = _Tree->getModelLayout()->getRowForPath(e.getTreePath().pathByAddingChild(e.getChildren()[i]));
+        RemovedRow = _Tree->getModelLayout()->getRowForPath(e.getPath().pathByAddingChild(e.getChildren()[i], e.getChildIndices()[i]));
         if(RemovedRow != -1)
         {
             _Tree->updateRemovedRows(RemovedRow, 1);

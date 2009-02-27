@@ -79,9 +79,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxComponentGenerator : public ComboB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual ComponentPtr getComboBoxComponent(ComboBoxPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus) = 0;
+	virtual ComponentPtr getComboBoxComponent(ComboBoxPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) = 0;
 
-	virtual ComponentPtr getComponent(ComponentPtr Parent, SharedFieldPtr Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
+	virtual ComponentPtr getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

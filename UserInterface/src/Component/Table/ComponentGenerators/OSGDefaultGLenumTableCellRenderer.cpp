@@ -77,15 +77,22 @@ A DefaultGLenumTableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultGLenumTableCellRenderer::getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentPtr DefaultGLenumTableCellRenderer::getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
-	if(value == NULL){
+	if(value.empty()){
 		return NullFC;
 	}
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 		std::string tempString;
-		tempString = toString(static_cast<SFGLenum*>(value.get())->getValue());
+        try
+        {
+		    tempString = toString(boost::any_cast<GLenum>(value));
+        }
+        catch (boost::bad_any_cast &)
+        {
+            //Not a UInt32
+        }
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);

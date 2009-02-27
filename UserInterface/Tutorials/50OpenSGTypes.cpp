@@ -126,9 +126,6 @@ class OpenSGTypePanel
 {
 public:
 
-    // Setup a FontListener to change the label's font
-    // when a different item in the FontList is
-    // selected
     class FCListListener: public ListSelectionListener
     {
       public:
@@ -137,10 +134,12 @@ public:
             if(!_List->getSelectionModel()->isSelectionEmpty())
             {
                 std::string ValueStr("");
-                SharedFieldPtr Value(_List->getValueAtIndex(_List->getSelectionModel()->getAnchorSelectionIndex()));
-                if(Value->getType() == SFString::getClassType())
+                try
                 {
-                    ValueStr = dynamic_cast<SFString*>(Value.get())->getValue();
+                    ValueStr = boost::any_cast<std::string>(_List->getValueAtIndex(_List->getSelectionModel()->getAnchorSelectionIndex()));
+                }
+                catch(boost::bad_any_cast &)
+                {
                 }
 
                 FieldContainerType* TheFCType = FieldContainerFactory::the()->findType(ValueStr.c_str());
@@ -210,7 +209,7 @@ protected:
 			if(TheType != NULL)
 			{
 				// Add all available Fonts to it
-				_TypeModel->pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
+				_TypeModel->pushBack(boost::any(std::string(TheType->getCName())));
 			}
 		}
 		// Create TypeList
@@ -317,7 +316,7 @@ protected:
 			if(TheType != NULL)
 			{
 				// Add all available Fonts to it
-				_FieldTypeModel->pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
+				_FieldTypeModel->pushBack(boost::any(std::string(TheType->getCName())));
 				++NumTypesFound;
 			}
 		}
@@ -426,7 +425,7 @@ protected:
 			if(TheType != NULL)
 			{
 				// Add all available Fonts to it
-				_FieldContainerTypeModel->pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
+				_FieldContainerTypeModel->pushBack(boost::any(std::string(TheType->getCName())));
 				++NumTypesFound;
 			}
 		}
@@ -669,7 +668,7 @@ int main(int argc, char **argv)
 		if(TheType != NULL)
 		{
 			// Add all available Fonts to it
-			TypeModel.pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
+			TypeModel.pushBack(boost::any(std::string(TheType->getCName())));
 		}
 	}*/
 	

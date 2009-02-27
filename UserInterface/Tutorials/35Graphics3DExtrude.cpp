@@ -8,17 +8,11 @@
 // the Button causes it to appear pressed
 
 
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -733,61 +727,61 @@ int main(int argc, char **argv)
 	DefaultListModelPtr Model1 = DefaultListModel::create();
 
     // Add values to it
-    Model1->pushBack(SharedFieldPtr(new SFString("Red")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Green")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Blue")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Orange")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Purple")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Yellow")));
-    Model1->pushBack(SharedFieldPtr(new SFString("White")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Black")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Gray")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Brown")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Indigo")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Pink")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Violet")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Mauve")));
-    Model1->pushBack(SharedFieldPtr(new SFString("Peach")));
+    Model1->pushBack(boost::any(std::string("Red")));
+    Model1->pushBack(boost::any(std::string("Green")));
+    Model1->pushBack(boost::any(std::string("Blue")));
+    Model1->pushBack(boost::any(std::string("Orange")));
+    Model1->pushBack(boost::any(std::string("Purple")));
+    Model1->pushBack(boost::any(std::string("Yellow")));
+    Model1->pushBack(boost::any(std::string("White")));
+    Model1->pushBack(boost::any(std::string("Black")));
+    Model1->pushBack(boost::any(std::string("Gray")));
+    Model1->pushBack(boost::any(std::string("Brown")));
+    Model1->pushBack(boost::any(std::string("Indigo")));
+    Model1->pushBack(boost::any(std::string("Pink")));
+    Model1->pushBack(boost::any(std::string("Violet")));
+    Model1->pushBack(boost::any(std::string("Mauve")));
+    Model1->pushBack(boost::any(std::string("Peach")));
 
 	// Create ListModel Component to add things to
 	DefaultListModelPtr Model2 = DefaultListModel::create();
 
     // Add values to it
-    Model2->pushBack(SharedFieldPtr(new SFString("Taco Pizza")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Spaghetti")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Chicken Fingers")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Buffalo Wings")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Cheesesticks")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Bloomin' Onion")));
-    Model2->pushBack(SharedFieldPtr(new SFString("French Fries")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Cheeseburger")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Onion Rings")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Curly Fries")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Chocolate Milkshake")));
-    Model2->pushBack(SharedFieldPtr(new SFString("All-Meat Pizza")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Supreme Pizza")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Veggie Pizza")));
-    Model2->pushBack(SharedFieldPtr(new SFString("Cheese Pizza")));
+    Model2->pushBack(boost::any(std::string("Taco Pizza")));
+    Model2->pushBack(boost::any(std::string("Spaghetti")));
+    Model2->pushBack(boost::any(std::string("Chicken Fingers")));
+    Model2->pushBack(boost::any(std::string("Buffalo Wings")));
+    Model2->pushBack(boost::any(std::string("Cheesesticks")));
+    Model2->pushBack(boost::any(std::string("Bloomin' Onion")));
+    Model2->pushBack(boost::any(std::string("French Fries")));
+    Model2->pushBack(boost::any(std::string("Cheeseburger")));
+    Model2->pushBack(boost::any(std::string("Onion Rings")));
+    Model2->pushBack(boost::any(std::string("Curly Fries")));
+    Model2->pushBack(boost::any(std::string("Chocolate Milkshake")));
+    Model2->pushBack(boost::any(std::string("All-Meat Pizza")));
+    Model2->pushBack(boost::any(std::string("Supreme Pizza")));
+    Model2->pushBack(boost::any(std::string("Veggie Pizza")));
+    Model2->pushBack(boost::any(std::string("Cheese Pizza")));
 
 	// Create ListModel Component to add things to
 	DefaultListModelPtr Model3 = DefaultListModel::create();
 
     // Add values to it
-    Model3->pushBack(SharedFieldPtr(new SFString("London")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Paris")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Amsterdam")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Manama")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Dubai")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Madrid")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Berlin")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Beijing")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Seoul")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Oslow")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Beirut")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Baghdad")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Mexico City")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Washington DC")));
-    Model3->pushBack(SharedFieldPtr(new SFString("Moscow")));
+    Model3->pushBack(boost::any(std::string("London")));
+    Model3->pushBack(boost::any(std::string("Paris")));
+    Model3->pushBack(boost::any(std::string("Amsterdam")));
+    Model3->pushBack(boost::any(std::string("Manama")));
+    Model3->pushBack(boost::any(std::string("Dubai")));
+    Model3->pushBack(boost::any(std::string("Madrid")));
+    Model3->pushBack(boost::any(std::string("Berlin")));
+    Model3->pushBack(boost::any(std::string("Beijing")));
+    Model3->pushBack(boost::any(std::string("Seoul")));
+    Model3->pushBack(boost::any(std::string("Oslow")));
+    Model3->pushBack(boost::any(std::string("Beirut")));
+    Model3->pushBack(boost::any(std::string("Baghdad")));
+    Model3->pushBack(boost::any(std::string("Mexico City")));
+    Model3->pushBack(boost::any(std::string("Washington DC")));
+    Model3->pushBack(boost::any(std::string("Moscow")));
 
     // Create ListSelectionModel
     // (normally will be default).
@@ -906,7 +900,7 @@ int main(int argc, char **argv)
                 value the Spinner can have.
             -setStepSize(int): Determine the 
                 incremental step size.
-            -setValue(SharedFieldPtr(new SFInt32(int)):
+            -setValue(boost::any(Int32(int)):
                 Determine initial starting value
                 of the Spinner.
 
@@ -920,19 +914,19 @@ int main(int argc, char **argv)
     TheModel1->setMaximum(100);
     TheModel1->setMinimum(-100);
     TheModel1->setStepSize(2);
-    TheModel1->setValue(SharedFieldPtr(new SFInt32(0)));
+    TheModel1->setValue(boost::any(Int32(0)));
 
 	//Spinner Model, TheModel2, used for spinner #2
 	TheModel2->setMaximum(100);
     TheModel2->setMinimum(-100);
     TheModel2->setStepSize(4);
-    TheModel2->setValue(SharedFieldPtr(new SFInt32(0)));
+    TheModel2->setValue(boost::any(Int32(0)));
 
 	//Spinner Model, TheModel3, used for spinner #3
 	TheModel3->setMaximum(100);
     TheModel3->setMinimum(-100);
     TheModel3->setStepSize(6);
-    TheModel3->setValue(SharedFieldPtr(new SFInt32(0)));
+    TheModel3->setValue(boost::any(Int32(0)));
 
     /******************************************************
             
@@ -1058,7 +1052,7 @@ int main(int argc, char **argv)
 	beginEditCP(Check1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         Check1->setText("Show Torus");
         Check1->setPreferredSize(Vec2f(125,50));
-        Check1->setHorizontalAlignment(0.0);
+        Check1->setAlignment(Vec2f(0.0,1.0));
     endEditCP(Check1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         Check1->addButtonSelectedListener(&RightPanelCheck1Listener);
@@ -1066,7 +1060,7 @@ int main(int argc, char **argv)
     beginEditCP(Check2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         Check2->setText("Show Box");
         Check2->setPreferredSize(Vec2f(125,50));
-        Check2->setHorizontalAlignment(0.0);
+        Check2->setAlignment(Vec2f(0.0,1.0));
     endEditCP(Check2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         Check2->addButtonSelectedListener(&RightPanelCheck2Listener);
@@ -1074,7 +1068,7 @@ int main(int argc, char **argv)
     beginEditCP(Check3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         Check3->setText("Show Sphere");
         Check3->setPreferredSize(Vec2f(125,50));
-        Check3->setHorizontalAlignment(0.0);
+        Check3->setAlignment(Vec2f(0.0,1.0));
     endEditCP(Check3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         Check3->addButtonSelectedListener(&RightPanelCheck3Listener);
@@ -1082,7 +1076,7 @@ int main(int argc, char **argv)
     beginEditCP(Check4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         Check4->setText("Show Cone");
         Check4->setPreferredSize(Vec2f(125,50));
-        Check4->setHorizontalAlignment(0.0);
+        Check4->setAlignment(Vec2f(0.0,1.0));
     endEditCP(Check4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         Check4->addButtonSelectedListener(&RightPanelCheck4Listener);

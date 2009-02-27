@@ -89,7 +89,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public AbstractTableM
     virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const;
     
     //Sets the value in the cell at columnIndex and rowIndex to aValue.
-    virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex);
+    virtual void setValueAt(const boost::any& aValue, UInt32 rowIndex, UInt32 columnIndex);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

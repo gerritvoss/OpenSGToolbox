@@ -42,6 +42,8 @@
 #include <OpenSG/OSGSFSysTypes.h>
 #include "OSGUserInterfaceDef.h"
 
+#include <boost/lexical_cast.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -58,61 +60,80 @@ std::string NumberSpinnerModel<NumberTypeT>::getModelName(void) const
 
 template<class NumberTypeT> inline
 NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(void) :
-  _Value(new SField<NumberType>(0))
+  _Value(NumberType(0))
 {
 }
 
 template<class NumberTypeT> inline
 NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(const NumberType& value) :
-  _Value(new SField<NumberType>(value))
+  _Value(value)
 {
 }
 
 template<class NumberTypeT> inline
-SharedFieldPtr NumberSpinnerModel<NumberTypeT>::getNextValue(void)
+boost::any NumberSpinnerModel<NumberTypeT>::getNextValue(void)
 {
-    //Check if we would go past the Maximum
-    if(dynamic_cast< SField<NumberType>* >(_Value.get())->getValue() + _StepSize > _Maximum)
+    try
     {
-        return SharedFieldPtr();
+        NumberType NewVal(boost::any_cast<NumberType>(_Value) + _StepSize);
+        //Check if we would go past the Maximum
+        if(NewVal > _Maximum)
+        {
+            return boost::any();
+        }
+        return NewVal;
     }
-    else
+    catch(boost::bad_any_cast &)
     {
-        return SharedFieldPtr(new SField<NumberType>(dynamic_cast< SField<NumberType>* >(_Value.get())->getValue() + _StepSize));
+        return boost::any();
     }
 }
 
 template<class NumberTypeT> inline
-SharedFieldPtr NumberSpinnerModel<NumberTypeT>::getPreviousValue(void)
+boost::any NumberSpinnerModel<NumberTypeT>::getPreviousValue(void)
 {
-    //Check if we would go past the Minimum
-    if(dynamic_cast< SField<NumberType>* >(_Value.get())->getValue() - _StepSize < _Minimum)
+    try
     {
-        return SharedFieldPtr();
+        NumberType NewVal(boost::any_cast<NumberType>(_Value) - _StepSize);
+        //Check if we would go past the Minimum
+        if(NewVal < _Minimum)
+        {
+            return boost::any();
+        }
+        return NewVal;
     }
-    else
+    catch(boost::bad_any_cast &)
     {
-        return SharedFieldPtr(new SField<NumberType>(dynamic_cast< SField<NumberType>* >(_Value.get())->getValue() - _StepSize));
+        return boost::any();
     }
 }
 
 template<class NumberTypeT> inline
-SharedFieldPtr NumberSpinnerModel<NumberTypeT>::getValue(void)
+boost::any NumberSpinnerModel<NumberTypeT>::getValue(void)
 {
     return _Value;
 }
 
 template<class NumberTypeT> inline
-void NumberSpinnerModel<NumberTypeT>::setValue(SharedFieldPtr value)
+void NumberSpinnerModel<NumberTypeT>::setValue(const boost::any& value)
 {
+    NumberType RawValue;
+    try
+    {
+        RawValue = boost::any_cast<NumberTypeT>(value);
+    }
+    catch (boost::bad_any_cast &)
+    {
+        //Not a string
+        throw IllegalArgumentException();
+    }
     //If the Value is outside of the Range
-    NumberType RawValue(dynamic_cast<SField<NumberTypeT>*>(value.get())->getValue());
     if(RawValue < _Minimum || RawValue > _Maximum)
     {
         throw IllegalArgumentException();
     }
 
-    dynamic_cast<SField<NumberTypeT>*>(_Value.get())->setValue(RawValue);
+    _Value = boost::any(RawValue);
     
     produceStateChanged();
 }
@@ -120,17 +141,15 @@ void NumberSpinnerModel<NumberTypeT>::setValue(SharedFieldPtr value)
 template<class NumberTypeT> inline
 void NumberSpinnerModel<NumberTypeT>::setValue(const std::string& value)
 {
-    SharedFieldPtr NewFieldValue(new SField<NumberType>());
-    NewFieldValue->pushValueByStr(value.c_str());
+    NumberType NewValue(boost::lexical_cast<NumberTypeT>(value));
 
     //If the Value is outside of the Range
-    NumberType RawValue(dynamic_cast<SField<NumberTypeT>*>(NewFieldValue.get())->getValue());
-    if(RawValue < _Minimum || RawValue > _Maximum)
+    if(NewValue < _Minimum || NewValue > _Maximum)
     {
         throw IllegalArgumentException();
     }
 
-    _Value = NewFieldValue;
+    _Value = boost::any(NewValue);
     
     produceStateChanged();
 }
@@ -150,7 +169,15 @@ NumberTypeT NumberSpinnerModel<NumberTypeT>::getMinimum(void) const
 template<class NumberTypeT> inline
 NumberTypeT NumberSpinnerModel<NumberTypeT>::getNumber(void) const
 {
-    return dynamic_cast<SField<NumberTypeT>*>(_Value.get())->getValue();;
+    try
+    {
+        return boost::any_cast<NumberTypeT>(_Value);
+    }
+    catch (boost::bad_any_cast &)
+    {
+        //Not a string
+        return 0;
+    }
 }
 
 template<class NumberTypeT> inline

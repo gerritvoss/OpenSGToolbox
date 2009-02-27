@@ -45,7 +45,7 @@
  
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
 #include "Event/OSGChangeListener.h"
 
 #include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
@@ -73,20 +73,20 @@ public:
     virtual void removeChangeListener(ChangeListenerPtr l) = 0;
     
     //Return the object in the sequence that comes after the object returned by getValue().
-    virtual SharedFieldPtr getNextValue(void) = 0;
+    virtual boost::any getNextValue(void) = 0;
     
     //Return the object in the sequence that comes before the object returned by getValue().
-    virtual SharedFieldPtr getPreviousValue(void) = 0;
+    virtual boost::any getPreviousValue(void) = 0;
     
     //The current element of the sequence.
-    virtual SharedFieldPtr getValue(void) = 0;
+    virtual boost::any getValue(void) = 0;
     
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
-    virtual void setValue(SharedFieldPtr value) = 0;
+    virtual void setValue(const boost::any& value) = 0;
 
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
     virtual void setValue(const std::string& value) = 0;
-	
+
 	virtual std::string getModelName(void) const = 0;
 };
 

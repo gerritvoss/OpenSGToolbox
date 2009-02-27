@@ -211,7 +211,7 @@ TreePath DefaultTreeSelectionModel::getAnchorSelectionPath(void) const
 {
     if(_AnchorSelectionIndex < 0)
     {
-	    return TreePath(SharedFieldPtr());
+	    return TreePath();
     }
     else
     {
@@ -228,7 +228,7 @@ TreePath DefaultTreeSelectionModel::getLeadSelectionPath(void) const
 {
     if(_LeadSelectionIndex < 0)
     {
-	    return TreePath(SharedFieldPtr());
+	    return TreePath();
     }
     else
     {
@@ -270,7 +270,7 @@ TreePath DefaultTreeSelectionModel::getSelectionPath(void) const
 {
     if(_MinSelectionIndex < 0)
     {
-	    return TreePath(SharedFieldPtr());
+	    return TreePath();
     }
     else
     {

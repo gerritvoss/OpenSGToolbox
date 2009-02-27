@@ -51,6 +51,7 @@
 #include "Component/Text/OSGLabel.h"
 
 #include "OSGDefaultStringTableCellRenderer.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,15 +76,22 @@ A DefaultStringTableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultStringTableCellRenderer::getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentPtr DefaultStringTableCellRenderer::getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
-	if(value == NULL){
+	if(value.empty()){
 		return NullFC;
 	}
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 		std::string tempString;
-		tempString = static_cast<SFString*>(value.get())->getValue();
+        try
+        {
+            tempString = lexical_cast(value);
+        }
+        catch (boost::bad_lexical_cast &)
+        {
+            //Could not convert to string
+        }
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);

@@ -100,7 +100,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeCellEditor : public TreeCellEditorBase
     virtual ~TreeCellEditor(void); 
 
     /*! \}                                                                 */
-	virtual ComponentPtr getTreeCellEditorComponent(TreePtr TheTree, SharedFieldPtr Value, bool IsSelected, bool IsExpanded, UInt32 row) = 0;
+	virtual ComponentPtr getTreeCellEditorComponent(TreePtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row) = 0;
     
     /*==========================  PRIVATE  ================================*/
   private:

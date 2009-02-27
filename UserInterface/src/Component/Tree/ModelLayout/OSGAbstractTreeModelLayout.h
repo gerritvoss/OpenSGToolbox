@@ -177,7 +177,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
     /*! \}                                                                 */
     //Returns, by reference in placeIn, the size needed to represent value.
-	virtual void getNodeDimensions(Pnt2f& TopLeft, Pnt2f& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn);
+	virtual void getNodeDimensions(Pnt2f& TopLeft, Pnt2f& BottomRight, const boost::any& value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn);
 
 
     //Object responsible for getting the size of a node.

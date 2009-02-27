@@ -74,7 +74,7 @@ A TreePath.
 bool TreePath::isDescendant(TreePath aTreePath) const
 {
     UInt32 i(0);
-    while(i<aTreePath._Path.size() && aTreePath._Path[i] != _Path.front() )
+    while(i<aTreePath._Path.size() && aTreePath._Path[i]._NodeIndex != _Path.front()._NodeIndex )
     {
          ++i;
     }
@@ -83,7 +83,7 @@ bool TreePath::isDescendant(TreePath aTreePath) const
     {
         for(UInt32 j(0) ; j<_Path.size() ; ++j)
         {
-             if(_Path[j] != aTreePath._Path[i+j])
+             if(_Path[j]._NodeIndex != aTreePath._Path[i+j]._NodeIndex)
              {
                  return false;
              }
@@ -96,10 +96,10 @@ bool TreePath::isDescendant(TreePath aTreePath) const
     }
 }
 
-TreePath TreePath::pathByAddingChild(SharedFieldPtr child) const
+TreePath TreePath::pathByAddingChild(const boost::any& child, UInt32 childIndex) const
 {
-	std::vector<SharedFieldPtr> Path(_Path);
-	Path.push_back(child);
+	PathVectorType Path(_Path);
+	Path.push_back(NodePairType(child,childIndex));
 	return TreePath(Path);
 }
 
@@ -109,12 +109,12 @@ TreePath TreePath::pathByAddingChild(SharedFieldPtr child) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
-TreePath::TreePath(SharedFieldPtr singlePath)
+TreePath::TreePath(const boost::any& singlePath, UInt32 childIndex)
 {
-	_Path.push_back(singlePath);
+	_Path.push_back(NodePairType(singlePath,childIndex));
 }
 
-TreePath::TreePath(const std::vector<SharedFieldPtr>& path) :
+TreePath::TreePath(const PathVectorType& path) :
     _Path(path)
 {
 }
@@ -122,7 +122,7 @@ TreePath::TreePath(const std::vector<SharedFieldPtr>& path) :
 TreePath::TreePath(void)
 {
 }
-TreePath::TreePath(const std::vector<SharedFieldPtr>& path, const UInt32& length)
+TreePath::TreePath(const PathVectorType& path, const UInt32& length)
 {
     if(path.size() > 0)
     {
@@ -133,16 +133,6 @@ TreePath::TreePath(const std::vector<SharedFieldPtr>& path, const UInt32& length
 		}
     }
 }
-
-TreePath::TreePath(TreePath parent, SharedFieldPtr lastElement)
-{
-    std::vector<SharedFieldPtr>::iterator LastElementItor = std::find(parent._Path.begin(), parent._Path.end(), lastElement);
-    if(LastElementItor != parent._Path.end())
-    {
-         _Path.insert(_Path.end(), parent._Path.begin(), LastElementItor);
-    }
-}
-
 /*----------------------------- class specific ----------------------------*/
 
 bool TreePath::operator==(const TreePath& Right) const
@@ -151,7 +141,7 @@ bool TreePath::operator==(const TreePath& Right) const
     {
         for(UInt32 i(0) ; i<_Path.size() ; ++i)
         {
-             if(_Path[i] != Right._Path[i])
+             if(_Path[i]._NodeIndex != Right._Path[i]._NodeIndex)
              {
                  return false;
              }
@@ -178,14 +168,7 @@ bool TreePath::operator<(const TreePath& RightPath) const
     {
         for(UInt32 i(0) ; i<_Path.size() ; ++i)
         {
-            if(_Path[i] != RightPath._Path[i])
-            {
-                std::string MyString, RightString;
-                _Path.back()->getValueByStr(MyString);
-                RightPath._Path.back()->getValueByStr(RightString);
-
-                return MyString.compare(RightString) < 0;
-            }
+            return _Path[i]._NodeIndex < RightPath._Path[i]._NodeIndex;
         }
         return false;
     }

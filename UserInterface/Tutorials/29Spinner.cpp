@@ -199,7 +199,7 @@ int main(int argc, char **argv)
     TheModel->setMaximum(100);
     TheModel->setMinimum(-100);
     TheModel->setStepSize(2);
-    TheModel->setValue(SharedFieldPtr(new SFInt32(0)));
+    TheModel->setValue(boost::any(Int32(0)));
 
     /******************************************************
             

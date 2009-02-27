@@ -77,7 +77,7 @@ void FunctionComponentIOTabComponentGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr FunctionComponentIOTabComponentGenerator::getComponent(ComponentPtr Parent, SharedFieldPtr Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
+ComponentPtr FunctionComponentIOTabComponentGenerator::getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
 {
     FunctionIOType IOTypeValue;
     if(Parent->getType().isDerivedFrom(FunctionComponent::getClassType()))

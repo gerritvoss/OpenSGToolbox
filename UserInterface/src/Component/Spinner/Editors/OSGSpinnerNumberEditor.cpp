@@ -48,8 +48,9 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSpinnerNumberEditor.h"
-#include <sstream>
+#include <boost/lexical_cast.hpp>
 #include "Component/Spinner/OSGSpinner.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,47 +83,41 @@ void SpinnerNumberEditor::commitEdit(void)
 {
 	try
 	{
-		Real64 result;
-		std::istringstream stream (getTextField()->getText());
-		if (stream >> result)
-		{
-			getSpinner()->getModel()->setValue(getTextField()->getText());
-		}
-		else
-		{
-			throw IllegalArgumentException();
-		}
+        Real64 result = boost::lexical_cast<Real64>(getTextField()->getText());
 
+		getSpinner()->getModel()->setValue(getTextField()->getText());
 	}
-	catch(IllegalArgumentException& e)
+    catch(std::exception &)
 	{
 		//Reset to the old value
 		beginEditCP(getTextField(), TextField::TextFieldMask);
 			std::string NewValue;
-			getSpinner()->getModel()->getValue()->getValueByStr(NewValue);
-			getTextField()->setText(NewValue);
+            try
+            {
+                getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+            }
+            catch(boost::bad_any_cast &)
+            {
+				getTextField()->setText("0.0");
+            }
 		endEditCP(getTextField(), TextField::TextFieldMask);
 	}
 }
 
-#include <sstream>
 void SpinnerNumberEditor::stateChanged(const ChangeEvent& e)
 {
-	if(getSpinner()->getModel()->getValue()->getType() == SFReal32::getClassType())
+	if(getSpinner()->getModel()->getValue().type() == typeid(Real32))
 	{
 		//Update the Value of the TextField
 		beginEditCP(getTextField(), TextField::TextFieldMask);
-			std::stringstream TheSStream;
-			Real32 Value(dynamic_cast<SFReal32*>(getSpinner()->getModel()->getValue().get())->getValue());
-			TheSStream << Value;
-			if(Value == Real32(0.0))
-			{
+            try
+            {
+                getTextField()->setText(boost::lexical_cast<std::string>(boost::any_cast<Real32>(getSpinner()->getModel()->getValue())));
+            }
+            catch(std::exception &)
+            {
 				getTextField()->setText("0.0");
-			}
-			else
-			{
-				getTextField()->setText(TheSStream.str());
-			}
+            }
 		endEditCP(getTextField(), TextField::TextFieldMask);
 	}
 	else

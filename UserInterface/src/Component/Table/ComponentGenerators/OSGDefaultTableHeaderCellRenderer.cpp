@@ -49,6 +49,7 @@
 #include "Component/Text/OSGLabel.h"
 
 #include "OSGDefaultTableHeaderCellRenderer.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -73,9 +74,9 @@ A DefaultTableHeaderCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
-	if(value == NULL){
+	if(value.empty()){
 		return NullFC;
 	}
 	BevelBorderPtr DefaultBorder = BevelBorder::create();
@@ -91,7 +92,14 @@ ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(Table
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BordersFieldMask);
 		std::string tempString;
-		tempString = static_cast<SFString*>(value.get())->getValue();
+        try
+        {
+            tempString = lexical_cast(value);
+        }
+        catch (boost::bad_lexical_cast &)
+        {
+            //Could not convert to string
+        }
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2f(100,30));
 		TheLabel->setBorders(DefaultBorder);

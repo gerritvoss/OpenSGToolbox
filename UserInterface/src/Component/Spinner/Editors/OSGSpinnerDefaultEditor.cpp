@@ -49,6 +49,7 @@
 
 #include "OSGSpinnerDefaultEditor.h"
 #include "Component/Spinner/OSGSpinner.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,13 +95,19 @@ void SpinnerDefaultEditor::commitEdit(void)
 	{
 		getSpinner()->getModel()->setValue(getTextField()->getText());
 	}
-	catch(IllegalArgumentException& e)
+	catch(IllegalArgumentException&)
 	{
 		//Reset to the old value
 		beginEditCP(getTextField(), TextField::TextFieldMask);
 			std::string NewValue;
-			getSpinner()->getModel()->getValue()->getValueByStr(NewValue);
-			getTextField()->setText(NewValue);
+            try
+            {
+                getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+            }
+            catch(boost::bad_any_cast &)
+            {
+				getTextField()->setText("");
+            }
 		endEditCP(getTextField(), TextField::TextFieldMask);
 	}
 }
@@ -110,8 +117,14 @@ void SpinnerDefaultEditor::cancelEdit(void)
 	//Reset to the old value
 	beginEditCP(getTextField(), TextField::TextFieldMask);
 		std::string NewValue;
-		getSpinner()->getModel()->getValue()->getValueByStr(NewValue);
-		getTextField()->setText(NewValue);
+        try
+        {
+            getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+        }
+        catch(boost::bad_any_cast &)
+        {
+			getTextField()->setText("");
+        }
 	endEditCP(getTextField(), TextField::TextFieldMask);
 }
 
@@ -126,11 +139,17 @@ void SpinnerDefaultEditor::dismiss(SpinnerPtr spinner)
 void SpinnerDefaultEditor::stateChanged(const ChangeEvent& e)
 {
     //Update the Value of the TextField
-    beginEditCP(getTextField(), TextField::TextFieldMask);
-        std::string NewValue;
-        getSpinner()->getModel()->getValue()->getValueByStr(NewValue);
-        getTextField()->setText(NewValue);
-    endEditCP(getTextField(), TextField::TextFieldMask);
+	beginEditCP(getTextField(), TextField::TextFieldMask);
+		std::string NewValue;
+        try
+        {
+            getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+        }
+        catch(boost::bad_any_cast &)
+        {
+			getTextField()->setText("");
+        }
+	endEditCP(getTextField(), TextField::TextFieldMask);
 }
 
 void SpinnerDefaultEditor::setEditable(bool Editable)
@@ -186,11 +205,17 @@ void SpinnerDefaultEditor::changed(BitVector whichField, UInt32 origin)
         getSpinner()->addChangeListener(this);
         
         //Update the Value of the TextField
-        beginEditCP(getTextField(), TextField::TextFieldMask);
-            std::string NewValue;
-            getSpinner()->getModel()->getValue()->getValueByStr(NewValue);
-            getTextField()->setText(NewValue);
-        endEditCP(getTextField(), TextField::TextFieldMask);
+	    beginEditCP(getTextField(), TextField::TextFieldMask);
+		    std::string NewValue;
+            try
+            {
+                getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+            }
+            catch(boost::bad_any_cast &)
+            {
+			    getTextField()->setText("");
+            }
+	    endEditCP(getTextField(), TextField::TextFieldMask);
     }
 
     if(whichField & TextFieldFieldMask)

@@ -55,6 +55,7 @@
 #include "Component/Container/OSGPanel.h"
 #include "Layout/OSGBoxLayout.h"
 #include "Border/OSGEmptyBorder.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,7 +84,7 @@ void DefaultTreeComponentGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
     //Setup the layout
     /*BoxLayoutPtr TheLayout = BoxLayout::create();
@@ -95,16 +96,14 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
 */
     //Get the text for the label
     std::string LabelText("");
-    if(Value->getType() == SFString::getClassType())
+    try
     {
-        LabelText = static_cast<SFString*>(Value.get())->getValue();
+        LabelText = lexical_cast(Value);
     }
-    else
+    catch (boost::bad_lexical_cast &)
     {
-        Value->getValueByStr(LabelText);
+        //Could not convert to string
     }
-
-    //Create the Label
     LabelPtr TheLabel = Label::Ptr::dcast(getNodeLabelPrototype()->shallowCopy());
     beginEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
         if(IsSelected)
@@ -134,7 +133,7 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
     return TheLabel;
 }
 
-ComponentPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+ComponentPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
     //If node is not a leaf expanded
     if(!Leaf)

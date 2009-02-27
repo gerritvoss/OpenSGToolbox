@@ -81,21 +81,19 @@ UInt32 DefaultListModel::getSize(void) const
 	return _FieldList.size();
 }
 
-SharedFieldPtr DefaultListModel::getElementAt(UInt32 index) const
+boost::any DefaultListModel::getElementAt(UInt32 index) const
 {
 	if(index < _FieldList.size())
 	{
-		FieldList::const_iterator SearchItor(_FieldList.begin());
-		for(UInt32 i(0) ; i<index ; ++i) {++SearchItor;}
-		return (*SearchItor);
+		return (*(_FieldList.begin() + index));
 	}
 	else
 	{
-		return SharedFieldPtr();
+        return boost::any();
 	}
 }
  
-void DefaultListModel::set(UInt32 Index, SharedFieldPtr v)
+void DefaultListModel::set(UInt32 Index, const boost::any& v)
 {
 	if(Index < _FieldList.size())
 	{
@@ -104,7 +102,7 @@ void DefaultListModel::set(UInt32 Index, SharedFieldPtr v)
 	}
 }
 
-void DefaultListModel::pushBack(SharedFieldPtr f)
+void DefaultListModel::pushBack(const boost::any& f)
 {
 	_FieldList.push_back(f);
 	produceListDataIntervalAdded(DefaultListModelPtr(this),_FieldList.size()-1,_FieldList.size()-1);
@@ -123,7 +121,7 @@ void DefaultListModel::popBack(void)
 	produceListDataIntervalRemoved(DefaultListModelPtr(this),_FieldList.size(),_FieldList.size());
 }
 
-void DefaultListModel::pushFront(SharedFieldPtr f)
+void DefaultListModel::pushFront(const boost::any& f)
 {
 	_FieldList.push_front(f);
 	produceListDataIntervalAdded(DefaultListModelPtr(this),0,0);
@@ -135,13 +133,11 @@ void DefaultListModel::popFront(void)
 	produceListDataIntervalRemoved(DefaultListModelPtr(this),0,0);
 }
 
-void DefaultListModel::insert(UInt32 Index, SharedFieldPtr f)
+void DefaultListModel::insert(UInt32 Index, const boost::any& f)
 {
 	if(Index < _FieldList.size())
 	{
-		FieldList::iterator SearchItor(_FieldList.begin());
-		for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
-		_FieldList.insert(SearchItor, f);
+		_FieldList.insert(_FieldList.begin() + Index, f);
 		produceListDataIntervalAdded(DefaultListModelPtr(this),Index,Index);
 	}
 	else

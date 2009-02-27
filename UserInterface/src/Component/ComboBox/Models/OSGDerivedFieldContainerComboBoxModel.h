@@ -80,7 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DerivedFieldContainerComboBoxModel : publi
 
     /*! \}                                                                 */
 	//Returns the selected item
-	virtual SharedFieldPtr getSelectedItem(void) const;
+    virtual boost::any getSelectedItem(void) const;
 
 	//Returns the selected item Index
 	virtual Int32 getSelectedItemIndex(void) const;
@@ -89,11 +89,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING DerivedFieldContainerComboBoxModel : publi
 	virtual void setSelectedItem(const Int32& index);
 	
 	//Set the selected item.
-	virtual void setSelectedItem(SharedFieldPtr anObject);
+	virtual void setSelectedItem(const boost::any& anObject);
 
 	virtual UInt32 getSize(void) const;
 
-	virtual SharedFieldPtr getElementAt(UInt32 index) const;
+    virtual boost::any getElementAt(UInt32 index) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -114,7 +114,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DerivedFieldContainerComboBoxModel : publi
     virtual ~DerivedFieldContainerComboBoxModel(void); 
 
     /*! \}                                                                 */
-	std::vector<SharedFieldPtr> _FieldList;
+    std::vector<boost::any> _FieldList;
 	Int32 _SelectedIndex;
     
     /*==========================  PRIVATE  ================================*/

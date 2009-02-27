@@ -55,7 +55,8 @@
 #include "Editors/OSGTableCellEditor.h"
 #include "OSGTableCellRenderer.h"
 #include "OSGTableColumnFields.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
+#include <typeinfo.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -192,7 +193,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     TableCellRendererPtr getCellRenderer(const UInt32& row, const UInt32& column) const;
 
     //Returns the type of the column appearing in the view at column position column.
-    const FieldType* getColumnType(const UInt32& column);
+    const std::type_info& getColumnType(const UInt32& column);
 
     //Returns the number of columns in the column model.
     UInt32 getColumnCount(void) const;
@@ -201,16 +202,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     //TableColumnModelPtr getColumnModel(void) const;
 
     //Returns the name of the column appearing in the view at column position column.
-    SharedFieldPtr getColumnValue(const UInt32& column) const;
+    boost::any getColumnValue(const UInt32& column) const;
 
     //Returns true if columns can be selected.
     bool getColumnSelectionAllowed(void) const;
 
     //Returns the editor to be used when no editor has been set in a TableColumn.
-    TableCellEditorPtr getDefaultEditor(const FieldType* columnType) const;
+    TableCellEditorPtr getDefaultEditor(const std::type_info& TheType) const;
 
     //Returns the cell renderer to be used when no renderer has been set in a TableColumn.
-    TableCellRendererPtr getDefaultRenderer(const FieldType* columnType) const;
+    TableCellRendererPtr getDefaultRenderer(const std::type_info& TheType) const;
 
     //Returns the index of the column that contains the cell currently being edited.
     Int32 getEditingColumn(void) const;
@@ -255,7 +256,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     ListSelectionModelPtr getSelectionModel(void) const;
 
     //Returns the cell value at row and column.
-    SharedFieldPtr getValueAt(const UInt32& row, const UInt32& column) const;
+    boost::any getValueAt(const UInt32& row, const UInt32& column) const;
 
     //Returns true if the cell at row and column is editable.
     bool isCellEditable(const UInt32& row, const UInt32& column) const;
@@ -309,10 +310,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     virtual void selectionChanged(const ListSelectionEvent& e);
 
     //Sets a default cell editor to be used if no editor has been set in a TableColumn.
-    void setDefaultEditor(const FieldType* columnType, TableCellEditorPtr editor);
+    void setDefaultEditor(const std::type_info& TheType, TableCellEditorPtr editor);
 
     //Sets a default cell renderer to be used if no renderer has been set in a TableColumn.
-    void setDefaultRenderer(const FieldType* columnType, TableCellRendererPtr renderer);
+    void setDefaultRenderer(const std::type_info& TheType, TableCellRendererPtr renderer);
 
     //Sets the dragEnabled property, which must be true to enable automatic drag handling (the first part of drag and drop) on this component.
     void setDragEnabled(bool b);
@@ -343,7 +344,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void setShowGrid(bool showGrid);
 
     //Sets the value for the cell in the table model at row and column.
-    void setValueAt(SharedFieldPtr aValue, const UInt32& row, const UInt32& column);
+    void setValueAt(const boost::any& aValue, const UInt32& row, const UInt32& column);
 
 /*=========================  PROTECTED  ===============================*/
   protected:
@@ -374,20 +375,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 
     ListSelectionModelPtr _RowSelectionModel;
 
-    struct FieldTypePtrComparitor
-    {
-        bool operator()(const FieldType* s1, const FieldType* s2) const;
-    };
-
-    typedef std::map<const FieldType*, TableCellEditorPtr, FieldTypePtrComparitor> CellEditorByTypeMap;
+    typedef std::map<std::string, TableCellEditorPtr> CellEditorByTypeMap;
     typedef CellEditorByTypeMap::iterator CellEditorByTypeMapItor;
 
-    typedef std::map<const FieldType*, TableCellRendererPtr, FieldTypePtrComparitor> CellRendererByTypeMap;
+    typedef std::map<std::string, TableCellRendererPtr> CellRendererByTypeMap;
     typedef CellRendererByTypeMap::iterator CellRendererByTypeMapItor;
 
     CellEditorByTypeMap _DefaultCellEditorByTypeMap;
 
     CellRendererByTypeMap _DefaultCellRendererByTypeMap;
+
+    mutable TableCellEditorPtr _DefaultCellEditor;
+    mutable TableCellRendererPtr _DefaultCellRenderer;
     
     
 	virtual void drawInternal(const GraphicsPtr Graphics) const;

@@ -116,7 +116,7 @@ TreePath FixedHeightTreeModelLayout::getPathForRow(const UInt32& row) const
     }
     else
     {
-        return TreePath(SharedFieldPtr());
+        return TreePath();
     }
 
 }

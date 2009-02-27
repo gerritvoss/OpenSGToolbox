@@ -71,12 +71,13 @@ Int8 intersectLines(const osg::PointInterface<ValueTypeT, StorageInterfaceT>& p1
 		intersect = p1;
 		return -1;
 		break;
-	case 0:
-		return 0;
-		break;
 	case 1:
 		intersect = p1 + t1*v1;
 		return 1;
+		break;
+	case 0:
+    default:
+		return 0;
 		break;
 	}
 }

@@ -47,7 +47,8 @@
 
 #include "OSGComponentGeneratorBase.h"
 #include "Component/OSGComponentFields.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+
+#include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,7 +82,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentGenerator : public ComponentGener
 
     /*! \}                                                                 */
     
-	virtual ComponentPtr getComponent(ComponentPtr Parent, SharedFieldPtr Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus) = 0;
+    virtual ComponentPtr getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus) = 0;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

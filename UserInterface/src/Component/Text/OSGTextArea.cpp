@@ -368,7 +368,6 @@ void TextArea::mouseClicked(const MouseEvent& e)
 
 void TextArea::mousePressed(const MouseEvent& e)
 {
-  Int32 Position;
 	if(e.getButton() == e.BUTTON1)
 	{
 		//set caret position to proper place

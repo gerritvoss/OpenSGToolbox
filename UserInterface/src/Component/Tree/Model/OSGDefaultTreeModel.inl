@@ -62,7 +62,7 @@ void DefaultTreeModel::reload(ModelTreeNodePtr node)
 }
 
 inline
-void DefaultTreeModel::nodesWereRemoved(ModelTreeNodePtr node, std::vector<UInt32> childIndices, std::vector<SharedFieldPtr> removedChildren)
+void DefaultTreeModel::nodesWereRemoved(ModelTreeNodePtr node, std::vector<UInt32> childIndices, std::vector<boost::any> removedChildren)
 {
     produceTreeNodesRemoved(node->getPath(), childIndices, removedChildren);
 }

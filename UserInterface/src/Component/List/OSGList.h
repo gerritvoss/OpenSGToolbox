@@ -50,7 +50,7 @@
 #include "OSGListDataListener.h"
 #include "OSGListSelectionListener.h"
 #include "OSGListSelectionModel.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
 
 #include <deque>
 
@@ -104,7 +104,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 	virtual void keyTyped(const KeyEvent& e);
 
     ComponentPtr getComponentAtPoint(const MouseEvent& e);
-    SharedFieldPtr getValueAtPoint(const MouseEvent& e);
+    boost::any getValueAtPoint(const MouseEvent& e);
 
     //Returns the row for the specified location.
 	//The Location should be in Component space
@@ -114,7 +114,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
     Int32 getIndexClosestToLocation(const Pnt2f& Location) const;
 
     ComponentPtr getComponentAtIndex(const UInt32& Index);
-    SharedFieldPtr getValueAtIndex(const UInt32& Index);
+    boost::any getValueAtIndex(const UInt32& Index);
     
 	
 	//Scrollable Interface

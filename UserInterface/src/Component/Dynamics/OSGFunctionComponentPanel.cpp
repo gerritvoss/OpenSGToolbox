@@ -340,10 +340,6 @@ FunctionComponentPanel::ResizeTab FunctionComponentPanel::getTabOverLocation(con
 									{
 										return TAB_LEFT;
 									}
-									else
-									{
-										return TAB_NONE;
-									}
 								}
 							}
 						}
@@ -352,6 +348,7 @@ FunctionComponentPanel::ResizeTab FunctionComponentPanel::getTabOverLocation(con
 			}
 		}
 	}
+    return TAB_NONE;
 }
 
 

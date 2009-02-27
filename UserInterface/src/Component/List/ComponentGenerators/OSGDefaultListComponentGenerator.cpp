@@ -50,6 +50,7 @@
 #include "OSGDefaultListComponentGenerator.h"
 #include "Component/OSGComponent.h"
 #include "Component/Text/OSGTextComponent.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,21 +79,21 @@ void DefaultListComponentGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
-	if(Value == NULL){
+	if(Value.empty()){
 		return NullFC;
 	}
 
 	std::string ValueString;
-	if(Value->getType() == SFString::getClassType())
-	{
-        ValueString = static_cast<SFString*>(Value.get())->getValue();
-	}
-	else
-	{
-		Value->getValueByStr(ValueString);
-	}
+    try
+    {
+        ValueString = lexical_cast(Value);
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        //Could not convert to string
+    }
 	return getListComponent(Parent, ValueString, Index, IsSelected, HasFocus);
 }
 

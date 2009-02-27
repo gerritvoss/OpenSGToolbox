@@ -31,10 +31,14 @@
 #include "OSGToolboxDef.h"
 
 #include <string>
+#include <boost/any.hpp>
+#include <boost/lexical_cast.hpp>
 
 OSG_BEGIN_NAMESPACE
 
 std::string OSG_TOOLBOXLIB_DLLMAPPING addStringBetweenUpperCaseChange(const std::string& Source, const std::string& Pad);
+
+std::string OSG_TOOLBOXLIB_DLLMAPPING lexical_cast(const boost::any& Source);
 
 OSG_END_NAMESPACE
 

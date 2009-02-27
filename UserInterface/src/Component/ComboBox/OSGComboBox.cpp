@@ -56,6 +56,7 @@
 #include "Component/Menu/OSGMenuItem.h"
 #include "Component/ComboBox/ComponentGenerators/OSGComboBoxComponentGenerator.h"
 #include "Util/OSGUIDrawUtils.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -175,7 +176,7 @@ void ComboBox::removeActionListener(ActionListenerPtr Listener)
 }
 
 
-void ComboBox::addItem(SharedFieldPtr anObject)
+void ComboBox::addItem(const boost::any& anObject)
 {
 	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
 	{
@@ -183,7 +184,7 @@ void ComboBox::addItem(SharedFieldPtr anObject)
 	}
 }
 
-void ComboBox::configureEditor(ComboBoxEditorPtr anEditor, SharedFieldPtr anItem)
+void ComboBox::configureEditor(ComboBoxEditorPtr anEditor, const boost::any& anItem)
 {
 	//TODO:Implement
 }
@@ -194,7 +195,7 @@ std::string ComboBox::getActionCommand(void) const
 	return std::string("");
 }
 
-void ComboBox::insertItemAt(SharedFieldPtr anObject, const UInt32& index)
+void ComboBox::insertItemAt(const boost::any& anObject, const UInt32& index)
 {
 	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
 	{
@@ -210,7 +211,7 @@ void ComboBox::removeAllItems(void)
 	}
 }
 
-void ComboBox::removeItem(SharedFieldPtr anObject)
+void ComboBox::removeItem(const boost::any& anObject)
 {
 	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
 	{
@@ -229,7 +230,7 @@ void ComboBox::removeItemAt(const UInt32& anIndex)
 bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
 {
 	UInt32 i(1);
-	SharedFieldPtr ModelElement;
+	boost::any ModelElement;
     std::string TheText;
 
     bool ExitLoop(false);
@@ -238,15 +239,14 @@ bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
 		//Get The first character of this item
 		ModelElement = getModel()->getElementAt((getModel()->getSelectedItemIndex() + i) % getModel()->getSize());
 
-        if(ModelElement->getType() == SFString::getClassType())
+        try
         {
-            TheText = dynamic_cast<SFString*>(ModelElement.get())->getValue();
+            TheText = lexical_cast(ModelElement);
         }
-        else
+        catch (boost::bad_lexical_cast &)
         {
-            ModelElement->getValueByStr(TheText);
+            //Could not convert to string
         }
-
         
 		if(TheText.size() > 0 &&
 		   (TheText[0] == KeyEvent::getCharFromKey(TheKey, 0) ||
@@ -404,15 +404,22 @@ void ComboBox::updateSelectionFromEditor(void)
 {
     if(getEditable() && getEditor() != NullFC)
     {
-        SharedFieldPtr EditorItem = getEditor()->getItem();
+        const boost::any& EditorItem = getEditor()->getItem();
 
 	    std::string EditorString;
 	    std::string ModelItemString;
 	    bool ExitLoop(false);
         for(UInt32 i(0) ; i<getModel()->getSize() && !ExitLoop ; ++i)
         {
-            EditorItem->getValueByStr(EditorString);
-            getModel()->getElementAt(i)->getValueByStr(ModelItemString);
+            try
+            {
+                EditorString = lexical_cast(EditorItem);
+                ModelItemString = lexical_cast(getModel()->getElementAt(i));
+            }
+            catch (boost::bad_lexical_cast &)
+            {
+                //Could not convert to string
+            }
             if(EditorString.compare(ModelItemString) == 0)
             {
                 ExitLoop = true;

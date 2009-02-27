@@ -97,7 +97,7 @@ ComponentPtr List::getComponentAtPoint(const MouseEvent& e)
 	}
 }
 
-SharedFieldPtr List::getValueAtPoint(const MouseEvent& e)
+boost::any List::getValueAtPoint(const MouseEvent& e)
 {
     Pnt2f PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
 
@@ -108,7 +108,7 @@ SharedFieldPtr List::getValueAtPoint(const MouseEvent& e)
 	}
 	else
 	{
-		return SharedFieldPtr();
+        return boost::any();
 	}
 
 }
@@ -940,7 +940,7 @@ ComponentPtr List::getComponentAtIndex(const UInt32& Index)
 	}
 }
 
-SharedFieldPtr List::getValueAtIndex(const UInt32& Index)
+boost::any List::getValueAtIndex(const UInt32& Index)
 {
 	if(getModel() != NULL && Index < getModel()->getSize())
 	{
@@ -948,7 +948,7 @@ SharedFieldPtr List::getValueAtIndex(const UInt32& Index)
 	}
 	else
 	{
-		return SharedFieldPtr();
+        return boost::any();
 	}
 }
 /*-------------------------------------------------------------------------*\

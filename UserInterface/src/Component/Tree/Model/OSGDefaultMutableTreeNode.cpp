@@ -181,7 +181,7 @@ void DefaultMutableTreeNode::setParent(MutableTreeNodePtr newParent)
 	endEditCP(DefaultMutableTreeNodePtr(this), ParentInternalFieldMask);
 }
 
-void DefaultMutableTreeNode::setUserObject(SharedFieldPtr object)
+void DefaultMutableTreeNode::setUserObject(const boost::any& object)
 {
 	_UserObject = object;
 }
@@ -494,16 +494,20 @@ UInt32 DefaultMutableTreeNode::getSiblingCount(void) const
 	{
 		return getParentInternal()->getChildCount() - 1;
 	}
+    else
+    {
+        return 0;
+    }
 }
 
-SharedFieldPtr DefaultMutableTreeNode::getUserObject(void) const
+boost::any DefaultMutableTreeNode::getUserObject(void) const
 {
 	return _UserObject;
 }
 
-std::vector<SharedFieldPtr> DefaultMutableTreeNode::getUserObjectPath(void) const
+std::vector<boost::any> DefaultMutableTreeNode::getUserObjectPath(void) const
 {
-	std::vector<SharedFieldPtr> UserObjectPath;
+	std::vector<boost::any> UserObjectPath;
 
 	DefaultMutableTreeNodePtr Node(DefaultMutableTreeNodePtr(this));
 	while(Node != NullFC)

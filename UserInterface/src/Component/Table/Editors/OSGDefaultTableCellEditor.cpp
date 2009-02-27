@@ -52,6 +52,7 @@
 #include "Border/OSGLineBorder.h"
 #include "Border/OSGEmptyBorder.h"
 #include "Component/Text/OSGTextField.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,22 +81,22 @@ void DefaultTableCellEditor::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column)
+ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column)
 {
-	if(value == NULL){
+	if(value.empty()){
 		return NullFC;
 	}
 	TextFieldPtr TheTextField = TextField::create();
 	beginEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::AlignmentFieldMask | TextField::CaretPositionFieldMask);
 		std::string tempString;
-		if(value->getType() == SFString::getClassType())
-		{
-			tempString = static_cast<SFString*>(value.get())->getValue();
-		}
-		else
-		{
-			value->getValueByStr(tempString);
-		}
+        try
+        {
+            tempString = lexical_cast(value);
+        }
+        catch (boost::bad_lexical_cast &)
+        {
+            //Could not convert to string
+        }
 		TheTextField->setText(tempString);
 		TheTextField->setPreferredSize(Vec2f(100,30));
 		TheTextField->setAlignment(Vec2f(0.5,0.5));
@@ -138,7 +139,7 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 	return getDefaultStringEditor();
 }
 
-ComponentPtr DefaultTableCellEditor::getCellEditor(SharedFieldPtr Value, bool IsSelected)
+ComponentPtr DefaultTableCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
 {
     return getTableCellEditorComponent(NullFC, Value, IsSelected, 0, 0);
 }
@@ -157,10 +158,10 @@ void DefaultTableCellEditor::cancelCellEditing(void)
     endEditCP(DefaultTableCellEditorPtr(this), DefaultStringEditorFieldMask);
 }
 
-SharedFieldPtr DefaultTableCellEditor::getCellEditorValue(void) const
+boost::any DefaultTableCellEditor::getCellEditorValue(void) const
 {
-    _Value->setValue(getDefaultStringEditor()->getText());
-    return SharedFieldPtr(_Value);
+    _Value = getDefaultStringEditor()->getText();
+    return boost::any(_Value);
 }
 
 bool DefaultTableCellEditor::isCellEditable(const Event& anEvent) const
@@ -179,7 +180,7 @@ bool DefaultTableCellEditor::isCellEditable(const Event& anEvent) const
 
 bool DefaultTableCellEditor::shouldSelectCell(const Event& anEvent) const
 {
-    return AbstractCellEditor::shouldSelectCell(anEvent);
+    return Inherited::shouldSelectCell(anEvent);
 }
 
 bool DefaultTableCellEditor::stopCellEditing(void)
@@ -230,14 +231,14 @@ void DefaultTableCellEditor::DefaultStringEditorListener::keyPressed(const KeyEv
 DefaultTableCellEditor::DefaultTableCellEditor(void) :
     Inherited(),
         _DefaultStringEditorListener(DefaultTableCellEditorPtr(this)),
-        _Value(new SFString(""))
+        _Value()
 {
 }
 
 DefaultTableCellEditor::DefaultTableCellEditor(const DefaultTableCellEditor &source) :
     Inherited(source),
         _DefaultStringEditorListener(DefaultTableCellEditorPtr(this)),
-        _Value(new SFString(""))
+        _Value()
 {
 }
 

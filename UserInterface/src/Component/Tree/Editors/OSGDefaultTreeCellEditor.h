@@ -81,15 +81,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditor : public DefaultTree
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual ComponentPtr getTreeCellEditorComponent(TreePtr TheTree, SharedFieldPtr Value, bool IsSelected, bool IsExpanded, UInt32 row);
+	virtual ComponentPtr getTreeCellEditorComponent(TreePtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row);
     
-    virtual ComponentPtr getCellEditor(SharedFieldPtr Value, bool IsSelected);
+    virtual ComponentPtr getCellEditor(const boost::any& Value, bool IsSelected);
     
     //Tells the editor to cancel editing and not accept any partially edited value.
     virtual void cancelCellEditing(void);
 
     //Returns the value contained in the editor.
-    virtual SharedFieldPtr getCellEditorValue(void) const;
+    virtual boost::any getCellEditorValue(void) const;
 
     //Asks the editor if it can start editing using anEvent.
     virtual bool isCellEditable(const Event& anEvent) const;
@@ -141,7 +141,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditor : public DefaultTree
 
 	DefaultTextFieldEditorListener _DefaultTextFieldEditorListener;
 
-    SharedFieldPtr _EditingValue;
+    mutable boost::any _EditingValue;
     
     /*==========================  PRIVATE  ================================*/
   private:

@@ -26,6 +26,7 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGStringUtils.h"
 #include <OpenSG/OSGBaseTypes.h>
+#include "OSGGLenumUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -43,6 +44,87 @@ std::string addStringBetweenUpperCaseChange(const std::string& Source, const std
 	}
 	
 	return Result;
+}
+
+std::string lexical_cast(const boost::any& Source)
+{
+    if(Source.type() == typeid(std::string))  //String
+    {
+        return boost::any_cast<std::string>(Source);
+    }
+    else if(Source.type() == typeid(Char8*))   //Char8 *
+    {
+        return std::string(boost::any_cast<Char8*>(Source));
+    }
+    //Numbers
+    else if(Source.type() == typeid(UInt8))   //UInt8
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<UInt8>(Source));
+    }
+    else if(Source.type() == typeid(UInt16))   //UInt16
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<UInt16>(Source));
+    }
+    else if(Source.type() == typeid(UInt32))   //UInt32
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<UInt32>(Source));
+    }
+    else if(Source.type() == typeid(UInt64))   //UInt64
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<UInt64>(Source));
+    }
+    else if(Source.type() == typeid(Int8))   //Int8
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Int8>(Source));
+    }
+    else if(Source.type() == typeid(Int16))   //Int16
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Int16>(Source));
+    }
+    else if(Source.type() == typeid(Int32))   //Int32
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Int32>(Source));
+    }
+    else if(Source.type() == typeid(Int64))   //Int64
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Int64>(Source));
+    }
+    else if(Source.type() == typeid(Real32))   //Real32
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Real32>(Source));
+    }
+    else if(Source.type() == typeid(Real64))   //Real64
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Real64>(Source));
+    }
+    else if(Source.type() == typeid(Real128))   //Real128
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Real128>(Source));
+    }
+    
+    else if(Source.type() == typeid(Char8))   //Char8
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Char8>(Source));
+    }
+    else if(Source.type() == typeid(UChar8))   //UChar8
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<UChar8>(Source));
+    }
+    else if(Source.type() == typeid(SChar8))   //SChar8
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<SChar8>(Source));
+    }
+    
+    else if(Source.type() == typeid(GLenum))   //GLenum
+    {
+        return toString(boost::any_cast<GLenum>(Source));
+    }
+
+    else
+    {
+        throw boost::bad_lexical_cast(Source.type(), typeid(std::string));
+    }
+    return std::string("");
 }
 
 OSG_END_NAMESPACE

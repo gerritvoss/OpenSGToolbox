@@ -6,17 +6,11 @@
 // Includes: placing multiple buttons using Flow Layout
 
 
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -193,7 +187,7 @@ public:
     {
         std::cout << "Add Item Action" << std::endl;
 		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
-		ExampleListModel->insert(SelectedItemIndex, SharedFieldPtr(new SFString("Added")));
+        ExampleListModel->insert(SelectedItemIndex, boost::any(std::string("Added")));
     }
 
 };
@@ -329,21 +323,21 @@ int main(int argc, char **argv)
 
     // Add data to it
 	ExampleListModel = DefaultListModel::create();
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Red")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Green")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Blue")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Orange")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Purple")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Yellow")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("White")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Black")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Gray")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Brown")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Indigo")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Pink")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Violet")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Mauve")));
-    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Peach")));
+    ExampleListModel->pushBack(boost::any(std::string("Red")));
+    ExampleListModel->pushBack(boost::any(std::string("Green")));
+    ExampleListModel->pushBack(boost::any(std::string("Blue")));
+    ExampleListModel->pushBack(boost::any(std::string("Orange")));
+    ExampleListModel->pushBack(boost::any(std::string("Purple")));
+    ExampleListModel->pushBack(boost::any(std::string("Yellow")));
+    ExampleListModel->pushBack(boost::any(std::string("White")));
+    ExampleListModel->pushBack(boost::any(std::string("Black")));
+    ExampleListModel->pushBack(boost::any(std::string("Gray")));
+    ExampleListModel->pushBack(boost::any(std::string("Brown")));
+    ExampleListModel->pushBack(boost::any(std::string("Indigo")));
+    ExampleListModel->pushBack(boost::any(std::string("Pink")));
+    ExampleListModel->pushBack(boost::any(std::string("Violet")));
+    ExampleListModel->pushBack(boost::any(std::string("Mauve")));
+    ExampleListModel->pushBack(boost::any(std::string("Peach")));
 
     /******************************************************
 

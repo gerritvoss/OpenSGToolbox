@@ -679,10 +679,8 @@ UInt32 InternalWindow::queryCursor(const Pnt2f& CursorLoc) const
 			break;
 		}
     }
-	else 
-	{
-		return Inherited::queryCursor(CursorLoc);
-	}
+
+    return Inherited::queryCursor(CursorLoc);
 }
 
 void InternalWindow::mouseDragged(const MouseEvent& e)

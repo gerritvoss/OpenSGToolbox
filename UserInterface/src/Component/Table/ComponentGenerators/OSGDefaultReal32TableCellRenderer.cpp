@@ -51,6 +51,7 @@
 #include "Component/Text/OSGLabel.h"
 
 #include "OSGDefaultReal32TableCellRenderer.h"
+#include <boost/lexical_cast.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,15 +76,26 @@ A DefaultReal32TableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultReal32TableCellRenderer::getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentPtr DefaultReal32TableCellRenderer::getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
-	if(value == NULL){
+	if(value.empty()){
 		return NullFC;
 	}
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 		std::string tempString;
-		dynamic_cast<SFReal32*>(value.get())->getValueByStr(tempString);
+        try
+        {
+            tempString = boost::lexical_cast<std::string>(boost::any_cast<Real32>(value));
+        }
+        catch (boost::bad_any_cast &)
+        {
+            //Not a UInt32
+        }
+        catch (boost::bad_lexical_cast &)
+        {
+            //Bad Cast to string
+        }
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);

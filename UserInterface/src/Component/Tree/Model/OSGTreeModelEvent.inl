@@ -16,20 +16,14 @@ std::vector<UInt32> TreeModelEvent::getChildIndices(void) const
 }
 
 inline
-std::vector<SharedFieldPtr> TreeModelEvent::getChildren(void) const
+std::vector<boost::any> TreeModelEvent::getChildren(void) const
 {
 	return _Children;
 }
 
 inline
-TreePath TreeModelEvent::getTreePath(void) const
+TreePath TreeModelEvent::getPath(void) const
 {
 	return _Path;
-}
-
-inline
-std::vector<SharedFieldPtr> TreeModelEvent::getPath(void) const
-{
-	return _Path.getPath();
 }
 OSG_END_NAMESPACE

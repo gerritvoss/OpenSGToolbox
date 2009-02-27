@@ -81,21 +81,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListModel : public DefaultListModel
 
     /*! \}                                                                 */
 	virtual UInt32 getSize(void) const;
-	virtual SharedFieldPtr getElementAt(UInt32 index) const;
+    virtual boost::any getElementAt(UInt32 index) const;
 
 	
 
-    typedef std::deque<SharedFieldPtr> FieldList;
-	void pushBack(SharedFieldPtr f);
+    typedef std::deque<boost::any> FieldList;
+	void pushBack(const boost::any& f);
 	void popBack(void);
 
-	void pushFront(SharedFieldPtr f);
+	void pushFront(const boost::any& f);
 	void popFront(void);
 
-	void insert(UInt32 Index, SharedFieldPtr f);
+	void insert(UInt32 Index, const boost::any& f);
 	
 	void erase(UInt32 Index);
-	void set(UInt32 Index, SharedFieldPtr v);
+	void set(UInt32 Index, const boost::any& v);
 	void clear(void);
     /*=========================  PROTECTED  ===============================*/
   protected:

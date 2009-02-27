@@ -57,7 +57,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultStringTableCellRenderer : public Ta
 {
     /*==========================  PUBLIC  =================================*/
   public:
-	virtual ComponentPtr getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column);
+	virtual ComponentPtr getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

@@ -48,7 +48,8 @@
 #include "OSGComboBoxEditorBase.h"
 #include "Event/OSGActionListener.h"
 #include "Component/OSGComponentFields.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+
+#include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -92,13 +93,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxEditor : public ComboBoxEditorBase
 	virtual ComponentPtr getEditorComponent(void) = 0;
 
 	//Return the edited item
-	virtual SharedFieldPtr getItem(void) = 0;
+	virtual boost::any getItem(void) = 0;
 
 	//Ask the editor to start editing and to select everything
 	virtual void selectAll(void) = 0;
 
 	//Set the item that should be edited.
-	virtual void setItem(SharedFieldPtr anObject) = 0;
+	virtual void setItem(const boost::any& anObject) = 0;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

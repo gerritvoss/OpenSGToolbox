@@ -71,7 +71,7 @@ TableCellRendererPtr TableColumn::getHeaderRenderer(void) const
 }
 
 inline
-SharedFieldPtr TableColumn::getHeaderValue(void) const
+boost::any TableColumn::getHeaderValue(void) const
 {
     return _HeaderValue;
 }
@@ -89,7 +89,7 @@ void TableColumn::setHeaderRenderer(TableCellRendererPtr headerRenderer)
 }
 
 inline
-void TableColumn::setHeaderValue(SharedFieldPtr headerValue)
+void TableColumn::setHeaderValue(const boost::any& headerValue)
 {
     _HeaderValue = headerValue;
 }

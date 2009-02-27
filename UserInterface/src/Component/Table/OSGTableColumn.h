@@ -96,7 +96,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
     TableCellRendererPtr getHeaderRenderer(void) const;
     
     //Returns the Object used as the value for the header renderer.
-    SharedFieldPtr getHeaderValue(void) const;
+    boost::any getHeaderValue(void) const;
     
     //Sets the TableCellRenderer used by JTable to draw individual values for this column.
     void setCellRenderer(TableCellRendererPtr cellRenderer);
@@ -105,7 +105,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
     void setHeaderRenderer(TableCellRendererPtr headerRenderer);
     
     //Sets the Object whose string representation will be used as the value for the headerRenderer.
-    void setHeaderValue(SharedFieldPtr headerValue);
+    void setHeaderValue(const boost::any& headerValue);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -130,7 +130,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
     TableCellRendererPtr _TableCellRenderer;
     TableCellRendererPtr _HeaderCellRenderer;
 
-    SharedFieldPtr _HeaderValue;
+    boost::any _HeaderValue;
     
 	typedef std::set<FieldChangeListenerPtr> FieldChangeListenerSet;
     typedef FieldChangeListenerSet::iterator FieldChangeListenerSetItor;

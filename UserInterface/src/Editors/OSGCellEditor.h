@@ -48,7 +48,7 @@
 #include "OSGCellEditorBase.h"
 #include <OpenSG/Input/OSGEvent.h>
 #include "OSGCellEditorListener.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <boost/any.hpp>
 #include "Component/OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
@@ -92,7 +92,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public CellEditorBase
     virtual void cancelCellEditing(void) = 0;
 
     //Returns the value contained in the editor.
-    virtual SharedFieldPtr getCellEditorValue(void) const = 0;
+    virtual boost::any getCellEditorValue(void) const = 0;
 
     //Asks the editor if it can start editing using anEvent.
     virtual bool isCellEditable(const Event& anEvent) const = 0;
@@ -104,7 +104,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public CellEditorBase
     virtual bool stopCellEditing(void) = 0;
     
     //Get the Editor Component
-    virtual ComponentPtr getCellEditor(SharedFieldPtr Value, bool IsSelected) = 0;
+    virtual ComponentPtr getCellEditor(const boost::any& Value, bool IsSelected) = 0;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

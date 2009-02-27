@@ -50,6 +50,7 @@
 #include "OSGDefaultComboBoxComponentGenerator.h"
 #include "Component/OSGComponent.h"
 #include "Component/Text/OSGTextComponent.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,9 +79,9 @@ void DefaultComboBoxComponentGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
-	if(Value == NULL){
+	if(Value.empty()){
 		return NullFC;
 	}
 
@@ -89,15 +90,17 @@ ComponentPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxPtr
 	if(TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
 	{
 		std::string ValueString;
-		if(Value->getType() == SFString::getClassType())
-		{
-            ValueString = static_cast<SFString*>(Value.get())->getValue();
-		}
-		else
-		{
-			Value->getValueByStr(ValueString);
-		}
-		beginEditCP(TheComponent, TextComponent::TextFieldMask);
+
+        try
+        {
+            ValueString = lexical_cast(Value);
+        }
+        catch (boost::bad_lexical_cast &)
+        {
+            //Could not convert to string
+        }
+
+        beginEditCP(TheComponent, TextComponent::TextFieldMask);
 			TextComponent::Ptr::dcast(TheComponent)->setText(ValueString);
 		endEditCP(TheComponent, TextComponent::TextFieldMask);
 
