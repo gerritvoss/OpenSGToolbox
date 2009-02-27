@@ -184,7 +184,7 @@ void Tree::keyTyped(const KeyEvent& e)
             {
                 expandRow(SelectedRow);
             }
-            else if(getModel()->getChildCount(SelectedPath.getLastPathComponent()) > 0)
+            else if(getModel()->getChildCount(SelectedPath.getLastPathComponent()._NodeValue) > 0)
             {
                 TreePath ToPath = SelectedPath.pathByAddingChild(getModel()->getChild(SelectedPath.getLastPathComponent()._NodeValue, 0), 0);
                 getSelectionModel()->setSelectionPath(ToPath);
@@ -213,7 +213,7 @@ void Tree::keyTyped(const KeyEvent& e)
 	case KeyEvent::KEY_ENTER:
         {
             TreePath SelectedPath = getSelectionModel()->getSelectionPath();
-		    if (getModel()->isLeaf(SelectedPath.getLastPathComponent()))
+		    if (getModel()->isLeaf(SelectedPath.getLastPathComponent()._NodeValue))
 		    {
                 //Send Action command for that leaf
 		    }
@@ -857,13 +857,13 @@ Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
         }
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
-            return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false),
-                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false),
+            return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent()._NodeValue, Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()._NodeValue), Row, false),
+                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent()._NodeValue, Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()._NodeValue), Row, false),
                 Row);
         }
         else
         {
-            return TreeRowComponents(NullFC, getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false),Row);
+            return TreeRowComponents(NullFC, getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent()._NodeValue, Row, 0,Selected, false),Row);
         }
     }
     else

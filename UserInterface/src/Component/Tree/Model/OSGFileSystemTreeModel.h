@@ -36,58 +36,64 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_TREE_MODEL_H_
-#define _OSG_UI_TREE_MODEL_H_
-
+#ifndef _OSGFILESYSTEMTREEMODEL_H_
+#define _OSGFILESYSTEMTREEMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
+
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include <boost/any.hpp>
-#include <OpenSG/OSGBaseTypes.h>
-#include "Component/Tree/OSGTreePath.h"
+
+#include "Component/Tree/Model/OSGAbstractTreeModel.h"
+#include <OpenSG/Toolbox/OSGPathType.h>
 
 OSG_BEGIN_NAMESPACE
-class TreeModelListener;
-class TreePath;
-typedef TreeModelListener* TreeModelListenerPtr;
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModel
+
+/*! \brief FileSystemTreeModel class. See \ref 
+           PageUserInterfaceFileSystemTreeModel for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING FileSystemTreeModel : public AbstractTreeModel
 {
-private:
-protected:
-public:
-
-	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual void addTreeModelListener(TreeModelListenerPtr l) = 0;
-
-	//Removes a listener previously added with addTreeModelListener.
-	virtual void removeTreeModelListener(TreeModelListenerPtr l) = 0;
+    /*==========================  PUBLIC  =================================*/
+  public:
 
 	//Returns the child of parent at index index in the parent's child array.
-	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const = 0;
+	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const;
 
 	//Returns the number of children of parent.
-	virtual UInt32 getChildCount(const boost::any& parent) const = 0;
+	virtual UInt32 getChildCount(const boost::any& parent) const;
 
 	//Returns the index of child in parent.
-	virtual UInt32 getIndexOfChild(const boost::any& parent, const boost::any& child) const = 0;
+	virtual UInt32 getIndexOfChild(const boost::any& parent, const boost::any& child) const;
 
 	//Returns the root of the tree.
-	virtual boost::any getRoot(void) const = 0;
+	virtual boost::any getRoot(void) const;
 
 	//Returns true if node is a leaf.
-	virtual bool isLeaf(const boost::any& node) const = 0;
+	virtual bool isLeaf(const boost::any& node) const;
 
 	//Messaged when the user has altered the value for the item identified by path to newValue.
-	virtual void valueForPathChanged(TreePath path, const boost::any& newValue) = 0;
+	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
+
+    //Sets the root to root.
+    void setRoot(const Path& root);
+
+    //Get the NodePtr to the Root Node
+    const Path& getRootPath(void) const;
+
+  protected:
+      Path _Root;
+
+    /*==========================  PRIVATE  ================================*/
+  private:
 };
 
-typedef TreeModel* TreeModelPtr;
+typedef FileSystemTreeModel *FileSystemTreeModelPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_TREE_MODEL_H_ */
+#define OSGFILESYSTEMTREEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
+#endif /* _OSGFILESYSTEMTREEMODEL_H_ */

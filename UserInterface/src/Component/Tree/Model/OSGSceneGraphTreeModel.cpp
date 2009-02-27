@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTreePath.h"
+#include "OSGSceneGraphTreeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::TreePath
-A TreePath. 
+/*! \class osg::SceneGraphTreeModel
+A SceneGraphTreeModel. 
 */
 
 /***************************************************************************\
@@ -71,36 +71,118 @@ A TreePath.
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool TreePath::isDescendant(TreePath aTreePath) const
+boost::any SceneGraphTreeModel::getChild(const boost::any& parent, const UInt32& index) const
 {
-    UInt32 i(0);
-    while(i<aTreePath._Path.size() && aTreePath._Path[i]._NodeIndex != _Path.front()._NodeIndex )
+    try
     {
-         ++i;
-    }
-
-    if(i<aTreePath._Path.size() && _Path.size() <= aTreePath._Path.size() - i)
-    {
-        for(UInt32 j(0) ; j<_Path.size() ; ++j)
+		NodePtr TheNode = boost::any_cast<NodePtr>(parent);
+        if(TheNode != NullFC &&
+           TheNode->getNChildren() > index)
         {
-             if(_Path[j]._NodeIndex != aTreePath._Path[i+j]._NodeIndex)
-             {
-                 return false;
-             }
+            return boost::any(TheNode->getChild(index));
         }
-        return true;
+        else
+        {
+            return boost::any();
+        }
     }
-    else
+    catch(boost::bad_any_cast &)
     {
-	   return false;
+        return boost::any();
     }
 }
 
-TreePath TreePath::pathByAddingChild(const boost::any& child, UInt32 childIndex) const
+UInt32 SceneGraphTreeModel::getChildCount(const boost::any& parent) const
 {
-	PathVectorType Path(_Path);
-	Path.push_back(NodePairType(child,childIndex));
-	return TreePath(Path);
+    try
+    {
+        NodePtr TheNode = boost::any_cast<NodePtr>(parent);
+        if(TheNode != NullFC)
+        {
+            return TheNode->getNChildren();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return 0;
+    }
+}
+
+UInt32 SceneGraphTreeModel::getIndexOfChild(const boost::any& parent, const boost::any& child) const
+{
+    try
+    {
+        NodePtr ParentNode = boost::any_cast<NodePtr>(parent);
+        NodePtr ChildNode = boost::any_cast<NodePtr>(child);
+        if(ParentNode != NullFC &&
+           ChildNode  != NullFC)
+        {
+            return ParentNode->findChild(ChildNode);
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return 0;
+    }
+}
+
+boost::any SceneGraphTreeModel::getRoot(void) const
+{
+    return boost::any(_Root);
+}
+
+bool SceneGraphTreeModel::isLeaf(const boost::any& node) const
+{
+    return getChildCount(node) == 0;
+}
+
+void SceneGraphTreeModel::valueForPathChanged(TreePath path, const boost::any& newValue)
+{
+    try
+    {
+        NodePtr NewNode = boost::any_cast<NodePtr>(newValue);
+        NodePtr OldNode = boost::any_cast<NodePtr>(path.getLastPathComponent()._NodeValue);
+        if(NewNode != NullFC &&
+           OldNode  != NullFC &&
+		   NewNode != OldNode &&
+		   OldNode->getParent() != NullFC)
+        {
+			NodePtr ParentNode(OldNode->getParent());
+			beginEditCP(ParentNode, Node::ChildrenFieldMask);
+				if(ParentNode->replaceChildBy(OldNode, NewNode))
+				{
+					endEditCP(ParentNode, Node::ChildrenFieldMask);
+					UInt32 ChildIndex(ParentNode->findChild(NewNode));
+					produceTreeStructureChanged(path.getParentPath(),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, newValue));
+				}
+				else
+				{
+					endEditNotChangedCP(ParentNode, Node::ChildrenFieldMask);
+				}
+        }
+    }
+    catch(boost::bad_any_cast &)
+    {
+    }
+}
+
+void SceneGraphTreeModel::setRoot(NodePtr root)
+{
+    _Root = root;
+	produceTreeStructureChanged(TreePath(),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(root)));
+}
+
+NodePtr SceneGraphTreeModel::getRootNode(void) const
+{
+    return _Root;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -109,94 +191,7 @@ TreePath TreePath::pathByAddingChild(const boost::any& child, UInt32 childIndex)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-TreePath::TreePath(const boost::any& singlePath, UInt32 childIndex)
-{
-	_Path.push_back(NodePairType(singlePath,childIndex));
-}
-
-TreePath::TreePath(const PathVectorType& path) :
-    _Path(path)
-{
-}
-
-TreePath::TreePath(void)
-{
-}
-TreePath::TreePath(const PathVectorType& path, const UInt32& length)
-{
-    if(path.size() > 0)
-    {
-        _Path = path;
-		if(_Path.size() > length)
-		{
-			_Path.resize(length);
-		}
-    }
-}
 /*----------------------------- class specific ----------------------------*/
-
-bool TreePath::operator==(const TreePath& Right) const
-{
-    if(_Path.size() == Right._Path.size())
-    {
-        for(UInt32 i(0) ; i<_Path.size() ; ++i)
-        {
-             if(_Path[i]._NodeIndex != Right._Path[i]._NodeIndex)
-             {
-                 return false;
-             }
-        }
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool TreePath::operator<(const TreePath& RightPath) const
-{
-    if(_Path.size() != RightPath._Path.size())
-    {
-        return _Path.size() < RightPath._Path.size();
-    }
-    else if(_Path.size() == 0)
-    {
-        return false;
-    }
-    else
-    {
-        for(UInt32 i(0) ; i<_Path.size() ; ++i)
-        {
-			if(_Path[i]._NodeIndex != RightPath._Path[i]._NodeIndex)
-			{
-				return _Path[i]._NodeIndex < RightPath._Path[i]._NodeIndex;
-			}
-        }
-        return false;
-    }
-}
-
-TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const
-{
-    UInt32 Depth(1);
-    
-    while( Depth < getDepth() &&
-           Depth < aTreePath.getDepth() &&
-           TreePath(_Path, Depth) == TreePath(aTreePath._Path, Depth) )
-    {
-        ++Depth;
-    }
-
-    if(Depth > 0)
-    {
-        return TreePath(_Path, Depth-1);
-    }
-    else
-    {
-        return TreePath();
-    }
-}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

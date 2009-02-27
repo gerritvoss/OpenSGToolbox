@@ -26,7 +26,11 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGStringUtils.h"
 #include <OpenSG/OSGBaseTypes.h>
+#include <OpenSG/OSGSimpleAttachments.h>
+#include <OpenSG/OSGAttachmentContainer.h>
+#include <OpenSG/OSGNode.h>
 #include "OSGGLenumUtils.h"
+#include "Types/OSGPathType.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -120,8 +124,33 @@ std::string lexical_cast(const boost::any& Source)
         return toString(boost::any_cast<GLenum>(Source));
     }
 
+    else if(Source.type() == typeid(Path))   //File Path
+    {
+        return boost::any_cast<Path>(Source).filename();
+    }
+
     else
     {
+		try
+		{
+			AttachmentContainerPtr Container = boost::any_cast<NodePtr>(Source);
+
+			if(Container != NullFC)
+			{
+				const Char8 * ContainerName(getName(Container));
+				if(ContainerName != NULL)
+				{
+					return std::string(ContainerName);
+				}
+				else
+				{
+					return std::string("Empty Name");
+				}
+			}
+		}
+		catch(boost::bad_any_cast &)
+		{
+		}
         throw boost::bad_lexical_cast(Source.type(), typeid(std::string));
     }
     return std::string("");

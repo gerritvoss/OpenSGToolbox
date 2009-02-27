@@ -98,6 +98,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "42FieldContainerComboBox", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\..\Dynamics\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "52SceneGraphTree", "52SceneGraphTree.vcproj", "{19916E64-01F6-4456-BB85-D450FD7922E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -300,6 +302,10 @@ Global
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.Build.0 = Debug|Win32
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.ActiveCfg = Release|Win32
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.Build.0 = Release|Win32
+		{19916E64-01F6-4456-BB85-D450FD7922E7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{19916E64-01F6-4456-BB85-D450FD7922E7}.Debug|Win32.Build.0 = Debug|Win32
+		{19916E64-01F6-4456-BB85-D450FD7922E7}.Release|Win32.ActiveCfg = Release|Win32
+		{19916E64-01F6-4456-BB85-D450FD7922E7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -472,7 +472,22 @@ bool AbstractTreeModelLayout::TreePathPreorderLessThan::operator()(const TreePat
                 const TreePath& RightPath) const
 {
 
-    if(LeftPath.getDepth() != RightPath.getDepth())
+    for(UInt32 i(0) ; i<osgMin(LeftPath.getDepth(),RightPath.getDepth()) ; ++i)
+    {
+		if(LeftPath.getPathComponent(i)._NodeIndex != RightPath.getPathComponent(i)._NodeIndex)
+		{
+			return LeftPath.getPathComponent(i)._NodeIndex < RightPath.getPathComponent(i)._NodeIndex;
+		}
+    }
+	if(LeftPath.getDepth() != RightPath.getDepth())
+	{
+		return LeftPath.getDepth() < RightPath.getDepth();
+	}
+	else
+	{
+		return false;
+	}
+    /*if(LeftPath.getDepth() != RightPath.getDepth())
     {
         if(LeftPath.isDescendant(RightPath)){return true;}
         else if(RightPath.isDescendant(LeftPath)){return false;}
@@ -485,10 +500,10 @@ bool AbstractTreeModelLayout::TreePathPreorderLessThan::operator()(const TreePat
         return false;
     }
 
-    UInt32 LeftNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent(),LeftPath.getPathComponent(CommonAncestor.getDepth())));
-    UInt32 RightNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent(),RightPath.getPathComponent(CommonAncestor.getDepth())));
+    UInt32 LeftNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent()._NodeValue,LeftPath.getPathComponent(CommonAncestor.getDepth())));
+    UInt32 RightNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent()._NodeValue,RightPath.getPathComponent(CommonAncestor.getDepth())));
 
-    return LeftNextDownAncestorIndex < RightNextDownAncestorIndex;
+    return LeftNextDownAncestorIndex < RightNextDownAncestorIndex;*/
 
 
     /*UInt32 LeftIndex(0), RightIndex(0);

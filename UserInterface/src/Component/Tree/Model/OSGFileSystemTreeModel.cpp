@@ -47,7 +47,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTreePath.h"
+#include "OSGFileSystemTreeModel.h"
+#include <boost/filesystem/operations.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::TreePath
-A TreePath. 
+/*! \class osg::FileSystemTreeModel
+A FileSystemTreeModel. 
 */
 
 /***************************************************************************\
@@ -71,36 +72,120 @@ A TreePath.
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool TreePath::isDescendant(TreePath aTreePath) const
+boost::any FileSystemTreeModel::getChild(const boost::any& parent, const UInt32& index) const
 {
-    UInt32 i(0);
-    while(i<aTreePath._Path.size() && aTreePath._Path[i]._NodeIndex != _Path.front()._NodeIndex )
+    try
     {
-         ++i;
-    }
+		Path ThePath = boost::any_cast<Path>(parent);
 
-    if(i<aTreePath._Path.size() && _Path.size() <= aTreePath._Path.size() - i)
-    {
-        for(UInt32 j(0) ; j<_Path.size() ; ++j)
+        if(!ThePath.empty() &&
+			boost::filesystem::exists(ThePath))
         {
-             if(_Path[j]._NodeIndex != aTreePath._Path[i+j]._NodeIndex)
-             {
-                 return false;
-             }
+			boost::filesystem::directory_iterator end_iter;
+			UInt32 Count(0);
+			for ( boost::filesystem::directory_iterator dir_itr( ThePath ); dir_itr != end_iter; ++dir_itr )
+			{
+				if(Count == index)
+				{
+					return boost::any(dir_itr->path());
+				}
+				++Count;
+			}
         }
-        return true;
+        return boost::any();
     }
-    else
+    catch(boost::bad_any_cast &)
     {
-	   return false;
+        return boost::any();
     }
 }
 
-TreePath TreePath::pathByAddingChild(const boost::any& child, UInt32 childIndex) const
+UInt32 FileSystemTreeModel::getChildCount(const boost::any& parent) const
 {
-	PathVectorType Path(_Path);
-	Path.push_back(NodePairType(child,childIndex));
-	return TreePath(Path);
+    try
+    {
+		Path ThePath = boost::any_cast<Path>(parent);
+
+		UInt32 Count(0);
+        if(!ThePath.empty() &&
+			boost::filesystem::exists(ThePath))
+        {
+			boost::filesystem::directory_iterator end_iter;
+			for ( boost::filesystem::directory_iterator dir_itr( ThePath ); dir_itr != end_iter; ++dir_itr )
+			{
+				++Count;
+			}
+        }
+        return Count;
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return 0;
+    }
+}
+
+UInt32 FileSystemTreeModel::getIndexOfChild(const boost::any& parent, const boost::any& child) const
+{
+    try
+    {
+		Path ParentPath = boost::any_cast<Path>(parent);
+		Path ChildPath = boost::any_cast<Path>(child);
+
+        if(!ParentPath.empty() &&
+			boost::filesystem::exists(ParentPath))
+        {
+			boost::filesystem::directory_iterator end_iter;
+			UInt32 Count(0);
+			for ( boost::filesystem::directory_iterator dir_itr( ParentPath ); dir_itr != end_iter; ++dir_itr )
+			{
+				if(boost::filesystem::equivalent(dir_itr->path(), ChildPath))
+				{
+					return Count;
+				}
+				++Count;
+			}
+        }
+        return 0;
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return 0;
+    }
+}
+
+boost::any FileSystemTreeModel::getRoot(void) const
+{
+    return boost::any(_Root);
+}
+
+bool FileSystemTreeModel::isLeaf(const boost::any& node) const
+{
+    try
+    {
+		Path ThePath = boost::any_cast<Path>(node);
+
+		return !boost::filesystem::is_directory(ThePath);
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return false;
+    }
+}
+
+void FileSystemTreeModel::valueForPathChanged(TreePath path, const boost::any& newValue)
+{
+	//Do Nothing
+}
+
+void FileSystemTreeModel::setRoot(const Path& root)
+{
+    _Root = root;
+	produceTreeStructureChanged(TreePath(),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(root)));
+}
+
+const Path& FileSystemTreeModel::getRootPath(void) const
+{
+    return _Root;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -109,94 +194,7 @@ TreePath TreePath::pathByAddingChild(const boost::any& child, UInt32 childIndex)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-TreePath::TreePath(const boost::any& singlePath, UInt32 childIndex)
-{
-	_Path.push_back(NodePairType(singlePath,childIndex));
-}
-
-TreePath::TreePath(const PathVectorType& path) :
-    _Path(path)
-{
-}
-
-TreePath::TreePath(void)
-{
-}
-TreePath::TreePath(const PathVectorType& path, const UInt32& length)
-{
-    if(path.size() > 0)
-    {
-        _Path = path;
-		if(_Path.size() > length)
-		{
-			_Path.resize(length);
-		}
-    }
-}
 /*----------------------------- class specific ----------------------------*/
-
-bool TreePath::operator==(const TreePath& Right) const
-{
-    if(_Path.size() == Right._Path.size())
-    {
-        for(UInt32 i(0) ; i<_Path.size() ; ++i)
-        {
-             if(_Path[i]._NodeIndex != Right._Path[i]._NodeIndex)
-             {
-                 return false;
-             }
-        }
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool TreePath::operator<(const TreePath& RightPath) const
-{
-    if(_Path.size() != RightPath._Path.size())
-    {
-        return _Path.size() < RightPath._Path.size();
-    }
-    else if(_Path.size() == 0)
-    {
-        return false;
-    }
-    else
-    {
-        for(UInt32 i(0) ; i<_Path.size() ; ++i)
-        {
-			if(_Path[i]._NodeIndex != RightPath._Path[i]._NodeIndex)
-			{
-				return _Path[i]._NodeIndex < RightPath._Path[i]._NodeIndex;
-			}
-        }
-        return false;
-    }
-}
-
-TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const
-{
-    UInt32 Depth(1);
-    
-    while( Depth < getDepth() &&
-           Depth < aTreePath.getDepth() &&
-           TreePath(_Path, Depth) == TreePath(aTreePath._Path, Depth) )
-    {
-        ++Depth;
-    }
-
-    if(Depth > 0)
-    {
-        return TreePath(_Path, Depth-1);
-    }
-    else
-    {
-        return TreePath();
-    }
-}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

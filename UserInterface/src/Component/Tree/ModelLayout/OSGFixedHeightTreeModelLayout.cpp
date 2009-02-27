@@ -150,7 +150,7 @@ UInt32 FixedHeightTreeModelLayout::getVisibleChildCount(const TreePath& path) co
 {
     if(isVisible(path))
     {
-        return _TreeModel->getChildCount(path.getLastPathComponent());
+        return _TreeModel->getChildCount(path.getLastPathComponent()._NodeValue);
     }
     else
     {

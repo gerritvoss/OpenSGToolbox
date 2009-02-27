@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,58 +34,14 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_TREE_MODEL_H_
-#define _OSG_UI_TREE_MODEL_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include <boost/any.hpp>
-#include <OpenSG/OSGBaseTypes.h>
-#include "Component/Tree/OSGTreePath.h"
 
 OSG_BEGIN_NAMESPACE
-class TreeModelListener;
-class TreePath;
-typedef TreeModelListener* TreeModelListenerPtr;
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModel
-{
-private:
-protected:
-public:
-
-	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual void addTreeModelListener(TreeModelListenerPtr l) = 0;
-
-	//Removes a listener previously added with addTreeModelListener.
-	virtual void removeTreeModelListener(TreeModelListenerPtr l) = 0;
-
-	//Returns the child of parent at index index in the parent's child array.
-	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const = 0;
-
-	//Returns the number of children of parent.
-	virtual UInt32 getChildCount(const boost::any& parent) const = 0;
-
-	//Returns the index of child in parent.
-	virtual UInt32 getIndexOfChild(const boost::any& parent, const boost::any& child) const = 0;
-
-	//Returns the root of the tree.
-	virtual boost::any getRoot(void) const = 0;
-
-	//Returns true if node is a leaf.
-	virtual bool isLeaf(const boost::any& node) const = 0;
-
-	//Messaged when the user has altered the value for the item identified by path to newValue.
-	virtual void valueForPathChanged(TreePath path, const boost::any& newValue) = 0;
-};
-
-typedef TreeModel* TreeModelPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_TREE_MODEL_H_ */
 

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="03XMLSceneLoader"
-	ProjectGUID="{9FB0F158-174C-42DD-B162-C662B1BF1872}"
-	RootNamespace="02GLUT"
+	Name="52SceneGraphTree"
+	ProjectGUID="{19916E64-01F6-4456-BB85-D450FD7922E7}"
+	RootNamespace="32Slider"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;$(BOOST_BASE_DIR);..\..\Builds\Windows\include"
+				AdditionalIncludeDirectories="$(BOOST_BASE_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\Builds\Windows\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -70,11 +70,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib OSGAnimationD.lib OSGParticleSystemD.lib OSGWindowGLUTD.lib glut32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGUserInterfaceD.lib OSGInputD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName)D.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;$(BOOST_BASE_DIR)\lib"
+				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName)D.pdb"
 				SubSystem="1"
@@ -132,7 +132,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\Builds\Windows\include;&quot;$(BOOST_BASE_DIR)&quot;"
+				AdditionalIncludeDirectories="$(BOOST_BASE_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\Builds\Windows\include"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -159,11 +159,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGAnimation.lib OSGParticleSystem.lib OSGToolbox.lib glut32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib OSGUserInterface.lib OSGInput.lib OSGToolbox.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;$(BOOST_BASE_DIR)\lib"
+				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
@@ -207,7 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\03XMLSceneLoader.cpp"
+				RelativePath=".\52SceneGraphTree.cpp"
 				>
 			</File>
 		</Filter>
