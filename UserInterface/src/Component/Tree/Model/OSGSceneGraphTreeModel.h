@@ -82,6 +82,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModel : public AbstractTreeM
 
     //Get the NodePtr to the Root Node
     NodePtr getRootNode(void) const;
+    virtual ~SceneGraphTreeModel(void);
 
   protected:
       NodePtr _Root;
