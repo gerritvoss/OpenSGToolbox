@@ -156,7 +156,7 @@ void DefaultTreeSelectionModel::addSelectionPaths(std::vector<TreePath> paths)
 {
     if(!paths.empty())
     {
-        std::set<TreePath> PreSelectedSet(_SelectionSet);
+        TreePathSet PreSelectedSet(_SelectionSet);
         
         switch(getSelectionMode())
         {
@@ -198,7 +198,7 @@ void DefaultTreeSelectionModel::addSelectionPaths(std::vector<TreePath> paths)
 
 void DefaultTreeSelectionModel::clearSelection(void)
 {
-    std::set<TreePath> PreSelectedSet(_SelectionSet);
+    TreePathSet PreSelectedSet(_SelectionSet);
 
     _SelectionSet.clear();
 
@@ -287,7 +287,7 @@ std::vector<TreePath> DefaultTreeSelectionModel::getSelectionPaths(void) const
 std::vector<Int32> DefaultTreeSelectionModel::getSelectionRows(void) const
 {
     std::vector<Int32> Result;
-    for(std::set<TreePath>::const_iterator Itor(_SelectionSet.begin());
+    for(TreePathSet::const_iterator Itor(_SelectionSet.begin());
         Itor != _SelectionSet.end() ;
         ++Itor)
     {
@@ -299,7 +299,7 @@ std::vector<Int32> DefaultTreeSelectionModel::getSelectionRows(void) const
 
 bool DefaultTreeSelectionModel::isPathSelected(std::vector<TreePath> paths) const
 {
-    for(std::set<TreePath>::const_iterator Itor(_SelectionSet.begin());
+    for(TreePathSet::const_iterator Itor(_SelectionSet.begin());
         Itor != _SelectionSet.end() ;
         ++Itor)
     {
@@ -339,11 +339,11 @@ void DefaultTreeSelectionModel::removeSelectionPaths(std::vector<TreePath> paths
 {
     if(!paths.empty())
     {
-        std::set<TreePath> PreSelectedSet(_SelectionSet);
+        TreePathSet PreSelectedSet(_SelectionSet);
         _SelectionSet.clear();
         
-        std::set<TreePath> RemoveSet(paths.begin(), paths.end());
-        std::set_difference(PreSelectedSet.begin(), PreSelectedSet.end(), RemoveSet.begin(), RemoveSet.end(), std::inserter(_SelectionSet, _SelectionSet.begin()));
+        TreePathSet RemoveSet(paths.begin(), paths.end());
+        std::set_difference(PreSelectedSet.begin(), PreSelectedSet.end(), RemoveSet.begin(), RemoveSet.end(), std::inserter(_SelectionSet, _SelectionSet.begin()), TreePath::BreadthFirstFunctional());
         switch(getSelectionMode())
         {
         case SINGLE_TREE_SELECTION:
@@ -386,7 +386,7 @@ void DefaultTreeSelectionModel::setSelectionMode(const UInt32& mode)
     if(_SelectionMode != static_cast<TreeSelectionMode>(mode) &&
         !_SelectionSet.empty())
     {
-        std::set<TreePath> PreSelectedSet(_SelectionSet);
+        TreePathSet PreSelectedSet(_SelectionSet);
 
         switch(mode)
         {
@@ -433,7 +433,7 @@ void DefaultTreeSelectionModel::setSelectionPaths(std::vector<TreePath> paths)
 {
     if(!paths.empty())
     {
-        std::set<TreePath> PreSelectedSet(_SelectionSet);
+        TreePathSet PreSelectedSet(_SelectionSet);
         Int32 OldLeadSelectionIndex(_LeadSelectionIndex);
         
         switch(getSelectionMode())
@@ -441,7 +441,7 @@ void DefaultTreeSelectionModel::setSelectionPaths(std::vector<TreePath> paths)
         case SINGLE_TREE_SELECTION:
             {
                 //Get the Minimum Row
-                Int32 MinRow = getMinRow(std::set<TreePath>(paths.begin(),paths.end()));
+                Int32 MinRow = getMinRow(TreePathSet(paths.begin(),paths.end()));
 
                 //Set the selection to the Minimum Row
                 _SelectionSet.clear();
@@ -494,9 +494,9 @@ void DefaultTreeSelectionModel::setSelectionInterval(const Int32& index0, const 
 }
 
 
-std::set<TreePath> DefaultTreeSelectionModel::getMinimumContiguousSelection(const std::set<TreePath>& PathSet) const
+DefaultTreeSelectionModel::TreePathSet DefaultTreeSelectionModel::getMinimumContiguousSelection(const TreePathSet& PathSet) const
 {
-	std::set<TreePath> Result;
+	TreePathSet Result;
 	NumberSet RowSet;
 
     toRowNumberSet(RowSet, PathSet);
@@ -538,7 +538,7 @@ void DefaultTreeSelectionModel::setAnchorSelectionRow(Int32 Row)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void DefaultTreeSelectionModel::produceEvents(const std::set<TreePath>& PreSelectedSet, const std::set<TreePath>& PostSelectedSet, Int32 OldLeadSelectionIndex)
+void DefaultTreeSelectionModel::produceEvents(const TreePathSet& PreSelectedSet, const TreePathSet& PostSelectedSet, Int32 OldLeadSelectionIndex)
 {
     NumberSet PreSelectedNumberSet, PostSelectedNumberSet;
     toRowNumberSet(PreSelectedNumberSet, PreSelectedSet);
@@ -558,7 +558,7 @@ void DefaultTreeSelectionModel::produceEvents(const std::set<TreePath>& PreSelec
     }
 }
 
-Int32 DefaultTreeSelectionModel::getMinRow(const std::set<TreePath>& PathSet) const
+Int32 DefaultTreeSelectionModel::getMinRow(const TreePathSet& PathSet) const
 {
     if(PathSet.empty())
     {
@@ -567,7 +567,7 @@ Int32 DefaultTreeSelectionModel::getMinRow(const std::set<TreePath>& PathSet) co
     else
     {
         Int32 Min;
-        std::set<TreePath>::const_iterator Itor(PathSet.begin());
+        TreePathSet::const_iterator Itor(PathSet.begin());
 		Min = getRowMapper()->getRowForPath(*Itor);
         ++Itor;
         while(Itor != PathSet.end())
@@ -584,7 +584,7 @@ Int32 DefaultTreeSelectionModel::getMinRow(const std::set<TreePath>& PathSet) co
     }
 }
 
-Int32 DefaultTreeSelectionModel::getMaxRow(const std::set<TreePath>& PathSet) const
+Int32 DefaultTreeSelectionModel::getMaxRow(const TreePathSet& PathSet) const
 {
     if(PathSet.empty())
     {
@@ -593,7 +593,7 @@ Int32 DefaultTreeSelectionModel::getMaxRow(const std::set<TreePath>& PathSet) co
     else
     {
         Int32 Max;
-        std::set<TreePath>::const_iterator Itor(PathSet.begin());
+        TreePathSet::const_iterator Itor(PathSet.begin());
 		Max = getRowMapper()->getRowForPath(*Itor);
         ++Itor;
         while(Itor != PathSet.end())
@@ -620,7 +620,7 @@ void DefaultTreeSelectionModel::updateMinMax(void)
     }
     else
     {
-        std::set<TreePath>::const_iterator Itor(_SelectionSet.begin());
+        TreePathSet::const_iterator Itor(_SelectionSet.begin());
 		_MaxSelectionIndex = _MinSelectionIndex = getRowMapper()->getRowForPath(*Itor);
         ++Itor;
         while(Itor != _SelectionSet.end())
@@ -640,9 +640,9 @@ void DefaultTreeSelectionModel::updateMinMax(void)
     }
 }
 
-void DefaultTreeSelectionModel::toRowNumberSet(NumberSet& Result, const std::set<TreePath>& PathSet) const
+void DefaultTreeSelectionModel::toRowNumberSet(NumberSet& Result, const TreePathSet& PathSet) const
 {
-    for(std::set<TreePath>::const_iterator Itor(PathSet.begin());
+    for(TreePathSet::const_iterator Itor(PathSet.begin());
         Itor != PathSet.end() ;
         ++Itor)
     {

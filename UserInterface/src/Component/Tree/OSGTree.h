@@ -53,6 +53,7 @@
 #include "Component/Tree/ModelLayout/OSGTreeModelLayoutListener.h"
 #include "Component/Container/OSGUIViewportFields.h"
 
+#include <set>
 #include <deque>
 
 OSG_BEGIN_NAMESPACE
@@ -393,11 +394,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
 	    virtual void treeNodesInserted(TreeModelEvent e);
 
+	    virtual void treeNodesWillBeRemoved(TreeModelEvent e);
+
 	    virtual void treeNodesRemoved(TreeModelEvent e);
 
 	    virtual void treeStructureChanged(TreeModelEvent e);
 	protected :
 		TreePtr _Tree;
+        std::set<Int32> _RomovedNodeRows;
 	};
 
 	friend class ModelListener;

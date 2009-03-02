@@ -10,19 +10,19 @@ const EventType &TreeModelEvent::getClassType(void)
 }
 
 inline
-std::vector<UInt32> TreeModelEvent::getChildIndices(void) const
+const std::vector<UInt32>& TreeModelEvent::getChildIndices(void) const
 {
 	return _ChildIndices;
 }
 
 inline
-std::vector<boost::any> TreeModelEvent::getChildren(void) const
+const std::vector<boost::any>& TreeModelEvent::getChildren(void) const
 {
 	return _Children;
 }
 
 inline
-TreePath TreeModelEvent::getPath(void) const
+const TreePath& TreeModelEvent::getPath(void) const
 {
 	return _Path;
 }

@@ -161,15 +161,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 
 
   protected:
-    void toRowNumberSet(NumberSet& Result, const std::set<TreePath>& PathSet) const;
+    typedef std::set<TreePath, TreePath::BreadthFirstFunctional> TreePathSet;
+    void toRowNumberSet(NumberSet& Result, const TreePathSet& PathSet) const;
     
     void updateMinMax(void);
-    Int32 getMinRow(const std::set<TreePath>& PathSet) const;
-    Int32 getMaxRow(const std::set<TreePath>& PathSet) const;
-    std::set<TreePath> getMinimumContiguousSelection(const std::set<TreePath>& PathSet) const;
+    Int32 getMinRow(const TreePathSet& PathSet) const;
+    Int32 getMaxRow(const TreePathSet& PathSet) const;
+    TreePathSet getMinimumContiguousSelection(const TreePathSet& PathSet) const;
 
-    void produceEvents(const std::set<TreePath>& PreSelectedSet, const std::set<TreePath>& PostSelectedSet, Int32 OldLeadSelectionIndex);
-    std::set<TreePath> _SelectionSet;
+    void produceEvents(const TreePathSet& PreSelectedSet, const TreePathSet& PostSelectedSet, Int32 OldLeadSelectionIndex);
+    TreePathSet _SelectionSet;
 
     TreeSelectionMode _SelectionMode;
     Int32 	_AnchorSelectionIndex;

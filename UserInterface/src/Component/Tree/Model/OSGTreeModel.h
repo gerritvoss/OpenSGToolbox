@@ -47,7 +47,7 @@
 #include "OSGUserInterfaceDef.h"
 #include <boost/any.hpp>
 #include <OpenSG/OSGBaseTypes.h>
-#include "Component/Tree/OSGTreePath.h"
+
 
 OSG_BEGIN_NAMESPACE
 class TreeModelListener;
@@ -80,12 +80,31 @@ public:
 
 	//Returns true if node is a leaf.
 	virtual bool isLeaf(const boost::any& node) const = 0;
+    
+    //Returns the Parent of this node
+    virtual boost::any getParent(const boost::any& node) const = 0;
+    
+    //Returns the Tree Path to this node
+    TreePath getPath(const boost::any& node) const;
+
+    //Returns true if these objects represent the same node in the tree
+    bool isEqual(const boost::any& left, const boost::any& right) const;
+
+    //A Depth First Traversal comparator
+    //Returns true if left would be visited before right in a DFT
+    bool depthFirstLessThan(const boost::any& left, const boost::any& right) const;
+    
+    //A Breadth First Traversal comparator
+    //Returns true if left would be visited before right in a BFT
+    bool breadthFirstLessThan(const boost::any& left, const boost::any& right) const;
+
 
 	//Messaged when the user has altered the value for the item identified by path to newValue.
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue) = 0;
 };
 
 typedef TreeModel* TreeModelPtr;
+typedef TreeModel const* ConstTreeModelPtr;
 
 OSG_END_NAMESPACE
 

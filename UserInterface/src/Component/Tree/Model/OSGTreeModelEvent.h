@@ -47,25 +47,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelEvent : public Event
 	enum EventEnum {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED};
 
 	//Returns the values of the child indexes.
-	std::vector<UInt32> getChildIndices(void) const;
+	const std::vector<UInt32>& getChildIndices(void) const;
 
 	//Returns the objects that are children of the node identified by getPath at the locations specified by getChildIndices.
-	std::vector<boost::any> getChildren(void) const;
+	const std::vector<boost::any>& getChildren(void) const;
 
 	//For all events, except treeStructureChanged, returns the parent of the changed nodes.
-	TreePath getPath(void) const;
+	const TreePath& getPath(void) const;
 
 	//Used to create an event when the node structure has changed in some way, identifying the path to the root of a modified subtree as an array of Objects.
-	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<boost::any> path);
+	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, const TreePath&);
 
 	//Used to create an event when nodes have been changed, inserted, or removed, identifying the path to the parent of the modified items as an array of Objects.
-	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<boost::any> path, std::vector<UInt32> childIndices, std::vector<boost::any> children);
-
-	//Used to create an event when the node structure has changed in some way, identifying the path to the root of the modified subtree as a TreePath object.
-	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, TreePath path);
-
-	//Used to create an event when nodes have been changed, inserted, or removed, identifying the path to the parent of the modified items as a TreePath object.
-	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, TreePath path, std::vector<UInt32> childIndices, std::vector<boost::any> children);
+	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, const TreePath&, const std::vector<UInt32>& childIndices, const std::vector<boost::any>& children);
     
     virtual const EventType &getType(void) const;
     

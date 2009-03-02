@@ -75,68 +75,129 @@ A DefaultTreeModel.
 
 ModelTreeNodePtr DefaultTreeModel::getNodeForPath(const TreePath& ThePath) const
 {
-    assert(false);
-    return NullFC;
-    /*if(ThePath.getPathCount()<1)
+    try
+    {
+        ModelTreeNodePtr TheNode = boost::any_cast<ModelTreeNodePtr>(ThePath.getLastPathComponent());
+        
+        return TheNode;
+    }
+    catch(boost::bad_any_cast &)
     {
         return NullFC;
     }
-
-    ModelTreeNodePtr Result(_Root);
-
-    UInt32 i(0);
-    while(i<ThePath.getPathCount()-1 && Result != NullFC && ThePath.getPathComponent(i) == Result->getUserObject())
-    {
-        ++i;
-        for(UInt32 j(0) ; j<Result->getChildCount() ; ++j)
-        {
-            if(Result->getChildAt(j)->getUserObject() == ThePath.getPathComponent(i))
-            {
-                Result = Result->getChildAt(j);
-                break;
-            }
-        }
-        if(Result->getUserObject() != ThePath.getPathComponent(i))
-        {
-            Result = NullFC;
-        }
-    }
-
-
-    return Result;*/
 }
 
 boost::any DefaultTreeModel::getChild(const boost::any& parent, const UInt32& index) const
 {
-    return _Root->getNodeFromUserObject(parent)->getChildAt(index)->getUserObject();
+    try
+    {
+        ModelTreeNodePtr ParentNode = boost::any_cast<ModelTreeNodePtr>(parent);
+        if(ParentNode != NullFC &&
+           index < ParentNode->getChildCount())
+        {
+            ModelTreeNodePtr ChildNode = ParentNode->getChildAt(index);
+            if(ChildNode != NullFC)
+            {
+                return boost::any(ChildNode);
+            }
+        }
+    }
+    catch(boost::bad_any_cast &)
+    {
+    }
+    return boost::any();
+}
+
+    
+boost::any DefaultTreeModel::getParent(const boost::any& node) const
+{
+    try
+    {
+        ModelTreeNodePtr Node = boost::any_cast<ModelTreeNodePtr>(node);
+        if(Node != NullFC &&
+           Node->getParent() != NullFC)
+        {
+            return boost::any(Node->getParent());
+        }
+    }
+    catch(boost::bad_any_cast &)
+    {
+    }
+    return boost::any();
 }
 
 UInt32 DefaultTreeModel::getChildCount(const boost::any& parent) const
 {
-    return _Root->getNodeFromUserObject(parent)->getChildCount();
+    try
+    {
+        ModelTreeNodePtr ParentNode = boost::any_cast<ModelTreeNodePtr>(parent);
+        if(ParentNode != NullFC)
+        {
+            return ParentNode->getChildCount();
+        }
+    }
+    catch(boost::bad_any_cast &)
+    {
+    }
+    return 0;
 }
 
 UInt32 DefaultTreeModel::getIndexOfChild(const boost::any& parent, const boost::any& child) const
 {
-    ModelTreeNodePtr ParentNode(_Root->getNodeFromUserObject(parent));
-    return ParentNode->getIndex(ParentNode->getNodeFromUserObject(child));
+    try
+    {
+        ModelTreeNodePtr ParentNode = boost::any_cast<ModelTreeNodePtr>(parent);
+        ModelTreeNodePtr ChildNode = boost::any_cast<ModelTreeNodePtr>(child);
+        if(ParentNode != NullFC &&
+           ChildNode != NullFC)
+        {
+            Int32 Index = ParentNode->getIndex(ChildNode);
+            if(Index > 0)
+            {
+                return static_cast<UInt32>(Index);
+            }
+        }
+    }
+    catch(boost::bad_any_cast &)
+    {
+    }
+    return 0;
 }
 
 boost::any DefaultTreeModel::getRoot(void) const
 {
-    return _Root->getUserObject();
+    if(_Root != NullFC)
+    {
+        return boost::any(_Root);
+    }
+    else
+    {
+        return boost::any();
+    }
 }
 
 bool DefaultTreeModel::isLeaf(const boost::any& node) const
 {
-    if(_AskAllowsChilren)
+    try
     {
-        return !_Root->getNodeFromUserObject(node)->getAllowsChildren();
+        ModelTreeNodePtr TheNode = boost::any_cast<ModelTreeNodePtr>(node);
+        if(TheNode != NullFC)
+        {
+            if(_AskAllowsChilren)
+            {
+                return TheNode->getAllowsChildren();
+            }
+            else
+            {
+                return TheNode->getChildCount() == 0;
+            }
+        }
     }
-    else
+    catch(boost::bad_any_cast &)
     {
-        return _Root->getNodeFromUserObject(node)->getChildCount() == 0;
     }
+    return false;
+
 }
 
 void DefaultTreeModel::valueForPathChanged(TreePath path, const boost::any& newValue)
@@ -176,10 +237,10 @@ void DefaultTreeModel::nodesChanged(ModelTreeNodePtr node, std::vector<UInt32> c
 
     for(UInt32 i(0) ; i< childIndices.size() ; ++i)
     {
-        ChildUserObjects.push_back(node->getChildAt(childIndices[i])->getUserObject());
+        ChildUserObjects.push_back(ModelTreeNode::Ptr::dcast(node->getChildAt(childIndices[i])));
     }
 
-    produceTreeNodesChanged(node->getPath(), childIndices, ChildUserObjects);
+    produceTreeNodesChanged(getPath(boost::any(node)), childIndices, ChildUserObjects);
 }
 
 void DefaultTreeModel::nodeStructureChanged(ModelTreeNodePtr node)
@@ -194,9 +255,9 @@ void DefaultTreeModel::nodesWereInserted(ModelTreeNodePtr node, std::vector<UInt
 
     for(UInt32 i(0) ; i< childIndices.size() ; ++i)
     {
-        InstertedChildUserObjects.push_back(node->getChildAt(childIndices[i])->getUserObject());
+        InstertedChildUserObjects.push_back(ModelTreeNode::Ptr::dcast(node->getChildAt(childIndices[i])));
     }
-    produceTreeNodesInserted(node->getPath(), childIndices, InstertedChildUserObjects);
+    produceTreeNodesInserted(getPath(boost::any(node)), childIndices, InstertedChildUserObjects);
 }
 
 void DefaultTreeModel::removeNodeFromParent(MutableTreeNodePtr node)
@@ -207,10 +268,11 @@ void DefaultTreeModel::removeNodeFromParent(MutableTreeNodePtr node)
     ChildIndicies.push_back(Parent->getIndex(node));
     
     std::vector<boost::any> Children;
-    Children.push_back(node->getUserObject());
+    Children.push_back(ModelTreeNode::Ptr::dcast(node));
 
+    produceTreeNodesWillBeRemoved(getPath(boost::any(Parent)), ChildIndicies, Children);
     node->removeFromParent();
-    produceTreeNodesRemoved(Parent->getPath(), ChildIndicies, Children);
+    produceTreeNodesRemoved(getPath(boost::any(Parent)), ChildIndicies, Children);
 	if(Parent->getChildCount() == 0)
 	{
 		nodeChanged(Parent);

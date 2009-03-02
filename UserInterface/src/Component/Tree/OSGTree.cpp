@@ -184,9 +184,9 @@ void Tree::keyTyped(const KeyEvent& e)
             {
                 expandRow(SelectedRow);
             }
-            else if(getModel()->getChildCount(SelectedPath.getLastPathComponent()._NodeValue) > 0)
+            else if(getModel()->getChildCount(SelectedPath.getLastPathComponent()) > 0)
             {
-                TreePath ToPath = SelectedPath.pathByAddingChild(getModel()->getChild(SelectedPath.getLastPathComponent()._NodeValue, 0), 0);
+                TreePath ToPath = getModel()->getPath(getModel()->getChild(SelectedPath.getLastPathComponent(),0));
                 getSelectionModel()->setSelectionPath(ToPath);
                 scrollPathToVisible(ToPath);
             }
@@ -204,7 +204,7 @@ void Tree::keyTyped(const KeyEvent& e)
             else if((getRootVisible() && SelectedPath.getPathCount() > 1) ||
                 (!getRootVisible() && SelectedPath.getPathCount() > 2))
             {
-                TreePath ToPath(SelectedPath.getPath(), SelectedPath.getPathCount()-1);
+                TreePath ToPath(SelectedPath.getParentPath());
                 getSelectionModel()->setSelectionPath(ToPath);
                 scrollPathToVisible(ToPath);
             }
@@ -213,7 +213,7 @@ void Tree::keyTyped(const KeyEvent& e)
 	case KeyEvent::KEY_ENTER:
         {
             TreePath SelectedPath = getSelectionModel()->getSelectionPath();
-		    if (getModel()->isLeaf(SelectedPath.getLastPathComponent()._NodeValue))
+		    if (getModel()->isLeaf(SelectedPath.getLastPathComponent()))
 		    {
                 //Send Action command for that leaf
 		    }
@@ -771,6 +771,7 @@ void Tree::updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRow
 
     updateRowsDrawn();
     updatePreferredSize();
+
 }
 
 void Tree::updateRows(const UInt32& Begining, const UInt32& NumRows)
@@ -857,13 +858,13 @@ Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
         }
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
-            return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent()._NodeValue, Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()._NodeValue), Row, false),
-                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent()._NodeValue, Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()._NodeValue), Row, false),
+            return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false),
+                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false),
                 Row);
         }
         else
         {
-            return TreeRowComponents(NullFC, getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent()._NodeValue, Row, 0,Selected, false),Row);
+            return TreeRowComponents(NullFC, getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false),Row);
         }
     }
     else
@@ -1083,7 +1084,7 @@ void Tree::ModelListener::treeNodesChanged(TreeModelEvent e)
     Int32 Row(-1);
     for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
     {
-        Row = _Tree->getModelLayout()->getRowForPath(e.getPath().pathByAddingChild(e.getChildren()[i], e.getChildIndices()[i]));
+        Row = _Tree->getModelLayout()->getRowForPath(_Tree->_Model->getPath(e.getChildren()[i]));
         if(Row != -1)
         {
             _Tree->updateRows(Row, 1);
@@ -1096,7 +1097,7 @@ void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
     Int32 InsertedRow(-1);
     for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
     {
-        InsertedRow = _Tree->getModelLayout()->getRowForPath(e.getPath().pathByAddingChild(e.getChildren()[i], e.getChildIndices()[i]));
+        InsertedRow = _Tree->getModelLayout()->getRowForPath(_Tree->_Model->getPath(e.getChildren()[i]));
         if(InsertedRow != -1)
         {
             _Tree->updateInsertedRows(InsertedRow, 1);
@@ -1104,17 +1105,54 @@ void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
     }
 }
 
+void Tree::ModelListener::treeNodesWillBeRemoved(TreeModelEvent e)
+{
+    _RomovedNodeRows.clear();
+    Int32 RemovedRow(-1);
+    std::vector<TreePath> VisibleDecendants;
+    TreePath ThePath;
+    for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+    {
+        ThePath = _Tree->_Model->getPath(e.getChildren()[i]);
+        //Get the row for this path
+        RemovedRow = _Tree->getModelLayout()->getRowForPath(ThePath);
+        _RomovedNodeRows.insert(RemovedRow);
+        
+        //Get the rows of all visible decendents
+        VisibleDecendants.clear();
+        _Tree->getModelLayout()->getVisibleDecendants(ThePath, VisibleDecendants);
+        for(std::vector<TreePath>::iterator Itor(VisibleDecendants.begin()) ; Itor != VisibleDecendants.end(); ++Itor)
+        {
+            RemovedRow = _Tree->getModelLayout()->getRowForPath(*Itor);
+            _RomovedNodeRows.insert(RemovedRow);
+        }
+        
+    }
+    
+
+    std::vector<UInt32> RemovedSelectionRows;
+    for(std::set<Int32>::iterator Itor(_RomovedNodeRows.begin()) ; Itor != _RomovedNodeRows.end(); ++Itor)
+    {
+        if((*Itor) >= 0)
+        {
+            RemovedSelectionRows.push_back(static_cast<UInt32>(*Itor));
+        }
+    }
+    
+    //Remove them from the selection
+    _Tree->removeSelectionRows(RemovedSelectionRows);
+}
 void Tree::ModelListener::treeNodesRemoved(TreeModelEvent e)
 {
     Int32 RemovedRow(-1);
-    for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+    for(std::set<Int32>::iterator Itor(_RomovedNodeRows.begin()) ; Itor != _RomovedNodeRows.end(); ++Itor)
     {
-        RemovedRow = _Tree->getModelLayout()->getRowForPath(e.getPath().pathByAddingChild(e.getChildren()[i], e.getChildIndices()[i]));
-        if(RemovedRow != -1)
+        if((*Itor) != -1)
         {
-            _Tree->updateRemovedRows(RemovedRow, 1);
+            _Tree->updateRemovedRows((*Itor), 1);
         }
     }
+    _RomovedNodeRows.clear();
 }
 
 void Tree::ModelListener::treeStructureChanged(TreeModelEvent e)

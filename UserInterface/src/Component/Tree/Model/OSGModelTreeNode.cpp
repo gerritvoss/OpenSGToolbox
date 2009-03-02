@@ -87,43 +87,6 @@ std::vector<ModelTreeNodePtr> ModelTreeNode::getChildren(void) const
     return Result;
 }
 
-ModelTreeNodePtr ModelTreeNode::getNodeFromUserObject(const boost::any& object)
-{
-    assert(false);
-    return NullFC;
-    /*if(object == getUserObject())
-    {
-        return ModelTreeNodePtr(this);
-    }
-    else
-    {
-        ModelTreeNodePtr Node;
-        for(UInt32 i(0) ; i<getChildCount() ; ++i)
-        {
-            Node = getChildAt(i)->getNodeFromUserObject(object);
-            if(Node != NullFC)
-            {
-                return Node;
-            }
-        }
-        return NullFC;
-    }*/
-}
-
-TreePath ModelTreeNode::getPath(void) const
-{
-    std::vector<boost::any> Path;
-
-    ModelTreeNodePtr Node(this);
-    while(Node != NullFC)
-    {
-        Path.push_back(Node->getUserObject());
-        Node = Node->getParent();
-    }
-
-	std::reverse(Path.begin(), Path.end());
-    return TreePath(Path);
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

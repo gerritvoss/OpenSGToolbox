@@ -148,9 +148,10 @@ Int32 FixedHeightTreeModelLayout::getRowForPath(const TreePath& path) const
 
 UInt32 FixedHeightTreeModelLayout::getVisibleChildCount(const TreePath& path) const
 {
-    if(isVisible(path))
+    if(isVisible(path) ||
+       (path.getPathCount() == 1 && isExpanded(path)))
     {
-        return _TreeModel->getChildCount(path.getLastPathComponent()._NodeValue);
+        return _TreeModel->getChildCount(path.getLastPathComponent());
     }
     else
     {
@@ -186,7 +187,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
 			{
 				_ExpandedPathSet.insert(path);
 
-                if(isVisible(path) || TreePath(_TreeModel->getRoot()) == path)
+                if(isVisible(path) || (_TreeModel->getPath(_TreeModel->getRoot()) == path))
 				{
 					//Insert all visible decendents of Path
 					std::vector<TreePath> VisibleDecendants;
@@ -210,7 +211,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
 			{
 				_ExpandedPathSet.erase(path);
 		        
-				if(isVisible(path) || TreePath(_TreeModel->getRoot()) == path)
+				if(isVisible(path) || _TreeModel->getPath(_TreeModel->getRoot()) == path)
 				{
 					//Remove all visible decendents of Path
 					std::vector<TreePath> VisibleDecendants;

@@ -49,6 +49,8 @@
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <vector>
+#include <deque>
+#include "Component/Tree/Model/OSGTreeModel.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -57,33 +59,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreePath
 {
 
 public:
-    struct NodePairType
+    struct BreadthFirstFunctional
     {
-        boost::any _NodeValue;
-        UInt32     _NodeIndex;
-
-        NodePairType(const boost::any& Value, UInt32 Index);
-        NodePairType(const NodePairType& Value);
-        NodePairType(void);
+    public:
+        bool operator()(const TreePath& LeftPath,
+                        const TreePath& RightPath) const;
+    };
+    
+    struct DepthFirstFunctional
+    {
+    public:
+        bool operator()(const TreePath& LeftPath,
+                        const TreePath& RightPath) const;
     };
 
-    typedef std::vector<NodePairType> PathVectorType;
+    typedef std::vector<boost::any> PathVectorType;
 
-	//Tests two TreePaths for equality by checking each element of the paths for equality.
+	//Tests two TreePaths for equality
 	bool operator==(const TreePath& Right) const;
 
 	bool operator!=(const TreePath& Right) const;
-
-    bool operator<(const TreePath& RightPath) const;
-
-    bool operator>(const TreePath& RightPath) const;
-
-    bool operator<=(const TreePath& RightPath) const;
-
-    bool operator>=(const TreePath& RightPath) const;
+    
+	bool operator<(const TreePath& Right) const;
 
 	//Returns the last component of this path.
-	NodePairType getLastPathComponent(void) const;
+    boost::any getLastPathComponent(void) const;
 
 	//Returns a path containing all the elements of this object, except the last path component.
 	TreePath getParentPath(void) const;
@@ -91,11 +91,8 @@ public:
 	//Returns a path containing the highest depth ancestor of this path and the given path
 	TreePath getHighestDepthAncestor(const TreePath& aTreePath) const;
 
-	//Returns an ordered array of Objects containing the components of this TreePath.
-	PathVectorType getPath(void) const;
-
 	//Returns the path component at the specified index.
-	NodePairType getPathComponent(const UInt32& Index) const;
+    boost::any getPathComponent(const UInt32& Index) const;
 
 	//Returns the number of elements in the path.
 	UInt32 getPathCount(void) const;
@@ -104,27 +101,44 @@ public:
     UInt32 getDepth(void) const;
 
 	//Returns true if aTreePath is a descendant of this TreePath.
-	bool isDescendant(TreePath aTreePath) const;
+	bool isDescendant(const TreePath& aTreePath) const;
+    
+	//Returns true if aTreePath is an ancestor of this TreePath.
+	bool isAncestor(const TreePath& aTreePath) const;
 
-	//Returns a new path containing all the elements of this object plus child.
-	TreePath pathByAddingChild(const boost::any& child, UInt32 childIndex) const;
+	//Returns true if aTreePath is a sibling of this TreePath.
+	bool isSibling(const TreePath& aTreePath) const;
 
+    //Copy constructor
+    TreePath(const TreePath& p);
+
+    //Default Tree Path Constructor
+    //creates an empty TreePath
     TreePath(void);
 
-	//Constructs a TreePath containing only a single element.
-	TreePath(const boost::any& singlePath, UInt32 childIndex = 0);
+    //Returns true if this is an empty path
+    bool empty(void) const;
 
-	//Constructs a path from an array of Objects, uniquely identifying the path from the root of the tree to a specific node, as returned by the tree's data model.
-	TreePath(const PathVectorType& path);
+    //A Breadth First Traversal comparator
+    //Returns true if left would be visited before right in a BFT
+    bool depthFirstLessThan(const TreePath& Right) const;
 
-
-	//Constructs a new TreePath with the identified path components of length length.
-	TreePath(const PathVectorType& path, const UInt32& length);
+    //A Breadth First Traversal comparator
+    //Returns true if this Path would be visited before Right in a BFT
+    bool breadthFirstLessThan(const TreePath& Right) const;
 
 private:
+    friend class TreeModel;
+    
+    TreePath(const PathVectorType& path, ConstTreeModelPtr theModel);
+    TreePath(const std::deque<boost::any>& path, ConstTreeModelPtr theModel);
+
+    TreePath(const TreePath& p, UInt32 len);
+
 protected:
 
 	PathVectorType _Path;
+    ConstTreeModelPtr _Model;
 };
 
 typedef TreePath* TreePathPtr;

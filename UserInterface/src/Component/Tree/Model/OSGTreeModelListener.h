@@ -54,6 +54,9 @@ public:
 	//Invoked after nodes have been removed from the tree.
 	virtual void treeNodesRemoved(TreeModelEvent e) = 0;
 
+	//Invoked before nodes have been removed from the tree.
+	virtual void treeNodesWillBeRemoved(TreeModelEvent e) = 0;
+
 	//Invoked after the tree has drastically changed structure from a given node down.
 	virtual void treeStructureChanged(TreeModelEvent e) = 0;
 };

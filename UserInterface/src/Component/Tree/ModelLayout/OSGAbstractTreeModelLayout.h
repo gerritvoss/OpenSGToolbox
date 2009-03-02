@@ -156,6 +156,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
 	//Tells the ModelLayout to veto the collapse of the given TreePath
 	virtual void vetoPathCollapse(const TreePath& Path);
+    
+    //Fills VisibleDecendents will all of the TreePaths to nodes that are visible decendents of Path
+    virtual void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -188,22 +191,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
     //Selection model.
     TreeSelectionModelPtr _TreeSelectionModel;
-
-
-    struct TreePathPreorderLessThan
-    {
-    protected:
-        TreeModelPtr _TreeModel;
-
-        TreePathPreorderLessThan(void);
-    public:
-        TreePathPreorderLessThan(TreeModelPtr Model);
-
-        bool operator()(const TreePath& LeftPath,
-                        const TreePath& RightPath) const;
-    };
     
-    typedef std::set<TreePath, TreePathPreorderLessThan> TreePathSet;
+    typedef std::set<TreePath, TreePath::BreadthFirstFunctional> TreePathSet;
     typedef TreePathSet::iterator TreePathSetItor;
     typedef TreePathSet::const_iterator TreePathSetConstItor;
 
@@ -217,6 +206,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 		
         virtual void treeNodesChanged(TreeModelEvent e);
         virtual void treeNodesInserted(TreeModelEvent e);
+        virtual void treeNodesWillBeRemoved(TreeModelEvent e);
         virtual void treeNodesRemoved(TreeModelEvent e);
         virtual void treeStructureChanged(TreeModelEvent e);
 	protected :
@@ -244,7 +234,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
     void insertVisiblePath(const TreePath& Path);
     void removeVisiblePath(const TreePath& Path);
     void removeExpandedPath(const TreePath& Path);
-    void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const;
     
     typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
 	typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
@@ -253,6 +242,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
 	void produceTreeNodesChanged(const TreeModelEvent& e);
 	void produceTreeNodesInserted(const TreeModelEvent& e);
+	void produceTreeNodesWillBeRemoved(const TreeModelEvent& e);
 	void produceTreeNodesRemoved(const TreeModelEvent& e);
 	void produceTreeStructureChanged(const TreeModelEvent& e);
 

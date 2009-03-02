@@ -189,6 +189,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	//Tells the ModelLayout to veto the collapse of the given TreePath
 	virtual void vetoPathCollapse(const TreePath& Path) = 0;
 
+    //Fills VisibleDecendents will all of the TreePaths to nodes that are visible decendents of Path
+    virtual void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

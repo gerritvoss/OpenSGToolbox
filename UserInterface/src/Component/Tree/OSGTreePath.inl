@@ -43,7 +43,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-TreePath::NodePairType TreePath::getLastPathComponent(void) const
+boost::any TreePath::getLastPathComponent(void) const
 {
 	return _Path.back();
 }
@@ -51,17 +51,11 @@ TreePath::NodePairType TreePath::getLastPathComponent(void) const
 inline
 TreePath TreePath::getParentPath(void) const
 {
-	return TreePath(_Path, _Path.size() - 1);
+	return TreePath(*this, _Path.size() - 1);
 }
 
 inline
-TreePath::PathVectorType TreePath::getPath(void) const
-{
-	return _Path;
-}
-
-inline
-TreePath::NodePairType TreePath::getPathComponent(const UInt32& Index) const
+boost::any TreePath::getPathComponent(const UInt32& Index) const
 {
 	return _Path[Index];
 }
@@ -79,44 +73,79 @@ UInt32 TreePath::getDepth(void) const
 }
 
 inline
+bool TreePath::empty(void) const
+{
+    return (_Model == NULL || _Path.size() == 0);
+}
+
+inline
+bool TreePath::isAncestor(const TreePath& aTreePath) const
+{
+    return aTreePath.isDescendant(*this);
+}
+
+inline
+bool TreePath::isSibling(const TreePath& aTreePath) const
+{
+    return (getParentPath() == aTreePath.getParentPath());
+}
+
+inline
+bool TreePath::operator<(const TreePath& Right) const
+{
+    return breadthFirstLessThan(Right);
+}
+
+inline
 bool TreePath::operator!=(const TreePath& Right) const
 {
     return !(operator==(Right));
 }
 
 inline
-bool TreePath::operator<=(const TreePath& RightPath) const
+bool TreePath::BreadthFirstFunctional::operator()(const TreePath& LeftPath,
+                const TreePath& RightPath) const
 {
-    return (operator==(RightPath) || operator<(RightPath));
+    return LeftPath.breadthFirstLessThan(RightPath);
 }
 
 inline
-bool TreePath::operator>(const TreePath& RightPath) const
+bool TreePath::DepthFirstFunctional::operator()(const TreePath& LeftPath,
+                const TreePath& RightPath) const
 {
-    return !operator<=(RightPath);
+    return LeftPath.depthFirstLessThan(RightPath);
 }
 
 inline
-bool TreePath::operator>=(const TreePath& RightPath) const
-{
-    return (operator==(RightPath) || operator>(RightPath));
-}
-
-inline
-TreePath::NodePairType::NodePairType(const boost::any& Value, UInt32 Index)
-: _NodeValue(Value), _NodeIndex(Index)
+TreePath::TreePath(const TreePath& p) :
+  _Path(p._Path), _Model(p._Model)
 {
 }
 
 inline
-TreePath::NodePairType::NodePairType(const NodePairType& Value)
-: _NodeValue(Value._NodeValue), _NodeIndex(Value._NodeIndex)
+TreePath::TreePath(const PathVectorType& path, ConstTreeModelPtr theModel) :
+  _Path(path), _Model(theModel)
 {
 }
 
 inline
-TreePath::NodePairType::NodePairType(void)
-: _NodeValue(), _NodeIndex(0)
+TreePath::TreePath(const std::deque<boost::any>& path, ConstTreeModelPtr theModel) :
+  _Path(path.begin(), path.end()), _Model(theModel)
+{
+}
+
+inline
+TreePath::TreePath(const TreePath& p, UInt32 len) : _Model(p._Model)
+{
+    if(len <= p._Path.size())
+    {
+        _Path.insert(_Path.begin(), p._Path.begin(), p._Path.begin() + len);
+    }
+}
+
+inline
+TreePath::TreePath(void) :
+  _Path(), _Model(NULL)
 {
 }
 

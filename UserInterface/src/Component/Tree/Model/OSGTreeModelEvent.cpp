@@ -9,13 +9,13 @@ const EventType &TreeModelEvent::getType(void) const
     return _Type;
 }
 
-TreeModelEvent::TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<boost::any> path)
+TreeModelEvent::TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, const TreePath& path)
 		: Event(Source, TimeStamp),
 		_Path(path)
 {
 }
 
-TreeModelEvent::TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<boost::any> path, std::vector<UInt32> childIndices, std::vector<boost::any> children)
+TreeModelEvent::TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, const TreePath& path, const std::vector<UInt32>& childIndices, const std::vector<boost::any>& children)
 		: Event(Source, TimeStamp),
 		_Path(path),
 		_Children(children),
@@ -23,17 +23,4 @@ TreeModelEvent::TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, std::ve
 {
 }
 
-TreeModelEvent::TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, TreePath path)
-		: Event(Source, TimeStamp),
-		_Path(path)
-{
-}
-
-TreeModelEvent::TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, TreePath path, std::vector<UInt32> childIndices, std::vector<boost::any> children)
-		: Event(Source, TimeStamp),
-		_Path(path),
-		_Children(children),
-		_ChildIndices(childIndices)
-{
-}
 OSG_END_NAMESPACE

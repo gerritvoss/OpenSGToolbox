@@ -49,6 +49,7 @@
 
 #include "OSGFileSystemTreeModel.h"
 #include <boost/filesystem/operations.hpp>
+#include "Component/Tree/OSGTreePath.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -98,6 +99,24 @@ boost::any FileSystemTreeModel::getChild(const boost::any& parent, const UInt32&
     {
         return boost::any();
     }
+}
+
+boost::any FileSystemTreeModel::getParent(const boost::any& node) const
+{
+    try
+    {
+		Path ThePath = boost::any_cast<Path>(node);
+
+        if(!ThePath.empty())
+        {
+            return boost::any(ThePath.branch_path());
+        }
+
+    }
+    catch(boost::bad_any_cast &)
+    {
+    }
+    return boost::any();
 }
 
 UInt32 FileSystemTreeModel::getChildCount(const boost::any& parent) const
@@ -180,7 +199,7 @@ void FileSystemTreeModel::valueForPathChanged(TreePath path, const boost::any& n
 void FileSystemTreeModel::setRoot(const Path& root)
 {
     _Root = root;
-	produceTreeStructureChanged(TreePath(),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(root)));
+	produceTreeStructureChanged(getPath(_Root),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(root)));
 }
 
 const Path& FileSystemTreeModel::getRootPath(void) const

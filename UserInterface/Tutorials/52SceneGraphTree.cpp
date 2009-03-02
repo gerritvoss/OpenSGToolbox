@@ -157,6 +157,7 @@ int main(int argc, char **argv)
 			Root->addChild(SphereGeometryNode);
 			Root->addChild(BoxGeometryNode);
 		endEditCP(Root, Node::CoreFieldMask | Node::ChildrenFieldMask);
+		setName(Root, std::string("Root"));
 	}
 
     // Create the Graphics
@@ -176,7 +177,8 @@ int main(int argc, char **argv)
     beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
         TheTree->setPreferredSize(Vec2f(100, 500));
     endEditCP(TheTree, Tree::PreferredSizeFieldMask);
-    TheTree->setModel(&TheFileSystemTreeModel);
+    //TheTree->setModel(&TheFileSystemTreeModel);
+    TheTree->setModel(&TheTreeModel);
 
 
 

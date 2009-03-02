@@ -108,7 +108,7 @@ void Tree::expandRow(const UInt32& row)
 inline
 boost::any Tree::getLastSelectedPathComponent(void) const
 {
-    return getModelLayout()->getPathForRow(_SelectionModel->getMaxSelectionRow()).getLastPathComponent()._NodeValue;
+    return getModelLayout()->getPathForRow(_SelectionModel->getMaxSelectionRow()).getLastPathComponent();
 }
 
 inline

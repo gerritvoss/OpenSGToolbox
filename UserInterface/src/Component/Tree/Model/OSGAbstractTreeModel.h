@@ -71,10 +71,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public TreeModel
 	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
 	TreeModelListenerSet _ModelListeners;
 
-	void produceTreeNodesChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<boost::any> Children);
-	void produceTreeNodesInserted(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<boost::any> Children);
-	void produceTreeNodesRemoved(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<boost::any> Children);
-	void produceTreeStructureChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<boost::any> Children);
+	void produceTreeNodesChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
+	void produceTreeNodesInserted(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
+	void produceTreeNodesRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
+	void produceTreeNodesWillBeRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
+	void produceTreeStructureChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
     /*==========================  PRIVATE  ================================*/
   private:
 };

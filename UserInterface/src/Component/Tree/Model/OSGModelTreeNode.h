@@ -108,12 +108,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ModelTreeNode : public ModelTreeNodeBase
     
 	//Returns this node's user object.
 	virtual boost::any getUserObject(void) const = 0;
-    
-    //Find the decendent node that uses object as it's UserObject
-    ModelTreeNodePtr getNodeFromUserObject(const boost::any& object);
-
-    //Get the Path from the Root to this node
-    TreePath getPath(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

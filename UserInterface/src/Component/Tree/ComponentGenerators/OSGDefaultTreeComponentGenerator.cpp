@@ -49,6 +49,7 @@
 
 #include "OSGDefaultTreeComponentGenerator.h"
 #include "Component/Tree/OSGTree.h"
+#include "Component/Tree/Model/OSGModelTreeNode.h"
 #include "Component/Text/OSGLabel.h"
 #include "Component/OSGComponent.h"
 
@@ -86,6 +87,25 @@ void DefaultTreeComponentGenerator::initMethod (void)
 
 ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
+    boost::any ValueToUse;
+    try
+    {
+        ModelTreeNodePtr TheNode = boost::any_cast<ModelTreeNodePtr>(Value);
+        if(TheNode != NullFC)
+        {
+            ValueToUse = TheNode->getUserObject();
+        }
+        else
+        {
+            ValueToUse = Value;
+        }
+    }
+    catch (boost::bad_any_cast &)
+    {
+        //Could not convert to ModelTreeNodePtr
+        ValueToUse = Value;
+    }
+
     //Setup the layout
     /*BoxLayoutPtr TheLayout = BoxLayout::create();
     beginEditCP(TheLayout, BoxLayout::OrientationFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
@@ -98,7 +118,7 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, con
     std::string LabelText("");
     try
     {
-        LabelText = lexical_cast(Value);
+        LabelText = lexical_cast(ValueToUse);
     }
     catch (boost::bad_lexical_cast &)
     {

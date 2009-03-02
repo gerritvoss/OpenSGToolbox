@@ -2741,6 +2741,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModel.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModel.h"
 							>
 						</File>

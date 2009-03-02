@@ -658,11 +658,6 @@ void DefaultMutableTreeNode::breadthFirst(std::vector<DefaultMutableTreeNodePtr>
     }
 }
 
-TreePath DefaultMutableTreeNode::getTreePath(void) const
-{
-    return TreePath(getUserObjectPath());
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

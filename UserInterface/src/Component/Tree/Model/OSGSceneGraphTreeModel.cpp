@@ -46,8 +46,11 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGSimpleAttachments.h>
+#include <OpenSG/OSGNodeCore.h>
 
 #include "OSGSceneGraphTreeModel.h"
+#include "Component/Tree/OSGTreePath.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -90,6 +93,24 @@ boost::any SceneGraphTreeModel::getChild(const boost::any& parent, const UInt32&
     {
         return boost::any();
     }
+}
+
+boost::any SceneGraphTreeModel::getParent(const boost::any& node) const
+{
+    try
+    {
+        NodePtr TheNode = boost::any_cast<NodePtr>(node);
+        if(TheNode != NullFC &&
+            TheNode != _Root &&
+            TheNode->getParent() != NullFC)
+        {
+            return boost::any(TheNode->getParent());
+        }
+    }
+    catch(boost::bad_any_cast &)
+    {
+    }
+    return boost::any();
 }
 
 UInt32 SceneGraphTreeModel::getChildCount(const boost::any& parent) const
@@ -149,7 +170,7 @@ void SceneGraphTreeModel::valueForPathChanged(TreePath path, const boost::any& n
     try
     {
         NodePtr NewNode = boost::any_cast<NodePtr>(newValue);
-        NodePtr OldNode = boost::any_cast<NodePtr>(path.getLastPathComponent()._NodeValue);
+        NodePtr OldNode = boost::any_cast<NodePtr>(path.getLastPathComponent());
         if(NewNode != NullFC &&
            OldNode  != NullFC &&
 		   NewNode != OldNode &&
@@ -186,7 +207,7 @@ void SceneGraphTreeModel::setRoot(NodePtr root)
     {
         addRefCP(_Root);
     }
-	produceTreeStructureChanged(TreePath(),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(root)));
+	produceTreeStructureChanged(getPath(_Root),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(root)));
 }
 
 NodePtr SceneGraphTreeModel::getRootNode(void) const

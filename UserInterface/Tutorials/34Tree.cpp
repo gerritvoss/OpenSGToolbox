@@ -275,11 +275,11 @@ int main(int argc, char **argv)
 
     //A
     ANode->insert(BNode);
-    //ANode->insert(CNode);
+    ANode->insert(CNode);
     
     //B
     BNode->insert(DNode);
-    /*BNode->insert(ENode);
+    BNode->insert(ENode);
     
     //C
     CNode->insert(FNode);
@@ -290,7 +290,7 @@ int main(int argc, char **argv)
     DNode->insert(INode);
 
 
-    std::string TempString;
+    /*std::string TempString;
 
     std::vector<DefaultMutableTreeNodePtr> TreePreorderSequence;
     ANode->preorder(TreePreorderSequence);
@@ -334,7 +334,7 @@ int main(int argc, char **argv)
     TheTree->setModel(&TheTreeModel);
 
     //Layout Expansion
-    TheTree->expandPath(ANode->getTreePath());
+    TheTree->expandPath(TheTreeModel.getPath(ANode));
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
     ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();

@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTreePath.h"
+#include <OpenSG/OSGBaseFunctions.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,36 +72,111 @@ A TreePath.
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool TreePath::isDescendant(TreePath aTreePath) const
+bool TreePath::depthFirstLessThan(const TreePath& Right) const
 {
-    UInt32 i(0);
-    while(i<aTreePath._Path.size() && aTreePath._Path[i]._NodeIndex != _Path.front()._NodeIndex )
+    if(_Model != Right._Model)
     {
-         ++i;
+        return false;
+    }
+    UInt32 LeftChildIndex,RightChildIndex;
+    for(UInt32 i(0) ; i<osgMin<UInt32>(getPathCount(), Right.getPathCount())-1 ; ++i)
+    {
+        LeftChildIndex = _Model->getIndexOfChild(getPathComponent(i),getPathComponent(i+1));
+        RightChildIndex = _Model->getIndexOfChild(Right.getPathComponent(i),Right.getPathComponent(i+1));
+        if(LeftChildIndex != RightChildIndex)
+        {
+            return LeftChildIndex < RightChildIndex;
+        }
     }
 
-    if(i<aTreePath._Path.size() && _Path.size() <= aTreePath._Path.size() - i)
+    return getDepth() > Right.getDepth();
+}
+
+bool TreePath::breadthFirstLessThan(const TreePath& Right) const
+{
+    if(_Model != Right._Model)
     {
-        for(UInt32 j(0) ; j<_Path.size() ; ++j)
+        return false;
+    }
+    UInt32 LeftChildIndex,RightChildIndex;
+    for(UInt32 i(0) ; i<osgMin<UInt32>(getPathCount(), Right.getPathCount())-1 ; ++i)
+    {
+        LeftChildIndex = _Model->getIndexOfChild(getPathComponent(i),getPathComponent(i+1));
+        RightChildIndex = _Model->getIndexOfChild(Right.getPathComponent(i),Right.getPathComponent(i+1));
+        if(LeftChildIndex != RightChildIndex)
         {
-             if(_Path[j]._NodeIndex != aTreePath._Path[i+j]._NodeIndex)
-             {
-                 return false;
-             }
+            return LeftChildIndex < RightChildIndex;
+        }
+    }
+
+    return getDepth() < Right.getDepth();
+}
+
+bool TreePath::isDescendant(const TreePath& aTreePath) const
+{
+    if(_Model == aTreePath._Model &&
+        getPathCount() < aTreePath.getPathCount())
+    {
+        for(UInt32 i(0) ; i<getPathCount()-1 ; ++i)
+        {
+            if( _Model->getIndexOfChild(getPathComponent(i),getPathComponent(i+1))
+                !=
+                _Model->getIndexOfChild(aTreePath.getPathComponent(i),aTreePath.getPathComponent(i+1)))
+            {
+                return false;
+            }
         }
         return true;
     }
     else
     {
-	   return false;
+        return false;
     }
 }
 
-TreePath TreePath::pathByAddingChild(const boost::any& child, UInt32 childIndex) const
+bool TreePath::operator==(const TreePath& Right) const
 {
-	PathVectorType Path(_Path);
-	Path.push_back(NodePairType(child,childIndex));
-	return TreePath(Path);
+    if(_Model == Right._Model &&
+        getPathCount() == Right.getPathCount())
+    {
+        for(UInt32 i(0) ; i<getPathCount()-1 ; ++i)
+        {
+            if( _Model->getIndexOfChild(getPathComponent(i),getPathComponent(i+1))
+                !=
+                _Model->getIndexOfChild(Right.getPathComponent(i),Right.getPathComponent(i+1)))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const
+{
+    if(_Model == aTreePath._Model &&
+       !empty() && !aTreePath.empty())
+    {
+        UInt32 i(0);
+        for( ; i<osgMin<UInt32>(getPathCount(),aTreePath.getPathCount())-1 ; ++i)
+        {
+            if( _Model->getIndexOfChild(getPathComponent(i),getPathComponent(i+1))
+                !=
+                _Model->getIndexOfChild(aTreePath.getPathComponent(i),aTreePath.getPathComponent(i+1)))
+            {
+                break;
+            }
+        }
+        return TreePath(*this, i);
+    }
+    else
+    {
+        return TreePath();
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -109,94 +185,8 @@ TreePath TreePath::pathByAddingChild(const boost::any& child, UInt32 childIndex)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-TreePath::TreePath(const boost::any& singlePath, UInt32 childIndex)
-{
-	_Path.push_back(NodePairType(singlePath,childIndex));
-}
-
-TreePath::TreePath(const PathVectorType& path) :
-    _Path(path)
-{
-}
-
-TreePath::TreePath(void)
-{
-}
-TreePath::TreePath(const PathVectorType& path, const UInt32& length)
-{
-    if(path.size() > 0)
-    {
-        _Path = path;
-		if(_Path.size() > length)
-		{
-			_Path.resize(length);
-		}
-    }
-}
 /*----------------------------- class specific ----------------------------*/
 
-bool TreePath::operator==(const TreePath& Right) const
-{
-    if(_Path.size() == Right._Path.size())
-    {
-        for(UInt32 i(0) ; i<_Path.size() ; ++i)
-        {
-             if(_Path[i]._NodeIndex != Right._Path[i]._NodeIndex)
-             {
-                 return false;
-             }
-        }
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool TreePath::operator<(const TreePath& RightPath) const
-{
-    if(_Path.size() != RightPath._Path.size())
-    {
-        return _Path.size() < RightPath._Path.size();
-    }
-    else if(_Path.size() == 0)
-    {
-        return false;
-    }
-    else
-    {
-        for(UInt32 i(0) ; i<_Path.size() ; ++i)
-        {
-			if(_Path[i]._NodeIndex != RightPath._Path[i]._NodeIndex)
-			{
-				return _Path[i]._NodeIndex < RightPath._Path[i]._NodeIndex;
-			}
-        }
-        return false;
-    }
-}
-
-TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const
-{
-    UInt32 Depth(1);
-    
-    while( Depth < getDepth() &&
-           Depth < aTreePath.getDepth() &&
-           TreePath(_Path, Depth) == TreePath(aTreePath._Path, Depth) )
-    {
-        ++Depth;
-    }
-
-    if(Depth > 0)
-    {
-        return TreePath(_Path, Depth-1);
-    }
-    else
-    {
-        return TreePath();
-    }
-}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

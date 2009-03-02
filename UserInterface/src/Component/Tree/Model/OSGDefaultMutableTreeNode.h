@@ -224,8 +224,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	//Removes all of this node's children, setting their parents to null.
 	void removeAllChildren(void);
 
-    //Get the TreePath for this node
-    TreePath getTreePath(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
