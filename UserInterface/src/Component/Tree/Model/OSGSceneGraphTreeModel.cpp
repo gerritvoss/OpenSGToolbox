@@ -197,16 +197,16 @@ void SceneGraphTreeModel::valueForPathChanged(TreePath path, const boost::any& n
 
 void SceneGraphTreeModel::setRoot(NodePtr root)
 {
-    if(_Root != NullFC)
-    {
-        subRefCP(_Root);
-    }
+    //if(_Root != NullFC)
+    //{
+    //    subRefCP(_Root);
+    //}
     _Root = root;
 
-    if(_Root != NullFC)
-    {
-        addRefCP(_Root);
-    }
+    //if(_Root != NullFC)
+    //{
+    //    addRefCP(_Root);
+    //}
 	produceTreeStructureChanged(getPath(_Root),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(root)));
 }
 
@@ -217,10 +217,10 @@ NodePtr SceneGraphTreeModel::getRootNode(void) const
 
 SceneGraphTreeModel::~SceneGraphTreeModel(void)
 {
-    if(_Root != NullFC)
-    {
-        subRefCP(_Root);
-    }
+    //if(_Root != NullFC)
+    //{
+    //    subRefCP(_Root);
+    //}
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

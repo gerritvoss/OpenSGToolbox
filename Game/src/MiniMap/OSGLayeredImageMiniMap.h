@@ -121,6 +121,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 	virtual void updateAllTransformations(void);
 
 	void setupDrawInternals(void);
+	void setupLockedMapDrawInternals(void);
+	void setupUnLockedMapDrawInternals(void);
 
 	Pnt2f ViewPointLocation;
 	Quaternion ViewPointOrientation;
