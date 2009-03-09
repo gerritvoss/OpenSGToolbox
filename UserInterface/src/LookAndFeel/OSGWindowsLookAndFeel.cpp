@@ -55,6 +55,7 @@
 #include "Component/Button/OSGCheckboxButton.h"
 #include "Component/Button/OSGRadioButton.h"
 #include "Component/Button/OSGToggleButton.h"
+#include "Component/Button/OSGMenuButton.h"
 #include "Component/Text/OSGLabel.h"
 #include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Container/Window/Dialog/OSGDialogWindow.h"
@@ -151,6 +152,7 @@ void WindowsLookAndFeel::init(void)
 {
 
 	ButtonPtr WindowsButton = Button::create();
+	MenuButtonPtr WindowsMenuButton = MenuButton::create();
 	LabelPtr WindowsLabel = Label::create();
 	InternalWindowPtr WindowsInternalWindow = InternalWindow::create();
 	DialogWindowPtr WindowsDialogWindow = DialogWindow::create();
@@ -195,6 +197,7 @@ void WindowsLookAndFeel::init(void)
 
 	beginEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 		getPrototypes().push_back(WindowsButton);
+        getPrototypes().push_back(WindowsMenuButton);
 		getPrototypes().push_back(WindowsLabel);
 		getPrototypes().push_back(WindowsInternalWindow);
 		getPrototypes().push_back(WindowsDialogWindow);
@@ -1785,6 +1788,51 @@ void WindowsLookAndFeel::init(void)
         WindowsToggleButton->setDrawObjectToTextPadding(4.0f);
 
 	endEditCP(WindowsToggleButton);
+    
+    //************************** Menu Button *****************************
+
+	beginEditCP(WindowsMenuButton);
+		WindowsMenuButton->setEnabled(true);
+		WindowsMenuButton->setVisible(true);
+		
+		WindowsMenuButton->setConstraints(NullFC);
+		//Sizes
+		WindowsMenuButton->setMinSize(Vec2f(0,0));
+		WindowsMenuButton->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsMenuButton->setPreferredSize(Vec2f(75,23));
+
+		//Border
+		WindowsMenuButton->setBorder(WindowsButtonBorder);
+		WindowsMenuButton->setRolloverBorder(WindowsRolloverButtonBorder);
+		WindowsMenuButton->setFocusedBorder(WindowsButtonBorder);
+		WindowsMenuButton->setDisabledBorder(WindowsDisabledButtonBorder);
+		WindowsMenuButton->setActiveBorder(WindowsActiveButtonBorder);
+		
+		//Background
+		WindowsMenuButton->setBackground(WindowsButtonBackground);
+		WindowsMenuButton->setRolloverBackground(WindowsRolloverButtonBackground);
+		WindowsMenuButton->setFocusedBackground(WindowsButtonBackground);
+		WindowsMenuButton->setDisabledBackground(WindowsDisabledButtonBackground);
+		WindowsMenuButton->setActiveBackground(WindowsActiveButtonBackground);
+		
+		//Opacity
+		WindowsMenuButton->setOpacity(1.0);
+
+		//Text
+		WindowsMenuButton->setText("");
+		WindowsMenuButton->setFont(WindowsFont);
+		WindowsMenuButton->setAlignment(Vec2f(0.5f,0.5f));
+		WindowsMenuButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsMenuButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsMenuButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsMenuButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsMenuButton->setDisabledTextColor(WindowsDisabledTextColor);
+        
+        WindowsMenuButton->setActiveOffset(Vec2f(2,2));
+        WindowsMenuButton->setDrawObjectToTextAlignment(Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT);
+        WindowsMenuButton->setDrawObjectToTextPadding(4.0f);
+
+	endEditCP(WindowsMenuButton);
 
 	/********Text Field********/
 	ColorLayerPtr WindowsTextFieldBackground = ColorLayer::create();

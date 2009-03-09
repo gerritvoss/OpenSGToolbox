@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,9 +43,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGToggleButton.h"
+#include "OSGMenuButton.h"
+#include "Component/Menu/OSGListGeneratedPopupMenu.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
+#include "Component/List/Models/OSGListModel.h"
 #include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
@@ -54,31 +59,19 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::ToggleButton
-A UI Button. 
+/*! \class osg::MenuButton
+A UI MenuButton 	
 */
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-const OSG::BitVector  ToggleButton::SelectedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << ToggleButton::SelectedBorderFieldId);
-
-const OSG::BitVector  ToggleButton::SelectedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << ToggleButton::SelectedBackgroundFieldId);
-
-const OSG::BitVector  ToggleButton::SelectedTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << ToggleButton::SelectedTextColorFieldId);
-
-const OSG::BitVector  ToggleButton::SelectedDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << ToggleButton::SelectedDrawObjectFieldId);
-
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ToggleButton::initMethod (void)
+void MenuButton::initMethod (void)
 {
 }
 
@@ -87,128 +80,133 @@ void ToggleButton::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-void ToggleButton::actionPreformed(const ActionEvent& e)
+void MenuButton::hidePopup(void)
 {
-    beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-	    setSelected(!getSelected());
-    endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-}
-
-BorderPtr ToggleButton::getDrawnBorder(void) const
-{
-	if(getSelected() && getEnabled())
-	{
-		return getActiveBorder();
-	}
-	else
-	{
-        return Inherited::getDrawnBorder();
-    }
-}
-
-Vec2f ToggleButton::getDrawnOffset(void) const
-{
-    if(getActive() || getSelected())
+    if(getMenuButtonPopupMenu()->getVisible())
     {
-        return getActiveOffset();
+	    getMenuButtonPopupMenu()->cancel();
     }
-    else
+}
+
+void MenuButton::showPopup(void)
+{
+    if(!getMenuButtonPopupMenu()->getVisible())
     {
-        return Vec2f(0.0f,0.0f);
+	    Pnt2f BorderTopLeft, BorderBottomRight;
+	    getBounds(BorderTopLeft, BorderBottomRight);
+
+        beginEditCP(getMenuButtonPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
+           getMenuButtonPopupMenu()->setInvoker(ComponentPtr(this));
+           getMenuButtonPopupMenu()->setVisible(true);
+           getMenuButtonPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentPtr(this)));
+	       getMenuButtonPopupMenu()->setSelection(-1);
+        endEditCP(getMenuButtonPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
+        
+        beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
+            getParentWindow()->getActivePopupMenus().push_back(getMenuButtonPopupMenu());
+        endEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
     }
 }
 
-LayerPtr ToggleButton::getDrawnBackground(void) const
-{
-	if(getSelected() && getEnabled())
-	{
-		return getActiveBackground();
-	}
-	else
-	{
-        return Inherited::getDrawnBackground();
-    }
-}
-LayerPtr ToggleButton::getDrawnForeground(void) const
-{
-	if(getSelected() && getEnabled())
-	{
-		return getActiveForeground();
-	}
-	else
-	{
-        return Inherited::getDrawnForeground();
-    }
-}
-
-Color4f ToggleButton::getDrawnTextColor(void) const
-{
-	if(getSelected() && getEnabled())
-	{
-		return getActiveTextColor();
-	}
-	else
-	{
-        return Inherited::getDrawnTextColor();
-    }
-}
-void  ToggleButton::produceButtonSelected(const ButtonSelectedEvent& e)
-{
-   for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
-   {
-      (*SetItor)->buttonSelected(e);
-   }
-}
-
-void  ToggleButton::produceButtonDeselected(const ButtonSelectedEvent& e)
-{
-   for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
-   {
-      (*SetItor)->buttonDeselected(e);
-   }
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-ToggleButton::ToggleButton(void) :
-    Inherited()
+MenuButton::MenuButton(void) :
+    Inherited(),
+    _MenuButtonEventsListener(MenuButtonPtr(this))
+{
+	beginEditCP(MenuButtonPtr(this), MenuButtonPopupMenuFieldMask);
+		setMenuButtonPopupMenu(ListGeneratedPopupMenu::create());
+	endEditCP(MenuButtonPtr(this), MenuButtonPopupMenuFieldMask);
+}
+
+MenuButton::MenuButton(const MenuButton &source) :
+    Inherited(source),
+    _MenuButtonEventsListener(MenuButtonPtr(this))
+{
+	beginEditCP(MenuButtonPtr(this), MenuButtonPopupMenuFieldMask);
+		setMenuButtonPopupMenu(ListGeneratedPopupMenu::create());
+	endEditCP(MenuButtonPtr(this), MenuButtonPopupMenuFieldMask);
+}
+
+MenuButton::~MenuButton(void)
 {
 }
 
-ToggleButton::ToggleButton(const ToggleButton &source) :
-    Inherited(source)
-{
-}
-
-ToggleButton::~ToggleButton(void)
-{
-}
 /*----------------------------- class specific ----------------------------*/
 
-void ToggleButton::changed(BitVector whichField, UInt32 origin)
+void MenuButton::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-    if( (whichField & SelectedFieldMask) )
+
+	if((whichField & MenuButtonPopupMenuFieldMask) &&
+		getMenuButtonPopupMenu() != NullFC)
+	{
+		getMenuButtonPopupMenu()->addPopupMenuListener(&_MenuButtonEventsListener);
+	}
+
+	if(whichField & ModelFieldMask)
+	{
+		if(getModel() != NullFC)
+		{
+			beginEditCP(getMenuButtonPopupMenu(), ListGeneratedPopupMenu::ModelFieldMask);
+				getMenuButtonPopupMenu()->setModel(getModel());
+			endEditCP(getMenuButtonPopupMenu(), ListGeneratedPopupMenu::ModelFieldMask);
+		}
+	}
+
+	if(((whichField & CellGeneratorFieldMask) ||
+		(whichField & MenuButtonPopupMenuFieldMask)) &&
+		getCellGenerator() != NullFC)
+	{
+		beginEditCP(getMenuButtonPopupMenu(), ListGeneratedPopupMenu::CellGeneratorFieldMask);
+			getMenuButtonPopupMenu()->setCellGenerator(getCellGenerator());
+		endEditCP(getMenuButtonPopupMenu(), ListGeneratedPopupMenu::CellGeneratorFieldMask);
+	}
+
+	if((whichField & SelectedFieldMask))
     {
         if(getSelected())
         {
-			produceButtonSelected( ButtonSelectedEvent(ComponentPtr(this),getSystemTime(),ButtonSelectedEvent::BUTTONSELECTED, ButtonPtr(this)) );    
+            showPopup();
         }
         else
         {
-            produceButtonDeselected( ButtonSelectedEvent(ComponentPtr(this),getSystemTime(),ButtonSelectedEvent::BUTTONDESELECTED, ButtonPtr(this)) );    
+            hidePopup();
         }
-     }
+    }
 }
 
-void ToggleButton::dump(      UInt32    , 
+void MenuButton::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump ToggleButton NI" << std::endl;
+    SLOG << "Dump MenuButton NI" << std::endl;
+}
+
+
+void MenuButton::MenuButtonEventsListener::popupMenuCanceled(const PopupMenuEvent& e)
+{
+    beginEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
+        _MenuButton->setSelected(false);
+    endEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
+}
+
+void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeInvisible(const PopupMenuEvent& e)
+{
+    beginEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
+        _MenuButton->setSelected(false);
+    endEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
+}
+
+void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeVisible(const PopupMenuEvent& e)
+{
+}
+
+void MenuButton::MenuButtonEventsListener::popupMenuContentsChanged(const PopupMenuEvent& e)
+{
 }
 
 /*------------------------------------------------------------------------*/
@@ -225,10 +223,10 @@ void ToggleButton::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTOGGLEBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTOGGLEBUTTONBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGMENUBUTTONBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGMENUBUTTONBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGTOGGLEBUTTONFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGMENUBUTTONFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

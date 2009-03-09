@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,34 +36,32 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSPRINGLAYOUT_H_
-#define _OSGSPRINGLAYOUT_H_
+#ifndef _OSGMENUBUTTON_H_
+#define _OSGMENUBUTTON_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGSpringLayoutBase.h"
-#include "Layout/Spring/OSGLayoutSpringFields.h"
-#include "Component/OSGComponentFields.h"
-#include "Component/Container/OSGContainerFields.h"
-#include "Layout/Spring/OSGLayoutSpringFields.h"
-#include "Layout/OSGSpringLayoutConstraintsFields.h"
+#include "OSGMenuButtonBase.h"
+#include "Component/List/OSGListDataListener.h"
+#include "Event/OSGPopupMenuListener.h"
+#include "Component/Menu/OSGListGeneratedPopupMenu.h"
+
 #include <set>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SpringLayout class. See \ref 
-           PageUserInterfaceSpringLayout for a description.
+/*! \brief MenuButton class. See \ref 
+           PageUserInterfaceMenuButton for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
+class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
 {
   private:
 
-    typedef SpringLayoutBase Inherited;
+    typedef MenuButtonBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -84,87 +82,77 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+	//Adds a PopupMenu listener which will listen to notification messages from the popup portion of the combo box.
+	void addPopupMenuListener(PopupMenuListenerPtr Listener);
+    
 
-    bool isCyclic(LayoutSpringPtr TheSpring) const;
-
-    //Returns the constraints for the specified component.
-    SpringLayoutConstraintsPtr getConstraint(ComponentPtr TheComponent) const;
-
-    //Returns the spring controlling the distance between the specified edge of the component and the top or left edge of its parent.
-    LayoutSpringPtr getConstraint(const UInt32 Edge, ComponentPtr TheComponent) const;
-
-    //Links edge e1 of component c1 to edge e2 of component c2, with a fixed distance between the edges.
-    void putConstraint(const UInt32 e1, ComponentPtr c1, const Real32& pad, const UInt32 e2, ComponentPtr c2);
-
-    //Links edge e1 of component c1 to edge e2 of component c2.
-    void putConstraint(const UInt32 e1, ComponentPtr c1, LayoutSpringPtr s, const UInt32 e2, ComponentPtr c2);
-
-    void putConstraint(const UInt32 e, ComponentPtr c, LayoutSpringPtr s);
-    virtual Vec2f minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+	//Removes a PopupMenuListener.
+	void removePopupMenuListener(PopupMenuListenerPtr Listener);
+    
+	//Determines the visibility of the popup.
+	bool isPopupVisible(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in SpringLayoutBase.
+    // Variables should all be in MenuButtonBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    SpringLayout(void);
-    SpringLayout(const SpringLayout &source);
+    MenuButton(void);
+    MenuButton(const MenuButton &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SpringLayout(void); 
+    virtual ~MenuButton(void); 
 
     /*! \}                                                                 */
 
+	void hidePopup(void);
+	void showPopup(void);
+    
+    //Expand Button Action Listener
+	class MenuButtonEventsListener : public PopupMenuListener
+	{
+	public:
+		MenuButtonEventsListener(MenuButtonPtr TheMenuButton);
+
+		virtual void popupMenuCanceled(const PopupMenuEvent& e);
+		virtual void popupMenuWillBecomeInvisible(const PopupMenuEvent& e);
+		virtual void popupMenuWillBecomeVisible(const PopupMenuEvent& e);
+		virtual void popupMenuContentsChanged(const PopupMenuEvent& e);
+	private:
+		MenuButtonPtr _MenuButton;
+	};
+
+	friend class MenuButtonEventsListener;
+
+	MenuButtonEventsListener _MenuButtonEventsListener;
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class SpringLayoutBase;
+    friend class MenuButtonBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const SpringLayout &source);
-
-    LayoutSpringPtr getDecycledSpring(LayoutSpringPtr s) const;
-
-    void resetCyclicStatuses(void);
-
-    void setParent(ContainerPtr p);
-
-    static SpringLayoutConstraintsPtr applyDefaults(ComponentPtr c, SpringLayoutConstraintsPtr constraints);
-
-    //void applyDefaults(SpringLayoutConstraintsPtr constraints, const UInt32 name1,
-    //                       LayoutSpringPtr spring1, const UInt32 name2, LayoutSpringPtr spring2,
-    //                       List<String> history);
-
-    typedef std::set<LayoutSpringPtr> LayoutSpringSet;
-
-    mutable LayoutSpringSet _CyclicSprings;
-    mutable LayoutSpringSet _AcyclicSprings;
-
-    LayoutSpringPtr _CyclicDummySpring;
+    void operator =(const MenuButton &source);
 };
 
-typedef SpringLayout *SpringLayoutP;
+typedef MenuButton *MenuButtonP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSpringLayoutBase.inl"
-#include "OSGSpringLayout.inl"
+#include "OSGMenuButtonBase.inl"
+#include "OSGMenuButton.inl"
 
-#define OSGSPRINGLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGMENUBUTTON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSPRINGLAYOUT_H_ */
+#endif /* _OSGMENUBUTTON_H_ */

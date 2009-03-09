@@ -76,6 +76,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayout : public GridBagLayoutBase
 
     /*! \}                                                                 */
     virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+    virtual Vec2f minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+	virtual Vec2f requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+	virtual Vec2f preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+	virtual Vec2f maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -96,6 +100,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayout : public GridBagLayoutBase
     virtual ~GridBagLayout(void); 
 
     /*! \}                                                                 */
+    virtual Vec2f layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

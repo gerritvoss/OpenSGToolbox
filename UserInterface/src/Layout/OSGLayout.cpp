@@ -74,6 +74,46 @@ void Layout::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+Vec2f Layout::minimumLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return minimumContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
+}
+
+Vec2f Layout::requestedLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return requestedContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
+}
+
+Vec2f Layout::preferredLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return preferredContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
+}
+
+Vec2f Layout::maximumLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return maximumContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
+}
+
+Vec2f Layout::getComponentSize(ComponentPtr TheComponent, SizeType TheSizeType)
+{
+    switch(TheSizeType)
+    {
+    case MIN_SIZE:
+        return TheComponent->getMinSize();
+        break;
+    case MAX_SIZE:
+        return TheComponent->getMaxSize();
+        break;
+    case PREFERRED_SIZE:
+        return TheComponent->getPreferredSize();
+        break;
+    case REQUESTED_SIZE:
+    default:
+        return TheComponent->getRequestedSize();
+        break;
+    }
+}
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

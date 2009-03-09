@@ -221,6 +221,75 @@ void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentP
 		}
 	}
 }
+
+Vec2f BorderLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+{
+    Vec2f Result(0.0,0.0);
+
+    Vec2f WestSize(0.0,0.0),
+        EastSize(0.0,0.0),
+        NorthSize(0.0,0.0),
+        SouthSize(0.0,0.0),
+        CenterSize(0.0,0.0);
+    for(UInt32 i(0) ; i<Components.size() ; ++i)
+    {
+        switch(BorderLayoutConstraintsPtr::dcast(Components[i]->getConstraints())->getRegion())
+        {
+        case BorderLayoutConstraints::BORDER_WEST:
+            WestSize = getComponentSize(Components[i],TheSizeType);
+            break;
+        case BorderLayoutConstraints::BORDER_EAST:
+            EastSize = getComponentSize(Components[i],TheSizeType);
+            break;
+        case BorderLayoutConstraints::BORDER_NORTH:
+            NorthSize = getComponentSize(Components[i],TheSizeType);
+            break;
+        case BorderLayoutConstraints::BORDER_SOUTH:
+            SouthSize = getComponentSize(Components[i],TheSizeType);
+            break;
+        case BorderLayoutConstraints::BORDER_CENTER:
+            CenterSize = getComponentSize(Components[i],TheSizeType);
+            break;
+        }
+    }
+
+    switch(TheSizeType)
+    {
+    case MAX_SIZE:
+        Result[0] = osgMin(osgMin(EastSize.x() + CenterSize.x() + WestSize.x(),NorthSize.x()),SouthSize.x());
+        Result[1] = osgMin(osgMin(EastSize.y(), CenterSize.y()), WestSize.y()) + NorthSize.y() + SouthSize.y();
+        break;
+    case MIN_SIZE:
+    case PREFERRED_SIZE:
+    case REQUESTED_SIZE:
+    default:
+        Result[0] = osgMax(osgMax(EastSize.x() + CenterSize.x() + WestSize.x(),NorthSize.x()),SouthSize.x());
+        Result[1] = osgMax(osgMax(EastSize.y(), CenterSize.y()), WestSize.y()) + NorthSize.y() + SouthSize.y();
+        break;
+    }
+
+    return Result;
+}
+
+Vec2f BorderLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MIN_SIZE);
+}
+
+Vec2f BorderLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
+}
+
+Vec2f BorderLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
+}
+
+Vec2f BorderLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MAX_SIZE);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

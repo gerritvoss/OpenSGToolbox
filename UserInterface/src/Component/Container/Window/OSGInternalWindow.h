@@ -138,7 +138,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 
 	virtual void close(void);
 
-	virtual void draw(const GraphicsPtr TheGraphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -161,6 +160,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
     /*! \}                                                                 */
     
 	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
+	virtual void drawUnclipped(const GraphicsPtr TheGraphics) const;
 	
 	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
 	{

@@ -345,6 +345,53 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
         endEditCP(Components[i], Component::PositionFieldMask | Component::SizeFieldMask);
     }
 }
+
+Vec2f FlowLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+{
+    Real32 MinorAxisMax(0.0f);
+    Real32 MajorAxisSum(0.0f);
+    
+	UInt32 MajorAxisIndex(0);
+	if(getOrientation() != HORIZONTAL_ORIENTATION ) MajorAxisIndex = 1;
+    
+	UInt32 MinorAxisIndex((MajorAxisIndex+1)%2);
+
+    Vec2f ComponentSize;
+    for(UInt32 i(0) ; i<Components.size() ; ++i)
+    {
+        ComponentSize = getComponentSize(Components[i],TheSizeType);
+        if(ComponentSize[MinorAxisIndex] > MinorAxisMax)
+        {
+            MinorAxisMax = ComponentSize[MinorAxisIndex];
+        }
+        MajorAxisSum += ComponentSize[MajorAxisIndex];
+    }
+
+    Vec2f Result;
+    Result[MajorAxisIndex] = MajorAxisSum;
+    Result[MinorAxisIndex] = MinorAxisMax;
+    return Result;
+}
+
+Vec2f FlowLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MIN_SIZE);
+}
+
+Vec2f FlowLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
+}
+
+Vec2f FlowLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
+}
+
+Vec2f FlowLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MAX_SIZE);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

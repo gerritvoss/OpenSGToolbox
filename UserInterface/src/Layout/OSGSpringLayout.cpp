@@ -91,12 +91,6 @@ void SpringLayout::updateLayout(const MFComponentPtr Components,const ComponentP
     
     const_cast<SpringLayout*>(this)->setParent(Container::Ptr::dcast(ParentComponent));
     
-    //getConstraint(ParentComponent).reset();
-    //for (UInt32 i(0) ; i < Components.size() ; i++) {
-        //getConstraint(Components[i]).reset();
-    //}
-
-    //TODO: Implement
     SpringLayoutConstraintsPtr MyBoundsConstraints = getConstraint(ParentComponent);
     
     getDecycledSpring(MyBoundsConstraints->getX())->setValue(ParentInsetsTopLeft.x());
@@ -117,6 +111,47 @@ void SpringLayout::updateLayout(const MFComponentPtr Components,const ComponentP
             Components[i]->setSize(Vec2f(width, height));
         endEditCP(Components[i], Component::PositionFieldMask | Component::SizeFieldMask);
      }
+}
+
+
+Vec2f SpringLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    /*SpringLayoutConstraintsPtr TheConstraints = getConstraint( ParentComponent );
+    Real32 width = getDecycledSpring(TheConstraints->getWidth())->getMinimumValue();
+    Real32 height = getDecycledSpring(TheConstraints->getHeight())->getMinimumValue();
+
+    return Vec2f(width, height);*/
+    return ParentComponent->getMinSize();
+}
+
+Vec2f SpringLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    /*SpringLayoutConstraintsPtr TheConstraints = getConstraint( ParentComponent );
+    Real32 width = getDecycledSpring(TheConstraints->getWidth())->getPreferredValue();
+    Real32 height = getDecycledSpring(TheConstraints->getHeight())->getPreferredValue();
+
+    return Vec2f(width, height);*/
+    return ParentComponent->getPreferredSize();
+}
+
+Vec2f SpringLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    /*SpringLayoutConstraintsPtr TheConstraints = getConstraint( ParentComponent );
+    Real32 width = getDecycledSpring(TheConstraints->getWidth())->getPreferredValue();
+    Real32 height = getDecycledSpring(TheConstraints->getHeight())->getPreferredValue();
+
+    return Vec2f(width, height);*/
+    return ParentComponent->getPreferredSize();
+}
+
+Vec2f SpringLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    /*SpringLayoutConstraintsPtr TheConstraints = getConstraint( ParentComponent );
+    Real32 width = getDecycledSpring(TheConstraints->getWidth())->getMaximumValue();
+    Real32 height = getDecycledSpring(TheConstraints->getHeight())->getMaximumValue();
+
+    return Vec2f(width, height);*/
+    return ParentComponent->getMaxSize();
 }
 
 bool SpringLayout::isCyclic(LayoutSpringPtr TheSpring) const

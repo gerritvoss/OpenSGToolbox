@@ -100,6 +100,51 @@ void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const Componen
 	}
 }
 
+
+Vec2f AbsoluteLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+{
+    Vec2f Result(0.0,0.0);
+
+    Vec2f ComponentSize;
+    Pnt2f ComponentPosition;
+    for(UInt32 i(0) ; i<Components.size() ; ++i)
+    {
+        ComponentPosition = AbsoluteLayoutConstraintsPtr::dcast(Components[i]->getConstraints())->getPosition();
+				
+        ComponentSize = getComponentSize(Components[i],TheSizeType);
+        if(ComponentPosition.x() + ComponentSize.x() > Result.x())
+        {
+            Result[0] = ComponentPosition.x() + ComponentSize.x();
+        }
+        if(ComponentPosition.y() + ComponentSize.y() > Result.y())
+        {
+            Result[1] = ComponentPosition.y() + ComponentSize.y();
+        }
+    }
+
+    return Result;
+}
+
+Vec2f AbsoluteLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MIN_SIZE);
+}
+
+Vec2f AbsoluteLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
+}
+
+Vec2f AbsoluteLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
+}
+
+Vec2f AbsoluteLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MAX_SIZE);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -426,11 +426,18 @@ void Component::draw(const GraphicsPtr TheGraphics) const
     //Set Clipping to initial settings
 	setupClipping(TheGraphics);
 
-	//Draw Border
-	drawBorder(TheGraphics, DrawnBorder);
+    //Draw all parts that should not be clipped against
+    drawUnclipped(TheGraphics);
 
     //Undo the Translation to Component Space
     glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+}
+
+
+void Component::drawUnclipped(const GraphicsPtr TheGraphics) const
+{
+	//Draw Border
+	drawBorder(TheGraphics, getDrawnBorder());
 }
 
 
@@ -983,12 +990,12 @@ void Component::ComponentUpdater::update(const UpdateEvent& e)
             if(_Component->getParentWindow() != NullFC &&
                _Component->getParentWindow()->getDrawingSurface() != NullFC)
             {
-                TheToolTip->setPosition(ComponentToDrawingSurface(_Component->getToolTipLocation(
+                TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(
                     _Component->getParentWindow()->getDrawingSurface()->getMousePosition()), _Component));
             }
             else
             {
-                TheToolTip->setPosition(ComponentToDrawingSurface(_Component->getToolTipLocation(Pnt2f(0,0)),_Component));
+                TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(Pnt2f(0,0)),_Component));
             }
             TheToolTip->setText(_Component->getToolTipText());
         endEditCP(TheToolTip, ToolTip::TippedComponentFieldMask | ToolTip::PositionFieldMask | ToolTip::TextFieldMask);

@@ -1376,6 +1376,34 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Component\Button\OSGMenuButton.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Button\OSGMenuButton.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Button\OSGMenuButton.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Button\OSGMenuButtonBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Button\OSGMenuButtonBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Button\OSGMenuButtonBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Button\OSGMenuButtonFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Button\OSGRadioButton.cpp"
 						>
 					</File>

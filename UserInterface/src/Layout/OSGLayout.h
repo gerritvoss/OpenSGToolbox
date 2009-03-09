@@ -77,8 +77,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING Layout : public LayoutBase
 
     /*! \}                                                                 */
 	virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
+	
+    virtual Vec2f minimumLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+	virtual Vec2f requestedLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+	virtual Vec2f preferredLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+	virtual Vec2f maximumLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+
+    virtual Vec2f minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
+	virtual Vec2f requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
+	virtual Vec2f preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
+	virtual Vec2f maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
+
+      enum SizeType {MIN_SIZE, MAX_SIZE, REQUESTED_SIZE, PREFERRED_SIZE};
 
     // Variables should all be in LayoutBase.
 
@@ -97,7 +109,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Layout : public LayoutBase
     virtual ~Layout(void); 
 
     /*! \}                                                                 */
-    
+
+    static Vec2f getComponentSize(ComponentPtr TheComponent, SizeType TheSizeType);
     /*==========================  PRIVATE  ================================*/
   private:
 

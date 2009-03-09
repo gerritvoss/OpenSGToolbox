@@ -142,6 +142,48 @@ void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	endEditCP(curCard, Component::PositionFieldMask);
 
 }
+
+
+Vec2f CardLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+{
+    Vec2f Result(0.0,0.0);
+
+    Vec2f ComponentSize;
+    for(UInt32 i(0) ; i<Components.size() ; ++i)
+    {
+        ComponentSize = getComponentSize(Components[i],TheSizeType);
+        if(ComponentSize.x() > Result.x())
+        {
+            Result[0] = ComponentSize.x();
+        }
+        if(ComponentSize.y() > Result.y())
+        {
+            Result[1] = ComponentSize.y();
+        }
+    }
+
+    return Result;
+}
+
+Vec2f CardLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MIN_SIZE);
+}
+
+Vec2f CardLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
+}
+
+Vec2f CardLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
+}
+
+Vec2f CardLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MAX_SIZE);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

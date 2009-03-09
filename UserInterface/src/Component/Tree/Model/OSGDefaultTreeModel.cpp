@@ -115,6 +115,7 @@ boost::any DefaultTreeModel::getParent(const boost::any& node) const
     {
         ModelTreeNodePtr Node = boost::any_cast<ModelTreeNodePtr>(node);
         if(Node != NullFC &&
+           Node != _Root  &&
            Node->getParent() != NullFC)
         {
             return boost::any(Node->getParent());

@@ -136,6 +136,48 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	}
 }
 
+
+Vec2f GridLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+{
+	Real32 maxSizeX = 0.0f;
+	Real32 maxSizeY = 0.0f;
+
+    Vec2f ComponentSize;
+	//set the size to the perfered sizes for the buttons
+	for(UInt16 i = 0; i<Components.size(); i++){
+		if (Components[i] != NullFC) 
+		{
+            ComponentSize = getComponentSize(Components[i],TheSizeType);
+			if(ComponentSize.x()>maxSizeX)
+				maxSizeX = ComponentSize.x();
+			if(ComponentSize.y()>maxSizeY)
+				maxSizeY = ComponentSize.y();
+		}
+	}
+
+    return Vec2f(maxSizeX * static_cast<Real32>(getRows()),
+                 maxSizeY * static_cast<Real32>(getColumns()));
+}
+
+Vec2f GridLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MIN_SIZE);
+}
+
+Vec2f GridLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
+}
+
+Vec2f GridLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
+}
+
+Vec2f GridLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MAX_SIZE);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -204,6 +204,54 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 		offset[AxisIndex] += spacing + Components[i]->getPreferredSize()[AxisIndex];
 	}
 }
+
+
+Vec2f BoxLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+{
+    Real32 MinorAxisMax(0.0f);
+    Real32 MajorAxisSum(0.0f);
+    
+	UInt32 MajorAxisIndex(0);
+	if(getOrientation() != HORIZONTAL_ORIENTATION ) MajorAxisIndex = 1;
+    
+	UInt32 MinorAxisIndex((MajorAxisIndex+1)%2);
+
+    Vec2f ComponentSize;
+    for(UInt32 i(0) ; i<Components.size() ; ++i)
+    {
+        ComponentSize = getComponentSize(Components[i],TheSizeType);
+        if(ComponentSize[MinorAxisIndex] > MinorAxisMax)
+        {
+            MinorAxisMax = ComponentSize[MinorAxisIndex];
+        }
+        MajorAxisSum += ComponentSize[MajorAxisIndex];
+    }
+
+    Vec2f Result;
+    Result[MajorAxisIndex] = MajorAxisSum;
+    Result[MinorAxisIndex] = MinorAxisMax;
+    return Result;
+}
+
+Vec2f BoxLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MIN_SIZE);
+}
+
+Vec2f BoxLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
+}
+
+Vec2f BoxLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
+}
+
+Vec2f BoxLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+    return layoutSize(Components, ParentComponent, MAX_SIZE);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -740,9 +740,9 @@ void InternalWindow::drawInternal(const GraphicsPtr TheGraphics) const
     }
 }
 
-void InternalWindow::draw(const GraphicsPtr TheGraphics) const
+void InternalWindow::drawUnclipped(const GraphicsPtr TheGraphics) const
 {
-	Inherited::draw(TheGraphics);
+    Inherited::drawUnclipped(TheGraphics);
         
     //If I have an active tooltip then draw it
     if(getActiveToolTip() != NullFC)
@@ -755,7 +755,6 @@ void InternalWindow::draw(const GraphicsPtr TheGraphics) const
     {
         getActivePopupMenus()[i]->draw(TheGraphics);
     }
-
 }
 
 void InternalWindow::destroyPopupMenu(void)

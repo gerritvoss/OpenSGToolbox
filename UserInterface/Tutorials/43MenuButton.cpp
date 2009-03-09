@@ -1,12 +1,10 @@
-// OpenSG Tutorial Example: Creating a Button Component
+// OpenSG Tutorial Example: Creating a List
 //
-// This tutorial explains how to edit the basic features of
-// a Button and a ToggleButtoncreated in the OSG User 
-// Interface library.
+// This tutorial explains how to create a List 
+// via the  OSG User Interface library.
 // 
-// Includes: Button PreferredSize, MaximumSize, MinimumSize, Font,
-// Text,and adding a Button to a Scene.  Also note that clicking
-// the Button causes it to appear pressed
+// Includes: placing multiple buttons using Flow Layout
+
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
@@ -14,14 +12,14 @@
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
 
-// A little helper to simplify Root management and interaction
+// A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
-// The general Root file loading handler
+// The general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
 
 // Input
@@ -33,9 +31,6 @@
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-
-#include <sstream>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -49,20 +44,31 @@ bool ExitApp = false;
 void display(void);
 void reshape(Vec2f Size);
 
-//Tree Headers
-#include <OpenSG/UserInterface/OSGTree.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
+// 18List Headers
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGSceneGraphTreeModel.h>
-#include <OpenSG/UserInterface/OSGFileSystemTreeModel.h>
-#include <OpenSG/UserInterface/OSGFixedHeightTreeModelLayout.h>
+#include <OpenSG/UserInterface/OSGMenuButton.h>
+#include <OpenSG/UserInterface/OSGLayers.h>
 
-#include <OpenSG/UserInterface/OSGScrollPanel.h>
-#include <OpenSG/OSGSimpleAttachments.h>
-#include <OpenSG/OSGSceneFileHandler.h>
+// List header files
+#include <OpenSG/UserInterface/OSGDefaultListModel.h>
 
-// Create a class to allow for the use of the Escape
-// key to exit
+
+class TutorialWindowListener : public WindowAdapter
+{
+public:
+    virtual void windowClosing(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+};
+
+// Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -84,30 +90,11 @@ public:
    }
 };
 
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
-
-SceneGraphTreeModel TheTreeModel;
-FileSystemTreeModel TheFileSystemTreeModel;
-TreePtr TheTree;
-
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    // Set up Window
     WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
 
@@ -125,40 +112,15 @@ int main(int argc, char **argv)
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
-	NodePtr Root(NullFC);
-    if(argc == 2)
-    {
-		Root = SceneFileHandler::the().read(argv[1]);
-	}
+    // Make Torus Node (creates Torus in background of scene)
+    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-	if(Root == NullFC)
-	{
-		// Make Torus Node (creates Torus in background of Root)
-		NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
-		setName(TorusGeometryNode, std::string("Torus"));
-
-		NodePtr TorusNode = Node::create();
-		beginEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-			TorusNode->setCore(osg::Transform::create());
-			TorusNode->addChild(TorusGeometryNode);
-		endEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-		setName(TorusNode, std::string("Torus Transform"));
-
-		NodePtr SphereGeometryNode = makeSphere(2,1.0f);
-		setName(SphereGeometryNode, std::string("Sphere"));
-		NodePtr BoxGeometryNode = makeBox(1.0,1.0,1.0,1,1,1);
-		setName(BoxGeometryNode, std::string("Box"));
-
-		// Make Main Scene Node and add the Torus
-		Root = osg::Node::create();
-		beginEditCP(Root, Node::CoreFieldMask | Node::ChildrenFieldMask);
-			Root->setCore(osg::Group::create());
-			Root->addChild(TorusNode);
-			Root->addChild(SphereGeometryNode);
-			Root->addChild(BoxGeometryNode);
-		endEditCP(Root, Node::CoreFieldMask | Node::ChildrenFieldMask);
-		setName(Root, std::string("Root"));
-	}
+    // Make Main Scene Node and add the Torus
+    NodePtr scene = osg::Node::create();
+    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        scene->setCore(osg::Group::create());
+        scene->addChild(TorusGeometryNode);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
@@ -166,30 +128,40 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //Tree Model
-    TheTreeModel.setRoot(Root);
+    //Create list data model to use for the Popup menu
+	DefaultListModelPtr ExampleListModel = DefaultListModel::create();
+    ExampleListModel->pushBack(boost::any(std::string("Red")));
+    ExampleListModel->pushBack(boost::any(std::string("Green")));
+    ExampleListModel->pushBack(boost::any(std::string("Blue")));
+    ExampleListModel->pushBack(boost::any(std::string("Orange")));
+    ExampleListModel->pushBack(boost::any(std::string("Purple")));
+    ExampleListModel->pushBack(boost::any(std::string("Yellow")));
+    ExampleListModel->pushBack(boost::any(std::string("White")));
+    ExampleListModel->pushBack(boost::any(std::string("Black")));
+    ExampleListModel->pushBack(boost::any(std::string("Gray")));
+    ExampleListModel->pushBack(boost::any(std::string("Brown")));
+    ExampleListModel->pushBack(boost::any(std::string("Indigo")));
+    ExampleListModel->pushBack(boost::any(std::string("Pink")));
+    ExampleListModel->pushBack(boost::any(std::string("Violet")));
+    ExampleListModel->pushBack(boost::any(std::string("Mauve")));
+    ExampleListModel->pushBack(boost::any(std::string("Peach")));
 
-	TheFileSystemTreeModel.setRoot(Path("C:\\"));
-    
-    //Create the Tree
-    TheTree = Tree::create();
+    //Create the MenuButton
+    MenuButtonPtr ExampleMenuButton = osg::MenuButton::create();
 
-    beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
-        TheTree->setPreferredSize(Vec2f(100, 500));
-    endEditCP(TheTree, Tree::PreferredSizeFieldMask);
-    TheTree->setModel(&TheFileSystemTreeModel);
-    //TheTree->setModel(&TheTreeModel);
+    beginEditCP(ExampleMenuButton, MenuButton::TextFieldMask | MenuButton::PreferredSizeFieldMask | MenuButton::ModelFieldMask);
+        ExampleMenuButton->setText("Menu Button");
+        ExampleMenuButton->setPreferredSize(Vec2f(120, 20));
+        ExampleMenuButton->setModel(ExampleListModel);
+        endEditCP(ExampleMenuButton, MenuButton::TextFieldMask | MenuButton::PreferredSizeFieldMask | MenuButton::ModelFieldMask);
 
-
-
-    // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
-    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2s(350,300));
-        //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-    ExampleScrollPanel->setViewComponent(TheTree);
+    // Create MainFramelayout
+    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
+        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+    endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
@@ -198,15 +170,13 @@ int main(int argc, char **argv)
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
     endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
+       MainInternalWindow->getChildren().push_back(ExampleMenuButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
@@ -217,7 +187,7 @@ int main(int argc, char **argv)
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
     endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
+    
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
@@ -225,14 +195,14 @@ int main(int argc, char **argv)
 
     beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
-    mgr->setRoot(Root);
+    mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
@@ -244,9 +214,10 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
-                                        "OpenSG 34 Tree Window");
+                                        Vec2f(900,900),
+                                        "OpenSG 43 Menu Button Window");
 
+    //Main Event Loop
     while(!ExitApp)
     {
         TutorialWindowEventProducer->update();
@@ -256,8 +227,6 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
-
 // Callback functions
 
 

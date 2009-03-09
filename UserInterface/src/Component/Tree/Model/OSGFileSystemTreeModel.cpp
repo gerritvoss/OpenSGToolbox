@@ -107,9 +107,10 @@ boost::any FileSystemTreeModel::getParent(const boost::any& node) const
     {
 		Path ThePath = boost::any_cast<Path>(node);
 
-        if(!ThePath.empty())
+        if(!ThePath.empty() || 
+            boost::filesystem::equivalent(ThePath, _Root))
         {
-            return boost::any(ThePath.branch_path());
+            return boost::any(ThePath.parent_path());
         }
 
     }
