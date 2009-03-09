@@ -240,8 +240,6 @@ SceneManager *mgr;
 TransformPtr CameraBeaconTransform;
 TransformPtr ViewpointTransform;
 TransformPtr TorusTransform;
-TransformPtr SphereTransform;
-TransformPtr BoxTransform;
 RubberBandCameraPtr RubberCamera;
 
 bool ExitApp = false;
@@ -464,40 +462,8 @@ int main(int argc, char **argv)
         TorusNode->addChild(TorusGeometryNode);
     endEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 	
-    // Make Sphere Node
-    NodePtr SphereGeometryNode = makeSphere(2,1.0f);
-
-	Matrix SphereTransMatrix;
-	SphereTransMatrix.setTransform(Vec3f(3.0,0.0,0.0));
-	SphereTransform = Transform::create();
-    beginEditCP(SphereTransform, Transform::MatrixFieldMask);
-		SphereTransform->setMatrix(SphereTransMatrix);
-    endEditCP(SphereTransform, Transform::MatrixFieldMask);
-
-	NodePtr SphereNode = Node::create();
-    beginEditCP(SphereNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        SphereNode->setCore(SphereTransform);
-        SphereNode->addChild(SphereGeometryNode);
-    endEditCP(SphereNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-	
     // Make Cylinder Node
     NodePtr CylinderGeometryNode = makeBox(0.5,0.5,0.5,2,2,2);//makeCylinder(1.0,0.25,2,true,true,true);
-
-    // Make Box Node
-    NodePtr BoxGeometryNode = makeBox(1.5,1.5,1.5,2,2,2);
-
-	Matrix BoxTransMatrix;
-	BoxTransMatrix.setTransform(Vec3f(-3.0,0.0,0.0));
-	BoxTransform = Transform::create();
-    beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-		BoxTransform->setMatrix(BoxTransMatrix);
-    endEditCP(BoxTransform, Transform::MatrixFieldMask);
-
-	NodePtr BoxNode = Node::create();
-    beginEditCP(BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        BoxNode->setCore(BoxTransform);
-        BoxNode->addChild(BoxGeometryNode);
-    endEditCP(BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	//Set the Camera Beacon Node
 	Matrix Offset;
@@ -527,8 +493,6 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(TorusNode);
-        scene->addChild(SphereNode);
-        scene->addChild(BoxNode);
         scene->addChild(ViewpointGeomtryNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
@@ -588,64 +552,6 @@ int main(int argc, char **argv)
 		ShipComponentGenerator->setComponentPrototype(ViewPointComponentPrototype);
 	endEditCP(ShipComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
 
-	//Create the Torus Node Indicator Prototype
-	ImageComponentPtr TorusNodeComponentPrototype = ImageComponent::create();
-	beginEditCP(TorusNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-		TorusNodeComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
-		TorusNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
-		TorusNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
-	endEditCP(TorusNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr TorusImage = ImageFileHandler::the().read(Path("./TorusNode.jpg").string().c_str());
-	TorusNodeComponentPrototype->setImage(TorusImage);
-	TorusNodeComponentPrototype->setRolloverImage(TorusImage);
-	TorusNodeComponentPrototype->setDisabledImage(TorusImage);
-	TorusNodeComponentPrototype->setFocusedImage(TorusImage);
-
-	//Create the Torus Component Generator
-	DefaultMiniMapIndicatorComponentGeneratorPtr TorusComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
-	beginEditCP(TorusComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-		TorusComponentGenerator->setComponentPrototype(TorusNodeComponentPrototype);
-	endEditCP(TorusComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-	
-	//Create the Sphere Node Indicator Prototype
-	ImageComponentPtr SphereNodeComponentPrototype = ImageComponent::create();
-	beginEditCP(SphereNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-		SphereNodeComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
-		SphereNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
-		SphereNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
-	endEditCP(SphereNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr SphereImage = ImageFileHandler::the().read(Path("./SphereNode.jpg").string().c_str());
-	SphereNodeComponentPrototype->setImage(SphereImage);
-	SphereNodeComponentPrototype->setRolloverImage(SphereImage);
-	SphereNodeComponentPrototype->setDisabledImage(SphereImage);
-	SphereNodeComponentPrototype->setFocusedImage(SphereImage);
-
-	//Create the Sphere Component Generator
-	DefaultMiniMapIndicatorComponentGeneratorPtr SphereComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
-	beginEditCP(SphereComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-		SphereComponentGenerator->setComponentPrototype(SphereNodeComponentPrototype);
-	endEditCP(SphereComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-	
-	//Create the Box Node Indicator Prototype
-	ImageComponentPtr BoxNodeComponentPrototype = ImageComponent::create();
-	beginEditCP(BoxNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-		BoxNodeComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
-		BoxNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
-		BoxNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
-	endEditCP(BoxNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr BoxImage = ImageFileHandler::the().read(Path("./BoxNode.jpg").string().c_str());
-	BoxNodeComponentPrototype->setImage(BoxImage);
-	BoxNodeComponentPrototype->setRolloverImage(BoxImage);
-	BoxNodeComponentPrototype->setDisabledImage(BoxImage);
-	BoxNodeComponentPrototype->setFocusedImage(BoxImage);
-
-	//Create the Box Component Generator
-	DefaultMiniMapIndicatorComponentGeneratorPtr BoxComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
-	beginEditCP(BoxComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-		BoxComponentGenerator->setComponentPrototype(BoxNodeComponentPrototype);
-	endEditCP(BoxComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-
-
 	//Create the Viewpoint Indicator
 	MiniMapIndicatorPtr ViewpointIndicator = MiniMapIndicator::create();
 
@@ -653,27 +559,6 @@ int main(int argc, char **argv)
 		ViewpointIndicator->setGenerator(ShipComponentGenerator);
 		ViewpointIndicator->setLocation(ViewpointGeomtryNode);
 	endEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-
-	//Other Indicators
-	MiniMapIndicatorPtr TorusIndicator = MiniMapIndicator::create();
-	beginEditCP(TorusIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-		TorusIndicator->setGenerator(TorusComponentGenerator);
-		TorusIndicator->setLocation(TorusGeometryNode);
-	endEditCP(TorusIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-	
-	MiniMapIndicatorPtr SphereIndicator = MiniMapIndicator::create();
-	beginEditCP(SphereIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-		SphereIndicator->setGenerator(SphereComponentGenerator);
-		SphereIndicator->setLocation(SphereGeometryNode);
-	endEditCP(SphereIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-	
-	MiniMapIndicatorPtr BoxIndicator = MiniMapIndicator::create();
-	beginEditCP(BoxIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-		BoxIndicator->setGenerator(BoxComponentGenerator);
-		BoxIndicator->setLocation(BoxGeometryNode);
-	endEditCP(BoxIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-
-	
 
 	// Setup the size and other preferences to the minimap
     BorderLayoutConstraintsPtr MiniMapConstraints = osg::BorderLayoutConstraints::create();
@@ -689,9 +574,6 @@ int main(int argc, char **argv)
 		MiniMap->setConstraints(MiniMapConstraints);
 		MiniMap->setLockMapOrientation(false);
         MiniMap->setUnlockedMapSize(Vec2f(1000,1000));
-		MiniMap->getIndicators().push_back(TorusIndicator);
-		MiniMap->getIndicators().push_back(SphereIndicator);
-		MiniMap->getIndicators().push_back(BoxIndicator);
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 
 	MiniMap->insertLayer(Path("./level1.jpg").string().c_str(), .3);
