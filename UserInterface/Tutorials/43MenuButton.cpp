@@ -90,6 +90,27 @@ public:
    }
 };
 
+class ExampleMenuButtonActionListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+        MenuButtonPtr TheMenuButton(MenuButton::Ptr::dcast(e.getSource()));
+        if(TheMenuButton != NullFC)
+        {
+            try
+            {
+                std::string StrValue = boost::any_cast<std::string>(TheMenuButton->getSelectionValue());
+                std::cout << "Selected: " << StrValue << std::endl;
+            }
+            catch(boost::bad_any_cast &)
+            {
+            }
+        }
+    }
+};
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -147,13 +168,15 @@ int main(int argc, char **argv)
     ExampleListModel->pushBack(boost::any(std::string("Peach")));
 
     //Create the MenuButton
-    MenuButtonPtr ExampleMenuButton = osg::MenuButton::create();
+    MenuButtonPtr ExampleMenuButton = MenuButton::create();
 
     beginEditCP(ExampleMenuButton, MenuButton::TextFieldMask | MenuButton::PreferredSizeFieldMask | MenuButton::ModelFieldMask);
         ExampleMenuButton->setText("Menu Button");
         ExampleMenuButton->setPreferredSize(Vec2f(120, 20));
         ExampleMenuButton->setModel(ExampleListModel);
-        endEditCP(ExampleMenuButton, MenuButton::TextFieldMask | MenuButton::PreferredSizeFieldMask | MenuButton::ModelFieldMask);
+    endEditCP(ExampleMenuButton, MenuButton::TextFieldMask | MenuButton::PreferredSizeFieldMask | MenuButton::ModelFieldMask);
+    ExampleMenuButtonActionListener TheActionListener;
+    ExampleMenuButton->addMenuActionListener(&TheActionListener);
 
     // Create MainFramelayout
     FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();

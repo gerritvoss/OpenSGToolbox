@@ -108,9 +108,67 @@ void MenuButton::showPopup(void)
     }
 }
 
+
+void MenuButton::removeMenuActionListener(ActionListenerPtr Listener)
+{
+   MenuActionListenerSetItor EraseIter(_MenuActionListeners.find(Listener));
+   if(EraseIter != _MenuActionListeners.end())
+   {
+      _MenuActionListeners.erase(EraseIter);
+   }
+}
+
+Int32 MenuButton::getSelectionIndex(void) const
+{
+    if(getMenuButtonPopupMenu() != NullFC)
+    {
+        return getMenuButtonPopupMenu()->getSelectionIndex();
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+boost::any MenuButton::getSelectionValue(void) const
+{
+    if(getMenuButtonPopupMenu() != NullFC &&
+        getModel() != NullFC &&
+        getMenuButtonPopupMenu()->getSelectionIndex() >= 0 &&
+        getMenuButtonPopupMenu()->getSelectionIndex() < getModel()->getSize())
+    {
+        return getModel()->getElementAt(getMenuButtonPopupMenu()->getSelectionIndex());
+    }
+    else
+    {
+        return boost::any();
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void MenuButton::updatePopupMenuConnections(void)
+{
+    if(getMenuButtonPopupMenu() != NullFC)
+    {
+        for(UInt32 i(0) ; i<getMenuButtonPopupMenu()->getNumItems() ; ++i)
+        {
+            getMenuButtonPopupMenu()->getItem(i)->addActionListener(&_MenuButtonEventsListener);
+        }
+    }
+}
+
+void MenuButton::produceMenuActionPerformed(void)
+{
+    ActionEvent e(MenuButtonPtr(this), getTimeStamp());
+	MenuActionListenerSet Listeners(_MenuActionListeners);
+    for(MenuActionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->actionPerformed(e);
+    }
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -146,6 +204,7 @@ void MenuButton::changed(BitVector whichField, UInt32 origin)
 		getMenuButtonPopupMenu() != NullFC)
 	{
 		getMenuButtonPopupMenu()->addPopupMenuListener(&_MenuButtonEventsListener);
+        updatePopupMenuConnections();
 	}
 
 	if(whichField & ModelFieldMask)
@@ -207,6 +266,12 @@ void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeVisible(const Popu
 
 void MenuButton::MenuButtonEventsListener::popupMenuContentsChanged(const PopupMenuEvent& e)
 {
+    _MenuButton->updatePopupMenuConnections();
+}
+
+void MenuButton::MenuButtonEventsListener::actionPerformed(const ActionEvent& e)
+{
+    _MenuButton->produceMenuActionPerformed();
 }
 
 /*------------------------------------------------------------------------*/

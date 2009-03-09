@@ -47,9 +47,11 @@
 #include "OSGMenuButtonBase.h"
 #include "Component/List/OSGListDataListener.h"
 #include "Event/OSGPopupMenuListener.h"
+#include "Event/OSGActionListener.h"
 #include "Component/Menu/OSGListGeneratedPopupMenu.h"
 
 #include <set>
+#include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -88,9 +90,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
 
 	//Removes a PopupMenuListener.
 	void removePopupMenuListener(PopupMenuListenerPtr Listener);
+
+    void addMenuActionListener(ActionListenerPtr Listener);
+    void removeMenuActionListener(ActionListenerPtr Listener);
     
 	//Determines the visibility of the popup.
 	bool isPopupVisible(void) const;
+
+    
+    Int32 getSelectionIndex(void) const;
+    boost::any getSelectionValue(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -114,9 +123,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
 
 	void hidePopup(void);
 	void showPopup(void);
+    void updatePopupMenuConnections(void);
     
     //Expand Button Action Listener
-	class MenuButtonEventsListener : public PopupMenuListener
+	class MenuButtonEventsListener : public PopupMenuListener, public ActionListener
 	{
 	public:
 		MenuButtonEventsListener(MenuButtonPtr TheMenuButton);
@@ -125,6 +135,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
 		virtual void popupMenuWillBecomeInvisible(const PopupMenuEvent& e);
 		virtual void popupMenuWillBecomeVisible(const PopupMenuEvent& e);
 		virtual void popupMenuContentsChanged(const PopupMenuEvent& e);
+        
+        virtual void actionPerformed(const ActionEvent& e);
 	private:
 		MenuButtonPtr _MenuButton;
 	};
@@ -132,6 +144,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
 	friend class MenuButtonEventsListener;
 
 	MenuButtonEventsListener _MenuButtonEventsListener;
+	
+	
+	typedef std::set<ActionListenerPtr> MenuActionListenerSet;
+    typedef MenuActionListenerSet::iterator MenuActionListenerSetItor;
+    typedef MenuActionListenerSet::const_iterator MenuActionListenerSetConstItor;
+	
+    MenuActionListenerSet       _MenuActionListeners;
+	
+    virtual void produceMenuActionPerformed(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

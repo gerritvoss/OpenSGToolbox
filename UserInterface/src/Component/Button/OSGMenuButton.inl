@@ -42,6 +42,13 @@
 
 OSG_BEGIN_NAMESPACE
 
+
+inline
+void MenuButton::addMenuActionListener(ActionListenerPtr Listener)
+{
+   _MenuActionListeners.insert(Listener);
+}
+
 inline
 void MenuButton::addPopupMenuListener(PopupMenuListenerPtr Listener)
 {
