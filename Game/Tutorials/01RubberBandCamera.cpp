@@ -1,3 +1,4 @@
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 

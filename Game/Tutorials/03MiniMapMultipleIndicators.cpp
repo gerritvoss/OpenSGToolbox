@@ -1,3 +1,16 @@
+/*************************************************
+Welcome to the 03 Mini Map Multiple Indicator 
+Tutorial. This is pretty much a continuation of the
+previous tutorial except as the title implies we 
+will be putting in more indicators. 
+
+The extra indicators in this tutorial mark objects
+that are stationary. Although if you look carefully
+the potential to use these indicators for other 
+moving objects is there.
+*************************************************/
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -60,6 +73,11 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
+/*************************************************
+Instead of using the built-in scene manager we need
+to over ride that to fit our needs. Here is the 
+necessary code to do so.
+*************************************************/
 class SceneManager
 {
 protected:
@@ -238,10 +256,20 @@ SceneManager *mgr;
 
 //Camera Beacon
 TransformPtr CameraBeaconTransform;
+
+//Viewpoint Indicator Location Information
 TransformPtr ViewpointTransform;
+
+//Centalized location marked with a Torus
 TransformPtr TorusTransform;
+
+//Location of one of the example objects
 TransformPtr SphereTransform;
+
+//Location of the other example object
 TransformPtr BoxTransform;
+
+
 RubberBandCameraPtr RubberCamera;
 
 bool ExitApp = false;
@@ -285,6 +313,10 @@ public:
    {
    }
 };
+
+/*************************************************
+This is the Listener for motion of the player object.
+*************************************************/
 
 class TutorialUpdateListener : public UpdateListener
 {
@@ -557,8 +589,10 @@ int main(int argc, char **argv)
 	endEditCP(RubberCamera, RubberBandCamera::DecorateeFieldMask | RubberBandCamera::BeaconFieldMask | RubberBandCamera::PositionCoefficientsFieldMask | RubberBandCamera::OrientationCoefficientsFieldMask);
 	RubberCamera->setToBeacon();
 
+    //Set the Rubber band camera as the viewpoint of the scene
 	mgr->setCamera(RubberCamera);
 
+    //Create the Mini Map itself
 	LayeredImageMiniMapPtr MiniMap = osg::LayeredImageMiniMap::create();
 
 	//World to MiniMap Transformation
@@ -645,7 +679,6 @@ int main(int argc, char **argv)
 		BoxComponentGenerator->setComponentPrototype(BoxNodeComponentPrototype);
 	endEditCP(BoxComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
 
-
 	//Create the Viewpoint Indicator
 	MiniMapIndicatorPtr ViewpointIndicator = MiniMapIndicator::create();
 
@@ -687,13 +720,15 @@ int main(int argc, char **argv)
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
 		MiniMap->setOpacity(.4);
 		MiniMap->setConstraints(MiniMapConstraints);
-		MiniMap->setLockMapOrientation(false);
-        MiniMap->setUnlockedMapSize(Vec2f(1000,1000));
-		MiniMap->getIndicators().push_back(TorusIndicator);
-		MiniMap->getIndicators().push_back(SphereIndicator);
-		MiniMap->getIndicators().push_back(BoxIndicator);
+		MiniMap->setLockMapOrientation(false);                  //If this is changed to true the map will then remain stationary and the indicator will then move and rotate
+        MiniMap->setUnlockedMapSize(Vec2f(1000,1000));          //This item is only necassary when the map is set to Unlocked Orientation
+		MiniMap->getIndicators().push_back(TorusIndicator);     //Link the Torus Indicator to the Mini Map
+		MiniMap->getIndicators().push_back(SphereIndicator);    //Link the Sphere Indicator to the Mini Map
+		MiniMap->getIndicators().push_back(BoxIndicator);       //Link the Box Indicator to the Mini Map
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 
+    //Set the images the map will use a layers of the scene.
+    //The second arg in the method call is the space between that layer and the layer befor it
 	MiniMap->insertLayer(Path("./level1.jpg").string().c_str(), .3);
     MiniMap->insertLayer(Path("./level2.jpg").string().c_str(), .3);
     MiniMap->insertLayer(Path("./level3.jpg").string().c_str(), .3);

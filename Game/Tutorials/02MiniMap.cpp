@@ -1,3 +1,25 @@
+/*************************************************
+Welcome to the 02 Mini Map Tutorial. In this tutorial
+you will find an examples of how to create two different
+types of Mini Maps. 
+
+Both of these Mini Maps will only have one indicator.
+From this point on that indicator will be referred to 
+as the Viewpoint Indicator. The Viewpoint indicator 
+is a single indicator that shows the users location
+on the Mini Map. 
+
+The Viewpoint indicator itself can be a Rotated indicator,
+which means it can be oriented to point in different
+directions, or it can be a locked indicator meaning 
+it may or may not have directionality.
+
+The two different map types are similar to the two
+indicator types. In which the map can also be
+Locked or Unlocked in regards to its orientation.
+
+*************************************************/
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -59,6 +81,12 @@
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
+
+/*************************************************
+Instead of using the built-in scene manager we need
+to over ride that to fit our needs. Here is the 
+necessary code to do so.
+*************************************************/
 
 class SceneManager
 {
@@ -238,8 +266,14 @@ SceneManager *mgr;
 
 //Camera Beacon
 TransformPtr CameraBeaconTransform;
+
+//Viewpoint Indicator Location Information
 TransformPtr ViewpointTransform;
+
+//Centalized location marked with a Torus
 TransformPtr TorusTransform;
+
+
 RubberBandCameraPtr RubberCamera;
 
 bool ExitApp = false;
@@ -283,6 +317,10 @@ public:
    {
    }
 };
+
+/*************************************************
+This is the Listener for motion of the player object.
+*************************************************/
 
 class TutorialUpdateListener : public UpdateListener
 {
@@ -512,6 +550,7 @@ int main(int argc, char **argv)
 	Vec3f PositionCoefficients(0.1,1.5,1.5);
 	Vec3f OrientationCoefficients(0.1,2.5,2.5);
 
+    //Set all information in regards to camera location and orientation
 	RubberCamera = RubberBandCamera::create();
 	beginEditCP(RubberCamera, RubberBandCamera::DecorateeFieldMask | RubberBandCamera::BeaconFieldMask | RubberBandCamera::PositionCoefficientsFieldMask | RubberBandCamera::OrientationCoefficientsFieldMask);
 		RubberCamera->setDecoratee(PCamera);
@@ -521,8 +560,11 @@ int main(int argc, char **argv)
 	endEditCP(RubberCamera, RubberBandCamera::DecorateeFieldMask | RubberBandCamera::BeaconFieldMask | RubberBandCamera::PositionCoefficientsFieldMask | RubberBandCamera::OrientationCoefficientsFieldMask);
 	RubberCamera->setToBeacon();
 
+    //Set the Rubber band camera as the viewpoint of the scene
 	mgr->setCamera(RubberCamera);
 
+
+    //Create the Mini Map itself
 	LayeredImageMiniMapPtr MiniMap = osg::LayeredImageMiniMap::create();
 
 	//World to MiniMap Transformation
@@ -555,6 +597,7 @@ int main(int argc, char **argv)
 	//Create the Viewpoint Indicator
 	MiniMapIndicatorPtr ViewpointIndicator = MiniMapIndicator::create();
 
+    //Set the Image to represent the viewpoint indicator on the map and set the location the the indicator is tied to
 	beginEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 		ViewpointIndicator->setGenerator(ShipComponentGenerator);
 		ViewpointIndicator->setLocation(ViewpointGeomtryNode);
@@ -565,17 +608,20 @@ int main(int argc, char **argv)
 	beginEditCP(MiniMapConstraints, BorderLayoutConstraints::RegionFieldMask);
 		MiniMapConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 	endEditCP(MiniMapConstraints, BorderLayoutConstraints::RegionFieldMask);
-	 
+	
+    //Setup Map preferences
     beginEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 	    MiniMap->setPreferredSize(Pnt2f(450,450));
 	    MiniMap->setViewPointIndicator(ViewpointIndicator);
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
 		MiniMap->setOpacity(.4);
 		MiniMap->setConstraints(MiniMapConstraints);
-		MiniMap->setLockMapOrientation(false);
-        MiniMap->setUnlockedMapSize(Vec2f(1000,1000));
+		MiniMap->setLockMapOrientation(false);          //If this is changed to true the map will then remain stationary and the indicator will then move and rotate
+        MiniMap->setUnlockedMapSize(Vec2f(1000,1000));  //This item is only necassary when the map is set to Unlocked Orientation
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 
+    //Set the images the map will use a layers of the scene.
+    //The second arg in the method call is the space between that layer and the layer befor it
 	MiniMap->insertLayer(Path("./level1.jpg").string().c_str(), .3);
     MiniMap->insertLayer(Path("./level2.jpg").string().c_str(), .3);
     MiniMap->insertLayer(Path("./level3.jpg").string().c_str(), .3);
