@@ -129,6 +129,11 @@ std::string lexical_cast(const boost::any& Source)
         return boost::any_cast<Path>(Source).filename();
     }
 
+    else if(Source.type() == typeid(FieldContainerType*))   //FieldContainerType
+    {
+        return std::string(boost::any_cast<FieldContainerType*>(Source)->getCName());
+    }
+
     else
     {
 		try
