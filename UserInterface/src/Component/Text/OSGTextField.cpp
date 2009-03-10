@@ -145,7 +145,7 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
     }
     else
     {
-        Alignment = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2f(0.0f,0.0f), getAlignment().y(), getAlignment().x());
+        Alignment = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds("|"), getAlignment().y(), getAlignment().x());
     }
 
     if(getEnabled() && getEditable() && getFocused() && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
