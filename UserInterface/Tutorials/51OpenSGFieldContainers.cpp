@@ -145,15 +145,14 @@ public:
     public:
         void selectionChanged(const ComboBoxSelectionEvent& e)
         {
-            std::string ValueStr("");
+            FieldContainerType* FoundType(NULL);
             try
             {
-                ValueStr = boost::any_cast<std::string>(_DerivedComboBoxModel->getSelectedItem());
+                FoundType = boost::any_cast<FieldContainerType*>(_DerivedComboBoxModel->getSelectedItem());
             }
             catch(boost::bad_any_cast &)
             {
             }
-            FieldContainerType* FoundType = FieldContainerFactory::the()->findType(ValueStr.c_str());
             if(FoundType != NULL)
             {
                 beginEditCP(DerivedFieldContainerComboBoxModel::Ptr::dcast(_FieldContainerTypeModel), DerivedFieldContainerComboBoxModel::DerivedFieldContainerTypesFieldMask);
@@ -181,16 +180,14 @@ public:
         {
             if(!_List->getSelectionModel()->isSelectionEmpty())
             {
-                std::string ValueStr("");
+                FieldContainerType* TheFCType(NULL);
                 try
                 {
-                    ValueStr = boost::any_cast<std::string>(_List->getValueAtIndex(_List->getSelectionModel()->getAnchorSelectionIndex()));
+                    TheFCType = boost::any_cast<FieldContainerType*>(_List->getValueAtIndex(_List->getSelectionModel()->getAnchorSelectionIndex()));
                 }
                 catch(boost::bad_any_cast &)
                 {
                 }
-
-                FieldContainerType* TheFCType = FieldContainerFactory::the()->findType(ValueStr.c_str());
 
                 if(TheFCType != NULL)
                 {

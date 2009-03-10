@@ -129,7 +129,7 @@ void FieldContainerComboBoxModel::setSelectedItem(const boost::any& anObject)
         try
         {
             while(index < _FieldList.size() && 
-                boost::any_cast<FieldContainerType>(_FieldList[index]) != boost::any_cast<FieldContainerType>(anObject))
+                *boost::any_cast<FieldContainerType*>(_FieldList[index]) != *boost::any_cast<FieldContainerType*>(anObject))
 		    {
 			    ++index;
 		    }
@@ -182,6 +182,7 @@ void FieldContainerComboBoxModel::changed(BitVector whichField, UInt32 origin)
     Inherited::changed(whichField, origin);
     if(whichField & FieldContainerTypesFieldMask)
     {
+        UInt32 PreListSize(_FieldList.size());
         _FieldList.clear();
         for(UInt32 i(0) ; i<getFieldContainerTypes().size() ; ++i)
         {
@@ -189,10 +190,10 @@ void FieldContainerComboBoxModel::changed(BitVector whichField, UInt32 origin)
             if(FoundType != NULL && (getIncludeAbstract() || !FoundType->isAbstract()))
             {
 
-                _FieldList.push_back(boost::any(std::string(FoundType->getCName())));
+                _FieldList.push_back(boost::any(FoundType));
             }
         }
-        produceListDataContentsChanged(FieldContainerComboBoxModelPtr(this), 0, _FieldList.size());
+        produceListDataContentsChanged(FieldContainerComboBoxModelPtr(this), 0, osgMax(PreListSize,_FieldList.size()));
         setSelectedItem(-1);
     }
 }

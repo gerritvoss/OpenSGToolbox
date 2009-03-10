@@ -128,7 +128,7 @@ void DerivedFieldContainerComboBoxModel::setSelectedItem(const boost::any& anObj
         try
         {
             while(index < _FieldList.size() && 
-                boost::any_cast<std::string>(_FieldList[index]).compare( boost::any_cast<std::string>(anObject)) != 0)
+                *boost::any_cast<FieldContainerType*>(_FieldList[index]) == *boost::any_cast<FieldContainerType*>(anObject))
 		    {
 			    ++index;
 		    }
@@ -208,14 +208,15 @@ void DerivedFieldContainerComboBoxModel::changed(BitVector whichField, UInt32 or
     
     if(whichField & InternalFieldContainerTypesFieldMask)
     {
+        UInt32 PreListSize(_FieldList.size());
         _FieldList.clear();
 
         for(UInt32 i(0) ; i<getInternalFieldContainerTypes().size() ; ++i)
         {
-            _FieldList.push_back(boost::any(std::string(FieldContainerFactory::the()->findType(getInternalFieldContainerTypes()[i])->getCName())));
+            _FieldList.push_back(boost::any(FieldContainerFactory::the()->findType(getInternalFieldContainerTypes()[i])));
         }
 
-        produceListDataContentsChanged(DerivedFieldContainerComboBoxModelPtr(this), 0, _FieldList.size());
+        produceListDataContentsChanged(DerivedFieldContainerComboBoxModelPtr(this), 0, osgMax(PreListSize,_FieldList.size()));
         setSelectedItem(-1);
     }
 }
