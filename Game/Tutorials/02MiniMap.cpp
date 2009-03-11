@@ -385,7 +385,6 @@ public:
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_A) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   //TranslateTransform.setTranslate(-TranslateAmount,0.0f,0.0f);
 		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()));
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
@@ -398,7 +397,6 @@ public:
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_D) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   //TranslateTransform.setTranslate(TranslateAmount,0.0f,0.0f);
 		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()));
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
@@ -504,8 +502,7 @@ int main(int argc, char **argv)
     NodePtr CylinderGeometryNode = makeBox(0.5,0.5,0.5,2,2,2);//makeCylinder(1.0,0.25,2,true,true,true);
 
 	//Set the Camera Beacon Node
-	Matrix Offset;
-	//Offset.setTranslate(0.0f,2.5f,6.0f);
+	Matrix Offset
 	Offset.setTranslate(0.0f,0.0,6.0f);
 	CameraBeaconTransform = Transform::create();
     beginEditCP(CameraBeaconTransform, Transform::MatrixFieldMask);
