@@ -6,17 +6,18 @@ LIB_INCLUDE_DIR_NAME = Dynamics
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Distributions:$(srcdir)/Distributions/1D:$(srcdir)/Distributions/2D:$(srcdir)/Distributions/3D:$(srcdir)/Function:$(srcdir)/Function/Conversion:$(srcdir)/Constants:$(srcdir)/Utils:$(srcdir)/BooleanOperations:
+VPATH = $(srcdir)/:$(srcdir)/Utils:$(srcdir)/Distributions:$(srcdir)/Distributions/1D:$(srcdir)/Distributions/2D:$(srcdir)/Distributions/3D:$(srcdir)/BooleanOperations:$(srcdir)/Function:$(srcdir)/Function/Conversion:$(srcdir)/Constants:
 
 
 #.SUFFIX = .o .o
 
 EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
 
-OBJECTS = OSGSegmentDistribution1D.o \
+OBJECTS = OSGDynamicsUtils.o \
+	OSGSegmentDistribution1D.o \
+	OSGGaussianNormalDistribution1DBase.o \
 	OSGSegmentSetDistribution1DBase.o \
 	OSGSegmentSetDistribution1D.o \
-	OSGGaussianNormalDistribution1DBase.o \
 	OSGGaussianNormalDistribution1D.o \
 	OSGSegmentDistribution1DBase.o \
 	OSGGaussianNormalDistribution2DBase.o \
@@ -29,11 +30,11 @@ OBJECTS = OSGSegmentDistribution1D.o \
 	OSGLineDistribution2D.o \
 	OSGQuadDistribution2D.o \
 	OSGTriDistribution2D.o \
-	OSGCylinderDistribution3D.o \
 	OSGBoxDistribution3DBase.o \
+	OSGCylinderDistribution3D.o \
 	OSGGaussianNormalDistribution3D.o \
-	OSGLineDistribution3D.o \
 	OSGGeoVolumeDistribution3DBase.o \
+	OSGLineDistribution3D.o \
 	OSGTriDistribution3D.o \
 	OSGSphereDistribution3DBase.o \
 	OSGBoxDistribution3D.o \
@@ -43,17 +44,19 @@ OBJECTS = OSGSegmentDistribution1D.o \
 	OSGSphereDistribution3D.o \
 	OSGCylinderDistribution3DBase.o \
 	OSGGaussianNormalDistribution3DBase.o \
-	OSGLineDistribution3DBase.o \
 	OSGDiscDistribution3D.o \
+	OSGLineDistribution3DBase.o \
 	OSGGeoSurfaceDistribution3D.o \
 	OSGTriDistribution3DBase.o \
-	OSGFunction.o \
+	OSGBooleanFunctionBase.o \
+	OSGBooleanFunction.o \
+	OSGFunctionConnectionsBase.o \
 	OSGCompoundFunctionBase.o \
+	OSGFunction.o \
+	OSGFunctionConnections.o \
 	OSGCompoundFunction.o \
 	OSGFunctionFactory.o \
 	OSGFunctionBase.o \
-	OSGFunctionConnections.o \
-	OSGFunctionConnectionsBase.o \
 	OSGDataCombiner.o \
 	OSGDataSplitterBase.o \
 	OSGDataConverterBase.o \
@@ -65,10 +68,7 @@ OBJECTS = OSGSegmentDistribution1D.o \
 	OSGPnt3fConstantFunctionBase.o \
 	OSGReal32ConstantFunction.o \
 	OSGPnt2fConstantFunction.o \
-	OSGPnt3fConstantFunction.o \
-	OSGDynamicsUtils.o \
-	OSGBooleanFunction.o \
-	OSGBooleanFunctionBase.o
+	OSGPnt3fConstantFunction.o
         
         
 include $(commondir)/CommonMake.mk

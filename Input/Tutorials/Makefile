@@ -144,7 +144,7 @@ endif
 
 CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGINPUTROOT)/include -I$(BOOST_BASE_DIR)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGINPUTROOT)/lib -lOSGInput$(DGB_OPT_EXT) $(EXTRA_LDFLAGS) -L$(BOOST_BASE_DIR)/lib -lboost_filesystem -lboost_system
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGINPUTROOT)/lib -lOSGInput$(DGB_OPT_EXT) $(EXTRA_LDFLAGS) $(BOOST_LD_FLAGS)
 
 
 # all tutorials in this directory

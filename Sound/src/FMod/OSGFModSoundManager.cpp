@@ -49,6 +49,7 @@
 
 #include "OSGFModSoundManager.h"
 #include "OSGFModSound.h"
+#include <stdarg.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,8 +84,8 @@ void FModSoundManager::init(const char* arg, ...){
 	va_list listPointer;
 	va_start(listPointer, arg);
 	const char* mediaPath = arg;
-	const char* mediaFile = va_arg(listPointer, const char*);
-	const int maxChannel = va_arg(listPointer, const int);
+	const char* mediaFile = va_arg(listPointer, char*);
+	const int maxChannel = va_arg(listPointer, int);
 	
 	va_end(listPointer);
 	result = FMOD::EventSystem_Create(&this->eventSystem);

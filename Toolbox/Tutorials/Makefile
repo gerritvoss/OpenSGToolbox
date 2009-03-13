@@ -137,7 +137,7 @@ endif
 
 CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGTOOLBOXROOT)/include -I$(BOOST_BASE_DIR)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGTOOLBOXROOT)/lib -lOSGToolbox$(DGB_OPT_EXT) -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-gcc41-mt-1_38 -lboost_system-gcc41-mt-1_38
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGTOOLBOXROOT)/lib -lOSGToolbox$(DGB_OPT_EXT) $(BOOST_LD_FLAGS)
 
 
 # all tutorials in this directory

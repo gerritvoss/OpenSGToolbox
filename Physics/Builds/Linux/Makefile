@@ -16,21 +16,21 @@ EXTRA_CCFLAGS = -I$(srcdir)
 OBJECTS = OSGImprovedEulerIntegration.o \
 	OSGRungeKuttaIntegrationBase.o \
 	OSGEulerIntegration.o \
-	OSGImprovedEulerIntegrationBase.o \
+	OSGIntegrationBase.o \
 	OSGIntegration.o \
+	OSGImprovedEulerIntegrationBase.o \
 	OSGRungeKuttaIntegration.o \
 	OSGEulerIntegrationBase.o \
-	OSGIntegrationBase.o \
 	OSGPhysicsSystem.o \
 	OSGForceSystemBase.o \
 	OSGForceSystem.o \
 	OSGPhysicsSystemBase.o \
+	OSGSurfaceFrictionForce.o \
 	OSGForce.o \
 	OSGNormalForceBase.o \
-	OSGSurfaceFrictionForce.o \
 	OSGSimpleDragForce.o \
-	OSGKineticSurfaceFrictionForce.o \
 	OSGSpringForceBase.o \
+	OSGKineticSurfaceFrictionForce.o \
 	OSGDefinedForce.o \
 	OSGStaticSurfaceFrictionForce.o \
 	OSGSimpleRotationalDragForceBase.o \
@@ -39,14 +39,14 @@ OBJECTS = OSGImprovedEulerIntegration.o \
 	OSGSpringForce.o \
 	OSGRocketForceBase.o \
 	OSGSimpleRotationalDragForce.o \
-	OSGBoyancyForceBase.o \
 	OSGGravitationalForce.o \
+	OSGBoyancyForceBase.o \
 	OSGForceBase.o \
+	OSGRocketForce.o \
 	OSGSurfaceFrictionForceBase.o \
 	OSGSimpleDragForceBase.o \
-	OSGRocketForce.o \
-	OSGKineticSurfaceFrictionForceBase.o \
 	OSGDefinedForceBase.o \
+	OSGKineticSurfaceFrictionForceBase.o \
 	OSGStaticSurfaceFrictionForceBase.o \
 	OSGBoyancyForce.o \
 	OSGPhysicsCoreBase.o \
@@ -55,20 +55,20 @@ OBJECTS = OSGImprovedEulerIntegration.o \
 	OSGFluidBase.o \
 	OSGFluid.o \
 	OSGSurfaceBase.o \
-	OSGLinearPositionalAttributeBase.o \
 	OSGDragGeometricAttributeBase.o \
+	OSGLinearPositionalAttributeBase.o \
 	OSGRotationalDragGeometricAttribute.o \
 	OSGInertiaAttribute.o \
 	OSGMassAttribute.o \
 	OSGRotationalAttributeBase.o \
-	OSGLinearPositionalAttribute.o \
 	OSGDragGeometricAttribute.o \
+	OSGLinearPositionalAttribute.o \
 	OSGVolumeAttributeBase.o \
 	OSGPhysicsObjectAttributeBase.o \
+	OSGRotationalDragGeometricAttributeBase.o \
 	OSGRotationalAttribute.o \
 	OSGCollidableAttributeBase.o \
 	OSGImovableAttributeBase.o \
-	OSGRotationalDragGeometricAttributeBase.o \
 	OSGVolumeAttribute.o \
 	OSGPhysicsObjectAttribute.o \
 	OSGInertiaAttributeBase.o \
