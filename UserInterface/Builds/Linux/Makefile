@@ -11,7 +11,7 @@ VPATH = $(srcdir)/:$(srcdir)/Event:$(srcdir)/LookAndFeel:$(srcdir)/Models:$(srcd
 
 #.SUFFIX = .o .o
 
-EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
+EXTRA_CCFLAGS = -fPIC -I$(srcdir) -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
 
 OBJECTS = OSGKeyAcceleratorEvent.o \
 	OSGChangeEvent.o \
