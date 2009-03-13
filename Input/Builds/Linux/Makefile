@@ -11,7 +11,7 @@ VPATH = $(srcdir)/:$(srcdir)/Utils:$(srcdir)/Event:$(srcdir)/WindowSystem:$(srcd
 
 #.SUFFIX = .o .o
 
-EXTRA_CCFLAGS = -I$(srcdir)  -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
+EXTRA_CCFLAGS = -fPIC -I$(srcdir)  -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
 
 OBJECTS = OSGStringUtils.o \
 	OSGMouseAdapter.o \
