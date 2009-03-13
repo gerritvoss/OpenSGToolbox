@@ -82,12 +82,28 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-	
+	/*****************************************
+    Removes an image from the set of layered Images
+    by taking in the index of that Image.
+    *****************************************/
 	void removeLayer(UInt32 index);
 
+    /*****************************************
+    Takes an Image pointer and a Real number as
+    the distance from the layer before it. The 
+    image is then placed at the top of the 
+    set of layered images.
+    *****************************************/
 	void insertLayer(ImagePtr Image, Real32 DistanceFromPrevious);
 	void insertLayer(const char *fileName, Real32 DistanceFromPrevious, const char *mimeType = 0);
 
+    /*****************************************
+    Takes an index of where the layer should
+    be placed in the the layer set, takes the 
+    Distance from the entry before it, and an
+    Image pointer for the image to be placed 
+    in the set.
+    *****************************************/
 	void insertLayer(UInt32 index, Real32 DistanceFromPrevious, ImagePtr Image);
 	void insertLayer(UInt32 index, Real32 DistanceFromPrevious, const char *fileName, const char *mimeType = 0);
 
