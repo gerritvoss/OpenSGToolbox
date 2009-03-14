@@ -326,7 +326,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, con
 	 boost::algorithm::trim_if(Extension,boost::is_any_of("."));
 
 	 _RootFilePath = FilePath;
-     _RootFilePath.remove_leaf();
+     _RootFilePath.remove_filename();
 
 	 //Get the FileType for this extension
 	 FCFileTypeP TheFileType(getFileType(Extension, FCFileType::OSG_WRITE_SUPPORTED));

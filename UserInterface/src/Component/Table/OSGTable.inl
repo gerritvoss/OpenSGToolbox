@@ -172,13 +172,13 @@ const std::type_info& Table::getColumnType(const UInt32& column)
 inline
 void Table::setDefaultEditor(const std::type_info& TheType, TableCellEditorPtr editor)
 {
-    _DefaultCellEditorByTypeMap[std::string(TheType.raw_name())] = editor;
+    _DefaultCellEditorByTypeMap[std::string(TheType.name())] = editor;
 }
 
 inline
 void Table::setDefaultRenderer(const std::type_info& TheType, TableCellRendererPtr renderer)
 {
-    _DefaultCellRendererByTypeMap[std::string(TheType.raw_name())] = renderer;
+    _DefaultCellRendererByTypeMap[std::string(TheType.name())] = renderer;
 }
 
 inline

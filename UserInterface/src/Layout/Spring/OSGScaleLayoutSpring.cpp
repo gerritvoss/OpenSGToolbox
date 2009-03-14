@@ -95,13 +95,13 @@ Real32 ScaleLayoutSpring::getMinimumValue(void) const
     }
     else
     {
-        return static_cast<Real32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getMinimumValue())));
+        return static_cast<Real32>(osgfloor(getFactor() * static_cast<Real32>(getSpring()->getMinimumValue())));
     }
 }
 
 Real32 ScaleLayoutSpring::getPreferredValue(void) const
 {
-    return static_cast<Real32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getPreferredValue())));
+    return static_cast<Real32>(osgfloor(getFactor() * static_cast<Real32>(getSpring()->getPreferredValue())));
 }
 
 Real32 ScaleLayoutSpring::getMaximumValue(void) const
@@ -112,13 +112,13 @@ Real32 ScaleLayoutSpring::getMaximumValue(void) const
     }
     else
     {
-        return static_cast<Real32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getMaximumValue())));
+        return static_cast<Real32>(osgfloor(getFactor() * static_cast<Real32>(getSpring()->getMaximumValue())));
     }
 }
 
 Real32 ScaleLayoutSpring::getValue(void) const
 {
-    return static_cast<Real32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getValue())));
+    return static_cast<Real32>(osgfloor(getFactor() * static_cast<Real32>(getSpring()->getValue())));
 }
 
 void ScaleLayoutSpring::setValue(const Real32& value)
@@ -129,7 +129,7 @@ void ScaleLayoutSpring::setValue(const Real32& value)
     }
     else
     {
-        getSpring()->setValue(osgfloor<Real32>(static_cast<Real32>(getSpring()->getValue()) / getFactor()));
+        getSpring()->setValue(osgfloor(static_cast<Real32>(getSpring()->getValue()) / getFactor()));
     }
 }
 

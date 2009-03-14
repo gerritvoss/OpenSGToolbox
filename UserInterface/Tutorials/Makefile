@@ -31,6 +31,10 @@ OSGPOOL ?= ..
 
 OSGINSTALLPREFIX := notset
 
+OPENSG_BASE_DIR ?= /usr
+
+OSGINSTALLPREFIX := $(OPENSG_BASE_DIR)
+
 PREFIXSUFFIX := $(shell $(OSGPOOL)/CommonConf/config.guess)
 -include .prefix.$(PREFIXSUFFIX)
 
@@ -131,9 +135,9 @@ else
 CC = $(shell $(OSGCONFIG) --compiler) 
 endif
 
-CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGUSERINTERFACEROOT)/include -I../../External/Boost
+CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB)) -I$(OSGUSERINTERFACEROOT)/include  -I$(BOOST_BASE_DIR)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGUSERINTERFACEROOT)/lib -lOSGUserInterface$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT) -lOSGToolbox$(DGB_OPT_EXT) -lboost_filesystem
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB)) -L$(OSGUSERINTERFACEROOT)/lib -lOSGUserInterface$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT) -lOSGToolbox$(DGB_OPT_EXT) -lOSGDynamics$(DGB_OPT_EXT) -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-gcc41-mt-1_38 -lboost_system-gcc41-mt-1_38
 
 
 # all tutorials in this directory

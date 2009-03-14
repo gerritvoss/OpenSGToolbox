@@ -56,7 +56,7 @@
 #include "OSGTableCellRenderer.h"
 #include "OSGTableColumnFields.h"
 #include <boost/any.hpp>
-#include <typeinfo.h>
+#include <typeinfo>
 
 OSG_BEGIN_NAMESPACE
 

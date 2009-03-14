@@ -17,12 +17,12 @@ EXTRA_LDFLAGS = -lboost_filesystem
 OBJECTS = OSGMiniMapBase.o \
 	OSGMiniMapOverlayBase.o \
 	OSGLayeredImageMiniMap.o \
-	OSGMiniMap.o \
-	OSGMiniMapMatrixTransformation.o \
 	OSGMiniMapTransformation.o \
+	OSGMiniMapMatrixTransformationBase.o \
+	OSGMiniMapMatrixTransformation.o \
+	OSGMiniMap.o \
 	OSGMiniMapOverlay.o \
 	OSGLayeredImageMiniMapBase.o \
-	OSGMiniMapMatrixTransformationBase.o \
 	OSGMiniMapTransformationBase.o \
 	OSGMiniMapIndicatorComponentGenerator.o \
 	OSGDefaultMiniMapIndicatorComponentGenerator.o \

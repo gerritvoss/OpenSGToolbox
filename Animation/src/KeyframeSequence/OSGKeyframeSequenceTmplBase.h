@@ -49,6 +49,7 @@
 #include <OpenSG/OSGMFBaseTypes.h>
 #include "OSGKeyframeSequenceTmplDesc.h"
 #include "Interpolation/OSGKeyframeInterpolations.h"
+#include "OSGKeyframeSequence.h"
 
 OSG_BEGIN_NAMESPACE
 

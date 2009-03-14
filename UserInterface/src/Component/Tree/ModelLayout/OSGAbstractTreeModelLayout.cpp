@@ -326,7 +326,9 @@ void AbstractTreeModelLayout::removeVisiblePath(const TreePath& Path)
     {
         if(Path.isDescendant((*VisibleSetItor)))
         {
-            VisibleSetItor = _VisiblePathSet.erase(VisibleSetItor);
+            TreePathSetItor RemoveItor(VisibleSetItor);
+            ++VisibleSetItor;
+           _VisiblePathSet.erase(RemoveItor);
         }
         else
         {
@@ -341,9 +343,12 @@ void AbstractTreeModelLayout::removeExpandedPath(const TreePath& Path)
     TreePathSetItor ExpandedSetItor(_ExpandedPathSet.begin());
     while(ExpandedSetItor != _ExpandedPathSet.end())
     {
+
         if(Path.isDescendant((*ExpandedSetItor)))
         {
-            ExpandedSetItor = _ExpandedPathSet.erase(ExpandedSetItor);
+            TreePathSetItor RemoveItor(ExpandedSetItor);
+            ++ExpandedSetItor;
+            _ExpandedPathSet.erase(RemoveItor);
         }
         else
         {

@@ -26,6 +26,10 @@ typedef boost::function<bool (RawInterpFuncion&,
                               bool,
                               osg::Field&)> ReplacementFuncion;
 
+bool OSG_ANIMATIONLIB_DLLMAPPING getInterpolationIndexes(const osg::MFReal32& Keys, const osg::Real32& time, osg::UInt32& LastKeyframeIndex, osg::UInt32& NextKeyframeIndex, osg::Real32& t, bool isCyclic=false);
+
+bool OSG_ANIMATIONLIB_DLLMAPPING getInterpolationIndex(const osg::MFReal32& Keys, const osg::Real32& time, osg::UInt32& Index, osg::Real32& t, bool isCyclic=false);
+
 //Generic Replace
 template<class SFieldTypeT>
 bool replacement(RawInterpFuncion& InterpFunc,
@@ -125,7 +129,7 @@ bool  lerpKeyframeSequence(  const MFieldTypeT& KeyValues, const osg::MFReal32& 
 }
 
 //Generic Spline
-template<class MFieldTypeT,class SFieldTypeT>
+template<typename MFieldTypeT,typename SFieldTypeT>
 bool  splineKeyframeSequence(  const MFieldTypeT& KeyValues, const osg::MFReal32& Keys, const osg::Real32& time, osg::Field& Value, bool isCyclic=false )
 {
    osg::Real32 t;
@@ -137,7 +141,7 @@ bool  splineKeyframeSequence(  const MFieldTypeT& KeyValues, const osg::MFReal32
       return true;
    }
    
-   std::vector< MFieldTypeT::StoredType > V;
+   std::vector< typename MFieldTypeT::StoredType > V;
    std::vector<osg::Real32> T;
    
    V.reserve(4);
@@ -242,10 +246,6 @@ bool  splineKeyframeSequence(  const MFieldTypeT& KeyValues, const osg::MFReal32
    static_cast<SFieldTypeT&>(Value).setValue(spline(V, T, t));
    return true;
 }
-
-bool OSG_ANIMATIONLIB_DLLMAPPING getInterpolationIndexes(const osg::MFReal32& Keys, const osg::Real32& time, osg::UInt32& LastKeyframeIndex, osg::UInt32& NextKeyframeIndex, osg::Real32& t, bool isCyclic=false);
-
-bool OSG_ANIMATIONLIB_DLLMAPPING getInterpolationIndex(const osg::MFReal32& Keys, const osg::Real32& time, osg::UInt32& Index, osg::Real32& t, bool isCyclic=false);
 
 //Normals Lerp
 template<class MFieldTypeT,class SFieldTypeT>

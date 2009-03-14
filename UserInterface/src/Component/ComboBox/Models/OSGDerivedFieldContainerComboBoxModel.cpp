@@ -216,7 +216,7 @@ void DerivedFieldContainerComboBoxModel::changed(BitVector whichField, UInt32 or
             _FieldList.push_back(boost::any(FieldContainerFactory::the()->findType(getInternalFieldContainerTypes()[i])));
         }
 
-        produceListDataContentsChanged(DerivedFieldContainerComboBoxModelPtr(this), 0, osgMax(PreListSize,_FieldList.size()));
+        produceListDataContentsChanged(DerivedFieldContainerComboBoxModelPtr(this), 0, osgMax<UInt32>(PreListSize,_FieldList.size()));
         setSelectedItem(-1);
     }
 }

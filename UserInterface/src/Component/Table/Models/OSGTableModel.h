@@ -49,7 +49,7 @@
 #include <boost/any.hpp>
 
 #include "Component/Table/OSGTableModelListener.h"
-#include <typeinfo.h>
+#include <typeinfo>
 
 OSG_BEGIN_NAMESPACE
 

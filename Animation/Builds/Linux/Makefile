@@ -6,42 +6,27 @@ LIB_INCLUDE_DIR_NAME = Animation
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Animations:$(srcdir)/Animations/Advancers:$(srcdir)/Events:$(srcdir)/SkeletalAnimation:$(srcdir)/Interpolation:$(srcdir)/GeometryAnimation:$(srcdir)/KeyframeSequence:$(srcdir)/KeyframeSequence/GeometryKeyframeSequences:$(srcdir)/Animators:$(srcdir)/Util:
+VPATH = $(srcdir)/:$(srcdir)/Animations:$(srcdir)/Animations/Advancers:$(srcdir)/Interpolation:$(srcdir)/GeometryAnimation:$(srcdir)/KeyframeSequence:$(srcdir)/KeyframeSequence/GeometryKeyframeSequences:$(srcdir)/Animators:$(srcdir)/Util:$(srcdir)/SkeletalAnimation:$(srcdir)/Events:
 
 
 #.SUFFIX = .o .o
 
-EXTRA_CCFLAGS = -I$(srcdir) -I$(installdir)/include
+EXTRA_CCFLAGS = -I$(srcdir) -I$(installdir)/include -fPIC
 
-OBJECTS = OSGGeometryAnimationBase.o \
-	OSGShaderAnimation.o \
+OBJECTS = OSGShaderAnimation.o \
 	OSGAnimationBase.o \
 	OSGFieldAnimation.o \
-	OSGGeometryAnimation.o \
 	OSGShaderAnimationBase.o \
 	OSGFieldAnimationBase.o \
 	OSGAnimation.o \
 	OSGFieldAnimationAdvancer.o \
-	OSGConstantAnimationAdvancer.o \
 	OSGElapsedTimeAnimationAdvancerBase.o \
+	OSGConstantAnimationAdvancer.o \
 	OSGFieldAnimationAdvancerBase.o \
 	OSGAnimationAdvancer.o \
 	OSGConstantAnimationAdvancerBase.o \
 	OSGElapsedTimeAnimationAdvancer.o \
 	OSGAnimationAdvancerBase.o \
-	OSGAnimationEvent.o \
-	OSGHingedBoneBase.o \
-	OSGBoneBase.o \
-	OSGSkeletonBlendedGeometryBase.o \
-	OSGSkeletonAnimation.o \
-	OSGSkeletonBase.o \
-	OSGSkeletonDrawable.o \
-	OSGHingedBone.o \
-	OSGBone.o \
-	OSGSkeletonBlendedGeometry.o \
-	OSGSkeletonAnimationBase.o \
-	OSGSkeletonDrawableBase.o \
-	OSGSkeleton.o \
 	OSGGeometryInterpolations.o \
 	OSGMFieldInterpolations.o \
 	OSGKeyframeInterpolations.o \
@@ -58,31 +43,44 @@ OBJECTS = OSGGeometryAnimationBase.o \
 	OSGGeoColorDifferenceSet.o \
 	OSGGeoTexCoordDifferenceSetBase.o \
 	OSGGeoNormalDifferenceSet.o \
-	OSGKeyframeSequence.o \
 	OSGKeyframeRotationsSequence.o \
 	OSGKeyframePositionsSequence.o \
 	OSGKeyframeTransformationsSequence.o \
 	OSGKeyframeColorsSequence.o \
 	OSGKeyframeSequenceTmplFields.o \
-	OSGKeyframeSequenceBase.o \
 	OSGKeyframeNumbersSequence.o \
+	OSGKeyframeSequenceBase.o \
 	OSGKeyframeVectorsSequence.o \
 	OSGKeyframeFCPtrsSequence.o \
 	OSGKeyframeDiscreetSequence.o \
 	OSGKeyframeSequenceTmplBase.o \
+	OSGKeyframeSequence.o \
 	OSGKeyframeSequenceGeoColorsPtrBase.o \
-	OSGKeyframeSequenceGeoTexCoordsPtrBase.o \
 	OSGKeyframeSequenceGeoTexCoordsPtr.o \
 	OSGKeyframeSequenceGeoNormalsPtr.o \
 	OSGKeyframeSequenceGeoPositionsPtr.o \
 	OSGKeyframeSequenceGeoColorsPtr.o \
+	OSGKeyframeSequenceGeoTexCoordsPtrBase.o \
 	OSGKeyframeSequenceGeoNormalsPtrBase.o \
 	OSGKeyframeSequenceGeoPositionsPtrBase.o \
 	OSGKeyframeAnimatorBase.o \
 	OSGKeyframeAnimator.o \
 	OSGAnimatorBase.o \
 	OSGAnimator.o \
-	OSGGeoPropertyOperations.o
+	OSGGeoPropertyOperations.o \
+	OSGSkeletonDrawable.o \
+	OSGBoneBase.o \
+	OSGSkeletonBase.o \
+	OSGSkeletonDrawableBase.o \
+	OSGBone.o \
+	OSGSkeleton.o \
+	OSGHingedBoneBase.o \
+	OSGSkeletonBlendedGeometryBase.o \
+	OSGSkeletonAnimation.o \
+	OSGHingedBone.o \
+	OSGSkeletonBlendedGeometry.o \
+	OSGSkeletonAnimationBase.o \
+	OSGAnimationEvent.o
         
         
 include $(commondir)/CommonMake.mk

@@ -193,7 +193,7 @@ void FieldContainerComboBoxModel::changed(BitVector whichField, UInt32 origin)
                 _FieldList.push_back(boost::any(FoundType));
             }
         }
-        produceListDataContentsChanged(FieldContainerComboBoxModelPtr(this), 0, osgMax(PreListSize,_FieldList.size()));
+        produceListDataContentsChanged(FieldContainerComboBoxModelPtr(this), 0, osgMax<UInt32>(PreListSize,_FieldList.size()));
         setSelectedItem(-1);
     }
 }

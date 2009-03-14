@@ -993,7 +993,7 @@ void Table::setShowGrid(bool showGrid)
 
 TableCellEditorPtr Table::getDefaultEditor(const std::type_info& TheType) const
 {
-    CellEditorByTypeMap::const_iterator FindItor(_DefaultCellEditorByTypeMap.find(std::string(TheType.raw_name())));
+    CellEditorByTypeMap::const_iterator FindItor(_DefaultCellEditorByTypeMap.find(std::string(TheType.name())));
     if(FindItor != _DefaultCellEditorByTypeMap.end())
     {
         return (*FindItor).second;
@@ -1012,7 +1012,7 @@ TableCellEditorPtr Table::getDefaultEditor(const std::type_info& TheType) const
 
 TableCellRendererPtr Table::getDefaultRenderer(const std::type_info& TheType) const
 {
-    CellRendererByTypeMap::const_iterator FindItor(_DefaultCellRendererByTypeMap.find(std::string(TheType.raw_name())));
+    CellRendererByTypeMap::const_iterator FindItor(_DefaultCellRendererByTypeMap.find(std::string(TheType.name())));
     if(FindItor != _DefaultCellRendererByTypeMap.end())
     {
         return (*FindItor).second;

@@ -6,73 +6,31 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Event:$(srcdir)/LookAndFeel:$(srcdir)/Models:$(srcdir)/Models/SelectionModels:$(srcdir)/Text:$(srcdir)/DragAndDrop:$(srcdir)/ComponentGenerators:$(srcdir)/UndoableEdit:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Component:$(srcdir)/Component/Slider:$(srcdir)/Component/Container:$(srcdir)/Component/Container/Toolbar:$(srcdir)/Component/Container/ColorChooser:$(srcdir)/Component/Container/Window:$(srcdir)/Component/Container/Window/Dialog:$(srcdir)/Component/Text:$(srcdir)/Component/Table:$(srcdir)/Component/Table/Models:$(srcdir)/Component/Table/ComponentGenerators:$(srcdir)/Component/Table/Editors:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Misc:$(srcdir)/Component/Scroll:$(srcdir)/Component/Tree:$(srcdir)/Component/Tree/Selection:$(srcdir)/Component/Tree/ComponentGenerators:$(srcdir)/Component/Tree/ModelLayout:$(srcdir)/Component/Tree/Model:$(srcdir)/Component/Tree/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Dynamics:$(srcdir)/Component/Dynamics/IOTabGenerators:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Models:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/ComboBox/ComponentGenerators:$(srcdir)/Component/List:$(srcdir)/Component/List/Models:$(srcdir)/Component/List/ComponentGenerators:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/Editors:$(srcdir)/Layer:$(srcdir)/Border:$(srcdir)/Layout:$(srcdir)/Layout/Spring:$(srcdir)/Util:
+VPATH = $(srcdir)/:$(srcdir)/DragAndDrop:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Event:$(srcdir)/Component:$(srcdir)/Component/Container:$(srcdir)/Component/Container/Toolbar:$(srcdir)/Component/Container/ColorChooser:$(srcdir)/Component/Container/Window:$(srcdir)/Component/Container/Window/Dialog:$(srcdir)/Component/Slider:$(srcdir)/Component/Text:$(srcdir)/Component/Table:$(srcdir)/Component/Table/Models:$(srcdir)/Component/Table/Editors:$(srcdir)/Component/Table/ComponentGenerators:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Misc:$(srcdir)/Component/Scroll:$(srcdir)/Component/Tree:$(srcdir)/Component/Tree/Selection:$(srcdir)/Component/Tree/ComponentGenerators:$(srcdir)/Component/Tree/ModelLayout:$(srcdir)/Component/Tree/Model:$(srcdir)/Component/Tree/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/ComboBox/Models:$(srcdir)/Component/ComboBox/ComponentGenerators:$(srcdir)/Component/List:$(srcdir)/Component/List/Models:$(srcdir)/Component/List/ComponentGenerators:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Dynamics:$(srcdir)/Component/Dynamics/IOTabGenerators:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/Editors:$(srcdir)/Border:$(srcdir)/Layout:$(srcdir)/Layout/Spring:$(srcdir)/Util:$(srcdir)/UndoableEdit:$(srcdir)/ComponentGenerators:$(srcdir)/Models:$(srcdir)/Models/SelectionModels:$(srcdir)/Layer:
 
 
 #.SUFFIX = .o .o
 
-EXTRA_CCFLAGS = -fPIC -I$(srcdir) -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
+EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include -I$(BOOST_BASE_DIR)/include
 
-OBJECTS = OSGKeyAcceleratorEvent.o \
-	OSGChangeEvent.o \
-	OSGMessageDialogEvent.o \
-	OSGTextEvent.o \
-	OSGButtonSelectedEvent.o \
-	OSGPopupMenuEvent.o \
-	OSGDialogEvent.o \
-	OSGComponentEvent.o \
-	OSGMenuEvent.o \
-	OSGDragGestureEvent.o \
-	OSGActionEvent.o \
-	OSGAdjustmentEvent.o \
-	OSGFocusEvent.o \
-	OSGWindowsLookAndFeelBase.o \
-	OSGWindowsLookAndFeel.o \
-	OSGXMLLookAndFeelBase.o \
-	OSGLookAndFeelManager.o \
-	OSGLookAndFeel.o \
-	OSGDefaultLookAndFeel.o \
-	OSGXMLLookAndFeel.o \
-	OSGLookAndFeelBase.o \
-	OSGDefaultLookAndFeelBase.o \
-	OSGSingleSelectionModel.o \
-	OSGSelectionEvent.o \
-	OSGSingleSelectionModelBase.o \
-	OSGDefaultSingleSelectionModelBase.o \
-	OSGDefaultSingleSelectionModel.o \
-	OSGUIFont.o \
-	OSGUIFontBase.o \
+OBJECTS = OSGTransferableBase.o \
 	OSGDragGestureRecognizer.o \
-	OSGTransferableBase.o \
 	OSGTransferable.o \
 	OSGTransferHandlerBase.o \
 	OSGDataFlavorBase.o \
 	OSGTransferHandler.o \
 	OSGDataFlavor.o \
-	OSGComponentGenerator.o \
-	OSGComponentGeneratorBase.o \
-	OSGUndoableCommand.o \
-	OSGUndoableEditEvent.o \
-	OSGCompoundUndoableEdit.o \
-	OSGCommandFactory.o \
-	OSGCommand.o \
-	OSGCommandEvent.o \
-	OSGUndoableEdit.o \
-	OSGUndoManager.o \
-	OSGCommandManager.o \
-	OSGCommandType.o \
-	OSGAbstractUndoableEdit.o \
-	OSGGraphics3DExtrude.o \
 	OSGGraphics2D.o \
+	OSGGraphics3DExtrude.o \
 	OSGGraphicsBase.o \
 	OSGGraphics.o \
 	OSGGraphics2DBase.o \
 	OSGGraphics3DExtrudeBase.o \
-	OSGTexturedQuadUIDrawObjectBase.o \
 	OSGPolygonUIDrawObjectBase.o \
 	OSGLineUIDrawObject.o \
 	OSGDiscUIDrawObject.o \
 	OSGPolygonUIDrawObject.o \
+	OSGTexturedQuadUIDrawObjectBase.o \
 	OSGTextUIDrawObjectBase.o \
 	OSGRectUIDrawObjectBase.o \
 	OSGArcUIDrawObjectBase.o \
@@ -86,27 +44,38 @@ OBJECTS = OSGKeyAcceleratorEvent.o \
 	OSGDiscUIDrawObjectBase.o \
 	OSGMultiColoredQuadUIDrawObject.o \
 	OSGUIDrawObject.o \
+	OSGChangeEvent.o \
+	OSGKeyAcceleratorEvent.o \
+	OSGTextEvent.o \
+	OSGButtonSelectedEvent.o \
+	OSGPopupMenuEvent.o \
+	OSGComponentEvent.o \
+	OSGMenuEvent.o \
+	OSGActionEvent.o \
+	OSGAdjustmentEvent.o \
+	OSGFocusEvent.o \
+	OSGDialogEvent.o \
+	OSGDragGestureEvent.o \
+	OSGMessageDialogEvent.o \
 	OSGComponentBase.o \
 	OSGComponent.o \
-	OSGSlider.o \
-	OSGSliderBase.o \
-	OSGUIViewportBase.o \
 	OSGTabPanel.o \
 	OSGPanel.o \
+	OSGUIViewportBase.o \
 	OSGSplitPanel.o \
 	OSGTabPanelBase.o \
 	OSGContainer.o \
 	OSGPanelBase.o \
 	OSGSplitPanelBase.o \
-	OSGUIViewport.o \
 	OSGContainerBase.o \
-	OSGToolbar.o \
+	OSGUIViewport.o \
 	OSGToolbarBase.o \
+	OSGToolbar.o \
 	OSGColorChooserBase.o \
 	OSGHSVColorChooserPanel.o \
 	OSGAbstractColorChooserPanel.o \
-	OSGDefaultColorSelectionModel.o \
 	OSGRGBColorChooserPanelBase.o \
+	OSGDefaultColorSelectionModel.o \
 	OSGAbstractColorSelectionModel.o \
 	OSGHSVColorChooserPanelBase.o \
 	OSGAbstractColorChooserPanelBase.o \
@@ -121,79 +90,81 @@ OBJECTS = OSGKeyAcceleratorEvent.o \
 	OSGDialogFactory.o \
 	OSGDialogWindow.o \
 	OSGDialogWindowBase.o \
-	OSGEditableTextComponentBase.o \
+	OSGSliderBase.o \
+	OSGSlider.o \
 	OSGTextComponentBase.o \
 	OSGPasswordField.o \
 	OSGLabelBase.o \
 	OSGTextArea.o \
 	OSGTextField.o \
-	OSGEditableTextComponent.o \
 	OSGPasswordFieldBase.o \
 	OSGTextComponent.o \
 	OSGTextAreaBase.o \
 	OSGLabel.o \
 	OSGTextFieldBase.o \
+	OSGEditableTextComponentBase.o \
+	OSGEditableTextComponent.o \
 	OSGTableHeaderBase.o \
 	OSGTableColumn.o \
 	OSGTable.o \
 	OSGTableColumnModelEvent.o \
-	OSGTableColumnBase.o \
 	OSGTableHeader.o \
-	OSGTableBase.o \
+	OSGTableColumnBase.o \
 	OSGTableModelEvent.o \
-	OSGAbstractTableModel.o \
-	OSGAbstractTableColumnModelBase.o \
+	OSGTableBase.o \
 	OSGDefaultTableColumnModel.o \
+	OSGAbstractTableModel.o \
 	OSGTableModelBase.o \
-	OSGDefaultTableColumnModelBase.o \
+	OSGAbstractTableColumnModelBase.o \
 	OSGTableColumnModel.o \
+	OSGDefaultTableColumnModelBase.o \
 	OSGAbstractTableModelBase.o \
 	OSGTableModel.o \
 	OSGAbstractTableColumnModel.o \
 	OSGTableColumnModelBase.o \
+	OSGTableCellEditorBase.o \
+	OSGTableCellEditor.o \
+	OSGDefaultTableCellEditorBase.o \
+	OSGDefaultTableCellEditor.o \
 	OSGDefaultUInt32TableCellRenderer.o \
 	OSGDefaultGLenumTableCellRenderer.o \
-	OSGDefaultReal32TableCellRenderer.o \
 	OSGDefaultTableHeaderCellRenderer.o \
+	OSGDefaultReal32TableCellRenderer.o \
 	OSGDefaultBoolTableCellRenderer.o \
 	OSGDefaultInt32TableCellRenderer.o \
 	OSGDefaultStringTableCellRenderer.o \
 	OSGDefaultTableCellRenderer.o \
-	OSGDefaultTableCellEditor.o \
-	OSGTableCellEditorBase.o \
-	OSGTableCellEditor.o \
-	OSGDefaultTableCellEditorBase.o \
 	OSGProgressBar.o \
 	OSGProgressBarBase.o \
 	OSGToolTipBase.o \
-	OSGSeparator.o \
-	OSGGLViewportBase.o \
 	OSGImageComponent.o \
 	OSGCanvas.o \
-	OSGUIDrawObjectCanvasBase.o \
 	OSGUIDrawObjectCanvas.o \
 	OSGRotatedComponent.o \
 	OSGToolTip.o \
-	OSGSeparatorBase.o \
 	OSGImageComponentBase.o \
-	OSGGLViewport.o \
 	OSGCanvasBase.o \
+	OSGUIDrawObjectCanvasBase.o \
 	OSGRotatedComponentBase.o \
+	OSGGLViewportBase.o \
+	OSGSeparator.o \
+	OSGSeparatorBase.o \
+	OSGGLViewport.o \
 	OSGScrollPanelBase.o \
-	OSGScrollBarBase.o \
 	OSGScrollPanel.o \
+	OSGScrollBarBase.o \
 	OSGScrollBar.o \
 	OSGDefaultBoundedRangeModel.o \
 	OSGTreeRowMapperBase.o \
+	OSGTreePath.o \
 	OSGTreeBase.o \
 	OSGTreeRowMapper.o \
 	OSGTree.o \
-	OSGTreePath.o \
-	OSGDefaultTreeSelectionModel.o \
 	OSGTreeSelectionEvent.o \
 	OSGAbstractTreeSelectionModel.o \
-	OSGDefaultTreeComponentGeneratorBase.o \
+	OSGDefaultTreeSelectionModel.o \
 	OSGTreeComponentGenerator.o \
+	OSGDefaultTreeComponentGeneratorBase.o \
 	OSGDefaultTreeComponentGenerator.o \
 	OSGTreeComponentGeneratorBase.o \
 	OSGAbstractTreeModelLayout.o \
@@ -206,105 +177,105 @@ OBJECTS = OSGKeyAcceleratorEvent.o \
 	OSGTreeModelLayoutEvent.o \
 	OSGFixedHeightTreeModelLayoutBase.o \
 	OSGDefaultTreeModel.o \
-	OSGFileSystemTreeModel.o \
 	OSGModelTreeNode.o \
 	OSGAbstractTreeModel.o \
 	OSGMutableTreeNode.o \
 	OSGModelTreeNodeBase.o \
-	OSGDefaultMutableTreeNodeBase.o \
 	OSGDefaultMutableTreeNode.o \
 	OSGMutableTreeNodeBase.o \
+	OSGDefaultMutableTreeNodeBase.o \
+	OSGTreeModelEvent.o \
+	OSGFileSystemTreeModel.o \
 	OSGSceneGraphTreeModel.o \
 	OSGTreeModel.o \
-	OSGTreeModelEvent.o \
-	OSGDefaultTreeCellEditorBase.o \
 	OSGTreeCellEditorBase.o \
 	OSGTreeCellEditor.o \
+	OSGDefaultTreeCellEditorBase.o \
 	OSGDefaultTreeCellEditor.o \
 	OSGMenuBase.o \
-	OSGListGeneratedPopupMenuBase.o \
-	OSGComponentMenuItemBase.o \
 	OSGMenuItemBase.o \
 	OSGPopupMenu.o \
 	OSGMenuBar.o \
 	OSGMenu.o \
-	OSGListGeneratedPopupMenu.o \
-	OSGComponentMenuItem.o \
 	OSGMenuItem.o \
 	OSGPopupMenuBase.o \
 	OSGMenuBarBase.o \
-	OSGFunctionComponentPanelBase.o \
-	OSGFunctionComponentPanel.o \
-	OSGFunctionComponentBase.o \
-	OSGFunctionComponent.o \
-	OSGDefaultFunctionComponentIOTabComponentGeneratorBase.o \
-	OSGDefaultFunctionComponentIOTabComponentGenerator.o \
-	OSGFunctionComponentIOTabComponentGeneratorBase.o \
-	OSGFunctionComponentIOTabComponentGenerator.o \
+	OSGListGeneratedPopupMenuBase.o \
+	OSGListGeneratedPopupMenu.o \
+	OSGComponentMenuItemBase.o \
+	OSGComponentMenuItem.o \
 	OSGComboBox.o \
 	OSGComboBoxBase.o \
 	OSGComboBoxSelectionEvent.o \
+	OSGComboBoxEditorBase.o \
+	OSGDefaultComboBoxEditorBase.o \
+	OSGComboBoxEditor.o \
+	OSGDefaultComboBoxEditor.o \
 	OSGAbstractMutableComboBoxModel.o \
 	OSGComboBoxModel.o \
-	OSGFieldContainerComboBoxModelBase.o \
 	OSGMutableComboBoxModelBase.o \
-	OSGDerivedFieldContainerComboBoxModelBase.o \
-	OSGDerivedFieldContainerComboBoxModel.o \
 	OSGDefaultMutableComboBoxModel.o \
 	OSGAbstractComboBoxModel.o \
 	OSGAbstractMutableComboBoxModelBase.o \
 	OSGComboBoxModelBase.o \
-	OSGFieldContainerComboBoxModel.o \
 	OSGDefaultMutableComboBoxModelBase.o \
 	OSGMutableComboBoxModel.o \
 	OSGAbstractComboBoxModelBase.o \
-	OSGDefaultComboBoxEditorBase.o \
-	OSGComboBoxEditorBase.o \
-	OSGComboBoxEditor.o \
-	OSGDefaultComboBoxEditor.o \
-	OSGDefaultComboBoxComponentGeneratorBase.o \
+	OSGFieldContainerComboBoxModelBase.o \
+	OSGDerivedFieldContainerComboBoxModel.o \
+	OSGDerivedFieldContainerComboBoxModelBase.o \
+	OSGFieldContainerComboBoxModel.o \
 	OSGComboBoxComponentGeneratorBase.o \
+	OSGDefaultComboBoxComponentGeneratorBase.o \
 	OSGComboBoxComponentGenerator.o \
 	OSGDefaultComboBoxComponentGenerator.o \
-	OSGListDataEvent.o \
 	OSGListBase.o \
-	OSGList.o \
 	OSGDefaultListSelectionModel.o \
+	OSGListDataEvent.o \
+	OSGList.o \
 	OSGListSelectionEvent.o \
-	OSGDefaultListModelBase.o \
 	OSGListModelBase.o \
+	OSGDefaultListModelBase.o \
 	OSGListModel.o \
 	OSGDefaultListModel.o \
 	OSGAbstractListModelBase.o \
 	OSGAbstractListModel.o \
-	OSGDefaultListComponentGeneratorBase.o \
 	OSGListComponentGeneratorBase.o \
 	OSGListComponentGenerator.o \
+	OSGDefaultListComponentGeneratorBase.o \
 	OSGDefaultListComponentGenerator.o \
-	OSGCheckboxButtonBase.o \
 	OSGRadioButtonBase.o \
 	OSGRadioButtonGroup.o \
 	OSGButton.o \
 	OSGToggleButton.o \
+	OSGCheckboxButtonBase.o \
 	OSGRadioButton.o \
 	OSGButtonBase.o \
 	OSGToggleButtonBase.o \
 	OSGCheckboxButton.o \
-	OSGMenuButton.o \
 	OSGMenuButtonBase.o \
-	OSGBoundedRangeSpinnerModel.o \
+	OSGMenuButton.o \
 	OSGListSpinnerModel.o \
 	OSGSpinnerBase.o \
 	OSGSpinner.o \
 	OSGAbstractSpinnerModel.o \
+	OSGBoundedRangeSpinnerModel.o \
 	OSGSpinnerDefaultEditorBase.o \
-	OSGSpinnerNumberEditor.o \
-	OSGSpinnerListEditor.o \
-	OSGSpinnerEditor.o \
 	OSGSpinnerNumberEditorBase.o \
 	OSGSpinnerDefaultEditor.o \
+	OSGSpinnerNumberEditor.o \
 	OSGSpinnerListEditorBase.o \
+	OSGSpinnerListEditor.o \
+	OSGSpinnerEditor.o \
 	OSGSpinnerEditorBase.o \
+	OSGFunctionComponentPanel.o \
+	OSGFunctionComponentBase.o \
+	OSGFunctionComponent.o \
+	OSGFunctionComponentPanelBase.o \
+	OSGDefaultFunctionComponentIOTabComponentGenerator.o \
+	OSGFunctionComponentIOTabComponentGeneratorBase.o \
+	OSGFunctionComponentIOTabComponentGenerator.o \
+	OSGDefaultFunctionComponentIOTabComponentGeneratorBase.o \
 	OSGUIDrawingSurfaceBase.o \
 	OSGUIDrawingSurface.o \
 	OSGUIDrawingSurfaceMouseTransformFunctorBase.o \
@@ -317,76 +288,68 @@ OBJECTS = OSGKeyAcceleratorEvent.o \
 	OSGUIForeground.o \
 	OSGUIForegroundMouseTransformFunctorBase.o \
 	OSGUIForegroundMouseTransformFunctor.o \
+	OSGDefaultLookAndFeel.o \
+	OSGWindowsLookAndFeelBase.o \
+	OSGWindowsLookAndFeel.o \
+	OSGLookAndFeelBase.o \
+	OSGLookAndFeelManager.o \
+	OSGLookAndFeel.o \
+	OSGDefaultLookAndFeelBase.o \
+	OSGXMLLookAndFeelBase.o \
+	OSGXMLLookAndFeel.o \
+	OSGUIFontBase.o \
+	OSGUIFont.o \
+	OSGAbstractCellEditor.o \
 	OSGCellEditor.o \
 	OSGAbstractCellEditorBase.o \
-	OSGAbstractCellEditor.o \
 	OSGCellEditorBase.o \
-	OSGMaterialLayerBase.o \
-	OSGEmptyLayerBase.o \
-	OSGMaterialLayer.o \
-	OSGColorLayerBase.o \
-	OSGLayerBase.o \
-	OSGCompoundLayerBase.o \
-	OSGGradientLayerBase.o \
-	OSGTextureLayerBase.o \
-	OSGEmptyLayer.o \
-	OSGPatternLayerBase.o \
-	OSGColorLayer.o \
-	OSGLayer.o \
-	OSGCompoundLayer.o \
-	OSGGradientLayer.o \
-	OSGTextureLayer.o \
-	OSGPatternLayer.o \
 	OSGEmptyBorder.o \
 	OSGBorderBase.o \
 	OSGMultiColorMatteBorderBase.o \
 	OSGLineBorderBase.o \
 	OSGBevelBorderBase.o \
-	OSGCompoundBorderBase.o \
 	OSGRoundedCornerLineBorderBase.o \
 	OSGBorder.o \
-	OSGPolygonBorderBase.o \
+	OSGCompoundBorderBase.o \
 	OSGMultiColorMatteBorder.o \
-	OSGEtchedBorderBase.o \
 	OSGLineBorder.o \
+	OSGEtchedBorderBase.o \
 	OSGBevelBorder.o \
-	OSGWindowBorderBase.o \
 	OSGMatteBorderBase.o \
 	OSGShadowBorderBase.o \
 	OSGRoundedCornerLineBorder.o \
 	OSGCompoundBorder.o \
-	OSGPolygonBorder.o \
 	OSGEmptyBorderBase.o \
 	OSGEtchedBorder.o \
-	OSGWindowBorder.o \
 	OSGMatteBorder.o \
 	OSGShadowBorder.o \
-	OSGCardLayout.o \
+	OSGWindowBorderBase.o \
+	OSGWindowBorder.o \
+	OSGPolygonBorderBase.o \
+	OSGPolygonBorder.o \
 	OSGFlowLayoutBase.o \
-	OSGBoxLayout.o \
+	OSGCardLayout.o \
 	OSGBoxLayoutConstraints.o \
 	OSGGridBagLayoutConstraints.o \
+	OSGBoxLayout.o \
 	OSGAbsoluteLayoutConstraints.o \
 	OSGFlowLayout.o \
-	OSGSpringLayoutConstraints.o \
 	OSGCardLayoutConstraintsBase.o \
 	OSGAbsoluteLayoutBase.o \
-	OSGBorderLayoutConstraintsBase.o \
 	OSGGridBagLayoutBase.o \
+	OSGBorderLayoutConstraintsBase.o \
 	OSGCardLayoutConstraints.o \
 	OSGLayoutConstraintsBase.o \
-	OSGOverlayLayoutBase.o \
-	OSGAbsoluteLayoutConstraintsBase.o \
 	OSGGridLayoutConstraintsBase.o \
 	OSGBoxLayoutConstraintsBase.o \
+	OSGOverlayLayoutBase.o \
 	OSGBoxLayoutBase.o \
 	OSGGridBagLayout.o \
-	OSGSpringLayout.o \
-	OSGLayoutConstraints.o \
+	OSGAbsoluteLayoutConstraintsBase.o \
 	OSGBorderLayoutConstraints.o \
+	OSGLayoutConstraints.o \
 	OSGBorderLayoutBase.o \
 	OSGGridLayoutConstraints.o \
-	OSGSpringLayoutConstraintsBase.o \
 	OSGGridLayoutBase.o \
 	OSGOverlayLayout.o \
 	OSGFlowLayoutConstraintsBase.o \
@@ -395,15 +358,18 @@ OBJECTS = OSGKeyAcceleratorEvent.o \
 	OSGFlowLayoutConstraints.o \
 	OSGOverlayLayoutConstraintsBase.o \
 	OSGLayoutBase.o \
-	OSGSpringLayoutBase.o \
 	OSGCardLayoutBase.o \
 	OSGOverlayLayoutConstraints.o \
 	OSGAbsoluteLayout.o \
 	OSGLayout.o \
 	OSGGridBagLayoutConstraintsBase.o \
+	OSGSpringLayoutConstraints.o \
+	OSGSpringLayout.o \
+	OSGSpringLayoutConstraintsBase.o \
+	OSGSpringLayoutBase.o \
 	OSGCompoundLayoutSpringBase.o \
-	OSGProxyLayoutSpring.o \
 	OSGMaxLayoutSpringBase.o \
+	OSGProxyLayoutSpring.o \
 	OSGScaleLayoutSpringBase.o \
 	OSGComponentHeightLayoutSpringBase.o \
 	OSGSumLayoutSpringBase.o \
@@ -420,12 +386,46 @@ OBJECTS = OSGKeyAcceleratorEvent.o \
 	OSGLayoutSpring.o \
 	OSGStaticLayoutSpring.o \
 	OSGNegativeLayoutSpring.o \
-	OSGComponentWidthLayoutSpringBase.o \
 	OSGProxyLayoutSpringBase.o \
+	OSGComponentWidthLayoutSpringBase.o \
 	OSGAbstractLayoutSpringBase.o \
-	OSGNumberRangeSet.o \
 	OSGLineUtils.o \
-	OSGUIDrawUtils.o
+	OSGNumberRangeSet.o \
+	OSGUIDrawUtils.o \
+	OSGUndoableCommand.o \
+	OSGUndoableEditEvent.o \
+	OSGCompoundUndoableEdit.o \
+	OSGCommandFactory.o \
+	OSGCommand.o \
+	OSGCommandEvent.o \
+	OSGUndoableEdit.o \
+	OSGUndoManager.o \
+	OSGCommandManager.o \
+	OSGCommandType.o \
+	OSGAbstractUndoableEdit.o \
+	OSGComponentGenerator.o \
+	OSGComponentGeneratorBase.o \
+	OSGSelectionEvent.o \
+	OSGSingleSelectionModelBase.o \
+	OSGSingleSelectionModel.o \
+	OSGDefaultSingleSelectionModelBase.o \
+	OSGDefaultSingleSelectionModel.o \
+	OSGMaterialLayerBase.o \
+	OSGEmptyLayerBase.o \
+	OSGMaterialLayer.o \
+	OSGColorLayerBase.o \
+	OSGLayerBase.o \
+	OSGCompoundLayerBase.o \
+	OSGGradientLayerBase.o \
+	OSGTextureLayerBase.o \
+	OSGEmptyLayer.o \
+	OSGPatternLayerBase.o \
+	OSGColorLayer.o \
+	OSGLayer.o \
+	OSGCompoundLayer.o \
+	OSGGradientLayer.o \
+	OSGTextureLayer.o \
+	OSGPatternLayer.o
         
         
 include $(commondir)/CommonMake.mk
