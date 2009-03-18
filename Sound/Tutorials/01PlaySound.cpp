@@ -327,7 +327,7 @@ NodePtr setupScene(){
 void setupSound(){
 	//fmod wrapper
 	soundManager = FModSoundManager::create();  //create default sound manager
-	soundManager->init(".\\","metablast.fev", 64); //initialization, args: media path, media filename, max_channel
+	soundManager->init("./","metablast.fev", 64); //initialization, args: media path, media filename, max_channel
 	soundManager->setCamera(mgr->getCamera());  //for updating viwer/listener's position, velocity and orientation
 	soundManager->setWindowEventProducer(TutorialWindowEventProducer); //for automatic updates
 
@@ -410,14 +410,14 @@ int main(int argc, char **argv)
                                         "OpenSG 01PlaySound Window");
 										
     //setup scene
+    mgr->setRoot(setupScene());
 
-
-	mgr->setRoot(setupScene());
-	setupSound();
-
+    //setup sound
+    setupSound();
+	
     // Show the whole Scene
     mgr->showAll();
-
+    
 	
 	float r = 0;
     while(!ExitApp)
@@ -439,9 +439,8 @@ int main(int argc, char **argv)
 		
 		TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
-		soundManager->update(0);		
+	soundManager->update(0);		
     }
-	//FMOD_Event_Stop(event, 1);
     osgExit();
 	
     return 0;
