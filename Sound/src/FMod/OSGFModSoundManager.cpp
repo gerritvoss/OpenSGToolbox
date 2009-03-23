@@ -82,6 +82,7 @@ void FModSoundManager::initMethod (void)
 
 void FModSoundManager::init(const char* arg, ...){
 	va_list listPointer;
+	
 	va_start(listPointer, arg);
 	const char* mediaPath = arg;
 	const char* mediaFile = va_arg(listPointer, char*);
@@ -93,6 +94,7 @@ void FModSoundManager::init(const char* arg, ...){
 	
 	result = eventSystem->setMediaPath(mediaPath);
 	result = eventSystem->load(mediaFile, 0, 0);
+	printf("result :%d:\n", result);
 	result = eventSystem->set3DNumListeners(1);
 }
 

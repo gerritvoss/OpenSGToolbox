@@ -46,7 +46,7 @@
 
 #include "OSGDialogCoordinatorBase.h"
 #include "OSGSoundEmitter.h"
-#include "Events/OSGSoundListener.h"
+#include "OSGSoundListener.h"
 #include "OSGSoundManager.h"
 
 OSG_BEGIN_NAMESPACE

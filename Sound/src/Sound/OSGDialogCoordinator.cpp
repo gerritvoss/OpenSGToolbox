@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDialogCoordinator.h"
+#include "OpenSG/Sound/OSGDialogCoordinator.h"
 
 OSG_BEGIN_NAMESPACE
 
