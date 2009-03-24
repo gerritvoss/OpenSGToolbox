@@ -57,7 +57,26 @@ INCLUDE_DIRECTORIES(.)
 
 SET(LIBRARY_OUTPUT_PATH ../Build/Linux/dbg)
 
-ADD_LIBRARY(sound SHARED ./FMod/OSGFModSoundChannel.cpp
+#link libraries
+
+
+IF(WIN32)
+TARGET_LINK_LIBRARIES(Sound fmodexp_vc)
+TARGET_LINK_LIBRARIES(Sound fmod_event)
+
+TARGET_LINK_LIBRARIES(Sound OSGBase)
+TARGET_LINK_LIBRARIES(Sound OSGSystem)
+TARGET_LINK_LIBRARIES(Sound OSGInput)
+TARGET_LINK_LIBRARIES(Sound opengl32)
+TARGET_LINK_LIBRARIES(Sound glu32)
+TARGET_LINK_LIBRARIES(Sound tif32)
+TARGET_LINK_LIBRARIES(Sound libjpeg)
+TARGET_LINK_LIBRARIES(Sound libpng)
+TARGET_LINK_LIBRARIES(Sound Winmm)
+ENDIF(WIN32)
+
+
+ADD_LIBRARY(Sound SHARED ./FMod/OSGFModSoundChannel.cpp
 ./FMod/OSGFModSoundManager.cpp
 ./FMod/OSGFModSoundBase.cpp
 ./FMod/OSGFModSound.cpp
