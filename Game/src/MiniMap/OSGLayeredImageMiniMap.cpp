@@ -84,17 +84,27 @@ void LayeredImageMiniMap::initMethod (void)
 \***************************************************************************/
 void LayeredImageMiniMap::updateAllTransformations(void)
 {
-    //Viewpoint Indicator
-    Pnt3f p;
-    Quaternion r;
+    if(getLockMapOrientation())
+        updateLockedMapTransformation();
+    else
+        updateUnlockedMapTransformation();
 
-    getViewPointIndicator()->getTransformation(p,r);
+    updateMultiIndicatorTransformation();
     
-    getTransformation()->transform(p);
+}
+
+void LayeredImageMiniMap::updateLockedMapTransformation(void)
+{
+    Pnt3f p;            //location of view point indicator
+    Quaternion r;       //orientation of view point indicator
+
+    getViewPointIndicator()->getTransformation(p,r);        //get the location and orientation
+    
+    getTransformation()->transform(p);      //set the transformation of the viewpoint indicator
     getTransformation()->transform(r);
 
-    ViewPointLocation.setValues(p.x(), p.y());
-    ViewPointOrientation = r;
+    ViewPointLocation.setValues(p.x(), p.y());      //set position of indicator on the minimap
+    ViewPointOrientation = r;                       //set rotaion of indicator on minimap
 
     //All other Indicators
     InidicatorLocations.resize(getIndicators().size());
@@ -122,46 +132,136 @@ void LayeredImageMiniMap::updateAllTransformations(void)
         Vec3f Axis;
         Rot.getValueAsAxisRad(Axis,ViewpointAngle);
         
+        //Rotation alteration so the indicator rotates correctly
         if(Axis.y()<0.0f)
         {
             ViewpointAngle = -ViewpointAngle;
         }
 
-        if(getStationaryIndicator())
+    beginEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
+        _RotatedIndicator->setAngle(ViewpointAngle);                 
+    endEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
+
+    //Update Rotated Component Position
+    AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::Ptr::dcast(_RotatedIndicator->getConstraints());
+    Pnt2f AlignedPosition;
+    AlignedPosition = Pnt2f(ViewPointLocation.x()*getSize().x(),ViewPointLocation.y()*getSize().y()) - 0.5f*_RotatedIndicator->getSize();
+    beginEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+        RotatedComponentConstraints->setPosition(AlignedPosition);
+    endEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+
+    }
+
+    if(_MapImageComponent != NullFC)
+    {
+        //Update Map Image Component
+        Pnt3f ViewPoint;
+        Quaternion ViewOrientation;
+
+        getViewPointIndicator()->getTransformation(ViewPoint,ViewOrientation);
+
+        if(getLayerTextures().getSize() > 1)
         {
+           _DrawnLayerIndex = -1;
+           if(ViewPoint.y() < (getLayerDistances().getValue(0) + (getLayerDistances().getValue(1) * 0.5)))
+           {
+               _DrawnLayerIndex = 0;
+           }
+
+           UInt32 index = 1;
+           Real32 lowerDistance = getLayerDistances().getValue(0);
+
+           while(_DrawnLayerIndex == -1)
+           {
+               
+               if(getLayerTextures().size() > 2 && ViewPoint.y() >= (lowerDistance + (getLayerDistances().getValue(index) * 0.5)) && ViewPoint.y() < (lowerDistance + getLayerDistances().getValue(index) + (lowerDistance + (getLayerDistances().getValue(index + 1) * 0.5))))
+               {
+                   _DrawnLayerIndex = index;
+               }
+               else if(getLayerTextures().getSize() > index + 2)
+               {
+                   lowerDistance += getLayerDistances().getValue(index);
+                   index++;
+               }
+               else
+               {
+                   _DrawnLayerIndex = index + 1;
+               }
+           }
         }
         else
         {
+           _DrawnLayerIndex = 0;
+        }
+    
+        beginEditCP(_MapImageComponent , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
+            _MapImageComponent->setTexture(getLayerTextures(_DrawnLayerIndex));
+            _MapImageComponent->setRolloverTexture(getLayerTextures(_DrawnLayerIndex));
+            _MapImageComponent->setDisabledTexture(getLayerTextures(_DrawnLayerIndex));
+            _MapImageComponent->setFocusedTexture(getLayerTextures(_DrawnLayerIndex));
+        endEditCP(_MapImageComponent , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
+    }
+}
+void LayeredImageMiniMap::updateUnlockedMapTransformation(void)
+{
+    Pnt3f p;            //location of view point indicator
+    Quaternion r;       //orientation of view point indicator
+
+    getViewPointIndicator()->getTransformation(p,r);        //get the location and orientation
+    
+    getTransformation()->transform(p);      //set the transformation of the viewpoint indicator
+    getTransformation()->transform(r);
+
+    ViewPointLocation.setValues(p.x(), p.y());      //set position of indicator on the minimap
+    ViewPointOrientation = r;                       //set rotaion of indicator on minimap
+
+    //All other Indicators
+    InidicatorLocations.resize(getIndicators().size());
+    InidicatorOrientations.resize(getIndicators().size());
+    for(UInt32 i(0) ; i<getIndicators().size() ; ++i)
+    {
+        getIndicators(i)->getTransformation(p,r);
+        
+        getTransformation()->transform(p);
+        getTransformation()->transform(r);
+
+        InidicatorLocations[i].setValues(p.x(), p.y());
+        InidicatorOrientations[i] = r;
+    }
+    
+    //Viewpoint Rotated Component
+    Real32 ViewpointAngle;
+    if(_RotatedIndicator != NullFC)
+    {
+        //Update Rotation ViewpointAngle
+        Vec3f MapXAxis(1.0f,0.0f,0.0f), ViewPointXAxis;
+        ViewPointOrientation.multVec(MapXAxis,ViewPointXAxis);
+        Quaternion Rot(MapXAxis, ViewPointXAxis);
+
+        Vec3f Axis;
+        Rot.getValueAsAxisRad(Axis,ViewpointAngle);
+        
+        //Rotation alteration so the indicator rotates correctly
+        if(Axis.y()<0.0f)
+        {
+            ViewpointAngle = -ViewpointAngle;
+        }
+
         beginEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
-           if(getLockMapOrientation())
-           {
-                _RotatedIndicator->setAngle(ViewpointAngle);
-           }
-           else
-           {
-                _RotatedIndicator->setAngle(-ViewpointAngle);
-           }
+            _RotatedIndicator->setAngle(-ViewpointAngle);
         endEditCP(_RotatedIndicator, RotatedComponent::AngleFieldMask);
 
         //Update Rotated Component Position
         AbsoluteLayoutConstraintsPtr RotatedComponentConstraints = AbsoluteLayoutConstraints::Ptr::dcast(_RotatedIndicator->getConstraints());
         Pnt2f AlignedPosition;
-        if(!getLockMapOrientation())    //When map is Unlocked
-        {
-            Vec2f RotatedViewpoint((ViewPointLocation.x()-0.5f)*getUnlockedMapSize().x(),(ViewPointLocation.y()-0.5f)*getUnlockedMapSize().y());
-            
-            RotatedViewpoint.setValues(RotatedViewpoint.x()*osgcos(ViewpointAngle)-RotatedViewpoint.y()*osgsin(ViewpointAngle), RotatedViewpoint.x()*osgsin(ViewpointAngle)+RotatedViewpoint.y()*osgcos(ViewpointAngle));
-            
-            AlignedPosition = -0.5f*Pnt2f(_RotatedIndicator->getSize()) + 0.5f*getSize() - RotatedViewpoint;
-        }
-        else
-        {
-            AlignedPosition = Pnt2f(ViewPointLocation.x()*getSize().x(),ViewPointLocation.y()*getSize().y()) - 0.5f*_RotatedIndicator->getSize();
-        }
+        Vec2f RotatedViewpoint((ViewPointLocation.x()-0.5f)*getUnlockedMapSize().x(),(ViewPointLocation.y()-0.5f)*getUnlockedMapSize().y());
+        
+        RotatedViewpoint.setValues(RotatedViewpoint.x()*osgcos(ViewpointAngle)-RotatedViewpoint.y()*osgsin(ViewpointAngle), RotatedViewpoint.x()*osgsin(ViewpointAngle)+RotatedViewpoint.y()*osgcos(ViewpointAngle));
+        
+        AlignedPosition = -0.5f*Pnt2f(_RotatedIndicator->getSize()) + 0.5f*getSize() - RotatedViewpoint;
         beginEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
             RotatedComponentConstraints->setPosition(AlignedPosition);
         endEditCP(RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
-        }
     }
 
     if(_MapImageComponent != NullFC)
@@ -215,7 +315,7 @@ void LayeredImageMiniMap::updateAllTransformations(void)
     }
 
     //Viewpoint Indicator
-    if(!getLockMapOrientation() && _ViewpointIndicatorComponent != NullFC)
+    if(_ViewpointIndicatorComponent != NullFC)
     {
         AbsoluteLayoutConstraintsPtr ViewpointComponentConstraints = AbsoluteLayoutConstraints::Ptr::dcast(_ViewpointIndicatorComponent->getConstraints());
 
@@ -226,8 +326,10 @@ void LayeredImageMiniMap::updateAllTransformations(void)
             ViewpointComponentConstraints->setPosition(AlignedPosition);
         endEditCP(ViewpointComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
     }
+}
 
-    //Indicators
+void LayeredImageMiniMap::updateMultiIndicatorTransformation(void)
+{
     for(UInt32 i(0) ; i<_IndicatorComponents.size() ; ++i)
     {
         //Update Rotation Angle
@@ -261,8 +363,8 @@ void LayeredImageMiniMap::updateAllTransformations(void)
             _IndicatorComponents[i]._RotatedComponentConstraints->setPosition(AlignedPosition);
         endEditCP(_IndicatorComponents[i]._RotatedComponentConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
     }
-}
 
+}
 
 void LayeredImageMiniMap::removeLayer(UInt32 index)
 {
@@ -387,15 +489,7 @@ void LayeredImageMiniMap::setupLockedMapDrawInternals(void)
 		Pnt2f TopLeft, BottomRight;
 		getInsideBorderBounds(TopLeft, BottomRight);
 		beginEditCP(_MapImageComponent, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask | Component::OpacityFieldMask | Component::ConstraintsFieldMask);
-			if(!getLockMapOrientation()) //if map is set to turn
-			{
-				_MapImageComponent->setPreferredSize(getUnlockedMapSize());
-				_MapImageComponent->setConstraints(AbsoluteLayoutConstraints::create());
-			}
-			else
-			{
-				_MapImageComponent->setPreferredSize(getSize());
-			}
+		    _MapImageComponent->setPreferredSize(getSize());
 			_MapImageComponent->setScale(ImageComponent::SCALE_STRETCH);
 			_MapImageComponent->setAlignment(Vec2f(0.5,0.5));
 			_MapImageComponent->setOpacity(getOpacity());
@@ -441,27 +535,6 @@ void LayeredImageMiniMap::setupLockedMapDrawInternals(void)
         endEditCP(_IndicatorComponents[i]._RotatedComponent, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
     }
 
-	//Map Component if the Map Orientation is not locked
-	if(!getLockMapOrientation())
-	{
-		if(_MapComponent == NullFC)
-		{
-			_MapComponent = Panel::createEmpty();
-		}
-
-		beginEditCP(_MapComponent, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-            _MapComponent->setPreferredSize(getUnlockedMapSize());
-            _MapComponent->setLayout(AbsoluteLayout::create());
-			_MapComponent->getChildren().clear();
-            _MapComponent->getChildren().push_back(_MapImageComponent);
-			//Attach the Indicator Components
-			for(UInt32 i(0) ; i<_IndicatorComponents.size() ; ++i)
-			{
-				_MapComponent->getChildren().push_back(_IndicatorComponents[i]._RotatedComponent);
-			}
-		endEditCP(_MapComponent, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-	}
-
     //Setup the Main Rotated Component
     //The Rotated Component may contain either the Viewpoint Indicator Component or the MapImage Component
 	if(_RotatedIndicator == NullFC)
@@ -469,14 +542,7 @@ void LayeredImageMiniMap::setupLockedMapDrawInternals(void)
 		_RotatedIndicator = RotatedComponent::create();
 	}
 	beginEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
-        if(getLockMapOrientation())
-        {
-            _RotatedIndicator->setInternalComponent(_ViewpointIndicatorComponent);
-        }
-        else        //if map is set to turn
-        {
-            _RotatedIndicator->setInternalComponent(_MapComponent);
-        }
+        _RotatedIndicator->setInternalComponent(_ViewpointIndicatorComponent);
         _RotatedIndicator->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
         _RotatedIndicator->setConstraints(RotatedComponentConstraints);
     endEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
@@ -484,32 +550,19 @@ void LayeredImageMiniMap::setupLockedMapDrawInternals(void)
     //Add all of the Components as Children
     beginEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
         getChildren().clear();
-		if(getLockMapOrientation())
+            
+        if(_MapImageComponent != NullFC)
         {
-            if(_MapImageComponent != NullFC)
-            {
-                getChildren().push_back(_MapImageComponent);
-            }
-			if(_RotatedIndicator != NullFC)
-			{
-				getChildren().push_back(_RotatedIndicator);
-			}
-			//Attach the Indicator Components
-			for(UInt32 i(0) ; i<_IndicatorComponents.size() ; ++i)
-			{
-				getChildren().push_back(_IndicatorComponents[i]._RotatedComponent);
-			}
-		}
-		else
+            getChildren().push_back(_MapImageComponent);
+        }
+		if(_RotatedIndicator != NullFC)
 		{
-			if(_RotatedIndicator != NullFC)
-			{
-				getChildren().push_back(_RotatedIndicator);
-			}
-            if(_ViewpointIndicatorComponent != NullFC)
-            {
-                getChildren().push_back(_ViewpointIndicatorComponent);
-            }
+			getChildren().push_back(_RotatedIndicator);
+		}
+		//Attach the Indicator Components
+		for(UInt32 i(0) ; i<_IndicatorComponents.size() ; ++i)
+		{
+			getChildren().push_back(_IndicatorComponents[i]._RotatedComponent);
 		}
 
         //The Layout Constraints for this Minimap
@@ -557,15 +610,8 @@ void LayeredImageMiniMap::setupUnLockedMapDrawInternals(void)
 		Pnt2f TopLeft, BottomRight;
 		getInsideBorderBounds(TopLeft, BottomRight);
 		beginEditCP(_MapImageComponent, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask | Component::OpacityFieldMask | Component::ConstraintsFieldMask);
-			if(!getLockMapOrientation()) //if map is set to turn
-			{
-				_MapImageComponent->setPreferredSize(getUnlockedMapSize());
-				_MapImageComponent->setConstraints(AbsoluteLayoutConstraints::create());
-			}
-			else
-			{
-				_MapImageComponent->setPreferredSize(getSize());
-			}
+			_MapImageComponent->setPreferredSize(getUnlockedMapSize());
+			_MapImageComponent->setConstraints(AbsoluteLayoutConstraints::create());
 			_MapImageComponent->setScale(ImageComponent::SCALE_STRETCH);
 			_MapImageComponent->setAlignment(Vec2f(0.5,0.5));
 			_MapImageComponent->setOpacity(getOpacity());
@@ -612,25 +658,22 @@ void LayeredImageMiniMap::setupUnLockedMapDrawInternals(void)
     }
 
 	//Map Component if the Map Orientation is not locked
-	if(!getLockMapOrientation())
+	if(_MapComponent == NullFC)
 	{
-		if(_MapComponent == NullFC)
-		{
-			_MapComponent = Panel::createEmpty();
-		}
-
-		beginEditCP(_MapComponent, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-            _MapComponent->setPreferredSize(getUnlockedMapSize());
-            _MapComponent->setLayout(AbsoluteLayout::create());
-			_MapComponent->getChildren().clear();
-            _MapComponent->getChildren().push_back(_MapImageComponent);
-			//Attach the Indicator Components
-			for(UInt32 i(0) ; i<_IndicatorComponents.size() ; ++i)
-			{
-				_MapComponent->getChildren().push_back(_IndicatorComponents[i]._RotatedComponent);
-			}
-		endEditCP(_MapComponent, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+		_MapComponent = Panel::createEmpty();
 	}
+
+	beginEditCP(_MapComponent, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+        _MapComponent->setPreferredSize(getUnlockedMapSize());
+        _MapComponent->setLayout(AbsoluteLayout::create());
+		_MapComponent->getChildren().clear();
+        _MapComponent->getChildren().push_back(_MapImageComponent);
+		//Attach the Indicator Components
+		for(UInt32 i(0) ; i<_IndicatorComponents.size() ; ++i)
+		{
+			_MapComponent->getChildren().push_back(_IndicatorComponents[i]._RotatedComponent);
+		}
+	endEditCP(_MapComponent, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 
     //Setup the Main Rotated Component
     //The Rotated Component may contain either the Viewpoint Indicator Component or the MapImage Component
@@ -639,14 +682,7 @@ void LayeredImageMiniMap::setupUnLockedMapDrawInternals(void)
 		_RotatedIndicator = RotatedComponent::create();
 	}
 	beginEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
-        if(getLockMapOrientation())
-        {
-            _RotatedIndicator->setInternalComponent(_ViewpointIndicatorComponent);
-        }
-        else        //if map is set to turn
-        {
-            _RotatedIndicator->setInternalComponent(_MapComponent);
-        }
+        _RotatedIndicator->setInternalComponent(_MapComponent);
         _RotatedIndicator->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
         _RotatedIndicator->setConstraints(RotatedComponentConstraints);
     endEditCP(_RotatedIndicator, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
@@ -654,33 +690,14 @@ void LayeredImageMiniMap::setupUnLockedMapDrawInternals(void)
     //Add all of the Components as Children
     beginEditCP(LayeredImageMiniMapPtr(this) , ChildrenFieldMask | LayoutFieldMask);
         getChildren().clear();
-		if(getLockMapOrientation())
-        {
-            if(_MapImageComponent != NullFC)
-            {
-                getChildren().push_back(_MapImageComponent);
-            }
-			if(_RotatedIndicator != NullFC)
-			{
-				getChildren().push_back(_RotatedIndicator);
-			}
-			//Attach the Indicator Components
-			for(UInt32 i(0) ; i<_IndicatorComponents.size() ; ++i)
-			{
-				getChildren().push_back(_IndicatorComponents[i]._RotatedComponent);
-			}
-		}
-		else
+		if(_RotatedIndicator != NullFC)
 		{
-			if(_RotatedIndicator != NullFC)
-			{
-				getChildren().push_back(_RotatedIndicator);
-			}
-            if(_ViewpointIndicatorComponent != NullFC)
-            {
-                getChildren().push_back(_ViewpointIndicatorComponent);
-            }
+			getChildren().push_back(_RotatedIndicator);
 		}
+        if(_ViewpointIndicatorComponent != NullFC)
+        {
+            getChildren().push_back(_ViewpointIndicatorComponent);
+        }
 
         //The Layout Constraints for this Minimap
         AbsoluteLayoutPtr MiniMapLayout = AbsoluteLayout::create();

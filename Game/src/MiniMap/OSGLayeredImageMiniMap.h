@@ -106,7 +106,17 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
     *****************************************/
 	void insertLayer(UInt32 index, Real32 DistanceFromPrevious, ImagePtr Image);
 	void insertLayer(UInt32 index, Real32 DistanceFromPrevious, const char *fileName, const char *mimeType = 0);
+    
+    /*****************************************
+    Takes an index of where the layer should
+    be placed in the the layer set, takes the 
+    Distance from the entry before it, and an
+    Image pointer for the image to be placed 
+    in the set.
 
+    Note: This method will override any existing
+    image in that position in the set.
+    *****************************************/
 	void setLayer(UInt32 index, Real32 DistanceFromPrevious, ImagePtr Image);
 	void setLayer(UInt32 index, Real32 DistanceFromPrevious, const char *fileName, const char *mimeType = 0);
 
@@ -135,6 +145,11 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
 	virtual void updateAllTransformations(void);
+
+    void updateLockedMapTransformation(void);
+    void updateUnlockedMapTransformation(void);
+
+    void updateMultiIndicatorTransformation(void);
 
 	void setupDrawInternals(void);
 	void setupLockedMapDrawInternals(void);
