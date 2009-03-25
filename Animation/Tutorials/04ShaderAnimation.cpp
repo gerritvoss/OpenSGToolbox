@@ -318,14 +318,13 @@ AnimationPtr createColorAnimation(FieldContainerPtr AnimatedObject, std::string 
     endEditCP(KeyframeAnimatorPtr::dcast(Animator), KeyframeAnimator::KeyframeSequenceFieldMask);
     
     //Animation
-    AnimationPtr ColorAnimation = FieldAnimation::create();
+    FieldAnimationPtr ColorAnimation = FieldAnimation::create();
     beginEditCP(ColorAnimation);
         FieldAnimationPtr::dcast(ColorAnimation)->setAnimator(Animator);
-        FieldAnimationPtr::dcast(ColorAnimation)->setContainer(AnimatedObject);
-        FieldAnimationPtr::dcast(ColorAnimation)->setFieldName( AnimatedField );
         FieldAnimationPtr::dcast(ColorAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
         FieldAnimationPtr::dcast(ColorAnimation)->setCycling(-1);
     endEditCP(ColorAnimation);
+	ColorAnimation->setAnimatedField(AnimatedObject, AnimatedField);
 
 	return ColorAnimation;
 }

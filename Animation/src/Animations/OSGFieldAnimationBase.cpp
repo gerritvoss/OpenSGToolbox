@@ -72,9 +72,6 @@ const OSG::BitVector  FieldAnimationBase::AnimatorFieldMask =
 const OSG::BitVector  FieldAnimationBase::ContainerFieldMask = 
     (TypeTraits<BitVector>::One << FieldAnimationBase::ContainerFieldId);
 
-const OSG::BitVector  FieldAnimationBase::FieldNameFieldMask = 
-    (TypeTraits<BitVector>::One << FieldAnimationBase::FieldNameFieldId);
-
 const OSG::BitVector  FieldAnimationBase::FieldIdFieldMask = 
     (TypeTraits<BitVector>::One << FieldAnimationBase::FieldIdFieldId);
 
@@ -95,9 +92,6 @@ const OSG::BitVector FieldAnimationBase::MTInfluenceMask =
     
 */
 /*! \var FieldContainerPtr FieldAnimationBase::_sfContainer
-    
-*/
-/*! \var std::string     FieldAnimationBase::_sfFieldName
     
 */
 /*! \var UInt32          FieldAnimationBase::_sfFieldId
@@ -124,11 +118,6 @@ FieldDescription *FieldAnimationBase::_desc[] =
                      ContainerFieldId, ContainerFieldMask,
                      false,
                      (FieldAccessMethod) &FieldAnimationBase::getSFContainer),
-    new FieldDescription(SFString::getClassType(), 
-                     "FieldName", 
-                     FieldNameFieldId, FieldNameFieldMask,
-                     false,
-                     (FieldAccessMethod) &FieldAnimationBase::getSFFieldName),
     new FieldDescription(SFUInt32::getClassType(), 
                      "FieldId", 
                      FieldIdFieldId, FieldIdFieldMask,
@@ -221,7 +210,6 @@ void FieldAnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 FieldAnimationBase::FieldAnimationBase(void) :
     _sfAnimator               (), 
     _sfContainer              (), 
-    _sfFieldName              (), 
     _sfFieldId                (), 
     _sfInterpolationType      (UInt32(LINEAR_INTERPOLATION)), 
     _sfReplacementPolicy      (UInt32(OVERWRITE)), 
@@ -236,7 +224,6 @@ FieldAnimationBase::FieldAnimationBase(void) :
 FieldAnimationBase::FieldAnimationBase(const FieldAnimationBase &source) :
     _sfAnimator               (source._sfAnimator               ), 
     _sfContainer              (source._sfContainer              ), 
-    _sfFieldName              (source._sfFieldName              ), 
     _sfFieldId                (source._sfFieldId                ), 
     _sfInterpolationType      (source._sfInterpolationType      ), 
     _sfReplacementPolicy      (source._sfReplacementPolicy      ), 
@@ -264,11 +251,6 @@ UInt32 FieldAnimationBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (ContainerFieldMask & whichField))
     {
         returnValue += _sfContainer.getBinSize();
-    }
-
-    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
-    {
-        returnValue += _sfFieldName.getBinSize();
     }
 
     if(FieldBits::NoField != (FieldIdFieldMask & whichField))
@@ -305,11 +287,6 @@ void FieldAnimationBase::copyToBin(      BinaryDataHandler &pMem,
         _sfContainer.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
-    {
-        _sfFieldName.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (FieldIdFieldMask & whichField))
     {
         _sfFieldId.copyToBin(pMem);
@@ -343,11 +320,6 @@ void FieldAnimationBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfContainer.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
-    {
-        _sfFieldName.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (FieldIdFieldMask & whichField))
     {
         _sfFieldId.copyFromBin(pMem);
@@ -379,9 +351,6 @@ void FieldAnimationBase::executeSyncImpl(      FieldAnimationBase *pOther,
     if(FieldBits::NoField != (ContainerFieldMask & whichField))
         _sfContainer.syncWith(pOther->_sfContainer);
 
-    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
-        _sfFieldName.syncWith(pOther->_sfFieldName);
-
     if(FieldBits::NoField != (FieldIdFieldMask & whichField))
         _sfFieldId.syncWith(pOther->_sfFieldId);
 
@@ -406,9 +375,6 @@ void FieldAnimationBase::executeSyncImpl(      FieldAnimationBase *pOther,
 
     if(FieldBits::NoField != (ContainerFieldMask & whichField))
         _sfContainer.syncWith(pOther->_sfContainer);
-
-    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
-        _sfFieldName.syncWith(pOther->_sfFieldName);
 
     if(FieldBits::NoField != (FieldIdFieldMask & whichField))
         _sfFieldId.syncWith(pOther->_sfFieldId);

@@ -69,7 +69,6 @@
 
 #include "Animators/OSGAnimator.h" // Animator type
 #include <OpenSG/OSGFieldContainerFields.h> // Container type
-#include <OpenSG/OSGStringFields.h> // FieldName type
 #include <OpenSG/OSGUInt32Fields.h> // FieldId type
 #include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
 #include <OpenSG/OSGUInt32Fields.h> // ReplacementPolicy type
@@ -98,8 +97,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
     {
         AnimatorFieldId          = Inherited::NextFieldId,
         ContainerFieldId         = AnimatorFieldId          + 1,
-        FieldNameFieldId         = ContainerFieldId         + 1,
-        FieldIdFieldId           = FieldNameFieldId         + 1,
+        FieldIdFieldId           = ContainerFieldId         + 1,
         InterpolationTypeFieldId = FieldIdFieldId           + 1,
         ReplacementPolicyFieldId = InterpolationTypeFieldId + 1,
         NextFieldId              = ReplacementPolicyFieldId + 1
@@ -107,7 +105,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
 
     static const OSG::BitVector AnimatorFieldMask;
     static const OSG::BitVector ContainerFieldMask;
-    static const OSG::BitVector FieldNameFieldMask;
     static const OSG::BitVector FieldIdFieldMask;
     static const OSG::BitVector InterpolationTypeFieldMask;
     static const OSG::BitVector ReplacementPolicyFieldMask;
@@ -138,20 +135,11 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
     /*! \{                                                                 */
 
            SFAnimatorPtr       *getSFAnimator       (void);
-           SFFieldContainerPtr *getSFContainer      (void);
-           SFString            *getSFFieldName      (void);
-           SFUInt32            *getSFFieldId        (void);
            SFUInt32            *getSFInterpolationType(void);
            SFUInt32            *getSFReplacementPolicy(void);
 
            AnimatorPtr         &getAnimator       (void);
      const AnimatorPtr         &getAnimator       (void) const;
-           FieldContainerPtr   &getContainer      (void);
-     const FieldContainerPtr   &getContainer      (void) const;
-           std::string         &getFieldName      (void);
-     const std::string         &getFieldName      (void) const;
-           UInt32              &getFieldId        (void);
-     const UInt32              &getFieldId        (void) const;
            UInt32              &getInterpolationType(void);
      const UInt32              &getInterpolationType(void) const;
            UInt32              &getReplacementPolicy(void);
@@ -163,9 +151,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
     /*! \{                                                                 */
 
      void setAnimator       ( const AnimatorPtr &value );
-     void setContainer      ( const FieldContainerPtr &value );
-     void setFieldName      ( const std::string &value );
-     void setFieldId        ( const UInt32 &value );
      void setInterpolationType( const UInt32 &value );
      void setReplacementPolicy( const UInt32 &value );
 
@@ -212,7 +197,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
 
     SFAnimatorPtr       _sfAnimator;
     SFFieldContainerPtr   _sfContainer;
-    SFString            _sfFieldName;
     SFUInt32            _sfFieldId;
     SFUInt32            _sfInterpolationType;
     SFUInt32            _sfReplacementPolicy;
@@ -231,6 +215,27 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
     /*! \{                                                                 */
 
     virtual ~FieldAnimationBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFFieldContainerPtr *getSFContainer      (void);
+           SFUInt32            *getSFFieldId        (void);
+
+           FieldContainerPtr   &getContainer      (void);
+     const FieldContainerPtr   &getContainer      (void) const;
+           UInt32              &getFieldId        (void);
+     const UInt32              &getFieldId        (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setContainer      (const FieldContainerPtr &value);
+     void setFieldId        (const UInt32 &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

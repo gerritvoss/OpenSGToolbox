@@ -80,6 +80,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimation : public FieldAnimationBase
     /*! \}                                                                 */
     
     virtual Real32 getLength(void) const;
+
+	void setAnimatedField(FieldContainerPtr TheContainer, const std::string& FieldName);
+	void setAnimatedField(FieldContainerPtr TheContainer, UInt32 FieldID);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

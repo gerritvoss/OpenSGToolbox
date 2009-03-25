@@ -110,13 +110,6 @@ SFFieldContainerPtr *FieldAnimationBase::getSFContainer(void)
     return &_sfContainer;
 }
 
-//! Get the FieldAnimation::_sfFieldName field.
-inline
-SFString *FieldAnimationBase::getSFFieldName(void)
-{
-    return &_sfFieldName;
-}
-
 //! Get the FieldAnimation::_sfFieldId field.
 inline
 SFUInt32 *FieldAnimationBase::getSFFieldId(void)
@@ -179,27 +172,6 @@ inline
 void FieldAnimationBase::setContainer(const FieldContainerPtr &value)
 {
     _sfContainer.setValue(value);
-}
-
-//! Get the value of the FieldAnimation::_sfFieldName field.
-inline
-std::string &FieldAnimationBase::getFieldName(void)
-{
-    return _sfFieldName.getValue();
-}
-
-//! Get the value of the FieldAnimation::_sfFieldName field.
-inline
-const std::string &FieldAnimationBase::getFieldName(void) const
-{
-    return _sfFieldName.getValue();
-}
-
-//! Set the value of the FieldAnimation::_sfFieldName field.
-inline
-void FieldAnimationBase::setFieldName(const std::string &value)
-{
-    _sfFieldName.setValue(value);
 }
 
 //! Get the value of the FieldAnimation::_sfFieldId field.

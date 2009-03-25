@@ -128,10 +128,16 @@ public:
 SimpleSceneManager *mgr;
 
 Time TimeLastIdle;
-AnimationPtr TheAnimation;
+FieldAnimationPtr TheAnimation;
 TutorialAnimationListener TheAnimationListener;
 AnimationAdvancerPtr TheAnimationAdvancer;
 MaterialPtr TheTorusMaterial;
+
+KeyframeAnimatorPtr TheAnimator;
+KeyframeTransformationsSequencePtr TransformationKeyframes;
+KeyframeColorsSequencePtr ColorKeyframes;
+KeyframeVectorsSequencePtr VectorKeyframes;
+KeyframeRotationsSequencePtr RotationKeyframes;
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -292,6 +298,21 @@ void keyboard(unsigned char k, int x, int y)
                 FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_NORMAL_INTERPOLATION);
             endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
             break;
+		case '1':
+			beginEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+				TheAnimator->setKeyframeSequence(ColorKeyframes);
+			endEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+			
+			TheAnimation->setAnimatedField(TheTorusMaterial, std::string("diffuse"));
+			
+			break;
+		case '2':
+			beginEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+				TheAnimator->setKeyframeSequence(TransformationKeyframes);
+			endEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+
+			TheAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
+            break;
     }
 }
 
@@ -313,18 +334,17 @@ int setupGLUT(int *argc, char *argv[])
     return winid;
 }
 
-
 void setupAnimation(void)
 {
     //Color Keyframe Sequence
-    KeyframeColorsSequencePtr ColorKeyframes = KeyframeColorsSequence3f::create();
+    ColorKeyframes = KeyframeColorsSequence3f::create();
     ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),0.0f);
     ColorKeyframes->addKeyframe(Color4f(0.0f,1.0f,0.0f,1.0f),2.0f);
     ColorKeyframes->addKeyframe(Color4f(0.0f,0.0f,1.0f,1.0f),4.0f);
     ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),6.0f);
 
 	//Vector Keyframe Sequence
-    KeyframeVectorsSequencePtr VectorKeyframes = KeyframeVectorsSequence3f::create();
+    VectorKeyframes = KeyframeVectorsSequence3f::create();
     VectorKeyframes->addKeyframe(Vec3f(0.0f,0.0f,0.0f),0.0f);
     VectorKeyframes->addKeyframe(Vec3f(0.0f,1.0f,0.0f),1.0f);
     VectorKeyframes->addKeyframe(Vec3f(1.0f,1.0f,0.0f),2.0f);
@@ -332,7 +352,7 @@ void setupAnimation(void)
     VectorKeyframes->addKeyframe(Vec3f(0.0f,0.0f,0.0f),4.0f);
     
 	//Rotation Keyframe Sequence
-    KeyframeRotationsSequencePtr RotationKeyframes = KeyframeRotationsSequenceQuat::create();
+    RotationKeyframes = KeyframeRotationsSequenceQuat::create();
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0),0.0f);
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5),1.0f);
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0),2.0f);
@@ -340,7 +360,7 @@ void setupAnimation(void)
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0),4.0f);
 
 	//Transformation Keyframe Sequence
-    KeyframeTransformationsSequencePtr TransformationKeyframes = KeyframeTransformationsSequence44f::create();
+    TransformationKeyframes = KeyframeTransformationsSequence44f::create();
 	Matrix TempMat;
 	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
     TransformationKeyframes->addKeyframe(TempMat,0.0f);
@@ -354,26 +374,19 @@ void setupAnimation(void)
     TransformationKeyframes->addKeyframe(TempMat,4.0f);
     
     //Animator
-    AnimatorPtr Animator = KeyframeAnimator::create();
-    beginEditCP(KeyframeAnimatorPtr::dcast(Animator), KeyframeAnimator::KeyframeSequenceFieldMask);
-        //KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(ColorKeyframes);
-        KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(TransformationKeyframes);
-    endEditCP(KeyframeAnimatorPtr::dcast(Animator), KeyframeAnimator::KeyframeSequenceFieldMask);
-         
-    //Animated Object
-    FieldContainerPtr AnimatedObject = getFieldContainer("Transform",std::string("TorusNodeTransformationCore"));
-    //FieldContainerPtr AnimatedObject = TheTorusMaterial;
+    TheAnimator = KeyframeAnimator::create();
+    beginEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+        TheAnimator->setKeyframeSequence(TransformationKeyframes);
+    endEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
     
     //Animation
     TheAnimation = FieldAnimation::create();
     beginEditCP(TheAnimation);
-        FieldAnimationPtr::dcast(TheAnimation)->setAnimator(Animator);
-        FieldAnimationPtr::dcast(TheAnimation)->setContainer(AnimatedObject);
-        //FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("diffuse") );
-        FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("matrix") );
-        FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
-        FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
+        TheAnimation->setAnimator(TheAnimator);
+        TheAnimation->setInterpolationType(LINEAR_INTERPOLATION);
+        TheAnimation->setCycling(-1);
     endEditCP(TheAnimation);
+	TheAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
 
     //Animation Listener
     TheAnimation->addAnimationListener(&TheAnimationListener);
