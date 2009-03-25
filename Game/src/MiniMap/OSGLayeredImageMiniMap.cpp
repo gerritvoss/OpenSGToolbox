@@ -275,24 +275,24 @@ void LayeredImageMiniMap::updateUnlockedMapTransformation(void)
         if(getLayerTextures().getSize() > 1)
         {
            _DrawnLayerIndex = -1;
-           if(ViewPoint.y() < (getLayerDistances().getValue(0) + (getLayerDistances().getValue(1) * 0.5)))
+           if(ViewPoint.y() < (getLayerDistances()[0] + (getLayerDistances()[1] * 0.5)))
            {
                _DrawnLayerIndex = 0;
            }
 
            UInt32 index = 1;
-           Real32 lowerDistance = getLayerDistances().getValue(0);
+           Real32 lowerDistance = getLayerDistances()[0];
 
            while(_DrawnLayerIndex == -1)
            {
                
-               if(getLayerTextures().size() > 2 && ViewPoint.y() >= (lowerDistance + (getLayerDistances().getValue(index) * 0.5)) && ViewPoint.y() < (lowerDistance + getLayerDistances().getValue(index) + (lowerDistance + (getLayerDistances().getValue(index + 1) * 0.5))))
+               if(getLayerTextures().size() > 2 && ViewPoint.y() >= (lowerDistance + (getLayerDistances()[index] * 0.5)) && ViewPoint.y() < (lowerDistance + getLayerDistances()[index] + (lowerDistance + (getLayerDistances()[index + 1] * 0.5))))
                {
                    _DrawnLayerIndex = index;
                }
                else if(getLayerTextures().getSize() > index + 2)
                {
-                   lowerDistance += getLayerDistances().getValue(index);
+                   lowerDistance += getLayerDistances()[index];
                    index++;
                }
                else
