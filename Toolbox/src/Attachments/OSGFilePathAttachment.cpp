@@ -142,21 +142,28 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container,
 bool FilePathAttachment::loadFromFilePath(AttachmentContainerPtr  container)
 {
 	const Path* LoadFilePath = FilePathAttachment::getFilePath(container);
-	if(LoadFilePath != NULL && boost::filesystem::exists(*LoadFilePath))
+	try
 	{
-		if(container->getType().isDerivedFrom(Image::getClassType()))
+		if(LoadFilePath != NULL && boost::filesystem::exists(*LoadFilePath))
 		{
-         ImagePtr TheImage;
-			ImageFileHandler::the().read(TheImage,LoadFilePath->string().c_str());
-         container = TheImage;
+			if(container->getType().isDerivedFrom(Image::getClassType()))
+			{
+			 ImagePtr TheImage;
+				ImageFileHandler::the().read(TheImage,LoadFilePath->string().c_str());
+			 container = TheImage;
+			}
+			else if(container->getType().isDerivedFrom(Node::getClassType()))
+			{
+				Node::Ptr::dcast(container) = SceneFileHandler::the().read(LoadFilePath->string().c_str());
+			}
+			return true;
 		}
-		else if(container->getType().isDerivedFrom(Node::getClassType()))
+		else
 		{
-			Node::Ptr::dcast(container) = SceneFileHandler::the().read(LoadFilePath->string().c_str());
+			return false;
 		}
-		return true;
 	}
-	else
+	catch(boost::filesystem::basic_filesystem_error<Path> &)
 	{
 		return false;
 	}
