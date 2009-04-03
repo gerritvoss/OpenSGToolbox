@@ -2,16 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
-	ProjectSection(ProjectDependencies) = postProject
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5} = {82609F8B-FDBB-4A72-B925-A5B4007272B5}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01RandomDistributions", "01RandomDistributions.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02BooleanFunctions", "02BooleanFunctions.vcproj", "{746DB72D-9A34-457D-BD50-4DFB59E9409E}"
 EndProject
@@ -39,10 +36,10 @@ Global
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.Build.0 = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.ActiveCfg = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.Build.0 = Release|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.Build.0 = Debug|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.ActiveCfg = Release|Win32
-		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.Build.0 = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.Build.0 = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.ActiveCfg = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.Build.0 = Release|Win32
 		{746DB72D-9A34-457D-BD50-4DFB59E9409E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{746DB72D-9A34-457D-BD50-4DFB59E9409E}.Debug|Win32.Build.0 = Debug|Win32
 		{746DB72D-9A34-457D-BD50-4DFB59E9409E}.Release|Win32.ActiveCfg = Release|Win32

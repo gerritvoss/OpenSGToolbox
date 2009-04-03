@@ -154,7 +154,18 @@ bool FilePathAttachment::loadFromFilePath(AttachmentContainerPtr  container)
 			}
 			else if(container->getType().isDerivedFrom(Node::getClassType()))
 			{
-				Node::Ptr::dcast(container) = SceneFileHandler::the().read(LoadFilePath->string().c_str());
+				NodePtr TheNode = SceneFileHandler::the().read(LoadFilePath->string().c_str());
+
+				beginEditCP(container);
+					Node::Ptr::dcast(container)->setCore(TheNode->getCore());
+					while(TheNode->getNChildren() > 0)
+					{
+						NodePtr ChildNode(TheNode->getChild(TheNode->getNChildren()-1));
+						Node::Ptr::dcast(container)->addChild(ChildNode);
+						//TheNode->subChild(TheNode->getNChildren()-1);
+					}
+				endEditCP(container);
+				
 			}
 			return true;
 		}

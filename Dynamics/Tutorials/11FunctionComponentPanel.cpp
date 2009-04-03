@@ -120,8 +120,16 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
+		std::string TypeName;
 	
-		std::string TypeName = static_cast<SFString*>(_TheComboBox->getSelectedItem().get())->getValue();
+		try
+		{
+			TypeName = boost::any_cast<std::string>(_TheComboBox->getSelectedItem());
+		}
+		catch(boost::bad_any_cast &e)
+		{
+			throw e;
+		}
 		
         FunctionPtr NewFunction = Function::Ptr::dcast(FieldContainerFactory::the()->createFieldContainer(TypeName.c_str()));
 		

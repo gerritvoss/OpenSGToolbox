@@ -237,7 +237,7 @@ int main(int argc, char **argv)
 	//GeoSurfaceDistribution
 	GeoSurfaceDistribution3DPtr TheGeoSurfaceDistribution3D = GeoSurfaceDistribution3D::create();
     beginEditCP(TheGeoSurfaceDistribution3D);
-      TheGeoSurfaceDistribution3D->setSurface(makeSphereGeo(5.0,4));
+      TheGeoSurfaceDistribution3D->setSurface(makeTorusGeo(0.5,3.0,16,16));
     endEditCP(TheGeoSurfaceDistribution3D);
 	
 	//GeoVolumeDistribution
@@ -248,7 +248,7 @@ int main(int argc, char **argv)
 
     LineDistribution3D::Output0DataType::RawType ReturnValue;
 
-    FunctionPtr TheDistribution = TheGeoVolumeDistribution3D;
+    FunctionPtr TheDistribution = TheGeoSurfaceDistribution3D;
     FunctionPtr TheInternalColorDistribution = TheLineDistribution;
     FunctionPtr TheInternalSizeDistribution = TheLineDistribution2;
 
@@ -304,7 +304,7 @@ int main(int argc, char **argv)
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-    UInt32 NumParticlesToGenerate(2500);
+    UInt32 NumParticlesToGenerate(1000);
 	Color3f ColorReturnValue;
 	Vec3f SizeReturnValue;
 	Pnt3f PositionReturnValue;
