@@ -122,8 +122,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 		virtual void mousePressed(const MouseEvent& e);
 		virtual void mouseMoved(const MouseEvent& e);
 		virtual void mouseDragged(const MouseEvent& e);
-        virtual void keyReleased(const KeyEvent& e);
-		virtual void keyPressed(const KeyEvent& e);
 		
 		//void setResizableComponent(ComponentPtr Component);
 		//void setResizableComponentBounds(Pnt2f TopLeft, Pnt2f BottomRight);
@@ -185,7 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
 	void drawMiniMap(const GraphicsPtr Graphics, const Pnt3f& TopLeft, const Pnt3f BottomRight) const;
     
-    void setupCursor(Pnt2f MouseLocation);
+	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
 	
 	ResizeTab getTabOverLocation(const Pnt2f& Location) const;
 	ComponentPtr getActiveComponent(const Pnt2f& Location) const;
@@ -199,7 +197,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 
     static void initMethod(void);
 	
-	bool _drawComponentResizeSquares;
 	bool _overResizeSquare;
 	ComponentPtr _ResizableComponent;
 	ResizeTab _ActiveResizeTab;

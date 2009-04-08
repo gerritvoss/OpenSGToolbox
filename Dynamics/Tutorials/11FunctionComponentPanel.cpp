@@ -124,7 +124,7 @@ public:
 	
 		try
 		{
-			TypeName = boost::any_cast<std::string>(_TheComboBox->getSelectedItem());
+			TypeName = boost::any_cast<FieldContainerType*>(_TheComboBox->getSelectedItem())->getCName();
 		}
 		catch(boost::bad_any_cast &e)
 		{

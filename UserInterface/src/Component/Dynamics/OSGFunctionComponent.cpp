@@ -532,7 +532,7 @@ void FunctionComponent::updateTabs(void)
                 if(getInputTabComponentGenerator()->getType().isDerivedFrom( FunctionComponentIOTabComponentGenerator::getClassType()))
                 {
                     TabComponent = FunctionComponentIOTabComponentGenerator::Ptr::dcast(getInputTabComponentGenerator())
-                        ->getIOTabComponent(FunctionComponentPtr(this), InputTypes[i],i,false,false,false,false);
+						->getIOTabComponent(FunctionComponentPtr(this), boost::any(InputTypes[i]),i,false,false,false,false);
                 }
                 else
                 {

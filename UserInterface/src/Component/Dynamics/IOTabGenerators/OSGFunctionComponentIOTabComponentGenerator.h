@@ -80,7 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentIOTabComponentGenerator :
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual ComponentPtr getIOTabComponent(FunctionComponentPtr Parent, const FunctionIOType& Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo) = 0;
+	virtual ComponentPtr getIOTabComponent(FunctionComponentPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo) = 0;
 
 	virtual ComponentPtr getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
     /*=========================  PROTECTED  ===============================*/

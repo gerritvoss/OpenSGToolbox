@@ -83,16 +83,16 @@ void FunctionComponentPanel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void FunctionComponentPanel::setupCursor(Pnt2f MouseLocation)
+UInt32 FunctionComponentPanel::queryCursor(const Pnt2f& CursorLoc) const
 {
-    UInt32 Cursor;
-	if(getTabOverLocation(MouseLocation) != TAB_NONE)
+    UInt32 Cursor(WindowEventProducer::CURSOR_POINTER);
+	if(getTabOverLocation(CursorLoc) != TAB_NONE)
 	{
 		Cursor = WindowEventProducer::CURSOR_POINTER;
 	}
 	else
 	{
-		if(_drawComponentResizeSquares)
+		if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyState(KeyEvent::KEY_CONTROL) == KeyEvent::KEY_STATE_DOWN)
 		{
 			Cursor = WindowEventProducer::CURSOR_RESIZE_ALL;
 		}
@@ -102,7 +102,7 @@ void FunctionComponentPanel::setupCursor(Pnt2f MouseLocation)
 		}
 	}
     
-    if(Cursor != getCursor())
+    /*if(Cursor != getCursor())
     {
         beginEditCP(FunctionComponentPanelPtr(this) , CursorFieldMask);
             setCursor(Cursor);
@@ -113,7 +113,9 @@ void FunctionComponentPanel::setupCursor(Pnt2f MouseLocation)
         beginEditCP(_ResizableComponent , CursorFieldMask);
             _ResizableComponent->setCursor(Cursor);
         endEditCP(_ResizableComponent , CursorFieldMask);
-    }
+    }*/
+
+	return Cursor;
 }
 
 Pnt2f FunctionComponentPanel::getParentToLocal(const Pnt2f& Location)
@@ -195,7 +197,8 @@ void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 	
 	setupClipping(Graphics);
 
-	if(_drawComponentResizeSquares)
+	if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyState(KeyEvent::KEY_CONTROL) == KeyEvent::KEY_STATE_DOWN &&
+		_ResizableComponent != NullFC)
 	{
 		Pnt2f ResizableComponentTopLeft, ResizableComponentBottomRight, ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
 		ResizableComponentTopLeft = getZoom() * (_ResizableComponent->getPosition());
@@ -272,7 +275,8 @@ void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f
 
 FunctionComponentPanel::ResizeTab FunctionComponentPanel::getTabOverLocation(const Pnt2f& Location) const
 {
-	if (_drawComponentResizeSquares)
+	if (getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyState(KeyEvent::KEY_CONTROL) == KeyEvent::KEY_STATE_DOWN &&
+		_ResizableComponent != NullFC)
 	{
 		Pnt2f ResizableComponentTopLeft, ResizableComponentBottomRight, ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
 		ResizableComponentTopLeft = getZoom() * (_ResizableComponent->getPosition());
@@ -427,8 +431,7 @@ FunctionComponentPanel::FunctionComponentPanel(void) :
     Inherited(),
         _ComponentMoveListener(FunctionComponentPanelPtr(this)),
         _ComponentPanelMoveListener(FunctionComponentPanelPtr(this)),
-		_ComponentResizeListener(FunctionComponentPanelPtr(this)),
-        _drawComponentResizeSquares(false)
+		_ComponentResizeListener(FunctionComponentPanelPtr(this))
 		//_overResizeSquare(false)
 {
 	
@@ -438,8 +441,7 @@ FunctionComponentPanel::FunctionComponentPanel(const FunctionComponentPanel &sou
     Inherited(source),
         _ComponentMoveListener(FunctionComponentPanelPtr(this)),
 		_ComponentPanelMoveListener(FunctionComponentPanelPtr(this)),
-		_ComponentResizeListener(FunctionComponentPanelPtr(this)),
-        _drawComponentResizeSquares(false)
+		_ComponentResizeListener(FunctionComponentPanelPtr(this))
 		//_overResizeSquare(false)
 {
 
@@ -509,7 +511,8 @@ void FunctionComponentPanel::dump(      UInt32    ,
 
 void FunctionComponentPanel::ComponentPanelMoveListener::mousePressed(const MouseEvent& e)
 {
-	if(_FunctionComponentPanel->_drawComponentResizeSquares && _FunctionComponentPanel->getTabOverLocation(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport())) != TAB_NONE)
+	if(_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyState(KeyEvent::KEY_CONTROL) == KeyEvent::KEY_STATE_DOWN 
+		&& _FunctionComponentPanel->getTabOverLocation(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport())) != TAB_NONE)
 	{
 		for(Int32 i(_FunctionComponentPanel->getChildren().size()-1) ; i>=0 ; --i)
 		{
@@ -586,15 +589,6 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 				_FunctionComponentPanel->_ComponentResizeListener.setActiveComponent(i);
 			}
 			
-			if(isContained)
-			{
-				_FunctionComponentPanel->_drawComponentResizeSquares = true;
-			}
-			else
-			{
-				_FunctionComponentPanel->_drawComponentResizeSquares = false;
-			}
-			
 		}
 	}
 	else
@@ -609,55 +603,16 @@ void FunctionComponentPanel::ComponentPanelMoveListener::mouseMoved(const MouseE
 					_FunctionComponentPanel->_ResizableComponent = _FunctionComponentPanel->getChildren()[i];
 					i = -1;
 				}
-				
-				else
-				{
-					_FunctionComponentPanel->_drawComponentResizeSquares = false;
-				}
 			}
 		}
-		else
-		{
-			_FunctionComponentPanel->_drawComponentResizeSquares = false;
-		}
 	}
-    _FunctionComponentPanel->setupCursor(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()));
+    //_FunctionComponentPanel->setupCursor(ViewportToComponent(e.getLocation(), _FunctionComponentPanel, e.getViewport()));
 	//Inherited::mouseMoved(e);
 }
 
 void FunctionComponentPanel::ComponentPanelMoveListener::mouseDragged(const MouseEvent& e)
 {
 }
-
-void FunctionComponentPanel::ComponentPanelMoveListener::keyReleased(const KeyEvent& e)
-{
-	if(e.getKey() == KeyEvent::KEY_CONTROL)
-	{
-		_FunctionComponentPanel->_drawComponentResizeSquares = false;
-	}
-	if(_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
-	{
-	    _FunctionComponentPanel->setupCursor(_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition());
-	}
-	//Inherited::keyReleased(e);
-}
-
-void FunctionComponentPanel::ComponentPanelMoveListener::keyPressed(const KeyEvent& e)
-{
-	if(e.getKey() == KeyEvent::KEY_CONTROL && _FunctionComponentPanel->_ResizableComponent != NullFC)
-	{
-		_FunctionComponentPanel->_drawComponentResizeSquares = true;
-	}
-	else
-	{
-		_FunctionComponentPanel->_drawComponentResizeSquares = false;
-	}
-    if(_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
-	{
-	    _FunctionComponentPanel->setupCursor(_FunctionComponentPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition());
-	}
-}
-
 
 
 void FunctionComponentPanel::ComponentMoveListener::mouseReleased(const MouseEvent& e)

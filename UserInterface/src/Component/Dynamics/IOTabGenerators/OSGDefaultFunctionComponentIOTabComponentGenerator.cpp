@@ -87,11 +87,23 @@ void DefaultFunctionComponentIOTabComponentGenerator::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-ComponentPtr DefaultFunctionComponentIOTabComponentGenerator::getIOTabComponent(FunctionComponentPtr Parent, const FunctionIOType& Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo)
+ComponentPtr DefaultFunctionComponentIOTabComponentGenerator::getIOTabComponent(FunctionComponentPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus, bool isDragFrom, bool isDragTo)
 {
+	std::string TypeText;
+	std::string ParameterNameText;
+	try
+	{
+		ParameterNameText = boost::any_cast<FunctionIOType>(Value).getParameterName();
+		TypeText = boost::any_cast<FunctionIOType>(Value).getType()->getCName();
+	}
+	catch(boost::bad_any_cast &)
+	{
+		return NullFC;
+	}
+
 	ButtonPtr Button = Button::create();
     beginEditCP(Button, Button::TextFieldMask);
-        Button->setText(Value.getType()->getCName());
+        Button->setText(TypeText);
     endEditCP(Button, Button::TextFieldMask);
 	
 	UIFontPtr ParameterNameFont = osg::UIFont::create();
@@ -104,7 +116,7 @@ ComponentPtr DefaultFunctionComponentIOTabComponentGenerator::getIOTabComponent(
         //ParameterName->setBorders(emptyBorder);
         //ParameterName->setBackgrounds(GreyBackground);
         ParameterName->setFont(ParameterNameFont);
-        ParameterName->setText(Value.getParameterName());
+        ParameterName->setText(ParameterNameText);
         //ParameterName->setPreferredSize(Vec2f(300, 100));
 		ParameterName->setAlignment(Vec2f(0.5,0.5));
 	endEditCP(ParameterName, /*Label::BordersFieldMask | Label::BackgroundsFieldMask |*/ Label::FontFieldMask | Label::TextFieldMask /*| Label::PreferredSizeFieldMask*/ | Label::AlignmentFieldMask);
