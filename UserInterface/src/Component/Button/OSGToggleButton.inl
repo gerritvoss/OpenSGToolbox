@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool ToggleButton::isButtonSelectedListenerAttached(ButtonSelectedListenerPtr Listener) const
+{
+    return _ButtonSelectedListeners.find(Listener) != _ButtonSelectedListeners.end();
+}
+
+inline
 void ToggleButton::setSelectedBorder   ( const BorderPtr &value )
 {
     setActiveBorder(value);
@@ -130,12 +136,6 @@ inline
 const UIDrawObjectCanvasPtr &ToggleButton::getSelectedDrawObject(void) const
 {
     return getActiveDrawObject();
-}
-
-inline
-void ToggleButton::addButtonSelectedListener(ButtonSelectedListenerPtr Listener)
-{
-   _ButtonSelectedListeners.insert(Listener);
 }
 
 inline

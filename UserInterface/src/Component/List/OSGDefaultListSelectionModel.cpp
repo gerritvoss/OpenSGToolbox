@@ -49,6 +49,8 @@
 
 #include "OSGDefaultListSelectionModel.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -70,6 +72,23 @@ A DefaultListSelectionModel.
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection DefaultListSelectionModel::addListSelectionListener(ListSelectionListenerPtr Listener)
+{
+   _ListSelectionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&DefaultListSelectionModel::isListSelectionListenerAttached, this, Listener),
+       boost::bind(&DefaultListSelectionModel::removeListSelectionListener, this, Listener));
+}
+
+void DefaultListSelectionModel::removeListSelectionListener(ListSelectionListenerPtr Listener)
+{
+   ListSelectionListenerSetItor EraseIter(_ListSelectionListeners.find(Listener));
+   if(EraseIter != _ListSelectionListeners.end())
+   {
+      _ListSelectionListeners.erase(EraseIter);
+   }
+}
 
 void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 index1)
 {

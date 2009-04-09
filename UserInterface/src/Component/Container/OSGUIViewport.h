@@ -49,6 +49,8 @@
 #include "Event/OSGChangeListener.h"
 #include <set>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief UIViewport class. See \ref 
@@ -82,7 +84,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewport : public UIViewportBase
     /*! \}                                                                 */
     virtual void updateLayout(void);
 
-	void addChangeListener(ChangeListenerPtr Listener);
+	EventConnection addChangeListener(ChangeListenerPtr Listener);
+	bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
 	void removeChangeListener(ChangeListenerPtr Listener);
     
     Vec2f getCorrectedViewSize(void) const;

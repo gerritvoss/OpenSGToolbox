@@ -56,6 +56,8 @@
 #include <set>
 #include <deque>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief Tree class. See \ref 
@@ -92,7 +94,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 	virtual void keyTyped(const KeyEvent& e);
 	virtual void focusLost(const FocusEvent& e);
 
-    void addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
+    EventConnection addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
+	bool isTreeModelLayoutListenerAttached(TreeModelLayoutListenerPtr Listener) const;
 
     void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
 
@@ -112,13 +115,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     void addSelectionRows(const std::vector<UInt32>& rows);
 
     //Adds a listener for TreeExpansion events.
-    //void addTreeExpansionListener(TreeExpansionListener tel);
+    //EventConnection addTreeExpansionListener(TreeExpansionListener tel);
+	//bool isTreeExpansionListenerAttached(TreeExpansionListener tel) const;
 
     //Adds a listener for TreeSelection events.
-    //void addTreeSelectionListener(TreeSelectionListener tsl);
+    //EventConnection addTreeSelectionListener(TreeSelectionListener tsl);
+	//bool isTreeSelectionListenerAttached(TreeSelectionListener tsl) const;
 
     //Adds a listener for TreeWillExpand events.
-    //void addTreeWillExpandListener(TreeWillExpandListener tel);
+    //EventConnection addTreeWillExpandListener(TreeWillExpandListener tel);
+	//bool isTreeWillExpandListenerAttached(TreeWillExpandListener tel) const;
 
     //Cancels the current editing session.
     void cancelEditing(void);

@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                          OpenSG Toolbox Input                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala                                                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -25,64 +27,60 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCOMMANDMANAGER_H_
-#define _OSGCOMMANDMANAGER_H_
-#ifdef __sgi
-#pragma once
-#endif
-
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
-#include "OSGCommand.h"
-#include "OSGCommandListener.h"
-#include <OpenSG/Input/OSGEventConnection.h>
-#include <set>
-#include "OSGCommandManagerFields.h"
-#include "OSGUndoManager.h"
-
-#include <OpenSG/Input/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING CommandManager : public IntrusivePtrImplBase
+EventConnection::EventConnection(IsConnectedFunctionType isConnectedFunc, DisconnectFunctionType disconnectedFunc) :
+    _isConnectedFunc(isConnectedFunc),
+    _disconnectedFunc(disconnectedFunc)
 {
-    /*==========================  PUBLIC  =================================*/
-
-  public :
-	void executeCommand(CommandPtr TheCommand);
+}
     
-	EventConnection addCommandListener(CommandListenerPtr Listener);
-	bool isCommandListenerAttached(CommandListenerPtr Listener) const;
+EventConnection::EventConnection(void)
+{
+}
 
-    void removeCommandListener(CommandListenerPtr Listener);
-	
-	static CommandManagerPtr create(UndoManagerPtr UndoManager);
-    /*=========================  PROTECTED  ===============================*/
-
-  protected:
-	friend class Command;
+EventConnection::EventConnection(const EventConnection& c) :
+    _isConnectedFunc(c._isConnectedFunc),
+    _disconnectedFunc(c._disconnectedFunc)
+{
+}
     
-	typedef IntrusivePtrImplBase Inherited;
-  
-    CommandManager(UndoManagerPtr UndoManager);
+const EventConnection& EventConnection::operator=(const EventConnection& c)
+{
+    if(&c != this)
+    {
+        _isConnectedFunc = c._isConnectedFunc;
+        _disconnectedFunc = c._disconnectedFunc;
+    }
 
-	CommandManager(const CommandManager& source);
-	
-    void operator =(const CommandManager& source);
-    
-    /*---------------------------------------------------------------------*/
-    virtual ~CommandManager(void);
-    
-	typedef std::set<CommandListenerPtr> CommandListenerSet;
-	
-    CommandListenerSet       _CommandListeners;
-	UndoManagerPtr           _UndoManager;
+    return c;
+}
 
-    void produceCommandExecuted(CommandPtr TheCommand);
-};
+bool EventConnection::isValid(void) const
+{
+    return _isConnectedFunc.empty() || _disconnectedFunc.empty();
+}
+
+bool EventConnection::isConnected(void) const
+{
+    if(_isConnectedFunc.empty())
+    {
+        return false;
+    }
+    else
+    {
+        return _isConnectedFunc();
+    }
+}
+
+void EventConnection::disconnect(void)
+{
+    if(isConnected() && !_disconnectedFunc.empty())
+    {
+        _disconnectedFunc();
+    }
+}
 
 OSG_END_NAMESPACE
-
-#endif /* _OSGCOMMANDMANAGER_H_ */

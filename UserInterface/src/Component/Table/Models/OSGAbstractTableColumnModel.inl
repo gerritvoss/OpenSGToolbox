@@ -42,6 +42,12 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+bool AbstractTableColumnModel::isColumnModelListenerAttached(TableColumnModelListenerPtr l) const
+{
+    return _ModelListeners.find(l) != _ModelListeners.end();
+}
+
 OSG_END_NAMESPACE
 
 #define OSGABSTRACTTABLECOLUMNMODEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

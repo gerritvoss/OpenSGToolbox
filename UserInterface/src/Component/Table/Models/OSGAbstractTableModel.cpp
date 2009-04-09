@@ -50,6 +50,8 @@
 #include "OSGAbstractTableModel.h"
 #include "Component/Table/OSGTableModelEvent.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -89,9 +91,12 @@ void AbstractTableModel::setValueAt(const boost::any& aValue, UInt32 rowIndex, U
     //So do nothing
 }
 
-void AbstractTableModel::addTableModelListener(TableModelListenerPtr l)
+EventConnection AbstractTableModel::addTableModelListener(TableModelListenerPtr l)
 {
    _ModelListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractTableModel::isTableModelListenerAttached, this, l),
+       boost::bind(&AbstractTableModel::removeTableModelListener, this, l));
 }
 
 void AbstractTableModel::removeTableModelListener(TableModelListenerPtr l)

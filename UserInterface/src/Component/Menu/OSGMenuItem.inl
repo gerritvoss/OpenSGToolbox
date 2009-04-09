@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool MenuItem::isActionListenerAttached(ActionListenerPtr Listener) const
+{
+    return _ActionListeners.find(Listener) != _ActionListeners.end();
+}
+
+inline
 MenuItem::MenuItemKeyAcceleratorListener::MenuItemKeyAcceleratorListener(MenuItemPtr TheMenuItem) :
 									_MenuItem(TheMenuItem)
 {
@@ -72,12 +78,6 @@ inline
 bool MenuItem::getDrawAsThoughSelected(void) const
 {
     return _DrawAsThoughSelected;
-}
-
-inline
-void MenuItem::addActionListener(ActionListenerPtr Listener)
-{
-   _ActionListeners.insert(Listener);
 }
 
 OSG_END_NAMESPACE

@@ -43,9 +43,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void DefaultSingleSelectionModel::addSelectionListener(SelectionListenerPtr Listener)
+bool DefaultSingleSelectionModel::isSelectionListenerAttached(SelectionListenerPtr listener) const
 {
-   _SelectionListeners.insert(Listener);
+    return _SelectionListeners.find(listener) != _SelectionListeners.end();
 }
 
 OSG_END_NAMESPACE

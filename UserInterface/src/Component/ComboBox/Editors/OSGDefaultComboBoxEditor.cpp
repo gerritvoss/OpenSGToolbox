@@ -51,6 +51,8 @@
 #include "Component/Text/OSGTextField.h"
 #include <OpenSG/Toolbox/OSGStringUtils.h>
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -78,12 +80,13 @@ void DefaultComboBoxEditor::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DefaultComboBoxEditor::addActionListener(ActionListenerPtr Listener)
+EventConnection DefaultComboBoxEditor::addActionListener(ActionListenerPtr Listener)
 {
 	if(getEditor() != NullFC)
 	{
-		getEditor()->addActionListener(Listener);
+		return getEditor()->addActionListener(Listener);
 	}
+    return EventConnection();
 }
 
 void DefaultComboBoxEditor::removeActionListener(ActionListenerPtr Listener)
@@ -91,6 +94,14 @@ void DefaultComboBoxEditor::removeActionListener(ActionListenerPtr Listener)
 	if(getEditor() != NullFC)
 	{
 		getEditor()->removeActionListener(Listener);
+	}
+}
+
+bool DefaultComboBoxEditor::isActionListenerAttached(ActionListenerPtr Listener) const
+{
+	if(getEditor() != NullFC)
+	{
+		return getEditor()->isActionListenerAttached(Listener);
 	}
 }
 

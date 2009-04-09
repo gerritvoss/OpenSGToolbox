@@ -50,6 +50,7 @@
 #include "OSGCellEditorListener.h"
 #include <boost/any.hpp>
 #include "Component/OSGComponentFields.h"
+#include <OpenSG/Input/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,7 +84,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public CellEditorBase
 
     /*! \}                                                                 */
     //Adds a listener to the list that's notified when the editor stops, or cancels editing.
-    virtual void addCellEditorListener(CellEditorListenerPtr l) = 0;
+    virtual EventConnection addCellEditorListener(CellEditorListenerPtr l) = 0;
+	virtual bool isCellEditorListenerAttached(CellEditorListenerPtr l) const = 0;
 
     //Removes a listener from the list that's notified
     virtual void removeCellEditorListener(CellEditorListenerPtr l) = 0;

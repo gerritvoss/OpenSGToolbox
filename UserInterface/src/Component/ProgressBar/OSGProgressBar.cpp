@@ -52,6 +52,8 @@
 #include "Util/OSGUIDrawUtils.h"
 #include <sstream>
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\

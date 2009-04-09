@@ -48,6 +48,8 @@
 #include "OSGTreeSelectionModel.h"
 #include <set>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief AbstractTreeSelectionModel class. See \ref 
@@ -59,13 +61,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeSelectionModel : public TreeSe
     /*==========================  PUBLIC  =================================*/
   public:
 	//Adds a listener for the TreeSelectionModelEvent posted after the tree changes.
-	virtual void addTreeSelectionListener(TreeSelectionListenerPtr l);
+	virtual EventConnection addTreeSelectionListener(TreeSelectionListenerPtr l);
+	virtual bool isTreeSelectionListenerAttached(TreeSelectionListenerPtr l) const;
 
 	//Removes a listener previously added with addTreeSelectionListener.
 	virtual void removeTreeSelectionListener(TreeSelectionListenerPtr l);
 	
 	//Adds a ChangeListener to the listener list.
-	virtual void addChangeListener(ChangeListenerPtr listener);
+	virtual EventConnection addChangeListener(ChangeListenerPtr listener);
+	virtual bool isChangeListenerAttached(ChangeListenerPtr listener) const;
 	
 	//Removes a ChangeListener from the listener list.
 	virtual void removeChangeListener(ChangeListenerPtr listener);

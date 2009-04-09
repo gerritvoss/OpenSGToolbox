@@ -54,6 +54,8 @@
 
 #include "Graphics/UIDrawObjects/OSGTexturedQuadUIDrawObject.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -147,6 +149,22 @@ UIDrawObjectCanvasPtr Button::createTexturedDrawObjectCanvas(TextureChunkPtr The
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+EventConnection Button::addActionListener(ActionListenerPtr Listener)
+{
+   _ActionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Button::isActionListenerAttached, this, Listener),
+       boost::bind(&Button::removeActionListener, this, Listener));
+}
+
+EventConnection Button::addMousePressedActionListener(ActionListenerPtr Listener)
+{
+   _MousePressedActionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Button::isMousePressedActionListenerAttached, this, Listener),
+       boost::bind(&Button::removeMousePressedActionListener, this, Listener));
+}
 
 Vec2f Button::getContentRequestedSize(void) const
 {

@@ -50,6 +50,8 @@
 #include "Models/SelectionModels/OSGSelectionListener.h"
 #include "Event/OSGPopupMenuListener.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief PopupMenu class. See \ref 
@@ -101,7 +103,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     virtual void mouseMoved(const MouseEvent& e);
     virtual void mouseDragged(const MouseEvent& e);
     
-    void addPopupMenuListener(PopupMenuListenerPtr Listener);
+    EventConnection addPopupMenuListener(PopupMenuListenerPtr Listener);
+	bool isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const;
     void removePopupMenuListener(PopupMenuListenerPtr Listener);
 
     void cancel(void);

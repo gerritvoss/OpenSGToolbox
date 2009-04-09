@@ -1984,6 +1984,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Component\Spinner\OSGSpinnerModel.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Spinner\OSGSpinnerModel.h"
 						>
 					</File>

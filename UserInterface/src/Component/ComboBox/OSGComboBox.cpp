@@ -58,6 +58,8 @@
 #include "Util/OSGUIDrawUtils.h"
 #include <OpenSG/Toolbox/OSGStringUtils.h>
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -84,6 +86,19 @@ void ComboBox::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection ComboBox::addPopupMenuListener(PopupMenuListenerPtr Listener)
+{
+	return getComboListPopupMenu()->addPopupMenuListener(Listener);
+}
+
+EventConnection ComboBox::addActionListener(ActionListenerPtr Listener)
+{
+   _ActionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&ComboBox::isActionListenerAttached, this, Listener),
+       boost::bind(&ComboBox::removeActionListener, this, Listener));
+}
 
 void ComboBox::updateLayout(void)
 {

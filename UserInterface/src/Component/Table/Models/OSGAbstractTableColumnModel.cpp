@@ -50,6 +50,8 @@
 #include "OSGAbstractTableColumnModel.h"
 #include "Component/Table/OSGTableColumnModelEvent.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -77,9 +79,12 @@ void AbstractTableColumnModel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbstractTableColumnModel::addColumnModelListener(TableColumnModelListenerPtr l)
+EventConnection AbstractTableColumnModel::addColumnModelListener(TableColumnModelListenerPtr l)
 {
    _ModelListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractTableColumnModel::isColumnModelListenerAttached, this, l),
+       boost::bind(&AbstractTableColumnModel::removeColumnModelListener, this, l));
 }
 
 void AbstractTableColumnModel::removeColumnModelListener(TableColumnModelListenerPtr l)

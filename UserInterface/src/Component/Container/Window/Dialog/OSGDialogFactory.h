@@ -45,6 +45,8 @@
 #include <deque>
 #include <map>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING DialogFactory
@@ -80,7 +82,8 @@ public:
     
     static ContainerPtr createOptionPanel(const std::string& Message, const std::vector<std::string>& OptionButtonsText);
 
-	static void addButtonActionListener(const ActionListener& Listener, const int index);
+	static EventConnection addButtonActionListener(const ActionListener& Listener, const int index);
+	static bool isButtonActionListenerAttached(const ActionListener& Listener, const int index);
 	
 	DialogWindowPtr createColorDialog(const std::string& Title, const Color4f& TheColor, const std::string& HistoryName);
 

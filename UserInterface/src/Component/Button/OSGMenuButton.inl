@@ -42,17 +42,22 @@
 
 OSG_BEGIN_NAMESPACE
 
-
 inline
-void MenuButton::addMenuActionListener(ActionListenerPtr Listener)
+bool MenuButton::isMenuActionListenerAttached(ActionListenerPtr Listener) const
 {
-   _MenuActionListeners.insert(Listener);
+    return _MenuActionListeners.find(Listener) != _MenuActionListeners.end();
 }
 
 inline
-void MenuButton::addPopupMenuListener(PopupMenuListenerPtr Listener)
+bool MenuButton::isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const
 {
-	getMenuButtonPopupMenu()->addPopupMenuListener(Listener);
+    return getMenuButtonPopupMenu()->isPopupMenuListenerAttached(Listener);
+}
+
+inline
+EventConnection MenuButton::addPopupMenuListener(PopupMenuListenerPtr Listener)
+{
+	return getMenuButtonPopupMenu()->addPopupMenuListener(Listener);
 }
 
 inline

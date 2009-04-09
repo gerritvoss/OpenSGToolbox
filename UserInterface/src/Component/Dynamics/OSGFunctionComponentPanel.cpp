@@ -83,39 +83,25 @@ void FunctionComponentPanel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+bool FunctionComponentPanel::shouldDrawResizeTabs(void) const
+{
+	return (getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL
+		);
+}
+
 UInt32 FunctionComponentPanel::queryCursor(const Pnt2f& CursorLoc) const
 {
-    UInt32 Cursor(WindowEventProducer::CURSOR_POINTER);
-	if(getTabOverLocation(CursorLoc) != TAB_NONE)
-	{
-		Cursor = WindowEventProducer::CURSOR_POINTER;
-	}
-	else
-	{
-		if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyState(KeyEvent::KEY_CONTROL) == KeyEvent::KEY_STATE_DOWN)
-		{
-			Cursor = WindowEventProducer::CURSOR_RESIZE_ALL;
-		}
-		else
-		{
-			Cursor = WindowEventProducer::CURSOR_POINTER;
-		}
-	}
-    
-    /*if(Cursor != getCursor())
-    {
-        beginEditCP(FunctionComponentPanelPtr(this) , CursorFieldMask);
-            setCursor(Cursor);
-        endEditCP(FunctionComponentPanelPtr(this) , CursorFieldMask);
-    }
-    if(_ResizableComponent != NullFC && Cursor != _ResizableComponent->getCursor())
+    if(_ResizableComponent != NullFC && shouldDrawResizeTabs())
     {
         beginEditCP(_ResizableComponent , CursorFieldMask);
-            _ResizableComponent->setCursor(Cursor);
+			_ResizableComponent->setCursor(WindowEventProducer::CURSOR_RESIZE_ALL);
         endEditCP(_ResizableComponent , CursorFieldMask);
-    }*/
+    }
 
-	return Cursor;
+	return Inherited::queryCursor(CursorLoc);
 }
 
 Pnt2f FunctionComponentPanel::getParentToLocal(const Pnt2f& Location)
@@ -197,29 +183,34 @@ void FunctionComponentPanel::drawInternal(const GraphicsPtr Graphics) const
 	
 	setupClipping(Graphics);
 
-	if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyState(KeyEvent::KEY_CONTROL) == KeyEvent::KEY_STATE_DOWN &&
-		_ResizableComponent != NullFC)
+	if(shouldDrawResizeTabs())
 	{
 		Pnt2f ResizableComponentTopLeft, ResizableComponentBottomRight, ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;
-		ResizableComponentTopLeft = getZoom() * (_ResizableComponent->getPosition());
-		ResizableComponentBottomRight = ResizableComponentTopLeft + getZoom() * (_ResizableComponent->getSize());
-		ResizableComponentTopRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), 0.0f));
-		ResizableComponentBottomLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
-		ResizableComponentTop = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, 0.0f));
-		ResizableComponentBottom = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
-		ResizableComponentLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
-		ResizableComponentRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
 		
-		Vec2f TabSize = getResizeTabsSize() * getZoom();
-		
-		Graphics->drawRect(ResizableComponentTopLeft - TabSize, ResizableComponentTopLeft + TabSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentBottomRight - TabSize, ResizableComponentBottomRight + TabSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentTopRight - TabSize, ResizableComponentTopRight + TabSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentBottomLeft - TabSize, ResizableComponentBottomLeft + TabSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentTop - TabSize, ResizableComponentTop + TabSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentBottom - TabSize, ResizableComponentBottom + TabSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentLeft - TabSize, ResizableComponentLeft + TabSize, getResizeTabsColor(), 1.0);
-		Graphics->drawRect(ResizableComponentRight - TabSize, ResizableComponentRight + TabSize, getResizeTabsColor(), 1.0);
+		ComponentPtr Child(NullFC);
+		for(UInt32 i(0) ; i<getChildren().size(); ++i)
+		{
+			Child = getChildren()[i];
+			ResizableComponentTopLeft = getZoom() * (Child->getPosition());
+			ResizableComponentBottomRight = ResizableComponentTopLeft + getZoom() * (Child->getSize());
+			ResizableComponentTopRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), 0.0f));
+			ResizableComponentBottomLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+			ResizableComponentTop = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, 0.0f));
+			ResizableComponentBottom = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()) / 2, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y())));
+			ResizableComponentLeft = ResizableComponentTopLeft + (Pnt2f(0.0f, (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
+			ResizableComponentRight = ResizableComponentTopLeft + (Pnt2f((ResizableComponentBottomRight.x() - ResizableComponentTopLeft.x()), (ResizableComponentBottomRight.y() - ResizableComponentTopLeft.y()) / 2));
+			
+			Vec2f TabSize = getResizeTabsSize() * getZoom();
+			
+			Graphics->drawRect(ResizableComponentTopLeft - TabSize, ResizableComponentTopLeft + TabSize, getResizeTabsColor(), 1.0);
+			Graphics->drawRect(ResizableComponentBottomRight - TabSize, ResizableComponentBottomRight + TabSize, getResizeTabsColor(), 1.0);
+			Graphics->drawRect(ResizableComponentTopRight - TabSize, ResizableComponentTopRight + TabSize, getResizeTabsColor(), 1.0);
+			Graphics->drawRect(ResizableComponentBottomLeft - TabSize, ResizableComponentBottomLeft + TabSize, getResizeTabsColor(), 1.0);
+			Graphics->drawRect(ResizableComponentTop - TabSize, ResizableComponentTop + TabSize, getResizeTabsColor(), 1.0);
+			Graphics->drawRect(ResizableComponentBottom - TabSize, ResizableComponentBottom + TabSize, getResizeTabsColor(), 1.0);
+			Graphics->drawRect(ResizableComponentLeft - TabSize, ResizableComponentLeft + TabSize, getResizeTabsColor(), 1.0);
+			Graphics->drawRect(ResizableComponentRight - TabSize, ResizableComponentRight + TabSize, getResizeTabsColor(), 1.0);
+		}
 	}
 }
 
@@ -275,7 +266,7 @@ void FunctionComponentPanel::drawMiniMap(const GraphicsPtr Graphics, const Pnt3f
 
 FunctionComponentPanel::ResizeTab FunctionComponentPanel::getTabOverLocation(const Pnt2f& Location) const
 {
-	if (getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyState(KeyEvent::KEY_CONTROL) == KeyEvent::KEY_STATE_DOWN &&
+	if (shouldDrawResizeTabs() &&
 		_ResizableComponent != NullFC)
 	{
 		Pnt2f ResizableComponentTopLeft, ResizableComponentBottomRight, ResizableComponentTopRight, ResizableComponentBottomLeft, ResizableComponentTop, ResizableComponentBottom, ResizableComponentLeft, ResizableComponentRight;

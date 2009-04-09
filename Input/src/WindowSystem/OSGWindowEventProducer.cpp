@@ -49,6 +49,7 @@
 //#include <OpenSG/OSGThreadManager.h>
 
 #include "OSGWindowEventProducer.h"
+#include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -147,6 +148,107 @@ void WindowEventProducer::setReshapeCallback(ReshapeCallbackFunc Callback)
    _ReshapeCallbackFunc = Callback;
 }
 
+EventConnection WindowEventProducer::addUpdateListener(UpdateListenerPtr Listener)
+{
+   _UpdateListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&WindowEventProducer::isUpdateListenerAttached, this, Listener),
+       boost::bind(&WindowEventProducer::removeUpdateListener, this, Listener));
+}
+
+EventConnection WindowEventProducer::addMouseListener(MouseListenerPtr Listener)
+{
+   _MouseListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&WindowEventProducer::isMouseListenerAttached, this, Listener),
+       boost::bind(&WindowEventProducer::removeMouseListener, this, Listener));
+}
+
+EventConnection WindowEventProducer::addMouseMotionListener(MouseMotionListenerPtr Listener)
+{
+   _MouseMotionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&WindowEventProducer::isMouseMotionListenerAttached, this, Listener),
+       boost::bind(&WindowEventProducer::removeMouseMotionListener, this, Listener));
+}
+
+EventConnection WindowEventProducer::addMouseWheelListener(MouseWheelListenerPtr Listener)
+{
+   _MouseWheelListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&WindowEventProducer::isMouseWheelListenerAttached, this, Listener),
+       boost::bind(&WindowEventProducer::removeMouseWheelListener, this, Listener));
+}
+
+EventConnection WindowEventProducer::addKeyListener(KeyListenerPtr Listener)
+{
+   _KeyListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&WindowEventProducer::isKeyListenerAttached, this, Listener),
+       boost::bind(&WindowEventProducer::removeKeyListener, this, Listener));
+}
+
+EventConnection WindowEventProducer::addWindowListener(WindowListenerPtr Listener)
+{
+   _WindowListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&WindowEventProducer::isWindowListenerAttached, this, Listener),
+       boost::bind(&WindowEventProducer::removeWindowListener, this, Listener));
+}
+
+void WindowEventProducer::removeMouseListener(MouseListenerPtr Listener)
+{
+   MouseListenerSetItor EraseIter(_MouseListeners.find(Listener));
+   if(EraseIter != _MouseListeners.end())
+   {
+      _MouseListeners.erase(EraseIter);
+   }
+}
+
+void WindowEventProducer::removeUpdateListener(UpdateListenerPtr Listener)
+{
+   UpdateListenerSetItor EraseIter(_UpdateListeners.find(Listener));
+   if(EraseIter != _UpdateListeners.end())
+   {
+      _UpdateListeners.erase(EraseIter);
+   }
+}
+
+void WindowEventProducer::removeMouseMotionListener(MouseMotionListenerPtr Listener)
+{
+   MouseMotionListenerSetItor EraseIter(_MouseMotionListeners.find(Listener));
+   if(EraseIter != _MouseMotionListeners.end())
+   {
+      _MouseMotionListeners.erase(EraseIter);
+   }
+}
+
+void WindowEventProducer::removeMouseWheelListener(MouseWheelListenerPtr Listener)
+{
+   MouseWheelListenerSetItor EraseIter(_MouseWheelListeners.find(Listener));
+   if(EraseIter != _MouseWheelListeners.end())
+   {
+      _MouseWheelListeners.erase(EraseIter);
+   }
+}
+
+void WindowEventProducer::removeKeyListener(KeyListenerPtr Listener)
+{
+   KeyListenerSetItor EraseIter(_KeyListeners.find(Listener));
+   if(EraseIter != _KeyListeners.end())
+   {
+      _KeyListeners.erase(EraseIter);
+   }
+}
+
+void WindowEventProducer::removeWindowListener(WindowListenerPtr Listener)
+{
+   WindowListenerSetItor EraseIter(_WindowListeners.find(Listener));
+   if(EraseIter != _WindowListeners.end())
+   {
+      _WindowListeners.erase(EraseIter);
+   }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool UndoManager::isChangeListenerAttached(ChangeListenerPtr l) const
+{
+    return _ChangeListeners.find(l) != _ChangeListeners.end();
+}
+
+inline
 Int32 UndoManager::getLimit(void) const
 {
 	return _Limit;

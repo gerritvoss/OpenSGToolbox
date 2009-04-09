@@ -53,6 +53,8 @@
 #include "LookAndFeel/OSGLookAndFeelManager.h"
 #include "Component/Menu/OSGMenu.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -78,6 +80,14 @@ void MenuItem::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection MenuItem::addActionListener(ActionListenerPtr Listener)
+{
+   _ActionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&MenuItem::isActionListenerAttached, this, Listener),
+       boost::bind(&MenuItem::removeActionListener, this, Listener));
+}
 
 void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight) const
 {

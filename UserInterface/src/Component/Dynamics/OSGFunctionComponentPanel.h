@@ -187,6 +187,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FunctionComponentPanel : public FunctionCo
 	
 	ResizeTab getTabOverLocation(const Pnt2f& Location) const;
 	ComponentPtr getActiveComponent(const Pnt2f& Location) const;
+
+	bool shouldDrawResizeTabs(void) const;
 	
 	
     /*==========================  PRIVATE  ================================*/

@@ -46,6 +46,8 @@
 
 #include "OSGAbstractTableColumnModelBase.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief AbstractTableColumnModel class. See \ref 
@@ -78,7 +80,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableColumnModel : public Abstract
 
     /*! \}                                                                 */
     //Adds a listener for table column model events.
-    virtual void addColumnModelListener(TableColumnModelListenerPtr l);
+    virtual EventConnection addColumnModelListener(TableColumnModelListenerPtr l);
+	virtual bool isColumnModelListenerAttached(TableColumnModelListenerPtr l) const;
 
     //Removes a listener for table column model events.
     virtual void removeColumnModelListener(TableColumnModelListenerPtr l);

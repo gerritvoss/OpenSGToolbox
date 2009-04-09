@@ -42,6 +42,12 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+bool AbstractCellEditor::isCellEditorListenerAttached(CellEditorListenerPtr l) const
+{
+    return _CellEditorListeners.find(l) != _CellEditorListeners.end();
+}
+
 OSG_END_NAMESPACE
 
 #define OSGABSTRACTCELLEDITOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

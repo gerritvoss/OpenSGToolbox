@@ -42,12 +42,18 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+bool DialogWindow::isDialogListenerAttached(DialogListenerPtr Listener) const
+{
+    return _DialogListeners.find(Listener) != _DialogListeners.end();
+}
 
 inline
-void DialogWindow::addDialogListener(DialogListenerPtr Listener)
+bool DialogWindow::isEventListenerAttached(EventListenerPtr Listener) const
 {
-   _DialogListeners.insert(Listener);
+    return _EventListeners.find(Listener) != _EventListeners.end();
 }
+
 
 OSG_END_NAMESPACE
 

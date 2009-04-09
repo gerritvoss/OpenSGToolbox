@@ -56,6 +56,8 @@
 #include "Component/Text/OSGLabel.h"
 #include <sstream>
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -82,6 +84,11 @@ void Slider::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection Slider::addChangeListener(ChangeListenerPtr l)
+{
+	return _Model->addChangeListener(l);
+}
 
 void Slider::drawInternal(const GraphicsPtr TheGraphics) const
 {

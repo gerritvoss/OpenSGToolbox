@@ -60,8 +60,10 @@
 
 #include "Component/Misc/OSGRotatedComponent.h"
 
-
 #include "Component/Container/OSGUIViewport.h"
+
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -106,6 +108,108 @@ void Component::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection Component::addKeyListener(KeyListenerPtr Listener)
+{
+   _KeyListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Component::isKeyListenerAttached, this, Listener),
+       boost::bind(&Component::removeKeyListener, this, Listener));
+}
+
+void Component::removeKeyListener(KeyListenerPtr Listener)
+{
+   KeyListenerSetItor EraseIter(_KeyListeners.find(Listener));
+   if(EraseIter != _KeyListeners.end())
+   {
+      _KeyListeners.erase(EraseIter);
+   }
+}
+
+EventConnection Component::addMouseListener(MouseListenerPtr Listener)
+{
+   _MouseListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Component::isMouseListenerAttached, this, Listener),
+       boost::bind(&Component::removeMouseListener, this, Listener));
+}
+
+void Component::removeMouseListener(MouseListenerPtr Listener)
+{
+   MouseListenerSetItor EraseIter(_MouseListeners.find(Listener));
+   if(EraseIter != _MouseListeners.end())
+   {
+      _MouseListeners.erase(EraseIter);
+   }
+}
+
+EventConnection Component::addMouseWheelListener(MouseWheelListenerPtr Listener)
+{
+   _MouseWheelListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Component::isMouseWheelListenerAttached, this, Listener),
+       boost::bind(&Component::removeMouseWheelListener, this, Listener));
+}
+
+void Component::removeMouseWheelListener(MouseWheelListenerPtr Listener)
+{
+   MouseWheelListenerSetItor EraseIter(_MouseWheelListeners.find(Listener));
+   if(EraseIter != _MouseWheelListeners.end())
+   {
+      _MouseWheelListeners.erase(EraseIter);
+   }
+}
+
+EventConnection Component::addMouseMotionListener(MouseMotionListenerPtr Listener)
+{
+   _MouseMotionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Component::isMouseMotionListenerAttached, this, Listener),
+       boost::bind(&Component::removeMouseMotionListener, this, Listener));
+}
+
+void Component::removeMouseMotionListener(MouseMotionListenerPtr Listener)
+{
+   MouseMotionListenerSetItor EraseIter(_MouseMotionListeners.find(Listener));
+   if(EraseIter != _MouseMotionListeners.end())
+   {
+      _MouseMotionListeners.erase(EraseIter);
+   }
+}
+
+EventConnection Component::addFocusListener(FocusListenerPtr Listener)
+{
+   _FocusListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Component::isFocusListenerAttached, this, Listener),
+       boost::bind(&Component::removeFocusListener, this, Listener));
+}
+
+void Component::removeFocusListener(FocusListenerPtr Listener)
+{
+   FocusListenerSetItor EraseIter(_FocusListeners.find(Listener));
+   if(EraseIter != _FocusListeners.end())
+   {
+      _FocusListeners.erase(EraseIter);
+   }
+}
+
+EventConnection Component::addComponentListener(ComponentListener* Listener)
+{
+   _ComponentListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Component::isComponentListenerAttached, this, Listener),
+       boost::bind(&Component::removeComponentListener, this, Listener));
+}
+
+void Component::removeComponentListener(ComponentListener* Listener)
+{
+   ComponentListenerSetItor EraseIter(_ComponentListeners.find(Listener));
+   if(EraseIter != _ComponentListeners.end())
+   {
+      _ComponentListeners.erase(EraseIter);
+   }
+}
 
 Pnt2f Component::getClipTopLeft(void) const
 {
@@ -522,7 +626,7 @@ void Component::mousePressed(const MouseEvent& e)
 	    beginEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	       getPopupMenu()->setInvoker(ComponentPtr(this));
 	       getPopupMenu()->setVisible(true);
-	       getPopupMenu()->setPosition(e.getLocation());
+	       getPopupMenu()->setPosition(ViewportToComponent(e.getLocation(),getParentWindow(),e.getViewport()));
 	    endEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	    
         beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);

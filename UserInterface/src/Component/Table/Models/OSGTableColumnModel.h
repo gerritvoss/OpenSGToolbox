@@ -51,6 +51,8 @@
 #include "Component/Table/OSGTableColumn.h"
 #include "Component/List/OSGListSelectionModel.h"
 #include "Component/Table/OSGTableColumnModelListener.h"
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TableColumnModel class. See \ref 
@@ -83,7 +85,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel : public TableColumnModel
 
     /*! \}                                                                 */
     //Adds a listener for table column model events.
-    virtual void addColumnModelListener(TableColumnModelListenerPtr l) = 0;
+    virtual EventConnection addColumnModelListener(TableColumnModelListenerPtr l) = 0;
+	virtual bool isColumnModelListenerAttached(TableColumnModelListenerPtr l) const = 0;
 
     //Removes a listener for table column model events.
     virtual void removeColumnModelListener(TableColumnModelListenerPtr l) = 0;

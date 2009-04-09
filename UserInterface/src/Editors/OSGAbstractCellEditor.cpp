@@ -49,6 +49,8 @@
 
 #include "OSGAbstractCellEditor.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -97,9 +99,12 @@ bool AbstractCellEditor::stopCellEditing(void)
     return true;
 }
 
-void AbstractCellEditor::addCellEditorListener(CellEditorListenerPtr l)
+EventConnection AbstractCellEditor::addCellEditorListener(CellEditorListenerPtr l)
 {
    _CellEditorListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractCellEditor::isCellEditorListenerAttached, this, l),
+       boost::bind(&AbstractCellEditor::removeCellEditorListener, this, l));
 }
 
 void AbstractCellEditor::removeCellEditorListener(CellEditorListenerPtr l)

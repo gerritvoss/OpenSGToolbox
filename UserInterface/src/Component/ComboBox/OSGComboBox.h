@@ -55,6 +55,8 @@
 #include "OSGComboBoxSelectionListener.h"
 #include <boost/any.hpp>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief ComboBox class. See \ref 
@@ -105,13 +107,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
     virtual void selectionChanged(const ComboBoxSelectionEvent& e);
 
 	//Adds an ItemListener.
-	//void addItemListener(ItemListenerPtr aListener);
+	//EventConnection addItemListener(ItemListenerPtr aListener);
+	//bool isItemListenerAttached(ItemListenerPtr aListener) const;
 
 	//Adds a PopupMenu listener which will listen to notification messages from the popup portion of the combo box.
-	void addPopupMenuListener(PopupMenuListenerPtr Listener);
+	EventConnection addPopupMenuListener(PopupMenuListenerPtr Listener);
+	bool isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const;
 
 	//Adds an ActionListener.
-	void addActionListener(ActionListenerPtr Listener);
+	EventConnection addActionListener(ActionListenerPtr Listener);
+	bool isActionListenerAttached(ActionListenerPtr Listener) const;
 
 	//Removes an ActionListener.
 	void removeActionListener(ActionListenerPtr Listener);

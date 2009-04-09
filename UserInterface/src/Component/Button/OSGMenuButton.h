@@ -53,6 +53,8 @@
 #include <set>
 #include <boost/any.hpp>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief MenuButton class. See \ref 
@@ -85,13 +87,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
 
     /*! \}                                                                 */
 	//Adds a PopupMenu listener which will listen to notification messages from the popup portion of the combo box.
-	void addPopupMenuListener(PopupMenuListenerPtr Listener);
+	EventConnection addPopupMenuListener(PopupMenuListenerPtr Listener);
+	bool isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const;
     
 
 	//Removes a PopupMenuListener.
 	void removePopupMenuListener(PopupMenuListenerPtr Listener);
 
-    void addMenuActionListener(ActionListenerPtr Listener);
+    EventConnection addMenuActionListener(ActionListenerPtr Listener);
+	bool isMenuActionListenerAttached(ActionListenerPtr Listener) const;
     void removeMenuActionListener(ActionListenerPtr Listener);
     
 	//Determines the visibility of the popup.

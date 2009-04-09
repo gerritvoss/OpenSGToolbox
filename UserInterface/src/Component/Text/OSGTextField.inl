@@ -43,9 +43,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void TextField::addActionListener(ActionListenerPtr Listener)
+bool TextField::isActionListenerAttached(ActionListenerPtr Listener) const
 {
-   _ActionListeners.insert(Listener);
+    return _ActionListeners.find(Listener) != _ActionListeners.end();
 }
 
 inline

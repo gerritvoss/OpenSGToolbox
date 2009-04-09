@@ -51,6 +51,8 @@
 #include <set>
 #include <OpenSG/Input/OSGUpdateListener.h>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief ProgressBar class. See \ref 
@@ -85,7 +87,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
     /*! \}                                                                 */
 
 	//Adds the specified ChangeListener to the progress bar.
-	void addChangeListener(ChangeListenerPtr Listener);
+	EventConnection addChangeListener(ChangeListenerPtr Listener);
+	bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
 
 	//Removes a ChangeListener from the progress bar.
 	void removeChangeListener(ChangeListenerPtr Listener);

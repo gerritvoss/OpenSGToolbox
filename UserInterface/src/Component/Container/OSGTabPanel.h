@@ -48,6 +48,8 @@
 #include "Event/OSGFocusListener.h"
 #include "Models/SelectionModels/OSGSingleSelectionModel.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TabPanel class. See \ref 
@@ -101,7 +103,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
     void setSelectedIndex(const Int32& Index);
 
     //Adds listener as a listener to changes in the model.
-    void addSelectionListener(SelectionListenerPtr listener);
+    EventConnection addSelectionListener(SelectionListenerPtr listener);
+	bool isSelectionListenerAttached(SelectionListenerPtr listener) const;
     //Removes listener as a listener to changes in the model.
     void removeSelectionListener(SelectionListenerPtr listener);
     /*=========================  PROTECTED  ===============================*/

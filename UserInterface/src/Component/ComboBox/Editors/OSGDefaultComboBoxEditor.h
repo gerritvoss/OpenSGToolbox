@@ -48,6 +48,8 @@
 #include "OSGDefaultComboBoxEditorBase.h"
 #include "Event/OSGFocusListener.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief DefaultComboBoxEditor class. See \ref 
@@ -80,7 +82,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComb
 
     /*! \}                                                                 */
 	//Add an ActionListener.
-	virtual void addActionListener(ActionListenerPtr Listener);
+	virtual EventConnection addActionListener(ActionListenerPtr Listener);
+	virtual bool isActionListenerAttached(ActionListenerPtr Listener) const;
 
 	//Remove an ActionListener
 	virtual void removeActionListener(ActionListenerPtr Listener);

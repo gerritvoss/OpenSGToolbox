@@ -44,11 +44,16 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+EventConnection Tree::addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener)
+{
+	return getModelLayout()->addTreeModelLayoutListener(Listener);
+}
 
 inline
-void Tree::addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener)
+bool Tree::isTreeModelLayoutListenerAttached(TreeModelLayoutListenerPtr Listener) const
 {
-	getModelLayout()->addTreeModelLayoutListener(Listener);
+    return getModelLayout()->isTreeModelLayoutListenerAttached(Listener);
 }
 
 inline

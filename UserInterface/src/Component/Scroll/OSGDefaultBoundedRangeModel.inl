@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool DefaultBoundedRangeModel::isChangeListenerAttached(ChangeListenerPtr Listener) const
+{
+    return _ChangeListeners.find(Listener) != _ChangeListeners.end();
+}
+
+inline
 UInt32 DefaultBoundedRangeModel::getExtent(void) const
 {
     return _Extent;
@@ -70,12 +76,6 @@ inline
 bool DefaultBoundedRangeModel::getValueIsAdjusting(void) const
 {
     return _ValueIsAdjusting;
-}
-
-inline
-void DefaultBoundedRangeModel::addChangeListener(ChangeListenerPtr Listener)
-{
-   _ChangeListeners.insert(Listener);
 }
 
 inline

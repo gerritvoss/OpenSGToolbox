@@ -53,6 +53,8 @@
 #include "Component/List/Models/OSGListModel.h"
 #include "Util/OSGUIDrawUtils.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -79,6 +81,14 @@ void MenuButton::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection MenuButton::addMenuActionListener(ActionListenerPtr Listener)
+{
+   _MenuActionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&MenuButton::isMenuActionListenerAttached, this, Listener),
+       boost::bind(&MenuButton::removeMenuActionListener, this, Listener));
+}
 
 void MenuButton::hidePopup(void)
 {

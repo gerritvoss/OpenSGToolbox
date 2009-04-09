@@ -33,6 +33,8 @@
 #include "OSGCommandManager.h"
 #include "OSGUndoableCommand.h"
 
+#include <boost/bind.hpp>
+
 OSG_USING_NAMESPACE
 
 void CommandManager::produceCommandExecuted(CommandPtr TheCommand)
@@ -51,11 +53,19 @@ void CommandManager::produceCommandExecuted(CommandPtr TheCommand)
 	}
 }
 
-void CommandManager::addCommandListener(CommandListenerPtr Listener)
+EventConnection CommandManager::addCommandListener(CommandListenerPtr Listener)
 {
    _CommandListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&CommandManager::isCommandListenerAttached, this, Listener),
+       boost::bind(&CommandManager::removeCommandListener, this, Listener));
 }
 
+
+bool CommandManager::isCommandListenerAttached(CommandListenerPtr Listener) const
+{
+    return _CommandListeners.find(Listener) != _CommandListeners.end();
+}
 
 void CommandManager::removeCommandListener(CommandListenerPtr Listener)
 {

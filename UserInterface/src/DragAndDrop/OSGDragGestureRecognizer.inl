@@ -31,9 +31,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void DragGestureRecognizer::addDragGestureListener(DragGestureListenerPtr Listener)
+bool DragGestureRecognizer::isDragGestureListenerAttached(DragGestureListenerPtr Listener) const
 {
-    _DragGestureListeners.insert(dgl);
+    return _DragGestureListeners.find(Listener) != _DragGestureListeners.end();
 }
 
 OSG_END_NAMESPACE

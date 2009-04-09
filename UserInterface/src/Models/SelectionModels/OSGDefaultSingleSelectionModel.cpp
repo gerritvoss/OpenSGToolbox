@@ -49,6 +49,8 @@
 
 #include "OSGDefaultSingleSelectionModel.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -75,6 +77,14 @@ void DefaultSingleSelectionModel::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection DefaultSingleSelectionModel::addSelectionListener(SelectionListenerPtr listener)
+{
+   _SelectionListeners.insert(listener);
+   return EventConnection(
+       boost::bind(&DefaultSingleSelectionModel::isSelectionListenerAttached, this, listener),
+       boost::bind(&DefaultSingleSelectionModel::removeSelectionListener, this, listener));
+}
 
 void DefaultSingleSelectionModel::removeSelectionListener(SelectionListenerPtr Listener)
 {

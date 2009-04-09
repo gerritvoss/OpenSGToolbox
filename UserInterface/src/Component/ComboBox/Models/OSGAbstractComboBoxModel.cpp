@@ -50,6 +50,8 @@
 #include "OSGAbstractComboBoxModel.h"
 #include "Component/List/OSGListDataListener.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -77,9 +79,12 @@ void AbstractComboBoxModel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbstractComboBoxModel::addListDataListener(ListDataListenerPtr l)
+EventConnection AbstractComboBoxModel::addListDataListener(ListDataListenerPtr l)
 {
     _DataListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractComboBoxModel::isListDataListenerAttached, this, l),
+       boost::bind(&AbstractComboBoxModel::removeListDataListener, this, l));
 }
 
 void AbstractComboBoxModel::removeListDataListener(ListDataListenerPtr l)
@@ -121,9 +126,12 @@ void AbstractComboBoxModel::produceListDataIntervalRemoved(FieldContainerPtr Sou
    }
 }
 
-void AbstractComboBoxModel::addSelectionListener(ComboBoxSelectionListenerPtr l)
+EventConnection AbstractComboBoxModel::addSelectionListener(ComboBoxSelectionListenerPtr l)
 {
     _SelectionListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractComboBoxModel::isSelectionListenerAttached, this, l),
+       boost::bind(&AbstractComboBoxModel::removeSelectionListener, this, l));
 }
 
 void AbstractComboBoxModel::removeSelectionListener(ComboBoxSelectionListenerPtr l)

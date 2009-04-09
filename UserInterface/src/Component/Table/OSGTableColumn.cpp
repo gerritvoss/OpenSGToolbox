@@ -49,6 +49,8 @@
 
 #include "OSGTableColumn.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -75,6 +77,15 @@ void TableColumn::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+
+EventConnection TableColumn::addFieldChangeListener(FieldChangeListenerPtr Listener)
+{
+   _FieldChangeListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&TableColumn::isFieldChangeListenerAttached, this, Listener),
+       boost::bind(&TableColumn::removeFieldChangeListener, this, Listener));
+}
 
 void TableColumn::produceFieldChanged(Field* TheField, FieldDescription* TheDescription)
 {

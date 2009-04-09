@@ -59,6 +59,8 @@
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -85,7 +87,6 @@ void Tree::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
 
 void Tree::mousePressed(const MouseEvent& e)
 {

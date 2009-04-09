@@ -56,6 +56,8 @@
 #include "Component/Spinner/Editors/OSGSpinnerDefaultEditor.h"
 #include "Component/Spinner/Editors/OSGSpinnerNumberEditor.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -82,6 +84,11 @@ void Spinner::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection Spinner::addChangeListener(ChangeListenerPtr l)
+{
+    return _Model->addChangeListener(l);
+}
 
 void Spinner::updateLayout(void)
 {

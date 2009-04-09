@@ -48,6 +48,8 @@
 #include "OSGAbstractListModelBase.h"
 #include <set>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief AbstractListModel class. See \ref 
@@ -80,7 +82,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public AbstractListMod
 
     /*! \}                                                                 */
 
-	virtual void addListDataListener(ListDataListenerPtr l);
+	virtual EventConnection addListDataListener(ListDataListenerPtr l);
+	virtual bool isListDataListenerAttached(ListDataListenerPtr l) const;
 	virtual void removeListDataListener(ListDataListenerPtr l);
     /*=========================  PROTECTED  ===============================*/
   protected:

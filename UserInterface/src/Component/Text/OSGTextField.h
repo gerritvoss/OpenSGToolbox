@@ -53,6 +53,8 @@
 #include <OpenSG/Input/OSGKeyAdapter.h>
 
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TextField class. See \ref 
@@ -95,7 +97,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 	virtual void focusGained(const FocusEvent& e);
 	virtual void focusLost(const FocusEvent& e);
 
-    void addActionListener(ActionListenerPtr Listener);
+    EventConnection addActionListener(ActionListenerPtr Listener);
+	bool isActionListenerAttached(ActionListenerPtr Listener) const;
     void removeActionListener(ActionListenerPtr Listener);
 
 	virtual std::string getDrawnText(void) const;

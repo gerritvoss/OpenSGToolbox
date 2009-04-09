@@ -48,6 +48,8 @@
 #include "OSGColorSelectionModel.h"
 #include <set>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief AbstractColorSelectionModel class. See \ref 
@@ -58,7 +60,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractColorSelectionModel : public Color
 {
     /*==========================  PUBLIC  =================================*/
   public:
-	virtual void addChangeListener(ChangeListenerPtr Listener);
+	virtual EventConnection addChangeListener(ChangeListenerPtr Listener);
+	virtual bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
 
 	virtual void removeChangeListener(ChangeListenerPtr Listener);
   protected:

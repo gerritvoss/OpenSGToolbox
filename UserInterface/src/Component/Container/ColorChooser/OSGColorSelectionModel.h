@@ -50,6 +50,8 @@
 #include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 #include "Event/OSGChangeListener.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING ColorSelectionModel : public IntrusivePtrImplBase
@@ -57,7 +59,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ColorSelectionModel : public IntrusivePtrI
 private:
 protected:
 public:
-	virtual void addChangeListener(ChangeListenerPtr Listener) = 0;
+	virtual EventConnection addChangeListener(ChangeListenerPtr Listener) = 0;
+	virtual bool isChangeListenerAttached(ChangeListenerPtr Listener) const = 0;
 
 	virtual void removeChangeListener(ChangeListenerPtr Listener) = 0;
 

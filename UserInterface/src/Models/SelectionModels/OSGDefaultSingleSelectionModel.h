@@ -47,6 +47,7 @@
 
 #include "OSGDefaultSingleSelectionModelBase.h"
 #include <set>
+#include <OpenSG/Input/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,7 +81,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultSingleSelectionModel : public Defau
 
     /*! \}                                                                 */
     //Adds listener as a listener to changes in the model.
-    virtual void addSelectionListener(SelectionListenerPtr listener);
+    virtual EventConnection addSelectionListener(SelectionListenerPtr listener);
+	bool isSelectionListenerAttached(SelectionListenerPtr listener) const;
 
     //Clears the selection (to -1).
     virtual void clearSelection(void);

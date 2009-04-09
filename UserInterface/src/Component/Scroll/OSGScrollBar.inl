@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool ScrollBar::isAdjustmentListenerAttached(AdjustmentListenerPtr Listener) const
+{
+    return _AdjustmentListeners.find(Listener) != _AdjustmentListeners.end();
+}
+
+inline
 void ScrollBar::setValue(Int32 newValue)
 {
     _Model->setValue(newValue);
@@ -112,12 +118,6 @@ inline
 void ScrollBar::setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting)
 {
     _Model->setRangeProperties(value, extent, min, max, adjusting);
-}
-
-inline
-void ScrollBar::addAdjustmentListener(AdjustmentListenerPtr Listener)
-{
-   _AdjustmentListeners.insert(Listener);
 }
 
 inline

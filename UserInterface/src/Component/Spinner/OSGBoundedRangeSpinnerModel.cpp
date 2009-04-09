@@ -50,6 +50,8 @@
 #include "OSGBoundedRangeSpinnerModel.h"
 #include "Component/Scroll/OSGDefaultBoundedRangeModel.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -120,9 +122,12 @@ void BoundedRangeSpinnerModel::setValue(Int32 newValue)
 	produceStateChanged();
 }
 
-void BoundedRangeSpinnerModel::addChangeListener(ChangeListenerPtr l)
+EventConnection BoundedRangeSpinnerModel::addChangeListener(ChangeListenerPtr l)
 {
    _ChangeListeners.insert(l);
+   return EventConnection(
+       boost::bind(&BoundedRangeSpinnerModel::isChangeListenerAttached, this, l),
+       boost::bind(&BoundedRangeSpinnerModel::removeChangeListener, this, l));
 }
 
 void BoundedRangeSpinnerModel::removeChangeListener(ChangeListenerPtr l)

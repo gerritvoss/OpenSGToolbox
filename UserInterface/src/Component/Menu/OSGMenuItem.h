@@ -50,6 +50,8 @@
 #include "Event/OSGKeyAcceleratorListener.h"
 #include "Component/Menu/OSGMenuFields.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief MenuItem class. See \ref 
@@ -83,7 +85,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
     /*! \}                                                                 */
 
     virtual void activate(void);
-    void addActionListener(ActionListenerPtr Listener);
+    EventConnection addActionListener(ActionListenerPtr Listener);
+	bool isActionListenerAttached(ActionListenerPtr Listener) const;
     void removeActionListener(ActionListenerPtr Listener);
 
 	Vec2f getContentRequestedSize(void) const;

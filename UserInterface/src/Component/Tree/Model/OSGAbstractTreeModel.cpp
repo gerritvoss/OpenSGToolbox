@@ -50,6 +50,8 @@
 #include "OSGAbstractTreeModel.h"
 #include "OSGTreeModelListener.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -72,9 +74,17 @@ A AbstractTreeModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbstractTreeModel::addTreeModelListener(TreeModelListenerPtr l)
+EventConnection AbstractTreeModel::addTreeModelListener(TreeModelListenerPtr l)
 {
     _ModelListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractTreeModel::isTreeModelListenerAttached, this, l),
+       boost::bind(&AbstractTreeModel::removeTreeModelListener, this, l));
+}
+
+bool AbstractTreeModel::isTreeModelListenerAttached(TreeModelListenerPtr l) const
+{
+    return _ModelListeners.find(l) != _ModelListeners.end();
 }
 
 void AbstractTreeModel::removeTreeModelListener(TreeModelListenerPtr l)

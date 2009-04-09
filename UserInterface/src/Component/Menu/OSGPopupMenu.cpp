@@ -54,6 +54,8 @@
 #include "Component/Misc/OSGSeparator.h"
 #include "Models/SelectionModels/OSGSingleSelectionModel.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -78,6 +80,14 @@ void PopupMenu::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection PopupMenu::addPopupMenuListener(PopupMenuListenerPtr Listener)
+{
+   _PopupMenuListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&PopupMenu::isPopupMenuListenerAttached, this, Listener),
+       boost::bind(&PopupMenu::removePopupMenuListener, this, Listener));
+}
 
 void PopupMenu::updateLayout(void)
 {

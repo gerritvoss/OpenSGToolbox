@@ -52,6 +52,8 @@
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include "Util/OSGUIDrawUtils.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -78,6 +80,14 @@ void AbstractWindow::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection AbstractWindow::addWindowListener(WindowListenerPtr Listener)
+{
+   _WindowListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&AbstractWindow::isWindowListenerAttached, this, Listener),
+       boost::bind(&AbstractWindow::removeWindowListener, this, Listener));
+}
 
 void AbstractWindow::updateContainerLayout(void)
 {

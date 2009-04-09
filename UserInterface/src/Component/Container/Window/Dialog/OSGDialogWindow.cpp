@@ -49,6 +49,8 @@
 
 #include "OSGDialogWindow.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -76,9 +78,20 @@ void DialogWindow::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DialogWindow::addEventListener(EventListenerPtr Listener)
+EventConnection DialogWindow::addDialogListener(DialogListenerPtr Listener)
+{
+   _DialogListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&DialogWindow::isDialogListenerAttached, this, Listener),
+       boost::bind(&DialogWindow::removeDialogListener, this, Listener));
+}
+
+EventConnection DialogWindow::addEventListener(EventListenerPtr Listener)
 {
     _EventListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&DialogWindow::isEventListenerAttached, this, Listener),
+       boost::bind(&DialogWindow::removeEventListener, this, Listener));
 }
 
 void DialogWindow::removeEventListener(EventListenerPtr Listener)

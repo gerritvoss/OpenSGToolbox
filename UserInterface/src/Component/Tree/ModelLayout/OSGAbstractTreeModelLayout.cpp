@@ -49,6 +49,8 @@
 
 #include "OSGAbstractTreeModelLayout.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -76,6 +78,14 @@ void AbstractTreeModelLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+EventConnection AbstractTreeModelLayout::addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener)
+{
+   _TreeModelLayoutListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&AbstractTreeModelLayout::isTreeModelLayoutListenerAttached, this, Listener),
+       boost::bind(&AbstractTreeModelLayout::removeTreeModelLayoutListener, this, Listener));
+}
+
 void AbstractTreeModelLayout::removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener)
 {
    TreeModelLayoutListenerSetItor EraseIter(_TreeModelLayoutListeners.find(Listener));
@@ -85,9 +95,12 @@ void AbstractTreeModelLayout::removeTreeModelLayoutListener(TreeModelLayoutListe
    }
 }
 
-void AbstractTreeModelLayout::addTreeModelListener(TreeModelListenerPtr l)
+EventConnection AbstractTreeModelLayout::addTreeModelListener(TreeModelListenerPtr l)
 {
     _ModelListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractTreeModelLayout::isTreeModelListenerAttached, this, l),
+       boost::bind(&AbstractTreeModelLayout::removeTreeModelListener, this, l));
 }
 
 void AbstractTreeModelLayout::removeTreeModelListener(TreeModelListenerPtr l)

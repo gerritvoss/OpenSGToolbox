@@ -48,6 +48,8 @@
 #include "OSGToggleButton.h"
 #include "Util/OSGUIDrawUtils.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -87,6 +89,13 @@ void ToggleButton::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+EventConnection ToggleButton::addButtonSelectedListener(ButtonSelectedListenerPtr Listener)
+{
+   _ButtonSelectedListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&ToggleButton::isButtonSelectedListenerAttached, this, Listener),
+       boost::bind(&ToggleButton::removeButtonSelectedListener, this, Listener));
+}
 
 void ToggleButton::actionPreformed(const ActionEvent& e)
 {

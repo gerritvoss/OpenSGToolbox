@@ -53,6 +53,8 @@
 #include "Event/OSGKeyAcceleratorListener.h"
 #include "Event/OSGActionListener.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief InternalWindow class. See \ref 
@@ -118,7 +120,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	bool giveFocus(ComponentPtr NewFocusedComponent, bool Temporary = false);
 	bool takeFocus(bool Temporary = false);
 
-    void addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener);
+    EventConnection addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener);
+    bool isKeyAcceleratorAttached(KeyEvent::Key TheKey, UInt32 Modifiers) const;
     void removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers);
 
 	enum WindowArea{WINDOW_OUTSIDE=0, WINDOW_LEFT_BORDER, WINDOW_RIGHT_BORDER, WINDOW_TOP_BORDER, WINDOW_BOTTOM_BORDER, WINDOW_TOP_LEFT_BORDER, WINDOW_TOP_RIGHT_BORDER, WINDOW_BOTTOM_LEFT_BORDER, WINDOW_BOTTOM_RIGHT_BORDER, WINDOW_TITLE_BAR, WINDOW_MAIN_PANEL};

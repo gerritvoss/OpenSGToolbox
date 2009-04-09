@@ -59,6 +59,8 @@
 #include "Util/OSGUIDrawUtils.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -852,9 +854,12 @@ void InternalWindow::updateLayout(void)
     Container::updateLayout();
 }
 
-void InternalWindow::addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener)
+EventConnection InternalWindow::addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener)
 {
     _KeyAcceleratorMap[KeyEvent::getHashable(TheKey, Modifiers)] = Listener;
+   return EventConnection(
+       boost::bind(&InternalWindow::isKeyAcceleratorAttached, this, TheKey, Modifiers),
+       boost::bind(&InternalWindow::removeKeyAccelerator, this, TheKey, Modifiers));
 }
 
 void InternalWindow::removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers)

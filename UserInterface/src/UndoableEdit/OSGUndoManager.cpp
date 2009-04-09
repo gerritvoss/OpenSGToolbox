@@ -49,6 +49,8 @@
 
 #include "OSGUndoManager.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -71,9 +73,12 @@ A UndoManager.
  *                           Instance methods                              *
 \***************************************************************************/
 
-void UndoManager::addChangeListener(ChangeListenerPtr l)
+EventConnection UndoManager::addChangeListener(ChangeListenerPtr l)
 {
    _ChangeListeners.insert(l);
+   return EventConnection(
+       boost::bind(&UndoManager::isChangeListenerAttached, this, l),
+       boost::bind(&UndoManager::removeChangeListener, this, l));
 }
 
 void UndoManager::removeChangeListener(ChangeListenerPtr l)

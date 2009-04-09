@@ -49,6 +49,8 @@
 #include <set>
 #include <vector>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief AbstractTreeModel class. See \ref 
@@ -60,7 +62,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public TreeModel
     /*==========================  PUBLIC  =================================*/
   public:
 	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual void addTreeModelListener(TreeModelListenerPtr l);
+	virtual EventConnection addTreeModelListener(TreeModelListenerPtr l);
+	virtual bool isTreeModelListenerAttached(TreeModelListenerPtr l) const;
 
 	//Removes a listener previously added with addTreeModelListener.
 	virtual void removeTreeModelListener(TreeModelListenerPtr l);

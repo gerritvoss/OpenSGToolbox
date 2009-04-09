@@ -6,6 +6,43 @@
 
 OSG_BEGIN_NAMESPACE
 
+    
+inline
+bool WindowEventProducer::isMouseListenerAttached(MouseListenerPtr Listener) const
+{
+    return _MouseListeners.find(Listener) != _MouseListeners.end();
+}
+
+inline
+bool WindowEventProducer::isMouseMotionListenerAttached(MouseMotionListenerPtr Listener) const
+{
+    return _MouseMotionListeners.find(Listener) != _MouseMotionListeners.end();
+}
+
+inline
+bool WindowEventProducer::isMouseWheelListenerAttached(MouseWheelListenerPtr Listener) const
+{
+    return _MouseWheelListeners.find(Listener) != _MouseWheelListeners.end();
+}
+
+inline
+bool WindowEventProducer::isKeyListenerAttached(KeyListenerPtr Listener) const
+{
+    return _KeyListeners.find(Listener) != _KeyListeners.end();
+}
+
+inline
+bool WindowEventProducer::isWindowListenerAttached(WindowListenerPtr Listener) const
+{
+    return _WindowListeners.find(Listener) != _WindowListeners.end();
+}
+
+inline
+bool WindowEventProducer::isUpdateListenerAttached(UpdateListenerPtr Listener) const
+{
+    return _UpdateListeners.find(Listener) != _UpdateListeners.end();
+}
+
 inline
 WindowEventProducer::FileDialogFilter::FileDialogFilter(const std::string& Name, const std::string& Filter) : 
 _Name(Name),
@@ -72,102 +109,6 @@ inline
 UInt32 WindowEventProducer::getCursorType(void) const
 {
 	return _CursorType;
-}
-
-inline
-void WindowEventProducer::addUpdateListener(UpdateListenerPtr Listener)
-{
-   _UpdateListeners.insert(Listener);
-}
-
-inline
-void WindowEventProducer::addMouseListener(MouseListenerPtr Listener)
-{
-   _MouseListeners.insert(Listener);
-}
-
-inline
-void WindowEventProducer::addMouseMotionListener(MouseMotionListenerPtr Listener)
-{
-   _MouseMotionListeners.insert(Listener);
-}
-
-inline
-void WindowEventProducer::addMouseWheelListener(MouseWheelListenerPtr Listener)
-{
-   _MouseWheelListeners.insert(Listener);
-}
-
-inline
-void WindowEventProducer::addKeyListener(KeyListenerPtr Listener)
-{
-   _KeyListeners.insert(Listener);
-}
-
-inline
-void WindowEventProducer::addWindowListener(WindowListenerPtr Listener)
-{
-   _WindowListeners.insert(Listener);
-}
-
-inline
-void WindowEventProducer::removeMouseListener(MouseListenerPtr Listener)
-{
-   MouseListenerSetItor EraseIter(_MouseListeners.find(Listener));
-   if(EraseIter != _MouseListeners.end())
-   {
-      _MouseListeners.erase(EraseIter);
-   }
-}
-
-inline
-void WindowEventProducer::removeUpdateListener(UpdateListenerPtr Listener)
-{
-   UpdateListenerSetItor EraseIter(_UpdateListeners.find(Listener));
-   if(EraseIter != _UpdateListeners.end())
-   {
-      _UpdateListeners.erase(EraseIter);
-   }
-}
-
-inline
-void WindowEventProducer::removeMouseMotionListener(MouseMotionListenerPtr Listener)
-{
-   MouseMotionListenerSetItor EraseIter(_MouseMotionListeners.find(Listener));
-   if(EraseIter != _MouseMotionListeners.end())
-   {
-      _MouseMotionListeners.erase(EraseIter);
-   }
-}
-
-inline
-void WindowEventProducer::removeMouseWheelListener(MouseWheelListenerPtr Listener)
-{
-   MouseWheelListenerSetItor EraseIter(_MouseWheelListeners.find(Listener));
-   if(EraseIter != _MouseWheelListeners.end())
-   {
-      _MouseWheelListeners.erase(EraseIter);
-   }
-}
-
-inline
-void WindowEventProducer::removeKeyListener(KeyListenerPtr Listener)
-{
-   KeyListenerSetItor EraseIter(_KeyListeners.find(Listener));
-   if(EraseIter != _KeyListeners.end())
-   {
-      _KeyListeners.erase(EraseIter);
-   }
-}
-
-inline
-void WindowEventProducer::removeWindowListener(WindowListenerPtr Listener)
-{
-   WindowListenerSetItor EraseIter(_WindowListeners.find(Listener));
-   if(EraseIter != _WindowListeners.end())
-   {
-      _WindowListeners.erase(EraseIter);
-   }
 }
 
 inline

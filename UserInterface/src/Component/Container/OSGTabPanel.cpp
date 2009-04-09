@@ -51,6 +51,8 @@
 #include "Layer/OSGLayer.h"
 #include "Models/SelectionModels/OSGSingleSelectionModel.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -827,12 +829,13 @@ LayerPtr TabPanel::getDrawnContentBackground(void) const
     }
 }
 
-void TabPanel::addSelectionListener(SelectionListenerPtr listener)
+EventConnection TabPanel::addSelectionListener(SelectionListenerPtr listener)
 {
     if(getSelectionModel() != NullFC)
     {
-        getSelectionModel()->addSelectionListener(listener);
+        return getSelectionModel()->addSelectionListener(listener);
     }
+    return EventConnection();
 }
 
 void TabPanel::removeSelectionListener(SelectionListenerPtr listener)

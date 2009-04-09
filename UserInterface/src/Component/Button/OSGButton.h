@@ -51,6 +51,8 @@
 #include <OpenSG/Input/OSGMouseAdapter.h>
 #include <OpenSG/Input/OSGUpdateListener.h>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
@@ -87,10 +89,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     virtual void mousePressed(const MouseEvent& e);
     virtual void mouseReleased(const MouseEvent& e);
 
-    void addActionListener(ActionListenerPtr Listener);
+    EventConnection addActionListener(ActionListenerPtr Listener);
+	bool isActionListenerAttached(ActionListenerPtr Listener) const;
     void removeActionListener(ActionListenerPtr Listener);
 
-    void addMousePressedActionListener(ActionListenerPtr Listener);
+    EventConnection addMousePressedActionListener(ActionListenerPtr Listener);
+	bool isMousePressedActionListenerAttached(ActionListenerPtr Listener) const;
     void removeMousePressedActionListener(ActionListenerPtr Listener);
 
     void setTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));

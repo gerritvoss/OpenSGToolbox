@@ -50,6 +50,8 @@
 
 #include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 	  
 class OSG_USERINTERFACELIB_DLLMAPPING IllegalArgumentException : public std::exception
@@ -67,7 +69,8 @@ protected:
 public:
 
     //Adds a ChangeListener to the model's listener list.
-    virtual void addChangeListener(ChangeListenerPtr l) = 0;
+    virtual EventConnection addChangeListener(ChangeListenerPtr l) = 0;
+	virtual bool isChangeListenerAttached(ChangeListenerPtr l) const = 0;
     
     //Removes a ChangeListener from the model's listener list.
     virtual void removeChangeListener(ChangeListenerPtr l) = 0;
@@ -91,6 +94,11 @@ public:
 };
 
 typedef boost::intrusive_ptr<SpinnerModel> SpinnerModelPtr;
+
+
+SpinnerModelPtr OSG_USERINTERFACELIB_DLLMAPPING createDefaultNumberSpinnerModel(const DataType& TheType);
+
+SpinnerModelPtr OSG_USERINTERFACELIB_DLLMAPPING createDefaultNumberSpinnerModel(Field*  TheField);
 
 OSG_END_NAMESPACE
 

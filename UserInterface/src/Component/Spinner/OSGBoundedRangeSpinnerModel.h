@@ -50,6 +50,8 @@
 #include "Component/Spinner/OSGNumberSpinnerModel.h"
 #include <set>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 class BoundedRangeSpinnerModel;
@@ -122,7 +124,8 @@ public:
     //Sets the model's current value to newValue if newValue satisfies the model's constraints.
     virtual void setValue(Int32 newValue);
     
-	virtual void addChangeListener(ChangeListenerPtr Listener);
+	virtual EventConnection addChangeListener(ChangeListenerPtr Listener);
+	bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
 	virtual void removeChangeListener(ChangeListenerPtr Listener);
 
 	BoundedRangeModelPtr getBoundedRangeModel(void);

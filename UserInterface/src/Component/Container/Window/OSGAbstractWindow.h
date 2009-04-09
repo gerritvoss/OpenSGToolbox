@@ -53,6 +53,8 @@
 
 #include <OpenSG/Input/OSGWindowListener.h>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief AbstractWindow class. See \ref 
@@ -85,7 +87,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
 
     /*! \}                                                                 */
 
-    void addWindowListener(WindowListenerPtr Listener);
+    EventConnection addWindowListener(WindowListenerPtr Listener);
+	bool isWindowListenerAttached(WindowListenerPtr Listener) const;
     void removeWindowListener(WindowListenerPtr Listener);
 
 	virtual bool isAlignableInDrawingSurface(void) const;

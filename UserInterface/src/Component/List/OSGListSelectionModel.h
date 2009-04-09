@@ -50,6 +50,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING ListSelectionModel
@@ -60,7 +62,8 @@ public:
    enum ListSelectionMode {MULTIPLE_INTERVAL_SELECTION, SINGLE_INTERVAL_SELECTION, SINGLE_SELECTION};
 
    //Add a listener to the list that's notified each time a change to the selection occurs.
-   virtual void addListSelectionListener(ListSelectionListenerPtr x) = 0;
+   virtual EventConnection addListSelectionListener(ListSelectionListenerPtr x) = 0;
+   virtual bool isListSelectionListenerAttached(ListSelectionListenerPtr x) const = 0;
 
    //Change the selection to be the set union of the current selection and the indices between index0 and index1 inclusive.
    virtual void addSelectionInterval(UInt32 index0, UInt32 index1) = 0;

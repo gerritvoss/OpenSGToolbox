@@ -49,6 +49,8 @@
 
 #include "OSGDefaultBoundedRangeModel.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -67,6 +69,13 @@ A DefaultChangeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
+EventConnection DefaultBoundedRangeModel::addChangeListener(ChangeListenerPtr Listener)
+{
+   _ChangeListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&DefaultBoundedRangeModel::isChangeListenerAttached, this, Listener),
+       boost::bind(&DefaultBoundedRangeModel::removeChangeListener, this, Listener));
+}
 
 void DefaultBoundedRangeModel::setExtent(UInt32 newExtent)
 {

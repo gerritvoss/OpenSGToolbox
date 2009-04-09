@@ -43,9 +43,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void Spinner::addChangeListener(ChangeListenerPtr l)
+bool Spinner::isChangeListenerAttached(ChangeListenerPtr l) const
 {
-    _Model->addChangeListener(l);
+    return _Model->isChangeListenerAttached(l);
 }
 
 inline

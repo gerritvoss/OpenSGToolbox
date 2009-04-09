@@ -53,6 +53,8 @@
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -85,6 +87,14 @@ void TextComponent::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection TextComponent::addTextListener(TextListenerPtr Listener)
+{
+   _TextListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&TextComponent::isTextListenerAttached, this, Listener),
+       boost::bind(&TextComponent::removeTextListener, this, Listener));
+}
 
 void TextComponent::keyTyped(const KeyEvent& e)
 {

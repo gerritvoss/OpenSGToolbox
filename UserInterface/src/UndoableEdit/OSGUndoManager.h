@@ -50,6 +50,7 @@
 #include "OSGUndoableEditListener.h"
 #include "Event/OSGChangeListener.h"
 #include <set>
+#include <OpenSG/Input/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +70,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UndoManager : public CompoundUndoableEdit,
     typedef UndoManager  Self;
 
     //Adds a ChangeListener to the model's listener list.
-    virtual void addChangeListener(ChangeListenerPtr l);
+    virtual EventConnection addChangeListener(ChangeListenerPtr l);
+	virtual bool isChangeListenerAttached(ChangeListenerPtr l) const;
     
     //Removes a ChangeListener from the model's listener list.
     virtual void removeChangeListener(ChangeListenerPtr l);

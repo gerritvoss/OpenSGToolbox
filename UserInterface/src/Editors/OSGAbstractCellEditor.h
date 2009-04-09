@@ -47,6 +47,7 @@
 
 #include "OSGAbstractCellEditorBase.h"
 #include <set>
+#include <OpenSG/Input/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,7 +81,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : public AbstractCellEd
 
     /*! \}                                                                 */
     //Adds a listener to the list that's notified when the editor stops, or cancels editing.
-    virtual void addCellEditorListener(CellEditorListenerPtr l);
+    virtual EventConnection addCellEditorListener(CellEditorListenerPtr l);
+	virtual bool isCellEditorListenerAttached(CellEditorListenerPtr l) const;
 
     //Removes a listener from the list that's notified
     virtual void removeCellEditorListener(CellEditorListenerPtr l);

@@ -43,9 +43,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void UIViewport::addChangeListener(ChangeListenerPtr Listener)
+bool UIViewport::isChangeListenerAttached(ChangeListenerPtr Listener) const
 {
-   _ChangeListeners.insert(Listener);
+    return _ChangeListeners.find(Listener) != _ChangeListeners.end();
 }
 
 OSG_END_NAMESPACE

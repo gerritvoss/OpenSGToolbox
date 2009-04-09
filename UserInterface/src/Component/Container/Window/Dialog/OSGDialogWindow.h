@@ -50,6 +50,8 @@
 #include <set>
 #include <OpenSG/Input/OSGEventListener.h>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief DialogWindow class. See \ref 
@@ -83,10 +85,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
 
     /*! \}                                                                 */
 
-    void addDialogListener(DialogListenerPtr Listener);
+    EventConnection addDialogListener(DialogListenerPtr Listener);
+	bool isDialogListenerAttached(DialogListenerPtr Listener) const;
     void removeDialogListener(DialogListenerPtr Listener);
 
-    void addEventListener(EventListenerPtr Listener);
+    EventConnection addEventListener(EventListenerPtr Listener);
+	bool isEventListenerAttached(EventListenerPtr Listener) const;
     void removeEventListener(EventListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:

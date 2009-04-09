@@ -51,6 +51,8 @@
 #include "Component/Table/OSGTableModelListener.h"
 #include <typeinfo>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TableModel class. See \ref 
@@ -83,7 +85,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModel : public TableModelBase
 
     /*! \}                                                                 */
     //Adds a listener to the list that is notified each time a change to the data model occurs.
-    virtual void addTableModelListener(TableModelListenerPtr l) = 0;
+    virtual EventConnection addTableModelListener(TableModelListenerPtr l) = 0;
+	virtual bool isTableModelListenerAttached(TableModelListenerPtr l) const = 0;
     
     //Removes a listener from the list that is notified each time a change to the data model occurs.
     virtual void removeTableModelListener(TableModelListenerPtr l) = 0;

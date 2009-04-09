@@ -50,6 +50,8 @@
 #include "OSGAbstractTreeSelectionModel.h"
 #include "OSGTreeSelectionListener.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -72,9 +74,17 @@ A AbstractTreeSelectionModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbstractTreeSelectionModel::addTreeSelectionListener(TreeSelectionListenerPtr l)
+EventConnection AbstractTreeSelectionModel::addTreeSelectionListener(TreeSelectionListenerPtr l)
 {
 	_SelectionListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractTreeSelectionModel::isTreeSelectionListenerAttached, this, l),
+       boost::bind(&AbstractTreeSelectionModel::removeTreeSelectionListener, this, l));
+}
+
+bool AbstractTreeSelectionModel::isTreeSelectionListenerAttached(TreeSelectionListenerPtr l) const
+{
+    return _SelectionListeners.find(l) != _SelectionListeners.end();
 }
 
 void AbstractTreeSelectionModel::removeTreeSelectionListener(TreeSelectionListenerPtr l)
@@ -86,9 +96,17 @@ void AbstractTreeSelectionModel::removeTreeSelectionListener(TreeSelectionListen
 	}
 }
 
-void AbstractTreeSelectionModel::addChangeListener(ChangeListenerPtr listener)
+EventConnection AbstractTreeSelectionModel::addChangeListener(ChangeListenerPtr listener)
 {
 	_ChangeListeners.insert(listener);
+   return EventConnection(
+       boost::bind(&AbstractTreeSelectionModel::isChangeListenerAttached, this, listener),
+       boost::bind(&AbstractTreeSelectionModel::removeChangeListener, this, listener));
+}
+
+bool AbstractTreeSelectionModel::isChangeListenerAttached(ChangeListenerPtr listener) const
+{
+    return _ChangeListeners.find(listener) != _ChangeListeners.end();
 }
 
 void AbstractTreeSelectionModel::removeChangeListener(ChangeListenerPtr listener)

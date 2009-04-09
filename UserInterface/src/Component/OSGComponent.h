@@ -53,6 +53,7 @@
 #include <OpenSG/Input/OSGMouseWheelListener.h>
 #include <OpenSG/Input/OSGMouseMotionListener.h>
 #include <OpenSG/Input/OSGUpdateListener.h>
+#include <OpenSG/Input/OSGEventConnection.h>
 
 #include <set>
 
@@ -123,20 +124,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	virtual void focusGained(const FocusEvent& e);
 	virtual void focusLost(const FocusEvent& e);
 	
-    void addMouseMotionListener(MouseMotionListenerPtr Listener);
+    EventConnection addMouseMotionListener(MouseMotionListenerPtr Listener);
     void removeMouseMotionListener(MouseMotionListenerPtr Listener);
-    void addMouseWheelListener(MouseWheelListenerPtr Listener);
+    EventConnection addMouseWheelListener(MouseWheelListenerPtr Listener);
     void removeMouseWheelListener(MouseWheelListenerPtr Listener);
-    void addMouseListener(MouseListenerPtr Listener);
+    EventConnection addMouseListener(MouseListenerPtr Listener);
     void removeMouseListener(MouseListenerPtr Listener);
-    void addKeyListener(KeyListenerPtr Listener);
+    EventConnection addKeyListener(KeyListenerPtr Listener);
     void removeKeyListener(KeyListenerPtr Listener);
     
-    void addFocusListener(FocusListenerPtr Listener);
+    EventConnection addFocusListener(FocusListenerPtr Listener);
     void removeFocusListener(FocusListenerPtr Listener);
 
-    void addComponentListener(ComponentListenerPtr Listener);
+    EventConnection addComponentListener(ComponentListenerPtr Listener);
     void removeComponentListener(ComponentListenerPtr Listener);
+    
+    bool isMouseListenerAttached(MouseListenerPtr Listener) const;
+    bool isMouseMotionListenerAttached(MouseMotionListenerPtr Listener) const;
+    bool isMouseWheelListenerAttached(MouseWheelListenerPtr Listener) const;
+    bool isKeyListenerAttached(KeyListenerPtr Listener) const;
+    bool isFocusListenerAttached(FocusListenerPtr Listener) const;
+    bool isComponentListenerAttached(ComponentListenerPtr Listener) const;
 
 	void setMouseContained(bool Value);
 	bool getMouseContained(void);

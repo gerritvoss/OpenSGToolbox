@@ -53,6 +53,8 @@
 #include <OpenSG/Input/OSGFieldChangeListener.h>
 #include <OpenSG/Input/OSGFieldChangeEvent.h>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TableColumn class. See \ref 
@@ -85,7 +87,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
 
     /*! \}                                                                 */
     
-    void addFieldChangeListener(FieldChangeListenerPtr Listener);
+    EventConnection addFieldChangeListener(FieldChangeListenerPtr Listener);
+	bool isFieldChangeListenerAttached(FieldChangeListenerPtr Listener) const;
     
     void removeFieldChangeListener(FieldChangeListenerPtr Listener);
     

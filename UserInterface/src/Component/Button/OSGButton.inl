@@ -43,6 +43,18 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool Button::isActionListenerAttached(ActionListenerPtr Listener) const
+{
+    return _ActionListeners.find(Listener) != _ActionListeners.end();
+}
+
+inline
+bool Button::isMousePressedActionListenerAttached(ActionListenerPtr Listener) const
+{
+    return _MousePressedActionListeners.find(Listener) != _MousePressedActionListeners.end();
+}
+
+inline
 bool Button::getActive(void) const
 {
     return _Active;
@@ -58,18 +70,6 @@ inline
 Button::ButtonArmedListener::ButtonArmedListener(ButtonPtr TheButton) :
 _Button(TheButton)
 {
-}
-
-inline
-void Button::addActionListener(ActionListenerPtr Listener)
-{
-   _ActionListeners.insert(Listener);
-}
-
-inline
-void Button::addMousePressedActionListener(ActionListenerPtr Listener)
-{
-   _MousePressedActionListeners.insert(Listener);
 }
 
 inline

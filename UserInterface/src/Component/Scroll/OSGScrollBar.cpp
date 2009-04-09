@@ -54,6 +54,8 @@
 
 #include "Util/OSGUIDrawUtils.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -80,6 +82,14 @@ void ScrollBar::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection ScrollBar::addAdjustmentListener(AdjustmentListenerPtr Listener)
+{
+   _AdjustmentListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&ScrollBar::isAdjustmentListenerAttached, this, Listener),
+       boost::bind(&ScrollBar::removeAdjustmentListener, this, Listener));
+}
 
 void ScrollBar::updateLayout(void)
 {

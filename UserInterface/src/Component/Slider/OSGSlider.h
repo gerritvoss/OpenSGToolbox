@@ -53,6 +53,8 @@
 #include <OpenSG/Input/OSGKeyAdapter.h>
 #include <OpenSG/Input/OSGMouseMotionAdapter.h>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief Slider class. See \ref 
@@ -89,7 +91,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
     virtual void updateLayout(void);
 
     //Adds a listener to the list that is notified each time a change to the model occurs.
-    void addChangeListener(ChangeListenerPtr l);
+    EventConnection addChangeListener(ChangeListenerPtr l);
+	bool isChangeListenerAttached(ChangeListenerPtr l) const;
 
     //Removes a ChangeListener from this spinner.
     void removeChangeListener(ChangeListenerPtr l);

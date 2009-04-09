@@ -48,6 +48,8 @@
 #include "OSGComboBoxModelBase.h"
 #include "Component/ComboBox/OSGComboBoxSelectionListener.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief ComboBoxModel class. See \ref 
@@ -91,7 +93,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxModel : public ComboBoxModelBase
 	//Set the selected item.
 	virtual void setSelectedItem(const boost::any& anObject) = 0;
 	
-	virtual void addSelectionListener(ComboBoxSelectionListenerPtr l) = 0;
+	virtual EventConnection addSelectionListener(ComboBoxSelectionListenerPtr l) = 0;
+	virtual bool isSelectionListenerAttached(ComboBoxSelectionListenerPtr l) const = 0;
 
 	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l) = 0;
 

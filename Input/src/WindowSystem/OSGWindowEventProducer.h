@@ -55,6 +55,7 @@
 #include "OSGWindowEventProducerBase.h"
 
 
+#include "Event/OSGEventConnection.h"
 #include "Event/OSGMouseListener.h"
 #include "Event/OSGMouseMotionListener.h"
 #include "Event/OSGMouseWheelListener.h"
@@ -200,12 +201,19 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     /*! \}                                                                 */
     
-    void addMouseListener(MouseListenerPtr Listener);
-    void addMouseMotionListener(MouseMotionListenerPtr Listener);
-    void addMouseWheelListener(MouseWheelListenerPtr Listener);
-    void addKeyListener(KeyListenerPtr Listener);
-    void addWindowListener(WindowListenerPtr Listener);
-    void addUpdateListener(UpdateListenerPtr Listener);
+    EventConnection addMouseListener(MouseListenerPtr Listener);
+    EventConnection addMouseMotionListener(MouseMotionListenerPtr Listener);
+    EventConnection addMouseWheelListener(MouseWheelListenerPtr Listener);
+    EventConnection addKeyListener(KeyListenerPtr Listener);
+    EventConnection addWindowListener(WindowListenerPtr Listener);
+    EventConnection addUpdateListener(UpdateListenerPtr Listener);
+    
+    bool isMouseListenerAttached(MouseListenerPtr Listener) const;
+    bool isMouseMotionListenerAttached(MouseMotionListenerPtr Listener) const;
+    bool isMouseWheelListenerAttached(MouseWheelListenerPtr Listener) const;
+    bool isKeyListenerAttached(KeyListenerPtr Listener) const;
+    bool isWindowListenerAttached(WindowListenerPtr Listener) const;
+    bool isUpdateListenerAttached(UpdateListenerPtr Listener) const;
 
     void removeMouseListener(MouseListenerPtr Listener);
     void removeMouseMotionListener(MouseMotionListenerPtr Listener);

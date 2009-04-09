@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool BoundedRangeSpinnerModel::isChangeListenerAttached(ChangeListenerPtr Listener) const
+{
+    return _ChangeListeners.find(Listener) != _ChangeListeners.end();
+}
+
+inline
 BoundedRangeModelPtr BoundedRangeSpinnerModel::getBoundedRangeModel(void)
 {
 	return _TheBoundedRangeModel;

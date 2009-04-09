@@ -54,6 +54,8 @@
 #include <OpenSG/Input/OSGMouseMotionAdapter.h>
 #include <OpenSG/Input/OSGMouseAdapter.h>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief ScrollBar class. See \ref 
@@ -92,7 +94,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     void setModel(BoundedRangeModel* Model);
     BoundedRangeModel* getModel(void) const;
     
-    void addAdjustmentListener(AdjustmentListenerPtr Listener);
+    EventConnection addAdjustmentListener(AdjustmentListenerPtr Listener);
+	bool isAdjustmentListenerAttached(AdjustmentListenerPtr Listener) const;
     void removeAdjustmentListener(AdjustmentListenerPtr Listener);
 
     UInt32 getExtent(void) const;

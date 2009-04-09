@@ -52,6 +52,8 @@
 #include "Component/Tree/OSGTreeRowMapper.h"
 #include "Event/OSGChangeListener.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING TreeSelectionModel
@@ -62,7 +64,8 @@ public:
    enum TreeSelectionMode {CONTIGUOUS_TREE_SELECTION, DISCONTIGUOUS_TREE_SELECTION, SINGLE_TREE_SELECTION};
 
 	//Adds a ChangeListener to the listener list.
-	virtual void addChangeListener(ChangeListenerPtr listener) = 0;
+	virtual EventConnection addChangeListener(ChangeListenerPtr listener) = 0;
+	virtual bool isChangeListenerAttached(ChangeListenerPtr listener) const = 0;
 
 	//Adds path to the current selection.
 	virtual void addSelectionPath(TreePath path) = 0;
@@ -73,7 +76,8 @@ public:
 	virtual void addSelectionRows(std::vector<Int32> Rows) = 0;
 
 	//Adds x to the list of listeners that are notified each time the set of selected TreePaths changes.
-	virtual void addTreeSelectionListener(TreeSelectionListenerPtr x) = 0;
+	virtual EventConnection addTreeSelectionListener(TreeSelectionListenerPtr x) = 0;
+	virtual bool isTreeSelectionListenerAttached(TreeSelectionListenerPtr x) const = 0;
 
 	//Empties the current selection.
 	virtual void clearSelection(void) = 0;

@@ -1,7 +1,17 @@
 #include "OSGDragGestureRecognizer.h"
 #include "Event/OSGDragGestureEvent.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
+
+EventConnection DragGestureRecognizer::addDragGestureListener(DragGestureListenerPtr Listener)
+{
+    _DragGestureListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&DragGestureRecognizer::isDragGestureListenerAttached, this, Listener),
+       boost::bind(&DragGestureRecognizer::removeDragGestureListener, this, Listener));
+}
 
 void DragGestureRecognizer::removeDragGestureListener(DragGestureListenerPtr Listener)
 {

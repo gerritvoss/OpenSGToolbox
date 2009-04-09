@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool TabPanel::isSelectionListenerAttached(SelectionListenerPtr Listener) const
+{
+    return getSelectionModel()->isSelectionListenerAttached(Listener);
+}
+
+inline
 TabPanel::TabSelectionListener::TabSelectionListener(TabPanelPtr TheTabPanel) :
 									_TabPanel(TheTabPanel)
 {

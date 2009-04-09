@@ -49,6 +49,8 @@
 
 #include "OSGAbstractColorSelectionModel.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -71,9 +73,17 @@ A AbstractColorSelectionModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbstractColorSelectionModel::addChangeListener(ChangeListenerPtr Listener)
+bool AbstractColorSelectionModel::isChangeListenerAttached(ChangeListenerPtr Listener) const
+{
+    return _ChangeListeners.find(Listener) != _ChangeListeners.end();
+}
+
+EventConnection AbstractColorSelectionModel::addChangeListener(ChangeListenerPtr Listener)
 {
    _ChangeListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&AbstractColorSelectionModel::isChangeListenerAttached, this, Listener),
+       boost::bind(&AbstractColorSelectionModel::removeChangeListener, this, Listener));
 }
 
 void AbstractColorSelectionModel::removeChangeListener(ChangeListenerPtr Listener)

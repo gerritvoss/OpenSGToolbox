@@ -47,9 +47,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void PopupMenu::addPopupMenuListener(PopupMenuListenerPtr Listener)
+bool PopupMenu::isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const
 {
-   _PopupMenuListeners.insert(Listener);
+    return _PopupMenuListeners.find(Listener) != _PopupMenuListeners.end();
 }
 
 inline

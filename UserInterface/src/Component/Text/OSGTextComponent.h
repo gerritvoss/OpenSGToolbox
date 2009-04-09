@@ -48,6 +48,8 @@
 #include "OSGTextComponentBase.h"
 #include "Event/OSGTextListener.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TextComponent class. See \ref 
@@ -79,7 +81,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    void addTextListener(TextListenerPtr Listener);
+    EventConnection addTextListener(TextListenerPtr Listener);
+	bool isTextListenerAttached(TextListenerPtr Listener) const;
     void removeTextListener(TextListenerPtr Listener);
 	
 	virtual void keyTyped(const KeyEvent& e);

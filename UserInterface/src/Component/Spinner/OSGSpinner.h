@@ -49,6 +49,8 @@
 #include "OSGSpinnerModel.h"
 #include "Event/OSGActionListener.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief Spinner class. See \ref 
@@ -83,7 +85,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
     virtual void updateLayout(void);
 
     //Adds a listener to the list that is notified each time a change to the model occurs.
-    void addChangeListener(ChangeListenerPtr l);
+    EventConnection addChangeListener(ChangeListenerPtr l);
+	bool isChangeListenerAttached(ChangeListenerPtr l) const;
 
     //Removes a ChangeListener from this spinner.
     void removeChangeListener(ChangeListenerPtr l);

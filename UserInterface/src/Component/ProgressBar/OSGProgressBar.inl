@@ -43,6 +43,18 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+EventConnection ProgressBar::addChangeListener(ChangeListenerPtr Listener)
+{
+	return _Model->addChangeListener(Listener);
+}
+
+inline
+bool ProgressBar::isChangeListenerAttached(ChangeListenerPtr Listener) const
+{
+	return _Model->isChangeListenerAttached(Listener);
+}
+
+inline
 Int32 ProgressBar::getMaximum(void) const
 {
 	return _Model->getMaximum();
@@ -95,12 +107,6 @@ inline
 void ProgressBar::setValue(const Int32& n)
 {
 	_Model->setValue(n);
-}
-
-inline
-void ProgressBar::addChangeListener(ChangeListenerPtr Listener)
-{
-	_Model->addChangeListener(Listener);
 }
 
 inline

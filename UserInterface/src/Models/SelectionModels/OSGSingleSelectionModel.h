@@ -47,6 +47,7 @@
 
 #include "OSGSingleSelectionModelBase.h"
 #include "OSGSelectionListener.h"
+#include <OpenSG/Input/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,7 +82,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModel : public SingleSelect
     /*! \}                                                                 */
 
     //Adds listener as a listener to changes in the model.
-    virtual void addSelectionListener(SelectionListenerPtr listener) = 0;
+    virtual EventConnection addSelectionListener(SelectionListenerPtr listener) = 0;
+	virtual bool isSelectionListenerAttached(SelectionListenerPtr listener) const = 0;
 
     //Clears the selection (to -1).
     virtual void clearSelection(void) = 0;

@@ -36,6 +36,7 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 
 WindowEventProducerPtr TheWindowEventProducer;
+EventConnection MouseEventConnection;
 
 bool ExitMainLoop = false;
 
@@ -136,6 +137,9 @@ public:
                 break;
             case KeyEvent::KEY_L:
                 TheWindowEventProducer->setFocused(false);
+                break;
+            case KeyEvent::KEY_M:
+                MouseEventConnection.disconnect();
                 break;
             default:
                 break;
@@ -252,7 +256,7 @@ int main(int argc, char **argv)
 
     //Attach Mouse Listener
     TutorialMouseListener TheTutorialMouseListener;
-    TheWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
+    MouseEventConnection = TheWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
     //Attach Mouse Wheel Listener
     TutorialMouseWheelListener TheTutorialMouseWheelListener;
     TheWindowEventProducer->addMouseWheelListener(&TheTutorialMouseWheelListener);

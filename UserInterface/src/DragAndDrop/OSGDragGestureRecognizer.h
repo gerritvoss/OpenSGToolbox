@@ -36,6 +36,8 @@
 #include "Event/OSGDragGestureListener.h"
 #include <set>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING DragGestureRecognizer
@@ -44,7 +46,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DragGestureRecognizer
 public:
 
     //Register a new DragGestureListener.
-    void addDragGestureListener(DragGestureListenerPtr Listener);
+    EventConnection addDragGestureListener(DragGestureListenerPtr Listener);
+	bool isDragGestureListenerAttached(DragGestureListenerPtr Listener) const;
 
     //Reset the Recognizer, if its currently recognizing a gesture, ignore it.
     virtual void resetRecognizer(void) = 0;
@@ -66,5 +69,7 @@ protected:
 typedef DragGestureRecognizer* DragGestureRecognizerPtr;
 
 OSG_END_NAMESPACE
+
+#include "OSGDragGestureRecognizer.inl"
 
 #endif /* _OSGDRAGGESTURERECOGNIZER_H_ */

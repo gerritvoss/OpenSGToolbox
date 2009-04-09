@@ -50,6 +50,8 @@
 #include "OSGAbstractListModel.h"
 #include "Component/List/OSGListDataListener.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -77,9 +79,12 @@ void AbstractListModel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbstractListModel::addListDataListener(ListDataListenerPtr l)
+EventConnection AbstractListModel::addListDataListener(ListDataListenerPtr l)
 {
     _DataListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractListModel::isListDataListenerAttached, this, l),
+       boost::bind(&AbstractListModel::removeListDataListener, this, l));
 }
 
 void AbstractListModel::removeListDataListener(ListDataListenerPtr l)

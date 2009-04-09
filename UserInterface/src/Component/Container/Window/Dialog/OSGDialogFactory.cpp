@@ -24,6 +24,8 @@
 #include "Layout/OSGBorderLayout.h"
 #include "Layout/OSGBorderLayoutConstraints.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -145,11 +147,17 @@ TextAreaPtr DialogFactory::createTransparentTextArea(const std::string& Message)
 	return TransparentTextArea;
 }
 
-void DialogFactory::addButtonActionListener(const ActionListener& Listener, const int index)
+EventConnection DialogFactory::addButtonActionListener(const ActionListener& Listener, const int index)
 {
     //TODO: Implement function to allow user to add actionlisteners 
 	//to the buttons in an option panel
-
+    return EventConnection();
+}
+bool DialogFactory::isButtonActionListenerAttached(const ActionListener& Listener, const int index)
+{
+    //TODO: Implement function to allow user to add actionlisteners 
+	//to the buttons in an option panel
+    return false;
 }
 //InternalWindowPtr DialogFactory::createMessageDialog(const std::string& Title, const std::string& Message, const std::string& ConfirmButtonText)
 //{

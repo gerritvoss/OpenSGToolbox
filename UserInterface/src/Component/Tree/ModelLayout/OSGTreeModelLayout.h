@@ -53,6 +53,8 @@
 #include "OSGTreeModelLayoutListener.h"
 #include <OpenSG/OSGVector.h>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TreeModelLayout class. See \ref 
@@ -85,12 +87,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 
     /*! \}                                                                 */
 
-    virtual void addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener) = 0;
+    virtual EventConnection addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener) = 0;
+	virtual bool isTreeModelLayoutListenerAttached(TreeModelLayoutListenerPtr Listener) const = 0;
 
     virtual void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener) = 0;
 
 	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual void addTreeModelListener(TreeModelListenerPtr l) = 0;
+	virtual EventConnection addTreeModelListener(TreeModelListenerPtr l) = 0;
+	virtual bool isTreeModelListenerAttached(TreeModelListenerPtr l) const = 0;
 
 	//Removes a listener previously added with addTreeModelListener.
 	virtual void removeTreeModelListener(TreeModelListenerPtr l) = 0;

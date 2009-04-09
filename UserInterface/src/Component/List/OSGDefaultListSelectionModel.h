@@ -49,6 +49,8 @@
 #include <set>
 #include <list>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief DefaultListSelectionModel class. See \ref 
@@ -61,7 +63,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
   public:
    enum SelectionMode {SINGLE_SELECTION, SINGLE_INTERVAL_SELECTION, MULTIPLE_INTERVAL_SELECTION};
 
-   virtual void 	addListSelectionListener(ListSelectionListenerPtr x);
+    virtual EventConnection 	addListSelectionListener(ListSelectionListenerPtr Listener);
+	virtual bool isListSelectionListenerAttached(ListSelectionListenerPtr Listener) const;
 
    virtual void 	addSelectionInterval(UInt32 index0, UInt32 index1);
    

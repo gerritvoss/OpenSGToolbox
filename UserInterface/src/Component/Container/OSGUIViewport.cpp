@@ -49,6 +49,8 @@
 
 #include "OSGUIViewport.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -75,6 +77,14 @@ void UIViewport::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection UIViewport::addChangeListener(ChangeListenerPtr Listener)
+{
+   _ChangeListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&UIViewport::isChangeListenerAttached, this, Listener),
+       boost::bind(&UIViewport::removeChangeListener, this, Listener));
+}
 
 void UIViewport::getViewBounds(Pnt2f& TopLeft, Pnt2f& BottomRight)
 {

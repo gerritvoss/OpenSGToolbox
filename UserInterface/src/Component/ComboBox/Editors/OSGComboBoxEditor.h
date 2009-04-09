@@ -51,6 +51,8 @@
 
 #include <boost/any.hpp>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief ComboBoxEditor class. See \ref 
@@ -84,7 +86,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxEditor : public ComboBoxEditorBase
     /*! \}                                                                 */
 	
 	//Add an ActionListener.
-	virtual void addActionListener(ActionListenerPtr Listener) = 0;
+	virtual EventConnection addActionListener(ActionListenerPtr Listener) = 0;
+	virtual bool isActionListenerAttached(ActionListenerPtr Listener) const = 0;
 
 	//Remove an ActionListener
 	virtual void removeActionListener(ActionListenerPtr Listener) = 0;

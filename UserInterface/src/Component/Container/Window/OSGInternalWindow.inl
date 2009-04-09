@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool InternalWindow::isKeyAcceleratorAttached(KeyEvent::Key TheKey, UInt32 Modifiers) const
+{
+    return _KeyAcceleratorMap.find(KeyEvent::getHashable(TheKey, Modifiers)) != _KeyAcceleratorMap.end();
+}
+
+inline
 InternalWindow::PopupMenuInteractionListener::PopupMenuInteractionListener(InternalWindowPtr TheInternalWindow) :
 _InternalWindow(TheInternalWindow)
 {

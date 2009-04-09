@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool AbstractWindow::isWindowListenerAttached(WindowListenerPtr Listener) const
+{
+    return _WindowListeners.find(Listener) != _WindowListeners.end();
+}
+
+inline
 void AbstractWindow::vetoWindowClose(void)
 {
 	_VetoWindowClose = true;
@@ -64,12 +70,6 @@ bool AbstractWindow::isScalableInDrawingSurface(void) const
 		getScalingInDrawingSurface().x() <= 1.0f &&
 		getScalingInDrawingSurface().y() >= 0.0f &&
 		getScalingInDrawingSurface().y() <= 1.0f;
-}
-
-inline
-void AbstractWindow::addWindowListener(WindowListenerPtr Listener)
-{
-   _WindowListeners.insert(Listener);
 }
 OSG_END_NAMESPACE
 

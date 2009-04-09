@@ -43,106 +43,46 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+bool Component::isMouseListenerAttached(MouseListenerPtr Listener) const
+{
+    return _MouseListeners.find(Listener) != _MouseListeners.end();
+}
+
+inline
+bool Component::isMouseMotionListenerAttached(MouseMotionListenerPtr Listener) const
+{
+    return _MouseMotionListeners.find(Listener) != _MouseMotionListeners.end();
+}
+
+inline
+bool Component::isMouseWheelListenerAttached(MouseWheelListenerPtr Listener) const
+{
+    return _MouseWheelListeners.find(Listener) != _MouseWheelListeners.end();
+}
+
+inline
+bool Component::isKeyListenerAttached(KeyListenerPtr Listener) const
+{
+    return _KeyListeners.find(Listener) != _KeyListeners.end();
+}
+
+inline
+bool Component::isFocusListenerAttached(FocusListenerPtr Listener) const
+{
+    return _FocusListeners.find(Listener) != _FocusListeners.end();
+}
+
+inline
+bool Component::isComponentListenerAttached(ComponentListenerPtr Listener) const
+{
+    return _ComponentListeners.find(Listener) != _ComponentListeners.end();
+}
+
+inline
 void Component::getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	TopLeft = getClipTopLeft();
 	BottomRight = getClipBottomRight();
-}
-
-inline
-void Component::addKeyListener(KeyListenerPtr Listener)
-{
-   _KeyListeners.insert(Listener);
-}
-
-inline
-void Component::removeKeyListener(KeyListenerPtr Listener)
-{
-   KeyListenerSetItor EraseIter(_KeyListeners.find(Listener));
-   if(EraseIter != _KeyListeners.end())
-   {
-      _KeyListeners.erase(EraseIter);
-   }
-}
-
-inline
-void Component::addMouseListener(MouseListenerPtr Listener)
-{
-   _MouseListeners.insert(Listener);
-}
-
-inline
-void Component::removeMouseListener(MouseListenerPtr Listener)
-{
-   MouseListenerSetItor EraseIter(_MouseListeners.find(Listener));
-   if(EraseIter != _MouseListeners.end())
-   {
-      _MouseListeners.erase(EraseIter);
-   }
-}
-
-inline
-void Component::addMouseWheelListener(MouseWheelListenerPtr Listener)
-{
-   _MouseWheelListeners.insert(Listener);
-}
-
-inline
-void Component::removeMouseWheelListener(MouseWheelListenerPtr Listener)
-{
-   MouseWheelListenerSetItor EraseIter(_MouseWheelListeners.find(Listener));
-   if(EraseIter != _MouseWheelListeners.end())
-   {
-      _MouseWheelListeners.erase(EraseIter);
-   }
-}
-
-inline
-void Component::addMouseMotionListener(MouseMotionListenerPtr Listener)
-{
-   _MouseMotionListeners.insert(Listener);
-}
-
-inline
-void Component::removeMouseMotionListener(MouseMotionListenerPtr Listener)
-{
-   MouseMotionListenerSetItor EraseIter(_MouseMotionListeners.find(Listener));
-   if(EraseIter != _MouseMotionListeners.end())
-   {
-      _MouseMotionListeners.erase(EraseIter);
-   }
-}
-
-inline
-void Component::addFocusListener(FocusListenerPtr Listener)
-{
-   _FocusListeners.insert(Listener);
-}
-
-inline
-void Component::removeFocusListener(FocusListenerPtr Listener)
-{
-   FocusListenerSetItor EraseIter(_FocusListeners.find(Listener));
-   if(EraseIter != _FocusListeners.end())
-   {
-      _FocusListeners.erase(EraseIter);
-   }
-}
-
-inline
-void Component::addComponentListener(ComponentListener* Listener)
-{
-   _ComponentListeners.insert(Listener);
-}
-
-inline
-void Component::removeComponentListener(ComponentListener* Listener)
-{
-   ComponentListenerSetItor EraseIter(_ComponentListeners.find(Listener));
-   if(EraseIter != _ComponentListeners.end())
-   {
-      _ComponentListeners.erase(EraseIter);
-   }
 }
 
 

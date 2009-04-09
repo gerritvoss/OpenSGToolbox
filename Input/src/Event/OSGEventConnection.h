@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                          OpenSG Toolbox Input                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala                                                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -25,64 +27,47 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCOMMANDMANAGER_H_
-#define _OSGCOMMANDMANAGER_H_
+
+#ifndef _OSGEVENTCONNECTION_H_
+#define _OSGEVENTCONNECTION_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
-#include "OSGCommand.h"
-#include "OSGCommandListener.h"
-#include <OpenSG/Input/OSGEventConnection.h>
-#include <set>
-#include "OSGCommandManagerFields.h"
-#include "OSGUndoManager.h"
-
-#include <OpenSG/Input/OSGEventConnection.h>
+#include "OSGInputDef.h"
+#include <boost/function.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING CommandManager : public IntrusivePtrImplBase
+class OSG_INPUTLIB_DLLMAPPING EventConnection
 {
-    /*==========================  PUBLIC  =================================*/
+    /*=========================  PUBLIC  ===============================*/
+  public:
+      typedef boost::function<bool (void)> IsConnectedFunctionType;
+      typedef boost::function<void (void)> DisconnectFunctionType;
 
-  public :
-	void executeCommand(CommandPtr TheCommand);
-    
-	EventConnection addCommandListener(CommandListenerPtr Listener);
-	bool isCommandListenerAttached(CommandListenerPtr Listener) const;
+      EventConnection(IsConnectedFunctionType isConnectedFunc, DisconnectFunctionType disconnectedFunc);
+      
+      EventConnection(void);
+      
+      EventConnection(const EventConnection& c);
 
-    void removeCommandListener(CommandListenerPtr Listener);
-	
-	static CommandManagerPtr create(UndoManagerPtr UndoManager);
-    /*=========================  PROTECTED  ===============================*/
+      const EventConnection& operator=(const EventConnection& c);
 
-  protected:
-	friend class Command;
-    
-	typedef IntrusivePtrImplBase Inherited;
-  
-    CommandManager(UndoManagerPtr UndoManager);
+      bool isValid(void) const;
 
-	CommandManager(const CommandManager& source);
-	
-    void operator =(const CommandManager& source);
-    
-    /*---------------------------------------------------------------------*/
-    virtual ~CommandManager(void);
-    
-	typedef std::set<CommandListenerPtr> CommandListenerSet;
-	
-    CommandListenerSet       _CommandListeners;
-	UndoManagerPtr           _UndoManager;
+      bool isConnected(void) const;
 
-    void produceCommandExecuted(CommandPtr TheCommand);
+      void disconnect(void);
+protected:
+    IsConnectedFunctionType _isConnectedFunc;
+    DisconnectFunctionType _disconnectedFunc;
+
 };
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGCOMMANDMANAGER_H_ */
+#include "OSGEventConnection.inl"
+
+#endif /* _OSGEVENTCONNECTION_H_ */

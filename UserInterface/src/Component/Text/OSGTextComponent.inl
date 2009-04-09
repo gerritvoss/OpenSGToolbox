@@ -43,9 +43,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void TextComponent::addTextListener(TextListenerPtr Listener)
+bool TextComponent::isTextListenerAttached(TextListenerPtr Listener) const
 {
-   _TextListeners.insert(Listener);
+    return _TextListeners.find(Listener) != _TextListeners.end();
 }
 
 inline

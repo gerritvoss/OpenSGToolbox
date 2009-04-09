@@ -45,6 +45,19 @@
 #include "Models/OSGComboBoxModel.h"
 OSG_BEGIN_NAMESPACE
 
+
+inline
+bool ComboBox::isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const
+{
+    return getComboListPopupMenu()->isPopupMenuListenerAttached(Listener);
+}
+
+inline
+bool ComboBox::isActionListenerAttached(ActionListenerPtr Listener) const
+{
+    return _ActionListeners.find(Listener) != _ActionListeners.end();
+}
+
 inline
 UInt32 ComboBox::getSelectedIndex(void) const
 {
@@ -70,12 +83,6 @@ UInt32 ComboBox::getItemCount(void) const
 }
 
 inline
-void ComboBox::addActionListener(ActionListenerPtr Listener)
-{
-   _ActionListeners.insert(Listener);
-}
-
-inline
 void ComboBox::setSelectedIndex(const UInt32& anIndex)
 {
 	getModel()->setSelectedItem(anIndex);
@@ -85,12 +92,6 @@ inline
 void ComboBox::setSelectedItem(const boost::any& anObject)
 {
 	getModel()->setSelectedItem(anObject);
-}
-
-inline
-void ComboBox::addPopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	getComboListPopupMenu()->addPopupMenuListener(Listener);
 }
 
 inline

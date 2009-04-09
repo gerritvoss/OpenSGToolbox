@@ -43,9 +43,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void TableColumn::addFieldChangeListener(FieldChangeListenerPtr Listener)
+bool TableColumn::isFieldChangeListenerAttached(FieldChangeListenerPtr Listener) const
 {
-   _FieldChangeListeners.insert(Listener);
+    return _FieldChangeListeners.find(Listener) != _FieldChangeListeners.end();
 }
 
 inline

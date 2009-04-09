@@ -60,6 +60,8 @@
 
 #include "LookAndFeel/OSGLookAndFeelManager.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -86,6 +88,14 @@ void TextField::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection TextField::addActionListener(ActionListenerPtr Listener)
+{
+   _ActionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&TextField::isActionListenerAttached, this, Listener),
+       boost::bind(&TextField::removeActionListener, this, Listener));
+}
 
 Vec2f TextField::getContentRequestedSize(void) const
 {

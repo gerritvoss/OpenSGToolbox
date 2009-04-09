@@ -48,6 +48,8 @@
 
 #include "OSGAbstractTableModelBase.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief AbstractTableModel class. See \ref 
@@ -80,7 +82,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public AbstractTableM
 
     /*! \}                                                                 */
     //Adds a listener to the list that is notified each time a change to the data model occurs.
-    virtual void addTableModelListener(TableModelListenerPtr l);
+    virtual EventConnection addTableModelListener(TableModelListenerPtr l);
+	virtual bool isTableModelListenerAttached(TableModelListenerPtr l) const;
     
     //Removes a listener from the list that is notified each time a change to the data model occurs.
     virtual void removeTableModelListener(TableModelListenerPtr l);

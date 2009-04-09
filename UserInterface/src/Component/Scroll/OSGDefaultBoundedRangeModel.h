@@ -50,6 +50,8 @@
 #include "Event/OSGChangeListener.h"
 #include <set>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModel : public BoundedRangeModel
@@ -103,7 +105,8 @@ public:
     //This attribute indicates that any upcoming changes to the value of the model should be considered a single event
     virtual void setValueIsAdjusting(bool b);
     
-	virtual void addChangeListener(ChangeListenerPtr Listener);
+	virtual EventConnection addChangeListener(ChangeListenerPtr Listener);
+	virtual bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
 	virtual void removeChangeListener(ChangeListenerPtr Listener);
     DefaultBoundedRangeModel(void);
     ~DefaultBoundedRangeModel(void);

@@ -48,6 +48,8 @@
 #include "OSGToggleButtonBase.h"
 #include "Event/OSGButtonSelectedListener.h"
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
@@ -88,7 +90,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
 
     /*! \}                                                                 */
 
-    void addButtonSelectedListener(ButtonSelectedListenerPtr Listener);
+    EventConnection addButtonSelectedListener(ButtonSelectedListenerPtr Listener);
+	bool isButtonSelectedListenerAttached(ButtonSelectedListenerPtr Listener) const;
     void removeButtonSelectedListener(ButtonSelectedListenerPtr Listener);
 
     void setSelectedBorder   ( const BorderPtr &value );

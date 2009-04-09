@@ -49,6 +49,8 @@
 
 #include "OSGAbstractSpinnerModel.h"
 
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -72,9 +74,17 @@ A AbstractSpinnerModel.
 \***************************************************************************/
 
 
-void AbstractSpinnerModel::addChangeListener(ChangeListenerPtr l)
+EventConnection AbstractSpinnerModel::addChangeListener(ChangeListenerPtr l)
 {
    _ChangeListeners.insert(l);
+   return EventConnection(
+       boost::bind(&AbstractSpinnerModel::isChangeListenerAttached, this, l),
+       boost::bind(&AbstractSpinnerModel::removeChangeListener, this, l));
+}
+
+bool AbstractSpinnerModel::isChangeListenerAttached(ChangeListenerPtr l) const
+{
+    return _ChangeListeners.find(l) != _ChangeListeners.end();
 }
 
 void AbstractSpinnerModel::removeChangeListener(ChangeListenerPtr l)

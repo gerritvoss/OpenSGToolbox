@@ -48,6 +48,8 @@
 #include "OSGAbstractMutableComboBoxModelBase.h"
 #include <set>
 
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief AbstractMutableComboBoxModel class. See \ref 
@@ -79,10 +81,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractMutableComboBoxModel : public Abst
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void addListDataListener(ListDataListenerPtr l);
+	virtual EventConnection addListDataListener(ListDataListenerPtr l);
+	virtual bool isListDataListenerAttached(ListDataListenerPtr l) const;
 	virtual void removeListDataListener(ListDataListenerPtr l);
 	
-	virtual void addSelectionListener(ComboBoxSelectionListenerPtr l);
+	virtual EventConnection addSelectionListener(ComboBoxSelectionListenerPtr l);
+	virtual bool isSelectionListenerAttached(ComboBoxSelectionListenerPtr l) const;
 	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l);
     /*=========================  PROTECTED  ===============================*/
   protected:

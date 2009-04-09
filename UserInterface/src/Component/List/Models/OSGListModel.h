@@ -48,6 +48,8 @@
 #include "OSGListModelBase.h"
 
 #include <boost/any.hpp>
+#include <OpenSG/Input/OSGEventConnection.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief ListModel class. See \ref 
@@ -85,7 +87,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListModel : public ListModelBase
 	virtual UInt32 getSize(void) const = 0;
     virtual boost::any getElementAt(UInt32 index) const = 0;
 
-	virtual void addListDataListener(ListDataListenerPtr l) = 0;
+	virtual EventConnection addListDataListener(ListDataListenerPtr l) = 0;
+	virtual bool isListDataListenerAttached(ListDataListenerPtr l) const = 0;
 	virtual void removeListDataListener(ListDataListenerPtr l) = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:

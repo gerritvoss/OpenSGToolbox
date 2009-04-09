@@ -42,6 +42,18 @@
 
 OSG_BEGIN_NAMESPACE
 
+
+inline
+bool AbstractComboBoxModel::isListDataListenerAttached(ListDataListenerPtr l) const
+{
+    return _DataListeners.find(l) != _DataListeners.end();
+}
+
+inline
+bool AbstractComboBoxModel::isSelectionListenerAttached(ComboBoxSelectionListenerPtr l) const
+{
+    return _SelectionListeners.find(l) != _SelectionListeners.end();
+}
 OSG_END_NAMESPACE
 
 #define OSGABSTRACTCOMBOBOXMODEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
