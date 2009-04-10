@@ -530,6 +530,66 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="Caption"
+				>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaption.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaption.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaption.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionListener.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionListener.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionListenerBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionListenerBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionListenerBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionListenerFields.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

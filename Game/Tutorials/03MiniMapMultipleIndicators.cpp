@@ -598,7 +598,7 @@ int main(int argc, char **argv)
 	//World to MiniMap Transformation
 	MiniMapMatrixTransformationPtr WorldToMiniMapTransformation = MiniMapMatrixTransformation::create();
 	Matrix Transform;
-	Transform.setTransform(Vec3f(0.5,0.5,0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),deg2rad(-90.0)), Vec3f(0.07, 1.0, 0.07));
+	Transform.setTransform(Vec3f(0.5,0.5,0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),deg2rad(-90.0)), Vec3f(0.042, 1.0, 0.042));
 	beginEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
 		WorldToMiniMapTransformation->setTransformation(Transform);
 	endEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
@@ -718,7 +718,7 @@ int main(int argc, char **argv)
 	    MiniMap->setPreferredSize(Pnt2f(450,450));
 	    MiniMap->setViewPointIndicator(ViewpointIndicator);
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
-		MiniMap->setOpacity(.4);
+		MiniMap->setOpacity(.6);
 		MiniMap->setConstraints(MiniMapConstraints);
 		MiniMap->setLockMapOrientation(false);                  //If this is changed to true the map will then remain stationary and the indicator will then move and rotate
         MiniMap->setUnlockedMapSize(Vec2f(1000,1000));          //This item is only necassary when the map is set to Unlocked Orientation
