@@ -403,6 +403,7 @@ void PopupMenu::cancel(void)
 {
     if(getVisible())
     {
+        clearSelection();
         beginEditCP(PopupMenuPtr(this), VisibleFieldMask);
             setVisible(false);
         endEditCP(PopupMenuPtr(this), VisibleFieldMask);

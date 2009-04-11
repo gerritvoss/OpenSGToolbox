@@ -89,11 +89,13 @@ EventConnection MenuItem::addActionListener(ActionListenerPtr Listener)
        boost::bind(&MenuItem::removeActionListener, this, Listener));
 }
 
-void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight) const
+void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const
 {
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
    {
+       Pnt2f b, BottomRight;
+       getInsideBorderBounds(b, BottomRight);
       //Calculate Alignment
       Pnt2f AlignedPosition;
       Pnt2f TextTopLeft, TextBottomRight;
@@ -134,7 +136,7 @@ void MenuItem::mouseReleased(const MouseEvent& e)
        endEditCP(MenuItemPtr(this), SelectedFieldMask);
     }
     
-    Component::mouseReleased(e);
+    Button::mouseReleased(e);
 }
 
 MenuPtr MenuItem::getTopLevelMenu(void) const

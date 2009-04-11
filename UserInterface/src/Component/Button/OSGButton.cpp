@@ -389,7 +389,7 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
 			  break;
 		  }
 
-		  Button::drawText(TheGraphics, TextAlignedPosition);
+		  drawText(TheGraphics, TextAlignedPosition);
 	  }
 	  else
 	  {
@@ -418,7 +418,7 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
 
        AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getAlignment().y(), getAlignment().x());
 
-	   Button::drawText(TheGraphics, AlignedPosition);
+	   drawText(TheGraphics, AlignedPosition);
    }
 }
 
