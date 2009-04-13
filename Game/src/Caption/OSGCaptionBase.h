@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,6 +68,13 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGStringFields.h> // Segment type
+#include <OpenSG/OSGReal32Fields.h> // StartStamps type
+#include <OpenSG/OSGReal32Fields.h> // EndStamps type
+#include <OpenSG/OSGUInt32Fields.h> // CurrentSegmentIndex type
+#include <OpenSG/OSGSoundFields.h> // CaptionDialogSound type
+#include <OpenSG/OSGContainerFields.h> // ParentContainer type
+#include <OpenSG/OSGUInt32Fields.h> // ChildIndex type
+#include <OpenSG/OSGComponentGeneratorFields.h> // ComponentGenerator type
 
 #include "OSGCaptionFields.h"
 
@@ -91,11 +98,25 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
 
     enum
     {
-        SegmentFieldId = Inherited::NextFieldId,
-        NextFieldId    = SegmentFieldId + 1
+        SegmentFieldId             = Inherited::NextFieldId,
+        StartStampsFieldId         = SegmentFieldId             + 1,
+        EndStampsFieldId           = StartStampsFieldId         + 1,
+        CurrentSegmentIndexFieldId = EndStampsFieldId           + 1,
+        CaptionDialogSoundFieldId  = CurrentSegmentIndexFieldId + 1,
+        ParentContainerFieldId     = CaptionDialogSoundFieldId  + 1,
+        ChildIndexFieldId          = ParentContainerFieldId     + 1,
+        ComponentGeneratorFieldId  = ChildIndexFieldId          + 1,
+        NextFieldId                = ComponentGeneratorFieldId  + 1
     };
 
     static const OSG::BitVector SegmentFieldMask;
+    static const OSG::BitVector StartStampsFieldMask;
+    static const OSG::BitVector EndStampsFieldMask;
+    static const OSG::BitVector CurrentSegmentIndexFieldMask;
+    static const OSG::BitVector CaptionDialogSoundFieldMask;
+    static const OSG::BitVector ParentContainerFieldMask;
+    static const OSG::BitVector ChildIndexFieldMask;
+    static const OSG::BitVector ComponentGeneratorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,16 +144,44 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
     /*! \{                                                                 */
 
            MFString            *getMFSegment        (void);
+           MFReal32            *getMFStartStamps    (void);
+           MFReal32            *getMFEndStamps      (void);
+           SFUInt32            *getSFCurrentSegmentIndex(void);
+           SFSoundPtr          *getSFCaptionDialogSound(void);
+           SFContainerPtr      *getSFParentContainer(void);
+           SFUInt32            *getSFChildIndex     (void);
+           SFComponentGeneratorPtr *getSFComponentGenerator(void);
 
+           UInt32              &getCurrentSegmentIndex(void);
+     const UInt32              &getCurrentSegmentIndex(void) const;
+           SoundPtr            &getCaptionDialogSound(void);
+     const SoundPtr            &getCaptionDialogSound(void) const;
+           ContainerPtr        &getParentContainer(void);
+     const ContainerPtr        &getParentContainer(void) const;
+           UInt32              &getChildIndex     (void);
+     const UInt32              &getChildIndex     (void) const;
+           ComponentGeneratorPtr &getComponentGenerator(void);
+     const ComponentGeneratorPtr &getComponentGenerator(void) const;
            std::string         &getSegment        (const UInt32 index);
            MFString            &getSegment        (void);
      const MFString            &getSegment        (void) const;
+           Real32              &getStartStamps    (const UInt32 index);
+           MFReal32            &getStartStamps    (void);
+     const MFReal32            &getStartStamps    (void) const;
+           Real32              &getEndStamps      (const UInt32 index);
+           MFReal32            &getEndStamps      (void);
+     const MFReal32            &getEndStamps      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setCurrentSegmentIndex( const UInt32 &value );
+     void setCaptionDialogSound( const SoundPtr &value );
+     void setParentContainer( const ContainerPtr &value );
+     void setChildIndex     ( const UInt32 &value );
+     void setComponentGenerator( const ComponentGeneratorPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +225,13 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
     /*! \{                                                                 */
 
     MFString            _mfSegment;
+    MFReal32            _mfStartStamps;
+    MFReal32            _mfEndStamps;
+    SFUInt32            _sfCurrentSegmentIndex;
+    SFSoundPtr          _sfCaptionDialogSound;
+    SFContainerPtr      _sfParentContainer;
+    SFUInt32            _sfChildIndex;
+    SFComponentGeneratorPtr   _sfComponentGenerator;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -76,6 +76,21 @@ void Caption::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Caption::CaptionSegment(std::string s, Real32 start, Real32 end)
+{
+
+}
+
+void Caption::SetCaptionDialog(SoundPtr)
+{
+
+}
+
+bool Caption::CaptionSegmentUpdate()
+{
+
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

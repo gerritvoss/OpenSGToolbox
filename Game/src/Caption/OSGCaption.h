@@ -73,6 +73,10 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
+    void CaptionSegment(std::string s, Real32 start, Real32 end);
+    void SetCaptionDialog(SoundPtr);
+    bool CaptionSegmentUpdate();
+
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 

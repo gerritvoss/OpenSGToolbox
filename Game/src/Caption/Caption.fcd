@@ -12,10 +12,74 @@
 	useLocalIncludes="true"
 >
 A Caption.
+	
 	<Field
 		name="Segment"
-		type="String"
+		type="std::string"
 		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="StartStamps"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="EndStamps"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="CurrentSegmentIndex"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="CaptionDialogSound"
+		type="SoundPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="ParentContainer"
+		type="ContainerPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="ChildIndex"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="ComponentGenerator"
+		type="ComponentGeneratorPtr"
+		cardinality="single"
 		visibility="external"
 		access="public"
 	>

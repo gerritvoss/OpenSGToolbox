@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,27 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  CaptionBase::SegmentFieldMask = 
     (TypeTraits<BitVector>::One << CaptionBase::SegmentFieldId);
 
+const OSG::BitVector  CaptionBase::StartStampsFieldMask = 
+    (TypeTraits<BitVector>::One << CaptionBase::StartStampsFieldId);
+
+const OSG::BitVector  CaptionBase::EndStampsFieldMask = 
+    (TypeTraits<BitVector>::One << CaptionBase::EndStampsFieldId);
+
+const OSG::BitVector  CaptionBase::CurrentSegmentIndexFieldMask = 
+    (TypeTraits<BitVector>::One << CaptionBase::CurrentSegmentIndexFieldId);
+
+const OSG::BitVector  CaptionBase::CaptionDialogSoundFieldMask = 
+    (TypeTraits<BitVector>::One << CaptionBase::CaptionDialogSoundFieldId);
+
+const OSG::BitVector  CaptionBase::ParentContainerFieldMask = 
+    (TypeTraits<BitVector>::One << CaptionBase::ParentContainerFieldId);
+
+const OSG::BitVector  CaptionBase::ChildIndexFieldMask = 
+    (TypeTraits<BitVector>::One << CaptionBase::ChildIndexFieldId);
+
+const OSG::BitVector  CaptionBase::ComponentGeneratorFieldMask = 
+    (TypeTraits<BitVector>::One << CaptionBase::ComponentGeneratorFieldId);
+
 const OSG::BitVector CaptionBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -74,7 +95,28 @@ const OSG::BitVector CaptionBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var String          CaptionBase::_mfSegment
+/*! \var std::string     CaptionBase::_mfSegment
+    
+*/
+/*! \var Real32          CaptionBase::_mfStartStamps
+    
+*/
+/*! \var Real32          CaptionBase::_mfEndStamps
+    
+*/
+/*! \var UInt32          CaptionBase::_sfCurrentSegmentIndex
+    
+*/
+/*! \var SoundPtr        CaptionBase::_sfCaptionDialogSound
+    
+*/
+/*! \var ContainerPtr    CaptionBase::_sfParentContainer
+    
+*/
+/*! \var UInt32          CaptionBase::_sfChildIndex
+    
+*/
+/*! \var ComponentGeneratorPtr CaptionBase::_sfComponentGenerator
     
 */
 
@@ -86,7 +128,42 @@ FieldDescription *CaptionBase::_desc[] =
                      "Segment", 
                      SegmentFieldId, SegmentFieldMask,
                      false,
-                     (FieldAccessMethod) &CaptionBase::getMFSegment)
+                     (FieldAccessMethod) &CaptionBase::getMFSegment),
+    new FieldDescription(MFReal32::getClassType(), 
+                     "StartStamps", 
+                     StartStampsFieldId, StartStampsFieldMask,
+                     false,
+                     (FieldAccessMethod) &CaptionBase::getMFStartStamps),
+    new FieldDescription(MFReal32::getClassType(), 
+                     "EndStamps", 
+                     EndStampsFieldId, EndStampsFieldMask,
+                     false,
+                     (FieldAccessMethod) &CaptionBase::getMFEndStamps),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "CurrentSegmentIndex", 
+                     CurrentSegmentIndexFieldId, CurrentSegmentIndexFieldMask,
+                     false,
+                     (FieldAccessMethod) &CaptionBase::getSFCurrentSegmentIndex),
+    new FieldDescription(SFSoundPtr::getClassType(), 
+                     "CaptionDialogSound", 
+                     CaptionDialogSoundFieldId, CaptionDialogSoundFieldMask,
+                     false,
+                     (FieldAccessMethod) &CaptionBase::getSFCaptionDialogSound),
+    new FieldDescription(SFContainerPtr::getClassType(), 
+                     "ParentContainer", 
+                     ParentContainerFieldId, ParentContainerFieldMask,
+                     false,
+                     (FieldAccessMethod) &CaptionBase::getSFParentContainer),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "ChildIndex", 
+                     ChildIndexFieldId, ChildIndexFieldMask,
+                     false,
+                     (FieldAccessMethod) &CaptionBase::getSFChildIndex),
+    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
+                     "ComponentGenerator", 
+                     ComponentGeneratorFieldId, ComponentGeneratorFieldMask,
+                     false,
+                     (FieldAccessMethod) &CaptionBase::getSFComponentGenerator)
 };
 
 
@@ -153,6 +230,8 @@ void CaptionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     Inherited::onDestroyAspect(uiId, uiAspect);
 
     _mfSegment.terminateShare(uiAspect, this->getContainerSize());
+    _mfStartStamps.terminateShare(uiAspect, this->getContainerSize());
+    _mfEndStamps.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -164,6 +243,13 @@ void CaptionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 CaptionBase::CaptionBase(void) :
     _mfSegment                (), 
+    _mfStartStamps            (), 
+    _mfEndStamps              (), 
+    _sfCurrentSegmentIndex    (), 
+    _sfCaptionDialogSound     (), 
+    _sfParentContainer        (), 
+    _sfChildIndex             (), 
+    _sfComponentGenerator     (), 
     Inherited() 
 {
 }
@@ -174,6 +260,13 @@ CaptionBase::CaptionBase(void) :
 
 CaptionBase::CaptionBase(const CaptionBase &source) :
     _mfSegment                (source._mfSegment                ), 
+    _mfStartStamps            (source._mfStartStamps            ), 
+    _mfEndStamps              (source._mfEndStamps              ), 
+    _sfCurrentSegmentIndex    (source._sfCurrentSegmentIndex    ), 
+    _sfCaptionDialogSound     (source._sfCaptionDialogSound     ), 
+    _sfParentContainer        (source._sfParentContainer        ), 
+    _sfChildIndex             (source._sfChildIndex             ), 
+    _sfComponentGenerator     (source._sfComponentGenerator     ), 
     Inherited                 (source)
 {
 }
@@ -195,6 +288,41 @@ UInt32 CaptionBase::getBinSize(const BitVector &whichField)
         returnValue += _mfSegment.getBinSize();
     }
 
+    if(FieldBits::NoField != (StartStampsFieldMask & whichField))
+    {
+        returnValue += _mfStartStamps.getBinSize();
+    }
+
+    if(FieldBits::NoField != (EndStampsFieldMask & whichField))
+    {
+        returnValue += _mfEndStamps.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CurrentSegmentIndexFieldMask & whichField))
+    {
+        returnValue += _sfCurrentSegmentIndex.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CaptionDialogSoundFieldMask & whichField))
+    {
+        returnValue += _sfCaptionDialogSound.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    {
+        returnValue += _sfParentContainer.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ChildIndexFieldMask & whichField))
+    {
+        returnValue += _sfChildIndex.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ComponentGeneratorFieldMask & whichField))
+    {
+        returnValue += _sfComponentGenerator.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +335,41 @@ void CaptionBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SegmentFieldMask & whichField))
     {
         _mfSegment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StartStampsFieldMask & whichField))
+    {
+        _mfStartStamps.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EndStampsFieldMask & whichField))
+    {
+        _mfEndStamps.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CurrentSegmentIndexFieldMask & whichField))
+    {
+        _sfCurrentSegmentIndex.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CaptionDialogSoundFieldMask & whichField))
+    {
+        _sfCaptionDialogSound.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    {
+        _sfParentContainer.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ChildIndexFieldMask & whichField))
+    {
+        _sfChildIndex.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ComponentGeneratorFieldMask & whichField))
+    {
+        _sfComponentGenerator.copyToBin(pMem);
     }
 
 
@@ -222,6 +385,41 @@ void CaptionBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfSegment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (StartStampsFieldMask & whichField))
+    {
+        _mfStartStamps.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EndStampsFieldMask & whichField))
+    {
+        _mfEndStamps.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CurrentSegmentIndexFieldMask & whichField))
+    {
+        _sfCurrentSegmentIndex.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CaptionDialogSoundFieldMask & whichField))
+    {
+        _sfCaptionDialogSound.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    {
+        _sfParentContainer.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ChildIndexFieldMask & whichField))
+    {
+        _sfChildIndex.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ComponentGeneratorFieldMask & whichField))
+    {
+        _sfComponentGenerator.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -235,6 +433,27 @@ void CaptionBase::executeSyncImpl(      CaptionBase *pOther,
     if(FieldBits::NoField != (SegmentFieldMask & whichField))
         _mfSegment.syncWith(pOther->_mfSegment);
 
+    if(FieldBits::NoField != (StartStampsFieldMask & whichField))
+        _mfStartStamps.syncWith(pOther->_mfStartStamps);
+
+    if(FieldBits::NoField != (EndStampsFieldMask & whichField))
+        _mfEndStamps.syncWith(pOther->_mfEndStamps);
+
+    if(FieldBits::NoField != (CurrentSegmentIndexFieldMask & whichField))
+        _sfCurrentSegmentIndex.syncWith(pOther->_sfCurrentSegmentIndex);
+
+    if(FieldBits::NoField != (CaptionDialogSoundFieldMask & whichField))
+        _sfCaptionDialogSound.syncWith(pOther->_sfCaptionDialogSound);
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+        _sfParentContainer.syncWith(pOther->_sfParentContainer);
+
+    if(FieldBits::NoField != (ChildIndexFieldMask & whichField))
+        _sfChildIndex.syncWith(pOther->_sfChildIndex);
+
+    if(FieldBits::NoField != (ComponentGeneratorFieldMask & whichField))
+        _sfComponentGenerator.syncWith(pOther->_sfComponentGenerator);
+
 
 }
 #else
@@ -245,9 +464,30 @@ void CaptionBase::executeSyncImpl(      CaptionBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (CurrentSegmentIndexFieldMask & whichField))
+        _sfCurrentSegmentIndex.syncWith(pOther->_sfCurrentSegmentIndex);
+
+    if(FieldBits::NoField != (CaptionDialogSoundFieldMask & whichField))
+        _sfCaptionDialogSound.syncWith(pOther->_sfCaptionDialogSound);
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+        _sfParentContainer.syncWith(pOther->_sfParentContainer);
+
+    if(FieldBits::NoField != (ChildIndexFieldMask & whichField))
+        _sfChildIndex.syncWith(pOther->_sfChildIndex);
+
+    if(FieldBits::NoField != (ComponentGeneratorFieldMask & whichField))
+        _sfComponentGenerator.syncWith(pOther->_sfComponentGenerator);
+
 
     if(FieldBits::NoField != (SegmentFieldMask & whichField))
         _mfSegment.syncWith(pOther->_mfSegment, sInfo);
+
+    if(FieldBits::NoField != (StartStampsFieldMask & whichField))
+        _mfStartStamps.syncWith(pOther->_mfStartStamps, sInfo);
+
+    if(FieldBits::NoField != (EndStampsFieldMask & whichField))
+        _mfEndStamps.syncWith(pOther->_mfEndStamps, sInfo);
 
 
 }
@@ -260,6 +500,12 @@ void CaptionBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (SegmentFieldMask & whichField))
         _mfSegment.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (StartStampsFieldMask & whichField))
+        _mfStartStamps.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (EndStampsFieldMask & whichField))
+        _mfEndStamps.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
