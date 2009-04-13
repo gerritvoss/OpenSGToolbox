@@ -107,7 +107,7 @@ MFString *CaptionBase::getMFSegment(void)
 
 //! Get the value of the \a index element the Caption::_mfSegment field.
 inline
-String &CaptionBase::getSegment(const UInt32 index)
+std::string &CaptionBase::getSegment(const UInt32 index)
 {
     return _mfSegment[index];
 }

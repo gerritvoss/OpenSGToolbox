@@ -124,7 +124,7 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
 
            MFString            *getMFSegment        (void);
 
-           String              &getSegment        (const UInt32 index);
+           std::string         &getSegment        (const UInt32 index);
            MFString            &getSegment        (void);
      const MFString            &getSegment        (void) const;
 
