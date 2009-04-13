@@ -562,31 +562,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Caption\OSGCaptionListener.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Caption\OSGCaptionListener.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Caption\OSGCaptionListener.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Caption\OSGCaptionListenerBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Caption\OSGCaptionListenerBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Caption\OSGCaptionListenerBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Caption\OSGCaptionListenerFields.h"
 					>
 				</File>
 			</Filter>
