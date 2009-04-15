@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "..\..\UserInterface\Builds\Windows\OSGUserInterface.vcproj", "{A1522E75-3430-4B6C-883C-935732C315D3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10UserInterface", "10UserInterface.vcproj", "{FA6AD85A-5A29-4D3A-9AD6-9A5CC84BB307}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11FunctionComponentPanel", "11FunctionComponentPanel.vcproj", "{651AE4EB-7CDA-4D5B-A4BB-5A04A9DEC158}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +31,18 @@ Global
 		{651AE4EB-7CDA-4D5B-A4BB-5A04A9DEC158}.Debug|Win32.Build.0 = Debug|Win32
 		{651AE4EB-7CDA-4D5B-A4BB-5A04A9DEC158}.Release|Win32.ActiveCfg = Release|Win32
 		{651AE4EB-7CDA-4D5B-A4BB-5A04A9DEC158}.Release|Win32.Build.0 = Release|Win32
+		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.Build.0 = Debug|Win32
+		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.ActiveCfg = Release|Win32
+		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.Build.0 = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.Build.0 = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.ActiveCfg = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.Build.0 = Release|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.Build.0 = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.ActiveCfg = Release|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
