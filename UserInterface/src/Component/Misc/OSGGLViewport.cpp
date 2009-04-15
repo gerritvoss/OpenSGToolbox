@@ -446,6 +446,15 @@ void GLViewport::setOffset(const Vec3f& Offset)
     updateView();
 }
 
+
+
+void GLViewport::updateNavigatorConnections(void)
+{
+		//Set up Navigator
+		_Navigator.setViewport(getPort());
+		_Navigator.setCameraTransformation(getPort()->getCamera()->getBeacon());
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -499,9 +508,7 @@ void GLViewport::changed(BitVector whichField, UInt32 origin)
 
 	if(whichField & PortFieldMask)
 	{
-		//Set up Navigator
-		_Navigator.setViewport(getPort());
-		_Navigator.setCameraTransformation(getPort()->getCamera()->getBeacon());
+		updateNavigatorConnections();
 	}
 }
 
@@ -584,6 +591,11 @@ void GLViewport::MouseControlListener::mouseDragged(const MouseEvent& e)
         _GLViewport->setPitch( _GLViewport->_InitialPitch + (_GLViewport->_InitialMousePos.y() - e.getLocation().y())*_GLViewport->_PitchMultiplier );
         _GLViewport->updateView();
     }
+}
+
+void GLViewport::set(const Matrix& m)
+{
+	_Navigator.set(m);
 }
 
 void GLViewport::MouseControlListener::setInitialMat(const Matrix& Mat)

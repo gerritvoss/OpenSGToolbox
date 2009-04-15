@@ -85,6 +85,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
 
 	void showAll(void);
     void lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up);
+	void set(const Matrix& m);
     void setMode(Navigator::Mode TheMode);
 
     virtual void mousePressed(const MouseEvent& e);
@@ -101,6 +102,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
     void setOffsetMultipliers(const Vec3f& OffsetMultipliers);
     void setMinOffset(const Vec3f& MinOffset);
     void setMaxOffset(const Vec3f& MaxOffset);
+
+	void updateNavigatorConnections(void);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
