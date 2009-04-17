@@ -326,6 +326,12 @@ void MenuItem::changed(BitVector whichField, UInt32 origin)
                     Pos = osgMin(MnemonicCharLowerPos, MnemonicCharUpperPos);
                 }
             }
+
+			//Update Parent Menu
+			if(getParentContainer() != NullFC)
+			{
+				getParentContainer()->updateLayout();
+			}
         }
         
         beginEditCP(MenuItemPtr(this), MnemonicTextPositionFieldMask);
