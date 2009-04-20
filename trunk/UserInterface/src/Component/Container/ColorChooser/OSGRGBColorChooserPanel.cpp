@@ -446,10 +446,15 @@ void RGBColorChooserPanel::buildChooser(void)
 
 void RGBColorChooserPanel::updateColorSelectedModel(void)
 {
+	bool isValueAdjusting = _RedModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+		                    _GreenModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+		                    _BlueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+		                    _AlphaModel->getBoundedRangeModel()->getValueIsAdjusting();
 	getColorSelectionModel()->setSelectedColor(Color4f(static_cast<Real32>(_RedModel->getValue())/255.0f,
 		                                               static_cast<Real32>(_GreenModel->getValue())/255.0f,
 													   static_cast<Real32>(_BlueModel->getValue())/255.0f,
-													   static_cast<Real32>(_AlphaModel->getValue())/255.0f));
+													   static_cast<Real32>(_AlphaModel->getValue())/255.0f),
+													   isValueAdjusting);
 }
 
 void RGBColorChooserPanel::attachModelListener(void)

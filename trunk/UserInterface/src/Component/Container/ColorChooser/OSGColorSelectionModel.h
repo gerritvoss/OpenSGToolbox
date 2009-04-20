@@ -66,7 +66,7 @@ public:
 
 	virtual Color4f getSelectedColor(void) const = 0;
 
-	virtual void setSelectedColor(const Color4f& Value) = 0;
+	virtual void setSelectedColor(const Color4f& Value, bool isValueAdjusting) = 0;
 };
 
 typedef boost::intrusive_ptr<ColorSelectionModel> ColorSelectionModelPtr;

@@ -211,7 +211,7 @@ void ColorChooser::setColor(const Color4f& color)
 {
 	if(_SelectionModel != NULL)
 	{
-		_SelectionModel->setSelectedColor(color);
+		_SelectionModel->setSelectedColor(color,false);
 	}
 }
 

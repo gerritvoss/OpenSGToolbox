@@ -463,7 +463,11 @@ void HSVColorChooserPanel::updateColorSelectedModel(void)
 		static_cast<Real32>(_SaturationModel->getValue())/static_cast<Real32>(_SaturationModel->getMaximum()),
 		static_cast<Real32>(_ValueModel->getValue())/static_cast<Real32>(_ValueModel->getMaximum()));
 
-	getColorSelectionModel()->setSelectedColor(TempColor);
+	bool isValueAdjusting = _HueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+		                    _SaturationModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+		                    _ValueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+		                    _AlphaModel->getBoundedRangeModel()->getValueIsAdjusting();
+	getColorSelectionModel()->setSelectedColor(TempColor, isValueAdjusting);
 }
 
 void HSVColorChooserPanel::attachModelListener(void)

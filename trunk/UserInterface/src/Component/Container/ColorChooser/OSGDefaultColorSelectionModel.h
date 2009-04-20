@@ -60,7 +60,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultColorSelectionModel : public Abstra
 	  
 	virtual Color4f getSelectedColor(void) const;
 
-	virtual void setSelectedColor(const Color4f& Value);
+	virtual void setSelectedColor(const Color4f& Value, bool isValueAdjusting);
 
   protected:
 	  Color4f _SelectedColor;

@@ -642,6 +642,7 @@ void Slider::KnobDraggedListener::mousePressed(const MouseEvent& e)
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(this);
+		_Slider->_Model->setValueIsAdjusting(true);
     }
 }
 
@@ -656,6 +657,7 @@ void Slider::KnobDraggedListener::mouseReleased(const MouseEvent& e)
         _Slider->getKnobButton()->addMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+		_Slider->_Model->setValueIsAdjusting(false);
     }
 }
 
@@ -668,6 +670,7 @@ void Slider::KnobDraggedListener::keyTyped(const KeyEvent& e)
         _Slider->getKnobButton()->addMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+		_Slider->_Model->setValueIsAdjusting(false);
 	}
 }
 

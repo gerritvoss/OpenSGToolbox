@@ -76,7 +76,7 @@ Color4f DefaultColorSelectionModel::getSelectedColor(void) const
 	return _SelectedColor;
 }
 
-void DefaultColorSelectionModel::setSelectedColor(const Color4f& Value)
+void DefaultColorSelectionModel::setSelectedColor(const Color4f& Value, bool isValueAdjusting)
 {
 	if(_SelectedColor != Value)
 	{
