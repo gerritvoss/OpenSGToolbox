@@ -496,10 +496,6 @@ void List::intervalRemoved(ListDataEvent e)
 		{
 			NumToPush = NumRemoved;
 		}
-		else if(NewBottomDrawnIndex >= 0)
-		{
-			NumToPush = OldBottomDrawnIndex-NewBottomDrawnIndex;
-		}
 		for(UInt32 i(0) ; i<NumToPush ; ++i)
 		{
 			_DrawnIndices.push_back(createIndexComponent(NewBottomDrawnIndex - (NumToPush-i)+1));
