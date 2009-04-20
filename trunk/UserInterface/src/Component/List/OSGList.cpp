@@ -115,63 +115,68 @@ boost::any List::getValueAtPoint(const MouseEvent& e)
 
 void List::updateItem(const UInt32& Index)
 {
-	if(Index < 0 || Index >= getChildren().size()) {return;}
-
-	cleanItem(Index);
-	_DrawnIndices[Index] = createIndexComponent(getListIndexFromDrawnIndex(Index));
-	initItem(Index);
+	if(Index >= 0 && getListIndexFromDrawnIndex(Index) < getModel()->getSize())
+    {
+	    cleanItem(Index);
+	    _DrawnIndices[Index] = createIndexComponent(getListIndexFromDrawnIndex(Index));
+	    initItem(Index);
+    }
 }
 
 void List::cleanItem(const UInt32& Index)
 {
-	if(Index < 0 || Index >= getChildren().size()) {return;}
-	_DrawnIndices[Index]->removeFocusListener(this);
+	if(Index >= 0 && Index < getChildren().size())
+    {
+	    _DrawnIndices[Index]->removeFocusListener(this);
+    }
 }
 
 void List::initItem(const UInt32& Index)
 {
-	Pnt2f InsetsTopLeft, InsetsBottomRight;
-	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
-
-	if(Index < 0 || Index >= getChildren().size()) {return;}
-	if(getListIndexFromDrawnIndex(Index) == _FocusedIndex)
-	{
-		getParentWindow()->setFocusedComponent(_DrawnIndices[Index]);
-	}
-	_DrawnIndices[Index]->addFocusListener(this);
-	_DrawnIndices[Index]->setFocused(getListIndexFromDrawnIndex(Index) == _FocusedIndex);
-	
-    UInt16 OrientationMajorAxisIndex;
-    UInt16 OrientationMinorAxisIndex;
-    if(getOrientation() == List::VERTICAL_ORIENTATION)
+	if(Index >= 0 && Index < getChildren().size())
     {
-        OrientationMajorAxisIndex = 1;
+	    Pnt2f InsetsTopLeft, InsetsBottomRight;
+	    getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+	    if(getListIndexFromDrawnIndex(Index) == _FocusedIndex)
+	    {
+		    getParentWindow()->setFocusedComponent(_DrawnIndices[Index]);
+	    }
+	    _DrawnIndices[Index]->addFocusListener(this);
+	    _DrawnIndices[Index]->setFocused(getListIndexFromDrawnIndex(Index) == _FocusedIndex);
+    	
+        UInt16 OrientationMajorAxisIndex;
+        UInt16 OrientationMinorAxisIndex;
+        if(getOrientation() == List::VERTICAL_ORIENTATION)
+        {
+            OrientationMajorAxisIndex = 1;
+        }
+        else
+        {
+            OrientationMajorAxisIndex = 0;
+        }
+	    OrientationMinorAxisIndex = (OrientationMajorAxisIndex +1) %2;
+
+        //Update the Position and Size of the Index
+	    Pnt2f Pos;
+	    Vec2f Size;
+	    Pos[OrientationMajorAxisIndex] = getCellMajorAxisLength()*getListIndexFromDrawnIndex(Index);
+	    Pos[OrientationMinorAxisIndex] = InsetsTopLeft[OrientationMinorAxisIndex];
+
+	    Size[OrientationMajorAxisIndex] = getCellMajorAxisLength();
+	    Size[OrientationMinorAxisIndex] = getSize()[OrientationMinorAxisIndex];
+
+	    beginEditCP(_DrawnIndices[Index], Component::PositionFieldMask | Component::SizeFieldMask | Component::ParentContainerFieldMask | Component::ParentWindowFieldMask);
+            _DrawnIndices[Index]->setPosition(Pos);
+            _DrawnIndices[Index]->setSize(Size);
+		    _DrawnIndices[Index]->setParentContainer(ListPtr(this));
+		    _DrawnIndices[Index]->setParentWindow(getParentWindow());
+        endEditCP(_DrawnIndices[Index], Component::PositionFieldMask | Component::SizeFieldMask | Component::ParentContainerFieldMask | Component::ParentWindowFieldMask);
+
+	    //_DrawnIndices[Index]->updateClipBounds();
+
+	    getChildren()[Index] = _DrawnIndices[Index];
     }
-    else
-    {
-        OrientationMajorAxisIndex = 0;
-    }
-	OrientationMinorAxisIndex = (OrientationMajorAxisIndex +1) %2;
-
-    //Update the Position and Size of the Index
-	Pnt2f Pos;
-	Vec2f Size;
-	Pos[OrientationMajorAxisIndex] = getCellMajorAxisLength()*getListIndexFromDrawnIndex(Index);
-	Pos[OrientationMinorAxisIndex] = InsetsTopLeft[OrientationMinorAxisIndex];
-
-	Size[OrientationMajorAxisIndex] = getCellMajorAxisLength();
-	Size[OrientationMinorAxisIndex] = getSize()[OrientationMinorAxisIndex];
-
-	beginEditCP(_DrawnIndices[Index], Component::PositionFieldMask | Component::SizeFieldMask | Component::ParentContainerFieldMask | Component::ParentWindowFieldMask);
-        _DrawnIndices[Index]->setPosition(Pos);
-        _DrawnIndices[Index]->setSize(Size);
-		_DrawnIndices[Index]->setParentContainer(ListPtr(this));
-		_DrawnIndices[Index]->setParentWindow(getParentWindow());
-    endEditCP(_DrawnIndices[Index], Component::PositionFieldMask | Component::SizeFieldMask | Component::ParentContainerFieldMask | Component::ParentWindowFieldMask);
-
-	//_DrawnIndices[Index]->updateClipBounds();
-
-	getChildren()[Index] = _DrawnIndices[Index];
 }
 
 
@@ -557,7 +562,6 @@ void List::intervalRemoved(ListDataEvent e)
 	}
 	
 	updatePreferredSize();
-    
     getSelectionModel()->removeIndexInterval(e.getIndex0(), e.getIndex1());
 }
 

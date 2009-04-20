@@ -168,13 +168,60 @@ EventConnection Button::addMousePressedActionListener(ActionListenerPtr Listener
 
 Vec2f Button::getContentRequestedSize(void) const
 {
-    Pnt2f TextTopLeft(0.0f,0.0f), TextBottomRight(0.0f,0.0f);
-    if(getFont() != NullFC)
+    Vec2f Result(0.0f,0.0f);
+    UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
+    if(getDrawObjectToTextAlignment() == ALIGN_DRAW_OBJECT_LEFT_OF_TEXT ||
+       getDrawObjectToTextAlignment() == ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT)
     {
-        getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+        if(getFont() != NullFC)
+        {
+            Pnt2f TextTopLeft(0.0f,0.0f), TextBottomRight(0.0f,0.0f);
+            getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+            Result[0] += (TextBottomRight - TextTopLeft).x();
+            Result[1] = osgMax(Result[1],(TextBottomRight - TextTopLeft).y());
+        }
+
+        if(DrawnDrawObject != NullFC)
+        {
+            Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
+            DrawnDrawObject->getDrawObjectBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+
+            Result[0] += (DrawObjectBottomRight - DrawObjectTopLeft).x();
+            Result[1] = osgMax(Result[1],(DrawObjectBottomRight - DrawObjectTopLeft).y());
+        }
+
+        if(getFont() != NullFC && DrawnDrawObject != NullFC)
+        {
+            Result[0] += getDrawObjectToTextPadding();
+        }
+    }
+    else if(getDrawObjectToTextAlignment() == ALIGN_DRAW_OBJECT_ABOVE_TEXT ||
+       getDrawObjectToTextAlignment() == ALIGN_DRAW_OBJECT_BELOW_TEXT)
+    {
+        if(getFont() != NullFC)
+        {
+            Pnt2f TextTopLeft(0.0f,0.0f), TextBottomRight(0.0f,0.0f);
+            getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+            Result[1] += (TextBottomRight - TextTopLeft).y();
+            Result[0] = osgMax(Result[0],(TextBottomRight - TextTopLeft).x());
+        }
+
+        if(DrawnDrawObject != NullFC)
+        {
+            Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
+            DrawnDrawObject->getDrawObjectBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+
+            Result[1] += (DrawObjectBottomRight - DrawObjectTopLeft).y();
+            Result[0] = osgMax(Result[0],(DrawObjectBottomRight - DrawObjectTopLeft).x());
+        }
+
+        if(getFont() != NullFC && DrawnDrawObject != NullFC)
+        {
+            Result[1] += getDrawObjectToTextPadding();
+        }
     }
 
-	return (TextBottomRight - TextTopLeft) + Vec2f(2.0,2.0);
+	return Result + Vec2f(2.0,2.0);
 }
 BorderPtr Button::getDrawnBorder(void) const
 {

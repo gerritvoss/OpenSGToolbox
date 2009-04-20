@@ -159,7 +159,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     /*! \}                                                                 */
 
-    ListModelPtr _Model;
     ListSelectionModelPtr _SelectionModel;
 
 

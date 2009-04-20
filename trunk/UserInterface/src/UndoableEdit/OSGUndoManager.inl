@@ -58,6 +58,8 @@ inline
 void UndoManager::setLimit(const Int32& limit)
 {
 	_Limit = limit;
+	trimForLimit();
+	produceStateChanged();
 }
 
 OSG_END_NAMESPACE
