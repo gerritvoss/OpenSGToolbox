@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::IndicatorsFieldMask = 
     (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::IndicatorsFieldId);
 
+const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::IndicatorComponentsFieldMask = 
+    (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::IndicatorComponentsFieldId);
+
 const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::DirectionComponentGeneratorFieldMask = 
     (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::DirectionComponentGeneratorFieldId);
 
@@ -81,6 +84,9 @@ const OSG::BitVector DirectionalIndicatorMiniMapOverlayBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var MiniMapIndicatorPtr DirectionalIndicatorMiniMapOverlayBase::_mfIndicators
+    
+*/
+/*! \var ComponentPtr    DirectionalIndicatorMiniMapOverlayBase::_mfIndicatorComponents
     
 */
 /*! \var ComponentGeneratorPtr DirectionalIndicatorMiniMapOverlayBase::_sfDirectionComponentGenerator
@@ -99,6 +105,11 @@ FieldDescription *DirectionalIndicatorMiniMapOverlayBase::_desc[] =
                      IndicatorsFieldId, IndicatorsFieldMask,
                      false,
                      (FieldAccessMethod) &DirectionalIndicatorMiniMapOverlayBase::getMFIndicators),
+    new FieldDescription(MFComponentPtr::getClassType(), 
+                     "IndicatorComponents", 
+                     IndicatorComponentsFieldId, IndicatorComponentsFieldMask,
+                     true,
+                     (FieldAccessMethod) &DirectionalIndicatorMiniMapOverlayBase::getMFIndicatorComponents),
     new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
                      "DirectionComponentGenerator", 
                      DirectionComponentGeneratorFieldId, DirectionComponentGeneratorFieldMask,
@@ -175,6 +186,7 @@ void DirectionalIndicatorMiniMapOverlayBase::onDestroyAspect(UInt32 uiId, UInt32
     Inherited::onDestroyAspect(uiId, uiAspect);
 
     _mfIndicators.terminateShare(uiAspect, this->getContainerSize());
+    _mfIndicatorComponents.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -186,6 +198,7 @@ void DirectionalIndicatorMiniMapOverlayBase::onDestroyAspect(UInt32 uiId, UInt32
 
 DirectionalIndicatorMiniMapOverlayBase::DirectionalIndicatorMiniMapOverlayBase(void) :
     _mfIndicators             (), 
+    _mfIndicatorComponents    (), 
     _sfDirectionComponentGenerator(ComponentGeneratorPtr(NullFC)), 
     _sfOverlayPanel           (PanelPtr(NullFC)), 
     Inherited() 
@@ -198,6 +211,7 @@ DirectionalIndicatorMiniMapOverlayBase::DirectionalIndicatorMiniMapOverlayBase(v
 
 DirectionalIndicatorMiniMapOverlayBase::DirectionalIndicatorMiniMapOverlayBase(const DirectionalIndicatorMiniMapOverlayBase &source) :
     _mfIndicators             (source._mfIndicators             ), 
+    _mfIndicatorComponents    (source._mfIndicatorComponents    ), 
     _sfDirectionComponentGenerator(source._sfDirectionComponentGenerator), 
     _sfOverlayPanel           (source._sfOverlayPanel           ), 
     Inherited                 (source)
@@ -219,6 +233,11 @@ UInt32 DirectionalIndicatorMiniMapOverlayBase::getBinSize(const BitVector &which
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
     {
         returnValue += _mfIndicators.getBinSize();
+    }
+
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+    {
+        returnValue += _mfIndicatorComponents.getBinSize();
     }
 
     if(FieldBits::NoField != (DirectionComponentGeneratorFieldMask & whichField))
@@ -245,6 +264,11 @@ void DirectionalIndicatorMiniMapOverlayBase::copyToBin(      BinaryDataHandler &
         _mfIndicators.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+    {
+        _mfIndicatorComponents.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (DirectionComponentGeneratorFieldMask & whichField))
     {
         _sfDirectionComponentGenerator.copyToBin(pMem);
@@ -266,6 +290,11 @@ void DirectionalIndicatorMiniMapOverlayBase::copyFromBin(      BinaryDataHandler
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
     {
         _mfIndicators.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+    {
+        _mfIndicatorComponents.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (DirectionComponentGeneratorFieldMask & whichField))
@@ -290,6 +319,9 @@ void DirectionalIndicatorMiniMapOverlayBase::executeSyncImpl(      DirectionalIn
 
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
         _mfIndicators.syncWith(pOther->_mfIndicators);
+
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+        _mfIndicatorComponents.syncWith(pOther->_mfIndicatorComponents);
 
     if(FieldBits::NoField != (DirectionComponentGeneratorFieldMask & whichField))
         _sfDirectionComponentGenerator.syncWith(pOther->_sfDirectionComponentGenerator);
@@ -317,6 +349,9 @@ void DirectionalIndicatorMiniMapOverlayBase::executeSyncImpl(      DirectionalIn
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
         _mfIndicators.syncWith(pOther->_mfIndicators, sInfo);
 
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+        _mfIndicatorComponents.syncWith(pOther->_mfIndicatorComponents, sInfo);
+
 
 }
 
@@ -328,6 +363,9 @@ void DirectionalIndicatorMiniMapOverlayBase::execBeginEditImpl (const BitVector 
 
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
         _mfIndicators.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+        _mfIndicatorComponents.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

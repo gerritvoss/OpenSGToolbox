@@ -46,6 +46,7 @@
 #define OSG_COMPILEGAMELIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
 
 #include "OSGMiniMap.h"
 
@@ -89,6 +90,50 @@ void MiniMap::removeMiniMapListener(MiniMapListenerPtr Listener)
    {
       _MiniMapListeners.erase(EraseIter);
    }
+}
+
+void MiniMap::updateOverlays(void)
+{
+	for(UInt32 i(0) ; i<getOverlays().size() ; ++i)
+	{
+		getOverlays(i)->update(MiniMapPtr(this),NullFC, Vec3f(0.0,0.0),Vec2f(0.0,0.0));
+	}
+
+	updateOverlayPanels();
+	attachAllOverlays();
+}
+
+void MiniMap::updateOverlayPanels(void)
+{
+	Vec2f InsetsTopLeft, InsetsBottomRight;
+	this->getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+	PanelPtr ThePanel;
+	for(UInt32 i(0) ; i<getOverlays().size() ; ++i)
+	{
+		ThePanel = getOverlays(i)->getPanel();
+		
+		beginEditCP(ThePanel, Panel::PositionFieldMask | Panel::SizeFieldMask);
+			ThePanel->setPosition(InsetsTopLeft);
+			ThePanel->setSize(InsetsBottomRight - InsetsTopLeft);
+		endEditCP(ThePanel, Panel::PositionFieldMask | Panel::SizeFieldMask);
+	}
+}
+
+void MiniMap::attachAllOverlays(void)
+{
+	PanelPtr AddedPanel;
+	beginEditCP(MiniMapPtr(this), MiniMap::ChildrenFieldMask);
+		for(UInt32 i(0) ; i<getOverlays().size() ; ++i)
+		{
+			AddedPanel = getOverlays(i)->getPanel();
+			
+			if(getChildren().find(AddedPanel) == getChildren().end())
+			{
+				getChildren().push_back(AddedPanel);
+			}
+		}
+	endEditCP(MiniMapPtr(this), MiniMap::ChildrenFieldMask);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -149,6 +194,15 @@ void MiniMap::changed(BitVector whichField, UInt32 origin)
 		(whichField & ViewPointIndicatorFieldMask))
 	{
 		updateAllTransformations();
+	}
+
+	if((whichField & SizeFieldMask))
+	{
+		updateOverlayPanels();
+	}
+	if((whichField & OverlaysFieldMask))
+	{
+		updateOverlays();
 	}
 }
 

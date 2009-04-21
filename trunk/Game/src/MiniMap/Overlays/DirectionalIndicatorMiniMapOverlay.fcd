@@ -22,6 +22,15 @@ A Directional Indicator MiniMapOverlay.
 	>
 	</Field>
 	<Field
+		name="IndicatorComponents"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="internal"
+		header="OpenSG/UserInterface/OSGComponentFields.h"
+		access="protected"
+	>
+	</Field>
+	<Field
 		name="DirectionComponentGenerator"
 		type="ComponentGeneratorPtr"
 		cardinality="single"

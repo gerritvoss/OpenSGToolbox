@@ -90,6 +90,8 @@ void LayeredImageMiniMap::updateAllTransformations(void)
         updateUnlockedMapTransformation();
 
     updateMultiIndicatorTransformation();
+
+	updateOverlays();
     
 }
 

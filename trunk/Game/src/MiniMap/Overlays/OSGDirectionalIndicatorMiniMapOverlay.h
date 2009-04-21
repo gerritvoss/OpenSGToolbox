@@ -77,7 +77,8 @@ class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlay : public Directi
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual PanelPtr update(MiniMapPtr TheMiniMap, PanelPtr OverlayPanel, const Vec2f& TopLeft, const Vec3f& BottomRight);
+    virtual void update(MiniMapPtr TheMiniMap, PanelPtr OverlayPanel, const Vec2f& TopLeft, const Vec3f& BottomRight);
+    virtual PanelPtr getPanel(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

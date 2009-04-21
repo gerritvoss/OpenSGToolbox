@@ -127,6 +127,10 @@ class OSG_GAMELIB_DLLMAPPING MiniMap : public MiniMapBase
 	friend class TransformationChangedListener;
 
 	TransformationChangedListener _TransformationChangedListener;
+
+	void updateOverlays(void);
+	void updateOverlayPanels(void);
+	void attachAllOverlays(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

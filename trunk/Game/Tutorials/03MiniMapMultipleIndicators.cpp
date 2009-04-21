@@ -28,6 +28,7 @@ moving objects is there.
 #include <OpenSG/OSGSolidBackground.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
 #include <OpenSG/OSGRenderAction.h>
+#include <OpenSG/OSGSceneFileHandler.h>
 #include <OpenSG/Toolbox/OSGCameraUtils.h>
 
 
@@ -47,9 +48,6 @@ moving objects is there.
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
 
 // Button Headers
 
@@ -481,7 +479,8 @@ int main(int argc, char **argv)
                                         "OpenSG 02LayeredImageMiniMap");
 										
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.25, 1, 16, 16);
+    //NodePtr TorusGeometryNode = makeTorus(.25, 1, 16, 16);
+	NodePtr TorusGeometryNode = SceneFileHandler::the().read("C:\\Documents and Settings\\All Users\\Documents\\Cell.osb");
 
 	Matrix TorusTransMatrix;
 	TorusTransMatrix.setTransform(Vec3f(0.0,0.0,0.0));

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -68,6 +68,7 @@
 #include "OSGMiniMapOverlay.h" // Parent
 
 #include "MiniMap/Indicators/OSGMiniMapIndicator.h" // Indicators type
+#include <OpenSG/UserInterface/OSGComponentFields.h> // IndicatorComponents type
 #include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // DirectionComponentGenerator type
 #include <OpenSG/UserInterface/OSGPanelFields.h> // OverlayPanel type
 
@@ -94,12 +95,14 @@ class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlayBase : public Min
     enum
     {
         IndicatorsFieldId                  = Inherited::NextFieldId,
-        DirectionComponentGeneratorFieldId = IndicatorsFieldId                  + 1,
+        IndicatorComponentsFieldId         = IndicatorsFieldId                  + 1,
+        DirectionComponentGeneratorFieldId = IndicatorComponentsFieldId         + 1,
         OverlayPanelFieldId                = DirectionComponentGeneratorFieldId + 1,
         NextFieldId                        = OverlayPanelFieldId                + 1
     };
 
     static const OSG::BitVector IndicatorsFieldMask;
+    static const OSG::BitVector IndicatorComponentsFieldMask;
     static const OSG::BitVector DirectionComponentGeneratorFieldMask;
     static const OSG::BitVector OverlayPanelFieldMask;
 
@@ -186,6 +189,7 @@ class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlayBase : public Min
     /*! \{                                                                 */
 
     MFMiniMapIndicatorPtr   _mfIndicators;
+    MFComponentPtr      _mfIndicatorComponents;
     SFComponentGeneratorPtr   _sfDirectionComponentGenerator;
     SFPanelPtr          _sfOverlayPanel;
 
@@ -209,10 +213,14 @@ class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlayBase : public Min
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           MFComponentPtr      *getMFIndicatorComponents(void);
            SFPanelPtr          *getSFOverlayPanel   (void);
 
            PanelPtr            &getOverlayPanel   (void);
      const PanelPtr            &getOverlayPanel   (void) const;
+           ComponentPtr        &getIndicatorComponents(UInt32 index);
+           MFComponentPtr      &getIndicatorComponents(void);
+     const MFComponentPtr      &getIndicatorComponents(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

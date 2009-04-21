@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -103,6 +103,13 @@ MFMiniMapIndicatorPtr *DirectionalIndicatorMiniMapOverlayBase::getMFIndicators(v
     return &_mfIndicators;
 }
 
+//! Get the DirectionalIndicatorMiniMapOverlay::_mfIndicatorComponents field.
+inline
+MFComponentPtr *DirectionalIndicatorMiniMapOverlayBase::getMFIndicatorComponents(void)
+{
+    return &_mfIndicatorComponents;
+}
+
 //! Get the DirectionalIndicatorMiniMapOverlay::_sfDirectionComponentGenerator field.
 inline
 SFComponentGeneratorPtr *DirectionalIndicatorMiniMapOverlayBase::getSFDirectionComponentGenerator(void)
@@ -180,6 +187,27 @@ inline
 const MFMiniMapIndicatorPtr &DirectionalIndicatorMiniMapOverlayBase::getIndicators(void) const
 {
     return _mfIndicators;
+}
+
+//! Get the value of the \a index element the DirectionalIndicatorMiniMapOverlay::_mfIndicatorComponents field.
+inline
+ComponentPtr &DirectionalIndicatorMiniMapOverlayBase::getIndicatorComponents(const UInt32 index)
+{
+    return _mfIndicatorComponents[index];
+}
+
+//! Get the DirectionalIndicatorMiniMapOverlay::_mfIndicatorComponents field.
+inline
+MFComponentPtr &DirectionalIndicatorMiniMapOverlayBase::getIndicatorComponents(void)
+{
+    return _mfIndicatorComponents;
+}
+
+//! Get the DirectionalIndicatorMiniMapOverlay::_mfIndicatorComponents field.
+inline
+const MFComponentPtr &DirectionalIndicatorMiniMapOverlayBase::getIndicatorComponents(void) const
+{
+    return _mfIndicatorComponents;
 }
 
 OSG_END_NAMESPACE

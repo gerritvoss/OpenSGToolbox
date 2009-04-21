@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDirectionalIndicatorMiniMapOverlay.h"
+#include "OSGDirectionalIndicatorComponentGenerator.h"
 #include "MiniMap/OSGMiniMap.h"
 
 OSG_BEGIN_NAMESPACE
@@ -77,10 +78,66 @@ void DirectionalIndicatorMiniMapOverlay::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-PanelPtr DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr OverlayPanel, const Vec2f& TopLeft, const Vec3f& BottomRight)
+void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr OverlayPanel, const Vec2f& TopLeft, const Vec3f& BottomRight)
+{
+	if(!TheMiniMap->getLockMapOrientation())
+	{
+		if(getOverlayPanel() == NullFC)
+		{
+			beginEditCP(DirectionalIndicatorMiniMapOverlayPtr(this), OverlayPanelFieldMask);
+				setOverlayPanel(Panel::createEmpty());
+			endEditCP(DirectionalIndicatorMiniMapOverlayPtr(this), OverlayPanelFieldMask);
+		}
+
+		Vec3f IndicatorDelta;
+		for(UInt32 i(0) ; i<getIndicators().size() ; ++i)
+		{
+			//Calculate the Direction
+			IndicatorDelta = Vec3f(0.0,0.0,0.0);
+
+			//Add Component if necissary
+			if(getIndicatorComponents().size() < i+1)
+			{
+				ComponentPtr TheComponent;
+				if(getDirectionComponentGenerator()->getType().isDerivedFrom(DirectionalIndicatorComponentGenerator::getClassType()))
+				{
+					TheComponent = DirectionalIndicatorComponentGenerator::Ptr::dcast(getDirectionComponentGenerator())->getDirectionalComponent(TheMiniMap, getIndicators(i), IndicatorDelta, false);
+				}
+				else
+				{
+					TheComponent = getDirectionComponentGenerator()->getComponent(TheMiniMap,boost::any(getIndicators(i)),0,0,false,false);
+				}
+
+				//Create the Component for this indicator
+				beginEditCP(DirectionalIndicatorMiniMapOverlayPtr(this), IndicatorComponentsFieldMask);
+					getIndicatorComponents().push_back(TheComponent);
+				endEditCP(DirectionalIndicatorMiniMapOverlayPtr(this), IndicatorComponentsFieldMask);
+			}
+
+			//Update the Component Position and direction
+			beginEditCP(getIndicatorComponents(i), Component::PositionFieldMask | Component::SizeFieldMask);
+				getIndicatorComponents(i)->setPosition(Vec2f(0.0f,0.0f));
+				getIndicatorComponents(i)->setSize(Vec2f(20.0,20.0));
+			endEditCP(getIndicatorComponents(i), Component::PositionFieldMask | Component::SizeFieldMask);
+			
+		}
+
+		//Add Components to the Panel
+		beginEditCP(getOverlayPanel(), Panel::ChildrenFieldMask);
+			getOverlayPanel()->getChildren().clear();
+			for(UInt32 i(0) ; i<getIndicatorComponents().size() ; ++i)
+			{
+				getOverlayPanel()->getChildren().push_back(getIndicatorComponents(i));
+			}
+		endEditCP(getOverlayPanel(), Panel::ChildrenFieldMask);
+	}
+}
+
+PanelPtr DirectionalIndicatorMiniMapOverlay::getPanel(void) const
 {
     return getOverlayPanel();
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
