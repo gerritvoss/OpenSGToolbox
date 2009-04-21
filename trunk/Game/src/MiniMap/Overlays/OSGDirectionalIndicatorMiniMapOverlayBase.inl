@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class LayeredImageMiniMap!
+ **     class DirectionalIndicatorMiniMapOverlay!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &LayeredImageMiniMapBase::getClassType(void)
+OSG::FieldContainerType &DirectionalIndicatorMiniMapOverlayBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LayeredImageMiniMapBase::getClassTypeId(void) 
+OSG::UInt32 DirectionalIndicatorMiniMapOverlayBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-LayeredImageMiniMapPtr LayeredImageMiniMapBase::create(void) 
+DirectionalIndicatorMiniMapOverlayPtr DirectionalIndicatorMiniMapOverlayBase::create(void) 
 {
-    LayeredImageMiniMapPtr fc; 
+    DirectionalIndicatorMiniMapOverlayPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = LayeredImageMiniMapPtr::dcast(
+        fc = DirectionalIndicatorMiniMapOverlayPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ LayeredImageMiniMapPtr LayeredImageMiniMapBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-LayeredImageMiniMapPtr LayeredImageMiniMapBase::createEmpty(void) 
+DirectionalIndicatorMiniMapOverlayPtr DirectionalIndicatorMiniMapOverlayBase::createEmpty(void) 
 { 
-    LayeredImageMiniMapPtr returnValue; 
+    DirectionalIndicatorMiniMapOverlayPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,65 +96,93 @@ LayeredImageMiniMapPtr LayeredImageMiniMapBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the LayeredImageMiniMap::_mfLayerTextures field.
+//! Get the DirectionalIndicatorMiniMapOverlay::_mfIndicators field.
 inline
-MFTextureChunkPtr *LayeredImageMiniMapBase::getMFLayerTextures(void)
+MFMiniMapIndicatorPtr *DirectionalIndicatorMiniMapOverlayBase::getMFIndicators(void)
 {
-    return &_mfLayerTextures;
+    return &_mfIndicators;
 }
 
-//! Get the LayeredImageMiniMap::_mfLayerDistances field.
+//! Get the DirectionalIndicatorMiniMapOverlay::_sfDirectionComponentGenerator field.
 inline
-MFReal32 *LayeredImageMiniMapBase::getMFLayerDistances(void)
+SFComponentGeneratorPtr *DirectionalIndicatorMiniMapOverlayBase::getSFDirectionComponentGenerator(void)
 {
-    return &_mfLayerDistances;
+    return &_sfDirectionComponentGenerator;
+}
+
+//! Get the DirectionalIndicatorMiniMapOverlay::_sfOverlayPanel field.
+inline
+SFPanelPtr *DirectionalIndicatorMiniMapOverlayBase::getSFOverlayPanel(void)
+{
+    return &_sfOverlayPanel;
 }
 
 
-
-//! Get the value of the \a index element the LayeredImageMiniMap::_mfLayerTextures field.
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfDirectionComponentGenerator field.
 inline
-TextureChunkPtr &LayeredImageMiniMapBase::getLayerTextures(const UInt32 index)
+ComponentGeneratorPtr &DirectionalIndicatorMiniMapOverlayBase::getDirectionComponentGenerator(void)
 {
-    return _mfLayerTextures[index];
+    return _sfDirectionComponentGenerator.getValue();
 }
 
-//! Get the LayeredImageMiniMap::_mfLayerTextures field.
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfDirectionComponentGenerator field.
 inline
-MFTextureChunkPtr &LayeredImageMiniMapBase::getLayerTextures(void)
+const ComponentGeneratorPtr &DirectionalIndicatorMiniMapOverlayBase::getDirectionComponentGenerator(void) const
 {
-    return _mfLayerTextures;
+    return _sfDirectionComponentGenerator.getValue();
 }
 
-//! Get the LayeredImageMiniMap::_mfLayerTextures field.
+//! Set the value of the DirectionalIndicatorMiniMapOverlay::_sfDirectionComponentGenerator field.
 inline
-const MFTextureChunkPtr &LayeredImageMiniMapBase::getLayerTextures(void) const
+void DirectionalIndicatorMiniMapOverlayBase::setDirectionComponentGenerator(const ComponentGeneratorPtr &value)
 {
-    return _mfLayerTextures;
+    _sfDirectionComponentGenerator.setValue(value);
 }
 
-//! Get the value of the \a index element the LayeredImageMiniMap::_mfLayerDistances field.
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfOverlayPanel field.
 inline
-Real32 &LayeredImageMiniMapBase::getLayerDistances(const UInt32 index)
+PanelPtr &DirectionalIndicatorMiniMapOverlayBase::getOverlayPanel(void)
 {
-    return _mfLayerDistances[index];
+    return _sfOverlayPanel.getValue();
 }
 
-//! Get the LayeredImageMiniMap::_mfLayerDistances field.
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfOverlayPanel field.
 inline
-MFReal32 &LayeredImageMiniMapBase::getLayerDistances(void)
+const PanelPtr &DirectionalIndicatorMiniMapOverlayBase::getOverlayPanel(void) const
 {
-    return _mfLayerDistances;
+    return _sfOverlayPanel.getValue();
 }
 
-//! Get the LayeredImageMiniMap::_mfLayerDistances field.
+//! Set the value of the DirectionalIndicatorMiniMapOverlay::_sfOverlayPanel field.
 inline
-const MFReal32 &LayeredImageMiniMapBase::getLayerDistances(void) const
+void DirectionalIndicatorMiniMapOverlayBase::setOverlayPanel(const PanelPtr &value)
 {
-    return _mfLayerDistances;
+    _sfOverlayPanel.setValue(value);
+}
+
+
+//! Get the value of the \a index element the DirectionalIndicatorMiniMapOverlay::_mfIndicators field.
+inline
+MiniMapIndicatorPtr &DirectionalIndicatorMiniMapOverlayBase::getIndicators(const UInt32 index)
+{
+    return _mfIndicators[index];
+}
+
+//! Get the DirectionalIndicatorMiniMapOverlay::_mfIndicators field.
+inline
+MFMiniMapIndicatorPtr &DirectionalIndicatorMiniMapOverlayBase::getIndicators(void)
+{
+    return _mfIndicators;
+}
+
+//! Get the DirectionalIndicatorMiniMapOverlay::_mfIndicators field.
+inline
+const MFMiniMapIndicatorPtr &DirectionalIndicatorMiniMapOverlayBase::getIndicators(void) const
+{
+    return _mfIndicators;
 }
 
 OSG_END_NAMESPACE
 
-#define OSGLAYEREDIMAGEMINIMAPBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGDIRECTIONALINDICATORMINIMAPOVERLAYBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

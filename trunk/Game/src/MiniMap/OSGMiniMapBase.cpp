@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -91,6 +91,9 @@ const OSG::BitVector  MiniMapBase::MapSceneFieldMask =
 const OSG::BitVector  MiniMapBase::UnlockedMapSizeFieldMask = 
     (TypeTraits<BitVector>::One << MiniMapBase::UnlockedMapSizeFieldId);
 
+const OSG::BitVector  MiniMapBase::OverlaysFieldMask = 
+    (TypeTraits<BitVector>::One << MiniMapBase::OverlaysFieldId);
+
 const OSG::BitVector MiniMapBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -123,6 +126,9 @@ const OSG::BitVector MiniMapBase::MTInfluenceMask =
     
 */
 /*! \var Vec2f           MiniMapBase::_sfUnlockedMapSize
+    
+*/
+/*! \var MiniMapOverlayPtr MiniMapBase::_mfOverlays
     
 */
 
@@ -174,7 +180,12 @@ FieldDescription *MiniMapBase::_desc[] =
                      "UnlockedMapSize", 
                      UnlockedMapSizeFieldId, UnlockedMapSizeFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFUnlockedMapSize)
+                     (FieldAccessMethod) &MiniMapBase::getSFUnlockedMapSize),
+    new FieldDescription(MFMiniMapOverlayPtr::getClassType(), 
+                     "Overlays", 
+                     OverlaysFieldId, OverlaysFieldMask,
+                     false,
+                     (FieldAccessMethod) &MiniMapBase::getMFOverlays)
 };
 
 
@@ -232,6 +243,7 @@ void MiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     Inherited::onDestroyAspect(uiId, uiAspect);
 
     _mfIndicators.terminateShare(uiAspect, this->getContainerSize());
+    _mfOverlays.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -251,6 +263,7 @@ MiniMapBase::MiniMapBase(void) :
     _sfMapScaleParameter      (), 
     _sfMapScene               (), 
     _sfUnlockedMapSize        (), 
+    _mfOverlays               (), 
     Inherited() 
 {
 }
@@ -269,6 +282,7 @@ MiniMapBase::MiniMapBase(const MiniMapBase &source) :
     _sfMapScaleParameter      (source._sfMapScaleParameter      ), 
     _sfMapScene               (source._sfMapScene               ), 
     _sfUnlockedMapSize        (source._sfUnlockedMapSize        ), 
+    _mfOverlays               (source._mfOverlays               ), 
     Inherited                 (source)
 {
 }
@@ -330,6 +344,11 @@ UInt32 MiniMapBase::getBinSize(const BitVector &whichField)
         returnValue += _sfUnlockedMapSize.getBinSize();
     }
 
+    if(FieldBits::NoField != (OverlaysFieldMask & whichField))
+    {
+        returnValue += _mfOverlays.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -382,6 +401,11 @@ void MiniMapBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (UnlockedMapSizeFieldMask & whichField))
     {
         _sfUnlockedMapSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OverlaysFieldMask & whichField))
+    {
+        _mfOverlays.copyToBin(pMem);
     }
 
 
@@ -437,6 +461,11 @@ void MiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfUnlockedMapSize.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (OverlaysFieldMask & whichField))
+    {
+        _mfOverlays.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -473,6 +502,9 @@ void MiniMapBase::executeSyncImpl(      MiniMapBase *pOther,
 
     if(FieldBits::NoField != (UnlockedMapSizeFieldMask & whichField))
         _sfUnlockedMapSize.syncWith(pOther->_sfUnlockedMapSize);
+
+    if(FieldBits::NoField != (OverlaysFieldMask & whichField))
+        _mfOverlays.syncWith(pOther->_mfOverlays);
 
 
 }
@@ -512,6 +544,9 @@ void MiniMapBase::executeSyncImpl(      MiniMapBase *pOther,
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
         _mfIndicators.syncWith(pOther->_mfIndicators, sInfo);
 
+    if(FieldBits::NoField != (OverlaysFieldMask & whichField))
+        _mfOverlays.syncWith(pOther->_mfOverlays, sInfo);
+
 
 }
 
@@ -523,6 +558,9 @@ void MiniMapBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
         _mfIndicators.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (OverlaysFieldMask & whichField))
+        _mfOverlays.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

@@ -45,126 +45,84 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class LayeredImageMiniMap!
+ **     class DirectionalIndicatorComponentGenerator!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILELAYEREDIMAGEMINIMAPINST
+#define OSG_COMPILEDIRECTIONALINDICATORCOMPONENTGENERATORINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGLayeredImageMiniMapBase.h"
-#include "OSGLayeredImageMiniMap.h"
+#include "OSGDirectionalIndicatorComponentGeneratorBase.h"
+#include "OSGDirectionalIndicatorComponentGenerator.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LayeredImageMiniMapBase::LayerTexturesFieldMask = 
-    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::LayerTexturesFieldId);
-
-const OSG::BitVector  LayeredImageMiniMapBase::LayerDistancesFieldMask = 
-    (TypeTraits<BitVector>::One << LayeredImageMiniMapBase::LayerDistancesFieldId);
-
-const OSG::BitVector LayeredImageMiniMapBase::MTInfluenceMask = 
+const OSG::BitVector DirectionalIndicatorComponentGeneratorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
-// Field descriptions
 
-/*! \var TextureChunkPtr LayeredImageMiniMapBase::_mfLayerTextures
-    
-*/
-/*! \var Real32          LayeredImageMiniMapBase::_mfLayerDistances
-    
-*/
-
-//! LayeredImageMiniMap description
-
-FieldDescription *LayeredImageMiniMapBase::_desc[] = 
-{
-    new FieldDescription(MFTextureChunkPtr::getClassType(), 
-                     "LayerTextures", 
-                     LayerTexturesFieldId, LayerTexturesFieldMask,
-                     false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getMFLayerTextures),
-    new FieldDescription(MFReal32::getClassType(), 
-                     "LayerDistances", 
-                     LayerDistancesFieldId, LayerDistancesFieldMask,
-                     false,
-                     (FieldAccessMethod) &LayeredImageMiniMapBase::getMFLayerDistances)
-};
-
-
-FieldContainerType LayeredImageMiniMapBase::_type(
-    "LayeredImageMiniMap",
-    "MiniMap",
+FieldContainerType DirectionalIndicatorComponentGeneratorBase::_type(
+    "DirectionalIndicatorComponentGenerator",
+    "ComponentGenerator",
     NULL,
-    (PrototypeCreateF) &LayeredImageMiniMapBase::createEmpty,
-    LayeredImageMiniMap::initMethod,
-    _desc,
-    sizeof(_desc));
+    NULL, 
+    DirectionalIndicatorComponentGenerator::initMethod,
+    NULL,
+    0);
 
-//OSG_FIELD_CONTAINER_DEF(LayeredImageMiniMapBase, LayeredImageMiniMapPtr)
+//OSG_FIELD_CONTAINER_DEF(DirectionalIndicatorComponentGeneratorBase, DirectionalIndicatorComponentGeneratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LayeredImageMiniMapBase::getType(void) 
+FieldContainerType &DirectionalIndicatorComponentGeneratorBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &LayeredImageMiniMapBase::getType(void) const 
+const FieldContainerType &DirectionalIndicatorComponentGeneratorBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr LayeredImageMiniMapBase::shallowCopy(void) const 
+UInt32 DirectionalIndicatorComponentGeneratorBase::getContainerSize(void) const 
 { 
-    LayeredImageMiniMapPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const LayeredImageMiniMap *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 LayeredImageMiniMapBase::getContainerSize(void) const 
-{ 
-    return sizeof(LayeredImageMiniMap); 
+    return sizeof(DirectionalIndicatorComponentGenerator); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void LayeredImageMiniMapBase::executeSync(      FieldContainer &other,
+void DirectionalIndicatorComponentGeneratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((LayeredImageMiniMapBase *) &other, whichField);
+    this->executeSyncImpl((DirectionalIndicatorComponentGeneratorBase *) &other, whichField);
 }
 #else
-void LayeredImageMiniMapBase::executeSync(      FieldContainer &other,
+void DirectionalIndicatorComponentGeneratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((LayeredImageMiniMapBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((DirectionalIndicatorComponentGeneratorBase *) &other, whichField, sInfo);
 }
-void LayeredImageMiniMapBase::execBeginEdit(const BitVector &whichField, 
+void DirectionalIndicatorComponentGeneratorBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void LayeredImageMiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void DirectionalIndicatorComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfLayerTextures.terminateShare(uiAspect, this->getContainerSize());
-    _mfLayerDistances.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -174,9 +132,7 @@ void LayeredImageMiniMapBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-LayeredImageMiniMapBase::LayeredImageMiniMapBase(void) :
-    _mfLayerTextures          (), 
-    _mfLayerDistances         (), 
+DirectionalIndicatorComponentGeneratorBase::DirectionalIndicatorComponentGeneratorBase(void) :
     Inherited() 
 {
 }
@@ -185,92 +141,54 @@ LayeredImageMiniMapBase::LayeredImageMiniMapBase(void) :
 #pragma warning (default : 383)
 #endif
 
-LayeredImageMiniMapBase::LayeredImageMiniMapBase(const LayeredImageMiniMapBase &source) :
-    _mfLayerTextures          (source._mfLayerTextures          ), 
-    _mfLayerDistances         (source._mfLayerDistances         ), 
+DirectionalIndicatorComponentGeneratorBase::DirectionalIndicatorComponentGeneratorBase(const DirectionalIndicatorComponentGeneratorBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-LayeredImageMiniMapBase::~LayeredImageMiniMapBase(void)
+DirectionalIndicatorComponentGeneratorBase::~DirectionalIndicatorComponentGeneratorBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LayeredImageMiniMapBase::getBinSize(const BitVector &whichField)
+UInt32 DirectionalIndicatorComponentGeneratorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
-
-    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
-    {
-        returnValue += _mfLayerTextures.getBinSize();
-    }
-
-    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
-    {
-        returnValue += _mfLayerDistances.getBinSize();
-    }
 
 
     return returnValue;
 }
 
-void LayeredImageMiniMapBase::copyToBin(      BinaryDataHandler &pMem,
+void DirectionalIndicatorComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
-    {
-        _mfLayerTextures.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
-    {
-        _mfLayerDistances.copyToBin(pMem);
-    }
-
 
 }
 
-void LayeredImageMiniMapBase::copyFromBin(      BinaryDataHandler &pMem,
+void DirectionalIndicatorComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
-    {
-        _mfLayerTextures.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
-    {
-        _mfLayerDistances.copyFromBin(pMem);
-    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOther,
+void DirectionalIndicatorComponentGeneratorBase::executeSyncImpl(      DirectionalIndicatorComponentGeneratorBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
-        _mfLayerTextures.syncWith(pOther->_mfLayerTextures);
-
-    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
-        _mfLayerDistances.syncWith(pOther->_mfLayerDistances);
-
 
 }
 #else
-void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOther,
+void DirectionalIndicatorComponentGeneratorBase::executeSyncImpl(      DirectionalIndicatorComponentGeneratorBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -278,26 +196,14 @@ void LayeredImageMiniMapBase::executeSyncImpl(      LayeredImageMiniMapBase *pOt
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
 
-    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
-        _mfLayerTextures.syncWith(pOther->_mfLayerTextures, sInfo);
-
-    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
-        _mfLayerDistances.syncWith(pOther->_mfLayerDistances, sInfo);
-
 
 }
 
-void LayeredImageMiniMapBase::execBeginEditImpl (const BitVector &whichField, 
+void DirectionalIndicatorComponentGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (LayerTexturesFieldMask & whichField))
-        _mfLayerTextures.beginEdit(uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (LayerDistancesFieldMask & whichField))
-        _mfLayerDistances.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -312,11 +218,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LayeredImageMiniMapPtr>::_type("LayeredImageMiniMapPtr", "MiniMapPtr");
+DataType FieldDataTraits<DirectionalIndicatorComponentGeneratorPtr>::_type("DirectionalIndicatorComponentGeneratorPtr", "ComponentGeneratorPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LayeredImageMiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LayeredImageMiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(DirectionalIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(DirectionalIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -333,10 +239,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(LayeredImageMiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLAYEREDIMAGEMINIMAPBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLAYEREDIMAGEMINIMAPBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDIRECTIONALINDICATORCOMPONENTGENERATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDIRECTIONALINDICATORCOMPONENTGENERATORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGLAYEREDIMAGEMINIMAPFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

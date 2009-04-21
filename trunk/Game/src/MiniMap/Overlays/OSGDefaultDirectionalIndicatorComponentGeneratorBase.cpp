@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,90 +45,110 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class MiniMapOverlay!
+ **     class DefaultDirectionalIndicatorComponentGenerator!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEMINIMAPOVERLAYINST
+#define OSG_COMPILEDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMiniMapOverlayBase.h"
-#include "OSGMiniMapOverlay.h"
+#include "OSGDefaultDirectionalIndicatorComponentGeneratorBase.h"
+#include "OSGDefaultDirectionalIndicatorComponentGenerator.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector MiniMapOverlayBase::MTInfluenceMask = 
+const OSG::BitVector  DefaultDirectionalIndicatorComponentGeneratorBase::ComponentPrototypeFieldMask = 
+    (TypeTraits<BitVector>::One << DefaultDirectionalIndicatorComponentGeneratorBase::ComponentPrototypeFieldId);
+
+const OSG::BitVector DefaultDirectionalIndicatorComponentGeneratorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
+// Field descriptions
 
-FieldContainerType MiniMapOverlayBase::_type(
-    "MiniMapOverlay",
-    "FieldContainer",
-    NULL,
-    (PrototypeCreateF) &MiniMapOverlayBase::createEmpty,
-    MiniMapOverlay::initMethod,
-    NULL,
-    0);
+/*! \var ComponentPtr    DefaultDirectionalIndicatorComponentGeneratorBase::_sfComponentPrototype
+    
+*/
 
-//OSG_FIELD_CONTAINER_DEF(MiniMapOverlayBase, MiniMapOverlayPtr)
+//! DefaultDirectionalIndicatorComponentGenerator description
+
+FieldDescription *DefaultDirectionalIndicatorComponentGeneratorBase::_desc[] = 
+{
+    new FieldDescription(SFComponentPtr::getClassType(), 
+                     "ComponentPrototype", 
+                     ComponentPrototypeFieldId, ComponentPrototypeFieldMask,
+                     false,
+                     (FieldAccessMethod) &DefaultDirectionalIndicatorComponentGeneratorBase::getSFComponentPrototype)
+};
+
+
+FieldContainerType DefaultDirectionalIndicatorComponentGeneratorBase::_type(
+    "DefaultDirectionalIndicatorComponentGenerator",
+    "DirectionalIndicatorComponentGenerator",
+    NULL,
+    (PrototypeCreateF) &DefaultDirectionalIndicatorComponentGeneratorBase::createEmpty,
+    DefaultDirectionalIndicatorComponentGenerator::initMethod,
+    _desc,
+    sizeof(_desc));
+
+//OSG_FIELD_CONTAINER_DEF(DefaultDirectionalIndicatorComponentGeneratorBase, DefaultDirectionalIndicatorComponentGeneratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MiniMapOverlayBase::getType(void) 
+FieldContainerType &DefaultDirectionalIndicatorComponentGeneratorBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &MiniMapOverlayBase::getType(void) const 
+const FieldContainerType &DefaultDirectionalIndicatorComponentGeneratorBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr MiniMapOverlayBase::shallowCopy(void) const 
+FieldContainerPtr DefaultDirectionalIndicatorComponentGeneratorBase::shallowCopy(void) const 
 { 
-    MiniMapOverlayPtr returnValue; 
+    DefaultDirectionalIndicatorComponentGeneratorPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const MiniMapOverlay *>(this)); 
+    newPtr(returnValue, dynamic_cast<const DefaultDirectionalIndicatorComponentGenerator *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 MiniMapOverlayBase::getContainerSize(void) const 
+UInt32 DefaultDirectionalIndicatorComponentGeneratorBase::getContainerSize(void) const 
 { 
-    return sizeof(MiniMapOverlay); 
+    return sizeof(DefaultDirectionalIndicatorComponentGenerator); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MiniMapOverlayBase::executeSync(      FieldContainer &other,
+void DefaultDirectionalIndicatorComponentGeneratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((MiniMapOverlayBase *) &other, whichField);
+    this->executeSyncImpl((DefaultDirectionalIndicatorComponentGeneratorBase *) &other, whichField);
 }
 #else
-void MiniMapOverlayBase::executeSync(      FieldContainer &other,
+void DefaultDirectionalIndicatorComponentGeneratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((MiniMapOverlayBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((DefaultDirectionalIndicatorComponentGeneratorBase *) &other, whichField, sInfo);
 }
-void MiniMapOverlayBase::execBeginEdit(const BitVector &whichField, 
+void DefaultDirectionalIndicatorComponentGeneratorBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void MiniMapOverlayBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void DefaultDirectionalIndicatorComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -141,7 +161,8 @@ void MiniMapOverlayBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-MiniMapOverlayBase::MiniMapOverlayBase(void) :
+DefaultDirectionalIndicatorComponentGeneratorBase::DefaultDirectionalIndicatorComponentGeneratorBase(void) :
+    _sfComponentPrototype     (ComponentPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -150,65 +171,87 @@ MiniMapOverlayBase::MiniMapOverlayBase(void) :
 #pragma warning (default : 383)
 #endif
 
-MiniMapOverlayBase::MiniMapOverlayBase(const MiniMapOverlayBase &source) :
+DefaultDirectionalIndicatorComponentGeneratorBase::DefaultDirectionalIndicatorComponentGeneratorBase(const DefaultDirectionalIndicatorComponentGeneratorBase &source) :
+    _sfComponentPrototype     (source._sfComponentPrototype     ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-MiniMapOverlayBase::~MiniMapOverlayBase(void)
+DefaultDirectionalIndicatorComponentGeneratorBase::~DefaultDirectionalIndicatorComponentGeneratorBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MiniMapOverlayBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultDirectionalIndicatorComponentGeneratorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
+    {
+        returnValue += _sfComponentPrototype.getBinSize();
+    }
 
 
     return returnValue;
 }
 
-void MiniMapOverlayBase::copyToBin(      BinaryDataHandler &pMem,
+void DefaultDirectionalIndicatorComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
+    {
+        _sfComponentPrototype.copyToBin(pMem);
+    }
+
 
 }
 
-void MiniMapOverlayBase::copyFromBin(      BinaryDataHandler &pMem,
+void DefaultDirectionalIndicatorComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
+    {
+        _sfComponentPrototype.copyFromBin(pMem);
+    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MiniMapOverlayBase::executeSyncImpl(      MiniMapOverlayBase *pOther,
+void DefaultDirectionalIndicatorComponentGeneratorBase::executeSyncImpl(      DefaultDirectionalIndicatorComponentGeneratorBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
+        _sfComponentPrototype.syncWith(pOther->_sfComponentPrototype);
+
 
 }
 #else
-void MiniMapOverlayBase::executeSyncImpl(      MiniMapOverlayBase *pOther,
+void DefaultDirectionalIndicatorComponentGeneratorBase::executeSyncImpl(      DefaultDirectionalIndicatorComponentGeneratorBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (ComponentPrototypeFieldMask & whichField))
+        _sfComponentPrototype.syncWith(pOther->_sfComponentPrototype);
+
 
 
 }
 
-void MiniMapOverlayBase::execBeginEditImpl (const BitVector &whichField, 
+void DefaultDirectionalIndicatorComponentGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -227,11 +270,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MiniMapOverlayPtr>::_type("MiniMapOverlayPtr", "FieldContainerPtr");
+DataType FieldDataTraits<DefaultDirectionalIndicatorComponentGeneratorPtr>::_type("DefaultDirectionalIndicatorComponentGeneratorPtr", "DirectionalIndicatorComponentGeneratorPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(MiniMapOverlayPtr, OSG_GAMELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MiniMapOverlayPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(DefaultDirectionalIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(DefaultDirectionalIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -248,10 +291,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(MiniMapOverlayPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMINIMAPOVERLAYBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMINIMAPOVERLAYBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGMINIMAPOVERLAYFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

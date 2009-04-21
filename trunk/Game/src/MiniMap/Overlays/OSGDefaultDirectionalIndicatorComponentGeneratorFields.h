@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGMINIMAPFIELDS_H_
-#define _OSGMINIMAPFIELDS_H_
+#ifndef _OSGDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_H_
+#define _OSGDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGGameDef.h"
 
-#include <OpenSG/UserInterface/OSGContainerFields.h>
+#include "OSGDirectionalIndicatorComponentGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class MiniMap;
+class DefaultDirectionalIndicatorComponentGenerator;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MiniMapPtr
+//! DefaultDirectionalIndicatorComponentGeneratorPtr
 
-typedef FCPtr<ContainerPtr, MiniMap> MiniMapPtr;
+typedef FCPtr<DirectionalIndicatorComponentGeneratorPtr, DefaultDirectionalIndicatorComponentGenerator> DefaultDirectionalIndicatorComponentGeneratorPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ContainerPtr, MiniMap> MiniMapPtr;
 #endif
 
 template <>
-struct FieldDataTraits<MiniMapPtr> : 
-    public FieldTraitsRecurseMapper<MiniMapPtr, true>
+struct FieldDataTraits<DefaultDirectionalIndicatorComponentGeneratorPtr> : 
+    public FieldTraitsRecurseMapper<DefaultDirectionalIndicatorComponentGeneratorPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<MiniMapPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFMiniMapPtr"; }
-    static const char *getMName(void) { return "MFMiniMapPtr"; }
+    static const char *getSName(void) { return "SFDefaultDirectionalIndicatorComponentGeneratorPtr"; }
+    static const char *getMName(void) { return "MFDefaultDirectionalIndicatorComponentGeneratorPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MiniMapPtr, true>
+/*! \class  FieldTraitsRecurseMapper<DefaultDirectionalIndicatorComponentGeneratorPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<MiniMapPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldSingle */
 
-typedef SField<MiniMapPtr> SFMiniMapPtr;
+typedef SField<DefaultDirectionalIndicatorComponentGeneratorPtr> SFDefaultDirectionalIndicatorComponentGeneratorPtr;
 #endif
 
-#ifndef OSG_COMPILEMINIMAPINST
-OSG_DLLEXPORT_DECL1(SField, MiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORINST
+OSG_DLLEXPORT_DECL1(SField, DefaultDirectionalIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldMulti */
 
-typedef MField<MiniMapPtr> MFMiniMapPtr;
+typedef MField<DefaultDirectionalIndicatorComponentGeneratorPtr> MFDefaultDirectionalIndicatorComponentGeneratorPtr;
 #endif
 
-#ifndef OSG_COMPILEMINIMAPINST
-OSG_DLLEXPORT_DECL1(MField, MiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORINST
+OSG_DLLEXPORT_DECL1(MField, DefaultDirectionalIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGMINIMAPFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGMINIMAPFIELDS_H_ */
+#endif /* _OSGDEFAULTDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_H_ */

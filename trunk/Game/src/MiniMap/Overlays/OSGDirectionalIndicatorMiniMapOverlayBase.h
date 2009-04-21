@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class MiniMap
+ **     class DirectionalIndicatorMiniMapOverlay
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGMINIMAPBASE_H_
-#define _OSGMINIMAPBASE_H_
+#ifndef _OSGDIRECTIONALINDICATORMINIMAPOVERLAYBASE_H_
+#define _OSGDIRECTIONALINDICATORMINIMAPOVERLAYBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,64 +65,43 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/UserInterface/OSGContainer.h> // Parent
+#include "OSGMiniMapOverlay.h" // Parent
 
-#include "MiniMap/OSGMiniMapTransformation.h" // Transformation type
 #include "MiniMap/Indicators/OSGMiniMapIndicator.h" // Indicators type
-#include "MiniMap/Indicators/OSGMiniMapIndicator.h" // ViewPointIndicator type
-#include <OpenSG/OSGQuaternionFields.h> // MapOrientation type
-#include <OpenSG/OSGBoolFields.h> // LockMapOrientation type
-#include <OpenSG/OSGUInt32Fields.h> // MapScale type
-#include <OpenSG/OSGVec3fFields.h> // MapScaleParameter type
-#include <OpenSG/OSGNodeFields.h> // MapScene type
-#include <OpenSG/OSGVec2fFields.h> // UnlockedMapSize type
-#include "MiniMap/Overlays/OSGMiniMapOverlay.h" // Overlays type
+#include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // DirectionComponentGenerator type
+#include <OpenSG/UserInterface/OSGPanelFields.h> // OverlayPanel type
 
-#include "OSGMiniMapFields.h"
+#include "OSGDirectionalIndicatorMiniMapOverlayFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class MiniMap;
+class DirectionalIndicatorMiniMapOverlay;
 class BinaryDataHandler;
 
-//! \brief MiniMap Base Class.
+//! \brief DirectionalIndicatorMiniMapOverlay Base Class.
 
-class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
+class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlayBase : public MiniMapOverlay
 {
   private:
 
-    typedef Container    Inherited;
+    typedef MiniMapOverlay    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef MiniMapPtr  Ptr;
+    typedef DirectionalIndicatorMiniMapOverlayPtr  Ptr;
 
     enum
     {
-        TransformationFieldId     = Inherited::NextFieldId,
-        IndicatorsFieldId         = TransformationFieldId     + 1,
-        ViewPointIndicatorFieldId = IndicatorsFieldId         + 1,
-        MapOrientationFieldId     = ViewPointIndicatorFieldId + 1,
-        LockMapOrientationFieldId = MapOrientationFieldId     + 1,
-        MapScaleFieldId           = LockMapOrientationFieldId + 1,
-        MapScaleParameterFieldId  = MapScaleFieldId           + 1,
-        MapSceneFieldId           = MapScaleParameterFieldId  + 1,
-        UnlockedMapSizeFieldId    = MapSceneFieldId           + 1,
-        OverlaysFieldId           = UnlockedMapSizeFieldId    + 1,
-        NextFieldId               = OverlaysFieldId           + 1
+        IndicatorsFieldId                  = Inherited::NextFieldId,
+        DirectionComponentGeneratorFieldId = IndicatorsFieldId                  + 1,
+        OverlayPanelFieldId                = DirectionComponentGeneratorFieldId + 1,
+        NextFieldId                        = OverlayPanelFieldId                + 1
     };
 
-    static const OSG::BitVector TransformationFieldMask;
     static const OSG::BitVector IndicatorsFieldMask;
-    static const OSG::BitVector ViewPointIndicatorFieldMask;
-    static const OSG::BitVector MapOrientationFieldMask;
-    static const OSG::BitVector LockMapOrientationFieldMask;
-    static const OSG::BitVector MapScaleFieldMask;
-    static const OSG::BitVector MapScaleParameterFieldMask;
-    static const OSG::BitVector MapSceneFieldMask;
-    static const OSG::BitVector UnlockedMapSizeFieldMask;
-    static const OSG::BitVector OverlaysFieldMask;
+    static const OSG::BitVector DirectionComponentGeneratorFieldMask;
+    static const OSG::BitVector OverlayPanelFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -149,53 +128,21 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFMiniMapTransformationPtr *getSFTransformation (void);
            MFMiniMapIndicatorPtr *getMFIndicators     (void);
-           SFMiniMapIndicatorPtr *getSFViewPointIndicator(void);
-           SFQuaternion        *getSFMapOrientation (void);
-           SFBool              *getSFLockMapOrientation(void);
-           SFUInt32            *getSFMapScale       (void);
-           SFVec3f             *getSFMapScaleParameter(void);
-           SFNodePtr           *getSFMapScene       (void);
-           SFVec2f             *getSFUnlockedMapSize(void);
-           MFMiniMapOverlayPtr *getMFOverlays       (void);
+           SFComponentGeneratorPtr *getSFDirectionComponentGenerator(void);
 
-           MiniMapTransformationPtr &getTransformation (void);
-     const MiniMapTransformationPtr &getTransformation (void) const;
-           MiniMapIndicatorPtr &getViewPointIndicator(void);
-     const MiniMapIndicatorPtr &getViewPointIndicator(void) const;
-           Quaternion          &getMapOrientation (void);
-     const Quaternion          &getMapOrientation (void) const;
-           bool                &getLockMapOrientation(void);
-     const bool                &getLockMapOrientation(void) const;
-           UInt32              &getMapScale       (void);
-     const UInt32              &getMapScale       (void) const;
-           Vec3f               &getMapScaleParameter(void);
-     const Vec3f               &getMapScaleParameter(void) const;
-           NodePtr             &getMapScene       (void);
-     const NodePtr             &getMapScene       (void) const;
-           Vec2f               &getUnlockedMapSize(void);
-     const Vec2f               &getUnlockedMapSize(void) const;
+           ComponentGeneratorPtr &getDirectionComponentGenerator(void);
+     const ComponentGeneratorPtr &getDirectionComponentGenerator(void) const;
            MiniMapIndicatorPtr &getIndicators     (const UInt32 index);
            MFMiniMapIndicatorPtr &getIndicators     (void);
      const MFMiniMapIndicatorPtr &getIndicators     (void) const;
-           MiniMapOverlayPtr   &getOverlays       (const UInt32 index);
-           MFMiniMapOverlayPtr &getOverlays       (void);
-     const MFMiniMapOverlayPtr &getOverlays       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTransformation ( const MiniMapTransformationPtr &value );
-     void setViewPointIndicator( const MiniMapIndicatorPtr &value );
-     void setMapOrientation ( const Quaternion &value );
-     void setLockMapOrientation( const bool &value );
-     void setMapScale       ( const UInt32 &value );
-     void setMapScaleParameter( const Vec3f &value );
-     void setMapScene       ( const NodePtr &value );
-     void setUnlockedMapSize( const Vec2f &value );
+     void setDirectionComponentGenerator( const ComponentGeneratorPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -215,6 +162,22 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  DirectionalIndicatorMiniMapOverlayPtr      create          (void); 
+    static  DirectionalIndicatorMiniMapOverlayPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -222,31 +185,41 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFMiniMapTransformationPtr   _sfTransformation;
     MFMiniMapIndicatorPtr   _mfIndicators;
-    SFMiniMapIndicatorPtr   _sfViewPointIndicator;
-    SFQuaternion        _sfMapOrientation;
-    SFBool              _sfLockMapOrientation;
-    SFUInt32            _sfMapScale;
-    SFVec3f             _sfMapScaleParameter;
-    SFNodePtr           _sfMapScene;
-    SFVec2f             _sfUnlockedMapSize;
-    MFMiniMapOverlayPtr   _mfOverlays;
+    SFComponentGeneratorPtr   _sfDirectionComponentGenerator;
+    SFPanelPtr          _sfOverlayPanel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    MiniMapBase(void);
-    MiniMapBase(const MiniMapBase &source);
+    DirectionalIndicatorMiniMapOverlayBase(void);
+    DirectionalIndicatorMiniMapOverlayBase(const DirectionalIndicatorMiniMapOverlayBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MiniMapBase(void); 
+    virtual ~DirectionalIndicatorMiniMapOverlayBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPanelPtr          *getSFOverlayPanel   (void);
+
+           PanelPtr            &getOverlayPanel   (void);
+     const PanelPtr            &getOverlayPanel   (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setOverlayPanel   (const PanelPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,13 +227,13 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      MiniMapBase *pOther,
+    void executeSyncImpl(      DirectionalIndicatorMiniMapOverlayBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      MiniMapBase *pOther,
+    void executeSyncImpl(      DirectionalIndicatorMiniMapOverlayBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -290,7 +263,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const MiniMapBase &source);
+    void operator =(const DirectionalIndicatorMiniMapOverlayBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -298,17 +271,17 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef MiniMapBase *MiniMapBaseP;
+typedef DirectionalIndicatorMiniMapOverlayBase *DirectionalIndicatorMiniMapOverlayBaseP;
 
-typedef osgIF<MiniMapBase::isNodeCore,
-              CoredNodePtr<MiniMap>,
+typedef osgIF<DirectionalIndicatorMiniMapOverlayBase::isNodeCore,
+              CoredNodePtr<DirectionalIndicatorMiniMapOverlay>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet MiniMapNodePtr;
+              >::_IRet DirectionalIndicatorMiniMapOverlayNodePtr;
 
-typedef RefPtr<MiniMapPtr> MiniMapRefPtr;
+typedef RefPtr<DirectionalIndicatorMiniMapOverlayPtr> DirectionalIndicatorMiniMapOverlayRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGMINIMAPBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGDIRECTIONALINDICATORMINIMAPOVERLAYBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGMINIMAPBASE_H_ */
+#endif /* _OSGDIRECTIONALINDICATORMINIMAPOVERLAYBASE_H_ */

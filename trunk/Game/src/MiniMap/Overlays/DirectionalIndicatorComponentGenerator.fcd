@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="MiniMapOverlay"
-	parent="FieldContainer"
+	name="DirectionalIndicatorComponentGenerator"
+	parent="ComponentGenerator"
 	library="Game"
 	pointerfieldtypes="both"
-	structure="concrete"
+	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A MiniMapOverlay.
+A DirectionalIndicator ComponentGenerator.
 </FieldContainer>

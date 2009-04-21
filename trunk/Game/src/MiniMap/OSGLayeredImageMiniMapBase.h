@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,10 +67,8 @@
 
 #include "OSGMiniMap.h" // Parent
 
-#include "MiniMap/OSGMiniMapOverlay.h" // Overlay type
 #include <OpenSG/OSGTextureChunkFields.h> // LayerTextures type
 #include <OpenSG/OSGReal32Fields.h> // LayerDistances type
-#include <OpenSG/OSGBoolFields.h> // StationaryIndicator type
 
 #include "OSGLayeredImageMiniMapFields.h"
 
@@ -94,21 +92,13 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
 
     enum
     {
-        OverlayFieldId             = Inherited::NextFieldId,
-        LayerTexturesFieldId       = OverlayFieldId             + 1,
-        LayerDistancesFieldId      = LayerTexturesFieldId       + 1,
-        StationaryIndicatorFieldId = LayerDistancesFieldId      + 1,
-        RotatedMapFieldId          = StationaryIndicatorFieldId + 1,
-        MapImageComponentFieldId   = RotatedMapFieldId          + 1,
-        NextFieldId                = MapImageComponentFieldId   + 1
+        LayerTexturesFieldId  = Inherited::NextFieldId,
+        LayerDistancesFieldId = LayerTexturesFieldId  + 1,
+        NextFieldId           = LayerDistancesFieldId + 1
     };
 
-    static const OSG::BitVector OverlayFieldMask;
     static const OSG::BitVector LayerTexturesFieldMask;
     static const OSG::BitVector LayerDistancesFieldMask;
-    static const OSG::BitVector StationaryIndicatorFieldMask;
-    static const OSG::BitVector RotatedMapFieldMask;
-    static const OSG::BitVector MapImageComponentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -129,27 +119,6 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           MFMiniMapOverlayPtr *getMFOverlay        (void);
-           SFBool              *getSFStationaryIndicator(void);
-
-           bool                &getStationaryIndicator(void);
-     const bool                &getStationaryIndicator(void) const;
-           MiniMapOverlayPtr   &getOverlay        (const UInt32 index);
-           MFMiniMapOverlayPtr &getOverlay        (void);
-     const MFMiniMapOverlayPtr &getOverlay        (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setStationaryIndicator( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,10 +161,8 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMapBase : public MiniMap
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFMiniMapOverlayPtr   _mfOverlay;
     MFTextureChunkPtr   _mfLayerTextures;
     MFReal32            _mfLayerDistances;
-    SFBool              _sfStationaryIndicator;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

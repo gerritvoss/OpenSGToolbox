@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DirectionalIndicatorMiniMapOverlay"
+	parent="MiniMapOverlay"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Directional Indicator MiniMapOverlay.
+	<Field
+		name="Indicators"
+		type="MiniMapIndicatorPtr"
+		cardinality="multi"
+		visibility="external"
+		header="MiniMap/Indicators/OSGMiniMapIndicator.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DirectionComponentGenerator"
+		type="ComponentGeneratorPtr"
+		cardinality="single"
+        visibility="external"
+        header="OpenSG/UserInterface/OSGComponentGeneratorFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+    </Field>
+	<Field
+		name="OverlayPanel"
+		type="PanelPtr"
+		cardinality="single"
+        visibility="external"
+        header="OpenSG/UserInterface/OSGPanelFields.h"
+		defaultValue="NullFC"
+		access="protected"
+	>
+    </Field>
+</FieldContainer>

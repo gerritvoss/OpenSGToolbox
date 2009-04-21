@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -131,6 +131,13 @@ inline
 SFVec2f *MiniMapBase::getSFUnlockedMapSize(void)
 {
     return &_sfUnlockedMapSize;
+}
+
+//! Get the MiniMap::_mfOverlays field.
+inline
+MFMiniMapOverlayPtr *MiniMapBase::getMFOverlays(void)
+{
+    return &_mfOverlays;
 }
 
 
@@ -322,6 +329,27 @@ inline
 const MFMiniMapIndicatorPtr &MiniMapBase::getIndicators(void) const
 {
     return _mfIndicators;
+}
+
+//! Get the value of the \a index element the MiniMap::_mfOverlays field.
+inline
+MiniMapOverlayPtr &MiniMapBase::getOverlays(const UInt32 index)
+{
+    return _mfOverlays[index];
+}
+
+//! Get the MiniMap::_mfOverlays field.
+inline
+MFMiniMapOverlayPtr &MiniMapBase::getOverlays(void)
+{
+    return _mfOverlays;
+}
+
+//! Get the MiniMap::_mfOverlays field.
+inline
+const MFMiniMapOverlayPtr &MiniMapBase::getOverlays(void) const
+{
+    return _mfOverlays;
 }
 
 OSG_END_NAMESPACE

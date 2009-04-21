@@ -13,15 +13,6 @@
 >
 A LayeredImageMiniMap.
 	<Field
-		name="Overlay"
-		type="MiniMapOverlayPtr"
-		cardinality="multi"
-		visibility="external"
-		header="MiniMap/OSGMiniMapOverlay.h"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="LayerTextures"
 		type="TextureChunkPtr"
 		cardinality="multi"
@@ -37,30 +28,4 @@ A LayeredImageMiniMap.
 		access="protected"
 	>
 	</Field>
-	<Field
-		name="StationaryIndicator"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="RotatedMap"
-		type="RotatedComponentPtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="MapImageComponent"
-		type="ComponentPtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-
-
 </FieldContainer>

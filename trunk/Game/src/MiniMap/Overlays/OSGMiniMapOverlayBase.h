@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -124,22 +124,6 @@ class OSG_GAMELIB_DLLMAPPING MiniMapOverlayBase : public FieldContainer
     virtual void   copyFromBin(      BinaryDataHandler &pMem,
                                const BitVector         &whichField);
 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  MiniMapOverlayPtr      create          (void); 
-    static  MiniMapOverlayPtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

@@ -47,7 +47,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMiniMapIndicatorComponentGenerator.h"
+#include "OSGDirectionalIndicatorMiniMapOverlay.h"
+#include "MiniMap/OSGMiniMap.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::MiniMapIndicatorComponentGenerator
-A MiniMapIndicator ComponentGenerator. 
+/*! \class osg::DirectionalIndicatorMiniMapOverlay
+A MiniMapOverlay. 
 */
 
 /***************************************************************************\
@@ -67,56 +68,50 @@ A MiniMapIndicator ComponentGenerator.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MiniMapIndicatorComponentGenerator::initMethod (void)
+void DirectionalIndicatorMiniMapOverlay::initMethod (void)
 {
 }
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr MiniMapIndicatorComponentGenerator::getComponent(ComponentPtr Parent, const boost::any &Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
+PanelPtr DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr OverlayPanel, const Vec2f& TopLeft, const Vec3f& BottomRight)
 {
-    if(Parent->getType().isDerivedFrom(MiniMap::getClassType()))
-    {
-		return getMiniMapComponent(MiniMapPtr::dcast(Parent), IsSelected, HasFocus);
-	}
-	else
-	{
-		return getMiniMapComponent(NullFC, IsSelected, HasFocus);
-	}
+    return getOverlayPanel();
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-MiniMapIndicatorComponentGenerator::MiniMapIndicatorComponentGenerator(void) :
+DirectionalIndicatorMiniMapOverlay::DirectionalIndicatorMiniMapOverlay(void) :
     Inherited()
 {
 }
 
-MiniMapIndicatorComponentGenerator::MiniMapIndicatorComponentGenerator(const MiniMapIndicatorComponentGenerator &source) :
+DirectionalIndicatorMiniMapOverlay::DirectionalIndicatorMiniMapOverlay(const DirectionalIndicatorMiniMapOverlay &source) :
     Inherited(source)
 {
 }
 
-MiniMapIndicatorComponentGenerator::~MiniMapIndicatorComponentGenerator(void)
+DirectionalIndicatorMiniMapOverlay::~DirectionalIndicatorMiniMapOverlay(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void MiniMapIndicatorComponentGenerator::changed(BitVector whichField, UInt32 origin)
+void DirectionalIndicatorMiniMapOverlay::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void MiniMapIndicatorComponentGenerator::dump(      UInt32    , 
+void DirectionalIndicatorMiniMapOverlay::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump MiniMapIndicatorComponentGenerator NI" << std::endl;
+    SLOG << "Dump DirectionalIndicatorMiniMapOverlay NI" << std::endl;
 }
 
 
@@ -134,10 +129,10 @@ void MiniMapIndicatorComponentGenerator::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMINIMAPINDICATORCOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMINIMAPINDICATORCOMPONENTGENERATORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDIRECTIONALINDICATORMINIMAPOVERLAYBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDIRECTIONALINDICATORMINIMAPOVERLAYBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGMINIMAPINDICATORCOMPONENTGENERATORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDIRECTIONALINDICATORMINIMAPOVERLAYFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

@@ -47,7 +47,9 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMiniMapIndicatorComponentGenerator.h"
+#include "OSGDirectionalIndicatorComponentGenerator.h"
+#include "MiniMap/Indicators/OSGMiniMapIndicator.h"
+#include "MiniMap/OSGMiniMap.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +57,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::MiniMapIndicatorComponentGenerator
-A MiniMapIndicator ComponentGenerator. 
+/*! \class osg::DirectionalIndicatorComponentGenerator
+A DirectionalIndicator ComponentGenerator. 
 */
 
 /***************************************************************************\
@@ -67,23 +69,42 @@ A MiniMapIndicator ComponentGenerator.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MiniMapIndicatorComponentGenerator::initMethod (void)
+void DirectionalIndicatorComponentGenerator::initMethod (void)
 {
 }
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr MiniMapIndicatorComponentGenerator::getComponent(ComponentPtr Parent, const boost::any &Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
+
+ComponentPtr DirectionalIndicatorComponentGenerator::getComponent(ComponentPtr Parent, const boost::any &Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
 {
+    MiniMapPtr UsedParent;
+    MiniMapIndicatorPtr Indicator;
+
+    //Parent
     if(Parent->getType().isDerivedFrom(MiniMap::getClassType()))
     {
-		return getMiniMapComponent(MiniMapPtr::dcast(Parent), IsSelected, HasFocus);
+		 UsedParent = MiniMapPtr::dcast(Parent);
 	}
 	else
 	{
-		return getMiniMapComponent(NullFC, IsSelected, HasFocus);
+        UsedParent = NullFC;
 	}
+
+    //Indicator
+    try
+    {
+        Indicator = boost::any_cast<MiniMapIndicatorPtr>(Value);
+    }
+    catch(boost::bad_any_cast&)
+    {
+        Indicator = NullFC;
+    }
+
+    return getDirectionalComponent(UsedParent, Indicator, Vec3f(0.0f,0.0f,0.0f), IsSelected);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -92,31 +113,31 @@ ComponentPtr MiniMapIndicatorComponentGenerator::getComponent(ComponentPtr Paren
 
 /*----------------------- constructors & destructors ----------------------*/
 
-MiniMapIndicatorComponentGenerator::MiniMapIndicatorComponentGenerator(void) :
+DirectionalIndicatorComponentGenerator::DirectionalIndicatorComponentGenerator(void) :
     Inherited()
 {
 }
 
-MiniMapIndicatorComponentGenerator::MiniMapIndicatorComponentGenerator(const MiniMapIndicatorComponentGenerator &source) :
+DirectionalIndicatorComponentGenerator::DirectionalIndicatorComponentGenerator(const DirectionalIndicatorComponentGenerator &source) :
     Inherited(source)
 {
 }
 
-MiniMapIndicatorComponentGenerator::~MiniMapIndicatorComponentGenerator(void)
+DirectionalIndicatorComponentGenerator::~DirectionalIndicatorComponentGenerator(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void MiniMapIndicatorComponentGenerator::changed(BitVector whichField, UInt32 origin)
+void DirectionalIndicatorComponentGenerator::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void MiniMapIndicatorComponentGenerator::dump(      UInt32    , 
+void DirectionalIndicatorComponentGenerator::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump MiniMapIndicatorComponentGenerator NI" << std::endl;
+    SLOG << "Dump DirectionalIndicatorComponentGenerator NI" << std::endl;
 }
 
 
@@ -134,10 +155,10 @@ void MiniMapIndicatorComponentGenerator::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMINIMAPINDICATORCOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMINIMAPINDICATORCOMPONENTGENERATORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDIRECTIONALINDICATORCOMPONENTGENERATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDIRECTIONALINDICATORCOMPONENTGENERATORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGMINIMAPINDICATORCOMPONENTGENERATORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

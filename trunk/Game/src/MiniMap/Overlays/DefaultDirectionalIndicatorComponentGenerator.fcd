@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultDirectionalIndicatorComponentGenerator"
+	parent="DirectionalIndicatorComponentGenerator"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="false"
+>
+A UI DefaultDirectionalIndicator ComponentGenerator.
+	<Field
+		name="ComponentPrototype"
+		type="ComponentPtr"
+		cardinality="single"
+		visibility="external"
+		header="OpenSG/UserInterface/OSGComponentFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+</FieldContainer>

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,28 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGMINIMAPOVERLAY_H_
-#define _OSGMINIMAPOVERLAY_H_
+#ifndef _OSGDIRECTIONALINDICATORMINIMAPOVERLAY_H_
+#define _OSGDIRECTIONALINDICATORMINIMAPOVERLAY_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
 
-#include "OSGMiniMapOverlayBase.h"
+#include "OSGDirectionalIndicatorMiniMapOverlayBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MiniMapOverlay class. See \ref 
-           PageUserInterfaceMiniMapOverlay for a description.
+/*! \brief DirectionalIndicatorMiniMapOverlay class. See \ref 
+           PageGameDirectionalIndicatorMiniMapOverlay for a description.
 */
 
-class OSG_GAMELIB_DLLMAPPING MiniMapOverlay : public MiniMapOverlayBase
+class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlay : public DirectionalIndicatorMiniMapOverlayBase
 {
   private:
 
-    typedef MiniMapOverlayBase Inherited;
+    typedef DirectionalIndicatorMiniMapOverlayBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -78,24 +77,25 @@ class OSG_GAMELIB_DLLMAPPING MiniMapOverlay : public MiniMapOverlayBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual PanelPtr update(MiniMapPtr TheMiniMap, PanelPtr OverlayPanel, const Vec2f& TopLeft, const Vec3f& BottomRight);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in MiniMapOverlayBase.
+    // Variables should all be in DirectionalIndicatorMiniMapOverlayBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    MiniMapOverlay(void);
-    MiniMapOverlay(const MiniMapOverlay &source);
+    DirectionalIndicatorMiniMapOverlay(void);
+    DirectionalIndicatorMiniMapOverlay(const DirectionalIndicatorMiniMapOverlay &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MiniMapOverlay(void); 
+    virtual ~DirectionalIndicatorMiniMapOverlay(void); 
 
     /*! \}                                                                 */
     
@@ -103,22 +103,22 @@ class OSG_GAMELIB_DLLMAPPING MiniMapOverlay : public MiniMapOverlayBase
   private:
 
     friend class FieldContainer;
-    friend class MiniMapOverlayBase;
+    friend class DirectionalIndicatorMiniMapOverlayBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const MiniMapOverlay &source);
+    void operator =(const DirectionalIndicatorMiniMapOverlay &source);
 };
 
-typedef MiniMapOverlay *MiniMapOverlayP;
+typedef DirectionalIndicatorMiniMapOverlay *DirectionalIndicatorMiniMapOverlayP;
 
 OSG_END_NAMESPACE
 
-#include "OSGMiniMapOverlayBase.inl"
-#include "OSGMiniMapOverlay.inl"
+#include "OSGDirectionalIndicatorMiniMapOverlayBase.inl"
+#include "OSGDirectionalIndicatorMiniMapOverlay.inl"
 
-#define OSGMINIMAPOVERLAY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDIRECTIONALINDICATORMINIMAPOVERLAY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGMINIMAPOVERLAY_H_ */
+#endif /* _OSGDIRECTIONALINDICATORMINIMAPOVERLAY_H_ */

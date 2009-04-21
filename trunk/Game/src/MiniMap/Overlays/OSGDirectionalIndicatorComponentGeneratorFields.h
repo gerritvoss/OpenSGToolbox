@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *					Authors: David Kabala, Eric Langkamp					 *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGMINIMAPOVERLAYFIELDS_H_
-#define _OSGMINIMAPOVERLAYFIELDS_H_
+#ifndef _OSGDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_H_
+#define _OSGDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGGameDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include <OpenSG/UserInterface/OSGComponentGeneratorFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class MiniMapOverlay;
+class DirectionalIndicatorComponentGenerator;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MiniMapOverlayPtr
+//! DirectionalIndicatorComponentGeneratorPtr
 
-typedef FCPtr<FieldContainerPtr, MiniMapOverlay> MiniMapOverlayPtr;
+typedef FCPtr<ComponentGeneratorPtr, DirectionalIndicatorComponentGenerator> DirectionalIndicatorComponentGeneratorPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<FieldContainerPtr, MiniMapOverlay> MiniMapOverlayPtr;
 #endif
 
 template <>
-struct FieldDataTraits<MiniMapOverlayPtr> : 
-    public FieldTraitsRecurseMapper<MiniMapOverlayPtr, true>
+struct FieldDataTraits<DirectionalIndicatorComponentGeneratorPtr> : 
+    public FieldTraitsRecurseMapper<DirectionalIndicatorComponentGeneratorPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<MiniMapOverlayPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFMiniMapOverlayPtr"; }
-    static const char *getMName(void) { return "MFMiniMapOverlayPtr"; }
+    static const char *getSName(void) { return "SFDirectionalIndicatorComponentGeneratorPtr"; }
+    static const char *getMName(void) { return "MFDirectionalIndicatorComponentGeneratorPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MiniMapOverlayPtr, true>
+/*! \class  FieldTraitsRecurseMapper<DirectionalIndicatorComponentGeneratorPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<MiniMapOverlayPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldSingle */
 
-typedef SField<MiniMapOverlayPtr> SFMiniMapOverlayPtr;
+typedef SField<DirectionalIndicatorComponentGeneratorPtr> SFDirectionalIndicatorComponentGeneratorPtr;
 #endif
 
-#ifndef OSG_COMPILEMINIMAPOVERLAYINST
-OSG_DLLEXPORT_DECL1(SField, MiniMapOverlayPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDIRECTIONALINDICATORCOMPONENTGENERATORINST
+OSG_DLLEXPORT_DECL1(SField, DirectionalIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldMulti */
 
-typedef MField<MiniMapOverlayPtr> MFMiniMapOverlayPtr;
+typedef MField<DirectionalIndicatorComponentGeneratorPtr> MFDirectionalIndicatorComponentGeneratorPtr;
 #endif
 
-#ifndef OSG_COMPILEMINIMAPOVERLAYINST
-OSG_DLLEXPORT_DECL1(MField, MiniMapOverlayPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDIRECTIONALINDICATORCOMPONENTGENERATORINST
+OSG_DLLEXPORT_DECL1(MField, DirectionalIndicatorComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGMINIMAPOVERLAYFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGMINIMAPOVERLAYFIELDS_H_ */
+#endif /* _OSGDIRECTIONALINDICATORCOMPONENTGENERATORFIELDS_H_ */
