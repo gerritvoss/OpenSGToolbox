@@ -711,11 +711,11 @@ int main(int argc, char **argv)
 	//Create the Directional Indicator Prototype
 	ImageComponentPtr DirectionalComponentPrototype = ImageComponent::create();
 	beginEditCP(DirectionalComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-		DirectionalComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
-		DirectionalComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
+		DirectionalComponentPrototype->setPreferredSize(Vec2f(15.0f,20.0f));
+        DirectionalComponentPrototype->setScale(ImageComponent::SCALE_STRETCH);
 		DirectionalComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(DirectionalComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr PointerImage = ImageFileHandler::the().read(Path("./Ship.JPG").string().c_str());
+	ImagePtr PointerImage = ImageFileHandler::the().read(Path("./Pointer.png").string().c_str());
 	DirectionalComponentPrototype->setImage(PointerImage);
 	DirectionalComponentPrototype->setRolloverImage(PointerImage);
 	DirectionalComponentPrototype->setDisabledImage(PointerImage);
@@ -730,9 +730,9 @@ int main(int argc, char **argv)
 	//Create the Overlay
 	DirectionalIndicatorMiniMapOverlayPtr DirectionalOverlay = DirectionalIndicatorMiniMapOverlay::create();
 	beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask | DirectionalIndicatorMiniMapOverlay::DirectionComponentGeneratorFieldMask);
-		//DirectionalOverlay->getIndicators().push_back(TorusIndicator);     //Link the Torus Indicator to the Mini Map
+		DirectionalOverlay->getIndicators().push_back(TorusIndicator);     //Link the Torus Indicator to the Mini Map
 		DirectionalOverlay->getIndicators().push_back(SphereIndicator);    //Link the Sphere Indicator to the Mini Map
-		//DirectionalOverlay->getIndicators().push_back(BoxIndicator);       //Link the Box Indicator to the Mini Map
+		DirectionalOverlay->getIndicators().push_back(BoxIndicator);       //Link the Box Indicator to the Mini Map
 		DirectionalOverlay->setDirectionComponentGenerator(DirectionalComponentGenerator);
 	endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask | DirectionalIndicatorMiniMapOverlay::DirectionComponentGeneratorFieldMask);
 	//*******************************************
@@ -751,10 +751,10 @@ int main(int argc, char **argv)
 		MiniMap->setOpacity(.6);
 		MiniMap->setConstraints(MiniMapConstraints);
 		MiniMap->setLockMapOrientation(false);                  //If this is changed to true the map will then remain stationary and the indicator will then move and rotate
-        MiniMap->setUnlockedMapSize(Vec2f(1000,1000));          //This item is only necassary when the map is set to Unlocked Orientation
-		//MiniMap->getIndicators().push_back(TorusIndicator);     //Link the Torus Indicator to the Mini Map
+        MiniMap->setUnlockedMapSize(Vec2f(2000,2000));          //This item is only necassary when the map is set to Unlocked Orientation
+		MiniMap->getIndicators().push_back(TorusIndicator);     //Link the Torus Indicator to the Mini Map
 		MiniMap->getIndicators().push_back(SphereIndicator);    //Link the Sphere Indicator to the Mini Map
-		//MiniMap->getIndicators().push_back(BoxIndicator);       //Link the Box Indicator to the Mini Map
+		MiniMap->getIndicators().push_back(BoxIndicator);       //Link the Box Indicator to the Mini Map
 		MiniMap->getOverlays().push_back(DirectionalOverlay);
 	endEditCP(MiniMap, LayeredImageMiniMap::OverlaysFieldMask | LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 

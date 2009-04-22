@@ -99,15 +99,14 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
 
 		Vec3f IndicatorDelta;
         Pnt2f ViewpointPos;
+        Pnt2f IndicatorPos;
         ViewpointPos = TheMiniMap->getComponentSpace(TheMiniMap->getViewPointIndicator());
-
-        std::cout << "Viewpoint: " << ViewpointPos << std::endl;
 		for(UInt32 i(0) ; i<getIndicators().size() ; ++i)
 		{
 			//Calculate the Direction
-			IndicatorDelta = ViewpointPos - TheMiniMap->getComponentSpace(getIndicators(i));
+            IndicatorPos = TheMiniMap->getComponentSpace(getIndicators(i));
+			IndicatorDelta = ViewpointPos - IndicatorPos;
             IndicatorDelta.normalize();
-            std::cout << "Indicator: " << TheMiniMap->getComponentSpace(getIndicators(i)) << std::endl << std::endl;
 
 			//Add Component if necissary
 			if(getIndicatorComponents().size() < i+1)
@@ -134,6 +133,14 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
 					getIndicatorComponents().push_back(EmbededRotatedComponent);
 				endEditCP(DirectionalIndicatorMiniMapOverlayPtr(this), IndicatorComponentsFieldMask);
 			}
+            //Determine if the Component is completely visible
+            Pnt2f TopLeft,BottomRight;
+            TheMiniMap->getBounds(TopLeft,BottomRight);
+            beginEditCP(getIndicatorComponents(i), Component::VisibleFieldMask);
+				getIndicatorComponents(i)->setVisible(!isContainedBounds(IndicatorPos,TopLeft,BottomRight));
+			endEditCP(getIndicatorComponents(i), Component::VisibleFieldMask);
+
+
             Vec3f MapYAxis(0.0f,1.0f,0.0f);
             Quaternion Rot(MapYAxis, IndicatorDelta);
 
