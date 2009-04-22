@@ -54,6 +54,7 @@
 #include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGUIDrawUtils.h>
+#include <OpenSG/Toolbox/OSGMathUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -105,7 +106,7 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
 		{
 			//Calculate the Direction
             IndicatorPos = TheMiniMap->getComponentSpace(getIndicators(i));
-			IndicatorDelta = ViewpointPos - IndicatorPos;
+			IndicatorDelta = IndicatorPos - ViewpointPos;
             IndicatorDelta.normalize();
 
 			//Add Component if necissary
@@ -141,7 +142,7 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
 			endEditCP(getIndicatorComponents(i), Component::VisibleFieldMask);
 
 
-            Vec3f MapYAxis(0.0f,1.0f,0.0f);
+            Vec3f MapYAxis(0.0f,-1.0f,0.0f);
             Quaternion Rot(MapYAxis, IndicatorDelta);
 
             Vec3f Axis;
@@ -159,59 +160,112 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
             endEditCP(getIndicatorComponents(i), RotatedComponent::AngleFieldMask);
 
             Pnt2f Pos;
-            if(IndicatorAngle > -2.356194)
+            Pnt2f p1((TopLeft + BottomRight)*0.5);
+            Vec2f v1(IndicatorDelta);
+            Real32 s_min(-1.0);
+            Pnt2f Intersect_min;
+            UInt8 Side(-1);
+            if(IndicatorDelta.x() > 0)  //Right
             {
-                if(IndicatorAngle > -0.785398)
+                Pnt2f p2(BottomRight.x(),TopLeft.y());
+                Vec2f v2(0.0, BottomRight.y()-TopLeft.y());
+                
+                Real32 s,t;
+                Pnt2f Intersect;
+                if(intersectLines(p1,v1,p2,v2,s,t,Intersect) == 1 &&
+                    s > 0.0 &&
+                    t >= 0.0 &&
+                    t <= 1.0 &&
+                    (s_min < 0.0 || s < s_min) )
                 {
-                    if(IndicatorAngle > 0.785398)
-                    {
-                        if(IndicatorAngle > 2.356194)
-                        {
-                            //Bottom
-                            Pos = calculateAlignment(Pnt2f(0.0,0.0),
-                                                     getOverlayPanel()->getSize(),
-                                                     getIndicatorComponents(i)->getSize(),
-                                                     1.0,
-                                                     0.5*((IndicatorDelta.x()/IndicatorDelta.y()+1.0)));
-                        }
-                        else
-                        {
-                            //Left
-                            Pos = calculateAlignment(Pnt2f(0.0,0.0),
-                                                     getOverlayPanel()->getSize(),
-                                                     getIndicatorComponents(i)->getSize(),
-                                                     -0.5*((IndicatorDelta.y()/IndicatorDelta.x()-1.0)),
-                                                     0.0f);
-                        }
-                    }
-                    else
-                    {
-                        //Top
-                        Pos = calculateAlignment(Pnt2f(0.0,0.0),
-                                                 getOverlayPanel()->getSize(),
-                                                 getIndicatorComponents(i)->getSize(),
-                                                 0.0,
-                                                 -0.5*((IndicatorDelta.x()/IndicatorDelta.y()-1.0)));
-                    }
-                }
-                else
-                {
-                    //Right
-                    Pos = calculateAlignment(Pnt2f(0.0,0.0),
-                                             getOverlayPanel()->getSize(),
-                                             getIndicatorComponents(i)->getSize(),
-                                             0.5*((IndicatorDelta.y()/IndicatorDelta.x()+1.0)),
-                                             1.0f);
+                    s_min = s;
+                    Intersect_min = Intersect;
+                    Side = 0;
                 }
             }
-            else
+            if(IndicatorDelta.x() < 0)  //Left
             {
-                //Bottom
+                Vec2f v2(0.0, BottomRight.y()-TopLeft.y());
+                
+                Real32 s,t;
+                Pnt2f Intersect;
+                if(intersectLines(p1,v1,TopLeft,v2,s,t,Intersect) == 1 &&
+                    s > 0.0 &&
+                    t >= 0.0 &&
+                    t <= 1.0 &&
+                    (s_min < 0.0 || s < s_min) )
+                {
+                    s_min = s;
+                    Intersect_min = Intersect;
+                    Side = 1;
+                }
+            }
+            if(IndicatorDelta.y() < 0)  //Top
+            {
+                Vec2f v2(BottomRight.x()-TopLeft.x(),0.0);
+                
+                Real32 s,t;
+                Pnt2f Intersect;
+                if(intersectLines(p1,v1,TopLeft,v2,s,t,Intersect) == 1 &&
+                    s > 0.0 &&
+                    t >= 0.0 &&
+                    t <= 1.0 &&
+                    (s_min < 0.0 || s < s_min) )
+                {
+                    s_min = s;
+                    Intersect_min = Intersect;
+                    Side = 2;
+                }
+            }
+            if(IndicatorDelta.y() > 0)  //Bottom
+            {
+                Pnt2f p2(TopLeft.x(),BottomRight.y());
+                Vec2f v2(BottomRight.x()-TopLeft.x(), 0.0);
+                
+                Real32 s,t;
+                Pnt2f Intersect;
+                if(intersectLines(p1,v1,p2,v2,s,t,Intersect) == 1 &&
+                    s > 0.0 &&
+                    t >= 0.0 &&
+                    t <= 1.0 &&
+                    (s_min < 0.0 || s < s_min) )
+                {
+                    s_min = s;
+                    Intersect_min = Intersect;
+                    Side = 3;
+                }
+            }
+
+            switch(Side)
+            {
+            case 0:   //Right
                 Pos = calculateAlignment(Pnt2f(0.0,0.0),
                                          getOverlayPanel()->getSize(),
                                          getIndicatorComponents(i)->getSize(),
-                                         1.0,
-                                         0.5*((IndicatorDelta.x()/IndicatorDelta.y()+1.0)));
+                                         (Intersect_min.y() - TopLeft.y())/(BottomRight.y()-TopLeft.y()),
+                                         1.0f);
+                break;
+            case 1:   //Left
+                Pos = calculateAlignment(Pnt2f(0.0,0.0),
+                                         getOverlayPanel()->getSize(),
+                                         getIndicatorComponents(i)->getSize(),
+                                         (Intersect_min.y() - TopLeft.y())/(BottomRight.y()-TopLeft.y()),
+                                         0.0f);
+                break;
+            case 2:   //Top
+                Pos = calculateAlignment(Pnt2f(0.0,0.0),
+                                         getOverlayPanel()->getSize(),
+                                         getIndicatorComponents(i)->getSize(),
+                                         0.0f,
+                                         (Intersect_min.x() - TopLeft.x())/(BottomRight.x()-TopLeft.x()));
+                break;
+            case 3:   //Bottom
+                Pos = calculateAlignment(Pnt2f(0.0,0.0),
+                                         getOverlayPanel()->getSize(),
+                                         getIndicatorComponents(i)->getSize(),
+                                         1.0f,
+                                         (Intersect_min.x() - TopLeft.x())/(BottomRight.x()-TopLeft.x()));
+                break;
             }
 			//Update the Component Position
             AbsoluteLayoutConstraintsPtr CompConstraints = AbsoluteLayoutConstraints::Ptr::dcast(getIndicatorComponents(i)->getConstraints());
