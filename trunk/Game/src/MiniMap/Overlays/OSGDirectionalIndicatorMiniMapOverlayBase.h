@@ -68,8 +68,11 @@
 #include "OSGMiniMapOverlay.h" // Parent
 
 #include "MiniMap/Indicators/OSGMiniMapIndicator.h" // Indicators type
-#include <OpenSG/UserInterface/OSGComponentFields.h> // IndicatorComponents type
 #include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // DirectionComponentGenerator type
+#include <OpenSG/OSGBoolFields.h> // DrawWhenVisible type
+#include <OpenSG/OSGBoolFields.h> // FadeAsApproaching type
+#include <OpenSG/OSGReal32Fields.h> // MinimumDistance type
+#include <OpenSG/UserInterface/OSGComponentFields.h> // IndicatorComponents type
 #include <OpenSG/UserInterface/OSGPanelFields.h> // OverlayPanel type
 
 #include "OSGDirectionalIndicatorMiniMapOverlayFields.h"
@@ -95,15 +98,21 @@ class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlayBase : public Min
     enum
     {
         IndicatorsFieldId                  = Inherited::NextFieldId,
-        IndicatorComponentsFieldId         = IndicatorsFieldId                  + 1,
-        DirectionComponentGeneratorFieldId = IndicatorComponentsFieldId         + 1,
-        OverlayPanelFieldId                = DirectionComponentGeneratorFieldId + 1,
+        DirectionComponentGeneratorFieldId = IndicatorsFieldId                  + 1,
+        DrawWhenVisibleFieldId             = DirectionComponentGeneratorFieldId + 1,
+        FadeAsApproachingFieldId           = DrawWhenVisibleFieldId             + 1,
+        MinimumDistanceFieldId             = FadeAsApproachingFieldId           + 1,
+        IndicatorComponentsFieldId         = MinimumDistanceFieldId             + 1,
+        OverlayPanelFieldId                = IndicatorComponentsFieldId         + 1,
         NextFieldId                        = OverlayPanelFieldId                + 1
     };
 
     static const OSG::BitVector IndicatorsFieldMask;
-    static const OSG::BitVector IndicatorComponentsFieldMask;
     static const OSG::BitVector DirectionComponentGeneratorFieldMask;
+    static const OSG::BitVector DrawWhenVisibleFieldMask;
+    static const OSG::BitVector FadeAsApproachingFieldMask;
+    static const OSG::BitVector MinimumDistanceFieldMask;
+    static const OSG::BitVector IndicatorComponentsFieldMask;
     static const OSG::BitVector OverlayPanelFieldMask;
 
 
@@ -133,9 +142,18 @@ class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlayBase : public Min
 
            MFMiniMapIndicatorPtr *getMFIndicators     (void);
            SFComponentGeneratorPtr *getSFDirectionComponentGenerator(void);
+           SFBool              *getSFDrawWhenVisible(void);
+           SFBool              *getSFFadeAsApproaching(void);
+           SFReal32            *getSFMinimumDistance(void);
 
            ComponentGeneratorPtr &getDirectionComponentGenerator(void);
      const ComponentGeneratorPtr &getDirectionComponentGenerator(void) const;
+           bool                &getDrawWhenVisible(void);
+     const bool                &getDrawWhenVisible(void) const;
+           bool                &getFadeAsApproaching(void);
+     const bool                &getFadeAsApproaching(void) const;
+           Real32              &getMinimumDistance(void);
+     const Real32              &getMinimumDistance(void) const;
            MiniMapIndicatorPtr &getIndicators     (const UInt32 index);
            MFMiniMapIndicatorPtr &getIndicators     (void);
      const MFMiniMapIndicatorPtr &getIndicators     (void) const;
@@ -146,6 +164,9 @@ class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlayBase : public Min
     /*! \{                                                                 */
 
      void setDirectionComponentGenerator( const ComponentGeneratorPtr &value );
+     void setDrawWhenVisible( const bool &value );
+     void setFadeAsApproaching( const bool &value );
+     void setMinimumDistance( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,8 +210,11 @@ class OSG_GAMELIB_DLLMAPPING DirectionalIndicatorMiniMapOverlayBase : public Min
     /*! \{                                                                 */
 
     MFMiniMapIndicatorPtr   _mfIndicators;
-    MFComponentPtr      _mfIndicatorComponents;
     SFComponentGeneratorPtr   _sfDirectionComponentGenerator;
+    SFBool              _sfDrawWhenVisible;
+    SFBool              _sfFadeAsApproaching;
+    SFReal32            _sfMinimumDistance;
+    MFComponentPtr      _mfIndicatorComponents;
     SFPanelPtr          _sfOverlayPanel;
 
     /*! \}                                                                 */

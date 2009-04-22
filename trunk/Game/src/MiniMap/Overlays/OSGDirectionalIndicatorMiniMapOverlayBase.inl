@@ -103,18 +103,39 @@ MFMiniMapIndicatorPtr *DirectionalIndicatorMiniMapOverlayBase::getMFIndicators(v
     return &_mfIndicators;
 }
 
-//! Get the DirectionalIndicatorMiniMapOverlay::_mfIndicatorComponents field.
-inline
-MFComponentPtr *DirectionalIndicatorMiniMapOverlayBase::getMFIndicatorComponents(void)
-{
-    return &_mfIndicatorComponents;
-}
-
 //! Get the DirectionalIndicatorMiniMapOverlay::_sfDirectionComponentGenerator field.
 inline
 SFComponentGeneratorPtr *DirectionalIndicatorMiniMapOverlayBase::getSFDirectionComponentGenerator(void)
 {
     return &_sfDirectionComponentGenerator;
+}
+
+//! Get the DirectionalIndicatorMiniMapOverlay::_sfDrawWhenVisible field.
+inline
+SFBool *DirectionalIndicatorMiniMapOverlayBase::getSFDrawWhenVisible(void)
+{
+    return &_sfDrawWhenVisible;
+}
+
+//! Get the DirectionalIndicatorMiniMapOverlay::_sfFadeAsApproaching field.
+inline
+SFBool *DirectionalIndicatorMiniMapOverlayBase::getSFFadeAsApproaching(void)
+{
+    return &_sfFadeAsApproaching;
+}
+
+//! Get the DirectionalIndicatorMiniMapOverlay::_sfMinimumDistance field.
+inline
+SFReal32 *DirectionalIndicatorMiniMapOverlayBase::getSFMinimumDistance(void)
+{
+    return &_sfMinimumDistance;
+}
+
+//! Get the DirectionalIndicatorMiniMapOverlay::_mfIndicatorComponents field.
+inline
+MFComponentPtr *DirectionalIndicatorMiniMapOverlayBase::getMFIndicatorComponents(void)
+{
+    return &_mfIndicatorComponents;
 }
 
 //! Get the DirectionalIndicatorMiniMapOverlay::_sfOverlayPanel field.
@@ -144,6 +165,69 @@ inline
 void DirectionalIndicatorMiniMapOverlayBase::setDirectionComponentGenerator(const ComponentGeneratorPtr &value)
 {
     _sfDirectionComponentGenerator.setValue(value);
+}
+
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfDrawWhenVisible field.
+inline
+bool &DirectionalIndicatorMiniMapOverlayBase::getDrawWhenVisible(void)
+{
+    return _sfDrawWhenVisible.getValue();
+}
+
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfDrawWhenVisible field.
+inline
+const bool &DirectionalIndicatorMiniMapOverlayBase::getDrawWhenVisible(void) const
+{
+    return _sfDrawWhenVisible.getValue();
+}
+
+//! Set the value of the DirectionalIndicatorMiniMapOverlay::_sfDrawWhenVisible field.
+inline
+void DirectionalIndicatorMiniMapOverlayBase::setDrawWhenVisible(const bool &value)
+{
+    _sfDrawWhenVisible.setValue(value);
+}
+
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfFadeAsApproaching field.
+inline
+bool &DirectionalIndicatorMiniMapOverlayBase::getFadeAsApproaching(void)
+{
+    return _sfFadeAsApproaching.getValue();
+}
+
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfFadeAsApproaching field.
+inline
+const bool &DirectionalIndicatorMiniMapOverlayBase::getFadeAsApproaching(void) const
+{
+    return _sfFadeAsApproaching.getValue();
+}
+
+//! Set the value of the DirectionalIndicatorMiniMapOverlay::_sfFadeAsApproaching field.
+inline
+void DirectionalIndicatorMiniMapOverlayBase::setFadeAsApproaching(const bool &value)
+{
+    _sfFadeAsApproaching.setValue(value);
+}
+
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfMinimumDistance field.
+inline
+Real32 &DirectionalIndicatorMiniMapOverlayBase::getMinimumDistance(void)
+{
+    return _sfMinimumDistance.getValue();
+}
+
+//! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfMinimumDistance field.
+inline
+const Real32 &DirectionalIndicatorMiniMapOverlayBase::getMinimumDistance(void) const
+{
+    return _sfMinimumDistance.getValue();
+}
+
+//! Set the value of the DirectionalIndicatorMiniMapOverlay::_sfMinimumDistance field.
+inline
+void DirectionalIndicatorMiniMapOverlayBase::setMinimumDistance(const Real32 &value)
+{
+    _sfMinimumDistance.setValue(value);
 }
 
 //! Get the value of the DirectionalIndicatorMiniMapOverlay::_sfOverlayPanel field.

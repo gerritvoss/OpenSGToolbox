@@ -22,15 +22,6 @@ A Directional Indicator MiniMapOverlay.
 	>
 	</Field>
 	<Field
-		name="IndicatorComponents"
-		type="ComponentPtr"
-		cardinality="multi"
-		visibility="internal"
-		header="OpenSG/UserInterface/OSGComponentFields.h"
-		access="protected"
-	>
-	</Field>
-	<Field
 		name="DirectionComponentGenerator"
 		type="ComponentGeneratorPtr"
 		cardinality="single"
@@ -40,6 +31,42 @@ A Directional Indicator MiniMapOverlay.
 		access="public"
 	>
     </Field>
+	<Field
+		name="DrawWhenVisible"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FadeAsApproaching"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MinimumDistance"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0f"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="IndicatorComponents"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="internal"
+		header="OpenSG/UserInterface/OSGComponentFields.h"
+		access="protected"
+	>
+	</Field>
 	<Field
 		name="OverlayPanel"
 		type="PanelPtr"

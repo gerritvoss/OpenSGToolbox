@@ -98,7 +98,8 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
             endEditCP(getOverlayPanel(), Panel::LayoutFieldMask);
 		}
 
-		Vec3f IndicatorDelta;
+		Vec3f IndicatorDir;
+		Real32 IndicatorDistance;
         Pnt2f ViewpointPos;
         Pnt2f IndicatorPos;
         ViewpointPos = TheMiniMap->getComponentSpace(TheMiniMap->getViewPointIndicator());
@@ -106,8 +107,9 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
 		{
 			//Calculate the Direction
             IndicatorPos = TheMiniMap->getComponentSpace(getIndicators(i));
-			IndicatorDelta = IndicatorPos - ViewpointPos;
-            IndicatorDelta.normalize();
+			IndicatorDir = IndicatorPos - ViewpointPos;
+			IndicatorDistance = IndicatorDir.length();
+            IndicatorDir.normalize();
 
 			//Add Component if necissary
 			if(getIndicatorComponents().size() < i+1)
@@ -115,12 +117,15 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
 				ComponentPtr TheComponent;
 				if(getDirectionComponentGenerator()->getType().isDerivedFrom(DirectionalIndicatorComponentGenerator::getClassType()))
 				{
-					TheComponent = DirectionalIndicatorComponentGenerator::Ptr::dcast(getDirectionComponentGenerator())->getDirectionalComponent(TheMiniMap, getIndicators(i), IndicatorDelta, false);
+					TheComponent = DirectionalIndicatorComponentGenerator::Ptr::dcast(getDirectionComponentGenerator())->getDirectionalComponent(TheMiniMap, getIndicators(i), IndicatorDir, false);
 				}
 				else
 				{
 					TheComponent = getDirectionComponentGenerator()->getComponent(TheMiniMap,boost::any(getIndicators(i)),0,0,false,false);
 				}
+				beginEditCP(TheComponent, Component::OpacityFieldMask);
+					TheComponent->setOpacity(TheMiniMap->getOpacity());
+				endEditCP(TheComponent, Component::OpacityFieldMask);
 
                 RotatedComponentPtr EmbededRotatedComponent = RotatedComponent::create();
                 beginEditCP(EmbededRotatedComponent, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
@@ -137,19 +142,16 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
             //Determine if the Component is completely visible
             Pnt2f TopLeft,BottomRight;
             TheMiniMap->getBounds(TopLeft,BottomRight);
-            beginEditCP(getIndicatorComponents(i), Component::VisibleFieldMask);
-				getIndicatorComponents(i)->setVisible(!isContainedBounds(IndicatorPos,TopLeft,BottomRight));
-			endEditCP(getIndicatorComponents(i), Component::VisibleFieldMask);
 
 
             Vec3f MapYAxis(0.0f,-1.0f,0.0f);
-            Quaternion Rot(MapYAxis, IndicatorDelta);
+            Quaternion Rot(MapYAxis, IndicatorDir);
 
             Vec3f Axis;
             Real32 IndicatorAngle;
             Rot.getValueAsAxisRad(Axis,IndicatorAngle);
 
-            if(MapYAxis.cross(IndicatorDelta).z() > 0)
+            if(MapYAxis.cross(IndicatorDir).z() > 0)
             {
                 IndicatorAngle = -IndicatorAngle;
             }
@@ -160,113 +162,143 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
             endEditCP(getIndicatorComponents(i), RotatedComponent::AngleFieldMask);
 
             Pnt2f Pos;
-            Pnt2f p1((TopLeft + BottomRight)*0.5);
-            Vec2f v1(IndicatorDelta);
-            Real32 s_min(-1.0);
-            Pnt2f Intersect_min;
-            UInt8 Side(-1);
-            if(IndicatorDelta.x() > 0)  //Right
-            {
-                Pnt2f p2(BottomRight.x(),TopLeft.y());
-                Vec2f v2(0.0, BottomRight.y()-TopLeft.y());
+			Pnt2f p1((TopLeft + BottomRight)*0.5);
+			Vec2f v1(IndicatorDir);
+			Real32 s_min(-1.0);
+			Pnt2f Intersect_min;
+			UInt8 Side(-1);
+			if(IndicatorDir.x() > 0)  //Right
+			{
+				Pnt2f p2(BottomRight.x(),TopLeft.y());
+				Vec2f v2(0.0, BottomRight.y()-TopLeft.y());
                 
-                Real32 s,t;
-                Pnt2f Intersect;
-                if(intersectLines(p1,v1,p2,v2,s,t,Intersect) == 1 &&
-                    s > 0.0 &&
-                    t >= 0.0 &&
-                    t <= 1.0 &&
-                    (s_min < 0.0 || s < s_min) )
-                {
-                    s_min = s;
-                    Intersect_min = Intersect;
-                    Side = 0;
-                }
-            }
-            if(IndicatorDelta.x() < 0)  //Left
-            {
-                Vec2f v2(0.0, BottomRight.y()-TopLeft.y());
+				Real32 s,t;
+				Pnt2f Intersect;
+				if(intersectLines(p1,v1,p2,v2,s,t,Intersect) == 1 &&
+					s > 0.0 &&
+					t >= 0.0 &&
+					t <= 1.0 &&
+					(s_min < 0.0 || s < s_min) )
+				{
+					s_min = s;
+					Intersect_min = Intersect;
+					Side = 0;
+				}
+			}
+			if(IndicatorDir.x() < 0)  //Left
+			{
+				Vec2f v2(0.0, BottomRight.y()-TopLeft.y());
                 
-                Real32 s,t;
-                Pnt2f Intersect;
-                if(intersectLines(p1,v1,TopLeft,v2,s,t,Intersect) == 1 &&
-                    s > 0.0 &&
-                    t >= 0.0 &&
-                    t <= 1.0 &&
-                    (s_min < 0.0 || s < s_min) )
-                {
-                    s_min = s;
-                    Intersect_min = Intersect;
-                    Side = 1;
-                }
-            }
-            if(IndicatorDelta.y() < 0)  //Top
-            {
-                Vec2f v2(BottomRight.x()-TopLeft.x(),0.0);
+				Real32 s,t;
+				Pnt2f Intersect;
+				if(intersectLines(p1,v1,TopLeft,v2,s,t,Intersect) == 1 &&
+					s > 0.0 &&
+					t >= 0.0 &&
+					t <= 1.0 &&
+					(s_min < 0.0 || s < s_min) )
+				{
+					s_min = s;
+					Intersect_min = Intersect;
+					Side = 1;
+				}
+			}
+			if(IndicatorDir.y() < 0)  //Top
+			{
+				Vec2f v2(BottomRight.x()-TopLeft.x(),0.0);
                 
-                Real32 s,t;
-                Pnt2f Intersect;
-                if(intersectLines(p1,v1,TopLeft,v2,s,t,Intersect) == 1 &&
-                    s > 0.0 &&
-                    t >= 0.0 &&
-                    t <= 1.0 &&
-                    (s_min < 0.0 || s < s_min) )
-                {
-                    s_min = s;
-                    Intersect_min = Intersect;
-                    Side = 2;
-                }
-            }
-            if(IndicatorDelta.y() > 0)  //Bottom
-            {
-                Pnt2f p2(TopLeft.x(),BottomRight.y());
-                Vec2f v2(BottomRight.x()-TopLeft.x(), 0.0);
+				Real32 s,t;
+				Pnt2f Intersect;
+				if(intersectLines(p1,v1,TopLeft,v2,s,t,Intersect) == 1 &&
+					s > 0.0 &&
+					t >= 0.0 &&
+					t <= 1.0 &&
+					(s_min < 0.0 || s < s_min) )
+				{
+					s_min = s;
+					Intersect_min = Intersect;
+					Side = 2;
+				}
+			}
+			if(IndicatorDir.y() > 0)  //Bottom
+			{
+				Pnt2f p2(TopLeft.x(),BottomRight.y());
+				Vec2f v2(BottomRight.x()-TopLeft.x(), 0.0);
                 
-                Real32 s,t;
-                Pnt2f Intersect;
-                if(intersectLines(p1,v1,p2,v2,s,t,Intersect) == 1 &&
-                    s > 0.0 &&
-                    t >= 0.0 &&
-                    t <= 1.0 &&
-                    (s_min < 0.0 || s < s_min) )
-                {
-                    s_min = s;
-                    Intersect_min = Intersect;
-                    Side = 3;
-                }
-            }
+				Real32 s,t;
+				Pnt2f Intersect;
+				if(intersectLines(p1,v1,p2,v2,s,t,Intersect) == 1 &&
+					s > 0.0 &&
+					t >= 0.0 &&
+					t <= 1.0 &&
+					(s_min < 0.0 || s < s_min) )
+				{
+					s_min = s;
+					Intersect_min = Intersect;
+					Side = 3;
+				}
+			}
 
-            switch(Side)
-            {
-            case 0:   //Right
-                Pos = calculateAlignment(Pnt2f(0.0,0.0),
-                                         getOverlayPanel()->getSize(),
-                                         getIndicatorComponents(i)->getSize(),
-                                         (Intersect_min.y() - TopLeft.y())/(BottomRight.y()-TopLeft.y()),
-                                         1.0f);
-                break;
-            case 1:   //Left
-                Pos = calculateAlignment(Pnt2f(0.0,0.0),
-                                         getOverlayPanel()->getSize(),
-                                         getIndicatorComponents(i)->getSize(),
-                                         (Intersect_min.y() - TopLeft.y())/(BottomRight.y()-TopLeft.y()),
-                                         0.0f);
-                break;
-            case 2:   //Top
-                Pos = calculateAlignment(Pnt2f(0.0,0.0),
-                                         getOverlayPanel()->getSize(),
-                                         getIndicatorComponents(i)->getSize(),
-                                         0.0f,
-                                         (Intersect_min.x() - TopLeft.x())/(BottomRight.x()-TopLeft.x()));
-                break;
-            case 3:   //Bottom
-                Pos = calculateAlignment(Pnt2f(0.0,0.0),
-                                         getOverlayPanel()->getSize(),
-                                         getIndicatorComponents(i)->getSize(),
-                                         1.0f,
-                                         (Intersect_min.x() - TopLeft.x())/(BottomRight.x()-TopLeft.x()));
-                break;
-            }
+			switch(Side)
+			{
+			case 0:   //Right
+				Pos = calculateAlignment(Pnt2f(0.0,0.0),
+										 getOverlayPanel()->getSize(),
+										 getIndicatorComponents(i)->getSize(),
+										 (Intersect_min.y() - TopLeft.y())/(BottomRight.y()-TopLeft.y()),
+										 1.0f);
+				break;
+			case 1:   //Left
+				Pos = calculateAlignment(Pnt2f(0.0,0.0),
+										 getOverlayPanel()->getSize(),
+										 getIndicatorComponents(i)->getSize(),
+										 (Intersect_min.y() - TopLeft.y())/(BottomRight.y()-TopLeft.y()),
+										 0.0f);
+				break;
+			case 2:   //Top
+				Pos = calculateAlignment(Pnt2f(0.0,0.0),
+										 getOverlayPanel()->getSize(),
+										 getIndicatorComponents(i)->getSize(),
+										 0.0f,
+										 (Intersect_min.x() - TopLeft.x())/(BottomRight.x()-TopLeft.x()));
+				break;
+			case 3:   //Bottom
+				Pos = calculateAlignment(Pnt2f(0.0,0.0),
+										 getOverlayPanel()->getSize(),
+										 getIndicatorComponents(i)->getSize(),
+										 1.0f,
+										 (Intersect_min.x() - TopLeft.x())/(BottomRight.x()-TopLeft.x()));
+				break;
+			}
+
+			if(getDrawWhenVisible())
+			{
+
+				beginEditCP(getIndicatorComponents(i), Component::VisibleFieldMask);
+					getIndicatorComponents(i)->setVisible(true);
+				endEditCP(getIndicatorComponents(i), Component::VisibleFieldMask);
+				
+				if(isContainedBounds(IndicatorPos,TopLeft,BottomRight))
+				{
+					Pos = IndicatorPos - (Vec2f(IndicatorDir)*getMinimumDistance()) - (getIndicatorComponents(i)->getSize()*0.5);
+
+					if(getFadeAsApproaching())
+					{
+						Real32 Alpha;
+						Alpha = (ViewpointPos - Pos).length()/(0.5*osgMin(BottomRight.x()-TopLeft.x(), BottomRight.y() - TopLeft.y()));
+						Alpha *= Alpha;
+						beginEditCP(RotatedComponentPtr::dcast(getIndicatorComponents(i))->getInternalComponent(), Component::OpacityFieldMask);
+							RotatedComponentPtr::dcast(getIndicatorComponents(i))->getInternalComponent()->setOpacity(Alpha);
+						endEditCP(RotatedComponentPtr::dcast(getIndicatorComponents(i))->getInternalComponent(), Component::OpacityFieldMask);
+					}
+				}
+			}
+			else
+			{
+				beginEditCP(getIndicatorComponents(i), Component::VisibleFieldMask);
+					getIndicatorComponents(i)->setVisible(!isContainedBounds(IndicatorPos,TopLeft,BottomRight));
+				endEditCP(getIndicatorComponents(i), Component::VisibleFieldMask);
+			}
+
 			//Update the Component Position
             AbsoluteLayoutConstraintsPtr CompConstraints = AbsoluteLayoutConstraints::Ptr::dcast(getIndicatorComponents(i)->getConstraints());
 

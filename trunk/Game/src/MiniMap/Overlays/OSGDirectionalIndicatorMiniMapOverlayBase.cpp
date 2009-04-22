@@ -67,11 +67,20 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::IndicatorsFieldMask = 
     (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::IndicatorsFieldId);
 
-const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::IndicatorComponentsFieldMask = 
-    (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::IndicatorComponentsFieldId);
-
 const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::DirectionComponentGeneratorFieldMask = 
     (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::DirectionComponentGeneratorFieldId);
+
+const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::DrawWhenVisibleFieldMask = 
+    (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::DrawWhenVisibleFieldId);
+
+const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::FadeAsApproachingFieldMask = 
+    (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::FadeAsApproachingFieldId);
+
+const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::MinimumDistanceFieldMask = 
+    (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::MinimumDistanceFieldId);
+
+const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::IndicatorComponentsFieldMask = 
+    (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::IndicatorComponentsFieldId);
 
 const OSG::BitVector  DirectionalIndicatorMiniMapOverlayBase::OverlayPanelFieldMask = 
     (TypeTraits<BitVector>::One << DirectionalIndicatorMiniMapOverlayBase::OverlayPanelFieldId);
@@ -86,10 +95,19 @@ const OSG::BitVector DirectionalIndicatorMiniMapOverlayBase::MTInfluenceMask =
 /*! \var MiniMapIndicatorPtr DirectionalIndicatorMiniMapOverlayBase::_mfIndicators
     
 */
-/*! \var ComponentPtr    DirectionalIndicatorMiniMapOverlayBase::_mfIndicatorComponents
+/*! \var ComponentGeneratorPtr DirectionalIndicatorMiniMapOverlayBase::_sfDirectionComponentGenerator
     
 */
-/*! \var ComponentGeneratorPtr DirectionalIndicatorMiniMapOverlayBase::_sfDirectionComponentGenerator
+/*! \var bool            DirectionalIndicatorMiniMapOverlayBase::_sfDrawWhenVisible
+    
+*/
+/*! \var bool            DirectionalIndicatorMiniMapOverlayBase::_sfFadeAsApproaching
+    
+*/
+/*! \var Real32          DirectionalIndicatorMiniMapOverlayBase::_sfMinimumDistance
+    
+*/
+/*! \var ComponentPtr    DirectionalIndicatorMiniMapOverlayBase::_mfIndicatorComponents
     
 */
 /*! \var PanelPtr        DirectionalIndicatorMiniMapOverlayBase::_sfOverlayPanel
@@ -105,16 +123,31 @@ FieldDescription *DirectionalIndicatorMiniMapOverlayBase::_desc[] =
                      IndicatorsFieldId, IndicatorsFieldMask,
                      false,
                      (FieldAccessMethod) &DirectionalIndicatorMiniMapOverlayBase::getMFIndicators),
-    new FieldDescription(MFComponentPtr::getClassType(), 
-                     "IndicatorComponents", 
-                     IndicatorComponentsFieldId, IndicatorComponentsFieldMask,
-                     true,
-                     (FieldAccessMethod) &DirectionalIndicatorMiniMapOverlayBase::getMFIndicatorComponents),
     new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
                      "DirectionComponentGenerator", 
                      DirectionComponentGeneratorFieldId, DirectionComponentGeneratorFieldMask,
                      false,
                      (FieldAccessMethod) &DirectionalIndicatorMiniMapOverlayBase::getSFDirectionComponentGenerator),
+    new FieldDescription(SFBool::getClassType(), 
+                     "DrawWhenVisible", 
+                     DrawWhenVisibleFieldId, DrawWhenVisibleFieldMask,
+                     false,
+                     (FieldAccessMethod) &DirectionalIndicatorMiniMapOverlayBase::getSFDrawWhenVisible),
+    new FieldDescription(SFBool::getClassType(), 
+                     "FadeAsApproaching", 
+                     FadeAsApproachingFieldId, FadeAsApproachingFieldMask,
+                     false,
+                     (FieldAccessMethod) &DirectionalIndicatorMiniMapOverlayBase::getSFFadeAsApproaching),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "MinimumDistance", 
+                     MinimumDistanceFieldId, MinimumDistanceFieldMask,
+                     false,
+                     (FieldAccessMethod) &DirectionalIndicatorMiniMapOverlayBase::getSFMinimumDistance),
+    new FieldDescription(MFComponentPtr::getClassType(), 
+                     "IndicatorComponents", 
+                     IndicatorComponentsFieldId, IndicatorComponentsFieldMask,
+                     true,
+                     (FieldAccessMethod) &DirectionalIndicatorMiniMapOverlayBase::getMFIndicatorComponents),
     new FieldDescription(SFPanelPtr::getClassType(), 
                      "OverlayPanel", 
                      OverlayPanelFieldId, OverlayPanelFieldMask,
@@ -198,8 +231,11 @@ void DirectionalIndicatorMiniMapOverlayBase::onDestroyAspect(UInt32 uiId, UInt32
 
 DirectionalIndicatorMiniMapOverlayBase::DirectionalIndicatorMiniMapOverlayBase(void) :
     _mfIndicators             (), 
-    _mfIndicatorComponents    (), 
     _sfDirectionComponentGenerator(ComponentGeneratorPtr(NullFC)), 
+    _sfDrawWhenVisible        (bool(false)), 
+    _sfFadeAsApproaching      (bool(true)), 
+    _sfMinimumDistance        (Real32(0.0f)), 
+    _mfIndicatorComponents    (), 
     _sfOverlayPanel           (PanelPtr(NullFC)), 
     Inherited() 
 {
@@ -211,8 +247,11 @@ DirectionalIndicatorMiniMapOverlayBase::DirectionalIndicatorMiniMapOverlayBase(v
 
 DirectionalIndicatorMiniMapOverlayBase::DirectionalIndicatorMiniMapOverlayBase(const DirectionalIndicatorMiniMapOverlayBase &source) :
     _mfIndicators             (source._mfIndicators             ), 
-    _mfIndicatorComponents    (source._mfIndicatorComponents    ), 
     _sfDirectionComponentGenerator(source._sfDirectionComponentGenerator), 
+    _sfDrawWhenVisible        (source._sfDrawWhenVisible        ), 
+    _sfFadeAsApproaching      (source._sfFadeAsApproaching      ), 
+    _sfMinimumDistance        (source._sfMinimumDistance        ), 
+    _mfIndicatorComponents    (source._mfIndicatorComponents    ), 
     _sfOverlayPanel           (source._sfOverlayPanel           ), 
     Inherited                 (source)
 {
@@ -235,14 +274,29 @@ UInt32 DirectionalIndicatorMiniMapOverlayBase::getBinSize(const BitVector &which
         returnValue += _mfIndicators.getBinSize();
     }
 
-    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
-    {
-        returnValue += _mfIndicatorComponents.getBinSize();
-    }
-
     if(FieldBits::NoField != (DirectionComponentGeneratorFieldMask & whichField))
     {
         returnValue += _sfDirectionComponentGenerator.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DrawWhenVisibleFieldMask & whichField))
+    {
+        returnValue += _sfDrawWhenVisible.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FadeAsApproachingFieldMask & whichField))
+    {
+        returnValue += _sfFadeAsApproaching.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MinimumDistanceFieldMask & whichField))
+    {
+        returnValue += _sfMinimumDistance.getBinSize();
+    }
+
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+    {
+        returnValue += _mfIndicatorComponents.getBinSize();
     }
 
     if(FieldBits::NoField != (OverlayPanelFieldMask & whichField))
@@ -264,14 +318,29 @@ void DirectionalIndicatorMiniMapOverlayBase::copyToBin(      BinaryDataHandler &
         _mfIndicators.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
-    {
-        _mfIndicatorComponents.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (DirectionComponentGeneratorFieldMask & whichField))
     {
         _sfDirectionComponentGenerator.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawWhenVisibleFieldMask & whichField))
+    {
+        _sfDrawWhenVisible.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FadeAsApproachingFieldMask & whichField))
+    {
+        _sfFadeAsApproaching.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MinimumDistanceFieldMask & whichField))
+    {
+        _sfMinimumDistance.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+    {
+        _mfIndicatorComponents.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (OverlayPanelFieldMask & whichField))
@@ -292,14 +361,29 @@ void DirectionalIndicatorMiniMapOverlayBase::copyFromBin(      BinaryDataHandler
         _mfIndicators.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
-    {
-        _mfIndicatorComponents.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (DirectionComponentGeneratorFieldMask & whichField))
     {
         _sfDirectionComponentGenerator.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawWhenVisibleFieldMask & whichField))
+    {
+        _sfDrawWhenVisible.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FadeAsApproachingFieldMask & whichField))
+    {
+        _sfFadeAsApproaching.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MinimumDistanceFieldMask & whichField))
+    {
+        _sfMinimumDistance.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+    {
+        _mfIndicatorComponents.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (OverlayPanelFieldMask & whichField))
@@ -320,11 +404,20 @@ void DirectionalIndicatorMiniMapOverlayBase::executeSyncImpl(      DirectionalIn
     if(FieldBits::NoField != (IndicatorsFieldMask & whichField))
         _mfIndicators.syncWith(pOther->_mfIndicators);
 
-    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
-        _mfIndicatorComponents.syncWith(pOther->_mfIndicatorComponents);
-
     if(FieldBits::NoField != (DirectionComponentGeneratorFieldMask & whichField))
         _sfDirectionComponentGenerator.syncWith(pOther->_sfDirectionComponentGenerator);
+
+    if(FieldBits::NoField != (DrawWhenVisibleFieldMask & whichField))
+        _sfDrawWhenVisible.syncWith(pOther->_sfDrawWhenVisible);
+
+    if(FieldBits::NoField != (FadeAsApproachingFieldMask & whichField))
+        _sfFadeAsApproaching.syncWith(pOther->_sfFadeAsApproaching);
+
+    if(FieldBits::NoField != (MinimumDistanceFieldMask & whichField))
+        _sfMinimumDistance.syncWith(pOther->_sfMinimumDistance);
+
+    if(FieldBits::NoField != (IndicatorComponentsFieldMask & whichField))
+        _mfIndicatorComponents.syncWith(pOther->_mfIndicatorComponents);
 
     if(FieldBits::NoField != (OverlayPanelFieldMask & whichField))
         _sfOverlayPanel.syncWith(pOther->_sfOverlayPanel);
@@ -341,6 +434,15 @@ void DirectionalIndicatorMiniMapOverlayBase::executeSyncImpl(      DirectionalIn
 
     if(FieldBits::NoField != (DirectionComponentGeneratorFieldMask & whichField))
         _sfDirectionComponentGenerator.syncWith(pOther->_sfDirectionComponentGenerator);
+
+    if(FieldBits::NoField != (DrawWhenVisibleFieldMask & whichField))
+        _sfDrawWhenVisible.syncWith(pOther->_sfDrawWhenVisible);
+
+    if(FieldBits::NoField != (FadeAsApproachingFieldMask & whichField))
+        _sfFadeAsApproaching.syncWith(pOther->_sfFadeAsApproaching);
+
+    if(FieldBits::NoField != (MinimumDistanceFieldMask & whichField))
+        _sfMinimumDistance.syncWith(pOther->_sfMinimumDistance);
 
     if(FieldBits::NoField != (OverlayPanelFieldMask & whichField))
         _sfOverlayPanel.syncWith(pOther->_sfOverlayPanel);

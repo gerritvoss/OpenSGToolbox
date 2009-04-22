@@ -734,6 +734,8 @@ int main(int argc, char **argv)
 		DirectionalOverlay->getIndicators().push_back(SphereIndicator);    //Link the Sphere Indicator to the Mini Map
 		DirectionalOverlay->getIndicators().push_back(BoxIndicator);       //Link the Box Indicator to the Mini Map
 		DirectionalOverlay->setDirectionComponentGenerator(DirectionalComponentGenerator);
+		DirectionalOverlay->setDrawWhenVisible(true);
+		DirectionalOverlay->setMinimumDistance(40.0f);
 	endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask | DirectionalIndicatorMiniMapOverlay::DirectionComponentGeneratorFieldMask);
 	//*******************************************
 	
