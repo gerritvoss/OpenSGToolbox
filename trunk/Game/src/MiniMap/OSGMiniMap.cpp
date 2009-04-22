@@ -77,6 +77,15 @@ void MiniMap::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Vec3f MiniMap::getMapSpace(const Vec3f& Position) const
+{
+    Vec3f TransformedPosition(Position);
+    
+    getTransformation()->transform(TransformedPosition);
+
+    return TransformedPosition;
+}
+
 void MiniMap::mousePressed(const MouseEvent& e)
 {
 	produceLocationSelected();
@@ -113,10 +122,10 @@ void MiniMap::updateOverlayPanels(void)
 	{
 		ThePanel = getOverlays(i)->getPanel();
 		
-		beginEditCP(ThePanel, Panel::PositionFieldMask | Panel::SizeFieldMask);
+		beginEditCP(ThePanel, Panel::PositionFieldMask | Panel::PreferredSizeFieldMask);
 			ThePanel->setPosition(InsetsTopLeft);
-			ThePanel->setSize(InsetsBottomRight - InsetsTopLeft);
-		endEditCP(ThePanel, Panel::PositionFieldMask | Panel::SizeFieldMask);
+			ThePanel->setPreferredSize(InsetsBottomRight - InsetsTopLeft);
+		endEditCP(ThePanel, Panel::PositionFieldMask | Panel::PreferredSizeFieldMask);
 	}
 }
 

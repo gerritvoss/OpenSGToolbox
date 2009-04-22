@@ -180,6 +180,19 @@ Pnt2f ComponentToDrawingSurface(const Pnt2f& ComponentPoint, const ComponentPtr 
 	return Result;
 }
 
+Pnt2f ComponentToComponent(const Pnt2f& ComponentPoint, const ComponentPtr Comp, const ComponentPtr ParentComp)
+{
+	Pnt2f Result(ComponentPoint);
+	ComponentPtr CompRecurse = Comp;
+	while(CompRecurse != NullFC &&
+          CompRecurse != ParentComp)
+	{
+        Result = CompRecurse->getLocalToParent(Result);
+		CompRecurse = CompRecurse->getParentContainer();
+	}
+	return Result;
+}
+
 Pnt2f ComponentToFrame(const Pnt2f& ComponentPoint, const ComponentPtr Comp)
 {
 	Pnt2f Result(ComponentPoint);
@@ -187,7 +200,7 @@ Pnt2f ComponentToFrame(const Pnt2f& ComponentPoint, const ComponentPtr Comp)
 	while(CompRecurse != NullFC &&
           CompRecurse != Comp->getParentWindow())
 	{
-		Result += Vec2f(CompRecurse->getPosition());
+        Result = CompRecurse->getLocalToParent(Result);
 		CompRecurse = CompRecurse->getParentContainer();
 	}
 	return Result;

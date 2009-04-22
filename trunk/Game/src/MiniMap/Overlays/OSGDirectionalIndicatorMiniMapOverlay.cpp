@@ -50,6 +50,10 @@
 #include "OSGDirectionalIndicatorMiniMapOverlay.h"
 #include "OSGDirectionalIndicatorComponentGenerator.h"
 #include "MiniMap/OSGMiniMap.h"
+#include <OpenSG/UserInterface/OSGRotatedComponent.h>
+#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
+#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
+#include <OpenSG/UserInterface/OSGUIDrawUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -87,13 +91,23 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
 			beginEditCP(DirectionalIndicatorMiniMapOverlayPtr(this), OverlayPanelFieldMask);
 				setOverlayPanel(Panel::createEmpty());
 			endEditCP(DirectionalIndicatorMiniMapOverlayPtr(this), OverlayPanelFieldMask);
+
+            beginEditCP(getOverlayPanel(), Panel::LayoutFieldMask);
+            getOverlayPanel()->setLayout(AbsoluteLayout::create());
+            endEditCP(getOverlayPanel(), Panel::LayoutFieldMask);
 		}
 
 		Vec3f IndicatorDelta;
+        Pnt2f ViewpointPos;
+        ViewpointPos = TheMiniMap->getComponentSpace(TheMiniMap->getViewPointIndicator());
+
+        std::cout << "Viewpoint: " << ViewpointPos << std::endl;
 		for(UInt32 i(0) ; i<getIndicators().size() ; ++i)
 		{
 			//Calculate the Direction
-			IndicatorDelta = Vec3f(0.0,0.0,0.0);
+			IndicatorDelta = ViewpointPos - TheMiniMap->getComponentSpace(getIndicators(i));
+            IndicatorDelta.normalize();
+            std::cout << "Indicator: " << TheMiniMap->getComponentSpace(getIndicators(i)) << std::endl << std::endl;
 
 			//Add Component if necissary
 			if(getIndicatorComponents().size() < i+1)
@@ -108,17 +122,96 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
 					TheComponent = getDirectionComponentGenerator()->getComponent(TheMiniMap,boost::any(getIndicators(i)),0,0,false,false);
 				}
 
+                RotatedComponentPtr EmbededRotatedComponent = RotatedComponent::create();
+                beginEditCP(EmbededRotatedComponent, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
+                    EmbededRotatedComponent->setInternalComponent(TheComponent);
+                    EmbededRotatedComponent->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
+                    EmbededRotatedComponent->setConstraints(AbsoluteLayoutConstraints::create());
+                endEditCP(EmbededRotatedComponent, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
+    
 				//Create the Component for this indicator
 				beginEditCP(DirectionalIndicatorMiniMapOverlayPtr(this), IndicatorComponentsFieldMask);
-					getIndicatorComponents().push_back(TheComponent);
+					getIndicatorComponents().push_back(EmbededRotatedComponent);
 				endEditCP(DirectionalIndicatorMiniMapOverlayPtr(this), IndicatorComponentsFieldMask);
 			}
+            Vec3f MapYAxis(0.0f,1.0f,0.0f);
+            Quaternion Rot(MapYAxis, IndicatorDelta);
 
-			//Update the Component Position and direction
-			beginEditCP(getIndicatorComponents(i), Component::PositionFieldMask | Component::SizeFieldMask);
-				getIndicatorComponents(i)->setPosition(Vec2f(0.0f,0.0f));
-				getIndicatorComponents(i)->setSize(Vec2f(20.0,20.0));
-			endEditCP(getIndicatorComponents(i), Component::PositionFieldMask | Component::SizeFieldMask);
+            Vec3f Axis;
+            Real32 IndicatorAngle;
+            Rot.getValueAsAxisRad(Axis,IndicatorAngle);
+
+            if(MapYAxis.cross(IndicatorDelta).z() > 0)
+            {
+                IndicatorAngle = -IndicatorAngle;
+            }
+
+            //Update the Component Rotation
+            beginEditCP(getIndicatorComponents(i), RotatedComponent::AngleFieldMask);
+                RotatedComponentPtr::dcast(getIndicatorComponents(i))->setAngle(IndicatorAngle);
+            endEditCP(getIndicatorComponents(i), RotatedComponent::AngleFieldMask);
+
+            Pnt2f Pos;
+            if(IndicatorAngle > -2.356194)
+            {
+                if(IndicatorAngle > -0.785398)
+                {
+                    if(IndicatorAngle > 0.785398)
+                    {
+                        if(IndicatorAngle > 2.356194)
+                        {
+                            //Bottom
+                            Pos = calculateAlignment(Pnt2f(0.0,0.0),
+                                                     getOverlayPanel()->getSize(),
+                                                     getIndicatorComponents(i)->getSize(),
+                                                     1.0,
+                                                     0.5*((IndicatorDelta.x()/IndicatorDelta.y()+1.0)));
+                        }
+                        else
+                        {
+                            //Left
+                            Pos = calculateAlignment(Pnt2f(0.0,0.0),
+                                                     getOverlayPanel()->getSize(),
+                                                     getIndicatorComponents(i)->getSize(),
+                                                     -0.5*((IndicatorDelta.y()/IndicatorDelta.x()-1.0)),
+                                                     0.0f);
+                        }
+                    }
+                    else
+                    {
+                        //Top
+                        Pos = calculateAlignment(Pnt2f(0.0,0.0),
+                                                 getOverlayPanel()->getSize(),
+                                                 getIndicatorComponents(i)->getSize(),
+                                                 0.0,
+                                                 -0.5*((IndicatorDelta.x()/IndicatorDelta.y()-1.0)));
+                    }
+                }
+                else
+                {
+                    //Right
+                    Pos = calculateAlignment(Pnt2f(0.0,0.0),
+                                             getOverlayPanel()->getSize(),
+                                             getIndicatorComponents(i)->getSize(),
+                                             0.5*((IndicatorDelta.y()/IndicatorDelta.x()+1.0)),
+                                             1.0f);
+                }
+            }
+            else
+            {
+                //Bottom
+                Pos = calculateAlignment(Pnt2f(0.0,0.0),
+                                         getOverlayPanel()->getSize(),
+                                         getIndicatorComponents(i)->getSize(),
+                                         1.0,
+                                         0.5*((IndicatorDelta.x()/IndicatorDelta.y()+1.0)));
+            }
+			//Update the Component Position
+            AbsoluteLayoutConstraintsPtr CompConstraints = AbsoluteLayoutConstraints::Ptr::dcast(getIndicatorComponents(i)->getConstraints());
+
+			beginEditCP(CompConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+				CompConstraints->setPosition(Pos);
+			endEditCP(CompConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
 			
 		}
 

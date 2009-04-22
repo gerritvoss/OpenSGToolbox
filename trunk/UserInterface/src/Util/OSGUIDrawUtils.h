@@ -68,6 +68,7 @@ Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ViewportToDrawingSurface(const Pnt2f& View
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING DrawingSurfaceToViewport(const Pnt2f& DrawingSurfacePoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport);
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ComponentToDrawingSurface(const Pnt2f& ComponentPoint, const ComponentPtr Comp);
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ComponentToFrame(const Pnt2f& ComponentPoint, const ComponentPtr Comp);
+Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ComponentToComponent(const Pnt2f& ComponentPoint, const ComponentPtr Comp, const ComponentPtr ParentComp);
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING Rotate(const Pnt2f& Point, const Real32& Angle);
 
 void OSG_USERINTERFACELIB_DLLMAPPING getDrawObjectBounds(MFUIDrawObjectPtr DrawObjects, Pnt2f& TopLeft, Pnt2f& BottomRight);

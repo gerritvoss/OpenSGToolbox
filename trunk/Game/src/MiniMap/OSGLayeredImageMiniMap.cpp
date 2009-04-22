@@ -56,6 +56,7 @@
 #include <OpenSG/UserInterface/OSGImageComponent.h>
 #include <OpenSG/UserInterface/OSGUIDrawUtils.h>
 #include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGUIDrawUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,6 +83,29 @@ void LayeredImageMiniMap::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+Pnt2f LayeredImageMiniMap::getComponentSpace(MiniMapIndicatorPtr Indicator) const
+{
+    if(Indicator == this->getViewPointIndicator())
+    {
+        if(_ViewpointIndicatorComponent != NullFC)
+        {
+            return ComponentToComponent(_ViewpointIndicatorComponent->getSize()*0.5,_ViewpointIndicatorComponent, ComponentPtr(this));
+        }
+    }
+    else if(_IndicatorComponents.size() == getIndicators().size())
+    {
+        for(UInt32 i(0) ; i<getIndicators().size() ; ++i)
+        {
+            if(getIndicators()[i] == Indicator)
+            {
+                return ComponentToComponent(_IndicatorComponents[i]._RotatedComponent->getSize()*0.5,_IndicatorComponents[i]._RotatedComponent, ComponentPtr(this));
+            }
+        }
+    }
+    return Pnt2f(0.0,0.0);
+}
+
 void LayeredImageMiniMap::updateAllTransformations(void)
 {
     if(getLockMapOrientation())

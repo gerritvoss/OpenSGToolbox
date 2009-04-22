@@ -84,6 +84,9 @@ class OSG_GAMELIB_DLLMAPPING MiniMap : public MiniMapBase
     void removeMiniMapListener(MiniMapListenerPtr Listener);
 	
 	virtual void mousePressed(const MouseEvent& e);
+
+    Vec3f getMapSpace(const Vec3f& Position) const;
+    virtual Pnt2f getComponentSpace(MiniMapIndicatorPtr Indicator) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

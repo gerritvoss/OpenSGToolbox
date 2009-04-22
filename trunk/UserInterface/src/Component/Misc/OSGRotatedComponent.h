@@ -96,6 +96,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponent : public RotatedComponent
 
     virtual Pnt2f getParentToLocal(const Pnt2f& Location);
 
+    virtual Pnt2f getLocalToParent(const Pnt2f& Location);
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

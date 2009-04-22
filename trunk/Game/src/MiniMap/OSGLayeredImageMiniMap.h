@@ -120,6 +120,7 @@ class OSG_GAMELIB_DLLMAPPING LayeredImageMiniMap : public LayeredImageMiniMapBas
 	void setLayer(UInt32 index, Real32 DistanceFromPrevious, ImagePtr Image);
 	void setLayer(UInt32 index, Real32 DistanceFromPrevious, const char *fileName, const char *mimeType = 0);
 
+    virtual Pnt2f getComponentSpace(MiniMapIndicatorPtr Indicator) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

@@ -236,6 +236,11 @@ Pnt2f Component::getParentToLocal(const Pnt2f& Location)
     return Location - getPosition();
 }
 
+Pnt2f Component::getLocalToParent(const Pnt2f& Location)
+{
+    return Location + getPosition();
+}
+
 UInt32 Component::queryCursor(const Pnt2f& CursorLoc) const
 {
 	return getCursor();
