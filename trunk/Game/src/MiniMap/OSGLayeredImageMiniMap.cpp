@@ -768,6 +768,7 @@ void LayeredImageMiniMap::changed(BitVector whichField, UInt32 origin)
        (whichField & ViewPointIndicatorFieldMask) || 
        (whichField & LayerTexturesFieldMask))
     {
+        _IndicatorComponents.clear();
         setupDrawInternals();
     }
 

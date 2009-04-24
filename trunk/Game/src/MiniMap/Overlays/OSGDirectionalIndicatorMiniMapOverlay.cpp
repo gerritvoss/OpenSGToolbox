@@ -123,9 +123,9 @@ void DirectionalIndicatorMiniMapOverlay::update(MiniMapPtr TheMiniMap, PanelPtr 
 				{
 					TheComponent = getDirectionComponentGenerator()->getComponent(TheMiniMap,boost::any(getIndicators(i)),0,0,false,false);
 				}
-				beginEditCP(TheComponent, Component::OpacityFieldMask);
+				/*beginEditCP(TheComponent, Component::OpacityFieldMask);
 					TheComponent->setOpacity(TheMiniMap->getOpacity());
-				endEditCP(TheComponent, Component::OpacityFieldMask);
+				endEditCP(TheComponent, Component::OpacityFieldMask);*/
 
                 RotatedComponentPtr EmbededRotatedComponent = RotatedComponent::create();
                 beginEditCP(EmbededRotatedComponent, RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask | RotatedComponent::ConstraintsFieldMask);
