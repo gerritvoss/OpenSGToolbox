@@ -129,7 +129,7 @@ void LayeredImageMiniMap::updateLockedMapTransformation(void)
     getTransformation()->transform(p);      //set the transformation of the viewpoint indicator
     getTransformation()->transform(r);
 
-    ViewPointLocation.setValues(p.x(), p.y());      //set position of indicator on the minimap
+    ViewPointLocation = p;      //set position of indicator on the minimap
     ViewPointOrientation = r;                       //set rotaion of indicator on minimap
 
     //All other Indicators
@@ -230,20 +230,23 @@ void LayeredImageMiniMap::updateLockedMapTransformation(void)
 }
 void LayeredImageMiniMap::updateUnlockedMapTransformation(void)
 {
-    Pnt3f p;            //location of view point indicator
-    Quaternion r;       //orientation of view point indicator
+    Pnt3f WorldSpaceViewPointLocation;            //location of view point indicator
+    Quaternion WorldSpaceViewPointOrientation;       //orientation of view point indicator
 
-    getViewPointIndicator()->getTransformation(p,r);        //get the location and orientation
+    getViewPointIndicator()->getTransformation(WorldSpaceViewPointLocation,WorldSpaceViewPointOrientation);        //get the location and orientation
     
-    getTransformation()->transform(p);      //set the transformation of the viewpoint indicator
-    getTransformation()->transform(r);
+    ViewPointLocation = WorldSpaceViewPointLocation;      //set position of indicator on the minimap
+    ViewPointOrientation = WorldSpaceViewPointOrientation;                       //set rotaion of indicator on minimap
 
-    ViewPointLocation.setValues(p.x(), p.y());      //set position of indicator on the minimap
-    ViewPointOrientation = r;                       //set rotaion of indicator on minimap
+    getTransformation()->transform(ViewPointLocation);      //set the transformation of the viewpoint indicator
+    getTransformation()->transform(ViewPointOrientation);
+
 
     //All other Indicators
     InidicatorLocations.resize(getIndicators().size());
     InidicatorOrientations.resize(getIndicators().size());
+    Pnt3f p;
+    Quaternion r;
     for(UInt32 i(0) ; i<getIndicators().size() ; ++i)
     {
         getIndicators(i)->getTransformation(p,r);
@@ -293,15 +296,11 @@ void LayeredImageMiniMap::updateUnlockedMapTransformation(void)
     if(_MapImageComponent != NullFC)
     {
         //Update Map Image Component
-        Pnt3f ViewPoint;
-        Quaternion ViewOrientation;
-
-        getViewPointIndicator()->getTransformation(ViewPoint,ViewOrientation);
 
         if(getLayerTextures().getSize() > 1)
         {
            _DrawnLayerIndex = -1;
-           if(ViewPoint.y() < (getLayerDistances()[0] + (getLayerDistances()[1] * 0.5)))
+           if(WorldSpaceViewPointLocation.y() < (getLayerDistances()[0] + (getLayerDistances()[1] * 0.5)))
            {
                _DrawnLayerIndex = 0;
            }
@@ -312,7 +311,7 @@ void LayeredImageMiniMap::updateUnlockedMapTransformation(void)
            while(_DrawnLayerIndex == -1)
            {
                
-               if(getLayerTextures().size() > 2 && ViewPoint.y() >= (lowerDistance + (getLayerDistances()[index] * 0.5)) && ViewPoint.y() < (lowerDistance + getLayerDistances()[index] + (lowerDistance + (getLayerDistances()[index + 1] * 0.5))))
+               if(getLayerTextures().size() > 2 && WorldSpaceViewPointLocation.y() >= (lowerDistance + (getLayerDistances()[index] * 0.5)) && WorldSpaceViewPointLocation.y() < (lowerDistance + getLayerDistances()[index] + (lowerDistance + (getLayerDistances()[index + 1] * 0.5))))
                {
                    _DrawnLayerIndex = index;
                }

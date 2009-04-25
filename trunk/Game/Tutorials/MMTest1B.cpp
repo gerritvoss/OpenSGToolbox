@@ -23,7 +23,7 @@ moving objects is there.
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGDirectionalLight.h>
 #include <OpenSG/OSGPerspectiveCamera.h>
-#include <OpenSG/OSGTransform.h>
+#include <OpenSG/OSGComponentTransform.h>
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGSolidBackground.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
@@ -96,7 +96,7 @@ LayeredImageMiniMapPtr TheMiniMap;
 TransformPtr CameraBeaconTransform;
 
 //Viewpoint Indicator Location Information
-TransformPtr ViewpointTransform;
+ComponentTransformPtr ViewpointTransform;
 
 //Centalized location marked with a Cell
 TransformPtr CellTransform;
@@ -609,59 +609,59 @@ public:
         
 
 
-	   float TranslateAmount(75.0f);
+        bool updateTransform(false);
+	   float ForwardAcceleration(375.0f);
+	   float SideAcceleration(275.0f);
+	   float UpwardAcceleration(175.0f);
 	   float RotateAmount(1.0f);
         CameraAcceleration.setValues(0.0,0.0,0.0);
 		WindowEventProducerPtr TheEventProducer(WindowEventProducerPtr::dcast(e.getSource()));
 		if(_IsLeftKeyDown)
 		{
-		   CameraAcceleration = CameraAcceleration +Vec3f(-TranslateAmount,0.0f,0.0f);
+		   CameraAcceleration = CameraAcceleration +Vec3f(-SideAcceleration,0.0f,0.0f);
            hasMoved = true;
 		}
 		if(_IsRightKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(TranslateAmount,0.0f,0.0f);
+		   CameraAcceleration = CameraAcceleration +Vec3f(SideAcceleration,0.0f,0.0f);
            hasMoved = true;
 	   }
 		if(_IsUpKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,0.0f,-TranslateAmount);
+		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,0.0f,-ForwardAcceleration);
            hasMoved = true;
 	   }
 		if(_IsDownKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,0.0f,TranslateAmount);
+		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,0.0f,ForwardAcceleration);
            hasMoved = true;
 	   }
 		if(_IsAKeyDown)
 	   {
            CameraRotation.mult(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()));
+            updateTransform = true;
 	   }
 		if(_IsDKeyDown)
 	   {
            CameraRotation.mult(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()));
+            updateTransform = true;
 	   }
         if(_IsWKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,TranslateAmount,0.0f);
+		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,UpwardAcceleration,0.0f);
            hasMoved = true;
 	   }
          if(_IsSKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,-TranslateAmount,0.0f);
+		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,-UpwardAcceleration,0.0f);
            hasMoved = true;
 	   }
         //Update Camera Position
         if(CameraVelocity != Vec3f(0.0,0.0,0.0) || CameraAcceleration != Vec3f(0.0,0.0,0.0))
         {
-            if(CameraAcceleration == Vec3f(0.0,0.0,0.0))
-            {
-                CameraAcceleration = CameraVelocityDamping * -CameraVelocity;
-            }
-            else
-            {
-                ViewpointTransform->getMatrix().multMatrixVec(CameraAcceleration, CameraAcceleration);
-            }
+            ViewpointTransform->getMatrix().multMatrixVec(CameraAcceleration, CameraAcceleration);
+            CameraAcceleration += (CameraVelocityDamping * -CameraVelocity);
+
             CameraPosition = CameraPosition + static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration;
             CameraVelocity = CameraVelocity + static_cast<Real32>(e.getElapsedTime())*CameraAcceleration;
             if(CameraVelocity.length() > CameraMaxVelocity)
@@ -669,16 +669,16 @@ public:
                 CameraVelocity.normalize();
                 CameraVelocity = CameraMaxVelocity * CameraVelocity;
             }
+            updateTransform = true;
         }
-        Vec3f MatPosition, MatScale;
-        Quaternion MatRot, MatScaleOrient;
-        ViewpointTransform->getMatrix().getTransform(MatPosition, MatRot, MatScale, MatScaleOrient);
-        Matrix NewTransform;
-        NewTransform.setTransform(Vec3f(CameraPosition), CameraRotation, MatScale, MatScaleOrient);
+        if(updateTransform)
+        {
 
-        beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-           ViewpointTransform->setMatrix(NewTransform);
-        endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+            beginEditCP(ViewpointTransform, ComponentTransform::RotationFieldMask | ComponentTransform::TranslationFieldMask);
+               ViewpointTransform->setRotation(CameraRotation);
+               ViewpointTransform->setTranslation(CameraPosition);
+            endEditCP(ViewpointTransform, ComponentTransform::RotationFieldMask | ComponentTransform::TranslationFieldMask);
+        }
 	}
 
 
@@ -770,16 +770,19 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(700,850),
-                                        "OpenSG 02LayeredImageMiniMap");
+                                        "MataBlast MiniMap Test");
 										
     // Make Cell Node (creates Cell in background of scene)
     
     
     NodePtr CellGeometryNode = SceneFileHandler::the().read("cell.osb");
-    /*NodePtr CellGeometryNode = Node::create();
-    beginEditCP(CellGeometryNode, Node::CoreFieldMask);
-    CellGeometryNode->setCore(Group::create());
-    endEditCP(CellGeometryNode, Node::CoreFieldMask);*/
+    if(CellGeometryNode == NullFC)
+    {
+        CellGeometryNode = Node::create();
+        beginEditCP(CellGeometryNode, Node::CoreFieldMask);
+        CellGeometryNode->setCore(Group::create());
+        endEditCP(CellGeometryNode, Node::CoreFieldMask);
+    }
 
 	Matrix CellTransMatrix;
 	CellTransMatrix.setTransform(Vec3f(-1060.0,140.0,75.0)); //CellPosition
@@ -864,14 +867,13 @@ int main(int argc, char **argv)
     endEditCP(CameraBeaconNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	//Set the Viewpoint Transform Node
-	ViewpointTransform = Transform::create();
-    Matrix StartPosition;
-    StartPosition.setTranslate(-30.0f,85.0f,600.0f);
+	ViewpointTransform = ComponentTransform::create();
 	NodePtr ViewpointGeomtryNode = Node::create();
 
-    beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-        ViewpointTransform->setMatrix(StartPosition);
-    endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+    beginEditCP(ViewpointTransform, ComponentTransform::RotationFieldMask | ComponentTransform::TranslationFieldMask);
+       ViewpointTransform->setRotation(CameraRotation);
+       ViewpointTransform->setTranslation(CameraPosition);
+    endEditCP(ViewpointTransform, ComponentTransform::RotationFieldMask | ComponentTransform::TranslationFieldMask);
 
     beginEditCP(ViewpointGeomtryNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
         ViewpointGeomtryNode->setCore(ViewpointTransform);
