@@ -29,6 +29,7 @@ moving objects is there.
 #include <OpenSG/Input/OSGWindowAdapter.h>
 #include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/Toolbox/OSGCameraUtils.h>
+#include <OpenSG/OSGImageForeground.h>
 
 
 // The general scene file loading handler
@@ -142,6 +143,8 @@ Vec3f CameraVelocity(0.0,0.0,0.0);
 Vec3f CameraAcceleration(0.0,0.0,0.0);
 Real32 CameraMaxVelocity(150.0), CameraVelocityDamping(3.0);
 
+NodePtr CellGeometryNode;
+NodePtr CellNode;
 
 class SceneManager
 {
@@ -610,9 +613,9 @@ public:
 
 
         bool updateTransform(false);
-	   float ForwardAcceleration(375.0f);
-	   float SideAcceleration(275.0f);
-	   float UpwardAcceleration(175.0f);
+	   float ForwardAcceleration(175.0f);
+	   float SideAcceleration(75.0f);
+	   float UpwardAcceleration(75.0f);
 	   float RotateAmount(1.0f);
         CameraAcceleration.setValues(0.0,0.0,0.0);
 		WindowEventProducerPtr TheEventProducer(WindowEventProducerPtr::dcast(e.getSource()));
@@ -662,13 +665,15 @@ public:
             ViewpointTransform->getMatrix().multMatrixVec(CameraAcceleration, CameraAcceleration);
             CameraAcceleration += (CameraVelocityDamping * -CameraVelocity);
 
-            CameraPosition = CameraPosition + static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration;
+			checkCameraIntersection(static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration, e.getElapsedTime());
+			
+			/*CameraPosition = CameraPosition + static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration;
             CameraVelocity = CameraVelocity + static_cast<Real32>(e.getElapsedTime())*CameraAcceleration;
             if(CameraVelocity.length() > CameraMaxVelocity)
             {
                 CameraVelocity.normalize();
                 CameraVelocity = CameraMaxVelocity * CameraVelocity;
-            }
+            }*/
             updateTransform = true;
         }
         if(updateTransform)
@@ -681,6 +686,55 @@ public:
         }
 	}
 
+	virtual void checkCameraIntersection(const Vec3f& Trans, Real32 t)
+	{
+	   Matrix TranslateTransform;
+	   TranslateTransform.setTranslate(Trans.x(),Trans.y(),Trans.z());
+	   Matrix NewTransform(ViewpointTransform->getMatrix());
+	   Vec3f Translation, Scale;
+	   Quaternion temp;
+	   NewTransform.getTransform(Translation,temp, Scale, temp);
+
+
+
+		Line ray;
+		ray.setValue(CameraPosition, CameraPosition + Trans);
+		IntersectAction *iAct = IntersectAction::create();
+		iAct->setLine(ray);
+		iAct->apply(CellNode);
+	    
+		if (iAct->didHit() && iAct->getHitT() >= 0.0f && iAct->getHitT()*iAct->getHitT() <= Trans.squareLength ())
+		{
+			//Move up to the hit point
+			Vec3f TransDir = Trans;
+			TransDir.normalize();
+			CameraPosition = iAct->getHitPoint() + 0.001f*iAct->getHitNormal();
+
+			//Get the new velocity
+			//Get the time left
+			/*Real32 remaining_t(t * (1.0-iAct->getHitT()));
+			Vec3f Up_axis = Trans.cross(iAct->getHitNormal());
+			Vec3f Slide1 = Up_axis.cross(iAct->getHitNormal());
+			Slide1.normalize();
+			Vec3f Slide2 = Trans;
+			Slide2.projectTo(Slide1);
+			
+			CameraPosition = CameraPosition + remaining_t*Slide2;*/
+				
+				CameraVelocity.setValues(0.0,0.0,0.0);
+				CameraAcceleration.setValues(0.0,0.0,0.0);
+		}
+		else
+		{
+			CameraPosition = CameraPosition + t*CameraVelocity+ static_cast<Real32>(0.5)*t*t*CameraAcceleration;
+            CameraVelocity = CameraVelocity + t*CameraAcceleration;
+            if(CameraVelocity.length() > CameraMaxVelocity)
+            {
+                CameraVelocity.normalize();
+                CameraVelocity = CameraMaxVelocity * CameraVelocity;
+            }
+		}
+	}
 
 };
 // The SimpleSceneManager to manage simple applications
@@ -769,13 +823,13 @@ int main(int argc, char **argv)
     mgr->setWindow(MainWindow);
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(700,850),
-                                        "MataBlast MiniMap Test");
+                                        Vec2f(1024,800),
+                                        "MataBlast Unlocked MiniMap Test");
 										
     // Make Cell Node (creates Cell in background of scene)
     
     
-    NodePtr CellGeometryNode = SceneFileHandler::the().read("cell.osb");
+    CellGeometryNode = SceneFileHandler::the().read("cell.osb");
     if(CellGeometryNode == NullFC)
     {
         CellGeometryNode = Node::create();
@@ -791,7 +845,7 @@ int main(int argc, char **argv)
 		CellTransform->setMatrix(CellTransMatrix);
     endEditCP(CellTransform, Transform::MatrixFieldMask);
 
-	NodePtr CellNode = Node::create();
+	CellNode = Node::create();
     beginEditCP(CellNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
         CellNode->setCore(CellTransform);
         CellNode->addChild(CellGeometryNode);
@@ -1284,83 +1338,30 @@ int main(int argc, char **argv)
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
     endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
+	//Create a Foreground for a reticule
+	ImageForegroundPtr ReticuleForeground = ImageForeground::create();
+	beginEditCP(ReticuleForeground, ImageForeground::ImagesFieldMask | ImageForeground::PositionsFieldMask);
+		ReticuleForeground->getImages().push_back(ImageFileHandler::the().read(Path("./ret.png").string().c_str()));
+		ReticuleForeground->getPositions().push_back(Vec2f(0.5,0.5));
+	endEditCP(ReticuleForeground, ImageForeground::ImagesFieldMask | ImageForeground::PositionsFieldMask);
+
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
         TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(ReticuleForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene
     //mgr->showAll();
 
-/*    Vec3f SphereTrans, scal, cen,BoxTrans, PlayerTrans;
-    Quaternion rot, scalori;
-
-    SphereTransMatrix.getTransform(SphereTrans,rot,scal,scalori,cen);
-    BoxTransMatrix.getTransform(BoxTrans,rot,scal,scalori,cen);
-
-    SphereNodeComponentPrototype->setImage(SameImage);
-    SphereNodeComponentPrototype->setRolloverImage(SameImage);
-    SphereNodeComponentPrototype->setDisabledImage(SameImage);
-    SphereNodeComponentPrototype->setFocusedImage(SameImage);
-
-    CheckPointOneNodeComponentPrototype->setImage(SameImage);
-    CheckPointOneNodeComponentPrototype->setRolloverImage(SameImage);
-    CheckPointOneNodeComponentPrototype->setDisabledImage(SameImage);
-    CheckPointOneNodeComponentPrototype->setFocusedImage(SameImage);*/
 
     while(!ExitApp)
     {
         TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
-/*
-        Matrix playerPosition = ViewpointTransform->getMatrix();
-        playerPosition.getTransform(PlayerTrans,rot,scal,scalori,cen);
-        if(SphereTrans.z() >= PlayerTrans.z()+1)
-        {
-            SphereNodeComponentPrototype->setImage(UpImage);
-	        SphereNodeComponentPrototype->setRolloverImage(UpImage);
-	        SphereNodeComponentPrototype->setDisabledImage(UpImage);
-	        SphereNodeComponentPrototype->setFocusedImage(UpImage);
-        }
-        else if(SphereTrans.z() <= PlayerTrans.z()-1)
-        {
-            SphereNodeComponentPrototype->setImage(DownImage);
-	        SphereNodeComponentPrototype->setRolloverImage(DownImage);
-	        SphereNodeComponentPrototype->setDisabledImage(DownImage);
-	        SphereNodeComponentPrototype->setFocusedImage(DownImage);
-        }
-        else
-        {
-            SphereNodeComponentPrototype->setImage(SameImage);
-	        SphereNodeComponentPrototype->setRolloverImage(SameImage);
-	        SphereNodeComponentPrototype->setDisabledImage(SameImage);
-	        SphereNodeComponentPrototype->setFocusedImage(SameImage);
-        }
-
-        if(BoxTrans.z() >= PlayerTrans.z()+1)
-        {
-            CheckPointOneNodeComponentPrototype->setImage(UpImage);
-	        CheckPointOneNodeComponentPrototype->setRolloverImage(UpImage);
-	        CheckPointOneNodeComponentPrototype->setDisabledImage(UpImage);
-	        CheckPointOneNodeComponentPrototype->setFocusedImage(UpImage);
-        }
-        else if(BoxTrans.z() <= PlayerTrans.z()-1)
-        {
-            CheckPointOneNodeComponentPrototype->setImage(DownImage);
-	        CheckPointOneNodeComponentPrototype->setRolloverImage(DownImage);
-	        CheckPointOneNodeComponentPrototype->setDisabledImage(DownImage);
-	        CheckPointOneNodeComponentPrototype->setFocusedImage(DownImage);
-        }
-        else
-        {
-            CheckPointOneNodeComponentPrototype->setImage(SameImage);
-	        CheckPointOneNodeComponentPrototype->setRolloverImage(SameImage);
-	        CheckPointOneNodeComponentPrototype->setDisabledImage(SameImage);
-	        CheckPointOneNodeComponentPrototype->setFocusedImage(SameImage);
-        }*/
     }
     osgExit();
 

@@ -23,12 +23,13 @@ moving objects is there.
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGDirectionalLight.h>
 #include <OpenSG/OSGPerspectiveCamera.h>
-#include <OpenSG/OSGTransform.h>
+#include <OpenSG/OSGComponentTransform.h>
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGSolidBackground.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
 #include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/Toolbox/OSGCameraUtils.h>
+#include <OpenSG/OSGImageForeground.h>
 
 
 // The general scene file loading handler
@@ -71,8 +72,8 @@ moving objects is there.
 #include <OpenSG/Game/OSGMiniMapMatrixTransformation.h>
 #include <OpenSG/Game/OSGDefaultMiniMapIndicatorComponentGenerator.h>
 
-//#include <OpenSG/Game/OSGDirectionalIndicatorMiniMapOverlay.h>
-//#include <OpenSG/Game/OSGDefaultDirectionalIndicatorComponentGenerator.h>
+#include <OpenSG/Game/OSGDirectionalIndicatorMiniMapOverlay.h>
+#include <OpenSG/Game/OSGDefaultDirectionalIndicatorComponentGenerator.h>
 
 
 #include <boost/lexical_cast.hpp>
@@ -96,7 +97,7 @@ LayeredImageMiniMapPtr TheMiniMap;
 TransformPtr CameraBeaconTransform;
 
 //Viewpoint Indicator Location Information
-TransformPtr ViewpointTransform;
+ComponentTransformPtr ViewpointTransform;
 
 //Centalized location marked with a Cell
 TransformPtr CellTransform;
@@ -108,7 +109,7 @@ TransformPtr CheckPoint1Transform;
 TransformPtr CheckPoint2Transform;
 TransformPtr CheckPoint3Transform;
 
-//DirectionalIndicatorMiniMapOverlayPtr DirectionalOverlay;
+DirectionalIndicatorMiniMapOverlayPtr DirectionalOverlay;
 
 RubberBandCameraPtr RubberCamera;
 
@@ -142,6 +143,8 @@ Vec3f CameraVelocity(0.0,0.0,0.0);
 Vec3f CameraAcceleration(0.0,0.0,0.0);
 Real32 CameraMaxVelocity(150.0), CameraVelocityDamping(3.0);
 
+NodePtr CellGeometryNode;
+NodePtr CellNode;
 
 class SceneManager
 {
@@ -490,10 +493,10 @@ public:
             if(CheckPointNum == 2)
             {
                 TrackingTime = 0.0;
-                /*beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+                beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
 	            DirectionalOverlay->getIndicators().clear();
 		            DirectionalOverlay->getIndicators().push_back(CheckPoint2Indicator);       //Link the Box Indicator to the Mini Map
-	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);*/
+	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
 
                 if(TheMiniMap != NullFC)
                 {
@@ -506,10 +509,10 @@ public:
             if(CheckPointNum == 3)
             {
                 TrackingTime = 0.0;
-                /*beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+                beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
 	            DirectionalOverlay->getIndicators().clear();
 		            DirectionalOverlay->getIndicators().push_back(CheckPoint3Indicator);       //Link the Box Indicator to the Mini Map
-	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);*/
+	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
                 if(TheMiniMap != NullFC)
                 {
                     beginEditCP(TheMiniMap, MiniMap::IndicatorsFieldMask);
@@ -537,10 +540,10 @@ public:
                     TheIndicator = CheckPoint1Indicator;
                     break;
                 }
-                /*beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+                beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
 	                DirectionalOverlay->getIndicators().clear();
 		            DirectionalOverlay->getIndicators().push_back(TheIndicator);       //Link the Box Indicator to the Mini Map
-	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);*/
+	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
 
                 if(TheMiniMap != NullFC)
                 {
@@ -564,10 +567,10 @@ public:
                     TheIndicator = CheckPoint2Indicator;
                     break;
                 }
-                /*beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+                beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
 	                DirectionalOverlay->getIndicators().clear();
 		            DirectionalOverlay->getIndicators().push_back(TheIndicator);       //Link the Box Indicator to the Mini Map
-	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);*/
+	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
 
                 if(TheMiniMap != NullFC)
                 {
@@ -590,10 +593,10 @@ public:
                     TheIndicator = CheckPoint3Indicator;
                     break;
                 }
-                /*beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+                beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
 	                DirectionalOverlay->getIndicators().clear();
 		            DirectionalOverlay->getIndicators().push_back(TheIndicator);       //Link the Box Indicator to the Mini Map
-	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);*/
+	            endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
 
                 if(TheMiniMap != NullFC)
                 {
@@ -609,78 +612,121 @@ public:
         
 
 
-	   float TranslateAmount(75.0f);
+        bool updateTransform(false);
+	   float ForwardAcceleration(175.0f);
+	   float SideAcceleration(75.0f);
+	   float UpwardAcceleration(75.0f);
 	   float RotateAmount(1.0f);
         CameraAcceleration.setValues(0.0,0.0,0.0);
 		WindowEventProducerPtr TheEventProducer(WindowEventProducerPtr::dcast(e.getSource()));
 		if(_IsLeftKeyDown)
 		{
-		   CameraAcceleration = CameraAcceleration +Vec3f(-TranslateAmount,0.0f,0.0f);
+		   CameraAcceleration = CameraAcceleration +Vec3f(-SideAcceleration,0.0f,0.0f);
            hasMoved = true;
 		}
 		if(_IsRightKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(TranslateAmount,0.0f,0.0f);
+		   CameraAcceleration = CameraAcceleration +Vec3f(SideAcceleration,0.0f,0.0f);
            hasMoved = true;
 	   }
 		if(_IsUpKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,0.0f,-TranslateAmount);
+		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,0.0f,-ForwardAcceleration);
            hasMoved = true;
 	   }
 		if(_IsDownKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,0.0f,TranslateAmount);
+		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,0.0f,ForwardAcceleration);
            hasMoved = true;
 	   }
 		if(_IsAKeyDown)
 	   {
            CameraRotation.mult(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()));
+            updateTransform = true;
 	   }
 		if(_IsDKeyDown)
 	   {
            CameraRotation.mult(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()));
+            updateTransform = true;
 	   }
         if(_IsWKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,TranslateAmount,0.0f);
+		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,UpwardAcceleration,0.0f);
            hasMoved = true;
 	   }
          if(_IsSKeyDown)
 	   {
-		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,-TranslateAmount,0.0f);
+		   CameraAcceleration = CameraAcceleration +Vec3f(0.0f,-UpwardAcceleration,0.0f);
            hasMoved = true;
 	   }
         //Update Camera Position
         if(CameraVelocity != Vec3f(0.0,0.0,0.0) || CameraAcceleration != Vec3f(0.0,0.0,0.0))
         {
-            if(CameraAcceleration == Vec3f(0.0,0.0,0.0))
-            {
-                CameraAcceleration = CameraVelocityDamping * -CameraVelocity;
-            }
-            else
-            {
-                ViewpointTransform->getMatrix().multMatrixVec(CameraAcceleration, CameraAcceleration);
-            }
-            CameraPosition = CameraPosition + static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration;
-            CameraVelocity = CameraVelocity + static_cast<Real32>(e.getElapsedTime())*CameraAcceleration;
+            ViewpointTransform->getMatrix().multMatrixVec(CameraAcceleration, CameraAcceleration);
+            CameraAcceleration += (CameraVelocityDamping * -CameraVelocity);
+
+			checkCameraIntersection(static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration, e.getElapsedTime());
+            updateTransform = true;
+        }
+        if(updateTransform)
+        {
+
+            beginEditCP(ViewpointTransform, ComponentTransform::RotationFieldMask | ComponentTransform::TranslationFieldMask);
+               ViewpointTransform->setRotation(CameraRotation);
+               ViewpointTransform->setTranslation(CameraPosition);
+            endEditCP(ViewpointTransform, ComponentTransform::RotationFieldMask | ComponentTransform::TranslationFieldMask);
+        }
+	}
+
+	virtual void checkCameraIntersection(const Vec3f& Trans, Real32 t)
+	{
+	   Matrix TranslateTransform;
+	   TranslateTransform.setTranslate(Trans.x(),Trans.y(),Trans.z());
+	   Matrix NewTransform(ViewpointTransform->getMatrix());
+	   Vec3f Translation, Scale;
+	   Quaternion temp;
+	   NewTransform.getTransform(Translation,temp, Scale, temp);
+
+
+
+		Line ray;
+		ray.setValue(CameraPosition, CameraPosition + Trans);
+		IntersectAction *iAct = IntersectAction::create();
+		iAct->setLine(ray);
+		iAct->apply(CellNode);
+	    
+		if (iAct->didHit() && iAct->getHitT() >= 0.0f && iAct->getHitT()*iAct->getHitT() <= Trans.squareLength ())
+		{
+			//Move up to the hit point
+			Vec3f TransDir = Trans;
+			TransDir.normalize();
+			CameraPosition = iAct->getHitPoint() + 0.001f*iAct->getHitNormal();
+
+			//Get the new velocity
+			//Get the time left
+			/*Real32 remaining_t(t * (1.0-iAct->getHitT()));
+			Vec3f Up_axis = Trans.cross(iAct->getHitNormal());
+			Vec3f Slide1 = Up_axis.cross(iAct->getHitNormal());
+			Slide1.normalize();
+			Vec3f Slide2 = Trans;
+			Slide2.projectTo(Slide1);
+			
+			CameraPosition = CameraPosition + remaining_t*Slide2;*/
+				
+				CameraVelocity.setValues(0.0,0.0,0.0);
+				CameraAcceleration.setValues(0.0,0.0,0.0);
+		}
+		else
+		{
+			CameraPosition = CameraPosition + t*CameraVelocity+ static_cast<Real32>(0.5)*t*t*CameraAcceleration;
+            CameraVelocity = CameraVelocity + t*CameraAcceleration;
             if(CameraVelocity.length() > CameraMaxVelocity)
             {
                 CameraVelocity.normalize();
                 CameraVelocity = CameraMaxVelocity * CameraVelocity;
             }
-        }
-        Vec3f MatPosition, MatScale;
-        Quaternion MatRot, MatScaleOrient;
-        ViewpointTransform->getMatrix().getTransform(MatPosition, MatRot, MatScale, MatScaleOrient);
-        Matrix NewTransform;
-        NewTransform.setTransform(Vec3f(CameraPosition), CameraRotation, MatScale, MatScaleOrient);
-
-        beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-           ViewpointTransform->setMatrix(NewTransform);
-        endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+		}
 	}
-
 
 };
 // The SimpleSceneManager to manage simple applications
@@ -769,17 +815,20 @@ int main(int argc, char **argv)
     mgr->setWindow(MainWindow);
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(700,850),
-                                        "OpenSG 02LayeredImageMiniMap");
+                                        Vec2f(1024,800),
+                                        "MataBlast Unlocked MiniMap Test");
 										
     // Make Cell Node (creates Cell in background of scene)
     
     
-    NodePtr CellGeometryNode = SceneFileHandler::the().read("cell.osb");
-    /*NodePtr CellGeometryNode = Node::create();
-    beginEditCP(CellGeometryNode, Node::CoreFieldMask);
-    CellGeometryNode->setCore(Group::create());
-    endEditCP(CellGeometryNode, Node::CoreFieldMask);*/
+    CellGeometryNode = SceneFileHandler::the().read("cell.osb");
+    if(CellGeometryNode == NullFC)
+    {
+        CellGeometryNode = Node::create();
+        beginEditCP(CellGeometryNode, Node::CoreFieldMask);
+        CellGeometryNode->setCore(Group::create());
+        endEditCP(CellGeometryNode, Node::CoreFieldMask);
+    }
 
 	Matrix CellTransMatrix;
 	CellTransMatrix.setTransform(Vec3f(-1060.0,140.0,75.0)); //CellPosition
@@ -788,7 +837,7 @@ int main(int argc, char **argv)
 		CellTransform->setMatrix(CellTransMatrix);
     endEditCP(CellTransform, Transform::MatrixFieldMask);
 
-	NodePtr CellNode = Node::create();
+	CellNode = Node::create();
     beginEditCP(CellNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
         CellNode->setCore(CellTransform);
         CellNode->addChild(CellGeometryNode);
@@ -864,14 +913,13 @@ int main(int argc, char **argv)
     endEditCP(CameraBeaconNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	//Set the Viewpoint Transform Node
-	ViewpointTransform = Transform::create();
-    Matrix StartPosition;
-    StartPosition.setTranslate(-30.0f,85.0f,600.0f);
+	ViewpointTransform = ComponentTransform::create();
 	NodePtr ViewpointGeomtryNode = Node::create();
 
-    beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-        ViewpointTransform->setMatrix(StartPosition);
-    endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+    beginEditCP(ViewpointTransform, ComponentTransform::RotationFieldMask | ComponentTransform::TranslationFieldMask);
+       ViewpointTransform->setRotation(CameraRotation);
+       ViewpointTransform->setTranslation(CameraPosition);
+    endEditCP(ViewpointTransform, ComponentTransform::RotationFieldMask | ComponentTransform::TranslationFieldMask);
 
     beginEditCP(ViewpointGeomtryNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
         ViewpointGeomtryNode->setCore(ViewpointTransform);
@@ -1117,7 +1165,7 @@ int main(int argc, char **argv)
 	
 
     //OverLay
-	/*ImageComponentPtr DirectionalComponentPrototype = ImageComponent::create();
+	ImageComponentPtr DirectionalComponentPrototype = ImageComponent::create();
 	beginEditCP(DirectionalComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
 		DirectionalComponentPrototype->setPreferredSize(Vec2f(15.0f,20.0f));
         DirectionalComponentPrototype->setScale(ImageComponent::SCALE_STRETCH);
@@ -1143,7 +1191,7 @@ int main(int argc, char **argv)
         DirectionalOverlay->setDrawWhenVisible(false);
         //DirectionalOverlay->setMinimumDistance(4000.0f);
         //DirectionalOverlay->setFadeAsApproaching(true);
-	endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask | DirectionalIndicatorMiniMapOverlay::DirectionComponentGeneratorFieldMask);*/
+	endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask | DirectionalIndicatorMiniMapOverlay::DirectionComponentGeneratorFieldMask);
     
     
 
@@ -1282,83 +1330,30 @@ int main(int argc, char **argv)
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
     endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
+	//Create a Foreground for a reticule
+	ImageForegroundPtr ReticuleForeground = ImageForeground::create();
+	beginEditCP(ReticuleForeground, ImageForeground::ImagesFieldMask | ImageForeground::PositionsFieldMask);
+		ReticuleForeground->getImages().push_back(ImageFileHandler::the().read(Path("./ret.png").string().c_str()));
+		ReticuleForeground->getPositions().push_back(Vec2f(0.5,0.5));
+	endEditCP(ReticuleForeground, ImageForeground::ImagesFieldMask | ImageForeground::PositionsFieldMask);
+
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
         TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(ReticuleForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene
     //mgr->showAll();
 
-/*    Vec3f SphereTrans, scal, cen,BoxTrans, PlayerTrans;
-    Quaternion rot, scalori;
-
-    SphereTransMatrix.getTransform(SphereTrans,rot,scal,scalori,cen);
-    BoxTransMatrix.getTransform(BoxTrans,rot,scal,scalori,cen);
-
-    SphereNodeComponentPrototype->setImage(SameImage);
-    SphereNodeComponentPrototype->setRolloverImage(SameImage);
-    SphereNodeComponentPrototype->setDisabledImage(SameImage);
-    SphereNodeComponentPrototype->setFocusedImage(SameImage);
-
-    CheckPointOneNodeComponentPrototype->setImage(SameImage);
-    CheckPointOneNodeComponentPrototype->setRolloverImage(SameImage);
-    CheckPointOneNodeComponentPrototype->setDisabledImage(SameImage);
-    CheckPointOneNodeComponentPrototype->setFocusedImage(SameImage);*/
 
     while(!ExitApp)
     {
         TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
-/*
-        Matrix playerPosition = ViewpointTransform->getMatrix();
-        playerPosition.getTransform(PlayerTrans,rot,scal,scalori,cen);
-        if(SphereTrans.z() >= PlayerTrans.z()+1)
-        {
-            SphereNodeComponentPrototype->setImage(UpImage);
-	        SphereNodeComponentPrototype->setRolloverImage(UpImage);
-	        SphereNodeComponentPrototype->setDisabledImage(UpImage);
-	        SphereNodeComponentPrototype->setFocusedImage(UpImage);
-        }
-        else if(SphereTrans.z() <= PlayerTrans.z()-1)
-        {
-            SphereNodeComponentPrototype->setImage(DownImage);
-	        SphereNodeComponentPrototype->setRolloverImage(DownImage);
-	        SphereNodeComponentPrototype->setDisabledImage(DownImage);
-	        SphereNodeComponentPrototype->setFocusedImage(DownImage);
-        }
-        else
-        {
-            SphereNodeComponentPrototype->setImage(SameImage);
-	        SphereNodeComponentPrototype->setRolloverImage(SameImage);
-	        SphereNodeComponentPrototype->setDisabledImage(SameImage);
-	        SphereNodeComponentPrototype->setFocusedImage(SameImage);
-        }
-
-        if(BoxTrans.z() >= PlayerTrans.z()+1)
-        {
-            CheckPointOneNodeComponentPrototype->setImage(UpImage);
-	        CheckPointOneNodeComponentPrototype->setRolloverImage(UpImage);
-	        CheckPointOneNodeComponentPrototype->setDisabledImage(UpImage);
-	        CheckPointOneNodeComponentPrototype->setFocusedImage(UpImage);
-        }
-        else if(BoxTrans.z() <= PlayerTrans.z()-1)
-        {
-            CheckPointOneNodeComponentPrototype->setImage(DownImage);
-	        CheckPointOneNodeComponentPrototype->setRolloverImage(DownImage);
-	        CheckPointOneNodeComponentPrototype->setDisabledImage(DownImage);
-	        CheckPointOneNodeComponentPrototype->setFocusedImage(DownImage);
-        }
-        else
-        {
-            CheckPointOneNodeComponentPrototype->setImage(SameImage);
-	        CheckPointOneNodeComponentPrototype->setRolloverImage(SameImage);
-	        CheckPointOneNodeComponentPrototype->setDisabledImage(SameImage);
-	        CheckPointOneNodeComponentPrototype->setFocusedImage(SameImage);
-        }*/
     }
     osgExit();
 
