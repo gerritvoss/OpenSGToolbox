@@ -307,7 +307,7 @@ SectionGroup "Release"
       File /nonfatal /x *D.exe "${ProjectRootDirName}\ParticleSystem\Tutorials\*.exe"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
-		Push "$INSTDIR\Tutorials\Particle System" ;Path where to search for the file or folder.
+		Push "$INSTDIR\Tutorials\ParticleSystem" ;Path where to search for the file or folder.
 		Push $0
 		GetFunctionAddress $0 "InstallParticleSystemTutorialLinks" ;Custom callback function name
 		Exch $0
@@ -335,7 +335,7 @@ SectionGroup "Release"
       File /nonfatal /x *D.exe "${ProjectRootDirName}\UserInterface\Tutorials\*.exe"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
-		Push "$INSTDIR\Tutorials\User Interface" ;Path where to search for the file or folder.
+		Push "$INSTDIR\Tutorials\UserInterface" ;Path where to search for the file or folder.
 		Push $0
 		GetFunctionAddress $0 "InstallUserInterfaceTutorialLinks" ;Custom callback function name
 		Exch $0

@@ -14,16 +14,16 @@ set PROJECT_DIR=OpenSGToolbox
 set BUILD_DIR=Builds\Windows
 set SOLUTION_NAME=vs-8.0-OpenSGToolbox.sln
 
-set LIBRARY_BUILD_ORDER=(Toolbox Input Sound Animation Dynamics ParticleSystem UserInterface Game)
+set LIBRARY_BUILD_ORDER=(Toolbox Input Sound Video Animation Dynamics ParticleSystem UserInterface Game)
 set LIBRARY_BUILD_CONFIGURATIONS=(Debug Release)
 set TUTORIAL_BUILD_CONFIGURATIONS=(Release)
 
 :Setup the Directory
-:rd /Q /S "%PROJECT_DIR%"
-:md "%PROJECT_DIR%"
+rd /Q /S "%PROJECT_DIR%"
+md "%PROJECT_DIR%"
 
 :Checkout the Repository
-:"%SUBVERSION_PATH%\svn.exe" checkout "%REPOSITORY_URL%" "%PROJECT_DIR%" --non-interactive
+"%SUBVERSION_PATH%\svn.exe" checkout "%REPOSITORY_URL%" "%PROJECT_DIR%" --non-interactive
 
 :Move to Main Build Directory
 cd "%PROJECT_DIR%"
@@ -44,10 +44,14 @@ FOR %%p in %LIBRARY_BUILD_ORDER% DO (
 
 :Build the Installer
 pushd Release\Windows
-"%NSIS_PATH%\makensis.exe" /V 2 InstallScript.nsi
+"%NSIS_PATH%\makensis.exe" /V3 InstallScript.nsi
+
+
+:Move the Installer to original directory
+move OpenSGToolbox.exe "%~d0%~p0"
+
 popd
+
 
 :Move back to original Directory
 popd
-
-pause
