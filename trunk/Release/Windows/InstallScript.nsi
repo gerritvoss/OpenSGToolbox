@@ -257,7 +257,8 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Toolbox"
       CreateDirectory $INSTDIR\Tutorials\Toolbox
       setOutPath $INSTDIR\Tutorials\Toolbox
-      File /nonfatal /x *D.exe "${ProjectRootDirName}\Toolbox\Tutorials\*.exe"
+      #File /nonfatal /x *D.exe "${ProjectRootDirName}\Toolbox\Tutorials\*.exe"
+      File /nonfatal "${ProjectRootDirName}\Toolbox\Tutorials\*.exe"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Toolbox\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
@@ -272,7 +273,7 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Input"
       CreateDirectory $INSTDIR\Tutorials\Input
       setOutPath $INSTDIR\Tutorials\Input
-      File /nonfatal /x *D.exe "${ProjectRootDirName}\Input\Tutorials\*.exe"
+      File /nonfatal "${ProjectRootDirName}\Input\Tutorials\*.exe"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Input\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
@@ -287,7 +288,7 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Animation"
       CreateDirectory $INSTDIR\Tutorials\Animation
       setOutPath $INSTDIR\Tutorials\Animation
-      File /nonfatal /x *D.exe "${ProjectRootDirName}\Animation\Tutorials\*.exe"
+      File /nonfatal "${ProjectRootDirName}\Animation\Tutorials\*.exe"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Animation\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
@@ -302,7 +303,7 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Dynamics"
       CreateDirectory $INSTDIR\Tutorials\Dynamics
       setOutPath $INSTDIR\Tutorials\Dynamics
-      File /nonfatal /x *D.exe "${ProjectRootDirName}\Dynamics\Tutorials\*.exe"
+      File /nonfatal "${ProjectRootDirName}\Dynamics\Tutorials\*.exe"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Dynamics\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
@@ -317,7 +318,7 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Particle System"
       CreateDirectory $INSTDIR\Tutorials\ParticleSystem
       setOutPath $INSTDIR\Tutorials\ParticleSystem
-      File /nonfatal /x *D.exe "${ProjectRootDirName}\ParticleSystem\Tutorials\*.exe"
+      File /nonfatal "${ProjectRootDirName}\ParticleSystem\Tutorials\*.exe"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\ParticleSystem\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
@@ -332,7 +333,7 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Sound"
       CreateDirectory $INSTDIR\Tutorials\Sound
       setOutPath $INSTDIR\Tutorials\Sound
-      File /nonfatal /x *D.exe "${ProjectRootDirName}\Sound\Tutorials\*.exe"
+      File /nonfatal "${ProjectRootDirName}\Sound\Tutorials\*.exe"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Sound\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
@@ -347,7 +348,7 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\User Interface"
       CreateDirectory $INSTDIR\Tutorials\UserInterface
       setOutPath $INSTDIR\Tutorials\UserInterface
-      File /nonfatal /x *D.exe "${ProjectRootDirName}\UserInterface\Tutorials\*.exe"
+      File /nonfatal "${ProjectRootDirName}\UserInterface\Tutorials\*.exe"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\UserInterface\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
@@ -362,7 +363,7 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Game"
       CreateDirectory $INSTDIR\Tutorials\Game
       setOutPath $INSTDIR\Tutorials\Game
-      File /nonfatal /x *D.exe "${ProjectRootDirName}\Game\Tutorials\*.exe"
+      File /nonfatal "${ProjectRootDirName}\Game\Tutorials\*.exe"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Game\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
@@ -377,7 +378,7 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Video"
       CreateDirectory $INSTDIR\Tutorials\Video
       setOutPath $INSTDIR\Tutorials\Video
-      File /nonfatal /x *D.exe "${ProjectRootDirName}\Video\Tutorials\*.exe"
+      File /nonfatal "${ProjectRootDirName}\Video\Tutorials\*.exe"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Video\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
