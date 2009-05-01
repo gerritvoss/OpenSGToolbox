@@ -9,13 +9,14 @@ set NSIS_PATH=C:\Program Files\NSIS
 set VS_PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE
 
 
-set REPOSITORY_URL=https://subversion.vrac.iastate.edu/Subversion/OpenSGToolbox/svn/OpenSGToolbox
+set REPOSITORY_URL=https://opensgtoolbox.svn.sourceforge.net/svnroot/opensgtoolbox/trunk
 set PROJECT_DIR=OpenSGToolbox
 set BUILD_DIR=Builds\Windows
 set SOLUTION_NAME=vs-8.0-OpenSGToolbox.sln
 
 set LIBRARY_BUILD_ORDER=(Toolbox Input Sound Animation Dynamics ParticleSystem UserInterface Game)
 set LIBRARY_BUILD_CONFIGURATIONS=(Debug Release)
+set TUTORIAL_BUILD_CONFIGURATIONS=(Release)
 
 :Setup the Directory
 :rd /Q /S "%PROJECT_DIR%"
@@ -29,14 +30,14 @@ cd "%PROJECT_DIR%"
 pushd "%BUILD_DIR%"
 
 :Build the Libraries
-:FOR %%p in %LIBRARY_BUILD_ORDER% DO FOR %%c in %LIBRARY_BUILD_CONFIGURATIONS% DO "%VS_PATH%\devenv.com" "%SOLUTION_NAME%" /build %%c /project OSG%%p
+FOR %%p in %LIBRARY_BUILD_ORDER% DO FOR %%c in %LIBRARY_BUILD_CONFIGURATIONS% DO "%VS_PATH%\devenv.com" "%SOLUTION_NAME%" /build %%c /project OSG%%p
 popd
 
 :Build the Tutorials
 FOR %%p in %LIBRARY_BUILD_ORDER% DO (
     pushd %%p\Tutorials
     FOR /f "tokens=*" %%f in ('dir *.vcproj /b') DO (
-        FOR %%c in %LIBRARY_BUILD_CONFIGURATIONS% DO "%VS_PATH%\devenv.com" %%f /build %%c
+        FOR %%c in %TUTORIAL_BUILD_CONFIGURATIONS% DO "%VS_PATH%\devenv.com" %%f /build %%c
     )
     popd
 )
