@@ -1,3 +1,5 @@
+!include FindFile.nsh
+
 # name the installer
 !define ProjectName "OpenSGToolbox"
 !define SMPROGRAMSFolder $SMPROGRAMS\${ProjectName}
@@ -9,9 +11,30 @@
 
 outFile "${OutFileName}"
 
+
+!macro IsUserAdmin RESULT
+ !define Index "Line${__LINE__}"
+   StrCpy ${RESULT} 0
+   System::Call '*(&i1 0,&i4 0,&i1 5)i.r0'
+   System::Call 'advapi32::AllocateAndInitializeSid(i r0,i 2,i 32,i 544,i 0,i 0,i 0,i 0,i 0, \
+   i 0,*i .R0)i.r5'
+   System::Free $0
+   System::Call 'advapi32::CheckTokenMembership(i n,i R0,*i .R1)i.r5'
+   StrCmp $5 0 ${Index}_Error
+   StrCpy ${RESULT} $R1
+   Goto ${Index}_End
+ ${Index}_Error:
+   StrCpy ${RESULT} -1
+ ${Index}_End:
+   System::Call 'advapi32::FreeSid(i R0)i.r5'
+ !undef Index
+!macroend
+
 # define the directory to install to, the desktop in this case as specified  
 # by the predefined $DESKTOP variable
+
 installDir $PROGRAMFILES\${InstallDirName}
+
 
 Page license
    LicenseText "GNU Lesser Library General Public License v. 3"
@@ -25,9 +48,64 @@ Page instfiles
 UninstPage uninstConfirm
 UninstPage instfiles
 
+Function InstallToolboxTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Toolbox\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
+Function InstallInputTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Input\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
+Function InstallAnimationTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Animation\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
+Function InstallDynamicsTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Dynamics\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
+Function InstallParticleSystemTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Particle System\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
+Function InstallSoundTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Sound\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
+Function InstallVideoTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Video\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
+Function InstallUserInterfaceTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\User Interface\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
+Function InstallGameTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Game\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
 # default section start; every NSIS script has at least one section.
 section
-   
+	#IntCmp IsUserAdmin 0 is0 lessthan0 morethan0
+	#is0:
+	#  messageBox MB_OK "Adminsitrator"
+	#  Goto done
+	#lessthan0:
+	#  messageBox MB_OK "Error"
+	#  Goto done
+	#morethan0:
+	#  messageBox MB_OK "Not Administrator"
+	#  Goto done
+	#done:
    # define the output path for this file
    setOutPath $INSTDIR
    
@@ -42,7 +120,7 @@ section
    
    #Create OpenSGToolbox environment variable
    
-   # create a shortcut named "new shortcut" in the start menu programs directory
+   # create a shortcut in the start menu programs directory
    # presently, the new shortcut doesn't call anything (the second field is blank)
    CreateDirectory "${SMPROGRAMSFolder}"
    createShortCut "${SMPROGRAMSFolder}\${ProjectName} Directory.lnk" "$INSTDIR"
@@ -92,61 +170,51 @@ SectionGroup "Devolopment"
       setOutPath $INSTDIR\Tutorials
       
       #Create Tutorial Directory for each Library
-      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Toolbox"
       CreateDirectory $INSTDIR\Tutorials\Toolbox
       setOutPath $INSTDIR\Tutorials\Toolbox
-      File /nonfatal "${ProjectRootDirName}\Toolbox\Tutorials\*D.exe"
       File /nonfatal "${ProjectRootDirName}\Toolbox\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Toolbox\Tutorials\*.vcproj"
+		
       
-      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Input"
       CreateDirectory $INSTDIR\Tutorials\Input
       setOutPath $INSTDIR\Tutorials\Input
-      File /nonfatal "${ProjectRootDirName}\Input\Tutorials\*D.exe"
       File /nonfatal "${ProjectRootDirName}\Input\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Input\Tutorials\*.vcproj"
       
-      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Animation"
       CreateDirectory $INSTDIR\Tutorials\Animation
       setOutPath $INSTDIR\Tutorials\Animation
-      File /nonfatal "${ProjectRootDirName}\Animation\Tutorials\*D.exe"
       File /nonfatal "${ProjectRootDirName}\Animation\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Animation\Tutorials\*.vcproj"
       
-      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Dynamics"
       CreateDirectory $INSTDIR\Tutorials\Dynamics
       setOutPath $INSTDIR\Tutorials\Dynamics
-      File /nonfatal "${ProjectRootDirName}\Dynamics\Tutorials\*D.exe"
       File /nonfatal "${ProjectRootDirName}\Dynamics\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Dynamics\Tutorials\*.vcproj"
       
-      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\ParticleSystem"
       CreateDirectory $INSTDIR\Tutorials\ParticleSystem
       setOutPath $INSTDIR\Tutorials\ParticleSystem
-      File /nonfatal "${ProjectRootDirName}\ParticleSystem\Tutorials\*D.exe"
       File /nonfatal "${ProjectRootDirName}\ParticleSystem\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\ParticleSystem\Tutorials\*.vcproj"
       
-      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Sound"
       CreateDirectory $INSTDIR\Tutorials\Sound
       setOutPath $INSTDIR\Tutorials\Sound
-      File /nonfatal "${ProjectRootDirName}\Sound\Tutorials\*D.exe"
       File /nonfatal "${ProjectRootDirName}\Sound\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Sound\Tutorials\*.vcproj"
       
-      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\UserInterface"
       CreateDirectory $INSTDIR\Tutorials\UserInterface
       setOutPath $INSTDIR\Tutorials\UserInterface
-      File /nonfatal "${ProjectRootDirName}\UserInterface\Tutorials\*D.exe"
       File /nonfatal "${ProjectRootDirName}\UserInterface\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\UserInterface\Tutorials\*.vcproj"
       
-      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Game"
       CreateDirectory $INSTDIR\Tutorials\Game
       setOutPath $INSTDIR\Tutorials\Game
-      File /nonfatal "${ProjectRootDirName}\Game\Tutorials\*D.exe"
       File /nonfatal "${ProjectRootDirName}\Game\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Game\Tutorials\*.vcproj"
+      
+      CreateDirectory $INSTDIR\Tutorials\Video
+      setOutPath $INSTDIR\Tutorials\Video
+      File /nonfatal "${ProjectRootDirName}\Video\Tutorials\*.cpp"
+      File /nonfatal "${ProjectRootDirName}\Video\Tutorials\*.vcproj"
       
    sectionEnd
 SectionGroupEnd
@@ -162,27 +230,9 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\lib
          
       setOutPath $INSTDIR\lib
-      
-      #File "${InputDirName}\lib\OSG*[^D].lib"
-      #File "${InputDirName}\lib\OSG*[^D].dll"
-      
-      File "${InputDirName}\lib\OSGAnimation.lib"
-      File "${InputDirName}\lib\OSGDynamics.lib"
-      File "${InputDirName}\lib\OSGInput.lib"
-      File "${InputDirName}\lib\OSGToolbox.lib"
-      File "${InputDirName}\lib\OSGParticleSystem.lib"
-      File "${InputDirName}\lib\OSGUserInterface.lib"
-      File "${InputDirName}\lib\OSGGame.lib"
-      File "${InputDirName}\lib\OSGSound.lib"
-      
-      File "${InputDirName}\lib\OSGAnimation.dll"
-      File "${InputDirName}\lib\OSGDynamics.dll"
-      File "${InputDirName}\lib\OSGInput.dll"
-      File "${InputDirName}\lib\OSGToolbox.dll"
-      File "${InputDirName}\lib\OSGParticleSystem.dll"
-      File "${InputDirName}\lib\OSGUserInterface.dll"
-      File "${InputDirName}\lib\OSGGame.dll"
-      File "${InputDirName}\lib\OSGSound.dll"
+      File /x *D.lib "${InputDirName}\lib\OSG*.lib"
+      File /x *D.dll "${InputDirName}\lib\OSG*.dll"
+		
    sectionEnd
    section "Tutorials"
       # define the output path for this file
@@ -198,7 +248,128 @@ SectionGroup "Release"
       CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Toolbox"
       CreateDirectory $INSTDIR\Tutorials\Toolbox
       setOutPath $INSTDIR\Tutorials\Toolbox
-      File "${ProjectRootDirName}\Toolbox\Tutorials\*D.exe"
+      File /nonfatal /x *D.exe "${ProjectRootDirName}\Toolbox\Tutorials\*.exe"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Toolbox" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallToolboxTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+      
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Input"
+      CreateDirectory $INSTDIR\Tutorials\Input
+      setOutPath $INSTDIR\Tutorials\Input
+      File /nonfatal /x *D.exe "${ProjectRootDirName}\Input\Tutorials\*.exe"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Input" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallInputTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+      
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Animation"
+      CreateDirectory $INSTDIR\Tutorials\Animation
+      setOutPath $INSTDIR\Tutorials\Animation
+      File /nonfatal /x *D.exe "${ProjectRootDirName}\Animation\Tutorials\*.exe"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Animation" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallAnimationTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+      
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Dynamics"
+      CreateDirectory $INSTDIR\Tutorials\Dynamics
+      setOutPath $INSTDIR\Tutorials\Dynamics
+      File /nonfatal /x *D.exe "${ProjectRootDirName}\Dynamics\Tutorials\*.exe"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Dynamics" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallDynamicsTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+      
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Particle System"
+      CreateDirectory $INSTDIR\Tutorials\ParticleSystem
+      setOutPath $INSTDIR\Tutorials\ParticleSystem
+      File /nonfatal /x *D.exe "${ProjectRootDirName}\ParticleSystem\Tutorials\*.exe"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Particle System" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallParticleSystemTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+      
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Sound"
+      CreateDirectory $INSTDIR\Tutorials\Sound
+      setOutPath $INSTDIR\Tutorials\Sound
+      File /nonfatal /x *D.exe "${ProjectRootDirName}\Sound\Tutorials\*.exe"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Sound" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallSoundTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+      
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\User Interface"
+      CreateDirectory $INSTDIR\Tutorials\UserInterface
+      setOutPath $INSTDIR\Tutorials\UserInterface
+      File /nonfatal /x *D.exe "${ProjectRootDirName}\UserInterface\Tutorials\*.exe"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\User Interface" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallUserInterfaceTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+      
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Game"
+      CreateDirectory $INSTDIR\Tutorials\Game
+      setOutPath $INSTDIR\Tutorials\Game
+      File /nonfatal /x *D.exe "${ProjectRootDirName}\Game\Tutorials\*.exe"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Game" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallGameTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+      
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Video"
+      CreateDirectory $INSTDIR\Tutorials\Video
+      setOutPath $INSTDIR\Tutorials\Video
+      File /nonfatal /x *D.exe "${ProjectRootDirName}\Video\Tutorials\*.exe"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Video" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallVideoTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
       
    sectionEnd
 SectionGroupEnd
@@ -210,6 +381,53 @@ section "Documentation"
    #Create the Install Directory
    CreateDirectory $INSTDIR\Documentation
 sectionEnd
+
+SectionGroup "Dependencies"
+	SectionGroup "OpenSG"
+		section "Release"
+			# define the output path for this file
+			setOutPath $INSTDIR
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Dependencies
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Include
+		sectionEnd
+		section "Development"
+			# define the output path for this file
+			setOutPath $INSTDIR
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Dependencies
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Include
+		sectionEnd
+	SectionGroupEnd
+	SectionGroup "boost"
+		section "Release"
+			# define the output path for this file
+			setOutPath $INSTDIR
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Dependencies
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Include
+		sectionEnd
+		section "Development"
+			# define the output path for this file
+			setOutPath $INSTDIR
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Dependencies
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Include
+		sectionEnd
+	SectionGroupEnd
+SectionGroupEnd
 
 
 # create a section to define what the uninstaller does.
@@ -232,4 +450,5 @@ section "un.Uninstall ${ProjectName}"
    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenSGToolbox"
  
 sectionEnd
+
 
