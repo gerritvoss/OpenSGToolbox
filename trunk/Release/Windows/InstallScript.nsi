@@ -174,47 +174,56 @@ SectionGroup "Devolopment"
       setOutPath $INSTDIR\Tutorials\Toolbox
       File /nonfatal "${ProjectRootDirName}\Toolbox\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Toolbox\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Toolbox\Tutorials\Data"
 		
       
       CreateDirectory $INSTDIR\Tutorials\Input
       setOutPath $INSTDIR\Tutorials\Input
       File /nonfatal "${ProjectRootDirName}\Input\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Input\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Input\Tutorials\Data"
       
       CreateDirectory $INSTDIR\Tutorials\Animation
       setOutPath $INSTDIR\Tutorials\Animation
       File /nonfatal "${ProjectRootDirName}\Animation\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Animation\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Animation\Tutorials\Data"
       
       CreateDirectory $INSTDIR\Tutorials\Dynamics
       setOutPath $INSTDIR\Tutorials\Dynamics
       File /nonfatal "${ProjectRootDirName}\Dynamics\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Dynamics\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Dynamics\Tutorials\Data"
       
       CreateDirectory $INSTDIR\Tutorials\ParticleSystem
       setOutPath $INSTDIR\Tutorials\ParticleSystem
       File /nonfatal "${ProjectRootDirName}\ParticleSystem\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\ParticleSystem\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\ParticleSystem\Tutorials\Data"
       
       CreateDirectory $INSTDIR\Tutorials\Sound
       setOutPath $INSTDIR\Tutorials\Sound
       File /nonfatal "${ProjectRootDirName}\Sound\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Sound\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Sound\Tutorials\Data"
       
       CreateDirectory $INSTDIR\Tutorials\UserInterface
       setOutPath $INSTDIR\Tutorials\UserInterface
       File /nonfatal "${ProjectRootDirName}\UserInterface\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\UserInterface\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\UserInterface\Tutorials\Data"
       
       CreateDirectory $INSTDIR\Tutorials\Game
       setOutPath $INSTDIR\Tutorials\Game
       File /nonfatal "${ProjectRootDirName}\Game\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Game\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Game\Tutorials\Data"
       
       CreateDirectory $INSTDIR\Tutorials\Video
       setOutPath $INSTDIR\Tutorials\Video
       File /nonfatal "${ProjectRootDirName}\Video\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Video\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Video\Tutorials\Data"
       
    sectionEnd
 SectionGroupEnd
@@ -249,6 +258,7 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\Tutorials\Toolbox
       setOutPath $INSTDIR\Tutorials\Toolbox
       File /nonfatal /x *D.exe "${ProjectRootDirName}\Toolbox\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Toolbox\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
 		Push "$INSTDIR\Tutorials\Toolbox" ;Path where to search for the file or folder.
@@ -263,6 +273,7 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\Tutorials\Input
       setOutPath $INSTDIR\Tutorials\Input
       File /nonfatal /x *D.exe "${ProjectRootDirName}\Input\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Input\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
 		Push "$INSTDIR\Tutorials\Input" ;Path where to search for the file or folder.
@@ -277,6 +288,7 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\Tutorials\Animation
       setOutPath $INSTDIR\Tutorials\Animation
       File /nonfatal /x *D.exe "${ProjectRootDirName}\Animation\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Animation\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
 		Push "$INSTDIR\Tutorials\Animation" ;Path where to search for the file or folder.
@@ -291,6 +303,7 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\Tutorials\Dynamics
       setOutPath $INSTDIR\Tutorials\Dynamics
       File /nonfatal /x *D.exe "${ProjectRootDirName}\Dynamics\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Dynamics\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
 		Push "$INSTDIR\Tutorials\Dynamics" ;Path where to search for the file or folder.
@@ -305,6 +318,7 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\Tutorials\ParticleSystem
       setOutPath $INSTDIR\Tutorials\ParticleSystem
       File /nonfatal /x *D.exe "${ProjectRootDirName}\ParticleSystem\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\ParticleSystem\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
 		Push "$INSTDIR\Tutorials\ParticleSystem" ;Path where to search for the file or folder.
@@ -319,6 +333,7 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\Tutorials\Sound
       setOutPath $INSTDIR\Tutorials\Sound
       File /nonfatal /x *D.exe "${ProjectRootDirName}\Sound\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Sound\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
 		Push "$INSTDIR\Tutorials\Sound" ;Path where to search for the file or folder.
@@ -333,6 +348,7 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\Tutorials\UserInterface
       setOutPath $INSTDIR\Tutorials\UserInterface
       File /nonfatal /x *D.exe "${ProjectRootDirName}\UserInterface\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\UserInterface\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
 		Push "$INSTDIR\Tutorials\UserInterface" ;Path where to search for the file or folder.
@@ -347,6 +363,7 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\Tutorials\Game
       setOutPath $INSTDIR\Tutorials\Game
       File /nonfatal /x *D.exe "${ProjectRootDirName}\Game\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Game\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
 		Push "$INSTDIR\Tutorials\Game" ;Path where to search for the file or folder.
@@ -361,6 +378,7 @@ SectionGroup "Release"
       CreateDirectory $INSTDIR\Tutorials\Video
       setOutPath $INSTDIR\Tutorials\Video
       File /nonfatal /x *D.exe "${ProjectRootDirName}\Video\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Video\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
 		Push "$INSTDIR\Tutorials\Video" ;Path where to search for the file or folder.

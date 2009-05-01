@@ -502,7 +502,7 @@ int main(int argc, char **argv)
     NodePtr CylinderGeometryNode = makeBox(0.5,0.5,0.5,2,2,2);//makeCylinder(1.0,0.25,2,true,true,true);
 
 	//Set the Camera Beacon Node
-	Matrix Offset
+	Matrix Offset;
 	Offset.setTranslate(0.0f,0.0,6.0f);
 	CameraBeaconTransform = Transform::create();
     beginEditCP(CameraBeaconTransform, Transform::MatrixFieldMask);
@@ -579,7 +579,7 @@ int main(int argc, char **argv)
 		ViewPointComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		ViewPointComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(ViewPointComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr ShipImage = ImageFileHandler::the().read(Path("./Ship.JPG").string().c_str());
+	ImagePtr ShipImage = ImageFileHandler::the().read(Path("./Data/Ship.JPG").string().c_str());
 	ViewPointComponentPrototype->setImage(ShipImage);
 	ViewPointComponentPrototype->setRolloverImage(ShipImage);
 	ViewPointComponentPrototype->setDisabledImage(ShipImage);
@@ -613,22 +613,22 @@ int main(int argc, char **argv)
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
 		MiniMap->setOpacity(.4);
 		MiniMap->setConstraints(MiniMapConstraints);
-		MiniMap->setLockMapOrientation(false);          //If this is changed to true the map will then remain stationary and the indicator will then move and rotate
-        MiniMap->setUnlockedMapSize(Vec2f(1000,1000));  //This item is only necassary when the map is set to Unlocked Orientation
+		MiniMap->setLockMapOrientation(true);          //If this is changed to true the map will then remain stationary and the indicator will then move and rotate
+        //MiniMap->setUnlockedMapSize(Vec2f(1000,1000));  //This item is only necassary when the map is set to Unlocked Orientation
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 
     //Set the images the map will use a layers of the scene.
     //The second arg in the method call is the space between that layer and the layer befor it
-	MiniMap->insertLayer(Path("./level1.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./level2.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./level3.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./level4.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./level5.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./level6.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./level7.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./level8.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./level9.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./level10.jpg").string().c_str(), .3);
+	MiniMap->insertLayer(Path("./Data/level1.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./Data/level2.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./Data/level3.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./Data/level4.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./Data/level5.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./Data/level6.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./Data/level7.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./Data/level8.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./Data/level9.jpg").string().c_str(), .3);
+    MiniMap->insertLayer(Path("./Data/level10.jpg").string().c_str(), .3);
 
 	 // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();

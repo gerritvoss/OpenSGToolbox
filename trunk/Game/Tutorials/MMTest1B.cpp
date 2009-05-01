@@ -992,7 +992,7 @@ int main(int argc, char **argv)
 		ViewPointComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		ViewPointComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(ViewPointComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr ShipImage = ImageFileHandler::the().read(Path("./Ship.PNG").string().c_str());
+	ImagePtr ShipImage = ImageFileHandler::the().read(Path("./Data/Ship.PNG").string().c_str());
 	ViewPointComponentPrototype->setImage(ShipImage);
 	ViewPointComponentPrototype->setRolloverImage(ShipImage);
 	ViewPointComponentPrototype->setDisabledImage(ShipImage);
@@ -1011,7 +1011,7 @@ int main(int argc, char **argv)
 		CellNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		CellNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(CellNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr CellImage = ImageFileHandler::the().read(Path("./CellNode.jpg").string().c_str());
+	ImagePtr CellImage = ImageFileHandler::the().read(Path("./Data/CellNode.jpg").string().c_str());
 	CellNodeComponentPrototype->setImage(CellImage);
 	CellNodeComponentPrototype->setRolloverImage(CellImage);
 	CellNodeComponentPrototype->setDisabledImage(CellImage);
@@ -1047,9 +1047,9 @@ int main(int argc, char **argv)
 		CheckPointOneNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(CheckPointOneNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
 	
-    ImagePtr SameImage = ImageFileHandler::the().read(Path("./SameLevelIndicate.PNG").string().c_str());
-    ImagePtr DownImage = ImageFileHandler::the().read(Path("./DownLevelIndicate.PNG").string().c_str());
-    ImagePtr UpImage = ImageFileHandler::the().read(Path("./UpLevelIndicate.PNG").string().c_str());
+    ImagePtr SameImage = ImageFileHandler::the().read(Path("./Data/SameLevelIndicate.PNG").string().c_str());
+    ImagePtr DownImage = ImageFileHandler::the().read(Path("./Data/DownLevelIndicate.PNG").string().c_str());
+    ImagePtr UpImage = ImageFileHandler::the().read(Path("./Data/UpLevelIndicate.PNG").string().c_str());
 	CheckPointOneNodeComponentPrototype->setImage(SameImage);
     CheckPointOneNodeComponentPrototype->setRolloverImage(SameImage);
     CheckPointOneNodeComponentPrototype->setDisabledImage(SameImage);
@@ -1179,7 +1179,7 @@ int main(int argc, char **argv)
         DirectionalComponentPrototype->setScale(ImageComponent::SCALE_STRETCH);
 		DirectionalComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(DirectionalComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr PointerImage = ImageFileHandler::the().read(Path("./Pointer.png").string().c_str());
+	ImagePtr PointerImage = ImageFileHandler::the().read(Path("./Data/Pointer.png").string().c_str());
 	DirectionalComponentPrototype->setImage(PointerImage);
 	DirectionalComponentPrototype->setRolloverImage(PointerImage);
 	DirectionalComponentPrototype->setDisabledImage(PointerImage);
@@ -1224,16 +1224,16 @@ int main(int argc, char **argv)
 
     //Set the images the map will use a layers of the scene.
     //The second arg in the method call is the space between that layer and the layer befor it
-	TheMiniMap->insertLayer(Path("./level1.jpg").string().c_str(), 15.0);
-    TheMiniMap->insertLayer(Path("./level2.jpg").string().c_str(), 15.0);
-    TheMiniMap->insertLayer(Path("./level3.jpg").string().c_str(), 15.0);
-    TheMiniMap->insertLayer(Path("./level4.jpg").string().c_str(), 15.0);
-    TheMiniMap->insertLayer(Path("./level5.jpg").string().c_str(), 15.0);
-    TheMiniMap->insertLayer(Path("./level6.jpg").string().c_str(), 15.0);
-    TheMiniMap->insertLayer(Path("./level7.jpg").string().c_str(), 15.0);
-    TheMiniMap->insertLayer(Path("./level8.jpg").string().c_str(), 15.0);
-    TheMiniMap->insertLayer(Path("./level9.jpg").string().c_str(), 15.0);
-    TheMiniMap->insertLayer(Path("./level10.jpg").string().c_str(), 15.0);
+	TheMiniMap->insertLayer(Path("./Data/level1.jpg").string().c_str(), 15.0);
+    TheMiniMap->insertLayer(Path("./Data/level2.jpg").string().c_str(), 15.0);
+    TheMiniMap->insertLayer(Path("./Data/level3.jpg").string().c_str(), 15.0);
+    TheMiniMap->insertLayer(Path("./Data/level4.jpg").string().c_str(), 15.0);
+    TheMiniMap->insertLayer(Path("./Data/level5.jpg").string().c_str(), 15.0);
+    TheMiniMap->insertLayer(Path("./Data/level6.jpg").string().c_str(), 15.0);
+    TheMiniMap->insertLayer(Path("./Data/level7.jpg").string().c_str(), 15.0);
+    TheMiniMap->insertLayer(Path("./Data/level8.jpg").string().c_str(), 15.0);
+    TheMiniMap->insertLayer(Path("./Data/level9.jpg").string().c_str(), 15.0);
+    TheMiniMap->insertLayer(Path("./Data/level10.jpg").string().c_str(), 15.0);
 
 	 // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
@@ -1341,7 +1341,7 @@ int main(int argc, char **argv)
 	//Create a Foreground for a reticule
 	ImageForegroundPtr ReticuleForeground = ImageForeground::create();
 	beginEditCP(ReticuleForeground, ImageForeground::ImagesFieldMask | ImageForeground::PositionsFieldMask);
-		ReticuleForeground->getImages().push_back(ImageFileHandler::the().read(Path("./ret.png").string().c_str()));
+		ReticuleForeground->getImages().push_back(ImageFileHandler::the().read(Path("./Data/ret.png").string().c_str()));
 		ReticuleForeground->getPositions().push_back(Vec2f(0.5,0.5));
 	endEditCP(ReticuleForeground, ImageForeground::ImagesFieldMask | ImageForeground::PositionsFieldMask);
 
