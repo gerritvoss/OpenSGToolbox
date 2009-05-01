@@ -11,6 +11,7 @@
 
 outFile "${OutFileName}"
 
+icon "${InputDirName}\Data\OpenSGToolbox-Icon-32x32.ico"
 
 !macro IsUserAdmin RESULT
  !define Index "Line${__LINE__}"
