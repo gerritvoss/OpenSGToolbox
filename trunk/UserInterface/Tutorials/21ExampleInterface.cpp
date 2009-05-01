@@ -391,11 +391,16 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
                                         Vec2f(550,550),
                                         "OpenSG 21ExampleInterface Window");
+
+	//Load in File
+	NodePtr LoadedFile = SceneFileHandler::the().read("C:\\Documents and Settings\\All Users\\Documents\\Cell.osb");
+
     // Make Main Scene Node
     create3DObjects();
     scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
+		scene->addChild(LoadedFile);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
