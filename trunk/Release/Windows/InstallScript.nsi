@@ -13,6 +13,16 @@ outFile "${OutFileName}"
 
 icon "${InputDirName}\Data\OpenSGToolbox-Icon-32x32.ico"
 
+#Version Information
+!define _VERSION "0.8.0"
+;...
+;from {NSISDIR}\Examples\VersionInfo.nsi
+VIProductVersion "${_VERSION}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${ProjectName}"
+#VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "..."
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${_VERSION}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName" "${OutFileName}"
+
 !macro IsUserAdmin RESULT
  !define Index "Line${__LINE__}"
    StrCpy ${RESULT} 0
