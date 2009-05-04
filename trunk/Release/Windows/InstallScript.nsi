@@ -8,15 +8,15 @@
 !define ProjectRootDirName "..\.."
 !define InputDirName "..\..\Builds\Windows"
 !define UninstallFileName "Uninstall ${ProjectName}.exe"
+!define BoostDepDir "C:\Program Files\boost\boost_1_36_0"
+!define OpenSGDepDir "C:\Program Files\OpenSG"
 
 outFile "${OutFileName}"
 
-icon "${InputDirName}\Data\OpenSGToolbox-Icon-32x32.ico"
+icon "${ProjectRootDirName}\Data\OpenSGToolbox-Icon-32x32.ico"
 
 #Version Information
-!define _VERSION "0.8.0"
-;...
-;from {NSISDIR}\Examples\VersionInfo.nsi
+!define _VERSION "0.8.0.0"
 VIProductVersion "${_VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${ProjectName}"
 #VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "..."
@@ -419,20 +419,28 @@ SectionGroup "Dependencies"
 			setOutPath $INSTDIR
 			
 			#Create the Dependencies Install Directory
-			CreateDirectory $INSTDIR\Dependencies
-			
-			#Create the Dependencies Install Directory
-			CreateDirectory $INSTDIR\Include
+			CreateDirectory $INSTDIR\lib
+            
+            setOutPath $INSTDIR\lib
+            File "${OpenSGDepDir}\lib\OSGBase.*"
+            File "${OpenSGDepDir}\lib\OSGSystem.*"
+            File "${OpenSGDepDir}\lib\OSGWindowWIN32.*"
+            File "${OpenSGDepDir}\lib\OSGWindowGLUT.*"
+            File "${OpenSGDepDir}\lib\glut32.dll"
+            File "${OpenSGDepDir}\lib\msvcp80.dll"
+            File "${OpenSGDepDir}\lib\msvcr80.dll"
+            File "${OpenSGDepDir}\lib\msvcrt.dll"
+            File "${OpenSGDepDir}\lib\msvcp60.dll"
 		sectionEnd
 		section "Development"
 			# define the output path for this file
 			setOutPath $INSTDIR
 			
 			#Create the Dependencies Install Directory
-			CreateDirectory $INSTDIR\Dependencies
+			CreateDirectory $INSTDIR\lib
 			
 			#Create the Dependencies Install Directory
-			CreateDirectory $INSTDIR\Include
+			CreateDirectory $INSTDIR\include
 		sectionEnd
 	SectionGroupEnd
 	SectionGroup "boost"
@@ -441,7 +449,12 @@ SectionGroup "Dependencies"
 			setOutPath $INSTDIR
 			
 			#Create the Dependencies Install Directory
-			CreateDirectory $INSTDIR\Dependencies
+			CreateDirectory $INSTDIR\lib
+            
+            setOutPath $INSTDIR\lib
+            File "${BoostDepDir}\lib\boost_filesystem-*"
+            File "${BoostDepDir}\lib\boost_system-*"
+            
 			
 			#Create the Dependencies Install Directory
 			CreateDirectory $INSTDIR\Include
