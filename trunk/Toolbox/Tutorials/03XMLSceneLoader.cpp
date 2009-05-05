@@ -289,11 +289,7 @@ void Load(std::string FilePath, std::vector<NodePtr>& RootNodes, std::vector<Cam
     }
     else
     {
-		SceneFileHandler::FCPtrStore Roots = SceneFileHandler::the().readTopNodes(FilePath.c_str());
-		for(unsigned int i(0) ; i<Roots.size() ; ++i)
-		{
-			RootNodes.push_back(Node::Ptr::dcast(Roots[i]));
-		}
+		RootNodes.push_back(SceneFileHandler::the().read(FilePath.c_str()));
     }
     
     Time end = getSystemTime();
