@@ -99,6 +99,13 @@ Path makeRelative(const Path& Root, const Path& ToPath)
 		++ToPathIter;
 	}
 
+	++RootIter;
+	while(RootIter != RootComplete.end())
+	{
+		Result = Path("..") / Result;
+		++RootIter;
+	}
+
 	return Result;
 }
 
