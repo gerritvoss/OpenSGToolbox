@@ -161,6 +161,7 @@ void UIForeground::changed(BitVector whichField, UInt32 origin)
 	if( (whichField & DrawingSurfaceFieldMask) &&
 		getDrawingSurface() != NullFC)
     {
+        getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
 	}
 }
 

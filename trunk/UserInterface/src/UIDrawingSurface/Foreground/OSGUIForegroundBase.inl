@@ -49,8 +49,6 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -132,10 +130,6 @@ inline
 void UIForegroundBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 {
     _sfDrawingSurface.setValue(value);
-	if(getDrawingSurface() != NullFC)
-	{
-        getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
-	}
 }
 
 //! Get the value of the UIForeground::_sfMouseTransformFunctor field.
