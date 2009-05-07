@@ -270,7 +270,7 @@ void Menu::changed(BitVector whichField, UInt32 origin)
         }
     }
     
-    if(whichField & SelectedFieldMask)
+    if(whichField & SelectedFieldMask && getEnabled())
     {
         if(getSelected())
         {
