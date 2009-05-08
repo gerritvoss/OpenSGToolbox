@@ -40,6 +40,7 @@
 #include <OpenSG/OSGFieldType.h>
 #include <OpenSG/OSGBaseFieldDataType.h>
 #include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGFieldContainerFactory.h>
 
 #include <OpenSG/OSGSField.h>
 #include <OpenSG/OSGMField.h>
@@ -50,14 +51,114 @@ OSG_BEGIN_NAMESPACE
 
 typedef std::map<Int32, FieldContainerPtr>  FieldContainerMap;
 
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-
 template <>
-struct FieldTraitsRecurseMapper<FieldContainerMap, false> : 
+struct FieldDataTraits<FieldContainerMap> : 
     public FieldTraitsRecurseBase<FieldContainerMap>
 {
-    enum                    { bHasParent        = 0x00   };
+    // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
+    static DataType       _type;
 
+    // Define whether string conversions are available. It is strongly
+    // recommended to implement both.
+    enum                  { StringConvertable = ToStringConvertable | 
+                                                FromStringConvertable    };
+
+    // access method for the DataType
+    static DataType       &getType      (void) { return _type;          }
+
+    // Access to the names of the actual Fields
+    static char     *getSName(void) { return "SFFieldContainerMap"; }
+    static char     *getMName(void) { return "MFFieldContainerMap"; }
+
+    // Create a default instance of the class, needed for Field creation
+    static FieldContainerMap       getDefault   (void) { return FieldContainerMap();   }
+
+    
+    // This is where it gets interesting: the conversion functions
+
+    // String conversion
+    // Output inVal into outVal
+    // the exact mapping doesn't matter, 
+    // Our recommendation is to output as a string, 
+    // i.e. start and stop with ", as this simplifies integration into the
+    // OSG Loader.
+    static void putToString(const FieldContainerMap   &inVal,
+                                  std::string &outVal)
+    {
+		//Loop through all of the map elelments
+        FieldContainerMap::const_iterator Itor(inVal.begin());
+        std::string tempOut;
+        for(; Itor != inVal.end(); ++Itor)
+        {
+			if(Itor != inVal.begin())
+			{
+				outVal.append(";");
+			}
+            outVal.append(TypeTraits<FieldContainerMap::key_type>::putToString( Itor->first ));
+
+            outVal.append(",");
+			if(Itor->second == NullFC)
+			{
+				outVal.append(TypeTraits<UInt32>::putToString( 0 ));
+			}
+			else
+			{
+				outVal.append(TypeTraits<UInt32>::putToString( Itor->second.getFieldContainerId() ));
+			}
+            outVal.append(tempOut);
+        }
+    }
+    
+    // Setup outVal from the contents of inVal
+    // For complicated classes it makes sense to implement this function
+    // as a class method and just call that from here  
+    static bool getFromString(      FieldContainerMap  &outVal,
+                              const Char8     *&inVal)
+    {
+        outVal.clear();
+
+		//Loop through all of the map elelments
+        const Char8 *curInString(inVal);
+
+		Int32 Key;
+		FieldContainerPtr Value;
+		UInt32 FieldContainerID(0);
+        while(curInString != NULL)
+        {
+			//Get the key value
+			Key = TypeTraits<FieldContainerMap::key_type>::getFromString( curInString );
+			
+			//Move past the ; seperator
+            curInString = strchr(curInString, ',');
+            ++curInString;
+            if(curInString == NULL)
+            {
+                return false;
+            }
+
+			//Get the map value
+			FieldContainerID = TypeTraits<UInt32>::getFromString(curInString);
+			Value = FieldContainerFactory::the()->getMappedContainer(FieldContainerID);
+			if(Value == NullFC)
+			{
+				SWARNING <<
+					"ERROR in FieldContainerMap::getFromString(): Could not find Container referenced with Id: " << FieldContainerID <<
+					std::endl;
+			}
+
+			//Add the Key/Value pair
+            outVal[Key] = Value;
+
+			//Move past the ; seperator
+			curInString = strchr(curInString, ';');
+			if(curInString != NULL)
+			{
+				++curInString;
+			}
+        }
+	}
+    
+    // Binary conversion
     static UInt32 getBinSize(const FieldContainerMap &oObject)
     {
         //FieldContainerMap::const_iterator mapIt  = oObject.begin();
@@ -174,41 +275,6 @@ struct FieldTraitsRecurseMapper<FieldContainerMap, false> :
     }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-
-#endif
-
-#if !defined(OSG_DOC_DEV_TRAITS)
-
-#endif
-
-template <>
-struct OSG_TOOLBOXLIB_DLLMAPPING FieldDataTraits<FieldContainerMap> : 
-    public FieldTraitsRecurseMapper<FieldContainerMap, false>
-{
-    static DataType                  _type;
-
-    enum                            { StringConvertable = 0x01  };
-    enum                            { bHasParent        = 0x00  };
-
-    static DataType &getType (void) { return _type;             }
-    static char     *getSName(void) { return "SFFieldContainerMap"; }
-    static char     *getMName(void) { return "MFFieldContainerMap"; }
-
-    static bool        getFromString(      FieldContainerMap  &,
-                                     const Char8         *&)
-    {
-        return false;
-    }
-
-    static void      putToString    (const FieldContainerMap &,
-                                           std::string   &outStr)
-    {
-        outStr.assign("FieldContainerMap");
-    }
-};
-
-
 // Here the actual Field types are declared
 // You don't always have to have both, either is fine
 
@@ -231,8 +297,6 @@ OSG_DLLEXPORT_DECL1(SField, FieldContainerMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
 #ifndef OSG_COMPILEFIELDCONTAINERMAPTYPEINST
 OSG_DLLEXPORT_DECL1(MField, FieldContainerMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
 #endif
-
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 OSG_END_NAMESPACE
 
