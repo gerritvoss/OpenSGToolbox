@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -100,6 +100,9 @@ const OSG::BitVector  ScrollBarBase::HorizontalScrollFieldFieldMask =
 const OSG::BitVector  ScrollBarBase::ScrollBarMinLengthFieldMask = 
     (TypeTraits<BitVector>::One << ScrollBarBase::ScrollBarMinLengthFieldId);
 
+const OSG::BitVector  ScrollBarBase::RangeModelFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::RangeModelFieldId);
+
 const OSG::BitVector ScrollBarBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -141,6 +144,9 @@ const OSG::BitVector ScrollBarBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          ScrollBarBase::_sfScrollBarMinLength
+    
+*/
+/*! \var BoundedRangeModelPtr ScrollBarBase::_sfRangeModel
     
 */
 
@@ -207,7 +213,12 @@ FieldDescription *ScrollBarBase::_desc[] =
                      "ScrollBarMinLength", 
                      ScrollBarMinLengthFieldId, ScrollBarMinLengthFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFScrollBarMinLength)
+                     (FieldAccessMethod) &ScrollBarBase::getSFScrollBarMinLength),
+    new FieldDescription(SFBoundedRangeModelPtr::getClassType(), 
+                     "RangeModel", 
+                     RangeModelFieldId, RangeModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollBarBase::getSFRangeModel)
 };
 
 
@@ -295,6 +306,7 @@ ScrollBarBase::ScrollBarBase(void) :
     _sfHorizontalScrollBar    (ButtonPtr(NullFC)), 
     _sfHorizontalScrollField  (ButtonPtr(NullFC)), 
     _sfScrollBarMinLength     (UInt32(20)), 
+    _sfRangeModel             (BoundedRangeModelPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -316,6 +328,7 @@ ScrollBarBase::ScrollBarBase(const ScrollBarBase &source) :
     _sfHorizontalScrollBar    (source._sfHorizontalScrollBar    ), 
     _sfHorizontalScrollField  (source._sfHorizontalScrollField  ), 
     _sfScrollBarMinLength     (source._sfScrollBarMinLength     ), 
+    _sfRangeModel             (source._sfRangeModel             ), 
     Inherited                 (source)
 {
 }
@@ -392,6 +405,11 @@ UInt32 ScrollBarBase::getBinSize(const BitVector &whichField)
         returnValue += _sfScrollBarMinLength.getBinSize();
     }
 
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+    {
+        returnValue += _sfRangeModel.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -459,6 +477,11 @@ void ScrollBarBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ScrollBarMinLengthFieldMask & whichField))
     {
         _sfScrollBarMinLength.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+    {
+        _sfRangeModel.copyToBin(pMem);
     }
 
 
@@ -529,6 +552,11 @@ void ScrollBarBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfScrollBarMinLength.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+    {
+        _sfRangeModel.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -575,6 +603,9 @@ void ScrollBarBase::executeSyncImpl(      ScrollBarBase *pOther,
     if(FieldBits::NoField != (ScrollBarMinLengthFieldMask & whichField))
         _sfScrollBarMinLength.syncWith(pOther->_sfScrollBarMinLength);
 
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+        _sfRangeModel.syncWith(pOther->_sfRangeModel);
+
 
 }
 #else
@@ -620,6 +651,9 @@ void ScrollBarBase::executeSyncImpl(      ScrollBarBase *pOther,
 
     if(FieldBits::NoField != (ScrollBarMinLengthFieldMask & whichField))
         _sfScrollBarMinLength.syncWith(pOther->_sfScrollBarMinLength);
+
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+        _sfRangeModel.syncWith(pOther->_sfRangeModel);
 
 
 

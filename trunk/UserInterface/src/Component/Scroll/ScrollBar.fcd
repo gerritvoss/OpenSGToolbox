@@ -128,4 +128,14 @@ A UI ScrollBar.
 		defaultValue="20"
 	>
 	</Field>
+	<Field
+		name="RangeModel"
+		type="BoundedRangeModelPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Scroll/OSGBoundedRangeModelFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>

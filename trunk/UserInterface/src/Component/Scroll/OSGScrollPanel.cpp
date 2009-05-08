@@ -100,14 +100,14 @@ void ScrollPanel::updateRangeModels(void)
 {
     getView()->removeChangeListener(&_ViewportChangeListener);
     
-    _ViewportVerticalRangeModel.setRangeProperties(
+    getVerticalRangeModel()->setRangeProperties(
         getView()->getViewPosition().y(),
         getView()->getSize().y(),
         0,
         getView()->getViewComponent()->getSize().y(),
         false);
     
-    _ViewportHorizontalRangeModel.setRangeProperties(
+    getHorizontalRangeModel()->setRangeProperties(
         getView()->getViewPosition().x(),
         getView()->getSize().x(),
         0,
@@ -115,14 +115,14 @@ void ScrollPanel::updateRangeModels(void)
         false);
 
     beginEditCP(getVerticalScrollBar(), ScrollBar::BlockIncrementFieldMask | ScrollBar::UnitIncrementFieldMask);
-        //getVerticalScrollBar()->setBlockIncrement(_ViewportVerticalRangeModel.getExtent());
+        //getVerticalScrollBar()->setBlockIncrement(getVerticalRangeModel()->getExtent());
         getVerticalScrollBar()->setBlockIncrement(getView()->getViewComponent()->getScrollableBlockIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::VERTICAL_ORIENTATION, 1));
         
         getVerticalScrollBar()->setUnitIncrement(getView()->getViewComponent()->getScrollableUnitIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::VERTICAL_ORIENTATION, 1));
     endEditCP(getVerticalScrollBar(), ScrollBar::BlockIncrementFieldMask | ScrollBar::UnitIncrementFieldMask);
     
     beginEditCP(getHorizontalScrollBar(), ScrollBar::BlockIncrementFieldMask | ScrollBar::UnitIncrementFieldMask);
-        //getHorizontalScrollBar()->setBlockIncrement(_ViewportHorizontalRangeModel.getExtent());
+        //getHorizontalScrollBar()->setBlockIncrement(getHorizontalRangeModel()->getExtent());
         getHorizontalScrollBar()->setBlockIncrement(getView()->getViewComponent()->getScrollableBlockIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::HORIZONTAL_ORIENTATION, 1));
         
         getHorizontalScrollBar()->setUnitIncrement(getView()->getViewComponent()->getScrollableUnitIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::HORIZONTAL_ORIENTATION, 1));
@@ -175,7 +175,7 @@ void ScrollPanel::updateLayout(void)
     //Determine if Vertical Scrollbar is shown
     if(getVerticalScrollBarDisplayPolicy() == SCROLLBAR_AS_ALWAYS ||
        (getVerticalScrollBarDisplayPolicy() == SCROLLBAR_AS_NEEDED &&
-       _ViewportVerticalRangeModel.getExtent() < (_ViewportVerticalRangeModel.getMaximum() - _ViewportVerticalRangeModel.getMinimum()) ))
+       getVerticalRangeModel()->getExtent() < (getVerticalRangeModel()->getMaximum() - getVerticalRangeModel()->getMinimum()) ))
     {
         VerticalScrollbarShown = true;
         beginEditCP(getVerticalScrollBar(), ScrollBar::VisibleFieldMask);
@@ -201,7 +201,7 @@ void ScrollPanel::updateLayout(void)
     //Determine if Horizontal Scrollbar is shown
     if(getHorizontalScrollBarDisplayPolicy() == SCROLLBAR_AS_ALWAYS ||
        (getHorizontalScrollBarDisplayPolicy() == SCROLLBAR_AS_NEEDED &&
-       _ViewportHorizontalRangeModel.getExtent() < (_ViewportHorizontalRangeModel.getMaximum() - _ViewportHorizontalRangeModel.getMinimum()) ))
+       getHorizontalRangeModel()->getExtent() < (getHorizontalRangeModel()->getMaximum() - getHorizontalRangeModel()->getMinimum()) ))
     {
         HorizontalScrollbarShown = true;
         beginEditCP(getHorizontalScrollBar(), ScrollBar::VisibleFieldMask);
@@ -410,8 +410,6 @@ ScrollPanel::ScrollPanel(void) :
     _ViewportChangeListener(ScrollPanelPtr(this)),
     _ViewportRangeModelChangeListener(ScrollPanelPtr(this))
 {
-    _ViewportVerticalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
-    _ViewportHorizontalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
 }
 
 ScrollPanel::ScrollPanel(const ScrollPanel &source) :
@@ -419,9 +417,6 @@ ScrollPanel::ScrollPanel(const ScrollPanel &source) :
     _ViewportChangeListener(ScrollPanelPtr(this)),
     _ViewportRangeModelChangeListener(ScrollPanelPtr(this))
 {
-    _ViewportVerticalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
-    _ViewportHorizontalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
-    
     ScrollBarPtr NewVerticalScrollBar = ScrollBar::create();
     beginEditCP(NewVerticalScrollBar, ScrollBar::OrientationFieldMask);
         NewVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
@@ -432,17 +427,27 @@ ScrollPanel::ScrollPanel(const ScrollPanel &source) :
         NewHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
     endEditCP(NewHorizontalScrollBar, ScrollBar::OrientationFieldMask);
 
-    beginEditCP(ScrollPanelPtr(this), InternalVerticalScrollBarFieldMask | InternalHorizontalScrollBarFieldMask);
+    beginEditCP(ScrollPanelPtr(this), InternalVerticalScrollBarFieldMask | InternalHorizontalScrollBarFieldMask | VerticalRangeModelFieldMask | HorizontalRangeModelFieldMask);
         setInternalVerticalScrollBar(NewVerticalScrollBar);
         setInternalHorizontalScrollBar(NewHorizontalScrollBar);
-    endEditCP(ScrollPanelPtr(this), InternalVerticalScrollBarFieldMask | InternalHorizontalScrollBarFieldMask);
+        setVerticalRangeModel(DefaultBoundedRangeModel::create());
+        setHorizontalRangeModel(DefaultBoundedRangeModel::create());
+    endEditCP(ScrollPanelPtr(this), InternalVerticalScrollBarFieldMask | InternalHorizontalScrollBarFieldMask | VerticalRangeModelFieldMask | HorizontalRangeModelFieldMask);
+    getVerticalRangeModel()->addChangeListener(&_ViewportRangeModelChangeListener);
+    getHorizontalRangeModel()->addChangeListener(&_ViewportRangeModelChangeListener);
 
 }
 
 ScrollPanel::~ScrollPanel(void)
 {
-    _ViewportVerticalRangeModel.removeChangeListener(&_ViewportRangeModelChangeListener);
-    _ViewportHorizontalRangeModel.removeChangeListener(&_ViewportRangeModelChangeListener);
+    if(getVerticalRangeModel() != NullFC)
+    {
+        getVerticalRangeModel()->removeChangeListener(&_ViewportRangeModelChangeListener);
+    }
+    if(getHorizontalRangeModel() != NullFC)
+    {
+        getHorizontalRangeModel()->removeChangeListener(&_ViewportRangeModelChangeListener);
+    }
 }
 
 /*----------------------------- class specific ----------------------------*/
@@ -474,13 +479,17 @@ void ScrollPanel::changed(BitVector whichField, UInt32 origin)
     if((whichField & InternalVerticalScrollBarFieldMask) &&
         getInternalVerticalScrollBar() != NullFC)
     {
-        getInternalVerticalScrollBar()->setModel(&_ViewportVerticalRangeModel);
+        beginEditCP(getInternalVerticalScrollBar(), ScrollBar::RangeModelFieldMask);
+            getInternalVerticalScrollBar()->setRangeModel(getVerticalRangeModel());
+        endEditCP(getInternalVerticalScrollBar(), ScrollBar::RangeModelFieldMask);
     }
     
     if((whichField & InternalHorizontalScrollBarFieldMask) &&
         getInternalHorizontalScrollBar() != NullFC)
     {
-        getInternalHorizontalScrollBar()->setModel(&_ViewportHorizontalRangeModel);
+        beginEditCP(getInternalHorizontalScrollBar(), ScrollBar::RangeModelFieldMask);
+            getInternalHorizontalScrollBar()->setRangeModel(getHorizontalRangeModel());
+        endEditCP(getInternalHorizontalScrollBar(), ScrollBar::RangeModelFieldMask);
     }
 }
 
@@ -500,7 +509,7 @@ void ScrollPanel::ViewportRangeModelChangeListener::stateChanged(const ChangeEve
 {
     beginEditCP(_ScrollPanel->getView(), UIViewport::ViewPositionFieldMask);
         _ScrollPanel->getView()->setViewPosition(
-            Pnt2f(_ScrollPanel->_ViewportHorizontalRangeModel.getValue(), _ScrollPanel->_ViewportVerticalRangeModel.getValue()) );
+            Pnt2f(_ScrollPanel->getHorizontalRangeModel()->getValue(), _ScrollPanel->getVerticalRangeModel()->getValue()) );
     endEditCP(_ScrollPanel->getView(), UIViewport::ViewPositionFieldMask);
 
     _ScrollPanel->updateLayout();

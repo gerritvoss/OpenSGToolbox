@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,91 +42,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool Slider::isChangeListenerAttached(ChangeListenerPtr l) const
-{
-    return getRangeModel()->isChangeListenerAttached(l);
-}
-
-inline
-FieldContainerMap Slider::createStandardLabels(UInt32 increment)
-{
-	return createStandardLabels(increment, getMinimum());
-}
-
-inline
-void Slider::removeChangeListener(ChangeListenerPtr l)
-{
-	getRangeModel()->removeChangeListener(l);
-}
-
-inline
-UInt32 Slider::getExtent(void) const
-{
-	return getRangeModel()->getExtent();
-}
-
-inline
-Int32 Slider::getMaximum(void) const
-{
-	return getRangeModel()->getMaximum();
-}
-
-inline
-Int32 Slider::getMinimum(void) const
-{
-	return getRangeModel()->getMinimum();
-}
-
-inline
-Int32 Slider::getValue(void) const
-{
-	return getRangeModel()->getValue();
-}
-
-inline
-bool Slider::getValueIsAdjusting(void) const
-{
-	return getRangeModel()->getValueIsAdjusting();
-}
-
-inline
-void Slider::setExtent(UInt32 extent)
-{
-	getRangeModel()->setExtent(extent);
-}
-
-inline
-void Slider::setMaximum(Int32 maximum)
-{
-	getRangeModel()->setMaximum(maximum);
-}
-
-inline
-void Slider::setMinimum(Int32 minimum)
-{
-	getRangeModel()->setMinimum(minimum);
-}
-
-inline
-void Slider::setValueIsAdjusting(bool b)
-{
-	getRangeModel()->setValueIsAdjusting(b);
-}
-
-inline
-Slider::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(SliderPtr TheSlider) :
-   _Slider(TheSlider)
-{
-}
-
-inline
-Slider::KnobDraggedListener::KnobDraggedListener(SliderPtr TheSlider) :
-   _Slider(TheSlider)
-{
-}
-
 OSG_END_NAMESPACE
 
-#define OSGSLIDER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGBOUNDEDRANGEMODEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

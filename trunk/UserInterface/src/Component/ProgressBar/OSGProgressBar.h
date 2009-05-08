@@ -47,7 +47,6 @@
 
 #include "OSGProgressBarBase.h"
 #include "Event/OSGChangeListener.h"
-#include "Component/Scroll/OSGBoundedRangeModel.h"
 #include <set>
 #include <OpenSG/Input/OSGUpdateListener.h>
 
@@ -99,9 +98,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 	//Returns the progress bar's minimum value, which is stored in the progress bar's BoundedRangeModel.
 	Int32 getMinimum(void) const;
 
-	//Returns the data model used by this progress bar.
-	BoundedRangeModel* getModel(void) const;
-
 	//Returns the percent complete for the progress bar.
 	Real32 getPercentComplete(void) const;
 
@@ -113,9 +109,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 
 	//Sets the progress bar's minimum value (stored in the progress bar's data model) to n.
 	void setMinimum(const Int32& n);
-
-	//Sets the data model used by the JProgressBar.
-	void setModel(BoundedRangeModel* newModel);
 
 	//Sets the progress bar's current value (stored in the progress bar's data model) to n
 	void setValue(const Int32& n);
@@ -148,8 +141,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
     virtual Color4f getDrawnTextColor(void) const;
     virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
 
-    BoundedRangeModel* _Model;
-
 	void setupProgressBar();
 	void setupIndeterminateProgressBar(const Time& Elps);
     
@@ -166,6 +157,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 	friend class ModelChangeListener;
 
 	ModelChangeListener _ModelChangeListener;
+    EventConnection _RangeModelConnection;
 
 	class IndeterminateUpdateListener : public UpdateListener
 	{

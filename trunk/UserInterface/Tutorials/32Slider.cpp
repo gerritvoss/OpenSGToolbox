@@ -141,27 +141,27 @@ int main(int argc, char **argv)
 
     // Create the DefaultBoundedRangeModel and 
     // set its values
-    DefaultBoundedRangeModel TheBoundedRangeModel;
-    TheBoundedRangeModel.setMinimum(10);
-    TheBoundedRangeModel.setMaximum(110);
-    TheBoundedRangeModel.setValue(60);
-    TheBoundedRangeModel.setExtent(0);
+    DefaultBoundedRangeModelPtr TheBoundedRangeModel = DefaultBoundedRangeModel::create();
+    TheBoundedRangeModel->setMinimum(10);
+    TheBoundedRangeModel->setMaximum(110);
+    TheBoundedRangeModel->setValue(60);
+    TheBoundedRangeModel->setExtent(0);
     
     //Create the slider
     LabelPtr TempLabel;
     SliderPtr TheSliderVertical = Slider::create();
-    beginEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    beginEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
         TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Min"); endEditCP(TempLabel, Label::TextFieldMask);
-        TheSliderVertical->getLabelMap()[TheBoundedRangeModel.getMinimum()] = TempLabel;
+        TheSliderVertical->getLabelMap()[TheBoundedRangeModel->getMinimum()] = TempLabel;
         
         TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Low"); endEditCP(TempLabel, Label::TextFieldMask);
-        TheSliderVertical->getLabelMap()[TheBoundedRangeModel.getMinimum() + (TheBoundedRangeModel.getMaximum() - TheBoundedRangeModel.getMinimum())/10] = TempLabel;
+        TheSliderVertical->getLabelMap()[TheBoundedRangeModel->getMinimum() + (TheBoundedRangeModel->getMaximum() - TheBoundedRangeModel->getMinimum())/10] = TempLabel;
 
         TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Max"); endEditCP(TempLabel, Label::TextFieldMask);
-        TheSliderVertical->getLabelMap()[TheBoundedRangeModel.getMaximum()] = TempLabel;
+        TheSliderVertical->getLabelMap()[TheBoundedRangeModel->getMaximum()] = TempLabel;
 
 
         TheSliderVertical->setPreferredSize(Vec2f(100, 300));
@@ -171,11 +171,11 @@ int main(int argc, char **argv)
         TheSliderVertical->setOrientation(Slider::VERTICAL_ORIENTATION);
         TheSliderVertical->setInverted(true);
         TheSliderVertical->setDrawLabels(true);
-    endEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
-    TheSliderVertical->setModel(&TheBoundedRangeModel);
+        TheSliderVertical->setRangeModel(TheBoundedRangeModel);
+    endEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
     
     SliderPtr TheSliderHorizontal = Slider::create();
-    beginEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    beginEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
         TheSliderHorizontal->setPreferredSize(Vec2f(300, 100));
         TheSliderHorizontal->setSnapToTicks(false);
         TheSliderHorizontal->setMajorTickSpacing(10);
@@ -183,8 +183,8 @@ int main(int argc, char **argv)
         TheSliderHorizontal->setOrientation(Slider::HORIZONTAL_ORIENTATION);
         TheSliderHorizontal->setInverted(false);
         TheSliderHorizontal->setDrawLabels(true);
-    endEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
-    TheSliderHorizontal->setModel(&TheBoundedRangeModel);
+        TheSliderHorizontal->setRangeModel(TheBoundedRangeModel);
+        endEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
     
 
     // Create Background to be used with the MainFrame

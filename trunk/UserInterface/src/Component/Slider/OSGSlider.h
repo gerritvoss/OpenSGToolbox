@@ -46,7 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGSliderBase.h"
-#include "Component/Scroll/OSGBoundedRangeModel.h"
 #include "Event/OSGChangeListener.h"
 
 #include <OpenSG/Input/OSGMouseAdapter.h>
@@ -112,9 +111,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 	//Returns the minimum value supported by the slider.
 	Int32 getMinimum(void) const;
 
-	//Returns data model that handles the sliders three fundamental properties: minimum, maximum, value.
-    BoundedRangeModel* getModel(void) const;
-
 	//Returns the sliders value.
 	Int32 getValue(void) const;
 
@@ -129,9 +125,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 
 	//Sets the models minimum property.
 	void setMinimum(Int32 minimum);
-
-	//Sets the model that handles the sliders three fundamental properties: minimum, maximum, value.
-    void setModel(BoundedRangeModel* Model);
 
 	//Sets the sliders current value.
 	void setValue(Int32 n);
@@ -159,7 +152,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
     virtual ~Slider(void); 
 
     /*! \}                                                                 */
-    BoundedRangeModel* _Model;
     
     //Listener for getting change updates of the BoundedRangeModel
 	class BoundedRangeModelChangeListener : public ChangeListener
@@ -174,6 +166,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 	friend class BoundedRangeModelChangeListener;
 
 	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
+    EventConnection _RangeModelConnection;
 	
 	class KnobDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
 	{

@@ -97,6 +97,12 @@ const OSG::BitVector  ScrollPanelBase::VerticalScrollBarAlignmentFieldMask =
 const OSG::BitVector  ScrollPanelBase::HorizontalScrollBarAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalScrollBarAlignmentFieldId);
 
+const OSG::BitVector  ScrollPanelBase::VerticalRangeModelFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalRangeModelFieldId);
+
+const OSG::BitVector  ScrollPanelBase::HorizontalRangeModelFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalRangeModelFieldId);
+
 const OSG::BitVector ScrollPanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -129,6 +135,12 @@ const OSG::BitVector ScrollPanelBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          ScrollPanelBase::_sfHorizontalScrollBarAlignment
+    
+*/
+/*! \var DefaultBoundedRangeModelPtr ScrollPanelBase::_sfVerticalRangeModel
+    
+*/
+/*! \var DefaultBoundedRangeModelPtr ScrollPanelBase::_sfHorizontalRangeModel
     
 */
 
@@ -180,7 +192,17 @@ FieldDescription *ScrollPanelBase::_desc[] =
                      "HorizontalScrollBarAlignment", 
                      HorizontalScrollBarAlignmentFieldId, HorizontalScrollBarAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalScrollBarAlignment)
+                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalScrollBarAlignment),
+    new FieldDescription(SFDefaultBoundedRangeModelPtr::getClassType(), 
+                     "VerticalRangeModel", 
+                     VerticalRangeModelFieldId, VerticalRangeModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollPanelBase::getSFVerticalRangeModel),
+    new FieldDescription(SFDefaultBoundedRangeModelPtr::getClassType(), 
+                     "HorizontalRangeModel", 
+                     HorizontalRangeModelFieldId, HorizontalRangeModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalRangeModel)
 };
 
 
@@ -265,6 +287,8 @@ ScrollPanelBase::ScrollPanelBase(void) :
     _sfHorizontalResizePolicy (UInt32(ScrollPanel::NO_RESIZE)), 
     _sfVerticalScrollBarAlignment(UInt32(ScrollPanel::SCROLLBAR_ALIGN_RIGHT)), 
     _sfHorizontalScrollBarAlignment(UInt32(ScrollPanel::SCROLLBAR_ALIGN_BOTTOM)), 
+    _sfVerticalRangeModel     (DefaultBoundedRangeModelPtr(DefaultBoundedRangeModel::create())), 
+    _sfHorizontalRangeModel   (DefaultBoundedRangeModelPtr(DefaultBoundedRangeModel::create())), 
     Inherited() 
 {
 }
@@ -283,6 +307,8 @@ ScrollPanelBase::ScrollPanelBase(const ScrollPanelBase &source) :
     _sfHorizontalResizePolicy (source._sfHorizontalResizePolicy ), 
     _sfVerticalScrollBarAlignment(source._sfVerticalScrollBarAlignment), 
     _sfHorizontalScrollBarAlignment(source._sfHorizontalScrollBarAlignment), 
+    _sfVerticalRangeModel     (source._sfVerticalRangeModel     ), 
+    _sfHorizontalRangeModel   (source._sfHorizontalRangeModel   ), 
     Inherited                 (source)
 {
 }
@@ -344,6 +370,16 @@ UInt32 ScrollPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfHorizontalScrollBarAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
+    {
+        returnValue += _sfVerticalRangeModel.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalRangeModel.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -396,6 +432,16 @@ void ScrollPanelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
     {
         _sfHorizontalScrollBarAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
+    {
+        _sfVerticalRangeModel.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
+    {
+        _sfHorizontalRangeModel.copyToBin(pMem);
     }
 
 
@@ -451,6 +497,16 @@ void ScrollPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfHorizontalScrollBarAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
+    {
+        _sfVerticalRangeModel.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
+    {
+        _sfHorizontalRangeModel.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -488,6 +544,12 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
     if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
         _sfHorizontalScrollBarAlignment.syncWith(pOther->_sfHorizontalScrollBarAlignment);
 
+    if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
+        _sfVerticalRangeModel.syncWith(pOther->_sfVerticalRangeModel);
+
+    if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
+        _sfHorizontalRangeModel.syncWith(pOther->_sfHorizontalRangeModel);
+
 
 }
 #else
@@ -524,6 +586,12 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
 
     if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
         _sfHorizontalScrollBarAlignment.syncWith(pOther->_sfHorizontalScrollBarAlignment);
+
+    if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
+        _sfVerticalRangeModel.syncWith(pOther->_sfVerticalRangeModel);
+
+    if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
+        _sfHorizontalRangeModel.syncWith(pOther->_sfHorizontalRangeModel);
 
 
 

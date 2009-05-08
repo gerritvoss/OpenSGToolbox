@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -112,6 +112,9 @@ const OSG::BitVector  ProgressBarBase::RolloverDrawObjectFieldMask =
 const OSG::BitVector  ProgressBarBase::DisabledDrawObjectFieldMask = 
     (TypeTraits<BitVector>::One << ProgressBarBase::DisabledDrawObjectFieldId);
 
+const OSG::BitVector  ProgressBarBase::RangeModelFieldMask = 
+    (TypeTraits<BitVector>::One << ProgressBarBase::RangeModelFieldId);
+
 const OSG::BitVector ProgressBarBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -165,6 +168,9 @@ const OSG::BitVector ProgressBarBase::MTInfluenceMask =
     
 */
 /*! \var UIDrawObjectCanvasPtr ProgressBarBase::_sfDisabledDrawObject
+    
+*/
+/*! \var BoundedRangeModelPtr ProgressBarBase::_sfRangeModel
     
 */
 
@@ -251,7 +257,12 @@ FieldDescription *ProgressBarBase::_desc[] =
                      "DisabledDrawObject", 
                      DisabledDrawObjectFieldId, DisabledDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &ProgressBarBase::getSFDisabledDrawObject)
+                     (FieldAccessMethod) &ProgressBarBase::getSFDisabledDrawObject),
+    new FieldDescription(SFBoundedRangeModelPtr::getClassType(), 
+                     "RangeModel", 
+                     RangeModelFieldId, RangeModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &ProgressBarBase::getSFRangeModel)
 };
 
 
@@ -343,6 +354,7 @@ ProgressBarBase::ProgressBarBase(void) :
     _sfFocusedDrawObject      (UIDrawObjectCanvasPtr(NullFC)), 
     _sfRolloverDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
     _sfDisabledDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfRangeModel             (BoundedRangeModelPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -368,6 +380,7 @@ ProgressBarBase::ProgressBarBase(const ProgressBarBase &source) :
     _sfFocusedDrawObject      (source._sfFocusedDrawObject      ), 
     _sfRolloverDrawObject     (source._sfRolloverDrawObject     ), 
     _sfDisabledDrawObject     (source._sfDisabledDrawObject     ), 
+    _sfRangeModel             (source._sfRangeModel             ), 
     Inherited                 (source)
 {
 }
@@ -464,6 +477,11 @@ UInt32 ProgressBarBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDisabledDrawObject.getBinSize();
     }
 
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+    {
+        returnValue += _sfRangeModel.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -551,6 +569,11 @@ void ProgressBarBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
     {
         _sfDisabledDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+    {
+        _sfRangeModel.copyToBin(pMem);
     }
 
 
@@ -641,6 +664,11 @@ void ProgressBarBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDisabledDrawObject.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+    {
+        _sfRangeModel.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -699,6 +727,9 @@ void ProgressBarBase::executeSyncImpl(      ProgressBarBase *pOther,
     if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
         _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
 
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+        _sfRangeModel.syncWith(pOther->_sfRangeModel);
+
 
 }
 #else
@@ -756,6 +787,9 @@ void ProgressBarBase::executeSyncImpl(      ProgressBarBase *pOther,
 
     if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
         _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
+
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+        _sfRangeModel.syncWith(pOther->_sfRangeModel);
 
 
 

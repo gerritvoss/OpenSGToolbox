@@ -86,6 +86,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING HSVColorChooserPanel : public HSVColorChoo
 
 	//Invoked automatically when the model's state changes.
 	virtual void updateChooser(void);
+    void init(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

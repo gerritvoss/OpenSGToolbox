@@ -87,6 +87,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING RGBColorChooserPanel : public RGBColorChoo
 
 	//Invoked automatically when the model's state changes.
 	virtual void updateChooser(void);
+
+    void init(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

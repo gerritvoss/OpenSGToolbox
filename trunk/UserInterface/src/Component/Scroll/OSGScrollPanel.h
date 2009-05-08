@@ -48,7 +48,6 @@
 #include "Event/OSGChangeListener.h"
 #include "Event/OSGAdjustmentListener.h"
 #include "OSGScrollPanelBase.h"
-#include "OSGDefaultBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -112,10 +111,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
     virtual ~ScrollPanel(void); 
 
     /*! \}                                                                 */
-    
-    //Range Model for the UIViewport
-    DefaultBoundedRangeModel _ViewportVerticalRangeModel;
-    DefaultBoundedRangeModel _ViewportHorizontalRangeModel;
     
     //Listener for getting change updates of the UIViewport
 	class ViewportChangeListener : public ChangeListener

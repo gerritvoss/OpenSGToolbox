@@ -234,14 +234,14 @@ void HSVColorChooserPanel::buildChooser(void)
 	endEditCP(HueSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
 
 	_HueSlider = Slider::create();
-	beginEditCP(_HueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
+	beginEditCP(_HueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 		_HueSlider->setDrawLabels(false);
 		_HueSlider->setDrawMajorTicks(false);
 		_HueSlider->setDrawMinorTicks(false);
         _HueSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);
 		_HueSlider->setTrackDrawObject(HueSliderTrackCanvas);
-	endEditCP(_HueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
-	_HueSlider->setModel(_HueModel->getBoundedRangeModel());
+    	_HueSlider->setRangeModel(_HueModel->getBoundedRangeModel());
+	endEditCP(_HueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 	
 	//Saturation
 	_SaturationSliderTrackBackground = GradientLayer::create();
@@ -258,14 +258,14 @@ void HSVColorChooserPanel::buildChooser(void)
 	endEditCP(SaturationSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
 
 	_SaturationSlider = Slider::create();
-	beginEditCP(_SaturationSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
+	beginEditCP(_SaturationSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 		_SaturationSlider->setDrawLabels(false);
 		_SaturationSlider->setDrawMajorTicks(false);
 		_SaturationSlider->setDrawMinorTicks(false);
 		_SaturationSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);
 		_SaturationSlider->setTrackDrawObject(SaturationSliderTrackCanvas);
-	endEditCP(_SaturationSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
-	_SaturationSlider->setModel(_SaturationModel->getBoundedRangeModel());
+    	_SaturationSlider->setRangeModel(_SaturationModel->getBoundedRangeModel());
+	endEditCP(_SaturationSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 	
 	//Value
 	_ValueSliderTrackBackground = GradientLayer::create();
@@ -282,14 +282,14 @@ void HSVColorChooserPanel::buildChooser(void)
 	endEditCP(ValueSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
 
 	_ValueSlider = Slider::create();
-	beginEditCP(_ValueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
+	beginEditCP(_ValueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 		_ValueSlider->setDrawLabels(false);
 		_ValueSlider->setDrawMajorTicks(false);
 		_ValueSlider->setDrawMinorTicks(false);
 		_ValueSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);
 		_ValueSlider->setTrackDrawObject(ValueSliderTrackCanvas);
-	endEditCP(_ValueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
-	_ValueSlider->setModel(_ValueModel->getBoundedRangeModel());
+    	_ValueSlider->setRangeModel(_ValueModel->getBoundedRangeModel());
+	endEditCP(_ValueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 	
 	if(getIncludeAlpha())
 	{
@@ -307,14 +307,14 @@ void HSVColorChooserPanel::buildChooser(void)
 		endEditCP(AlphaSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
 
 		_AlphaSlider = Slider::create();
-		beginEditCP(_AlphaSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
+		beginEditCP(_AlphaSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 			_AlphaSlider->setDrawLabels(false);
 			_AlphaSlider->setDrawMajorTicks(false);
 			_AlphaSlider->setDrawMinorTicks(false);
 			_AlphaSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);
 			_AlphaSlider->setTrackDrawObject(AlphaSliderTrackCanvas);
-		endEditCP(_AlphaSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
-		_AlphaSlider->setModel(_AlphaModel->getBoundedRangeModel());
+		    _AlphaSlider->setRangeModel(_AlphaModel->getBoundedRangeModel());
+		endEditCP(_AlphaSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 	}
 
 	//Labels
@@ -480,11 +480,22 @@ void HSVColorChooserPanel::attachModelListener(void)
 
 void HSVColorChooserPanel::dettachModelListener(void)
 {
-	_HueModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);
-	_SaturationModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);
-	_ValueModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);
-	_AlphaModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);
+    if(_HueModel){ _HueModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
+    if(_SaturationModel){ _SaturationModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
+    if(_ValueModel){ _ValueModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
+    if(_AlphaModel){ _AlphaModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
 }
+
+void HSVColorChooserPanel::init(void)
+{
+	_HueModel = new BoundedRangeSpinnerModel();
+	_SaturationModel = new BoundedRangeSpinnerModel();
+	_ValueModel = new BoundedRangeSpinnerModel();
+	_AlphaModel = new BoundedRangeSpinnerModel();
+
+	attachModelListener();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -495,24 +506,13 @@ HSVColorChooserPanel::HSVColorChooserPanel(void) :
     Inherited(),
 	_BoundedRangeSpinnerChangeListener(HSVColorChooserPanelPtr(this))
 {
-	_HueModel = new BoundedRangeSpinnerModel();
-	_SaturationModel = new BoundedRangeSpinnerModel();
-	_ValueModel = new BoundedRangeSpinnerModel();
-	_AlphaModel = new BoundedRangeSpinnerModel();
-
-	attachModelListener();
 }
 
 HSVColorChooserPanel::HSVColorChooserPanel(const HSVColorChooserPanel &source) :
     Inherited(source),
 	_BoundedRangeSpinnerChangeListener(HSVColorChooserPanelPtr(this))
 {
-	_HueModel = new BoundedRangeSpinnerModel(*source._HueModel.get());
-	_SaturationModel = new BoundedRangeSpinnerModel(*source._SaturationModel.get());
-	_ValueModel = new BoundedRangeSpinnerModel(*source._ValueModel.get());
-	_AlphaModel = new BoundedRangeSpinnerModel(*source._AlphaModel.get());
-
-	attachModelListener();
+    init();
 }
 
 HSVColorChooserPanel::~HSVColorChooserPanel(void)

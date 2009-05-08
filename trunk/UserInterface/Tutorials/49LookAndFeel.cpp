@@ -138,9 +138,9 @@ private:
 	PanelPtr _AdvancedPanel;
 	PanelPtr _ListPanel;
 	PanelPtr _TablePanel;
-    DefaultBoundedRangeModel _ProgressBarBoundedRangeModel;	
-    DefaultBoundedRangeModel _ScrollBarBoundedRangeModel;
-    DefaultBoundedRangeModel _SliderBoundedRangeModel;
+    DefaultBoundedRangeModelPtr _ProgressBarBoundedRangeModel;	
+    DefaultBoundedRangeModelPtr _ScrollBarBoundedRangeModel;
+    DefaultBoundedRangeModelPtr _SliderBoundedRangeModel;
     ToggleButtonPtr CreateNoTitlebarWindowButton;
     
     DefaultListModelPtr _ExampleListModel;
@@ -1965,49 +1965,50 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
     endEditCP(Constraint0205, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 
     //Progress Bar
-    _ProgressBarBoundedRangeModel.setMinimum(0);
-    _ProgressBarBoundedRangeModel.setMaximum(100);
-    _ProgressBarBoundedRangeModel.setValue(50);
-    _ProgressBarBoundedRangeModel.setExtent(0);
+    _ProgressBarBoundedRangeModel = DefaultBoundedRangeModel::create();
+    _ProgressBarBoundedRangeModel->setMinimum(0);
+    _ProgressBarBoundedRangeModel->setMaximum(100);
+    _ProgressBarBoundedRangeModel->setValue(50);
+    _ProgressBarBoundedRangeModel->setExtent(0);
 
 	// Create the ProgressBar
     ProgressBarPtr ExampleProgressBar = ProgressBar::create();
 	
 	// Add its BoundedRangeModel
-    ExampleProgressBar->setModel(&_ProgressBarBoundedRangeModel);
-
-	beginEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
+	beginEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask | ProgressBar::RangeModelFieldMask);
         ExampleProgressBar->setEnableProgressString(true);
         ExampleProgressBar->setIndeterminate(false);
         ExampleProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
 		ExampleProgressBar->setProgressString("Loading...");
         ExampleProgressBar->setConstraints(Constraint0101);
         ExampleProgressBar->setMaxSize(ExampleProgressBar->getPreferredSize());
-    endEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
+        ExampleProgressBar->setRangeModel(_ProgressBarBoundedRangeModel);
+    endEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask | ProgressBar::RangeModelFieldMask);
 
 
 	ProgressBarPtr DisabledProgressBar = ProgressBar::Ptr::dcast(ExampleProgressBar->shallowCopy());
-	beginEditCP(DisabledProgressBar, ProgressBar::EnabledFieldMask | ProgressBar::ConstraintsFieldMask);
+	beginEditCP(DisabledProgressBar, ProgressBar::EnabledFieldMask | ProgressBar::ConstraintsFieldMask | ProgressBar::RangeModelFieldMask);
         DisabledProgressBar->setConstraints(Constraint0201);
         DisabledProgressBar->setEnabled(false);
-	endEditCP(DisabledProgressBar, ProgressBar::EnabledFieldMask | ProgressBar::ConstraintsFieldMask);
+        DisabledProgressBar->setRangeModel(_ProgressBarBoundedRangeModel);
+	endEditCP(DisabledProgressBar, ProgressBar::EnabledFieldMask | ProgressBar::ConstraintsFieldMask | ProgressBar::RangeModelFieldMask);
 
-    DisabledProgressBar->setModel(&_ProgressBarBoundedRangeModel);
     //Scrollbars
-    _ScrollBarBoundedRangeModel.setMinimum(10);
-    _ScrollBarBoundedRangeModel.setMaximum(100);
-    _ScrollBarBoundedRangeModel.setValue(10);
-    _ScrollBarBoundedRangeModel.setExtent(20);
+    _ScrollBarBoundedRangeModel = DefaultBoundedRangeModel::create();
+    _ScrollBarBoundedRangeModel->setMinimum(10);
+    _ScrollBarBoundedRangeModel->setMaximum(100);
+    _ScrollBarBoundedRangeModel->setValue(10);
+    _ScrollBarBoundedRangeModel->setExtent(20);
 
     ScrollBarPtr ExampleVerticalScrollBar = ScrollBar::create();
     //ExampleScrollPanel->getHorizontalScrollBar()
-    beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
+    beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask |ScrollBar::RangeModelFieldMask);
         ExampleVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
         ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
         ExampleVerticalScrollBar->setConstraints(Constraint0102);
         ExampleVerticalScrollBar->setMaxSize(ExampleVerticalScrollBar->getPreferredSize());
-    endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
-    ExampleVerticalScrollBar->setModel(&_ScrollBarBoundedRangeModel);
+        ExampleVerticalScrollBar->setRangeModel(_ScrollBarBoundedRangeModel);
+    endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask |ScrollBar::RangeModelFieldMask);
 	
 	ScrollBarPtr DisabledVerticalScrollBar = ScrollBar::Ptr::dcast(ExampleVerticalScrollBar->shallowCopy());
 	beginEditCP(DisabledVerticalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
@@ -2016,13 +2017,13 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
 	endEditCP(DisabledVerticalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
 
     ScrollBarPtr ExampleHorizontalScrollBar = ScrollBar::create();
-    beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
+    beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask |ScrollBar::RangeModelFieldMask);
         ExampleHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
         ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
         ExampleHorizontalScrollBar->setConstraints(Constraint0103);
         ExampleHorizontalScrollBar->setMaxSize(ExampleHorizontalScrollBar->getPreferredSize());
-    endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
-    ExampleHorizontalScrollBar->setModel(&_ScrollBarBoundedRangeModel);
+        ExampleHorizontalScrollBar->setRangeModel(_ScrollBarBoundedRangeModel);
+    endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask |ScrollBar::RangeModelFieldMask);
 	
 	ScrollBarPtr DisabledHorizontalScrollBar = ScrollBar::Ptr::dcast(ExampleHorizontalScrollBar->shallowCopy());
 	beginEditCP(DisabledHorizontalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
@@ -2031,26 +2032,27 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
 	endEditCP(DisabledHorizontalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
 
     //The Slider
-    _SliderBoundedRangeModel.setMinimum(10);
-    _SliderBoundedRangeModel.setMaximum(110);
-    _SliderBoundedRangeModel.setValue(60);
-    _SliderBoundedRangeModel.setExtent(0);
+    _SliderBoundedRangeModel = DefaultBoundedRangeModel::create();
+    _SliderBoundedRangeModel->setMinimum(10);
+    _SliderBoundedRangeModel->setMaximum(110);
+    _SliderBoundedRangeModel->setValue(60);
+    _SliderBoundedRangeModel->setExtent(0);
     
     //Create the slider
     LabelPtr TempLabel;
     SliderPtr TheSliderVertical = Slider::create();
-    beginEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    beginEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask |Slider::RangeModelFieldMask);
         TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Min"); endEditCP(TempLabel, Label::TextFieldMask);
-        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel.getMinimum()] = TempLabel;
+        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel->getMinimum()] = TempLabel;
         
         TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Low"); endEditCP(TempLabel, Label::TextFieldMask);
-        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel.getMinimum() + (_SliderBoundedRangeModel.getMaximum() - _SliderBoundedRangeModel.getMinimum())/10] = TempLabel;
+        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel->getMinimum() + (_SliderBoundedRangeModel->getMaximum() - _SliderBoundedRangeModel->getMinimum())/10] = TempLabel;
 
         TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Max"); endEditCP(TempLabel, Label::TextFieldMask);
-        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel.getMaximum()] = TempLabel;
+        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel->getMaximum()] = TempLabel;
 
 
         TheSliderVertical->setPreferredSize(Vec2f(100, 300));
@@ -2062,8 +2064,8 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
         TheSliderVertical->setDrawLabels(true);
         TheSliderVertical->setConstraints(Constraint0104);
         TheSliderVertical->setMaxSize(TheSliderVertical->getPreferredSize());
-    endEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
-    TheSliderVertical->setModel(&_SliderBoundedRangeModel);
+        TheSliderVertical->setRangeModel(_SliderBoundedRangeModel);
+    endEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask |Slider::RangeModelFieldMask);
 	
 	SliderPtr DisabledVerticalSlider = Slider::Ptr::dcast(TheSliderVertical->shallowCopy());
 	beginEditCP(DisabledVerticalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
@@ -2072,7 +2074,7 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
 	endEditCP(DisabledVerticalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
     
     SliderPtr TheSliderHorizontal = Slider::create();
-    beginEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    beginEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask |Slider::RangeModelFieldMask);
         TheSliderHorizontal->setPreferredSize(Vec2f(300, 100));
         TheSliderHorizontal->setSnapToTicks(false);
         TheSliderHorizontal->setMajorTickSpacing(10);
@@ -2082,8 +2084,8 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
         TheSliderHorizontal->setDrawLabels(true);
         TheSliderHorizontal->setConstraints(Constraint0105);
         TheSliderHorizontal->setMaxSize(TheSliderHorizontal->getPreferredSize());
-    endEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
-    TheSliderHorizontal->setModel(&_SliderBoundedRangeModel);
+        TheSliderHorizontal->setRangeModel(_SliderBoundedRangeModel);
+    endEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask |Slider::RangeModelFieldMask);
 	
 	SliderPtr DisabledHorizontalSlider = Slider::Ptr::dcast(TheSliderHorizontal->shallowCopy());
 	beginEditCP(DisabledHorizontalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);

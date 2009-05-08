@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -130,6 +130,9 @@ const OSG::BitVector  SliderBase::TrackToTickOffsetFieldMask =
 const OSG::BitVector  SliderBase::TrackToLabelOffsetFieldMask = 
     (TypeTraits<BitVector>::One << SliderBase::TrackToLabelOffsetFieldId);
 
+const OSG::BitVector  SliderBase::RangeModelFieldMask = 
+    (TypeTraits<BitVector>::One << SliderBase::RangeModelFieldId);
+
 const OSG::BitVector SliderBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -201,6 +204,9 @@ const OSG::BitVector SliderBase::MTInfluenceMask =
     
 */
 /*! \var Int32           SliderBase::_sfTrackToLabelOffset
+    
+*/
+/*! \var BoundedRangeModelPtr SliderBase::_sfRangeModel
     
 */
 
@@ -317,7 +323,12 @@ FieldDescription *SliderBase::_desc[] =
                      "TrackToLabelOffset", 
                      TrackToLabelOffsetFieldId, TrackToLabelOffsetFieldMask,
                      false,
-                     (FieldAccessMethod) &SliderBase::getSFTrackToLabelOffset)
+                     (FieldAccessMethod) &SliderBase::getSFTrackToLabelOffset),
+    new FieldDescription(SFBoundedRangeModelPtr::getClassType(), 
+                     "RangeModel", 
+                     RangeModelFieldId, RangeModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &SliderBase::getSFRangeModel)
 };
 
 
@@ -419,6 +430,7 @@ SliderBase::SliderBase(void) :
     _sfTrackInset             (Int32(6)), 
     _sfTrackToTickOffset      (Int32(8)), 
     _sfTrackToLabelOffset     (Int32(16)), 
+    _sfRangeModel             (BoundedRangeModelPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -450,6 +462,7 @@ SliderBase::SliderBase(const SliderBase &source) :
     _sfTrackInset             (source._sfTrackInset             ), 
     _sfTrackToTickOffset      (source._sfTrackToTickOffset      ), 
     _sfTrackToLabelOffset     (source._sfTrackToLabelOffset     ), 
+    _sfRangeModel             (source._sfRangeModel             ), 
     Inherited                 (source)
 {
 }
@@ -576,6 +589,11 @@ UInt32 SliderBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTrackToLabelOffset.getBinSize();
     }
 
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+    {
+        returnValue += _sfRangeModel.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -693,6 +711,11 @@ void SliderBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
     {
         _sfTrackToLabelOffset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+    {
+        _sfRangeModel.copyToBin(pMem);
     }
 
 
@@ -813,6 +836,11 @@ void SliderBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTrackToLabelOffset.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+    {
+        _sfRangeModel.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -889,6 +917,9 @@ void SliderBase::executeSyncImpl(      SliderBase *pOther,
     if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
         _sfTrackToLabelOffset.syncWith(pOther->_sfTrackToLabelOffset);
 
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+        _sfRangeModel.syncWith(pOther->_sfRangeModel);
+
 
 }
 #else
@@ -952,6 +983,9 @@ void SliderBase::executeSyncImpl(      SliderBase *pOther,
 
     if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
         _sfTrackToLabelOffset.syncWith(pOther->_sfTrackToLabelOffset);
+
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+        _sfRangeModel.syncWith(pOther->_sfRangeModel);
 
 
     if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))

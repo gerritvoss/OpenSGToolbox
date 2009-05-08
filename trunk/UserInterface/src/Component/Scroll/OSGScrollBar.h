@@ -46,7 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGScrollBarBase.h"
-#include "OSGBoundedRangeModel.h"
 #include "Event/OSGAdjustmentListener.h"
 
 #include "Event/OSGChangeListener.h"
@@ -90,9 +89,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     /*! \}                                                                 */
 
     virtual void updateLayout(void);
-
-    void setModel(BoundedRangeModel* Model);
-    BoundedRangeModel* getModel(void) const;
     
     EventConnection addAdjustmentListener(AdjustmentListenerPtr Listener);
 	bool isAdjustmentListenerAttached(AdjustmentListenerPtr Listener) const;
@@ -168,8 +164,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     AdjustmentListenerSet       _AdjustmentListeners;
     void produceAdjustmentValueChanged(const AdjustmentEvent& e);
 
-    BoundedRangeModel* _Model;
-
     void updateScrollBarLayout(void);
     
 
@@ -186,6 +180,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	friend class BoundedRangeModelChangeListener;
 
 	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
+    EventConnection _RangeModelConnection;
 
 
     //Min Button Action Listener

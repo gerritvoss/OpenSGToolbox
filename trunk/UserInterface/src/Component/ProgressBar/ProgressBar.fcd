@@ -152,4 +152,14 @@ A UI ProgressBar.
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="RangeModel"
+		type="BoundedRangeModelPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Scroll/OSGBoundedRangeModel.h"
+		defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>

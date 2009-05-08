@@ -209,4 +209,14 @@ A UI Spinner.
 		defaultValue="16"
 	>
 	</Field>
+	<Field
+		name="RangeModel"
+		type="BoundedRangeModelPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Scroll/OSGBoundedRangeModel.h"
+		defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>

@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGSCROLLBARFIELDS_H_
-#define _OSGSCROLLBARFIELDS_H_
+#ifndef _OSGBOUNDEDRANGEMODELFIELDS_H_
+#define _OSGBOUNDEDRANGEMODELFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/Container/OSGContainerFields.h"
+#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class ScrollBar;
+class BoundedRangeModel;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ScrollBarPtr
+//! BoundedRangeModelPtr
 
-typedef FCPtr<ContainerPtr, ScrollBar> ScrollBarPtr;
+typedef FCPtr<FieldContainerPtr, BoundedRangeModel> BoundedRangeModelPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ContainerPtr, ScrollBar> ScrollBarPtr;
 #endif
 
 template <>
-struct FieldDataTraits<ScrollBarPtr> : 
-    public FieldTraitsRecurseMapper<ScrollBarPtr, true>
+struct FieldDataTraits<BoundedRangeModelPtr> : 
+    public FieldTraitsRecurseMapper<BoundedRangeModelPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<ScrollBarPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFScrollBarPtr"; }
-    static const char *getMName(void) { return "MFScrollBarPtr"; }
+    static const char *getSName(void) { return "SFBoundedRangeModelPtr"; }
+    static const char *getMName(void) { return "MFBoundedRangeModelPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ScrollBarPtr, true>
+/*! \class  FieldTraitsRecurseMapper<BoundedRangeModelPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<ScrollBarPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<ScrollBarPtr> SFScrollBarPtr;
+typedef SField<BoundedRangeModelPtr> SFBoundedRangeModelPtr;
 #endif
 
-#ifndef OSG_COMPILESCROLLBARINST
-OSG_DLLEXPORT_DECL1(SField, ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEBOUNDEDRANGEMODELINST
+OSG_DLLEXPORT_DECL1(SField, BoundedRangeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ScrollBarPtr> MFScrollBarPtr;
+typedef MField<BoundedRangeModelPtr> MFBoundedRangeModelPtr;
 #endif
 
-#ifndef OSG_COMPILESCROLLBARINST
-OSG_DLLEXPORT_DECL1(MField, ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEBOUNDEDRANGEMODELINST
+OSG_DLLEXPORT_DECL1(MField, BoundedRangeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGSCROLLBARFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGBOUNDEDRANGEMODELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGSCROLLBARFIELDS_H_ */
+#endif /* _OSGBOUNDEDRANGEMODELFIELDS_H_ */

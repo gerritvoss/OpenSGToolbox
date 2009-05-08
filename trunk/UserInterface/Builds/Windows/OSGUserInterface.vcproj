@@ -252,7 +252,31 @@
 					Name="Scroll"
 					>
 					<File
+						RelativePath="..\..\src\Component\Scroll\OSGBoundedRangeModel.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Scroll\OSGBoundedRangeModel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Scroll\OSGBoundedRangeModel.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Scroll\OSGBoundedRangeModelBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Scroll\OSGBoundedRangeModelBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Scroll\OSGBoundedRangeModelBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Scroll\OSGBoundedRangeModelFields.h"
 						>
 					</File>
 					<File
@@ -265,6 +289,22 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModel.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModelBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModelBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModelBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModelFields.h"
 						>
 					</File>
 					<File

@@ -87,7 +87,7 @@ void Slider::initMethod (void)
 
 EventConnection Slider::addChangeListener(ChangeListenerPtr l)
 {
-	return _Model->addChangeListener(l);
+	return getRangeModel()->addChangeListener(l);
 }
 
 void Slider::drawInternal(const GraphicsPtr TheGraphics) const
@@ -177,7 +177,7 @@ void Slider::updateLayout(void)
 	}
 	
 	//Update the MinorTickMarks
-	if(getDrawMinorTicks() && _Model != NULL)
+	if(getDrawMinorTicks() && getRangeModel() != NULL)
 	{
 		Pnt2f MinorTickTopLeft, MinorTickBottomRight;
 		getDrawObjectBounds(getMinorTickDrawObjects(), MinorTickTopLeft, MinorTickBottomRight);
@@ -202,7 +202,7 @@ void Slider::updateLayout(void)
 	}
 	
 	//Update the MajorTickMarks
-	if(getDrawMajorTicks() && _Model != NULL)
+	if(getDrawMajorTicks() && getRangeModel() != NULL)
 	{
 		Pnt2f MajorTickTopLeft, MajorTickBottomRight;
 		getDrawObjectBounds(getMajorTickDrawObjects(), MajorTickTopLeft, MajorTickBottomRight);
@@ -224,7 +224,7 @@ void Slider::updateLayout(void)
 	}
 
 	//Update the Labels
-	if(getDrawLabels() && _Model != NULL)
+	if(getDrawLabels() && getRangeModel() != NULL)
 	{
 		Vec2f Alignment;
 		Pnt2f Pos;
@@ -270,7 +270,7 @@ void Slider::updateSliderTrack(void)
 	}
 
 	//Update the Knob position
-	if(getKnobButton() != NullFC && _Model != NULL)
+	if(getKnobButton() != NullFC && getRangeModel() != NULL)
 	{
 	   Vec2f Size;
 	   Size[MinorAxis] = getKnobButton()->getPreferredSize().x();
@@ -344,28 +344,6 @@ FieldContainerMap Slider::createStandardLabels(UInt32 increment, Int32 start)
 	return NewMap;
 }
 
-void Slider::setModel(BoundedRangeModel* Model)
-{
-    if(_Model != NULL)
-    {
-        _Model->removeChangeListener(&_BoundedRangeModelChangeListener);
-    }
-    _Model = Model;
-    if(_Model != NULL)
-    {
-        _Model->addChangeListener(&_BoundedRangeModelChangeListener);
-		
-		if( getDrawLabels() &&
-			_UsingDefaultLabels)
-		{
-			beginEditCP(SliderPtr(this), LabelMapFieldMask);
-				setLabelMap(createStandardLabels(getMajorTickSpacing()));
-			endEditCP(SliderPtr(this), LabelMapFieldMask);
-			_UsingDefaultLabels = true;
-		}
-    }
-}
-
 UInt32 Slider::getTrackLength(void) const
 {
     if(getOrientation() == VERTICAL_ORIENTATION)
@@ -401,16 +379,16 @@ void Slider::setValue(Int32 n)
 
 		if(Mod <= getMajorTickSpacing()/2)
 		{
-			_Model->setValue(getMinorTickSpacing() * Div + getMinimum());
+			getRangeModel()->setValue(getMinorTickSpacing() * Div + getMinimum());
 		}
 		else
 		{
-			_Model->setValue(getMinorTickSpacing() * (Div + 1) + getMinimum());
+			getRangeModel()->setValue(getMinorTickSpacing() * (Div + 1) + getMinimum());
 		}
     }
     else
     {
-	   _Model->setValue(n);
+	   getRangeModel()->setValue(n);
     }
     
 }
@@ -456,7 +434,6 @@ Pnt2f Slider::calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size
 
 Slider::Slider(void) :
     Inherited(),
-		_Model(NULL),
         _BoundedRangeModelChangeListener(SliderPtr(this)),
         _KnobDraggedListener(SliderPtr(this)),
 		_UsingDefaultLabels(true)
@@ -465,7 +442,6 @@ Slider::Slider(void) :
 
 Slider::Slider(const Slider &source) :
     Inherited(source),
-		_Model(source._Model),
         _BoundedRangeModelChangeListener(SliderPtr(this)),
         _KnobDraggedListener(SliderPtr(this)),
 		_UsingDefaultLabels(source._UsingDefaultLabels)
@@ -514,7 +490,7 @@ void Slider::changed(BitVector whichField, UInt32 origin)
 	     (whichField & LabelPrototypeFieldMask) ||
 	     (whichField & MajorTickSpacingFieldMask))&&
 		 getDrawLabels() &&
-		 _Model != NULL &&
+		 getRangeModel() != NULL &&
 		 _UsingDefaultLabels)
 	{
 		beginEditCP(SliderPtr(this), LabelMapFieldMask);
@@ -586,6 +562,22 @@ void Slider::changed(BitVector whichField, UInt32 origin)
     {
         getKnobButton()->addMouseListener(&_KnobDraggedListener);
     }
+    if(whichField & RangeModelFieldMask)
+    {
+        _RangeModelConnection.disconnect();
+        if(getRangeModel() != NullFC)
+        {
+            _RangeModelConnection = getRangeModel()->addChangeListener(&_BoundedRangeModelChangeListener);
+		    if( getDrawLabels() &&
+			    _UsingDefaultLabels)
+		    {
+			    beginEditCP(SliderPtr(this), LabelMapFieldMask);
+				    setLabelMap(createStandardLabels(getMajorTickSpacing()));
+			    endEditCP(SliderPtr(this), LabelMapFieldMask);
+			    _UsingDefaultLabels = true;
+		    }
+        }
+    }
 }
 
 void Slider::dump(      UInt32    , 
@@ -642,7 +634,7 @@ void Slider::KnobDraggedListener::mousePressed(const MouseEvent& e)
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(this);
-		_Slider->_Model->setValueIsAdjusting(true);
+		_Slider->getRangeModel()->setValueIsAdjusting(true);
     }
 }
 
@@ -657,7 +649,7 @@ void Slider::KnobDraggedListener::mouseReleased(const MouseEvent& e)
         _Slider->getKnobButton()->addMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
-		_Slider->_Model->setValueIsAdjusting(false);
+		_Slider->getRangeModel()->setValueIsAdjusting(false);
     }
 }
 
@@ -670,7 +662,7 @@ void Slider::KnobDraggedListener::keyTyped(const KeyEvent& e)
         _Slider->getKnobButton()->addMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
-		_Slider->_Model->setValueIsAdjusting(false);
+		_Slider->getRangeModel()->setValueIsAdjusting(false);
 	}
 }
 

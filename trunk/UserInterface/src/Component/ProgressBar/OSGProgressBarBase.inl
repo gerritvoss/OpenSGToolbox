@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -206,6 +206,13 @@ inline
 SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFDisabledDrawObject(void)
 {
     return &_sfDisabledDrawObject;
+}
+
+//! Get the ProgressBar::_sfRangeModel field.
+inline
+SFBoundedRangeModelPtr *ProgressBarBase::getSFRangeModel(void)
+{
+    return &_sfRangeModel;
 }
 
 
@@ -543,6 +550,27 @@ inline
 void ProgressBarBase::setDisabledDrawObject(const UIDrawObjectCanvasPtr &value)
 {
     _sfDisabledDrawObject.setValue(value);
+}
+
+//! Get the value of the ProgressBar::_sfRangeModel field.
+inline
+BoundedRangeModelPtr &ProgressBarBase::getRangeModel(void)
+{
+    return _sfRangeModel.getValue();
+}
+
+//! Get the value of the ProgressBar::_sfRangeModel field.
+inline
+const BoundedRangeModelPtr &ProgressBarBase::getRangeModel(void) const
+{
+    return _sfRangeModel.getValue();
+}
+
+//! Set the value of the ProgressBar::_sfRangeModel field.
+inline
+void ProgressBarBase::setRangeModel(const BoundedRangeModelPtr &value)
+{
+    _sfRangeModel.setValue(value);
 }
 
 

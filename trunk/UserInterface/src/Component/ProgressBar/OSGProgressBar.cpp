@@ -210,7 +210,7 @@ void ProgressBar::setupProgressBar(void)
 	}
 	else
 	{
-		if(_Model == NULL) {return;}
+		if(getRangeModel() == NULL) {return;}
 
 		Real32 Percent(getPercentComplete());
 
@@ -274,7 +274,6 @@ void ProgressBar::endIndeterminate(void)
 
 ProgressBar::ProgressBar(void) :
     Inherited(),
-	_Model(NULL),
 	_ModelChangeListener(ProgressBarPtr(this)),
 	_IndeterminateUpdateListener(ProgressBarPtr(this)),
     _IndeterminateBarPosition(0)
@@ -283,7 +282,6 @@ ProgressBar::ProgressBar(void) :
 
 ProgressBar::ProgressBar(const ProgressBar &source) :
     Inherited(source),
-	_Model(NULL),
 	_ModelChangeListener(ProgressBarPtr(this)),
 	_IndeterminateUpdateListener(ProgressBarPtr(this)),
     _IndeterminateBarPosition(0),
@@ -305,6 +303,14 @@ void ProgressBar::changed(BitVector whichField, UInt32 origin)
     if((whichField & SizeFieldMask))
     {
         setupProgressBar();
+    }
+    if(whichField & RangeModelFieldMask)
+    {
+        _RangeModelConnection.disconnect();
+        if(getRangeModel() != NullFC)
+        {
+            _RangeModelConnection = getRangeModel()->addChangeListener(&_ModelChangeListener);
+        }
     }
 }
 

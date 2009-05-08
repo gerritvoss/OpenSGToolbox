@@ -45,31 +45,25 @@ OSG_BEGIN_NAMESPACE
 inline
 EventConnection ProgressBar::addChangeListener(ChangeListenerPtr Listener)
 {
-	return _Model->addChangeListener(Listener);
+	return getRangeModel()->addChangeListener(Listener);
 }
 
 inline
 bool ProgressBar::isChangeListenerAttached(ChangeListenerPtr Listener) const
 {
-	return _Model->isChangeListenerAttached(Listener);
+	return getRangeModel()->isChangeListenerAttached(Listener);
 }
 
 inline
 Int32 ProgressBar::getMaximum(void) const
 {
-	return _Model->getMaximum();
+	return getRangeModel()->getMaximum();
 }
 
 inline
 Int32 ProgressBar::getMinimum(void) const
 {
-	return _Model->getMinimum();
-}
-
-inline
-BoundedRangeModel* ProgressBar::getModel(void) const
-{
-	return _Model;
+	return getRangeModel()->getMinimum();
 }
 
 inline
@@ -81,38 +75,31 @@ Real32 ProgressBar::getPercentComplete(void) const
 inline
 Int32 ProgressBar::getValue(void) const
 {
-	return _Model->getValue();
+	return getRangeModel()->getValue();
 }
 
 inline
 void ProgressBar::setMaximum(const Int32& n)
 {
-	_Model->setMaximum(n);
+	getRangeModel()->setMaximum(n);
 }
 
 inline
 void ProgressBar::setMinimum(const Int32& n)
 {
-	_Model->setMinimum(n);
-}
-
-inline
-void ProgressBar::setModel(BoundedRangeModel* newModel)
-{
-	_Model = newModel;
-	_Model->addChangeListener(&_ModelChangeListener);
+	getRangeModel()->setMinimum(n);
 }
 
 inline
 void ProgressBar::setValue(const Int32& n)
 {
-	_Model->setValue(n);
+	getRangeModel()->setValue(n);
 }
 
 inline
 void ProgressBar::removeChangeListener(ChangeListenerPtr Listener)
 {
-	_Model->removeChangeListener(Listener);
+	getRangeModel()->removeChangeListener(Listener);
 }
 
 inline

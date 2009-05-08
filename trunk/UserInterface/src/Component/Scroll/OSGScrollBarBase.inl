@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -178,6 +178,13 @@ inline
 SFUInt32 *ScrollBarBase::getSFScrollBarMinLength(void)
 {
     return &_sfScrollBarMinLength;
+}
+
+//! Get the ScrollBar::_sfRangeModel field.
+inline
+SFBoundedRangeModelPtr *ScrollBarBase::getSFRangeModel(void)
+{
+    return &_sfRangeModel;
 }
 
 
@@ -431,6 +438,27 @@ inline
 void ScrollBarBase::setScrollBarMinLength(const UInt32 &value)
 {
     _sfScrollBarMinLength.setValue(value);
+}
+
+//! Get the value of the ScrollBar::_sfRangeModel field.
+inline
+BoundedRangeModelPtr &ScrollBarBase::getRangeModel(void)
+{
+    return _sfRangeModel.getValue();
+}
+
+//! Get the value of the ScrollBar::_sfRangeModel field.
+inline
+const BoundedRangeModelPtr &ScrollBarBase::getRangeModel(void) const
+{
+    return _sfRangeModel.getValue();
+}
+
+//! Set the value of the ScrollBar::_sfRangeModel field.
+inline
+void ScrollBarBase::setRangeModel(const BoundedRangeModelPtr &value)
+{
+    _sfRangeModel.setValue(value);
 }
 
 

@@ -159,6 +159,20 @@ SFUInt32 *ScrollPanelBase::getSFHorizontalScrollBarAlignment(void)
     return &_sfHorizontalScrollBarAlignment;
 }
 
+//! Get the ScrollPanel::_sfVerticalRangeModel field.
+inline
+SFDefaultBoundedRangeModelPtr *ScrollPanelBase::getSFVerticalRangeModel(void)
+{
+    return &_sfVerticalRangeModel;
+}
+
+//! Get the ScrollPanel::_sfHorizontalRangeModel field.
+inline
+SFDefaultBoundedRangeModelPtr *ScrollPanelBase::getSFHorizontalRangeModel(void)
+{
+    return &_sfHorizontalRangeModel;
+}
+
 
 //! Get the value of the ScrollPanel::_sfView field.
 inline
@@ -347,6 +361,48 @@ inline
 void ScrollPanelBase::setHorizontalScrollBarAlignment(const UInt32 &value)
 {
     _sfHorizontalScrollBarAlignment.setValue(value);
+}
+
+//! Get the value of the ScrollPanel::_sfVerticalRangeModel field.
+inline
+DefaultBoundedRangeModelPtr &ScrollPanelBase::getVerticalRangeModel(void)
+{
+    return _sfVerticalRangeModel.getValue();
+}
+
+//! Get the value of the ScrollPanel::_sfVerticalRangeModel field.
+inline
+const DefaultBoundedRangeModelPtr &ScrollPanelBase::getVerticalRangeModel(void) const
+{
+    return _sfVerticalRangeModel.getValue();
+}
+
+//! Set the value of the ScrollPanel::_sfVerticalRangeModel field.
+inline
+void ScrollPanelBase::setVerticalRangeModel(const DefaultBoundedRangeModelPtr &value)
+{
+    _sfVerticalRangeModel.setValue(value);
+}
+
+//! Get the value of the ScrollPanel::_sfHorizontalRangeModel field.
+inline
+DefaultBoundedRangeModelPtr &ScrollPanelBase::getHorizontalRangeModel(void)
+{
+    return _sfHorizontalRangeModel.getValue();
+}
+
+//! Get the value of the ScrollPanel::_sfHorizontalRangeModel field.
+inline
+const DefaultBoundedRangeModelPtr &ScrollPanelBase::getHorizontalRangeModel(void) const
+{
+    return _sfHorizontalRangeModel.getValue();
+}
+
+//! Set the value of the ScrollPanel::_sfHorizontalRangeModel field.
+inline
+void ScrollPanelBase::setHorizontalRangeModel(const DefaultBoundedRangeModelPtr &value)
+{
+    _sfHorizontalRangeModel.setValue(value);
 }
 
 

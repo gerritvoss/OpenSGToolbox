@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,6 +79,7 @@
 #include "Component/Button/OSGButton.h" // HorizontalScrollBar type
 #include "Component/Button/OSGButton.h" // HorizontalScrollField type
 #include <OpenSG/OSGUInt32Fields.h> // ScrollBarMinLength type
+#include "Component/Scroll/OSGBoundedRangeModelFields.h" // RangeModel type
 
 #include "OSGScrollBarFields.h"
 
@@ -114,7 +115,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
         HorizontalScrollBarFieldId   = HorizontalMaxButtonFieldId   + 1,
         HorizontalScrollFieldFieldId = HorizontalScrollBarFieldId   + 1,
         ScrollBarMinLengthFieldId    = HorizontalScrollFieldFieldId + 1,
-        NextFieldId                  = ScrollBarMinLengthFieldId    + 1
+        RangeModelFieldId            = ScrollBarMinLengthFieldId    + 1,
+        NextFieldId                  = RangeModelFieldId            + 1
     };
 
     static const OSG::BitVector OrientationFieldMask;
@@ -129,6 +131,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
     static const OSG::BitVector HorizontalScrollBarFieldMask;
     static const OSG::BitVector HorizontalScrollFieldFieldMask;
     static const OSG::BitVector ScrollBarMinLengthFieldMask;
+    static const OSG::BitVector RangeModelFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -167,6 +170,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
            SFButtonPtr         *getSFHorizontalScrollBar(void);
            SFButtonPtr         *getSFHorizontalScrollField(void);
            SFUInt32            *getSFScrollBarMinLength(void);
+           SFBoundedRangeModelPtr *getSFRangeModel     (void);
 
            UInt32              &getOrientation    (void);
      const UInt32              &getOrientation    (void) const;
@@ -192,6 +196,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
      const ButtonPtr           &getHorizontalScrollField(void) const;
            UInt32              &getScrollBarMinLength(void);
      const UInt32              &getScrollBarMinLength(void) const;
+           BoundedRangeModelPtr &getRangeModel     (void);
+     const BoundedRangeModelPtr &getRangeModel     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -210,6 +216,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
      void setHorizontalScrollBar( const ButtonPtr &value );
      void setHorizontalScrollField( const ButtonPtr &value );
      void setScrollBarMinLength( const UInt32 &value );
+     void setRangeModel     ( const BoundedRangeModelPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -264,6 +271,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
     SFButtonPtr         _sfHorizontalScrollBar;
     SFButtonPtr         _sfHorizontalScrollField;
     SFUInt32            _sfScrollBarMinLength;
+    SFBoundedRangeModelPtr   _sfRangeModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

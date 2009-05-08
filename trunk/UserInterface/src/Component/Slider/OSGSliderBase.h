@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,7 +70,6 @@
 #include "Component/Button/OSGButton.h" // KnobButton type
 #include <OpenSG/OSGUInt32Fields.h> // Orientation type
 #include <OpenSG/OSGUInt32Fields.h> // MajorTickSpacing type
-#include <OpenSG/OSGVec2sFields.h> // MajorTickPositions type
 #include <OpenSG/OSGUInt32Fields.h> // MinorTickSpacing type
 #include <OpenSG/OSGBoolFields.h> // SnapToTicks type
 #include <OpenSG/OSGBoolFields.h> // DrawMajorTicks type
@@ -88,6 +87,7 @@
 #include <OpenSG/OSGInt32Fields.h> // TrackInset type
 #include <OpenSG/OSGInt32Fields.h> // TrackToTickOffset type
 #include <OpenSG/OSGInt32Fields.h> // TrackToLabelOffset type
+#include "Component/Scroll/OSGBoundedRangeModel.h" // RangeModel type
 
 #include "OSGSliderFields.h"
 
@@ -133,7 +133,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
         TrackInsetFieldId           = MinorTickDrawObjectsFieldId + 1,
         TrackToTickOffsetFieldId    = TrackInsetFieldId           + 1,
         TrackToLabelOffsetFieldId   = TrackToTickOffsetFieldId    + 1,
-        NextFieldId                 = TrackToLabelOffsetFieldId   + 1
+        RangeModelFieldId           = TrackToLabelOffsetFieldId   + 1,
+        NextFieldId                 = RangeModelFieldId           + 1
     };
 
     static const OSG::BitVector KnobButtonFieldMask;
@@ -158,6 +159,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     static const OSG::BitVector TrackInsetFieldMask;
     static const OSG::BitVector TrackToTickOffsetFieldMask;
     static const OSG::BitVector TrackToLabelOffsetFieldMask;
+    static const OSG::BitVector RangeModelFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -204,6 +206,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
            SFInt32             *getSFTrackInset     (void);
            SFInt32             *getSFTrackToTickOffset(void);
            SFInt32             *getSFTrackToLabelOffset(void);
+           SFBoundedRangeModelPtr *getSFRangeModel     (void);
 
            ButtonPtr           &getKnobButton     (void);
      const ButtonPtr           &getKnobButton     (void) const;
@@ -241,6 +244,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
      const Int32               &getTrackToTickOffset(void) const;
            Int32               &getTrackToLabelOffset(void);
      const Int32               &getTrackToLabelOffset(void) const;
+           BoundedRangeModelPtr &getRangeModel     (void);
+     const BoundedRangeModelPtr &getRangeModel     (void) const;
            UIDrawObjectPtr     &getMajorTickDrawObjects(const UInt32 index);
            MFUIDrawObjectPtr   &getMajorTickDrawObjects(void);
      const MFUIDrawObjectPtr   &getMajorTickDrawObjects(void) const;
@@ -271,6 +276,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
      void setTrackInset     ( const Int32 &value );
      void setTrackToTickOffset( const Int32 &value );
      void setTrackToLabelOffset( const Int32 &value );
+     void setRangeModel     ( const BoundedRangeModelPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -335,6 +341,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     SFInt32             _sfTrackInset;
     SFInt32             _sfTrackToTickOffset;
     SFInt32             _sfTrackToLabelOffset;
+    SFBoundedRangeModelPtr   _sfRangeModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

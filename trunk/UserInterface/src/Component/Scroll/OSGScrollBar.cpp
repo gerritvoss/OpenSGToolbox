@@ -223,7 +223,7 @@ Vec2f ScrollBar::calculateScrollBarSize(void) const
 
 void ScrollBar::updateScrollBarLayout(void)
 {
-    if(getModel() != NULL && getScrollBar() != NullFC)
+    if(getRangeModel() != NullFC && getScrollBar() != NullFC)
     {
         beginEditCP(getScrollBar(), PositionFieldMask | SizeFieldMask);
             getScrollBar()->setSize(calculateScrollBarSize());
@@ -240,42 +240,28 @@ void  ScrollBar::produceAdjustmentValueChanged(const AdjustmentEvent& e)
    }
 }
 
-void ScrollBar::setModel(BoundedRangeModel* Model)
-{
-    if(_Model != NULL)
-    {
-        _Model->removeChangeListener(&_BoundedRangeModelChangeListener);
-    }
-    _Model = Model;
-    if(_Model != NULL)
-    {
-        _Model->addChangeListener(&_BoundedRangeModelChangeListener);
-    }
-}
-
-
 void ScrollBar::scrollUnit(const Int32 Units)
 {
     if(Units>0)
     {
-        if(_Model->getValue() + _Model->getExtent() + Units * getUnitIncrement() > _Model->getMaximum())
+        if(getRangeModel()->getValue() + getRangeModel()->getExtent() + Units * getUnitIncrement() > getRangeModel()->getMaximum())
         {
-            _Model->setValue(_Model->getMaximum() - _Model->getExtent());
+            getRangeModel()->setValue(getRangeModel()->getMaximum() - getRangeModel()->getExtent());
         }
         else
         {
-            _Model->setValue(_Model->getValue() + Units * getUnitIncrement());
+            getRangeModel()->setValue(getRangeModel()->getValue() + Units * getUnitIncrement());
         }
     }
     else if(Units < 0)
     {
-        if(_Model->getValue() + Units * static_cast<Int32>(getUnitIncrement()) < _Model->getMinimum())
+        if(getRangeModel()->getValue() + Units * static_cast<Int32>(getUnitIncrement()) < getRangeModel()->getMinimum())
         {
-            _Model->setValue(_Model->getMinimum());
+            getRangeModel()->setValue(getRangeModel()->getMinimum());
         }
         else
         {
-            _Model->setValue(_Model->getValue() + Units * getUnitIncrement());
+            getRangeModel()->setValue(getRangeModel()->getValue() + Units * getUnitIncrement());
         }
     }
 }
@@ -284,24 +270,24 @@ void ScrollBar::scrollBlock(const Int32 Blocks)
 {
     if(Blocks>0)
     {
-        if(_Model->getValue() + _Model->getExtent() + Blocks * getBlockIncrement() > _Model->getMaximum())
+        if(getRangeModel()->getValue() + getRangeModel()->getExtent() + Blocks * getBlockIncrement() > getRangeModel()->getMaximum())
         {
-            _Model->setValue(_Model->getMaximum() - _Model->getExtent());
+            getRangeModel()->setValue(getRangeModel()->getMaximum() - getRangeModel()->getExtent());
         }
         else
         {
-            _Model->setValue(_Model->getValue() + Blocks * getBlockIncrement());
+            getRangeModel()->setValue(getRangeModel()->getValue() + Blocks * getBlockIncrement());
         }
     }
     else if(Blocks < 0)
     {
-        if(_Model->getValue() + Blocks * getBlockIncrement() < _Model->getMinimum())
+        if(getRangeModel()->getValue() + Blocks * getBlockIncrement() < getRangeModel()->getMinimum())
         {
-            _Model->setValue(_Model->getMinimum());
+            getRangeModel()->setValue(getRangeModel()->getMinimum());
         }
         else
         {
-            _Model->setValue(_Model->getValue() + Blocks * getBlockIncrement());
+            getRangeModel()->setValue(getRangeModel()->getValue() + Blocks * getBlockIncrement());
         }
     }
 }
@@ -331,7 +317,7 @@ void ScrollBar::setMajorAxisScrollBarPosition(const Pnt2f& Pos)
     {
         ScrollValue = getMaximum() - getExtent();
     }
-    _Model->setValue(ScrollValue);
+    getRangeModel()->setValue(ScrollValue);
 }
 
 void ScrollBar::mouseWheelMoved(const MouseWheelEvent& e)
@@ -454,7 +440,6 @@ const ButtonPtr &ScrollBar::getScrollBar(void) const
 
 ScrollBar::ScrollBar(void) :
     Inherited(),
-        _Model(NULL),
         _BoundedRangeModelChangeListener(ScrollBarPtr(this)),
         _MinButtonActionListener(ScrollBarPtr(this)),
         _MaxButtonActionListener(ScrollBarPtr(this)),
@@ -466,7 +451,6 @@ ScrollBar::ScrollBar(void) :
 
 ScrollBar::ScrollBar(const ScrollBar &source) :
     Inherited(source),
-        _Model(source._Model),
         _BoundedRangeModelChangeListener(ScrollBarPtr(this)),
         _MinButtonActionListener(ScrollBarPtr(this)),
         _MaxButtonActionListener(ScrollBarPtr(this)),
@@ -656,6 +640,14 @@ void ScrollBar::changed(BitVector whichField, UInt32 origin)
 			endEditCP(getHorizontalScrollField(), Button::EnabledFieldMask);
 		}
 	}
+    if(whichField & RangeModelFieldMask)
+    {
+        _RangeModelConnection.disconnect();
+        if(getRangeModel() != NullFC)
+        {
+            _RangeModelConnection = getRangeModel()->addChangeListener(&_BoundedRangeModelChangeListener);
+        }
+    }
 }
 
 void ScrollBar::dump(      UInt32    , 

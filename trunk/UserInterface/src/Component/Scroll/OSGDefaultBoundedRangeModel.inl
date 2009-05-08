@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,52 +42,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool DefaultBoundedRangeModel::isChangeListenerAttached(ChangeListenerPtr Listener) const
-{
-    return _ChangeListeners.find(Listener) != _ChangeListeners.end();
-}
-
-inline
-UInt32 DefaultBoundedRangeModel::getExtent(void) const
-{
-    return _Extent;
-}
-
-inline
-Int32 DefaultBoundedRangeModel::getMaximum(void) const
-{
-    return _Maximum;
-}
-
-inline
-Int32 DefaultBoundedRangeModel::getMinimum(void) const
-{
-    return _Minimum;
-}
-
-inline
-Int32 DefaultBoundedRangeModel::getValue(void) const
-{
-    return _Value;
-}
-
-inline
-bool DefaultBoundedRangeModel::getValueIsAdjusting(void) const
-{
-    return _ValueIsAdjusting;
-}
-
-inline
-void DefaultBoundedRangeModel::removeChangeListener(ChangeListenerPtr Listener)
-{
-   ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
-   if(EraseIter != _ChangeListeners.end())
-   {
-      _ChangeListeners.erase(EraseIter);
-   }
-}
-
 OSG_END_NAMESPACE
 
+#define OSGDEFAULTBOUNDEDRANGEMODEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

@@ -170,7 +170,8 @@ BoundedRangeSpinnerModel::BoundedRangeSpinnerModel(void) :
 	_BoundedRangeModelChangeListener(this),
 	_SpinnerModelChangeListener(this)
 {
-	_TheBoundedRangeModel = new DefaultBoundedRangeModel();
+    _TheBoundedRangeModel = DefaultBoundedRangeModel::create();
+    addRefCP(_TheBoundedRangeModel);
 	_TheBoundedRangeModel->setExtent(0);
 	
 	_TheSpinnerModel = new Int32SpinnerModel();
@@ -183,7 +184,8 @@ BoundedRangeSpinnerModel::BoundedRangeSpinnerModel(const BoundedRangeSpinnerMode
 	_BoundedRangeModelChangeListener(this),
 	_SpinnerModelChangeListener(this)
 {
-	_TheBoundedRangeModel = new DefaultBoundedRangeModel();
+    _TheBoundedRangeModel = DefaultBoundedRangeModel::create();
+    addRefCP(_TheBoundedRangeModel);
 	_TheBoundedRangeModel->setExtent(source._TheBoundedRangeModel->getExtent());
 	
 	_TheSpinnerModel = new Int32SpinnerModel();
@@ -200,7 +202,7 @@ BoundedRangeSpinnerModel::~BoundedRangeSpinnerModel(void)
 {
 	dettachListenersFromModels();
 
-	delete _TheBoundedRangeModel;
+    subRefCP(_TheBoundedRangeModel);
 }
 
 

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultBoundedRangeModel"
+	parent="BoundedRangeModel"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI DefaultBoundedRangeModel.
+	<Field
+		name="InternalMinimum"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="InternalMaximum"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="InternalValue"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="InternalExtent"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="InternalValueIsAdjusting"
+		type="bool"
+		cardinality="single"
+		visibility="internal"
+		defaultValue="false"
+		access="protected"
+	>
+	</Field>
+</FieldContainer>

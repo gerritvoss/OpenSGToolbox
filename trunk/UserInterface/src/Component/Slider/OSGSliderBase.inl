@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -248,6 +248,13 @@ inline
 SFInt32 *SliderBase::getSFTrackToLabelOffset(void)
 {
     return &_sfTrackToLabelOffset;
+}
+
+//! Get the Slider::_sfRangeModel field.
+inline
+SFBoundedRangeModelPtr *SliderBase::getSFRangeModel(void)
+{
+    return &_sfRangeModel;
 }
 
 
@@ -627,6 +634,27 @@ inline
 void SliderBase::setTrackToLabelOffset(const Int32 &value)
 {
     _sfTrackToLabelOffset.setValue(value);
+}
+
+//! Get the value of the Slider::_sfRangeModel field.
+inline
+BoundedRangeModelPtr &SliderBase::getRangeModel(void)
+{
+    return _sfRangeModel.getValue();
+}
+
+//! Get the value of the Slider::_sfRangeModel field.
+inline
+const BoundedRangeModelPtr &SliderBase::getRangeModel(void) const
+{
+    return _sfRangeModel.getValue();
+}
+
+//! Set the value of the Slider::_sfRangeModel field.
+inline
+void SliderBase::setRangeModel(const BoundedRangeModelPtr &value)
+{
+    _sfRangeModel.setValue(value);
 }
 
 

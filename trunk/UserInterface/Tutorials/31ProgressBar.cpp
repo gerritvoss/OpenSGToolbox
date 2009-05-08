@@ -8,18 +8,11 @@
 // Text,and adding a Button to a Scene.  Also note that clicking
 // the Button causes it to appear pressed
 
-
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -134,16 +127,16 @@ public:
         _Elps += e.getElapsedTime();
 
 		// Increment the ProgressBar if it is under its Maximum value
-		if (_ProgressBar->getModel()->getValue() <= (_ProgressBar->getModel()->getMaximum() - _ProgPerSec) )
+		if (_ProgressBar->getRangeModel()->getValue() <= (_ProgressBar->getRangeModel()->getMaximum() - _ProgPerSec) )
 		{
-			_ProgressBar->getModel()->setValue(_ProgressBar->getModel()->getValue() + _ProgPerSec * _Elps);
+			_ProgressBar->getRangeModel()->setValue(_ProgressBar->getRangeModel()->getValue() + _ProgPerSec * _Elps);
         }
 		
-		if(_ProgressBar->getModel()->getValue() >= (_ProgressBar->getModel()->getMaximum() - _ProgPerSec))
+		if(_ProgressBar->getRangeModel()->getValue() >= (_ProgressBar->getRangeModel()->getMaximum() - _ProgPerSec))
 		{	
 			// Set the ProgressBar to the Maximum value when needed (in case the increment and 
 			// value do not exactly equal the Maximum)
-			_ProgressBar->getModel()->setValue(_ProgressBar->getModel()->getMaximum());
+			_ProgressBar->getRangeModel()->setValue(_ProgressBar->getRangeModel()->getMaximum());
 
 			// Change the Controlling ToggleButton accordingly
 			beginEditCP(ProgressControlToggleButton, ToggleButton::TextColorFieldMask | ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask);
@@ -232,7 +225,7 @@ class ResetProgressBarActionListener : public ActionListener
 			virtual void actionPerformed(const ActionEvent& e)
 			{	
 				// Finds Minimum value for ProgressBar and sets it as the ProgressBar's value
-				_ProgressBar->getModel()->setValue( _ProgressBar->getModel()->getMinimum());
+				_ProgressBar->getRangeModel()->setValue( _ProgressBar->getRangeModel()->getMinimum());
 
 				// Edits ProgressControlToggleButton accordingly
 				beginEditCP(_ProgressControlToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask);
@@ -314,17 +307,15 @@ int main(int argc, char **argv)
 
     ******************************************************/    
 
-    DefaultBoundedRangeModel ExampleProgressBarBoundedRangeModel;
-    ExampleProgressBarBoundedRangeModel.setMinimum(0);
-    ExampleProgressBarBoundedRangeModel.setMaximum(100);
-    ExampleProgressBarBoundedRangeModel.setValue(0);
-    ExampleProgressBarBoundedRangeModel.setExtent(0);
+    DefaultBoundedRangeModelPtr ExampleProgressBarBoundedRangeModel = DefaultBoundedRangeModel::create();
+    ExampleProgressBarBoundedRangeModel->setMinimum(0);
+    ExampleProgressBarBoundedRangeModel->setMaximum(100);
+    ExampleProgressBarBoundedRangeModel->setValue(0);
+    ExampleProgressBarBoundedRangeModel->setExtent(0);
 
 	// Create the ProgressBar
     ProgressBarPtr ExampleProgressBar = ProgressBar::create();
 	
-	// Add its BoundedRangeModel
-    ExampleProgressBar->setModel(&ExampleProgressBarBoundedRangeModel);
 
 	/******************************************************
             
@@ -365,14 +356,16 @@ int main(int argc, char **argv)
 				complete in numerical format.
 
     ******************************************************/    
-	beginEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
+	beginEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask | ProgressBar::RangeModelFieldMask);
         ExampleProgressBar->setEnableProgressString(true);
         ExampleProgressBar->setIndeterminate(false);
         ExampleProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
         // ExampleProgressBar->setIndeterminateBarMoveRate(0.0);
         // ExampleProgressBar->setIndeterminateBarSize(2.0);
 		// ExampleProgressBar->setProgressString("Loading...");
-    endEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
+	    // Add its BoundedRangeModel
+        ExampleProgressBar->setRangeModel(ExampleProgressBarBoundedRangeModel);
+    endEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask | ProgressBar::RangeModelFieldMask);
 
 	/******************************************************
          

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,42 +36,48 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_DEFAULT_BOUNDEDRANGE_MODEL_H_
-#define _OSG_UI_DEFAULT_BOUNDEDRANGE_MODEL_H_
-
+#ifndef _OSGDEFAULTBOUNDEDRANGEMODEL_H_
+#define _OSGDEFAULTBOUNDEDRANGEMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGBoundedRangeModel.h"
-#include "Event/OSGChangeListener.h"
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGDefaultBoundedRangeModelBase.h"
 #include <set>
 
-#include <OpenSG/Input/OSGEventConnection.h>
-
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModel : public BoundedRangeModel
-{
-private:
-protected:
-    UInt32 _Extent;
-    Int32 _Maximum;
-    Int32 _Minimum;
-    Int32 _Value;
-    bool _ValueIsAdjusting;
 
-    
-	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
-    typedef ChangeListenerSet::iterator ChangeListenerSetItor;
-    typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
-	
-    ChangeListenerSet       _ChangeListeners;
-    void produceStateChanged(const ChangeEvent& e);
-public:
+/*! \brief DefaultBoundedRangeModel class. See \ref 
+           PageUserInterfaceDefaultBoundedRangeModel for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModel : public DefaultBoundedRangeModelBase
+{
+  private:
+
+    typedef DefaultBoundedRangeModelBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
     //Returns the model's extent, the length of the inner range that begins at the model's value.
     virtual UInt32 getExtent(void) const;
     
@@ -108,15 +114,53 @@ public:
 	virtual EventConnection addChangeListener(ChangeListenerPtr Listener);
 	virtual bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
 	virtual void removeChangeListener(ChangeListenerPtr Listener);
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in DefaultBoundedRangeModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
     DefaultBoundedRangeModel(void);
-    ~DefaultBoundedRangeModel(void);
+    DefaultBoundedRangeModel(const DefaultBoundedRangeModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DefaultBoundedRangeModel(void); 
+
+    /*! \}                                                                 */
+    
+	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
+    typedef ChangeListenerSet::iterator ChangeListenerSetItor;
+    typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
+	
+    ChangeListenerSet       _ChangeListeners;
+    void produceStateChanged(const ChangeEvent& e);
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class DefaultBoundedRangeModelBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const DefaultBoundedRangeModel &source);
 };
 
-typedef DefaultBoundedRangeModel* DefaultBoundedRangeModelPtr;
+typedef DefaultBoundedRangeModel *DefaultBoundedRangeModelP;
 
 OSG_END_NAMESPACE
 
+#include "OSGDefaultBoundedRangeModelBase.inl"
 #include "OSGDefaultBoundedRangeModel.inl"
 
-#endif /* _OSG_UI_DEFAULT_BOUNDEDRANGE_MODEL_H_ */
+#define OSGDEFAULTBOUNDEDRANGEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
+#endif /* _OSGDEFAULTBOUNDEDRANGEMODEL_H_ */

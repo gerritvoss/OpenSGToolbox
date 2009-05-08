@@ -222,14 +222,14 @@ void RGBColorChooserPanel::buildChooser(void)
 	endEditCP(RedSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
 
 	_RedSlider = Slider::create();
-	beginEditCP(_RedSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
+	beginEditCP(_RedSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 		_RedSlider->setDrawLabels(false);
 		_RedSlider->setDrawMajorTicks(false);
 		_RedSlider->setDrawMinorTicks(false);
 		_RedSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);
 		_RedSlider->setTrackDrawObject(RedSliderTrackCanvas);
-	endEditCP(_RedSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
-	_RedSlider->setModel(_RedModel->getBoundedRangeModel());
+        _RedSlider->setRangeModel(_RedModel->getBoundedRangeModel());
+	endEditCP(_RedSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 	
 	//Green
 	_GreenSliderTrackBackground = GradientLayer::create();
@@ -246,14 +246,14 @@ void RGBColorChooserPanel::buildChooser(void)
 	endEditCP(GreenSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
 
 	_GreenSlider = Slider::create();
-	beginEditCP(_GreenSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
+	beginEditCP(_GreenSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 		_GreenSlider->setDrawLabels(false);
 		_GreenSlider->setDrawMajorTicks(false);
 		_GreenSlider->setDrawMinorTicks(false);
 		_GreenSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);;
 		_GreenSlider->setTrackDrawObject(GreenSliderTrackCanvas);
-	endEditCP(_GreenSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
-	_GreenSlider->setModel(_GreenModel->getBoundedRangeModel());
+    	_GreenSlider->setRangeModel(_GreenModel->getBoundedRangeModel());
+	endEditCP(_GreenSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 	
 	//Blue
 	_BlueSliderTrackBackground = GradientLayer::create();
@@ -270,14 +270,14 @@ void RGBColorChooserPanel::buildChooser(void)
 	endEditCP(BlueSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
 
 	_BlueSlider = Slider::create();
-	beginEditCP(_BlueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
+	beginEditCP(_BlueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 		_BlueSlider->setDrawLabels(false);
 		_BlueSlider->setDrawMajorTicks(false);
 		_BlueSlider->setDrawMinorTicks(false);
 		_BlueSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);;
 		_BlueSlider->setTrackDrawObject(BlueSliderTrackCanvas);
-	endEditCP(_BlueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
-	_BlueSlider->setModel(_BlueModel->getBoundedRangeModel());
+    	_BlueSlider->setRangeModel(_BlueModel->getBoundedRangeModel());
+	endEditCP(_BlueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 	
 	if(getIncludeAlpha())
 	{
@@ -295,14 +295,14 @@ void RGBColorChooserPanel::buildChooser(void)
 		endEditCP(AlphaSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
 
 		_AlphaSlider = Slider::create();
-		beginEditCP(_AlphaSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
+		beginEditCP(_AlphaSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 			_AlphaSlider->setDrawLabels(false);
 			_AlphaSlider->setDrawMajorTicks(false);
 			_AlphaSlider->setDrawMinorTicks(false);
 			_AlphaSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);;
 			_AlphaSlider->setTrackDrawObject(AlphaSliderTrackCanvas);
-		endEditCP(_AlphaSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
-		_AlphaSlider->setModel(_AlphaModel->getBoundedRangeModel());
+    		_AlphaSlider->setRangeModel(_AlphaModel->getBoundedRangeModel());
+		endEditCP(_AlphaSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask | Slider::RangeModelFieldMask);
 	}
 
 	//Labels
@@ -467,10 +467,20 @@ void RGBColorChooserPanel::attachModelListener(void)
 
 void RGBColorChooserPanel::dettachModelListener(void)
 {
-	_RedModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);
-	_GreenModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);
-	_BlueModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);
-	_AlphaModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);
+    if(_RedModel){ _RedModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
+    if(_GreenModel){ _GreenModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
+    if(_BlueModel){ _BlueModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
+    if(_AlphaModel){ _AlphaModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
+}
+
+void RGBColorChooserPanel::init(void)
+{
+	_RedModel = new BoundedRangeSpinnerModel();
+	_GreenModel = new BoundedRangeSpinnerModel();
+	_BlueModel = new BoundedRangeSpinnerModel();
+	_AlphaModel = new BoundedRangeSpinnerModel();
+
+	attachModelListener();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -482,24 +492,13 @@ RGBColorChooserPanel::RGBColorChooserPanel(void) :
     Inherited(),
 	_BoundedRangeSpinnerChangeListener(RGBColorChooserPanelPtr(this))
 {
-	_RedModel = new BoundedRangeSpinnerModel();
-	_GreenModel = new BoundedRangeSpinnerModel();
-	_BlueModel = new BoundedRangeSpinnerModel();
-	_AlphaModel = new BoundedRangeSpinnerModel();
-
-	attachModelListener();
 }
 
 RGBColorChooserPanel::RGBColorChooserPanel(const RGBColorChooserPanel &source) :
     Inherited(source),
 	_BoundedRangeSpinnerChangeListener(RGBColorChooserPanelPtr(this))
 {
-	_RedModel = new BoundedRangeSpinnerModel(*source._RedModel.get());
-	_GreenModel = new BoundedRangeSpinnerModel(*source._GreenModel.get());
-	_BlueModel = new BoundedRangeSpinnerModel(*source._BlueModel.get());
-	_AlphaModel = new BoundedRangeSpinnerModel(*source._AlphaModel.get());
-
-	attachModelListener();
+    init();
 }
 
 RGBColorChooserPanel::~RGBColorChooserPanel(void)

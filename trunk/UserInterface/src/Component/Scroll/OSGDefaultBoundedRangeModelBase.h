@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ScrollPanel
+ **     class DefaultBoundedRangeModel
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGSCROLLPANELBASE_H_
-#define _OSGSCROLLPANELBASE_H_
+#ifndef _OSGDEFAULTBOUNDEDRANGEMODELBASE_H_
+#define _OSGDEFAULTBOUNDEDRANGEMODELBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,67 +65,49 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGBoundedRangeModel.h" // Parent
 
-#include "Component/Container/OSGUIViewport.h" // View type
-#include "Component/Scroll/OSGScrollBar.h" // InternalVerticalScrollBar type
-#include "Component/Scroll/OSGScrollBar.h" // InternalHorizontalScrollBar type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalScrollBarDisplayPolicy type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalScrollBarDisplayPolicy type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalResizePolicy type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalResizePolicy type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalScrollBarAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalScrollBarAlignment type
-#include "Component/Scroll/OSGDefaultBoundedRangeModel.h" // VerticalRangeModel type
-#include "Component/Scroll/OSGDefaultBoundedRangeModel.h" // HorizontalRangeModel type
+#include <OpenSG/OSGInt32Fields.h> // InternalMinimum type
+#include <OpenSG/OSGInt32Fields.h> // InternalMaximum type
+#include <OpenSG/OSGInt32Fields.h> // InternalValue type
+#include <OpenSG/OSGUInt32Fields.h> // InternalExtent type
+#include <OpenSG/OSGBoolFields.h> // InternalValueIsAdjusting type
 
-#include "OSGScrollPanelFields.h"
+#include "OSGDefaultBoundedRangeModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ScrollPanel;
+class DefaultBoundedRangeModel;
 class BinaryDataHandler;
 
-//! \brief ScrollPanel Base Class.
+//! \brief DefaultBoundedRangeModel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModelBase : public BoundedRangeModel
 {
   private:
 
-    typedef Container    Inherited;
+    typedef BoundedRangeModel    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ScrollPanelPtr  Ptr;
+    typedef DefaultBoundedRangeModelPtr  Ptr;
 
     enum
     {
-        ViewFieldId                             = Inherited::NextFieldId,
-        InternalVerticalScrollBarFieldId        = ViewFieldId                             + 1,
-        InternalHorizontalScrollBarFieldId      = InternalVerticalScrollBarFieldId        + 1,
-        VerticalScrollBarDisplayPolicyFieldId   = InternalHorizontalScrollBarFieldId      + 1,
-        HorizontalScrollBarDisplayPolicyFieldId = VerticalScrollBarDisplayPolicyFieldId   + 1,
-        VerticalResizePolicyFieldId             = HorizontalScrollBarDisplayPolicyFieldId + 1,
-        HorizontalResizePolicyFieldId           = VerticalResizePolicyFieldId             + 1,
-        VerticalScrollBarAlignmentFieldId       = HorizontalResizePolicyFieldId           + 1,
-        HorizontalScrollBarAlignmentFieldId     = VerticalScrollBarAlignmentFieldId       + 1,
-        VerticalRangeModelFieldId               = HorizontalScrollBarAlignmentFieldId     + 1,
-        HorizontalRangeModelFieldId             = VerticalRangeModelFieldId               + 1,
-        NextFieldId                             = HorizontalRangeModelFieldId             + 1
+        InternalMinimumFieldId          = Inherited::NextFieldId,
+        InternalMaximumFieldId          = InternalMinimumFieldId          + 1,
+        InternalValueFieldId            = InternalMaximumFieldId          + 1,
+        InternalExtentFieldId           = InternalValueFieldId            + 1,
+        InternalValueIsAdjustingFieldId = InternalExtentFieldId           + 1,
+        NextFieldId                     = InternalValueIsAdjustingFieldId + 1
     };
 
-    static const OSG::BitVector ViewFieldMask;
-    static const OSG::BitVector InternalVerticalScrollBarFieldMask;
-    static const OSG::BitVector InternalHorizontalScrollBarFieldMask;
-    static const OSG::BitVector VerticalScrollBarDisplayPolicyFieldMask;
-    static const OSG::BitVector HorizontalScrollBarDisplayPolicyFieldMask;
-    static const OSG::BitVector VerticalResizePolicyFieldMask;
-    static const OSG::BitVector HorizontalResizePolicyFieldMask;
-    static const OSG::BitVector VerticalScrollBarAlignmentFieldMask;
-    static const OSG::BitVector HorizontalScrollBarAlignmentFieldMask;
-    static const OSG::BitVector VerticalRangeModelFieldMask;
-    static const OSG::BitVector HorizontalRangeModelFieldMask;
+    static const OSG::BitVector InternalMinimumFieldMask;
+    static const OSG::BitVector InternalMaximumFieldMask;
+    static const OSG::BitVector InternalValueFieldMask;
+    static const OSG::BitVector InternalExtentFieldMask;
+    static const OSG::BitVector InternalValueIsAdjustingFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -149,51 +131,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFUInt32            *getSFVerticalScrollBarDisplayPolicy(void);
-           SFUInt32            *getSFHorizontalScrollBarDisplayPolicy(void);
-           SFUInt32            *getSFVerticalResizePolicy(void);
-           SFUInt32            *getSFHorizontalResizePolicy(void);
-           SFUInt32            *getSFVerticalScrollBarAlignment(void);
-           SFUInt32            *getSFHorizontalScrollBarAlignment(void);
-           SFDefaultBoundedRangeModelPtr *getSFVerticalRangeModel(void);
-           SFDefaultBoundedRangeModelPtr *getSFHorizontalRangeModel(void);
-
-           UInt32              &getVerticalScrollBarDisplayPolicy(void);
-     const UInt32              &getVerticalScrollBarDisplayPolicy(void) const;
-           UInt32              &getHorizontalScrollBarDisplayPolicy(void);
-     const UInt32              &getHorizontalScrollBarDisplayPolicy(void) const;
-           UInt32              &getVerticalResizePolicy(void);
-     const UInt32              &getVerticalResizePolicy(void) const;
-           UInt32              &getHorizontalResizePolicy(void);
-     const UInt32              &getHorizontalResizePolicy(void) const;
-           UInt32              &getVerticalScrollBarAlignment(void);
-     const UInt32              &getVerticalScrollBarAlignment(void) const;
-           UInt32              &getHorizontalScrollBarAlignment(void);
-     const UInt32              &getHorizontalScrollBarAlignment(void) const;
-           DefaultBoundedRangeModelPtr &getVerticalRangeModel(void);
-     const DefaultBoundedRangeModelPtr &getVerticalRangeModel(void) const;
-           DefaultBoundedRangeModelPtr &getHorizontalRangeModel(void);
-     const DefaultBoundedRangeModelPtr &getHorizontalRangeModel(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setVerticalScrollBarDisplayPolicy( const UInt32 &value );
-     void setHorizontalScrollBarDisplayPolicy( const UInt32 &value );
-     void setVerticalResizePolicy( const UInt32 &value );
-     void setHorizontalResizePolicy( const UInt32 &value );
-     void setVerticalScrollBarAlignment( const UInt32 &value );
-     void setHorizontalScrollBarAlignment( const UInt32 &value );
-     void setVerticalRangeModel( const DefaultBoundedRangeModelPtr &value );
-     void setHorizontalRangeModel( const DefaultBoundedRangeModelPtr &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -214,8 +151,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ScrollPanelPtr      create          (void); 
-    static  ScrollPanelPtr      createEmpty     (void); 
+    static  DefaultBoundedRangeModelPtr      create          (void); 
+    static  DefaultBoundedRangeModelPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -233,57 +170,59 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIViewportPtr     _sfView;
-    SFScrollBarPtr      _sfInternalVerticalScrollBar;
-    SFScrollBarPtr      _sfInternalHorizontalScrollBar;
-    SFUInt32            _sfVerticalScrollBarDisplayPolicy;
-    SFUInt32            _sfHorizontalScrollBarDisplayPolicy;
-    SFUInt32            _sfVerticalResizePolicy;
-    SFUInt32            _sfHorizontalResizePolicy;
-    SFUInt32            _sfVerticalScrollBarAlignment;
-    SFUInt32            _sfHorizontalScrollBarAlignment;
-    SFDefaultBoundedRangeModelPtr   _sfVerticalRangeModel;
-    SFDefaultBoundedRangeModelPtr   _sfHorizontalRangeModel;
+    SFInt32             _sfInternalMinimum;
+    SFInt32             _sfInternalMaximum;
+    SFInt32             _sfInternalValue;
+    SFUInt32            _sfInternalExtent;
+    SFBool              _sfInternalValueIsAdjusting;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ScrollPanelBase(void);
-    ScrollPanelBase(const ScrollPanelBase &source);
+    DefaultBoundedRangeModelBase(void);
+    DefaultBoundedRangeModelBase(const DefaultBoundedRangeModelBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ScrollPanelBase(void); 
+    virtual ~DefaultBoundedRangeModelBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIViewportPtr     *getSFView           (void);
-           SFScrollBarPtr      *getSFInternalVerticalScrollBar(void);
-           SFScrollBarPtr      *getSFInternalHorizontalScrollBar(void);
+           SFInt32             *getSFInternalMinimum(void);
+           SFInt32             *getSFInternalMaximum(void);
+           SFInt32             *getSFInternalValue  (void);
+           SFUInt32            *getSFInternalExtent (void);
+           SFBool              *getSFInternalValueIsAdjusting(void);
 
-           UIViewportPtr       &getView           (void);
-     const UIViewportPtr       &getView           (void) const;
-           ScrollBarPtr        &getInternalVerticalScrollBar(void);
-     const ScrollBarPtr        &getInternalVerticalScrollBar(void) const;
-           ScrollBarPtr        &getInternalHorizontalScrollBar(void);
-     const ScrollBarPtr        &getInternalHorizontalScrollBar(void) const;
+           Int32               &getInternalMinimum(void);
+     const Int32               &getInternalMinimum(void) const;
+           Int32               &getInternalMaximum(void);
+     const Int32               &getInternalMaximum(void) const;
+           Int32               &getInternalValue  (void);
+     const Int32               &getInternalValue  (void) const;
+           UInt32              &getInternalExtent (void);
+     const UInt32              &getInternalExtent (void) const;
+           bool                &getInternalValueIsAdjusting(void);
+     const bool                &getInternalValueIsAdjusting(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setView           (const UIViewportPtr &value);
-     void setInternalVerticalScrollBar(const ScrollBarPtr &value);
-     void setInternalHorizontalScrollBar(const ScrollBarPtr &value);
+     void setInternalMinimum(const Int32 &value);
+     void setInternalMaximum(const Int32 &value);
+     void setInternalValue  (const Int32 &value);
+     void setInternalExtent (const UInt32 &value);
+     void setInternalValueIsAdjusting(const bool &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -291,13 +230,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ScrollPanelBase *pOther,
+    void executeSyncImpl(      DefaultBoundedRangeModelBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ScrollPanelBase *pOther,
+    void executeSyncImpl(      DefaultBoundedRangeModelBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -327,7 +266,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ScrollPanelBase &source);
+    void operator =(const DefaultBoundedRangeModelBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -335,17 +274,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef ScrollPanelBase *ScrollPanelBaseP;
+typedef DefaultBoundedRangeModelBase *DefaultBoundedRangeModelBaseP;
 
-typedef osgIF<ScrollPanelBase::isNodeCore,
-              CoredNodePtr<ScrollPanel>,
+typedef osgIF<DefaultBoundedRangeModelBase::isNodeCore,
+              CoredNodePtr<DefaultBoundedRangeModel>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ScrollPanelNodePtr;
+              >::_IRet DefaultBoundedRangeModelNodePtr;
 
-typedef RefPtr<ScrollPanelPtr> ScrollPanelRefPtr;
+typedef RefPtr<DefaultBoundedRangeModelPtr> DefaultBoundedRangeModelRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSCROLLPANELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGDEFAULTBOUNDEDRANGEMODELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGSCROLLPANELBASE_H_ */
+#endif /* _OSGDEFAULTBOUNDEDRANGEMODELBASE_H_ */

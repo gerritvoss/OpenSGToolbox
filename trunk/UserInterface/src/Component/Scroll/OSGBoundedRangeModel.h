@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,28 +36,51 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_BOUNDEDRANGE_MODEL_H_
-#define _OSG_UI_BOUNDEDRANGE_MODEL_H_
-
+#ifndef _OSGBOUNDEDRANGEMODEL_H_
+#define _OSGBOUNDEDRANGEMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
+
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGBaseTypes.h>
 #include "OSGUserInterfaceDef.h"
 
+#include "OSGBoundedRangeModelBase.h"
+
 #include <OpenSG/Input/OSGEventConnection.h>
+#include "Event/OSGChangeListener.h"
 
 OSG_BEGIN_NAMESPACE
-class ChangeListener;
-typedef ChangeListener* ChangeListenerPtr;
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING BoundedRangeModel
+
+/*! \brief BoundedRangeModel class. See \ref 
+           PageUserInterfaceBoundedRangeModel for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING BoundedRangeModel : public BoundedRangeModelBase
 {
-private:
-protected:
-public:
+  private:
+
+    typedef BoundedRangeModelBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
     //Returns the model's extent, the length of the inner range that begins at the model's value.
     virtual UInt32 getExtent(void) const = 0;
     
@@ -94,11 +117,47 @@ public:
 	virtual EventConnection addChangeListener(ChangeListenerPtr l) = 0;
 	virtual bool isChangeListenerAttached(ChangeListenerPtr l) const = 0;
 	virtual void removeChangeListener(ChangeListenerPtr l) = 0;
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in BoundedRangeModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    BoundedRangeModel(void);
+    BoundedRangeModel(const BoundedRangeModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~BoundedRangeModel(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class BoundedRangeModelBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const BoundedRangeModel &source);
 };
 
-typedef BoundedRangeModel* BoundedRangeModelPtr;
+typedef BoundedRangeModel *BoundedRangeModelP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_BOUNDEDRANGE_MODEL_H_ */
+#include "OSGBoundedRangeModelBase.inl"
+#include "OSGBoundedRangeModel.inl"
 
+#define OSGBOUNDEDRANGEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSGBOUNDEDRANGEMODEL_H_ */

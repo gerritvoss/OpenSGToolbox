@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,143 +40,99 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
-#include "Component/Scroll/OSGBoundedRangeModel.h"
+
+#include "OSGBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool ScrollBar::isAdjustmentListenerAttached(AdjustmentListenerPtr Listener) const
-{
-    return _AdjustmentListeners.find(Listener) != _AdjustmentListeners.end();
-}
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-inline
-void ScrollBar::setValue(Int32 newValue)
-{
-    getRangeModel()->setValue(newValue);
-}
+/*! \class osg::BoundedRangeModel
+A UI BoundedRangeModel. 
+*/
 
-inline
-bool ScrollBar::getValueIsAdjusting(void) const
-{
-    return getRangeModel()->getValueIsAdjusting();
-}
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
 
-inline
-void ScrollBar::setValueIsAdjusting(bool Value)
-{
-    getRangeModel()->setValueIsAdjusting(Value);
-}
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
 
-inline
-UInt32 ScrollBar::getExtent(void) const
-{
-    return getRangeModel()->getExtent();
-}
-
-inline
-Int32 ScrollBar::getMaximum(void) const
-{
-    return getRangeModel()->getMaximum();
-}
-
-inline
-Int32 ScrollBar::getMinimum(void) const
-{
-    return getRangeModel()->getMinimum();
-}
-
-inline
-Int32 ScrollBar::getValue(void) const
-{
-    return getRangeModel()->getValue();
-}
-
-inline
-void ScrollBar::setExtent(UInt32 newExtent)
-{
-    getRangeModel()->setExtent(newExtent);
-}
-
-inline
-void ScrollBar::setMaximum(Int32 newMaximum)
-{
-    getRangeModel()->setMaximum(newMaximum);
-}
-
-inline
-void ScrollBar::setMinimum(Int32 newMinimum)
-{
-    getRangeModel()->setMinimum(newMinimum);
-}
-
-inline
-void ScrollBar::setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting)
-{
-    getRangeModel()->setRangeProperties(value, extent, min, max, adjusting);
-}
-
-inline
-void ScrollBar::removeAdjustmentListener(AdjustmentListenerPtr Listener)
-{
-   AdjustmentListenerSetItor EraseIter(_AdjustmentListeners.find(Listener));
-   if(EraseIter != _AdjustmentListeners.end())
-   {
-      _AdjustmentListeners.erase(EraseIter);
-   }
-}
-
-inline
-ScrollBar::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(ScrollBarPtr TheScrollBar) :
-   _ScrollBar(TheScrollBar)
+void BoundedRangeModel::initMethod (void)
 {
 }
 
-inline
-ScrollBar::MinButtonActionListener::MinButtonActionListener(ScrollBarPtr TheScrollBar) :
-   _ScrollBar(TheScrollBar)
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+BoundedRangeModel::BoundedRangeModel(void) :
+    Inherited()
 {
 }
 
-inline
-ScrollBar::MaxButtonActionListener::MaxButtonActionListener(ScrollBarPtr TheScrollBar) :
-   _ScrollBar(TheScrollBar)
+BoundedRangeModel::BoundedRangeModel(const BoundedRangeModel &source) :
+    Inherited(source)
 {
 }
 
-inline
-ScrollBar::ScrollBarListener::ScrollBarListener(ScrollBarPtr TheScrollBar) :
-   _ScrollBar(TheScrollBar)
+BoundedRangeModel::~BoundedRangeModel(void)
 {
 }
 
-inline
-ScrollBar::ScrollBarDraggedListener::ScrollBarDraggedListener(ScrollBarPtr TheScrollBar) :
-   _ScrollBar(TheScrollBar)
+/*----------------------------- class specific ----------------------------*/
+
+void BoundedRangeModel::changed(BitVector whichField, UInt32 origin)
 {
+    Inherited::changed(whichField, origin);
 }
 
-inline
-ScrollBar::ScrollFieldListener::ScrollFieldListener(ScrollBarPtr TheScrollBar) :
-   _ScrollBar(TheScrollBar)
+void BoundedRangeModel::dump(      UInt32    , 
+                         const BitVector ) const
 {
+    SLOG << "Dump BoundedRangeModel NI" << std::endl;
 }
 
-inline
-void ScrollBar::ScrollBarDraggedListener::setInitialMousePosition(const Pnt2f& Pos)
+
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+namespace
 {
-    _InitialMousePosition = Pos;
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGBOUNDEDRANGEMODELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGBOUNDEDRANGEMODELBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGBOUNDEDRANGEMODELFIELDS_HEADER_CVSID;
 }
 
-inline
-void ScrollBar::ScrollBarDraggedListener::setInitialScrollBarPosition(const Pnt2f& Pos)
-{
-    _InitialScrollBarPosition = Pos;
-}
-
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
-
-#define OSGScrollBar_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

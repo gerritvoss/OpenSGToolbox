@@ -102,4 +102,24 @@ A UI ScrollPanel
 		defaultValue="ScrollPanel::SCROLLBAR_ALIGN_BOTTOM"
 	>
 	</Field>
+	<Field
+		name="VerticalRangeModel"
+		type="DefaultBoundedRangeModelPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Scroll/OSGDefaultBoundedRangeModel.h"
+		defaultValue="DefaultBoundedRangeModel::create()"
+	>
+	</Field>
+	<Field
+		name="HorizontalRangeModel"
+		type="DefaultBoundedRangeModelPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Scroll/OSGDefaultBoundedRangeModel.h"
+		defaultValue="DefaultBoundedRangeModel::create()"
+	>
+	</Field>
 </FieldContainer>

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -83,6 +83,7 @@
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
+#include "Component/Scroll/OSGBoundedRangeModel.h" // RangeModel type
 
 #include "OSGProgressBarFields.h"
 
@@ -122,7 +123,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
         FocusedDrawObjectFieldId        = DrawObjectFieldId               + 1,
         RolloverDrawObjectFieldId       = FocusedDrawObjectFieldId        + 1,
         DisabledDrawObjectFieldId       = RolloverDrawObjectFieldId       + 1,
-        NextFieldId                     = DisabledDrawObjectFieldId       + 1
+        RangeModelFieldId               = DisabledDrawObjectFieldId       + 1,
+        NextFieldId                     = RangeModelFieldId               + 1
     };
 
     static const OSG::BitVector IndeterminateFieldMask;
@@ -141,6 +143,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
     static const OSG::BitVector FocusedDrawObjectFieldMask;
     static const OSG::BitVector RolloverDrawObjectFieldMask;
     static const OSG::BitVector DisabledDrawObjectFieldMask;
+    static const OSG::BitVector RangeModelFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -183,6 +186,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
            SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void);
            SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
            SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
+           SFBoundedRangeModelPtr *getSFRangeModel     (void);
 
            bool                &getIndeterminate  (void);
      const bool                &getIndeterminate  (void) const;
@@ -216,6 +220,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
      const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
            UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
      const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
+           BoundedRangeModelPtr &getRangeModel     (void);
+     const BoundedRangeModelPtr &getRangeModel     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -238,6 +244,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
      void setFocusedDrawObject( const UIDrawObjectCanvasPtr &value );
      void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
      void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setRangeModel     ( const BoundedRangeModelPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -296,6 +303,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
     SFUIDrawObjectCanvasPtr   _sfFocusedDrawObject;
     SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
     SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
+    SFBoundedRangeModelPtr   _sfRangeModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

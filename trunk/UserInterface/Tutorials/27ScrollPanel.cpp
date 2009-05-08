@@ -281,29 +281,29 @@ int main(int argc, char **argv)
     ******************************************************/    
    
     // Create a DefaultBoundedRangeModel
-    DefaultBoundedRangeModel TheBoundedRangeModel;
-    TheBoundedRangeModel.setMinimum(10);
-    TheBoundedRangeModel.setMaximum(100);
-    TheBoundedRangeModel.setValue(10);
-    TheBoundedRangeModel.setExtent(20);
+    DefaultBoundedRangeModelPtr TheBoundedRangeModel = DefaultBoundedRangeModel::create();
+    TheBoundedRangeModel->setMinimum(10);
+    TheBoundedRangeModel->setMaximum(100);
+    TheBoundedRangeModel->setValue(10);
+    TheBoundedRangeModel->setExtent(20);
 
     ScrollBarPtr ExampleVerticalScrollBar = ScrollBar::create();
     //ExampleScrollPanel->getHorizontalScrollBar()
-    beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::EnabledFieldMask | ScrollBar::UnitIncrementFieldMask | ScrollBar::BlockIncrementFieldMask);
+    beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::EnabledFieldMask | ScrollBar::UnitIncrementFieldMask | ScrollBar::BlockIncrementFieldMask | ScrollBar::RangeModelFieldMask);
         ExampleVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
         ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
         ExampleVerticalScrollBar->setEnabled(false);
         ExampleVerticalScrollBar->setUnitIncrement(10);
         ExampleVerticalScrollBar->setBlockIncrement(100);
-		endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::EnabledFieldMask | ScrollBar::UnitIncrementFieldMask | ScrollBar::BlockIncrementFieldMask);
-    ExampleVerticalScrollBar->setModel(&TheBoundedRangeModel);
+        ExampleVerticalScrollBar->setRangeModel(TheBoundedRangeModel);
+	endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::EnabledFieldMask | ScrollBar::UnitIncrementFieldMask | ScrollBar::BlockIncrementFieldMask | ScrollBar::RangeModelFieldMask);
 
     ScrollBarPtr ExampleHorizontalScrollBar = ScrollBar::create();
-    beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
+    beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::RangeModelFieldMask);
         ExampleHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
         ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
-    endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
-    ExampleHorizontalScrollBar->setModel(&TheBoundedRangeModel);
+        ExampleHorizontalScrollBar->setRangeModel(TheBoundedRangeModel);
+    endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::RangeModelFieldMask);
     
        
     // Creates another DefaultBoundedRangeModel to use 
