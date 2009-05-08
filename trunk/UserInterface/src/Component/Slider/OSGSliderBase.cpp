@@ -130,6 +130,12 @@ const OSG::BitVector  SliderBase::TrackToTickOffsetFieldMask =
 const OSG::BitVector  SliderBase::TrackToLabelOffsetFieldMask = 
     (TypeTraits<BitVector>::One << SliderBase::TrackToLabelOffsetFieldId);
 
+const OSG::BitVector  SliderBase::AlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << SliderBase::AlignmentFieldId);
+
+const OSG::BitVector  SliderBase::TicksOnRightBottomFieldMask = 
+    (TypeTraits<BitVector>::One << SliderBase::TicksOnRightBottomFieldId);
+
 const OSG::BitVector  SliderBase::RangeModelFieldMask = 
     (TypeTraits<BitVector>::One << SliderBase::RangeModelFieldId);
 
@@ -204,6 +210,12 @@ const OSG::BitVector SliderBase::MTInfluenceMask =
     
 */
 /*! \var Int32           SliderBase::_sfTrackToLabelOffset
+    
+*/
+/*! \var Real32          SliderBase::_sfAlignment
+    
+*/
+/*! \var bool            SliderBase::_sfTicksOnRightBottom
     
 */
 /*! \var BoundedRangeModelPtr SliderBase::_sfRangeModel
@@ -324,6 +336,16 @@ FieldDescription *SliderBase::_desc[] =
                      TrackToLabelOffsetFieldId, TrackToLabelOffsetFieldMask,
                      false,
                      (FieldAccessMethod) &SliderBase::getSFTrackToLabelOffset),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Alignment", 
+                     AlignmentFieldId, AlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &SliderBase::getSFAlignment),
+    new FieldDescription(SFBool::getClassType(), 
+                     "TicksOnRightBottom", 
+                     TicksOnRightBottomFieldId, TicksOnRightBottomFieldMask,
+                     false,
+                     (FieldAccessMethod) &SliderBase::getSFTicksOnRightBottom),
     new FieldDescription(SFBoundedRangeModelPtr::getClassType(), 
                      "RangeModel", 
                      RangeModelFieldId, RangeModelFieldMask,
@@ -430,6 +452,8 @@ SliderBase::SliderBase(void) :
     _sfTrackInset             (Int32(6)), 
     _sfTrackToTickOffset      (Int32(8)), 
     _sfTrackToLabelOffset     (Int32(16)), 
+    _sfAlignment              (Real32(0.5)), 
+    _sfTicksOnRightBottom     (bool(true)), 
     _sfRangeModel             (BoundedRangeModelPtr(NullFC)), 
     Inherited() 
 {
@@ -462,6 +486,8 @@ SliderBase::SliderBase(const SliderBase &source) :
     _sfTrackInset             (source._sfTrackInset             ), 
     _sfTrackToTickOffset      (source._sfTrackToTickOffset      ), 
     _sfTrackToLabelOffset     (source._sfTrackToLabelOffset     ), 
+    _sfAlignment              (source._sfAlignment              ), 
+    _sfTicksOnRightBottom     (source._sfTicksOnRightBottom     ), 
     _sfRangeModel             (source._sfRangeModel             ), 
     Inherited                 (source)
 {
@@ -589,6 +615,16 @@ UInt32 SliderBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTrackToLabelOffset.getBinSize();
     }
 
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    {
+        returnValue += _sfAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
+    {
+        returnValue += _sfTicksOnRightBottom.getBinSize();
+    }
+
     if(FieldBits::NoField != (RangeModelFieldMask & whichField))
     {
         returnValue += _sfRangeModel.getBinSize();
@@ -711,6 +747,16 @@ void SliderBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
     {
         _sfTrackToLabelOffset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    {
+        _sfAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
+    {
+        _sfTicksOnRightBottom.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (RangeModelFieldMask & whichField))
@@ -836,6 +882,16 @@ void SliderBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTrackToLabelOffset.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    {
+        _sfAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
+    {
+        _sfTicksOnRightBottom.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (RangeModelFieldMask & whichField))
     {
         _sfRangeModel.copyFromBin(pMem);
@@ -917,6 +973,12 @@ void SliderBase::executeSyncImpl(      SliderBase *pOther,
     if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
         _sfTrackToLabelOffset.syncWith(pOther->_sfTrackToLabelOffset);
 
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
+
+    if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
+        _sfTicksOnRightBottom.syncWith(pOther->_sfTicksOnRightBottom);
+
     if(FieldBits::NoField != (RangeModelFieldMask & whichField))
         _sfRangeModel.syncWith(pOther->_sfRangeModel);
 
@@ -983,6 +1045,12 @@ void SliderBase::executeSyncImpl(      SliderBase *pOther,
 
     if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
         _sfTrackToLabelOffset.syncWith(pOther->_sfTrackToLabelOffset);
+
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pOther->_sfAlignment);
+
+    if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
+        _sfTicksOnRightBottom.syncWith(pOther->_sfTicksOnRightBottom);
 
     if(FieldBits::NoField != (RangeModelFieldMask & whichField))
         _sfRangeModel.syncWith(pOther->_sfRangeModel);

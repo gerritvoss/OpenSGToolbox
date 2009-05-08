@@ -168,7 +168,14 @@ void Slider::updateLayout(void)
 	   Pnt2f AlignedPosition;
 	   Size[MajorAxis] = getTrackLength();
 	   
-       AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, 0.5, 0.5);
+       if(getOrientation() == VERTICAL_ORIENTATION)
+       {
+           AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, 0.5, getAlignment());
+       }
+       else
+       {
+           AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, getAlignment(), 0.5);
+       }
 	   
 	   beginEditCP(getTrackDrawObject(), PositionFieldMask | SizeFieldMask);
 	       getTrackDrawObject()->setPosition(AlignedPosition);
@@ -184,6 +191,13 @@ void Slider::updateLayout(void)
 		
 	    Vec2f Alignment;
 
+        Real32 MaxLength(0.0);
+        for(UInt32 i(0) ; i<getMinorTickDrawObjects().size() ; ++i)
+        {
+            Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
+            getMinorTickDrawObjects()[i]->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+            MaxLength = osgMax(MaxLength, DrawObjectBottomRight.x()-DrawObjectTopLeft.x());
+        }
 		beginEditCP(SliderPtr(this), MinorTickPositionsFieldMask);
 			getMinorTickPositions().clear();
 
@@ -194,7 +208,14 @@ void Slider::updateLayout(void)
 					Alignment[MajorAxis] = static_cast<Real32>(i * getMinorTickSpacing())/static_cast<Real32>(getMaximum() - getMinimum());
 					getMinorTickPositions().push_back(
 						calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), (MinorTickBottomRight - MinorTickTopLeft), Alignment.y(), Alignment.x()));
-					getMinorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
+                    if(getTicksOnRightBottom())
+                    {
+					    getMinorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
+                    }
+                    else
+                    {
+					    getMinorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToTickOffset() - MaxLength;
+                    }
 				}
 			}
 		
@@ -209,6 +230,13 @@ void Slider::updateLayout(void)
 		
 	    Vec2f Alignment;
 
+        Real32 MaxLength(0.0);
+        for(UInt32 i(0) ; i<getMajorTickDrawObjects().size() ; ++i)
+        {
+            Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
+            getMajorTickDrawObjects()[i]->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+            MaxLength = osgMax(MaxLength, DrawObjectBottomRight.x()-DrawObjectTopLeft.x());
+        }
 		beginEditCP(SliderPtr(this), MajorTickPositionsFieldMask);
 			getMajorTickPositions().clear();
 
@@ -217,7 +245,14 @@ void Slider::updateLayout(void)
 		        Alignment[MajorAxis] = static_cast<Real32>(i * getMajorTickSpacing())/static_cast<Real32>(getMaximum() - getMinimum());
 				getMajorTickPositions().push_back(
 					calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), (MajorTickBottomRight - MajorTickTopLeft), Alignment.y(), Alignment.x()));
-				getMajorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
+				if(getTicksOnRightBottom())
+                {
+                    getMajorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
+                }
+                else
+                {
+                    getMajorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToTickOffset() - MaxLength;
+                }
 			}
 		
 		endEditCP(SliderPtr(this), MajorTickPositionsFieldMask);
@@ -233,7 +268,14 @@ void Slider::updateLayout(void)
 		{
 			Alignment[MajorAxis] = static_cast<Real32>((*Itor).first - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum());
 			Pos = calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), Component::Ptr::dcast((*Itor).second)->getPreferredSize(), Alignment.y(), Alignment.x());
-			Pos[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToLabelOffset();
+            if(getTicksOnRightBottom())
+            {
+                Pos[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToLabelOffset();
+            }
+            else
+            {
+                Pos[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToLabelOffset() - Component::Ptr::dcast((*Itor).second)->getPreferredSize()[MinorAxis];
+            }
 
 			beginEditCP(Component::Ptr::dcast((*Itor).second), PositionFieldMask | SizeFieldMask);
 				Component::Ptr::dcast((*Itor).second)->setPosition(Pos);
@@ -258,16 +300,6 @@ void Slider::updateSliderTrack(void)
         MajorAxis = 0;
     }
     MinorAxis = (MajorAxis+1)%2;
-
-	//Update the Min Track
-	if(getDrawTrack() && getMinTrackDrawObject() != NullFC)
-	{
-	}
-
-	//Update the Max Track
-	if(getDrawTrack() && getMaxTrackDrawObject() != NullFC)
-	{
-	}
 
 	//Update the Knob position
 	if(getKnobButton() != NullFC && getRangeModel() != NULL)
@@ -299,12 +331,12 @@ Pnt2f Slider::getSliderTrackTopLeft(void) const
 	
     if(getOrientation() == VERTICAL_ORIENTATION)
     {
-		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), 0.0, 0.5);
+		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), 0.0, getAlignment());
 		Pos[1] += getTrackInset();
     }
     else
     {
-		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), 0.5, 0.0);
+		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), getAlignment(), 0.0);
 		Pos[0] += getTrackInset();
     }
 
@@ -552,7 +584,9 @@ void Slider::changed(BitVector whichField, UInt32 origin)
        (whichField & MinorTickSpacingFieldMask) ||
        (whichField & MajorTickSpacingFieldMask) ||
        (whichField & LabelMapFieldMask) ||
-       (whichField & LabelPrototypeFieldMask))
+       (whichField & LabelPrototypeFieldMask) ||
+       (whichField & AlignmentFieldMask) ||
+       (whichField & TicksOnRightBottomFieldMask))
     {
         updateLayout();
     }

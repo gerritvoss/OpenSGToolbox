@@ -87,6 +87,8 @@
 #include <OpenSG/OSGInt32Fields.h> // TrackInset type
 #include <OpenSG/OSGInt32Fields.h> // TrackToTickOffset type
 #include <OpenSG/OSGInt32Fields.h> // TrackToLabelOffset type
+#include <OpenSG/OSGReal32Fields.h> // Alignment type
+#include <OpenSG/OSGBoolFields.h> // TicksOnRightBottom type
 #include "Component/Scroll/OSGBoundedRangeModel.h" // RangeModel type
 
 #include "OSGSliderFields.h"
@@ -133,7 +135,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
         TrackInsetFieldId           = MinorTickDrawObjectsFieldId + 1,
         TrackToTickOffsetFieldId    = TrackInsetFieldId           + 1,
         TrackToLabelOffsetFieldId   = TrackToTickOffsetFieldId    + 1,
-        RangeModelFieldId           = TrackToLabelOffsetFieldId   + 1,
+        AlignmentFieldId            = TrackToLabelOffsetFieldId   + 1,
+        TicksOnRightBottomFieldId   = AlignmentFieldId            + 1,
+        RangeModelFieldId           = TicksOnRightBottomFieldId   + 1,
         NextFieldId                 = RangeModelFieldId           + 1
     };
 
@@ -159,6 +163,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     static const OSG::BitVector TrackInsetFieldMask;
     static const OSG::BitVector TrackToTickOffsetFieldMask;
     static const OSG::BitVector TrackToLabelOffsetFieldMask;
+    static const OSG::BitVector AlignmentFieldMask;
+    static const OSG::BitVector TicksOnRightBottomFieldMask;
     static const OSG::BitVector RangeModelFieldMask;
 
 
@@ -206,6 +212,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
            SFInt32             *getSFTrackInset     (void);
            SFInt32             *getSFTrackToTickOffset(void);
            SFInt32             *getSFTrackToLabelOffset(void);
+           SFReal32            *getSFAlignment      (void);
+           SFBool              *getSFTicksOnRightBottom(void);
            SFBoundedRangeModelPtr *getSFRangeModel     (void);
 
            ButtonPtr           &getKnobButton     (void);
@@ -244,6 +252,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
      const Int32               &getTrackToTickOffset(void) const;
            Int32               &getTrackToLabelOffset(void);
      const Int32               &getTrackToLabelOffset(void) const;
+           Real32              &getAlignment      (void);
+     const Real32              &getAlignment      (void) const;
+           bool                &getTicksOnRightBottom(void);
+     const bool                &getTicksOnRightBottom(void) const;
            BoundedRangeModelPtr &getRangeModel     (void);
      const BoundedRangeModelPtr &getRangeModel     (void) const;
            UIDrawObjectPtr     &getMajorTickDrawObjects(const UInt32 index);
@@ -276,6 +288,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
      void setTrackInset     ( const Int32 &value );
      void setTrackToTickOffset( const Int32 &value );
      void setTrackToLabelOffset( const Int32 &value );
+     void setAlignment      ( const Real32 &value );
+     void setTicksOnRightBottom( const bool &value );
      void setRangeModel     ( const BoundedRangeModelPtr &value );
 
     /*! \}                                                                 */
@@ -341,6 +355,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     SFInt32             _sfTrackInset;
     SFInt32             _sfTrackToTickOffset;
     SFInt32             _sfTrackToLabelOffset;
+    SFReal32            _sfAlignment;
+    SFBool              _sfTicksOnRightBottom;
     SFBoundedRangeModelPtr   _sfRangeModel;
 
     /*! \}                                                                 */

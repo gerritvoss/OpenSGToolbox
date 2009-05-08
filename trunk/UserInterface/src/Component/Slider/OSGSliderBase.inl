@@ -250,6 +250,20 @@ SFInt32 *SliderBase::getSFTrackToLabelOffset(void)
     return &_sfTrackToLabelOffset;
 }
 
+//! Get the Slider::_sfAlignment field.
+inline
+SFReal32 *SliderBase::getSFAlignment(void)
+{
+    return &_sfAlignment;
+}
+
+//! Get the Slider::_sfTicksOnRightBottom field.
+inline
+SFBool *SliderBase::getSFTicksOnRightBottom(void)
+{
+    return &_sfTicksOnRightBottom;
+}
+
 //! Get the Slider::_sfRangeModel field.
 inline
 SFBoundedRangeModelPtr *SliderBase::getSFRangeModel(void)
@@ -634,6 +648,48 @@ inline
 void SliderBase::setTrackToLabelOffset(const Int32 &value)
 {
     _sfTrackToLabelOffset.setValue(value);
+}
+
+//! Get the value of the Slider::_sfAlignment field.
+inline
+Real32 &SliderBase::getAlignment(void)
+{
+    return _sfAlignment.getValue();
+}
+
+//! Get the value of the Slider::_sfAlignment field.
+inline
+const Real32 &SliderBase::getAlignment(void) const
+{
+    return _sfAlignment.getValue();
+}
+
+//! Set the value of the Slider::_sfAlignment field.
+inline
+void SliderBase::setAlignment(const Real32 &value)
+{
+    _sfAlignment.setValue(value);
+}
+
+//! Get the value of the Slider::_sfTicksOnRightBottom field.
+inline
+bool &SliderBase::getTicksOnRightBottom(void)
+{
+    return _sfTicksOnRightBottom.getValue();
+}
+
+//! Get the value of the Slider::_sfTicksOnRightBottom field.
+inline
+const bool &SliderBase::getTicksOnRightBottom(void) const
+{
+    return _sfTicksOnRightBottom.getValue();
+}
+
+//! Set the value of the Slider::_sfTicksOnRightBottom field.
+inline
+void SliderBase::setTicksOnRightBottom(const bool &value)
+{
+    _sfTicksOnRightBottom.setValue(value);
 }
 
 //! Get the value of the Slider::_sfRangeModel field.

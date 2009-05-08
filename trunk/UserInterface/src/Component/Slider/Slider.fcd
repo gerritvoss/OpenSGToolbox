@@ -11,7 +11,7 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Spinner.
+A UI Slider.
 	<Field
 		name="KnobButton"
 		type="ButtonPtr"
@@ -207,6 +207,24 @@ A UI Spinner.
 		visibility="external"
 		access="public"
 		defaultValue="16"
+	>
+	</Field>
+	<Field
+		name="Alignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.5"
+	>
+	</Field>
+	<Field
+		name="TicksOnRightBottom"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
 	>
 	</Field>
 	<Field
