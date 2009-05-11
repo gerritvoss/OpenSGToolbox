@@ -202,7 +202,7 @@ int main(int argc, char **argv)
 			Vec3f(0.0,0.0f,1.0f),
 			Color4f(1.0,0.0,0.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
-			i, 
+			-1.0, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)
 			,0);

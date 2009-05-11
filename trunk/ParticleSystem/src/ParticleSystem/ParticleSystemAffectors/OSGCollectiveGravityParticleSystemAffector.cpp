@@ -124,8 +124,8 @@ void CollectiveGravityParticleSystemAffector::affect(ParticleSystemPtr System, c
 		{
 			Force.setValues(0.0,0.0,0.0);
 		}
-			Acceleration = 1.0f/getParticleMass() * Force;
-			System->setAcceleration(Acceleration,i);
+		Acceleration = 1.0f/getParticleMass() * Force;
+		System->setAcceleration(Acceleration,i);
 	}
 	//subtract 
 

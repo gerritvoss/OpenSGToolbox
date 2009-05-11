@@ -491,7 +491,7 @@ int main(int argc, char **argv)
 
 	//Rocket material
 	TextureChunkPtr RocketQuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage3 = ImageFileHandler::the().read("Data/fireworkmodel copy1.png");    
+    ImagePtr LoadedImage3 = ImageFileHandler::the().read("Data/Cloud.png");    
     beginEditCP(RocketQuadTextureChunk, TextureChunk::ImageFieldMask);
         RocketQuadTextureChunk->setImage(LoadedImage3);
         RocketQuadTextureChunk->setEnvMode(GL_MODULATE);
@@ -514,7 +514,7 @@ int main(int argc, char **argv)
 		
 		//circle material
 	TextureChunkPtr CircleQuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/fireworkscircle.png");    
+    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Cloud.png");    
     beginEditCP(CircleQuadTextureChunk, TextureChunk::ImageFieldMask);
         CircleQuadTextureChunk->setImage(LoadedImage);
         CircleQuadTextureChunk->setEnvMode(GL_MODULATE);
@@ -537,7 +537,7 @@ int main(int argc, char **argv)
 		
 		//star material
 	TextureChunkPtr StarQuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage1 = ImageFileHandler::the().read("Data/fireworkstar.png");    
+    ImagePtr LoadedImage1 = ImageFileHandler::the().read("Data/Cloud.png");    
     beginEditCP(StarQuadTextureChunk, TextureChunk::ImageFieldMask);
         StarQuadTextureChunk->setImage(LoadedImage1);
         StarQuadTextureChunk->setEnvMode(GL_MODULATE);
@@ -564,7 +564,7 @@ int main(int argc, char **argv)
 	ComStarBlendChunk->setDestFactor(GL_ONE);
 
 	TextureChunkPtr ComStarQuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage2 = ImageFileHandler::the().read("Data/fireworkcomstar.png");    
+    ImagePtr LoadedImage2 = ImageFileHandler::the().read("Data/Cloud.png");    
     beginEditCP(ComStarQuadTextureChunk, TextureChunk::ImageFieldMask);
         ComStarQuadTextureChunk->setImage(LoadedImage2);
         ComStarQuadTextureChunk->setEnvMode(GL_MODULATE);
@@ -587,7 +587,7 @@ int main(int argc, char **argv)
 
 	//exposion material
 	TextureChunkPtr ExplosionQuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage4 = ImageFileHandler::the().read("Data/fireworkstar.png");    
+    ImagePtr LoadedImage4 = ImageFileHandler::the().read("Data/Cloud.png");    
     beginEditCP(ExplosionQuadTextureChunk, TextureChunk::ImageFieldMask);
         ExplosionQuadTextureChunk->setImage(LoadedImage4);
         ExplosionQuadTextureChunk->setEnvMode(GL_MODULATE);
@@ -610,7 +610,7 @@ int main(int argc, char **argv)
 
 	//exposion2 material
 	TextureChunkPtr Explosion2QuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage5 = ImageFileHandler::the().read("Data/fireworkmodel copy.png");    
+    ImagePtr LoadedImage5 = ImageFileHandler::the().read("Data/Cloud.png");    
     beginEditCP(Explosion2QuadTextureChunk, TextureChunk::ImageFieldMask);
         Explosion2QuadTextureChunk->setImage(LoadedImage5);
         Explosion2QuadTextureChunk->setEnvMode(GL_MODULATE);

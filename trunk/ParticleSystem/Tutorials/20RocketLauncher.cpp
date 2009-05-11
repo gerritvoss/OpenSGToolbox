@@ -354,7 +354,7 @@ int main(int argc, char **argv)
 
 		//smoke material
 	TextureChunkPtr QuadTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/ooze.png");    
+    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");    
     beginEditCP(QuadTextureChunk, TextureChunk::ImageFieldMask);
         QuadTextureChunk->setImage(LoadedImage);
         QuadTextureChunk->setEnvMode(GL_MODULATE);
@@ -431,6 +431,10 @@ int main(int argc, char **argv)
 
 		//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
 	NodePtr RocketParticlePrototypeNode = SceneFileHandler::the().read("Data/rocket.obj");
+    if(RocketParticlePrototypeNode == NullFC)
+    {
+        RocketParticlePrototypeNode = makeTorus(.5, 2, 16, 16);
+    }
 	
     NodeParticleSystemCorePtr RocketParticleNodeCore = osg::NodeParticleSystemCore::create();
     beginEditCP(RocketParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);

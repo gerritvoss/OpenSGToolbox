@@ -186,6 +186,10 @@ int main(int argc, char **argv)
 
 	//NodePtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
 	NodePtr ParticlePrototypeNode = SceneFileHandler::the().read("Data/rocket.obj");
+    if(ParticlePrototypeNode == NullFC)
+    {
+        ParticlePrototypeNode = makeTorus(.5, 2, 16, 16);
+    }
 	//Particle System Node
     NodeParticleSystemCorePtr NodeParticleNodeCore = osg::NodeParticleSystemCore::create();
     beginEditCP(NodeParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
