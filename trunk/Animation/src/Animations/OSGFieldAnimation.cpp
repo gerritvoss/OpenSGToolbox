@@ -76,6 +76,7 @@ Real32 FieldAnimation::getLength(void) const
 {
     return getAnimator()->getLength();
 }
+
 void FieldAnimation::setAnimatedField(FieldContainerPtr TheContainer, const std::string& FieldName)
 {
 	if(TheContainer != NullFC)

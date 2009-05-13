@@ -76,10 +76,18 @@ bool osg::getInterpolationIndex(const osg::MFReal32& Keys, const osg::Real32& ti
       return true;
    }
    
-   Index = KeysIndex-1;
+   if(KeysIndex == 0)
+   {
+      Index = KeysIndex;
+      t = 0;
+   }
+   else
+   {
+      Index = KeysIndex-1;
+      //Normalize t
+      t = (Adjustedtime-Keys[Index])/(Keys[Index+1]-Keys[Index]);
+   }
    
-   //Normalize t
-   t = (Adjustedtime-Keys[Index])/(Keys[Index+1]-Keys[Index]);
    return false;
 }
 //Matrix Replace
