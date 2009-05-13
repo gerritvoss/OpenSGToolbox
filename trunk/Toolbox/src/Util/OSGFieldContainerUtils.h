@@ -35,6 +35,8 @@
 OSG_BEGIN_NAMESPACE
 
 FieldContainerPtr OSG_TOOLBOXLIB_DLLMAPPING getFieldContainer(const Char8 *szTypeName, const std::string &namestring);
+FieldContainerPtr OSG_TOOLBOXLIB_DLLMAPPING getFieldContainer(const FieldContainerType *szType, const std::string &namestring);
+FieldContainerPtr OSG_TOOLBOXLIB_DLLMAPPING getFieldContainer(const std::string &namestring);
 
 OSG_END_NAMESPACE
 

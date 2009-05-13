@@ -54,11 +54,13 @@
 #include "Attachments/OSGFilePathAttachment.h"
 
 #include "OSGXMLFCFileType.h"
+#include "Util/OSGFieldContainerUtils.h"
 
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <algorithm>
+#include <boost/lexical_cast.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -244,13 +246,28 @@ std::string XMLFCFileType::getName(void) const
 								IDLookupMap::const_iterator FCInfoSearch;
 								if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
 								{
-									FCId = TypeTraits<UInt32>::getFromString(FieldValue.c_str());
-									FCInfoSearch = TheIDLookupMap.find(FCId);
-									if(FCId == 0)
+									try
 									{
-										static_cast<SFFieldContainerPtr *>(TheField)->setValue(NullFC);
+										FCId = boost::lexical_cast<UInt32>(FieldValue.c_str());
+										if( TheIDLookupMap.find(FCId) == TheIDLookupMap.end())
+										{
+											FCId = 0;
+										}
 									}
-									else if(FCInfoSearch == TheIDLookupMap.end())
+									catch(boost::bad_lexical_cast&)
+									{
+										FieldContainerPtr TheFC(getFieldContainer(FieldValue));
+										if(TheFC != NullFC)
+										{
+											FCId = TheFC.getFieldContainerId();
+										}
+										else
+										{
+											FCId = 0;
+										}
+									}
+
+									if(FCId == 0)
 									{
 										SWARNING <<
 											"ERROR in XMLFCFileType::read(): Could not find Container referenced with Id: " << FCId <<
