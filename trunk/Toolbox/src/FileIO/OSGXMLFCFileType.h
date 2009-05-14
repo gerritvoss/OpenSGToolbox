@@ -95,9 +95,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
 	 typedef FCFileType Inherited;
 	 static       XMLFCFileType*  _the;
 
-     FCPtrStore getAllDependantFCs(FCPtrStore Containers, FCPtrStore IgnoreContainers, const FCTypeVector& IgnoreTypes) const;
-     bool isFieldAFieldContainerPtr(const Field* TheField) const;
-
 	 IDLookupMap createFieldContainers(xmlpp::xmlnodelist::iterator Begin, xmlpp::xmlnodelist::iterator End, xmlpp::xmlcontextptr Context,
 	                     const std::string& FileNameOrExtension) const;
 	 void printXMLError(const xmlpp::xmlerror& Error, xmlpp::xmlcontextptr Context,

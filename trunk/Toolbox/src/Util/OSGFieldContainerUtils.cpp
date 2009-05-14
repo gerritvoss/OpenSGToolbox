@@ -1,6 +1,7 @@
 #include "OSGFieldContainerUtils.h"
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/OSGAttachmentContainer.h>
+#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -14,6 +15,7 @@ FieldContainerPtr getFieldContainer(const FieldContainerType *szType, const std:
    if(szType == NULL)
    {
       std::cout << "The Field type is not defined." << std::endl;
+      return NullFC;
    }
 
    const std::vector<FieldContainerPtr>* FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
@@ -34,6 +36,102 @@ FieldContainerPtr getFieldContainer(const FieldContainerType *szType, const std:
    return NullFC;
 }
 
+bool isFieldAFieldContainerPtr(const Field* TheField)
+{
+	if(TheField != NULL)
+	{
+		std::string TypeName(TheField->getType().getCName());
+		return TypeName.size() >= 3 && TypeName.substr(TypeName.size()-3,3).compare("Ptr") == 0;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+std::set<FieldContainerPtr> getAllDependantFCs(const std::set<FieldContainerPtr>& Containers, const std::set<FieldContainerPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes)
+{
+	std::set<FieldContainerPtr> AllContainers(Containers);
+	std::set<FieldContainerPtr> NewIgnores(IgnoreContainers);
+
+	UInt32 NumFields;
+	const FieldDescription* TheFieldDesc(NULL);
+	Field* TheField(NULL);
+
+	//Loop through all of the given containers
+	std::set<FieldContainerPtr> ContainersDifference;
+	std::set_difference(AllContainers.begin(),AllContainers.end(), NewIgnores.begin(), NewIgnores.end(), std::inserter(ContainersDifference, ContainersDifference.begin()));
+	for(std::set<FieldContainerPtr>::iterator ContainersItor(ContainersDifference.begin()) ; ContainersItor != ContainersDifference.end() ; ++ContainersItor)
+	{
+		if(std::find(IgnoreTypes.begin(), IgnoreTypes.end(), (*ContainersItor)->getType().getId()) != IgnoreTypes.end())
+		{
+			continue;
+		}
+
+		//Loop through all of the fields of the Container
+		NumFields = (*ContainersItor)->getType().getNumFieldDescs();
+		for(UInt32 i(1) ; i<NumFields+1 ; ++i)
+		{
+			TheFieldDesc = (*ContainersItor)->getType().getFieldDescription(i);
+			TheField = (*ContainersItor)->getField(TheFieldDesc->getFieldId());
+
+			if(!TheFieldDesc->isInternal())
+			{
+				//Determine if the Field is a Field Container Ptr
+				if(isFieldAFieldContainerPtr(TheField))
+				{
+					//Determine the cardinality of the field
+					if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
+					{
+						//If the Ptr is NOT NullFC and is NOT in the Containers already
+						if(static_cast<SFFieldContainerPtr *>(TheField)->getValue() != NullFC &&
+							AllContainers.find(static_cast<SFFieldContainerPtr *>(TheField)->getValue()) == AllContainers.end() &&
+							NewIgnores.find(static_cast<SFFieldContainerPtr *>(TheField)->getValue()) == NewIgnores.end() && 
+							std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<SFFieldContainerPtr *>(TheField)->getValue()->getTypeId()) == IgnoreTypes.end())
+						{
+							std::set<FieldContainerPtr> TheContainer;
+							
+							TheContainer.insert(static_cast<SFFieldContainerPtr *>(TheField)->getValue());
+                            
+                            AllContainers.insert(static_cast<SFFieldContainerPtr *>(TheField)->getValue());
+							NewIgnores.insert(Containers.begin(), Containers.end());
+						
+                            std::set<FieldContainerPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
+
+							AllContainers.insert(NewContainers.begin(), NewContainers.end());
+							NewIgnores.insert(NewContainers.begin(), NewContainers.end());
+						}
+					}
+					else
+					{
+						for(UInt32 i(0) ; i<TheField->getSize() ; ++i)
+						{
+							if(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i) != NullFC &&
+								AllContainers.find(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i)) == AllContainers.end() &&
+								NewIgnores.find(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i)) == NewIgnores.end() && 
+								std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<MFFieldContainerPtr *>(TheField)->operator[](i)->getTypeId()) == IgnoreTypes.end())
+							{
+								std::set<FieldContainerPtr> TheContainer;
+								TheContainer.insert(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i));
+                            	
+                                AllContainers.insert(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i));
+								NewIgnores.insert(Containers.begin(), Containers.end());
+
+                                std::set<FieldContainerPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
+
+								AllContainers.insert(NewContainers.begin(), NewContainers.end());
+								NewIgnores.insert(NewContainers.begin(), NewContainers.end());
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return AllContainers;
+}
 
 FieldContainerPtr getFieldContainer(const std::string &namestring)
 {
@@ -51,6 +149,5 @@ FieldContainerPtr getFieldContainer(const std::string &namestring)
 
    return NullFC;
 }
-
 
 OSG_END_NAMESPACE

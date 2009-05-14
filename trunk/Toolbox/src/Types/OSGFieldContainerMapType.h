@@ -161,20 +161,8 @@ struct FieldDataTraits<FieldContainerMap> :
     // Binary conversion
     static UInt32 getBinSize(const FieldContainerMap &oObject)
     {
-        //FieldContainerMap::const_iterator mapIt  = oObject.begin();
-        //FieldContainerMap::const_iterator mapEnd = oObject.end();
 
         UInt32 uiNumPublicObjects = oObject.size();
-
-        /*while(mapIt != mapEnd)
-        {
-            //if(mapIt->second->getInternal().getValue() == false)
-            //{
-                ++uiNumPublicObjects;
-            //}
-
-            ++mapIt;
-        }*/
 
         return sizeof(UInt32) +  // Number of elements in the map 
                uiNumPublicObjects * (sizeof(Int32) + sizeof(UInt32));
@@ -200,33 +188,17 @@ struct FieldDataTraits<FieldContainerMap> :
         UInt32 id;
         UInt32 uiNumPublicObjects = pObject.size();
 
-        /*FieldContainerMap::const_iterator mapIt  = pObject.begin();
-        FieldContainerMap::const_iterator mapEnd = pObject.end();
-
-        while(mapIt != mapEnd)
-        {
-            if(mapIt->second->getInternal().getValue() == false)
-            {
-                ++uiNumPublicObjects;
-            }
-
-            ++mapIt;
-        }*/
-
-        pMem.putValue(uiNumPublicObjects);
+        pMem.putValue(uiNumPublicObjects);  //Number of Key/Value pairs
 
         FieldContainerMap::const_iterator mapIt  = pObject.begin();
         FieldContainerMap::const_iterator mapEnd = pObject.end();
 
         for(; mapIt != mapEnd; ++mapIt)
         {
-            //if(mapIt->second->getInternal().getValue() == false)
-            //{
-                id      = mapIt->second.getFieldContainerId();
-                
-                pMem.putValue(mapIt->first);
-                pMem.putValue(id);
-            //}
+            id = mapIt->second.getFieldContainerId();
+            
+            pMem.putValue(mapIt->first);  //Key
+            pMem.putValue(id); //Value = Field Container ID
         }
     }
 

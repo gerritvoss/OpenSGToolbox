@@ -31,12 +31,18 @@
 #include "OSGToolboxDef.h"
 
 #include <OpenSG/OSGFieldContainer.h>
+#include <set>
+#include <vector>
 
 OSG_BEGIN_NAMESPACE
 
 FieldContainerPtr OSG_TOOLBOXLIB_DLLMAPPING getFieldContainer(const Char8 *szTypeName, const std::string &namestring);
 FieldContainerPtr OSG_TOOLBOXLIB_DLLMAPPING getFieldContainer(const FieldContainerType *szType, const std::string &namestring);
 FieldContainerPtr OSG_TOOLBOXLIB_DLLMAPPING getFieldContainer(const std::string &namestring);
+
+bool OSG_TOOLBOXLIB_DLLMAPPING isFieldAFieldContainerPtr(const Field* TheField);
+
+std::set<FieldContainerPtr> OSG_TOOLBOXLIB_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerPtr>& Containers, const std::set<FieldContainerPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes);
 
 OSG_END_NAMESPACE
 
