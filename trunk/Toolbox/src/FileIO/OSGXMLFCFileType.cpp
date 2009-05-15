@@ -219,7 +219,7 @@ std::string XMLFCFileType::getName(void) const
 							{
 								if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
 								{
-								    FieldContainerPtr TheFC(getFieldContainer(FieldValue));
+								    FieldContainerPtr TheFC;
 									try
 									{
 								        UInt32 FCId;
@@ -262,7 +262,6 @@ std::string XMLFCFileType::getName(void) const
 									for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
 									{
 								        FieldContainerPtr TheFC;
-                                        TheFC = getFieldContainer(FieldValue);
 									    try
 									    {
 								            UInt32 FCId;
