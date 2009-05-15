@@ -104,7 +104,7 @@ const OSG::BitVector CaptionBase::MTInfluenceMask =
 /*! \var Real32          CaptionBase::_mfEndStamps
     
 */
-/*! \var UInt32          CaptionBase::_sfCurrentSegmentIndex
+/*! \var Int32           CaptionBase::_sfCurrentSegmentIndex
     
 */
 /*! \var SoundPtr        CaptionBase::_sfCaptionDialogSound
@@ -139,7 +139,7 @@ FieldDescription *CaptionBase::_desc[] =
                      EndStampsFieldId, EndStampsFieldMask,
                      false,
                      (FieldAccessMethod) &CaptionBase::getMFEndStamps),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFInt32::getClassType(), 
                      "CurrentSegmentIndex", 
                      CurrentSegmentIndexFieldId, CurrentSegmentIndexFieldMask,
                      false,
@@ -245,10 +245,10 @@ CaptionBase::CaptionBase(void) :
     _mfSegment                (), 
     _mfStartStamps            (), 
     _mfEndStamps              (), 
-    _sfCurrentSegmentIndex    (), 
+    _sfCurrentSegmentIndex    (Int32(-1)), 
     _sfCaptionDialogSound     (), 
     _sfParentContainer        (), 
-    _sfChildIndex             (), 
+    _sfChildIndex             (UInt32(0)), 
     _sfComponentGenerator     (), 
     Inherited() 
 {

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,27 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCAPTION_H_
-#define _OSGCAPTION_H_
+#ifndef _OSGDEFAULTCAPTIONCOMPONENTGENERATOR_H_
+#define _OSGDEFAULTCAPTIONCOMPONENTGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGCaptionBase.h"
+#include "OSGDefaultCaptionComponentGeneratorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Caption class. See \ref 
-           PageGameCaption for a description.
+/*! \brief DefaultCaptionComponentGenerator class. See \ref 
+           PageUserInterfaceDefaultCaptionComponentGenerator for a description.
 */
 
-class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultCaptionComponentGenerator : public DefaultCaptionComponentGeneratorBase
 {
   private:
 
-    typedef CaptionBase Inherited;
+    typedef DefaultCaptionComponentGeneratorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -73,10 +73,6 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    void captionSegment(std::string s, Real32 start, Real32 end);
-    void setCaptionDialog(SoundPtr sound);
-    bool update(double timeStamp);
-
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
@@ -84,21 +80,21 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in CaptionBase.
+    // Variables should all be in DefaultCaptionComponentGeneratorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Caption(void);
-    Caption(const Caption &source);
+    DefaultCaptionComponentGenerator(void);
+    DefaultCaptionComponentGenerator(const DefaultCaptionComponentGenerator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Caption(void); 
+    virtual ~DefaultCaptionComponentGenerator(void); 
 
     /*! \}                                                                 */
     
@@ -106,22 +102,22 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
   private:
 
     friend class FieldContainer;
-    friend class CaptionBase;
+    friend class DefaultCaptionComponentGeneratorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Caption &source);
+    void operator =(const DefaultCaptionComponentGenerator &source);
 };
 
-typedef Caption *CaptionP;
+typedef DefaultCaptionComponentGenerator *DefaultCaptionComponentGeneratorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGCaptionBase.inl"
-#include "OSGCaption.inl"
+#include "OSGDefaultCaptionComponentGeneratorBase.inl"
+#include "OSGDefaultCaptionComponentGenerator.inl"
 
-#define OSGCAPTION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDEFAULTCAPTIONCOMPONENTGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGCAPTION_H_ */
+#endif /* _OSGDEFAULTCAPTIONCOMPONENTGENERATOR_H_ */

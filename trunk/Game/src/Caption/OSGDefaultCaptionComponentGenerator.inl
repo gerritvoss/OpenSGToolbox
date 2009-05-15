@@ -1,12 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Game                             *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,31 +24,25 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCAPTIONLISTENER_H_
-#define _OSGCAPTIONLISTENER_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
-
-#include <OpenSG/Input/OSGEventListener.h>
-#include "OSGCaptionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_GAMELIB_DLLMAPPING CaptionListener : public EventListener
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void segmentActivated(const CaptionEvent& e) = 0;
-};
-
-typedef CaptionListener* CaptionListenerPtr;
-
 OSG_END_NAMESPACE
 
-#endif /* _OSGCAPTIONLISTENER_H_ */
+#define OSGDEFAULTCAPTIONCOMPONENTGENERATOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+

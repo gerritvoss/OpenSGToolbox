@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultCaptionComponentGenerator"
+	parent="CaptionComponentGenerator"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Default Caption ComponentGenerator.
+	<Field
+		name="CaptionSegmentPrototype"
+		type="LabelPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Component/Text/OSGLabelFields.h"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

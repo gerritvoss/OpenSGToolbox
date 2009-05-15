@@ -119,7 +119,7 @@ MFReal32 *CaptionBase::getMFEndStamps(void)
 
 //! Get the Caption::_sfCurrentSegmentIndex field.
 inline
-SFUInt32 *CaptionBase::getSFCurrentSegmentIndex(void)
+SFInt32 *CaptionBase::getSFCurrentSegmentIndex(void)
 {
     return &_sfCurrentSegmentIndex;
 }
@@ -155,21 +155,21 @@ SFComponentGeneratorPtr *CaptionBase::getSFComponentGenerator(void)
 
 //! Get the value of the Caption::_sfCurrentSegmentIndex field.
 inline
-UInt32 &CaptionBase::getCurrentSegmentIndex(void)
+Int32 &CaptionBase::getCurrentSegmentIndex(void)
 {
     return _sfCurrentSegmentIndex.getValue();
 }
 
 //! Get the value of the Caption::_sfCurrentSegmentIndex field.
 inline
-const UInt32 &CaptionBase::getCurrentSegmentIndex(void) const
+const Int32 &CaptionBase::getCurrentSegmentIndex(void) const
 {
     return _sfCurrentSegmentIndex.getValue();
 }
 
 //! Set the value of the Caption::_sfCurrentSegmentIndex field.
 inline
-void CaptionBase::setCurrentSegmentIndex(const UInt32 &value)
+void CaptionBase::setCurrentSegmentIndex(const Int32 &value)
 {
     _sfCurrentSegmentIndex.setValue(value);
 }

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,11 +43,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEGAMELIB
+#define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGCaption.h"
+#include "OSGCaptionComponentGenerator.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::Caption
-A Minimap. 	
+/*! \class osg::CaptionComponentGenerator
+A UI Tree ComponentGenerator. 
 */
 
 /***************************************************************************\
@@ -67,7 +67,7 @@ A Minimap.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Caption::initMethod (void)
+void CaptionComponentGenerator::initMethod (void)
 {
 }
 
@@ -76,67 +76,37 @@ void Caption::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Caption::captionSegment(std::string s, Real32 start, Real32 end)
-{
-    getSegment().push_back(s);
-    getStartStamps().push_back(start);
-    getEndStamps().push_back(end);
-}
-
-void Caption::setCaptionDialog(SoundPtr sound)
-{
-
-}
-
-bool Caption::update(double timeStamp)
-{
-    if(getCurrentSegmentIndex() == -1)
-    {
-        if(getStartStamps(0) <= timeStamp)
-        {
-            setCurrentSegmentIndex(0);
-            return true;
-        }
-    }
-    else if(getEndStamps(getCurrentSegmentIndex()) <= timeStamp)
-    {
-        setCurrentSegmentIndex(getCurrentSegmentIndex()+1);
-        return true;
-    }
-    return false;
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-Caption::Caption(void) :
+CaptionComponentGenerator::CaptionComponentGenerator(void) :
     Inherited()
 {
 }
 
-Caption::Caption(const Caption &source) :
+CaptionComponentGenerator::CaptionComponentGenerator(const CaptionComponentGenerator &source) :
     Inherited(source)
 {
 }
 
-Caption::~Caption(void)
+CaptionComponentGenerator::~CaptionComponentGenerator(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Caption::changed(BitVector whichField, UInt32 origin)
+void CaptionComponentGenerator::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void Caption::dump(      UInt32    , 
+void CaptionComponentGenerator::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump Caption NI" << std::endl;
+    SLOG << "Dump CaptionComponentGenerator NI" << std::endl;
 }
 
 
@@ -154,10 +124,10 @@ void Caption::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCAPTIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCAPTIONBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGCAPTIONCOMPONENTGENERATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGCAPTIONCOMPONENTGENERATORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGCAPTIONFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGCAPTIONCOMPONENTGENERATORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

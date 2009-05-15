@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib OSGDynamicsD.lib OSGUserInterfaceD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib OSGDynamicsD.lib OSGUserInterfaceD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib OSGSoundD.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib OSGDynamics.lib OSGUserInterface.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib OSGDynamics.lib OSGUserInterface.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib OSGSound.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -621,6 +621,34 @@
 			<Filter
 				Name="Caption"
 				>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaption.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaption.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaption.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Caption\OSGCaptionFields.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>
