@@ -20,6 +20,7 @@
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
+#include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
 
 #include <OpenSG/Dynamics/OSGDataConverter.h>
 #include <OpenSG/Dynamics/OSGCompoundFunction.h>
@@ -195,16 +196,24 @@ int main(int argc, char **argv)
 			5, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)
-			,0);
+			,0); 
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
-	//Particle System Drawer
+	//Particle System Drawer (Line)
 	LineParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
 	beginEditCP(ExampleParticleSystemDrawer);
 		ExampleParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_VELOCITY);
 		ExampleParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_STATIC);
 		ExampleParticleSystemDrawer->setLineLength(0.1);
 	endEditCP(ExampleParticleSystemDrawer);
+
+	//Particle System Drawer (Quad)
+	QuadParticleSystemDrawerPtr ExampleQuadSystemDrawer = osg::QuadParticleSystemDrawer::create();
+	beginEditCP(ExampleQuadSystemDrawer);
+		ExampleQuadSystemDrawer->setQuadSizeScaling(Vec2f(1.0f,8.0f));
+		ExampleQuadSystemDrawer->setNormal(Vec3f(0.0f,1.0f,0.0f));
+	endEditCP(ExampleQuadSystemDrawer);
+
 		
 
 	//Create a Rate Particle Generator
@@ -228,7 +237,7 @@ int main(int argc, char **argv)
     ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExampleParticleSystemDrawer);
+		ParticleNodeCore->setDrawer(ExampleQuadSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
     
@@ -308,7 +317,7 @@ FunctionPtr createLifespanDistribution(void)
 
 FunctionPtr createVelocityDistribution(void)
 {
-	 //Sphere Distribution
+	 //Line Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
  		TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,100.0));

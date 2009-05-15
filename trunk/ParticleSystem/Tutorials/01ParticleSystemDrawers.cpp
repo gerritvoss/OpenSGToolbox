@@ -131,6 +131,7 @@ class TutorialMouseMotionListener : public MouseMotionListener
             mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
     }
 };
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -151,8 +152,10 @@ int main(int argc, char **argv)
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+	//Add Key Listener
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+	//Add Mouse Listeners
     TutorialMouseListener TheTutorialMouseListener;
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
     TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
@@ -175,9 +178,12 @@ int main(int argc, char **argv)
 		PSPointChunk->setSize(5.0f);
 		PSPointChunk->setSmooth(true);
 	endEditCP(PSPointChunk);
+
 	BlendChunkPtr PSBlendChunk = BlendChunk::create();
-	PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
-	PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+	beginEditCP(PSBlendChunk);
+		PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+		PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+	endEditCP(PSBlendChunk);
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
@@ -212,12 +218,12 @@ int main(int argc, char **argv)
 	//Particle System Drawer
 		//Point
 	ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
-    ExamplePointParticleSystemDrawer->setForcePerParticleSizing(true);
+    //ExamplePointParticleSystemDrawer->setForcePerParticleSizing(true);
 
 		//Line
 	ExampleLineParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
 	beginEditCP(ExampleLineParticleSystemDrawer);
-	ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
+		ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
 		ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
 	endEditCP(ExampleLineParticleSystemDrawer);
 		//Quad

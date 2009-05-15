@@ -369,7 +369,7 @@ FunctionPtr createPositionDistribution(void)
       TheCylinderDistribution->setHeight(400.0);
       TheCylinderDistribution->setNormal(Vec3f(0.0,0.0,1.0));
       TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::VOLUME);
-    endEditCP(TheCylinderDistribution);
+    endEditCP(TheCylinderDistribution); 
     
     //Tri Distribution
     TriDistribution3DPtr TheTriDistribution = TriDistribution3D::create();

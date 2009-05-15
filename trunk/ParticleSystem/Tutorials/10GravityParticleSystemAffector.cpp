@@ -25,6 +25,8 @@
 
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
+#include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
+
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -153,7 +155,7 @@ int main(int argc, char **argv)
 	//Particle System Material
 	PointChunkPtr PSPointChunk = PointChunk::create();
 	beginEditCP(PSPointChunk);
-		PSPointChunk->setSize(5.0f);
+		PSPointChunk->setSize(20.0f);
 		PSPointChunk->setSmooth(true);
 	endEditCP(PSPointChunk);
 	BlendChunkPtr PSBlendChunk = BlendChunk::create();
@@ -296,7 +298,17 @@ FunctionPtr createPositionDistribution(void)
       TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::SURFACE);
     endEditCP(TheCylinderDistribution);
 
-    return TheCylinderDistribution;
+	//Sphere Distribution
+	SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+	beginEditCP(TheSphereDistribution);
+		TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+		TheSphereDistribution->setInnerRadius(60.0);
+		TheSphereDistribution->setOuterRadius(60.0);
+		TheSphereDistribution->setMinTheta(-3.14159);
+		TheSphereDistribution->setMaxTheta(3.14159);
+	endEditCP(TheSphereDistribution);
+
+    return TheSphereDistribution;
 }
 
 FunctionPtr createLifespanDistribution(void)

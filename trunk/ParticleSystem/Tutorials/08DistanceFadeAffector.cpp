@@ -236,12 +236,12 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-	//Create an AgeFadeAffector
+	//Create an DistanceFadeAffector
 	DistanceFadeParticleAffectorPtr ExampleDistanceFadeParticleAffector = osg::DistanceFadeParticleAffector::create();
 	beginEditCP(ExampleDistanceFadeParticleAffector, DistanceFadeParticleAffector::DistanceFadeStartFieldMask | DistanceFadeParticleAffector::ParticleSystemNodeFieldMask | DistanceFadeParticleAffector::DistanceFadeEndFieldMask | DistanceFadeParticleAffector::FadeEndAlphaFieldMask | DistanceFadeParticleAffector::FadeStartAlphaFieldMask | DistanceFadeParticleAffector::DistanceFromSourceFieldMask | DistanceFadeParticleAffector::DistanceFromCameraFieldMask);
 	//	ExampleDistanceFadeParticleAffector->setFadeInTime(1.0f);
-		ExampleDistanceFadeParticleAffector->setDistanceFadeStart(500.0f);
-		ExampleDistanceFadeParticleAffector->setDistanceFadeEnd(1000.0f);
+		ExampleDistanceFadeParticleAffector->setDistanceFadeStart(200.0f);
+		ExampleDistanceFadeParticleAffector->setDistanceFadeEnd(500.0f);
 		ExampleDistanceFadeParticleAffector->setFadeStartAlpha(1.0f);
 		ExampleDistanceFadeParticleAffector->setFadeEndAlpha(0.0f);
 		ExampleDistanceFadeParticleAffector->setParticleSystemNode(ParticleNode);

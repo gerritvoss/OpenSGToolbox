@@ -202,7 +202,7 @@ int main(int argc, char **argv)
 	//Particle System Material
 	PointChunkPtr PSPointChunk = PointChunk::create();
 	beginEditCP(PSPointChunk);
-		PSPointChunk->setSize(5.0f);
+		PSPointChunk->setSize(12.0f);
 		PSPointChunk->setSmooth(true);
 	endEditCP(PSPointChunk);
 	BlendChunkPtr PSBlendChunk = BlendChunk::create();

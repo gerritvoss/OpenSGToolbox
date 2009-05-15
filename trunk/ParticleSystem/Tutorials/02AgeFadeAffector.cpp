@@ -203,7 +203,7 @@ int main(int argc, char **argv)
 		ExampleParticleSystem->addParticle(
 			PositionReturnValue,
 			Vec3f(0.0f,0.0f,1.0f),
-			Color4f(0.0,1.0,0.0,0.0), 
+			Color4f(0.0,1.0,0.8,0.0), 
 			Vec3f(1.0,1.0,1.0), 
 			LifespanReturnValue, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
@@ -219,13 +219,14 @@ int main(int argc, char **argv)
 	//Create an AgeFadeAffector
 	AgeFadeParticleAffectorPtr ExampleAgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
 	beginEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
-		ExampleAgeFadeParticleAffector->setFadeInTime(2.0f);
-		ExampleAgeFadeParticleAffector->setFadeOutTime(1.5f);
+		ExampleAgeFadeParticleAffector->setFadeInTime(4.0f);
+		ExampleAgeFadeParticleAffector->setFadeOutTime(2.5f);
 		ExampleAgeFadeParticleAffector->setStartAlpha(0.0f);
 		ExampleAgeFadeParticleAffector->setFadeToAlpha(1.0f);
 		ExampleAgeFadeParticleAffector->setEndAlpha(0.0f);	
 	endEditCP(ExampleAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
-
+	
+	//Add age affector to system
 	beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
 		ExampleParticleSystem->getAffectors().push_back(ExampleAgeFadeParticleAffector);
 	endEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);

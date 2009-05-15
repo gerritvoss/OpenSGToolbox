@@ -307,7 +307,7 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::SizeFunctionFieldMask);
 		ExampleBurstGenerator->setPositionFunction(createPositionDistribution());
 		ExampleBurstGenerator->setLifespanFunction(createLifespanDistribution());
-		ExampleBurstGenerator->setBurstAmount(6.0);
+		ExampleBurstGenerator->setBurstAmount(10.0);
 		ExampleBurstGenerator->setVelocityFunction(createVelocityDistribution());
 		//ExampleBurstGenerator->setAccelerationFunction(createAccelerationDistribution());
 		ExampleBurstGenerator->setSizeFunction(createSizeDistribution());
@@ -412,11 +412,11 @@ FunctionPtr createVelocityDistribution(void)
     beginEditCP(TheSphereDistribution);
       TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
       TheSphereDistribution->setInnerRadius(3.0);
-      TheSphereDistribution->setOuterRadius(10.0);
+      TheSphereDistribution->setOuterRadius(6.0);
       TheSphereDistribution->setMinTheta(-3.141950);
       TheSphereDistribution->setMaxTheta(3.141950);
       TheSphereDistribution->setMinZ(0.0);
-      TheSphereDistribution->setMaxZ(1.0);
+      TheSphereDistribution->setMaxZ(0.0);
 	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
     endEditCP(TheSphereDistribution);
 
@@ -453,8 +453,8 @@ FunctionPtr createAccelerationDistribution(void)
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
-      TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,-3.0));
-	  TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,-3.0));
+      TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,0.0));
+	  TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,0.0));
     endEditCP(TheLineDistribution);
 
 	DataConverterPtr TheVec3fConverter = DataConverter::create();

@@ -246,9 +246,16 @@ int main(int argc, char **argv)
 	//Particle System Material
 	TextureChunkPtr QuadTextureChunk = TextureChunk::create();
     ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Cloud.png");    
-    beginEditCP(QuadTextureChunk, TextureChunk::ImageFieldMask);
+    beginEditCP(QuadTextureChunk, TextureChunk::ImageFieldMask | TextureChunk::EnvModeFieldMask);
         QuadTextureChunk->setImage(LoadedImage);
-    endEditCP(QuadTextureChunk, TextureChunk::ImageFieldMask);
+		QuadTextureChunk->setEnvMode(GL_MODULATE);
+    endEditCP(QuadTextureChunk, TextureChunk::ImageFieldMask | TextureChunk::EnvModeFieldMask);
+
+	BlendChunkPtr PSBlendChunk = BlendChunk::create();
+	beginEditCP(PSBlendChunk);
+		PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+		PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+	endEditCP(PSBlendChunk);
 
 	MaterialChunkPtr PSMaterialChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunk);
@@ -262,6 +269,7 @@ int main(int argc, char **argv)
 	beginEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 		PSMaterial->addChunk(QuadTextureChunk);
 		PSMaterial->addChunk(PSMaterialChunk);
+		PSMaterial->addChunk(PSBlendChunk);
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
 
