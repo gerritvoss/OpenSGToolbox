@@ -79,39 +79,19 @@ void CollectiveGravityParticleSystemAffector::initMethod (void)
 
 void CollectiveGravityParticleSystemAffector::affect(ParticleSystemPtr System, const Time& elps)
 {
-    //TODO: Implement
 	Vec3f Force,Ftotal,LineSegment,Acceleration;
 	Real32 DistanceSquared;
 	Pnt3f CenterMass, TempCenterMass;
-	/*for(int i(0); i < System->getNumParticles(); ++i)
-	{
-		Ftotal.setValues(0.0,0.0,0.0);
-		for(int n(0);  n < System->getNumParticles();++n)
-		{
-			if(i!= n)
-			{
-				LineSegment = System->getPosition(n) - System->getPosition(i);
-				DistanceSquared = System->getPosition(n).dist2(System->getPosition(i));
-				if(DistanceSquared > 0)
-				{
-					Force = (getGravitationalConstant() * getParticleMass() * getParticleMass() * LineSegment)*(1/DistanceSquared);
-					Ftotal = Ftotal + Force;
-				}
-			}
-		}
-		Acceleration = 1.0f/getParticleMass() * Ftotal;
-		System->setAcceleration(Acceleration,i);
-	}*/
 
 	//calculate Center Mass of all particles
-	for(int i(0); i < System->getNumParticles(); ++i)
+	for(UInt32 i(0); i < System->getNumParticles(); ++i)
 	{
 		CenterMass = CenterMass + System->getPosition(i);
 	}
 
 	CenterMass*=1.0/System->getNumParticles();
 	
-	for(int i(0); i < System->getNumParticles(); ++i)
+	for(UInt32 i(0); i < System->getNumParticles(); ++i)
 	{
 		TempCenterMass = CenterMass - Vec3f(System->getPosition(i) * (1.0/System->getNumParticles()));
 		DistanceSquared = System->getPosition(i).dist2(TempCenterMass);

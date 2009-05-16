@@ -75,7 +75,11 @@ void BlendGeometry::initMethod (void)
 {
     DrawAction::registerEnterDefault(getClassType(),
         osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
-              CNodePtr, Action *>(&BlendGeometry::drawActionHandler));
+              CNodePtr, Action *>(&BlendGeometry::drawActionEnterHandler));
+
+    DrawAction::registerLeaveDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
+              CNodePtr, Action *>(&BlendGeometry::drawActionLeaveHandler));
 
     IntersectAction::registerEnterDefault(getClassType(),
         osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
@@ -83,7 +87,11 @@ void BlendGeometry::initMethod (void)
 
     RenderAction::registerEnterDefault(getClassType(),
         osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
-              CNodePtr, Action *>(&BlendGeometry::renderActionHandler));
+              CNodePtr, Action *>(&BlendGeometry::renderActionEnterHandler));
+
+    RenderAction::registerLeaveDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, BlendGeometryPtr,
+              CNodePtr, Action *>(&BlendGeometry::renderActionLeaveHandler));
 }
 
 BlendGeometryPtr BlendGeometry::create (const GeometryPtr Geo)

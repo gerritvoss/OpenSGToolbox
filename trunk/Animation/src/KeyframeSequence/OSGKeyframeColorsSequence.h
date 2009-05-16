@@ -50,7 +50,6 @@
 #include <OpenSG/OSGMFBaseTypes.h>
 #include <OpenSG/OSGSFBaseTypes.h>
 #include <OpenSG/OSGColor.h>
-#include <OpenSG/Toolbox/OSGColorOperations.h>
 
 OSG_BEGIN_NAMESPACE
 

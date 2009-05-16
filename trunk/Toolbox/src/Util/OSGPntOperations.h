@@ -31,19 +31,19 @@
 
 OSG_BEGIN_NAMESPACE
 
-template<class ValueTypeT, class StorageInterfaceT>
-osg::PointInterface<ValueTypeT, StorageInterfaceT> operator+(const osg::PointInterface<ValueTypeT, StorageInterfaceT>& lValue, const osg::PointInterface<ValueTypeT, StorageInterfaceT>& rValue)
+template<class ValueTypeT, UInt32 SizeI>
+osg::Point<ValueTypeT, SizeI> operator+(const osg::Point<ValueTypeT, SizeI>& lValue, const osg::Point<ValueTypeT, SizeI>& rValue)
 {
-   osg::PointInterface<ValueTypeT, StorageInterfaceT> Result(lValue);
-   for(osg::UInt8 i(0) ; i<StorageInterfaceT::_iSize ; ++i)
+   osg::Point<ValueTypeT, SizeI> Result(lValue);
+   for(osg::UInt8 i(0) ; i<SizeI ; ++i)
    {
       Result[i] += rValue[i];
    }
    return Result;
 }
 
-template<class ScalarValueTypeT, class ValueTypeT, class StorageInterfaceT>
-osg::PointInterface<ValueTypeT, StorageInterfaceT> operator*(const ScalarValueTypeT& lValue, const osg::PointInterface<ValueTypeT, StorageInterfaceT>& rValue)
+template<class ScalarValueTypeT, class ValueTypeT, UInt32 SizeI>
+osg::Point<ValueTypeT, SizeI> operator*(const ScalarValueTypeT& lValue, const osg::Point<ValueTypeT, SizeI>& rValue)
 {
    return rValue * static_cast<ValueTypeT>(lValue);
 }

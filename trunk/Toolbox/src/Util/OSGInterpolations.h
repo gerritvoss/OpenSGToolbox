@@ -39,7 +39,6 @@
 #include <OpenSG/OSGQuaternion.h>
 
 #include "OSGQuatOperations.h"
-#include "OSGPntOperations.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -149,16 +148,16 @@ FieldTypeT spline( const std::vector<FieldTypeT>& V, const std::vector<Real32>& 
 {
    osg::UInt8 i(1);
    //Set up the Blend Function
-   osg::VectorInterface<Real32, VecStorage4<Real32> > S1(s*s*s, s*s, s, (Real32)1.0);
+   osg::Vector<Real32, 4 > S1(s*s*s, s*s, s, (Real32)1.0);
    
    //std::cout << "S: " << S1 << std::endl;
    
-   osg::VectorInterface<Real32, VecStorage4<Real32> > H1( (Real32)2.0, (Real32)-3.0, (Real32)0.0, (Real32)1.0);
-   osg::VectorInterface<Real32, VecStorage4<Real32> > H2( (Real32)-2.0,(Real32)3.0,  (Real32)0.0, (Real32)0.0);
-   osg::VectorInterface<Real32, VecStorage4<Real32> > H3( (Real32)1.0, (Real32)-2.0, (Real32)1.0, (Real32)0.0);
-   osg::VectorInterface<Real32, VecStorage4<Real32> > H4( (Real32)1.0, (Real32)-1.0, (Real32)0.0, (Real32)0.0);
+   osg::Vector<Real32, 4 > H1( (Real32)2.0, (Real32)-3.0, (Real32)0.0, (Real32)1.0);
+   osg::Vector<Real32, 4 > H2( (Real32)-2.0,(Real32)3.0,  (Real32)0.0, (Real32)0.0);
+   osg::Vector<Real32, 4 > H3( (Real32)1.0, (Real32)-2.0, (Real32)1.0, (Real32)0.0);
+   osg::Vector<Real32, 4 > H4( (Real32)1.0, (Real32)-1.0, (Real32)0.0, (Real32)0.0);
    
-   osg::VectorInterface<Real32, VecStorage4<Real32> > S2;
+   osg::Vector<Real32, 4 > S2;
    S2[0] = S1.dot(H1);
    S2[1] = S1.dot(H2);
    S2[2] = S1.dot(H3);
@@ -193,11 +192,11 @@ FieldTypeT spline( const std::vector<FieldTypeT>& V, const std::vector<Real32>& 
    }
    //std::cout << "F+i+1: " << Fposiplus1 << std::endl;
          
-   //Return the sline
-   return S2[0] * V[i]
-         + S2[1] * V[i+1]
-         + S2[2] * (Fnegi * Ti)
-         + S2[3] * (Fposiplus1 * Tiplus1);
+   //Return the spline
+   return V[i] * S2[0]
+         + V[i+1] * S2[1]
+         + (Ti * Fnegi) * S2[2]
+         + (Tiplus1 * Fposiplus1) * S2[3];
 }
 
 template <class FieldTypeT>

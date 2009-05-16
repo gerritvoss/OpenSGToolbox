@@ -608,7 +608,7 @@ const Pnt3f& ParticleSystem::getSecPosition(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalSecPositions()[0];
+		return getInternalSecPositions()[0];
 	}
 }
 
@@ -620,7 +620,7 @@ const Vec3f& ParticleSystem::getNormal(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalNormals()[0];
+		return getInternalNormals()[0];
 	}
 }
 
@@ -632,7 +632,7 @@ const Color4f& ParticleSystem::getColor(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalColors()[0];
+		return getInternalColors()[0];
 	}
 }
 
@@ -644,7 +644,7 @@ const Vec3f& ParticleSystem::getSize(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalSizes()[0];
+		return getInternalSizes()[0];
 	}
 }
 
@@ -656,7 +656,7 @@ Real32 ParticleSystem::getLifespan(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalLifespans()[0];
+		return getInternalLifespans()[0];
 	}
 }
 
@@ -668,7 +668,7 @@ Real32 ParticleSystem::getAge(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalAges()[0];
+		return getInternalAges()[0];
 	}
 }
 
@@ -680,7 +680,7 @@ const Vec3f& ParticleSystem::getVelocity(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalVelocities()[0];
+		return getInternalVelocities()[0];
 	}
 }
 
@@ -692,7 +692,7 @@ const Vec3f& ParticleSystem::getSecVelocity(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalSecVelocities()[0];
+		return getInternalSecVelocities()[0];
 	}
 }
 
@@ -704,7 +704,7 @@ const Vec3f& ParticleSystem::getAcceleration(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalAccelerations()[0];
+		return getInternalAccelerations()[0];
 	}
 }
 
@@ -716,7 +716,7 @@ UInt64 ParticleSystem::getProperty(const UInt32& Index) const
 	}
 	else
 	{
-		getInternalProperties()[0];
+		return getInternalProperties()[0];
 	}
 }
 void ParticleSystem::setSecPosition(const Pnt3f& SecPosition, const UInt32& Index)

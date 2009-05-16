@@ -139,7 +139,6 @@ void LineParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & v
     volume.setEmpty();
 
     Vec3f p1, p2;
-    Real32 s;
 
     for(UInt32 i = 0; i < NumParticles; i++)
     {

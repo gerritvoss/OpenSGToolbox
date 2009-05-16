@@ -264,18 +264,18 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    // Create the DefaultBoundedRangeModel and 
+    // Create the DefaultBoundedRangeModelPtr and 
     // set its values
-    DefaultBoundedRangeModel XBlendGeometryRangeModel;
-    XBlendGeometryRangeModel.setMinimum(-200);
-    XBlendGeometryRangeModel.setMaximum(200);
-    XBlendGeometryRangeModel.setValue(0);
-    XBlendGeometryRangeModel.setExtent(0);
+    DefaultBoundedRangeModelPtr XBlendGeometryRangeModel = DefaultBoundedRangeModel::create();
+    XBlendGeometryRangeModel->setMinimum(-200);
+    XBlendGeometryRangeModel->setMaximum(200);
+    XBlendGeometryRangeModel->setValue(0);
+    XBlendGeometryRangeModel->setExtent(0);
     
     //Create the slider
     LabelPtr TempLabel;
     SliderPtr XBlendGeometrySlider = Slider::create();
-    beginEditCP(XBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    beginEditCP(XBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
         TempLabel = Label::Ptr::dcast(XBlendGeometrySlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("-2.0"); endEditCP(TempLabel, Label::TextFieldMask);
         XBlendGeometrySlider->getLabelMap()[-200] = TempLabel;
@@ -304,18 +304,18 @@ int main(int argc, char **argv)
         XBlendGeometrySlider->setOrientation(Slider::VERTICAL_ORIENTATION);
         XBlendGeometrySlider->setInverted(true);
         XBlendGeometrySlider->setDrawLabels(true);
-    endEditCP(XBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
-    XBlendGeometrySlider->setModel(&XBlendGeometryRangeModel);
+        XBlendGeometrySlider->setRangeModel(XBlendGeometryRangeModel);
+    endEditCP(XBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
     
-    DefaultBoundedRangeModel YBlendGeometryRangeModel;
-    YBlendGeometryRangeModel.setMinimum(-200);
-    YBlendGeometryRangeModel.setMaximum(200);
-    YBlendGeometryRangeModel.setValue(0);
-    YBlendGeometryRangeModel.setExtent(0);
+    DefaultBoundedRangeModelPtr YBlendGeometryRangeModel = DefaultBoundedRangeModel::create();
+    YBlendGeometryRangeModel->setMinimum(-200);
+    YBlendGeometryRangeModel->setMaximum(200);
+    YBlendGeometryRangeModel->setValue(0);
+    YBlendGeometryRangeModel->setExtent(0);
     
     //Create the slider
     SliderPtr YBlendGeometrySlider = Slider::create();
-    beginEditCP(YBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    beginEditCP(YBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
         TempLabel = Label::Ptr::dcast(YBlendGeometrySlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("-2.0"); endEditCP(TempLabel, Label::TextFieldMask);
         YBlendGeometrySlider->getLabelMap()[-200] = TempLabel;
@@ -344,18 +344,18 @@ int main(int argc, char **argv)
         YBlendGeometrySlider->setOrientation(Slider::VERTICAL_ORIENTATION);
         YBlendGeometrySlider->setInverted(true);
         YBlendGeometrySlider->setDrawLabels(true);
-    endEditCP(YBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
-    YBlendGeometrySlider->setModel(&YBlendGeometryRangeModel);
+        YBlendGeometrySlider->setRangeModel(YBlendGeometryRangeModel);
+    endEditCP(YBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
     
-    DefaultBoundedRangeModel ZBlendGeometryRangeModel;
-    ZBlendGeometryRangeModel.setMinimum(-200);
-    ZBlendGeometryRangeModel.setMaximum(200);
-    ZBlendGeometryRangeModel.setValue(0);
-    ZBlendGeometryRangeModel.setExtent(0);
+    DefaultBoundedRangeModelPtr ZBlendGeometryRangeModel = DefaultBoundedRangeModel::create();
+    ZBlendGeometryRangeModel->setMinimum(-200);
+    ZBlendGeometryRangeModel->setMaximum(200);
+    ZBlendGeometryRangeModel->setValue(0);
+    ZBlendGeometryRangeModel->setExtent(0);
     
     //Create the slider
     SliderPtr ZBlendGeometrySlider = Slider::create();
-    beginEditCP(ZBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    beginEditCP(ZBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
         TempLabel = Label::Ptr::dcast(ZBlendGeometrySlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("-2.0"); endEditCP(TempLabel, Label::TextFieldMask);
         ZBlendGeometrySlider->getLabelMap()[-200] = TempLabel;
@@ -384,8 +384,8 @@ int main(int argc, char **argv)
         ZBlendGeometrySlider->setOrientation(Slider::VERTICAL_ORIENTATION);
         ZBlendGeometrySlider->setInverted(true);
         ZBlendGeometrySlider->setDrawLabels(true);
-    endEditCP(ZBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
-    ZBlendGeometrySlider->setModel(&ZBlendGeometryRangeModel);
+        ZBlendGeometrySlider->setRangeModel(ZBlendGeometryRangeModel);
+    endEditCP(ZBlendGeometrySlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
 
     // Create Background to be used with the MainFrame
     ColorLayerPtr MainFrameBackground = osg::ColorLayer::create();

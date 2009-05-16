@@ -230,10 +230,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGColorOperations.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Util\OSGFieldContainerUtils.cpp"
 					>
 				</File>
@@ -271,10 +267,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Util\OSGMathUtils.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Util\OSGPntOperations.h"
 					>
 				</File>
 				<File

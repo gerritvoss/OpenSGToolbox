@@ -56,13 +56,13 @@ bool isEqual(FloatTypeT Left, FloatTypeT Right, FloatTypeT ERR = REAL32_COMPARE_
 	return osgabs<FloatTypeT>(Left - Right) > ERR;
 }
 
-template<class ValueTypeT, class StorageInterfaceT>
-Int8 intersectLines(const osg::PointInterface<ValueTypeT, StorageInterfaceT>& p1,
-			    const osg::VectorInterface<ValueTypeT, StorageInterfaceT>& v1,
-			    const osg::PointInterface<ValueTypeT, StorageInterfaceT>& p2,
-			    const osg::VectorInterface<ValueTypeT, StorageInterfaceT>& v2,
+template<class ValueTypeT, UInt32 SizeI>
+Int8 intersectLines(const osg::Point<ValueTypeT, SizeI>& p1,
+			    const osg::Vector<ValueTypeT, SizeI>& v1,
+			    const osg::Point<ValueTypeT, SizeI>& p2,
+			    const osg::Vector<ValueTypeT, SizeI>& v2,
 				ValueTypeT& t1, ValueTypeT& t2,
-				osg::PointInterface<ValueTypeT, StorageInterfaceT>& intersect)
+				osg::Point<ValueTypeT, SizeI>& intersect)
 {
 
 	switch( solveLinearSystem2(v1.x(),-v2.x(),v1.y(),-v2.y(),p2.x()-p1.x(),p2.y()-p1.y(),t1,t2) )
@@ -82,10 +82,10 @@ Int8 intersectLines(const osg::PointInterface<ValueTypeT, StorageInterfaceT>& p1
 	}
 }
 
-template<class ValueTypeT, class StorageInterfaceT>
-osg::VectorInterface<ValueTypeT, StorageInterfaceT> reflect(const osg::VectorInterface<ValueTypeT, StorageInterfaceT>& Vec, const osg::VectorInterface<ValueTypeT, StorageInterfaceT>& Normal)
+template<class ValueTypeT, UInt32 SizeI>
+osg::Vector<ValueTypeT, SizeI> reflect(const osg::Vector<ValueTypeT, SizeI>& Vec, const osg::Vector<ValueTypeT, SizeI>& Normal)
 {
-   osg::VectorInterface<ValueTypeT, StorageInterfaceT> Result;
+   osg::Vector<ValueTypeT, SizeI> Result;
 
    Result = Vec - (2 * (Vec.dot(Normal)) * Normal);
 
@@ -96,7 +96,7 @@ template <class FloatTypeT>
 class Matrix22
 {
 public:
-	typedef VectorInterface< Real32, VecStorage2<Real32> > VectorType;
+	typedef Vector< Real32, 2 > VectorType;
 	Matrix22(FloatTypeT a11, FloatTypeT a12, FloatTypeT a21, FloatTypeT a22)
 	{
 		_Values[0] = a11;
