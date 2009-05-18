@@ -45,6 +45,13 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGCaptionBase.h"
+#include "Event/OSGCaptionListener.h"
+#include <OpenSG/Input/OSGUpdateListener.h>
+
+#include <OpenSG/Input/OSGEventConnection.h>
+
+#include <set>
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -73,14 +80,21 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    void captionSegment(std::string s, Real32 start, Real32 end);
-    void setCaptionDialog(SoundPtr sound);
-    bool update(double timeStamp);
-
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    void captionSegment(std::string s, Real32 start, Real32 end);
+    void setCaptionDialog(SoundPtr sound);
+    bool update(double timeStamp);
+
+    EventConnection addCaptionListener(CaptionListenerPtr Listener);
+	bool isCaptionListenerAttached(CaptionListenerPtr Listener) const;
+    void removeCaptionListener(CaptionListenerPtr Listener);
+
+
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -100,6 +114,8 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
 
     virtual ~Caption(void); 
 
+    virtual void actionPreformed(const CaptionEvent& e);
+
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
@@ -113,6 +129,16 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const Caption &source);
+
+    typedef std::set<CaptionListenerPtr> CaptionListenerSet;
+    typedef CaptionListenerSet::iterator CaptionListenerSetItor;
+    typedef CaptionListenerSet::const_iterator CaptionListenerSetConstItor;
+
+    CaptionListenerSet       _CaptionListeners;
+
+    virtual void produceSegmentActivated(const CaptionEvent& e);
+    virtual void produceCaptionStarted(const CaptionEvent& e);
+    virtual void produceCaptionEnded(const CaptionEvent& e);
 };
 
 typedef Caption *CaptionP;

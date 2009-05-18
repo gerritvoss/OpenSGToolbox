@@ -49,6 +49,10 @@
 
 #include "OSGCaption.h"
 
+#include <boost/bind.hpp>
+
+#include <time.h>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -90,12 +94,14 @@ void Caption::setCaptionDialog(SoundPtr sound)
 
 bool Caption::update(double timeStamp)
 {
-
+    CaptionEvent e = CaptionEvent(CaptionPtr(this),getSystemTime());
     if(getCurrentSegmentIndex() == -1)
     {
         if(getStartStamps(0) <= timeStamp)
         {
             setCurrentSegmentIndex(0);
+            produceSegmentActivated(e);
+            produceCaptionStarted(e);
             return true;
         }
     }
@@ -104,8 +110,63 @@ bool Caption::update(double timeStamp)
         setCurrentSegmentIndex(getCurrentSegmentIndex()+1);
         return true;
     }
+    if(getCurrentSegmentIndex() >= getSegment().size()-1)
+    {
+        produceCaptionEnded(e);
+    }
+
     return false;
 }
+
+void Caption::produceSegmentActivated(const CaptionEvent& e)
+{
+	CaptionListenerSet Listeners(_CaptionListeners);
+    for(CaptionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->segmentActivated(e);
+    }
+}
+
+void Caption::produceCaptionStarted(const CaptionEvent& e)
+{
+    CaptionListenerSet Listeners(_CaptionListeners);
+    for(CaptionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->captionStarted(e);
+    }
+}
+
+void Caption::produceCaptionEnded(const CaptionEvent& e)
+{
+    CaptionListenerSet Listeners(_CaptionListeners);
+    for(CaptionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->captionEnded(e);
+    }
+}
+
+void Caption::actionPreformed(const CaptionEvent& e)
+{
+}
+
+EventConnection Caption::addCaptionListener(CaptionListenerPtr Listener)
+{
+   _CaptionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Caption::isCaptionListenerAttached, this, Listener),
+       boost::bind(&Caption::removeCaptionListener, this, Listener));
+}
+
+void Caption::removeCaptionListener(CaptionListenerPtr Listener)
+{
+   CaptionListenerSetItor EraseIter(_CaptionListeners.find(Listener));
+   if(EraseIter != _CaptionListeners.end())
+   {
+      _CaptionListeners.erase(EraseIter);
+   }
+}
+
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

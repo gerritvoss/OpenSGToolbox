@@ -709,12 +709,28 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Event"
+					>
+					<File
+						RelativePath="..\..\src\Caption\Event\OSGCaptionEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\Event\OSGCaptionEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\Event\OSGCaptionEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGCaptionListener.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath="..\..\Tutorials\05Caption.vcproj"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

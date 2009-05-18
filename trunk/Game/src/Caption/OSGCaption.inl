@@ -42,6 +42,12 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+bool Caption::isCaptionListenerAttached(CaptionListenerPtr Listener) const
+{
+    return _CaptionListeners.find(Listener) != _CaptionListeners.end();
+}
+
 OSG_END_NAMESPACE
 
 #define OSGCAPTION_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
