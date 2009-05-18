@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="04ShaderAnimation"
-	ProjectGUID="{F959AA31-C66E-4F25-BD8B-47E9681DD040}"
+	Name="16LoadXMLSkeleton"
+	ProjectGUID="{B72618FF-2010-4DDA-8747-888EB14DF988}"
 	RootNamespace="10SkeletonDrawer"
 	Keyword="Win32Proj"
 	>
@@ -207,15 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\04ShaderAnimation.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\04ShaderAnimation.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\16LoadXMLSkeleton.cpp"
 				>
 			</File>
 		</Filter>

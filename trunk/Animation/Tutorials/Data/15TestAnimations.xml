@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<OSGFieldContainers>
+	<KeyframeColorsSequence3f
+		fieldcontainerid="255"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;2.000000e+000;4.000000e+000;6.000000e+000"
+		colors="1.000000e+000 0.000000e+000 0.000000e+000;0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000;1.000000e+000 0.000000e+000 0.000000e+000"
+	>
+	</KeyframeColorsSequence3f>
+	<KeyframeAnimator
+		fieldcontainerid="256"
+		KeyframeSequence="255"
+	>
+	</KeyframeAnimator>
+	<FieldAnimation
+		fieldcontainerid="257"
+		Cycling="-1"
+		Animator="256"
+		Container="236"
+		FieldId="7"
+		InterpolationType="1"
+		ReplacementPolicy="1"
+	>
+	</FieldAnimation>
+	<SimpleMaterial
+		fieldcontainerid="236"
+		sortKey="0"
+		transparencyMode="0"
+		chunks=""
+		slots=""
+		ambient="0.000000e+000 0.000000e+000 0.000000e+000"
+		diffuse="0.000000e+000 0.000000e+000 0.000000e+000"
+		specular="0.000000e+000 0.000000e+000 0.000000e+000"
+		shininess="1.000000e+000"
+		emission="0.000000e+000 0.000000e+000 0.000000e+000"
+		transparency="0.000000e+000"
+		lit="TRUE"
+		colorMaterial="4609"
+	>
+	</SimpleMaterial>
+</OSGFieldContainers>
+

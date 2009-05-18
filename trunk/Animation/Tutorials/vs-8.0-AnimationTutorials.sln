@@ -28,6 +28,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03MFieldAnimation", "03MFie
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04ShaderAnimation", "04ShaderAnimation.vcproj", "{F959AA31-C66E-4F25-BD8B-47E9681DD040}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15LoadXMLAnimation", "15LoadXMLAnimation.vcproj", "{66E2C0CB-836C-44F1-9FF9-67AB1AC23583}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "16LoadXMLSkeleton", "16LoadXMLSkeleton.vcproj", "{B72618FF-2010-4DDA-8747-888EB14DF988}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -90,6 +94,14 @@ Global
 		{F959AA31-C66E-4F25-BD8B-47E9681DD040}.Debug|Win32.Build.0 = Debug|Win32
 		{F959AA31-C66E-4F25-BD8B-47E9681DD040}.Release|Win32.ActiveCfg = Release|Win32
 		{F959AA31-C66E-4F25-BD8B-47E9681DD040}.Release|Win32.Build.0 = Release|Win32
+		{66E2C0CB-836C-44F1-9FF9-67AB1AC23583}.Debug|Win32.ActiveCfg = Debug|Win32
+		{66E2C0CB-836C-44F1-9FF9-67AB1AC23583}.Debug|Win32.Build.0 = Debug|Win32
+		{66E2C0CB-836C-44F1-9FF9-67AB1AC23583}.Release|Win32.ActiveCfg = Release|Win32
+		{66E2C0CB-836C-44F1-9FF9-67AB1AC23583}.Release|Win32.Build.0 = Release|Win32
+		{B72618FF-2010-4DDA-8747-888EB14DF988}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B72618FF-2010-4DDA-8747-888EB14DF988}.Debug|Win32.Build.0 = Debug|Win32
+		{B72618FF-2010-4DDA-8747-888EB14DF988}.Release|Win32.ActiveCfg = Release|Win32
+		{B72618FF-2010-4DDA-8747-888EB14DF988}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
