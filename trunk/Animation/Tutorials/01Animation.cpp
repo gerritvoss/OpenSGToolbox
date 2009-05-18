@@ -363,15 +363,15 @@ void setupAnimation(void)
     TransformationKeyframes = KeyframeTransformationsSequence44f::create();
 	Matrix TempMat;
 	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
-    TransformationKeyframes->addKeyframe(TempMat,0.0f);
-	TempMat.setTransform(Vec3f(0.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5));
     TransformationKeyframes->addKeyframe(TempMat,1.0f);
-	TempMat.setTransform(Vec3f(1.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0));
+	TempMat.setTransform(Vec3f(0.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5));
     TransformationKeyframes->addKeyframe(TempMat,2.0f);
-	TempMat.setTransform(Vec3f(1.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5));
+	TempMat.setTransform(Vec3f(1.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0));
     TransformationKeyframes->addKeyframe(TempMat,3.0f);
-	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
+	TempMat.setTransform(Vec3f(1.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5));
     TransformationKeyframes->addKeyframe(TempMat,4.0f);
+	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
+    TransformationKeyframes->addKeyframe(TempMat,5.0f);
     
     //Animator
     TheAnimator = KeyframeAnimator::create();

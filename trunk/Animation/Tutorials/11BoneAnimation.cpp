@@ -357,22 +357,20 @@ void setupAnimation(BonePtr TheBone,BonePtr TheChildBone,BonePtr TheBoneLength )
    TheAnimation = osg::FieldAnimation::create();
    osg::beginEditCP(TheAnimation);
       osg::FieldAnimationPtr::dcast(TheAnimation)->setAnimator(Animator);
-	  osg::FieldAnimationPtr::dcast(TheAnimation)->setContainer(TheBone);
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setFieldName( std::string("Rotation") );
       osg::FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(osg::CUBIC_INTERPOLATION);
       osg::FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
    osg::endEditCP(TheAnimation);
+   osg::FieldAnimationPtr::dcast(TheAnimation)->setAnimatedField(TheBone, std::string("Rotation"));
 
 
    //ChildBone Animation
    TheChildAnimation = osg::FieldAnimation::create();
    osg::beginEditCP(TheChildAnimation);
       osg::FieldAnimationPtr::dcast(TheChildAnimation)->setAnimator(Animator);
-	  osg::FieldAnimationPtr::dcast(TheChildAnimation)->setContainer(TheChildBone);
-      osg::FieldAnimationPtr::dcast(TheChildAnimation)->setFieldName( std::string("Rotation") );
       osg::FieldAnimationPtr::dcast(TheChildAnimation)->setInterpolationType(osg::CUBIC_INTERPOLATION);
       osg::FieldAnimationPtr::dcast(TheChildAnimation)->setCycling(-1);
    osg::endEditCP(TheChildAnimation);
+   osg::FieldAnimationPtr::dcast(TheChildAnimation)->setAnimatedField(TheChildBone, std::string("Rotation"));
 
 
 
@@ -380,11 +378,10 @@ void setupAnimation(BonePtr TheBone,BonePtr TheChildBone,BonePtr TheBoneLength )
    TheChildLengthAnimation = osg::FieldAnimation::create();
    osg::beginEditCP(TheChildLengthAnimation);
       osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setAnimator(LengthAnimator);
-	  osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setContainer(TheBoneLength);
-      osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setFieldName( std::string("Length") );
       osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setInterpolationType(osg::CUBIC_INTERPOLATION);
       osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setCycling(-1);
    osg::endEditCP(TheChildLengthAnimation);
+   osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setAnimatedField(TheBoneLength, std::string("Length"));
 
 
    //Animation Advancer
