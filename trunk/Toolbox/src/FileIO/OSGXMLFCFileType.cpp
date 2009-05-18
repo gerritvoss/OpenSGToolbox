@@ -256,7 +256,6 @@ std::string XMLFCFileType::getName(void) const
 								else if(TheField->getCardinality() == FieldType::MULTI_FIELD &&
 									!FieldValue.empty())
 								{
-								    UInt32 FCId;
 									std::vector< std::string > SplitVec;
                                     boost::algorithm::split( SplitVec, FieldValue, boost::algorithm::is_any_of(std::string(";")) );
 									for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
