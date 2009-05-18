@@ -148,7 +148,9 @@ bool FilePathAttachment::loadFromFilePath(AttachmentContainerPtr  container)
 		{
 			if(container->getType().isDerivedFrom(Image::getClassType()))
 			{
-				ImageFileHandler::the().read(Image::Ptr::dcast(container),LoadFilePath->string().c_str());
+			  ImagePtr TheImage = Image::Ptr::dcast(container);
+				ImageFileHandler::the().read(TheImage,LoadFilePath->string().c_str());
+                                container = TheImage;
 			}
 			else if(container->getType().isDerivedFrom(Node::getClassType()))
 			{

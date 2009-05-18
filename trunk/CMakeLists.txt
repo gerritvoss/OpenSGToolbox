@@ -1,0 +1,55 @@
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+PROJECT(OpenSGToolbox)
+
+IF(COMMAND cmake_policy)
+      cmake_policy(SET CMP0003 OLD)
+ENDIF(COMMAND cmake_policy)
+
+SET (CMAKE_VERBOSE_MAKEFILE TRUE)
+
+######### FMod
+FIND_PATH(FMOD_BASE_DIR NAMES api/inc/fmod.h PATHS "/Developer/FMOD Programmers API Mac")
+SET(FMOD_INC_DIR ${FMOD_BASE_DIR}/api/inc)
+SET(FMOD_LIB_DIR ${FMOD_BASE_DIR}/api/lib)
+
+FIND_PATH(FMOD_DESIGNER_BASE_DIR api/inc/fmod_event.h PATHS ${FMOD_BASE_DIR}/fmoddesignerapi)
+SET(FMOD_DESIGNER_INC_DIR ${FMOD_DESIGNER_BASE_DIR}/api/inc)
+SET(FMOD_DESIGNER_LIB_DIR ${FMOD_DESIGNER_BASE_DIR}/api/lib)
+
+
+######### OpenSG
+FIND_PATH(OPENSG_BASE_DIR include/OpenSG/OSGConfig.h)
+SET(OPENSG_INC_DIR ${OPENSG_BASE_DIR}/include)
+SET(OPENSG_LIB_DIR ${OPENSG_BASE_DIR}/lib)
+
+FIND_PROGRAM(OSG_CONFIG osg-config ${OPENSG_BASE_DIR}/bin)
+IF (${OSG_CONFIG})
+IF (UNIX)
+   IF(APPLE)
+	MESSAGE("Mac are not currently supported")
+   ELSE(APPLE)
+	SET(OSG_CXX_FLAGS "`${OSG_CONFIG} --cflags Base System X`")
+	SET(OSG_LD_FLAGS "`${OSG_CONFIG} --lflags Base System X`")
+	SET(OSG_LIBS "`${OSG_CONFIG} --llibs Base System X`")
+   ENDIF(APPLE)
+ENDIF(UNIX)	
+
+IF(WIN32)
+	SET(OPENSG_CXX_FLAGS "`${OSG_CONFIG} --cflags Base System Win32`")
+	SET(OPENSG_LD_FLAGS "`${OSG_CONFIG} --lflags Base System Win32`")
+	SET(OPENSG_LIBS "`${OSG_CONFIG} --llibs Base System Win32`")
+ENDIF(WIN32)
+
+SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${OPENSG_CXX_FLAGS})
+SET(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} ${OPENSG_LD_FLAGS})
+ELSE(${OSG_CONFIG})
+	#MESSAGE("osg-config not found")
+ENDIF (${OSG_CONFIG})
+
+######## BOOST
+FIND_PACKAGE(Boost REQUIRED)
+
+
+##Sub components
+ADD_SUBDIRECTORY(Toolbox/src)
