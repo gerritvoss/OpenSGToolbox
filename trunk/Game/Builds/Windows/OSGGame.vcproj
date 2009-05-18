@@ -649,8 +649,72 @@
 					RelativePath="..\..\src\Caption\OSGCaptionFields.h"
 					>
 				</File>
+				<Filter
+					Name="ComponentGenerators"
+					>
+					<File
+						RelativePath="..\..\src\Caption\OSGCaptionComponentGenerator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGCaptionComponentGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGCaptionComponentGenerator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGCaptionComponentGeneratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGCaptionComponentGeneratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGCaptionComponentGeneratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGCaptionComponentGeneratorFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGDefaultCaptionComponentGenerator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGDefaultCaptionComponentGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGDefaultCaptionComponentGenerator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGDefaultCaptionComponentGeneratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGDefaultCaptionComponentGeneratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGDefaultCaptionComponentGeneratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\OSGDefaultCaptionComponentGeneratorFields.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\..\Tutorials\05Caption.vcproj"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

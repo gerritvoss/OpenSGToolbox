@@ -43,8 +43,11 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGGameDef.h"
 
 #include "OSGCaptionComponentGeneratorBase.h"
+
+#include "OSGCaptionBase.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -52,7 +55,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceCaptionComponentGenerator for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING CaptionComponentGenerator : public CaptionComponentGeneratorBase
+class OSG_GAMELIB_DLLMAPPING CaptionComponentGenerator : public CaptionComponentGeneratorBase
 {
   private:
 
@@ -75,6 +78,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING CaptionComponentGenerator : public Caption
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+
+    virtual ComponentPtr getCaptionComponent(CaptionPtr Parent, const boost::any& Value) = 0;
+
+    virtual ComponentPtr getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

@@ -3,7 +3,7 @@
 <FieldContainer
 	name="DefaultCaptionComponentGenerator"
 	parent="CaptionComponentGenerator"
-	library="UserInterface"
+	library="Game"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"

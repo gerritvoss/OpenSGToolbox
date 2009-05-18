@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<CaptionComponentGeneratorPtr>::_type("CaptionComponentGeneratorPtr", "ComponentGeneratorPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(CaptionComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(CaptionComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(CaptionComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(CaptionComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

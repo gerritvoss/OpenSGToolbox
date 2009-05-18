@@ -43,11 +43,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEUSERINTERFACELIB
+#define OSG_COMPILEGAMELIB
 
 #include <OpenSG/OSGConfig.h>
 
+#include "OSGCaption.h"
 #include "OSGCaptionComponentGenerator.h"
+#include "OpenSG/UserInterface/OSGComponent.h"
+#include "OSGDefaultCaptionComponentGenerator.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,6 +78,18 @@ void CaptionComponentGenerator::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+ComponentPtr CaptionComponentGenerator::getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
+{
+    if(Parent->getType().isDerivedFrom(Caption::getClassType()))
+    {
+        return getCaptionComponent(Caption::Ptr::dcast(Parent), Value);
+    }
+    else
+    {
+        return getCaptionComponent(NullFC, Value);
+    }
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -43,11 +43,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEUSERINTERFACELIB
+#define OSG_COMPILEGAMELIB
 
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDefaultCaptionComponentGenerator.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
+
+#include "OpenSG/UserInterface/OSGLabel.h"
+#include "OpenSG/UserInterface/OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,7 +79,25 @@ void DefaultCaptionComponentGenerator::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+ComponentPtr DefaultCaptionComponentGenerator::getCaptionComponent(CaptionPtr Parent, const boost::any& Value)
+{
+    std::string CaptionSegment("");
+    try
+    {
+        CaptionSegment = lexical_cast(Value);
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        std::cout<<"Unable to display segment"<<std::endl;
+    }
 
+    LabelPtr TheCaptionSegment = Label::Ptr::dcast(getCaptionSegmentPrototype()->shallowCopy());
+    beginEditCP(TheCaptionSegment, Label::TextFieldMask);
+        TheCaptionSegment->setText(CaptionSegment);
+    endEditCP(TheCaptionSegment, Label::TextFieldMask);
+
+    return TheCaptionSegment;
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

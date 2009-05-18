@@ -59,13 +59,13 @@
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGGameDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponentGenerator.h" // Parent
+#include "OpenSG/UserInterface/OSGComponentGenerator.h" // Parent
 
 
 #include "OSGCaptionComponentGeneratorFields.h"
@@ -77,7 +77,7 @@ class BinaryDataHandler;
 
 //! \brief CaptionComponentGenerator Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING CaptionComponentGeneratorBase : public ComponentGenerator
+class OSG_GAMELIB_DLLMAPPING CaptionComponentGeneratorBase : public ComponentGenerator
 {
   private:
 

@@ -90,6 +90,7 @@ void Caption::setCaptionDialog(SoundPtr sound)
 
 bool Caption::update(double timeStamp)
 {
+
     if(getCurrentSegmentIndex() == -1)
     {
         if(getStartStamps(0) <= timeStamp)
@@ -98,7 +99,7 @@ bool Caption::update(double timeStamp)
             return true;
         }
     }
-    else if(getEndStamps(getCurrentSegmentIndex()) <= timeStamp)
+    else if(getEndStamps(getCurrentSegmentIndex()) <= timeStamp && getCurrentSegmentIndex() < getSegment().size()-1)
     {
         setCurrentSegmentIndex(getCurrentSegmentIndex()+1);
         return true;

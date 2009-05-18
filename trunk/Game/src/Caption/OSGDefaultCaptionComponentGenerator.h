@@ -44,7 +44,11 @@
 
 #include <OpenSG/OSGConfig.h>
 
+#include "OSGGameDef.h"
+
 #include "OSGDefaultCaptionComponentGeneratorBase.h"
+
+#include "OSGCaptionBase.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -52,7 +56,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultCaptionComponentGenerator for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultCaptionComponentGenerator : public DefaultCaptionComponentGeneratorBase
+class OSG_GAMELIB_DLLMAPPING DefaultCaptionComponentGenerator : public DefaultCaptionComponentGeneratorBase
 {
   private:
 
@@ -75,6 +79,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultCaptionComponentGenerator : public 
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+
+    virtual ComponentPtr getCaptionComponent(CaptionPtr Parent, const boost::any& Value);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

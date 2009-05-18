@@ -58,7 +58,7 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGGameDef.h"
 
 #include "OSGCaptionComponentGeneratorFields.h"
 
@@ -74,7 +74,7 @@ typedef FCPtr<CaptionComponentGeneratorPtr, DefaultCaptionComponentGenerator> De
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpGameFieldTraits
  */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
@@ -105,23 +105,23 @@ struct FieldDataTraits<DefaultCaptionComponentGeneratorPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+/*! \ingroup GrpGameFieldSingle */
 
 typedef SField<DefaultCaptionComponentGeneratorPtr> SFDefaultCaptionComponentGeneratorPtr;
 #endif
 
 #ifndef OSG_COMPILEDEFAULTCAPTIONCOMPONENTGENERATORINST
-OSG_DLLEXPORT_DECL1(SField, DefaultCaptionComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+OSG_DLLEXPORT_DECL1(SField, DefaultCaptionComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
+/*! \ingroup GrpGameFieldMulti */
 
 typedef MField<DefaultCaptionComponentGeneratorPtr> MFDefaultCaptionComponentGeneratorPtr;
 #endif
 
 #ifndef OSG_COMPILEDEFAULTCAPTIONCOMPONENTGENERATORINST
-OSG_DLLEXPORT_DECL1(MField, DefaultCaptionComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+OSG_DLLEXPORT_DECL1(MField, DefaultCaptionComponentGeneratorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
