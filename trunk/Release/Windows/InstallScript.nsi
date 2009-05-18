@@ -1,4 +1,5 @@
 !include FindFile.nsh
+!include ModifyPath.nsh
 
 # name the installer
 !define ProjectName "OpenSGToolbox"
@@ -400,6 +401,10 @@ SectionGroup "Release"
 		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
 		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
 		Call SearchFile
+        
+        #Set up the Path
+        Push $INSTDIR\lib
+        Call AddToPath
       
    sectionEnd
 SectionGroupEnd
@@ -491,6 +496,10 @@ section "un.Uninstall ${ProjectName}"
    
    #Delete the registry key for add/remove program control panel
    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenSGToolbox"
+   
+   #Remove from path
+   Push $INSTDIR\lib
+   Call un.RemoveFromPath
  
 sectionEnd
 
