@@ -116,7 +116,7 @@ const OSG::BitVector CaptionBase::MTInfluenceMask =
 /*! \var UInt32          CaptionBase::_sfChildIndex
     
 */
-/*! \var ComponentGeneratorPtr CaptionBase::_sfComponentGenerator
+/*! \var DefaultCaptionComponentGeneratorPtr CaptionBase::_sfComponentGenerator
     
 */
 
@@ -159,7 +159,7 @@ FieldDescription *CaptionBase::_desc[] =
                      ChildIndexFieldId, ChildIndexFieldMask,
                      false,
                      (FieldAccessMethod) &CaptionBase::getSFChildIndex),
-    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
+    new FieldDescription(SFDefaultCaptionComponentGeneratorPtr::getClassType(), 
                      "ComponentGenerator", 
                      ComponentGeneratorFieldId, ComponentGeneratorFieldMask,
                      false,

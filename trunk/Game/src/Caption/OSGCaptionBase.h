@@ -74,7 +74,7 @@
 #include <OpenSG/Sound/OSGSoundFields.h> // CaptionDialogSound type
 #include <OpenSG/UserInterface/OSGContainerFields.h> // ParentContainer type
 #include <OpenSG/OSGUInt32Fields.h> // ChildIndex type
-#include <OpenSG/UserInterface/OSGComponentGeneratorFields.h> // ComponentGenerator type
+#include "OSGDefaultCaptionComponentGeneratorFields.h" // ComponentGenerator type
 
 #include "OSGCaptionFields.h"
 
@@ -150,7 +150,7 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
            SFSoundPtr          *getSFCaptionDialogSound(void);
            SFContainerPtr      *getSFParentContainer(void);
            SFUInt32            *getSFChildIndex     (void);
-           SFComponentGeneratorPtr *getSFComponentGenerator(void);
+           SFDefaultCaptionComponentGeneratorPtr *getSFComponentGenerator(void);
 
            Int32               &getCurrentSegmentIndex(void);
      const Int32               &getCurrentSegmentIndex(void) const;
@@ -160,8 +160,8 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
      const ContainerPtr        &getParentContainer(void) const;
            UInt32              &getChildIndex     (void);
      const UInt32              &getChildIndex     (void) const;
-           ComponentGeneratorPtr &getComponentGenerator(void);
-     const ComponentGeneratorPtr &getComponentGenerator(void) const;
+           DefaultCaptionComponentGeneratorPtr &getComponentGenerator(void);
+     const DefaultCaptionComponentGeneratorPtr &getComponentGenerator(void) const;
            std::string         &getSegment        (const UInt32 index);
            MFString            &getSegment        (void);
      const MFString            &getSegment        (void) const;
@@ -181,7 +181,7 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
      void setCaptionDialogSound( const SoundPtr &value );
      void setParentContainer( const ContainerPtr &value );
      void setChildIndex     ( const UInt32 &value );
-     void setComponentGenerator( const ComponentGeneratorPtr &value );
+     void setComponentGenerator( const DefaultCaptionComponentGeneratorPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,7 +231,7 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
     SFSoundPtr          _sfCaptionDialogSound;
     SFContainerPtr      _sfParentContainer;
     SFUInt32            _sfChildIndex;
-    SFComponentGeneratorPtr   _sfComponentGenerator;
+    SFDefaultCaptionComponentGeneratorPtr   _sfComponentGenerator;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

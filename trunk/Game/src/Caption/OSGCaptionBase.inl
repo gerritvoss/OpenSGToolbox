@@ -147,7 +147,7 @@ SFUInt32 *CaptionBase::getSFChildIndex(void)
 
 //! Get the Caption::_sfComponentGenerator field.
 inline
-SFComponentGeneratorPtr *CaptionBase::getSFComponentGenerator(void)
+SFDefaultCaptionComponentGeneratorPtr *CaptionBase::getSFComponentGenerator(void)
 {
     return &_sfComponentGenerator;
 }
@@ -239,21 +239,21 @@ void CaptionBase::setChildIndex(const UInt32 &value)
 
 //! Get the value of the Caption::_sfComponentGenerator field.
 inline
-ComponentGeneratorPtr &CaptionBase::getComponentGenerator(void)
+DefaultCaptionComponentGeneratorPtr &CaptionBase::getComponentGenerator(void)
 {
     return _sfComponentGenerator.getValue();
 }
 
 //! Get the value of the Caption::_sfComponentGenerator field.
 inline
-const ComponentGeneratorPtr &CaptionBase::getComponentGenerator(void) const
+const DefaultCaptionComponentGeneratorPtr &CaptionBase::getComponentGenerator(void) const
 {
     return _sfComponentGenerator.getValue();
 }
 
 //! Set the value of the Caption::_sfComponentGenerator field.
 inline
-void CaptionBase::setComponentGenerator(const ComponentGeneratorPtr &value)
+void CaptionBase::setComponentGenerator(const DefaultCaptionComponentGeneratorPtr &value)
 {
     _sfComponentGenerator.setValue(value);
 }

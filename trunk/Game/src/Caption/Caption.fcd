@@ -84,7 +84,7 @@ A Caption.
 	
 	<Field
 		name="ComponentGenerator"
-		type="ComponentGeneratorPtr"
+		type="DefaultCaptionComponentGeneratorPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"

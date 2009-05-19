@@ -91,31 +91,65 @@ void Caption::setCaptionDialog(SoundPtr sound)
 {
 
 }
-
-bool Caption::update(double timeStamp)
+void Caption::setupCaption()
 {
-    CaptionEvent e = CaptionEvent(CaptionPtr(this),getSystemTime());
-    if(getCurrentSegmentIndex() == -1)
+    beginEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
+        getParentContainer()->getChildren().clear();
+        getParentContainer()->getChildren().push_back(getComponentGenerator()->getCaptionComponent(NullFC,getSegment(getCurrentSegmentIndex())));
+    endEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
+}
+
+void Caption::start()
+{
+    _start = true;
+}
+
+void Caption::stop()
+{
+    _start = false;
+    setCurrentSegmentIndex(-1);
+    _timeStamp = 0.0;
+    beginEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
+        getParentContainer()->getChildren().clear();
+    endEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
+}
+
+void Caption::update(const UpdateEvent& e)
+{
+    if(_start)
     {
-        if(getStartStamps(0) <= timeStamp)
+        _timeStamp += e.getElapsedTime();
+        CaptionEvent ce = CaptionEvent(CaptionPtr(this),getSystemTime());
+        if(getCurrentSegmentIndex() == -1)
         {
-            setCurrentSegmentIndex(0);
-            produceSegmentActivated(e);
-            produceCaptionStarted(e);
-            return true;
+            if(getStartStamps(0) <= _timeStamp)
+            {
+                setCurrentSegmentIndex(0);
+                produceCaptionStarted(ce);
+                produceSegmentActivated(ce);
+                _captionEndedCheck = false;
+                setupCaption();
+                return;
+            }
+        }
+        else if(getEndStamps(getCurrentSegmentIndex()) <= _timeStamp && getCurrentSegmentIndex() < getSegment().size()-1)
+        {
+            setCurrentSegmentIndex(getCurrentSegmentIndex()+1);
+            produceSegmentActivated(ce);
+            setupCaption();
+            return;
+        }
+        if(_captionEndedCheck)
+        {
+            return;
+        }
+        if(getCurrentSegmentIndex() >= getSegment().size()-1)
+        {
+            produceCaptionEnded(ce);
+            _captionEndedCheck = true;
         }
     }
-    else if(getEndStamps(getCurrentSegmentIndex()) <= timeStamp && getCurrentSegmentIndex() < getSegment().size()-1)
-    {
-        setCurrentSegmentIndex(getCurrentSegmentIndex()+1);
-        return true;
-    }
-    if(getCurrentSegmentIndex() >= getSegment().size()-1)
-    {
-        produceCaptionEnded(e);
-    }
-
-    return false;
+    return;
 }
 
 void Caption::produceSegmentActivated(const CaptionEvent& e)
@@ -166,6 +200,16 @@ void Caption::removeCaptionListener(CaptionListenerPtr Listener)
    }
 }
 
+void Caption::CaptionListener::update(const UpdateEvent& e)
+{
+    _Caption->update(e);
+}
+
+void Caption::attachWindowEventProducer(WindowEventProducerPtr TheEventProducer)
+{
+    TheEventProducer->addUpdateListener(&_CaptionListener);
+}
+
 
 
 /*-------------------------------------------------------------------------*\
@@ -175,12 +219,18 @@ void Caption::removeCaptionListener(CaptionListenerPtr Listener)
 /*----------------------- constructors & destructors ----------------------*/
 
 Caption::Caption(void) :
-    Inherited()
+    Inherited(),
+    _CaptionListener(CaptionPtr(this)),
+    _timeStamp(0.0),
+    _start(false)
 {
 }
 
 Caption::Caption(const Caption &source) :
-    Inherited(source)
+    Inherited(source),
+    _CaptionListener(CaptionPtr(this)),
+    _timeStamp(0.0),
+    _start(false)
 {
 }
 

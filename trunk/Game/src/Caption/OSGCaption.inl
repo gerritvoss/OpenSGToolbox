@@ -47,6 +47,11 @@ bool Caption::isCaptionListenerAttached(CaptionListenerPtr Listener) const
 {
     return _CaptionListeners.find(Listener) != _CaptionListeners.end();
 }
+inline
+Caption::CaptionListener::CaptionListener(CaptionPtr TheCaption) :
+_Caption(TheCaption)
+{
+}
 
 OSG_END_NAMESPACE
 
