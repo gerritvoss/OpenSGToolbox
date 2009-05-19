@@ -137,7 +137,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
     
     /*==========================  PRIVATE  ================================*/
 
-    void sortParticles(void);
+    void sortParticles(DrawActionBase *action);
   private:
 
     friend class FieldContainer;

@@ -42,6 +42,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <vector>
 
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
@@ -49,6 +50,7 @@
 #include <OpenSG/OSGIntersectAction.h>
 #include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/OSGSimpleGeometry.h>
+#include <OpenSG/OSGCamera.h>
 
 #include "OSGParticleSystemCore.h"
 
@@ -95,7 +97,7 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
     //If I have a Drawer tell it to draw the particles
     if(getDrawer() != NullFC && getSystem() != NullFC)
     {
-		sortParticles();
+		sortParticles(action);
         getDrawer()->draw(action, getSystem(), getSort() );
     }
     else
@@ -182,13 +184,31 @@ void ParticleSystemCore::adjustVolume(Volume & volume)
     }
 }
 
-void ParticleSystemCore::sortParticles(void)
+void ParticleSystemCore::sortParticles(DrawActionBase *action)
 {
-	//TODO:Implement
+	//TODO: Finish Implementation
     //This should be called if the ParticleSystem has
     //just finished an update
+	
+	//
+	Camera * theCamera = action->getCamera();
+	//extract camera position
+	Matrix cameraViewingMatrix /*= action->getCameraToWorld()*/;
 
-    //TODO: Implement
+	theCamera->getProjection(cameraViewingMatrix,1,1);
+
+	
+	//get the particle system
+	ParticleSystemPtr sys = getSystem();
+	
+	// push current positions into vector
+	std::vector<Pnt3f> positions;
+	for(UInt32 i(0); i < sys->getNumParticles(); ++i)
+	{
+		positions.push_back(sys->getPosition(i));
+	}
+	
+	//
     if(getSystem() != NullFC && getSortingMode() != NONE)
     {
         switch(getSortingMode())
@@ -200,6 +220,10 @@ void ParticleSystemCore::sortParticles(void)
             //Use the BackToFront Comparitor
             break;
         }
+
+		// sort here w/ comparitor
+		// sorted order goes in _mfSort (MFUInt32) in OSGParticleSystemCoreBase
+
     }
 }
 
