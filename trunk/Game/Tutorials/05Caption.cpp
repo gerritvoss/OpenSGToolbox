@@ -213,6 +213,18 @@ public:
     }
 };
 
+class PauseButtonActionListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+        TutorialCaption->pause();
+        std::cout << "Pause Action" << std::endl;
+
+    }
+};
+
 class StopButtonActionListener : public ActionListener
 {
 public:
@@ -263,6 +275,7 @@ int main(int argc, char **argv)
     //Create Start and stop buttons for the caption
     ButtonPtr StartButton = osg::Button::create();
     ButtonPtr StopButton = osg::Button::create();
+    ButtonPtr PauseButton = osg::Button::create();
 
     UIFontPtr ButtonFont = osg::UIFont::create();
 
@@ -302,11 +315,31 @@ int main(int argc, char **argv)
     endEditCP(StopButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
         Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
 
+    beginEditCP(PauseButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            PauseButton->setMinSize(Vec2f(50, 25));
+            PauseButton->setMaxSize(Vec2f(200, 100));
+            PauseButton->setPreferredSize(Vec2f(100, 50));
+            PauseButton->setToolTipText("This will Pause the caption!");
+
+            PauseButton->setText("PAUSE");
+            PauseButton->setFont(ButtonFont);
+            PauseButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            PauseButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            PauseButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            PauseButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(PauseButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+
     StartButtonActionListener TheStartButtonActionListener;
     StartButton->addActionListener(&TheStartButtonActionListener);
 
     StopButtonActionListener TheStopButtonActionListener;
     StopButton->addActionListener(&TheStopButtonActionListener);
+
+    PauseButtonActionListener ThePauseButtonActionListener;
+    PauseButton->addActionListener(&ThePauseButtonActionListener);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
@@ -401,6 +434,7 @@ int main(int argc, char **argv)
 	   MainInternalWindow->getChildren().push_back(CaptionContainer);
 	   MainInternalWindow->getChildren().push_back(StartButton);
 	   MainInternalWindow->getChildren().push_back(StopButton);
+       MainInternalWindow->getChildren().push_back(PauseButton);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface

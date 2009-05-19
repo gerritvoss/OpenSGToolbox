@@ -114,6 +114,11 @@ void Caption::stop()
     endEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
 }
 
+void Caption::pause()
+{
+    _start = false;
+}
+
 void Caption::update(const UpdateEvent& e)
 {
     if(_start)

@@ -98,6 +98,7 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     void setupCaption();
     void start();
     void stop();
+    void pause();
 
 
     /*=========================  PROTECTED  ===============================*/
