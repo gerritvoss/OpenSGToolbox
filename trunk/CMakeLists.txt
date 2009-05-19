@@ -6,7 +6,7 @@ IF(COMMAND cmake_policy)
       cmake_policy(SET CMP0003 OLD)
 ENDIF(COMMAND cmake_policy)
 
-SET (CMAKE_VERBOSE_MAKEFILE TRUE)
+#SET (CMAKE_VERBOSE_MAKEFILE TRUE)
 
 ######### FMod
 FIND_PATH(FMOD_BASE_DIR NAMES api/inc/fmod.h PATHS "/Developer/FMOD Programmers API Mac")
@@ -52,4 +52,15 @@ FIND_PACKAGE(Boost REQUIRED)
 
 
 ##Sub components
-ADD_SUBDIRECTORY(Toolbox/src)
+IF(UNIX)
+IF(APPLE)
+ELSE(APPLE)
+SET(BUILD_PATH "Builds/Linux")
+ENDIF(APPLE)
+ENDIF(UNIX)
+
+IF(WIN32)
+SET(BUILD_PATH "Builds/Windows")
+ENDIF(WIN32)
+ADD_SUBDIRECTORY(Toolbox/src ${BUILD_PATH})
+ADD_SUBDIRECTORY(Input/src ${BUILD_PATH})
