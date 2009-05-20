@@ -75,7 +75,7 @@
 #include <OpenSG/OSGInt32Fields.h> // Looping type
 #include <OpenSG/OSGBoolFields.h> // Streaming type
 #include <OpenSG/Toolbox/OSGPathType.h> // File type
-#include "OSGSoundGroupFields.h" // Group type
+#include <OpenSG/OSGBoolFields.h> // Enable3D type
 
 #include "OSGSoundFields.h"
 
@@ -107,8 +107,8 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
         LoopingFieldId   = FrequencyFieldId + 1,
         StreamingFieldId = LoopingFieldId   + 1,
         FileFieldId      = StreamingFieldId + 1,
-        GroupFieldId     = FileFieldId      + 1,
-        NextFieldId      = GroupFieldId     + 1
+        Enable3DFieldId  = FileFieldId      + 1,
+        NextFieldId      = Enable3DFieldId  + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -119,7 +119,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
     static const OSG::BitVector LoopingFieldMask;
     static const OSG::BitVector StreamingFieldMask;
     static const OSG::BitVector FileFieldMask;
-    static const OSG::BitVector GroupFieldMask;
+    static const OSG::BitVector Enable3DFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -154,6 +154,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
            SFInt32             *getSFLooping        (void);
            SFBool              *getSFStreaming      (void);
            SFPath              *getSFFile           (void);
+           SFBool              *getSFEnable3D       (void);
 
            Pnt3f               &getPosition       (void);
      const Pnt3f               &getPosition       (void) const;
@@ -171,6 +172,8 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
      const bool                &getStreaming      (void) const;
            Path                &getFile           (void);
      const Path                &getFile           (void) const;
+           bool                &getEnable3D       (void);
+     const bool                &getEnable3D       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -185,6 +188,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
      void setLooping        ( const Int32 &value );
      void setStreaming      ( const bool &value );
      void setFile           ( const Path &value );
+     void setEnable3D       ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -219,7 +223,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
     SFInt32             _sfLooping;
     SFBool              _sfStreaming;
     SFPath              _sfFile;
-    SFSoundGroupPtr     _sfGroup;
+    SFBool              _sfEnable3D;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -235,23 +239,6 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual ~SoundBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFSoundGroupPtr     *getSFGroup          (void);
-
-           SoundGroupPtr       &getGroup          (void);
-     const SoundGroupPtr       &getGroup          (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setGroup          (const SoundGroupPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -88,8 +88,8 @@ const OSG::BitVector  SoundBase::StreamingFieldMask =
 const OSG::BitVector  SoundBase::FileFieldMask = 
     (TypeTraits<BitVector>::One << SoundBase::FileFieldId);
 
-const OSG::BitVector  SoundBase::GroupFieldMask = 
-    (TypeTraits<BitVector>::One << SoundBase::GroupFieldId);
+const OSG::BitVector  SoundBase::Enable3DFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::Enable3DFieldId);
 
 const OSG::BitVector SoundBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -122,8 +122,8 @@ const OSG::BitVector SoundBase::MTInfluenceMask =
 /*! \var Path            SoundBase::_sfFile
     The Path to the sound file to load this sound from.
 */
-/*! \var SoundGroupPtr   SoundBase::_sfGroup
-    The Path to the sound file to load this sound from.
+/*! \var bool            SoundBase::_sfEnable3D
+    
 */
 
 //! Sound description
@@ -170,11 +170,11 @@ FieldDescription *SoundBase::_desc[] =
                      FileFieldId, FileFieldMask,
                      false,
                      (FieldAccessMethod) &SoundBase::getSFFile),
-    new FieldDescription(SFSoundGroupPtr::getClassType(), 
-                     "Group", 
-                     GroupFieldId, GroupFieldMask,
+    new FieldDescription(SFBool::getClassType(), 
+                     "Enable3D", 
+                     Enable3DFieldId, Enable3DFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFGroup)
+                     (FieldAccessMethod) &SoundBase::getSFEnable3D)
 };
 
 
@@ -199,7 +199,7 @@ FieldContainerType &SoundBase::getType(void)
 const FieldContainerType &SoundBase::getType(void) const 
 {
     return _type;
-}
+} 
 
 UInt32 SoundBase::getContainerSize(void) const 
 { 
@@ -248,7 +248,7 @@ SoundBase::SoundBase(void) :
     _sfLooping                (Int32(1)), 
     _sfStreaming              (bool(false)), 
     _sfFile                   (), 
-    _sfGroup                  (), 
+    _sfEnable3D               (bool(false)), 
     Inherited() 
 {
 }
@@ -266,7 +266,7 @@ SoundBase::SoundBase(const SoundBase &source) :
     _sfLooping                (source._sfLooping                ), 
     _sfStreaming              (source._sfStreaming              ), 
     _sfFile                   (source._sfFile                   ), 
-    _sfGroup                  (source._sfGroup                  ), 
+    _sfEnable3D               (source._sfEnable3D               ), 
     Inherited                 (source)
 {
 }
@@ -323,9 +323,9 @@ UInt32 SoundBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFile.getBinSize();
     }
 
-    if(FieldBits::NoField != (GroupFieldMask & whichField))
+    if(FieldBits::NoField != (Enable3DFieldMask & whichField))
     {
-        returnValue += _sfGroup.getBinSize();
+        returnValue += _sfEnable3D.getBinSize();
     }
 
 
@@ -377,9 +377,9 @@ void SoundBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFile.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (GroupFieldMask & whichField))
+    if(FieldBits::NoField != (Enable3DFieldMask & whichField))
     {
-        _sfGroup.copyToBin(pMem);
+        _sfEnable3D.copyToBin(pMem);
     }
 
 
@@ -430,9 +430,9 @@ void SoundBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFile.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (GroupFieldMask & whichField))
+    if(FieldBits::NoField != (Enable3DFieldMask & whichField))
     {
-        _sfGroup.copyFromBin(pMem);
+        _sfEnable3D.copyFromBin(pMem);
     }
 
 
@@ -469,8 +469,8 @@ void SoundBase::executeSyncImpl(      SoundBase *pOther,
     if(FieldBits::NoField != (FileFieldMask & whichField))
         _sfFile.syncWith(pOther->_sfFile);
 
-    if(FieldBits::NoField != (GroupFieldMask & whichField))
-        _sfGroup.syncWith(pOther->_sfGroup);
+    if(FieldBits::NoField != (Enable3DFieldMask & whichField))
+        _sfEnable3D.syncWith(pOther->_sfEnable3D);
 
 
 }
@@ -506,8 +506,8 @@ void SoundBase::executeSyncImpl(      SoundBase *pOther,
     if(FieldBits::NoField != (FileFieldMask & whichField))
         _sfFile.syncWith(pOther->_sfFile);
 
-    if(FieldBits::NoField != (GroupFieldMask & whichField))
-        _sfGroup.syncWith(pOther->_sfGroup);
+    if(FieldBits::NoField != (Enable3DFieldMask & whichField))
+        _sfEnable3D.syncWith(pOther->_sfEnable3D);
 
 
 

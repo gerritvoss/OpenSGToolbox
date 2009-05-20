@@ -77,10 +77,13 @@ void SoundEmitter::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-//void SoundEmitter::update(){
-	//assert(get
-//	this->getParents(0);
-
+void SoundEmitter::emitSound(void)
+{
+    if(getSound() != NullFC)
+    {
+        _EmittedSoundChannels.insert(getSound()->play());
+    }
+}
 
 bool SoundEmitter::attachUpdateListener(WindowEventProducerPtr UpdateProducer)
 {
@@ -108,14 +111,31 @@ void SoundEmitter::dettachUpdateListener(WindowEventProducerPtr UpdateProducer)
 
 void SoundEmitter::update(const Time& elps)
 {
-	if (!getSound())
-		return; //empty sound, do nothing
 	assert(getParents().size() == 1 && "A Sound Emitter NodeCore MUST have 1 and only 1 parent.");
-	Matrix wm;
-	getParents()[0]->getToWorld(wm);
-	Pnt3f wp, origin(0, 0, 0);
-	wm.mult(origin, wp);
-	this->getSound()->setPosition(wp);
+
+    if(getSound() != NullFC)
+    {
+        //Remove all invalid
+        for(std::set<UInt32>::iterator Itor(_EmittedSoundChannels.begin()) ; Itor != _EmittedSoundChannels.end() ;)
+        {
+            if(!getSound()->isValid(*Itor))
+            {
+                Itor = _EmittedSoundChannels.erase(Itor);
+            }
+            else
+            {
+	            Matrix wm;
+	            getParents()[0]->getToWorld(wm);
+	            Pnt3f origin(0, 0, 0);
+	            wm.mult(origin);
+
+                std::cout << "Sound Position: " << origin << std::endl;
+
+                getSound()->setChannelPosition(origin, *Itor);
+                ++Itor;
+            }
+        }
+    }
 }
 
 /*----------------------- constructors & destructors ----------------------*/

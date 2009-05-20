@@ -65,7 +65,8 @@ inline
 OSG::UInt32 SoundBase::getClassTypeId(void) 
 {
     return _type.getId(); 
-} 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
@@ -125,11 +126,11 @@ SFPath *SoundBase::getSFFile(void)
     return &_sfFile;
 }
 
-//! Get the Sound::_sfGroup field.
+//! Get the Sound::_sfEnable3D field.
 inline
-SFSoundGroupPtr *SoundBase::getSFGroup(void)
+SFBool *SoundBase::getSFEnable3D(void)
 {
-    return &_sfGroup;
+    return &_sfEnable3D;
 }
 
 
@@ -301,25 +302,25 @@ void SoundBase::setFile(const Path &value)
     _sfFile.setValue(value);
 }
 
-//! Get the value of the Sound::_sfGroup field.
+//! Get the value of the Sound::_sfEnable3D field.
 inline
-SoundGroupPtr &SoundBase::getGroup(void)
+bool &SoundBase::getEnable3D(void)
 {
-    return _sfGroup.getValue();
+    return _sfEnable3D.getValue();
 }
 
-//! Get the value of the Sound::_sfGroup field.
+//! Get the value of the Sound::_sfEnable3D field.
 inline
-const SoundGroupPtr &SoundBase::getGroup(void) const
+const bool &SoundBase::getEnable3D(void) const
 {
-    return _sfGroup.getValue();
+    return _sfEnable3D.getValue();
 }
 
-//! Set the value of the Sound::_sfGroup field.
+//! Set the value of the Sound::_sfEnable3D field.
 inline
-void SoundBase::setGroup(const SoundGroupPtr &value)
+void SoundBase::setEnable3D(const bool &value)
 {
-    _sfGroup.setValue(value);
+    _sfEnable3D.setValue(value);
 }
 
 

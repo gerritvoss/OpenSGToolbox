@@ -330,7 +330,7 @@ void FModSound::setChannelPosition(const Pnt3f &pos, UInt32 ChannelID)
             curPos.y = pos.y();
             curPos.z = pos.z();
 
-            result = channel->get3DAttributes(&curPos, &curVec);
+            result = channel->set3DAttributes(&curPos, &curVec);
             FMOD_ERRCHECK(result);
         }
     }
@@ -386,7 +386,7 @@ void FModSound::setChannelVelocity(const Vec3f &vec, UInt32 ChannelID)
             curVec.y = vec.y();
             curVec.z = vec.z();
 
-            result = channel->get3DAttributes(&curPos, &curVec);
+            result = channel->set3DAttributes(&curPos, &curVec);
             FMOD_ERRCHECK(result);
         }
     }
@@ -641,8 +641,11 @@ void FModSound::changed(BitVector whichField, UInt32 origin)
         {
             FMOD_RESULT      result;
             FMOD_MODE soundMode(FMOD_DEFAULT);
-            //soundMode |= FMOD_3D;
-            soundMode |= FMOD_NONBLOCKING;
+            if(getEnable3D())
+            {
+                soundMode |= FMOD_3D;
+            }
+            //soundMode |= FMOD_NONBLOCKING;
             if(getLooping() != 0)
             {
                 soundMode |= FMOD_LOOP_NORMAL | FMOD_SOFTWARE;

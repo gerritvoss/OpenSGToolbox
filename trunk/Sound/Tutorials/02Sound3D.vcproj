@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="02FModSound"
+	Name="02Sound3D"
 	ProjectGUID="{3BF16424-AB24-4672-83B6-00BBA7A35301}"
 	RootNamespace="02RubberBandCamera"
 	Keyword="Win32Proj"
@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="fmod_event.lib fmodexp_vc.lib OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib OSGSoundD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="fmodex_vc.lib OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib OSGSoundD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName)D.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -159,7 +159,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="fmodex_vc.lib fmod_event.lib OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib OSGSound.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="fmodex_vc.lib OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib OSGSound.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -207,11 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\02FModSound.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\metablast.h"
+				RelativePath=".\02Sound3D.cpp"
 				>
 			</File>
 		</Filter>

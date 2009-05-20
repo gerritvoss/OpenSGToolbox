@@ -92,13 +92,12 @@ A Sound Interface.
     The Path to the sound file to load this sound from.
 	</Field>
 	<Field
-		name="Group"
-		type="SoundGroupPtr"
+		name="Enable3D"
+		type="bool"
 		cardinality="single"
 		visibility="external"
-		access="protected"
-        header="OSGSoundGroupFields.h"
+		access="public"
+        defaultValue="false"
 	>
-    The Path to the sound file to load this sound from.
 	</Field>
 </FieldContainer>

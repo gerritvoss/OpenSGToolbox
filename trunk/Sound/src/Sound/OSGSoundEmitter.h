@@ -49,6 +49,8 @@
 #include <OpenSG/Input/OSGUpdateListener.h>
 #include <OpenSG/Input/OSGWindowEventProducerFields.h>
 
+#include <set>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief SoundEmitter class. See \ref 
@@ -84,6 +86,8 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitter : public SoundEmitterBase
     bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
     void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
 
+    void emitSound(void);
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -118,6 +122,8 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitter : public SoundEmitterBase
 	SystemUpdateListener _SystemUpdateListener;
 	
     virtual void update(const Time& elps);
+
+    std::set<UInt32> _EmittedSoundChannels;
 
     /*! \}                                                                 */
     

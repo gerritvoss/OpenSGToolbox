@@ -194,18 +194,21 @@ void FModSoundManager::update(const UpdateEvent& e)
     {
 	    cam->getViewing(camW2S, 1, 1);
 	    Pnt3f org(0, 0, 0);
-	    camW2S.mult(org);
+	    camW2S.multMatrixPnt(org);
 
 	    Vec3f up(0, 1, 0);
-	    camW2S.mult(up);
+	    camW2S.multMatrixVec(up);
 
 	    Vec3f forward(0, 0, -1);
-	    camW2S.mult(forward);
+	    camW2S.multMatrixVec(forward);
 	    FMOD_VECTOR f_pos, f_vel, f_up, f_forward;
 	    f_pos.x = org.x(); f_pos.y = org.y(); f_pos.z = org.z();
 	    f_vel.x = 0; f_vel.y = 0; f_vel.z = 0;
 	    f_up.x = up.x(); f_up.y = up.y(); f_up.z = up.z();
 	    f_forward.x = forward.x(); f_forward.y = forward.y(); f_forward.z = forward.z();
+
+        
+        std::cout << "Camera Position: " << org << std::endl;
         
 	    result = _FModSystem->set3DListenerAttributes(0, &f_pos, &f_vel, &f_forward, &f_up);
         FMOD_ERRCHECK(result);
