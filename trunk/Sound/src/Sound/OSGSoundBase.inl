@@ -66,6 +66,7 @@ OSG::UInt32 SoundBase::getClassTypeId(void)
 {
     return _type.getId(); 
 } 
+
 /*------------------------------ get -----------------------------------*/
 
 //! Get the Sound::_sfPosition field.
@@ -122,6 +123,13 @@ inline
 SFPath *SoundBase::getSFFile(void)
 {
     return &_sfFile;
+}
+
+//! Get the Sound::_sfGroup field.
+inline
+SFSoundGroupPtr *SoundBase::getSFGroup(void)
+{
+    return &_sfGroup;
 }
 
 
@@ -291,6 +299,27 @@ inline
 void SoundBase::setFile(const Path &value)
 {
     _sfFile.setValue(value);
+}
+
+//! Get the value of the Sound::_sfGroup field.
+inline
+SoundGroupPtr &SoundBase::getGroup(void)
+{
+    return _sfGroup.getValue();
+}
+
+//! Get the value of the Sound::_sfGroup field.
+inline
+const SoundGroupPtr &SoundBase::getGroup(void) const
+{
+    return _sfGroup.getValue();
+}
+
+//! Set the value of the Sound::_sfGroup field.
+inline
+void SoundBase::setGroup(const SoundGroupPtr &value)
+{
+    _sfGroup.setValue(value);
 }
 
 

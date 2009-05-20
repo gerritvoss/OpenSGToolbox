@@ -89,6 +89,8 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
 	virtual UInt32 play(void);
 	virtual Real32 getLength(void) const;
 
+    virtual UInt32 getNumChannels(void) const;
+    virtual UInt32 getNumPlayingChannels(void) const;
     virtual bool isPlaying(UInt32 ChannelID) const;
     virtual bool isValid(UInt32 ChannelID) const;
 	virtual void stop(UInt32 ChannelID);
@@ -116,6 +118,10 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
 	virtual void mute(bool shouldMute, UInt32 ChannelID);
 
     void soundEnded(FMOD::Channel *channel);
+	virtual void setAllChannelsVolume(Real32 volume);
+	virtual void stopAllChannels(void);
+	virtual void setAllChannelPaused(bool paused);
+	virtual void setAllChannelMute(bool shouldMute);
 	
 	 /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

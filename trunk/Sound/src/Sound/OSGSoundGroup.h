@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,27 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSTUBSOUND_H_
-#define _OSGSTUBSOUND_H_
+#ifndef _OSGSOUNDGROUP_H_
+#define _OSGSOUNDGROUP_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGStubSoundBase.h"
+#include "OSGSoundGroupBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief StubSound class. See \ref 
-           PageSoundStubSound for a description.
+/*! \brief SoundGroup class. See \ref 
+           PageSoundSoundGroup for a description.
 */
 
-class OSG_SOUNDLIB_DLLMAPPING StubSound : public StubSoundBase
+class OSG_SOUNDLIB_DLLMAPPING SoundGroup : public SoundGroupBase
 {
   private:
 
-    typedef StubSoundBase Inherited;
+    typedef SoundGroupBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -76,61 +76,35 @@ class OSG_SOUNDLIB_DLLMAPPING StubSound : public StubSoundBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-	/*! \}                                                                 */
+    /*! \}                                                                 */
 
-	virtual UInt32 play(void);
-	virtual Real32 getLength(void) const;
-    
-    virtual UInt32 getNumChannels(void) const;
-    virtual UInt32 getNumPlayingChannels(void) const;
-    virtual bool isPlaying(UInt32 ChannelID) const;
-    virtual bool isValid(UInt32 ChannelID) const;
-	virtual void stop(UInt32 ChannelID);
+    void stop(void);
+    void pause(void);
+    void unpause(void);
+    void setVolume(Real32 volume);
+    void mute(bool muted);
 
-    
-	virtual void pause(UInt32 ChannelID);
-	virtual void unpause(UInt32 ChannelID);
-	virtual void pauseToggle(UInt32 ChannelID);
-    virtual bool isPaused(UInt32 ChannelID) const;
-
-    
-	virtual void seek(Real32 pos, UInt32 ChannelID);
-    virtual Real32 getTime(UInt32 ChannelID) const;
-
-
-	virtual void setChannelPosition(const Pnt3f &pos, UInt32 ChannelID);
-	virtual Pnt3f getChannelPosition(UInt32 ChannelID) const;
-
-	virtual void setChannelVelocity(const Vec3f &vec, UInt32 ChannelID);
-	virtual Vec3f getChannelVelocity(UInt32 ChannelID) const;
-
-	virtual void setChannelVolume(Real32 volume, UInt32 ChannelID);
-	virtual Real32 getChannelVolume(UInt32 ChannelID) const;
-	virtual bool getMute(UInt32 ChannelID) const;
-	virtual void mute(bool shouldMute, UInt32 ChannelID);
-    
-	virtual void setAllChannelsVolume(Real32 volume);
-	virtual void stopAllChannels(void);
-	virtual void setAllChannelPaused(bool paused);
-	virtual void setAllChannelMute(bool shouldMute);
+    UInt32 getNumSounds(void) const;
+    UInt32 getNumPlayingSounds(void) const;
+    UInt32 getNumPlayingChannels(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in StubSoundBase.
+    // Variables should all be in SoundGroupBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    StubSound(void);
-    StubSound(const StubSound &source);
+    SoundGroup(void);
+    SoundGroup(const SoundGroup &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~StubSound(void); 
+    virtual ~SoundGroup(void); 
 
     /*! \}                                                                 */
     
@@ -138,23 +112,22 @@ class OSG_SOUNDLIB_DLLMAPPING StubSound : public StubSoundBase
   private:
 
     friend class FieldContainer;
-    friend class StubSoundBase;
+    friend class SoundGroupBase;
 
     static void initMethod(void);
-	void update();
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const StubSound &source);
+    void operator =(const SoundGroup &source);
 };
 
-typedef StubSound *StubSoundP;
+typedef SoundGroup *SoundGroupP;
 
 OSG_END_NAMESPACE
 
-#include "OSGStubSoundBase.inl"
-#include "OSGStubSound.inl"
+#include "OSGSoundGroupBase.inl"
+#include "OSGSoundGroup.inl"
 
-#define OSGSTUBSOUND_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGSOUNDGROUP_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSTUBSOUND_H_ */
+#endif /* _OSGSOUNDGROUP_H_ */

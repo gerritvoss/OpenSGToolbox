@@ -278,6 +278,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Sound\OSGSoundGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundGroup.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundGroup.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundGroupBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundGroupBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundGroupBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Sound\OSGSoundGroupFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Sound\OSGSoundManager.cpp"
 					>
 				</File>

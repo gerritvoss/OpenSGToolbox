@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,7 +47,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGStubSound.h"
+#include "OSGSoundGroup.h"
+#include "OSGSound.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::StubSound
-A stub Sound Interface.
+/*! \class osg::SoundGroup
+A SoundGroup. 	
 */
 
 /***************************************************************************\
@@ -67,7 +68,7 @@ A stub Sound Interface.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void StubSound::initMethod (void)
+void SoundGroup::initMethod (void)
 {
 }
 
@@ -76,121 +77,75 @@ void StubSound::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-UInt32 StubSound::play(void)
+void SoundGroup::stop(void)
 {
-    SWARNING << "StubSound played" << std::endl;
-    return 0;
+    for(UInt32 i(0) ; i<getSounds().size() ; ++i)
+    {
+        getSounds(i)->stopAllChannels();
+    }
 }
 
-Real32 StubSound::getLength(void) const
+void SoundGroup::pause(void)
 {
-    return 0.0;
+    for(UInt32 i(0) ; i<getSounds().size() ; ++i)
+    {
+        getSounds(i)->setAllChannelPaused(true);
+    }
 }
 
-UInt32 StubSound::getNumChannels(void) const
+void SoundGroup::unpause(void)
 {
-    return 0;
+    for(UInt32 i(0) ; i<getSounds().size() ; ++i)
+    {
+        getSounds(i)->setAllChannelPaused(false);
+    }
 }
 
-UInt32 StubSound::getNumPlayingChannels(void) const
+void SoundGroup::mute(bool muted)
 {
-    return 0;
+    for(UInt32 i(0) ; i<getSounds().size() ; ++i)
+    {
+        getSounds(i)->setAllChannelMute(muted);
+    }
 }
 
-bool StubSound::isPlaying(UInt32 ChannelID) const
+void SoundGroup::setVolume(Real32 volume)
 {
-    return false;
+    for(UInt32 i(0) ; i<getSounds().size() ; ++i)
+    {
+        getSounds(i)->setAllChannelsVolume(volume);
+        beginEditCP(getSounds(i), Sound::VolumeFieldMask);
+            getSounds(i)->setVolume(volume);
+        beginEditCP(getSounds(i), Sound::VolumeFieldMask);
+    }
 }
 
-bool StubSound::isValid(UInt32 ChannelID) const
+UInt32 SoundGroup::getNumSounds(void) const
 {
-    return false;
+    return getSounds().size();
 }
 
-void StubSound::stop(UInt32 ChannelID)
+UInt32 SoundGroup::getNumPlayingSounds(void) const
 {
+    UInt32 Count(0);
+    for(UInt32 i(0) ; i<getSounds().size() ; ++i)
+    {
+        if(getSounds()[i]->getNumPlayingChannels() > 0)
+        {
+            ++Count;
+        }
+    }
+    return Count;
 }
 
-
-void StubSound::pause(UInt32 ChannelID)
+UInt32 SoundGroup::getNumPlayingChannels(void) const
 {
-}
-
-void StubSound::unpause(UInt32 ChannelID)
-{
-}
-
-void StubSound::pauseToggle(UInt32 ChannelID)
-{
-}
-
-bool StubSound::isPaused(UInt32 ChannelID) const
-{
-    return false;
-}
-
-
-
-void StubSound::seek(Real32 pos, UInt32 ChannelID)
-{
-}
-
-Real32 StubSound::getTime(UInt32 ChannelID) const
-{
-    return 0.0f;
-}
-
-void StubSound::setChannelPosition(const Pnt3f &pos, UInt32 ChannelID)
-{
-}
-
-Pnt3f StubSound::getChannelPosition(UInt32 ChannelID) const
-{
-    return Pnt3f();
-}
-
-void StubSound::setChannelVelocity(const Vec3f &vec, UInt32 ChannelID)
-{
-}
-
-Vec3f StubSound::getChannelVelocity(UInt32 ChannelID) const
-{
-    return Vec3f();
-}
-
-
-void StubSound::setChannelVolume(Real32 volume, UInt32 ChannelID)
-{
-}
-
-Real32 StubSound::getChannelVolume(UInt32 ChannelID) const
-{
-    return 0.0f;
-}
-
-bool StubSound::getMute(UInt32 ChannelID) const
-{
-    return false;
-}
-
-void StubSound::mute(bool shouldMute, UInt32 ChannelID)
-{
-}
-
-void StubSound::setAllChannelsVolume(Real32 volume)
-{
-}
-
-void StubSound::stopAllChannels(void)
-{
-}
-
-void StubSound::setAllChannelPaused(bool paused)
-{
-}
-
-void StubSound::setAllChannelMute(bool shouldMute)
-{
+    UInt32 Count(0);
+    for(UInt32 i(0) ; i<getSounds().size() ; ++i)
+    {
+        Count += getSounds()[i]->getNumPlayingChannels();
+    }
+    return Count;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -199,31 +154,31 @@ void StubSound::setAllChannelMute(bool shouldMute)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-StubSound::StubSound(void) :
+SoundGroup::SoundGroup(void) :
     Inherited()
 {
 }
 
-StubSound::StubSound(const StubSound &source) :
+SoundGroup::SoundGroup(const SoundGroup &source) :
     Inherited(source)
 {
 }
 
-StubSound::~StubSound(void)
+SoundGroup::~SoundGroup(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void StubSound::changed(BitVector whichField, UInt32 origin)
+void SoundGroup::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void StubSound::dump(      UInt32    , 
+void SoundGroup::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump StubSound NI" << std::endl;
+    SLOG << "Dump SoundGroup NI" << std::endl;
 }
 
 
@@ -241,10 +196,10 @@ void StubSound::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSTUBSOUNDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSTUBSOUNDBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGSOUNDGROUPBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSOUNDGROUPBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGSTUBSOUNDFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGSOUNDGROUPFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

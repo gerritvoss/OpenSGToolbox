@@ -87,6 +87,8 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
 	virtual Real32 getLength(void) const = 0;
     
     //Channel Methods
+    virtual UInt32 getNumChannels(void) const = 0;
+    virtual UInt32 getNumPlayingChannels(void) const = 0;
     virtual bool isPlaying(UInt32 ChannelID) const = 0;
     virtual bool isValid(UInt32 ChannelID) const = 0;
 	virtual void stop(UInt32 ChannelID) = 0;
@@ -114,7 +116,12 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
 	virtual void mute(bool shouldMute, UInt32 ChannelID) = 0;
 
     
-    static  SoundPtr      create          (void); 
+	virtual void setAllChannelsVolume(Real32 volume) = 0;
+	virtual void stopAllChannels(void) = 0;
+	virtual void setAllChannelPaused(bool paused) = 0;
+	virtual void setAllChannelMute(bool shouldMute) = 0;
+    
+    static  SoundPtr      create(void); 
 
     EventConnection addSoundListener(SoundListenerPtr Listener);
     bool isSoundListenerAttached(SoundListenerPtr Listener) const;

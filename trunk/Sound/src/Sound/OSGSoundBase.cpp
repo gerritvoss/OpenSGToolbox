@@ -88,6 +88,9 @@ const OSG::BitVector  SoundBase::StreamingFieldMask =
 const OSG::BitVector  SoundBase::FileFieldMask = 
     (TypeTraits<BitVector>::One << SoundBase::FileFieldId);
 
+const OSG::BitVector  SoundBase::GroupFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::GroupFieldId);
+
 const OSG::BitVector SoundBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -117,6 +120,9 @@ const OSG::BitVector SoundBase::MTInfluenceMask =
     Whether or not this sound should be streamed.
 */
 /*! \var Path            SoundBase::_sfFile
+    The Path to the sound file to load this sound from.
+*/
+/*! \var SoundGroupPtr   SoundBase::_sfGroup
     The Path to the sound file to load this sound from.
 */
 
@@ -163,7 +169,12 @@ FieldDescription *SoundBase::_desc[] =
                      "File", 
                      FileFieldId, FileFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFFile)
+                     (FieldAccessMethod) &SoundBase::getSFFile),
+    new FieldDescription(SFSoundGroupPtr::getClassType(), 
+                     "Group", 
+                     GroupFieldId, GroupFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundBase::getSFGroup)
 };
 
 
@@ -237,6 +248,7 @@ SoundBase::SoundBase(void) :
     _sfLooping                (Int32(1)), 
     _sfStreaming              (bool(false)), 
     _sfFile                   (), 
+    _sfGroup                  (), 
     Inherited() 
 {
 }
@@ -254,6 +266,7 @@ SoundBase::SoundBase(const SoundBase &source) :
     _sfLooping                (source._sfLooping                ), 
     _sfStreaming              (source._sfStreaming              ), 
     _sfFile                   (source._sfFile                   ), 
+    _sfGroup                  (source._sfGroup                  ), 
     Inherited                 (source)
 {
 }
@@ -310,6 +323,11 @@ UInt32 SoundBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFile.getBinSize();
     }
 
+    if(FieldBits::NoField != (GroupFieldMask & whichField))
+    {
+        returnValue += _sfGroup.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -357,6 +375,11 @@ void SoundBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (FileFieldMask & whichField))
     {
         _sfFile.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GroupFieldMask & whichField))
+    {
+        _sfGroup.copyToBin(pMem);
     }
 
 
@@ -407,6 +430,11 @@ void SoundBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFile.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (GroupFieldMask & whichField))
+    {
+        _sfGroup.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -441,6 +469,9 @@ void SoundBase::executeSyncImpl(      SoundBase *pOther,
     if(FieldBits::NoField != (FileFieldMask & whichField))
         _sfFile.syncWith(pOther->_sfFile);
 
+    if(FieldBits::NoField != (GroupFieldMask & whichField))
+        _sfGroup.syncWith(pOther->_sfGroup);
+
 
 }
 #else
@@ -474,6 +505,9 @@ void SoundBase::executeSyncImpl(      SoundBase *pOther,
 
     if(FieldBits::NoField != (FileFieldMask & whichField))
         _sfFile.syncWith(pOther->_sfFile);
+
+    if(FieldBits::NoField != (GroupFieldMask & whichField))
+        _sfGroup.syncWith(pOther->_sfGroup);
 
 
 

@@ -161,6 +161,27 @@ Real32 FModSound::getLength(void) const
     }
 }
 
+UInt32 FModSound::getNumChannels(void) const
+{
+    return _ChannelMap.size();
+}
+
+UInt32 FModSound::getNumPlayingChannels(void) const
+{
+    UInt32 Count(0);
+    
+    for(ChannelMap::const_iterator SearchItor = _ChannelMap.begin() ;
+        SearchItor != _ChannelMap.end() ;
+        ++SearchItor)
+    {
+        if(isPlaying(SearchItor->first))
+        {
+            ++Count;
+        }
+    }
+    return Count;
+}
+
 bool FModSound::isPlaying(UInt32 ChannelID) const
 {
     bool playing(false);
@@ -534,6 +555,54 @@ UInt32 FModSound::getChannelID(FMOD::Channel* channel) const
         }
     }
     return 0;
+}
+
+
+void FModSound::setAllChannelsVolume(Real32 volume)
+{
+    for(ChannelMap::iterator SearchItor = _ChannelMap.begin() ;
+        SearchItor != _ChannelMap.end() ;
+        ++SearchItor)
+    {
+        setChannelVolume(volume, SearchItor->first);
+    }
+}
+
+void FModSound::stopAllChannels(void)
+{
+    for(ChannelMap::iterator SearchItor = _ChannelMap.begin() ;
+        SearchItor != _ChannelMap.end() ;
+        ++SearchItor)
+    {
+        stop(SearchItor->first);
+    }
+}
+
+void FModSound::setAllChannelPaused(bool paused)
+{
+    for(ChannelMap::iterator SearchItor = _ChannelMap.begin() ;
+        SearchItor != _ChannelMap.end() ;
+        ++SearchItor)
+    {
+        if(paused)
+        {
+            pause(SearchItor->first);
+        }
+        else
+        {
+            unpause(SearchItor->first);
+        }
+    }
+}
+
+void FModSound::setAllChannelMute(bool shouldMute)
+{
+    for(ChannelMap::iterator SearchItor = _ChannelMap.begin() ;
+        SearchItor != _ChannelMap.end() ;
+        ++SearchItor)
+    {
+        mute(shouldMute, SearchItor->first);
+    }
 }
 
 /*-------------------------------------------------------------------------*\
