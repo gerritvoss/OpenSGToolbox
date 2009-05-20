@@ -52,6 +52,8 @@
 #include <OpenSG/Input/OSGEventConnection.h>
 #include <OpenSG/Input/OSGWindowUtils.h>
 #include "OSGDefaultCaptionComponentGenerator.h"
+#include <OpenSG/Sound/OSGSound.h>
+#include <OpenSG/Sound/OSGSoundManager.h>
 
 #include <set>
 
@@ -89,7 +91,6 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     /*! \}                                                                 */
 
     void captionSegment(std::string s, Real32 start, Real32 end);
-    void setCaptionDialog(SoundPtr sound);
 
     EventConnection addCaptionListener(CaptionListenerPtr Listener);
 	bool isCaptionListenerAttached(CaptionListenerPtr Listener) const;
@@ -99,6 +100,7 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     void start();
     void stop();
     void pause();
+    void attachSoundListener();
 
 
     /*=========================  PROTECTED  ===============================*/
@@ -134,12 +136,23 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     
     void update(const UpdateEvent& e);
 
-    class CaptionListener : public UpdateListener
+    class CaptionListener : public UpdateListener, public SoundListener
 	{
 	public :
 		CaptionListener(CaptionPtr TheCaption);
 		
 		virtual void update(const UpdateEvent& e);
+        virtual void soundPlayed(const SoundEvent& e);
+
+        virtual void soundStopped(const SoundEvent& e);
+
+        virtual void soundPaused(const SoundEvent& e);
+
+        virtual void soundUnpaused(const SoundEvent& e);
+
+        virtual void soundLooped(const SoundEvent& e);
+
+        virtual void soundEnded(const SoundEvent& e);
 	protected :
 		CaptionPtr _Caption;
 	};

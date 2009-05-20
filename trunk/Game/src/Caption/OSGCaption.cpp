@@ -87,10 +87,6 @@ void Caption::captionSegment(std::string s, Real32 start, Real32 end)
     getEndStamps().push_back(end);
 }
 
-void Caption::setCaptionDialog(SoundPtr sound)
-{
-
-}
 void Caption::setupCaption()
 {
     beginEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
@@ -210,6 +206,37 @@ void Caption::CaptionListener::update(const UpdateEvent& e)
     _Caption->update(e);
 }
 
+void Caption::CaptionListener::soundPlayed(const SoundEvent& e)
+{
+    _Caption->start();
+}
+
+void Caption::CaptionListener::soundStopped(const SoundEvent& e)
+{
+    _Caption->stop();
+}
+
+void Caption::CaptionListener::soundPaused(const SoundEvent& e)
+{
+    _Caption->pause();
+}
+
+void Caption::CaptionListener::soundUnpaused(const SoundEvent& e)
+{
+    _Caption->start();
+}
+
+void Caption::CaptionListener::soundLooped(const SoundEvent& e)
+{
+    _Caption->stop();
+    _Caption->start();
+}
+
+void Caption::CaptionListener::soundEnded(const SoundEvent& e)
+{
+    _Caption->stop();
+}
+
 void Caption::attachWindowEventProducer(WindowEventProducerPtr TheEventProducer)
 {
     TheEventProducer->addUpdateListener(&_CaptionListener);
@@ -248,6 +275,14 @@ Caption::~Caption(void)
 void Caption::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & CaptionDialogSoundFieldMask)
+    {
+        if(getCaptionDialogSound() != NullFC)
+        {
+            getCaptionDialogSound()->addSoundListener(&_CaptionListener);
+        }
+    }
 }
 
 void Caption::dump(      UInt32    , 

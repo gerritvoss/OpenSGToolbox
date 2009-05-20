@@ -86,7 +86,9 @@ information:
 #include <OpenSG/Game/OSGCaption.h>
 #include <OpenSG/Game/OSGDefaultCaptionComponentGenerator.h>
 
-
+//Sound
+#include <OpenSG/Sound/OSGSoundManager.h>
+#include <OpenSG/Sound/OSGSound.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -97,6 +99,8 @@ DefaultCaptionComponentGeneratorPtr TutorialCapGen;
 double timee = 0.0;
 Int32 segUpdate = 0;
 NodePtr scene;
+
+SoundPtr TutorialSound;
 
 
 // The SimpleSceneManager to manage simple applications
@@ -264,6 +268,14 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
+    TutorialSound = SoundManager::the()->createSound();
+    beginEditCP(TutorialSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
+        TutorialSound->setFile(Path("./Data/zap.wav"));
+        TutorialSound->setVolume(1.0);
+        TutorialSound->setStreaming(true);
+        TutorialSound->setLooping(-1);
+    endEditCP(TutorialSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
+
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
@@ -393,6 +405,7 @@ int main(int argc, char **argv)
     TutorialCaption->captionSegment("background to be blank.",16.0,18.0);
     TutorialCaption->captionSegment("MUCH BETTER!",18.0,20.0);
 
+
     //Add the tutorial Caption Listener to the Caption that was set up for the tutorial
     TutorialCaptionListener TheCaptionListener;
     TutorialCaption->addCaptionListener(&TheCaptionListener);
@@ -401,10 +414,11 @@ int main(int argc, char **argv)
     TutorialCapGen = DefaultCaptionComponentGenerator::create();
 
     TutorialCaption->attachWindowEventProducer(TutorialWindowEventProducer);
-    beginEditCP(TutorialCaption, Caption::ParentContainerFieldMask | Caption::ComponentGeneratorFieldMask);
+    beginEditCP(TutorialCaption, Caption::ParentContainerFieldMask | Caption::ComponentGeneratorFieldMask | Caption::CaptionDialogSoundFieldMask);
         TutorialCaption->setParentContainer(CaptionContainer);
         TutorialCaption->setComponentGenerator(TutorialCapGen);
-    endEditCP(TutorialCaption, Caption::ParentContainerFieldMask | Caption::ComponentGeneratorFieldMask);
+        TutorialCaption->setCaptionDialogSound(TutorialSound);
+    endEditCP(TutorialCaption, Caption::ParentContainerFieldMask | Caption::ComponentGeneratorFieldMask | Caption::CaptionDialogSoundFieldMask);
 
 
     //Create and modify the Label prototype that will be used for the caption
