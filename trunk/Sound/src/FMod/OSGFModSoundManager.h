@@ -76,16 +76,11 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public SoundManager
 	/**
 	* update the sound system with current elapsed time
 	*/
-    virtual void update(const UpdateEvent& e);
-
-	/**
-	* update listener's property, actual argument depends on the extended class
-	*/
-	virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
-	
+    virtual void update(const UpdateEvent& e);	
 
 	//create a new sound object by its integer id
 	virtual SoundPtr createSound(void) const;
+    virtual void setCamera(CameraPtr TheCamera);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -111,6 +106,7 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public SoundManager
     
 
     FMOD::System* getSystem(void) const;
+	Pnt3f _PreviousLisenerPosition;
 
     /*==========================  PRIVATE  ================================*/
   private:

@@ -4,9 +4,9 @@
  *                                                                           *
  *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
+ *                            www.opensg.LisenerPosition                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *   contact: dirk@opensg.LisenerPosition, gerrit.voss@vossg.LisenerPosition, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -159,13 +159,13 @@ void FModSoundManager::init(void)
         }
     }
 
-    result = _FModSystem->init(100, FMOD_INIT_NORMAL, 0);
+    result = _FModSystem->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);
     if (result == FMOD_ERR_OUTPUT_CREATEBUFFER)         /* Ok, the speaker mode selected isn't supported by this soundcard.  Switch it back to stereo... */
     {
         result = _FModSystem->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
         FMOD_ERRCHECK(result);
             
-        result = _FModSystem->init(100, FMOD_INIT_NORMAL, 0);/* ... and re-init. */
+        result = _FModSystem->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);/* ... and re-init. */
         FMOD_ERRCHECK(result);
     }
 
@@ -188,13 +188,12 @@ void FModSoundManager::update(const UpdateEvent& e)
     FMOD_RESULT result;
 
     //setup listener's position and orientation as camera's
-	Matrix camW2S;
-	CameraPtr cam = getCamera();
-    if(cam != NullFC)
+    if(getCamera() != NullFC)
     {
-	    cam->getViewing(camW2S, 1, 1);
-	    Pnt3f org(0, 0, 0);
-	    camW2S.multMatrixPnt(org);
+	    Matrix camW2S;
+	    getCamera()->getViewing(camW2S, 1, 1);
+	    Pnt3f LisenerPosition(0, 0, 0);
+	    camW2S.multMatrixPnt(LisenerPosition);
 
 	    Vec3f up(0, 1, 0);
 	    camW2S.multMatrixVec(up);
@@ -202,13 +201,16 @@ void FModSoundManager::update(const UpdateEvent& e)
 	    Vec3f forward(0, 0, -1);
 	    camW2S.multMatrixVec(forward);
 	    FMOD_VECTOR f_pos, f_vel, f_up, f_forward;
-	    f_pos.x = org.x(); f_pos.y = org.y(); f_pos.z = org.z();
-	    f_vel.x = 0; f_vel.y = 0; f_vel.z = 0;
+	    f_pos.x = LisenerPosition.x(); f_pos.y = LisenerPosition.y(); f_pos.z = LisenerPosition.z();
 	    f_up.x = up.x(); f_up.y = up.y(); f_up.z = up.z();
 	    f_forward.x = forward.x(); f_forward.y = forward.y(); f_forward.z = forward.z();
 
-        
-        std::cout << "Camera Position: " << org << std::endl;
+        //Calculate Velocity
+	    f_vel.x = 0; f_vel.y = 0; f_vel.z = 0;
+	    /*f_vel.x = ( _PreviousLisenerPosition.x() - LisenerPosition.x() ) / e.getElapsedTime();
+        f_vel.y = ( _PreviousLisenerPosition.y() - LisenerPosition.y() ) / e.getElapsedTime();
+        f_vel.z = ( _PreviousLisenerPosition.z() - LisenerPosition.z() ) / e.getElapsedTime();*/
+        _PreviousLisenerPosition = LisenerPosition;
         
 	    result = _FModSystem->set3DListenerAttributes(0, &f_pos, &f_vel, &f_forward, &f_up);
         FMOD_ERRCHECK(result);
@@ -223,16 +225,18 @@ void FModSoundManager::update(const UpdateEvent& e)
     FMOD_ERRCHECK(result);
 }
 
-void FModSoundManager::setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up)
-{	
-	/*FMOD_VECTOR pos, vel, forwardDir, upDir;
-	pos.x = lstnrPos[0]; pos.y = lstnrPos[1]; pos.z = lstnrPos[2];
-	vel.x = velocity[0]; vel.y = velocity[1]; vel.z = velocity[2];
-	forwardDir.x = forward[0]; forwardDir.y = forward[1]; forwardDir.z = forward[2];
-	upDir.x = up[0]; upDir.y = up[1]; upDir.z = up[2];
-
-	this->eventSystem->set3DListenerAttributes(0, &pos, &vel, &forwardDir, &upDir);*/
+void FModSoundManager::setCamera(CameraPtr TheCamera)
+{
+    Inherited::setCamera(TheCamera);
+    if(TheCamera != NullFC)
+    {
+	    Matrix camW2S;
+        TheCamera->getViewing(camW2S, 1, 1);
+        _PreviousLisenerPosition.setValues(0.0,0.0,0.0);
+        camW2S.multMatrixPnt(_PreviousLisenerPosition);
+    }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

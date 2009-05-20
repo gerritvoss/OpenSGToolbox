@@ -64,20 +64,14 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public UpdateListener
     static SoundManager* the(void);
 
 	virtual void init(void) = 0;
-	virtual void uninit(void) = 0;
-
-	/**
-	* update listener's property, actual argument depends on the extended class
-	*/
-	virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up) = 0;
-	
+	virtual void uninit(void) = 0;	
 
 	//create a new sound object by its integer id
 	virtual SoundPtr createSound(void) const = 0;
 
     
-    void setCamera(CameraPtr TheCamera);
-    CameraPtr getCamera(void) const;
+    virtual void setCamera(CameraPtr TheCamera);
+    virtual CameraPtr getCamera(void) const;
 
     void attachUpdateProducer(WindowEventProducerPtr TheProducer);
 

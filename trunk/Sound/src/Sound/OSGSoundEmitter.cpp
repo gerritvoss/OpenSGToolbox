@@ -93,6 +93,14 @@ bool SoundEmitter::attachUpdateListener(WindowEventProducerPtr UpdateProducer)
     }
 
     UpdateProducer->addUpdateListener(&_SystemUpdateListener);
+    
+    if(getParents().size() > 0)
+    {
+        Matrix wm;
+        getParents()[0]->getToWorld(wm);
+        _PreviousPosition.setValues(0, 0, 0);
+        wm.mult(_PreviousPosition);
+    }
 
     return true;
 }
@@ -113,6 +121,11 @@ void SoundEmitter::update(const Time& elps)
 {
 	assert(getParents().size() == 1 && "A Sound Emitter NodeCore MUST have 1 and only 1 parent.");
 
+    Matrix wm;
+    getParents()[0]->getToWorld(wm);
+    Pnt3f Position(0, 0, 0);
+    wm.mult(Position);
+
     if(getSound() != NullFC)
     {
         //Remove all invalid
@@ -124,18 +137,17 @@ void SoundEmitter::update(const Time& elps)
             }
             else
             {
-	            Matrix wm;
-	            getParents()[0]->getToWorld(wm);
-	            Pnt3f origin(0, 0, 0);
-	            wm.mult(origin);
 
-                std::cout << "Sound Position: " << origin << std::endl;
+                //getSound()->setChannelVelocity(_PreviousPosition - Position * (1.0f/elps), *Itor);
+                
 
-                getSound()->setChannelPosition(origin, *Itor);
+                getSound()->setChannelPosition(Position, *Itor);
                 ++Itor;
             }
         }
     }
+
+    _PreviousPosition = Position;
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -162,6 +174,14 @@ SoundEmitter::~SoundEmitter(void)
 void SoundEmitter::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & ParentsFieldMask && getParents().size() > 0)
+    {
+        Matrix wm;
+        getParents()[0]->getToWorld(wm);
+        _PreviousPosition.setValues(0, 0, 0);
+        wm.mult(_PreviousPosition);
+    }
 }
 
 void SoundEmitter::dump(      UInt32    , 
