@@ -101,6 +101,17 @@ void SoundGroup::unpause(void)
     }
 }
 
+Real32 SoundGroup::getVolume(void) const
+{
+    Real32 Sum(0.0f);
+    for(UInt32 i(0) ; i<getSounds().size() ; ++i)
+    {
+        Sum += getSounds()[i]->getVolume();
+    }
+
+    return Sum/static_cast<Real32>(getSounds().size());
+}
+
 void SoundGroup::mute(bool muted)
 {
     for(UInt32 i(0) ; i<getSounds().size() ; ++i)
@@ -116,7 +127,7 @@ void SoundGroup::setVolume(Real32 volume)
         getSounds(i)->setAllChannelsVolume(volume);
         beginEditCP(getSounds(i), Sound::VolumeFieldMask);
             getSounds(i)->setVolume(volume);
-        beginEditCP(getSounds(i), Sound::VolumeFieldMask);
+        endEditCP(getSounds(i), Sound::VolumeFieldMask);
     }
 }
 

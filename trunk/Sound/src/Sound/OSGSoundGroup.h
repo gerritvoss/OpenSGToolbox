@@ -82,6 +82,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundGroup : public SoundGroupBase
     void pause(void);
     void unpause(void);
     void setVolume(Real32 volume);
+    Real32 getVolume(void) const;
     void mute(bool muted);
 
     UInt32 getNumSounds(void) const;

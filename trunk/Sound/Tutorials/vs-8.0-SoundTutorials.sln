@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02FModSound", "02FmodSound.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03SoundGroup", "03SoundGroup.vcproj", "{1100FF27-9C2C-49FC-AAE6-241BB6F4735A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -37,6 +39,10 @@ Global
 		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.Build.0 = Debug|Win32
 		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.ActiveCfg = Release|Win32
 		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.Build.0 = Release|Win32
+		{1100FF27-9C2C-49FC-AAE6-241BB6F4735A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1100FF27-9C2C-49FC-AAE6-241BB6F4735A}.Debug|Win32.Build.0 = Debug|Win32
+		{1100FF27-9C2C-49FC-AAE6-241BB6F4735A}.Release|Win32.ActiveCfg = Release|Win32
+		{1100FF27-9C2C-49FC-AAE6-241BB6F4735A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
