@@ -67,7 +67,7 @@
 
 #include "OSGCaptionComponentGenerator.h" // Parent
 
-#include "OpenSG/UserInterface/OSGLabelFields.h" // CaptionSegmentPrototype type
+#include <OpenSG/UserInterface/OSGLabelFields.h> // CaptionSegmentPrototype type
 
 #include "OSGDefaultCaptionComponentGeneratorFields.h"
 

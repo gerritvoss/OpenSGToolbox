@@ -95,8 +95,9 @@ void Caption::setupCaption()
     endEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
 }
 
-void Caption::start()
+void Caption::start(UInt32 SoundChannelID)
 {
+    _SoundChannelID = SoundChannelID;
     _start = true;
 }
 
@@ -104,7 +105,6 @@ void Caption::stop()
 {
     _start = false;
     setCurrentSegmentIndex(-1);
-    _timeStamp = 0.0;
     beginEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
         getParentContainer()->getChildren().clear();
     endEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
@@ -119,12 +119,11 @@ void Caption::update(const UpdateEvent& e)
 {
     if(_start)
     {
-        _timeStamp += e.getElapsedTime();
-        CaptionEvent ce = CaptionEvent(CaptionPtr(this),getSystemTime());
         if(getCurrentSegmentIndex() == -1)
         {
-            if(getStartStamps(0) <= _timeStamp)
+            if(getStartStamps(0) <= getCaptionDialogSound()->getTime(_SoundChannelID))
             {
+                CaptionEvent ce = CaptionEvent(CaptionPtr(this),getSystemTime());
                 setCurrentSegmentIndex(0);
                 produceCaptionStarted(ce);
                 produceSegmentActivated(ce);
@@ -133,9 +132,10 @@ void Caption::update(const UpdateEvent& e)
                 return;
             }
         }
-        else if(getEndStamps(getCurrentSegmentIndex()) <= _timeStamp && getCurrentSegmentIndex() < getSegment().size()-1)
+        else if(getEndStamps(getCurrentSegmentIndex()) <= getCaptionDialogSound()->getTime(_SoundChannelID) && getCurrentSegmentIndex() < getSegment().size()-1)
         {
             setCurrentSegmentIndex(getCurrentSegmentIndex()+1);
+            CaptionEvent ce = CaptionEvent(CaptionPtr(this),getSystemTime());
             produceSegmentActivated(ce);
             setupCaption();
             return;
@@ -146,6 +146,7 @@ void Caption::update(const UpdateEvent& e)
         }
         if(getCurrentSegmentIndex() >= getSegment().size()-1)
         {
+            CaptionEvent ce = CaptionEvent(CaptionPtr(this),getSystemTime());
             produceCaptionEnded(ce);
             _captionEndedCheck = true;
         }
@@ -208,7 +209,7 @@ void Caption::CaptionListener::update(const UpdateEvent& e)
 
 void Caption::CaptionListener::soundPlayed(const SoundEvent& e)
 {
-    _Caption->start();
+    _Caption->start(e.getChannel());
 }
 
 void Caption::CaptionListener::soundStopped(const SoundEvent& e)
@@ -223,13 +224,13 @@ void Caption::CaptionListener::soundPaused(const SoundEvent& e)
 
 void Caption::CaptionListener::soundUnpaused(const SoundEvent& e)
 {
-    _Caption->start();
+    _Caption->start(e.getChannel());
 }
 
 void Caption::CaptionListener::soundLooped(const SoundEvent& e)
 {
     _Caption->stop();
-    _Caption->start();
+    _Caption->start(e.getChannel());
 }
 
 void Caption::CaptionListener::soundEnded(const SoundEvent& e)
@@ -253,16 +254,16 @@ void Caption::attachWindowEventProducer(WindowEventProducerPtr TheEventProducer)
 Caption::Caption(void) :
     Inherited(),
     _CaptionListener(CaptionPtr(this)),
-    _timeStamp(0.0),
-    _start(false)
+    _start(false),
+    _SoundChannelID(0)
 {
 }
 
 Caption::Caption(const Caption &source) :
     Inherited(source),
     _CaptionListener(CaptionPtr(this)),
-    _timeStamp(0.0),
-    _start(false)
+    _start(false),
+    _SoundChannelID(0)
 {
 }
 

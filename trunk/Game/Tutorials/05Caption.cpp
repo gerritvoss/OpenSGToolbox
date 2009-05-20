@@ -211,7 +211,7 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        TutorialCaption->start();
+        TutorialSound->play();
         std::cout << "Start Action" << std::endl;
 
     }
@@ -267,14 +267,6 @@ int main(int argc, char **argv)
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
-
-    TutorialSound = SoundManager::the()->createSound();
-    beginEditCP(TutorialSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
-        TutorialSound->setFile(Path("./Data/zap.wav"));
-        TutorialSound->setVolume(1.0);
-        TutorialSound->setStreaming(true);
-        TutorialSound->setLooping(-1);
-    endEditCP(TutorialSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
@@ -383,8 +375,7 @@ int main(int argc, char **argv)
     
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 
-    // Create the Caption
-    TutorialCaption = osg::Caption::create();
+
 
     PanelPtr CaptionContainer = osg::Panel::create();
 
@@ -392,6 +383,21 @@ int main(int argc, char **argv)
         CaptionContainer->setPreferredSize(Pnt2f(250.0,30.0));
         CaptionContainer->setLayout(MainInternalWindowLayout);
     endEditCP(CaptionContainer, Panel::PreferredSizeFieldMask | Panel::LayoutFieldMask);
+
+    //Initialize the Sound Manager
+    SoundManager::the()->init();
+    SoundManager::the()->attachUpdateProducer(TutorialWindowEventProducer);
+
+    TutorialSound = SoundManager::the()->createSound();
+    beginEditCP(TutorialSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
+        TutorialSound->setFile(Path("./Data/VCTheme.mp3"));
+        TutorialSound->setVolume(1.0);
+        TutorialSound->setStreaming(true);
+        TutorialSound->setLooping(-1);
+    endEditCP(TutorialSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
+
+    // Create the Caption
+    TutorialCaption = osg::Caption::create();
 
     //Add the segments of text to be displayed
     TutorialCaption->captionSegment("The Caption Listener can",0.0,2.0);
@@ -477,6 +483,7 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
+    SoundManager::the()->setCamera(mgr->getCamera());
 
 
     while(!ExitApp)

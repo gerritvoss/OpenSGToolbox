@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OpenSG/UserInterface/OSGComponentGenerator.h" // Parent
+#include <OpenSG/UserInterface/OSGComponentGenerator.h> // Parent
 
 
 #include "OSGCaptionComponentGeneratorFields.h"

@@ -97,7 +97,6 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     void removeCaptionListener(CaptionListenerPtr Listener);
     void attachWindowEventProducer(WindowEventProducerPtr TheEventProducer);
     void setupCaption();
-    void start();
     void stop();
     void pause();
     void attachSoundListener();
@@ -122,7 +121,6 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
 
     bool _start;
     bool _captionEndedCheck;
-    Real32 _timeStamp;
 
     virtual ~Caption(void); 
 
@@ -164,6 +162,9 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     virtual void produceSegmentActivated(const CaptionEvent& e);
     virtual void produceCaptionStarted(const CaptionEvent& e);
     virtual void produceCaptionEnded(const CaptionEvent& e);
+    
+    void start(UInt32 SoundChannelID);
+    UInt32 _SoundChannelID;
 
 
     
