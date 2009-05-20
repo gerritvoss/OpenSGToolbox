@@ -101,7 +101,7 @@ Int32 segUpdate = 0;
 NodePtr scene;
 
 SoundPtr TutorialSound;
-
+UInt32 TutorialSoundChannelID;
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
@@ -211,7 +211,7 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        TutorialSound->play();
+        TutorialSoundChannelID = TutorialSound->play();
         std::cout << "Start Action" << std::endl;
 
     }
@@ -223,7 +223,7 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        TutorialCaption->pause();
+        TutorialSound->pauseToggle(TutorialSoundChannelID);
         std::cout << "Pause Action" << std::endl;
 
     }
@@ -235,7 +235,7 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        TutorialCaption->stop();
+        TutorialSound->stop(TutorialSoundChannelID);
         std::cout << "Stop Action" << std::endl;
         NodePtr s = makeTorus(.5, 2, 16, 16);
         beginEditCP(scene, Node::ChildrenFieldMask);
@@ -393,7 +393,7 @@ int main(int argc, char **argv)
         TutorialSound->setFile(Path("./Data/VCTheme.mp3"));
         TutorialSound->setVolume(1.0);
         TutorialSound->setStreaming(true);
-        TutorialSound->setLooping(-1);
+        TutorialSound->setLooping(1);
     endEditCP(TutorialSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
 
     // Create the Caption

@@ -108,6 +108,7 @@ void Caption::stop()
     beginEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
         getParentContainer()->getChildren().clear();
     endEditCP(getParentContainer(), InternalWindow::ChildrenFieldMask);
+    getCaptionDialogSound()->stop(_SoundChannelID);
 }
 
 void Caption::pause()
