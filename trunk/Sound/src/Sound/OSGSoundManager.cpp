@@ -49,9 +49,13 @@
 
 #include "OSGSoundManager.h"
 
-#include "OSGSoundEmitter.h"
-
 #include "OSGSound.h"
+#include "Stub/OSGStubSoundManager.h"
+
+#ifdef _OSG_TOOLBOX_USE_FMOD_
+#include "FMod/OSGFModSoundManager.h"
+#endif
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -66,14 +70,40 @@ A SoundManager Interface.
  *                           Class variables                               *
 \***************************************************************************/
 
+SoundManager *SoundManager::_the = NULL;
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SoundManager::initMethod (void)
+SoundManager *SoundManager::the(void)
 {
+    if(_the == NULL)
+    {
+        _the = getDefaultSoundManager();
+    }
+
+    if(_the == NULL)
+    {
+        SWARNING << "SoundManager: The Sound Manager is NULL.  Need to set the Sound Manager." << std::endl;
+    }
+
+    return _the;
 }
 
+void SoundManager::setSoundManager(SoundManager *manager)
+{
+    _the = manager;
+}
+
+SoundManager* SoundManager::getDefaultSoundManager(void)
+{
+#ifdef _OSG_TOOLBOX_USE_FMOD_
+    return FModSoundManager::the();
+#else
+    return StubSoundManager::the();
+#endif
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -85,76 +115,17 @@ void SoundManager::initMethod (void)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-SoundManager::SoundManager(void) :
-    Inherited()
+SoundManager::SoundManager(void)
 {
 }
 
-SoundManager::SoundManager(const SoundManager &source) :
-    Inherited(source)
+SoundManager::SoundManager(const SoundManager &source)
 {
 }
 
 SoundManager::~SoundManager(void)
 {
 }
-
-void SoundManager::setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up){
-
-}
-/*----------------------------- class specific ----------------------------*/
-
-void SoundManager::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void SoundManager::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump SoundManager NI" << std::endl;
-}
-
-
-//create a NodePtr that contain a sound emitter core
-SoundEmitterPtr SoundManager::getSoundEmitter(const int id){
-	SoundEmitterPtr emitter = SoundEmitter::create();
-	SoundPtr sound = this->getSound(id);
-	emitter->setSound(sound);
-	emitter->attachUpdateListener(this->getWindowEventProducer());
-	return emitter;
-}
-SoundEmitterPtr SoundManager::getSoundEmitter(const char* name){
-	SoundEmitterPtr emitter = SoundEmitter::create();
-	SoundPtr sound = this->getSound(name);
-	emitter->setSound(sound);
-	emitter->attachUpdateListener(this->getWindowEventProducer());
-	return emitter;
-}
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSOUNDMANAGERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSOUNDMANAGERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSOUNDMANAGERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

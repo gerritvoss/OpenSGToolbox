@@ -44,9 +44,10 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGCamera.h>
-#include "OSGSoundManagerBase.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/Input/OSGUpdateListener.h>
+
 #include "OSGSound.h"
-#include "OSGSoundEmitter.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,57 +55,31 @@ OSG_BEGIN_NAMESPACE
            PageSoundSoundManager for a description.
 */
 
-class OSG_SOUNDLIB_DLLMAPPING SoundManager : public SoundManagerBase
+class OSG_SOUNDLIB_DLLMAPPING SoundManager : public UpdateListener
 {
   private:
 
-    typedef SoundManagerBase Inherited;
-
     /*==========================  PUBLIC  =================================*/
   public:
+    static SoundManager* the(void);
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-    /*! \}                                                                 */
-
-	virtual void init(const char* arg, ...) = 0;
+	virtual void init(void) = 0;
 	virtual void uninit(void) = 0;
-
-	/**
-	* update the sound system with current elapsed time
-	*/
-	virtual void update(const Real32& elps) = 0;
 
 	/**
 	* update listener's property, actual argument depends on the extended class
 	*/
-
-	//virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up) = 0;
-	virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
+	virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up) = 0;
 	
 
 	//create a new sound object by its integer id
-	virtual SoundPtr getSound(const int id) = 0;
+	virtual SoundPtr createSound(void) const = 0;
 
-	//create a new sound object by its name
-	virtual SoundPtr getSound(const char* name) = 0;
+    
+    void setCamera(CameraPtr TheCamera);
+    CameraPtr getCamera(void) const;
 
-	//create a NodePtr that contain a sound emitter core
-	virtual SoundEmitterPtr getSoundEmitter(const int id);
-	virtual SoundEmitterPtr getSoundEmitter(const char* name);
+    void attachUpdateProducer(WindowEventProducerPtr TheProducer);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -128,26 +103,26 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public SoundManagerBase
 
     /*! \}                                                                 */
     
+    static SoundManager   *_the;
+
+    static void setSoundManager(SoundManager *manager);
+    static SoundManager* getDefaultSoundManager(void);
+
+    CameraPtr _Camera;
+
+	/**
+	* update the sound system with current elapsed time
+	*/
     /*==========================  PRIVATE  ================================*/
   private:
-
-    friend class FieldContainer;
-    friend class SoundManagerBase;
-
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const SoundManager &source);
 };
 
-typedef SoundManager *SoundManagerP;
-
 OSG_END_NAMESPACE
 
-#include "OSGSoundManagerBase.inl"
 #include "OSGSoundManager.inl"
 
-#define OSGSOUNDMANAGER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSOUNDMANAGER_H_ */

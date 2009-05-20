@@ -43,13 +43,13 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGSoundDef.h"
 
-#include "OSGFModSoundManagerBase.h"
-#include "OSGFModSound.h"
+#ifdef _OSG_TOOLBOX_USE_FMOD_
 
-//fmod include files
+#include "Sound/OSGSoundManager.h"
+
 #include "fmod.hpp"
-#include "fmod_errors.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,79 +57,41 @@ OSG_BEGIN_NAMESPACE
            PageSoundFModSoundManager for a description.
 */
 
-class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public FModSoundManagerBase
+void OSG_SOUNDLIB_DLLMAPPING FMOD_ERRCHECK(FMOD_RESULT result);
+
+class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public SoundManager
 {
   private:
 
-    typedef FModSoundManagerBase Inherited;
+    typedef SoundManager Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-	/**
-	* default initialization with out loading the .FEV file, 
-	* to load .FEV and set the path to the file and .FSB file
-	* typical use: init(const char* mediaPath, const char* mediaFile, const int maxChannel);
-	*/
-	virtual void init(const char* arg, ...);
+      
+    static FModSoundManager* the(void);
 
-	/**
-	* release the fmod eventsystem object
-	*/
+	virtual void init(void);
 	virtual void uninit(void);
+
+	/**
+	* update the sound system with current elapsed time
+	*/
+    virtual void update(const UpdateEvent& e);
+
+	/**
+	* update listener's property, actual argument depends on the extended class
+	*/
+	virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
 	
-	/**
-	* return the underlying fmod eventsystem object
-	*/
-	FMOD::EventSystem* getFMODEventSystem();
 
-	/**
-	* return the result of previous operation
-	*/
-	FMOD_RESULT getFmodResult();
-
-
-	/**
-	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
-	* @param path, the path in the .FEV file to locate the specific FMod event instance
-	*/
-	SoundPtr getSound(const char* name);
-
-	/**
-	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
-	* @param id, id from the Fmod designer, which can be found in the optional output .h and text file
-	*/
-	SoundPtr getSound(const int id);
-	
-	/**
-	* update the listener's properties
-	* Pnt3f &position
-	* Vec3f &velocity
-	* Vec3f &forward direction
-	* Vec3f &up direction
-	*/
-	//void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
-	void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
-	void update(const Real32& elps);
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
+	//create a new sound object by its integer id
+	virtual SoundPtr createSound(void) const;
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    static FModSoundManager* _the;
 
-    // Variables should all be in FModSoundManagerBase.
+    // Variables should all be in StubSoundManagerBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -147,26 +109,28 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public FModSoundManagerBase
 
     /*! \}                                                                 */
     
+
+    FMOD::System* getSystem(void) const;
+
     /*==========================  PRIVATE  ================================*/
   private:
-
-    friend class FieldContainer;
-    friend class FModSoundManagerBase;
-
-    static void initMethod(void);
+      friend class SoundManager;
+      friend class FModSound;
 
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const FModSoundManager &source);
+    
+    FMOD::System    *_FModSystem;
 };
 
 typedef FModSoundManager *FModSoundManagerP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFModSoundManagerBase.inl"
 #include "OSGFModSoundManager.inl"
 
-#define OSGFMODSOUNDMANAGER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSG_TOOLBOX_USE_FMOD_ */
 
 #endif /* _OSGFMODSOUNDMANAGER_H_ */

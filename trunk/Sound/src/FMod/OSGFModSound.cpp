@@ -48,37 +48,17 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFModSound.h"
+
+#ifdef _OSG_TOOLBOX_USE_FMOD_
+#include "OSGFModSoundManager.h"
+#include "OSGFModSound.h"
+
 #include "Sound/Events/OSGSoundListener.h"
 #include "Sound/Events/OSGSoundEvent.h"
 
+#include <boost/filesystem.hpp>
+
 OSG_BEGIN_NAMESPACE
-
-
-/************************fmod callback ************************************/
-FMOD_RESULT  F_CALLBACK  fmod_callback(
-	FMOD_EVENT *  event, 
-	FMOD_EVENT_CALLBACKTYPE  type, 
-	void *  param1, 
-	void *  param2, 
-	void *  userdata){
-	FModSound* sound = (FModSound*)userdata;
-	for (int i = 0; i < 20; i++){
-		if (!sound->listeners[i]) continue;
-		SoundListenerPtr listener = sound->listeners[i];
-		SoundPtr soundPtr(sound);
-		SoundEvent event(soundPtr, Time(), soundPtr);
-		switch (type){
-			case (FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_START):
-				listener->soundPlayed(event);
-				break;
-			case (FMOD_EVENT_CALLBACKTYPE_EVENTFINISHED):
-			//case (FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_END):
-				listener->soundEnded(event);
-				break;
-		}
-	}
-	return FMOD_OK;
-}
 
 /***************************************************************************\
  *                            Description                                  *
@@ -100,110 +80,461 @@ void FModSound::initMethod (void)
 {
 }
 
-FMOD::Event*& FModSound::getFmodEvent(){
-	return event;
-}
+FMOD_RESULT F_CALLBACK FModSoundChannelCallback(FMOD_CHANNEL *channel, FMOD_CHANNEL_CALLBACKTYPE type, void *commanddata1, void *commanddata2)
+{
+    if(type == FMOD_CHANNEL_CALLBACKTYPE_END)
+    {
+        FMOD::Channel *cppchannel = (FMOD::Channel *)channel;
 
-void FModSound::setFModEvent(FMOD::Event* event){
-	this->event = event;
-	event->setCallback(fmod_callback, this);
-}
-void FModSound::play(void){
-	event->start();
-}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ stop playing the sound object                                   */
+        void* userData;
 
-void FModSound::stop(void){
-	event->stop();
-}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ seek to position at pos sec                                     */
+        FMOD_RESULT result;
+        result = cppchannel->getUserData(&userData);
+        FMOD_ERRCHECK(result);
 
-void FModSound::seek(float pos){}
-	
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
+        static_cast<FModSound*>(userData)->soundEnded(cppchannel);
+    }
 
-void FModSound::setPosition(const Pnt3f &pos){
-	FMOD_VECTOR curPos;
-	FMOD_VECTOR curVec;
-	event->get3DAttributes(&curPos, &curVec);
-	curPos.x = pos[0];
-	curPos.y = pos[1];
-	curPos.z = pos[2];
-	event->set3DAttributes(&curPos, &curVec);
-}
-
-void FModSound::update(){
-	
-}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
-
-void FModSound::setVelocity(const Vec3f &vec){
-	FMOD_VECTOR curPos;
-	FMOD_VECTOR curVec;
-	event->get3DAttributes(&curPos, &curVec);
-	curVec.x = vec[0];
-	curVec.y = vec[1];
-	curVec.z = vec[2];
-	event->set3DAttributes(&curPos, &curVec);
-}
-/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ get the volumne  of the sound between 0 and 1.0                 */
-
-float FModSound::getVolume(){
-	float v;
-	event->getVolume(&v);
-	return v;
-}
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound between 0 and 1.0                 */
-
-void FModSound::setVolume(const float volume){
-	event->setVolume(volume);
-}
-
-
-float FModSound::getParameter(const int index){
-	FMOD::EventParameter *p;
-	float param, min, max;
-	int result = event->getParameterByIndex(index, &p);
-	if (result != FMOD_OK)
-		return -1;
-	p->getValue(&param);
-	p->getRange(&min, &max);
-	param = (param - min) / (max - min); //normalize to between zero and one
-	return param;
-}
-void FModSound::setParameter(const int index, const float pp){
-	FMOD::EventParameter *p;
-	float param = pp, min, max;
-	int result = event->getParameterByIndex(index, &p);
-	if (result != FMOD_OK)
-		return ;
-	p->getRange(&min, &max);
-	param = param * (max - min) + min; //normalize to between native range
-	p->setValue(param);
+    return FMOD_OK;
 }
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+UInt32 FModSound::play(void)
+{
+    FMOD::Channel *channel;
+
+    FMOD_RESULT result;
+    result = FModSoundManager::the()->getSystem()->playSound(FMOD_CHANNEL_FREE, _FModSound, true, &channel);
+    FMOD_ERRCHECK(result);
+
+    if(result == FMOD_OK && channel != NULL)
+    {
+        FMOD_MODE TheMode;
+        result = channel->getMode(&TheMode);
+        FMOD_ERRCHECK(result);
+        if(result == FMOD_OK && TheMode & FMOD_3D)
+        {
+            FMOD_VECTOR curPos;
+            FMOD_VECTOR curVec;
+            curPos.x = getPosition().x();
+            curPos.y = getPosition().y();
+            curPos.z = getPosition().z();
+            curVec.x = getVelocity().x();
+            curVec.y = getVelocity().y();
+            curVec.z = getVelocity().z();
+
+            result = channel->set3DAttributes(&curPos, &curVec);
+            FMOD_ERRCHECK(result);
+        }
+
+        result = channel->setPaused(false);
+        FMOD_ERRCHECK(result);
+
+        UInt32 ChannelID = addChannel(channel);
+
+        produceSoundPlayed(ChannelID);
+    
+        return ChannelID;
+    }
+
+    return 0;
+}
+
+Real32 FModSound::getLength(void) const
+{
+    UInt32 ui_length(0);
+    
+    FMOD_RESULT result;
+    result = _FModSound->getLength(&ui_length, FMOD_TIMEUNIT_MS);
+    FMOD_ERRCHECK(result);
+
+    if(result == FMOD_OK)
+    {
+        return static_cast<Real32>(ui_length)/static_cast<Real32>(1000.0f);
+    }
+    else
+    {
+        return 0.0f;
+    }
+}
+
+bool FModSound::isPlaying(UInt32 ChannelID) const
+{
+    bool playing(false);
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        FMOD_RESULT result;
+        result = channel->isPlaying(&playing);
+        FMOD_ERRCHECK(result);
+    }
+    
+    return playing;
+    
+}
+
+bool FModSound::isValid(UInt32 ChannelID) const
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    return channel != NULL;
+}
+
+void FModSound::stop(UInt32 ChannelID)
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL && isPlaying(ChannelID))
+    {
+        FMOD_RESULT result;
+        result = channel->stop();
+        FMOD_ERRCHECK(result);
+        if(result == FMOD_OK)
+        {
+            produceSoundStopped(ChannelID);
+        }
+    }
+}
+
+void FModSound::pause(UInt32 ChannelID)
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL && isPlaying(ChannelID) && !isPaused(ChannelID))
+    {
+        FMOD_RESULT result;
+        result = channel->setPaused(true);
+        FMOD_ERRCHECK(result);
+        if(result == FMOD_OK)
+        {
+            produceSoundPaused(ChannelID);
+        }
+    }
+}
+
+void FModSound::unpause(UInt32 ChannelID)
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL && isPaused(ChannelID))
+    {
+        FMOD_RESULT result;
+        result = channel->setPaused(false);
+        FMOD_ERRCHECK(result);
+        if(result == FMOD_OK)
+        {
+            produceSoundUnpaused(ChannelID);
+        }
+    }
+}
+
+void FModSound::pauseToggle(UInt32 ChannelID)
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL && isPaused(ChannelID))
+    {
+        unpause(ChannelID);
+    }
+    else
+    {
+        pause(ChannelID);
+    }
+}
+
+bool FModSound::isPaused(UInt32 ChannelID) const
+{
+    bool paused(false);
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        FMOD_RESULT result;
+        result = channel->getPaused(&paused);
+        FMOD_ERRCHECK(result);
+    }
+    
+    return paused;
+}
+
+
+
+void FModSound::seek(Real32 pos, UInt32 ChannelID)
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        unsigned int position(pos * 1000.0);
+
+        FMOD_RESULT result;
+        result = channel->setPosition(position, FMOD_TIMEUNIT_MS);
+        FMOD_ERRCHECK(result);
+    }
+}
+
+Real32 FModSound::getTime(UInt32 ChannelID) const
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        unsigned int position;
+        FMOD_RESULT result;
+        result = channel->getPosition(&position, FMOD_TIMEUNIT_MS);
+        FMOD_ERRCHECK(result);
+        
+        if(result == FMOD_OK)
+        {
+            return static_cast<Real32>(position)/static_cast<Real32>(1000.0f);
+        }
+    }
+    return 0.0f;
+}
+
+void FModSound::setChannelPosition(const Pnt3f &pos, UInt32 ChannelID)
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        FMOD_RESULT result;
+
+        FMOD_MODE TheMode;
+        result = channel->getMode(&TheMode);
+        FMOD_ERRCHECK(result);
+        if(result == FMOD_OK && TheMode & FMOD_3D)
+        {
+            FMOD_VECTOR curPos;
+            FMOD_VECTOR curVec;
+
+            result = channel->get3DAttributes(&curPos, &curVec);
+            FMOD_ERRCHECK(result);
+
+            curPos.x = pos.x();
+            curPos.y = pos.y();
+            curPos.z = pos.z();
+
+            result = channel->get3DAttributes(&curPos, &curVec);
+            FMOD_ERRCHECK(result);
+        }
+    }
+}
+
+Pnt3f FModSound::getChannelPosition(UInt32 ChannelID) const
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        FMOD_RESULT result;
+
+        FMOD_MODE TheMode;
+        result = channel->getMode(&TheMode);
+        FMOD_ERRCHECK(result);
+        if(result == FMOD_OK && TheMode & FMOD_3D)
+        {
+            FMOD_VECTOR curPos;
+            FMOD_VECTOR curVec;
+
+            result = channel->get3DAttributes(&curPos, &curVec);
+            FMOD_ERRCHECK(result);
+
+            return Vec3f(curPos.x, curPos.y, curPos.z);
+        }
+        else
+        {
+            SWARNING << "FModSound: This channel is not an FMOD_3D" << std::endl;
+        }
+    }
+    return Vec3f(0.0f,0.0f,0.0f);
+}
+
+void FModSound::setChannelVelocity(const Vec3f &vec, UInt32 ChannelID)
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        FMOD_RESULT result;
+
+        FMOD_MODE TheMode;
+        result = channel->getMode(&TheMode);
+        FMOD_ERRCHECK(result);
+        if(result == FMOD_OK && TheMode & FMOD_3D)
+        {
+            FMOD_VECTOR curPos;
+            FMOD_VECTOR curVec;
+
+            result = channel->get3DAttributes(&curPos, &curVec);
+            FMOD_ERRCHECK(result);
+
+            curVec.x = vec.x();
+            curVec.y = vec.y();
+            curVec.z = vec.z();
+
+            result = channel->get3DAttributes(&curPos, &curVec);
+            FMOD_ERRCHECK(result);
+        }
+    }
+}
+
+Vec3f FModSound::getChannelVelocity(UInt32 ChannelID) const
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        FMOD_RESULT result;
+
+        FMOD_MODE TheMode;
+        result = channel->getMode(&TheMode);
+        FMOD_ERRCHECK(result);
+        if(result == FMOD_OK && TheMode & FMOD_3D)
+        {
+            FMOD_VECTOR curPos;
+            FMOD_VECTOR curVec;
+
+            result = channel->get3DAttributes(&curPos, &curVec);
+            FMOD_ERRCHECK(result);
+
+            return Vec3f(curVec.x, curVec.y, curVec.z);
+        }
+        else
+        {
+            SWARNING << "FModSound: This channel is not an FMOD_3D" << std::endl;
+        }
+    }
+    return Vec3f(0.0f,0.0f,0.0f);
+}
+
+void FModSound::setChannelVolume(Real32 volume, UInt32 ChannelID)
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        FMOD_RESULT result;
+        result = channel->setVolume(volume);
+        FMOD_ERRCHECK(result);
+    }
+}
+
+Real32 FModSound::getChannelVolume(UInt32 ChannelID) const
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        float  volume;
+
+        FMOD_RESULT result;
+        result = channel->getVolume(&volume);
+        FMOD_ERRCHECK(result);
+        
+        if(result == FMOD_OK)
+        {
+            return static_cast<Real32>(volume);
+        }
+    }
+    return 0.0f;
+}
+
+bool FModSound::getMute(UInt32 ChannelID) const
+{
+    bool muteValue(false);
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        FMOD_RESULT result;
+        result = channel->getMute(&muteValue);
+        FMOD_ERRCHECK(result);
+    }
+    
+    return muteValue;
+}
+
+void FModSound::mute(bool shouldMute, UInt32 ChannelID)
+{
+    FMOD::Channel* channel(getChannel(ChannelID));
+    if(channel != NULL)
+    {
+        FMOD_RESULT result;
+        result = channel->setMute(shouldMute);
+        FMOD_ERRCHECK(result);
+    }
+}
+
+void FModSound::soundEnded(FMOD::Channel *channel)
+{
+    UInt32 ChannelID(getChannelID(channel));
+
+    if(ChannelID != 0)
+    {
+        removeChannel(ChannelID);
+        produceSoundEnded(ChannelID);
+    }
+}
+
+UInt32 FModSound::generateChannelID(void) const
+{
+    UInt32 NewID;//
+    if(_ChannelMap.size() == 0)
+    {
+        NewID = 1;
+    }
+    else
+    {
+        NewID = (--_ChannelMap.end())->first+1;
+    }
+    while(_ChannelMap.find(NewID) != _ChannelMap.end())
+    {
+        if(NewID == TypeTraits<UInt32>::getMax())
+        {
+            NewID = 1;
+        }
+        else
+        {
+            ++NewID;
+        }
+    }
+    return NewID;
+}
+
+FMOD::Channel* FModSound::getChannel(UInt32 ChannelID) const
+{
+    ChannelMap::const_iterator SearchItor = _ChannelMap.find(ChannelID);
+    if(SearchItor != _ChannelMap.end())
+    {
+        return SearchItor->second;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+UInt32 FModSound::addChannel(FMOD::Channel* channel)
+{
+    
+    FMOD_RESULT result;
+    result = channel->setCallback(FModSoundChannelCallback);
+    FMOD_ERRCHECK(result);
+    result = channel->setUserData(this);
+    FMOD_ERRCHECK(result);
+
+    UInt32 NewID(generateChannelID());
+    _ChannelMap[NewID] = channel;
+    return NewID;
+}
+
+void FModSound::removeChannel(UInt32 ChannelID)
+{
+    _ChannelMap.erase(ChannelID);
+}
+
+UInt32 FModSound::getChannelID(FMOD::Channel* channel) const
+{
+    for(ChannelMap::const_iterator SearchItor = _ChannelMap.begin() ;
+        SearchItor != _ChannelMap.end() ;
+        ++SearchItor)
+    {
+        if(SearchItor->second == channel)
+        {
+            return SearchItor->first;
+        }
+    }
+    return 0;
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -212,18 +543,22 @@ void FModSound::setParameter(const int index, const float pp){
 /*----------------------- constructors & destructors ----------------------*/
 
 FModSound::FModSound(void) :
-    Inherited()
+    Inherited(),
+    _FModSound(NULL)
 {
-	event = NULL;
 }
 
 FModSound::FModSound(const FModSound &source) :
-    Inherited(source)
+    Inherited(source),
+    _FModSound(NULL)
 {
 }
 
 FModSound::~FModSound(void)
 {
+    FMOD_RESULT result;
+    result = _FModSound->release();
+    FMOD_ERRCHECK(result);
 }
 
 /*----------------------------- class specific ----------------------------*/
@@ -231,7 +566,48 @@ FModSound::~FModSound(void)
 void FModSound::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-	printf("here\n");
+    if(whichField & FileFieldMask)
+    {
+        if(boost::filesystem::exists(getFile()))
+        {
+            FMOD_RESULT      result;
+            FMOD_MODE soundMode(FMOD_DEFAULT);
+            //soundMode |= FMOD_3D;
+            soundMode |= FMOD_NONBLOCKING;
+            if(getLooping() != 0)
+            {
+                soundMode |= FMOD_LOOP_NORMAL | FMOD_SOFTWARE;
+            }
+            else
+            {
+                soundMode |= FMOD_HARDWARE;
+            }
+
+            if(getStreaming())
+            {
+                result = FModSoundManager::the()->getSystem()->createStream(getFile().string().c_str(), soundMode, 0, &_FModSound);		// FMOD_DEFAULT uses the defaults.  These are the same as FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE.
+            }
+            else
+            {
+                result = FModSoundManager::the()->getSystem()->createSound(getFile().string().c_str(), soundMode, 0, &_FModSound);		// FMOD_DEFAULT uses the defaults.  These are the same as FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE.
+            }
+            FMOD_ERRCHECK(result);
+        }
+    }
+    if(whichField & VolumeFieldMask ||
+        whichField & PanFieldMask ||
+        whichField & FrequencyFieldMask)
+    {
+        FMOD_RESULT      result;
+        result = _FModSound->setDefaults(getFrequency(), getVolume(),getPan(), 128);
+        FMOD_ERRCHECK(result);
+    }
+    if(whichField & LoopingFieldMask)
+    {
+        FMOD_RESULT      result;
+        result = _FModSound->setLoopCount(getLooping());
+        FMOD_ERRCHECK(result);
+    }
 }
 
 void FModSound::dump(      UInt32    , 
@@ -268,3 +644,4 @@ namespace
 
 OSG_END_NAMESPACE
 
+#endif /* _OSG_TOOLBOX_USE_FMOD_ */

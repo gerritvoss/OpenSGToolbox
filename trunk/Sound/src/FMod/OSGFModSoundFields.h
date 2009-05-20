@@ -60,10 +60,9 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGSoundDef.h"
 
-#include <Sound/OSGSoundFields.h>
+#ifdef _OSG_TOOLBOX_USE_FMOD_
 
-#include "fmod_event.hpp"
-#include "fmod_errors.h"
+#include <Sound/OSGSoundFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -130,5 +129,7 @@ OSG_DLLEXPORT_DECL1(MField, FModSoundPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
 OSG_END_NAMESPACE
 
 #define OSGFMODSOUNDFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+
+#endif /* _OSG_TOOLBOX_USE_FMOD_ */
 
 #endif /* _OSGFMODSOUNDFIELDS_H_ */

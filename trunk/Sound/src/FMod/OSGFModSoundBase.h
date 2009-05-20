@@ -61,6 +61,8 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGSoundDef.h"
 
+#ifdef _OSG_TOOLBOX_USE_FMOD_
+
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
@@ -69,11 +71,6 @@
 
 
 #include "OSGFModSoundFields.h"
-
-
-//fmod
-#include "fmod_event.hpp"
-#include "fmod_errors.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -154,9 +151,6 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundBase : public Sound
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-	FMOD::Event* event;
-	FMOD::EventParameter* primaryParam;
-
 
     FModSoundBase(void);
     FModSoundBase(const FModSoundBase &source);
@@ -229,5 +223,7 @@ typedef RefPtr<FModSoundPtr> FModSoundRefPtr;
 OSG_END_NAMESPACE
 
 #define OSGFMODSOUNDBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+
+#endif /* _OSG_TOOLBOX_USE_FMOD_ */
 
 #endif /* _OSGFMODSOUNDBASE_H_ */

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -66,10 +66,232 @@ OSG::UInt32 SoundBase::getClassTypeId(void)
 {
     return _type.getId(); 
 } 
-
-
 /*------------------------------ get -----------------------------------*/
 
+//! Get the Sound::_sfPosition field.
+inline
+SFPnt3f *SoundBase::getSFPosition(void)
+{
+    return &_sfPosition;
+}
+
+//! Get the Sound::_sfVelocity field.
+inline
+SFVec3f *SoundBase::getSFVelocity(void)
+{
+    return &_sfVelocity;
+}
+
+//! Get the Sound::_sfVolume field.
+inline
+SFReal32 *SoundBase::getSFVolume(void)
+{
+    return &_sfVolume;
+}
+
+//! Get the Sound::_sfPan field.
+inline
+SFReal32 *SoundBase::getSFPan(void)
+{
+    return &_sfPan;
+}
+
+//! Get the Sound::_sfFrequency field.
+inline
+SFReal32 *SoundBase::getSFFrequency(void)
+{
+    return &_sfFrequency;
+}
+
+//! Get the Sound::_sfLooping field.
+inline
+SFInt32 *SoundBase::getSFLooping(void)
+{
+    return &_sfLooping;
+}
+
+//! Get the Sound::_sfStreaming field.
+inline
+SFBool *SoundBase::getSFStreaming(void)
+{
+    return &_sfStreaming;
+}
+
+//! Get the Sound::_sfFile field.
+inline
+SFPath *SoundBase::getSFFile(void)
+{
+    return &_sfFile;
+}
+
+
+//! Get the value of the Sound::_sfPosition field.
+inline
+Pnt3f &SoundBase::getPosition(void)
+{
+    return _sfPosition.getValue();
+}
+
+//! Get the value of the Sound::_sfPosition field.
+inline
+const Pnt3f &SoundBase::getPosition(void) const
+{
+    return _sfPosition.getValue();
+}
+
+//! Set the value of the Sound::_sfPosition field.
+inline
+void SoundBase::setPosition(const Pnt3f &value)
+{
+    _sfPosition.setValue(value);
+}
+
+//! Get the value of the Sound::_sfVelocity field.
+inline
+Vec3f &SoundBase::getVelocity(void)
+{
+    return _sfVelocity.getValue();
+}
+
+//! Get the value of the Sound::_sfVelocity field.
+inline
+const Vec3f &SoundBase::getVelocity(void) const
+{
+    return _sfVelocity.getValue();
+}
+
+//! Set the value of the Sound::_sfVelocity field.
+inline
+void SoundBase::setVelocity(const Vec3f &value)
+{
+    _sfVelocity.setValue(value);
+}
+
+//! Get the value of the Sound::_sfVolume field.
+inline
+Real32 &SoundBase::getVolume(void)
+{
+    return _sfVolume.getValue();
+}
+
+//! Get the value of the Sound::_sfVolume field.
+inline
+const Real32 &SoundBase::getVolume(void) const
+{
+    return _sfVolume.getValue();
+}
+
+//! Set the value of the Sound::_sfVolume field.
+inline
+void SoundBase::setVolume(const Real32 &value)
+{
+    _sfVolume.setValue(value);
+}
+
+//! Get the value of the Sound::_sfPan field.
+inline
+Real32 &SoundBase::getPan(void)
+{
+    return _sfPan.getValue();
+}
+
+//! Get the value of the Sound::_sfPan field.
+inline
+const Real32 &SoundBase::getPan(void) const
+{
+    return _sfPan.getValue();
+}
+
+//! Set the value of the Sound::_sfPan field.
+inline
+void SoundBase::setPan(const Real32 &value)
+{
+    _sfPan.setValue(value);
+}
+
+//! Get the value of the Sound::_sfFrequency field.
+inline
+Real32 &SoundBase::getFrequency(void)
+{
+    return _sfFrequency.getValue();
+}
+
+//! Get the value of the Sound::_sfFrequency field.
+inline
+const Real32 &SoundBase::getFrequency(void) const
+{
+    return _sfFrequency.getValue();
+}
+
+//! Set the value of the Sound::_sfFrequency field.
+inline
+void SoundBase::setFrequency(const Real32 &value)
+{
+    _sfFrequency.setValue(value);
+}
+
+//! Get the value of the Sound::_sfLooping field.
+inline
+Int32 &SoundBase::getLooping(void)
+{
+    return _sfLooping.getValue();
+}
+
+//! Get the value of the Sound::_sfLooping field.
+inline
+const Int32 &SoundBase::getLooping(void) const
+{
+    return _sfLooping.getValue();
+}
+
+//! Set the value of the Sound::_sfLooping field.
+inline
+void SoundBase::setLooping(const Int32 &value)
+{
+    _sfLooping.setValue(value);
+}
+
+//! Get the value of the Sound::_sfStreaming field.
+inline
+bool &SoundBase::getStreaming(void)
+{
+    return _sfStreaming.getValue();
+}
+
+//! Get the value of the Sound::_sfStreaming field.
+inline
+const bool &SoundBase::getStreaming(void) const
+{
+    return _sfStreaming.getValue();
+}
+
+//! Set the value of the Sound::_sfStreaming field.
+inline
+void SoundBase::setStreaming(const bool &value)
+{
+    _sfStreaming.setValue(value);
+}
+
+//! Get the value of the Sound::_sfFile field.
+inline
+Path &SoundBase::getFile(void)
+{
+    return _sfFile.getValue();
+}
+
+//! Get the value of the Sound::_sfFile field.
+inline
+const Path &SoundBase::getFile(void) const
+{
+    return _sfFile.getValue();
+}
+
+//! Set the value of the Sound::_sfFile field.
+inline
+void SoundBase::setFile(const Path &value)
+{
+    _sfFile.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

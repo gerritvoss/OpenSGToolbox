@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSound.h"
+#include "OSGSoundManager.h"
+#include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -72,10 +74,83 @@ void Sound::initMethod (void)
 }
 
 
+//! create a new instance of the class
+SoundPtr Sound::create(void)
+{
+    return SoundManager::the()->createSound(); 
+}
+
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+EventConnection Sound::addSoundListener(SoundListenerPtr Listener)
+{
+   _SoundListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Sound::isSoundListenerAttached, this, Listener),
+       boost::bind(&Sound::removeSoundListener, this, Listener));
+}
+
+void Sound::removeSoundListener(SoundListenerPtr Listener)
+{
+   SoundListenerSetItor EraseIter(_SoundListeners.find(Listener));
+   if(EraseIter != _SoundListeners.end())
+   {
+      _SoundListeners.erase(EraseIter);
+   }
+}
+
+void Sound::produceSoundPlayed(UInt32 TheChannel)
+{
+    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    SoundListenerSet ListenerSet(_SoundListeners);
+    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+      (*SetItor)->soundPlayed(e);
+    }
+}
+
+void Sound::produceSoundStopped(UInt32 TheChannel)
+{
+    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    SoundListenerSet ListenerSet(_SoundListeners);
+    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+      (*SetItor)->soundStopped(e);
+    }
+}
+
+void Sound::produceSoundPaused(UInt32 TheChannel)
+{
+    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    SoundListenerSet ListenerSet(_SoundListeners);
+    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+      (*SetItor)->soundPaused(e);
+    }
+}
+
+void Sound::produceSoundUnpaused(UInt32 TheChannel)
+{
+    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    SoundListenerSet ListenerSet(_SoundListeners);
+    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+      (*SetItor)->soundUnpaused(e);
+    }
+}
+
+void Sound::produceSoundEnded(UInt32 TheChannel)
+{
+    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    SoundListenerSet ListenerSet(_SoundListeners);
+    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+      (*SetItor)->soundEnded(e);
+    }
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -86,38 +161,12 @@ void Sound::initMethod (void)
 Sound::Sound(void) :
     Inherited()
 {
-	for (int i = 0; i < 20; i++){
-		listeners[i] = NULL;
-	}
 }
 
 Sound::Sound(const Sound &source) :
     Inherited(source)
 {
-	for (int i = 0; i < 20; i++){
-		listeners[i] = NULL;
-	}
 }
-
-
-void Sound::addSoundListener(SoundListenerPtr listener){
-	for (int i = 0; i < 20; i++){
-		if (!listeners[i]){
-			listeners[i] = listener;
-			return;
-		}
-	}
-}
-
-void Sound::removeSoundListener(SoundListenerPtr listener){
-	for (int i = 0; i < 20; i++){
-		if (listeners[i] && (listeners[i] == listener)){
-			listeners[i] = NULL;
-			return;
-		}
-	}
-}
-
 
 Sound::~Sound(void)
 {

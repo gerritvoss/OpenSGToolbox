@@ -43,8 +43,13 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGSoundDef.h"
+
+#ifdef _OSG_TOOLBOX_USE_FMOD_
 
 #include "OSGFModSoundBase.h"
+#include "fmod.hpp"
+#include "fmod_errors.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -62,13 +67,8 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
     /*==========================  PUBLIC  =================================*/
   public:
 
-	friend FMOD_RESULT  F_CALLBACK fmod_callback(FMOD_EVENT *  event, 	FMOD_EVENT_CALLBACKTYPE  type, 	void *  param1, 	void *  param2, 	void *  userdata);
+	//friend FMOD_RESULT  F_CALLBACK fmod_callback(FMOD_EVENT *  event, 	FMOD_EVENT_CALLBACKTYPE  type, 	void *  param1, 	void *  param2, 	void *  userdata);
 	
-	/**
-	* return the underlying Fmod Event object
-	*/
-	  FMOD::Event*& getFmodEvent();
-	  void setFModEvent(FMOD::Event* event);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -85,51 +85,37 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
    
-	virtual void play(void);
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ stop playing the sound object                                   */
 
-	virtual void stop(void);
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ seek to position at pos sec                                     */
+	virtual UInt32 play(void);
+	virtual Real32 getLength(void) const;
 
-	virtual void seek(float pos);
+    virtual bool isPlaying(UInt32 ChannelID) const;
+    virtual bool isValid(UInt32 ChannelID) const;
+	virtual void stop(UInt32 ChannelID);
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
+    
+	virtual void pause(UInt32 ChannelID);
+	virtual void unpause(UInt32 ChannelID);
+	virtual void pauseToggle(UInt32 ChannelID);
+    virtual bool isPaused(UInt32 ChannelID) const;
 
-	virtual void setPosition(const Pnt3f &pos);
+    
+	virtual void seek(Real32 pos, UInt32 ChannelID);
+    virtual Real32 getTime(UInt32 ChannelID) const;
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the 3d velocity of the sound                                */
 
-	virtual void setVelocity(const Vec3f &pos);
+	virtual void setChannelPosition(const Pnt3f &pos, UInt32 ChannelID);
+	virtual Pnt3f getChannelPosition(UInt32 ChannelID) const;
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ get the volumne  of the sound between 0 and 1.0                 */
+	virtual void setChannelVelocity(const Vec3f &vec, UInt32 ChannelID);
+	virtual Vec3f getChannelVelocity(UInt32 ChannelID) const;
 
-	virtual float getVolume();
+	virtual void setChannelVolume(Real32 volume, UInt32 ChannelID);
+	virtual Real32 getChannelVolume(UInt32 ChannelID) const;
+	virtual bool getMute(UInt32 ChannelID) const;
+	virtual void mute(bool shouldMute, UInt32 ChannelID);
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound between 0 and 1.0                 */
-
-	virtual void setVolume(const float volume);
-
-	virtual float getParameter(const int);
-	virtual void setParameter(const int, const float);
-
+    void soundEnded(FMOD::Channel *channel);
 	
 	 /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
@@ -153,6 +139,20 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
 
     /*! \}                                                                 */
     
+    FMOD::Sound *_FModSound;
+
+    typedef std::map<UInt32, FMOD::Channel*> ChannelMap;
+    typedef ChannelMap::iterator ChannelMapItor;
+
+    ChannelMap _ChannelMap;
+
+    UInt32 generateChannelID(void) const;
+    UInt32 addChannel(FMOD::Channel* channel);
+    UInt32 getChannelID(FMOD::Channel* channel) const;
+    void removeChannel(UInt32 ChannelID);
+
+    FMOD::Channel* getChannel(UInt32 ChannelID) const;
+
     /*==========================  PRIVATE  ================================*/
   private:
 
@@ -160,7 +160,6 @@ class OSG_SOUNDLIB_DLLMAPPING FModSound : public FModSoundBase
     friend class FModSoundBase;
 
     static void initMethod(void);
-	void update();
 
     // prohibit default functions (move to 'public' if you need one)
 
@@ -175,5 +174,7 @@ OSG_END_NAMESPACE
 #include "OSGFModSound.inl"
 
 #define OSGFMODSOUND_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSG_TOOLBOX_USE_FMOD_ */
 
 #endif /* _OSGFMODSOUND_H_ */

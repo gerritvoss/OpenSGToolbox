@@ -25,7 +25,10 @@
  * License along with this library; if not, write to the Free Software       *
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
-\*---------------------------------------------------------------------------*/#include <OpenSG/OSGConfig.h>
+\*---------------------------------------------------------------------------*/
+#include <OpenSG/OSGConfig.h>
+#include "OSGSoundDef.h"
+#include "Sound/OSGSound.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -39,6 +42,12 @@ inline
 SoundPtr SoundEvent::getSound(void) const
 {
 	return _Sound;
+}
+
+inline
+UInt32 SoundEvent::getChannel(void) const
+{
+	return _Channel;
 }
 
 OSG_END_NAMESPACE

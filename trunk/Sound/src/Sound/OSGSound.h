@@ -47,9 +47,8 @@
 
 #include "OSGSoundBase.h"
 #include "Sound/Events/OSGSoundListener.h"
-
-#include "fmod.hpp"
-#include "fmod_errors.h"
+#include <OpenSG/Input/OSGEventConnection.h>
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -73,11 +72,6 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
 
     virtual void changed(BitVector  whichField, 
                          UInt32     origin    );
-
-	virtual void addSoundListener(SoundListenerPtr listener);
-
-	virtual void removeSoundListener(SoundListenerPtr listener);
-
 	
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -88,56 +82,44 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
                       const BitVector  bvFlags  = 0) const;
 
 	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ start playing the sound object                                  */
 
-	virtual void play(void) = 0;
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ stop playing the sound object                                   */
+	virtual UInt32 play(void) = 0;
+	virtual Real32 getLength(void) const = 0;
+    
+    //Channel Methods
+    virtual bool isPlaying(UInt32 ChannelID) const = 0;
+    virtual bool isValid(UInt32 ChannelID) const = 0;
+	virtual void stop(UInt32 ChannelID) = 0;
 
-	virtual void stop(void) = 0;
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ seek to position at pos sec                                     */
+    
+	virtual void pause(UInt32 ChannelID) = 0;
+	virtual void unpause(UInt32 ChannelID) = 0;
+	virtual void pauseToggle(UInt32 ChannelID) = 0;
+    virtual bool isPaused(UInt32 ChannelID) const = 0;
 
-	virtual void seek(float pos) = 0;
+    
+	virtual void seek(Real32 pos, UInt32 ChannelID) = 0;
+    virtual Real32 getTime(UInt32 ChannelID) const = 0;
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
 
-	virtual void setPosition(const Pnt3f &pos) = 0;
+	virtual void setChannelPosition(const Pnt3f &pos, UInt32 ChannelID) = 0;
+	virtual Pnt3f getChannelPosition(UInt32 ChannelID) const = 0;
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound                                   */
+	virtual void setChannelVelocity(const Vec3f &vec, UInt32 ChannelID) = 0;
+	virtual Vec3f getChannelVelocity(UInt32 ChannelID) const = 0;
 
-	virtual void setVelocity(const Vec3f &vec) = 0;
+	virtual void setChannelVolume(Real32 volume, UInt32 ChannelID) = 0;
+	virtual Real32 getChannelVolume(UInt32 ChannelID) const = 0;
+	virtual bool getMute(UInt32 ChannelID) const = 0;
+	virtual void mute(bool shouldMute, UInt32 ChannelID) = 0;
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ get the volumne  of the sound between 0 and 1.0                 */
+    
+    static  SoundPtr      create          (void); 
 
-	virtual float getVolume() = 0;
+    EventConnection addSoundListener(SoundListenerPtr Listener);
+    bool isSoundListenerAttached(SoundListenerPtr Listener) const;
+    void removeSoundListener(SoundListenerPtr Listener);
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound between 0 and 1.0                 */
-
-	virtual void setVolume(const float volume) = 0;
-
-	virtual float getParameter(const int) = 0;
-	virtual void setParameter(const int, const float) = 0;
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -149,7 +131,6 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
 
     Sound(void);
     Sound(const Sound &source);
-	SoundListenerPtr listeners[20];
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -159,6 +140,17 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
     virtual ~Sound(void); 
 
     /*! \}                                                                 */
+	typedef std::set<SoundListenerPtr> SoundListenerSet;
+    typedef SoundListenerSet::iterator SoundListenerSetItor;
+    typedef SoundListenerSet::const_iterator SoundListenerSetConstItor;
+    
+    SoundListenerSet       _SoundListeners;
+
+    void produceSoundPlayed(UInt32 TheChannel);
+    void produceSoundStopped(UInt32 TheChannel);
+    void produceSoundPaused(UInt32 TheChannel);
+    void produceSoundUnpaused(UInt32 TheChannel);
+    void produceSoundEnded(UInt32 TheChannel);
     
     /*==========================  PRIVATE  ================================*/
   private:
@@ -166,8 +158,6 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
     friend class FieldContainer;
     friend class SoundBase;
     static void initMethod(void);
-	virtual void update() = 0;
-	
 	
     // prohibit default functions (move to 'public' if you need one)
 

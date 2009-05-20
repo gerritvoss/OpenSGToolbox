@@ -76,59 +76,98 @@ void StubSound::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-void StubSound::play(void){
-}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ stop playing the sound object                                   */
-
-void StubSound::stop(void){
-	
-}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ seek to position at pos sec                                     */
-
-void StubSound::seek(float pos){}
-	
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
-
-void StubSound::setPosition(const Pnt3f &pos){
-	
+UInt32 StubSound::play(void)
+{
+    SWARNING << "StubSound played" << std::endl;
+    return 0;
 }
 
-void StubSound::update(){}
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
-
-void StubSound::setVelocity(const Vec3f &vec){
-	
-}
-/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ get the volumne  of the sound between 0 and 1.0                 */
-
-float StubSound::getVolume(){
-	return 0;
+Real32 StubSound::getLength(void) const
+{
+    return 0.0;
 }
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound between 0 and 1.0                 */
-
-void StubSound::setVolume(const float volume){
-	
+bool StubSound::isPlaying(UInt32 ChannelID) const
+{
+    return false;
 }
+
+bool StubSound::isValid(UInt32 ChannelID) const
+{
+    return false;
+}
+
+void StubSound::stop(UInt32 ChannelID)
+{
+}
+
+
+void StubSound::pause(UInt32 ChannelID)
+{
+}
+
+void StubSound::unpause(UInt32 ChannelID)
+{
+}
+
+void StubSound::pauseToggle(UInt32 ChannelID)
+{
+}
+
+bool StubSound::isPaused(UInt32 ChannelID) const
+{
+    return false;
+}
+
+
+
+void StubSound::seek(Real32 pos, UInt32 ChannelID)
+{
+}
+
+Real32 StubSound::getTime(UInt32 ChannelID) const
+{
+    return 0.0f;
+}
+
+void StubSound::setChannelPosition(const Pnt3f &pos, UInt32 ChannelID)
+{
+}
+
+Pnt3f StubSound::getChannelPosition(UInt32 ChannelID) const
+{
+    return Pnt3f();
+}
+
+void StubSound::setChannelVelocity(const Vec3f &vec, UInt32 ChannelID)
+{
+}
+
+Vec3f StubSound::getChannelVelocity(UInt32 ChannelID) const
+{
+    return Vec3f();
+}
+
+
+void StubSound::setChannelVolume(Real32 volume, UInt32 ChannelID)
+{
+}
+
+Real32 StubSound::getChannelVolume(UInt32 ChannelID) const
+{
+    return 0.0f;
+}
+
+bool StubSound::getMute(UInt32 ChannelID) const
+{
+    return false;
+}
+
+void StubSound::mute(bool shouldMute, UInt32 ChannelID)
+{
+}
+
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

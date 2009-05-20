@@ -76,48 +76,36 @@ class OSG_SOUNDLIB_DLLMAPPING StubSound : public StubSoundBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-	virtual void play(void);
 	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ stop playing the sound object                                   */
 
-	virtual void stop(void);
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ seek to position at pos sec                                     */
+	virtual UInt32 play(void);
+	virtual Real32 getLength(void) const;
+    
+    virtual bool isPlaying(UInt32 ChannelID) const;
+    virtual bool isValid(UInt32 ChannelID) const;
+	virtual void stop(UInt32 ChannelID);
 
-	virtual void seek(float pos);
+    
+	virtual void pause(UInt32 ChannelID);
+	virtual void unpause(UInt32 ChannelID);
+	virtual void pauseToggle(UInt32 ChannelID);
+    virtual bool isPaused(UInt32 ChannelID) const;
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the position of the sound                                   */
+    
+	virtual void seek(Real32 pos, UInt32 ChannelID);
+    virtual Real32 getTime(UInt32 ChannelID) const;
 
-	virtual void setPosition(const Pnt3f &pos);
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the 3d velocity of the sound                                */
+	virtual void setChannelPosition(const Pnt3f &pos, UInt32 ChannelID);
+	virtual Pnt3f getChannelPosition(UInt32 ChannelID) const;
 
-	virtual void setVelocity(const Vec3f &pos);
+	virtual void setChannelVelocity(const Vec3f &vec, UInt32 ChannelID);
+	virtual Vec3f getChannelVelocity(UInt32 ChannelID) const;
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ get the volumne  of the sound between 0 and 1.0                 */
-
-	virtual float getVolume();
-
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{ set the velocity of the sound between 0 and 1.0                 */
-
-	virtual void setVolume(const float volume);
-    /*! \}                                                                 */
+	virtual void setChannelVolume(Real32 volume, UInt32 ChannelID);
+	virtual Real32 getChannelVolume(UInt32 ChannelID) const;
+	virtual bool getMute(UInt32 ChannelID) const;
+	virtual void mute(bool shouldMute, UInt32 ChannelID);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -130,8 +118,6 @@ class OSG_SOUNDLIB_DLLMAPPING StubSound : public StubSoundBase
     StubSound(void);
     StubSound(const StubSound &source);
 
-	float getParameter(const int){ return -1;}
-	void setParameter(const int, const float){}
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */

@@ -48,8 +48,12 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFModSoundManager.h"
+
+#ifdef _OSG_TOOLBOX_USE_FMOD_
 #include "OSGFModSound.h"
-#include <stdarg.h>
+
+//fmod include files
+#include "fmod_errors.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -65,102 +69,166 @@ A FMod SoundManager Interface.
  *                           Class variables                               *
 \***************************************************************************/
 
+FModSoundManager *FModSoundManager::_the = NULL;
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void FModSoundManager::initMethod (void)
+FModSoundManager *FModSoundManager::the(void)
 {
+    if(_the == NULL)
+    {
+        _the = new FModSoundManager();
+    }
+
+    return _the;
 }
 
-
+void FMOD_ERRCHECK(FMOD_RESULT result)
+{
+    if (result != FMOD_OK)
+    {
+        SWARNING << "FModSoundManager:: FMod Error: " << FMOD_ErrorString(result) << std::endl;
+    }
+}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
+SoundPtr FModSoundManager::createSound(void) const
+{
+    return FModSound::create();
+}
 
+void FModSoundManager::init(void)
+{
+    SLOG << "FModSoundManager Initializing." << std::endl;
 
-void FModSoundManager::init(const char* arg, ...){
-	va_list listPointer;
-	
-	va_start(listPointer, arg);
-	const char* mediaPath = arg;
-	const char* mediaFile = va_arg(listPointer, char*);
-	const int maxChannel = va_arg(listPointer, int);
-	
-	va_end(listPointer);
-	result = FMOD::EventSystem_Create(&this->eventSystem);
-	result = eventSystem->init(maxChannel, FMOD_INIT_NORMAL, 0, FMOD_EVENT_INIT_NORMAL);
-	
-	result = eventSystem->setMediaPath(mediaPath);
-	result = eventSystem->load(mediaFile, 0, 0);
-	printf("result :%d:\n", result);
-	result = eventSystem->set3DNumListeners(1);
+    FMOD_RESULT      result;
+    unsigned int     version;
+    int              numdrivers;
+    FMOD_SPEAKERMODE speakermode;
+    FMOD_CAPS        caps;
+    char             name[256];
+
+    /*
+        Create a System object and initialize.
+    */
+    result = FMOD::System_Create(&_FModSystem);
+    FMOD_ERRCHECK(result);
+    
+    result = _FModSystem->getVersion(&version);
+    FMOD_ERRCHECK(result);
+
+    if (version < FMOD_VERSION)
+    {
+        SWARNING << "FModSoundManager::init: Error!  You are using an old version of FMOD " << version << ".  This program requires " << FMOD_VERSION << std::endl;
+        return;
+    }
+    
+    result = _FModSystem->getNumDrivers(&numdrivers);
+    FMOD_ERRCHECK(result);
+
+    if (numdrivers == 0)
+    {
+        result = _FModSystem->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
+        FMOD_ERRCHECK(result);
+    }
+    else
+    {
+        result = _FModSystem->getDriverCaps(0, &caps, 0, 0, &speakermode);
+        FMOD_ERRCHECK(result);
+
+        result = _FModSystem->setSpeakerMode(speakermode);       /* Set the user selected speaker mode. */
+        FMOD_ERRCHECK(result);
+
+        if (caps & FMOD_CAPS_HARDWARE_EMULATED)             /* The user has the 'Acceleration' slider set to off!  This is really bad for latency!. */
+        {                                                   /* You might want to warn the user about this. */
+            result = _FModSystem->setDSPBufferSize(1024, 10);
+            FMOD_ERRCHECK(result);
+        }
+
+        result = _FModSystem->getDriverInfo(0, name, 256, 0);
+        FMOD_ERRCHECK(result);
+
+        if (strstr(name, "SigmaTel"))   /* Sigmatel sound devices crackle for some reason if the format is PCM 16bit.  PCM floating point output seems to solve it. */
+        {
+            result = _FModSystem->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
+            FMOD_ERRCHECK(result);
+        }
+    }
+
+    result = _FModSystem->init(100, FMOD_INIT_NORMAL, 0);
+    if (result == FMOD_ERR_OUTPUT_CREATEBUFFER)         /* Ok, the speaker mode selected isn't supported by this soundcard.  Switch it back to stereo... */
+    {
+        result = _FModSystem->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
+        FMOD_ERRCHECK(result);
+            
+        result = _FModSystem->init(100, FMOD_INIT_NORMAL, 0);/* ... and re-init. */
+        FMOD_ERRCHECK(result);
+    }
+
+    SLOG << "FModSoundManager Successfully Initialized." << std::endl;
 }
 
 void FModSoundManager::uninit(void)
-{	
-	if (eventSystem)
-		eventSystem->release();
-	eventSystem = NULL;
-}
-
-FMOD_RESULT FModSoundManager::getFmodResult(){
-	return result;
-}
-
-FMOD::EventSystem* FModSoundManager::getFMODEventSystem()
 {
-	return eventSystem;
+    SLOG << "FModSoundManager Uninitializing." << std::endl;
+    FMOD_RESULT      result;
+
+    result = _FModSystem->release();
+    FMOD_ERRCHECK(result);
+    
+    SLOG << "FModSoundManager Successfully Uninitialized." << std::endl;
 }
 
+void FModSoundManager::update(const UpdateEvent& e)
+{
+    FMOD_RESULT result;
 
-
-SoundPtr FModSoundManager::getSound(const char* path){
-	if (!eventSystem)
-		return (FModSoundPtr)NULL;
-	FModSoundPtr s = FModSound::create();
-	FMOD::Event* e;
-	result = eventSystem->getEvent(path, FMOD_EVENT_DEFAULT, &e);
-	s->setFModEvent(e);
-	return s;
-}
-
-SoundPtr FModSoundManager::getSound(const int id){
-	if (!eventSystem)
-		return (FModSoundPtr)NULL;
-	FModSoundPtr s = FModSound::create();
-	FMOD::Event* e;
-	result = eventSystem->getEventBySystemID(id, FMOD_EVENT_DEFAULT, &e);
-	s->setFModEvent(e);
-	return s;
-}
-
-void FModSoundManager::update(const Real32& elps){
-	//setup listener's position and orientation as camera's
+    //setup listener's position and orientation as camera's
 	Matrix camW2S;
-	CameraPtr cam = this->getCamera();
-	cam->getViewing(camW2S, 0, 0);
-	Pnt3f org(0, 0, 0);
-	camW2S.mult(org);
-	//printf("position: %8f, %8f, %8f\r\n", org[0], org[1], org[2]);
+	CameraPtr cam = getCamera();
+    if(cam != NullFC)
+    {
+	    cam->getViewing(camW2S, 1, 1);
+	    Pnt3f org(0, 0, 0);
+	    camW2S.mult(org);
 
-	Vec3f up(0, 1, 0);
-	camW2S.mult(up);
-	//printf("up: %8f, %8f, %8f\r\n", up[0], up[1], up[2]);
+	    Vec3f up(0, 1, 0);
+	    camW2S.mult(up);
 
-	Vec3f forward(0, 0, -1);
-	camW2S.mult(forward);
-	//printf("forward: %8f, %8f, %8f\r\n", forward[0], forward[1], forward[2]);
-	FMOD_VECTOR f_pos, f_vel, f_up, f_forward;
-	f_pos.x = org[0]; f_pos.y = org[1]; f_pos.z = org[2];
-	f_vel.x = 0; f_vel.y = 0; f_vel.z = 0;
-	f_up.x = up[0]; f_up.y = up[1]; f_up.z = up[2];
-	f_forward.x = forward[0]; f_forward.y = forward[1]; f_forward.z = forward[2];
+	    Vec3f forward(0, 0, -1);
+	    camW2S.mult(forward);
+	    FMOD_VECTOR f_pos, f_vel, f_up, f_forward;
+	    f_pos.x = org.x(); f_pos.y = org.y(); f_pos.z = org.z();
+	    f_vel.x = 0; f_vel.y = 0; f_vel.z = 0;
+	    f_up.x = up.x(); f_up.y = up.y(); f_up.z = up.z();
+	    f_forward.x = forward.x(); f_forward.y = forward.y(); f_forward.z = forward.z();
+        
+	    result = _FModSystem->set3DListenerAttributes(0, &f_pos, &f_vel, &f_forward, &f_up);
+        FMOD_ERRCHECK(result);
+    }
+    else
+    {
+        SWARNING << "FModSoundManager: The Camera is not attached to the sound manager.  This is required to update the listeners position and velocity." << std::endl;
+    }
 
-	eventSystem->set3DListenerAttributes(0, &f_pos, &f_vel, &f_forward, &f_up);
 	//call FMOD's update
-	eventSystem->update();
+	result = _FModSystem->update();
+    FMOD_ERRCHECK(result);
+}
+
+void FModSoundManager::setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up)
+{	
+	/*FMOD_VECTOR pos, vel, forwardDir, upDir;
+	pos.x = lstnrPos[0]; pos.y = lstnrPos[1]; pos.z = lstnrPos[2];
+	vel.x = velocity[0]; vel.y = velocity[1]; vel.z = velocity[2];
+	forwardDir.x = forward[0]; forwardDir.y = forward[1]; forwardDir.z = forward[2];
+	upDir.x = up[0]; upDir.y = up[1]; upDir.z = up[2];
+
+	this->eventSystem->set3DListenerAttributes(0, &pos, &vel, &forwardDir, &upDir);*/
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -171,7 +239,6 @@ void FModSoundManager::update(const Real32& elps){
 FModSoundManager::FModSoundManager(void) :
     Inherited()
 {	
-	eventSystem = NULL;
 }
 
 FModSoundManager::FModSoundManager(const FModSoundManager &source) :
@@ -183,52 +250,7 @@ FModSoundManager::~FModSoundManager(void)
 {
 	uninit();
 }
-void FModSoundManager::setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up){	
-	FMOD_VECTOR pos, vel, forwardDir, upDir;
-	pos.x = lstnrPos[0]; pos.y = lstnrPos[1]; pos.z = lstnrPos[2];
-	vel.x = velocity[0]; vel.y = velocity[1]; vel.z = velocity[2];
-	forwardDir.x = forward[0]; forwardDir.y = forward[1]; forwardDir.z = forward[2];
-	upDir.x = up[0]; upDir.y = up[1]; upDir.z = up[2];
-
-	this->eventSystem->set3DListenerAttributes(0, &pos, &vel, &forwardDir, &upDir);
-}
-/*----------------------------- class specific ----------------------------*/
-
-void FModSoundManager::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void FModSoundManager::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump FModSoundManager NI" << std::endl;
-}
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGFMODSOUNDMANAGERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGFMODSOUNDMANAGERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGFMODSOUNDMANAGERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 
+#endif /* _OSG_TOOLBOX_USE_FMOD_ */

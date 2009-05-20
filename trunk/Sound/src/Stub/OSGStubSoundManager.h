@@ -44,7 +44,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGStubSoundManagerBase.h"
+#include "Sound/OSGSoundManager.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -52,61 +52,37 @@ OSG_BEGIN_NAMESPACE
            PageSoundStubSoundManager for a description.
 */
 
-class OSG_SOUNDLIB_DLLMAPPING StubSoundManager : public StubSoundManagerBase
+class OSG_SOUNDLIB_DLLMAPPING StubSoundManager : public SoundManager
 {
   private:
 
-    typedef StubSoundManagerBase Inherited;
+    typedef SoundManager Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
+      
+    static StubSoundManager* the(void);
 
-	 virtual void init(const char* arg, ...);
-
-	/**
-	* release the fmod eventsystem object
-	*/
+	virtual void init(void);
 	virtual void uninit(void);
 
+	/**
+	* update the sound system with current elapsed time
+	*/
+    virtual void update(const UpdateEvent& e);
 
 	/**
-	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
-	* @param path, the path in the .FEV file to locate the specific FMod event instance
+	* update listener's property, actual argument depends on the extended class
 	*/
-	SoundPtr getSound(const char* name);
-
-	/**
-	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
-	* @param id, id from the Fmod designer, which can be found in the optional output .h and text file
-	*/
-	SoundPtr getSound(const int id);
+	virtual void setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up);
 	
-	/**
-	* update the listener's properties
-	* Pnt3f &listener's postition
-	* 
-	*/
-	void setListenerProperties(const Pnt3f &lstnrPos, ...);
-	void update(const Real32& elps);
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
+	//create a new sound object by its integer id
+	virtual SoundPtr createSound(void) const;
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    static StubSoundManager* _the;
 
     // Variables should all be in StubSoundManagerBase.
 
@@ -128,11 +104,7 @@ class OSG_SOUNDLIB_DLLMAPPING StubSoundManager : public StubSoundManagerBase
     
     /*==========================  PRIVATE  ================================*/
   private:
-
-    friend class FieldContainer;
-    friend class StubSoundManagerBase;
-
-    static void initMethod(void);
+      friend class SoundManager;
 
     // prohibit default functions (move to 'public' if you need one)
 
@@ -143,9 +115,6 @@ typedef StubSoundManager *StubSoundManagerP;
 
 OSG_END_NAMESPACE
 
-#include "OSGStubSoundManagerBase.inl"
 #include "OSGStubSoundManager.inl"
-
-#define OSGSTUBSOUNDMANAGER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSTUBSOUNDMANAGER_H_ */

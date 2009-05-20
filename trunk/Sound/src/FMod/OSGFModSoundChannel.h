@@ -43,8 +43,12 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGSoundDef.h"
 
-#include "OSGFModSoundChannelBase.h"
+#ifdef _OSG_TOOLBOX_USE_FMOD_
+
+#include "Sound/OSGSoundChannel.h"
+#include "fmod.hpp"
 
 OSG_BEGIN_NAMESPACE
 
@@ -52,31 +56,50 @@ OSG_BEGIN_NAMESPACE
            PageSoundFModSoundChannel for a description.
 */
 
-class OSG_SOUNDLIB_DLLMAPPING FModSoundChannel : public FModSoundChannelBase
+class OSG_SOUNDLIB_DLLMAPPING FModSoundChannel : public SoundChannel
 {
   private:
 
-    typedef FModSoundChannelBase Inherited;
+    typedef SoundChannel Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
+    virtual bool isPlaying(void) const;
+    virtual bool isValid(void) const;
+	virtual void stop(void);
 
+    
+	virtual void pause(void);
+	virtual void unpause(void);
+	virtual void pauseToggle(void);
+    virtual bool isPaused(void) const;
+
+    
+	virtual void seek(Real32 pos);
+    virtual Real32 getTime(void) const;
+	virtual Real32 getLength(void) const;
+
+
+	virtual void setPosition(const Pnt3f &pos);
+	virtual Pnt3f getPosition(void) const;
+
+	virtual void setVelocity(const Vec3f &vec);
+	virtual Vec3f getVelocity(void) const;
+
+	virtual void setVolume(Real32 volume);
+	virtual Real32 getVolume(void) const;
+	virtual bool getMute(void) const;
+	virtual void mute(bool shouldMute);
+
+    void soundEnded(void);
     /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
+    /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual ~FModSoundChannel(void); 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -86,38 +109,26 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundChannel : public FModSoundChannelBase
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    FModSoundChannel(void);
-    FModSoundChannel(const FModSoundChannel &source);
+    FModSoundChannel(FMOD::Channel *channel);
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
-
-    virtual ~FModSoundChannel(void); 
-
-    /*! \}                                                                 */
+    FMOD::Channel *_FModChannel;
     
     /*==========================  PRIVATE  ================================*/
   private:
-
-    friend class FieldContainer;
-    friend class FModSoundChannelBase;
-
-    static void initMethod(void);
-
+      friend class FModSound;
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const FModSoundChannel &source);
+    FModSoundChannel(const FModSoundChannel &source);
 };
 
 typedef FModSoundChannel *FModSoundChannelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFModSoundChannelBase.inl"
 #include "OSGFModSoundChannel.inl"
 
-#define OSGFMODSOUNDCHANNEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#endif /* _OSG_TOOLBOX_USE_FMOD_ */
 
 #endif /* _OSGFMODSOUNDCHANNEL_H_ */

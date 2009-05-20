@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="01PlaySound"
+	Name="02FModSound"
 	ProjectGUID="{3BF16424-AB24-4672-83B6-00BBA7A35301}"
 	RootNamespace="02RubberBandCamera"
 	Keyword="Win32Proj"
@@ -207,7 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\01PlaySound.cpp"
+				RelativePath=".\02FModSound.cpp"
 				>
 			</File>
 			<File

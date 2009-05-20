@@ -36,7 +36,7 @@
 #include "OSGSoundDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
-#include "Sound/OSGSound.h"
+#include "Sound/OSGSoundFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -46,16 +46,18 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEvent : public Event
   public:
 
    SoundEvent(FieldContainerPtr Source, Time TimeStamp,
-	   SoundPtr TheSound);
+	   SoundPtr TheSound, UInt32 TheChannel);
 
     virtual const EventType &getType(void) const;
     SoundPtr getSound(void) const;
+    UInt32 getChannel(void) const;
     
     static const EventType &getClassType(void);
   private:
      static EventType _Type;
 
 	 SoundPtr _Sound;
+     UInt32 _Channel;
 };
 
 OSG_END_NAMESPACE

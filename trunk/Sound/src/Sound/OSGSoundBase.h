@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,14 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+#include <OpenSG/OSGPnt3fFields.h> // Position type
+#include <OpenSG/OSGVec3fFields.h> // Velocity type
+#include <OpenSG/OSGReal32Fields.h> // Volume type
+#include <OpenSG/OSGReal32Fields.h> // Pan type
+#include <OpenSG/OSGReal32Fields.h> // Frequency type
+#include <OpenSG/OSGInt32Fields.h> // Looping type
+#include <OpenSG/OSGBoolFields.h> // Streaming type
+#include <OpenSG/Toolbox/OSGPathType.h> // File type
 
 #include "OSGSoundFields.h"
 
@@ -87,6 +95,28 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
   public:
 
     typedef SoundPtr  Ptr;
+
+    enum
+    {
+        PositionFieldId  = Inherited::NextFieldId,
+        VelocityFieldId  = PositionFieldId  + 1,
+        VolumeFieldId    = VelocityFieldId  + 1,
+        PanFieldId       = VolumeFieldId    + 1,
+        FrequencyFieldId = PanFieldId       + 1,
+        LoopingFieldId   = FrequencyFieldId + 1,
+        StreamingFieldId = LoopingFieldId   + 1,
+        FileFieldId      = StreamingFieldId + 1,
+        NextFieldId      = FileFieldId      + 1
+    };
+
+    static const OSG::BitVector PositionFieldMask;
+    static const OSG::BitVector VelocityFieldMask;
+    static const OSG::BitVector VolumeFieldMask;
+    static const OSG::BitVector PanFieldMask;
+    static const OSG::BitVector FrequencyFieldMask;
+    static const OSG::BitVector LoopingFieldMask;
+    static const OSG::BitVector StreamingFieldMask;
+    static const OSG::BitVector FileFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +140,51 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPnt3f             *getSFPosition       (void);
+           SFVec3f             *getSFVelocity       (void);
+           SFReal32            *getSFVolume         (void);
+           SFReal32            *getSFPan            (void);
+           SFReal32            *getSFFrequency      (void);
+           SFInt32             *getSFLooping        (void);
+           SFBool              *getSFStreaming      (void);
+           SFPath              *getSFFile           (void);
+
+           Pnt3f               &getPosition       (void);
+     const Pnt3f               &getPosition       (void) const;
+           Vec3f               &getVelocity       (void);
+     const Vec3f               &getVelocity       (void) const;
+           Real32              &getVolume         (void);
+     const Real32              &getVolume         (void) const;
+           Real32              &getPan            (void);
+     const Real32              &getPan            (void) const;
+           Real32              &getFrequency      (void);
+     const Real32              &getFrequency      (void) const;
+           Int32               &getLooping        (void);
+     const Int32               &getLooping        (void) const;
+           bool                &getStreaming      (void);
+     const bool                &getStreaming      (void) const;
+           Path                &getFile           (void);
+     const Path                &getFile           (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setPosition       ( const Pnt3f &value );
+     void setVelocity       ( const Vec3f &value );
+     void setVolume         ( const Real32 &value );
+     void setPan            ( const Real32 &value );
+     void setFrequency      ( const Real32 &value );
+     void setLooping        ( const Int32 &value );
+     void setStreaming      ( const bool &value );
+     void setFile           ( const Path &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -124,11 +199,24 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
     virtual void   copyFromBin(      BinaryDataHandler &pMem,
                                const BitVector         &whichField);
 
-
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFPnt3f             _sfPosition;
+    SFVec3f             _sfVelocity;
+    SFReal32            _sfVolume;
+    SFReal32            _sfPan;
+    SFReal32            _sfFrequency;
+    SFInt32             _sfLooping;
+    SFBool              _sfStreaming;
+    SFPath              _sfFile;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -180,6 +268,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

@@ -61,6 +61,8 @@
 #include "OSGFModSoundBase.h"
 #include "OSGFModSound.h"
 
+#ifdef _OSG_TOOLBOX_USE_FMOD_
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -256,3 +258,4 @@ namespace
 
 OSG_END_NAMESPACE
 
+#endif /* _OSG_TOOLBOX_USE_FMOD_ */

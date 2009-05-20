@@ -5,7 +5,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGSound", "..\Builds\Windo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01PlaySound", "01PlaySound.vcproj", "{3BF16424-AB24-4672-83B6-00BBA7A35301}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01DefaultSound", "01DefaultSound.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02FModSound", "02FmodSound.vcproj", "{3BF16424-AB24-4672-83B6-00BBA7A35301}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +25,18 @@ Global
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.Build.0 = Debug|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.ActiveCfg = Release|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.Build.0 = Release|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.Build.0 = Debug|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.ActiveCfg = Release|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.Build.0 = Release|Win32
 		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Debug|Win32.ActiveCfg = Debug|Win32
 		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Debug|Win32.Build.0 = Debug|Win32
 		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Release|Win32.ActiveCfg = Release|Win32
 		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Release|Win32.Build.0 = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.Build.0 = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.ActiveCfg = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -47,8 +47,8 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(FMOD_DESIGNER_BASE_DIR)\inc&quot;;&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(FMOD_BASE_DIR)\inc&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_COMPILESOUNDLIB"
+				AdditionalIncludeDirectories="&quot;$(FMOD_BASE_DIR)\inc&quot;;&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(FMOD_BASE_DIR)\inc&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_COMPILESOUNDLIB;_OSG_TOOLBOX_USE_FMOD_"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -75,11 +75,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="fmod_event.lib fmodexp_vc.lib OSGBaseD.lib OSGSystemD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib fmodex_vc.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(FMOD_DESIGNER_BASE_DIR)\lib&quot;;&quot;$(FMOD_BASE_DIR)\lib&quot;;..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(FMOD_BASE_DIR)\lib&quot;;..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
@@ -140,8 +140,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(FMOD_DESIGNER_BASE_DIR)\inc&quot;;&quot;$(FMOD_BASE_DIR)\inc&quot;;&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
-				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILESOUNDLIB"
+				AdditionalIncludeDirectories="&quot;$(FMOD_BASE_DIR)\inc&quot;;&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
+				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILESOUNDLIB;_OSG_TOOLBOX_USE_FMOD_"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -167,11 +167,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="fmodex_vc.lib fmod_event.lib OSGBase.lib OSGSystem.lib OSGInput.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="fmodex_vc.lib OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(FMOD_DESIGNER_BASE_DIR)\lib&quot;;&quot;$(FMOD_BASE_DIR)\lib&quot;;..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(FMOD_BASE_DIR)\lib&quot;;..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
@@ -222,34 +222,6 @@
 				Name="Sound"
 				>
 				<File
-					RelativePath="..\..\src\Sound\OSGDialogCoordinator.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGDialogCoordinator.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGDialogCoordinator.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGDialogCoordinatorBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGDialogCoordinatorBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGDialogCoordinatorBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGDialogCoordinatorFields.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Sound\OSGSound.cpp"
 					>
 				</File>
@@ -271,34 +243,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Sound\OSGSoundBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundChannel.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundChannel.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundChannel.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundChannelBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundChannelBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundChannelBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundChannelFields.h"
 					>
 				</File>
 				<File
@@ -343,22 +287,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Sound\OSGSoundManager.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundManagerBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundManagerBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundManagerBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Sound\OSGSoundManagerFields.h"
 					>
 				</File>
 				<Filter
@@ -410,34 +338,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundChannel.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundChannel.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundChannel.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundChannelBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundChannelBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundChannelBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundChannelFields.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\FMod\OSGFModSoundFields.h"
 					>
 				</File>
@@ -451,22 +351,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\FMod\OSGFModSoundManager.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundManagerBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundManagerBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundManagerBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FMod\OSGFModSoundManagerFields.h"
 					>
 				</File>
 			</Filter>
@@ -498,34 +382,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundChannel.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundChannel.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundChannel.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundChannelBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundChannelBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundChannelBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundChannelFields.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Stub\OSGStubSoundFields.h"
 					>
 				</File>
@@ -539,22 +395,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Stub\OSGStubSoundManager.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundManagerBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundManagerBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundManagerBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Stub\OSGStubSoundManagerFields.h"
 					>
 				</File>
 			</Filter>

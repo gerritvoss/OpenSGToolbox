@@ -42,7 +42,31 @@
 
 OSG_BEGIN_NAMESPACE
 
-OSG_END_NAMESPACE
+inline
+void SoundManager::attachUpdateProducer(WindowEventProducerPtr TheProducer)
+{
+    TheProducer->addUpdateListener(this);
+}
 
-#define OSGSOUNDMANAGER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+inline
+void SoundManager::setCamera(CameraPtr TheCamera)
+{
+    if(_Camera != NullFC)
+    {
+        subRefCP(_Camera);
+    }
+    _Camera = TheCamera;
+    if(_Camera != NullFC)
+    {
+        addRefCP(_Camera);
+    }
+}
+
+inline
+CameraPtr SoundManager::getCamera(void) const
+{
+    return _Camera;
+}
+
+OSG_END_NAMESPACE
 

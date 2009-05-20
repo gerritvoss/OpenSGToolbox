@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGStubSoundManager.h"
+#include "OSGStubSound.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -63,49 +64,47 @@ A stub SoundManager Interface.
  *                           Class variables                               *
 \***************************************************************************/
 
+StubSoundManager *StubSoundManager::_the = NULL;
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void StubSoundManager::initMethod (void)
+StubSoundManager *StubSoundManager::the(void)
 {
-}
+    if(_the == NULL)
+    {
+        _the = new StubSoundManager();
+    }
 
+    return _the;
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void StubSoundManager::init(const char* arg, ...){}
-
-	/**
-	* release the fmod eventsystem object
-	*/
-void StubSoundManager::uninit(void){}
-
-
-	/**
-	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
-	* @param path, the path in the .FEV file to locate the specific FMod event instance
-	*/
-SoundPtr StubSoundManager::getSound(const char* name){
-	return (SoundPtr)NULL;
+void StubSoundManager::init(void)
+{
+    SWARNING << "StubSoundManager Initialized." << std::endl;
 }
 
-	/**
-	* create and return an Fmod event wrapper object found in the .FEV and .FSB file
-	* @param id, id from the Fmod designer, which can be found in the optional output .h and text file
-	*/
-SoundPtr StubSoundManager::getSound(const int id){
-	return (SoundPtr)NULL;
+void StubSoundManager::uninit(void)
+{
 }
-	
-	/**
-	* update the listener's properties
-	* Pnt3f &listener's postition
-	* 
-	*/
-void StubSoundManager::setListenerProperties(const Pnt3f &lstnrPos, ...){}
-void StubSoundManager::update(const Real32& elps){}
+
+void StubSoundManager::setListenerProperties(const Pnt3f &lstnrPos, const Vec3f &velocity, const Vec3f &forward, const Vec3f &up)
+{
+}
+
+void StubSoundManager::update(const UpdateEvent& e)
+{
+}
+
+SoundPtr StubSoundManager::createSound(void) const
+{
+    return StubSound::create();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -125,44 +124,6 @@ StubSoundManager::StubSoundManager(const StubSoundManager &source) :
 StubSoundManager::~StubSoundManager(void)
 {
 }
-
-/*----------------------------- class specific ----------------------------*/
-
-void StubSoundManager::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void StubSoundManager::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump StubSoundManager NI" << std::endl;
-}
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSTUBSOUNDMANAGERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSTUBSOUNDMANAGERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSTUBSOUNDMANAGERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

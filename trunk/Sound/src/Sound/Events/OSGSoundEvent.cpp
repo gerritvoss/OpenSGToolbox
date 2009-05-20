@@ -38,9 +38,10 @@ const EventType &SoundEvent::getType(void) const
 
 
 SoundEvent::SoundEvent(FieldContainerPtr Source, Time TimeStamp,
-	   SoundPtr TheSound) :
+	   SoundPtr TheSound, UInt32 TheChannel) :
    Event(Source, TimeStamp),
-   _Sound(TheSound)
+   _Sound(TheSound),
+   _Channel(TheChannel)
 {
 }
 

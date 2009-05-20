@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,20 +64,117 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  SoundBase::PositionFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::PositionFieldId);
+
+const OSG::BitVector  SoundBase::VelocityFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::VelocityFieldId);
+
+const OSG::BitVector  SoundBase::VolumeFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::VolumeFieldId);
+
+const OSG::BitVector  SoundBase::PanFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::PanFieldId);
+
+const OSG::BitVector  SoundBase::FrequencyFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::FrequencyFieldId);
+
+const OSG::BitVector  SoundBase::LoopingFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::LoopingFieldId);
+
+const OSG::BitVector  SoundBase::StreamingFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::StreamingFieldId);
+
+const OSG::BitVector  SoundBase::FileFieldMask = 
+    (TypeTraits<BitVector>::One << SoundBase::FileFieldId);
+
 const OSG::BitVector SoundBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var Pnt3f           SoundBase::_sfPosition
+    
+*/
+/*! \var Vec3f           SoundBase::_sfVelocity
+    
+*/
+/*! \var Real32          SoundBase::_sfVolume
+    Values from 0.0 to 1.0.  0.0 = Silent, 1.0 = Full Volume.
+*/
+/*! \var Real32          SoundBase::_sfPan
+    Values from -1.0 to 1.0. -1.0 = Full Left, 0.0 = Full Center, 1.0 = Full Right.
+*/
+/*! \var Real32          SoundBase::_sfFrequency
+    
+*/
+/*! \var Int32           SoundBase::_sfLooping
+    Number of times to loop this sound. 1 = play the sound once, Values less than 0 = Inifinite loop. Values 2 greater than plays the sound that many times.
+*/
+/*! \var bool            SoundBase::_sfStreaming
+    Whether or not this sound should be streamed.
+*/
+/*! \var Path            SoundBase::_sfFile
+    The Path to the sound file to load this sound from.
+*/
+
+//! Sound description
+
+FieldDescription *SoundBase::_desc[] = 
+{
+    new FieldDescription(SFPnt3f::getClassType(), 
+                     "Position", 
+                     PositionFieldId, PositionFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundBase::getSFPosition),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Velocity", 
+                     VelocityFieldId, VelocityFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundBase::getSFVelocity),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Volume", 
+                     VolumeFieldId, VolumeFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundBase::getSFVolume),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Pan", 
+                     PanFieldId, PanFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundBase::getSFPan),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Frequency", 
+                     FrequencyFieldId, FrequencyFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundBase::getSFFrequency),
+    new FieldDescription(SFInt32::getClassType(), 
+                     "Looping", 
+                     LoopingFieldId, LoopingFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundBase::getSFLooping),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Streaming", 
+                     StreamingFieldId, StreamingFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundBase::getSFStreaming),
+    new FieldDescription(SFPath::getClassType(), 
+                     "File", 
+                     FileFieldId, FileFieldMask,
+                     false,
+                     (FieldAccessMethod) &SoundBase::getSFFile)
+};
 
 
 FieldContainerType SoundBase::_type(
     "Sound",
     "AttachmentContainer",
     NULL,
-    NULL, 
-    Sound::initMethod,
     NULL,
-    0);
+    Sound::initMethod,
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(SoundBase, SoundPtr)
 
@@ -91,8 +188,7 @@ FieldContainerType &SoundBase::getType(void)
 const FieldContainerType &SoundBase::getType(void) const 
 {
     return _type;
-} 
-
+}
 
 UInt32 SoundBase::getContainerSize(void) const 
 { 
@@ -133,6 +229,14 @@ void SoundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SoundBase::SoundBase(void) :
+    _sfPosition               (Pnt3f(0.0,0.0,0.0)), 
+    _sfVelocity               (Vec3f(0.0,0.0,0.0)), 
+    _sfVolume                 (Real32(1.0)), 
+    _sfPan                    (Real32(0.0)), 
+    _sfFrequency              (Real32(44100.0)), 
+    _sfLooping                (Int32(1)), 
+    _sfStreaming              (bool(false)), 
+    _sfFile                   (), 
     Inherited() 
 {
 }
@@ -142,6 +246,14 @@ SoundBase::SoundBase(void) :
 #endif
 
 SoundBase::SoundBase(const SoundBase &source) :
+    _sfPosition               (source._sfPosition               ), 
+    _sfVelocity               (source._sfVelocity               ), 
+    _sfVolume                 (source._sfVolume                 ), 
+    _sfPan                    (source._sfPan                    ), 
+    _sfFrequency              (source._sfFrequency              ), 
+    _sfLooping                (source._sfLooping                ), 
+    _sfStreaming              (source._sfStreaming              ), 
+    _sfFile                   (source._sfFile                   ), 
     Inherited                 (source)
 {
 }
@@ -158,6 +270,46 @@ UInt32 SoundBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        returnValue += _sfPosition.getBinSize();
+    }
+
+    if(FieldBits::NoField != (VelocityFieldMask & whichField))
+    {
+        returnValue += _sfVelocity.getBinSize();
+    }
+
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+    {
+        returnValue += _sfVolume.getBinSize();
+    }
+
+    if(FieldBits::NoField != (PanFieldMask & whichField))
+    {
+        returnValue += _sfPan.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+    {
+        returnValue += _sfFrequency.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LoopingFieldMask & whichField))
+    {
+        returnValue += _sfLooping.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StreamingFieldMask & whichField))
+    {
+        returnValue += _sfStreaming.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FileFieldMask & whichField))
+    {
+        returnValue += _sfFile.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -167,6 +319,46 @@ void SoundBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        _sfPosition.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VelocityFieldMask & whichField))
+    {
+        _sfVelocity.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+    {
+        _sfVolume.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PanFieldMask & whichField))
+    {
+        _sfPan.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+    {
+        _sfFrequency.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoopingFieldMask & whichField))
+    {
+        _sfLooping.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StreamingFieldMask & whichField))
+    {
+        _sfStreaming.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FileFieldMask & whichField))
+    {
+        _sfFile.copyToBin(pMem);
+    }
+
 
 }
 
@@ -174,6 +366,46 @@ void SoundBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        _sfPosition.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VelocityFieldMask & whichField))
+    {
+        _sfVelocity.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+    {
+        _sfVolume.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PanFieldMask & whichField))
+    {
+        _sfPan.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+    {
+        _sfFrequency.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoopingFieldMask & whichField))
+    {
+        _sfLooping.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StreamingFieldMask & whichField))
+    {
+        _sfStreaming.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FileFieldMask & whichField))
+    {
+        _sfFile.copyFromBin(pMem);
+    }
 
 
 }
@@ -185,6 +417,30 @@ void SoundBase::executeSyncImpl(      SoundBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pOther->_sfPosition);
+
+    if(FieldBits::NoField != (VelocityFieldMask & whichField))
+        _sfVelocity.syncWith(pOther->_sfVelocity);
+
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+        _sfVolume.syncWith(pOther->_sfVolume);
+
+    if(FieldBits::NoField != (PanFieldMask & whichField))
+        _sfPan.syncWith(pOther->_sfPan);
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+        _sfFrequency.syncWith(pOther->_sfFrequency);
+
+    if(FieldBits::NoField != (LoopingFieldMask & whichField))
+        _sfLooping.syncWith(pOther->_sfLooping);
+
+    if(FieldBits::NoField != (StreamingFieldMask & whichField))
+        _sfStreaming.syncWith(pOther->_sfStreaming);
+
+    if(FieldBits::NoField != (FileFieldMask & whichField))
+        _sfFile.syncWith(pOther->_sfFile);
+
 
 }
 #else
@@ -194,6 +450,30 @@ void SoundBase::executeSyncImpl(      SoundBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pOther->_sfPosition);
+
+    if(FieldBits::NoField != (VelocityFieldMask & whichField))
+        _sfVelocity.syncWith(pOther->_sfVelocity);
+
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+        _sfVolume.syncWith(pOther->_sfVolume);
+
+    if(FieldBits::NoField != (PanFieldMask & whichField))
+        _sfPan.syncWith(pOther->_sfPan);
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+        _sfFrequency.syncWith(pOther->_sfFrequency);
+
+    if(FieldBits::NoField != (LoopingFieldMask & whichField))
+        _sfLooping.syncWith(pOther->_sfLooping);
+
+    if(FieldBits::NoField != (StreamingFieldMask & whichField))
+        _sfStreaming.syncWith(pOther->_sfStreaming);
+
+    if(FieldBits::NoField != (FileFieldMask & whichField))
+        _sfFile.syncWith(pOther->_sfFile);
 
 
 
