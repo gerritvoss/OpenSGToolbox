@@ -102,3 +102,4 @@ OSG_END_NAMESPACE
 #include "OSGKeyframeRotationsSequence.inl"
 
 #endif /* _OSGKEYFRAME_ROTATIONS_SEQUENCE_H_ */
+

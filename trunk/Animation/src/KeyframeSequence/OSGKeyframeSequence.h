@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGKeyframeSequenceBase.h"
 #include "Interpolation/OSGKeyframeInterpolations.h"

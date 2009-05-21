@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = Game
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/MiniMap:$(srcdir)/MiniMap/Indicators:$(srcdir)/MiniMap/Events:$(srcdir)/Cameras:
+VPATH = $(srcdir)/:$(srcdir)/MiniMap:$(srcdir)/MiniMap/Indicators:$(srcdir)/MiniMap/Overlays:$(srcdir)/MiniMap/Events:$(srcdir)/Cameras:$(srcdir)/Caption:$(srcdir)/Caption/Event:
 
 
 #.SUFFIX = .cpp .o
@@ -15,14 +15,12 @@ EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include
 EXTRA_LDFLAGS = -lboost_filesystem
 
 OBJECTS = OSGMiniMapBase.o \
-	OSGMiniMapOverlayBase.o \
 	OSGLayeredImageMiniMap.o \
-	OSGMiniMapTransformation.o \
-	OSGMiniMapMatrixTransformationBase.o \
-	OSGMiniMapMatrixTransformation.o \
 	OSGMiniMap.o \
-	OSGMiniMapOverlay.o \
+	OSGMiniMapMatrixTransformation.o \
+	OSGMiniMapTransformation.o \
 	OSGLayeredImageMiniMapBase.o \
+	OSGMiniMapMatrixTransformationBase.o \
 	OSGMiniMapTransformationBase.o \
 	OSGMiniMapIndicatorComponentGenerator.o \
 	OSGDefaultMiniMapIndicatorComponentGenerator.o \
@@ -30,11 +28,26 @@ OBJECTS = OSGMiniMapBase.o \
 	OSGDefaultMiniMapIndicatorComponentGeneratorBase.o \
 	OSGMiniMapIndicatorComponentGeneratorBase.o \
 	OSGMiniMapIndicatorBase.o \
+	OSGDirectionalIndicatorMiniMapOverlayBase.o \
+	OSGMiniMapOverlayBase.o \
+	OSGDirectionalIndicatorMiniMapOverlay.o \
+	OSGDirectionalIndicatorComponentGeneratorBase.o \
+	OSGMiniMapOverlay.o \
+	OSGDefaultDirectionalIndicatorComponentGenerator.o \
+	OSGDirectionalIndicatorComponentGenerator.o \
+	OSGDefaultDirectionalIndicatorComponentGeneratorBase.o \
 	OSGMiniMapEvent.o \
 	OSGAirplaneCameraBase.o \
 	OSGAirplaneCamera.o \
 	OSGRubberBandCameraBase.o \
-	OSGRubberBandCamera.o
+	OSGRubberBandCamera.o \
+	OSGDefaultCaptionComponentGeneratorBase.o \
+	OSGCaptionComponentGenerator.o \
+	OSGCaptionBase.o \
+	OSGDefaultCaptionComponentGenerator.o \
+	OSGCaption.o \
+	OSGCaptionComponentGeneratorBase.o \
+	OSGCaptionEvent.o
         
         
 include $(commondir)/CommonMake.mk

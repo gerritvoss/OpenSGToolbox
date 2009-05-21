@@ -10,7 +10,7 @@ endif
 
 # program dependencies
 
-default:	toolbox input userinterface
+default:	toolbox input animation userinterface
 
 
 # make rules
@@ -68,4 +68,20 @@ userinterface-clean-opt:
         
 userinterface-clean: userinterface-clean-dbg userinterface-clean-opt
 
-clean: toolbox-clean input-clean userinterface-clean
+#Animation
+animation-dbg:
+	   gmake -C ../Animation/Builds/Linux/dbg -j6 install
+
+animation-opt:
+	   gmake -C ../Animation/Builds/Linux/opt -j6 install
+
+animation: animation-dbg animation-opt
+
+animation-clean-dbg:
+	   gmake -C ../Animation/Builds/Linux/dbg clean
+
+animation-clean-opt:
+	   gmake -C ../Animation/Builds/Linux/opt clean
+
+animation-clean: animation-clean-dbg animation-clean-opt
+clean: toolbox-clean input-clean userinterface-clean animation-clean

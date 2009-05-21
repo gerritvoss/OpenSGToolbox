@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = Physics
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Physics:$(srcdir)/Integrations:$(srcdir)/Systems:$(srcdir)/Systems/Forces:$(srcdir)/Objects:$(srcdir)/Objects/Attributes:$(srcdir)/Actors:
+VPATH = $(srcdir)/:$(srcdir)/Integrations:$(srcdir)/Systems:$(srcdir)/Systems/Forces:$(srcdir)/Objects:$(srcdir)/Objects/Attributes:$(srcdir)/Actors:
 
 
 #.SUFFIX = .o .o

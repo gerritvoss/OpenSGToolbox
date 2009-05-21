@@ -46,14 +46,6 @@
 #include <GL/glx.h>
 #endif
 
-#ifdef OSG_WITH_GLUT
-#include <OpenSG/OSGGLUTWindow.h>
-#include <OpenSG/OSGGLUT.h>
-#include "WindowSystem/GLUT/OSGGLUTWindowEventProducer.h"
-#endif
-
-//#include <OpenSG/OSGQTWindow.h>
-//#include <OpenSG/OSGQT4Window.h>
 #include "OSGWindowEventProducerFactory.h"
 
 OSG_BEGIN_NAMESPACE
@@ -85,12 +77,6 @@ WindowEventProducerPtr OSG_INPUTLIB_DLLMAPPING createWindowEventProducer(const F
     if(WindowType == XWindow::getClassType())
     {
         return XWindowEventProducer::create();
-    }
-#endif
-#if defined(OSG_WITH_GLUT)
-    else if(WindowType == GLUTWindow::getClassType())
-    {
-        return GLUTWindowEventProducer::create();
     }
 #endif
     return NullFC;

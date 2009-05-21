@@ -378,7 +378,7 @@ void KeyframeSequenceTmpl<KeyframeSequenceDesc>::setKeyframe(const StoredGeneric
 {
 //CHECKCHECK do conversion constructor iff necessary
     _field[index] = StoredType(value);
-    _mfInternalKeys[index] = key;
+    this->_sfInternalKeys[index] = key;
 }
 
 template <class KeyframeSequenceDesc> inline 
@@ -387,7 +387,7 @@ void KeyframeSequenceTmpl<KeyframeSequenceDesc>::addKeyframe(const StoredGeneric
 {
 //CHECKCHECK do conversion constructor iff necessary
     _field.push_back( StoredType(value) );
-    _mfInternalKeys.push_back( key );
+    this->_sfInternalKeys.push_back( key );
 }
 
 template <class KeyframeSequenceDesc> inline
@@ -407,7 +407,7 @@ bool KeyframeSequenceTmpl<KeyframeSequenceDesc>::insertKeyframe(const StoredGene
     else
     {
         _field.insert(_field.begin() + index, StoredType(val));
-        _mfInternalKeys.insert(_mfInternalKeys.begin() + index, key);
+        this->_sfInternalKeys.insert(this->_sfInternalKeys.begin() + index, key);
         return true;
     }
 }
@@ -416,7 +416,7 @@ template <class KeyframeSequenceDesc> inline
 void KeyframeSequenceTmpl<KeyframeSequenceDesc>::clear( void )
 {
     _field.clear();
-    _mfInternalKeys.clear();
+    this->_mfInternalKeys.clear();
 }
 
 template <class KeyframeSequenceDesc> inline
@@ -431,14 +431,14 @@ template <class KeyframeSequenceDesc> inline
 void KeyframeSequenceTmpl<KeyframeSequenceDesc>::resize( size_t newsize )
 {
     _field.resize(newsize);
-    _mfInternalKeys.resize(newsize);
+    this->_mfInternalKeys.resize(newsize);
 }
 
 template <class KeyframeSequenceDesc> inline
 void KeyframeSequenceTmpl<KeyframeSequenceDesc>::shrink( void )
 {
     StoredFieldType(_field).swap(_field);
-    _mfInternalKeys.swap(_mfInternalKeys);
+    this->_mfInternalKeys.swap(this->_mfInternalKeys);
 }
 
 template <class KeyframeSequenceDesc> inline
@@ -451,63 +451,63 @@ void KeyframeSequenceTmpl<KeyframeSequenceDesc>::dump(      UInt32    uiIndent,
 template <class KeyframeSequenceDesc> inline
 RawInterpFuncion KeyframeSequenceTmpl<KeyframeSequenceDesc>::getStepInterpFuncion(void)
 {
-    KeyframeSequenceDesc::ConcreteInterpFunction f(KeyframeSequenceDesc::getStepConcreteInterpFuncion());
+    typename KeyframeSequenceDesc::ConcreteInterpFunction f(KeyframeSequenceDesc::getStepConcreteInterpFuncion());
     if(f.empty())
     {
         return NULL;
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),getKeys(),_1,_2,_3);
+        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
     }
 }
 
 template <class KeyframeSequenceDesc> inline
 RawInterpFuncion KeyframeSequenceTmpl<KeyframeSequenceDesc>::getLinearInterpFuncion(void)
 {
-    KeyframeSequenceDesc::ConcreteInterpFunction f(KeyframeSequenceDesc::getLinearConcreteInterpFuncion());
+    typename KeyframeSequenceDesc::ConcreteInterpFunction f(KeyframeSequenceDesc::getLinearConcreteInterpFuncion());
     if(f.empty())
     {
         return NULL;
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),getKeys(),_1,_2,_3);
+        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
     }
 }
 
 template <class KeyframeSequenceDesc> inline
 RawInterpFuncion KeyframeSequenceTmpl<KeyframeSequenceDesc>::getCubicInterpFuncion(void)
 {
-    KeyframeSequenceDesc::ConcreteInterpFunction f(KeyframeSequenceDesc::getCubicConcreteInterpFuncion());
+    typename KeyframeSequenceDesc::ConcreteInterpFunction f(KeyframeSequenceDesc::getCubicConcreteInterpFuncion());
     if(f.empty())
     {
         return NULL;
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),getKeys(),_1,_2,_3);
+        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
     }
 }
 
 template <class KeyframeSequenceDesc> inline
 RawInterpFuncion KeyframeSequenceTmpl<KeyframeSequenceDesc>::getLinearNormalInterpFuncion(void)
 {
-    KeyframeSequenceDesc::ConcreteInterpFunction f(KeyframeSequenceDesc::getLinearNormalConcreteInterpFuncion());
+    typename KeyframeSequenceDesc::ConcreteInterpFunction f(KeyframeSequenceDesc::getLinearNormalConcreteInterpFuncion());
     if(f.empty())
     {
         return NULL;
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),getKeys(),_1,_2,_3);
+        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
     }
 }
 
 template <class KeyframeSequenceDesc> inline
 ReplacementFuncion KeyframeSequenceTmpl<KeyframeSequenceDesc>::getReplacementFuncion(void)
 {
-    return &replacement<KeyframeSequenceDesc::SingleFieldType>;
+    return &replacement<typename KeyframeSequenceDesc::SingleFieldType>;
 }
 
 template <class KeyframeSequenceDesc> inline

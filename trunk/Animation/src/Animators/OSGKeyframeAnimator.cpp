@@ -116,14 +116,7 @@ Real32 KeyframeAnimator::getLength(void) const
 
 const DataType &KeyframeAnimator::getDataType(void) const
 {
-   if( getKeyframeSequence() != NullFC)
-   {
-      return getKeyframeSequence()->getDataType();
-   }
-   else
-   {
-      return DataType("","");
-   }
+   return getKeyframeSequence()->getDataType();
 }
 
 /*-------------------------------------------------------------------------*\

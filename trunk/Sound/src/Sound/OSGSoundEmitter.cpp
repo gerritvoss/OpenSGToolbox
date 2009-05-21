@@ -133,7 +133,9 @@ void SoundEmitter::update(const Time& elps)
         {
             if(!getSound()->isValid(*Itor))
             {
-                Itor = _EmittedSoundChannels.erase(Itor);
+                std::set<UInt32>::iterator EraseItor(Itor);
+                ++Itor;
+                _EmittedSoundChannels.erase(EraseItor);
             }
             else
             {

@@ -18,11 +18,12 @@ OBJECTS = OSGStringUtils.o \
 	OSGKeyAdapter.o \
 	OSGMouseEventProducer.o \
 	OSGKeyEventProducer.o \
+	OSGEventConnection.o \
 	OSGWindowEvent.o \
 	OSGMouseWheelEvent.o \
-	OSGMouseEvent.o \
 	OSGKeyEvent.o \
 	OSGFieldChangeEvent.o \
+	OSGMouseEvent.o \
 	OSGFieldChangeListener.o \
 	OSGInputEvent.o \
 	OSGMouseMotionAdapter.o \
@@ -36,14 +37,8 @@ OBJECTS = OSGStringUtils.o \
 	OSGWindowEventProducerFactory.o \
 	OSGWindowEventProducerBase.o \
 	OSGWindowEventProducer.o \
-	OSGWin32WindowEventProducerBase.o \
-	OSGWin32WindowEventProducer.o \
-	OSGCarbonWindowEventProducerBase.o \
-	OSGCarbonWindowEventProducer.o \
 	OSGXWindowEventProducer.o \
 	OSGXWindowEventProducerBase.o \
-	OSGGLUTWindowEventProducer.o \
-	OSGGLUTWindowEventProducerBase.o \
 	OSGInputSettings.o
         
         
