@@ -128,7 +128,7 @@ class TutorialCaptionListener : public CaptionListener
 public:
     virtual void segmentActivated(const CaptionEvent& e)
     {
-        if(segUpdate == 4)
+        if(segUpdate == 6)
         {
             NodePtr s = makeSphere(1,2);
             beginEditCP(scene, Node::ChildrenFieldMask);
@@ -139,7 +139,7 @@ public:
                 scene->addChild(s);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
-        if(segUpdate == 5)
+        if(segUpdate == 9)
         {
             NodePtr s = makeBox(3,3,3,2,2,2);
             beginEditCP(scene, Node::ChildrenFieldMask);
@@ -148,6 +148,15 @@ public:
                     scene->subChild(scene->getNChildren()-1);
                 }
                 scene->addChild(s);
+            endEditCP(scene, Node::ChildrenFieldMask);
+        }
+        if(segUpdate == 11)
+        {
+            beginEditCP(scene, Node::ChildrenFieldMask);
+                while(scene->getNChildren() > 0)
+                {
+                    scene->subChild(scene->getNChildren()-1);
+                }
             endEditCP(scene, Node::ChildrenFieldMask);
         }
         ++segUpdate;
@@ -159,12 +168,7 @@ public:
     }
     virtual void captionEnded(const CaptionEvent& e)
     {
-        beginEditCP(scene, Node::ChildrenFieldMask);
-                while(scene->getNChildren() > 0)
-                {
-                    scene->subChild(scene->getNChildren()-1);
-                }
-        endEditCP(scene, Node::ChildrenFieldMask);
+        
         std::cout<<"Caption Ended"<<std::endl;
     }
 };
@@ -390,7 +394,7 @@ int main(int argc, char **argv)
 
     TutorialSound = SoundManager::the()->createSound();
     beginEditCP(TutorialSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
-        TutorialSound->setFile(Path("./Data/VCTheme.mp3"));
+        TutorialSound->setFile(Path("./Data/captionSoundFile.ogg"));
         TutorialSound->setVolume(1.0);
         TutorialSound->setStreaming(true);
         TutorialSound->setLooping(1);
@@ -400,16 +404,18 @@ int main(int argc, char **argv)
     TutorialCaption = osg::Caption::create();
 
     //Add the segments of text to be displayed
-    TutorialCaption->captionSegment("The Caption Listener can",0.0,2.0);
-    TutorialCaption->captionSegment("be used for many different things.",2.0,4.0);
-    TutorialCaption->captionSegment("Such as changing the background",4.0,6.0);
-    TutorialCaption->captionSegment("from a torus to a sphere ",6.0,8.0);
-    TutorialCaption->captionSegment("or maybe a cube instead.",8.0,10.0);
-    TutorialCaption->captionSegment("Needless to say its a useful",10.0,12.0);
-    TutorialCaption->captionSegment("tool to have as a programmer.",12.0,14.0);
-    TutorialCaption->captionSegment("Lets go ahead and reset the",14.0,16.0);
-    TutorialCaption->captionSegment("background to be blank.",16.0,18.0);
-    TutorialCaption->captionSegment("MUCH BETTER!",18.0,20.0);
+    TutorialCaption->captionSegment("Listeners can be used for a variety",1.7,3.4);
+    TutorialCaption->captionSegment("of different applications.",3.4,4.7);
+    TutorialCaption->captionSegment("In this tutorial we will",5.0,6.35);
+    TutorialCaption->captionSegment("simply be changing the background though.",6.35,8.0);
+    TutorialCaption->captionSegment("First we will change the",8.8,10.2);
+    TutorialCaption->captionSegment("torus on screen to a sphere.",10.2,11.75);
+    TutorialCaption->captionSegment("By timing things correctly we can make",12.7,14.6);
+    TutorialCaption->captionSegment("the changes right as the word is spoken.",14.6,16.75);
+    TutorialCaption->captionSegment("Such as changing the sphere to a cube",17.3,20.0);
+    TutorialCaption->captionSegment("but personally I would prefer",20.33,21.65);
+    TutorialCaption->captionSegment("the background to be blank.",21.65,22.8);
+    TutorialCaption->captionSegment("Much better!",23.8,25.0);
 
 
     //Add the tutorial Caption Listener to the Caption that was set up for the tutorial
