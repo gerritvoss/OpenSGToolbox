@@ -537,38 +537,6 @@
 					>
 				</File>
 				<Filter
-					Name="GLUT"
-					>
-					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducer.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerFields.h"
-						>
-					</File>
-				</Filter>
-				<Filter
 					Name="Win32"
 					>
 					<File
