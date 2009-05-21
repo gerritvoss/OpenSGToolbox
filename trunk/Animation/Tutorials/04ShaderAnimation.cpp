@@ -7,12 +7,6 @@
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGSimpleGeometry.h>
-#include <OpenSG/Input/OSGWindowUtils.h>
-
-// Input
-#include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
-
 #include <OpenSG/OSGLineChunk.h>
 #include <OpenSG/OSGBlendChunk.h>
 #include <OpenSG/OSGChunkMaterial.h>
@@ -20,6 +14,11 @@
 #include <OpenSG/OSGSHLChunk.h>
 #include <OpenSG/OSGSHLParameterChunk.h>
 #include <OpenSG/OSGShaderParameterVec4f.h>
+
+// Input
+#include <OpenSG/Input/OSGKeyListener.h>
+#include <OpenSG/Input/OSGWindowAdapter.h>
+#include <OpenSG/Input/OSGWindowUtils.h>
 
 #include <sstream>
 

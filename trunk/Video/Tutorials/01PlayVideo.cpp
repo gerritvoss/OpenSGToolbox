@@ -167,12 +167,13 @@ int main(int argc, char **argv)
     getDefaultVideoManager()->init(argc, argv);
     
     TheVideo = getDefaultVideoManager()->createVideoWrapper();
-    
-    TheVideo->open(Path("C:\\Test.avi"));
-	TheVideo->pause();
 
 	TutorialVideoListener TheVideoListener;
 	TheVideo->addVideoListener(&TheVideoListener);
+    
+    TheVideo->open(Path("./Data/flame.avi"));
+	TheVideo->pause();
+
 
 
     // GLUT init
@@ -184,7 +185,10 @@ int main(int argc, char **argv)
     gwin->init();
 
     // create the scene
-	GeometryPtr SceneGeometry = makePlaneGeo(10.0,10.0,10,10);
+	TheVideo->updateImage();
+    Real32 AspectRatio(static_cast<Real32>(TheVideo->getImage()->getWidth())/static_cast<Real32>(TheVideo->getImage()->getHeight()));
+
+	GeometryPtr SceneGeometry = makePlaneGeo(10.0*AspectRatio,10.0,10,10);
 	beginEditCP(SceneGeometry, Geometry::MaterialFieldMask);
 		SceneGeometry->setMaterial(createVideoMaterial());
 	endEditCP(SceneGeometry, Geometry::MaterialFieldMask);
@@ -202,18 +206,6 @@ int main(int argc, char **argv)
 		scene->addChild(SceneGeometryNode);
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    
-    // Create the parts needed for the video background
-    
-    UInt32 width = 640;
-    UInt32 height = 480;
-    
-    // get the desired size from the command line
-    if(argc >= 3)
-    {
-        width = atoi(argv[1]);
-        height = atoi(argv[2]);
-    }    
     
     // To check OpenGL extensions, the Window needs to have run through
     // frameInit at least once. This automatically happens when rendering,
@@ -296,6 +288,7 @@ void keyboard(unsigned char k, int x, int y)
         }
         break;
 		case 'p':
+		case ' ':
 			TheVideo->pauseToggle();
 			break;
 		case 's':
