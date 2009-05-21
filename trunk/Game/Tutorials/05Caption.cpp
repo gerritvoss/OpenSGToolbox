@@ -1,45 +1,24 @@
 /*************************************************
-Welcome to the 01Button tutorial.  In this tutorial, 
+Welcome to the 05Caption tutorial.  In this tutorial, 
 you will see examples of how to create the following 
-OGS User Interface components:
+OGS Game components:
 	
-	ActionListener
-	Button
-	ToggleButton
+	CaptionListener
+	Caption
 	
-Buttons are often used to create interactivity
-within the interface (via clicking, etc).  This
-tutorial details how to create simple Buttons and
-modify their basic features.  The ActionListener
-class is used to create the desired result when
-actions are preformed (again, clicking, etc).  A
-ToggleButton remains pressed, hence "Toggle."
+As well as:
 
-The following all are shown and explained
-within this tutorial for:
+    Sound
+	
+Caption is used mainly for the purpose of diplaying
+text on screen corresponding with the sound being 
+played. The CaptionListener is used to listen for
+a change in a specific caption. The CaptionListener 
+listens for:
 
-Button/ToggleButton
-    Setting Sizes (Max/Min, and display size)
-	Setting Tool Tip Text
-	Setting the displayed Text
-	Setting the Font
-	Setting the Font Color
-	Setting the Active/Rollover text color
-		(Active = pressed, Rollover = mousedover)
-	Setting the Text alignment
-
-ToggleButton
-	Setting to "selected"
-
-These tutorials contain potentially relevant
-information:
-	02AbsoluteLayout: Assigning constraints to
-		Buttons
-	03Border: Setting Active Borders
-	04Background: Setting Active Backgrounds
-	06BoxLayout: Showing Max/Min Size effects
-
-
+    segmentActivated - When a new segment of text is started
+    captionStarted - When the specified caption itself is started
+    captionEnded - When the specified caption ends
 
 *************************************************/
 
