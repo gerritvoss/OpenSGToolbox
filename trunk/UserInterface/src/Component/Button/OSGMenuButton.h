@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGMenuButtonBase.h"
 #include "Component/List/OSGListDataListener.h"

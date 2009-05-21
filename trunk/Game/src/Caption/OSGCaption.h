@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGGameDef.h"
 
 #include "OSGCaptionBase.h"
 #include "Event/OSGCaptionListener.h"

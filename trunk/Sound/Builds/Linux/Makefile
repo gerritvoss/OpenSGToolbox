@@ -11,11 +11,10 @@ VPATH = $(srcdir)/:$(srcdir)/FMod:$(srcdir)/Sound:$(srcdir)/Sound/Events:$(srcdi
 
 #.SUFFIX = .cpp .o
 
-EXTRA_CCFLAGS = -fPIC -I$(FMOD_BASE_DIR)/inc -I$(srcdir) -I../../../../Builds/Linux/include
-EXTRA_LDFLAGS = -L$(FMOD_BASE_DIR)/lib -lfmodex64 -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-gcc41-mt-1_38 -lboost_system-gcc41-mt-1_38 
+EXTRA_CCFLAGS = -fPIC -I$(FMOD_BASE_DIR)/inc -I$(srcdir) -I$(BOOST_BASE_DIR)/include -I../../../../Builds/Linux/include -D_OSG_TOOLBOX_USE_FMOD_
+#EXTRA_LDFLAGS = -L$(FMOD_BASE_DIR)/lib -lfmodex64 -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-gcc41-mt-1_38 -lboost_system-gcc41-mt-1_38 
 
-OBJECTS = OSGFModSoundChannel.o \
-	OSGFModSoundManager.o \
+OBJECTS = 	OSGFModSoundManager.o \
 	OSGFModSoundBase.o \
 	OSGFModSound.o \
 	OSGSound.o \

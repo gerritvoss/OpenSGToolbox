@@ -39,6 +39,7 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 #include "Component/Scroll/OSGBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE

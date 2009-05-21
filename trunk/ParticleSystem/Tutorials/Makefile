@@ -2,7 +2,6 @@
 
 # use debug or opt libs?
 LIBTYPE ?= dbg
-OSGPARTICLESYSTEMROOT ?= ../../Builds/Linux
 
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D
@@ -30,6 +29,10 @@ OSGPOOL ?= ..
 # than one system is configured from one dir. Just for the 1.0
 
 OSGINSTALLPREFIX := notset
+
+OPENSG_BASE_DIR ?= /usr
+
+OSGINSTALLPREFIX := $(OPENSG_BASE_DIR)
 
 PREFIXSUFFIX := $(shell $(OSGPOOL)/CommonConf/config.guess)
 -include .prefix.$(PREFIXSUFFIX)
@@ -91,18 +94,21 @@ ifeq ($(SYSTEM),IRIX)
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
+	SYSTEM_INSTALL_SUBDIR := IRIX
 endif
 ifeq ($(SYSTEM),IRIX64)
         CCOUT  := -o 
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
+	SYSTEM_INSTALL_SUBDIR := IRIX64
 endif
 ifeq ($(SYSTEM),Linux)
         CCOUT  := -o 
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
+	SYSTEM_INSTALL_SUBDIR := Linux
 endif
 ifeq ($(findstring WIN,$(SYSTEM)),WIN)
         OS := WIN32
@@ -116,12 +122,17 @@ ifeq ($(SYSTEM),HP-UX)
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
+	SYSTEM_INSTALL_SUBDIR := HP-UX
 endif
 ifeq ($(SYSTEM),Darwin)
         CCOUT := -o 
         LDOUT := -o 
 	LINK  := 
+	SYSTEM_INSTALL_SUBDIR := Apple
+	EXTRA_LDFLAGS := -framework Carbon -framework AGL -framework Quicktime -lOSGWindowCarbon
 endif
+
+OSGINPUTROOT = ../../Builds/$(SYSTEM_INSTALL_SUBDIR)
 
 # Var settings
 
@@ -131,9 +142,9 @@ else
 CC = $(shell $(OSGCONFIG) --compiler) 
 endif
 
-CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGPARTICLESYSTEMROOT)/include
+CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB)) -I$(OSGINPUTROOT)/include -I$(BOOST_BASE_DIR)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGPARTICLESYSTEMROOT)/lib -lOSGParticleSystem$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT)
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB)) -L$(OSGINPUTROOT)/lib -lOSGToolbox$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT) -lOSGDynamics$(DGB_OPT_EXT) -lOSGParticleSystem$(DGB_OPT_EXT) $(EXTRA_LDFLAGS) -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-gcc41-mt-1_38 -lboost_system-gcc41-mt-1_38
 
 
 # all tutorials in this directory
@@ -160,6 +171,7 @@ clean:
 	rm -f *.pdb
 	rm -f *.ilk
 	rm -f *.idb
+	rm -f $(PROGS)
 
 Clean: clean
 	rm -f $(PROGS) 

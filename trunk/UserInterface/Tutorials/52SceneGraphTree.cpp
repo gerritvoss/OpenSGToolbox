@@ -169,7 +169,7 @@ int main(int argc, char **argv)
     //Tree Model
     TheTreeModel.setRoot(Root);
 
-	TheFileSystemTreeModel.setRoot(Path("C:\\"));
+	 //TheFileSystemTreeModel.setRoot(Path("C:\\"));
     
     //Create the Tree
     TheTree = Tree::create();

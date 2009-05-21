@@ -2,6 +2,7 @@
 
 # use debug or opt libs?
 LIBTYPE ?= dbg
+OSGUSERINTERFACEROOT ?= ../../Builds/Linux
 
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D
@@ -94,21 +95,18 @@ ifeq ($(SYSTEM),IRIX)
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
-	SYSTEM_INSTALL_SUBDIR := IRIX
 endif
 ifeq ($(SYSTEM),IRIX64)
         CCOUT  := -o 
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
-	SYSTEM_INSTALL_SUBDIR := IRIX64
 endif
 ifeq ($(SYSTEM),Linux)
         CCOUT  := -o 
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
-	SYSTEM_INSTALL_SUBDIR := Linux
 endif
 ifeq ($(findstring WIN,$(SYSTEM)),WIN)
         OS := WIN32
@@ -122,17 +120,12 @@ ifeq ($(SYSTEM),HP-UX)
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
-	SYSTEM_INSTALL_SUBDIR := HP-UX
 endif
 ifeq ($(SYSTEM),Darwin)
         CCOUT := -o 
         LDOUT := -o 
 	LINK  := 
-	SYSTEM_INSTALL_SUBDIR := Apple
-	EXTRA_LDFLAGS := -framework Carbon -framework AGL -framework Quicktime -lOSGWindowCarbon
 endif
-
-OSGINPUTROOT = ../../Builds/$(SYSTEM_INSTALL_SUBDIR)
 
 # Var settings
 
@@ -142,9 +135,9 @@ else
 CC = $(shell $(OSGCONFIG) --compiler) 
 endif
 
-CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB)) -I$(OSGINPUTROOT)/include -I$(BOOST_BASE_DIR)/include
+CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB)) -I$(OSGUSERINTERFACEROOT)/include  -I$(BOOST_BASE_DIR)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB)) -L$(OSGINPUTROOT)/lib -lOSGToolbox$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT) -lOSGSound$(DGB_OPT_EXT) $(EXTRA_LDFLAGS) -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-gcc41-mt-1_38 -lboost_system-gcc41-mt-1_38 -L$(FMOD_BASE_DIR)/lib -lfmodex64
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB)) -L$(OSGUSERINTERFACEROOT)/lib -lOSGUserInterface$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT) -lOSGGame$(DGB_OPT_EXT) -lOSGSound$(DGB_OPT_EXT) -lOSGToolbox$(DGB_OPT_EXT) -lOSGDynamics$(DGB_OPT_EXT) -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-gcc41-mt-1_38 -lboost_system-gcc41-mt-1_38 -L$(FMOD_BASE_DIR)/lib -lfmodex64
 
 
 # all tutorials in this directory

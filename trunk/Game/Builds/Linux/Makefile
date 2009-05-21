@@ -11,8 +11,7 @@ VPATH = $(srcdir)/:$(srcdir)/MiniMap:$(srcdir)/MiniMap/Indicators:$(srcdir)/Mini
 
 #.SUFFIX = .cpp .o
 
-EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include
-EXTRA_LDFLAGS = -lboost_filesystem
+EXTRA_CCFLAGS = -fPIC -I$(FMOD_BASE_DIR)/inc -I$(srcdir) -I$(BOOST_BASE_DIR)/include -I../../../../Builds/Linux/include -D_OSG_TOOLBOX_USE_FMOD_
 
 OBJECTS = OSGMiniMapBase.o \
 	OSGLayeredImageMiniMap.o \
