@@ -114,7 +114,7 @@ public:
                 TheWindowEventProducer->setSize(Vec2us(300,300));
                 break;
             case KeyEvent::KEY_F:
-                TheWindowEventProducer->setFullscreen(true);
+                TheWindowEventProducer->setFullscreen(!TheWindowEventProducer->getFullscreen());
                 break;
             case KeyEvent::KEY_G:
                 TheWindowEventProducer->setFullscreen(false);
@@ -250,6 +250,11 @@ int main(int argc, char **argv)
     
     TheWindowEventProducer = createDefaultWindowEventProducer();
     TheWindowEventProducer->initWindow();
+
+	beginEditCP(TheWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
+		TheWindowEventProducer->setUseCallbackForDraw(true);
+		TheWindowEventProducer->setUseCallbackForReshape(true);
+	endEditCP(TheWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
     
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
@@ -284,8 +289,8 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                        Vec2s(500,500),
+    TheWindowEventProducer->openWindow(Pnt2s(0,0),
+                        Vec2s(1280,1024),
                         "Default Window");
 
     while(!ExitMainLoop)

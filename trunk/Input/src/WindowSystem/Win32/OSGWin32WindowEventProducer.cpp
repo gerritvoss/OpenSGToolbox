@@ -95,18 +95,90 @@ void Win32WindowEventProducer::WindowEventLoopThread(void* args)
         return;
     }
 
+    //Fullscreen
+    bool fullscreen(false);
+    if(fullscreen)
+    {
+        DEVMODE dmScreenSettings;					// Device Mode
+		memset(&dmScreenSettings,0,sizeof(dmScreenSettings));		// Makes Sure Memory's Cleared
+		dmScreenSettings.dmSize=sizeof(dmScreenSettings);		// Size Of The Devmode Structure
+		dmScreenSettings.dmPelsWidth	= Arguments->_Size.x();			// Selected Screen Width
+		dmScreenSettings.dmPelsHeight	= Arguments->_Size.y();			// Selected Screen Height
+		dmScreenSettings.dmBitsPerPel	= 32;				// Selected Bits Per Pixel
+		dmScreenSettings.dmFields=DM_BITSPERPEL|DM_PELSWIDTH|DM_PELSHEIGHT;
+
+        // Try To Set Selected Mode And Get Results.  NOTE: CDS_FULLSCREEN Gets Rid Of Start Bar.
+		if (ChangeDisplaySettings(&dmScreenSettings,CDS_FULLSCREEN)!=DISP_CHANGE_SUCCESSFUL)
+		{
+            // If The Mode Fails, Offer Two Options.  Quit Or Run In A Window.
+			if (MessageBox(NULL,"The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?","NeHe GL",MB_YESNO|MB_ICONEXCLAMATION)==IDYES)
+			{
+                	fullscreen=FALSE;				// Select Windowed Mode (Fullscreen=FALSE)
+			}
+			else
+			{
+                // Pop Up A Message Box Letting User Know The Program Is Closing.
+				MessageBox(NULL,"Program Will Now Close.","ERROR",MB_OK|MB_ICONSTOP);
+				return;					// Exit And Return FALSE
+			}
+		}
+	}
+
+    RECT WindowRect;							// Grabs Rectangle Upper Left / Lower Right Values
+	WindowRect.left=(long)0;						// Set Left Value To 0
+	WindowRect.right=(long)Arguments->_Size.x();						// Set Right Value To Requested Width
+	WindowRect.top=(long)0;							// Set Top Value To 0
+	WindowRect.bottom=(long)Arguments->_Size.y();						// Set Bottom Value To Requested Height
+
+    DWORD		dwExStyle;						// Window Extended Style
+	DWORD		dwStyle;						// Window Style
+
+    if (fullscreen)								// Are We Still In Fullscreen Mode?
+	{
+        dwExStyle=WS_EX_APPWINDOW;					// Window Extended Style
+		dwStyle=WS_POPUP;						// Windows Style
+		ShowCursor(FALSE);						// Hide Mouse Pointer
+	}
+	else
+	{
+        dwExStyle=WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;			// Window Extended Style
+		dwStyle=WS_OVERLAPPEDWINDOW;					// Windows Style
+	}
+    AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);		// Adjust Window To True Requested Size
+
+
 
     // Create a Window
-    hwnd = CreateWindow( Arguments->_WindowName.c_str(), Arguments->_WindowName.c_str(),
-                    WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-                    Arguments->_ScreenPosition.x(), 
-                    Arguments->_ScreenPosition.y(), 
-                    Arguments->_Size.x(), 
-                    Arguments->_Size.y(),
-                    NULL, 
-                    NULL, 
-                    GetModuleHandle(NULL), 
-                    0 );
+    if(fullscreen)
+    {
+        hwnd = CreateWindowEx(	dwExStyle,				// Extended Style For The Window
+					Arguments->_WindowName.c_str(),				// Class Name
+					Arguments->_WindowName.c_str(),					// Window Title
+					WS_CLIPSIBLINGS |			// Required Window Style
+					WS_CLIPCHILDREN |			// Required Window Style
+					dwStyle,				// Selected Window Style
+					0, 0,					// Window Position
+					WindowRect.right-WindowRect.left,	// Calculate Adjusted Window Width
+					WindowRect.bottom-WindowRect.top,	// Calculate Adjusted Window Height
+					NULL,					// No Parent Window
+					NULL,					// No Menu
+					wndClass.hInstance,				// Instance
+					NULL);					// Don't Pass Anything To WM_CREATE
+
+    }
+    else
+    {
+        hwnd = CreateWindow( Arguments->_WindowName.c_str(), Arguments->_WindowName.c_str(),
+                        WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
+                        Arguments->_ScreenPosition.x(), 
+                        Arguments->_ScreenPosition.y(), 
+                        Arguments->_Size.x(), 
+                        Arguments->_Size.y(),
+                        NULL, 
+                        NULL, 
+                        GetModuleHandle(NULL), 
+                        0 );
+    }
 
     //Attach Window
     beginEditCP(Arguments->_Window, WIN32Window::HwndFieldMask);
@@ -130,6 +202,13 @@ void Win32WindowEventProducer::WindowEventLoopThread(void* args)
         DispatchMessage(&msg);
         WaitMessage();
     }
+
+    if (fullscreen)								// Are We In Fullscreen Mode?
+	{
+		ChangeDisplaySettings(NULL,0);					// If So Switch Back To The Desktop
+		ShowCursor(TRUE);						// Show Mouse Pointer
+	}
+
     Arguments->_EventProducer->produceWindowClosed();
     
     //Delete my arguments, to avoid memory leak
@@ -1473,23 +1552,30 @@ bool Win32WindowEventProducer::getIconify(void) const
 void Win32WindowEventProducer::setFullscreen(bool Fullscreen)
 {
     //TODO: find a better way to do this
-    if(Fullscreen)
+    if(Fullscreen && !getFullscreen())
     {
+        _PreviousWindowPosition = getPosition();
+        _PreviousWindowSize = getSize();
         SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST, 0, 0, GetSystemMetrics(SM_CXFULLSCREEN),GetSystemMetrics(SM_CYFULLSCREEN),
             SWP_NOZORDER);
+        _IsFullscreen = true;
     }
-    else
+    else if(!Fullscreen && getFullscreen())
     {
-        SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST, 0, 0, 300,300,
+        SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST,
+            static_cast<int>(_PreviousWindowPosition.x()),
+            static_cast<int>(_PreviousWindowPosition.y()),
+            static_cast<int>(_PreviousWindowSize.x()),
+            static_cast<int>(_PreviousWindowSize.y()),
             SWP_NOZORDER);
+        _IsFullscreen = false;
     }
 }
 
 //Get the Window Fullscreen
 bool Win32WindowEventProducer::getFullscreen(void) const
 {
-    //TODO: find a better way to do this
-    return false;
+    return _IsFullscreen;
 }
 
 void Win32WindowEventProducer::closeWindow(void)
@@ -1548,13 +1634,15 @@ bool Win32WindowEventProducer::getDrawBorder(void)
 
 Win32WindowEventProducer::Win32WindowEventProducer(void) :
     Inherited(),
-        _MouseOverWindow(false)
+        _MouseOverWindow(false),
+        _IsFullscreen(false)
 {
 }
 
 Win32WindowEventProducer::Win32WindowEventProducer(const Win32WindowEventProducer &source) :
     Inherited(source),
-        _MouseOverWindow(false)
+        _MouseOverWindow(false),
+        _IsFullscreen(false)
 {
 }
 

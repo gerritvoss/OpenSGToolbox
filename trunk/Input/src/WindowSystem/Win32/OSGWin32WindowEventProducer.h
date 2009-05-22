@@ -222,6 +222,10 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 
     static const UINT WIN32_DRAW_MESSAGE = WM_USER + 1;
     static const UINT WIN32_UPDATE_MESSAGE = WM_USER + 2;
+
+    Pnt2f _PreviousWindowPosition;
+    Vec2f _PreviousWindowSize;
+    bool _IsFullscreen;
     /*==========================  PRIVATE  ================================*/
   private:
 
