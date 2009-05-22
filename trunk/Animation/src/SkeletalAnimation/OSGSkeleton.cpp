@@ -50,6 +50,8 @@
 #include "OSGSkeleton.h"
 #include "OSGSkeletonBlendedGeometry.h"
 
+#include "OSGBone.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -80,10 +82,10 @@ void Skeleton::initMethod (void)
 void Skeleton::skeletonUpdated(void)
 {
     //Tell all attached Blended Geometry that the skeleton has been updated
-    for(UInt32 i(0) ; i<getAttachedGeometries().size() ; ++i)
-    {
-        getAttachedGeometries(i)->skeletonUpdated();
-    }
+	for(UInt32 i(0) ; i<getAttachedGeometries().size() ; ++i)
+	{
+		getAttachedGeometries(i)->skeletonUpdated();
+	}
 }
 
 /*-------------------------------------------------------------------------*\
@@ -108,9 +110,37 @@ Skeleton::~Skeleton(void)
 
 /*----------------------------- class specific ----------------------------*/
 
+//void Skeleton::updateBlendedGeometry()
+//{
+//	//Do something with a listener...
+//}
+
+void Skeleton::setBoneParentSkeleton(BonePtr theBone)
+{
+	beginEditCP(theBone, Bone::InternalSkeletonFieldMask);
+		theBone->setInternalSkeleton(SkeletonPtr(this));
+	endEditCP(theBone, Bone::InternalSkeletonFieldMask);
+
+
+	for (UInt32 i(0); i < theBone->getNumChildren(); ++i)
+	{
+		setBoneParentSkeleton(theBone->getChild(i));
+	}
+}
+
 void Skeleton::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & RootBonesFieldMask)
+	{
+		//Loop through bone hierarchy and set their parent Skeleton this instance
+		MFBonePtr CurrentBones = getRootBones();
+		for(UInt32 i(0); i < CurrentBones.size(); ++i)
+		{
+			Skeleton::setBoneParentSkeleton(CurrentBones[i]);
+		}
+	}
 }
 
 void Skeleton::dump(      UInt32    , 

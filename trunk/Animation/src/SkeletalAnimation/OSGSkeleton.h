@@ -62,6 +62,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
     /*==========================  PUBLIC  =================================*/
   public:
 
+	void setBoneParentSkeleton(BonePtr Bone);
+	//void updateBlendedGeometry();
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -76,6 +79,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+
+
 
     /*! \}                                                                 */
 

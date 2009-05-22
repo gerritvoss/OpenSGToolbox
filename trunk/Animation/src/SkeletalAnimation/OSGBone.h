@@ -82,8 +82,18 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
     void addChild(BonePtr TheBone);
     void removeChild(BonePtr TheBone);
     void removeChild(UInt32 Index);
+	void setBindPosition();
     UInt32 getNumChildren(void) const;
     BonePtr getChild(UInt32 Index) const;
+
+	Matrix getInternalRelativeTransformation(void);
+	Matrix getInternalAbsoluteTransformation(void);
+	Matrix getInternalDefaultRelativeTransformation(void);
+	Matrix getInternalDefaultAbsoluteTransformation(void);
+	Matrix getInternalRelativeDifferenceTransformation(void);
+	Matrix getInternalAbsoluteDifferenceTransformation(UInt32 BlendMode);
+	Matrix getEndInternalRelativeDifferenceTransformation(void);
+	Matrix getEndInternalAbsoluteDifferenceTransformation(void);
 
     BonePtr getParent(void) const;
     const Matrix              &getRelativeTransformation(void) const;
@@ -94,6 +104,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
   protected:
 
     // Variables should all be in BoneBase.
+	
+	Matrix _InternalRelativeTransformation;
+	Matrix _InternalAbsoluteTransformation;
+	Matrix _InternalDefaultRelativeTransformation;
+	Matrix _InternalDefaultAbsoluteTransformation;
+	Matrix _InternalRelativeDifferenceTransformation;
+	Matrix _InternalAbsoluteDifferenceTransformation;
+
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+
+<OSGFieldContainers>
+	<Bone
+		fieldcontainerid="243"
+		Rotation="8.944272e-001 0.000000e+000 4.472136e-001 1.570796e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="1.500000e+001"
+		InternalChildren="244;250;247;253"
+		InternalParent="0"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="244"
+		Rotation="7.071068e-001 0.000000e+000 7.071068e-001 3.141593e+000"
+		Translation="0.000000e+000  0.000000e+000  -1.000000e+001"
+		Length="4.000000e+000"
+		InternalChildren="245"
+		InternalParent="243"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="245"
+		Rotation="0.000000e+000 0.000000e+000 1.000000e+000 3.141593e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="4.000000e+000"
+		InternalChildren="246"
+		InternalParent="244"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="246"
+		Rotation="0.000000e+000 0.000000e+000 1.000000e+000 3.141593e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="1.000000e+000"
+		InternalChildren=""
+		InternalParent="245"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="247"
+		Rotation="0.000000e+000 1.000000e+000 0.000000e+000 7.853983e-001"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren="248"
+		InternalParent="243"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="248"
+		Rotation="0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="8.000000e+000"
+		InternalChildren="249"
+		InternalParent="247"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="249"
+		Rotation="0.000000e+000 7.071068e-001 7.071068e-001 3.141593e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="2.000000e+000"
+		InternalChildren=""
+		InternalParent="248"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="250"
+		Rotation="-7.071068e-001 0.000000e+000 7.071068e-001 3.141593e+000"
+		Translation="0.000000e+000  0.000000e+000  -1.000000e+001"
+		Length="4.000000e+000"
+		InternalChildren="251"
+		InternalParent="243"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="251"
+		Rotation="0.000000e+000 0.000000e+000 1.000000e+000 3.141593e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="4.000000e+000"
+		InternalChildren="252"
+		InternalParent="250"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="252"
+		Rotation="0.000000e+000 0.000000e+000 1.000000e+000 3.141593e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="1.000000e+000"
+		InternalChildren=""
+		InternalParent="251"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="253"
+		Rotation="-0.000000e+000 -1.000000e+000 -0.000000e+000 7.853983e-001"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren="254"
+		InternalParent="243"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="254"
+		Rotation="0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="8.000000e+000"
+		InternalChildren="255"
+		InternalParent="253"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="255"
+		Rotation="0.000000e+000 7.071068e-001 7.071068e-001 3.141593e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="2.000000e+000"
+		InternalChildren=""
+		InternalParent="254"
+	>
+	</Bone>
+	<Skeleton
+		fieldcontainerid="256"
+		RootBones="243"
+		AttachedGeometries=""
+	>
+	</Skeleton>
+	<KeyframeNumbersSequenceReal32
+		fieldcontainerid="272"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;3.000000e+000;4.000000e+000;5.000000e+000;6.000000e+000"
+		numbers="1.500000e+001;1.000000e+001;1.500000e+001;1.000000e+001;1.500000e+001"
+	>
+	</KeyframeNumbersSequenceReal32>
+	<KeyframeAnimator
+		fieldcontainerid="273"
+		KeyframeSequence="272"
+	>
+	</KeyframeAnimator>
+	<KeyframeRotationsSequenceQuat
+		fieldcontainerid="274"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;2.000000e+000;4.000000e+000;5.000000e+000;6.000000e+000"
+		rotations="0.000000e+000 1.000000e+000 0.000000e+000 2.268928e+000;0.000000e+000 1.000000e+000 0.000000e+000 8.813913e-001;0.000000e+000 1.000000e+000 0.000000e+000 3.490661e-001;0.000000e+000 1.000000e+000 0.000000e+000 8.813913e-001;0.000000e+000 1.000000e+000 0.000000e+000 2.268928e+000"
+	>
+	</KeyframeRotationsSequenceQuat>
+	<KeyframeAnimator
+		fieldcontainerid="275"
+		KeyframeSequence="274"
+	>
+	</KeyframeAnimator>
+	<KeyframeRotationsSequenceQuat
+		fieldcontainerid="276"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;2.000000e+000;4.000000e+000;5.000000e+000;6.000000e+000"
+		rotations="0.000000e+000 1.000000e+000 0.000000e+000 8.726647e-001;0.000000e+000 1.000000e+000 0.000000e+000 3.490661e-001;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000"
+	>
+	</KeyframeRotationsSequenceQuat>
+	<KeyframeAnimator
+		fieldcontainerid="277"
+		KeyframeSequence="276"
+	>
+	</KeyframeAnimator>
+	<KeyframeRotationsSequenceQuat
+		fieldcontainerid="278"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;2.000000e+000;4.000000e+000;5.000000e+000;6.000000e+000"
+		rotations="0.000000e+000 1.000000e+000 0.000000e+000 1.221730e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000"
+	>
+	</KeyframeRotationsSequenceQuat>
+	<KeyframeAnimator
+		fieldcontainerid="279"
+		KeyframeSequence="278"
+	>
+	</KeyframeAnimator>
+	<KeyframeRotationsSequenceQuat
+		fieldcontainerid="280"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;2.000000e+000;4.000000e+000;5.000000e+000;6.000000e+000"
+		rotations="0.000000e+000 1.000000e+000 0.000000e+000 8.726647e-001;0.000000e+000 1.000000e+000 0.000000e+000 3.490661e-001;0.000000e+000 1.000000e+000 0.000000e+000 8.726594e-002;0.000000e+000 1.000000e+000 0.000000e+000 3.490661e-001;0.000000e+000 1.000000e+000 0.000000e+000 8.726647e-001"
+	>
+	</KeyframeRotationsSequenceQuat>
+	<KeyframeAnimator
+		fieldcontainerid="281"
+		KeyframeSequence="280"
+	>
+	</KeyframeAnimator>
+	<KeyframeRotationsSequenceQuat
+		fieldcontainerid="282"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;2.000000e+000;4.000000e+000;5.000000e+000;6.000000e+000"
+		rotations="-0.000000e+000 -1.000000e+000 -0.000000e+000 2.268928e+000;-0.000000e+000 -1.000000e+000 -0.000000e+000 8.813913e-001;-0.000000e+000 -1.000000e+000 -0.000000e+000 3.490661e-001;-0.000000e+000 -1.000000e+000 -0.000000e+000 8.813913e-001;-0.000000e+000 -1.000000e+000 -0.000000e+000 2.268928e+000"
+	>
+	</KeyframeRotationsSequenceQuat>
+	<KeyframeAnimator
+		fieldcontainerid="283"
+		KeyframeSequence="282"
+	>
+	</KeyframeAnimator>
+	<KeyframeRotationsSequenceQuat
+		fieldcontainerid="284"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;2.000000e+000;4.000000e+000;5.000000e+000;6.000000e+000"
+		rotations="-0.000000e+000 -1.000000e+000 -0.000000e+000 8.726647e-001;-0.000000e+000 -1.000000e+000 -0.000000e+000 3.490661e-001;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000"
+	>
+	</KeyframeRotationsSequenceQuat>
+	<KeyframeAnimator
+		fieldcontainerid="285"
+		KeyframeSequence="284"
+	>
+	</KeyframeAnimator>
+	<KeyframeRotationsSequenceQuat
+		fieldcontainerid="286"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;2.000000e+000;4.000000e+000;5.000000e+000;6.000000e+000"
+		rotations="-0.000000e+000 -1.000000e+000 -0.000000e+000 1.221730e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000;0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000"
+	>
+	</KeyframeRotationsSequenceQuat>
+	<KeyframeAnimator
+		fieldcontainerid="287"
+		KeyframeSequence="286"
+	>
+	</KeyframeAnimator>
+	<KeyframeRotationsSequenceQuat
+		fieldcontainerid="288"
+		internal="FALSE"
+		InternalKeys="0.000000e+000;2.000000e+000;4.000000e+000;5.000000e+000;6.000000e+000"
+		rotations="-0.000000e+000 -1.000000e+000 -0.000000e+000 8.726647e-001;-0.000000e+000 -1.000000e+000 -0.000000e+000 3.490661e-001;-0.000000e+000 -1.000000e+000 -0.000000e+000 8.726594e-002;-0.000000e+000 -1.000000e+000 -0.000000e+000 3.490661e-001;-0.000000e+000 -1.000000e+000 -0.000000e+000 8.726647e-001"
+	>
+	</KeyframeRotationsSequenceQuat>
+	<KeyframeAnimator
+		fieldcontainerid="289"
+		KeyframeSequence="288"
+	>
+	</KeyframeAnimator>
+	<SkeletonAnimation
+		fieldcontainerid="290"
+		Cycling="-1"
+		RotationAnimators="275;277;279;281;283;285;287;289"
+		RotationAnimatorBones="244;245;246;247;250;251;252;253"
+		TranslationAnimators=""
+		LengthAnimatorBones="243"
+		LengthAnimators="273"
+		TranslationAnimatorBones=""
+		Skeleton="0"
+		InterpolationType="1"
+	>
+	</SkeletonAnimation>
+</OSGFieldContainers>
+

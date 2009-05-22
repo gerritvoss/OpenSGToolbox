@@ -60,7 +60,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
 
     /*==========================  PUBLIC  =================================*/
   public:
-
+	  enum BlendMode{BLEND_RIGID =0, BLEND_SMOOTH =1};
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -78,7 +78,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
 
     /*! \}                                                                 */
     
-    void addBoneBlending(const UInt32& PositionIndex, const BonePtr TheBone, const Real32& BlendAmount);
+    void addBoneBlending(const UInt32& PositionIndex, const BonePtr TheBone, const Real32& BlendAmount, bool AttachedToEnd);
 	void skeletonUpdated(void);
 
     void addSkeleton(SkeletonPtr TheSkeleton);

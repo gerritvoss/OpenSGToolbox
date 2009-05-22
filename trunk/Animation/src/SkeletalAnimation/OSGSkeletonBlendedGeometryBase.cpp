@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -76,8 +76,14 @@ const OSG::BitVector  SkeletonBlendedGeometryBase::PositionIndexesFieldMask =
 const OSG::BitVector  SkeletonBlendedGeometryBase::BlendAmountsFieldMask = 
     (TypeTraits<BitVector>::One << SkeletonBlendedGeometryBase::BlendAmountsFieldId);
 
+const OSG::BitVector  SkeletonBlendedGeometryBase::AttachedToEndFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonBlendedGeometryBase::AttachedToEndFieldId);
+
 const OSG::BitVector  SkeletonBlendedGeometryBase::SkeletonsFieldMask = 
     (TypeTraits<BitVector>::One << SkeletonBlendedGeometryBase::SkeletonsFieldId);
+
+const OSG::BitVector  SkeletonBlendedGeometryBase::BlendModeFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonBlendedGeometryBase::BlendModeFieldId);
 
 const OSG::BitVector SkeletonBlendedGeometryBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -98,7 +104,13 @@ const OSG::BitVector SkeletonBlendedGeometryBase::MTInfluenceMask =
 /*! \var Real32          SkeletonBlendedGeometryBase::_mfBlendAmounts
     
 */
+/*! \var UInt8           SkeletonBlendedGeometryBase::_mfAttachedToEnd
+    
+*/
 /*! \var SkeletonPtr     SkeletonBlendedGeometryBase::_mfSkeletons
+    
+*/
+/*! \var UInt32          SkeletonBlendedGeometryBase::_sfBlendMode
     
 */
 
@@ -126,11 +138,21 @@ FieldDescription *SkeletonBlendedGeometryBase::_desc[] =
                      BlendAmountsFieldId, BlendAmountsFieldMask,
                      false,
                      (FieldAccessMethod) &SkeletonBlendedGeometryBase::getMFBlendAmounts),
+    new FieldDescription(MFUInt8::getClassType(), 
+                     "AttachedToEnd", 
+                     AttachedToEndFieldId, AttachedToEndFieldMask,
+                     false,
+                     (FieldAccessMethod) &SkeletonBlendedGeometryBase::getMFAttachedToEnd),
     new FieldDescription(MFSkeletonPtr::getClassType(), 
                      "Skeletons", 
                      SkeletonsFieldId, SkeletonsFieldMask,
                      false,
-                     (FieldAccessMethod) &SkeletonBlendedGeometryBase::getMFSkeletons)
+                     (FieldAccessMethod) &SkeletonBlendedGeometryBase::getMFSkeletons),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "BlendMode", 
+                     BlendModeFieldId, BlendModeFieldMask,
+                     false,
+                     (FieldAccessMethod) &SkeletonBlendedGeometryBase::getSFBlendMode)
 };
 
 
@@ -199,6 +221,7 @@ void SkeletonBlendedGeometryBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     _mfBones.terminateShare(uiAspect, this->getContainerSize());
     _mfPositionIndexes.terminateShare(uiAspect, this->getContainerSize());
     _mfBlendAmounts.terminateShare(uiAspect, this->getContainerSize());
+    _mfAttachedToEnd.terminateShare(uiAspect, this->getContainerSize());
     _mfSkeletons.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
@@ -214,7 +237,9 @@ SkeletonBlendedGeometryBase::SkeletonBlendedGeometryBase(void) :
     _mfBones                  (), 
     _mfPositionIndexes        (), 
     _mfBlendAmounts           (), 
+    _mfAttachedToEnd          (), 
     _mfSkeletons              (), 
+    _sfBlendMode              (), 
     Inherited() 
 {
 }
@@ -228,7 +253,9 @@ SkeletonBlendedGeometryBase::SkeletonBlendedGeometryBase(const SkeletonBlendedGe
     _mfBones                  (source._mfBones                  ), 
     _mfPositionIndexes        (source._mfPositionIndexes        ), 
     _mfBlendAmounts           (source._mfBlendAmounts           ), 
+    _mfAttachedToEnd          (source._mfAttachedToEnd          ), 
     _mfSkeletons              (source._mfSkeletons              ), 
+    _sfBlendMode              (source._sfBlendMode              ), 
     Inherited                 (source)
 {
 }
@@ -265,9 +292,19 @@ UInt32 SkeletonBlendedGeometryBase::getBinSize(const BitVector &whichField)
         returnValue += _mfBlendAmounts.getBinSize();
     }
 
+    if(FieldBits::NoField != (AttachedToEndFieldMask & whichField))
+    {
+        returnValue += _mfAttachedToEnd.getBinSize();
+    }
+
     if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
     {
         returnValue += _mfSkeletons.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BlendModeFieldMask & whichField))
+    {
+        returnValue += _sfBlendMode.getBinSize();
     }
 
 
@@ -299,9 +336,19 @@ void SkeletonBlendedGeometryBase::copyToBin(      BinaryDataHandler &pMem,
         _mfBlendAmounts.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (AttachedToEndFieldMask & whichField))
+    {
+        _mfAttachedToEnd.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
     {
         _mfSkeletons.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BlendModeFieldMask & whichField))
+    {
+        _sfBlendMode.copyToBin(pMem);
     }
 
 
@@ -332,9 +379,19 @@ void SkeletonBlendedGeometryBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfBlendAmounts.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (AttachedToEndFieldMask & whichField))
+    {
+        _mfAttachedToEnd.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
     {
         _mfSkeletons.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BlendModeFieldMask & whichField))
+    {
+        _sfBlendMode.copyFromBin(pMem);
     }
 
 
@@ -359,8 +416,14 @@ void SkeletonBlendedGeometryBase::executeSyncImpl(      SkeletonBlendedGeometryB
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
         _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts);
 
+    if(FieldBits::NoField != (AttachedToEndFieldMask & whichField))
+        _mfAttachedToEnd.syncWith(pOther->_mfAttachedToEnd);
+
     if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
         _mfSkeletons.syncWith(pOther->_mfSkeletons);
+
+    if(FieldBits::NoField != (BlendModeFieldMask & whichField))
+        _sfBlendMode.syncWith(pOther->_sfBlendMode);
 
 
 }
@@ -375,6 +438,9 @@ void SkeletonBlendedGeometryBase::executeSyncImpl(      SkeletonBlendedGeometryB
     if(FieldBits::NoField != (BaseGeometryFieldMask & whichField))
         _sfBaseGeometry.syncWith(pOther->_sfBaseGeometry);
 
+    if(FieldBits::NoField != (BlendModeFieldMask & whichField))
+        _sfBlendMode.syncWith(pOther->_sfBlendMode);
+
 
     if(FieldBits::NoField != (BonesFieldMask & whichField))
         _mfBones.syncWith(pOther->_mfBones, sInfo);
@@ -384,6 +450,9 @@ void SkeletonBlendedGeometryBase::executeSyncImpl(      SkeletonBlendedGeometryB
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
         _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts, sInfo);
+
+    if(FieldBits::NoField != (AttachedToEndFieldMask & whichField))
+        _mfAttachedToEnd.syncWith(pOther->_mfAttachedToEnd, sInfo);
 
     if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
         _mfSkeletons.syncWith(pOther->_mfSkeletons, sInfo);
@@ -405,6 +474,9 @@ void SkeletonBlendedGeometryBase::execBeginEditImpl (const BitVector &whichField
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
         _mfBlendAmounts.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (AttachedToEndFieldMask & whichField))
+        _mfAttachedToEnd.beginEdit(uiAspect, uiContainerSize);
 
     if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
         _mfSkeletons.beginEdit(uiAspect, uiContainerSize);

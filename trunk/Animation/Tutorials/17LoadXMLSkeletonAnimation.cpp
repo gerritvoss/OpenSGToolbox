@@ -10,6 +10,7 @@
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
+#include <OpenSG/Input/OSGUpdateListener.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
 #include <OpenSG/OSGLineChunk.h>
@@ -24,7 +25,20 @@
 
 #include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
+// FROM ANIMATION.CPP
+#include <OpenSG/OSGTime.h>
+#include <OpenSG/Animation/OSGKeyframeSequences.h>
+#include <OpenSG/Animation/OSGFieldAnimation.h>
+#include <OpenSG/Animation/OSGKeyframeAnimator.h>
+#include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
+#include <OpenSG/OSGSimpleAttachments.h>
+#include <OpenSG/Animation/OSGSkeletonAnimation.h>
+#include <OpenSG/Animation/OSGSkeleton.h>
+#include <OpenSG/Animation/OSGBone.h>
+
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
+
+
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -32,11 +46,19 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
+osg::Time TimeLastIdle;
+osg::AnimationPtr TheSkeletonAnimation;
+osg::AnimationAdvancerPtr TheAnimationAdvancer;
+FCFileType::FCPtrStore Containers;
+FCFileType::FCTypeVector IgnoreTypes;
+
 bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
+void setupAnimation(FCFileType::FCPtrStore Containers);
+
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -110,6 +132,17 @@ class TutorialMouseMotionListener : public MouseMotionListener
     }
 };
 
+class TutorialUpdateListener : public UpdateListener
+{
+  public:
+    virtual void update(const UpdateEvent& e)
+    {
+		osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+
+		TheSkeletonAnimation->update(TheAnimationAdvancer);
+    }
+};
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -126,6 +159,9 @@ int main(int argc, char **argv)
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
+
+	TutorialUpdateListener TheTutorialUpdateListener;
+    TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
@@ -176,15 +212,13 @@ int main(int argc, char **argv)
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
 
-	//Store bones and skeleton for XML export
-	FCFileType::FCPtrStore Containers;
 
-	//Read skeleton from XML file
+	//Import skeleton from XML file
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/16Skeleton.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/17SkeletonAnimation.xml"));
 
 	SkeletonPtr ExampleSkeleton;
-
+	
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
@@ -195,6 +229,8 @@ int main(int argc, char **argv)
 		}
     }
 
+
+
     //SkeletonDrawer
     SkeletonDrawablePtr ExampleSkeletonDrawable = osg::SkeletonDrawable::create();
     beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
@@ -202,7 +238,7 @@ int main(int argc, char **argv)
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
 	
-	//Particle System Node
+	//Skeleton Node
     
 	NodePtr SkeletonNode = osg::Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
@@ -210,10 +246,15 @@ int main(int argc, char **argv)
     endEditCP(SkeletonNode, Node::CoreFieldMask);
 
 
+	
+   //Animation Advancer
+   TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
+   osg::beginEditCP(TheAnimationAdvancer);
+   osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
+   osg::beginEditCP(TheAnimationAdvancer);
 
 
-
-    // Make Main Scene Node and add the Torus
+    
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
@@ -222,8 +263,14 @@ int main(int argc, char **argv)
 
     mgr->setRoot(scene);
 
+	//Setup the Animation
+	setupAnimation(NewContainers);
+	
+
+
     // Show the whole Scene
     mgr->showAll();
+
 
     while(!ExitApp)
     {
@@ -236,9 +283,6 @@ int main(int argc, char **argv)
 }
 
 
-// Callback functions
-
-
 // Redraw the window
 void display(void)
 {
@@ -249,4 +293,21 @@ void display(void)
 void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
+    
+}
+
+
+
+void setupAnimation(FCFileType::FCPtrStore Containers)
+{
+	//Import animation from XML file
+	FCFileType::FCPtrStore::iterator Itor;
+    for(Itor = Containers.begin() ; Itor != Containers.end() ; ++Itor)
+    {
+		if( (*Itor)->getType().isDerivedFrom(Animation::getClassType()))
+		{
+			//Set the animation to the one we just read in
+			TheSkeletonAnimation = (Animation::Ptr::dcast(*Itor));
+		}
+    }
 }

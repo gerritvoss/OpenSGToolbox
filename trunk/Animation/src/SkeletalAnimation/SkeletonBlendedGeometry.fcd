@@ -45,6 +45,14 @@
 	>
 	</Field>
 	<Field
+		name="AttachedToEnd"
+		type="UInt8"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
 		name="Skeletons"
 		type="SkeletonPtr"
 		cardinality="multi"
@@ -53,4 +61,12 @@
 		header="OSGSkeletonFields.h"
 	>
 	</Field>
-</FieldContainer>
+	<Field
+		name="BlendMode"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	</FieldContainer>

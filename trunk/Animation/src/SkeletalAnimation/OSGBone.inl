@@ -42,17 +42,17 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-const Matrix &Bone::getRelativeTransformation(void) const
-{
-	return getInternalRelativeTransformation();
-}
-
-inline
-const Matrix &Bone::getAbsoluteTransformation(void) const
-{
-	return getInternalAbsoluteTransformation();
-}
+//inline
+//const Matrix &Bone::getRelativeTransformation(void) const
+//{
+//	return getInternalRelativeTransformation();
+//}
+//
+//inline
+//const Matrix &Bone::getAbsoluteTransformation(void) const
+//{
+//	return getInternalAbsoluteTransformation();
+//}
 
 inline
 UInt32 Bone::getNumChildren(void) const

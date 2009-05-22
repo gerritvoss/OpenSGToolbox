@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -124,11 +124,25 @@ MFReal32 *SkeletonBlendedGeometryBase::getMFBlendAmounts(void)
     return &_mfBlendAmounts;
 }
 
+//! Get the SkeletonBlendedGeometry::_mfAttachedToEnd field.
+inline
+MFUInt8 *SkeletonBlendedGeometryBase::getMFAttachedToEnd(void)
+{
+    return &_mfAttachedToEnd;
+}
+
 //! Get the SkeletonBlendedGeometry::_mfSkeletons field.
 inline
 MFSkeletonPtr *SkeletonBlendedGeometryBase::getMFSkeletons(void)
 {
     return &_mfSkeletons;
+}
+
+//! Get the SkeletonBlendedGeometry::_sfBlendMode field.
+inline
+SFUInt32 *SkeletonBlendedGeometryBase::getSFBlendMode(void)
+{
+    return &_sfBlendMode;
 }
 
 
@@ -151,6 +165,27 @@ inline
 void SkeletonBlendedGeometryBase::setBaseGeometry(const GeometryPtr &value)
 {
     _sfBaseGeometry.setValue(value);
+}
+
+//! Get the value of the SkeletonBlendedGeometry::_sfBlendMode field.
+inline
+UInt32 &SkeletonBlendedGeometryBase::getBlendMode(void)
+{
+    return _sfBlendMode.getValue();
+}
+
+//! Get the value of the SkeletonBlendedGeometry::_sfBlendMode field.
+inline
+const UInt32 &SkeletonBlendedGeometryBase::getBlendMode(void) const
+{
+    return _sfBlendMode.getValue();
+}
+
+//! Set the value of the SkeletonBlendedGeometry::_sfBlendMode field.
+inline
+void SkeletonBlendedGeometryBase::setBlendMode(const UInt32 &value)
+{
+    _sfBlendMode.setValue(value);
 }
 
 
@@ -215,6 +250,27 @@ inline
 const MFReal32 &SkeletonBlendedGeometryBase::getBlendAmounts(void) const
 {
     return _mfBlendAmounts;
+}
+
+//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfAttachedToEnd field.
+inline
+UInt8 &SkeletonBlendedGeometryBase::getAttachedToEnd(const UInt32 index)
+{
+    return _mfAttachedToEnd[index];
+}
+
+//! Get the SkeletonBlendedGeometry::_mfAttachedToEnd field.
+inline
+MFUInt8 &SkeletonBlendedGeometryBase::getAttachedToEnd(void)
+{
+    return _mfAttachedToEnd;
+}
+
+//! Get the SkeletonBlendedGeometry::_mfAttachedToEnd field.
+inline
+const MFUInt8 &SkeletonBlendedGeometryBase::getAttachedToEnd(void) const
+{
+    return _mfAttachedToEnd;
 }
 
 //! Get the value of the \a index element the SkeletonBlendedGeometry::_mfSkeletons field.

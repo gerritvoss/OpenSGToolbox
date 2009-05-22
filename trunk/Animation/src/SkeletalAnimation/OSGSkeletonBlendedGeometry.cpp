@@ -57,6 +57,8 @@
 #include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/OSGIntersectActor.h>
 
+#include <set>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -189,54 +191,58 @@ void SkeletonBlendedGeometry::subSkeleton(UInt32 Index)
     }
 }
 
-void SkeletonBlendedGeometry::addBoneBlending(const UInt32& PositionIndex, const BonePtr TheBone, const Real32& BlendAmount)
+void SkeletonBlendedGeometry::addBoneBlending(const UInt32& PositionIndex, const BonePtr TheBone, const Real32& BlendAmount,  bool AttachedToEnd)
 {
-	beginEditCP(SkeletonBlendedGeometryPtr(this), BonesFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask);
+	beginEditCP(SkeletonBlendedGeometryPtr(this), BonesFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask | AttachedToEndFieldMask);
 		getPositionIndexes().push_back(PositionIndex);
 		getBones().push_back(TheBone);
 		getBlendAmounts().push_back(BlendAmount);
-	endEditCP(SkeletonBlendedGeometryPtr(this), BonesFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask);
+		getAttachedToEnd().push_back(AttachedToEnd);
+	endEditCP(SkeletonBlendedGeometryPtr(this), BonesFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask | AttachedToEndFieldMask);
 }
 
 void SkeletonBlendedGeometry::calculatePositions(void)
 {
-	Matrix BonesTransforms,m;
-	std::vector<Matrix> PositionTrans;
-
 	if(getBaseGeometry() != NullFC &&
 		getPositions() != NullFC &&
 		(getPositionIndexes().size() == getBones().size() &&
 		getPositionIndexes().size() == getBlendAmounts().size()))
 	{
-		
-		PositionTrans.resize(getPositions()->size());
-		//UInt32 VertexesTransformations[n];
-		for(UInt32 i(0) ; i<getPositionIndexes().size() ; ++i)
-		{
-			BonesTransforms = getBones(i)->getAbsoluteTransformation();
-			BonesTransforms.scale(getBlendAmounts(i));
-			BonesTransforms.mult(PositionTrans[getPositionIndexes(i)]);
-			PositionTrans[getPositionIndexes(i)] = BonesTransforms;
-
-
-		}
-		//Update the Positions and Normals
 		Pnt3f CalculatedPoint;
-		Vec3f CalculatedVector;
-		for(UInt32 i(0) ; i<getPositions()->size() ; ++i)
-		{
-			//get's the Positions
-			PositionTrans[i].multFullMatrixPnt(getBaseGeometry()->getPositions()->getValue(i), CalculatedPoint);
-			getPositions()->setValue(CalculatedPoint, i);   //P[i]
+		//Update the Positions and Normals
+		std::set<UInt32> VisitedIndicies;
 
-			if(getNormals() != NullFC)
+		//UInt32 VertexesTransformations[n];
+		for(UInt32 i(0) ; i < getPositionIndexes().size() ; ++i)
+		{
+			if(getAttachedToEnd(i))
 			{
-				//get's the Normals
-				PositionTrans[i].multMatrixVec(getBaseGeometry()->getNormals()-> getValue(i),CalculatedVector);
-				getNormals()->setValue(CalculatedVector,i);
+				Matrix temp = getBones(i)->getEndInternalAbsoluteDifferenceTransformation();
+				temp.scale(getBlendAmounts(i));
+				temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
+
 			}
-	
+			else
+			{
+				Matrix temp = getBones(i)->getInternalAbsoluteDifferenceTransformation(getBlendMode());
+				temp.scale(getBlendAmounts(i));
+				temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
+			}
+
+
+			if(VisitedIndicies.find(getPositionIndexes(i)) == VisitedIndicies.end())
+			{
+				//Overwrite
+				VisitedIndicies.insert(getPositionIndexes(i));
+			}
+			else
+			{
+				//Add
+				CalculatedPoint += getPositions()->getValue(getPositionIndexes(i));
+			}
+			getPositions()->setValue(CalculatedPoint, getPositionIndexes(i));
 		}
+
 		for(UInt32 i = 0; i < _parents.size(); i++)
 		{
 			_parents[i]->invalidateVolume();

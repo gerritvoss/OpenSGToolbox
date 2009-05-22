@@ -1064,6 +1064,22 @@
 					RelativePath="..\..\src\Events\OSGAnimationListener.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonListener.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

@@ -190,7 +190,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 10SkeletonDrawer Window");
+                                        "OpenSG 19SmoothAnimationWindow");
 										
 
 	//SkeletonDrawer System Material
@@ -211,6 +211,7 @@ int main(int argc, char **argv)
 		ExampleMaterialChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
 		ExampleMaterialChunk->setDiffuse(Color4f(0.0f,0.0f,0.0f,1.0f));
 		ExampleMaterialChunk->setSpecular(Color4f(0.0f,0.0f,0.0f,1.0f));
+		//ExampleMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(ExampleMaterialChunk);
 
 	ChunkMaterialPtr ExampleMaterial = ChunkMaterial::create();
@@ -223,7 +224,7 @@ int main(int argc, char **argv)
 //===========================================BONE==================================================================
 	const int num = 9;
 	BonePtr Torso, LeftHumerus, LeftRadius, LeftHand, LeftFemur, LeftTibia, LeftFeet,
-		           RightHumerus, RightRadius, RightHand, RightFemur, RightTibia, RightFeet; 
+		           RightHumerus, RightRadius, RightHand, RightFemur, RightTibia, RightFeet;
 
 
 
@@ -231,10 +232,14 @@ int main(int argc, char **argv)
 /*                                       TORSO                                                    */
 
 	Torso = Bone::create(); //create a bone called ExampleChildbone
-	beginEditCP(Torso, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
+	beginEditCP(Torso, Bone::RotationFieldMask | Bone::LengthFieldMask | Bone::TranslationFieldMask);//use the field masks
 		Torso->setLength(15.0f);
-		Torso->setRotation(Quaternion(Vec3f(10,0,5), osgdegree2rad(90)));
-	endEditCP(Torso, Bone::RotationFieldMask | Bone::LengthFieldMask);
+		Torso->setRotation(Quaternion(Vec3f(1,0,0), osgdegree2rad(90)));
+		Torso->setTranslation(Vec3f(0,15,0));
+	endEditCP(Torso, Bone::RotationFieldMask | Bone::LengthFieldMask | Bone::TranslationFieldMask);
+
+	//Save current position as default position
+	Torso->setBindPosition();
 	
 
 /*================================================================================================*/
@@ -243,9 +248,12 @@ int main(int argc, char **argv)
 	LeftHumerus = Bone::create(); //create a bone called ExampleChildbone
 			beginEditCP(LeftHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);//use the field masks
 				LeftHumerus->setLength(4.0f);
-				LeftHumerus->setRotation(Quaternion(Vec3f(1,0,1), osgdegree2rad(180)));
+				LeftHumerus->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(90)));
 				LeftHumerus->setTranslation(Vec3f(0,0,-10));
 			endEditCP(LeftHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);
+
+	//Save current position as default position
+	LeftHumerus->setBindPosition();
 
 /*================================================================================================*/
 /*                                    LEFT RADIUS                                                 */
@@ -254,9 +262,12 @@ int main(int argc, char **argv)
 	LeftRadius = Bone::create(); //create a bone called ExampleChildbone
 			beginEditCP(LeftRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
 				LeftRadius->setLength(4.0f);
-				LeftRadius->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
+				LeftRadius->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(0)));
 			endEditCP(LeftRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);
 
+
+	//Save current position as default position
+	LeftRadius->setBindPosition();
 
 
 /*================================================================================================*/
@@ -265,8 +276,11 @@ int main(int argc, char **argv)
 	LeftHand = Bone::create(); //create a bone called ExampleChildbone
 			beginEditCP(LeftHand, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
 				LeftHand->setLength(1.0f);
-				LeftHand->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
+				LeftHand->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(0)));
 			endEditCP(LeftHand, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+	//Save current position as default position
+	LeftHand->setBindPosition();
 
 /*================================================================================================*/
 /*                                    LEFT FEMUR                                                  */
@@ -277,6 +291,9 @@ int main(int argc, char **argv)
 				LeftFemur->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(45)));
 			endEditCP(LeftFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);
 
+	//Save current position as default position
+	LeftFemur->setBindPosition();
+
 /*================================================================================================*/
 /*                                    LEFT TIBIA                                                  */
 
@@ -285,6 +302,9 @@ int main(int argc, char **argv)
 				LeftTibia->setLength(8.0f);
 				LeftTibia->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(0)));
 			endEditCP(LeftTibia, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);
+
+	//Save current position as default position
+	LeftTibia->setBindPosition();
 
 /*================================================================================================*/
 /*                                    LEFT FEET                                                   */
@@ -295,6 +315,9 @@ int main(int argc, char **argv)
 				LeftFeet->setRotation(Quaternion(Vec3f(0,1,1), osgdegree2rad(180)));
 			endEditCP(LeftFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);
 
+	//Save current position as default position
+	LeftFeet->setBindPosition();
+
 
 /*================================================================================================*/
 /*                                    RIGHT HUMERUS                                               */
@@ -302,9 +325,12 @@ int main(int argc, char **argv)
 	RightHumerus = Bone::create(); //create a bone called ExampleChildbone
 			beginEditCP(RightHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);//use the field masks
 				RightHumerus->setLength(4.0f);
-				RightHumerus->setRotation(Quaternion(Vec3f(-1,0,1), osgdegree2rad(180)));
+				RightHumerus->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(-90)));
 				RightHumerus->setTranslation(Vec3f(0,0,-10));
 			endEditCP(RightHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);
+
+	//Save current position as default position
+	RightHumerus->setBindPosition();
 
 
 /*================================================================================================*/
@@ -313,8 +339,11 @@ int main(int argc, char **argv)
 	RightRadius = Bone::create(); //create a bone called ExampleChildbone
 			beginEditCP(RightRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
 				RightRadius->setLength(4.0f);
-				RightRadius->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
+				RightRadius->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(0)));
 			endEditCP(RightRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+	//Save current position as default position
+	RightRadius->setBindPosition();
 
 
 /*================================================================================================*/
@@ -324,9 +353,12 @@ int main(int argc, char **argv)
 	RightHand = Bone::create(); //create a bone called ExampleChildbone
 			beginEditCP(RightHand, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
 				RightHand->setLength(1.0f);
-				RightHand->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
+				RightHand->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(0)));
 				
 			endEditCP(RightHand, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+	//Save current position as default position
+	RightHand->setBindPosition();
 
 /*================================================================================================*/
 /*                                     RIGHT FEMUR                                                */
@@ -337,6 +369,9 @@ int main(int argc, char **argv)
 				RightFemur->setLength(5.0f);
 				RightFemur->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(-45)));
 			endEditCP(RightFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+	//Save current position as default position
+	RightFemur->setBindPosition();
 
 /*================================================================================================*/
 /*                                     RIGHT TIBIA                                                */
@@ -349,6 +384,9 @@ int main(int argc, char **argv)
 				
 			endEditCP(RightTibia, Bone::RotationFieldMask | Bone::LengthFieldMask);
 
+	//Save current position as default position
+	RightTibia->setBindPosition();
+
 /*================================================================================================*/
 /*                                     RIGHT FEET                                                 */
 
@@ -358,6 +396,9 @@ int main(int argc, char **argv)
 				RightFeet->setLength(2.0f);
 				RightFeet->setRotation(Quaternion(Vec3f(0,1,1), osgdegree2rad(180)));
 			endEditCP(RightFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);
+
+	//Save current position as default position
+	RightFeet->setBindPosition();
 
 
 
@@ -378,22 +419,21 @@ int main(int argc, char **argv)
 
 			//get the Children
 
-			BonePtr TheLeftHumerus, TheLeftRadius, TheLeftHand, TheLeftFemur, TheLeftTibia, TheLeftFeet,
-		            TheRightHumerus, TheRightRadius, TheRightHand, TheRightFemur, TheRightTibia, TheRightFeet; 
+			//BonePtr TheLeftFemur, TheRightFemur; 
 
 
-			LeftHumerus  = Torso->getChild(0);
-			RightHumerus = Torso->getChild(1);
-			LeftFemur    = Torso->getChild(2);
-			RightFemur   = Torso->getChild(3);
-			LeftRadius   = LeftHumerus->getChild(0);
+			/*LeftHumerus  = Torso->getChild(0);
+			RightHumerus = Torso->getChild(1);*/
+			//LeftFemur    = Torso->getChild(0);
+			//RightFemur   = Torso->getChild(1);
+			/*LeftRadius   = LeftHumerus->getChild(0);
 			LeftHand     = LeftRadius->getChild(0);
 			RightRadius  = RightHumerus->getChild(0);
 			RightHand    = RightRadius->getChild(0);
 			LeftTibia    = LeftFemur->getChild(0);
 			LeftFeet     = LeftTibia->getChild(0);
 			RightTibia   = RightFemur->getChild(0);
-			RightFeet    = RightTibia->getChild(0);
+			RightFeet    = RightTibia->getChild(0);*/
 
 
 
@@ -424,71 +464,83 @@ int main(int argc, char **argv)
     beginEditCP(pnts, GeoPositions3f::GeoPropDataFieldMask);
     {
 		// the points of the Quads
-        pnts->addValue(Pnt3f(-0.5,  0,  0));
-        pnts->addValue(Pnt3f( 0.5,  0,  0));
-        pnts->addValue(Pnt3f( 0.5,  0,  0));
-        pnts->addValue(Pnt3f(-0.5,  0,  0));
-
-        pnts->addValue(Pnt3f(-0.5,  0,  0));
-        pnts->addValue(Pnt3f( 0.5,  0,  0));
+		//TORSO
+        pnts->addValue(Pnt3f(-0.5,  15,  0));
+        pnts->addValue(Pnt3f( 0.5,  15,  0));
         pnts->addValue(Pnt3f( 0.5,  0,  0));
         pnts->addValue(Pnt3f(-0.5,  0,  0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//LEFT FEMUR
+        pnts->addValue(Pnt3f(-0.3535,  0.3535, 0));
+		pnts->addValue(Pnt3f(0.3535, -0.3535, 0));
+		pnts->addValue(Pnt3f(-3.182,  -3.889, 0));
+        pnts->addValue(Pnt3f(-3.889,  -3.182, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//RIGHT FEMUR
+		pnts->addValue(Pnt3f(0.3535,  0.3535, 0));
+        pnts->addValue(Pnt3f(3.889,  -3.182, 0));
+        pnts->addValue(Pnt3f(3.182,  -3.889, 0));
+        pnts->addValue(Pnt3f(-0.3535, -0.3535, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//LEFT HUMERUS
+		pnts->addValue(Pnt3f(-4,  10.5, 0));
+        pnts->addValue(Pnt3f(0,  10.5, 0));
+        pnts->addValue(Pnt3f(0,  9.5, 0));
+        pnts->addValue(Pnt3f(-4, 9.5, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//RIGHT HUMERUS
+		pnts->addValue(Pnt3f(0,  10.5, 0));
+        pnts->addValue(Pnt3f(4,  10.5, 0));
+        pnts->addValue(Pnt3f(4,  9.5, 0));
+        pnts->addValue(Pnt3f(0, 9.5, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//LEFT RADIUS
+		pnts->addValue(Pnt3f(-8,  10.5, 0));
+        pnts->addValue(Pnt3f(-4,  10.5, 0));
+        pnts->addValue(Pnt3f(-4,  9.5, 0));
+        pnts->addValue(Pnt3f(-8, 9.5, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//RIGHT RADIUS
+		pnts->addValue(Pnt3f(4,  10.5, 0));
+        pnts->addValue(Pnt3f(8,  10.5, 0));
+        pnts->addValue(Pnt3f(8,  9.5, 0));
+        pnts->addValue(Pnt3f(4, 9.5, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//LEFT HAND
+		pnts->addValue(Pnt3f(-9,  10.5, 0));
+        pnts->addValue(Pnt3f(-8,  10.5, 0));
+        pnts->addValue(Pnt3f(-8,  9.5, 0));
+        pnts->addValue(Pnt3f(-9, 9.5, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//RIGHT HAND
+		pnts->addValue(Pnt3f(8,  10.5, 0));
+        pnts->addValue(Pnt3f(9,  10.5, 0));
+        pnts->addValue(Pnt3f(9,  9.5, 0));
+        pnts->addValue(Pnt3f(8, 9.5, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//LEFT TIBIA
+		pnts->addValue(Pnt3f(-3.8890, -3.1820, 0));
+		pnts->addValue(Pnt3f(-3.1820, -3.8890, 0));
+		pnts->addValue(Pnt3f(-8.8389, -9.5459, 0));
+        pnts->addValue(Pnt3f(-9.5459, -8.8389, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//RIGHT TIBIA
+		pnts->addValue(Pnt3f(3.8890, -3.1820, 0));
+        pnts->addValue(Pnt3f(9.5459, -8.8389, 0));
+        pnts->addValue(Pnt3f(8.8389, -9.5459, 0));
+        pnts->addValue(Pnt3f(3.1820, -3.8890, 0));
 
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f( 0.5,  0,  0));
-		pnts->addValue(Pnt3f(-0.5,  0,  0));
+		//LEFT FOOT
+		pnts->addValue(Pnt3f(-9.5459, -8.8389, 0));
+		pnts->addValue(Pnt3f(-8.8389, -9.5459, 0));
+		pnts->addValue(Pnt3f(-8.8389, -9.5459, 2));
+        pnts->addValue(Pnt3f(-9.5459, -8.8389, 2));
 
+		//RIGHT FOOT
+		pnts->addValue(Pnt3f(9.5459, -8.8389, 0));
+        pnts->addValue(Pnt3f(9.5459, -8.8389, 2));
+        pnts->addValue(Pnt3f(8.8389, -9.5459, 2));
+        pnts->addValue(Pnt3f(8.8389, -9.5459, 0));
     }
     endEditCP  (pnts, GeoPositions3f::GeoPropDataFieldMask);
     
@@ -496,86 +548,181 @@ int main(int argc, char **argv)
 	 GeoNormals3fPtr norms = GeoNormals3f::create();
 	 geo=Geometry::create();
     beginEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
-        norms->addValue(Vec3f( 0.0,1.0,0.0));
-        norms->addValue(Vec3f( 0.0,1.0,0.0));
-        norms->addValue(Vec3f( 0.0,1.0,0.0));
-        norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//TORSO
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-        norms->addValue(Vec3f( 0.0,1.0,0.0));
-        norms->addValue(Vec3f( 0.0,1.0,0.0));
-        norms->addValue(Vec3f( 0.0,1.0,0.0));
-        norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//LEFT FEMUR
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//RIGHT FEMUR
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//LEFT HUMERUS
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//RIGHT HUMERUS
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//LEFT RADIUS
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//RIGHT RADIUS
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//LEFT HAND
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//RIGHT HAND
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//LEFT TIBIA
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//RIGHT TIBIA
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
+		//LEFT FOOT
+		norms->addValue(Vec3f( 0.7071,-0.7071,0.0));
+		norms->addValue(Vec3f( 0.7071,-0.7071,0.0));
+		norms->addValue(Vec3f( 0.7071,-0.7071,0.0));
+		norms->addValue(Vec3f( 0.7071,-0.7071,0.0));
 
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-		norms->addValue(Vec3f( 0.0,1.0,0.0));
-
-		
+		//RIGHT FOOT
+		norms->addValue(Vec3f( -0.7071,0.7071,0.0));
+		norms->addValue(Vec3f( -0.7071,0.7071,0.0));
+		norms->addValue(Vec3f( -0.7071,0.7071,0.0));
+		norms->addValue(Vec3f( -0.7071,0.7071,0.0));
 
     endEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
+
+	 GeoColors3fPtr colors = GeoColors3f::create();
+    beginEditCP(colors, GeoColors3f::GeoPropDataFieldMask);
+		//TORSO
+        colors->addValue(Color3f( 1.0,0.0,0.0));
+        colors->addValue(Color3f( 1.0,0.0,0.0));
+        colors->addValue(Color3f( 1.0,0.0,0.0));
+        colors->addValue(Color3f( 1.0,0.0,0.0));
+
+		//LEFT FEMUR
+        colors->addValue(Color3f( 0.0,1.0,0.0));
+        colors->addValue(Color3f( 0.0,1.0,0.0));
+        colors->addValue(Color3f( 0.0,1.0,0.0));
+        colors->addValue(Color3f( 0.0,1.0,0.0));
+
+		//RIGHT FEMUR
+		colors->addValue(Color3f( 0.0,0.0,1.0));
+		colors->addValue(Color3f( 0.0,0.0,1.0));
+		colors->addValue(Color3f( 0.0,0.0,1.0));
+		colors->addValue(Color3f( 0.0,0.0,1.0));
+
+		//LEFT HUMERUS
+		colors->addValue(Color3f( 0.0,1.0,1.0));
+		colors->addValue(Color3f( 0.0,1.0,1.0));
+		colors->addValue(Color3f( 0.0,1.0,1.0));
+		colors->addValue(Color3f( 0.0,1.0,1.0));
+
+		//RIGHT HUMERUS
+		colors->addValue(Color3f( 1.0,1.0,0.0));
+		colors->addValue(Color3f( 1.0,1.0,0.0));
+		colors->addValue(Color3f( 1.0,1.0,0.0));
+		colors->addValue(Color3f( 1.0,1.0,0.0));
+
+		//LEFT RADIUS
+		colors->addValue(Color3f( 1.0,0.5,0.0));
+		colors->addValue(Color3f( 1.0,0.5,0.0));
+		colors->addValue(Color3f( 1.0,0.5,0.0));
+		colors->addValue(Color3f( 1.0,0.5,0.0));
+
+		//RIGHT RADIUS
+		colors->addValue(Color3f( 1.0,0.0,1.0));
+		colors->addValue(Color3f( 1.0,0.0,1.0));
+		colors->addValue(Color3f( 1.0,0.0,1.0));
+		colors->addValue(Color3f( 1.0,0.0,1.0));
+
+		//LEFT HAND
+		colors->addValue(Color3f( 5.0,0.0,1.0));
+		colors->addValue(Color3f( 5.0,0.0,1.0));
+		colors->addValue(Color3f( 5.0,0.0,1.0));
+		colors->addValue(Color3f( 5.0,0.0,1.0));
+
+		//RIGHT HAND
+		colors->addValue(Color3f( 0.0,0.5,1.0));
+		colors->addValue(Color3f( 0.0,0.5,1.0));
+		colors->addValue(Color3f( 0.0,0.5,1.0));
+		colors->addValue(Color3f( 0.0,0.5,1.0));
+
+		//LEFT TIBIA
+		colors->addValue(Color3f( 1.0,0.0,0.5));
+		colors->addValue(Color3f( 1.0,0.0,0.5));
+		colors->addValue(Color3f( 1.0,0.0,0.5));
+		colors->addValue(Color3f( 1.0,0.0,0.5));
+
+		//RIGHT TIBIA
+		colors->addValue(Color3f( 0.0,1.0,0.5));
+		colors->addValue(Color3f( 0.0,1.0,0.5));
+		colors->addValue(Color3f( 0.0,1.0,0.5));
+		colors->addValue(Color3f( 0.0,1.0,0.5));
+
+		//LEFT FOOT
+		colors->addValue(Color3f( 0.25,0.25,1.0));
+		colors->addValue(Color3f( 0.25,0.25,1.0));
+		colors->addValue(Color3f( 0.25,0.25,1.0));
+		colors->addValue(Color3f( 0.25,0.25,1.0));
+
+		//RIGHT FOOT
+		colors->addValue(Color3f( 1.0,0.25,0.25));
+		colors->addValue(Color3f( 1.0,0.25,0.25));
+		colors->addValue(Color3f( 1.0,0.25,0.25));
+		colors->addValue(Color3f( 1.0,0.25,0.25));
+		
+    endEditCP(colors, GeoColors3f::GeoPropDataFieldMask);
 
 
     beginEditCP(geo, Geometry::TypesFieldMask     |
                      Geometry::LengthsFieldMask   |
                      Geometry::PositionsFieldMask |
                      Geometry::NormalsFieldMask |
-                     Geometry::MaterialFieldMask  );
+                     Geometry::MaterialFieldMask |
+					 Geometry::ColorsFieldMask);
     {
         geo->setTypes    (type);
         geo->setLengths  (lens);
         geo->setPositions(pnts);
         geo->setNormals(norms);
+        geo->setColors(colors);
 
         // assign a material to the geometry to make it visible. The details
         // of materials are defined later.
@@ -585,7 +732,8 @@ int main(int argc, char **argv)
                      Geometry::LengthsFieldMask   |
                      Geometry::PositionsFieldMask |
                      Geometry::NormalsFieldMask |
-                     Geometry::MaterialFieldMask  );
+                     Geometry::MaterialFieldMask |
+					 Geometry::ColorsFieldMask  );
     
     // put the geometry core into a node
     NodePtr n = Node::create();
@@ -626,76 +774,127 @@ int main(int argc, char **argv)
 	beginEditCP(TheNewSkeletonGeometry);
 		TheNewSkeletonGeometry->addSkeleton(ExampleSkeleton);
 		TheNewSkeletonGeometry->setBaseGeometry(geo);
+		TheNewSkeletonGeometry->setBlendMode(SkeletonBlendedGeometry::BLEND_RIGID);
+		
+		//TORSO QUAD
 		TheNewSkeletonGeometry->addBoneBlending(0,Torso,1.0f,false);
 		TheNewSkeletonGeometry->addBoneBlending(1,Torso,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(2,RightFemur,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(3,RightFemur,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(2,Torso,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(3,Torso,1.0f,true);
 
+		
+		//LEFT FEMUR QUAD
 		TheNewSkeletonGeometry->addBoneBlending(4,RightFemur,1.0f,false);
 		TheNewSkeletonGeometry->addBoneBlending(5,RightFemur,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(6,RightTibia,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(7,RightTibia,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(6,RightFemur,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(7,RightFemur,1.0f,true);
+		
+		//TheNewSkeletonGeometry->addBoneBlending(4,LeftFemur,0.5f,false);
 
-		TheNewSkeletonGeometry->addBoneBlending(8,RightTibia,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(9,RightTibia,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(10,RightFeet,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(11,RightFeet,1.0f,false);
+		
+		//RIGHT FEMUR QUAD
+		TheNewSkeletonGeometry->addBoneBlending(8,LeftFemur,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(9,LeftFemur,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(10,LeftFemur,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(11,LeftFemur,1.0f,false);
 
-		TheNewSkeletonGeometry->addBoneBlending(12,Torso,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(13,Torso,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(14,LeftFemur,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(15,LeftFemur,1.0f,false);
+		//TheNewSkeletonGeometry->addBoneBlending(8,RightFemur,0.5f,false);
 
-		TheNewSkeletonGeometry->addBoneBlending(16,LeftFemur,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(17,LeftFemur,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(18,LeftTibia,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(19,LeftTibia,1.0f,false);
+		
+		//LEFT HUMERUS QUAD
+		TheNewSkeletonGeometry->addBoneBlending(12,RightHumerus,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(13,RightHumerus,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(14,RightHumerus,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(15,RightHumerus,1.0f,true);
 
-		TheNewSkeletonGeometry->addBoneBlending(20,LeftTibia,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(21,LeftTibia,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(22,LeftFeet,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(23,LeftFeet,1.0f,false);
+		//TheNewSkeletonGeometry->addBoneBlending(12,RightRadius,0.5f,false);
+		//TheNewSkeletonGeometry->addBoneBlending(15,RightRadius,0.5f,false);
 
-		TheNewSkeletonGeometry->addBoneBlending(24,Torso,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(25,Torso,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(26,RightHumerus,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(27,RightHumerus,1.0f,false);
 
-		TheNewSkeletonGeometry->addBoneBlending(28,RightHumerus,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(29,RightHumerus,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(30,RightRadius,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(31,RightRadius,1.0f,false);
+		//RIGHT HUMERUS QUAD
+		TheNewSkeletonGeometry->addBoneBlending(16,LeftHumerus,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(17,LeftHumerus,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(18,LeftHumerus,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(19,LeftHumerus,1.0f,false);
 
-		TheNewSkeletonGeometry->addBoneBlending(32,RightRadius,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(33,RightRadius,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(34,RightHand,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(35,RightHand,1.0f,false);
 
-		TheNewSkeletonGeometry->addBoneBlending(36,LeftHumerus,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(37,LeftHumerus,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(38,LeftRadius,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(39,LeftRadius,1.0f,false);
+		//LEFT RADIUS QUAD
+		TheNewSkeletonGeometry->addBoneBlending(20,RightRadius,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(21,RightRadius,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(22,RightRadius,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(23,RightRadius,1.0f,true);
 
-		TheNewSkeletonGeometry->addBoneBlending(40,LeftRadius,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(41,LeftRadius,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(42,LeftHand,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(43,LeftHand,1.0f,false);
+		//TheNewSkeletonGeometry->addBoneBlending(21,RightHumerus,1.0f,true);
+		//TheNewSkeletonGeometry->addBoneBlending(22,RightHumerus,1.0f,true);
 
-		TheNewSkeletonGeometry->addBoneBlending(44,LeftHand,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(45,LeftHand,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(46,LeftHand,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(47,LeftHand,1.0f,false);
+		//TheNewSkeletonGeometry->addBoneBlending(20,RightHand,1.0f,false);
+		//TheNewSkeletonGeometry->addBoneBlending(23,RightHand,1.0f,false);
 
-		TheNewSkeletonGeometry->addBoneBlending(48,RightHand,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(49,RightHand,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(50,RightHand,1.0f,false);
-		TheNewSkeletonGeometry->addBoneBlending(51,RightHand,1.0f,false);
+
+		//RIGHT RADIUS QUAD
+		TheNewSkeletonGeometry->addBoneBlending(24,LeftRadius,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(25,LeftRadius,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(26,LeftRadius,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(27,LeftRadius,1.0f,false);
+
+
+		//LEFT HAND QUAD
+		TheNewSkeletonGeometry->addBoneBlending(28,RightHand,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(29,RightHand,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(30,RightHand,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(31,RightHand,1.0f,true);
+
+		//TheNewSkeletonGeometry->addBoneBlending(29,RightRadius,0.5f,true);
+		//TheNewSkeletonGeometry->addBoneBlending(30,RightRadius,0.5f,true);
+
+
+		//RIGHT HAND QUAD
+		TheNewSkeletonGeometry->addBoneBlending(32,LeftHand,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(33,LeftHand,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(34,LeftHand,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(35,LeftHand,1.0f,false);
+
+
+		//LEFT TIBIA QUAD
+		TheNewSkeletonGeometry->addBoneBlending(36,RightTibia,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(37,RightTibia,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(38,RightTibia,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(39,RightTibia,1.0f,true);
+
+
+		//RIGHT TIBIA QUAD
+		TheNewSkeletonGeometry->addBoneBlending(40,LeftTibia,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(41,LeftTibia,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(42,LeftTibia,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(43,LeftTibia,1.0f,false);
+
+
+		//LEFT FOOT QUAD
+		TheNewSkeletonGeometry->addBoneBlending(44,RightFeet,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(45,RightFeet,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(46,RightFeet,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(47,RightFeet,1.0f,true);
+
+
+		//RIGHT FOOT QUAD
+		TheNewSkeletonGeometry->addBoneBlending(48,LeftFeet,1.0f,false);
+		TheNewSkeletonGeometry->addBoneBlending(49,LeftFeet,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(50,LeftFeet,1.0f,true);
+		TheNewSkeletonGeometry->addBoneBlending(51,LeftFeet,1.0f,false);
+		
+		
     endEditCP(TheNewSkeletonGeometry);
 	
 	NodePtr MeshNode = osg::Node::create();
     beginEditCP(MeshNode, Node::CoreFieldMask);
         MeshNode->setCore(TheNewSkeletonGeometry);
     endEditCP(MeshNode, Node::CoreFieldMask);
+
+	//Create unbound geometry Node
+	NodePtr UnboundGeometry = Node::create();
+	beginEditCP(UnboundGeometry, Node::CoreFieldMask);
+		UnboundGeometry->setCore(geo);
+	endEditCP(UnboundGeometry, Node::CoreFieldMask);
 
 
 	
@@ -711,7 +910,7 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(SkeletonNode);
-        scene->addChild(MeshNode);
+        scene->addChild(/*UnboundGeometry*/MeshNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
@@ -722,6 +921,7 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
+
 
 
     while(!ExitApp)
@@ -755,7 +955,6 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 {
  
 /* ================================ ANIMATION OF THE BONES ==============================================*/
-
 /*================================================================================================*/
 /*                                       TORSO                                                    */
  //Length
@@ -789,6 +988,19 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
     osg::beginEditCP(LeftHumerusAnimator);
       osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->setKeyframeSequence(LeftHumerusKeyFrame);
     osg::endEditCP(LeftHumerusAnimator);
+
+
+	//Translation
+	osg::KeyframeVectorsSequence3fPtr LeftHumerusTranslationFrame = osg::KeyframeVectorsSequence3f::create();
+
+	LeftHumerusTranslationFrame->addKeyframe(osg::Vec3f(0.0f,0.0f,0.0f), 0.0f);
+	LeftHumerusTranslationFrame->addKeyframe(osg::Vec3f(0.0f,0.0f,-3.0), 3.0f);
+	LeftHumerusTranslationFrame->addKeyframe(osg::Vec3f(0.0f,0.0f,0.0f), 6.0f);
+
+	osg::KeyframeAnimatorPtr LeftHumerusTranslationAnimator = osg::KeyframeAnimator::create();
+	osg::beginEditCP(LeftHumerusTranslationAnimator);
+		osg::KeyframeAnimatorPtr::dcast(LeftHumerusTranslationAnimator)->setKeyframeSequence(LeftHumerusTranslationFrame);
+	osg::endEditCP(LeftHumerusTranslationAnimator);
 
 
 
@@ -860,17 +1072,17 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
 
 
 
-///*================================================================================================*/
-///*                                    LEFT TIBIA                                                  */
-//
-//	
-//
-///*================================================================================================*/
-///*                                    LEFT FEET                                                   */
-//
-//	
-//
-//
+/*================================================================================================*/
+/*                                    LEFT TIBIA                                                  */
+
+	
+
+/*================================================================================================*/
+/*                                    LEFT FEET                                                   */
+
+	
+
+
 /*================================================================================================*/
 /*                                    RIGHT HUMERUS                                               */
 
@@ -889,6 +1101,18 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
    osg::beginEditCP(RightHumerusAnimator);
       osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->setKeyframeSequence(RightHumerusKeyFrame);
    osg::endEditCP(RightHumerusAnimator);
+
+    //Translation
+	osg::KeyframeVectorsSequence3fPtr RightHumerusTranslationFrame = osg::KeyframeVectorsSequence3f::create();
+
+	RightHumerusTranslationFrame->addKeyframe(osg::Vec3f(0.0f,0.0f,0.0f), 0.0f);
+	RightHumerusTranslationFrame->addKeyframe(osg::Vec3f(0.0f,0.0f,-3.0), 3.0f);
+	RightHumerusTranslationFrame->addKeyframe(osg::Vec3f(0.0f,0.0f,0.0f), 6.0f);
+
+	osg::KeyframeAnimatorPtr RightHumerusTranslationAnimator = osg::KeyframeAnimator::create();
+	osg::beginEditCP(RightHumerusTranslationAnimator);
+		osg::KeyframeAnimatorPtr::dcast(RightHumerusTranslationAnimator)->setKeyframeSequence(RightHumerusTranslationFrame);
+	osg::endEditCP(RightHumerusTranslationAnimator);
 
 
 
@@ -982,6 +1206,8 @@ void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeft
    osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightHandAnimator,   TheRightHand);
    osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightFemurAnimator,  TheRightFemur);
    osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addLengthAnimator  (TorsoLengthAnimator, TheTorso);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addTranslationAnimator(LeftHumerusTranslationAnimator,   TheLeftHumerus);
+   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addTranslationAnimator(RightHumerusTranslationAnimator,   TheRightHumerus);
 
 
 }

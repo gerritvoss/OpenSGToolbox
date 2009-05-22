@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<OSGFieldContainers>
+	<Bone
+		fieldcontainerid="243"
+		Rotation="0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="0.000000e+000"
+		InternalChildren="244"
+		InternalParent="0"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="244"
+		Rotation="5.773503e-001 5.773503e-001 5.773503e-001 2.813258e-001"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren="245"
+		InternalParent="243"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="245"
+		Rotation="5.773503e-001 5.773503e-001 5.773503e-001 1.513518e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren="246"
+		InternalParent="244"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="246"
+		Rotation="5.773503e-001 5.773503e-001 5.773503e-001 2.648602e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren="247"
+		InternalParent="245"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="247"
+		Rotation="5.773503e-001 5.773503e-001 5.773503e-001 1.159834e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren="248"
+		InternalParent="246"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="248"
+		Rotation="5.773503e-001 5.773503e-001 5.773503e-001 1.844790e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren="249"
+		InternalParent="247"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="249"
+		Rotation="5.773503e-001 5.773503e-001 5.773503e-001 1.623524e-001"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren="250;253"
+		InternalParent="248"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="250"
+		Rotation="5.773503e-001 5.773503e-001 5.773503e-001 7.169432e-001"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren="251"
+		InternalParent="249"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="251"
+		Rotation="5.773503e-001 5.773503e-001 5.773503e-001 3.113043e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren=""
+		InternalParent="250"
+	>
+	</Bone>
+	<Bone
+		fieldcontainerid="253"
+		Rotation="5.773503e-001 5.773503e-001 5.773503e-001 1.844790e+000"
+		Translation="0.000000e+000  0.000000e+000  0.000000e+000"
+		Length="5.000000e+000"
+		InternalChildren=""
+		InternalParent="249"
+	>
+	</Bone>
+	<Skeleton
+		fieldcontainerid="252"
+		RootBones="243"
+		AttachedGeometries=""
+	>
+	</Skeleton>
+</OSGFieldContainers>
+

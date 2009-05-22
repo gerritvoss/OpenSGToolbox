@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -117,6 +117,27 @@ SFReal32 *BoneBase::getSFLength(void)
     return &_sfLength;
 }
 
+//! Get the Bone::_sfDefaultRotation field.
+inline
+SFQuaternion *BoneBase::getSFDefaultRotation(void)
+{
+    return &_sfDefaultRotation;
+}
+
+//! Get the Bone::_sfDefaultTranslation field.
+inline
+SFPnt3f *BoneBase::getSFDefaultTranslation(void)
+{
+    return &_sfDefaultTranslation;
+}
+
+//! Get the Bone::_sfDefaultLength field.
+inline
+SFReal32 *BoneBase::getSFDefaultLength(void)
+{
+    return &_sfDefaultLength;
+}
+
 //! Get the Bone::_mfInternalChildren field.
 inline
 MFBonePtr *BoneBase::getMFInternalChildren(void)
@@ -131,18 +152,11 @@ SFBonePtr *BoneBase::getSFInternalParent(void)
     return &_sfInternalParent;
 }
 
-//! Get the Bone::_sfInternalRelativeTransformation field.
+//! Get the Bone::_sfInternalSkeleton field.
 inline
-SFMatrix *BoneBase::getSFInternalRelativeTransformation(void)
+SFSkeletonPtr *BoneBase::getSFInternalSkeleton(void)
 {
-    return &_sfInternalRelativeTransformation;
-}
-
-//! Get the Bone::_sfInternalAbsoluteTransformation field.
-inline
-SFMatrix *BoneBase::getSFInternalAbsoluteTransformation(void)
-{
-    return &_sfInternalAbsoluteTransformation;
+    return &_sfInternalSkeleton;
 }
 
 
@@ -209,6 +223,69 @@ void BoneBase::setLength(const Real32 &value)
     _sfLength.setValue(value);
 }
 
+//! Get the value of the Bone::_sfDefaultRotation field.
+inline
+Quaternion &BoneBase::getDefaultRotation(void)
+{
+    return _sfDefaultRotation.getValue();
+}
+
+//! Get the value of the Bone::_sfDefaultRotation field.
+inline
+const Quaternion &BoneBase::getDefaultRotation(void) const
+{
+    return _sfDefaultRotation.getValue();
+}
+
+//! Set the value of the Bone::_sfDefaultRotation field.
+inline
+void BoneBase::setDefaultRotation(const Quaternion &value)
+{
+    _sfDefaultRotation.setValue(value);
+}
+
+//! Get the value of the Bone::_sfDefaultTranslation field.
+inline
+Pnt3f &BoneBase::getDefaultTranslation(void)
+{
+    return _sfDefaultTranslation.getValue();
+}
+
+//! Get the value of the Bone::_sfDefaultTranslation field.
+inline
+const Pnt3f &BoneBase::getDefaultTranslation(void) const
+{
+    return _sfDefaultTranslation.getValue();
+}
+
+//! Set the value of the Bone::_sfDefaultTranslation field.
+inline
+void BoneBase::setDefaultTranslation(const Pnt3f &value)
+{
+    _sfDefaultTranslation.setValue(value);
+}
+
+//! Get the value of the Bone::_sfDefaultLength field.
+inline
+Real32 &BoneBase::getDefaultLength(void)
+{
+    return _sfDefaultLength.getValue();
+}
+
+//! Get the value of the Bone::_sfDefaultLength field.
+inline
+const Real32 &BoneBase::getDefaultLength(void) const
+{
+    return _sfDefaultLength.getValue();
+}
+
+//! Set the value of the Bone::_sfDefaultLength field.
+inline
+void BoneBase::setDefaultLength(const Real32 &value)
+{
+    _sfDefaultLength.setValue(value);
+}
+
 //! Get the value of the Bone::_sfInternalParent field.
 inline
 BonePtr &BoneBase::getInternalParent(void)
@@ -230,46 +307,25 @@ void BoneBase::setInternalParent(const BonePtr &value)
     _sfInternalParent.setValue(value);
 }
 
-//! Get the value of the Bone::_sfInternalRelativeTransformation field.
+//! Get the value of the Bone::_sfInternalSkeleton field.
 inline
-Matrix &BoneBase::getInternalRelativeTransformation(void)
+SkeletonPtr &BoneBase::getInternalSkeleton(void)
 {
-    return _sfInternalRelativeTransformation.getValue();
+    return _sfInternalSkeleton.getValue();
 }
 
-//! Get the value of the Bone::_sfInternalRelativeTransformation field.
+//! Get the value of the Bone::_sfInternalSkeleton field.
 inline
-const Matrix &BoneBase::getInternalRelativeTransformation(void) const
+const SkeletonPtr &BoneBase::getInternalSkeleton(void) const
 {
-    return _sfInternalRelativeTransformation.getValue();
+    return _sfInternalSkeleton.getValue();
 }
 
-//! Set the value of the Bone::_sfInternalRelativeTransformation field.
+//! Set the value of the Bone::_sfInternalSkeleton field.
 inline
-void BoneBase::setInternalRelativeTransformation(const Matrix &value)
+void BoneBase::setInternalSkeleton(const SkeletonPtr &value)
 {
-    _sfInternalRelativeTransformation.setValue(value);
-}
-
-//! Get the value of the Bone::_sfInternalAbsoluteTransformation field.
-inline
-Matrix &BoneBase::getInternalAbsoluteTransformation(void)
-{
-    return _sfInternalAbsoluteTransformation.getValue();
-}
-
-//! Get the value of the Bone::_sfInternalAbsoluteTransformation field.
-inline
-const Matrix &BoneBase::getInternalAbsoluteTransformation(void) const
-{
-    return _sfInternalAbsoluteTransformation.getValue();
-}
-
-//! Set the value of the Bone::_sfInternalAbsoluteTransformation field.
-inline
-void BoneBase::setInternalAbsoluteTransformation(const Matrix &value)
-{
-    _sfInternalAbsoluteTransformation.setValue(value);
+    _sfInternalSkeleton.setValue(value);
 }
 
 

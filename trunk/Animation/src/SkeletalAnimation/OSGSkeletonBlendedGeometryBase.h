@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -71,7 +71,9 @@
 #include "SkeletalAnimation/OSGBoneFields.h" // Bones type
 #include <OpenSG/OSGUInt32Fields.h> // PositionIndexes type
 #include <OpenSG/OSGReal32Fields.h> // BlendAmounts type
+#include <OpenSG/OSGUInt8Fields.h> // AttachedToEnd type
 #include "OSGSkeletonFields.h" // Skeletons type
+#include <OpenSG/OSGUInt32Fields.h> // BlendMode type
 
 #include "OSGSkeletonBlendedGeometryFields.h"
 
@@ -99,15 +101,19 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
         BonesFieldId           = BaseGeometryFieldId    + 1,
         PositionIndexesFieldId = BonesFieldId           + 1,
         BlendAmountsFieldId    = PositionIndexesFieldId + 1,
-        SkeletonsFieldId       = BlendAmountsFieldId    + 1,
-        NextFieldId            = SkeletonsFieldId       + 1
+        AttachedToEndFieldId   = BlendAmountsFieldId    + 1,
+        SkeletonsFieldId       = AttachedToEndFieldId   + 1,
+        BlendModeFieldId       = SkeletonsFieldId       + 1,
+        NextFieldId            = BlendModeFieldId       + 1
     };
 
     static const OSG::BitVector BaseGeometryFieldMask;
     static const OSG::BitVector BonesFieldMask;
     static const OSG::BitVector PositionIndexesFieldMask;
     static const OSG::BitVector BlendAmountsFieldMask;
+    static const OSG::BitVector AttachedToEndFieldMask;
     static const OSG::BitVector SkeletonsFieldMask;
+    static const OSG::BitVector BlendModeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -135,9 +141,12 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     /*! \{                                                                 */
 
            SFGeometryPtr       *getSFBaseGeometry   (void);
+           SFUInt32            *getSFBlendMode      (void);
 
            GeometryPtr         &getBaseGeometry   (void);
      const GeometryPtr         &getBaseGeometry   (void) const;
+           UInt32              &getBlendMode      (void);
+     const UInt32              &getBlendMode      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,6 +154,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     /*! \{                                                                 */
 
      void setBaseGeometry   ( const GeometryPtr &value );
+     void setBlendMode      ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -191,7 +201,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     MFBonePtr           _mfBones;
     MFUInt32            _mfPositionIndexes;
     MFReal32            _mfBlendAmounts;
+    MFUInt8             _mfAttachedToEnd;
     MFSkeletonPtr       _mfSkeletons;
+    SFUInt32            _sfBlendMode;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -216,6 +228,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
            MFBonePtr           *getMFBones          (void);
            MFUInt32            *getMFPositionIndexes(void);
            MFReal32            *getMFBlendAmounts   (void);
+           MFUInt8             *getMFAttachedToEnd  (void);
            MFSkeletonPtr       *getMFSkeletons      (void);
 
            BonePtr             &getBones          (UInt32 index);
@@ -227,6 +240,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
            Real32              &getBlendAmounts   (UInt32 index);
            MFReal32            &getBlendAmounts   (void);
      const MFReal32            &getBlendAmounts   (void) const;
+           UInt8               &getAttachedToEnd  (UInt32 index);
+           MFUInt8             &getAttachedToEnd  (void);
+     const MFUInt8             &getAttachedToEnd  (void) const;
            SkeletonPtr         &getSkeletons      (UInt32 index);
            MFSkeletonPtr       &getSkeletons      (void);
      const MFSkeletonPtr       &getSkeletons      (void) const;

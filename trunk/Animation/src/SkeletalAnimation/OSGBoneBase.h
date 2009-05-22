@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -70,10 +70,12 @@
 #include <OpenSG/OSGQuaternionFields.h> // Rotation type
 #include <OpenSG/OSGPnt3fFields.h> // Translation type
 #include <OpenSG/OSGReal32Fields.h> // Length type
+#include <OpenSG/OSGQuaternionFields.h> // DefaultRotation type
+#include <OpenSG/OSGPnt3fFields.h> // DefaultTranslation type
+#include <OpenSG/OSGReal32Fields.h> // DefaultLength type
 #include "SkeletalAnimation/OSGBoneFields.h" // InternalChildren type
 #include "SkeletalAnimation/OSGBoneFields.h" // InternalParent type
-#include <OpenSG/OSGMatrixFields.h> // InternalRelativeTransformation type
-#include <OpenSG/OSGMatrixFields.h> // InternalAbsoluteTransformation type
+#include "SkeletalAnimation/OSGSkeletonFields.h" // InternalSkeleton type
 
 #include "OSGBoneFields.h"
 
@@ -97,23 +99,27 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
 
     enum
     {
-        RotationFieldId                       = Inherited::NextFieldId,
-        TranslationFieldId                    = RotationFieldId                       + 1,
-        LengthFieldId                         = TranslationFieldId                    + 1,
-        InternalChildrenFieldId               = LengthFieldId                         + 1,
-        InternalParentFieldId                 = InternalChildrenFieldId               + 1,
-        InternalRelativeTransformationFieldId = InternalParentFieldId                 + 1,
-        InternalAbsoluteTransformationFieldId = InternalRelativeTransformationFieldId + 1,
-        NextFieldId                           = InternalAbsoluteTransformationFieldId + 1
+        RotationFieldId           = Inherited::NextFieldId,
+        TranslationFieldId        = RotationFieldId           + 1,
+        LengthFieldId             = TranslationFieldId        + 1,
+        DefaultRotationFieldId    = LengthFieldId             + 1,
+        DefaultTranslationFieldId = DefaultRotationFieldId    + 1,
+        DefaultLengthFieldId      = DefaultTranslationFieldId + 1,
+        InternalChildrenFieldId   = DefaultLengthFieldId      + 1,
+        InternalParentFieldId     = InternalChildrenFieldId   + 1,
+        InternalSkeletonFieldId   = InternalParentFieldId     + 1,
+        NextFieldId               = InternalSkeletonFieldId   + 1
     };
 
     static const OSG::BitVector RotationFieldMask;
     static const OSG::BitVector TranslationFieldMask;
     static const OSG::BitVector LengthFieldMask;
+    static const OSG::BitVector DefaultRotationFieldMask;
+    static const OSG::BitVector DefaultTranslationFieldMask;
+    static const OSG::BitVector DefaultLengthFieldMask;
     static const OSG::BitVector InternalChildrenFieldMask;
     static const OSG::BitVector InternalParentFieldMask;
-    static const OSG::BitVector InternalRelativeTransformationFieldMask;
-    static const OSG::BitVector InternalAbsoluteTransformationFieldMask;
+    static const OSG::BitVector InternalSkeletonFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,6 +149,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
            SFQuaternion        *getSFRotation       (void);
            SFPnt3f             *getSFTranslation    (void);
            SFReal32            *getSFLength         (void);
+           SFQuaternion        *getSFDefaultRotation(void);
+           SFPnt3f             *getSFDefaultTranslation(void);
+           SFReal32            *getSFDefaultLength  (void);
+           SFSkeletonPtr       *getSFInternalSkeleton(void);
 
            Quaternion          &getRotation       (void);
      const Quaternion          &getRotation       (void) const;
@@ -150,6 +160,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
      const Pnt3f               &getTranslation    (void) const;
            Real32              &getLength         (void);
      const Real32              &getLength         (void) const;
+           Quaternion          &getDefaultRotation(void);
+     const Quaternion          &getDefaultRotation(void) const;
+           Pnt3f               &getDefaultTranslation(void);
+     const Pnt3f               &getDefaultTranslation(void) const;
+           Real32              &getDefaultLength  (void);
+     const Real32              &getDefaultLength  (void) const;
+           SkeletonPtr         &getInternalSkeleton(void);
+     const SkeletonPtr         &getInternalSkeleton(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -159,6 +177,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
      void setRotation       ( const Quaternion &value );
      void setTranslation    ( const Pnt3f &value );
      void setLength         ( const Real32 &value );
+     void setDefaultRotation( const Quaternion &value );
+     void setDefaultTranslation( const Pnt3f &value );
+     void setDefaultLength  ( const Real32 &value );
+     void setInternalSkeleton( const SkeletonPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -204,10 +226,12 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     SFQuaternion        _sfRotation;
     SFPnt3f             _sfTranslation;
     SFReal32            _sfLength;
+    SFQuaternion        _sfDefaultRotation;
+    SFPnt3f             _sfDefaultTranslation;
+    SFReal32            _sfDefaultLength;
     MFBonePtr           _mfInternalChildren;
     SFBonePtr           _sfInternalParent;
-    SFMatrix            _sfInternalRelativeTransformation;
-    SFMatrix            _sfInternalAbsoluteTransformation;
+    SFSkeletonPtr       _sfInternalSkeleton;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,15 +255,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
 
            MFBonePtr           *getMFInternalChildren(void);
            SFBonePtr           *getSFInternalParent (void);
-           SFMatrix            *getSFInternalRelativeTransformation(void);
-           SFMatrix            *getSFInternalAbsoluteTransformation(void);
 
            BonePtr             &getInternalParent (void);
      const BonePtr             &getInternalParent (void) const;
-           Matrix              &getInternalRelativeTransformation(void);
-     const Matrix              &getInternalRelativeTransformation(void) const;
-           Matrix              &getInternalAbsoluteTransformation(void);
-     const Matrix              &getInternalAbsoluteTransformation(void) const;
            BonePtr             &getInternalChildren(UInt32 index);
            MFBonePtr           &getInternalChildren(void);
      const MFBonePtr           &getInternalChildren(void) const;
@@ -250,8 +268,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING BoneBase : public AttachmentContainer
     /*! \{                                                                 */
 
      void setInternalParent (const BonePtr &value);
-     void setInternalRelativeTransformation(const Matrix &value);
-     void setInternalAbsoluteTransformation(const Matrix &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

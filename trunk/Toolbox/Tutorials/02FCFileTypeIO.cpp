@@ -37,33 +37,8 @@ int main(int argc, char **argv)
 	NodePtr Root = createScene();
 
 
-	/*PerspectiveCameraPtr ThePerspectiveCamera = PerspectiveCamera::create();
-	beginEditCP(ThePerspectiveCamera);
-		ThePerspectiveCamera->setBeacon(Root);
-		ThePerspectiveCamera->setFov   (deg2rad(60.f));
-		ThePerspectiveCamera->setNear  (0.1f);
-		ThePerspectiveCamera->setFar   (10000.f);
-	endEditCP(ThePerspectiveCamera);
-
-	GradientBackgroundPtr TheGradientBackground = GradientBackground::create();
-	TheGradientBackground->addLine(Color3f(1.0f,0.0f,0.0f), 0.0f);
-	TheGradientBackground->addLine(Color3f(0.0f,1.0f,0.0f), 0.5f);
-	TheGradientBackground->addLine(Color3f(0.0f,0.0f,1.0f), 1.0f);
-
-	PolygonForegroundPtr ThePolygonForeground = PolygonForeground::create();
-	ThePolygonForeground->getPositions().push_back(Pnt2f(0.0f,1.0f));
-
-	ViewportPtr TheViewport = Viewport::create();
-	TheViewport->setRoot(Root);
-	TheViewport->setCamera(ThePerspectiveCamera);
-	TheViewport->setBackground(TheGradientBackground);
-	TheViewport->getForegrounds().push_back(ThePolygonForeground);*/
-
 	FCFileType::FCPtrStore Containers;
 	Containers.insert(Root);
-
-	//Save the Field Containers to a binary file
-	//FCFileHandler::the()->write(Containers,Path("./TestFieldContainers.fcb"));
 
 	FCFileType::FCTypeVector IgnoreTypes;
 	//IgnoreTypes.push_back(Node::getClassType().getId());

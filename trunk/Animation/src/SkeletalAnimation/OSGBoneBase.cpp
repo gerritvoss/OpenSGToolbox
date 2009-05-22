@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -73,17 +73,23 @@ const OSG::BitVector  BoneBase::TranslationFieldMask =
 const OSG::BitVector  BoneBase::LengthFieldMask = 
     (TypeTraits<BitVector>::One << BoneBase::LengthFieldId);
 
+const OSG::BitVector  BoneBase::DefaultRotationFieldMask = 
+    (TypeTraits<BitVector>::One << BoneBase::DefaultRotationFieldId);
+
+const OSG::BitVector  BoneBase::DefaultTranslationFieldMask = 
+    (TypeTraits<BitVector>::One << BoneBase::DefaultTranslationFieldId);
+
+const OSG::BitVector  BoneBase::DefaultLengthFieldMask = 
+    (TypeTraits<BitVector>::One << BoneBase::DefaultLengthFieldId);
+
 const OSG::BitVector  BoneBase::InternalChildrenFieldMask = 
     (TypeTraits<BitVector>::One << BoneBase::InternalChildrenFieldId);
 
 const OSG::BitVector  BoneBase::InternalParentFieldMask = 
     (TypeTraits<BitVector>::One << BoneBase::InternalParentFieldId);
 
-const OSG::BitVector  BoneBase::InternalRelativeTransformationFieldMask = 
-    (TypeTraits<BitVector>::One << BoneBase::InternalRelativeTransformationFieldId);
-
-const OSG::BitVector  BoneBase::InternalAbsoluteTransformationFieldMask = 
-    (TypeTraits<BitVector>::One << BoneBase::InternalAbsoluteTransformationFieldId);
+const OSG::BitVector  BoneBase::InternalSkeletonFieldMask = 
+    (TypeTraits<BitVector>::One << BoneBase::InternalSkeletonFieldId);
 
 const OSG::BitVector BoneBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -101,16 +107,22 @@ const OSG::BitVector BoneBase::MTInfluenceMask =
 /*! \var Real32          BoneBase::_sfLength
     
 */
+/*! \var Quaternion      BoneBase::_sfDefaultRotation
+    
+*/
+/*! \var Pnt3f           BoneBase::_sfDefaultTranslation
+    
+*/
+/*! \var Real32          BoneBase::_sfDefaultLength
+    
+*/
 /*! \var BonePtr         BoneBase::_mfInternalChildren
     
 */
 /*! \var BonePtr         BoneBase::_sfInternalParent
     
 */
-/*! \var Matrix          BoneBase::_sfInternalRelativeTransformation
-    
-*/
-/*! \var Matrix          BoneBase::_sfInternalAbsoluteTransformation
+/*! \var SkeletonPtr     BoneBase::_sfInternalSkeleton
     
 */
 
@@ -133,6 +145,21 @@ FieldDescription *BoneBase::_desc[] =
                      LengthFieldId, LengthFieldMask,
                      false,
                      (FieldAccessMethod) &BoneBase::getSFLength),
+    new FieldDescription(SFQuaternion::getClassType(), 
+                     "DefaultRotation", 
+                     DefaultRotationFieldId, DefaultRotationFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoneBase::getSFDefaultRotation),
+    new FieldDescription(SFPnt3f::getClassType(), 
+                     "DefaultTranslation", 
+                     DefaultTranslationFieldId, DefaultTranslationFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoneBase::getSFDefaultTranslation),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "DefaultLength", 
+                     DefaultLengthFieldId, DefaultLengthFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoneBase::getSFDefaultLength),
     new FieldDescription(MFBonePtr::getClassType(), 
                      "InternalChildren", 
                      InternalChildrenFieldId, InternalChildrenFieldMask,
@@ -143,16 +170,11 @@ FieldDescription *BoneBase::_desc[] =
                      InternalParentFieldId, InternalParentFieldMask,
                      false,
                      (FieldAccessMethod) &BoneBase::getSFInternalParent),
-    new FieldDescription(SFMatrix::getClassType(), 
-                     "InternalRelativeTransformation", 
-                     InternalRelativeTransformationFieldId, InternalRelativeTransformationFieldMask,
-                     true,
-                     (FieldAccessMethod) &BoneBase::getSFInternalRelativeTransformation),
-    new FieldDescription(SFMatrix::getClassType(), 
-                     "InternalAbsoluteTransformation", 
-                     InternalAbsoluteTransformationFieldId, InternalAbsoluteTransformationFieldMask,
-                     true,
-                     (FieldAccessMethod) &BoneBase::getSFInternalAbsoluteTransformation)
+    new FieldDescription(SFSkeletonPtr::getClassType(), 
+                     "InternalSkeleton", 
+                     InternalSkeletonFieldId, InternalSkeletonFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoneBase::getSFInternalSkeleton)
 };
 
 
@@ -232,10 +254,12 @@ BoneBase::BoneBase(void) :
     _sfRotation               (), 
     _sfTranslation            (), 
     _sfLength                 (), 
+    _sfDefaultRotation        (), 
+    _sfDefaultTranslation     (), 
+    _sfDefaultLength          (), 
     _mfInternalChildren       (), 
     _sfInternalParent         (), 
-    _sfInternalRelativeTransformation(), 
-    _sfInternalAbsoluteTransformation(), 
+    _sfInternalSkeleton       (), 
     Inherited() 
 {
 }
@@ -248,10 +272,12 @@ BoneBase::BoneBase(const BoneBase &source) :
     _sfRotation               (source._sfRotation               ), 
     _sfTranslation            (source._sfTranslation            ), 
     _sfLength                 (source._sfLength                 ), 
+    _sfDefaultRotation        (source._sfDefaultRotation        ), 
+    _sfDefaultTranslation     (source._sfDefaultTranslation     ), 
+    _sfDefaultLength          (source._sfDefaultLength          ), 
     _mfInternalChildren       (source._mfInternalChildren       ), 
     _sfInternalParent         (source._sfInternalParent         ), 
-    _sfInternalRelativeTransformation(source._sfInternalRelativeTransformation), 
-    _sfInternalAbsoluteTransformation(source._sfInternalAbsoluteTransformation), 
+    _sfInternalSkeleton       (source._sfInternalSkeleton       ), 
     Inherited                 (source)
 {
 }
@@ -283,6 +309,21 @@ UInt32 BoneBase::getBinSize(const BitVector &whichField)
         returnValue += _sfLength.getBinSize();
     }
 
+    if(FieldBits::NoField != (DefaultRotationFieldMask & whichField))
+    {
+        returnValue += _sfDefaultRotation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DefaultTranslationFieldMask & whichField))
+    {
+        returnValue += _sfDefaultTranslation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DefaultLengthFieldMask & whichField))
+    {
+        returnValue += _sfDefaultLength.getBinSize();
+    }
+
     if(FieldBits::NoField != (InternalChildrenFieldMask & whichField))
     {
         returnValue += _mfInternalChildren.getBinSize();
@@ -293,14 +334,9 @@ UInt32 BoneBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInternalParent.getBinSize();
     }
 
-    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSkeletonFieldMask & whichField))
     {
-        returnValue += _sfInternalRelativeTransformation.getBinSize();
-    }
-
-    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
-    {
-        returnValue += _sfInternalAbsoluteTransformation.getBinSize();
+        returnValue += _sfInternalSkeleton.getBinSize();
     }
 
 
@@ -327,6 +363,21 @@ void BoneBase::copyToBin(      BinaryDataHandler &pMem,
         _sfLength.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (DefaultRotationFieldMask & whichField))
+    {
+        _sfDefaultRotation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DefaultTranslationFieldMask & whichField))
+    {
+        _sfDefaultTranslation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DefaultLengthFieldMask & whichField))
+    {
+        _sfDefaultLength.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (InternalChildrenFieldMask & whichField))
     {
         _mfInternalChildren.copyToBin(pMem);
@@ -337,14 +388,9 @@ void BoneBase::copyToBin(      BinaryDataHandler &pMem,
         _sfInternalParent.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSkeletonFieldMask & whichField))
     {
-        _sfInternalRelativeTransformation.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
-    {
-        _sfInternalAbsoluteTransformation.copyToBin(pMem);
+        _sfInternalSkeleton.copyToBin(pMem);
     }
 
 
@@ -370,6 +416,21 @@ void BoneBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfLength.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (DefaultRotationFieldMask & whichField))
+    {
+        _sfDefaultRotation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DefaultTranslationFieldMask & whichField))
+    {
+        _sfDefaultTranslation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DefaultLengthFieldMask & whichField))
+    {
+        _sfDefaultLength.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (InternalChildrenFieldMask & whichField))
     {
         _mfInternalChildren.copyFromBin(pMem);
@@ -380,14 +441,9 @@ void BoneBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfInternalParent.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
+    if(FieldBits::NoField != (InternalSkeletonFieldMask & whichField))
     {
-        _sfInternalRelativeTransformation.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
-    {
-        _sfInternalAbsoluteTransformation.copyFromBin(pMem);
+        _sfInternalSkeleton.copyFromBin(pMem);
     }
 
 
@@ -409,17 +465,23 @@ void BoneBase::executeSyncImpl(      BoneBase *pOther,
     if(FieldBits::NoField != (LengthFieldMask & whichField))
         _sfLength.syncWith(pOther->_sfLength);
 
+    if(FieldBits::NoField != (DefaultRotationFieldMask & whichField))
+        _sfDefaultRotation.syncWith(pOther->_sfDefaultRotation);
+
+    if(FieldBits::NoField != (DefaultTranslationFieldMask & whichField))
+        _sfDefaultTranslation.syncWith(pOther->_sfDefaultTranslation);
+
+    if(FieldBits::NoField != (DefaultLengthFieldMask & whichField))
+        _sfDefaultLength.syncWith(pOther->_sfDefaultLength);
+
     if(FieldBits::NoField != (InternalChildrenFieldMask & whichField))
         _mfInternalChildren.syncWith(pOther->_mfInternalChildren);
 
     if(FieldBits::NoField != (InternalParentFieldMask & whichField))
         _sfInternalParent.syncWith(pOther->_sfInternalParent);
 
-    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
-        _sfInternalRelativeTransformation.syncWith(pOther->_sfInternalRelativeTransformation);
-
-    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
-        _sfInternalAbsoluteTransformation.syncWith(pOther->_sfInternalAbsoluteTransformation);
+    if(FieldBits::NoField != (InternalSkeletonFieldMask & whichField))
+        _sfInternalSkeleton.syncWith(pOther->_sfInternalSkeleton);
 
 
 }
@@ -440,14 +502,20 @@ void BoneBase::executeSyncImpl(      BoneBase *pOther,
     if(FieldBits::NoField != (LengthFieldMask & whichField))
         _sfLength.syncWith(pOther->_sfLength);
 
+    if(FieldBits::NoField != (DefaultRotationFieldMask & whichField))
+        _sfDefaultRotation.syncWith(pOther->_sfDefaultRotation);
+
+    if(FieldBits::NoField != (DefaultTranslationFieldMask & whichField))
+        _sfDefaultTranslation.syncWith(pOther->_sfDefaultTranslation);
+
+    if(FieldBits::NoField != (DefaultLengthFieldMask & whichField))
+        _sfDefaultLength.syncWith(pOther->_sfDefaultLength);
+
     if(FieldBits::NoField != (InternalParentFieldMask & whichField))
         _sfInternalParent.syncWith(pOther->_sfInternalParent);
 
-    if(FieldBits::NoField != (InternalRelativeTransformationFieldMask & whichField))
-        _sfInternalRelativeTransformation.syncWith(pOther->_sfInternalRelativeTransformation);
-
-    if(FieldBits::NoField != (InternalAbsoluteTransformationFieldMask & whichField))
-        _sfInternalAbsoluteTransformation.syncWith(pOther->_sfInternalAbsoluteTransformation);
+    if(FieldBits::NoField != (InternalSkeletonFieldMask & whichField))
+        _sfInternalSkeleton.syncWith(pOther->_sfInternalSkeleton);
 
 
     if(FieldBits::NoField != (InternalChildrenFieldMask & whichField))

@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGBone.h"
+#include "OSGSkeleton.h"
+#include "OSGSkeletonBlendedGeometry.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,6 +77,139 @@ void Bone::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+
+Matrix Bone::getInternalRelativeTransformation(void)
+{
+	return _InternalRelativeTransformation;
+}
+
+Matrix Bone::getInternalAbsoluteTransformation(void)
+{
+	return _InternalAbsoluteTransformation;
+}
+
+Matrix Bone::getInternalDefaultRelativeTransformation(void)
+{
+	return _InternalDefaultRelativeTransformation;
+}
+
+Matrix Bone::getInternalDefaultAbsoluteTransformation(void)
+{
+	return _InternalDefaultAbsoluteTransformation;
+}
+
+Matrix Bone::getInternalRelativeDifferenceTransformation(void)
+{
+	Matrix m;
+	Vec3f DefaultTranslation(getDefaultTranslation());
+	Vec3f Translation(getTranslation());
+	if(getInternalParent() != NullFC)
+	{
+		m = getInternalParent()->getEndInternalRelativeDifferenceTransformation();
+		getInternalParent()->getInternalDefaultRelativeTransformation().mult(DefaultTranslation);
+		getInternalParent()->getInternalDefaultRelativeTransformation().mult(Translation);
+	}
+
+	Matrix Trans;
+	Trans.setTranslate(Translation-DefaultTranslation);
+
+	m.mult(Trans);
+	return m;
+}
+
+Matrix Bone::getInternalAbsoluteDifferenceTransformation(UInt32 BlendMode)
+{
+	Matrix m;
+
+	if(BlendMode == SkeletonBlendedGeometry::BLEND_SMOOTH)
+	{
+		//BLEND_SMOOTH
+		Vec3f DefaultTranslation(getDefaultTranslation());
+		Vec3f Translation(getTranslation());
+		if(getInternalParent() != NullFC)
+		{
+			m = getInternalParent()->getEndInternalAbsoluteDifferenceTransformation();
+			getInternalParent()->getInternalDefaultAbsoluteTransformation().mult(DefaultTranslation);
+			getInternalParent()->getInternalDefaultAbsoluteTransformation().mult(Translation);
+		}
+
+		Matrix Trans;
+		Trans.setTranslate(Translation-DefaultTranslation);
+
+		m.mult(Trans);
+	}
+	else
+	{
+		//BLEND_RIGID
+		m = _InternalAbsoluteDifferenceTransformation;
+	}
+
+
+	
+	return m;
+}
+
+Matrix Bone::getEndInternalRelativeDifferenceTransformation(void)
+{
+	//Dif(end) = Current * [Translation(z)*CurrentLength] * ~[Translation(z)*DefaultLength] * ~Default
+	
+	Matrix EndRelativeDifference;
+
+	//Set up operands
+	Matrix CurrentTransformation = getInternalRelativeTransformation();
+	
+	Matrix TranslationCurrent;
+	Vec3f CurrentLength(0.0f, 0.0f, getLength());
+	TranslationCurrent.setTranslate(CurrentLength);
+
+	Matrix TranslationDefault;
+	Vec3f DefaultLength(0.0f, 0.0f, getDefaultLength());
+	TranslationDefault.setTranslate(DefaultLength);
+	TranslationDefault.invert();
+
+	Matrix RelativeDefault = getInternalDefaultRelativeTransformation();
+	RelativeDefault.invert();
+
+	//Perform calculation
+	EndRelativeDifference = CurrentTransformation;
+	TranslationDefault.mult(RelativeDefault);
+	TranslationCurrent.mult(TranslationDefault);
+	EndRelativeDifference.mult(TranslationCurrent);
+
+	return EndRelativeDifference;
+}
+
+Matrix Bone::getEndInternalAbsoluteDifferenceTransformation(void)
+{
+	//Dif(end) = Current * [Translation(z)*CurrentLength] * ~[Translation(z)*DefaultLength] * ~Default
+	
+	Matrix EndAbsoluteDifference;
+
+	//Set up operands
+	Matrix CurrentTransformation = getInternalAbsoluteTransformation();
+	
+	Matrix TranslationCurrent;
+	Vec3f CurrentLength(0.0f, 0.0f, getLength());
+	TranslationCurrent.setTranslate(CurrentLength);
+
+	Matrix TranslationDefault;
+	Vec3f DefaultLength(0.0f, 0.0f, getDefaultLength());
+	TranslationDefault.setTranslate(DefaultLength);
+	TranslationDefault.invert();
+
+	Matrix AbsoluteDefault = getInternalDefaultAbsoluteTransformation();
+	AbsoluteDefault.invert();
+
+	//Perform calculation
+	EndAbsoluteDifference = CurrentTransformation;
+	TranslationDefault.mult(AbsoluteDefault);
+	TranslationCurrent.mult(TranslationDefault);
+	EndAbsoluteDifference.mult(TranslationCurrent);
+
+	return EndAbsoluteDifference;
+}
+
 
 void Bone::addChild(BonePtr TheBone)
 {
@@ -117,38 +252,48 @@ void Bone::removeChild(UInt32 Index)
     }
 }
 
+void Bone::setBindPosition()
+{
+	//Update Rotation, Translation, and Length Field Containers
+	beginEditCP(BonePtr(this), DefaultRotationFieldMask | DefaultTranslationFieldMask | DefaultLengthFieldMask);
+		setDefaultRotation(getRotation());
+		setDefaultTranslation(getTranslation());
+		setDefaultLength(getLength());
+	endEditCP(BonePtr(this), DefaultRotationFieldMask | DefaultTranslationFieldMask | DefaultLengthFieldMask);
+}
+
 void Bone::updateTransformation(void)
 {
+	//=====Update relative & absolute transformations=====//
 	//Calculate Relative Transformation
-	Matrix m; //a matrix called m
-	 Vec3f Translation;
+	Vec3f Translation;
 	if(getInternalParent() != NullFC)
 	{
 		Translation += Vec3f(0.0,0.0,getInternalParent()->getLength());
 	}
 	Translation += getTranslation();
-	m.setTransform(Translation , getRotation()); //calculates the the rotation of the bone
-	beginEditCP(BonePtr(this), Bone::InternalRelativeTransformationFieldMask);
-		setInternalRelativeTransformation(m); //field container
-	endEditCP(BonePtr(this), Bone::InternalRelativeTransformationFieldMask);
+	_InternalRelativeTransformation.setTransform(Translation , getRotation()); //calculates the the rotation of the bone
 
 	//Calculate Absolute Transformation
-	//Matrix AbsoluteTransformation(getInternalRelativeTransformation()); //a matrix called m
-	Matrix AbsoluteTransformation; //a matrix called m
 	if(getInternalParent() !=NullFC)
 	{
-		AbsoluteTransformation = getInternalParent()->getAbsoluteTransformation();
-		//AbsoluteTransformation.mult( getInternalParent()->getAbsoluteTransformation() );
-		AbsoluteTransformation.mult( getInternalRelativeTransformation() );
+		_InternalAbsoluteTransformation = getInternalParent()->getInternalAbsoluteTransformation();
+		_InternalAbsoluteTransformation.mult( getInternalRelativeTransformation() );
 	}
 	else
 	{
-		AbsoluteTransformation = getInternalRelativeTransformation();
+		_InternalAbsoluteTransformation = getInternalRelativeTransformation();
 	}
+	
+	_InternalRelativeDifferenceTransformation = getInternalDefaultRelativeTransformation();
+	_InternalRelativeDifferenceTransformation.invert();
+	_InternalRelativeDifferenceTransformation.multLeft(getInternalRelativeTransformation());
 
-	beginEditCP(BonePtr(this), Bone::InternalAbsoluteTransformationFieldMask);
-		setInternalAbsoluteTransformation(AbsoluteTransformation); //field container
-	endEditCP(BonePtr(this), Bone::InternalAbsoluteTransformationFieldMask);
+	
+	_InternalAbsoluteDifferenceTransformation = getInternalDefaultAbsoluteTransformation();
+	_InternalAbsoluteDifferenceTransformation.invert();
+	_InternalAbsoluteDifferenceTransformation.multLeft(getInternalAbsoluteTransformation());
+	
 
 	//Tell all children to update Transformations
 	for(UInt32 i(0) ; i<getNumChildren() ; ++i)
@@ -156,6 +301,12 @@ void Bone::updateTransformation(void)
 		getChild(i)->updateTransformation();
 	}
 	
+
+	//Tell skeleton that the bone has changed
+	if(getInternalSkeleton() != NullFC)
+	{
+		getInternalSkeleton()->Skeleton::skeletonUpdated();
+	}	
 		
 }
 
@@ -185,11 +336,45 @@ void Bone::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
+	if((whichField & DefaultRotationFieldMask) ||
+		(whichField & DefaultLengthFieldMask) ||
+		(whichField & DefaultTranslationFieldMask) ||
+		(whichField & InternalParentFieldMask))
+	{
+
+		//=====Set default internal relative & absolute transformations; no need to calculate them again=====//
+		//Calculate Default Relative Transformation
+		Vec3f DefaultTranslation;
+		if(getInternalParent() != NullFC)
+		{
+			DefaultTranslation += Vec3f(0.0,0.0,getInternalParent()->getDefaultLength());
+		}
+		DefaultTranslation += getTranslation();
+		_InternalDefaultRelativeTransformation.setTransform(DefaultTranslation , getDefaultRotation()); //calculates the the rotation of the bone
+		
+		//Calculate Default Absolute Transformation
+		if(getInternalParent() !=NullFC)
+		{
+			_InternalDefaultAbsoluteTransformation = getInternalParent()->getInternalDefaultAbsoluteTransformation();
+			_InternalDefaultAbsoluteTransformation.mult( getInternalDefaultRelativeTransformation() );
+		}
+		else
+		{
+			_InternalDefaultAbsoluteTransformation = getInternalDefaultRelativeTransformation();
+		}
+	}
+
 	if((whichField & RotationFieldMask) ||
 		(whichField & InternalParentFieldMask) ||
 		(whichField & LengthFieldMask) ||
-		(whichField & TranslationFieldMask))
+		(whichField & TranslationFieldMask) ||
+		(whichField & DefaultRotationFieldMask) ||
+		(whichField & DefaultLengthFieldMask) ||
+		(whichField & DefaultTranslationFieldMask) ||
+		(whichField & InternalSkeletonFieldMask))
 	{
+
+
 		updateTransformation();
 	}
 }

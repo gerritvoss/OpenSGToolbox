@@ -122,7 +122,7 @@ void SkeletonDrawable::drawBone (BonePtr TheBone, DrawActionBase *action)
 	
 
 		glPushMatrix();
-			glMultMatrixf(TheBone->getAbsoluteTransformation().getValues());
+			glMultMatrixf(TheBone->getInternalAbsoluteTransformation().getValues());
 			//Draw the bone as a line from it traslation point to the point
 			//in the direction of the bones rotation, that is the length of the bone
 			glBegin(GL_LINES);
@@ -242,10 +242,10 @@ void SkeletonDrawable::expandVolumeByBone (BonePtr TheBone, Volume &volume)
 	
 	Vec3f Translation, Scale, Zaxis,Zlength;
 	Quaternion Rotation, ScaleOrientation;
-	TheBone->getAbsoluteTransformation().getTransform(Translation, Rotation, Scale, ScaleOrientation);
+	TheBone->getInternalAbsoluteTransformation().getTransform(Translation, Rotation, Scale, ScaleOrientation);
 	
 	
-	Zaxis.setValues(TheBone->getAbsoluteTransformation()[2][0],TheBone->getAbsoluteTransformation()[2][1],TheBone->getAbsoluteTransformation()[2][2]);
+	Zaxis.setValues(TheBone->getInternalAbsoluteTransformation()[2][0],TheBone->getInternalAbsoluteTransformation()[2][1],TheBone->getInternalAbsoluteTransformation()[2][2]);
 	Translation+Zaxis;
 
 	volume.extendBy(Pnt3f(Translation));
