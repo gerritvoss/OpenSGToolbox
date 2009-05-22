@@ -89,7 +89,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
     Action::ResultE renderActionHandler( Action* action );
     Action::ResultE intersect( Action* action );
     /*! \}                                                                 */
-
+	
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -132,12 +132,18 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 	friend class SystemUpdateListener;
 
 	SystemUpdateListener _SystemUpdateListener;
+	
+    void sortParticles(DrawActionBase *action);
+
+	void handleParticleGenerated(const ParticleEvent& e);
+	void handleParticleKilled(const ParticleEvent& e);
+	void handleParticleStolen(const ParticleEvent& e);
+	
+	UInt32 comparisons;
 
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
-
-    void sortParticles(DrawActionBase *action);
   private:
 
     friend class FieldContainer;
@@ -148,6 +154,19 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const ParticleSystemCore &source);
+	
+	// used for sorting particles 
+	struct ParticleSortByViewPosition
+	{
+	public:
+		ParticleSystemPtr _System;
+		Pnt3f _CameraPos;
+		bool _SortByMinimum;
+		static UInt32 _numComparisons;
+		ParticleSortByViewPosition(ParticleSystemPtr TheSystem, Pnt3f TheCameraPos, bool SortByMinimum);
+		bool operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight);	
+		UInt32 getNumComparisons(void);
+	};
 };
 
 typedef ParticleSystemCore *ParticleSystemCoreP;

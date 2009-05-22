@@ -51,6 +51,8 @@
 #include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/OSGCamera.h>
+#include <OpenSG/OSGMatrix.h>
+#include <OpenSG/OSGQuaternion.h>
 
 #include "OSGParticleSystemCore.h"
 
@@ -98,7 +100,13 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
     if(getDrawer() != NullFC && getSystem() != NullFC)
     {
 		sortParticles(action);
-        getDrawer()->draw(action, getSystem(), getSort() );
+
+		TimeStamp theTime = getTimeStamp();
+
+		getDrawer()->draw(action, getSystem(), getSort() );
+		theTime = getTimeStamp() - theTime;
+		std::cout << "Draw Time = " <<  getTimeStampMsecs(theTime) << std::endl; // ticks converted to milliseconds
+      
     }
     else
     {
@@ -186,45 +194,78 @@ void ParticleSystemCore::adjustVolume(Volume & volume)
 
 void ParticleSystemCore::sortParticles(DrawActionBase *action)
 {
-	//TODO: Finish Implementation
     //This should be called if the ParticleSystem has
     //just finished an update
 	
-	//
-	Camera * theCamera = action->getCamera();
-	//extract camera position
-	Matrix cameraViewingMatrix /*= action->getCameraToWorld()*/;
-
-	theCamera->getProjection(cameraViewingMatrix,1,1);
-
-	
-	//get the particle system
-	ParticleSystemPtr sys = getSystem();
-	
-	// push current positions into vector
-	std::vector<Pnt3f> positions;
-	for(UInt32 i(0); i < sys->getNumParticles(); ++i)
-	{
-		positions.push_back(sys->getPosition(i));
+	//initialize _mfSort
+	static bool firstCall = true;
+	if(firstCall){
+		//add each particle from the particle system to _mfSort the first time through
+		firstCall = false;
+		ParticleSystemPtr sys = getSystem();
+		for(UInt32 i(0); i < sys->getNumParticles(); ++i)
+		{
+			_mfSort.push_back(i);
+		}
 	}
+
+	//extract camera position
+	Pnt3f CameraLocation(0.0,0.0,0.0);
+	action->getCameraToWorld().mult(CameraLocation);
 	
-	//
     if(getSystem() != NullFC && getSortingMode() != NONE)
     {
-        switch(getSortingMode())
+		// initialize sort funcion struct
+		ParticleSortByViewPosition TheSortFunction = ParticleSortByViewPosition(getSystem(),CameraLocation,true);
+        // get sorting order
+		switch(getSortingMode())
         {
-        case FRONT_TO_BACK:
-            //Use the FrontToBack Comparitor
-            break;
-        case BACK_TO_FRONT:
-            //Use the BackToFront Comparitor
-            break;
+			case FRONT_TO_BACK:
+				//Use the FrontToBack Comparitor, already initialized above
+				break;
+
+			case BACK_TO_FRONT:
+				//Use the BackToFront Comparitor, changes sorting order
+				TheSortFunction = ParticleSortByViewPosition(getSystem(),CameraLocation,false);
+				break;
         }
+		
+		// mfSort is sorted, keep track of sort time
+		TimeStamp theTime = getTimeStamp();
+		TheSortFunction._numComparisons = 0;
+		std::sort(_mfSort.begin(),_mfSort.end(),TheSortFunction);
+		theTime = getTimeStamp() - theTime;
 
-		// sort here w/ comparitor
-		// sorted order goes in _mfSort (MFUInt32) in OSGParticleSystemCoreBase
-
+		std::cout << "Sort Time = " <<  getTimeStampMsecs(theTime); // ticks converted to milliseconds
+		UInt32 comps = TheSortFunction._numComparisons;
+		std::cout << ", Num. Sorted = " << _mfSort.size() << ", Num Comps = " << comps;
+		std::cout << ", Comps/Particle = " << comps/_mfSort.size() << std::endl;
     }
+}
+UInt32 ParticleSystemCore::ParticleSortByViewPosition::_numComparisons=0;
+
+ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition(ParticleSystemPtr TheSystem, Pnt3f TheCameraPos, bool SortByMinimum) 
+	: _System(TheSystem), _CameraPos(TheCameraPos), _SortByMinimum(SortByMinimum)
+{
+}
+
+
+bool ParticleSystemCore::ParticleSortByViewPosition::operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight)
+{
+	
+	bool retFlag;
+	if(_SortByMinimum){
+		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
+			< ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
+
+	} else
+	{
+		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
+			> ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
+	}
+	++_numComparisons;
+	return retFlag;
+
 }
 
 /*-------------------------------------------------------------------------*\
@@ -290,14 +331,49 @@ void ParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSyste
 
 void ParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEvent& e)
 {
+	_Core->handleParticleGenerated(e);
 }
 
 void ParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEvent& e)
 {
+	_Core->handleParticleKilled(e);
 }
 
 void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEvent& e)
 {
+	_Core->handleParticleStolen(e);
+}
+
+// TODO: make these more efficient
+void ParticleSystemCore::handleParticleGenerated(const ParticleEvent& e)
+{
+	//add particle to _mfSort
+	_mfSort.addValue(e.getIndex());
+}
+
+void ParticleSystemCore::handleParticleKilled(const ParticleEvent& e)
+{
+	// remove highest indexed particle from _mfSort
+	for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
+	{
+		if((int)*theItor == _mfSort.size() - 1 ) 
+		{
+			_mfSort.erase(theItor);
+			break;
+		}
+	}	
+}
+
+void ParticleSystemCore::handleParticleStolen(const ParticleEvent& e)
+{
+	// remove particle from _mfSort (is this right? stolen particles are just removed from the system?)
+	for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
+	{
+		if((int)*theItor == _mfSort.size() - 1 ) 
+		{
+			_mfSort.erase(theItor);
+		}
+	}
 }
 
 /*------------------------------------------------------------------------*/

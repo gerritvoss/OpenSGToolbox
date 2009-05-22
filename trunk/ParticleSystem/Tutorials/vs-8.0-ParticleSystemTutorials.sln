@@ -40,6 +40,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "21Fireworks", "21Fireworks.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14ParticleSorting", "14ParticleSorting.vcproj", "{8640C8C1-71F1-4440-A223-186BCB862DD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -126,6 +128,10 @@ Global
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.Build.0 = Debug|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.ActiveCfg = Release|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.Build.0 = Release|Win32
+		{8640C8C1-71F1-4440-A223-186BCB862DD6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8640C8C1-71F1-4440-A223-186BCB862DD6}.Debug|Win32.Build.0 = Debug|Win32
+		{8640C8C1-71F1-4440-A223-186BCB862DD6}.Release|Win32.ActiveCfg = Release|Win32
+		{8640C8C1-71F1-4440-A223-186BCB862DD6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

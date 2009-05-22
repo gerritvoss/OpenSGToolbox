@@ -350,7 +350,7 @@ FunctionPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setMean(15.0f);
+      TheLifespanDistribution->setMean(30.0f);
       TheLifespanDistribution->setStandardDeviation(3.0);
     endEditCP(TheLifespanDistribution);
 	

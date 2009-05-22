@@ -187,9 +187,9 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,0.3f));
+		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,0.3f));
+		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,0.3f));
 		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSMaterialChunkChunk);
 
@@ -206,7 +206,7 @@ int main(int argc, char **argv)
 	{
 		ExampleParticleSystem->addParticle(Pnt3f(i,i,i),
 			Vec3f(0.0,0.0f,1.0f),
-			Color4f(1.0,0.0,0.0,1.0), 
+			Color4f(1.0,0.0,0.0,0.3), 
 			Vec3f(1.0,1.0,1.0), 
 			-1.0, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity

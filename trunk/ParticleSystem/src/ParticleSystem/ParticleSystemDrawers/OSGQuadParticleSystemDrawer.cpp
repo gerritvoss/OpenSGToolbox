@@ -79,27 +79,47 @@ void QuadParticleSystemDrawer::initMethod (void)
 
 Action::ResultE QuadParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
 {
+	bool isSorted(Sort.getSize() > 0);
+	UInt32 NumParticles;
+	if(isSorted)
+	{
+		NumParticles = Sort.getSize();
+	}
+	else
+	{
+		NumParticles = System->getNumParticles();
+	}
 	Pnt3f P1,P2,P3,P4;
+	UInt32 Index;
 
 glBegin(GL_QUADS);
-	for(UInt32 i(0); i<System->getNumParticles();++i)
+	for(UInt32 i(0); i<NumParticles;++i)
 	{
+		if(isSorted)
+		{
+			Index = Sort[i];
+		}
+		else
+		{
+			Index = i;
+		}
 	//Loop through all particles
 		//Get The Normal of the Particle
-		Vec3f Normal = getQuadNormal(action,System, i);
+		Vec3f Normal = getQuadNormal(action,System, Index);
 
 
 	    //Calculate the Binormal as the cross between Normal and Up
-	    Vec3f Binormal = getQuadUpDir(action,  System, i).cross(Normal);
+	    Vec3f Binormal = getQuadUpDir(action,  System, Index).cross(Normal);
 		
 		//Get the Up Direction of the Particle
 		Vec3f Up = Normal.cross(Binormal);
 
 		//Determine Local Space of the Particle
-		Pnt3f Position = System->getPosition(i);
+		//This is where error occurs
+		Pnt3f Position = System->getPosition(Index);
 
 		//Determine the Width and Height of the quad
-		Real32 Width = System->getSize(i).x()*getQuadSizeScaling().x(),Height =System->getSize(i).y()*getQuadSizeScaling().y();
+		Real32 Width = System->getSize(Index).x()*getQuadSizeScaling().x(),Height =System->getSize(Index).y()*getQuadSizeScaling().y();
 
 		//Calculate Quads positions
 		P1 = Position + (Width/2.0f)*Binormal + (Height/2.0f)*Up;
@@ -110,7 +130,7 @@ glBegin(GL_QUADS);
 	    //Draw the Quad
 		glNormal3fv(Normal.getValues());
 		
-		glColor4fv(System->getColor(i).getValuesRGBA());
+		glColor4fv(System->getColor(Index).getValuesRGBA());
 		glTexCoord2f(0.0, 0.0);
 		glVertex3fv(P1.getValues());
 		
