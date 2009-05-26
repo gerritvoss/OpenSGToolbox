@@ -279,6 +279,10 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     //Get wether or not the window is drawing a border
     virtual bool getDrawBorder(void) = 0;
 
+    virtual void setShowCursor(bool showCursor) = 0;
+
+    virtual bool getShowCursor(void) const = 0;
+
     //Set Display Callback Function
     virtual void setDisplayCallback(DisplayCallbackFunc Callback);
 

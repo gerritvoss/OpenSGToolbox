@@ -85,18 +85,33 @@ void Win32WindowEventProducer::WindowEventLoopThread(void* args)
 
     // Win32 Init
     memset(&wndClass, 0, sizeof(wndClass));
-    wndClass.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-    wndClass.lpfnWndProc = Win32WindowEventProducer::staticWndProc;
-    wndClass.hInstance = GetModuleHandle(NULL);
-    // doesn't compile?!? wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wndClass.lpszClassName = Arguments->_WindowName.c_str();
+    
+    wndClass.style		= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;		// Redraw On Move, And Own DC For Window
+	wndClass.lpfnWndProc		= (WNDPROC) Win32WindowEventProducer::staticWndProc;				// WndProc Handles Messages
+	wndClass.cbClsExtra		= 0;						// No Extra Window Data
+	wndClass.cbWndExtra		= 0;						// No Extra Window Data
+	wndClass.hInstance		= GetModuleHandle(NULL);					// Set The Instance
+	wndClass.hIcon		= LoadIcon(NULL, IDI_WINLOGO);			// Load The Default Icon
+	//wndClass.hCursor		= LoadCursor(NULL, IDC_ARROW);			// Load The Arrow Pointer
+	wndClass.hbrBackground	= NULL;						// No Background Required For GL
+	wndClass.lpszMenuName		= NULL;						// We Don't Want A Menu
+	wndClass.lpszClassName	= Arguments->_WindowName.c_str();
+
     if (!RegisterClass(&wndClass)) 
     {
+        MessageBox(NULL,"Failed To Register The Window Class.","ERROR",MB_OK|MB_ICONEXCLAMATION);
         return;
     }
 
+
+    RECT WindowRect;							// Grabs Rectangle Upper Left / Lower Right Values
+	WindowRect.left=(long)Arguments->_ScreenPosition.x();						// Set Left Value To 0
+	WindowRect.right=(long)Arguments->_Size.x();						// Set Right Value To Requested Width
+	WindowRect.top=(long)Arguments->_ScreenPosition.x();							// Set Top Value To 0
+	WindowRect.bottom=(long)Arguments->_Size.y();						// Set Bottom Value To Requested Height
+
     //Fullscreen
-    bool fullscreen(false);
+    bool fullscreen(Arguments->_EventProducer->getFullscreen());
     if(fullscreen)
     {
         DEVMODE dmScreenSettings;					// Device Mode
@@ -124,60 +139,46 @@ void Win32WindowEventProducer::WindowEventLoopThread(void* args)
 		}
 	}
 
-    RECT WindowRect;							// Grabs Rectangle Upper Left / Lower Right Values
-	WindowRect.left=(long)0;						// Set Left Value To 0
-	WindowRect.right=(long)Arguments->_Size.x();						// Set Right Value To Requested Width
-	WindowRect.top=(long)0;							// Set Top Value To 0
-	WindowRect.bottom=(long)Arguments->_Size.y();						// Set Bottom Value To Requested Height
-
     DWORD		dwExStyle;						// Window Extended Style
 	DWORD		dwStyle;						// Window Style
 
     if (fullscreen)								// Are We Still In Fullscreen Mode?
 	{
+	    WindowRect.left=(long)0;						// Set Left Value To 0
+	    WindowRect.top=(long)0;						// Set Top Value To 0
         dwExStyle=WS_EX_APPWINDOW;					// Window Extended Style
 		dwStyle=WS_POPUP;						// Windows Style
-		ShowCursor(FALSE);						// Hide Mouse Pointer
+        AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);		// Adjust Window To True Requested Size
 	}
 	else
 	{
         dwExStyle=WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;			// Window Extended Style
 		dwStyle=WS_OVERLAPPEDWINDOW;					// Windows Style
 	}
-    AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);		// Adjust Window To True Requested Size
+    
+    ShowCursor(Arguments->_EventProducer->getShowCursor());						// Show/Hide Mouse Pointer
 
 
 
     // Create a Window
-    if(fullscreen)
-    {
-        hwnd = CreateWindowEx(	dwExStyle,				// Extended Style For The Window
-					Arguments->_WindowName.c_str(),				// Class Name
-					Arguments->_WindowName.c_str(),					// Window Title
-					WS_CLIPSIBLINGS |			// Required Window Style
-					WS_CLIPCHILDREN |			// Required Window Style
-					dwStyle,				// Selected Window Style
-					0, 0,					// Window Position
-					WindowRect.right-WindowRect.left,	// Calculate Adjusted Window Width
-					WindowRect.bottom-WindowRect.top,	// Calculate Adjusted Window Height
-					NULL,					// No Parent Window
-					NULL,					// No Menu
-					wndClass.hInstance,				// Instance
-					NULL);					// Don't Pass Anything To WM_CREATE
+    hwnd = CreateWindowEx(	dwExStyle,				// Extended Style For The Window
+				Arguments->_WindowName.c_str(),				// Class Name
+				Arguments->_WindowName.c_str(),					// Window Title
+				WS_CLIPSIBLINGS |			// Required Window Style
+				WS_CLIPCHILDREN |			// Required Window Style
+				dwStyle,				// Selected Window Style
+				WindowRect.left, WindowRect.top,					// Window Position
+				WindowRect.right-WindowRect.left,	// Calculate Adjusted Window Width
+				WindowRect.bottom-WindowRect.top,	// Calculate Adjusted Window Height
+				NULL,					// No Parent Window
+				NULL,					// No Menu
+				wndClass.hInstance,				// Instance
+				NULL);					// Don't Pass Anything To WM_CREATE
 
-    }
-    else
+    if(!hwnd)
     {
-        hwnd = CreateWindow( Arguments->_WindowName.c_str(), Arguments->_WindowName.c_str(),
-                        WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-                        Arguments->_ScreenPosition.x(), 
-                        Arguments->_ScreenPosition.y(), 
-                        Arguments->_Size.x(), 
-                        Arguments->_Size.y(),
-                        NULL, 
-                        NULL, 
-                        GetModuleHandle(NULL), 
-                        0 );
+        MessageBox(NULL,"Window Creation Error.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+        return;
     }
 
     //Attach Window
@@ -193,8 +194,15 @@ void Win32WindowEventProducer::WindowEventLoopThread(void* args)
     
     //Open the Window and enter the main event loop
 	ShowWindow( hwnd, SW_SHOWNORMAL );
-	SetActiveWindow( hwnd );
+    SetForegroundWindow(hwnd);
+    SetFocus(hwnd);
+	//SetActiveWindow( hwnd );
 	
+    if(fullscreen)
+    {
+        Arguments->_EventProducer->internalReshape(Vec2f(WindowRect.right-WindowRect.left, WindowRect.bottom-WindowRect.top));
+    }
+
     MSG msg;
 	// main loop 
     while ( GetMessage(&msg, NULL, 0, 0) > 0 )
@@ -1458,6 +1466,18 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
     }
     return 0;
 }
+
+void Win32WindowEventProducer::setShowCursor(bool showCursor)
+{
+    _IsCursorShown = showCursor;
+    ShowCursor(_IsCursorShown);
+}
+
+bool Win32WindowEventProducer::getShowCursor(void) const
+{
+    return _IsCursorShown;
+}
+
 //Set the Window Position
 void Win32WindowEventProducer::setPosition(Pnt2f Pos)
 {
@@ -1635,14 +1655,16 @@ bool Win32WindowEventProducer::getDrawBorder(void)
 Win32WindowEventProducer::Win32WindowEventProducer(void) :
     Inherited(),
         _MouseOverWindow(false),
-        _IsFullscreen(false)
+        _IsFullscreen(false),
+        _IsCursorShown(true)
 {
 }
 
 Win32WindowEventProducer::Win32WindowEventProducer(const Win32WindowEventProducer &source) :
     Inherited(source),
         _MouseOverWindow(false),
-        _IsFullscreen(false)
+        _IsFullscreen(false),
+        _IsCursorShown(true)
 {
 }
 

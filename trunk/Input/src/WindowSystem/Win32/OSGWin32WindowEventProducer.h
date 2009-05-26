@@ -148,6 +148,10 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const;
+
+    virtual void setShowCursor(bool showCursor);
+
+    virtual bool getShowCursor(void) const;
 	
 	virtual UInt32 getKeyModifiers(void) const;
 	virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const;
@@ -226,6 +230,7 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     Pnt2f _PreviousWindowPosition;
     Vec2f _PreviousWindowSize;
     bool _IsFullscreen;
+    bool _IsCursorShown;
     /*==========================  PRIVATE  ================================*/
   private:
 

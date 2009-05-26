@@ -568,30 +568,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="X"
-					>
-				</Filter>
-				<Filter
-					Name="QT"
-					>
-				</Filter>
-				<Filter
-					Name="QT4"
-					>
-				</Filter>
-				<Filter
-					Name="CoreGL"
-					>
-				</Filter>
-				<Filter
-					Name="Carbon"
-					>
-				</Filter>
-				<Filter
-					Name="Cocoa"
-					>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Utils"

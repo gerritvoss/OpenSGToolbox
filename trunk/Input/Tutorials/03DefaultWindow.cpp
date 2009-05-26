@@ -254,6 +254,7 @@ int main(int argc, char **argv)
 	beginEditCP(TheWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 		TheWindowEventProducer->setUseCallbackForDraw(true);
 		TheWindowEventProducer->setUseCallbackForReshape(true);
+        //TheWindowEventProducer->setFullscreen(true);
 	endEditCP(TheWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
     
     TheWindowEventProducer->setDisplayCallback(display);
@@ -291,6 +292,7 @@ int main(int argc, char **argv)
 
     TheWindowEventProducer->openWindow(Pnt2s(0,0),
                         Vec2s(1280,1024),
+                        //Vec2f(1920,1200),
                         "Default Window");
 
     while(!ExitMainLoop)
