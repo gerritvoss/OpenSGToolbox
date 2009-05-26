@@ -478,10 +478,9 @@ void reshape(Vec2f Size)
 void setupBlendGeometry(void)
 {
     
-   osg::NodePtr BaseGeometryNode = NamedNodeFinder::find(BubbleBlendGeometryNode, "Base Geometry");
-   osg::NodePtr XDeformGeometryNode = NamedNodeFinder::find(BubbleBlendGeometryNode, "X Deform Geometry");
-   osg::NodePtr YDeformGeometryNode = NamedNodeFinder::find(BubbleBlendGeometryNode, "Y Deform Geometry");
-   osg::NodePtr ZDeformGeometryNode = NamedNodeFinder::find(BubbleBlendGeometryNode, "Z Deform Geometry");
+   osg::NodePtr BaseGeometryNode = NamedNodeFinder::find(BubbleBlendGeometryNode, "Base_Geometry");
+   osg::NodePtr BlendShape1Node = NamedNodeFinder::find(BubbleBlendGeometryNode, "Blend_Shape_1");
+   osg::NodePtr BlendShape2Node = NamedNodeFinder::find(BubbleBlendGeometryNode, "Blend_Shape_2");
 
    if(BaseGeometryNode == NullFC)
    {
@@ -489,36 +488,28 @@ void setupBlendGeometry(void)
       std::cout << "Are you using Data/BubbleBlendShape.osb" << std::endl;
       exit(0);
    }
-   if(XDeformGeometryNode == NullFC)
+   if(BlendShape1Node == NullFC)
    {
-      std::cout << "XDeformGeometryNode Not Found." << std::endl;
+      std::cout << "BlendShape1Node Not Found." << std::endl;
       std::cout << "Are you using Data/BubbleBlendShape.osb" << std::endl;
       exit(0);
    }
-   if(YDeformGeometryNode == NullFC)
+   if(BlendShape2Node == NullFC)
    {
-      std::cout << "YDeformGeometryNode Not Found." << std::endl;
-      std::cout << "Are you using Data/BubbleBlendShape.osb" << std::endl;
-      exit(0);
-   }
-   if(ZDeformGeometryNode == NullFC)
-   {
-      std::cout << "ZDeformGeometryNode Not Found." << std::endl;
+      std::cout << "BlendShape2Node Not Found." << std::endl;
       std::cout << "Are you using Data/BubbleBlendShape.osb" << std::endl;
       exit(0);
    }
 
    osg::GeometryPtr BaseGeometryCore= osg::Geometry::Ptr::dcast( BaseGeometryNode->getCore() );
    osg::GeometryPtr BaseGeometryCoreCopy= osg::Geometry::Ptr::dcast( deepClone(BaseGeometryCore, std::string("")) );
-   osg::GeometryPtr XDeformGeometryCore= osg::Geometry::Ptr::dcast( XDeformGeometryNode->getCore() );
-   osg::GeometryPtr YDeformGeometryCore= osg::Geometry::Ptr::dcast( YDeformGeometryNode->getCore() );
-   osg::GeometryPtr ZDeformGeometryCore= osg::Geometry::Ptr::dcast( ZDeformGeometryNode->getCore() );
+   osg::GeometryPtr BlendShape1GeoCore= osg::Geometry::Ptr::dcast( BlendShape1Node->getCore() );
+   osg::GeometryPtr BlendShape2GeoCore= osg::Geometry::Ptr::dcast( BlendShape2Node->getCore() );
 
    //Create the BlendGeometry Core
    TheBlendGeometry = osg::BlendGeometry::create(BaseGeometryCore);
-   TheBlendGeometry->addBlendGeometry(XDeformGeometryCore,0.0f);
-   TheBlendGeometry->addBlendGeometry(YDeformGeometryCore,0.0f);
-   TheBlendGeometry->addBlendGeometry(ZDeformGeometryCore,0.0f);
+   TheBlendGeometry->addBlendGeometry(BlendShape1GeoCore,0.0f);
+   TheBlendGeometry->addBlendGeometry(BlendShape2GeoCore,0.0f);
 
    NodePtr BlendGeometryNode = osg::Node::create();
    beginEditCP(BlendGeometryNode);

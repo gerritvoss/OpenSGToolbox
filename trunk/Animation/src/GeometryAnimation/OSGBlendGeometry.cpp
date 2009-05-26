@@ -440,6 +440,7 @@ void BlendGeometry::recalculateNormals(void)
 
    Real32 BlendAmount;
    UInt32 Index;
+
    for(UInt32 i=0 ; i<NumNormals ; ++i)
    {
       //Set the Normal to the base position
@@ -449,7 +450,7 @@ void BlendGeometry::recalculateNormals(void)
       {
          //Blend Each DiffSet that has a non-zero blending value
          BlendAmount = getBlendAmounts(j);
-         if(BlendAmount != 0.0)
+         if(BlendAmount != 0.0 && CurDiffSetIndicies[j] < getGeoNormalDifferenceSets()[j]->getIndices()->getSize())
          {
             //Blend each DiffSet that has an alternet Normal
             Index = getGeoNormalDifferenceSets()[j]->getIndices()->getValue(CurDiffSetIndicies[j]);
