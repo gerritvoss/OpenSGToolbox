@@ -97,7 +97,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
     virtual void        resize   (      size_t      newsize)       = 0;
     virtual void        shrink   (void                     )       = 0;
 
-    bool interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result);
+    bool interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result, UInt32 Index);
     
     virtual const osg::Field& getKeyValues(void) const = 0;
     

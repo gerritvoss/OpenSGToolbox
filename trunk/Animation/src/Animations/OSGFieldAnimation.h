@@ -83,6 +83,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimation : public FieldAnimationBase
 
 	void setAnimatedField(FieldContainerPtr TheContainer, const std::string& FieldName);
 	void setAnimatedField(FieldContainerPtr TheContainer, UInt32 FieldID);
+    
+	void setAnimatedMultiField(FieldContainerPtr TheContainer, const std::string& FieldName, UInt32 Index);
+	void setAnimatedMultiField(FieldContainerPtr TheContainer, UInt32 FieldID, UInt32 Index);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -105,6 +108,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimation : public FieldAnimationBase
     /*! \}                                                                 */
     
     virtual void internalUpdate(const Real32& t, const Real32 prev_t);
+
+    void updateAttachedContainer(std::string FieldName);
     /*==========================  PRIVATE  ================================*/
   private:
 

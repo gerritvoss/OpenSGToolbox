@@ -89,7 +89,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
                  const osg::UInt32& Cycling,
                  const osg::Real32& time,
                  const osg::Real32& prevTime,
-                 osg::Field& Result);
+                 osg::Field& Result,
+                 UInt32 Index = 0);
     
     virtual Real32 getLength(void) const;
 

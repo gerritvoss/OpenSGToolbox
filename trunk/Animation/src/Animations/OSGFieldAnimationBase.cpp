@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -75,6 +75,12 @@ const OSG::BitVector  FieldAnimationBase::ContainerFieldMask =
 const OSG::BitVector  FieldAnimationBase::FieldIdFieldMask = 
     (TypeTraits<BitVector>::One << FieldAnimationBase::FieldIdFieldId);
 
+const OSG::BitVector  FieldAnimationBase::FieldNameFieldMask = 
+    (TypeTraits<BitVector>::One << FieldAnimationBase::FieldNameFieldId);
+
+const OSG::BitVector  FieldAnimationBase::IndexFieldMask = 
+    (TypeTraits<BitVector>::One << FieldAnimationBase::IndexFieldId);
+
 const OSG::BitVector  FieldAnimationBase::InterpolationTypeFieldMask = 
     (TypeTraits<BitVector>::One << FieldAnimationBase::InterpolationTypeFieldId);
 
@@ -95,6 +101,12 @@ const OSG::BitVector FieldAnimationBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          FieldAnimationBase::_sfFieldId
+    
+*/
+/*! \var std::string     FieldAnimationBase::_sfFieldName
+    
+*/
+/*! \var Int64           FieldAnimationBase::_sfIndex
     
 */
 /*! \var UInt32          FieldAnimationBase::_sfInterpolationType
@@ -123,6 +135,16 @@ FieldDescription *FieldAnimationBase::_desc[] =
                      FieldIdFieldId, FieldIdFieldMask,
                      false,
                      (FieldAccessMethod) &FieldAnimationBase::getSFFieldId),
+    new FieldDescription(SFString::getClassType(), 
+                     "FieldName", 
+                     FieldNameFieldId, FieldNameFieldMask,
+                     false,
+                     (FieldAccessMethod) &FieldAnimationBase::getSFFieldName),
+    new FieldDescription(SFInt64::getClassType(), 
+                     "Index", 
+                     IndexFieldId, IndexFieldMask,
+                     false,
+                     (FieldAccessMethod) &FieldAnimationBase::getSFIndex),
     new FieldDescription(SFUInt32::getClassType(), 
                      "InterpolationType", 
                      InterpolationTypeFieldId, InterpolationTypeFieldMask,
@@ -211,6 +233,8 @@ FieldAnimationBase::FieldAnimationBase(void) :
     _sfAnimator               (), 
     _sfContainer              (), 
     _sfFieldId                (), 
+    _sfFieldName              (), 
+    _sfIndex                  (), 
     _sfInterpolationType      (UInt32(LINEAR_INTERPOLATION)), 
     _sfReplacementPolicy      (UInt32(OVERWRITE)), 
     Inherited() 
@@ -225,6 +249,8 @@ FieldAnimationBase::FieldAnimationBase(const FieldAnimationBase &source) :
     _sfAnimator               (source._sfAnimator               ), 
     _sfContainer              (source._sfContainer              ), 
     _sfFieldId                (source._sfFieldId                ), 
+    _sfFieldName              (source._sfFieldName              ), 
+    _sfIndex                  (source._sfIndex                  ), 
     _sfInterpolationType      (source._sfInterpolationType      ), 
     _sfReplacementPolicy      (source._sfReplacementPolicy      ), 
     Inherited                 (source)
@@ -256,6 +282,16 @@ UInt32 FieldAnimationBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (FieldIdFieldMask & whichField))
     {
         returnValue += _sfFieldId.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
+    {
+        returnValue += _sfFieldName.getBinSize();
+    }
+
+    if(FieldBits::NoField != (IndexFieldMask & whichField))
+    {
+        returnValue += _sfIndex.getBinSize();
     }
 
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
@@ -292,6 +328,16 @@ void FieldAnimationBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFieldId.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
+    {
+        _sfFieldName.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IndexFieldMask & whichField))
+    {
+        _sfIndex.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         _sfInterpolationType.copyToBin(pMem);
@@ -325,6 +371,16 @@ void FieldAnimationBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFieldId.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
+    {
+        _sfFieldName.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IndexFieldMask & whichField))
+    {
+        _sfIndex.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         _sfInterpolationType.copyFromBin(pMem);
@@ -354,6 +410,12 @@ void FieldAnimationBase::executeSyncImpl(      FieldAnimationBase *pOther,
     if(FieldBits::NoField != (FieldIdFieldMask & whichField))
         _sfFieldId.syncWith(pOther->_sfFieldId);
 
+    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
+        _sfFieldName.syncWith(pOther->_sfFieldName);
+
+    if(FieldBits::NoField != (IndexFieldMask & whichField))
+        _sfIndex.syncWith(pOther->_sfIndex);
+
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
         _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
 
@@ -378,6 +440,12 @@ void FieldAnimationBase::executeSyncImpl(      FieldAnimationBase *pOther,
 
     if(FieldBits::NoField != (FieldIdFieldMask & whichField))
         _sfFieldId.syncWith(pOther->_sfFieldId);
+
+    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
+        _sfFieldName.syncWith(pOther->_sfFieldName);
+
+    if(FieldBits::NoField != (IndexFieldMask & whichField))
+        _sfIndex.syncWith(pOther->_sfIndex);
 
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
         _sfInterpolationType.syncWith(pOther->_sfInterpolationType);

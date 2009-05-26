@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -117,6 +117,20 @@ SFUInt32 *FieldAnimationBase::getSFFieldId(void)
     return &_sfFieldId;
 }
 
+//! Get the FieldAnimation::_sfFieldName field.
+inline
+SFString *FieldAnimationBase::getSFFieldName(void)
+{
+    return &_sfFieldName;
+}
+
+//! Get the FieldAnimation::_sfIndex field.
+inline
+SFInt64 *FieldAnimationBase::getSFIndex(void)
+{
+    return &_sfIndex;
+}
+
 //! Get the FieldAnimation::_sfInterpolationType field.
 inline
 SFUInt32 *FieldAnimationBase::getSFInterpolationType(void)
@@ -193,6 +207,48 @@ inline
 void FieldAnimationBase::setFieldId(const UInt32 &value)
 {
     _sfFieldId.setValue(value);
+}
+
+//! Get the value of the FieldAnimation::_sfFieldName field.
+inline
+std::string &FieldAnimationBase::getFieldName(void)
+{
+    return _sfFieldName.getValue();
+}
+
+//! Get the value of the FieldAnimation::_sfFieldName field.
+inline
+const std::string &FieldAnimationBase::getFieldName(void) const
+{
+    return _sfFieldName.getValue();
+}
+
+//! Set the value of the FieldAnimation::_sfFieldName field.
+inline
+void FieldAnimationBase::setFieldName(const std::string &value)
+{
+    _sfFieldName.setValue(value);
+}
+
+//! Get the value of the FieldAnimation::_sfIndex field.
+inline
+Int64 &FieldAnimationBase::getIndex(void)
+{
+    return _sfIndex.getValue();
+}
+
+//! Get the value of the FieldAnimation::_sfIndex field.
+inline
+const Int64 &FieldAnimationBase::getIndex(void) const
+{
+    return _sfIndex.getValue();
+}
+
+//! Set the value of the FieldAnimation::_sfIndex field.
+inline
+void FieldAnimationBase::setIndex(const Int64 &value)
+{
+    _sfIndex.setValue(value);
 }
 
 //! Get the value of the FieldAnimation::_sfInterpolationType field.

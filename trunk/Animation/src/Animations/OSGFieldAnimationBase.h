@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -70,6 +70,8 @@
 #include "Animators/OSGAnimator.h" // Animator type
 #include <OpenSG/OSGFieldContainerFields.h> // Container type
 #include <OpenSG/OSGUInt32Fields.h> // FieldId type
+#include <OpenSG/OSGStringFields.h> // FieldName type
+#include <OpenSG/OSGInt64Fields.h> // Index type
 #include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
 #include <OpenSG/OSGUInt32Fields.h> // ReplacementPolicy type
 
@@ -98,7 +100,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
         AnimatorFieldId          = Inherited::NextFieldId,
         ContainerFieldId         = AnimatorFieldId          + 1,
         FieldIdFieldId           = ContainerFieldId         + 1,
-        InterpolationTypeFieldId = FieldIdFieldId           + 1,
+        FieldNameFieldId         = FieldIdFieldId           + 1,
+        IndexFieldId             = FieldNameFieldId         + 1,
+        InterpolationTypeFieldId = IndexFieldId             + 1,
         ReplacementPolicyFieldId = InterpolationTypeFieldId + 1,
         NextFieldId              = ReplacementPolicyFieldId + 1
     };
@@ -106,6 +110,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
     static const OSG::BitVector AnimatorFieldMask;
     static const OSG::BitVector ContainerFieldMask;
     static const OSG::BitVector FieldIdFieldMask;
+    static const OSG::BitVector FieldNameFieldMask;
+    static const OSG::BitVector IndexFieldMask;
     static const OSG::BitVector InterpolationTypeFieldMask;
     static const OSG::BitVector ReplacementPolicyFieldMask;
 
@@ -198,6 +204,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
     SFAnimatorPtr       _sfAnimator;
     SFFieldContainerPtr   _sfContainer;
     SFUInt32            _sfFieldId;
+    SFString            _sfFieldName;
+    SFInt64             _sfIndex;
     SFUInt32            _sfInterpolationType;
     SFUInt32            _sfReplacementPolicy;
 
@@ -223,11 +231,17 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
 
            SFFieldContainerPtr *getSFContainer      (void);
            SFUInt32            *getSFFieldId        (void);
+           SFString            *getSFFieldName      (void);
+           SFInt64             *getSFIndex          (void);
 
            FieldContainerPtr   &getContainer      (void);
      const FieldContainerPtr   &getContainer      (void) const;
            UInt32              &getFieldId        (void);
      const UInt32              &getFieldId        (void) const;
+           std::string         &getFieldName      (void);
+     const std::string         &getFieldName      (void) const;
+           Int64               &getIndex          (void);
+     const Int64               &getIndex          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -236,6 +250,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
 
      void setContainer      (const FieldContainerPtr &value);
      void setFieldId        (const UInt32 &value);
+     void setFieldName      (const std::string &value);
+     void setIndex          (const Int64 &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

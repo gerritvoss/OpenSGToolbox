@@ -79,60 +79,36 @@ Real32 FieldAnimation::getLength(void) const
 
 void FieldAnimation::setAnimatedField(FieldContainerPtr TheContainer, const std::string& FieldName)
 {
-	if(TheContainer != NullFC)
-	{
-		FieldDescription * f = TheContainer->getType().findFieldDescription(FieldName.c_str());
-		if( f == NULL )
-		{
-			SWARNING << "Could not find Field "<< FieldName << " in Field Container " << TheContainer->getTypeName()  << std::endl;
-			return;
-		}
-		else
-		{
-			setAnimatedField(TheContainer, f->getFieldId());
-		}
-	}
-	else
-	{
-         SWARNING << "There is no Field Container defined to Animate"  << std::endl;
-         return;
-	}
+    beginEditCP(FieldAnimationPtr(this), FieldNameFieldMask | ContainerFieldMask);
+        setFieldName( FieldName );
+        setContainer( TheContainer );
+    endEditCP(FieldAnimationPtr(this), FieldNameFieldMask | ContainerFieldMask);
 }
 
 void FieldAnimation::setAnimatedField(FieldContainerPtr TheContainer, UInt32 FieldID)
 {
-	if(TheContainer != NullFC)
-	{
-		  FieldDescription * f = TheContainer->getType().getFieldDescription(FieldID);
-		  if( f == NULL )
-		  {
-			SWARNING << "Could not find Field ID"<< FieldID << " in Field Container " << TheContainer->getTypeName()  << std::endl;
-			return;
-		  }
-		  else
-		  {
-			   Field& TheField(*TheContainer->getField( FieldID ));
+    beginEditCP(FieldAnimationPtr(this), FieldIdFieldMask | ContainerFieldMask);
+        setFieldId( FieldID );
+        setContainer( TheContainer );
+    endEditCP(FieldAnimationPtr(this), FieldIdFieldMask | ContainerFieldMask);
+}
+    
+void FieldAnimation::setAnimatedMultiField(FieldContainerPtr TheContainer, const std::string& FieldName, UInt32 Index)
+{
+    beginEditCP(FieldAnimationPtr(this), FieldNameFieldMask | ContainerFieldMask | IndexFieldMask);
+        setFieldName( FieldName );
+        setContainer( TheContainer );
+        setIndex( Index );
+    endEditCP(FieldAnimationPtr(this), FieldNameFieldMask | ContainerFieldMask | IndexFieldMask);
+}
 
-			   //Check if it's the right type
-			   if(TheField.getContentType() != getAnimator()->getDataType())
-			   {
-					 SWARNING << "The data type of the field connected to this animation, " << TheField.getContentType().getCName() << ", is not the same data type that the animator works on, " << getAnimator()->getDataType().getCName() << "."  << std::endl;
-					 return;
-			   }
-			   else
-			   {
-				  beginEditCP(FieldAnimationPtr(this), FieldIdFieldMask | ContainerFieldMask);
-					 setFieldId( f->getFieldId() );
-					 setContainer( TheContainer );
-				  endEditCP(FieldAnimationPtr(this), FieldIdFieldMask | ContainerFieldMask);
-			   }
-		  }
-	}
-	else
-	{
-         SWARNING << "There is no Field Container defined to Animate"  << std::endl;
-         return;
-	}
+void FieldAnimation::setAnimatedMultiField(FieldContainerPtr TheContainer, UInt32 FieldID, UInt32 Index)
+{
+    beginEditCP(FieldAnimationPtr(this), FieldIdFieldMask | ContainerFieldMask | IndexFieldMask);
+        setFieldId( FieldID );
+        setContainer( TheContainer );
+        setIndex( Index );
+    endEditCP(FieldAnimationPtr(this), FieldIdFieldMask | ContainerFieldMask | IndexFieldMask);
 }
 
 void FieldAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
@@ -160,7 +136,8 @@ void FieldAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
                getCycling(), 
                t,
                prev_t,
-               TheField) )
+               TheField,
+               getIndex()) )
    {
       osg::endEditCP(getContainer(), getContainer()->getType().getFieldDescription(getFieldId())->getFieldMask());
    }
@@ -199,6 +176,101 @@ FieldAnimation::~FieldAnimation(void)
 void FieldAnimation::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & FieldNameFieldMask)
+    {
+	    if(getContainer() != NullFC)
+	    {
+
+		    FieldDescription * f = getContainer()->getType().findFieldDescription(getFieldName().c_str());
+		    if( f == NULL )
+		    {
+			    SWARNING << "Could not find Field "<< getFieldName() << " in Field Container " << getContainer()->getTypeName()  << std::endl;
+			    return;
+		    }
+		    else
+		    {
+                beginEditCP(FieldAnimationPtr(this), FieldIdFieldMask);
+                    setFieldId(f->getFieldId());
+                endEditCP(FieldAnimationPtr(this), FieldIdFieldMask);
+		    }
+	    }
+	    else
+	    {
+             SWARNING << "There is no Field Container defined to Animate"  << std::endl;
+             return;
+	    }
+    }
+    else if((whichField & FieldIdFieldMask) ||
+            (whichField & ContainerFieldMask))
+    {
+	    if(getContainer() != NullFC)
+	    {
+		      FieldDescription * f = getContainer()->getType().getFieldDescription(getFieldId());
+		      if( f == NULL )
+		      {
+			    SWARNING << "Could not find Field ID"<< getFieldId() << " in Field Container " << getContainer()->getTypeName()  << std::endl;
+			    return;
+		      }
+		      else
+		      {
+			       Field& TheField(*getContainer()->getField( getFieldId() ));
+
+			       //Check if it's the right type
+			       if(TheField.getContentType() != getAnimator()->getDataType())
+			       {
+					     SWARNING << "The data type of the field connected to this animation, " << TheField.getContentType().getCName() << ", is not the same data type that the animator works on, " << getAnimator()->getDataType().getCName() << "."  << std::endl;
+					     return;
+			       }
+		      }
+	    }
+	    else
+	    {
+             SWARNING << "There is no Field Container defined to Animate"  << std::endl;
+             return;
+	    }
+    }
+    if(whichField & IndexFieldMask)
+    {
+	    if(getContainer() != NullFC)
+	    {
+		      FieldDescription * f = getContainer()->getType().getFieldDescription(getFieldId());
+		      if( f == NULL )
+		      {
+			    SWARNING << "Could not find Field ID"<< getFieldId() << " in Field Container " << getContainer()->getTypeName()  << std::endl;
+			    return;
+		      }
+		      else
+		      {
+			       Field& TheField(*getContainer()->getField( getFieldId() ));
+
+			       //Check if it's the right type
+			       if(TheField.getContentType() != getAnimator()->getDataType())
+			       {
+					     SWARNING << "The data type of the field connected to this animation, " << TheField.getContentType().getCName() << ", is not the same data type that the animator works on, " << getAnimator()->getDataType().getCName() << "."  << std::endl;
+					     return;
+			       }
+
+                   if( getIndex() >= 0 &&
+                       TheField.getCardinality() != FieldType::MULTI_FIELD &&
+                       getIndex() < TheField.getSize())
+                   {
+					     SWARNING << "If the Index for the field animation is > 0 then the animated field must be a multi field and the index must be less than the size of this field." << getAnimator()->getDataType().getCName() << "."  << std::endl;
+					     return;
+                   }
+                   else if( getIndex() < 0 &&
+                       TheField.getCardinality() != FieldType::SINGLE_FIELD)
+                   {
+					     SWARNING << "If the Index for the field animation is < 0 then the animated field must be a single field." << getAnimator()->getDataType().getCName()  << std::endl;
+                   }
+		      }
+	    }
+	    else
+	    {
+             SWARNING << "There is no Field Container defined to Animate"  << std::endl;
+             return;
+	    }
+    }
 }
 
 void FieldAnimation::dump(      UInt32    , 

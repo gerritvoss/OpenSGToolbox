@@ -76,7 +76,7 @@ void KeyframeSequence::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool KeyframeSequence::interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result)
+bool KeyframeSequence::interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result, UInt32 Index)
 {
     RawInterpFuncion InterpFunc(getRawInterpFuncion(Type));
     if(InterpFunc.empty())
@@ -91,7 +91,7 @@ bool KeyframeSequence::interpolate(const InterpolationType& Type, const Real32& 
         return false;
     }
 
-    return ReplaceFunc(InterpFunc, time, prevTime, ReplacePolicy, isCyclic, Result);
+    return ReplaceFunc(InterpFunc, time, prevTime, ReplacePolicy, isCyclic, Result, Index);
 }
 
 RawInterpFuncion KeyframeSequence::getRawInterpFuncion(const InterpolationType& Type)

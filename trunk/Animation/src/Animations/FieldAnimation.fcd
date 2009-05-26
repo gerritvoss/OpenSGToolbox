@@ -38,6 +38,22 @@ Field Animation Class.
 	>
 	</Field>
 	<Field
+		name="FieldName"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="Index"
+		type="Int64"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
 		name="InterpolationType"
 		type="UInt32"
 		cardinality="single"

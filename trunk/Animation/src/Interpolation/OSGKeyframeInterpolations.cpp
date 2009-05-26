@@ -97,33 +97,62 @@ bool osg::replacement<osg::SFMatrix>(RawInterpFuncion& InterpFunc,
                               const osg::Real32& prevtime,
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
-                              osg::Field& Result)
+                              osg::Field& Result,
+                              UInt32 Index)
 {
     SFMatrix Value(static_cast<osg::SFMatrix&>(Result).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-    switch(ReplacePolicy)
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
     {
-    case ADDITIVE_SINCE_LAST:
+        switch(ReplacePolicy)
         {
-            osg::SFMatrix PrevValue;
-            InterpFunc(prevtime, PrevValue,isCyclic);
-            osg::Matrix DeltaSinceLast(PrevValue.getValue());
-            DeltaSinceLast.invert();
-            DeltaSinceLast.mult(Value.getValue());
-            static_cast<osg::SFMatrix&>(Result).getValue().mult( DeltaSinceLast );
+        case ADDITIVE_SINCE_LAST:
+            {
+                osg::SFMatrix PrevValue;
+                InterpFunc(prevtime, PrevValue,isCyclic);
+                osg::Matrix DeltaSinceLast(PrevValue.getValue());
+                DeltaSinceLast.invert();
+                DeltaSinceLast.mult(Value.getValue());
+                static_cast<osg::SFMatrix&>(Result).getValue().mult( DeltaSinceLast );
+                break;
+            }
+        case ADDITIVE_ABSOLUTE:
+            static_cast<osg::SFMatrix&>(Result).getValue().mult( Value.getValue() );
             break;
-        }
-    case ADDITIVE_ABSOLUTE:
-        static_cast<osg::SFMatrix&>(Result).getValue().mult( Value.getValue() );
-        break;
-    case OVERWRITE:
-        static_cast<osg::SFMatrix&>(Result).setValue(Value.getValue());
-        break;
-    default:
-        SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
-        break;
-   }
+        case OVERWRITE:
+            static_cast<osg::SFMatrix&>(Result).setValue(Value.getValue());
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+       }
+    }
+    else
+    {
+        switch(ReplacePolicy)
+        {
+        case ADDITIVE_SINCE_LAST:
+            {
+                osg::SFMatrix PrevValue;
+                InterpFunc(prevtime, PrevValue,isCyclic);
+                osg::Matrix DeltaSinceLast(PrevValue.getValue());
+                DeltaSinceLast.invert();
+                DeltaSinceLast.mult(Value.getValue());
+                static_cast<osg::MFMatrix&>(Result)[Index].mult( DeltaSinceLast );
+                break;
+            }
+        case ADDITIVE_ABSOLUTE:
+            static_cast<osg::MFMatrix&>(Result)[Index].mult( Value.getValue() );
+            break;
+        case OVERWRITE:
+            static_cast<osg::MFMatrix&>(Result)[Index] = Value.getValue();
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+       }
+    }
    return ReturnValue;
 }
 
@@ -134,19 +163,75 @@ bool osg::replacement<osg::SFString>(RawInterpFuncion& InterpFunc,
                               const osg::Real32& prevtime,
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
-                              osg::Field& Result)
+                              osg::Field& Result,
+                              UInt32 Index)
 {
     SFString Value(static_cast<osg::SFString&>(Result).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-    switch(ReplacePolicy)
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
     {
-    case OVERWRITE:
-        static_cast<osg::SFString&>(Result).setValue(Value.getValue());
-        break;
-    default:
-        SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
-        break;
-   }
+        switch(ReplacePolicy)
+        {
+        case OVERWRITE:
+            static_cast<osg::SFString&>(Result).setValue(Value.getValue());
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+        }
+    }
+    else
+    {
+        switch(ReplacePolicy)
+        {
+        case OVERWRITE:
+            static_cast<osg::MFString&>(Result)[Index] = Value.getValue();
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+        }
+    }
    return ReturnValue;
+}
+
+//Boolean Replace
+template<>
+bool osg::replacement<osg::SFBool>(RawInterpFuncion& InterpFunc,
+                              const osg::Real32& time,
+                              const osg::Real32& prevtime,
+                              const osg::ValueReplacementPolicy& ReplacePolicy,
+                              bool isCyclic,
+                              osg::Field& Result,
+                              UInt32 Index)
+{
+    SFBool Value(static_cast<osg::SFBool&>(Result).getValue());
+    bool ReturnValue = InterpFunc(time, Value,isCyclic);
+
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        switch(ReplacePolicy)
+        {
+        case OVERWRITE:
+            static_cast<osg::SFBool&>(Result).setValue(Value.getValue());
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+        }
+    }
+    else
+    {
+        switch(ReplacePolicy)
+        {
+        case OVERWRITE:
+            static_cast<osg::MFBool&>(Result)[Index] = Value.getValue();
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+        }
+    }
+    return ReturnValue;
 }

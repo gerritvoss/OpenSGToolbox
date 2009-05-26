@@ -85,16 +85,12 @@ bool KeyframeAnimator::animate(const osg::InterpolationType& InterpType,
            const osg::UInt32& Cycling,
            const osg::Real32& time,
            const osg::Real32& prevTime,
-           osg::Field& Result)
+           osg::Field& Result,
+           UInt32 Index)
 {
-   if(Result.getCardinality() != osg::FieldType::SINGLE_FIELD)
-   {
-      SWARNING << "Result Field must be an SField NOT an MField." << std::endl;
-      return false;
-   }
    if( getKeyframeSequence() != NullFC)
    {
-      return getKeyframeSequence()->interpolate(InterpType, time, prevTime, ReplacementPolicy, Cycling, Result);
+      return getKeyframeSequence()->interpolate(InterpType, time, prevTime, ReplacementPolicy, Cycling, Result, Index);
    }
    else
    {

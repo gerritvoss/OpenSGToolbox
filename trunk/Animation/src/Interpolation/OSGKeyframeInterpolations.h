@@ -7,6 +7,7 @@
 #include <OpenSG/OSGMFBaseTypes.h>
 #include <OpenSG/OSGMFSysTypes.h>
 #include <OpenSG/OSGSFMathTypes.h>
+#include <OpenSG/OSGMFMathTypes.h>
 #include <OpenSG/OSGBaseTypes.h>
 
 #include <OpenSG/Toolbox/OSGInterpolations.h>
@@ -24,7 +25,8 @@ typedef boost::function<bool (RawInterpFuncion&,
                               const osg::Real32&,
                               const osg::ValueReplacementPolicy&,
                               bool,
-                              osg::Field&)> ReplacementFuncion;
+                              osg::Field&,
+                              UInt32)> ReplacementFuncion;
 
 bool OSG_ANIMATIONLIB_DLLMAPPING getInterpolationIndexes(const osg::MFReal32& Keys, const osg::Real32& time, osg::UInt32& LastKeyframeIndex, osg::UInt32& NextKeyframeIndex, osg::Real32& t, bool isCyclic=false);
 
@@ -37,32 +39,60 @@ bool replacement(RawInterpFuncion& InterpFunc,
                               const osg::Real32& prevtime,
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
-                              osg::Field& Result)
+                              osg::Field& Result,
+                              UInt32 Index)
 {
-    SFieldTypeT Value(static_cast<SFieldTypeT&>(Result).getValue());
+    SFieldTypeT Value;
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-    switch(ReplacePolicy)
-    {
-    case ADDITIVE_SINCE_LAST:
+   if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+   {
+        switch(ReplacePolicy)
         {
-            SFieldTypeT PrevValue;
-            InterpFunc(prevtime, PrevValue,isCyclic);
-            static_cast<SFieldTypeT&>(Result).setValue(static_cast<SFieldTypeT&>(Result).getValue() + (Value.getValue() - PrevValue.getValue()));
+        case ADDITIVE_SINCE_LAST:
+            {
+                SFieldTypeT PrevValue;
+                InterpFunc(prevtime, PrevValue,isCyclic);
+                static_cast<SFieldTypeT&>(Result).setValue(static_cast<SFieldTypeT&>(Result).getValue() + (Value.getValue() - PrevValue.getValue()));
+                break;
+            }
+        case ADDITIVE_ABSOLUTE:
+            static_cast<SFieldTypeT&>(Result).setValue(static_cast<SFieldTypeT&>(Result).getValue() + Value.getValue());
             break;
-        }
-    case ADDITIVE_ABSOLUTE:
-        static_cast<SFieldTypeT&>(Result).setValue(static_cast<SFieldTypeT&>(Result).getValue() + Value.getValue());
-        break;
-    case OVERWRITE:
-        static_cast<SFieldTypeT&>(Result).setValue(Value.getValue());
-        break;
-    default:
-        SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
-        break;
+        case OVERWRITE:
+            static_cast<SFieldTypeT&>(Result).setValue(Value.getValue());
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+       }
    }
-   return ReturnValue;
+   else
+   {
+
+        switch(ReplacePolicy)
+        {
+        case ADDITIVE_SINCE_LAST:
+            {
+                SFieldTypeT PrevValue;
+                InterpFunc(prevtime, PrevValue,isCyclic);
+                static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] + (Value.getValue() - PrevValue.getValue()), Index;
+                break;
+            }
+        case ADDITIVE_ABSOLUTE:
+            static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] + Value.getValue();
+            break;
+        case OVERWRITE:
+            static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] = Value.getValue();
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+       }
+   }
+    return ReturnValue;
 }
+
 //Matrix Replace
 template<>
 bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFMatrix>(RawInterpFuncion& InterpFunc,
@@ -70,7 +100,8 @@ bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFMatrix>(RawInterpFuncion& InterpF
                               const osg::Real32& prevtime,
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
-                              osg::Field& Result);
+                              osg::Field& Result,
+                              UInt32 Index);
 
 //String Replace
 template<>
@@ -79,7 +110,18 @@ bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFString>(RawInterpFuncion& InterpF
                               const osg::Real32& prevtime,
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
-                              osg::Field& Result);
+                              osg::Field& Result,
+                              UInt32 Index);
+
+//Boolean Replace
+template<>
+bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFBool>(RawInterpFuncion& InterpFunc,
+                              const osg::Real32& time,
+                              const osg::Real32& prevtime,
+                              const osg::ValueReplacementPolicy& ReplacePolicy,
+                              bool isCyclic,
+                              osg::Field& Result,
+                              UInt32 Index);
 
 //Generic Step
 template<class MFieldTypeT,class SFieldTypeT>

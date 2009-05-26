@@ -210,14 +210,6 @@
 				RelativePath=".\04ShaderAnimation.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\04ShaderAnimation.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\resource.h"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>
