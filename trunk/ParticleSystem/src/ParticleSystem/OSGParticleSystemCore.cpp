@@ -235,7 +235,7 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
 		TheSortFunction._numComparisons = 0;
 		TimeStamp theTime = getTimeStamp();
 		//std::sort(_mfSort.begin(),_mfSort.end(),TheSortFunction);
-		smoothsort(_mfSort.begin(),_mfSort.size(),TheSortFunction);
+		std::sort(_mfSort.begin(),_mfSort.end(),TheSortFunction);
 		theTime = getTimeStamp() - theTime;
 		//std::cout << "Sort Time = " <<  getTimeStampMsecs(theTime); // ticks converted to milliseconds
 		//std::cout << ", Num. Sorted = " << _mfSort.size() << ", Num Comps = " << TheSortFunction._numComparisons;
@@ -243,7 +243,7 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
 		//for(UInt32 i(0); i < _mfSort.size(); i++)
 		//	std::cout << _mfSort[i] << ", ";
 
-		std::vector<Int32> TempVec;
+		/*std::vector<Int32> TempVec;
 		for(Int32 i(0) ; i<10 ; ++i)
 		{
 			if(i%2 ==0)
@@ -258,7 +258,7 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
 		smoothsort(TempVec.begin(), TempVec.size(), TempComparitor());
 		for(UInt32 i(0); i < TempVec.size(); i++)
 			std::cout << TempVec[i] << ", ";
-		std::cout << std::endl;
+		std::cout << std::endl;*/
     }
 }
 UInt32 ParticleSystemCore::ParticleSortByViewPosition::_numComparisons=0;
