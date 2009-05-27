@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
+#include <iterator>
 
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
@@ -231,15 +232,33 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
         }
 		
 		// mfSort is sorted, keep track of sort time
-		TimeStamp theTime = getTimeStamp();
 		TheSortFunction._numComparisons = 0;
-		std::sort(_mfSort.begin(),_mfSort.end(),TheSortFunction);
+		TimeStamp theTime = getTimeStamp();
+		//std::sort(_mfSort.begin(),_mfSort.end(),TheSortFunction);
+		smoothsort(_mfSort.begin(),_mfSort.size(),TheSortFunction);
 		theTime = getTimeStamp() - theTime;
+		//std::cout << "Sort Time = " <<  getTimeStampMsecs(theTime); // ticks converted to milliseconds
+		//std::cout << ", Num. Sorted = " << _mfSort.size() << ", Num Comps = " << TheSortFunction._numComparisons;
+		//std::cout << ", Comps/Particle = " << TheSortFunction._numComparisons/_mfSort.size() << std::endl;
+		//for(UInt32 i(0); i < _mfSort.size(); i++)
+		//	std::cout << _mfSort[i] << ", ";
 
-		std::cout << "Sort Time = " <<  getTimeStampMsecs(theTime); // ticks converted to milliseconds
-		UInt32 comps = TheSortFunction._numComparisons;
-		std::cout << ", Num. Sorted = " << _mfSort.size() << ", Num Comps = " << comps;
-		std::cout << ", Comps/Particle = " << comps/_mfSort.size() << std::endl;
+		std::vector<Int32> TempVec;
+		for(Int32 i(0) ; i<10 ; ++i)
+		{
+			if(i%2 ==0)
+			{
+				TempVec.push_back(-i);
+			}
+			else
+			{
+				TempVec.push_back(i);
+			}
+		}
+		smoothsort(TempVec.begin(), TempVec.size(), TempComparitor());
+		for(UInt32 i(0); i < TempVec.size(); i++)
+			std::cout << TempVec[i] << ", ";
+		std::cout << std::endl;
     }
 }
 UInt32 ParticleSystemCore::ParticleSortByViewPosition::_numComparisons=0;
@@ -249,24 +268,28 @@ ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition(Parti
 {
 }
 
+bool ParticleSystemCore::TempComparitor::operator()(Int32 ParticleIndexLeft, Int32 ParticleIndexRight)
+{
+	return ParticleIndexLeft<ParticleIndexRight;
+}
 
 bool ParticleSystemCore::ParticleSortByViewPosition::operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight)
 {
-	
 	bool retFlag;
+	// relative distances squared are compared
 	if(_SortByMinimum){
 		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
-			< ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
+			>= ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
 
 	} else
 	{
 		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
-			> ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
+			<= ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
 	}
 	++_numComparisons;
 	return retFlag;
-
 }
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

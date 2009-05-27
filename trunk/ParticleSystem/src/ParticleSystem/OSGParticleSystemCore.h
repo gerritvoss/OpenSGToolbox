@@ -165,9 +165,20 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 		static UInt32 _numComparisons;
 		ParticleSortByViewPosition(ParticleSystemPtr TheSystem, Pnt3f TheCameraPos, bool SortByMinimum);
 		bool operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight);	
-		UInt32 getNumComparisons(void);
 	};
+
+	struct TempComparitor
+	{
+	public:
+		bool operator()(Int32 ParticleIndexLeft, Int32 ParticleIndexRight);	
+	};
+
+
 };
+
+
+template <class RandomAccessIterator, class Compare>
+void insertionSort(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
 
 typedef ParticleSystemCore *ParticleSystemCoreP;
 
