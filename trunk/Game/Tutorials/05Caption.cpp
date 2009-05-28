@@ -376,7 +376,7 @@ int main(int argc, char **argv)
         TutorialSound->setFile(Path("./Data/captionSoundFile.ogg"));
         TutorialSound->setVolume(1.0);
         TutorialSound->setStreaming(true);
-        TutorialSound->setLooping(1);
+        TutorialSound->setLooping(0);
     endEditCP(TutorialSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
 
     // Create the Caption

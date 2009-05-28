@@ -87,6 +87,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05Caption", "05Caption.vcpr
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06Dialog", "06Dialog.vcproj", "{18346695-D85A-4078-9E1A-AF1BDECF4059}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -145,6 +151,10 @@ Global
 		{9BDBFDBF-50DC-4D5F-9605-6A0962C6B3F4}.Debug|Win32.Build.0 = Debug|Win32
 		{9BDBFDBF-50DC-4D5F-9605-6A0962C6B3F4}.Release|Win32.ActiveCfg = Release|Win32
 		{9BDBFDBF-50DC-4D5F-9605-6A0962C6B3F4}.Release|Win32.Build.0 = Release|Win32
+		{18346695-D85A-4078-9E1A-AF1BDECF4059}.Debug|Win32.ActiveCfg = Debug|Win32
+		{18346695-D85A-4078-9E1A-AF1BDECF4059}.Debug|Win32.Build.0 = Debug|Win32
+		{18346695-D85A-4078-9E1A-AF1BDECF4059}.Release|Win32.ActiveCfg = Release|Win32
+		{18346695-D85A-4078-9E1A-AF1BDECF4059}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

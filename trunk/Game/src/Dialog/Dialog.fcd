@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Dialog"
+	parent="AttachmentContainer"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Dialog.
+	
+	<Field
+		name="Response"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="ResponsePresentationDelay"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="Interactive"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="Responses"
+		type="DialogPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="DialogSound"
+		type="SoundPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="OpenSG/Sound/OSGSoundFields.h"
+	>
+	</Field>
+	
+	<Field
+		name="ParentDialogHierachy"
+		type="DialogHierachyPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+</FieldContainer>

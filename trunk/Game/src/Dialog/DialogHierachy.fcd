@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DialogHierachy"
+	parent="AttachmentContainer"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Dialog.
+	
+	<Field
+		name="RootDialog"
+		type="DialogPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="CurrentDialog"
+		type="DialogPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="CurrentDialogResponses"
+		type="DialogPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+</FieldContainer>
