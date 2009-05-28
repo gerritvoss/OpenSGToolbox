@@ -79,8 +79,8 @@ const OSG::BitVector  DialogBase::ResponsesFieldMask =
 const OSG::BitVector  DialogBase::DialogSoundFieldMask = 
     (TypeTraits<BitVector>::One << DialogBase::DialogSoundFieldId);
 
-const OSG::BitVector  DialogBase::ParentDialogHierachyFieldMask = 
-    (TypeTraits<BitVector>::One << DialogBase::ParentDialogHierachyFieldId);
+const OSG::BitVector  DialogBase::ParentDialogHierarchyFieldMask = 
+    (TypeTraits<BitVector>::One << DialogBase::ParentDialogHierarchyFieldId);
 
 const OSG::BitVector DialogBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -104,7 +104,7 @@ const OSG::BitVector DialogBase::MTInfluenceMask =
 /*! \var SoundPtr        DialogBase::_sfDialogSound
     
 */
-/*! \var DialogHierachyPtr DialogBase::_sfParentDialogHierachy
+/*! \var DialogHierarchyPtr DialogBase::_sfParentDialogHierarchy
     
 */
 
@@ -137,11 +137,11 @@ FieldDescription *DialogBase::_desc[] =
                      DialogSoundFieldId, DialogSoundFieldMask,
                      false,
                      (FieldAccessMethod) &DialogBase::getSFDialogSound),
-    new FieldDescription(SFDialogHierachyPtr::getClassType(), 
-                     "ParentDialogHierachy", 
-                     ParentDialogHierachyFieldId, ParentDialogHierachyFieldMask,
+    new FieldDescription(SFDialogHierarchyPtr::getClassType(), 
+                     "ParentDialogHierarchy", 
+                     ParentDialogHierarchyFieldId, ParentDialogHierarchyFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogBase::getSFParentDialogHierachy)
+                     (FieldAccessMethod) &DialogBase::getSFParentDialogHierarchy)
 };
 
 
@@ -223,7 +223,7 @@ DialogBase::DialogBase(void) :
     _sfInteractive            (), 
     _mfResponses              (), 
     _sfDialogSound            (), 
-    _sfParentDialogHierachy   (), 
+    _sfParentDialogHierarchy   (), 
     Inherited() 
 {
 }
@@ -238,7 +238,7 @@ DialogBase::DialogBase(const DialogBase &source) :
     _sfInteractive            (source._sfInteractive            ), 
     _mfResponses              (source._mfResponses              ), 
     _sfDialogSound            (source._sfDialogSound            ), 
-    _sfParentDialogHierachy   (source._sfParentDialogHierachy   ), 
+    _sfParentDialogHierarchy   (source._sfParentDialogHierarchy   ), 
     Inherited                 (source)
 {
 }
@@ -280,9 +280,9 @@ UInt32 DialogBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDialogSound.getBinSize();
     }
 
-    if(FieldBits::NoField != (ParentDialogHierachyFieldMask & whichField))
+    if(FieldBits::NoField != (ParentDialogHierarchyFieldMask & whichField))
     {
-        returnValue += _sfParentDialogHierachy.getBinSize();
+        returnValue += _sfParentDialogHierarchy.getBinSize();
     }
 
 
@@ -319,9 +319,9 @@ void DialogBase::copyToBin(      BinaryDataHandler &pMem,
         _sfDialogSound.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ParentDialogHierachyFieldMask & whichField))
+    if(FieldBits::NoField != (ParentDialogHierarchyFieldMask & whichField))
     {
-        _sfParentDialogHierachy.copyToBin(pMem);
+        _sfParentDialogHierarchy.copyToBin(pMem);
     }
 
 
@@ -357,9 +357,9 @@ void DialogBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDialogSound.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ParentDialogHierachyFieldMask & whichField))
+    if(FieldBits::NoField != (ParentDialogHierarchyFieldMask & whichField))
     {
-        _sfParentDialogHierachy.copyFromBin(pMem);
+        _sfParentDialogHierarchy.copyFromBin(pMem);
     }
 
 
@@ -387,8 +387,8 @@ void DialogBase::executeSyncImpl(      DialogBase *pOther,
     if(FieldBits::NoField != (DialogSoundFieldMask & whichField))
         _sfDialogSound.syncWith(pOther->_sfDialogSound);
 
-    if(FieldBits::NoField != (ParentDialogHierachyFieldMask & whichField))
-        _sfParentDialogHierachy.syncWith(pOther->_sfParentDialogHierachy);
+    if(FieldBits::NoField != (ParentDialogHierarchyFieldMask & whichField))
+        _sfParentDialogHierarchy.syncWith(pOther->_sfParentDialogHierarchy);
 
 
 }
@@ -412,8 +412,8 @@ void DialogBase::executeSyncImpl(      DialogBase *pOther,
     if(FieldBits::NoField != (DialogSoundFieldMask & whichField))
         _sfDialogSound.syncWith(pOther->_sfDialogSound);
 
-    if(FieldBits::NoField != (ParentDialogHierachyFieldMask & whichField))
-        _sfParentDialogHierachy.syncWith(pOther->_sfParentDialogHierachy);
+    if(FieldBits::NoField != (ParentDialogHierarchyFieldMask & whichField))
+        _sfParentDialogHierarchy.syncWith(pOther->_sfParentDialogHierarchy);
 
 
     if(FieldBits::NoField != (ResponsesFieldMask & whichField))

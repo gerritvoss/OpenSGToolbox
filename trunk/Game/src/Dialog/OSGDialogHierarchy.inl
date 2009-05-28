@@ -42,11 +42,11 @@
 
 OSG_BEGIN_NAMESPACE
 inline
-DialogHierachy::DialogHierachyListener::DialogHierachyListener(DialogHierachyPtr TheDialogHierachy) :
-_DialogHierachy(TheDialogHierachy)
+DialogHierarchy::DialogHierarchyListener::DialogHierarchyListener(DialogHierarchyPtr TheDialogHierarchy) :
+_DialogHierarchy(TheDialogHierarchy)
 {
 }
 OSG_END_NAMESPACE
 
-#define OSGDIALOGHIERACHY_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGDIALOGHIERARCHY_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

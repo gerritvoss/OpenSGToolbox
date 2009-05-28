@@ -36,30 +36,30 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDIALOGHIERACHY_H_
-#define _OSGDIALOGHIERACHY_H_
+#ifndef _OSGDIALOGHIERARCHY_H_
+#define _OSGDIALOGHIERARCHY_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDialogHierachyBase.h"
+#include "OSGDialogHierarchyBase.h"
 #include "OSGDialog.h"
 #include "Event/OSGDialogListener.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DialogHierachy class. See \ref 
-           PageGameDialogHierachy for a description.
+/*! \brief DialogHierarchy class. See \ref 
+           PageGameDialogHierarchy for a description.
 */
 
-class OSG_GAMELIB_DLLMAPPING DialogHierachy : public DialogHierachyBase
+class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
 {
   private:
 
-    typedef DialogHierachyBase Inherited;
+    typedef DialogHierarchyBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -88,12 +88,12 @@ class OSG_GAMELIB_DLLMAPPING DialogHierachy : public DialogHierachyBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in DialogHierachyBase.
+    // Variables should all be in DialogHierarchyBase.
 
-    class DialogHierachyListener : public DialogListener
+    class DialogHierarchyListener : public DialogListener
     {
 	public :
-		DialogHierachyListener(DialogHierachyPtr TheDialogHierachy);
+		DialogHierarchyListener(DialogHierarchyPtr TheDialogHierarchy);
 		
         virtual void started(const DialogEvent& e);
         virtual void ended(const DialogEvent& e);
@@ -103,24 +103,24 @@ class OSG_GAMELIB_DLLMAPPING DialogHierachy : public DialogHierachyBase
 
 	protected :
 
-        DialogHierachyPtr _DialogHierachy;
+        DialogHierarchyPtr _DialogHierarchy;
 	};
 
-    DialogHierachyListener _DialogHierachyListener;
+    DialogHierarchyListener _DialogHierarchyListener;
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DialogHierachy(void);
-    DialogHierachy(const DialogHierachy &source);
+    DialogHierarchy(void);
+    DialogHierarchy(const DialogHierarchy &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogHierachy(void); 
+    virtual ~DialogHierarchy(void); 
 
     /*! \}                                                                 */
     
@@ -128,22 +128,22 @@ class OSG_GAMELIB_DLLMAPPING DialogHierachy : public DialogHierachyBase
   private:
 
     friend class FieldContainer;
-    friend class DialogHierachyBase;
+    friend class DialogHierarchyBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const DialogHierachy &source);
+    void operator =(const DialogHierarchy &source);
 };
 
-typedef DialogHierachy *DialogHierachyP;
+typedef DialogHierarchy *DialogHierarchyP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDialogHierachyBase.inl"
-#include "OSGDialogHierachy.inl"
+#include "OSGDialogHierarchyBase.inl"
+#include "OSGDialogHierarchy.inl"
 
-#define OSGDIALOGHIERACHY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDIALOGHIERARCHY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDIALOGHIERACHY_H_ */
+#endif /* _OSGDIALOGHIERARCHY_H_ */

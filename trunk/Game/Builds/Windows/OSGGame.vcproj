@@ -762,31 +762,31 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Dialog\OSGDialogHierachy.cpp"
+					RelativePath="..\..\src\Dialog\OSGDialogHierarchy.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Dialog\OSGDialogHierachy.h"
+					RelativePath="..\..\src\Dialog\OSGDialogHierarchy.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Dialog\OSGDialogHierachy.inl"
+					RelativePath="..\..\src\Dialog\OSGDialogHierarchy.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Dialog\OSGDialogHierachyBase.cpp"
+					RelativePath="..\..\src\Dialog\OSGDialogHierarchyBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Dialog\OSGDialogHierachyBase.h"
+					RelativePath="..\..\src\Dialog\OSGDialogHierarchyBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Dialog\OSGDialogHierachyBase.inl"
+					RelativePath="..\..\src\Dialog\OSGDialogHierarchyBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Dialog\OSGDialogHierachyFields.h"
+					RelativePath="..\..\src\Dialog\OSGDialogHierarchyFields.h"
 					>
 				</File>
 				<Filter

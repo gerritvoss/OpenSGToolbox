@@ -72,7 +72,7 @@
 #include <OpenSG/OSGBoolFields.h> // Interactive type
 #include "OSGDialogFields.h" // Responses type
 #include <OpenSG/Sound/OSGSoundFields.h> // DialogSound type
-#include "OSGDialogHierachyFields.h" // ParentDialogHierachy type
+#include "OSGDialogHierarchyFields.h" // ParentDialogHierarchy type
 
 #include "OSGDialogFields.h"
 
@@ -101,8 +101,8 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
         InteractiveFieldId               = ResponsePresentationDelayFieldId + 1,
         ResponsesFieldId                 = InteractiveFieldId               + 1,
         DialogSoundFieldId               = ResponsesFieldId                 + 1,
-        ParentDialogHierachyFieldId      = DialogSoundFieldId               + 1,
-        NextFieldId                      = ParentDialogHierachyFieldId      + 1
+        ParentDialogHierarchyFieldId      = DialogSoundFieldId               + 1,
+        NextFieldId                      = ParentDialogHierarchyFieldId      + 1
     };
 
     static const OSG::BitVector ResponseFieldMask;
@@ -110,7 +110,7 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
     static const OSG::BitVector InteractiveFieldMask;
     static const OSG::BitVector ResponsesFieldMask;
     static const OSG::BitVector DialogSoundFieldMask;
-    static const OSG::BitVector ParentDialogHierachyFieldMask;
+    static const OSG::BitVector ParentDialogHierarchyFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -142,7 +142,7 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
            SFBool              *getSFInteractive    (void);
            MFDialogPtr         *getMFResponses      (void);
            SFSoundPtr          *getSFDialogSound    (void);
-           SFDialogHierachyPtr *getSFParentDialogHierachy(void);
+           SFDialogHierarchyPtr *getSFParentDialogHierarchy(void);
 
            std::string         &getResponse       (void);
      const std::string         &getResponse       (void) const;
@@ -152,8 +152,8 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
      const bool                &getInteractive    (void) const;
            SoundPtr            &getDialogSound    (void);
      const SoundPtr            &getDialogSound    (void) const;
-           DialogHierachyPtr   &getParentDialogHierachy(void);
-     const DialogHierachyPtr   &getParentDialogHierachy(void) const;
+           DialogHierarchyPtr   &getParentDialogHierarchy(void);
+     const DialogHierarchyPtr   &getParentDialogHierarchy(void) const;
            DialogPtr           &getResponses      (const UInt32 index);
            MFDialogPtr         &getResponses      (void);
      const MFDialogPtr         &getResponses      (void) const;
@@ -167,7 +167,7 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
      void setResponsePresentationDelay( const Real32 &value );
      void setInteractive    ( const bool &value );
      void setDialogSound    ( const SoundPtr &value );
-     void setParentDialogHierachy( const DialogHierachyPtr &value );
+     void setParentDialogHierarchy( const DialogHierarchyPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -215,7 +215,7 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
     SFBool              _sfInteractive;
     MFDialogPtr         _mfResponses;
     SFSoundPtr          _sfDialogSound;
-    SFDialogHierachyPtr   _sfParentDialogHierachy;
+    SFDialogHierarchyPtr   _sfParentDialogHierarchy;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DialogHierachy
+ **     class DialogHierarchy
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGDIALOGHIERACHYBASE_H_
-#define _OSGDIALOGHIERACHYBASE_H_
+#ifndef _OSGDIALOGHIERARCHYBASE_H_
+#define _OSGDIALOGHIERARCHYBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -69,16 +69,16 @@
 
 #include "OSGDialogFields.h" // RootDialog type // CurrentDialog type // CurrentDialogResponses type
 
-#include "OSGDialogHierachyFields.h"
+#include "OSGDialogHierarchyFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class DialogHierachy;
+class DialogHierarchy;
 class BinaryDataHandler;
 
-//! \brief DialogHierachy Base Class.
+//! \brief DialogHierarchy Base Class.
 
-class OSG_GAMELIB_DLLMAPPING DialogHierachyBase : public AttachmentContainer
+class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
 {
   private:
 
@@ -87,7 +87,7 @@ class OSG_GAMELIB_DLLMAPPING DialogHierachyBase : public AttachmentContainer
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DialogHierachyPtr  Ptr;
+    typedef DialogHierarchyPtr  Ptr;
 
     enum
     {
@@ -168,8 +168,8 @@ class OSG_GAMELIB_DLLMAPPING DialogHierachyBase : public AttachmentContainer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DialogHierachyPtr      create          (void); 
-    static  DialogHierachyPtr      createEmpty     (void); 
+    static  DialogHierarchyPtr      create          (void); 
+    static  DialogHierarchyPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -196,15 +196,15 @@ class OSG_GAMELIB_DLLMAPPING DialogHierachyBase : public AttachmentContainer
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    DialogHierachyBase(void);
-    DialogHierachyBase(const DialogHierachyBase &source);
+    DialogHierarchyBase(void);
+    DialogHierarchyBase(const DialogHierarchyBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogHierachyBase(void); 
+    virtual ~DialogHierarchyBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -212,13 +212,13 @@ class OSG_GAMELIB_DLLMAPPING DialogHierachyBase : public AttachmentContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DialogHierachyBase *pOther,
+    void executeSyncImpl(      DialogHierarchyBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      DialogHierachyBase *pOther,
+    void executeSyncImpl(      DialogHierarchyBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -248,7 +248,7 @@ class OSG_GAMELIB_DLLMAPPING DialogHierachyBase : public AttachmentContainer
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const DialogHierachyBase &source);
+    void operator =(const DialogHierarchyBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -256,17 +256,17 @@ class OSG_GAMELIB_DLLMAPPING DialogHierachyBase : public AttachmentContainer
 //---------------------------------------------------------------------------
 
 
-typedef DialogHierachyBase *DialogHierachyBaseP;
+typedef DialogHierarchyBase *DialogHierarchyBaseP;
 
-typedef osgIF<DialogHierachyBase::isNodeCore,
-              CoredNodePtr<DialogHierachy>,
+typedef osgIF<DialogHierarchyBase::isNodeCore,
+              CoredNodePtr<DialogHierarchy>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DialogHierachyNodePtr;
+              >::_IRet DialogHierarchyNodePtr;
 
-typedef RefPtr<DialogHierachyPtr> DialogHierachyRefPtr;
+typedef RefPtr<DialogHierarchyPtr> DialogHierarchyRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGDIALOGHIERACHYBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGDIALOGHIERARCHYBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGDIALOGHIERACHYBASE_H_ */
+#endif /* _OSGDIALOGHIERARCHYBASE_H_ */

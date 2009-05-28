@@ -45,132 +45,132 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DialogHierachy!
+ **     class DialogHierarchy!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEDIALOGHIERACHYINST
+#define OSG_COMPILEDIALOGHIERARCHYINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDialogHierachyBase.h"
-#include "OSGDialogHierachy.h"
+#include "OSGDialogHierarchyBase.h"
+#include "OSGDialogHierarchy.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DialogHierachyBase::RootDialogFieldMask = 
-    (TypeTraits<BitVector>::One << DialogHierachyBase::RootDialogFieldId);
+const OSG::BitVector  DialogHierarchyBase::RootDialogFieldMask = 
+    (TypeTraits<BitVector>::One << DialogHierarchyBase::RootDialogFieldId);
 
-const OSG::BitVector  DialogHierachyBase::CurrentDialogFieldMask = 
-    (TypeTraits<BitVector>::One << DialogHierachyBase::CurrentDialogFieldId);
+const OSG::BitVector  DialogHierarchyBase::CurrentDialogFieldMask = 
+    (TypeTraits<BitVector>::One << DialogHierarchyBase::CurrentDialogFieldId);
 
-const OSG::BitVector  DialogHierachyBase::CurrentDialogResponsesFieldMask = 
-    (TypeTraits<BitVector>::One << DialogHierachyBase::CurrentDialogResponsesFieldId);
+const OSG::BitVector  DialogHierarchyBase::CurrentDialogResponsesFieldMask = 
+    (TypeTraits<BitVector>::One << DialogHierarchyBase::CurrentDialogResponsesFieldId);
 
-const OSG::BitVector DialogHierachyBase::MTInfluenceMask = 
+const OSG::BitVector DialogHierarchyBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var DialogPtr       DialogHierachyBase::_sfRootDialog
+/*! \var DialogPtr       DialogHierarchyBase::_sfRootDialog
     
 */
-/*! \var DialogPtr       DialogHierachyBase::_sfCurrentDialog
+/*! \var DialogPtr       DialogHierarchyBase::_sfCurrentDialog
     
 */
-/*! \var DialogPtr       DialogHierachyBase::_mfCurrentDialogResponses
+/*! \var DialogPtr       DialogHierarchyBase::_mfCurrentDialogResponses
     
 */
 
-//! DialogHierachy description
+//! DialogHierarchy description
 
-FieldDescription *DialogHierachyBase::_desc[] = 
+FieldDescription *DialogHierarchyBase::_desc[] = 
 {
     new FieldDescription(SFDialogPtr::getClassType(), 
                      "RootDialog", 
                      RootDialogFieldId, RootDialogFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogHierachyBase::getSFRootDialog),
+                     (FieldAccessMethod) &DialogHierarchyBase::getSFRootDialog),
     new FieldDescription(SFDialogPtr::getClassType(), 
                      "CurrentDialog", 
                      CurrentDialogFieldId, CurrentDialogFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogHierachyBase::getSFCurrentDialog),
+                     (FieldAccessMethod) &DialogHierarchyBase::getSFCurrentDialog),
     new FieldDescription(MFDialogPtr::getClassType(), 
                      "CurrentDialogResponses", 
                      CurrentDialogResponsesFieldId, CurrentDialogResponsesFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogHierachyBase::getMFCurrentDialogResponses)
+                     (FieldAccessMethod) &DialogHierarchyBase::getMFCurrentDialogResponses)
 };
 
 
-FieldContainerType DialogHierachyBase::_type(
-    "DialogHierachy",
+FieldContainerType DialogHierarchyBase::_type(
+    "DialogHierarchy",
     "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &DialogHierachyBase::createEmpty,
-    DialogHierachy::initMethod,
+    (PrototypeCreateF) &DialogHierarchyBase::createEmpty,
+    DialogHierarchy::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(DialogHierachyBase, DialogHierachyPtr)
+//OSG_FIELD_CONTAINER_DEF(DialogHierarchyBase, DialogHierarchyPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DialogHierachyBase::getType(void) 
+FieldContainerType &DialogHierarchyBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &DialogHierachyBase::getType(void) const 
+const FieldContainerType &DialogHierarchyBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr DialogHierachyBase::shallowCopy(void) const 
+FieldContainerPtr DialogHierarchyBase::shallowCopy(void) const 
 { 
-    DialogHierachyPtr returnValue; 
+    DialogHierarchyPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const DialogHierachy *>(this)); 
+    newPtr(returnValue, dynamic_cast<const DialogHierarchy *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 DialogHierachyBase::getContainerSize(void) const 
+UInt32 DialogHierarchyBase::getContainerSize(void) const 
 { 
-    return sizeof(DialogHierachy); 
+    return sizeof(DialogHierarchy); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void DialogHierachyBase::executeSync(      FieldContainer &other,
+void DialogHierarchyBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((DialogHierachyBase *) &other, whichField);
+    this->executeSyncImpl((DialogHierarchyBase *) &other, whichField);
 }
 #else
-void DialogHierachyBase::executeSync(      FieldContainer &other,
+void DialogHierarchyBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((DialogHierachyBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((DialogHierarchyBase *) &other, whichField, sInfo);
 }
-void DialogHierachyBase::execBeginEdit(const BitVector &whichField, 
+void DialogHierarchyBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void DialogHierachyBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void DialogHierarchyBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -184,7 +184,7 @@ void DialogHierachyBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-DialogHierachyBase::DialogHierachyBase(void) :
+DialogHierarchyBase::DialogHierarchyBase(void) :
     _sfRootDialog             (), 
     _sfCurrentDialog          (), 
     _mfCurrentDialogResponses (), 
@@ -196,7 +196,7 @@ DialogHierachyBase::DialogHierachyBase(void) :
 #pragma warning (default : 383)
 #endif
 
-DialogHierachyBase::DialogHierachyBase(const DialogHierachyBase &source) :
+DialogHierarchyBase::DialogHierarchyBase(const DialogHierarchyBase &source) :
     _sfRootDialog             (source._sfRootDialog             ), 
     _sfCurrentDialog          (source._sfCurrentDialog          ), 
     _mfCurrentDialogResponses (source._mfCurrentDialogResponses ), 
@@ -206,13 +206,13 @@ DialogHierachyBase::DialogHierachyBase(const DialogHierachyBase &source) :
 
 /*-------------------------- destructors ----------------------------------*/
 
-DialogHierachyBase::~DialogHierachyBase(void)
+DialogHierarchyBase::~DialogHierarchyBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DialogHierachyBase::getBinSize(const BitVector &whichField)
+UInt32 DialogHierarchyBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -235,7 +235,7 @@ UInt32 DialogHierachyBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void DialogHierachyBase::copyToBin(      BinaryDataHandler &pMem,
+void DialogHierarchyBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -258,7 +258,7 @@ void DialogHierachyBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void DialogHierachyBase::copyFromBin(      BinaryDataHandler &pMem,
+void DialogHierarchyBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -282,7 +282,7 @@ void DialogHierachyBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void DialogHierachyBase::executeSyncImpl(      DialogHierachyBase *pOther,
+void DialogHierarchyBase::executeSyncImpl(      DialogHierarchyBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -300,7 +300,7 @@ void DialogHierachyBase::executeSyncImpl(      DialogHierachyBase *pOther,
 
 }
 #else
-void DialogHierachyBase::executeSyncImpl(      DialogHierachyBase *pOther,
+void DialogHierarchyBase::executeSyncImpl(      DialogHierarchyBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -320,7 +320,7 @@ void DialogHierachyBase::executeSyncImpl(      DialogHierachyBase *pOther,
 
 }
 
-void DialogHierachyBase::execBeginEditImpl (const BitVector &whichField, 
+void DialogHierarchyBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -342,11 +342,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DialogHierachyPtr>::_type("DialogHierachyPtr", "AttachmentContainerPtr");
+DataType FieldDataTraits<DialogHierarchyPtr>::_type("DialogHierarchyPtr", "AttachmentContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DialogHierachyPtr, OSG_GAMELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DialogHierachyPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -363,10 +363,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(DialogHierachyPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDIALOGHIERACHYBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDIALOGHIERACHYBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDIALOGHIERARCHYBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDIALOGHIERARCHYBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGDIALOGHIERACHYFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDIALOGHIERARCHYFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

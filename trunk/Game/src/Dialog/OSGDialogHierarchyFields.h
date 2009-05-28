@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGDIALOGHIERACHYFIELDS_H_
-#define _OSGDIALOGHIERACHYFIELDS_H_
+#ifndef _OSGDIALOGHIERARCHYFIELDS_H_
+#define _OSGDIALOGHIERARCHYFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,12 +64,12 @@
 
 OSG_BEGIN_NAMESPACE
 
-class DialogHierachy;
+class DialogHierarchy;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DialogHierachyPtr
+//! DialogHierarchyPtr
 
-typedef FCPtr<AttachmentContainerPtr, DialogHierachy> DialogHierachyPtr;
+typedef FCPtr<AttachmentContainerPtr, DialogHierarchy> DialogHierarchyPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<AttachmentContainerPtr, DialogHierachy> DialogHierachyPtr;
 #endif
 
 template <>
-struct FieldDataTraits<DialogHierachyPtr> : 
-    public FieldTraitsRecurseMapper<DialogHierachyPtr, true>
+struct FieldDataTraits<DialogHierarchyPtr> : 
+    public FieldTraitsRecurseMapper<DialogHierarchyPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<DialogHierachyPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFDialogHierachyPtr"; }
-    static const char *getMName(void) { return "MFDialogHierachyPtr"; }
+    static const char *getSName(void) { return "SFDialogHierarchyPtr"; }
+    static const char *getMName(void) { return "MFDialogHierarchyPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DialogHierachyPtr, true>
+/*! \class  FieldTraitsRecurseMapper<DialogHierarchyPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<DialogHierachyPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldSingle */
 
-typedef SField<DialogHierachyPtr> SFDialogHierachyPtr;
+typedef SField<DialogHierarchyPtr> SFDialogHierarchyPtr;
 #endif
 
-#ifndef OSG_COMPILEDIALOGHIERACHYINST
-OSG_DLLEXPORT_DECL1(SField, DialogHierachyPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDIALOGHIERARCHYINST
+OSG_DLLEXPORT_DECL1(SField, DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldMulti */
 
-typedef MField<DialogHierachyPtr> MFDialogHierachyPtr;
+typedef MField<DialogHierarchyPtr> MFDialogHierarchyPtr;
 #endif
 
-#ifndef OSG_COMPILEDIALOGHIERACHYINST
-OSG_DLLEXPORT_DECL1(MField, DialogHierachyPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDIALOGHIERARCHYINST
+OSG_DLLEXPORT_DECL1(MField, DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGDIALOGHIERACHYFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGDIALOGHIERARCHYFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGDIALOGHIERACHYFIELDS_H_ */
+#endif /* _OSGDIALOGHIERARCHYFIELDS_H_ */

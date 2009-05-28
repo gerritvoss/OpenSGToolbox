@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDialogHierachy.h"
+#include "OSGDialogHierarchy.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DialogHierachy
+/*! \class osg::DialogHierarchy
 A Dialog. 	 	
 */
 
@@ -67,7 +67,7 @@ A Dialog.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DialogHierachy::initMethod (void)
+void DialogHierarchy::initMethod (void)
 {
 }
 
@@ -76,32 +76,32 @@ void DialogHierachy::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DialogHierachy::reset()
+void DialogHierarchy::reset()
 {
     _mfCurrentDialogResponses.clear();
     setCurrentDialog(NullFC);
 }
 
-void DialogHierachy::start()
+void DialogHierarchy::start()
 {
     setCurrentDialog(getRootDialog());
     retrieveReponses();
     getCurrentDialog()->start();
 }
 
-DialogPtr DialogHierachy::addDialog(std::string response, Real32 delayResponses, SoundPtr dialogSound, bool interactive, DialogPtr parentDialog)
+DialogPtr DialogHierarchy::addDialog(std::string response, Real32 delayResponses, SoundPtr dialogSound, bool interactive, DialogPtr parentDialog)
 {
 
     DialogPtr d = osg::Dialog::create();
-    beginEditCP(d, Dialog::ResponseFieldMask | Dialog::ResponsePresentationDelayFieldMask | Dialog::DialogSoundFieldMask | Dialog::InteractiveFieldMask | Dialog::ParentDialogHierachyFieldMask);
+    beginEditCP(d, Dialog::ResponseFieldMask | Dialog::ResponsePresentationDelayFieldMask | Dialog::DialogSoundFieldMask | Dialog::InteractiveFieldMask | Dialog::ParentDialogHierarchyFieldMask);
         d->setResponse(response);
         d->setResponsePresentationDelay(delayResponses);
         d->setDialogSound(dialogSound);
         d->setInteractive(interactive);
-        d->setParentDialogHierachy(DialogHierachyPtr(this));
-    endEditCP(d, Dialog::ResponseFieldMask | Dialog::ResponsePresentationDelayFieldMask | Dialog::DialogSoundFieldMask | Dialog::InteractiveFieldMask | Dialog::ParentDialogHierachyFieldMask);
+        d->setParentDialogHierarchy(DialogHierarchyPtr(this));
+    endEditCP(d, Dialog::ResponseFieldMask | Dialog::ResponsePresentationDelayFieldMask | Dialog::DialogSoundFieldMask | Dialog::InteractiveFieldMask | Dialog::ParentDialogHierarchyFieldMask);
 
-    d->addDialogListener(&_DialogHierachyListener);
+    d->addDialogListener(&_DialogHierarchyListener);
 
     if(parentDialog != NullFC)
     {
@@ -117,36 +117,36 @@ DialogPtr DialogHierachy::addDialog(std::string response, Real32 delayResponses,
     return d;
 }
 
-void DialogHierachy::retrieveReponses()
+void DialogHierarchy::retrieveReponses()
 {
     _mfCurrentDialogResponses = getCurrentDialog()->getResponses();
 }
 
-void DialogHierachy::DialogHierachyListener::started(const DialogEvent& e)
+void DialogHierarchy::DialogHierarchyListener::started(const DialogEvent& e)
 {
 
 }
 
-void DialogHierachy::DialogHierachyListener::ended(const DialogEvent& e)
+void DialogHierarchy::DialogHierarchyListener::ended(const DialogEvent& e)
 {
 }
 
-void DialogHierachy::DialogHierachyListener::responseSelected(const DialogEvent& e)
+void DialogHierarchy::DialogHierarchyListener::responseSelected(const DialogEvent& e)
 {
-    DialogEvent Pe = DialogEvent(_DialogHierachy->getCurrentDialog(),getSystemTime());
-    _DialogHierachy->getCurrentDialog()->produceEnded(Pe);
-    _DialogHierachy->getCurrentDialog()->_displayed = false;
+    DialogEvent Pe = DialogEvent(_DialogHierarchy->getCurrentDialog(),getSystemTime());
+    _DialogHierarchy->getCurrentDialog()->produceEnded(Pe);
+    _DialogHierarchy->getCurrentDialog()->_displayed = false;
 
-    _DialogHierachy->setCurrentDialog(DialogPtr::dcast(e.getSource()));
-    _DialogHierachy->retrieveReponses();
-    _DialogHierachy->getCurrentDialog()->start();
+    _DialogHierarchy->setCurrentDialog(DialogPtr::dcast(e.getSource()));
+    _DialogHierarchy->retrieveReponses();
+    _DialogHierarchy->getCurrentDialog()->start();
 }
 
-void DialogHierachy::DialogHierachyListener::responsesReady(const DialogEvent& e)
+void DialogHierarchy::DialogHierarchyListener::responsesReady(const DialogEvent& e)
 {
 }
 
-void DialogHierachy::DialogHierachyListener::terminated(const DialogEvent& e)
+void DialogHierarchy::DialogHierarchyListener::terminated(const DialogEvent& e)
 {
 }
 
@@ -156,33 +156,33 @@ void DialogHierachy::DialogHierachyListener::terminated(const DialogEvent& e)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DialogHierachy::DialogHierachy(void) :
+DialogHierarchy::DialogHierarchy(void) :
     Inherited(),
-    _DialogHierachyListener(DialogHierachyPtr(this))
+    _DialogHierarchyListener(DialogHierarchyPtr(this))
 {
 }
 
-DialogHierachy::DialogHierachy(const DialogHierachy &source) :
+DialogHierarchy::DialogHierarchy(const DialogHierarchy &source) :
     Inherited(source),
-    _DialogHierachyListener(DialogHierachyPtr(this))
+    _DialogHierarchyListener(DialogHierarchyPtr(this))
 {
 }
 
-DialogHierachy::~DialogHierachy(void)
+DialogHierarchy::~DialogHierarchy(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DialogHierachy::changed(BitVector whichField, UInt32 origin)
+void DialogHierarchy::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void DialogHierachy::dump(      UInt32    , 
+void DialogHierarchy::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump DialogHierachy NI" << std::endl;
+    SLOG << "Dump DialogHierarchy NI" << std::endl;
 }
 
 
@@ -200,10 +200,10 @@ void DialogHierachy::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDIALOGHIERACHYBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDIALOGHIERACHYBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDIALOGHIERARCHYBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDIALOGHIERARCHYBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGDIALOGHIERACHYFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDIALOGHIERARCHYFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

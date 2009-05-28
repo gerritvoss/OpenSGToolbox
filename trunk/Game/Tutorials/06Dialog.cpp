@@ -63,7 +63,7 @@ listens for:
 
 //Dialog Includes
 #include <OpenSG/Game/OSGDialog.h>
-#include <OpenSG/Game/OSGDialogHierachy.h>
+#include <OpenSG/Game/OSGDialogHierarchy.h>
 #include <OpenSG/Game/OSGDialogListener.h>
 
 //Sound
@@ -75,7 +75,7 @@ listens for:
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-DialogHierachyPtr TutorialDialog;
+DialogHierarchyPtr TutorialDialog;
 InternalWindowPtr MainInternalWindow;
 Int32 segUpdate = 0;
 NodePtr scene;
@@ -318,7 +318,7 @@ int main(int argc, char **argv)
         ButtonFont->setSize(16);
     endEditCP(ButtonFont, UIFont::SizeFieldMask);
 
-    TutorialDialog = osg::DialogHierachy::create();
+    TutorialDialog = osg::DialogHierarchy::create();
 
     DialogPtr rootDialog = TutorialDialog->addDialog("DummyDialog!", 0.0, NullFC, true, NullFC);
     DialogPtr RootDialogChildA = TutorialDialog->addDialog("Foreground", 0.0, NullFC, true, rootDialog);

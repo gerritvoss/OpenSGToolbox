@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DialogHierachy!
+ **     class DialogHierarchy!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &DialogHierachyBase::getClassType(void)
+OSG::FieldContainerType &DialogHierarchyBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DialogHierachyBase::getClassTypeId(void) 
+OSG::UInt32 DialogHierarchyBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-DialogHierachyPtr DialogHierachyBase::create(void) 
+DialogHierarchyPtr DialogHierarchyBase::create(void) 
 {
-    DialogHierachyPtr fc; 
+    DialogHierarchyPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = DialogHierachyPtr::dcast(
+        fc = DialogHierarchyPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ DialogHierachyPtr DialogHierachyBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-DialogHierachyPtr DialogHierachyBase::createEmpty(void) 
+DialogHierarchyPtr DialogHierarchyBase::createEmpty(void) 
 { 
-    DialogHierachyPtr returnValue; 
+    DialogHierarchyPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,93 +96,93 @@ DialogHierachyPtr DialogHierachyBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DialogHierachy::_sfRootDialog field.
+//! Get the DialogHierarchy::_sfRootDialog field.
 inline
-SFDialogPtr *DialogHierachyBase::getSFRootDialog(void)
+SFDialogPtr *DialogHierarchyBase::getSFRootDialog(void)
 {
     return &_sfRootDialog;
 }
 
-//! Get the DialogHierachy::_sfCurrentDialog field.
+//! Get the DialogHierarchy::_sfCurrentDialog field.
 inline
-SFDialogPtr *DialogHierachyBase::getSFCurrentDialog(void)
+SFDialogPtr *DialogHierarchyBase::getSFCurrentDialog(void)
 {
     return &_sfCurrentDialog;
 }
 
-//! Get the DialogHierachy::_mfCurrentDialogResponses field.
+//! Get the DialogHierarchy::_mfCurrentDialogResponses field.
 inline
-MFDialogPtr *DialogHierachyBase::getMFCurrentDialogResponses(void)
+MFDialogPtr *DialogHierarchyBase::getMFCurrentDialogResponses(void)
 {
     return &_mfCurrentDialogResponses;
 }
 
 
-//! Get the value of the DialogHierachy::_sfRootDialog field.
+//! Get the value of the DialogHierarchy::_sfRootDialog field.
 inline
-DialogPtr &DialogHierachyBase::getRootDialog(void)
+DialogPtr &DialogHierarchyBase::getRootDialog(void)
 {
     return _sfRootDialog.getValue();
 }
 
-//! Get the value of the DialogHierachy::_sfRootDialog field.
+//! Get the value of the DialogHierarchy::_sfRootDialog field.
 inline
-const DialogPtr &DialogHierachyBase::getRootDialog(void) const
+const DialogPtr &DialogHierarchyBase::getRootDialog(void) const
 {
     return _sfRootDialog.getValue();
 }
 
-//! Set the value of the DialogHierachy::_sfRootDialog field.
+//! Set the value of the DialogHierarchy::_sfRootDialog field.
 inline
-void DialogHierachyBase::setRootDialog(const DialogPtr &value)
+void DialogHierarchyBase::setRootDialog(const DialogPtr &value)
 {
     _sfRootDialog.setValue(value);
 }
 
-//! Get the value of the DialogHierachy::_sfCurrentDialog field.
+//! Get the value of the DialogHierarchy::_sfCurrentDialog field.
 inline
-DialogPtr &DialogHierachyBase::getCurrentDialog(void)
+DialogPtr &DialogHierarchyBase::getCurrentDialog(void)
 {
     return _sfCurrentDialog.getValue();
 }
 
-//! Get the value of the DialogHierachy::_sfCurrentDialog field.
+//! Get the value of the DialogHierarchy::_sfCurrentDialog field.
 inline
-const DialogPtr &DialogHierachyBase::getCurrentDialog(void) const
+const DialogPtr &DialogHierarchyBase::getCurrentDialog(void) const
 {
     return _sfCurrentDialog.getValue();
 }
 
-//! Set the value of the DialogHierachy::_sfCurrentDialog field.
+//! Set the value of the DialogHierarchy::_sfCurrentDialog field.
 inline
-void DialogHierachyBase::setCurrentDialog(const DialogPtr &value)
+void DialogHierarchyBase::setCurrentDialog(const DialogPtr &value)
 {
     _sfCurrentDialog.setValue(value);
 }
 
 
-//! Get the value of the \a index element the DialogHierachy::_mfCurrentDialogResponses field.
+//! Get the value of the \a index element the DialogHierarchy::_mfCurrentDialogResponses field.
 inline
-DialogPtr &DialogHierachyBase::getCurrentDialogResponses(const UInt32 index)
+DialogPtr &DialogHierarchyBase::getCurrentDialogResponses(const UInt32 index)
 {
     return _mfCurrentDialogResponses[index];
 }
 
-//! Get the DialogHierachy::_mfCurrentDialogResponses field.
+//! Get the DialogHierarchy::_mfCurrentDialogResponses field.
 inline
-MFDialogPtr &DialogHierachyBase::getCurrentDialogResponses(void)
+MFDialogPtr &DialogHierarchyBase::getCurrentDialogResponses(void)
 {
     return _mfCurrentDialogResponses;
 }
 
-//! Get the DialogHierachy::_mfCurrentDialogResponses field.
+//! Get the DialogHierarchy::_mfCurrentDialogResponses field.
 inline
-const MFDialogPtr &DialogHierachyBase::getCurrentDialogResponses(void) const
+const MFDialogPtr &DialogHierarchyBase::getCurrentDialogResponses(void) const
 {
     return _mfCurrentDialogResponses;
 }
 
 OSG_END_NAMESPACE
 
-#define OSGDIALOGHIERACHYBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGDIALOGHIERARCHYBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -131,11 +131,11 @@ SFSoundPtr *DialogBase::getSFDialogSound(void)
     return &_sfDialogSound;
 }
 
-//! Get the Dialog::_sfParentDialogHierachy field.
+//! Get the Dialog::_sfParentDialogHierarchy field.
 inline
-SFDialogHierachyPtr *DialogBase::getSFParentDialogHierachy(void)
+SFDialogHierarchyPtr *DialogBase::getSFParentDialogHierarchy(void)
 {
-    return &_sfParentDialogHierachy;
+    return &_sfParentDialogHierarchy;
 }
 
 
@@ -223,25 +223,25 @@ void DialogBase::setDialogSound(const SoundPtr &value)
     _sfDialogSound.setValue(value);
 }
 
-//! Get the value of the Dialog::_sfParentDialogHierachy field.
+//! Get the value of the Dialog::_sfParentDialogHierarchy field.
 inline
-DialogHierachyPtr &DialogBase::getParentDialogHierachy(void)
+DialogHierarchyPtr &DialogBase::getParentDialogHierarchy(void)
 {
-    return _sfParentDialogHierachy.getValue();
+    return _sfParentDialogHierarchy.getValue();
 }
 
-//! Get the value of the Dialog::_sfParentDialogHierachy field.
+//! Get the value of the Dialog::_sfParentDialogHierarchy field.
 inline
-const DialogHierachyPtr &DialogBase::getParentDialogHierachy(void) const
+const DialogHierarchyPtr &DialogBase::getParentDialogHierarchy(void) const
 {
-    return _sfParentDialogHierachy.getValue();
+    return _sfParentDialogHierarchy.getValue();
 }
 
-//! Set the value of the Dialog::_sfParentDialogHierachy field.
+//! Set the value of the Dialog::_sfParentDialogHierarchy field.
 inline
-void DialogBase::setParentDialogHierachy(const DialogHierachyPtr &value)
+void DialogBase::setParentDialogHierarchy(const DialogHierarchyPtr &value)
 {
-    _sfParentDialogHierachy.setValue(value);
+    _sfParentDialogHierarchy.setValue(value);
 }
 
 

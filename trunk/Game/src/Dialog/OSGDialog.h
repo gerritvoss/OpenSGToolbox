@@ -50,7 +50,7 @@
 #include <OpenSG/Sound/OSGSound.h>
 #include <OpenSG/Sound/OSGSoundManager.h>
 #include <OpenSG/Input/OSGUpdateListener.h>
-#include "OSGDialogHierachy.h"
+#include "OSGDialogHierarchy.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
