@@ -88,7 +88,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
     Action::ResultE drawActionHandler( Action* action );
     Action::ResultE renderActionHandler( Action* action );
     Action::ResultE intersect( Action* action );
-    /*! \}                                                                 */
+
+    /*! \}*/
+
+	// used for sorting particles
+	struct ParticleSortByViewPosition
+	{
+	public:
+		
+		ParticleSystemPtr _System;
+		Pnt3f _CameraPos;
+		bool _SortByMinimum;
+		ParticleSortByViewPosition(ParticleSystemPtr TheSystem, Pnt3f TheCameraPos, bool SortByMinimum);
+		ParticleSortByViewPosition();
+		bool operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight);
+	};
+	static ParticleSortByViewPosition TheSorter;
 	
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -125,6 +140,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
        virtual void particleGenerated(const ParticleEvent& e);
        virtual void particleKilled(const ParticleEvent& e);
        virtual void particleStolen(const ParticleEvent& e);
+	   	// used for sorting particles 
+
 	private:
 		ParticleSystemCorePtr _Core;
 	};
@@ -140,6 +157,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 	void handleParticleStolen(const ParticleEvent& e);
 	
 	UInt32 comparisons;
+	
+
+
+
+	friend struct ParticleSortByViewPosition;
+
 
     /*! \}                                                                 */
     
@@ -155,30 +178,11 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 
     void operator =(const ParticleSystemCore &source);
 	
-	// used for sorting particles 
-	struct ParticleSortByViewPosition
-	{
-	public:
-		ParticleSystemPtr _System;
-		Pnt3f _CameraPos;
-		bool _SortByMinimum;
-		static UInt32 _numComparisons;
-		ParticleSortByViewPosition(ParticleSystemPtr TheSystem, Pnt3f TheCameraPos, bool SortByMinimum);
-		bool operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight);	
-	};
-
-	struct TempComparitor
-	{
-	public:
-		bool operator()(Int32 ParticleIndexLeft, Int32 ParticleIndexRight);	
-	};
-
-
 };
 
+// fwd declaration, this function is used for qsort in sortParticles(DrawActionBase *action)
+int qSortComp(const void * a, const void * b);
 
-template <class RandomAccessIterator, class Compare>
-void insertionSort(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
 
 typedef ParticleSystemCore *ParticleSystemCoreP;
 

@@ -57,7 +57,10 @@
 
 #include "OSGParticleSystemCore.h"
 
+
+
 OSG_BEGIN_NAMESPACE
+
 
 /***************************************************************************\
  *                            Description                                  *
@@ -70,6 +73,8 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
+
+ParticleSystemCore::ParticleSortByViewPosition ParticleSystemCore::TheSorter = ParticleSystemCore::ParticleSortByViewPosition();
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -193,6 +198,7 @@ void ParticleSystemCore::adjustVolume(Volume & volume)
     }
 }
 
+
 void ParticleSystemCore::sortParticles(DrawActionBase *action)
 {
     //This should be called if the ParticleSystem has
@@ -201,7 +207,8 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
 	//initialize _mfSort
 	static bool firstCall = true;
 	if(firstCall){
-		//add each particle from the particle system to _mfSort the first time through
+		//add each particle index from the particle system to _mfSort the first time 
+		//this function is called
 		firstCall = false;
 		ParticleSystemPtr sys = getSystem();
 		for(UInt32 i(0); i < sys->getNumParticles(); ++i)
@@ -217,8 +224,9 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
     if(getSystem() != NullFC && getSortingMode() != NONE)
     {
 		// initialize sort funcion struct
-		ParticleSortByViewPosition TheSortFunction = ParticleSortByViewPosition(getSystem(),CameraLocation,true);
-        // get sorting order
+		TheSorter = ParticleSortByViewPosition(getSystem(),CameraLocation,true);
+
+		// get sorting order
 		switch(getSortingMode())
         {
 			case FRONT_TO_BACK:
@@ -227,67 +235,60 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
 
 			case BACK_TO_FRONT:
 				//Use the BackToFront Comparitor, changes sorting order
-				TheSortFunction = ParticleSortByViewPosition(getSystem(),CameraLocation,false);
+				TheSorter = ParticleSortByViewPosition(getSystem(),CameraLocation,false);
 				break;
         }
 		
-		// mfSort is sorted, keep track of sort time
-		TheSortFunction._numComparisons = 0;
-		TimeStamp theTime = getTimeStamp();
-		//std::sort(_mfSort.begin(),_mfSort.end(),TheSortFunction);
-		std::sort(_mfSort.begin(),_mfSort.end(),TheSortFunction);
-		theTime = getTimeStamp() - theTime;
-		//std::cout << "Sort Time = " <<  getTimeStampMsecs(theTime); // ticks converted to milliseconds
-		//std::cout << ", Num. Sorted = " << _mfSort.size() << ", Num Comps = " << TheSortFunction._numComparisons;
-		//std::cout << ", Comps/Particle = " << TheSortFunction._numComparisons/_mfSort.size() << std::endl;
-		//for(UInt32 i(0); i < _mfSort.size(); i++)
-		//	std::cout << _mfSort[i] << ", ";
-
-		/*std::vector<Int32> TempVec;
-		for(Int32 i(0) ; i<10 ; ++i)
-		{
-			if(i%2 ==0)
-			{
-				TempVec.push_back(-i);
-			}
-			else
-			{
-				TempVec.push_back(i);
-			}
-		}
-		smoothsort(TempVec.begin(), TempVec.size(), TempComparitor());
-		for(UInt32 i(0); i < TempVec.size(); i++)
-			std::cout << TempVec[i] << ", ";
-		std::cout << std::endl;*/
+		// particles sorted using stdlib's quicksort
+		std::qsort(&_mfSort[0],_mfSort.size(), sizeof(MFUInt32::StoredType),qSortComp);
     }
 }
-UInt32 ParticleSystemCore::ParticleSortByViewPosition::_numComparisons=0;
 
 ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition(ParticleSystemPtr TheSystem, Pnt3f TheCameraPos, bool SortByMinimum) 
 	: _System(TheSystem), _CameraPos(TheCameraPos), _SortByMinimum(SortByMinimum)
 {
 }
 
-bool ParticleSystemCore::TempComparitor::operator()(Int32 ParticleIndexLeft, Int32 ParticleIndexRight)
+ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition() 
+	: _System(NULL), _CameraPos(Pnt3f(0.0,0.0,0.0)), _SortByMinimum(true)
 {
-	return ParticleIndexLeft<ParticleIndexRight;
 }
 
+
+/*  
+ *	This comparison operator is left here in case we revert to std::sort again
+ */
 bool ParticleSystemCore::ParticleSortByViewPosition::operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight)
 {
 	bool retFlag;
 	// relative distances squared are compared
 	if(_SortByMinimum){
 		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
-			>= ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
+			< ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
 
 	} else
 	{
 		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
-			<= ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
+			> ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
 	}
-	++_numComparisons;
 	return retFlag;
+}
+
+// function used for qsort comparisons
+int qSortComp(const void * a, const void * b)
+{
+	int ret;
+	// relative distances squared are compared
+	if(ParticleSystemCore::TheSorter._SortByMinimum){
+		ret = (Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)a) - ParticleSystemCore::TheSorter._CameraPos).squareLength()) 
+			- ((Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)b)) - ParticleSystemCore::TheSorter._CameraPos).squareLength());
+
+	} else
+	{
+		ret = Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)b) - ParticleSystemCore::TheSorter._CameraPos).squareLength() 
+			- Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)a) - ParticleSystemCore::TheSorter._CameraPos).squareLength();
+	}
+	return ret;
 }
 
 
@@ -389,12 +390,13 @@ void ParticleSystemCore::handleParticleKilled(const ParticleEvent& e)
 
 void ParticleSystemCore::handleParticleStolen(const ParticleEvent& e)
 {
-	// remove particle from _mfSort (is this right? stolen particles are just removed from the system?)
+	// remove particle from _mfSort
 	for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
 	{
 		if((int)*theItor == _mfSort.size() - 1 ) 
 		{
 			_mfSort.erase(theItor);
+			break;
 		}
 	}
 }
