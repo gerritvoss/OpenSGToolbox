@@ -674,6 +674,17 @@ bool XWindowEventProducer::getDrawBorder(void)
     return true;
 }
 
+void XWindowEventProducer::setShowCursor(bool showCursor)
+{
+   //TODO:Implement
+}
+
+bool XWindowEventProducer::getShowCursor(void) const
+{
+   //TODO:Implement
+    return true;
+}
+
 void XWindowEventProducer::update(void)
 {
    //Updating

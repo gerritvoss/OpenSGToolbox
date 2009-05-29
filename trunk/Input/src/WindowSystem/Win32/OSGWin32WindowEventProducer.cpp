@@ -1576,8 +1576,8 @@ void Win32WindowEventProducer::setFullscreen(bool Fullscreen)
     {
         _PreviousWindowPosition = getPosition();
         _PreviousWindowSize = getSize();
-        SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST, 0, 0, GetSystemMetrics(SM_CXFULLSCREEN),GetSystemMetrics(SM_CYFULLSCREEN),
-            SWP_NOZORDER);
+        //SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST, 0, 0, GetSystemMetrics(SM_CXFULLSCREEN),GetSystemMetrics(SM_CYFULLSCREEN),
+        //    SWP_NOZORDER);
         _IsFullscreen = true;
     }
     else if(!Fullscreen && getFullscreen())

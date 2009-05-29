@@ -121,6 +121,10 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const;
 
+    virtual void setShowCursor(bool showCursor);
+
+    virtual bool getShowCursor(void) const;
+
     //Set the text on the Title bar of the window
     virtual void setTitle(const std::string& TitleText);
 
