@@ -76,14 +76,14 @@ bool replacement(RawInterpFuncion& InterpFunc,
             {
                 SFieldTypeT PrevValue;
                 InterpFunc(prevtime, PrevValue,isCyclic);
-                static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] + (Value.getValue() - PrevValue.getValue()), Index;
+                static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] + (Value.getValue() - PrevValue.getValue()), Index;
                 break;
             }
         case ADDITIVE_ABSOLUTE:
-            static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] + Value.getValue();
+            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] + Value.getValue();
             break;
         case OVERWRITE:
-            static_cast<MField<SFieldTypeT::StoredType>&>(Result)[Index] = Value.getValue();
+            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = Value.getValue();
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
