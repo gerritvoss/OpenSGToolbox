@@ -11,7 +11,7 @@ VPATH = $(srcdir)/:$(srcdir)/Event:$(srcdir)/Utils:$(srcdir)/WindowSystem:$(srcd
 
 #.SUFFIX = .o .o
 
-EXTRA_CCFLAGS = -I$(srcdir)
+EXTRA_CCFLAGS = -I$(srcdir) -I$(BOOST_BASE_DIR)/include -I../../../../Builds/Apple/include
 
 OBJECTS = OSGEventFactory.o \
 	OSGEventType.o \
@@ -41,7 +41,7 @@ OBJECTS = OSGEventFactory.o \
 	OSGGLUTWindowEventProducerBase.o \
 	OSGWin32WindowEventProducer.o \
 	OSGWin32WindowEventProducerBase.o \
-	OSGXWindowEventProducer.o \
+	OSGCarbonWindowEventProducer.o \
 	OSGXWindowEventProducerBase.o \
 	OSGInputSettings.o
         

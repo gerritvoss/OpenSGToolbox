@@ -121,6 +121,14 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 
     /*! \}                                                                 */
 	
+	//TODO: IMPLEMENT
+	virtual void setShowCursor(bool);
+	virtual bool getShowCursor() const;
+	virtual osg::Vec2f getDesktopSize() const;
+	virtual std::vector<osg::Path, std::allocator<osg::Path> > openFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, bool);
+	virtual osg::Path saveFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, const osg::Path&, bool);
+	virtual osg::KeyEvent::KeyState getKeyState(osg::KeyEvent::Key) const;
+	
 	//Store state of modifier keys
 	UInt32 _modifierKeyState;
 	

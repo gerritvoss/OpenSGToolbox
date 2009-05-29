@@ -313,6 +313,41 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+//TODO: IMPLEMENT
+void CarbonWindowEventProducer::setShowCursor(bool)
+{
+	//TODO: implement
+}
+bool CarbonWindowEventProducer::getShowCursor() const
+{
+	//TODO: implement
+}
+osg::Vec2f CarbonWindowEventProducer::getDesktopSize() const
+{
+	//TODO: implement
+	return Vec2f();
+}
+std::vector<osg::Path, std::allocator<osg::Path> > CarbonWindowEventProducer::openFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, bool)
+{
+	//TODO: implement
+	return NullFC;
+}
+osg::Path CarbonWindowEventProducer::saveFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, const osg::Path&, bool)
+{
+	//TODO: implement
+	return NullFC;
+}
+osg::KeyEvent::KeyState CarbonWindowEventProducer::getKeyState(osg::KeyEvent::Key) const
+{
+	//TODO: implement
+	return NullFC;
+}
+
+
+
+
+
 WindowPtr CarbonWindowEventProducer::initWindow(void)
 {
 	WindowPtr MyWindow = Inherited::initWindow();

@@ -298,7 +298,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = C997E4EC0DE7565800509C0E /* Make Animation Directory */;
+			remoteGlobalIDString = C997E4EC0DE7565800509C0E;
 			remoteInfo = "Make Animation Directory";
 		};
 		C997E4EF0DE7567800509C0E /* PBXContainerItemProxy */ = {

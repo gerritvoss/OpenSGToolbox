@@ -2,7 +2,6 @@
 
 # use debug or opt libs?
 LIBTYPE ?= dbg
-OSGTOOLBOXROOT ?= ../../Builds/Linux
 
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D
@@ -107,6 +106,8 @@ ifeq ($(SYSTEM),Linux)
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
+	OSGTOOLBOXROOT ?= ../../Builds/Linux
+	EXTRA_LDFLAGS = -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-xgcc40-mt-1_39 -lboost_system-xgcc40-mt-1_39
 endif
 ifeq ($(findstring WIN,$(SYSTEM)),WIN)
         OS := WIN32
@@ -125,6 +126,8 @@ ifeq ($(SYSTEM),Darwin)
         CCOUT := -o 
         LDOUT := -o 
 	LINK  := 
+	OSGTOOLBOXROOT ?= ../../Builds/Apple
+	EXTRA_LDFLAGS = -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-xgcc40-mt-1_39 -lboost_system-xgcc40-mt-1_39
 endif
 
 # Var settings
@@ -137,7 +140,7 @@ endif
 
 CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB)) -I$(OSGTOOLBOXROOT)/include -I$(BOOST_BASE_DIR)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB)) -L$(OSGTOOLBOXROOT)/lib -lOSGToolbox$(DGB_OPT_EXT) -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-gcc41-mt-1_38 -lboost_system-gcc41-mt-1_38
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB)) -L$(OSGTOOLBOXROOT)/lib -lOSGToolbox$(DGB_OPT_EXT) $(EXTRA_LDFLAGS)
 
 
 # all tutorials in this directory
