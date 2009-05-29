@@ -106,13 +106,7 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
     if(getDrawer() != NullFC && getSystem() != NullFC)
     {
 		sortParticles(action);
-
-		TimeStamp theTime = getTimeStamp();
-
 		getDrawer()->draw(action, getSystem(), getSort() );
-		theTime = getTimeStamp() - theTime;
-		std::cout << "Draw Time = " <<  getTimeStampMsecs(theTime) << std::endl; // ticks converted to milliseconds
-      
     }
     else
     {
