@@ -210,7 +210,7 @@ int main(int argc, char **argv)
 	//Particle System Material
 	PointChunkPtr PSPointChunk = PointChunk::create();
 	beginEditCP(PSPointChunk);
-		PSPointChunk->setSize(35.0f);
+		PSPointChunk->setSize(6.0f);
 		PSPointChunk->setSmooth(true);
 	endEditCP(PSPointChunk);
 
@@ -241,7 +241,7 @@ int main(int argc, char **argv)
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-	for(UInt32 i(0) ; i<10 ; ++i)
+	for(UInt32 i(0) ; i<1 ; ++i)
 	{
 		ExampleParticleSystem->addParticle(Pnt3f(i,i,i), //Position
 			Vec3f(0.0,0.0f,1.0f), //Normal
@@ -268,21 +268,21 @@ int main(int argc, char **argv)
 		//Quad
 	ExampleQuadParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
 	
-	//	//Create a Rate Particle Generator
-	//BurstParticleGeneratorPtr ExampleGenerator = osg::BurstParticleGenerator::create();
+		//Create a Rate Particle Generator
+	BurstParticleGeneratorPtr ExampleGenerator = osg::BurstParticleGenerator::create();
 
-	////Attach the function objects to the Generator
-	//beginEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
-	//	ExampleGenerator->setPositionFunction(createPositionDistribution());
-	//	ExampleGenerator->setLifespanFunction(createLifespanDistribution());
-	//	ExampleGenerator->setBurstAmount(400);
-	//endEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
-	//
-	////Attach the Generator to the Particle System
-	//beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
-	//	ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
-	//	ExampleParticleSystem->setMaxParticles(1500);
-	//endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
+	//Attach the function objects to the Generator
+	beginEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
+		ExampleGenerator->setPositionFunction(createPositionDistribution());
+		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+		ExampleGenerator->setBurstAmount(1000);
+	endEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
+	
+	//Attach the Generator to the Particle System
+	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
+		ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
+		ExampleParticleSystem->setMaxParticles(1000);
+	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
 	
 	//Particle System Node
     ParticleNodeCore = osg::ParticleSystemCore::create();
@@ -309,6 +309,8 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
+
+	mgr->getCamera()->setFar(500.0);
 
 
     while(!ExitApp)
@@ -345,12 +347,12 @@ FunctionPtr createPositionDistribution(void)
     beginEditCP(TheSphereDistribution);
       TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
       TheSphereDistribution->setInnerRadius(1.0);
-      TheSphereDistribution->setOuterRadius(10.0);
+      TheSphereDistribution->setOuterRadius(30.0);
       TheSphereDistribution->setMinTheta(-3.141950);
       TheSphereDistribution->setMaxTheta(3.141950);
       TheSphereDistribution->setMinZ(-1.0);
       TheSphereDistribution->setMaxZ(1.0);
-	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
     endEditCP(TheSphereDistribution);
 
     return TheSphereDistribution;

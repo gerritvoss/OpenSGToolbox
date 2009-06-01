@@ -243,7 +243,7 @@ int main(int argc, char **argv)
     endEditCP(ParticleNode, Node::CoreFieldMask);
 
 
-    // Make Main Scene Node and add the Torus
+    // Make Main Scene Node
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
