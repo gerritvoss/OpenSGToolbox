@@ -39,6 +39,7 @@
 #include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/Animation/OSGSkeletonBlendedGeometry.h>
 
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 
 // Activate the OpenSG namespace
@@ -774,7 +775,7 @@ int main(int argc, char **argv)
 	beginEditCP(TheNewSkeletonGeometry);
 		TheNewSkeletonGeometry->addSkeleton(ExampleSkeleton);
 		TheNewSkeletonGeometry->setBaseGeometry(geo);
-		TheNewSkeletonGeometry->setBlendMode(SkeletonBlendedGeometry::BLEND_RIGID);
+		TheNewSkeletonGeometry->setBlendMode(SkeletonBlendedGeometry::BLEND_SMOOTH);
 		
 		//TORSO QUAD
 		TheNewSkeletonGeometry->addBoneBlending(0,Torso,1.0f,false);
@@ -921,7 +922,6 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
-
 
 
     while(!ExitApp)

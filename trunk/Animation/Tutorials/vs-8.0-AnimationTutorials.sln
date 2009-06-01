@@ -38,6 +38,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "18RigidAnimation", "18Rigid
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "19SmoothAnimation", "19SmoothAnimation.vcproj", "{C03E1438-6F9C-4600-BFC4-D87573478900}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20LoadXMLBlendedGeometry", "20LoadXMLBlendedGeometry.vcproj", "{2ECE50D1-30FF-4F6E-A361-D1ABB80A5675}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -120,6 +122,10 @@ Global
 		{C03E1438-6F9C-4600-BFC4-D87573478900}.Debug|Win32.Build.0 = Debug|Win32
 		{C03E1438-6F9C-4600-BFC4-D87573478900}.Release|Win32.ActiveCfg = Release|Win32
 		{C03E1438-6F9C-4600-BFC4-D87573478900}.Release|Win32.Build.0 = Release|Win32
+		{2ECE50D1-30FF-4F6E-A361-D1ABB80A5675}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2ECE50D1-30FF-4F6E-A361-D1ABB80A5675}.Debug|Win32.Build.0 = Debug|Win32
+		{2ECE50D1-30FF-4F6E-A361-D1ABB80A5675}.Release|Win32.ActiveCfg = Release|Win32
+		{2ECE50D1-30FF-4F6E-A361-D1ABB80A5675}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
