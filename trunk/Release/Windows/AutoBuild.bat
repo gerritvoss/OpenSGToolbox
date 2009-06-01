@@ -55,3 +55,6 @@ popd
 
 :Move back to original Directory
 popd
+
+:Update the Website
+UpdateWebsite.bat
