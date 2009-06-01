@@ -215,7 +215,7 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
 	Pnt3f CameraLocation(0.0,0.0,0.0);
 	action->getCameraToWorld().mult(CameraLocation);
 	
-    if(getSystem() != NullFC && getSortingMode() != NONE)
+    if(getSystem() != NullFC && getSortingMode() != NONE && _mfSort.size() > 0)
     {
 		// initialize sort funcion struct
 		TheSorter = ParticleSortByViewPosition(getSystem(),CameraLocation,true);
