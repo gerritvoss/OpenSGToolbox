@@ -78,6 +78,8 @@ A FMod Sound Interface.
 
 void FModSound::initMethod (void)
 {
+    addInitFunction(&FModSoundManager::init);
+    addSystemExitFunction(&FModSoundManager::uninit);
 }
 
 FMOD_RESULT F_CALLBACK FModSoundChannelCallback(FMOD_CHANNEL *channel, FMOD_CHANNEL_CALLBACKTYPE type, void *commanddata1, void *commanddata2)

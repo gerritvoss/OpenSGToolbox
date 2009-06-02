@@ -75,7 +75,7 @@ void PhysicsWorld::initMethod (void)
 bool PhysicsWorld::odeInitFunc(void)
 {
     SLOG << "Initializing ODE." << std::endl;
-    return dInitODE2(dInitFlagManualThreadCleanup);
+    return dInitODE2(0);
 }
 
 bool PhysicsWorld::odeExitFunc(void)

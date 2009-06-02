@@ -101,7 +101,7 @@ SoundPtr FModSoundManager::createSound(void) const
     return FModSound::create();
 }
 
-void FModSoundManager::init(void)
+bool FModSoundManager::init(void)
 {
     SLOG << "FModSoundManager Initializing." << std::endl;
 
@@ -115,72 +115,74 @@ void FModSoundManager::init(void)
     /*
         Create a System object and initialize.
     */
-    result = FMOD::System_Create(&_FModSystem);
+    result = FMOD::System_Create(&the()->_FModSystem);
     FMOD_ERRCHECK(result);
     
-    result = _FModSystem->getVersion(&version);
+    result = the()->_FModSystem->getVersion(&version);
     FMOD_ERRCHECK(result);
 
     if (version < FMOD_VERSION)
     {
         SWARNING << "FModSoundManager::init: Error!  You are using an old version of FMOD " << version << ".  This program requires " << FMOD_VERSION << std::endl;
-        return;
+        return false;
     }
     
-    result = _FModSystem->getNumDrivers(&numdrivers);
+    result = the()->_FModSystem->getNumDrivers(&numdrivers);
     FMOD_ERRCHECK(result);
 
     if (numdrivers == 0)
     {
-        result = _FModSystem->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
+        result = the()->_FModSystem->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
         FMOD_ERRCHECK(result);
     }
     else
     {
-        result = _FModSystem->getDriverCaps(0, &caps, 0, 0, &speakermode);
+        result = the()->_FModSystem->getDriverCaps(0, &caps, 0, 0, &speakermode);
         FMOD_ERRCHECK(result);
 
-        result = _FModSystem->setSpeakerMode(speakermode);       /* Set the user selected speaker mode. */
+        result = the()->_FModSystem->setSpeakerMode(speakermode);       /* Set the user selected speaker mode. */
         FMOD_ERRCHECK(result);
 
         if (caps & FMOD_CAPS_HARDWARE_EMULATED)             /* The user has the 'Acceleration' slider set to off!  This is really bad for latency!. */
         {                                                   /* You might want to warn the user about this. */
-            result = _FModSystem->setDSPBufferSize(1024, 10);
+            result = the()->_FModSystem->setDSPBufferSize(1024, 10);
             FMOD_ERRCHECK(result);
         }
 
-        result = _FModSystem->getDriverInfo(0, name, 256, 0);
+        result = the()->_FModSystem->getDriverInfo(0, name, 256, 0);
         FMOD_ERRCHECK(result);
 
         if (strstr(name, "SigmaTel"))   /* Sigmatel sound devices crackle for some reason if the format is PCM 16bit.  PCM floating point output seems to solve it. */
         {
-            result = _FModSystem->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
+            result = the()->_FModSystem->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
             FMOD_ERRCHECK(result);
         }
     }
 
-    result = _FModSystem->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);
+    result = the()->_FModSystem->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);
     if (result == FMOD_ERR_OUTPUT_CREATEBUFFER)         /* Ok, the speaker mode selected isn't supported by this soundcard.  Switch it back to stereo... */
     {
-        result = _FModSystem->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
+        result = the()->_FModSystem->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
         FMOD_ERRCHECK(result);
             
-        result = _FModSystem->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);/* ... and re-init. */
+        result = the()->_FModSystem->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);/* ... and re-init. */
         FMOD_ERRCHECK(result);
     }
 
     SLOG << "FModSoundManager Successfully Initialized." << std::endl;
+    return true;
 }
 
-void FModSoundManager::uninit(void)
+bool FModSoundManager::uninit(void)
 {
     SLOG << "FModSoundManager Uninitializing." << std::endl;
     FMOD_RESULT      result;
 
-    result = _FModSystem->release();
+    result = the()->_FModSystem->release();
     FMOD_ERRCHECK(result);
     
     SLOG << "FModSoundManager Successfully Uninitialized." << std::endl;
+    return true;
 }
 
 void FModSoundManager::update(const UpdateEvent& e)
@@ -255,7 +257,6 @@ FModSoundManager::FModSoundManager(const FModSoundManager &source) :
 
 FModSoundManager::~FModSoundManager(void)
 {
-	uninit();
 }
 
 OSG_END_NAMESPACE

@@ -83,14 +83,6 @@ StubSoundManager *StubSoundManager::the(void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void StubSoundManager::init(void)
-{
-    SWARNING << "StubSoundManager Initialized." << std::endl;
-}
-
-void StubSoundManager::uninit(void)
-{
-}
 
 void StubSoundManager::update(const UpdateEvent& e)
 {

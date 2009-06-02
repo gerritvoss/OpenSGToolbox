@@ -237,7 +237,6 @@ int main(int argc, char **argv)
 
 
     //Initialize the Sound Manager
-    SoundManager::the()->init();
     SoundManager::the()->attachUpdateProducer(TheWindowEventProducer);
     SoundManager::the()->setCamera(mgr->getCamera());
 

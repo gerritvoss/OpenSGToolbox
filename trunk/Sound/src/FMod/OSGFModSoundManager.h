@@ -70,8 +70,8 @@ class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public SoundManager
       
     static FModSoundManager* the(void);
 
-	virtual void init(void);
-	virtual void uninit(void);
+	static bool init(void);
+	static bool uninit(void);
 
 	/**
 	* update the sound system with current elapsed time

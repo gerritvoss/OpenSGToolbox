@@ -63,9 +63,6 @@ class OSG_SOUNDLIB_DLLMAPPING StubSoundManager : public SoundManager
       
     static StubSoundManager* the(void);
 
-	virtual void init(void);
-	virtual void uninit(void);
-
 	/**
 	* update the sound system with current elapsed time
 	*/

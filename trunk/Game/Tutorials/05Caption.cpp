@@ -368,7 +368,6 @@ int main(int argc, char **argv)
     endEditCP(CaptionContainer, Panel::PreferredSizeFieldMask | Panel::LayoutFieldMask);
 
     //Initialize the Sound Manager
-    SoundManager::the()->init();
     SoundManager::the()->attachUpdateProducer(TutorialWindowEventProducer);
 
     TutorialSound = SoundManager::the()->createSound();

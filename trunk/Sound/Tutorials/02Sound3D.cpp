@@ -276,7 +276,6 @@ int main(int argc, char **argv)
     endEditCP(TheCamera, Camera::NearFieldMask | Camera::FarFieldMask);
 
     //Initialize the Sound Manager
-    SoundManager::the()->init();
     SoundManager::the()->attachUpdateProducer(TheWindowEventProducer);
     SoundManager::the()->setCamera(mgr->getCamera());
 
@@ -301,7 +300,7 @@ int main(int argc, char **argv)
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
                         Vec2s(500,500),
-                        "02 Sound3F Window");
+                        "02 Sound3D Window");
 
     while(!ExitMainLoop)
     {

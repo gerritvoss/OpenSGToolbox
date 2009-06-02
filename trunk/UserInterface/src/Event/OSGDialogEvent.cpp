@@ -30,7 +30,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-EventType DialogEvent::_Type("DialogEvent", "EventType");
+EventType DialogEvent::_Type("DialogWindowEvent", "EventType");
 
 const EventType &DialogEvent::getType(void) const
 {
