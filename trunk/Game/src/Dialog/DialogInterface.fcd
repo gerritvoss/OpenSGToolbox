@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DialogInterface"
+	parent="AttachmentContainer"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Dialog.
+	
+	<Field
+		name="ComponentGenerator"
+		type="DefaultDialogComponentGeneratorPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+	<Field
+		name="ParentContainer"
+		type="ContainerPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="OpenSG/UserInterface/OSGContainerFields.h"
+	>
+	</Field>
+
+
+</FieldContainer>

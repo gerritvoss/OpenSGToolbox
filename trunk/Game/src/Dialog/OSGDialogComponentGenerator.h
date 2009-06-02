@@ -36,31 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDIALOGHIERARCHY_H_
-#define _OSGDIALOGHIERARCHY_H_
+#ifndef _OSGDIALOGCOMPONENTGENERATOR_H_
+#define _OSGDIALOGCOMPONENTGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDialogHierarchyBase.h"
-#include "OSGDialog.h"
-#include "Event/OSGDialogListener.h"
-#include "Event/OSGDialogHierarchyListener.h"
-
+#include "OSGDialogComponentGeneratorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DialogHierarchy class. See \ref 
-           PageGameDialogHierarchy for a description.
+/*! \brief DialogComponentGenerator class. See \ref 
+           PageGameDialogComponentGenerator for a description.
 */
 
-class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
+class OSG_GAMELIB_DLLMAPPING DialogComponentGenerator : public DialogComponentGeneratorBase
 {
   private:
 
-    typedef DialogHierarchyBase Inherited;
+    typedef DialogComponentGeneratorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -75,17 +71,10 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
-
-    void reset();
-    void start();
-    DialogPtr addDialog(std::string response, Real32 delayResponses, SoundPtr dialogSound, bool interactive, DialogPtr parentDialog);
-    void retrieveReponses();
     /*! \{                                                                 */
 
-    EventConnection addDialogHierarchyListener(DialogHierarchyListenerPtr Listener);
-	bool isDialogHierarchyListenerAttached(DialogHierarchyListenerPtr Listener) const;
-    void removeDialogHierarchyListener(DialogHierarchyListenerPtr Listener);
 
+    virtual ComponentPtr getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
@@ -94,52 +83,21 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in DialogHierarchyBase.
-
-    typedef std::set<DialogHierarchyListenerPtr> DialogHierarchyListenerSet;
-    typedef DialogHierarchyListenerSet::iterator DialogHierarchyListenerSetItor;
-    typedef DialogHierarchyListenerSet::const_iterator DialogHierarchyListenerSetConstItor;
-
-
-    class DialogHierarchyListener : public DialogListener
-    {
-	public :
-		DialogHierarchyListener(DialogHierarchyPtr TheDialogHierarchy);
-		
-        virtual void started(const DialogEvent& e);
-        virtual void ended(const DialogEvent& e);
-        virtual void responseSelected(const DialogEvent& e);
-        virtual void responsesReady(const DialogEvent& e);
-        virtual void terminated(const DialogEvent& e);
-
-	protected :
-
-        DialogHierarchyPtr _DialogHierarchy;
-	};
-
-    
-    DialogHierarchyListenerSet       _DialogHierarchyListeners;
-    DialogHierarchyListener          _DialogHierarchyListener;
-
-    virtual void produceNewDialogStarted(const DialogHierarchyEvent& e);
-    virtual void produceDialogEnded(const DialogHierarchyEvent& e);
-    virtual void produceDialogResponseSelected(const DialogHierarchyEvent& e);
-    virtual void produceDialogResponsesReady(const DialogHierarchyEvent& e);
-    virtual void produceTerminated(const DialogHierarchyEvent& e);
+    // Variables should all be in DialogComponentGeneratorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DialogHierarchy(void);
-    DialogHierarchy(const DialogHierarchy &source);
+    DialogComponentGenerator(void);
+    DialogComponentGenerator(const DialogComponentGenerator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogHierarchy(void); 
+    virtual ~DialogComponentGenerator(void); 
 
     /*! \}                                                                 */
     
@@ -147,22 +105,22 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
   private:
 
     friend class FieldContainer;
-    friend class DialogHierarchyBase;
+    friend class DialogComponentGeneratorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const DialogHierarchy &source);
+    void operator =(const DialogComponentGenerator &source);
 };
 
-typedef DialogHierarchy *DialogHierarchyP;
+typedef DialogComponentGenerator *DialogComponentGeneratorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDialogHierarchyBase.inl"
-#include "OSGDialogHierarchy.inl"
+#include "OSGDialogComponentGeneratorBase.inl"
+#include "OSGDialogComponentGenerator.inl"
 
-#define OSGDIALOGHIERARCHY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDIALOGCOMPONENTGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDIALOGHIERARCHY_H_ */
+#endif /* _OSGDIALOGCOMPONENTGENERATOR_H_ */

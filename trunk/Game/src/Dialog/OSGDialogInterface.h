@@ -36,31 +36,30 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDIALOGHIERARCHY_H_
-#define _OSGDIALOGHIERARCHY_H_
+#ifndef _OSGDIALOGINTERFACE_H_
+#define _OSGDIALOGINTERFACE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGGameDef.h"
 
-#include "OSGDialogHierarchyBase.h"
-#include "OSGDialog.h"
-#include "Event/OSGDialogListener.h"
+#include "OSGDialogInterfaceBase.h"
 #include "Event/OSGDialogHierarchyListener.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DialogHierarchy class. See \ref 
-           PageGameDialogHierarchy for a description.
+/*! \brief DialogInterface class. See \ref 
+           PageGameDialogInterface for a description.
 */
 
-class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
+class OSG_GAMELIB_DLLMAPPING DialogInterface : public DialogInterfaceBase
 {
   private:
 
-    typedef DialogHierarchyBase Inherited;
+    typedef DialogInterfaceBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -75,17 +74,7 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
-
-    void reset();
-    void start();
-    DialogPtr addDialog(std::string response, Real32 delayResponses, SoundPtr dialogSound, bool interactive, DialogPtr parentDialog);
-    void retrieveReponses();
     /*! \{                                                                 */
-
-    EventConnection addDialogHierarchyListener(DialogHierarchyListenerPtr Listener);
-	bool isDialogHierarchyListenerAttached(DialogHierarchyListenerPtr Listener) const;
-    void removeDialogHierarchyListener(DialogHierarchyListenerPtr Listener);
-
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
@@ -94,52 +83,42 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in DialogHierarchyBase.
+    // Variables should all be in DialogInterfaceBase.
 
-    typedef std::set<DialogHierarchyListenerPtr> DialogHierarchyListenerSet;
-    typedef DialogHierarchyListenerSet::iterator DialogHierarchyListenerSetItor;
-    typedef DialogHierarchyListenerSet::const_iterator DialogHierarchyListenerSetConstItor;
-
-
-    class DialogHierarchyListener : public DialogListener
+    class DialogInterfaceListener : public DialogHierarchyListener
     {
 	public :
-		DialogHierarchyListener(DialogHierarchyPtr TheDialogHierarchy);
+		DialogInterfaceListener(DialogInterfacePtr TheDialogInterface);
 		
-        virtual void started(const DialogEvent& e);
-        virtual void ended(const DialogEvent& e);
-        virtual void responseSelected(const DialogEvent& e);
-        virtual void responsesReady(const DialogEvent& e);
-        virtual void terminated(const DialogEvent& e);
+    virtual void newDialogStarted(const DialogHierarchyEvent& e);
+    virtual void dialogEnded(const DialogHierarchyEvent& e);
+    virtual void dialogResponseSelected(const DialogHierarchyEvent& e);
+    virtual void dialogResponsesReady(const DialogHierarchyEvent& e);
+    virtual void terminated(const DialogHierarchyEvent& e);
+
 
 	protected :
 
-        DialogHierarchyPtr _DialogHierarchy;
+        DialogInterfacePtr _DialogInterface;
 	};
 
     
-    DialogHierarchyListenerSet       _DialogHierarchyListeners;
-    DialogHierarchyListener          _DialogHierarchyListener;
+    DialogInterfaceListener          _DialogInterfaceListener;
 
-    virtual void produceNewDialogStarted(const DialogHierarchyEvent& e);
-    virtual void produceDialogEnded(const DialogHierarchyEvent& e);
-    virtual void produceDialogResponseSelected(const DialogHierarchyEvent& e);
-    virtual void produceDialogResponsesReady(const DialogHierarchyEvent& e);
-    virtual void produceTerminated(const DialogHierarchyEvent& e);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DialogHierarchy(void);
-    DialogHierarchy(const DialogHierarchy &source);
+    DialogInterface(void);
+    DialogInterface(const DialogInterface &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogHierarchy(void); 
+    virtual ~DialogInterface(void); 
 
     /*! \}                                                                 */
     
@@ -147,22 +126,22 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
   private:
 
     friend class FieldContainer;
-    friend class DialogHierarchyBase;
+    friend class DialogInterfaceBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const DialogHierarchy &source);
+    void operator =(const DialogInterface &source);
 };
 
-typedef DialogHierarchy *DialogHierarchyP;
+typedef DialogInterface *DialogInterfaceP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDialogHierarchyBase.inl"
-#include "OSGDialogHierarchy.inl"
+#include "OSGDialogInterfaceBase.inl"
+#include "OSGDialogInterface.inl"
 
-#define OSGDIALOGHIERARCHY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDIALOGINTERFACE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDIALOGHIERARCHY_H_ */
+#endif /* _OSGDIALOGINTERFACE_H_ */

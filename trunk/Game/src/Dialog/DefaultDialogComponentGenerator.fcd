@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultDialogComponentGenerator"
+	parent="DialogComponentGenerator"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Default Caption ComponentGenerator.
+	<Field
+		name="ResponseButtonPrototype"
+		type="ButtonPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="OpenSG/UserInterface/OSGButtonFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="QuestionPrototype"
+		type="LabelPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="OpenSG/UserInterface/OSGLabelFields.h"
+		access="public"
+	>
+	</Field>
+
+</FieldContainer>

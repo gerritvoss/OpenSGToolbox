@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DialogComponentGenerator"
+	parent="ComponentGenerator"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Dialog ComponentGenerator.
+</FieldContainer>

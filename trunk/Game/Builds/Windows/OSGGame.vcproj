@@ -789,6 +789,34 @@
 					RelativePath="..\..\src\Dialog\OSGDialogHierarchyFields.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Dialog\OSGDialogInterface.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Dialog\OSGDialogInterface.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Dialog\OSGDialogInterface.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Dialog\OSGDialogInterfaceBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Dialog\OSGDialogInterfaceBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Dialog\OSGDialogInterfaceBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Dialog\OSGDialogInterfaceFields.h"
+					>
+				</File>
 				<Filter
 					Name="Event"
 					>
@@ -805,7 +833,83 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyListener.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Dialog\Event\OSGDialogListener.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="ComponentGenerators"
+					>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDefaultDialogComponentGenerator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDefaultDialogComponentGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDefaultDialogComponentGenerator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDefaultDialogComponentGeneratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDefaultDialogComponentGeneratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDefaultDialogComponentGeneratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDefaultDialogComponentGeneratorFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDialogComponentGenerator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDialogComponentGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDialogComponentGenerator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDialogComponentGeneratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDialogComponentGeneratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDialogComponentGeneratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\OSGDialogComponentGeneratorFields.h"
 						>
 					</File>
 				</Filter>

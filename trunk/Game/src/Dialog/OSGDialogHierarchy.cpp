@@ -122,13 +122,58 @@ void DialogHierarchy::retrieveReponses()
     _mfCurrentDialogResponses = getCurrentDialog()->getResponses();
 }
 
+void DialogHierarchy::produceNewDialogStarted(const DialogHierarchyEvent& e)
+{
+    DialogHierarchyListenerSet Listeners(_DialogHierarchyListeners);
+    for(DialogHierarchyListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->newDialogStarted(e);
+    }
+}
+void DialogHierarchy::produceDialogEnded(const DialogHierarchyEvent& e)
+{
+    DialogHierarchyListenerSet Listeners(_DialogHierarchyListeners);
+    for(DialogHierarchyListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->dialogEnded(e);
+    }
+}
+void DialogHierarchy::produceDialogResponseSelected(const DialogHierarchyEvent& e)
+{
+    DialogHierarchyListenerSet Listeners(_DialogHierarchyListeners);
+    for(DialogHierarchyListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->dialogResponseSelected(e);
+    }
+}
+void DialogHierarchy::produceDialogResponsesReady(const DialogHierarchyEvent& e)
+{
+    DialogHierarchyListenerSet Listeners(_DialogHierarchyListeners);
+    for(DialogHierarchyListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->dialogResponsesReady(e);
+    }
+}
+void DialogHierarchy::produceTerminated(const DialogHierarchyEvent& e)
+{
+    DialogHierarchyListenerSet Listeners(_DialogHierarchyListeners);
+    for(DialogHierarchyListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->terminated(e);
+    }
+}
+
 void DialogHierarchy::DialogHierarchyListener::started(const DialogEvent& e)
 {
-
+    
+    DialogHierarchyEvent de = DialogHierarchyEvent(_DialogHierarchy,getSystemTime());
+    _DialogHierarchy->produceNewDialogStarted(de);
 }
 
 void DialogHierarchy::DialogHierarchyListener::ended(const DialogEvent& e)
 {
+    DialogHierarchyEvent de = DialogHierarchyEvent(_DialogHierarchy,getSystemTime());
+    _DialogHierarchy->produceDialogEnded(de);
 }
 
 void DialogHierarchy::DialogHierarchyListener::responseSelected(const DialogEvent& e)
@@ -140,14 +185,21 @@ void DialogHierarchy::DialogHierarchyListener::responseSelected(const DialogEven
     _DialogHierarchy->setCurrentDialog(DialogPtr::dcast(e.getSource()));
     _DialogHierarchy->retrieveReponses();
     _DialogHierarchy->getCurrentDialog()->start();
+
+    DialogHierarchyEvent de = DialogHierarchyEvent(_DialogHierarchy,getSystemTime());
+    _DialogHierarchy->produceDialogResponseSelected(de);
 }
 
 void DialogHierarchy::DialogHierarchyListener::responsesReady(const DialogEvent& e)
 {
+    DialogHierarchyEvent de = DialogHierarchyEvent(_DialogHierarchy,getSystemTime());
+    _DialogHierarchy->produceDialogResponsesReady(de);
 }
 
 void DialogHierarchy::DialogHierarchyListener::terminated(const DialogEvent& e)
 {
+    DialogHierarchyEvent de = DialogHierarchyEvent(_DialogHierarchy,getSystemTime());
+    _DialogHierarchy->produceTerminated(de);
 }
 
 /*-------------------------------------------------------------------------*\
