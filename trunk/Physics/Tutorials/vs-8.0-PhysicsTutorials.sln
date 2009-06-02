@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGPhysics", "..\Builds\Windows\OSGPhysics.vcproj", "{4A3961BC-39D6-4369-A089-5997CD50FE3C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01SimplePhysics", "01SimplePhysics.vcproj", "{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug|Win32.Build.0 = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.ActiveCfg = Release|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release|Win32.Build.0 = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Debug|Win32.Build.0 = Debug|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.ActiveCfg = Release|Win32
+		{754AE60E-7EFA-4594-AD85-38162C5ED0B2}.Release|Win32.Build.0 = Release|Win32
+		{4A3961BC-39D6-4369-A089-5997CD50FE3C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4A3961BC-39D6-4369-A089-5997CD50FE3C}.Debug|Win32.Build.0 = Debug|Win32
+		{4A3961BC-39D6-4369-A089-5997CD50FE3C}.Release|Win32.ActiveCfg = Release|Win32
+		{4A3961BC-39D6-4369-A089-5997CD50FE3C}.Release|Win32.Build.0 = Release|Win32
+		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Debug|Win32.Build.0 = Debug|Win32
+		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Release|Win32.ActiveCfg = Release|Win32
+		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

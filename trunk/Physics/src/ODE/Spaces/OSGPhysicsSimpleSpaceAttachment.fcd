@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PhysicsSimpleSpace"
+	parent="PhysicsSpace"
+	library="Physics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="false"
+>
+</FieldContainer>

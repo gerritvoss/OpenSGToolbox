@@ -10,6 +10,7 @@
 !define InputDirName "..\..\Builds\Windows"
 !define UninstallFileName "Uninstall ${ProjectName}.exe"
 !define BoostDepDir "C:\Program Files\boost\boost_1_36_0"
+!define ODEDepDir "C:\Documents and Settings\David\My Documents\Work\ode-0.11.1"
 !define OpenSGDepDir "C:\Program Files\OpenSG"
 
 outFile "${OutFileName}"
@@ -67,6 +68,11 @@ FunctionEnd
 
 Function InstallInputTutorialLinks
    createShortCut "${SMPROGRAMSFolder}\Tutorials\Input\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
+Function InstallPhysicsTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Physics\$R3.lnk" "$R4"
 	Push "Continue"
 FunctionEnd
 
@@ -195,6 +201,12 @@ SectionGroup "Devolopment"
       File /nonfatal "${ProjectRootDirName}\Input\Tutorials\*.vcproj"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Input\Tutorials\Data"
       
+      CreateDirectory $INSTDIR\Tutorials\Physics
+      setOutPath $INSTDIR\Tutorials\Physics
+      File /nonfatal "${ProjectRootDirName}\Physics\Tutorials\*.cpp"
+      File /nonfatal "${ProjectRootDirName}\Physics\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Physics\Tutorials\Data"
+      
       CreateDirectory $INSTDIR\Tutorials\Animation
       setOutPath $INSTDIR\Tutorials\Animation
       File /nonfatal "${ProjectRootDirName}\Animation\Tutorials\*.cpp"
@@ -292,6 +304,21 @@ SectionGroup "Release"
 		Push "$INSTDIR\Tutorials\Input" ;Path where to search for the file or folder.
 		Push $0
 		GetFunctionAddress $0 "InstallInputTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+        
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Physics"
+      CreateDirectory $INSTDIR\Tutorials\Physics
+      setOutPath $INSTDIR\Tutorials\Physics
+      File /nonfatal "${ProjectRootDirName}\Physics\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Physics\Tutorials\Data"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Physics" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallPhysicsTutorialLinks" ;Custom callback function name
 		Exch $0
 		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
 		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
@@ -459,6 +486,33 @@ SectionGroup "Dependencies"
             setOutPath $INSTDIR\lib
             File "${BoostDepDir}\lib\boost_filesystem-*"
             File "${BoostDepDir}\lib\boost_system-*"
+            
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Include
+		sectionEnd
+		section "Development"
+			# define the output path for this file
+			setOutPath $INSTDIR
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Dependencies
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Include
+		sectionEnd
+	SectionGroupEnd
+	SectionGroup "ODE"
+		section "Release"
+			# define the output path for this file
+			setOutPath $INSTDIR
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\lib
+            
+            setOutPath $INSTDIR\lib
+            File "${ODEDepDir}\lib\ode_single.*"
+            File "${ODEDepDir}\lib\ode_singled.*"
             
 			
 			#Create the Dependencies Install Directory

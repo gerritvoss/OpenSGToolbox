@@ -1,0 +1,31 @@
+
+README for Physics
+==================
+
+Name:                   Physics
+License:                LGPL
+Maintainer:             Behboud Kalantary <behboud.kalantary@igd.fhg.de>
+Initial Author:         Behboud Kalantary <behboud.kalantary@igd.fhg.de>
+Additional Libraries:   ODE (http://opende.sourceforge.net
+Added:                  2005/07/08
+Last modified:          2005/07/08
+Last tested:            2005/07/08
+
+Description:
+
+This lib wraps the ODE functions for OpenSG. Tested only with the static ODE lib!
+Not all methods are implemented into FieldContainer classes. Thus, when you save a
+osb file, things like mass are not stored. This is something todo. Feel free to complete
+the supported functions.
+
+Coded at the Fraunhofer Institut für Graphische Datenverarbeitung - Abteilung für
+Industrielle Anwendungen ( IGD - A2)
+
+Configure:
+./configure <your profile > --with-add-lib=ode:ode
+
+Many thanks to Anreas Zieringer and Christian Lessig
+
+Have fun
+
+    BK

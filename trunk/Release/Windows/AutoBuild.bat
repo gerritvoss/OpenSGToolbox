@@ -14,7 +14,7 @@ set PROJECT_DIR=OpenSGToolbox
 set BUILD_DIR=Builds\Windows
 set SOLUTION_NAME=vs-8.0-OpenSGToolbox.sln
 
-set LIBRARY_BUILD_ORDER=(Toolbox Input Sound Video Animation Dynamics ParticleSystem UserInterface Game)
+set LIBRARY_BUILD_ORDER=(Toolbox Input Physics Sound Video Animation Dynamics ParticleSystem UserInterface Game)
 set LIBRARY_BUILD_CONFIGURATIONS=(Debug Release)
 set TUTORIAL_BUILD_CONFIGURATIONS=(Release)
 

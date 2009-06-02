@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PhysicsWorld"
+	parent="Attachment"
+	library="Physics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="false"
+>
+The PhysicsWorld contains all global dWorld attributes from ODE.
+	<Field
+		name="erp"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.2"
+		access="public"
+	>
+	the global ERP value, that controls how much error correction is performed in each time step. Typical values are in the range 0.1--0.8. The default is 0.2.
+	</Field>
+	<Field
+		name="gravity"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	the world's global gravity vector. The units are m/s/s, so Earth's gravity vector would be (0,0,-9.81), assuming that +z is up. The default is no gravity, i.e. (0,0,0).
+	</Field>
+	<Field
+		name="cfm"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	the global CFM (constraint force mixing) value. Typical values are in the range 10-9 -- 1. The default is 10-5 if single precision is being used, or 10-10 if double precision is being used.
+	</Field>
+	<Field
+		name="autoDisableFlag"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	Set and get the default auto-disable parameters for newly created bodies. See section 6.5 of ODE userguide for a description of the auto-disable feature. The default parameter AutoDisableFlag = disabled
+	</Field>
+	<Field
+		name="autoDisableLinearThreshold"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.01"
+		access="public"
+	>
+	Set and get the default auto-disable parameters for newly created bodies. See section 6.5 of ODE userguide for a description of the auto-disable feature. The default parameter AutoDisableLinearThreshold = 0.01
+	</Field>
+	<Field
+		name="autoDisableAngularThreshold"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.01"
+		access="public"
+	>
+	Set and get the default auto-disable parameters for newly created bodies. See section 6.5 of ODE userguide for a description of the auto-disable feature. The default parameter AutoDisableAngularThreshold = 0.01
+	</Field>
+	<Field
+		name="autoDisableSteps"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="10"
+		access="public"
+	>
+	Set and get the default auto-disable parameters for newly created bodies. See section 6.5 of ODE userguide for a description of the auto-disable feature. The default parameter AutoDisableSteps = 10
+	</Field>
+	<Field
+		name="autoDisableTime"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0"
+		access="public"
+	>
+	Set and get the default auto-disable parameters for newly created bodies. See section 6.5 of ODE userguide for a description of the auto-disable feature. The default parameter AutoDisableTime = 0
+	</Field>
+	<Field
+		name="worldQuickStepNumIterations"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="20"
+		access="public"
+	>
+	Set and get the number of iterations that the QuickStep method performs per step. More iterations will give a more accurate solution, but will take longer to compute. The default is 20 iterations.
+	</Field>
+	<Field
+		name="worldContactMaxCorrectingVel"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	maximum correcting velocity that contacts are allowed to generate. The default value is infinity (i.e. no limit). Reducing this value can help prevent "popping" of deeply embedded objects.
+	</Field>
+	<Field
+		name="worldContactSurfaceLayer"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0"
+		access="public"
+	>
+	the depth of the surface layer around all geometry objects. Contacts are allowed to sink into the surface layer up to the given depth before coming to rest. The default value is zero. Increasing this to some small value (e.g. 0.001) can help prevent jittering problems due to contacts being repeatedly made and broken.
+	</Field>
+</FieldContainer>

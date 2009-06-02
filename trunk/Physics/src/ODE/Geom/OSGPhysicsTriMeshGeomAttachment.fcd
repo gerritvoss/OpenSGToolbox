@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PhysicsTriMeshGeom"
+	parent="PhysicsGeom"
+	library="Physics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="false"
+>
+	<Field
+		name="geometryNode"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	this node should contain a geometrynode core with geo data!
+	</Field>
+</FieldContainer>

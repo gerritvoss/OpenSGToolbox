@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PhysicsSliderJoint"
+	parent="PhysicsJoint"
+	library="Physics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="false"
+>
+	<Field
+		name="axis"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

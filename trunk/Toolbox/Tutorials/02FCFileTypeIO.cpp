@@ -17,6 +17,7 @@
 #include <OpenSG/OSGPolygonForeground.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGQuaternion.h>
 
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
@@ -32,6 +33,16 @@ int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
+
+    Quaternion q;
+    //q.setValueAsQuat(0, -0.583734, 0, 0.811945);
+    q.setValueAsAxisDeg(Vec3f(0,-1,0),90);
+
+    Vec3f Axis;
+    Real32 Angle;
+    q.getValueAsAxisDeg(Axis,Angle);
+    std::cout << "Axis: " << Axis << ", Angle: " << Angle << std::endl;
+    std::cout << "Quaternion: " << q << std::endl;
     
 	//Create some Field Containers
 	NodePtr Root = createScene();

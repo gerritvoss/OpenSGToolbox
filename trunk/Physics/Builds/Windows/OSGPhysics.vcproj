@@ -29,7 +29,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Installing Includes"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Dynamics&#x0D;&#x0A;"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Physics&#x0D;&#x0A;"
 				Outputs="include"
 			/>
 			<Tool
@@ -43,10 +43,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;_OSG_DYNAMICS_BUILD_"
+				AdditionalIncludeDirectories="&quot;$(ODE_BASE_DIR)\include&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;dSINGLE;OSG_COMPILEPHYSICSLIB"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -73,11 +74,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib ode_singled.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="&quot;$(ODE_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
@@ -122,7 +123,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Input&#x0D;&#x0A;"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Physics&#x0D;&#x0A;"
 				Outputs="include"
 			/>
 			<Tool
@@ -136,9 +137,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src"
-				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;_OSG_INPUT_BUILD_"
+				AdditionalIncludeDirectories="&quot;$(ODE_BASE_DIR)\include&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;dSINGLE;OSG_COMPILEPHYSICSLIB"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -164,11 +166,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib OSGWindowWIN32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib ode_single.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="&quot;$(ODE_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
@@ -216,917 +218,621 @@
 				>
 			</File>
 			<Filter
-				Name="Integrations"
+				Name="ODE"
 				>
 				<File
-					RelativePath="..\..\src\Integrations\OSGEulerIntegration.cpp"
+					RelativePath="..\..\src\ODE\OSGPhysics.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGEulerIntegration.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsBody.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGEulerIntegration.inl"
+					RelativePath="..\..\src\ODE\OSGPhysicsBody.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGEulerIntegrationBase.cpp"
+					RelativePath="..\..\src\ODE\OSGPhysicsBody.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGEulerIntegrationBase.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsBodyBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGEulerIntegrationBase.inl"
+					RelativePath="..\..\src\ODE\OSGPhysicsBodyBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGEulerIntegrationFields.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsBodyBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGImprovedEulerIntegration.cpp"
+					RelativePath="..\..\src\ODE\OSGPhysicsBodyFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGImprovedEulerIntegration.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsHandler.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGImprovedEulerIntegration.inl"
+					RelativePath="..\..\src\ODE\OSGPhysicsHandler.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGImprovedEulerIntegrationBase.cpp"
+					RelativePath="..\..\src\ODE\OSGPhysicsHandler.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGImprovedEulerIntegrationBase.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsHandlerBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGImprovedEulerIntegrationBase.inl"
+					RelativePath="..\..\src\ODE\OSGPhysicsHandlerBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGImprovedEulerIntegrationFields.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsHandlerBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGIntegration.cpp"
+					RelativePath="..\..\src\ODE\OSGPhysicsHandlerFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGIntegration.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsWorld.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGIntegration.inl"
+					RelativePath="..\..\src\ODE\OSGPhysicsWorld.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGIntegrationBase.cpp"
+					RelativePath="..\..\src\ODE\OSGPhysicsWorld.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGIntegrationBase.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsWorldBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGIntegrationBase.inl"
+					RelativePath="..\..\src\ODE\OSGPhysicsWorldBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGIntegrationFields.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsWorldBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Integrations\OSGRungeKuttaIntegration.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Integrations\OSGRungeKuttaIntegration.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Integrations\OSGRungeKuttaIntegration.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Integrations\OSGRungeKuttaIntegrationBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Integrations\OSGRungeKuttaIntegrationBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Integrations\OSGRungeKuttaIntegrationBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Integrations\OSGRungeKuttaIntegrationFields.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Actors"
-				>
-				<File
-					RelativePath="..\..\src\Actors\OSGPhysicsActor.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actors\OSGPhysicsActor.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actors\OSGPhysicsActor.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actors\OSGPhysicsActorBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actors\OSGPhysicsActorBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actors\OSGPhysicsActorBase.inl"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Objects"
-				>
-				<File
-					RelativePath="..\..\src\Objects\OSGFluid.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGFluid.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGFluid.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGFluidBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGFluidBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGFluidBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGFluidFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGPhysicsCore.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGPhysicsCore.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGPhysicsCore.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGPhysicsCoreBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGPhysicsCoreBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGPhysicsCoreBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGPhysicsCoreFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGSurface.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGSurface.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGSurface.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGSurfaceBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGSurfaceBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGSurfaceBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Objects\OSGSurfaceFields.h"
+					RelativePath="..\..\src\ODE\OSGPhysicsWorldFields.h"
 					>
 				</File>
 				<Filter
-					Name="Attributes"
+					Name="Geom"
 					>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGCollidableAttribute.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsBoxGeom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGCollidableAttribute.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsBoxGeom.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGCollidableAttribute.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsBoxGeom.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGCollidableAttributeBase.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsBoxGeomBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGCollidableAttributeBase.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsBoxGeomBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGCollidableAttributeBase.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsBoxGeomBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGCollidableAttributeFields.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsBoxGeomFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGDragGeometricAttribute.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGDragGeometricAttribute.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeom.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGDragGeometricAttribute.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeom.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGDragGeometricAttributeBase.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeomBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGDragGeometricAttributeBase.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeomBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGDragGeometricAttributeBase.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeomBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGDragGeometricAttributeFields.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeomFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGImovableAttribute.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsGeom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGImovableAttribute.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsGeom.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGImovableAttribute.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsGeom.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGImovableAttributeBase.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsGeomBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGImovableAttributeBase.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsGeomBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGImovableAttributeBase.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsGeomBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGImovableAttributeFields.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsGeomFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGInertiaAttribute.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsPlaneGeom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGInertiaAttribute.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsPlaneGeom.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGInertiaAttribute.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsPlaneGeom.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGInertiaAttributeBase.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsPlaneGeomBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGInertiaAttributeBase.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsPlaneGeomBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGInertiaAttributeBase.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsPlaneGeomBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGInertiaAttributeFields.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsPlaneGeomFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGLinearPositionalAttribute.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsRayGeom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGLinearPositionalAttribute.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsRayGeom.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGLinearPositionalAttribute.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsRayGeom.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGLinearPositionalAttributeBase.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsRayGeomBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGLinearPositionalAttributeBase.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsRayGeomBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGLinearPositionalAttributeBase.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsRayGeomBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGLinearPositionalAttributeFields.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsRayGeomFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGMassAttribute.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsSphereGeom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGMassAttribute.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsSphereGeom.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGMassAttribute.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsSphereGeom.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGMassAttributeBase.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsSphereGeomBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGMassAttributeBase.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsSphereGeomBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGMassAttributeBase.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsSphereGeomBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGMassAttributeFields.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsSphereGeomFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGPhysicsObjectAttribute.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsTriMeshGeom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGPhysicsObjectAttribute.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsTriMeshGeom.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGPhysicsObjectAttribute.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsTriMeshGeom.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGPhysicsObjectAttributeBase.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsTriMeshGeomBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGPhysicsObjectAttributeBase.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsTriMeshGeomBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGPhysicsObjectAttributeBase.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsTriMeshGeomBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGPhysicsObjectAttributeFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalAttribute.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalAttribute.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalAttribute.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalAttributeBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalAttributeBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalAttributeBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalAttributeFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalDragGeometricAttribute.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalDragGeometricAttribute.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalDragGeometricAttribute.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalDragGeometricAttributeBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalDragGeometricAttributeBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalDragGeometricAttributeBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGRotationalDragGeometricAttributeFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGVolumeAttribute.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGVolumeAttribute.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGVolumeAttribute.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGVolumeAttributeBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGVolumeAttributeBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGVolumeAttributeBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Objects\Attributes\OSGVolumeAttributeFields.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsTriMeshGeomFields.h"
 						>
 					</File>
 				</Filter>
-			</Filter>
-			<Filter
-				Name="Systems"
-				>
-				<File
-					RelativePath="..\..\src\Systems\OSGForceSystem.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGForceSystem.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGForceSystem.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGForceSystemBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGForceSystemBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGForceSystemBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGForceSystemFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGPhysicsSystem.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGPhysicsSystem.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGPhysicsSystem.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGPhysicsSystemBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGPhysicsSystemBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGPhysicsSystemBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Systems\OSGPhysicsSystemFields.h"
-					>
-				</File>
 				<Filter
-					Name="Forces"
+					Name="Spaces"
 					>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGBoyancyForce.cpp"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsHashSpace.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGBoyancyForce.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsHashSpace.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGBoyancyForce.inl"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsHashSpace.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGBoyancyForceBase.cpp"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsHashSpaceBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGBoyancyForceBase.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsHashSpaceBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGBoyancyForceBase.inl"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsHashSpaceBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGBoyancyForceFields.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsHashSpaceFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGDefinedForce.cpp"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsQuadTreeSpace.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGDefinedForce.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsQuadTreeSpace.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGDefinedForce.inl"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsQuadTreeSpace.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGDefinedForceBase.cpp"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsQuadTreeSpaceBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGDefinedForceBase.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsQuadTreeSpaceBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGDefinedForceBase.inl"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsQuadTreeSpaceBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGDefinedForceFields.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsQuadTreeSpaceFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGForce.cpp"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSimpleSpace.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGForce.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSimpleSpace.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGForce.inl"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSimpleSpace.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGForceBase.cpp"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSimpleSpaceBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGForceBase.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSimpleSpaceBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGForceBase.inl"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSimpleSpaceBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGForceFields.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSimpleSpaceFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGGravitationalForce.cpp"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSpace.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGGravitationalForce.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSpace.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGGravitationalForce.inl"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSpace.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGGravitationalForceBase.cpp"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSpaceBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGGravitationalForceBase.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSpaceBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGGravitationalForceBase.inl"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSpaceBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGGravitationalForceFields.h"
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSpaceFields.h"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="Joints"
+					>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGKineticSurfaceFrictionForce.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsAMotorJoint.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGKineticSurfaceFrictionForce.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsAMotorJoint.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGKineticSurfaceFrictionForce.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsAMotorJoint.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGKineticSurfaceFrictionForceBase.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsAMotorJointBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGKineticSurfaceFrictionForceBase.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsAMotorJointBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGKineticSurfaceFrictionForceBase.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsAMotorJointBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGKineticSurfaceFrictionForceFields.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsAMotorJointFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGNormalForce.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsBallJoint.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGNormalForce.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsBallJoint.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGNormalForce.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsBallJoint.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGNormalForceBase.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsBallJointBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGNormalForceBase.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsBallJointBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGNormalForceBase.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsBallJointBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGNormalForceFields.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsBallJointFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGRocketForce.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHinge2Joint.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGRocketForce.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHinge2Joint.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGRocketForce.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHinge2Joint.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGRocketForceBase.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHinge2JointBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGRocketForceBase.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHinge2JointBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGRocketForceBase.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHinge2JointBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGRocketForceFields.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHinge2JointFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleDragForce.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHingeJoint.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleDragForce.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHingeJoint.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleDragForce.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHingeJoint.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleDragForceBase.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHingeJointBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleDragForceBase.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHingeJointBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleDragForceBase.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHingeJointBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleDragForceFields.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsHingeJointFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleRotationalDragForce.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsJoint.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleRotationalDragForce.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsJoint.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleRotationalDragForce.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsJoint.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleRotationalDragForceBase.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsJointBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleRotationalDragForceBase.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsJointBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleRotationalDragForceBase.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsJointBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSimpleRotationalDragForceFields.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsJointFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSpringForce.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsSliderJoint.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSpringForce.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsSliderJoint.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSpringForce.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsSliderJoint.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSpringForceBase.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsSliderJointBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSpringForceBase.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsSliderJointBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSpringForceBase.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsSliderJointBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSpringForceFields.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsSliderJointFields.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGStaticSurfaceFrictionForce.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsUniversalJoint.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGStaticSurfaceFrictionForce.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsUniversalJoint.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGStaticSurfaceFrictionForce.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsUniversalJoint.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGStaticSurfaceFrictionForceBase.cpp"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsUniversalJointBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGStaticSurfaceFrictionForceBase.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsUniversalJointBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGStaticSurfaceFrictionForceBase.inl"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsUniversalJointBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGStaticSurfaceFrictionForceFields.h"
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsUniversalJointFields.h"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="Utils"
+					>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSurfaceFrictionForce.cpp"
+						RelativePath="..\..\src\ODE\Utils\OSGPhysicsUtils.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSurfaceFrictionForce.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSurfaceFrictionForce.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSurfaceFrictionForceBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSurfaceFrictionForceBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSurfaceFrictionForceBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Systems\Forces\OSGSurfaceFrictionForceFields.h"
+						RelativePath="..\..\src\ODE\Utils\OSGPhysicsUtils.h"
 						>
 					</File>
 				</Filter>
