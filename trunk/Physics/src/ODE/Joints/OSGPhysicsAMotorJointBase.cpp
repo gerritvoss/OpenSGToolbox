@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsConfig.h"
+#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsAMotorJointBase.h"
 #include "OSGPhysicsAMotorJoint.h"

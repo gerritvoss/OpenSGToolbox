@@ -44,7 +44,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsConfig.h"
+#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsGeom.h"
 #include "ODE/Spaces/OSGPhysicsSpace.h"

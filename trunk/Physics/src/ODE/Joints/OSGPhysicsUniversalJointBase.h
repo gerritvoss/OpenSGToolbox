@@ -59,7 +59,7 @@
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsConfig.h"
+#include "OSGPhysicsDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>

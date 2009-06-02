@@ -44,7 +44,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsConfig.h"
+#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsWorld.h"
 
@@ -117,8 +117,7 @@ void PhysicsWorld::onDestroy()
 	PhysicsWorldPtr tmpPtr(*this);
     if(tmpPtr->id)
     {
-	    //dWorldDestroy(tmpPtr->id);
-        tmpPtr->id = 0;
+	    dWorldDestroy(tmpPtr->id);
     }
 }
 

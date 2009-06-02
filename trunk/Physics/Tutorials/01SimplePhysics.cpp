@@ -27,6 +27,9 @@
 
 #include <OpenSG/OSGFieldContainerFactory.h>
 #include <OpenSG/OSGSimpleAttachments.h>
+#include <OpenSG/OSGSceneFileHandler.h>
+
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -170,16 +173,21 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-        //PhysicsHandlerPtr tmpPtr(*this);
-        //free contact Joints
-        dJointGroupEmpty(physColJointGroupId);
-        //collide
-        physHandler->getSpace()->Collide(0 , physCollisionCallback);
-        //step the world
-        physHandler->getWorld()->worldQuickStep(e.getElapsedTime());
+        static Time StepSize(1.0/60.0);
+        static Time TimeSinceLast(0.0);
+        TimeSinceLast += e.getElapsedTime();
 
-        //update matrices
-        physHandler->updateWorld(rootNode);
+        while(TimeSinceLast > StepSize)
+        {
+            //PhysicsHandlerPtr tmpPtr(*this);
+            //free contact Joints
+            dJointGroupEmpty(physColJointGroupId);
+
+            //Update
+            physHandler->update(StepSize, rootNode, NULL , physCollisionCallback);
+
+            TimeSinceLast -= StepSize;
+        }
     }
 };
 
@@ -249,6 +257,10 @@ int main(int argc, char **argv)
 
     physHandler = PhysicsHandler::create();
     physicsWorld = PhysicsWorld::create();
+    physicsWorld->setWorldContactSurfaceLayer(0.005);
+    physicsWorld->setAutoDisableFlag(1);
+    physicsWorld->setAutoDisableTime(0.75);
+    physicsWorld->setWorldContactMaxCorrectingVel(100.0);
     physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
     hashSpace = PhysicsHashSpace::create();
     beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
@@ -268,8 +280,9 @@ int main(int argc, char **argv)
     physColJointGroupId = dJointGroupCreate(0);
     for (Int32 index = 0; index < 32; index++)
     {
-        physContactArray[index].surface.mode = dContactApprox1;
+        physContactArray[index].surface.mode = dContactBounce;
         physContactArray[index].surface.mu = 0.75;
+        physContactArray[index].surface.bounce = 0.75;
     }
 
 
@@ -315,6 +328,16 @@ int main(int argc, char **argv)
 	beginEditCP(scene, Node::ChildrenFieldMask);
 	    scene->addChild(spaceGroupNode);
 	endEditCP(scene, Node::ChildrenFieldMask);
+
+    //Save the Physics Sim
+	FCFileType::FCPtrStore Containers;
+	Containers.insert(physHandler);
+
+	FCFileType::FCTypeVector IgnoreTypes;
+	//IgnoreTypes.push_back(Node::getClassType().getId());
+	//Save the Field Containers to a xml file
+	FCFileHandler::the()->write(Containers,Path("./01PhysicsData.xml"),IgnoreTypes);
+
 
     // tell the manager what to manage
     mgr->setRoot  (rootNode);
@@ -453,6 +476,7 @@ void buildSphere(void)
 void buildTriMesh(void)
 {
     NodePtr tri = makeTorus(0.5, 1.0, 24, 12);
+    //NodePtr tri = SceneFileHandler::the().read("./Data/tie.wrl");
     if(tri!=NullFC)
     {
         GeometryPtr triGeo = GeometryPtr::dcast(tri->getCore()); 

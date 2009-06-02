@@ -46,7 +46,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(ODE_BASE_DIR)\include&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				AdditionalIncludeDirectories="&quot;$(ODE_BASE_DIR)\include&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;dSINGLE;OSG_COMPILEPHYSICSLIB"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -74,11 +74,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib ode_singled.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib ode_singled.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(ODE_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="&quot;$(ODE_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;;..\..\..\Builds\Windows\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
@@ -139,7 +139,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(ODE_BASE_DIR)\include&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				AdditionalIncludeDirectories="&quot;$(ODE_BASE_DIR)\include&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\..\Builds\Windows\include;..\..\src"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;dSINGLE;OSG_COMPILEPHYSICSLIB"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -166,11 +166,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib ode_single.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib ode_single.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(ODE_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="&quot;$(ODE_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;;..\..\..\Builds\Windows\lib"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
@@ -214,7 +214,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\..\src\OSGPhysicsConfig.h"
+				RelativePath="..\..\src\OSGPhysicsDef.h"
 				>
 			</File>
 			<Filter
@@ -836,6 +836,26 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Events"
+				>
+				<File
+					RelativePath="..\..\src\Events\OSGCollisionEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGCollisionEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGCollisionEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGCollisionListener.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

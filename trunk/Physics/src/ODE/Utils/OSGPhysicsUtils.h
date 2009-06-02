@@ -7,7 +7,7 @@
 
 // Headers
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsConfig.h"
+#include "OSGPhysicsDef.h"
 #include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/OSGBaseFunctions.h>
 #include <OpenSG/OSGTransform.h>

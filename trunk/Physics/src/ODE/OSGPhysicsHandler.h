@@ -43,7 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsConfig.h"
+#include "OSGPhysicsDef.h"
 #include <ode/ode.h>
 
 #include "OSGPhysicsHandlerBase.h"
@@ -86,7 +86,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
       void doPhysicsOnNode(NodePtr rootNode);
       static void physCollisionCallback(void* somedata, dGeomID o1, dGeomID o2);*/
       void odeInit(NodePtr node);
-      void updateWorld(NodePtr node);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -102,6 +101,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+
+    void update(Time ElapsedTime, NodePtr UpdateNode,  void* collisionData, dNearCallback* collisionCallback );
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
@@ -128,6 +129,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     /*! \{                                                                 */
     void onCreate(const PhysicsHandler *id = NULL);
     void onDestroy();
+      void updateWorld(NodePtr node);
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
   private:

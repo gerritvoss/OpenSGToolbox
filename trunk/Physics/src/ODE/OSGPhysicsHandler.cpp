@@ -43,7 +43,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsConfig.h"
+#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsHandler.h"
 
@@ -275,28 +275,10 @@ void PhysicsHandler::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsHandler::onCreate(const PhysicsHandler *)
 {
-
-    /*
-    PhysicsHandlerPtr tmpPtr(*this);
-    tmpPtr->physContactArray = new dContact[MAX_PHYS_CONTACTS];
-    tmpPtr->physColJointGroupId = dJointGroupCreate(0);
-    for (Int32 index = 0; index < MAX_PHYS_CONTACTS; index++)
-    {
-        tmpPtr->physContactArray[index].surface.mode = dContactApprox1 | dContactBounce;
-        tmpPtr->physContactArray[index].surface.mu = 0.75;
-        tmpPtr->physContactArray[index].surface.bounce = 0.14;
-        tmpPtr->physContactArray[index].surface.bounce_vel = 0.1;
-    }
-    */
 }
 
 void PhysicsHandler::onDestroy()
 {
-    /*
-    PhysicsHandlerPtr tmpPtr(*this);
-    if(tmpPtr->physContactArray)
-        delete tmpPtr->physContactArray;
-        */
 }
 /***************************************************************************\
 *                              Field Get	                               *
@@ -309,6 +291,18 @@ void PhysicsHandler::onDestroy()
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
+
+void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode,  void* collisionData, dNearCallback* collisionCallback )
+{
+    //collide
+    getSpace()->Collide(collisionData , collisionCallback);
+
+    //step the world
+    getWorld()->worldQuickStep(ElapsedTime);
+
+    //update matrices
+    updateWorld(UpdateNode);
+}
 
 void PhysicsHandler::updateWorld(NodePtr node)
 {
