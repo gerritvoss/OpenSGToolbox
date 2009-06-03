@@ -3,6 +3,7 @@
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
+#include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
@@ -37,6 +38,8 @@ bool ExitApp = false;
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
+
+NodePtr createAxisGeo(Real32 Length);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -171,8 +174,6 @@ int main(int argc, char **argv)
 	ChunkMaterialPtr ExampleMaterial = ChunkMaterial::create();
 	beginEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 		ExampleMaterial->addChunk(ExampleLineChunk);
-		ExampleMaterial->addChunk(ExampleMaterialChunk);
-		ExampleMaterial->addChunk(ExampleBlendChunk);
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
 
@@ -210,6 +211,8 @@ int main(int argc, char **argv)
     endEditCP(SkeletonNode, Node::CoreFieldMask);
 
 
+    //Torus Node
+    NodePtr TorusNode = makeTorus(.5, 2, 32, 32);
 
 
 
@@ -218,9 +221,12 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
         scene->addChild(SkeletonNode);
+        //scene->addChild(TorusNode);
+        scene->addChild(createAxisGeo(10.0));
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
+    mgr->turnHeadlightOff();
 
     // Show the whole Scene
     mgr->showAll();
@@ -233,6 +239,89 @@ int main(int argc, char **argv)
     osgExit();
 
     return 0;
+}
+
+NodePtr createAxisGeo(Real32 Length)
+{
+	GeoPTypesPtr type = GeoPTypesUI8::create();        
+    beginEditCP(type, GeoPTypesUI8::GeoPropDataFieldMask);
+    {
+        type->addValue(GL_LINES);
+    }
+    endEditCP  (type, GeoPTypesUI8::GeoPropDataFieldMask);
+
+	GeoPLengthsPtr lens = GeoPLengthsUI32::create();    
+    beginEditCP(lens, GeoPLengthsUI32::GeoPropDataFieldMask);
+    {
+        lens->addValue(6);
+    }
+    endEditCP  (lens, GeoPLengthsUI32::GeoPropDataFieldMask);
+	 GeoPositions3fPtr pnts = GeoPositions3f::create();
+    beginEditCP(pnts, GeoPositions3f::GeoPropDataFieldMask);
+    {
+		// the points of the Quads
+        pnts->addValue(Pnt3f(0.0,  0,  0));
+        pnts->addValue(Pnt3f(Length,  0,  0));
+
+        pnts->addValue(Pnt3f(0.0,  0,  0));
+        pnts->addValue(Pnt3f(0.0,  Length,  0));
+
+        pnts->addValue(Pnt3f(0.0,  0,  0));
+        pnts->addValue(Pnt3f(0.0,  0.0,  Length));
+
+    }
+    endEditCP  (pnts, GeoPositions3f::GeoPropDataFieldMask);
+    
+    //Colors
+    GeoColors3fPtr colors = GeoColors3f::create();
+    beginEditCP(colors, GeoColors3f::GeoPropDataFieldMask);
+        colors->addValue(Color3f( 1.0,0.0,0.0));
+        colors->addValue(Color3f( 1.0,0.0,0.0));
+
+        colors->addValue(Color3f( 0.0,1.0,0.0));
+        colors->addValue(Color3f( 0.0,1.0,0.0));
+
+        colors->addValue(Color3f( 0.0,0.0,1.0));
+        colors->addValue(Color3f( 0.0,0.0,1.0));
+    endEditCP(colors, GeoColors3f::GeoPropDataFieldMask);
+
+	LineChunkPtr ExampleLineChunk = LineChunk::create();
+	beginEditCP(ExampleLineChunk);
+		ExampleLineChunk->setWidth(2.0f);
+		ExampleLineChunk->setSmooth(true);
+	endEditCP(ExampleLineChunk);
+
+	ChunkMaterialPtr ExampleMaterial = ChunkMaterial::create();
+	beginEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
+		ExampleMaterial->addChunk(ExampleLineChunk);
+	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
+
+    GeometryPtr geo=Geometry::create();
+    beginEditCP(geo, Geometry::TypesFieldMask     |
+                     Geometry::LengthsFieldMask   |
+                     Geometry::PositionsFieldMask |
+                     Geometry::ColorsFieldMask);
+    {
+        geo->setTypes    (type);
+        geo->setLengths  (lens);
+        geo->setPositions(pnts);
+        geo->setColors(colors);
+        geo->setMaterial(ExampleMaterial);
+    }
+    endEditCP  (geo, Geometry::TypesFieldMask     |
+                     Geometry::LengthsFieldMask   |
+                     Geometry::PositionsFieldMask |
+                     Geometry::ColorsFieldMask);
+    
+    // put the geometry core into a node
+    NodePtr n = Node::create();
+    beginEditCP(n, Node::CoreFieldMask);
+    {
+        n->setCore(geo);
+    }
+    endEditCP  (n, Node::CoreFieldMask);
+
+    return n;
 }
 
 

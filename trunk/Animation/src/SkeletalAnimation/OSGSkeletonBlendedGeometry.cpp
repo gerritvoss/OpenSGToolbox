@@ -205,6 +205,7 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 {
 	if(getBaseGeometry() != NullFC &&
 		getPositions() != NullFC &&
+        getBaseGeometry()->getPositions() != NullFC &&
 		(getPositionIndexes().size() == getBones().size() &&
 		getPositionIndexes().size() == getBlendAmounts().size()))
 	{

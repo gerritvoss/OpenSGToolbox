@@ -475,16 +475,19 @@ void BlendGeometry::recalculateNormals(void)
 void BlendGeometry::recalculateColors(void)
 {
     //TODO: Implement
+    SWARNING << "BlendGeometry::recalculateColors(void) not implemented" << std::endl;
 }
 
 void BlendGeometry::recalculateSecondaryColors(void)
 {
     //TODO: Implement
+    SWARNING << "BlendGeometry::recalculateSecondaryColors(void) not implemented" << std::endl;
 }
 
 void BlendGeometry::recalculateTexCoords(UInt32 CoordNum)
 {
     //TODO: Implement
+    SWARNING << "BlendGeometry::recalculateTexCoords(void) not implemented" << std::endl;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

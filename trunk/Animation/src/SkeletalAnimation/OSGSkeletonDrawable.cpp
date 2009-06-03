@@ -106,7 +106,6 @@ Action::ResultE SkeletonDrawable::drawPrimitives (DrawActionBase *action)
     {
 		for(UInt32 i(0) ; i<getSkeleton()->getRootBones().size() ; ++i)
 		{
-			//TODO:Implement
 			//Draw all Root Bones of Skeleton
 			drawBone(getSkeleton()->getRootBones()[i], action);
 		}

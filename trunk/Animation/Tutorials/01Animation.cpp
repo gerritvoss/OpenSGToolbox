@@ -215,12 +215,13 @@ int main(int argc, char **argv)
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
                                         "OpenSG 01Animation Window");
+
+    // Tell the Manager what to manage
+    mgr->setWindow(TutorialWindowEventProducer->getWindow());
 
     //Torus Material
     TheTorusMaterial = SimpleMaterial::create();
@@ -281,6 +282,8 @@ int main(int argc, char **argv)
         TutorialWindowEventProducer->update();
         TutorialWindowEventProducer->draw();
     }
+
+    osgExit();
 
     return 0;
 }
