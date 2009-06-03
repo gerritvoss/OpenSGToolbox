@@ -292,10 +292,10 @@ void PhysicsHandler::onDestroy()
 *                              Class Specific                              *
 \***************************************************************************/
 
-void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode,  void* collisionData, dNearCallback* collisionCallback )
+void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
 {
     //collide
-    getSpace()->Collide(collisionData , collisionCallback);
+    getSpace()->Collide(getWorld());
 
     //step the world
     getWorld()->worldQuickStep(ElapsedTime);

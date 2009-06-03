@@ -102,7 +102,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    void update(Time ElapsedTime, NodePtr UpdateNode,  void* collisionData, dNearCallback* collisionCallback );
+    void update(Time ElapsedTime, NodePtr UpdateNode);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

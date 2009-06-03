@@ -67,7 +67,7 @@
 
 #include "OSGPhysicsGeom.h" // Parent
 
-#include <OpenSG/OSGVec3fFields.h> // Lenghts type
+#include <OpenSG/OSGVec3fFields.h> // Lengths type
 
 #include "OSGPhysicsBoxGeomFields.h"
 
@@ -91,11 +91,11 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBoxGeomBase : public PhysicsGeom
 
     enum
     {
-        LenghtsFieldId = Inherited::NextFieldId,
-        NextFieldId    = LenghtsFieldId + 1
+        LengthsFieldId = Inherited::NextFieldId,
+        NextFieldId    = LengthsFieldId + 1
     };
 
-    static const OSG::BitVector LenghtsFieldMask;
+    static const OSG::BitVector LengthsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +122,17 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBoxGeomBase : public PhysicsGeom
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec3f             *getSFLenghts        (void);
+           SFVec3f             *getSFLengths        (void);
 
-           Vec3f               &getLenghts        (void);
-     const Vec3f               &getLenghts        (void) const;
+           Vec3f               &getLengths        (void);
+     const Vec3f               &getLengths        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setLenghts        ( const Vec3f &value );
+     void setLengths        ( const Vec3f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBoxGeomBase : public PhysicsGeom
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFVec3f             _sfLenghts;
+    SFVec3f             _sfLengths;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

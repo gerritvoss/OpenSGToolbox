@@ -65,8 +65,8 @@
 
 OSG_USING_NAMESPACE
 
-const OSG::BitVector  PhysicsBoxGeomBase::LenghtsFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsBoxGeomBase::LenghtsFieldId);
+const OSG::BitVector  PhysicsBoxGeomBase::LengthsFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBoxGeomBase::LengthsFieldId);
 
 const OSG::BitVector PhysicsBoxGeomBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -75,7 +75,7 @@ const OSG::BitVector PhysicsBoxGeomBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Vec3f           PhysicsBoxGeomBase::_sfLenghts
+/*! \var Vec3f           PhysicsBoxGeomBase::_sfLengths
     
 */
 
@@ -84,10 +84,10 @@ const OSG::BitVector PhysicsBoxGeomBase::MTInfluenceMask =
 FieldDescription *PhysicsBoxGeomBase::_desc[] = 
 {
     new FieldDescription(SFVec3f::getClassType(), 
-                     "lenghts", 
-                     LenghtsFieldId, LenghtsFieldMask,
+                     "lengths", 
+                     LengthsFieldId, LengthsFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBoxGeomBase::getSFLenghts)
+                     (FieldAccessMethod) &PhysicsBoxGeomBase::getSFLengths)
 };
 
 
@@ -163,7 +163,7 @@ void PhysicsBoxGeomBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PhysicsBoxGeomBase::PhysicsBoxGeomBase(void) :
-    _sfLenghts                (), 
+    _sfLengths                (), 
     Inherited() 
 {
 }
@@ -173,7 +173,7 @@ PhysicsBoxGeomBase::PhysicsBoxGeomBase(void) :
 #endif
 
 PhysicsBoxGeomBase::PhysicsBoxGeomBase(const PhysicsBoxGeomBase &source) :
-    _sfLenghts                (source._sfLenghts                ), 
+    _sfLengths                (source._sfLengths                ), 
     Inherited                 (source)
 {
 }
@@ -190,9 +190,9 @@ UInt32 PhysicsBoxGeomBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (LenghtsFieldMask & whichField))
+    if(FieldBits::NoField != (LengthsFieldMask & whichField))
     {
-        returnValue += _sfLenghts.getBinSize();
+        returnValue += _sfLengths.getBinSize();
     }
 
 
@@ -204,9 +204,9 @@ void PhysicsBoxGeomBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (LenghtsFieldMask & whichField))
+    if(FieldBits::NoField != (LengthsFieldMask & whichField))
     {
-        _sfLenghts.copyToBin(pMem);
+        _sfLengths.copyToBin(pMem);
     }
 
 
@@ -217,9 +217,9 @@ void PhysicsBoxGeomBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (LenghtsFieldMask & whichField))
+    if(FieldBits::NoField != (LengthsFieldMask & whichField))
     {
-        _sfLenghts.copyFromBin(pMem);
+        _sfLengths.copyFromBin(pMem);
     }
 
 
@@ -232,8 +232,8 @@ void PhysicsBoxGeomBase::executeSyncImpl(      PhysicsBoxGeomBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (LenghtsFieldMask & whichField))
-        _sfLenghts.syncWith(pOther->_sfLenghts);
+    if(FieldBits::NoField != (LengthsFieldMask & whichField))
+        _sfLengths.syncWith(pOther->_sfLengths);
 
 
 }
@@ -245,8 +245,8 @@ void PhysicsBoxGeomBase::executeSyncImpl(      PhysicsBoxGeomBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (LenghtsFieldMask & whichField))
-        _sfLenghts.syncWith(pOther->_sfLenghts);
+    if(FieldBits::NoField != (LengthsFieldMask & whichField))
+        _sfLengths.syncWith(pOther->_sfLengths);
 
 
 

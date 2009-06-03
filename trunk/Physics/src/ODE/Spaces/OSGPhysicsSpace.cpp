@@ -48,6 +48,7 @@
 #include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsSpace.h"
+#include "ODE/OSGPhysicsWorld.h"
 
 OSG_USING_NAMESPACE
 
@@ -71,6 +72,11 @@ void PhysicsSpace::initMethod (void)
 {
 }
 
+void PhysicsSpace::collisionCallback (void *data, dGeomID o1, dGeomID o2)
+{
+    reinterpret_cast<PhysicsSpace*>(data)->collisionCallback(o1,o2);
+}
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -90,6 +96,36 @@ void PhysicsSpace::onDestroy()
     {
 	    //dSpaceDestroy(tmpPtr->sID);
         tmpPtr->sID = 0;
+    }
+}
+
+void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
+{
+    if (dGeomIsSpace (o1) || dGeomIsSpace (o2))
+    {
+        // colliding a space with something
+        dSpaceCollide2 (o1,o2,reinterpret_cast<void *>(this),&PhysicsSpace::collisionCallback);
+        // collide all geoms internal to the space(s)
+        if (dGeomIsSpace (o1)) dSpaceCollide (dGeomGetSpace(o1),reinterpret_cast<void *>(this),&PhysicsSpace::collisionCallback);
+        if (dGeomIsSpace (o2)) dSpaceCollide (dGeomGetSpace(o2),reinterpret_cast<void *>(this),&PhysicsSpace::collisionCallback);
+    }
+    else
+    {
+        // colliding two non-space geoms, so generate contact
+        // points between o1 and o2
+        Int32 numContacts = dCollide(o1, o2, _ContactJoints.size(), 
+            &(_ContactJoints[0].geom), sizeof(dContact));
+
+        //SLOG << "found contacts: " << numContacts << endLog;
+        // add these contact points to the simulation
+        for (Int32 i=0; i < numContacts; i++)
+        {
+            dJointID jointId = dJointCreateContact(_CollideWorldID, 
+                _ColJointGroupId, 
+                &_ContactJoints[i]);
+
+            dJointAttach(jointId, dGeomGetBody(o1), dGeomGetBody(o2));
+        }
     }
 }
 /***************************************************************************\
@@ -176,10 +212,15 @@ dGeomID PhysicsSpace::GetGeom( Int32 i )
 	return dSpaceGetGeom(tmpPtr->sID, i);
 }
 
-void PhysicsSpace::Collide( void* somedata, dNearCallback* callback )
+void PhysicsSpace::Collide( PhysicsWorldPtr w )
 {
+    _CollideWorldID = w->getWorldID();
+    
+    //free contact Joints
+    dJointGroupEmpty(_ColJointGroupId);
+
 	PhysicsSpacePtr tmpPtr(*this);
-	dSpaceCollide(tmpPtr->sID, somedata, callback);
+	dSpaceCollide(tmpPtr->sID, reinterpret_cast<void *>(this), &PhysicsSpace::collisionCallback);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -191,11 +232,32 @@ void PhysicsSpace::Collide( void* somedata, dNearCallback* callback )
 PhysicsSpace::PhysicsSpace(void) :
     Inherited()
 {
+    _ContactJoints.resize(32);
+    _ColJointGroupId = dJointGroupCreate(0);
+    for (Int32 index = 0; index < _ContactJoints.size(); index++)
+    {
+        _ContactJoints[index].surface.mode = dContactBounce;
+        _ContactJoints[index].surface.mu = 0.75;
+        _ContactJoints[index].surface.bounce = 0.9;
+    }
 }
 
 PhysicsSpace::PhysicsSpace(const PhysicsSpace &source) :
     Inherited(source)
 {
+    _ContactJoints.resize(32);
+    _ColJointGroupId = dJointGroupCreate(0);
+    for (Int32 index = 0; index < _ContactJoints.size(); index++)
+    {
+        //_ContactJoints[index].surface.mode = dContactApprox1;
+        //_ContactJoints[index].surface.mu = 0.75;
+        _ContactJoints[index].surface.mode = dContactApprox1 | dContactBounce;
+        _ContactJoints[index].surface.mu = 0.75;
+        _ContactJoints[index].surface.bounce = 0.1;
+        //_ContactJoints[index].surface.mode = dContactBounce;
+        //_ContactJoints[index].surface.mu = 0.75;
+        //_ContactJoints[index].surface.bounce = 0.9;
+    }
 }
 
 PhysicsSpace::~PhysicsSpace(void)

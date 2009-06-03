@@ -96,33 +96,33 @@ PhysicsBoxGeomPtr PhysicsBoxGeomBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PhysicsBoxGeom::_sfLenghts field.
+//! Get the PhysicsBoxGeom::_sfLengths field.
 inline
-SFVec3f *PhysicsBoxGeomBase::getSFLenghts(void)
+SFVec3f *PhysicsBoxGeomBase::getSFLengths(void)
 {
-    return &_sfLenghts;
+    return &_sfLengths;
 }
 
 
-//! Get the value of the PhysicsBoxGeom::_sfLenghts field.
+//! Get the value of the PhysicsBoxGeom::_sfLengths field.
 inline
-Vec3f &PhysicsBoxGeomBase::getLenghts(void)
+Vec3f &PhysicsBoxGeomBase::getLengths(void)
 {
-    return _sfLenghts.getValue();
+    return _sfLengths.getValue();
 }
 
-//! Get the value of the PhysicsBoxGeom::_sfLenghts field.
+//! Get the value of the PhysicsBoxGeom::_sfLengths field.
 inline
-const Vec3f &PhysicsBoxGeomBase::getLenghts(void) const
+const Vec3f &PhysicsBoxGeomBase::getLengths(void) const
 {
-    return _sfLenghts.getValue();
+    return _sfLengths.getValue();
 }
 
-//! Set the value of the PhysicsBoxGeom::_sfLenghts field.
+//! Set the value of the PhysicsBoxGeom::_sfLengths field.
 inline
-void PhysicsBoxGeomBase::setLenghts(const Vec3f &value)
+void PhysicsBoxGeomBase::setLengths(const Vec3f &value)
 {
-    _sfLenghts.setValue(value);
+    _sfLengths.setValue(value);
 }
 
 

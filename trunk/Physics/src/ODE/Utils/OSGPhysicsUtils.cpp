@@ -1,6 +1,6 @@
 #include "OSGPhysicsUtils.h"
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 PhysicsHandlerFinder::PhysicsHandlerFinder(void) :
     _found()
@@ -71,3 +71,56 @@ Action::ResultE PhysicsGeometryFinder::check(NodePtr& node)
     }
     return Action::Continue;        
 }
+
+Vec3f calcMinGeometryBounds(GeometryPtr geo)
+{
+    if(geo == NullFC ||
+       geo->getPositions() == NullFC ||
+       geo->getPositions()->size() == 0)
+    {
+        return Vec3f();
+    }
+
+    GeoPositionsPtr Positions(geo->getPositions());
+
+    Pnt3f Min(Positions->getValue(0)), 
+        Max(Positions->getValue(0));
+
+
+    for(UInt32 i(1) ; i<Positions->size(); ++i)
+    {
+        Min[0] = osgMin(Min[0], Positions->getValue(i)[0]);
+        Min[1] = osgMin(Min[1], Positions->getValue(i)[1]);
+        Min[2] = osgMin(Min[2], Positions->getValue(i)[2]);
+
+        Max[0] = osgMax(Max[0], Positions->getValue(i)[0]);
+        Max[1] = osgMax(Max[1], Positions->getValue(i)[1]);
+        Max[2] = osgMax(Max[2], Positions->getValue(i)[2]);
+    }
+
+    return Max-Min;
+}
+
+Pnt3f calcGeometryCenter(GeometryPtr geo)
+{
+    if(geo == NullFC ||
+       geo->getPositions() == NullFC ||
+       geo->getPositions()->size() == 0)
+    {
+        return Pnt3f();
+    }
+
+    GeoPositionsPtr Positions(geo->getPositions());
+
+    Pnt3f Sum;
+
+
+    for(UInt32 i(1) ; i<Positions->size(); ++i)
+    {
+        Sum = Sum + Vec3f(Positions->getValue(i));
+    }
+
+    return Sum * (1.0f/static_cast<Real32>(Positions->size()));
+}
+
+OSG_END_NAMESPACE

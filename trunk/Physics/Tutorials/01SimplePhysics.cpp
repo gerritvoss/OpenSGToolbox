@@ -52,19 +52,14 @@ void buildCar();
 void buildTriMesh(void);
 void buildSphere(void);
 void buildBox(void);
-void doPhysicsOnNode(NodePtr node);
-void physCollisionCallback(void* somedata, dGeomID o1, dGeomID o2);
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+NodePtr TriGeometryBase;
 
-PhysicsRayGeomPtr TutorialPhysicsRayGeom;
 PhysicsHandlerPtr physHandler;
 PhysicsWorldPtr physicsWorld;
 PhysicsHashSpacePtr hashSpace;
-
-dJointGroupID physColJointGroupId;
-dContact *physContactArray;
 
 //just for hierarchy
 NodePtr spaceGroupNode;
@@ -179,12 +174,8 @@ class TutorialUpdateListener : public UpdateListener
 
         while(TimeSinceLast > StepSize)
         {
-            //PhysicsHandlerPtr tmpPtr(*this);
-            //free contact Joints
-            dJointGroupEmpty(physColJointGroupId);
-
             //Update
-            physHandler->update(StepSize, rootNode, NULL , physCollisionCallback);
+            physHandler->update(StepSize, rootNode);
 
             TimeSinceLast -= StepSize;
         }
@@ -233,6 +224,9 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
 
+    //Make Base Geometry Node
+    TriGeometryBase = SceneFileHandler::the().read("./Data/Ship.osb");
+
     //Make Torus Node
     NodePtr TorusNode = makeTorus(.5, 2, 32, 32);
 
@@ -253,16 +247,26 @@ int main(int argc, char **argv)
     endEditCP  (rootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     //Setup Physics Scene
-    TutorialPhysicsRayGeom = PhysicsRayGeom::create();
+    physicsWorld = PhysicsWorld::create();
+    beginEditCP(physicsWorld, PhysicsWorld::WorldContactSurfaceLayerFieldMask | 
+                              PhysicsWorld::AutoDisableFlagFieldMask | 
+                              PhysicsWorld::AutoDisableTimeFieldMask | 
+                              PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
+                              PhysicsWorld::GravityFieldMask);
+        physicsWorld->setWorldContactSurfaceLayer(0.005);
+        physicsWorld->setAutoDisableFlag(1);
+        physicsWorld->setAutoDisableTime(0.75);
+        physicsWorld->setWorldContactMaxCorrectingVel(100.0);
+        physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
+    endEditCP(physicsWorld, PhysicsWorld::WorldContactSurfaceLayerFieldMask | 
+                              PhysicsWorld::AutoDisableFlagFieldMask | 
+                              PhysicsWorld::AutoDisableTimeFieldMask | 
+                              PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
+                              PhysicsWorld::GravityFieldMask);
+
+    hashSpace = PhysicsHashSpace::create();
 
     physHandler = PhysicsHandler::create();
-    physicsWorld = PhysicsWorld::create();
-    physicsWorld->setWorldContactSurfaceLayer(0.005);
-    physicsWorld->setAutoDisableFlag(1);
-    physicsWorld->setAutoDisableTime(0.75);
-    physicsWorld->setWorldContactMaxCorrectingVel(100.0);
-    physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
-    hashSpace = PhysicsHashSpace::create();
     beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
         physHandler->setWorld(physicsWorld);
         physHandler->setSpace(hashSpace);
@@ -274,16 +278,6 @@ int main(int argc, char **argv)
         rootNode->addAttachment(physicsWorld);
         rootNode->addAttachment(hashSpace);
     endEditCP(rootNode, Node::AttachmentsFieldMask);
-    
-    
-    physContactArray = new dContact[32];
-    physColJointGroupId = dJointGroupCreate(0);
-    for (Int32 index = 0; index < 32; index++)
-    {
-        physContactArray[index].surface.mode = dContactBounce;
-        physContactArray[index].surface.mu = 0.75;
-        physContactArray[index].surface.bounce = 0.75;
-    }
 
 
 	/************************************************************************/
@@ -294,7 +288,7 @@ int main(int argc, char **argv)
 	spaceGroupNode = makeCoredNode<Group>(&spaceGroup);
     //create the ground plane
     GeometryPtr plane;
-	NodePtr planeNode = makeBox(200.0, 200.0, 1.0, 1, 1, 1);
+	NodePtr planeNode = makeBox(30.0, 30.0, 1.0, 1, 1, 1);
     plane = GeometryPtr::dcast(planeNode->getCore());
     //and its Material
 	SimpleMaterialPtr plane_mat = SimpleMaterial::create();
@@ -309,21 +303,21 @@ int main(int argc, char **argv)
 
     //create Physical Attachments
 	PhysicsBoxGeomPtr planeGeom = PhysicsBoxGeom::create();
-    CPEdit(planeGeom, PhysicsBoxGeom::LenghtsFieldMask | 
-                      PhysicsBoxGeom::SpaceFieldMask);
-        planeGeom->setLenghts(Vec3f(200.0, 200.0, 1.0));
+    beginEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+        planeGeom->setLengths(Vec3f(30.0, 30.0, 1.0));
         //add geoms to space for collision
         planeGeom->setSpace(hashSpace);
+    endEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
 
 	//add Attachments to nodes...
-    beginEditCP(spaceGroupNode, Node::AttachmentsFieldMask | 
-                            Node::ChildrenFieldMask);
+    beginEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 	    spaceGroupNode->addAttachment(hashSpace);
         spaceGroupNode->addChild(planeNode);
-    endEditCP(spaceGroupNode);
+    endEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
+
     beginEditCP(planeNode, Node::AttachmentsFieldMask);
         planeNode->addAttachment(planeGeom);
-    endEditCP(planeNode);
+    endEditCP(planeNode, Node::AttachmentsFieldMask);
     
 	beginEditCP(scene, Node::ChildrenFieldMask);
 	    scene->addChild(spaceGroupNode);
@@ -386,37 +380,41 @@ void buildBox(void)
     endEditCP(box_mat);
     beginEditCP(box, Geometry::MaterialFieldMask);
         box->setMaterial(box_mat);
-    endEditCP(box);
+    endEditCP(box, Geometry::MaterialFieldMask);
     TransformPtr boxTrans;
     NodePtr boxTransNode = makeCoredNode<Transform>(&boxTrans);
     m.setIdentity();
-    Real32 randX = (Real32)(rand()%10);
-    Real32 randY = (Real32)(rand()%10);
+    Real32 randX = (Real32)(rand()%10)-5.0;
+    Real32 randY = (Real32)(rand()%10)-5.0;
     m.setTranslate(randX, randY, 10.0);
     beginEditCP(boxTrans, Transform::MatrixFieldMask);
         boxTrans->setMatrix(m);
-    endEditCP(boxTrans);
+    endEditCP(boxTrans, Transform::MatrixFieldMask);
+
     //create ODE data
     PhysicsBodyPtr boxBody = PhysicsBody::create();
     boxBody->setWorld(physicsWorld);
     CPEdit(boxBody, PhysicsBody::PositionFieldMask);
         boxBody->setPosition(Vec3f(randX, randY, 10.0));
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
-    CPEdit(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+    beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
         boxGeom->setBody(boxBody);
         boxGeom->setSpace(hashSpace);
+    endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+
     //add attachments
     beginEditCP(boxNode, Node::AttachmentsFieldMask);
         boxNode->addAttachment(boxGeom);
-    endEditCP(boxNode);
+    endEditCP(boxNode, Node::AttachmentsFieldMask);
     beginEditCP(boxTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
         boxTransNode->addAttachment(boxBody);
         boxTransNode->addChild(boxNode);
-    endEditCP(boxTransNode);
+    endEditCP(boxTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
+
     //add to SceneGraph
     beginEditCP(spaceGroupNode, Node::ChildrenFieldMask);
         spaceGroupNode->addChild(boxTransNode);
-    endEditCP(spaceGroupNode);
+    endEditCP(spaceGroupNode, Node::ChildrenFieldMask);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -440,8 +438,8 @@ void buildSphere(void)
     TransformPtr sphereTrans;
     NodePtr sphereTransNode = makeCoredNode<Transform>(&sphereTrans);
     m.setIdentity();
-    Real32 randX = (Real32)(rand()%10);
-    Real32 randY = (Real32)(rand()%10);
+    Real32 randX = (Real32)(rand()%10)-5.0;
+    Real32 randY = (Real32)(rand()%10)-5.0;
     m.setTranslate(randX, randY, 10.0);
     beginEditCP(sphereTrans, Transform::MatrixFieldMask);
     sphereTrans->setMatrix(m);
@@ -475,8 +473,9 @@ void buildSphere(void)
 //////////////////////////////////////////////////////////////////////////
 void buildTriMesh(void)
 {
-    NodePtr tri = makeTorus(0.5, 1.0, 24, 12);
-    //NodePtr tri = SceneFileHandler::the().read("./Data/tie.wrl");
+    //NodePtr tri = makeTorus(0.5, 1.0, 24, 12);
+    //NodePtr tri = makeBox(10.0, 10.0, 10.0, 1, 1, 1);
+    NodePtr tri = Node::Ptr::dcast(TriGeometryBase->shallowCopy());
     if(tri!=NullFC)
     {
         GeometryPtr triGeo = GeometryPtr::dcast(tri->getCore()); 
@@ -490,23 +489,38 @@ void buildTriMesh(void)
         TransformPtr triTrans;
         NodePtr triTransNode = makeCoredNode<Transform>(&triTrans);
         m.setIdentity();
-        Real32 randX = (Real32)(rand()%10);
-        Real32 randY = (Real32)(rand()%10);
+        Real32 randX = (Real32)(rand()%10)-5.0;
+        Real32 randY = (Real32)(rand()%10)-5.0;
         m.setTranslate(randX, randY, 18.0);
         triTrans->setMatrix(m);
+
         //create ODE data
         PhysicsBodyPtr triBody = PhysicsBody::create();
         triBody->setWorld(physicsWorld);
         triBody->setPosition(Vec3f(randX, randY, 18.0));
-        PhysicsTriMeshGeomPtr triGeom = PhysicsTriMeshGeom::create();
-        CPEdit(triGeom, PhysicsTriMeshGeom::BodyFieldMask | 
-                        PhysicsTriMeshGeom::SpaceFieldMask | 
-                        PhysicsTriMeshGeom::GeometryNodeFieldMask);
-            triGeom->setBody(triBody);
-            //add geom to space for collision
-            triGeom->setSpace(hashSpace);
-            //set the geometryNode to fill the ode-triMesh
-            triGeom->setGeometryNode(tri);
+        PhysicsGeomPtr triGeom;
+        if(false)
+        {
+            triGeom = PhysicsTriMeshGeom::create();
+            CPEdit(triGeom, PhysicsTriMeshGeom::BodyFieldMask | 
+                            PhysicsTriMeshGeom::SpaceFieldMask | 
+                            PhysicsTriMeshGeom::GeometryNodeFieldMask);
+                triGeom->setBody(triBody);
+                //add geom to space for collision
+                triGeom->setSpace(hashSpace);
+                //set the geometryNode to fill the ode-triMesh
+                PhysicsTriMeshGeom::Ptr::dcast(triGeom)->setGeometryNode(tri);
+        }
+        else
+        {
+
+            triGeom = PhysicsBoxGeom::create();
+            beginEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+                triGeom->setBody(triBody);
+                triGeom->setSpace(hashSpace);
+                PhysicsBoxGeom::Ptr::dcast(triGeom)->setLengths(calcMinGeometryBounds(triGeo));
+            endEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+        }
         
         //add attachments
         tri->addAttachment(triGeom);
@@ -518,20 +532,5 @@ void buildTriMesh(void)
     else
     {
         SLOG << "Could not read MeshData!" << endLog;
-    }
-}
-
-void physCollisionCallback(void* somedata, dGeomID o1, dGeomID o2)
-{
-    Int32 numContacts = dCollide(o1, o2, 32, 
-        &physContactArray[0].geom, sizeof(dContact));
-    //SLOG << "found contacts: " << numContacts << endLog;
-    for (Int32 i=0; i < numContacts; i++)
-    {
-        dJointID jointId = dJointCreateContact(physHandler->getWorld()->getWorldID(), 
-            physColJointGroupId, 
-            &physContactArray[i]);
-
-        dJointAttach(jointId, dGeomGetBody(o1), dGeomGetBody(o2));
     }
 }

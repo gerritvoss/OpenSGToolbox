@@ -81,7 +81,7 @@ void PhysicsBoxGeom::onCreate(const PhysicsBoxGeom *)
 {
 	PhysicsBoxGeomPtr tmpPtr(*this);
 	tmpPtr->id = dCreateBox(0, 1.0f, 1.0f, 1.0f);
-	PhysicsBoxGeomBase::setLenghts(tmpPtr->getLenghts());
+	PhysicsBoxGeomBase::setLengths(tmpPtr->getLengths());
     PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(id));
     PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(id));
 }
@@ -93,7 +93,7 @@ void PhysicsBoxGeom::onDestroy()
 /***************************************************************************\
 *                              Field Get	                               *
 \***************************************************************************/
-Vec3f PhysicsBoxGeom::getLenghts(void)
+Vec3f PhysicsBoxGeom::getLengths(void)
 {
 	PhysicsBoxGeomPtr tmpPtr(*this);
 	dVector3 t;
@@ -104,18 +104,18 @@ Vec3f PhysicsBoxGeom::getLenghts(void)
 *                              Field Set	                               *
 \***************************************************************************/
 
-void PhysicsBoxGeom::setLenghts(const Vec3f &value )
+void PhysicsBoxGeom::setLengths(const Vec3f &value )
 {
 	PhysicsBoxGeomPtr tmpPtr(*this);
 	dGeomBoxSetLengths(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsBoxGeomBase::setLenghts(value);
+	PhysicsBoxGeomBase::setLengths(value);
 }
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
 void PhysicsBoxGeom::initBoxGeom()
 {
-    setLenghts(PhysicsBoxGeomBase::getLenghts());
+    setLengths(PhysicsBoxGeomBase::getLengths());
     initGeom();
 }
 Real32 PhysicsBoxGeom::getPointDepth(const Vec3f& p)

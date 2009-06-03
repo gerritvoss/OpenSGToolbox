@@ -62,35 +62,10 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorld : public PhysicsWorldBase
 	/*---------------------------------------------------------------------*/
 	/*! \name                   Class Specific Get Field                    */
 	/*! \{                                                                 */
-	Real32	getErp(void);
-	Real32	getCfm(void);
-	Vec3f	getGravity(void);
-	Int32	getAutoDisableFlag(void);
-	Real32	getAutoDisableLinearThreshold(void);
-	Real32	getAutoDisableAngularThreshold(void);
-	Int32	getAutoDisableSteps(void);
-	Real32	getAutoDisableTime(void);
-	Int32	getWorldQuickStepNumIterations(void);
-	Real32	getWorldContactMaxCorrectingVel(void);
-	Real32	getWorldContactSurfaceLayer(void);
     dWorldID getWorldID(void);
 
 	/*! \}                                                                 */
-	/*---------------------------------------------------------------------*/
-	/*! \name                   Class Specific Set Field                    */
-	/*! \{                                                                 */
-	void setErp(const Real32 &value);
-	void setCfm(const Real32 &value);
-	void setGravity(const Vec3f &value );
-	void setAutoDisableFlag(const Int32 &value );
-	void setAutoDisableLinearThreshold(const Real32 &value );
-	void setAutoDisableAngularThreshold(const Real32 &value );
-	void setAutoDisableSteps(const Int32 &value );
-	void setAutoDisableTime(const Real32 &value );
-	void setWorldQuickStepNumIterations(const Int32 &value );
-	void setWorldContactMaxCorrectingVel(const Real32 &value );
-	void setWorldContactSurfaceLayer(const Real32 &value );
-	/*! \}                                                                 */
+
 	/*---------------------------------------------------------------------*/
 	/*! \name                   Class Specific                             */
 	/*! \{                                                                 */
@@ -139,7 +114,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorld : public PhysicsWorldBase
 	/*! \name                   Class Specific                             */
 	/*! \{                                                                 */
 
-	void onCreate(const PhysicsWorld *id = NULL);
+	void onCreate(const PhysicsWorld *_World = NULL);
 	void onDestroy();
 	
     static bool odeInitFunc(void);
@@ -159,7 +134,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorld : public PhysicsWorldBase
     void operator =(const PhysicsWorld &source);
 
     //ODE worldID
-    dWorldID id;
+    dWorldID _World;
 };
 
 typedef PhysicsWorld *PhysicsWorldP;

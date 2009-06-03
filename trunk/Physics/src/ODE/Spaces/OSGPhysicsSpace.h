@@ -47,6 +47,7 @@
 #include <ode/ode.h>
 
 #include "OSGPhysicsSpaceBase.h"
+#include "ODE/OSGPhysicsWorldFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -91,7 +92,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 	  Int32 GetNumGeoms();
 	  dGeomID GetGeom( Int32 i );
 
-	  void Collide( void* somedata, dNearCallback* callback );
+	  void Collide( PhysicsWorldPtr w );
+      static void collisionCallback (void *data, dGeomID o1, dGeomID o2);
 	  /*! \}                                                                 */
 
     /*---------------------------------------------------------------------*/
@@ -115,6 +117,10 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
     // Variables should all be in PhysicsSpaceBase.
     dSpaceID sID;
+    dWorldID _CollideWorldID;
+
+    dJointGroupID _ColJointGroupId;
+    std::vector<dContact> _ContactJoints;
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -130,6 +136,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
     virtual ~PhysicsSpace(void); 
 
+    void collisionCallback (dGeomID o1, dGeomID o2);
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

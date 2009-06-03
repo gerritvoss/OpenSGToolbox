@@ -60,13 +60,13 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBoxGeom : public PhysicsBoxGeomBase
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Get Field                    */
 	  /*! \{                                                                 */
-	  Vec3f getLenghts(void);
+	  Vec3f getLengths(void);
 	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Set Field                    */
 	  /*! \{                                                                 */
-	  void setLenghts(const Vec3f &value );
+	  void setLengths(const Vec3f &value );
 	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/

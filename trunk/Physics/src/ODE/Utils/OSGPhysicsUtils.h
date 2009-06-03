@@ -9,6 +9,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGPhysicsDef.h"
 #include <OpenSG/OSGSimpleGeometry.h>
+#include <OpenSG/OSGGeometry.h>
 #include <OpenSG/OSGBaseFunctions.h>
 #include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGAction.h>
@@ -49,6 +50,9 @@ private:
 
     NodePtr  _found;
 };
+
+Vec3f OSG_PHYSICSLIB_DLLMAPPING calcMinGeometryBounds(GeometryPtr geo);
+Pnt3f OSG_PHYSICSLIB_DLLMAPPING calcGeometryCenter(GeometryPtr geo);
 
 OSG_END_NAMESPACE
 

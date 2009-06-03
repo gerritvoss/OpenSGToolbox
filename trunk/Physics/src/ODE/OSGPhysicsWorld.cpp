@@ -90,10 +90,16 @@ bool PhysicsWorld::odeExitFunc(void)
 /*-------------------------------------------------------------------------*\
 -  public                                                                 -
 \*-------------------------------------------------------------------------*/
+
+dWorldID PhysicsWorld::getWorldID(void)
+{
+    return _World;
+}
+
 void PhysicsWorld::onCreate(const PhysicsWorld *)
 {
 	PhysicsWorldPtr tmpPtr(*this);
-	tmpPtr->id = dWorldCreate();
+	tmpPtr->_World = dWorldCreate();
     /*  should set ode to the loaded values but this does only work
         in the initWorld method and I do not know why...!?
     beginEditCP(tmpPtr);
@@ -115,194 +121,11 @@ void PhysicsWorld::onCreate(const PhysicsWorld *)
 void PhysicsWorld::onDestroy()
 {
 	PhysicsWorldPtr tmpPtr(*this);
-    if(tmpPtr->id)
+    if(tmpPtr->_World)
     {
-	    dWorldDestroy(tmpPtr->id);
+	    dWorldDestroy(tmpPtr->_World);
     }
 }
-
-
-/***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-
-
-Real32 PhysicsWorld::getErp(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	return Real32(dWorldGetERP(tmpPtr->id));
-}
-
-Real32 PhysicsWorld::getCfm(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	return Real32(dWorldGetCFM(tmpPtr->id));
-}
-
-Vec3f PhysicsWorld::getGravity(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dVector3 tmp;
-	dWorldGetGravity(id, tmp);
-	return Vec3f(tmp[0], tmp[1], tmp[2]);
-}
-
-Int32 PhysicsWorld::getAutoDisableFlag(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	return Int32(dWorldGetAutoDisableFlag(tmpPtr->id));
-}
-
-Real32 PhysicsWorld::getAutoDisableLinearThreshold(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	return Real32(dWorldGetAutoDisableLinearThreshold(tmpPtr->id));
-}
-
-Real32 PhysicsWorld::getAutoDisableAngularThreshold(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	return Real32(dWorldGetAutoDisableAngularThreshold(tmpPtr->id));
-}
-
-Int32 PhysicsWorld::getAutoDisableSteps(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	return Int32(dWorldGetAutoDisableSteps(tmpPtr->id));
-}
-
-Real32 PhysicsWorld::getAutoDisableTime(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	return Real32(dWorldGetAutoDisableTime(tmpPtr->id));
-}
-
-Int32 PhysicsWorld::getWorldQuickStepNumIterations(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	return Real32(dWorldGetQuickStepNumIterations(tmpPtr->id));
-}
-
-Real32 PhysicsWorld::getWorldContactMaxCorrectingVel(void)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	return Real32(dWorldGetContactMaxCorrectingVel(tmpPtr->id));
-}
-
-Real32 PhysicsWorld::getWorldContactSurfaceLayer(void)
-{
-	PhysicsWorldPtr tmpPtr(*this);
-	return (Real32)dWorldGetContactSurfaceLayer(tmpPtr->id);
-}
-
-dWorldID PhysicsWorld::getWorldID(void)
-{
-    PhysicsWorldPtr tmpPtr(*this);
-    return tmpPtr->id;
-}
-
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-
-void PhysicsWorld::setErp(const Real32 &value)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetERP(tmpPtr->id, value);
-	PhysicsWorldBase::setErp(value);
-}
-
-void PhysicsWorld::setCfm(const Real32 &value)
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetCFM(tmpPtr->id, value);
-	PhysicsWorldBase::setCfm(value);
-}
-
-void PhysicsWorld::setGravity(const Vec3f &value )
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetGravity(tmpPtr->id,value.x(), value.y(), value.z());
-	PhysicsWorldBase::setGravity(value);
-}
-
-void PhysicsWorld::setAutoDisableFlag(const Int32 &value )
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetAutoDisableFlag(tmpPtr->id, value);
-	PhysicsWorldBase::setAutoDisableFlag(value);
-}
-
-void PhysicsWorld::setAutoDisableLinearThreshold(const Real32 &value )
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetAutoDisableLinearThreshold(tmpPtr->id, value);
-	PhysicsWorldBase::setAutoDisableLinearThreshold(value);
-}
-
-void PhysicsWorld::setAutoDisableAngularThreshold(const Real32 &value )
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetAutoDisableAngularThreshold(tmpPtr->id, value);
-	PhysicsWorldBase::setAutoDisableAngularThreshold(value);
-}
-
-void PhysicsWorld::setAutoDisableSteps(const Int32 &value )
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetAutoDisableSteps(tmpPtr->id, value);
-	PhysicsWorldBase::setAutoDisableSteps(value);
-}
-
-void PhysicsWorld::setAutoDisableTime(const Real32 &value )
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetAutoDisableTime(tmpPtr->id, value);
-	PhysicsWorldBase::setAutoDisableTime(value);
-}
-
-void PhysicsWorld::setWorldQuickStepNumIterations(const Int32 &value )
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetQuickStepNumIterations(tmpPtr->id, value);
-	PhysicsWorldBase::setWorldQuickStepNumIterations(value);
-}
-
-void PhysicsWorld::setWorldContactMaxCorrectingVel(const Real32 &value )
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetContactMaxCorrectingVel(tmpPtr->id, value);
-	PhysicsWorldBase::setWorldContactMaxCorrectingVel(value);
-}
-
-void PhysicsWorld::setWorldContactSurfaceLayer(const Real32 &value )
-{
-    
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldSetContactSurfaceLayer(tmpPtr->id, value);
-	PhysicsWorldBase::setWorldContactSurfaceLayer(value);
-}
-
 
 /***************************************************************************\
 *                              Class Specific                              *
@@ -328,19 +151,19 @@ void PhysicsWorld::worldImpulseToForce(Real32 stepsize, Real32 x, Real32 y, Real
 	f[0]=force.x();
 	f[1]=force.y();
 	f[2]=force.z();
-	dWorldImpulseToForce(tmpPtr->id, stepsize, x, y, z, f);
+	dWorldImpulseToForce(tmpPtr->_World, stepsize, x, y, z, f);
 }
 
 void PhysicsWorld::worldStep(Real32 stepsize)
 {
 	PhysicsWorldPtr tmpPtr(*this);
-	dWorldStep(tmpPtr->id, stepsize);
+	dWorldStep(tmpPtr->_World, stepsize);
 }
 
 void PhysicsWorld::worldQuickStep(Real32 stepsize)
 {
 	PhysicsWorldPtr tmpPtr(*this);
-	dWorldQuickStep(tmpPtr->id, stepsize);
+	dWorldQuickStep(tmpPtr->_World, stepsize);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -368,6 +191,62 @@ PhysicsWorld::~PhysicsWorld(void)
 void PhysicsWorld::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & ErpFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetERP(tmpPtr->_World, getErp());
+    }
+    if(whichField & CfmFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetCFM(tmpPtr->_World, getCfm());
+    }
+    if(whichField & GravityFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetGravity(tmpPtr->_World,getGravity().x(), getGravity().y(), getGravity().z());
+    }
+    if(whichField & AutoDisableFlagFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetAutoDisableFlag(tmpPtr->_World, getAutoDisableFlag());
+    }
+    if(whichField & AutoDisableLinearThresholdFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetAutoDisableLinearThreshold(tmpPtr->_World, getAutoDisableLinearThreshold());
+    }
+    if(whichField & AutoDisableAngularThresholdFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetAutoDisableAngularThreshold(tmpPtr->_World, getAutoDisableAngularThreshold());
+    }
+    if(whichField & AutoDisableStepsFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetAutoDisableSteps(tmpPtr->_World, getAutoDisableSteps());
+    }
+    if(whichField & AutoDisableTimeFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetAutoDisableTime(tmpPtr->_World, getAutoDisableTime());
+    }
+    if(whichField & WorldQuickStepNumIterationsFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetQuickStepNumIterations(tmpPtr->_World, getWorldQuickStepNumIterations());
+    }
+    if(whichField & WorldContactMaxCorrectingVelFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetContactMaxCorrectingVel(tmpPtr->_World, getWorldContactMaxCorrectingVel());
+    }
+    if(whichField & WorldContactSurfaceLayerFieldMask)
+    {
+	    PhysicsWorldPtr tmpPtr(*this);
+	    dWorldSetContactSurfaceLayer(tmpPtr->_World, getWorldContactSurfaceLayer());
+    }
 }
 
 void PhysicsWorld::dump(      UInt32    , 

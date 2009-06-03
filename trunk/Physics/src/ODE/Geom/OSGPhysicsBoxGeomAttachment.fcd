@@ -12,7 +12,7 @@
 	useLocalIncludes="false"
 >
 	<Field
-		name="lenghts"
+		name="lengths"
 		type="Vec3f"
 		cardinality="single"
 		visibility="external"
