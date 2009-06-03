@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
@@ -7,6 +7,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGPhysics", "..\Builds\Windows\OSGPhysics.vcproj", "{4A3961BC-39D6-4369-A089-5997CD50FE3C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01SimplePhysics", "01SimplePhysics.vcproj", "{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02Joints", "02Joints.vcproj", "{4E7283A6-FF73-4C03-A72A-910E9ACFF400}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Debug|Win32.Build.0 = Debug|Win32
 		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Release|Win32.ActiveCfg = Release|Win32
 		{77B9137E-1E52-4B51-B5D3-6ECC6694B5FC}.Release|Win32.Build.0 = Release|Win32
+		{4E7283A6-FF73-4C03-A72A-910E9ACFF400}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E7283A6-FF73-4C03-A72A-910E9ACFF400}.Debug|Win32.Build.0 = Debug|Win32
+		{4E7283A6-FF73-4C03-A72A-910E9ACFF400}.Release|Win32.ActiveCfg = Release|Win32
+		{4E7283A6-FF73-4C03-A72A-910E9ACFF400}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
