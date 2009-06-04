@@ -375,6 +375,12 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
                 setTexCoords7(getBaseGeometry()->getTexCoords7());
             endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::TexCoords7FieldMask);
 		}
+		if(getBaseGeometry()->getIndices() != NullFC)
+		{
+            beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::IndicesFieldMask);
+                setIndices(getBaseGeometry()->getIndices());
+            endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::IndicesFieldMask);
+		}
         beginEditCP(SkeletonBlendedGeometryPtr(this), Geometry::DlistCacheFieldMask | Geometry::MaterialFieldMask | Geometry::HighindicesFieldMask | Geometry::LowindicesFieldMask | Geometry::MaxindexFieldMask | Geometry::MinindexFieldMask | Geometry::IndexMappingFieldMask);
             getIndexMapping().setValues(getBaseGeometry()->getIndexMapping());
 	        setMinindex(getBaseGeometry()->getMinindex());
