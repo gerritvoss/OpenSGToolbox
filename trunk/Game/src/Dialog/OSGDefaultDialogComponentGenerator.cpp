@@ -75,9 +75,44 @@ void DefaultDialogComponentGenerator::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-ComponentPtr DefaultDialogComponentGenerator::getCaptionComponent(DialogPtr Parent, const boost::any& Value)
+ComponentPtr DefaultDialogComponentGenerator::getResponseComponent(DialogInterfacePtr Parent, const boost::any& Value)
 {
-    return NullFC;
+    std::string responseString("");
+    try
+    {
+        responseString = lexical_cast(Value);
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        std::cout<<"Unable to display response"<<std::endl;
+    }
+
+    ButtonPtr TheResponseButton = Button::Ptr::dcast(getResponseButtonPrototype()->shallowCopy());
+
+    beginEditCP(TheResponseButton, Button::TextFieldMask);
+        TheResponseButton->setText(responseString);
+    endEditCP(TheResponseButton, Button::TextFieldMask);
+
+    return TheResponseButton;
+}
+ComponentPtr DefaultDialogComponentGenerator::getQuestionComponent(DialogInterfacePtr Parent, const boost::any& Value)
+{
+    std::string questionString("");
+    try
+    {
+        questionString = lexical_cast(Value);
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        std::cout<<"Unable to display question"<<std::endl;
+    }
+
+    LabelPtr TheQuestionString = Label::Ptr::dcast(getQuestionPrototype()->shallowCopy());
+    beginEditCP(TheQuestionString, Label::TextFieldMask);
+        TheQuestionString->setText(questionString);
+    endEditCP(TheQuestionString, Label::TextFieldMask);
+
+    return TheQuestionString;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

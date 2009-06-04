@@ -47,6 +47,11 @@
 #include "OSGDefaultDialogComponentGeneratorBase.h"
 
 #include "OSGDialog.h"
+#include "OSGDialogInterface.h"
+#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OpenSG/UserInterface/OSGLabel.h"
+#include "OpenSG/UserInterface/OSGComponent.h"
+#include <OpenSG/UserInterface/OSGButton.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,7 +81,8 @@ class OSG_GAMELIB_DLLMAPPING DefaultDialogComponentGenerator : public DefaultDia
     /*! \{                                                                 */
 
    
-    virtual ComponentPtr getCaptionComponent(DialogPtr Parent, const boost::any& Value);
+    ComponentPtr getResponseComponent(DialogInterfacePtr Parent, const boost::any& Value);
+    ComponentPtr getQuestionComponent(DialogInterfacePtr Parent, const boost::any& Value);
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;

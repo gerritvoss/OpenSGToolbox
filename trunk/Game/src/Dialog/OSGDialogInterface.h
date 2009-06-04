@@ -47,6 +47,11 @@
 
 #include "OSGDialogInterfaceBase.h"
 #include "Event/OSGDialogHierarchyListener.h"
+#include <OpenSG/UserInterface/OSGInternalWindow.h>
+#include <OpenSG/Input/OSGWindowUtils.h>
+#include <OpenSG/UserInterface/OSGButton.h>
+#include "OSGDefaultDialogComponentGenerator.h"
+#include <OpenSG/UserInterface/OSGActionListener.h>
 
 
 OSG_BEGIN_NAMESPACE
@@ -83,9 +88,12 @@ class OSG_GAMELIB_DLLMAPPING DialogInterface : public DialogInterfaceBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+      
+std::map<ButtonPtr, DialogPtr> _ButtonToResponseMap;
+
     // Variables should all be in DialogInterfaceBase.
 
-    class DialogInterfaceListener : public DialogHierarchyListener
+    class DialogInterfaceListener : public DialogHierarchyListener, public ActionListener
     {
 	public :
 		DialogInterfaceListener(DialogInterfacePtr TheDialogInterface);
@@ -95,6 +103,7 @@ class OSG_GAMELIB_DLLMAPPING DialogInterface : public DialogInterfaceBase
     virtual void dialogResponseSelected(const DialogHierarchyEvent& e);
     virtual void dialogResponsesReady(const DialogHierarchyEvent& e);
     virtual void terminated(const DialogHierarchyEvent& e);
+    virtual void actionPerformed(const ActionEvent& e);
 
 
 	protected :

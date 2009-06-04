@@ -49,6 +49,8 @@
 
 #include "OSGDialogInterface.h"
 
+#include <OpenSG/Game/OSGDialog.h>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -83,12 +85,30 @@ void DialogInterface::DialogInterfaceListener::dialogEnded(const DialogHierarchy
 }
 void DialogInterface::DialogInterfaceListener::dialogResponseSelected(const DialogHierarchyEvent& e)
 {
+    beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
+        _DialogInterface->getParentContainer()->getChildren().clear();
+    endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
 }
 void DialogInterface::DialogInterfaceListener::dialogResponsesReady(const DialogHierarchyEvent& e)
 {
+    for(UInt32 c = 0; DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses().getSize() > c; c++)
+    {
+        ButtonPtr Response = ButtonPtr::dcast(_DialogInterface->getComponentGenerator()->getResponseComponent(_DialogInterface,DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c)));
+
+        beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
+            _DialogInterface->getParentContainer()->getChildren().push_back(Response);
+        endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
+
+        Response->addActionListener(&DialogInterfacePtr::dcast(e.getSource())->_DialogInterfaceListener);
+        _DialogInterface->_ButtonToResponseMap[Response] = DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c);
+    }
 }
 void DialogInterface::DialogInterfaceListener::terminated(const DialogHierarchyEvent& e)
 {
+}
+void DialogInterface::DialogInterfaceListener::actionPerformed(const ActionEvent& e)
+{
+    _DialogInterface->_ButtonToResponseMap[ButtonPtr::dcast(e.getSource())]->selectResponse();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
