@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01SimplePhysics", "01Simple
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02Joints", "02Joints.vcproj", "{4E7283A6-FF73-4C03-A72A-910E9ACFF400}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03CharacterTerrain", "03CharacterTerrain.vcproj", "{EE595936-5725-467B-96BE-C1134D622AE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -36,6 +38,10 @@ Global
 		{4E7283A6-FF73-4C03-A72A-910E9ACFF400}.Debug|Win32.Build.0 = Debug|Win32
 		{4E7283A6-FF73-4C03-A72A-910E9ACFF400}.Release|Win32.ActiveCfg = Release|Win32
 		{4E7283A6-FF73-4C03-A72A-910E9ACFF400}.Release|Win32.Build.0 = Release|Win32
+		{EE595936-5725-467B-96BE-C1134D622AE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE595936-5725-467B-96BE-C1134D622AE4}.Debug|Win32.Build.0 = Debug|Win32
+		{EE595936-5725-467B-96BE-C1134D622AE4}.Release|Win32.ActiveCfg = Release|Win32
+		{EE595936-5725-467B-96BE-C1134D622AE4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -116,7 +116,6 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
         Int32 numContacts = dCollide(o1, o2, _ContactJoints.size(), 
             &(_ContactJoints[0].geom), sizeof(dContact));
 
-        //SLOG << "found contacts: " << numContacts << endLog;
         // add these contact points to the simulation
         for (Int32 i=0; i < numContacts; i++)
         {
@@ -236,9 +235,8 @@ PhysicsSpace::PhysicsSpace(void) :
     _ColJointGroupId = dJointGroupCreate(0);
     for (Int32 index = 0; index < _ContactJoints.size(); index++)
     {
-        _ContactJoints[index].surface.mode = dContactBounce;
+        _ContactJoints[index].surface.mode = dContactApprox1;
         _ContactJoints[index].surface.mu = 0.75;
-        _ContactJoints[index].surface.bounce = 0.9;
     }
 }
 
@@ -249,11 +247,11 @@ PhysicsSpace::PhysicsSpace(const PhysicsSpace &source) :
     _ColJointGroupId = dJointGroupCreate(0);
     for (Int32 index = 0; index < _ContactJoints.size(); index++)
     {
-        //_ContactJoints[index].surface.mode = dContactApprox1;
-        //_ContactJoints[index].surface.mu = 0.75;
-        _ContactJoints[index].surface.mode = dContactApprox1 | dContactBounce;
+        _ContactJoints[index].surface.mode = dContactApprox1;
         _ContactJoints[index].surface.mu = 0.75;
-        _ContactJoints[index].surface.bounce = 0.1;
+        //_ContactJoints[index].surface.mode = dContactApprox1 | dContactBounce;
+        //_ContactJoints[index].surface.mu = 0.75;
+        //_ContactJoints[index].surface.bounce = 0.1;
         //_ContactJoints[index].surface.mode = dContactBounce;
         //_ContactJoints[index].surface.mu = 0.75;
         //_ContactJoints[index].surface.bounce = 0.9;
