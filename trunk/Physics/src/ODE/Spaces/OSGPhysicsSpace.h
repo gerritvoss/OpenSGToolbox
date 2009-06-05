@@ -49,6 +49,8 @@
 #include "OSGPhysicsSpaceBase.h"
 #include "ODE/OSGPhysicsWorldFields.h"
 
+#define MAX_PHYS_CONTACTS 32
+
 OSG_BEGIN_NAMESPACE
 
 class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase

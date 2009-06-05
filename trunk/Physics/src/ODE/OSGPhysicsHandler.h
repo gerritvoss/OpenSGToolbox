@@ -48,7 +48,8 @@
 
 #include "OSGPhysicsHandlerBase.h"
 
-#define MAX_PHYS_CONTACTS 32
+#include <OpenSG/OSGStatElemTypes.h>
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -105,6 +106,16 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     void update(Time ElapsedTime, NodePtr UpdateNode);
 
     /*! \}                                                                 */
+    static StatElemDesc<StatTimeElem   > statCollisionTime;
+    static StatElemDesc<StatTimeElem   > statSimulationTime;
+    static StatElemDesc<StatTimeElem   > statPhysicsTime;
+    static StatElemDesc<StatIntElem    > statNPhysicsSteps;
+    static StatElemDesc<StatIntElem    > statNCollisionTests;
+    static StatElemDesc<StatIntElem    > statNCollisions;
+
+    StatCollector* getStatistics(void);
+    void setStatistics(StatCollector *stat);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -129,7 +140,11 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     /*! \{                                                                 */
     void onCreate(const PhysicsHandler *id = NULL);
     void onDestroy();
-      void updateWorld(NodePtr node);
+    void updateWorld(NodePtr node);
+
+    StatCollector* _statistics;
+    bool _ownStat;
+
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
   private:

@@ -257,6 +257,24 @@ Action::ResultE updateOsgOde(NodePtr& node)
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
+StatElemDesc<StatTimeElem> PhysicsHandler::statCollisionTime("collisionTime", 
+                                                      "time for collision tests per update");
+
+StatElemDesc<StatTimeElem> PhysicsHandler::statSimulationTime("simulationTime", 
+                                                      "time for physics simulation per update");
+
+StatElemDesc<StatTimeElem> PhysicsHandler::statPhysicsTime("physicsTime", 
+                                                      "time for entire physics update");
+
+
+StatElemDesc<StatIntElem> PhysicsHandler::statNPhysicsSteps("NPhysicsSteps", 
+                                                      "number of physics steps performed this update");
+
+StatElemDesc<StatIntElem> PhysicsHandler::statNCollisionTests("NCollisionTests", 
+                                                      "number of collision tests");
+
+StatElemDesc<StatIntElem> PhysicsHandler::statNCollisions("NCollisions", 
+                                                      "number of collisions");
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -280,6 +298,27 @@ void PhysicsHandler::onCreate(const PhysicsHandler *)
 void PhysicsHandler::onDestroy()
 {
 }
+
+StatCollector* PhysicsHandler::getStatistics(void)
+{
+    if(_statistics == NULL)
+    {
+        _statistics = StatCollector::create();
+        _ownStat = true;
+    }
+
+    return _statistics;
+}
+
+void PhysicsHandler::setStatistics(StatCollector *stat)
+{
+    if (_ownStat) {
+       delete _statistics;
+    }
+    _statistics = stat;
+    _ownStat = false;
+}
+
 /***************************************************************************\
 *                              Field Get	                               *
 \***************************************************************************/
@@ -318,48 +357,6 @@ void PhysicsHandler::odeInit(NodePtr node)
         osgTypedFunctionFunctor1CPtrRef<Action::ResultE,
         NodePtr        >(initOde));
 }
-/************************************************************************/
-/* the callback function for collision handling                         */
-/************************************************************************/
-#if 0
-void PhysicsHandler::physCollisionCallback(void* somedata, dGeomID o1, dGeomID o2)
-{
-    PhysicsHandlerPtr app = PhysicsHandlerPtr(somedata);
-    //PhysicsHandlerPtr tmpPtr(*this);
-    //SLOG << hashSpace->GetNumGeoms() << endLog;
-    Int32 numContacts = dCollide(o1, o2, 32, 
-        &app->physContactArray[0].geom, sizeof(dContact));
-    SLOG << "found contacts: " << numContacts << endLog;
-    for (Int32 i=0; i < numContacts; i++)
-    {
-        dJointID jointId = dJointCreateContact(app->getPhysicsWorld()->getWorldID(), 
-            app->physColJointGroupId, 
-            &app->physContactArray[i]);
-
-        dJointAttach(jointId, dGeomGetBody(o1), dGeomGetBody(o2));
-    }
-}
-#endif
-/************************************************************************/
-/* this method should be called whenever you want to update the physics */
-/************************************************************************/
-#if 0
-void PhysicsHandler::doPhysicsOnNode(NodePtr rootNode)
-{
-    PhysicsHandlerPtr tmpPtr(*this);
-    //free contact Joints
-    dJointGroupEmpty(tmpPtr->physColJointGroupId);
-    //collide
-    tmpPtr->getSpace()->Collide(0 , physCollisionCallback);
-    //step the world
-    tmpPtr->getPhysicsWorld()->worldQuickStep(0.02);
-
-    //update matrices
-    traverse(rootNode, 
-        osgTypedFunctionFunctor1CPtrRef<Action::ResultE,
-        NodePtr        >(updateOsgOde));
-}
-#endif
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -368,12 +365,16 @@ void PhysicsHandler::doPhysicsOnNode(NodePtr rootNode)
 /*----------------------- constructors & destructors ----------------------*/
 
 PhysicsHandler::PhysicsHandler(void) :
-    Inherited()
+    Inherited(),
+        _statistics(NULL),
+        _ownStat(false)
 {
 }
 
 PhysicsHandler::PhysicsHandler(const PhysicsHandler &source) :
-    Inherited(source)
+    Inherited(source),
+        _statistics(NULL),
+        _ownStat(false)
 {
 }
 

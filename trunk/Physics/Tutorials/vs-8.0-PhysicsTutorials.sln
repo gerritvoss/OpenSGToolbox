@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02Joints", "02Joints.vcproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03CharacterTerrain", "03CharacterTerrain.vcproj", "{EE595936-5725-467B-96BE-C1134D622AE4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04ZeroGravityShip", "04ZeroGravityShip.vcproj", "{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -42,6 +44,10 @@ Global
 		{EE595936-5725-467B-96BE-C1134D622AE4}.Debug|Win32.Build.0 = Debug|Win32
 		{EE595936-5725-467B-96BE-C1134D622AE4}.Release|Win32.ActiveCfg = Release|Win32
 		{EE595936-5725-467B-96BE-C1134D622AE4}.Release|Win32.Build.0 = Release|Win32
+		{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}.Debug|Win32.Build.0 = Debug|Win32
+		{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}.Release|Win32.ActiveCfg = Release|Win32
+		{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

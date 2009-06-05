@@ -148,6 +148,24 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
       void translateMass( const Vec3f& );
       void rotateMass( const Matrix& );
       void addMassOf( dBodyID otherBody );
+
+      //Damping
+      Real32 getLinearDamping (void);
+      Real32 getAngularDamping (void);
+      void setLinearDamping (Real32 scale);
+      void setAngularDamping (Real32 scale);
+
+      void setDamping (Real32 linear_scale, Real32 angular_scale);
+
+      Real32 getLinearDampingThreshold (void);
+      Real32 getAngularDampingThreshold (void);
+      void setLinearDampingThreshold (Real32 threshold);
+      void setAngularDampingThreshold (Real32 threshold);
+
+      void setDampingDefaults (void);
+
+      Real32 getMaxAngularSpeed (void);
+      void setMaxAngularSpeed (Real32 max_speed);
 	  /*! \}                                                                 */
 
 

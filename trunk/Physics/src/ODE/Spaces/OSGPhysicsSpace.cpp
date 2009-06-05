@@ -231,7 +231,7 @@ void PhysicsSpace::Collide( PhysicsWorldPtr w )
 PhysicsSpace::PhysicsSpace(void) :
     Inherited()
 {
-    _ContactJoints.resize(32);
+    _ContactJoints.resize(MAX_PHYS_CONTACTS);
     _ColJointGroupId = dJointGroupCreate(0);
     for (Int32 index = 0; index < _ContactJoints.size(); index++)
     {
@@ -243,7 +243,7 @@ PhysicsSpace::PhysicsSpace(void) :
 PhysicsSpace::PhysicsSpace(const PhysicsSpace &source) :
     Inherited(source)
 {
-    _ContactJoints.resize(32);
+    _ContactJoints.resize(MAX_PHYS_CONTACTS);
     _ColJointGroupId = dJointGroupCreate(0);
     for (Int32 index = 0; index < _ContactJoints.size(); index++)
     {

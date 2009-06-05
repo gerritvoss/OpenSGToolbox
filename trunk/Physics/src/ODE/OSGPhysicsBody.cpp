@@ -436,6 +436,18 @@ void PhysicsBody::addTorque(const Vec3f &v)
 	dBodyAddTorque(tmpPtr->id,v.x(), v.y(), v.z());
 }
 
+void PhysicsBody::addRelForce(const Vec3f &v)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	dBodyAddRelForce(tmpPtr->id,v.x(), v.y(), v.z());
+}
+
+void PhysicsBody::addRelTorque(const Vec3f &v)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	dBodyAddRelTorque(tmpPtr->id,v.x(), v.y(), v.z());
+}
+
 void PhysicsBody::addForceAtPos(const Vec3f &v, const Vec3f &p)
 {
 	PhysicsBodyPtr tmpPtr(*this);
@@ -653,6 +665,79 @@ void PhysicsBody::addMassOf( dBodyID otherBody )
     dBodyGetMass(otherBody, &otherMass);
     dMassAdd(&myMass, &otherMass);
     tmpPtr->setMass(&myMass);
+}
+
+//Damping
+Real32 PhysicsBody::getLinearDamping (void)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	return dBodyGetLinearDamping(tmpPtr->id);
+}
+
+Real32 PhysicsBody::getAngularDamping (void)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	return dBodyGetAngularDamping(tmpPtr->id);
+}
+
+void PhysicsBody::setLinearDamping (Real32 scale)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	dBodySetLinearDamping(tmpPtr->id, scale);
+}
+
+void PhysicsBody::setAngularDamping (Real32 scale)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	dBodySetAngularDamping(tmpPtr->id, scale);
+}
+
+void PhysicsBody::setDamping (Real32 linear_scale, Real32 angular_scale)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	dBodySetDamping(tmpPtr->id, linear_scale, angular_scale);
+}
+
+Real32 PhysicsBody::getLinearDampingThreshold (void)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	return dBodyGetLinearDampingThreshold(tmpPtr->id);
+}
+
+Real32 PhysicsBody::getAngularDampingThreshold (void)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	return dBodyGetAngularDampingThreshold(tmpPtr->id);
+}
+
+void PhysicsBody::setLinearDampingThreshold (Real32 threshold)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	dBodySetLinearDampingThreshold(tmpPtr->id, threshold);
+}
+
+void PhysicsBody::setAngularDampingThreshold (Real32 threshold)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	dBodySetAngularDampingThreshold(tmpPtr->id, threshold);
+}
+
+void PhysicsBody::setDampingDefaults (void)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	dBodySetDampingDefaults(tmpPtr->id);
+}
+
+Real32 PhysicsBody::getMaxAngularSpeed (void)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	return dBodyGetMaxAngularSpeed(tmpPtr->id);
+}
+
+void PhysicsBody::setMaxAngularSpeed (Real32 max_speed)
+{
+	PhysicsBodyPtr tmpPtr(*this);
+	dBodySetMaxAngularSpeed(tmpPtr->id, max_speed);
 }
 
 /*-------------------------------------------------------------------------*\

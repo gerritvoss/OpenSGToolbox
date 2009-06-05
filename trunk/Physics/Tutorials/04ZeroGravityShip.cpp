@@ -64,7 +64,6 @@ bool _IsUpKeyDown(false);
 bool _IsDownKeyDown(false);
 bool _IsLeftKeyDown(false);
 bool _IsRightKeyDown(false);
-bool _ShouldJump(false);
 
 //just for hierarchy
 NodePtr spaceGroupNode;
@@ -100,9 +99,6 @@ public:
 		   break;
 	   case KeyEvent::KEY_RIGHT:
            _IsRightKeyDown = true;
-           break;
-	   case KeyEvent::KEY_SPACE:
-           _ShouldJump = true;
            break;
        }
    }
@@ -204,11 +200,6 @@ class TutorialUpdateListener : public UpdateListener
         {
             ForceOnCharacter += Vec3f(PushForce, 0.0, 0.0);
         }
-        if(_ShouldJump)
-        {
-            ForceOnCharacter += Vec3f(0.0, 0.0, 50000.0);
-            _ShouldJump = false;
-        }
 
         static Time StepSize(0.001);
         static Time TimeSinceLast(0.0);
@@ -269,7 +260,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 03CharacterTerrain Window");
+                                        "OpenSG 02Joints Window");
 
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
@@ -318,7 +309,7 @@ int main(int argc, char **argv)
         physicsWorld->setAutoDisableFlag(1);
         physicsWorld->setAutoDisableTime(0.75);
         physicsWorld->setWorldContactMaxCorrectingVel(1.0);
-        physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
+        //physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
         //physicsWorld->setCfm(0.001);
         //physicsWorld->setErp(0.2);
     endEditCP(physicsWorld, PhysicsWorld::WorldContactSurfaceLayerFieldMask | 
@@ -353,7 +344,7 @@ int main(int argc, char **argv)
 	spaceGroupNode = makeCoredNode<Group>(&spaceGroup);
 
     //create the ground terrain
-    GeometryPtr TerrainGeo = buildTerrain(Vec2f(200.0,200.0),25,25);
+    GeometryPtr TerrainGeo = buildTerrain(Vec2f(200.0,200.0),1,1);
 
     //and its Material
 	SimpleMaterialPtr TerrainMat = SimpleMaterial::create();
@@ -454,8 +445,8 @@ GeometryPtr buildTerrain(Vec2f Dimensions, UInt32 XSubdivisions, UInt32 YSubdivi
         {
             for(UInt32 j(0) ; j<YSubdivisions ; ++j)
             {
-                Real32 Theta(5*3.14159*(static_cast<Real32>(i)/static_cast<Real32>(XSubdivisions))),
-                       ThetaNext(5*3.14159*(static_cast<Real32>(i+1)/static_cast<Real32>(XSubdivisions)));
+                Real32 Theta(0.0),//(5*3.14159*(static_cast<Real32>(i)/static_cast<Real32>(XSubdivisions))),
+                       ThetaNext(0.0);//(5*3.14159*(static_cast<Real32>(i+1)/static_cast<Real32>(XSubdivisions)));
 		        // the points of the Tris
                 pnts->addValue(Pnt3f(-Dimensions.x()/2.0+i*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-j*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(Theta)));
                 norms->addValue(Vec3f( 0.0,0.0,1.0));
@@ -616,7 +607,7 @@ PhysicsBodyPtr buildCharacter(Vec3f Dimensions, Pnt3f Position)
     CPEdit(CapsuleBody, PhysicsBody::PositionFieldMask);
         CapsuleBody->setPosition(Vec3f(Position));
         CapsuleBody->setCCylinderMass(1.0,3,Radius, Length);
-        //CapsuleBody->setLinearDamping(0.01);
+        CapsuleBody->setLinearDamping(0.01);
         CapsuleBody->setMaxAngularSpeed(0.0);
 
     PhysicsCCylinderGeomPtr CapsuleGeom = PhysicsCCylinderGeom::create();
