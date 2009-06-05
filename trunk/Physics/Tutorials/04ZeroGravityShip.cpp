@@ -49,8 +49,7 @@ OSG_USING_NAMESPACE
 void display(void);
 void reshape(Vec2f Size);
 PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position);
-PhysicsBodyPtr buildCharacter(Vec3f Dimensions, Pnt3f Position);
-GeometryPtr buildTerrain(Vec2f Dimensions, UInt32 XSubdivisions, UInt32 YSubdivisions);
+PhysicsBodyPtr buildShip(Vec3f Dimensions, Pnt3f Position);
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
@@ -200,26 +199,10 @@ class TutorialUpdateListener : public UpdateListener
         {
             ForceOnCharacter += Vec3f(PushForce, 0.0, 0.0);
         }
-
-        static Time StepSize(0.001);
-        static Time TimeSinceLast(0.0);
-        TimeSinceLast += e.getElapsedTime();
-
-        Real32 SkipCount(75);
-
-        if(osgfloor(TimeSinceLast/StepSize) > SkipCount)
-        {
-            TimeSinceLast -= StepSize*(osgfloor(TimeSinceLast/StepSize)-SkipCount);
-        }
-        while(TimeSinceLast > StepSize)
-        {        
-            CharacterPhysicsBody->addForce(ForceOnCharacter);
-
-            //Update
-            physHandler->update(StepSize, rootNode);
-
-            TimeSinceLast -= StepSize;
-        }
+        CharacterPhysicsBody->addForce(ForceOnCharacter);
+        physHandler->clearForceToBody();
+        physHandler->addForceToBody(CharacterPhysicsBody, ForceOnCharacter);
+        physHandler->update(e.getElapsedTime(), rootNode);
     }
 };
 
@@ -342,59 +325,22 @@ int main(int argc, char **argv)
     //create a group for our space
     GroupPtr spaceGroup;
 	spaceGroupNode = makeCoredNode<Group>(&spaceGroup);
-
-    //create the ground terrain
-    GeometryPtr TerrainGeo = buildTerrain(Vec2f(200.0,200.0),1,1);
-
-    //and its Material
-	SimpleMaterialPtr TerrainMat = SimpleMaterial::create();
-	beginEditCP(TerrainMat);
-		TerrainMat->setAmbient(Color3f(0.1,0.3,0.1));
-		TerrainMat->setDiffuse(Color3f(0.3,0.9,0.3));
-	endEditCP(TerrainMat);
-    beginEditCP(TerrainGeo, Geometry::MaterialFieldMask);
-	    TerrainGeo->setMaterial(TerrainMat);
-    endEditCP(TerrainGeo, Geometry::MaterialFieldMask);
-    
-    NodePtr TerrainNode = Node::create();
-    beginEditCP(TerrainNode, Node::CoreFieldMask);
-	    TerrainNode->setCore(TerrainGeo);
-    endEditCP(TerrainNode, Node::CoreFieldMask);
-
-
-    //create ODE data
-    PhysicsGeomPtr TerrainODEGeom = PhysicsTriMeshGeom::create();
-    beginEditCP(TerrainODEGeom, PhysicsTriMeshGeom::BodyFieldMask | 
-                    PhysicsTriMeshGeom::SpaceFieldMask | 
-                    PhysicsTriMeshGeom::GeometryNodeFieldMask);
-        //add geom to space for collision
-        TerrainODEGeom->setSpace(hashSpace);
-        //set the geometryNode to fill the ode-triMesh
-        PhysicsTriMeshGeom::Ptr::dcast(TerrainODEGeom)->setGeometryNode(TerrainNode);
-    endEditCP(TerrainODEGeom, PhysicsTriMeshGeom::BodyFieldMask | 
-                    PhysicsTriMeshGeom::SpaceFieldMask | 
-                    PhysicsTriMeshGeom::GeometryNodeFieldMask);
-    
-    //add attachments
-    //TerrainGeo->addAttachment(TerrainODEGeom);
-    //triTransNode->addAttachment(TerrainBody);
-
 	//add Attachments to nodes...
     beginEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 	    spaceGroupNode->addAttachment(hashSpace);
-        spaceGroupNode->addChild(TerrainNode);
     endEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 
-    beginEditCP(TerrainNode, Node::AttachmentsFieldMask);
-        TerrainNode->addAttachment(TerrainODEGeom);
-    endEditCP(TerrainNode, Node::AttachmentsFieldMask);
-    
 	beginEditCP(TutorialLightNode, Node::ChildrenFieldMask);
 	    TutorialLightNode->addChild(spaceGroupNode);
 	endEditCP(TutorialLightNode, Node::ChildrenFieldMask);
 
     //Create Character
-    CharacterPhysicsBody = buildCharacter(Vec3f(3.0,3.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
+    CharacterPhysicsBody = buildShip(Vec3f(3.0,3.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
+
+    for(UInt32 i(0) ; i<5 ; ++i)
+    {
+        buildBox(Vec3f(10.0,10.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
+    }
 
     // tell the manager what to manage
     mgr->setRoot  (rootNode);
@@ -426,86 +372,6 @@ void reshape(Vec2f Size)
 }
 
 
-GeometryPtr buildTerrain(Vec2f Dimensions, UInt32 XSubdivisions, UInt32 YSubdivisions)
-{
-	GeoPTypesPtr type = GeoPTypesUI8::create();        
-    beginEditCP(type, GeoPTypesUI8::GeoPropDataFieldMask);
-    {
-        type->addValue(GL_TRIANGLES);
-    }
-    endEditCP  (type, GeoPTypesUI8::GeoPropDataFieldMask);
-
-	GeoPositions3fPtr pnts = GeoPositions3f::create();
-	GeoNormals3fPtr norms = GeoNormals3f::create();
-    beginEditCP(pnts, GeoPositions3f::GeoPropDataFieldMask);
-    beginEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
-    {
-        Real32 ZScale(20.0);
-        for(UInt32 i(0) ; i<XSubdivisions ; ++i)
-        {
-            for(UInt32 j(0) ; j<YSubdivisions ; ++j)
-            {
-                Real32 Theta(0.0),//(5*3.14159*(static_cast<Real32>(i)/static_cast<Real32>(XSubdivisions))),
-                       ThetaNext(0.0);//(5*3.14159*(static_cast<Real32>(i+1)/static_cast<Real32>(XSubdivisions)));
-		        // the points of the Tris
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+i*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-j*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(Theta)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+(i+1)*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-j*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(ThetaNext)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+i*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-(j+1)*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(Theta)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+i*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-(j+1)*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(Theta)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+(i+1)*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-j*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(ThetaNext)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+(i+1)*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-(j+1)*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(ThetaNext)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-            }
-        }
-
-    }
-    endEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
-    endEditCP  (pnts, GeoPositions3f::GeoPropDataFieldMask);
-    
-    GeoIndicesUI32Ptr indicies = GeoIndicesUI32::create();
-    beginEditCP(indicies, GeoIndicesUI16::GeoPropDataFieldMask);
-    for(UInt32 i(0) ; i<pnts->size() ; ++i)
-    {
-        indicies->addValue(i);
-    }
-    endEditCP(indicies, GeoIndicesUI16::GeoPropDataFieldMask);
-    
-	GeoPLengthsPtr lens = GeoPLengthsUI32::create();    
-    beginEditCP(lens, GeoPLengthsUI32::GeoPropDataFieldMask);
-    {
-        lens->addValue(pnts->size());
-    }
-    endEditCP  (lens, GeoPLengthsUI32::GeoPropDataFieldMask);
-
-    GeometryPtr Terrain = Geometry::create();
-    beginEditCP(Terrain, Geometry::TypesFieldMask     |
-                     Geometry::LengthsFieldMask   |
-                     Geometry::PositionsFieldMask |
-                     Geometry::NormalsFieldMask |
-                     Geometry::IndicesFieldMask  );
-    {
-        Terrain->setTypes    (type);
-        Terrain->setLengths  (lens);
-        Terrain->setPositions(pnts);
-        Terrain->setNormals(norms);
-        Terrain->setIndices(indicies);
-    }
-    endEditCP  (Terrain, Geometry::TypesFieldMask     |
-                     Geometry::LengthsFieldMask   |
-                     Geometry::PositionsFieldMask |
-                     Geometry::NormalsFieldMask |
-                     Geometry::IndicesFieldMask  );
-
-    calcVertexNormals(Terrain);
-    return Terrain;
-}
-
 //////////////////////////////////////////////////////////////////////////
 //! build a box
 //////////////////////////////////////////////////////////////////////////
@@ -533,11 +399,14 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
     endEditCP(boxTrans, Transform::MatrixFieldMask);
 
     //create ODE data
-    PhysicsBodyPtr boxBody = PhysicsBody::create();
-    boxBody->setWorld(physicsWorld);
-    CPEdit(boxBody, PhysicsBody::PositionFieldMask);
+    PhysicsBodyPtr boxBody = PhysicsBody::create(physicsWorld);
+    beginEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
         boxBody->setPosition(Vec3f(Position));
-        boxBody->setBoxMass(1.0,Dimensions.x(), Dimensions.y(), Dimensions.z());
+        boxBody->setLinearDamping(0.001);
+        boxBody->setAngularDamping(0.001);
+    endEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+    boxBody->setBoxMass(1.0,Dimensions.x(), Dimensions.y(), Dimensions.z());
+
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
     beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
         boxGeom->setBody(boxBody);
@@ -566,7 +435,7 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
 //////////////////////////////////////////////////////////////////////////
 //! build a character
 //////////////////////////////////////////////////////////////////////////
-PhysicsBodyPtr buildCharacter(Vec3f Dimensions, Pnt3f Position)
+PhysicsBodyPtr buildShip(Vec3f Dimensions, Pnt3f Position)
 {
     Real32 Radius(osgMax(Dimensions.x(), Dimensions.y())/2.0f);
     Real32 Length(Dimensions.z() - 2.0f*Radius);
@@ -602,13 +471,13 @@ PhysicsBodyPtr buildCharacter(Vec3f Dimensions, Pnt3f Position)
 
     //create ODE data
 
-    PhysicsBodyPtr CapsuleBody = PhysicsBody::create();
-    CapsuleBody->setWorld(physicsWorld);
-    CPEdit(CapsuleBody, PhysicsBody::PositionFieldMask);
+    PhysicsBodyPtr CapsuleBody = PhysicsBody::create(physicsWorld);
+    beginEditCP(CapsuleBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::MaxAngularSpeedFieldMask);
         CapsuleBody->setPosition(Vec3f(Position));
-        CapsuleBody->setCCylinderMass(1.0,3,Radius, Length);
         CapsuleBody->setLinearDamping(0.01);
         CapsuleBody->setMaxAngularSpeed(0.0);
+    endEditCP(CapsuleBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::MaxAngularSpeedFieldMask);
+    CapsuleBody->setCCylinderMass(1.0,3,Radius, Length);
 
     PhysicsCCylinderGeomPtr CapsuleGeom = PhysicsCCylinderGeom::create();
     beginEditCP(CapsuleGeom, PhysicsRayGeom::BodyFieldMask | PhysicsRayGeom::SpaceFieldMask);

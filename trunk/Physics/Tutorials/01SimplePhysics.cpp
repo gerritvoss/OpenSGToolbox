@@ -168,17 +168,7 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-        static Time StepSize(1.0/60.0);
-        static Time TimeSinceLast(0.0);
-        TimeSinceLast += e.getElapsedTime();
-
-        while(TimeSinceLast > StepSize)
-        {
-            //Update
-            physHandler->update(StepSize, rootNode);
-
-            TimeSinceLast -= StepSize;
-        }
+        physHandler->update(e.getElapsedTime(), rootNode);
     }
 };
 
@@ -392,10 +382,11 @@ void buildBox(void)
     endEditCP(boxTrans, Transform::MatrixFieldMask);
 
     //create ODE data
-    PhysicsBodyPtr boxBody = PhysicsBody::create();
-    boxBody->setWorld(physicsWorld);
-    CPEdit(boxBody, PhysicsBody::PositionFieldMask);
+    PhysicsBodyPtr boxBody = PhysicsBody::create(physicsWorld);
+    beginEditCP(boxBody, PhysicsBody::PositionFieldMask);
         boxBody->setPosition(Vec3f(randX, randY, 10.0));
+    endEditCP(boxBody, PhysicsBody::PositionFieldMask);
+
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
     beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
         boxGeom->setBody(boxBody);
@@ -445,10 +436,11 @@ void buildSphere(void)
     sphereTrans->setMatrix(m);
     endEditCP(sphereTrans);
     //create ODE data
-    PhysicsBodyPtr sphereBody = PhysicsBody::create();
-    sphereBody->setWorld(physicsWorld);
-    CPEdit(sphereBody, PhysicsBody::PositionFieldMask);
-    sphereBody->setPosition(Vec3f(randX, randY, 10.0));
+    PhysicsBodyPtr sphereBody = PhysicsBody::create(physicsWorld);
+    beginEditCP(sphereBody, PhysicsBody::PositionFieldMask);
+        sphereBody->setPosition(Vec3f(randX, randY, 10.0));
+    endEditCP(sphereBody, PhysicsBody::PositionFieldMask);
+
     PhysicsSphereGeomPtr sphereGeom = PhysicsSphereGeom::create();
     CPEdit(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask);
         sphereGeom->setBody(sphereBody);
@@ -495,9 +487,10 @@ void buildTriMesh(void)
         triTrans->setMatrix(m);
 
         //create ODE data
-        PhysicsBodyPtr triBody = PhysicsBody::create();
-        triBody->setWorld(physicsWorld);
-        triBody->setPosition(Vec3f(randX, randY, 18.0));
+        PhysicsBodyPtr triBody = PhysicsBody::create(physicsWorld);
+        beginEditCP(triBody, PhysicsBody::PositionFieldMask);
+            triBody->setPosition(Vec3f(randX, randY, 18.0));
+        endEditCP(triBody, PhysicsBody::PositionFieldMask);
         PhysicsGeomPtr triGeom;
         if(false)
         {

@@ -209,26 +209,9 @@ class TutorialUpdateListener : public UpdateListener
             ForceOnCharacter += Vec3f(0.0, 0.0, 50000.0);
             _ShouldJump = false;
         }
-
-        static Time StepSize(0.001);
-        static Time TimeSinceLast(0.0);
-        TimeSinceLast += e.getElapsedTime();
-
-        Real32 SkipCount(75);
-
-        if(osgfloor(TimeSinceLast/StepSize) > SkipCount)
-        {
-            TimeSinceLast -= StepSize*(osgfloor(TimeSinceLast/StepSize)-SkipCount);
-        }
-        while(TimeSinceLast > StepSize)
-        {        
-            CharacterPhysicsBody->addForce(ForceOnCharacter);
-
-            //Update
-            physHandler->update(StepSize, rootNode);
-
-            TimeSinceLast -= StepSize;
-        }
+        physHandler->clearForceToBody();
+        physHandler->addForceToBody(CharacterPhysicsBody, ForceOnCharacter);
+        physHandler->update(e.getElapsedTime(), rootNode);
     }
 };
 

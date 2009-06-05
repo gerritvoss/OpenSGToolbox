@@ -159,17 +159,7 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-        static Time StepSize(0.001);
-        static Time TimeSinceLast(0.0);
-        TimeSinceLast += e.getElapsedTime();
-
-        while(TimeSinceLast > StepSize)
-        {
-            //Update
-            physHandler->update(StepSize, rootNode);
-
-            TimeSinceLast -= StepSize;
-        }
+        physHandler->update(e.getElapsedTime(), rootNode);
     }
 };
 
@@ -368,11 +358,12 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
     endEditCP(boxTrans, Transform::MatrixFieldMask);
 
     //create ODE data
-    PhysicsBodyPtr boxBody = PhysicsBody::create();
-    boxBody->setWorld(physicsWorld);
-    CPEdit(boxBody, PhysicsBody::PositionFieldMask);
+    PhysicsBodyPtr boxBody = PhysicsBody::create(physicsWorld);
+    CPEdit(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
         boxBody->setPosition(Vec3f(Position));
         boxBody->setBoxMass(1.0,Dimensions.x(), Dimensions.y(), Dimensions.z());
+        boxBody->setLinearDamping(0.0001);
+        boxBody->setAngularDamping(0.0001);
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
     beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
         boxGeom->setBody(boxBody);
