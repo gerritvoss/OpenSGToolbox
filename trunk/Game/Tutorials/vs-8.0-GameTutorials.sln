@@ -93,6 +93,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06Dialog", "06Dialog.vcproj
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20Ship", "20Ship.vcproj", "{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGPhysics", "..\..\Physics\Builds\Windows\OSGPhysics.vcproj", "{4A3961BC-39D6-4369-A089-5997CD50FE3C}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -155,6 +167,14 @@ Global
 		{18346695-D85A-4078-9E1A-AF1BDECF4059}.Debug|Win32.Build.0 = Debug|Win32
 		{18346695-D85A-4078-9E1A-AF1BDECF4059}.Release|Win32.ActiveCfg = Release|Win32
 		{18346695-D85A-4078-9E1A-AF1BDECF4059}.Release|Win32.Build.0 = Release|Win32
+		{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}.Debug|Win32.Build.0 = Debug|Win32
+		{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}.Release|Win32.ActiveCfg = Release|Win32
+		{D053DE17-D167-4B3C-BA9E-1C3C2E6EA6A4}.Release|Win32.Build.0 = Release|Win32
+		{4A3961BC-39D6-4369-A089-5997CD50FE3C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4A3961BC-39D6-4369-A089-5997CD50FE3C}.Debug|Win32.Build.0 = Debug|Win32
+		{4A3961BC-39D6-4369-A089-5997CD50FE3C}.Release|Win32.ActiveCfg = Release|Win32
+		{4A3961BC-39D6-4369-A089-5997CD50FE3C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
