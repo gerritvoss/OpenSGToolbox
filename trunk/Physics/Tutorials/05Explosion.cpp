@@ -27,9 +27,7 @@
 
 #include <OpenSG/OSGFieldContainerFactory.h>
 #include <OpenSG/OSGSimpleAttachments.h>
-#include <OpenSG/OSGGeoFunctions.h>
 #include <OpenSG/OSGSceneFileHandler.h>
-#include <OpenSG/OSGDirectionalLight.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -48,8 +46,9 @@ OSG_USING_NAMESPACE
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position);
-PhysicsBodyPtr buildShip(Vec3f Dimensions, Pnt3f Position);
+PhysicsBodyPtr buildSphere(void);
+PhysicsBodyPtr buildBox(void);
+void makeExplosion(Pnt3f Location, Real32 Force);
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
@@ -57,15 +56,10 @@ SimpleSceneManager *mgr;
 PhysicsHandlerPtr physHandler;
 PhysicsWorldPtr physicsWorld;
 PhysicsHashSpacePtr hashSpace;
-PhysicsBodyPtr CharacterPhysicsBody;
-Vec3f ForceOnCharacter;
-bool _IsUpKeyDown(false);
-bool _IsDownKeyDown(false);
-bool _IsLeftKeyDown(false);
-bool _IsRightKeyDown(false);
 
 //just for hierarchy
 NodePtr spaceGroupNode;
+std::vector<PhysicsBodyPtr> allPhysicsBodies;
 
 NodePtr rootNode;
 
@@ -84,41 +78,24 @@ public:
        }
        switch(e.getKey())
        {
+       case KeyEvent::KEY_S:
+            {
+                allPhysicsBodies.push_back(buildSphere());
+            }
+            break;
        case KeyEvent::KEY_B:
-           buildBox(Vec3f(10.0,10.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
-           break;
-	   case KeyEvent::KEY_UP:
-           _IsUpKeyDown = true;
-		   break;
-	   case KeyEvent::KEY_DOWN:
-           _IsDownKeyDown = true;
-		   break;
-	   case KeyEvent::KEY_LEFT:
-           _IsLeftKeyDown = true;
-		   break;
-	   case KeyEvent::KEY_RIGHT:
-           _IsRightKeyDown = true;
+            {
+                allPhysicsBodies.push_back(buildBox());
+            }
+            break;
+       case KeyEvent::KEY_E:
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 20000.0f);
            break;
        }
    }
 
    virtual void keyReleased(const KeyEvent& e)
    {
-	   switch(e.getKey())
-	   {
-	   case KeyEvent::KEY_UP:
-           _IsUpKeyDown = false;
-		   break;
-	   case KeyEvent::KEY_DOWN:
-           _IsDownKeyDown = false;
-		   break;
-	   case KeyEvent::KEY_LEFT:
-           _IsLeftKeyDown = false;
-		   break;
-	   case KeyEvent::KEY_RIGHT:
-           _IsRightKeyDown = false;
-           break;
-       }
    }
 
    virtual void keyTyped(const KeyEvent& e)
@@ -181,28 +158,22 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-        ForceOnCharacter.setValues(0.0,0.0,0.0);
-        Real32 PushForce(10000.0);
-        if(_IsUpKeyDown)
-        {
-            ForceOnCharacter += Vec3f(0.0, PushForce, 0.0);
-        }
-        if(_IsDownKeyDown)
-        {
-            ForceOnCharacter += Vec3f(0.0, -PushForce, 0.0);
-        }
-        if(_IsLeftKeyDown)
-        {
-            ForceOnCharacter += Vec3f(-PushForce, 0.0, 0.0);
-        }
-        if(_IsRightKeyDown)
-        {
-            ForceOnCharacter += Vec3f(PushForce, 0.0, 0.0);
-        }
-        CharacterPhysicsBody->addForce(ForceOnCharacter);
         physHandler->update(e.getElapsedTime(), rootNode);
     }
 };
+
+void makeExplosion(Pnt3f Location, Real32 Force)
+{
+    for(UInt32 i(0) ; i<allPhysicsBodies.size() ; ++i)
+    {
+        Vec3f Direction(allPhysicsBodies[i]->getPosition()-Location);
+
+        Real32 Distance(Direction.length());
+        Direction.normalize();
+
+        allPhysicsBodies[i]->addForce(Direction*Force*(1.0f/Distance));
+    }
+}
 
 // Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
@@ -241,10 +212,13 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 02Joints Window");
+                                        "OpenSG 05Explosion Window");
 
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
+
+    //Make Torus Node
+    NodePtr TorusNode = makeTorus(.5, 2, 32, 32);
 
     //Make Main Scene Node
 	NodePtr scene = makeCoredNode<Group>();
@@ -262,44 +236,23 @@ int main(int argc, char **argv)
     }
     endEditCP  (rootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-    //Light Beacon
-    NodePtr TutorialLightBeacon = makeCoredNode<Transform>();
-
-    //Light Node
-    DirectionalLightPtr TutorialLight = DirectionalLight::create();
-    TutorialLight->setDirection(0.0,0.0,-1.0);
-    TutorialLight->setBeacon(TutorialLightBeacon);
-
-    NodePtr TutorialLightNode = Node::create();
-    TutorialLightNode->setCore(TutorialLight);
-
-    scene->addChild(TutorialLightNode);
-    scene->addChild(TutorialLightBeacon);
-
-
     //Setup Physics Scene
     physicsWorld = PhysicsWorld::create();
     beginEditCP(physicsWorld, PhysicsWorld::WorldContactSurfaceLayerFieldMask | 
                               PhysicsWorld::AutoDisableFlagFieldMask | 
                               PhysicsWorld::AutoDisableTimeFieldMask | 
                               PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
-                              PhysicsWorld::GravityFieldMask | 
-                              PhysicsWorld::CfmFieldMask | 
-                              PhysicsWorld::ErpFieldMask);
-        physicsWorld->setWorldContactSurfaceLayer(0.01);
+                              PhysicsWorld::GravityFieldMask);
+        physicsWorld->setWorldContactSurfaceLayer(0.005);
         physicsWorld->setAutoDisableFlag(1);
         physicsWorld->setAutoDisableTime(0.75);
-        physicsWorld->setWorldContactMaxCorrectingVel(1.0);
-        //physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
-        //physicsWorld->setCfm(0.001);
-        //physicsWorld->setErp(0.2);
+        physicsWorld->setWorldContactMaxCorrectingVel(100.0);
+        physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
     endEditCP(physicsWorld, PhysicsWorld::WorldContactSurfaceLayerFieldMask | 
                               PhysicsWorld::AutoDisableFlagFieldMask | 
                               PhysicsWorld::AutoDisableTimeFieldMask | 
                               PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
-                              PhysicsWorld::GravityFieldMask | 
-                              PhysicsWorld::CfmFieldMask | 
-                              PhysicsWorld::ErpFieldMask);
+                              PhysicsWorld::GravityFieldMask);
 
     hashSpace = PhysicsHashSpace::create();
 
@@ -323,22 +276,42 @@ int main(int argc, char **argv)
     //create a group for our space
     GroupPtr spaceGroup;
 	spaceGroupNode = makeCoredNode<Group>(&spaceGroup);
+    //create the ground plane
+    GeometryPtr plane;
+	NodePtr planeNode = makeBox(30.0, 30.0, 1.0, 1, 1, 1);
+    plane = GeometryPtr::dcast(planeNode->getCore());
+    //and its Material
+	SimpleMaterialPtr plane_mat = SimpleMaterial::create();
+	beginEditCP(plane_mat);
+		plane_mat->setAmbient(Color3f(0.7,0.7,0.7));
+		plane_mat->setDiffuse(Color3f(0.9,0.6,1.0));
+	endEditCP(plane_mat);
+    beginEditCP(plane, Geometry::MaterialFieldMask);
+	    plane->setMaterial(plane_mat);
+    endEditCP(plane);
+
+
+    //create Physical Attachments
+	PhysicsBoxGeomPtr planeGeom = PhysicsBoxGeom::create();
+    beginEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+        planeGeom->setLengths(Vec3f(30.0, 30.0, 1.0));
+        //add geoms to space for collision
+        planeGeom->setSpace(hashSpace);
+    endEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+
 	//add Attachments to nodes...
     beginEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 	    spaceGroupNode->addAttachment(hashSpace);
+        spaceGroupNode->addChild(planeNode);
     endEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 
-	beginEditCP(TutorialLightNode, Node::ChildrenFieldMask);
-	    TutorialLightNode->addChild(spaceGroupNode);
-	endEditCP(TutorialLightNode, Node::ChildrenFieldMask);
-
-    //Create Character
-    CharacterPhysicsBody = buildShip(Vec3f(3.0,3.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
-
-    for(UInt32 i(0) ; i<5 ; ++i)
-    {
-        buildBox(Vec3f(10.0,10.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
-    }
+    beginEditCP(planeNode, Node::AttachmentsFieldMask);
+        planeNode->addAttachment(planeGeom);
+    endEditCP(planeNode, Node::AttachmentsFieldMask);
+    
+	beginEditCP(scene, Node::ChildrenFieldMask);
+	    scene->addChild(spaceGroupNode);
+	endEditCP(scene, Node::ChildrenFieldMask);
 
     // tell the manager what to manage
     mgr->setRoot  (rootNode);
@@ -373,17 +346,17 @@ void reshape(Vec2f Size)
 //////////////////////////////////////////////////////////////////////////
 //! build a box
 //////////////////////////////////////////////////////////////////////////
-PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
+PhysicsBodyPtr buildBox(void)
 {
     Matrix m;
     //create OpenSG mesh
     GeometryPtr box;
-    NodePtr boxNode = makeBox(Dimensions.x(), Dimensions.y(), Dimensions.z(), 1, 1, 1);
+    NodePtr boxNode = makeBox(1.0, 1.0, 1.0, 1, 1, 1);
     box = GeometryPtr::dcast(boxNode->getCore());
     SimpleMaterialPtr box_mat = SimpleMaterial::create();
     beginEditCP(box_mat);
         box_mat->setAmbient(Color3f(0.0,0.0,0.0));
-        box_mat->setDiffuse(Color3f(0.0,1.0 ,1.0));
+        box_mat->setDiffuse(Color3f(0.0,1.0 ,0.0));
     endEditCP(box_mat);
     beginEditCP(box, Geometry::MaterialFieldMask);
         box->setMaterial(box_mat);
@@ -391,7 +364,9 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
     TransformPtr boxTrans;
     NodePtr boxTransNode = makeCoredNode<Transform>(&boxTrans);
     m.setIdentity();
-    m.setTranslate(Position);
+    Real32 randX = (Real32)(rand()%5)-2.5;
+    Real32 randY = (Real32)(rand()%5)-2.5;
+    m.setTranslate(randX, randY, 10.0);
     beginEditCP(boxTrans, Transform::MatrixFieldMask);
         boxTrans->setMatrix(m);
     endEditCP(boxTrans, Transform::MatrixFieldMask);
@@ -399,17 +374,16 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
     //create ODE data
     PhysicsBodyPtr boxBody = PhysicsBody::create(physicsWorld);
     beginEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
-        boxBody->setPosition(Vec3f(Position));
-        boxBody->setLinearDamping(0.001);
-        boxBody->setAngularDamping(0.001);
+        boxBody->setPosition(Vec3f(randX, randY, 10.0));
+        boxBody->setLinearDamping(0.0001);
+        boxBody->setAngularDamping(0.0001);
+        boxBody->setBoxMass(1.0,1.0,1.0,1.0);
     endEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
-    boxBody->setBoxMass(1.0,Dimensions.x(), Dimensions.y(), Dimensions.z());
 
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
     beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
         boxGeom->setBody(boxBody);
         boxGeom->setSpace(hashSpace);
-        boxGeom->setLengths(Dimensions);
     endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
 
     //add attachments
@@ -429,74 +403,59 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
     return boxBody;
 }
 
-
 //////////////////////////////////////////////////////////////////////////
-//! build a character
+//! build a sphere
 //////////////////////////////////////////////////////////////////////////
-PhysicsBodyPtr buildShip(Vec3f Dimensions, Pnt3f Position)
+PhysicsBodyPtr buildSphere(void)
 {
-    Real32 Radius(osgMax(Dimensions.x(), Dimensions.y())/2.0f);
-    Real32 Length(Dimensions.z() - 2.0f*Radius);
-
     Matrix m;
     //create OpenSG mesh
-    GeometryPtr box;
-    NodePtr boxNode = makeBox(Dimensions.x(), Dimensions.y(), Dimensions.z(), 1, 1, 1);
-    box = GeometryPtr::dcast(boxNode->getCore());
-    SimpleMaterialPtr box_mat = SimpleMaterial::create();
-    beginEditCP(box_mat);
-        box_mat->setAmbient(Color3f(0.0,0.0,0.0));
-        box_mat->setDiffuse(Color3f(1.0,1.0 ,0.0));
-    endEditCP(box_mat);
-    beginEditCP(box, Geometry::MaterialFieldMask);
-        box->setMaterial(box_mat);
-    endEditCP(box, Geometry::MaterialFieldMask);
-    TransformPtr boxTrans;
-    NodePtr boxTransNode = makeCoredNode<Transform>(&boxTrans);
+    GeometryPtr sphere;
+    NodePtr sphereNode = makeSphere(2, 1);
+    sphere = GeometryPtr::dcast(sphereNode->getCore());
+    SimpleMaterialPtr sphere_mat = SimpleMaterial::create();
+    beginEditCP(sphere_mat);
+    sphere_mat->setAmbient(Color3f(0.0,0.0,0.0));
+    sphere_mat->setDiffuse(Color3f(0.0,0.0,1.0));
+    endEditCP(sphere_mat);
+    beginEditCP(sphere, Geometry::MaterialFieldMask);
+    sphere->setMaterial(sphere_mat);
+    endEditCP(sphere);
+    TransformPtr sphereTrans;
+    NodePtr sphereTransNode = makeCoredNode<Transform>(&sphereTrans);
     m.setIdentity();
-    m.setTranslate(Position);
-    beginEditCP(boxTrans, Transform::MatrixFieldMask);
-        boxTrans->setMatrix(m);
-    endEditCP(boxTrans, Transform::MatrixFieldMask);
-
-    beginEditCP(box->getPositions(), GeoPositions3f::GeoPropDataFieldMask);
-        for(UInt32 i(0) ; i<box->getPositions()->size() ; ++i)
-        {
-            box->getPositions()->setValue(box->getPositions()->getValue(i) + Vec3f(0.0,0.0,Dimensions.z()/2.0f),i);
-        }
-    endEditCP(box->getPositions(), GeoPositions3f::GeoPropDataFieldMask);
-
-
+    Real32 randX = (Real32)(rand()%5)-2.5;
+    Real32 randY = (Real32)(rand()%5)-2.5;
+    m.setTranslate(randX, randY, 10.0);
+    beginEditCP(sphereTrans, Transform::MatrixFieldMask);
+    sphereTrans->setMatrix(m);
+    endEditCP(sphereTrans);
     //create ODE data
+    PhysicsBodyPtr sphereBody = PhysicsBody::create(physicsWorld);
+    beginEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+        sphereBody->setPosition(Vec3f(randX, randY, 10.0));
+        sphereBody->setLinearDamping(0.0001);
+        sphereBody->setAngularDamping(0.0001);
+        sphereBody->setSphereMass(1.0,1.0);
+    endEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
 
-    PhysicsBodyPtr CapsuleBody = PhysicsBody::create(physicsWorld);
-    beginEditCP(CapsuleBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::MaxAngularSpeedFieldMask);
-        CapsuleBody->setPosition(Vec3f(Position));
-        CapsuleBody->setLinearDamping(0.01);
-        CapsuleBody->setMaxAngularSpeed(0.0);
-    endEditCP(CapsuleBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::MaxAngularSpeedFieldMask);
-    CapsuleBody->setCCylinderMass(1.0,3,Radius, Length);
-
-    PhysicsCCylinderGeomPtr CapsuleGeom = PhysicsCCylinderGeom::create();
-    beginEditCP(CapsuleGeom, PhysicsRayGeom::BodyFieldMask | PhysicsRayGeom::SpaceFieldMask);
-        CapsuleGeom->setBody(CapsuleBody);
-        CapsuleGeom->setSpace(hashSpace);
-        CapsuleGeom->setParams(Vec2f(Radius,Length));
-    endEditCP(CapsuleGeom, PhysicsRayGeom::BodyFieldMask | PhysicsRayGeom::SpaceFieldMask);
-
+    PhysicsSphereGeomPtr sphereGeom = PhysicsSphereGeom::create();
+    CPEdit(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask);
+        sphereGeom->setBody(sphereBody);
+        sphereGeom->setSpace(hashSpace);
+    
     //add attachments
-    beginEditCP(boxNode, Node::AttachmentsFieldMask);
-        boxNode->addAttachment(CapsuleGeom);
-    endEditCP(boxNode, Node::AttachmentsFieldMask);
-    beginEditCP(boxTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
-        boxTransNode->addAttachment(CapsuleBody);
-        boxTransNode->addChild(boxNode);
-    endEditCP(boxTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
-
+    beginEditCP(sphereNode, Node::AttachmentsFieldMask);
+    sphereNode->addAttachment(sphereGeom);
+    endEditCP(sphereNode);
+    beginEditCP(sphereTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
+    sphereTransNode->addAttachment(sphereBody);
+    sphereTransNode->addChild(sphereNode);
+    endEditCP(sphereTransNode);
     //add to SceneGraph
     beginEditCP(spaceGroupNode, Node::ChildrenFieldMask);
-        spaceGroupNode->addChild(boxTransNode);
-    endEditCP(spaceGroupNode, Node::ChildrenFieldMask);
+    spaceGroupNode->addChild(sphereTransNode);
+    endEditCP(spaceGroupNode);
 
-    return CapsuleBody;
+    return sphereBody;
 }

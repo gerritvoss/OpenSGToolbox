@@ -204,15 +204,6 @@ Action::ResultE updateOsgOde(NodePtr& node)
             //SLOG << "found a bodyNode " << endLog;
             PhysicsBodyPtr body = PhysicsBodyPtr::dcast(a);
             body->updateToODEState();
-            // If the object is moving normally, dampen the movement a bit to simulate low-level friction
-            // (the amount of dampening should depend on whether the object is contacting another or not,
-            // and a contact-type-specific dampening amount, but oh well, this generally works)
-            //beginEditCP(body, PhysicsBody::ForceFieldMask | PhysicsBody::TorqueFieldMask);
-            //    Vec3f vel = body->getLinearVel();
-            //    body->addForce(vel * -0.01f);
-            //    vel = body->getAngularVel();
-            //    body->addTorque(vel * -0.01f);
-            //endEditCP(body, PhysicsBody::ForceFieldMask | PhysicsBody::TorqueFieldMask);
 
             //update the position
             m.setIdentity();
@@ -332,6 +323,12 @@ void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
 
     while(_TimeSinceLast > getStepSize())
     {
+        std::set<PhysicsBodyPtr>::iterator Itor(_ApplyAccumForcesPerStep.begin());
+        for( ; Itor!=_ApplyAccumForcesPerStep.end() ; ++Itor)
+        {
+            (*Itor)->applyAccumForces();
+        }
+
         //Update
         getStatistics()->getElem(statNPhysicsSteps)->inc();
         //collide
@@ -350,6 +347,7 @@ void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
         _TimeSinceLast -= getStepSize();
     }
     getStatistics()->getElem(statPhysicsTime)->stop();
+    _ApplyAccumForcesPerStep.clear();
 }
 
 void PhysicsHandler::updateWorld(NodePtr node)

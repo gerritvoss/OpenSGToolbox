@@ -51,6 +51,8 @@
 #include <OpenSG/OSGStatElemTypes.h>
 #include "OSGPhysicsBodyFields.h"
 
+#include <set>
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -117,6 +119,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     StatCollector* getStatistics(void);
     void setStatistics(StatCollector *stat);
 
+    void addAccumForcesThisUpdate(PhysicsBodyPtr b);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -146,6 +150,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     StatCollector* _statistics;
     bool _ownStat;
     Time _TimeSinceLast;
+
+    std::set<PhysicsBodyPtr> _ApplyAccumForcesPerStep;
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/

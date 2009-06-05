@@ -456,7 +456,7 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
       DrawnDrawObject->draw(TheGraphics);
 
    }
-   else if(getFont() != NullFC)
+   else if(getText() != "" && getFont() != NullFC)
    {
 	   //Just Draw the Text
        Pnt2f AlignedPosition;

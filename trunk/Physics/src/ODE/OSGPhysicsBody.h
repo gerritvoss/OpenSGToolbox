@@ -150,6 +150,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    void applyAccumForces(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

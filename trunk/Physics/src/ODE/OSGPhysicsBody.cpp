@@ -47,6 +47,7 @@
 #include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsBody.h"
+#include "OSGPhysicsHandler.h"
 
 OSG_USING_NAMESPACE
 
@@ -129,14 +130,22 @@ dBodyID PhysicsBody::getBodyID(void)
 *                              Class Specific                              *
 \***************************************************************************/
 
+void PhysicsBody::applyAccumForces(void)
+{
+    dBodySetForce(_BodyID, _AccumulatedForce.x(),_AccumulatedForce.y(),_AccumulatedForce.z());
+    dBodySetTorque(_BodyID, _AccumulatedTorque.x(),_AccumulatedTorque.y(),_AccumulatedTorque.z());
+}
+
 void PhysicsBody::updateAddedForceTorque(void)
 {
     const dReal *odeVec;
     odeVec = dBodyGetForce(_BodyID);
-    _AccumulatedForce += Vec3f(odeVec);
+    _AccumulatedForce = Vec3f(odeVec);
 
     odeVec = dBodyGetTorque(_BodyID);
-    _AccumulatedTorque += Vec3f(odeVec);
+    _AccumulatedTorque = Vec3f(odeVec);
+
+    getWorld()->getParentHandler()->addAccumForcesThisUpdate(PhysicsBodyPtr(this));
 }
 
 void PhysicsBody::initDefaults(void)
