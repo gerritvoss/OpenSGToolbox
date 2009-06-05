@@ -71,7 +71,6 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Set Field                    */
 	  /*! \{                                                                 */
-      void setBodyID(const dBodyID &value );
 	  /*! \}                                                                 */
 
     /*---------------------------------------------------------------------*/
@@ -85,8 +84,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-	  void setMass(const dMass *mass);
-	  void getMass(dMass *mass);
+	  void setMassStruct(const dMass &mass );
+	  void getMassStruct(dMass &mass );
 	  void addForce(const Vec3f &v);
 	  void addTorque(const Vec3f &v);
 	  void addRelForce(const Vec3f &v);
@@ -180,6 +179,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
 	
 	/*! \}                                                                 */
 
+    void updateAddedForceTorque(void);
+
     /*==========================  PRIVATE  ================================*/
   private:
 
@@ -193,6 +194,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
     void operator =(const PhysicsBody &source);
 
     dBodyID _BodyID;
+    Vec3f _AccumulatedForce;
+    Vec3f _AccumulatedTorque;
 };
 
 typedef PhysicsBody *PhysicsBodyP;

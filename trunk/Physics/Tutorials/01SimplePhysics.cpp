@@ -383,9 +383,11 @@ void buildBox(void)
 
     //create ODE data
     PhysicsBodyPtr boxBody = PhysicsBody::create(physicsWorld);
-    beginEditCP(boxBody, PhysicsBody::PositionFieldMask);
+    beginEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
         boxBody->setPosition(Vec3f(randX, randY, 10.0));
-    endEditCP(boxBody, PhysicsBody::PositionFieldMask);
+        boxBody->setLinearDamping(0.0001);
+        boxBody->setAngularDamping(0.0001);
+    endEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
 
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
     beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
@@ -416,7 +418,7 @@ void buildSphere(void)
     Matrix m;
     //create OpenSG mesh
     GeometryPtr sphere;
-    NodePtr sphereNode = makeSphere(1, 1);
+    NodePtr sphereNode = makeSphere(2, 1);
     sphere = GeometryPtr::dcast(sphereNode->getCore());
     SimpleMaterialPtr sphere_mat = SimpleMaterial::create();
     beginEditCP(sphere_mat);
@@ -437,9 +439,11 @@ void buildSphere(void)
     endEditCP(sphereTrans);
     //create ODE data
     PhysicsBodyPtr sphereBody = PhysicsBody::create(physicsWorld);
-    beginEditCP(sphereBody, PhysicsBody::PositionFieldMask);
+    beginEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
         sphereBody->setPosition(Vec3f(randX, randY, 10.0));
-    endEditCP(sphereBody, PhysicsBody::PositionFieldMask);
+        sphereBody->setLinearDamping(0.0001);
+        sphereBody->setAngularDamping(0.0001);
+    endEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
 
     PhysicsSphereGeomPtr sphereGeom = PhysicsSphereGeom::create();
     CPEdit(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask);
@@ -488,9 +492,11 @@ void buildTriMesh(void)
 
         //create ODE data
         PhysicsBodyPtr triBody = PhysicsBody::create(physicsWorld);
-        beginEditCP(triBody, PhysicsBody::PositionFieldMask);
+        beginEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
             triBody->setPosition(Vec3f(randX, randY, 18.0));
-        endEditCP(triBody, PhysicsBody::PositionFieldMask);
+            triBody->setLinearDamping(0.0001);
+            triBody->setAngularDamping(0.0001);
+        endEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
         PhysicsGeomPtr triGeom;
         if(false)
         {

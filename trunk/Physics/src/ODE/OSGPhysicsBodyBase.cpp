@@ -85,6 +85,15 @@ const OSG::BitVector  PhysicsBodyBase::ForceFieldMask =
 const OSG::BitVector  PhysicsBodyBase::TorqueFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::TorqueFieldId);
 
+const OSG::BitVector  PhysicsBodyBase::MassFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::MassFieldId);
+
+const OSG::BitVector  PhysicsBodyBase::MassCenterOfGravityFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::MassCenterOfGravityFieldId);
+
+const OSG::BitVector  PhysicsBodyBase::MassInertiaTensorFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::MassInertiaTensorFieldId);
+
 const OSG::BitVector  PhysicsBodyBase::EnableFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::EnableFieldId);
 
@@ -156,6 +165,15 @@ const OSG::BitVector PhysicsBodyBase::MTInfluenceMask =
     
 */
 /*! \var Vec3f           PhysicsBodyBase::_sfTorque
+    
+*/
+/*! \var Real32          PhysicsBodyBase::_sfMass
+    
+*/
+/*! \var Vec3f           PhysicsBodyBase::_sfMassCenterOfGravity
+    
+*/
+/*! \var Matrix          PhysicsBodyBase::_sfMassInertiaTensor
     
 */
 /*! \var bool            PhysicsBodyBase::_sfEnable
@@ -243,6 +261,21 @@ FieldDescription *PhysicsBodyBase::_desc[] =
                      TorqueFieldId, TorqueFieldMask,
                      false,
                      (FieldAccessMethod) &PhysicsBodyBase::getSFTorque),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "mass", 
+                     MassFieldId, MassFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFMass),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "massCenterOfGravity", 
+                     MassCenterOfGravityFieldId, MassCenterOfGravityFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFMassCenterOfGravity),
+    new FieldDescription(SFMatrix::getClassType(), 
+                     "massInertiaTensor", 
+                     MassInertiaTensorFieldId, MassInertiaTensorFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFMassInertiaTensor),
     new FieldDescription(SFBool::getClassType(), 
                      "enable", 
                      EnableFieldId, EnableFieldMask,
@@ -400,6 +433,9 @@ PhysicsBodyBase::PhysicsBodyBase(void) :
     _sfAngularVel             (), 
     _sfForce                  (), 
     _sfTorque                 (), 
+    _sfMass                   (), 
+    _sfMassCenterOfGravity    (), 
+    _sfMassInertiaTensor      (), 
     _sfEnable                 (bool(true)), 
     _sfAutoDisableFlag        (), 
     _sfAutoDisableLinearThreshold(), 
@@ -431,6 +467,9 @@ PhysicsBodyBase::PhysicsBodyBase(const PhysicsBodyBase &source) :
     _sfAngularVel             (source._sfAngularVel             ), 
     _sfForce                  (source._sfForce                  ), 
     _sfTorque                 (source._sfTorque                 ), 
+    _sfMass                   (source._sfMass                   ), 
+    _sfMassCenterOfGravity    (source._sfMassCenterOfGravity    ), 
+    _sfMassInertiaTensor      (source._sfMassInertiaTensor      ), 
     _sfEnable                 (source._sfEnable                 ), 
     _sfAutoDisableFlag        (source._sfAutoDisableFlag        ), 
     _sfAutoDisableLinearThreshold(source._sfAutoDisableLinearThreshold), 
@@ -495,6 +534,21 @@ UInt32 PhysicsBodyBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TorqueFieldMask & whichField))
     {
         returnValue += _sfTorque.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MassFieldMask & whichField))
+    {
+        returnValue += _sfMass.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MassCenterOfGravityFieldMask & whichField))
+    {
+        returnValue += _sfMassCenterOfGravity.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MassInertiaTensorFieldMask & whichField))
+    {
+        returnValue += _sfMassInertiaTensor.getBinSize();
     }
 
     if(FieldBits::NoField != (EnableFieldMask & whichField))
@@ -616,6 +670,21 @@ void PhysicsBodyBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTorque.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (MassFieldMask & whichField))
+    {
+        _sfMass.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MassCenterOfGravityFieldMask & whichField))
+    {
+        _sfMassCenterOfGravity.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MassInertiaTensorFieldMask & whichField))
+    {
+        _sfMassInertiaTensor.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (EnableFieldMask & whichField))
     {
         _sfEnable.copyToBin(pMem);
@@ -734,6 +803,21 @@ void PhysicsBodyBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTorque.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MassFieldMask & whichField))
+    {
+        _sfMass.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MassCenterOfGravityFieldMask & whichField))
+    {
+        _sfMassCenterOfGravity.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MassInertiaTensorFieldMask & whichField))
+    {
+        _sfMassInertiaTensor.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (EnableFieldMask & whichField))
     {
         _sfEnable.copyFromBin(pMem);
@@ -840,6 +924,15 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
     if(FieldBits::NoField != (TorqueFieldMask & whichField))
         _sfTorque.syncWith(pOther->_sfTorque);
 
+    if(FieldBits::NoField != (MassFieldMask & whichField))
+        _sfMass.syncWith(pOther->_sfMass);
+
+    if(FieldBits::NoField != (MassCenterOfGravityFieldMask & whichField))
+        _sfMassCenterOfGravity.syncWith(pOther->_sfMassCenterOfGravity);
+
+    if(FieldBits::NoField != (MassInertiaTensorFieldMask & whichField))
+        _sfMassInertiaTensor.syncWith(pOther->_sfMassInertiaTensor);
+
     if(FieldBits::NoField != (EnableFieldMask & whichField))
         _sfEnable.syncWith(pOther->_sfEnable);
 
@@ -915,6 +1008,15 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
 
     if(FieldBits::NoField != (TorqueFieldMask & whichField))
         _sfTorque.syncWith(pOther->_sfTorque);
+
+    if(FieldBits::NoField != (MassFieldMask & whichField))
+        _sfMass.syncWith(pOther->_sfMass);
+
+    if(FieldBits::NoField != (MassCenterOfGravityFieldMask & whichField))
+        _sfMassCenterOfGravity.syncWith(pOther->_sfMassCenterOfGravity);
+
+    if(FieldBits::NoField != (MassInertiaTensorFieldMask & whichField))
+        _sfMassInertiaTensor.syncWith(pOther->_sfMassInertiaTensor);
 
     if(FieldBits::NoField != (EnableFieldMask & whichField))
         _sfEnable.syncWith(pOther->_sfEnable);

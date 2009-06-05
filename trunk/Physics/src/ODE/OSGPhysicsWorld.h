@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorld : public PhysicsWorldBase
 	void worldStep(Real32 stepsize);
 	void worldQuickStep(Real32 stepsize);
     void initWorld();
+
+    PhysicsHandlerPtr getParentHandler(void) const;
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -126,6 +128,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorld : public PhysicsWorldBase
 
     friend class FieldContainer;
     friend class PhysicsWorldBase;
+    friend class PhysicsHandler;
 
     static void initMethod(void);
 

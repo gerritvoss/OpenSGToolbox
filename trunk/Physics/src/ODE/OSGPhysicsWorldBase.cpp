@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,13 +57,12 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsWorldBase.h"
 #include "OSGPhysicsWorld.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsWorldBase::ErpFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsWorldBase::ErpFieldId);
@@ -97,6 +96,9 @@ const OSG::BitVector  PhysicsWorldBase::WorldContactMaxCorrectingVelFieldMask =
 
 const OSG::BitVector  PhysicsWorldBase::WorldContactSurfaceLayerFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsWorldBase::WorldContactSurfaceLayerFieldId);
+
+const OSG::BitVector  PhysicsWorldBase::InternalParentHandlerFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsWorldBase::InternalParentHandlerFieldId);
 
 const OSG::BitVector PhysicsWorldBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -137,6 +139,9 @@ const OSG::BitVector PhysicsWorldBase::MTInfluenceMask =
 */
 /*! \var Real32          PhysicsWorldBase::_sfWorldContactSurfaceLayer
     the depth of the surface layer around all geometry objects. Contacts are allowed to sink into the surface layer up to the given depth before coming to rest. The default value is zero. Increasing this to some small value (e.g. 0.001) can help prevent jittering problems due to contacts being repeatedly made and broken.
+*/
+/*! \var PhysicsHandlerPtr PhysicsWorldBase::_sfInternalParentHandler
+    
 */
 
 //! PhysicsWorld description
@@ -197,7 +202,12 @@ FieldDescription *PhysicsWorldBase::_desc[] =
                      "worldContactSurfaceLayer", 
                      WorldContactSurfaceLayerFieldId, WorldContactSurfaceLayerFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsWorldBase::getSFWorldContactSurfaceLayer)
+                     (FieldAccessMethod) &PhysicsWorldBase::getSFWorldContactSurfaceLayer),
+    new FieldDescription(SFPhysicsHandlerPtr::getClassType(), 
+                     "InternalParentHandler", 
+                     InternalParentHandlerFieldId, InternalParentHandlerFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsWorldBase::getSFInternalParentHandler)
 };
 
 
@@ -284,6 +294,7 @@ PhysicsWorldBase::PhysicsWorldBase(void) :
     _sfWorldQuickStepNumIterations(Int32(20)), 
     _sfWorldContactMaxCorrectingVel(), 
     _sfWorldContactSurfaceLayer(Real32(0)), 
+    _sfInternalParentHandler  (PhysicsHandlerPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -304,6 +315,7 @@ PhysicsWorldBase::PhysicsWorldBase(const PhysicsWorldBase &source) :
     _sfWorldQuickStepNumIterations(source._sfWorldQuickStepNumIterations), 
     _sfWorldContactMaxCorrectingVel(source._sfWorldContactMaxCorrectingVel), 
     _sfWorldContactSurfaceLayer(source._sfWorldContactSurfaceLayer), 
+    _sfInternalParentHandler  (source._sfInternalParentHandler  ), 
     Inherited                 (source)
 {
 }
@@ -375,6 +387,11 @@ UInt32 PhysicsWorldBase::getBinSize(const BitVector &whichField)
         returnValue += _sfWorldContactSurfaceLayer.getBinSize();
     }
 
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    {
+        returnValue += _sfInternalParentHandler.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -437,6 +454,11 @@ void PhysicsWorldBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (WorldContactSurfaceLayerFieldMask & whichField))
     {
         _sfWorldContactSurfaceLayer.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    {
+        _sfInternalParentHandler.copyToBin(pMem);
     }
 
 
@@ -502,6 +524,11 @@ void PhysicsWorldBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfWorldContactSurfaceLayer.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    {
+        _sfInternalParentHandler.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -544,6 +571,9 @@ void PhysicsWorldBase::executeSyncImpl(      PhysicsWorldBase *pOther,
 
     if(FieldBits::NoField != (WorldContactSurfaceLayerFieldMask & whichField))
         _sfWorldContactSurfaceLayer.syncWith(pOther->_sfWorldContactSurfaceLayer);
+
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+        _sfInternalParentHandler.syncWith(pOther->_sfInternalParentHandler);
 
 
 }
@@ -588,6 +618,9 @@ void PhysicsWorldBase::executeSyncImpl(      PhysicsWorldBase *pOther,
     if(FieldBits::NoField != (WorldContactSurfaceLayerFieldMask & whichField))
         _sfWorldContactSurfaceLayer.syncWith(pOther->_sfWorldContactSurfaceLayer);
 
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+        _sfInternalParentHandler.syncWith(pOther->_sfInternalParentHandler);
+
 
 
 }
@@ -603,6 +636,8 @@ void PhysicsWorldBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -614,8 +649,6 @@ DataType FieldDataTraits<PhysicsWorldPtr>::_type("PhysicsWorldPtr", "AttachmentP
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsWorldPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsWorldPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -631,10 +664,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsWorldBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSWORLDBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSWORLDBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSWORLDFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

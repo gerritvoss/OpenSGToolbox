@@ -209,8 +209,8 @@ class TutorialUpdateListener : public UpdateListener
             ForceOnCharacter += Vec3f(0.0, 0.0, 50000.0);
             _ShouldJump = false;
         }
-        physHandler->clearForceToBody();
-        physHandler->addForceToBody(CharacterPhysicsBody, ForceOnCharacter);
+        //physHandler->clearForceToBody();
+        //physHandler->addForceToBody(CharacterPhysicsBody, ForceOnCharacter);
         physHandler->update(e.getElapsedTime(), rootNode);
     }
 };
@@ -525,8 +525,7 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
     endEditCP(boxTrans, Transform::MatrixFieldMask);
 
     //create ODE data
-    PhysicsBodyPtr boxBody = PhysicsBody::create();
-    boxBody->setWorld(physicsWorld);
+    PhysicsBodyPtr boxBody = PhysicsBody::create(physicsWorld);
     CPEdit(boxBody, PhysicsBody::PositionFieldMask);
         boxBody->setPosition(Vec3f(Position));
         boxBody->setBoxMass(1.0,Dimensions.x(), Dimensions.y(), Dimensions.z());
@@ -594,9 +593,8 @@ PhysicsBodyPtr buildCharacter(Vec3f Dimensions, Pnt3f Position)
 
     //create ODE data
 
-    PhysicsBodyPtr CapsuleBody = PhysicsBody::create();
-    CapsuleBody->setWorld(physicsWorld);
-    CPEdit(CapsuleBody, PhysicsBody::PositionFieldMask);
+    PhysicsBodyPtr CapsuleBody = PhysicsBody::create(physicsWorld);
+    CPEdit(CapsuleBody, PhysicsBody::PositionFieldMask | PhysicsBody::MaxAngularSpeedFieldMask);
         CapsuleBody->setPosition(Vec3f(Position));
         CapsuleBody->setCCylinderMass(1.0,3,Radius, Length);
         //CapsuleBody->setLinearDamping(0.01);

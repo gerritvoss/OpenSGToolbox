@@ -77,6 +77,8 @@ PhysicsBodyPtr PhysicsBodyBase::createEmpty(void)
 
     return returnValue; 
 }
+
+
 /*------------------------------ get -----------------------------------*/
 
 //! Get the PhysicsBody::_sfPosition field.
@@ -126,6 +128,27 @@ inline
 SFVec3f *PhysicsBodyBase::getSFTorque(void)
 {
     return &_sfTorque;
+}
+
+//! Get the PhysicsBody::_sfMass field.
+inline
+SFReal32 *PhysicsBodyBase::getSFMass(void)
+{
+    return &_sfMass;
+}
+
+//! Get the PhysicsBody::_sfMassCenterOfGravity field.
+inline
+SFVec3f *PhysicsBodyBase::getSFMassCenterOfGravity(void)
+{
+    return &_sfMassCenterOfGravity;
+}
+
+//! Get the PhysicsBody::_sfMassInertiaTensor field.
+inline
+SFMatrix *PhysicsBodyBase::getSFMassInertiaTensor(void)
+{
+    return &_sfMassInertiaTensor;
 }
 
 //! Get the PhysicsBody::_sfEnable field.
@@ -379,6 +402,69 @@ inline
 void PhysicsBodyBase::setTorque(const Vec3f &value)
 {
     _sfTorque.setValue(value);
+}
+
+//! Get the value of the PhysicsBody::_sfMass field.
+inline
+Real32 &PhysicsBodyBase::getMass(void)
+{
+    return _sfMass.getValue();
+}
+
+//! Get the value of the PhysicsBody::_sfMass field.
+inline
+const Real32 &PhysicsBodyBase::getMass(void) const
+{
+    return _sfMass.getValue();
+}
+
+//! Set the value of the PhysicsBody::_sfMass field.
+inline
+void PhysicsBodyBase::setMass(const Real32 &value)
+{
+    _sfMass.setValue(value);
+}
+
+//! Get the value of the PhysicsBody::_sfMassCenterOfGravity field.
+inline
+Vec3f &PhysicsBodyBase::getMassCenterOfGravity(void)
+{
+    return _sfMassCenterOfGravity.getValue();
+}
+
+//! Get the value of the PhysicsBody::_sfMassCenterOfGravity field.
+inline
+const Vec3f &PhysicsBodyBase::getMassCenterOfGravity(void) const
+{
+    return _sfMassCenterOfGravity.getValue();
+}
+
+//! Set the value of the PhysicsBody::_sfMassCenterOfGravity field.
+inline
+void PhysicsBodyBase::setMassCenterOfGravity(const Vec3f &value)
+{
+    _sfMassCenterOfGravity.setValue(value);
+}
+
+//! Get the value of the PhysicsBody::_sfMassInertiaTensor field.
+inline
+Matrix &PhysicsBodyBase::getMassInertiaTensor(void)
+{
+    return _sfMassInertiaTensor.getValue();
+}
+
+//! Get the value of the PhysicsBody::_sfMassInertiaTensor field.
+inline
+const Matrix &PhysicsBodyBase::getMassInertiaTensor(void) const
+{
+    return _sfMassInertiaTensor.getValue();
+}
+
+//! Set the value of the PhysicsBody::_sfMassInertiaTensor field.
+inline
+void PhysicsBodyBase::setMassInertiaTensor(const Matrix &value)
+{
+    _sfMassInertiaTensor.setValue(value);
 }
 
 //! Get the value of the PhysicsBody::_sfEnable field.

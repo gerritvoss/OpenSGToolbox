@@ -117,9 +117,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     StatCollector* getStatistics(void);
     void setStatistics(StatCollector *stat);
 
-    void addForceToBody(PhysicsBodyPtr body, Vec3f force);
-    void clearForceToBody(void);
-
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -149,13 +146,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     StatCollector* _statistics;
     bool _ownStat;
     Time _TimeSinceLast;
-
-    struct BodyForce
-    {
-        PhysicsBodyPtr _Body;
-        Vec3f          _Force;
-    };
-    std::vector<BodyForce> _ApplyForcePerStep;
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -171,6 +171,13 @@ inline
 SFReal32 *PhysicsWorldBase::getSFWorldContactSurfaceLayer(void)
 {
     return &_sfWorldContactSurfaceLayer;
+}
+
+//! Get the PhysicsWorld::_sfInternalParentHandler field.
+inline
+SFPhysicsHandlerPtr *PhysicsWorldBase::getSFInternalParentHandler(void)
+{
+    return &_sfInternalParentHandler;
 }
 
 
@@ -405,8 +412,29 @@ void PhysicsWorldBase::setWorldContactSurfaceLayer(const Real32 &value)
     _sfWorldContactSurfaceLayer.setValue(value);
 }
 
+//! Get the value of the PhysicsWorld::_sfInternalParentHandler field.
+inline
+PhysicsHandlerPtr &PhysicsWorldBase::getInternalParentHandler(void)
+{
+    return _sfInternalParentHandler.getValue();
+}
+
+//! Get the value of the PhysicsWorld::_sfInternalParentHandler field.
+inline
+const PhysicsHandlerPtr &PhysicsWorldBase::getInternalParentHandler(void) const
+{
+    return _sfInternalParentHandler.getValue();
+}
+
+//! Set the value of the PhysicsWorld::_sfInternalParentHandler field.
+inline
+void PhysicsWorldBase::setInternalParentHandler(const PhysicsHandlerPtr &value)
+{
+    _sfInternalParentHandler.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSWORLDBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsWorldBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSWORLDBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

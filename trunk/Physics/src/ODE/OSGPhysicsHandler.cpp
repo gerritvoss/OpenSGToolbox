@@ -324,20 +324,6 @@ void PhysicsHandler::setStatistics(StatCollector *stat)
 *                              Class Specific                              *
 \***************************************************************************/
 
-void PhysicsHandler::addForceToBody(PhysicsBodyPtr body, Vec3f force)
-{
-    BodyForce NewBodyForce;
-    NewBodyForce._Body = body;
-    NewBodyForce._Force = force;
-    _ApplyForcePerStep.push_back(NewBodyForce);
-}
-
-void PhysicsHandler::clearForceToBody(void)
-{
-    _ApplyForcePerStep.clear();
-}
-
-
 void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
 {
 
@@ -346,11 +332,6 @@ void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
 
     while(_TimeSinceLast > getStepSize())
     {
-        for(UInt32 i(0) ; i<_ApplyForcePerStep.size() ; ++i)
-        {
-            _ApplyForcePerStep[i]._Body->addForce(_ApplyForcePerStep[i]._Force);
-        }
-
         //Update
         getStatistics()->getElem(statNPhysicsSteps)->inc();
         //collide
@@ -417,6 +398,13 @@ PhysicsHandler::~PhysicsHandler(void)
 void PhysicsHandler::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & WorldFieldMask && getWorld() != NullFC)
+    {
+        beginEditCP(getWorld(), PhysicsWorld::InternalParentHandlerFieldMask);
+            getWorld()->setInternalParentHandler(PhysicsHandlerPtr(this));
+        endEditCP(getWorld(), PhysicsWorld::InternalParentHandlerFieldMask);
+    }
 }
 
 void PhysicsHandler::dump(      UInt32    , 

@@ -68,6 +68,30 @@
 	>
 	</Field>
 	<Field
+		name="mass"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="massCenterOfGravity"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="massInertiaTensor"
+		type="Matrix"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="enable"
 		type="bool"
 		cardinality="single"
@@ -188,7 +212,7 @@
 		visibility="external"
 		defaultValue="NullFC"
 		header="OSGPhysicsWorld.h"
-		access="public"
+		access="protected"
 	>
 	</Field>
 </FieldContainer>

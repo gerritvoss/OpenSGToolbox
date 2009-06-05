@@ -395,7 +395,7 @@ void buildHingeJointMesh(void)
     Vec3f Box1Size(1.0,1.0,0.1),
           Box2Size(1.0,1.0,1.0);
     Pnt3f Box1Position((Real32)(rand()%10)-5.0, (Real32)(rand()%10)-5.0, 10.0);
-    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x(),0.0,0.0)));
+    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x()+.01,0.0,0.0)));
 
     PhysicsBodyPtr Box1Body = buildBox(Box1Size, Box1Position);
     PhysicsBodyPtr Box2Body = buildBox(Box2Size, Box2Position);

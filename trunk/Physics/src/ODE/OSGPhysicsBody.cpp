@@ -118,23 +118,27 @@ void PhysicsBody::onDestroy()
 
 dBodyID PhysicsBody::getBodyID(void)
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    return tmpPtr->_BodyID;
+    return _BodyID;
 }
 
 /***************************************************************************\
 *                              Field Set	                               *
 \***************************************************************************/
 
-void PhysicsBody::setBodyID(const dBodyID &value)
-{
-    PhysicsBodyPtr tmpPtr(*this);
-    tmpPtr->_BodyID = value;
-}
-
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
+
+void PhysicsBody::updateAddedForceTorque(void)
+{
+    const dReal *odeVec;
+    odeVec = dBodyGetForce(_BodyID);
+    _AccumulatedForce += Vec3f(odeVec);
+
+    odeVec = dBodyGetTorque(_BodyID);
+    _AccumulatedTorque += Vec3f(odeVec);
+}
+
 void PhysicsBody::initDefaults(void)
 {
     setAutoDisableFlag(dBodyGetAutoDisableFlag(_BodyID));
@@ -147,274 +151,296 @@ void PhysicsBody::initDefaults(void)
     dBodyGetFiniteRotationAxis(_BodyID, odeVec);
     setFiniteRotationAxis(Vec3f(odeVec[0], odeVec[1], odeVec[3]));
     setGravityMode(dBodyGetGravityMode(_BodyID));
+    
+    dMass TheMass;
+    dBodyGetMass(_BodyID, &TheMass);
+    setMassStruct(TheMass);
 }
 
-void PhysicsBody::setMass(const dMass *mass )
+void PhysicsBody::setMassStruct(const dMass &mass )
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetMass(tmpPtr->_BodyID, mass);
+    setMass(mass.mass);
+    setMassCenterOfGravity(Vec3f(mass.c[0],mass.c[1],mass.c[2]));
+    Matrix InertiaTensor;
+    InertiaTensor[0][0] = mass.I[0];
+    InertiaTensor[0][1] = mass.I[1];
+    InertiaTensor[0][2] = mass.I[2];
+    InertiaTensor[0][3] = 0;
+    InertiaTensor[1][0] = mass.I[4];
+    InertiaTensor[1][1] = mass.I[5];
+    InertiaTensor[1][2] = mass.I[6];
+    InertiaTensor[1][3] = 0;
+    InertiaTensor[2][0] = mass.I[8];
+    InertiaTensor[2][1] = mass.I[9];
+    InertiaTensor[2][2] = mass.I[10];
+    InertiaTensor[2][3] = 0;
+
+    //mass->I
+    setMassInertiaTensor(InertiaTensor);
 }
 
-void PhysicsBody::getMass(dMass *mass )
+void PhysicsBody::getMassStruct(dMass &mass )
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodyGetMass(tmpPtr->_BodyID, mass);
+	dBodyGetMass(_BodyID, &mass);
 }
 
 void PhysicsBody::addForce(const Vec3f &v)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddForce(tmpPtr->_BodyID,v.x(), v.y(), v.z());
+	dBodyAddForce(_BodyID,v.x(), v.y(), v.z());
+    updateAddedForceTorque();
 }
 
 void PhysicsBody::addTorque(const Vec3f &v)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddTorque(tmpPtr->_BodyID,v.x(), v.y(), v.z());
+	dBodyAddTorque(_BodyID,v.x(), v.y(), v.z());
+    updateAddedForceTorque();
 }
 
 void PhysicsBody::addRelForce(const Vec3f &v)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddRelForce(tmpPtr->_BodyID,v.x(), v.y(), v.z());
+	dBodyAddRelForce(_BodyID,v.x(), v.y(), v.z());
+    updateAddedForceTorque();
 }
 
 void PhysicsBody::addRelTorque(const Vec3f &v)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddRelTorque(tmpPtr->_BodyID,v.x(), v.y(), v.z());
+	dBodyAddRelTorque(_BodyID,v.x(), v.y(), v.z());
+    updateAddedForceTorque();
 }
 
 void PhysicsBody::addForceAtPos(const Vec3f &v, const Vec3f &p)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddForceAtPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+	dBodyAddForceAtPos(_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+    updateAddedForceTorque();
 }
 
 void PhysicsBody::addForceAtRelPos(const Vec3f &v, const Vec3f &p)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddForceAtRelPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+	dBodyAddForceAtRelPos(_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+    updateAddedForceTorque();
 }
 
 void PhysicsBody::addRelForceAtPos(const Vec3f &v, const Vec3f &p)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddRelForceAtPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+	dBodyAddRelForceAtPos(_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+    updateAddedForceTorque();
 }
 
 void PhysicsBody::addRelForceAtRelPos(const Vec3f &v, const Vec3f &p)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddRelForceAtRelPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+	dBodyAddRelForceAtRelPos(_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+    updateAddedForceTorque();
 }
 
 void PhysicsBody::getRelPointPos(const Vec3f &v, Vec3f &result)
 {
-	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyGetRelPointPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
+	dBodyGetRelPointPos(_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
 void PhysicsBody::getRelPointVel(const Vec3f &v, Vec3f &result)
 {
-	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyGetRelPointVel(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
+	dBodyGetRelPointVel(_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
 void PhysicsBody::getPointVel(const Vec3f &v, Vec3f &result)
 {
-	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyGetPointVel(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
+	dBodyGetPointVel(_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
 void PhysicsBody::vectorToWorld(const Vec3f &v, Vec3f &result)
 {
-	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyVectorToWorld(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
+	dBodyVectorToWorld(_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
 void PhysicsBody::vectorFromWorld(const Vec3f &v, Vec3f &result)
 {
-	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyVectorFromWorld(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
+	dBodyVectorFromWorld(_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
 void PhysicsBody::setAutoDisableDefaults(void)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAutoDisableDefaults(tmpPtr->_BodyID);
+	dBodySetAutoDisableDefaults(_BodyID);
 }
 
 void PhysicsBody::setData(void* someData)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetData(tmpPtr->_BodyID, someData);
+	dBodySetData(_BodyID, someData);
 }
 
 void* PhysicsBody::getData(void)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetData(tmpPtr->_BodyID);
+	return dBodyGetData(_BodyID);
 }
 
 Int32 PhysicsBody::getNumJoints(void)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetNumJoints(tmpPtr->_BodyID);
+	return dBodyGetNumJoints(_BodyID);
 }
 
 dJointID PhysicsBody::getJoint(Int32 index)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetJoint(tmpPtr->_BodyID, index);
+	return dBodyGetJoint(_BodyID, index);
 }
 //Mass
 void PhysicsBody::resetMass()
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    tmpPtr->getMass(&mass);
-    dMassSetZero(&mass);
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        getMassStruct(mass);
+        dMassSetZero(&mass);
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::setMassParams( Real32 theMass, const Vec3f& cg, 
                                 Real32 I11, Real32 I22, Real32 I33, 
                                 Real32 I12, Real32 I13, Real32 I23 )
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    dMassSetParameters(&mass, theMass, cg.x(), cg.y(), cg.z(),
-                        I11, I22, I33, I12, I13, I23 );
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        dMassSetParameters(&mass, theMass, cg.x(), cg.y(), cg.z(),
+                            I11, I22, I33, I12, I13, I23 );
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::setSphereMass( Real32 density, Real32 radius )
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    dMassSetSphere(&mass, density, radius);
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        dMassSetSphere(&mass, density, radius);
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::setSphereMassTotal( Real32 totalMass, Real32 radius )
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    dMassSetSphereTotal(&mass, totalMass, radius);
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        dMassSetSphereTotal(&mass, totalMass, radius);
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::setCCylinderMass( Real32 density, Int32 direction, 
                                    Real32 radius, Real32 length )
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    dMassSetCappedCylinder(&mass, density, direction, radius, length);
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        dMassSetCappedCylinder(&mass, density, direction, radius, length);
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::setCCylinderMassTotal( Real32 totalMass, Int32 direction, 
                                         Real32 radius, Real32 length )
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    dMassSetCappedCylinderTotal(&mass, totalMass, direction, radius, length);
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        dMassSetCappedCylinderTotal(&mass, totalMass, direction, radius, length);
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::setBoxMass( Real32 density, Real32 lx, Real32 ly, Real32 lz )
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    dMassSetBox(&mass, density, lx, ly, lz);
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        dMassSetBox(&mass, density, lx, ly, lz);
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::setBoxMassTotal( Real32 totalMass, Real32 lx, Real32 ly, Real32 lz )
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    dMassSetBoxTotal(&mass, totalMass, lx, ly, lz);
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        dMassSetBoxTotal(&mass, totalMass, lx, ly, lz);
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::adjustMass( Real32 newMass )
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    tmpPtr->getMass(&mass);
-    dMassAdjust(&mass, newMass);
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        getMassStruct(mass);
+        dMassAdjust(&mass, newMass);
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::translateMass( const Vec3f& t)
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    tmpPtr->getMass(&mass);
-    dMassTranslate(&mass, t.x(), t.y(), t.z() );
-    tmpPtr->setMass(&mass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass mass;
+        getMassStruct(mass);
+        dMassTranslate(&mass, t.x(), t.y(), t.z() );
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 
 void PhysicsBody::rotateMass( const Matrix& R)
 {
-    dMatrix3 rotation;
-    Vec4f v1 =  R[0];
-    Vec4f v2 =  R[1];
-    Vec4f v3 =  R[2];
-    rotation[0]   = v1.x();
-    rotation[1]   = v1.y();
-    rotation[2]   = v1.z();
-    rotation[3]   = 0;
-    rotation[4]   = v2.x();
-    rotation[5]   = v2.y();
-    rotation[6]   = v2.z();
-    rotation[7]   = 0;
-    rotation[8]   = v3.x();
-    rotation[9]   = v3.y();
-    rotation[10]  = v3.z();
-    rotation[11]  = 0;
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMatrix3 rotation;
+        Vec4f v1 =  R[0];
+        Vec4f v2 =  R[1];
+        Vec4f v3 =  R[2];
+        rotation[0]   = v1.x();
+        rotation[1]   = v1.y();
+        rotation[2]   = v1.z();
+        rotation[3]   = 0;
+        rotation[4]   = v2.x();
+        rotation[5]   = v2.y();
+        rotation[6]   = v2.z();
+        rotation[7]   = 0;
+        rotation[8]   = v3.x();
+        rotation[9]   = v3.y();
+        rotation[10]  = v3.z();
+        rotation[11]  = 0;
 
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass mass;
-    tmpPtr->getMass(&mass);
-    dMassRotate(&mass, rotation);
-    tmpPtr->setMass(&mass);
+        dMass mass;
+        getMassStruct(mass);
+        dMassRotate(&mass, rotation);
+        setMassStruct(mass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 void PhysicsBody::addMassOf( dBodyID otherBody )
 {
-    PhysicsBodyPtr tmpPtr(*this);
-    dMass myMass, otherMass;
-    tmpPtr->getMass(&myMass);
-    dBodyGetMass(otherBody, &otherMass);
-    dMassAdd(&myMass, &otherMass);
-    tmpPtr->setMass(&myMass);
+    beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
+        dMass myMass, otherMass;
+        getMassStruct(myMass);
+        dBodyGetMass(otherBody, &otherMass);
+        dMassAdd(&myMass, &otherMass);
+        setMassStruct(myMass);
+    endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
 //Damping
 void PhysicsBody::setDampingDefaults (void)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetDampingDefaults(tmpPtr->_BodyID);
+	dBodySetDampingDefaults(_BodyID);
+    setLinearDamping(dBodyGetLinearDamping(_BodyID));
+    setAngularDamping(dBodyGetAngularDamping(_BodyID));
 }
 
 void PhysicsBody::setDamping (Real32 linear_scale, Real32 angular_scale)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetDamping(tmpPtr->_BodyID, linear_scale, angular_scale);
+    setLinearDamping(linear_scale);
+    setAngularDamping(angular_scale);
 }
 
 void PhysicsBody::updateToODEState(void)
@@ -579,6 +605,51 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
     if(whichField & MaxAngularSpeedFieldMask)
     {
 	    dBodySetMaxAngularSpeed(_BodyID, getMaxAngularSpeed());
+    }
+    
+    if(whichField & MassFieldMask)
+    {
+        dMass TheMass;
+        dBodyGetMass(_BodyID, &TheMass);
+
+        TheMass.mass = getMass();
+
+        dBodySetMass(_BodyID, &TheMass);
+    }
+    if(whichField & MassCenterOfGravityFieldMask)
+    {
+        dMass TheMass;
+        dBodyGetMass(_BodyID, &TheMass);
+
+        TheMass.c[0] = getMassCenterOfGravity().x();
+        TheMass.c[1] = getMassCenterOfGravity().y();
+        TheMass.c[2] = getMassCenterOfGravity().z();
+
+        dBodySetMass(_BodyID, &TheMass);
+    }
+    if(whichField & MassInertiaTensorFieldMask)
+    {
+        dMass TheMass;
+        dBodyGetMass(_BodyID, &TheMass);
+        
+        dMatrix3 rotation;
+        Vec4f v1 =  getMassInertiaTensor()[0];
+        Vec4f v2 =  getMassInertiaTensor()[1];
+        Vec4f v3 =  getMassInertiaTensor()[2];
+        TheMass.I[0]   = v1.x();
+        TheMass.I[1]   = v1.y();
+        TheMass.I[2]   = v1.z();
+        TheMass.I[3]   = 0;
+        TheMass.I[4]   = v2.x();
+        TheMass.I[5]   = v2.y();
+        TheMass.I[6]   = v2.z();
+        TheMass.I[7]   = 0;
+        TheMass.I[8]   = v3.x();
+        TheMass.I[9]   = v3.y();
+        TheMass.I[10]  = v3.z();
+        TheMass.I[11]  = 0;
+        
+        dBodySetMass(_BodyID, &TheMass);
     }
 }
 

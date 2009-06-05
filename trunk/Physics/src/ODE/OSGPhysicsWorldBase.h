@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -78,6 +78,7 @@
 #include <OpenSG/OSGInt32Fields.h> // WorldQuickStepNumIterations type
 #include <OpenSG/OSGReal32Fields.h> // WorldContactMaxCorrectingVel type
 #include <OpenSG/OSGReal32Fields.h> // WorldContactSurfaceLayer type
+#include "OSGPhysicsHandlerFields.h" // InternalParentHandler type
 
 #include "OSGPhysicsWorldFields.h"
 
@@ -112,7 +113,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorldBase : public Attachment
         WorldQuickStepNumIterationsFieldId  = AutoDisableTimeFieldId              + 1,
         WorldContactMaxCorrectingVelFieldId = WorldQuickStepNumIterationsFieldId  + 1,
         WorldContactSurfaceLayerFieldId     = WorldContactMaxCorrectingVelFieldId + 1,
-        NextFieldId                         = WorldContactSurfaceLayerFieldId     + 1
+        InternalParentHandlerFieldId        = WorldContactSurfaceLayerFieldId     + 1,
+        NextFieldId                         = InternalParentHandlerFieldId        + 1
     };
 
     static const OSG::BitVector ErpFieldMask;
@@ -126,6 +128,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorldBase : public Attachment
     static const OSG::BitVector WorldQuickStepNumIterationsFieldMask;
     static const OSG::BitVector WorldContactMaxCorrectingVelFieldMask;
     static const OSG::BitVector WorldContactSurfaceLayerFieldMask;
+    static const OSG::BitVector InternalParentHandlerFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -256,6 +259,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorldBase : public Attachment
     SFInt32             _sfWorldQuickStepNumIterations;
     SFReal32            _sfWorldContactMaxCorrectingVel;
     SFReal32            _sfWorldContactSurfaceLayer;
+    SFPhysicsHandlerPtr   _sfInternalParentHandler;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -271,6 +275,23 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorldBase : public Attachment
     /*! \{                                                                 */
 
     virtual ~PhysicsWorldBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPhysicsHandlerPtr *getSFInternalParentHandler(void);
+
+           PhysicsHandlerPtr   &getInternalParentHandler(void);
+     const PhysicsHandlerPtr   &getInternalParentHandler(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setInternalParentHandler(const PhysicsHandlerPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -333,6 +354,6 @@ typedef RefPtr<PhysicsWorldPtr> PhysicsWorldRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSWORLDBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsWorldBase.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSWORLDBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSWORLDBASE_H_ */

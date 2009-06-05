@@ -6,10 +6,10 @@
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="true"
+	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 The PhysicsWorld contains all global dWorld attributes from ODE.
 	<Field
@@ -117,5 +117,15 @@ The PhysicsWorld contains all global dWorld attributes from ODE.
 		access="public"
 	>
 	the depth of the surface layer around all geometry objects. Contacts are allowed to sink into the surface layer up to the given depth before coming to rest. The default value is zero. Increasing this to some small value (e.g. 0.001) can help prevent jittering problems due to contacts being repeatedly made and broken.
+	</Field>
+	<Field
+		name="InternalParentHandler"
+		type="PhysicsHandlerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+        header="OSGPhysicsHandlerFields.h"
+		access="protected"
+	>
 	</Field>
 </FieldContainer>

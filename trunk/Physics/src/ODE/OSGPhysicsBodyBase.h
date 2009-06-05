@@ -74,6 +74,9 @@
 #include <OpenSG/OSGVec3fFields.h> // AngularVel type
 #include <OpenSG/OSGVec3fFields.h> // Force type
 #include <OpenSG/OSGVec3fFields.h> // Torque type
+#include <OpenSG/OSGReal32Fields.h> // Mass type
+#include <OpenSG/OSGVec3fFields.h> // MassCenterOfGravity type
+#include <OpenSG/OSGMatrixFields.h> // MassInertiaTensor type
 #include <OpenSG/OSGBoolFields.h> // Enable type
 #include <OpenSG/OSGInt32Fields.h> // AutoDisableFlag type
 #include <OpenSG/OSGReal32Fields.h> // AutoDisableLinearThreshold type
@@ -119,7 +122,10 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
         AngularVelFieldId                  = LinearVelFieldId                   + 1,
         ForceFieldId                       = AngularVelFieldId                  + 1,
         TorqueFieldId                      = ForceFieldId                       + 1,
-        EnableFieldId                      = TorqueFieldId                      + 1,
+        MassFieldId                        = TorqueFieldId                      + 1,
+        MassCenterOfGravityFieldId         = MassFieldId                        + 1,
+        MassInertiaTensorFieldId           = MassCenterOfGravityFieldId         + 1,
+        EnableFieldId                      = MassInertiaTensorFieldId           + 1,
         AutoDisableFlagFieldId             = EnableFieldId                      + 1,
         AutoDisableLinearThresholdFieldId  = AutoDisableFlagFieldId             + 1,
         AutoDisableAngularThresholdFieldId = AutoDisableLinearThresholdFieldId  + 1,
@@ -144,6 +150,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     static const OSG::BitVector AngularVelFieldMask;
     static const OSG::BitVector ForceFieldMask;
     static const OSG::BitVector TorqueFieldMask;
+    static const OSG::BitVector MassFieldMask;
+    static const OSG::BitVector MassCenterOfGravityFieldMask;
+    static const OSG::BitVector MassInertiaTensorFieldMask;
     static const OSG::BitVector EnableFieldMask;
     static const OSG::BitVector AutoDisableFlagFieldMask;
     static const OSG::BitVector AutoDisableLinearThresholdFieldMask;
@@ -192,6 +201,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
            SFVec3f             *getSFAngularVel     (void);
            SFVec3f             *getSFForce          (void);
            SFVec3f             *getSFTorque         (void);
+           SFReal32            *getSFMass           (void);
+           SFVec3f             *getSFMassCenterOfGravity(void);
+           SFMatrix            *getSFMassInertiaTensor(void);
            SFBool              *getSFEnable         (void);
            SFInt32             *getSFAutoDisableFlag(void);
            SFReal32            *getSFAutoDisableLinearThreshold(void);
@@ -206,7 +218,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
            SFReal32            *getSFLinearDampingThreshold(void);
            SFReal32            *getSFAngularDampingThreshold(void);
            SFReal32            *getSFMaxAngularSpeed(void);
-           SFPhysicsWorldPtr   *getSFWorld          (void);
 
            Vec3f               &getPosition       (void);
      const Vec3f               &getPosition       (void) const;
@@ -222,6 +233,12 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      const Vec3f               &getForce          (void) const;
            Vec3f               &getTorque         (void);
      const Vec3f               &getTorque         (void) const;
+           Real32              &getMass           (void);
+     const Real32              &getMass           (void) const;
+           Vec3f               &getMassCenterOfGravity(void);
+     const Vec3f               &getMassCenterOfGravity(void) const;
+           Matrix              &getMassInertiaTensor(void);
+     const Matrix              &getMassInertiaTensor(void) const;
            bool                &getEnable         (void);
      const bool                &getEnable         (void) const;
            Int32               &getAutoDisableFlag(void);
@@ -250,6 +267,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      const Real32              &getAngularDampingThreshold(void) const;
            Real32              &getMaxAngularSpeed(void);
      const Real32              &getMaxAngularSpeed(void) const;
+
            PhysicsWorldPtr     &getWorld          (void);
      const PhysicsWorldPtr     &getWorld          (void) const;
 
@@ -265,6 +283,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      void setAngularVel     ( const Vec3f &value );
      void setForce          ( const Vec3f &value );
      void setTorque         ( const Vec3f &value );
+     void setMass           ( const Real32 &value );
+     void setMassCenterOfGravity( const Vec3f &value );
+     void setMassInertiaTensor( const Matrix &value );
      void setEnable         ( const bool &value );
      void setAutoDisableFlag( const Int32 &value );
      void setAutoDisableLinearThreshold( const Real32 &value );
@@ -327,6 +348,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     SFVec3f             _sfAngularVel;
     SFVec3f             _sfForce;
     SFVec3f             _sfTorque;
+    SFReal32            _sfMass;
+    SFVec3f             _sfMassCenterOfGravity;
+    SFMatrix            _sfMassInertiaTensor;
     SFBool              _sfEnable;
     SFInt32             _sfAutoDisableFlag;
     SFReal32            _sfAutoDisableLinearThreshold;
@@ -359,7 +383,20 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     virtual ~PhysicsBodyBase(void); 
 
     /*! \}                                                                 */
-     void setWorld          ( const PhysicsWorldPtr &value );
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPhysicsWorldPtr   *getSFWorld          (void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setWorld          (const PhysicsWorldPtr &value);
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
