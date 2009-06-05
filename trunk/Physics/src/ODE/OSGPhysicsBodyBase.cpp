@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,13 +57,12 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsBodyBase.h"
 #include "OSGPhysicsBody.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsBodyBase::PositionFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::PositionFieldId);
@@ -92,11 +91,11 @@ const OSG::BitVector  PhysicsBodyBase::EnableFieldMask =
 const OSG::BitVector  PhysicsBodyBase::AutoDisableFlagFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::AutoDisableFlagFieldId);
 
-const OSG::BitVector  PhysicsBodyBase::AutoDisableLinearThresholFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsBodyBase::AutoDisableLinearThresholFieldId);
+const OSG::BitVector  PhysicsBodyBase::AutoDisableLinearThresholdFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::AutoDisableLinearThresholdFieldId);
 
-const OSG::BitVector  PhysicsBodyBase::AutoDisableAngularThresholFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsBodyBase::AutoDisableAngularThresholFieldId);
+const OSG::BitVector  PhysicsBodyBase::AutoDisableAngularThresholdFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::AutoDisableAngularThresholdFieldId);
 
 const OSG::BitVector  PhysicsBodyBase::AutoDisableStepsFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::AutoDisableStepsFieldId);
@@ -112,6 +111,21 @@ const OSG::BitVector  PhysicsBodyBase::FiniteRotationAxisFieldMask =
 
 const OSG::BitVector  PhysicsBodyBase::GravityModeFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::GravityModeFieldId);
+
+const OSG::BitVector  PhysicsBodyBase::LinearDampingFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::LinearDampingFieldId);
+
+const OSG::BitVector  PhysicsBodyBase::AngularDampingFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::AngularDampingFieldId);
+
+const OSG::BitVector  PhysicsBodyBase::LinearDampingThresholdFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::LinearDampingThresholdFieldId);
+
+const OSG::BitVector  PhysicsBodyBase::AngularDampingThresholdFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::AngularDampingThresholdFieldId);
+
+const OSG::BitVector  PhysicsBodyBase::MaxAngularSpeedFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::MaxAngularSpeedFieldId);
 
 const OSG::BitVector  PhysicsBodyBase::WorldFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::WorldFieldId);
@@ -150,10 +164,10 @@ const OSG::BitVector PhysicsBodyBase::MTInfluenceMask =
 /*! \var Int32           PhysicsBodyBase::_sfAutoDisableFlag
     
 */
-/*! \var Real32          PhysicsBodyBase::_sfAutoDisableLinearThreshol
+/*! \var Real32          PhysicsBodyBase::_sfAutoDisableLinearThreshold
     
 */
-/*! \var Real32          PhysicsBodyBase::_sfAutoDisableAngularThreshol
+/*! \var Real32          PhysicsBodyBase::_sfAutoDisableAngularThreshold
     
 */
 /*! \var Int32           PhysicsBodyBase::_sfAutoDisableSteps
@@ -169,6 +183,21 @@ const OSG::BitVector PhysicsBodyBase::MTInfluenceMask =
     
 */
 /*! \var bool            PhysicsBodyBase::_sfGravityMode
+    
+*/
+/*! \var Real32          PhysicsBodyBase::_sfLinearDamping
+    
+*/
+/*! \var Real32          PhysicsBodyBase::_sfAngularDamping
+    
+*/
+/*! \var Real32          PhysicsBodyBase::_sfLinearDampingThreshold
+    
+*/
+/*! \var Real32          PhysicsBodyBase::_sfAngularDampingThreshold
+    
+*/
+/*! \var Real32          PhysicsBodyBase::_sfMaxAngularSpeed
     
 */
 /*! \var PhysicsWorldPtr PhysicsBodyBase::_sfWorld
@@ -225,15 +254,15 @@ FieldDescription *PhysicsBodyBase::_desc[] =
                      false,
                      (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableFlag),
     new FieldDescription(SFReal32::getClassType(), 
-                     "autoDisableLinearThreshol", 
-                     AutoDisableLinearThresholFieldId, AutoDisableLinearThresholFieldMask,
+                     "autoDisableLinearThreshold", 
+                     AutoDisableLinearThresholdFieldId, AutoDisableLinearThresholdFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableLinearThreshol),
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableLinearThreshold),
     new FieldDescription(SFReal32::getClassType(), 
-                     "autoDisableAngularThreshol", 
-                     AutoDisableAngularThresholFieldId, AutoDisableAngularThresholFieldMask,
+                     "autoDisableAngularThreshold", 
+                     AutoDisableAngularThresholdFieldId, AutoDisableAngularThresholdFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableAngularThreshol),
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableAngularThreshold),
     new FieldDescription(SFInt32::getClassType(), 
                      "autoDisableSteps", 
                      AutoDisableStepsFieldId, AutoDisableStepsFieldMask,
@@ -259,6 +288,31 @@ FieldDescription *PhysicsBodyBase::_desc[] =
                      GravityModeFieldId, GravityModeFieldMask,
                      false,
                      (FieldAccessMethod) &PhysicsBodyBase::getSFGravityMode),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "linearDamping", 
+                     LinearDampingFieldId, LinearDampingFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFLinearDamping),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "angularDamping", 
+                     AngularDampingFieldId, AngularDampingFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFAngularDamping),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "linearDampingThreshold", 
+                     LinearDampingThresholdFieldId, LinearDampingThresholdFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFLinearDampingThreshold),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "angularDampingThreshold", 
+                     AngularDampingThresholdFieldId, AngularDampingThresholdFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFAngularDampingThreshold),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "maxAngularSpeed", 
+                     MaxAngularSpeedFieldId, MaxAngularSpeedFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFMaxAngularSpeed),
     new FieldDescription(SFPhysicsWorldPtr::getClassType(), 
                      "world", 
                      WorldFieldId, WorldFieldMask,
@@ -348,13 +402,18 @@ PhysicsBodyBase::PhysicsBodyBase(void) :
     _sfTorque                 (), 
     _sfEnable                 (bool(true)), 
     _sfAutoDisableFlag        (), 
-    _sfAutoDisableLinearThreshol(), 
-    _sfAutoDisableAngularThreshol(), 
+    _sfAutoDisableLinearThreshold(), 
+    _sfAutoDisableAngularThreshold(), 
     _sfAutoDisableSteps       (), 
     _sfAutoDisableTime        (), 
     _sfFiniteRotationMode     (), 
     _sfFiniteRotationAxis     (), 
     _sfGravityMode            (bool(true)), 
+    _sfLinearDamping          (), 
+    _sfAngularDamping         (), 
+    _sfLinearDampingThreshold (), 
+    _sfAngularDampingThreshold(), 
+    _sfMaxAngularSpeed        (), 
     _sfWorld                  (PhysicsWorldPtr(NullFC)), 
     Inherited() 
 {
@@ -374,13 +433,18 @@ PhysicsBodyBase::PhysicsBodyBase(const PhysicsBodyBase &source) :
     _sfTorque                 (source._sfTorque                 ), 
     _sfEnable                 (source._sfEnable                 ), 
     _sfAutoDisableFlag        (source._sfAutoDisableFlag        ), 
-    _sfAutoDisableLinearThreshol(source._sfAutoDisableLinearThreshol), 
-    _sfAutoDisableAngularThreshol(source._sfAutoDisableAngularThreshol), 
+    _sfAutoDisableLinearThreshold(source._sfAutoDisableLinearThreshold), 
+    _sfAutoDisableAngularThreshold(source._sfAutoDisableAngularThreshold), 
     _sfAutoDisableSteps       (source._sfAutoDisableSteps       ), 
     _sfAutoDisableTime        (source._sfAutoDisableTime        ), 
     _sfFiniteRotationMode     (source._sfFiniteRotationMode     ), 
     _sfFiniteRotationAxis     (source._sfFiniteRotationAxis     ), 
     _sfGravityMode            (source._sfGravityMode            ), 
+    _sfLinearDamping          (source._sfLinearDamping          ), 
+    _sfAngularDamping         (source._sfAngularDamping         ), 
+    _sfLinearDampingThreshold (source._sfLinearDampingThreshold ), 
+    _sfAngularDampingThreshold(source._sfAngularDampingThreshold), 
+    _sfMaxAngularSpeed        (source._sfMaxAngularSpeed        ), 
     _sfWorld                  (source._sfWorld                  ), 
     Inherited                 (source)
 {
@@ -443,14 +507,14 @@ UInt32 PhysicsBodyBase::getBinSize(const BitVector &whichField)
         returnValue += _sfAutoDisableFlag.getBinSize();
     }
 
-    if(FieldBits::NoField != (AutoDisableLinearThresholFieldMask & whichField))
+    if(FieldBits::NoField != (AutoDisableLinearThresholdFieldMask & whichField))
     {
-        returnValue += _sfAutoDisableLinearThreshol.getBinSize();
+        returnValue += _sfAutoDisableLinearThreshold.getBinSize();
     }
 
-    if(FieldBits::NoField != (AutoDisableAngularThresholFieldMask & whichField))
+    if(FieldBits::NoField != (AutoDisableAngularThresholdFieldMask & whichField))
     {
-        returnValue += _sfAutoDisableAngularThreshol.getBinSize();
+        returnValue += _sfAutoDisableAngularThreshold.getBinSize();
     }
 
     if(FieldBits::NoField != (AutoDisableStepsFieldMask & whichField))
@@ -476,6 +540,31 @@ UInt32 PhysicsBodyBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (GravityModeFieldMask & whichField))
     {
         returnValue += _sfGravityMode.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LinearDampingFieldMask & whichField))
+    {
+        returnValue += _sfLinearDamping.getBinSize();
+    }
+
+    if(FieldBits::NoField != (AngularDampingFieldMask & whichField))
+    {
+        returnValue += _sfAngularDamping.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LinearDampingThresholdFieldMask & whichField))
+    {
+        returnValue += _sfLinearDampingThreshold.getBinSize();
+    }
+
+    if(FieldBits::NoField != (AngularDampingThresholdFieldMask & whichField))
+    {
+        returnValue += _sfAngularDampingThreshold.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MaxAngularSpeedFieldMask & whichField))
+    {
+        returnValue += _sfMaxAngularSpeed.getBinSize();
     }
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
@@ -537,14 +626,14 @@ void PhysicsBodyBase::copyToBin(      BinaryDataHandler &pMem,
         _sfAutoDisableFlag.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AutoDisableLinearThresholFieldMask & whichField))
+    if(FieldBits::NoField != (AutoDisableLinearThresholdFieldMask & whichField))
     {
-        _sfAutoDisableLinearThreshol.copyToBin(pMem);
+        _sfAutoDisableLinearThreshold.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AutoDisableAngularThresholFieldMask & whichField))
+    if(FieldBits::NoField != (AutoDisableAngularThresholdFieldMask & whichField))
     {
-        _sfAutoDisableAngularThreshol.copyToBin(pMem);
+        _sfAutoDisableAngularThreshold.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (AutoDisableStepsFieldMask & whichField))
@@ -570,6 +659,31 @@ void PhysicsBodyBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (GravityModeFieldMask & whichField))
     {
         _sfGravityMode.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LinearDampingFieldMask & whichField))
+    {
+        _sfLinearDamping.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AngularDampingFieldMask & whichField))
+    {
+        _sfAngularDamping.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LinearDampingThresholdFieldMask & whichField))
+    {
+        _sfLinearDampingThreshold.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AngularDampingThresholdFieldMask & whichField))
+    {
+        _sfAngularDampingThreshold.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxAngularSpeedFieldMask & whichField))
+    {
+        _sfMaxAngularSpeed.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
@@ -630,14 +744,14 @@ void PhysicsBodyBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfAutoDisableFlag.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AutoDisableLinearThresholFieldMask & whichField))
+    if(FieldBits::NoField != (AutoDisableLinearThresholdFieldMask & whichField))
     {
-        _sfAutoDisableLinearThreshol.copyFromBin(pMem);
+        _sfAutoDisableLinearThreshold.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AutoDisableAngularThresholFieldMask & whichField))
+    if(FieldBits::NoField != (AutoDisableAngularThresholdFieldMask & whichField))
     {
-        _sfAutoDisableAngularThreshol.copyFromBin(pMem);
+        _sfAutoDisableAngularThreshold.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (AutoDisableStepsFieldMask & whichField))
@@ -663,6 +777,31 @@ void PhysicsBodyBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (GravityModeFieldMask & whichField))
     {
         _sfGravityMode.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LinearDampingFieldMask & whichField))
+    {
+        _sfLinearDamping.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AngularDampingFieldMask & whichField))
+    {
+        _sfAngularDamping.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LinearDampingThresholdFieldMask & whichField))
+    {
+        _sfLinearDampingThreshold.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AngularDampingThresholdFieldMask & whichField))
+    {
+        _sfAngularDampingThreshold.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxAngularSpeedFieldMask & whichField))
+    {
+        _sfMaxAngularSpeed.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
@@ -707,11 +846,11 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
     if(FieldBits::NoField != (AutoDisableFlagFieldMask & whichField))
         _sfAutoDisableFlag.syncWith(pOther->_sfAutoDisableFlag);
 
-    if(FieldBits::NoField != (AutoDisableLinearThresholFieldMask & whichField))
-        _sfAutoDisableLinearThreshol.syncWith(pOther->_sfAutoDisableLinearThreshol);
+    if(FieldBits::NoField != (AutoDisableLinearThresholdFieldMask & whichField))
+        _sfAutoDisableLinearThreshold.syncWith(pOther->_sfAutoDisableLinearThreshold);
 
-    if(FieldBits::NoField != (AutoDisableAngularThresholFieldMask & whichField))
-        _sfAutoDisableAngularThreshol.syncWith(pOther->_sfAutoDisableAngularThreshol);
+    if(FieldBits::NoField != (AutoDisableAngularThresholdFieldMask & whichField))
+        _sfAutoDisableAngularThreshold.syncWith(pOther->_sfAutoDisableAngularThreshold);
 
     if(FieldBits::NoField != (AutoDisableStepsFieldMask & whichField))
         _sfAutoDisableSteps.syncWith(pOther->_sfAutoDisableSteps);
@@ -727,6 +866,21 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
 
     if(FieldBits::NoField != (GravityModeFieldMask & whichField))
         _sfGravityMode.syncWith(pOther->_sfGravityMode);
+
+    if(FieldBits::NoField != (LinearDampingFieldMask & whichField))
+        _sfLinearDamping.syncWith(pOther->_sfLinearDamping);
+
+    if(FieldBits::NoField != (AngularDampingFieldMask & whichField))
+        _sfAngularDamping.syncWith(pOther->_sfAngularDamping);
+
+    if(FieldBits::NoField != (LinearDampingThresholdFieldMask & whichField))
+        _sfLinearDampingThreshold.syncWith(pOther->_sfLinearDampingThreshold);
+
+    if(FieldBits::NoField != (AngularDampingThresholdFieldMask & whichField))
+        _sfAngularDampingThreshold.syncWith(pOther->_sfAngularDampingThreshold);
+
+    if(FieldBits::NoField != (MaxAngularSpeedFieldMask & whichField))
+        _sfMaxAngularSpeed.syncWith(pOther->_sfMaxAngularSpeed);
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
         _sfWorld.syncWith(pOther->_sfWorld);
@@ -768,11 +922,11 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
     if(FieldBits::NoField != (AutoDisableFlagFieldMask & whichField))
         _sfAutoDisableFlag.syncWith(pOther->_sfAutoDisableFlag);
 
-    if(FieldBits::NoField != (AutoDisableLinearThresholFieldMask & whichField))
-        _sfAutoDisableLinearThreshol.syncWith(pOther->_sfAutoDisableLinearThreshol);
+    if(FieldBits::NoField != (AutoDisableLinearThresholdFieldMask & whichField))
+        _sfAutoDisableLinearThreshold.syncWith(pOther->_sfAutoDisableLinearThreshold);
 
-    if(FieldBits::NoField != (AutoDisableAngularThresholFieldMask & whichField))
-        _sfAutoDisableAngularThreshol.syncWith(pOther->_sfAutoDisableAngularThreshol);
+    if(FieldBits::NoField != (AutoDisableAngularThresholdFieldMask & whichField))
+        _sfAutoDisableAngularThreshold.syncWith(pOther->_sfAutoDisableAngularThreshold);
 
     if(FieldBits::NoField != (AutoDisableStepsFieldMask & whichField))
         _sfAutoDisableSteps.syncWith(pOther->_sfAutoDisableSteps);
@@ -788,6 +942,21 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
 
     if(FieldBits::NoField != (GravityModeFieldMask & whichField))
         _sfGravityMode.syncWith(pOther->_sfGravityMode);
+
+    if(FieldBits::NoField != (LinearDampingFieldMask & whichField))
+        _sfLinearDamping.syncWith(pOther->_sfLinearDamping);
+
+    if(FieldBits::NoField != (AngularDampingFieldMask & whichField))
+        _sfAngularDamping.syncWith(pOther->_sfAngularDamping);
+
+    if(FieldBits::NoField != (LinearDampingThresholdFieldMask & whichField))
+        _sfLinearDampingThreshold.syncWith(pOther->_sfLinearDampingThreshold);
+
+    if(FieldBits::NoField != (AngularDampingThresholdFieldMask & whichField))
+        _sfAngularDampingThreshold.syncWith(pOther->_sfAngularDampingThreshold);
+
+    if(FieldBits::NoField != (MaxAngularSpeedFieldMask & whichField))
+        _sfMaxAngularSpeed.syncWith(pOther->_sfMaxAngularSpeed);
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
         _sfWorld.syncWith(pOther->_sfWorld);
@@ -807,6 +976,8 @@ void PhysicsBodyBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -818,8 +989,6 @@ DataType FieldDataTraits<PhysicsBodyPtr>::_type("PhysicsBodyPtr", "AttachmentPtr
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsBodyPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsBodyPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -835,10 +1004,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsBodyBase.cpp,v 1.2 2006/02/20 17:04:20 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSBODYBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSBODYBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSBODYFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,21 +67,6 @@ OSG::UInt32 PhysicsBodyBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
-//! create a new instance of the class
-inline
-PhysicsBodyPtr PhysicsBodyBase::create(void) 
-{
-    PhysicsBodyPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PhysicsBodyPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
-
 //! create an empty new instance of the class, do not copy the prototype
 inline
 PhysicsBodyPtr PhysicsBodyBase::createEmpty(void) 
@@ -92,8 +77,6 @@ PhysicsBodyPtr PhysicsBodyBase::createEmpty(void)
 
     return returnValue; 
 }
-
-
 /*------------------------------ get -----------------------------------*/
 
 //! Get the PhysicsBody::_sfPosition field.
@@ -159,18 +142,18 @@ SFInt32 *PhysicsBodyBase::getSFAutoDisableFlag(void)
     return &_sfAutoDisableFlag;
 }
 
-//! Get the PhysicsBody::_sfAutoDisableLinearThreshol field.
+//! Get the PhysicsBody::_sfAutoDisableLinearThreshold field.
 inline
-SFReal32 *PhysicsBodyBase::getSFAutoDisableLinearThreshol(void)
+SFReal32 *PhysicsBodyBase::getSFAutoDisableLinearThreshold(void)
 {
-    return &_sfAutoDisableLinearThreshol;
+    return &_sfAutoDisableLinearThreshold;
 }
 
-//! Get the PhysicsBody::_sfAutoDisableAngularThreshol field.
+//! Get the PhysicsBody::_sfAutoDisableAngularThreshold field.
 inline
-SFReal32 *PhysicsBodyBase::getSFAutoDisableAngularThreshol(void)
+SFReal32 *PhysicsBodyBase::getSFAutoDisableAngularThreshold(void)
 {
-    return &_sfAutoDisableAngularThreshol;
+    return &_sfAutoDisableAngularThreshold;
 }
 
 //! Get the PhysicsBody::_sfAutoDisableSteps field.
@@ -206,6 +189,41 @@ inline
 SFBool *PhysicsBodyBase::getSFGravityMode(void)
 {
     return &_sfGravityMode;
+}
+
+//! Get the PhysicsBody::_sfLinearDamping field.
+inline
+SFReal32 *PhysicsBodyBase::getSFLinearDamping(void)
+{
+    return &_sfLinearDamping;
+}
+
+//! Get the PhysicsBody::_sfAngularDamping field.
+inline
+SFReal32 *PhysicsBodyBase::getSFAngularDamping(void)
+{
+    return &_sfAngularDamping;
+}
+
+//! Get the PhysicsBody::_sfLinearDampingThreshold field.
+inline
+SFReal32 *PhysicsBodyBase::getSFLinearDampingThreshold(void)
+{
+    return &_sfLinearDampingThreshold;
+}
+
+//! Get the PhysicsBody::_sfAngularDampingThreshold field.
+inline
+SFReal32 *PhysicsBodyBase::getSFAngularDampingThreshold(void)
+{
+    return &_sfAngularDampingThreshold;
+}
+
+//! Get the PhysicsBody::_sfMaxAngularSpeed field.
+inline
+SFReal32 *PhysicsBodyBase::getSFMaxAngularSpeed(void)
+{
+    return &_sfMaxAngularSpeed;
 }
 
 //! Get the PhysicsBody::_sfWorld field.
@@ -405,46 +423,46 @@ void PhysicsBodyBase::setAutoDisableFlag(const Int32 &value)
     _sfAutoDisableFlag.setValue(value);
 }
 
-//! Get the value of the PhysicsBody::_sfAutoDisableLinearThreshol field.
+//! Get the value of the PhysicsBody::_sfAutoDisableLinearThreshold field.
 inline
-Real32 &PhysicsBodyBase::getAutoDisableLinearThreshol(void)
+Real32 &PhysicsBodyBase::getAutoDisableLinearThreshold(void)
 {
-    return _sfAutoDisableLinearThreshol.getValue();
+    return _sfAutoDisableLinearThreshold.getValue();
 }
 
-//! Get the value of the PhysicsBody::_sfAutoDisableLinearThreshol field.
+//! Get the value of the PhysicsBody::_sfAutoDisableLinearThreshold field.
 inline
-const Real32 &PhysicsBodyBase::getAutoDisableLinearThreshol(void) const
+const Real32 &PhysicsBodyBase::getAutoDisableLinearThreshold(void) const
 {
-    return _sfAutoDisableLinearThreshol.getValue();
+    return _sfAutoDisableLinearThreshold.getValue();
 }
 
-//! Set the value of the PhysicsBody::_sfAutoDisableLinearThreshol field.
+//! Set the value of the PhysicsBody::_sfAutoDisableLinearThreshold field.
 inline
-void PhysicsBodyBase::setAutoDisableLinearThreshol(const Real32 &value)
+void PhysicsBodyBase::setAutoDisableLinearThreshold(const Real32 &value)
 {
-    _sfAutoDisableLinearThreshol.setValue(value);
+    _sfAutoDisableLinearThreshold.setValue(value);
 }
 
-//! Get the value of the PhysicsBody::_sfAutoDisableAngularThreshol field.
+//! Get the value of the PhysicsBody::_sfAutoDisableAngularThreshold field.
 inline
-Real32 &PhysicsBodyBase::getAutoDisableAngularThreshol(void)
+Real32 &PhysicsBodyBase::getAutoDisableAngularThreshold(void)
 {
-    return _sfAutoDisableAngularThreshol.getValue();
+    return _sfAutoDisableAngularThreshold.getValue();
 }
 
-//! Get the value of the PhysicsBody::_sfAutoDisableAngularThreshol field.
+//! Get the value of the PhysicsBody::_sfAutoDisableAngularThreshold field.
 inline
-const Real32 &PhysicsBodyBase::getAutoDisableAngularThreshol(void) const
+const Real32 &PhysicsBodyBase::getAutoDisableAngularThreshold(void) const
 {
-    return _sfAutoDisableAngularThreshol.getValue();
+    return _sfAutoDisableAngularThreshold.getValue();
 }
 
-//! Set the value of the PhysicsBody::_sfAutoDisableAngularThreshol field.
+//! Set the value of the PhysicsBody::_sfAutoDisableAngularThreshold field.
 inline
-void PhysicsBodyBase::setAutoDisableAngularThreshol(const Real32 &value)
+void PhysicsBodyBase::setAutoDisableAngularThreshold(const Real32 &value)
 {
-    _sfAutoDisableAngularThreshol.setValue(value);
+    _sfAutoDisableAngularThreshold.setValue(value);
 }
 
 //! Get the value of the PhysicsBody::_sfAutoDisableSteps field.
@@ -552,6 +570,111 @@ void PhysicsBodyBase::setGravityMode(const bool &value)
     _sfGravityMode.setValue(value);
 }
 
+//! Get the value of the PhysicsBody::_sfLinearDamping field.
+inline
+Real32 &PhysicsBodyBase::getLinearDamping(void)
+{
+    return _sfLinearDamping.getValue();
+}
+
+//! Get the value of the PhysicsBody::_sfLinearDamping field.
+inline
+const Real32 &PhysicsBodyBase::getLinearDamping(void) const
+{
+    return _sfLinearDamping.getValue();
+}
+
+//! Set the value of the PhysicsBody::_sfLinearDamping field.
+inline
+void PhysicsBodyBase::setLinearDamping(const Real32 &value)
+{
+    _sfLinearDamping.setValue(value);
+}
+
+//! Get the value of the PhysicsBody::_sfAngularDamping field.
+inline
+Real32 &PhysicsBodyBase::getAngularDamping(void)
+{
+    return _sfAngularDamping.getValue();
+}
+
+//! Get the value of the PhysicsBody::_sfAngularDamping field.
+inline
+const Real32 &PhysicsBodyBase::getAngularDamping(void) const
+{
+    return _sfAngularDamping.getValue();
+}
+
+//! Set the value of the PhysicsBody::_sfAngularDamping field.
+inline
+void PhysicsBodyBase::setAngularDamping(const Real32 &value)
+{
+    _sfAngularDamping.setValue(value);
+}
+
+//! Get the value of the PhysicsBody::_sfLinearDampingThreshold field.
+inline
+Real32 &PhysicsBodyBase::getLinearDampingThreshold(void)
+{
+    return _sfLinearDampingThreshold.getValue();
+}
+
+//! Get the value of the PhysicsBody::_sfLinearDampingThreshold field.
+inline
+const Real32 &PhysicsBodyBase::getLinearDampingThreshold(void) const
+{
+    return _sfLinearDampingThreshold.getValue();
+}
+
+//! Set the value of the PhysicsBody::_sfLinearDampingThreshold field.
+inline
+void PhysicsBodyBase::setLinearDampingThreshold(const Real32 &value)
+{
+    _sfLinearDampingThreshold.setValue(value);
+}
+
+//! Get the value of the PhysicsBody::_sfAngularDampingThreshold field.
+inline
+Real32 &PhysicsBodyBase::getAngularDampingThreshold(void)
+{
+    return _sfAngularDampingThreshold.getValue();
+}
+
+//! Get the value of the PhysicsBody::_sfAngularDampingThreshold field.
+inline
+const Real32 &PhysicsBodyBase::getAngularDampingThreshold(void) const
+{
+    return _sfAngularDampingThreshold.getValue();
+}
+
+//! Set the value of the PhysicsBody::_sfAngularDampingThreshold field.
+inline
+void PhysicsBodyBase::setAngularDampingThreshold(const Real32 &value)
+{
+    _sfAngularDampingThreshold.setValue(value);
+}
+
+//! Get the value of the PhysicsBody::_sfMaxAngularSpeed field.
+inline
+Real32 &PhysicsBodyBase::getMaxAngularSpeed(void)
+{
+    return _sfMaxAngularSpeed.getValue();
+}
+
+//! Get the value of the PhysicsBody::_sfMaxAngularSpeed field.
+inline
+const Real32 &PhysicsBodyBase::getMaxAngularSpeed(void) const
+{
+    return _sfMaxAngularSpeed.getValue();
+}
+
+//! Set the value of the PhysicsBody::_sfMaxAngularSpeed field.
+inline
+void PhysicsBodyBase::setMaxAngularSpeed(const Real32 &value)
+{
+    _sfMaxAngularSpeed.setValue(value);
+}
+
 //! Get the value of the PhysicsBody::_sfWorld field.
 inline
 PhysicsWorldPtr &PhysicsBodyBase::getWorld(void)
@@ -576,5 +699,5 @@ void PhysicsBodyBase::setWorld(const PhysicsWorldPtr &value)
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSBODYBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsBodyBase.inl,v 1.2 2006/02/20 17:04:20 dirk Exp $"
+#define OSGPHYSICSBODYBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

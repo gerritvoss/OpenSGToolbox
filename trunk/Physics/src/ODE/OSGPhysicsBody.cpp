@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,7 +70,27 @@ void PhysicsBody::initMethod (void)
 {
 }
 
+//! create a new instance of the class
+PhysicsBodyPtr PhysicsBody::create(PhysicsWorldPtr World) 
+{
+    PhysicsBodyPtr fc; 
 
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PhysicsBodyPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    if(fc != NullFC)
+    {
+        beginEditCP(fc, WorldFieldMask);
+            fc->setWorld(World);
+        endEditCP(fc, WorldFieldMask);
+
+        fc->initDefaults();
+    }
+    
+    return fc; 
+}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -80,17 +100,15 @@ void PhysicsBody::initMethod (void)
 void PhysicsBody::onCreate(const PhysicsBody *)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	//do not know how to get WorldID to create the bodyid here
-    id = 0;
+    _BodyID = 0;
 }
 
 void PhysicsBody::onDestroy()
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	if(tmpPtr->id)
+	if(_BodyID)
     {
-		//dBodyDestroy(tmpPtr->id);
-        tmpPtr->id =0;
+		dBodyDestroy(_BodyID);
+        _BodyID =0;
     }
 }
 
@@ -98,385 +116,104 @@ void PhysicsBody::onDestroy()
 *                              Field Get	                               *
 \***************************************************************************/
 
-Vec3f PhysicsBody::getPosition(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	const dReal* tmp = dBodyGetPosition(tmpPtr->id);
-	Vec3f v = Vec3f(tmp[0], tmp[1], tmp[2]);
-    PhysicsBodyBase::setPosition(v);
-    return v;
-}
-
-Matrix PhysicsBody::getRotation(void)
-{
-    
-	PhysicsBodyPtr tmpPtr(*this);
-	const dReal* tmp = dBodyGetRotation(tmpPtr->id);
-	const dMatrix3& rotation = *(const dMatrix3*)tmp;
-    
-	Matrix M = Matrix(rotation[0],rotation[1], rotation[2],0,
-		rotation[4], rotation[5], rotation[6], 0,
-		rotation[8], rotation[9], rotation[10], 0,
-		0,0,0,1);
-    PhysicsBodyBase::setRotation(M);
-    return M;
-}
-
-Quaternion PhysicsBody::getQuaternion(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	const dReal *t = dBodyGetQuaternion(tmpPtr->id);
-	const dQuaternion &q = *(const dQuaternion*)t;
-    Quaternion result;
-    result.setValueAsQuat(q[1], q[2], q[3], q[0]);
-    PhysicsBodyBase::setQuaternion(result);
-	return result;
-}
-
-Vec3f PhysicsBody::getLinearVel(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	const dReal* tmp = dBodyGetLinearVel(id);
-	Vec3f v = Vec3f(tmp[0], tmp[1], tmp[2]);
-    PhysicsBodyBase::setLinearVel(v);
-    return v;
-}
-
-Vec3f PhysicsBody::getAngularVel(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	const dReal* tmp = dBodyGetAngularVel(tmpPtr->id);
-	Vec3f v = Vec3f(tmp[0], tmp[1], tmp[2]);
-    PhysicsBodyBase::setAngularVel(v);
-    return v;
-}
-
-Vec3f PhysicsBody::getForce(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	const dReal* tmp = dBodyGetForce(tmpPtr->id);
-	Vec3f v = Vec3f(tmp[0], tmp[1], tmp[2]);
-    PhysicsBodyBase::setForce(v);
-    return v;
-}
-
-Vec3f PhysicsBody::getTorque(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	const dReal* tmp = dBodyGetTorque(tmpPtr->id);
-	Vec3f v = Vec3f(tmp[0], tmp[1], tmp[2]);
-    PhysicsBodyBase::setTorque(v);
-    return v;
-}
-
-bool PhysicsBody::getEnable(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyIsEnabled(tmpPtr->id)==1;
-}
-
-Int32 PhysicsBody::getAutoDisableFlag(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return Int32(dBodyGetAutoDisableFlag(tmpPtr->id));
-}
-
-Real32 PhysicsBody::getAutoDisableLinearThreshold(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return Real32(dBodyGetAutoDisableLinearThreshold(tmpPtr->id));
-}
-
-Real32 PhysicsBody::getAutoDisableAngularThreshold(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return Real32(dBodyGetAutoDisableAngularThreshold(tmpPtr->id));
-}
-
-Int32 PhysicsBody::getAutoDisableSteps(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return Int32(dBodyGetAutoDisableSteps(tmpPtr->id));
-}
-
-Real32 PhysicsBody::getAutoDisableTime(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return (Real32)dBodyGetAutoDisableTime(tmpPtr->id);
-}
-
-Int32 PhysicsBody::getFiniteRotationMode(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetFiniteRotationMode(tmpPtr->id);
-}
-
-Vec3f PhysicsBody::getFiniteRotationAxis(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dVector3 t;
-	dBodyGetFiniteRotationAxis(tmpPtr->id, t);
-	return Vec3f(t[0], t[1], t[2]);
-}
-
-bool PhysicsBody::getGravityMode(void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetGravityMode(tmpPtr->id)==1;
-}
-
 dBodyID PhysicsBody::getBodyID(void)
 {
     PhysicsBodyPtr tmpPtr(*this);
-    return tmpPtr->id;
+    return tmpPtr->_BodyID;
 }
 
-PhysicsWorldPtr PhysicsBody::getWorld(void)
-{
-    return PhysicsBodyBase::getWorld();
-}
 /***************************************************************************\
 *                              Field Set	                               *
 \***************************************************************************/
-void PhysicsBody::setWorld(const PhysicsWorldPtr &value)
-{
-    PhysicsBodyPtr tmpPtr(*this);
-    tmpPtr->id = dBodyCreate(value->getWorldID());
-    PhysicsBodyBase::setWorld(value);
-}
-
-void PhysicsBody::setPosition(const Vec3f &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetPosition(tmpPtr->id, value.x(),value.y(),value.z());
-	PhysicsBodyBase::setPosition(value);
-}
-
-void PhysicsBody::setRotation(const Matrix &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dMatrix3 rotation;
-	Vec4f v1 =  value[0];
-	Vec4f v2 =  value[1];
-	Vec4f v3 =  value[2];
-	rotation[0]   = v1.x();
-	rotation[1]   = v1.y();
-	rotation[2]   = v1.z();
-	rotation[3]   = 0;
-	rotation[4]   = v2.x();
-	rotation[5]   = v2.y();
-	rotation[6]   = v2.z();
-	rotation[7]   = 0;
-	rotation[8]   = v3.x();
-	rotation[9]   = v3.y();
-	rotation[10]  = v3.z();
-	rotation[11]  = 0;
-	dBodySetRotation(tmpPtr->id, rotation);
-	PhysicsBodyBase::setRotation(value);
-}
-
-void PhysicsBody::setQuaternion(const Quaternion &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dQuaternion q;
-	q[0]=value.w();
-	q[1]=value.x();
-	q[2]=value.y();
-	q[3]=value.z();
-	dBodySetQuaternion(tmpPtr->id,q);
-	PhysicsBodyBase::setQuaternion(value);
-}
-
-void PhysicsBody::setLinearVel(const Vec3f &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetLinearVel(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsBodyBase::setLinearVel(value);
-}
-
-void PhysicsBody::setAngularVel(const Vec3f &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAngularVel(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsBodyBase::setAngularVel(value);
-}
-
-void PhysicsBody::setForce(const Vec3f &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetForce(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsBodyBase::setForce(value);
-}
-
-void PhysicsBody::setTorque(const Vec3f &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetTorque(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsBodyBase::setTorque(value);
-}
-
-void PhysicsBody::setEnable(const bool &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	if(value)
-		dBodyEnable(tmpPtr->id);
-	else
-		dBodyDisable(tmpPtr->id);
-
-	PhysicsBodyBase::setEnable(value);
-}
-
-
-void PhysicsBody::setAutoDisableFlag(const Int32 &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAutoDisableFlag(tmpPtr->id, value);
-	PhysicsBodyBase::setAutoDisableFlag(value);
-}
-
-void PhysicsBody::setAutoDisableLinearThreshold(const Real32 &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAutoDisableLinearThreshold(tmpPtr->id, value);
-	PhysicsBodyBase::setAutoDisableLinearThreshol(value);
-}
-
-void PhysicsBody::setAutoDisableAngularThreshold(const Real32 &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAutoDisableAngularThreshold(tmpPtr->id, value);
-	PhysicsBodyBase::setAutoDisableAngularThreshol(value);
-}
-
-void PhysicsBody::setAutoDisableSteps(const Int32 &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAutoDisableSteps(tmpPtr->id, value);
-	PhysicsBodyBase::setAutoDisableSteps(value);
-}
-
-void PhysicsBody::setAutoDisableTime(const Real32 &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAutoDisableTime(tmpPtr->id, value);
-	PhysicsBodyBase::setAutoDisableTime(value);
-}
-
-void PhysicsBody::setFiniteRotationMode(const Int32 &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetFiniteRotationMode(tmpPtr->id, value);
-	PhysicsBodyBase::setFiniteRotationMode(value);
-}
-
-void PhysicsBody::setFiniteRotationAxis(const Vec3f &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetFiniteRotationAxis(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsBodyBase::setFiniteRotationAxis(value);
-}
-
-void PhysicsBody::setGravityMode(const bool &value )
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetGravityMode(tmpPtr->id, value ? 1:0);
-	PhysicsBodyBase::setGravityMode(value);
-}
 
 void PhysicsBody::setBodyID(const dBodyID &value)
 {
     PhysicsBodyPtr tmpPtr(*this);
-    tmpPtr->id = value;
+    tmpPtr->_BodyID = value;
 }
+
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsBody::initBody()
+void PhysicsBody::initDefaults(void)
 {
-    setWorld(PhysicsBodyBase::getWorld());
-    setPosition(PhysicsBodyBase::getPosition());
-    setRotation(PhysicsBodyBase::getRotation());
-    setQuaternion(PhysicsBodyBase::getQuaternion());
-    setLinearVel(PhysicsBodyBase::getLinearVel());
-    setAngularVel(PhysicsBodyBase::getAngularVel());
-    setForce(PhysicsBodyBase::getForce());
-    setTorque(PhysicsBodyBase::getTorque());
-    setEnable(PhysicsBodyBase::getEnable());
-    setAutoDisableFlag(PhysicsBodyBase::getAutoDisableFlag());
-    setAutoDisableLinearThreshol(PhysicsBodyBase::getAutoDisableLinearThreshol());
-    setAutoDisableAngularThreshol(PhysicsBodyBase::getAutoDisableAngularThreshol());
-    setAutoDisableSteps(PhysicsBodyBase::getAutoDisableFlag());
-    setAutoDisableTime(PhysicsBodyBase::getAutoDisableTime());
-    setFiniteRotationMode(PhysicsBodyBase::getFiniteRotationMode());
-    setFiniteRotationAxis(PhysicsBodyBase::getFiniteRotationAxis());
-    setGravityMode(PhysicsBodyBase::getGravityMode());
+    setAutoDisableFlag(dBodyGetAutoDisableFlag(_BodyID));
+    setAutoDisableLinearThreshold(dBodyGetAutoDisableLinearThreshold(_BodyID));
+    setAutoDisableAngularThreshold(dBodyGetAutoDisableAngularThreshold(_BodyID));
+    setAutoDisableSteps(dBodyGetAutoDisableSteps(_BodyID));
+    setAutoDisableTime(dBodyGetAutoDisableTime(_BodyID));
+    setFiniteRotationMode(dBodyGetFiniteRotationMode(_BodyID));
+    dVector3 odeVec;
+    dBodyGetFiniteRotationAxis(_BodyID, odeVec);
+    setFiniteRotationAxis(Vec3f(odeVec[0], odeVec[1], odeVec[3]));
+    setGravityMode(dBodyGetGravityMode(_BodyID));
 }
 
 void PhysicsBody::setMass(const dMass *mass )
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetMass(tmpPtr->id, mass);
+	dBodySetMass(tmpPtr->_BodyID, mass);
 }
 
 void PhysicsBody::getMass(dMass *mass )
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodyGetMass(tmpPtr->id, mass);
+	dBodyGetMass(tmpPtr->_BodyID, mass);
 }
 
 void PhysicsBody::addForce(const Vec3f &v)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddForce(tmpPtr->id,v.x(), v.y(), v.z());
+	dBodyAddForce(tmpPtr->_BodyID,v.x(), v.y(), v.z());
 }
 
 void PhysicsBody::addTorque(const Vec3f &v)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddTorque(tmpPtr->id,v.x(), v.y(), v.z());
+	dBodyAddTorque(tmpPtr->_BodyID,v.x(), v.y(), v.z());
 }
 
 void PhysicsBody::addRelForce(const Vec3f &v)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddRelForce(tmpPtr->id,v.x(), v.y(), v.z());
+	dBodyAddRelForce(tmpPtr->_BodyID,v.x(), v.y(), v.z());
 }
 
 void PhysicsBody::addRelTorque(const Vec3f &v)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddRelTorque(tmpPtr->id,v.x(), v.y(), v.z());
+	dBodyAddRelTorque(tmpPtr->_BodyID,v.x(), v.y(), v.z());
 }
 
 void PhysicsBody::addForceAtPos(const Vec3f &v, const Vec3f &p)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddForceAtPos(tmpPtr->id, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+	dBodyAddForceAtPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
 }
 
 void PhysicsBody::addForceAtRelPos(const Vec3f &v, const Vec3f &p)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddForceAtRelPos(tmpPtr->id, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+	dBodyAddForceAtRelPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
 }
 
 void PhysicsBody::addRelForceAtPos(const Vec3f &v, const Vec3f &p)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddRelForceAtPos(tmpPtr->id, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+	dBodyAddRelForceAtPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
 }
 
 void PhysicsBody::addRelForceAtRelPos(const Vec3f &v, const Vec3f &p)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodyAddRelForceAtRelPos(tmpPtr->id, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
+	dBodyAddRelForceAtRelPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
 }
 
 void PhysicsBody::getRelPointPos(const Vec3f &v, Vec3f &result)
 {
 	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyGetRelPointPos(tmpPtr->id, v.x(), v.y(), v.z(), t);
+	dBodyGetRelPointPos(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
@@ -484,7 +221,7 @@ void PhysicsBody::getRelPointVel(const Vec3f &v, Vec3f &result)
 {
 	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyGetRelPointVel(tmpPtr->id, v.x(), v.y(), v.z(), t);
+	dBodyGetRelPointVel(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
@@ -492,7 +229,7 @@ void PhysicsBody::getPointVel(const Vec3f &v, Vec3f &result)
 {
 	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyGetPointVel(tmpPtr->id, v.x(), v.y(), v.z(), t);
+	dBodyGetPointVel(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
@@ -500,7 +237,7 @@ void PhysicsBody::vectorToWorld(const Vec3f &v, Vec3f &result)
 {
 	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyVectorToWorld(tmpPtr->id, v.x(), v.y(), v.z(), t);
+	dBodyVectorToWorld(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
@@ -508,38 +245,38 @@ void PhysicsBody::vectorFromWorld(const Vec3f &v, Vec3f &result)
 {
 	PhysicsBodyPtr tmpPtr(*this);
 	dVector3 t;
-	dBodyVectorFromWorld(tmpPtr->id, v.x(), v.y(), v.z(), t);
+	dBodyVectorFromWorld(tmpPtr->_BodyID, v.x(), v.y(), v.z(), t);
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
 void PhysicsBody::setAutoDisableDefaults(void)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAutoDisableDefaults(tmpPtr->id);
+	dBodySetAutoDisableDefaults(tmpPtr->_BodyID);
 }
 
 void PhysicsBody::setData(void* someData)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetData(tmpPtr->id, someData);
+	dBodySetData(tmpPtr->_BodyID, someData);
 }
 
 void* PhysicsBody::getData(void)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetData(tmpPtr->id);
+	return dBodyGetData(tmpPtr->_BodyID);
 }
 
 Int32 PhysicsBody::getNumJoints(void)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetNumJoints(tmpPtr->id);
+	return dBodyGetNumJoints(tmpPtr->_BodyID);
 }
 
 dJointID PhysicsBody::getJoint(Int32 index)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetJoint(tmpPtr->id, index);
+	return dBodyGetJoint(tmpPtr->_BodyID, index);
 }
 //Mass
 void PhysicsBody::resetMass()
@@ -668,76 +405,27 @@ void PhysicsBody::addMassOf( dBodyID otherBody )
 }
 
 //Damping
-Real32 PhysicsBody::getLinearDamping (void)
+void PhysicsBody::setDampingDefaults (void)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetLinearDamping(tmpPtr->id);
-}
-
-Real32 PhysicsBody::getAngularDamping (void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetAngularDamping(tmpPtr->id);
-}
-
-void PhysicsBody::setLinearDamping (Real32 scale)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetLinearDamping(tmpPtr->id, scale);
-}
-
-void PhysicsBody::setAngularDamping (Real32 scale)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAngularDamping(tmpPtr->id, scale);
+	dBodySetDampingDefaults(tmpPtr->_BodyID);
 }
 
 void PhysicsBody::setDamping (Real32 linear_scale, Real32 angular_scale)
 {
 	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetDamping(tmpPtr->id, linear_scale, angular_scale);
+	dBodySetDamping(tmpPtr->_BodyID, linear_scale, angular_scale);
 }
 
-Real32 PhysicsBody::getLinearDampingThreshold (void)
+void PhysicsBody::updateToODEState(void)
 {
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetLinearDampingThreshold(tmpPtr->id);
-}
+    const dReal* pos(dBodyGetPosition(_BodyID));
+    const dReal* quat(dBodyGetQuaternion(_BodyID));
 
-Real32 PhysicsBody::getAngularDampingThreshold (void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetAngularDampingThreshold(tmpPtr->id);
-}
-
-void PhysicsBody::setLinearDampingThreshold (Real32 threshold)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetLinearDampingThreshold(tmpPtr->id, threshold);
-}
-
-void PhysicsBody::setAngularDampingThreshold (Real32 threshold)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetAngularDampingThreshold(tmpPtr->id, threshold);
-}
-
-void PhysicsBody::setDampingDefaults (void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetDampingDefaults(tmpPtr->id);
-}
-
-Real32 PhysicsBody::getMaxAngularSpeed (void)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	return dBodyGetMaxAngularSpeed(tmpPtr->id);
-}
-
-void PhysicsBody::setMaxAngularSpeed (Real32 max_speed)
-{
-	PhysicsBodyPtr tmpPtr(*this);
-	dBodySetMaxAngularSpeed(tmpPtr->id, max_speed);
+    setPosition(Vec3f(pos[0], pos[1], pos[2]));
+    Quaternion osgQuat;
+    osgQuat.setValueAsQuat(quat[1], quat[2], quat[3], quat[0]);
+    setQuaternion(osgQuat);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -747,12 +435,14 @@ void PhysicsBody::setMaxAngularSpeed (Real32 max_speed)
 /*----------------------- constructors & destructors ----------------------*/
 
 PhysicsBody::PhysicsBody(void) :
-    Inherited()
+    Inherited(),
+        _BodyID(0)
 {
 }
 
 PhysicsBody::PhysicsBody(const PhysicsBody &source) :
-    Inherited(source)
+    Inherited(source),
+        _BodyID(0)
 {
 }
 
@@ -765,6 +455,131 @@ PhysicsBody::~PhysicsBody(void)
 void PhysicsBody::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & WorldFieldMask)
+    {
+        if(_BodyID != 0)
+        {
+            dBodyDestroy(_BodyID);
+        }
+
+        if(getWorld() != NullFC)
+        {
+            _BodyID = dBodyCreate(getWorld()->getWorldID());
+        }
+    }
+    if(whichField & PositionFieldMask)
+    {
+	    dBodySetPosition(_BodyID, getPosition().x(),getPosition().y(),getPosition().z());
+    }
+    if(whichField & RotationFieldMask)
+    {
+	    dMatrix3 rotation;
+	    Vec4f v1 =  getRotation()[0];
+	    Vec4f v2 =  getRotation()[1];
+	    Vec4f v3 =  getRotation()[2];
+	    rotation[0]   = v1.x();
+	    rotation[1]   = v1.y();
+	    rotation[2]   = v1.z();
+	    rotation[3]   = 0;
+	    rotation[4]   = v2.x();
+	    rotation[5]   = v2.y();
+	    rotation[6]   = v2.z();
+	    rotation[7]   = 0;
+	    rotation[8]   = v3.x();
+	    rotation[9]   = v3.y();
+	    rotation[10]  = v3.z();
+	    rotation[11]  = 0;
+	    dBodySetRotation(_BodyID, rotation);
+    }
+    if(whichField & QuaternionFieldMask)
+    {
+	    dQuaternion q;
+	    q[0]=getQuaternion().w();
+	    q[1]=getQuaternion().x();
+	    q[2]=getQuaternion().y();
+	    q[3]=getQuaternion().z();
+	    dBodySetQuaternion(_BodyID,q);
+    }
+    if(whichField & LinearVelFieldMask)
+    {
+	    dBodySetLinearVel(_BodyID, getLinearVel().x(),getLinearVel().y(),getLinearVel().z());
+    }
+    if(whichField & AngularVelFieldMask)
+    {
+	    dBodySetAngularVel(_BodyID, getAngularVel().x(),getAngularVel().y(),getAngularVel().z());
+    }
+    if(whichField & ForceFieldMask)
+    {
+	    dBodySetForce(_BodyID, getForce().x(),getForce().y(),getForce().z());
+    }
+    if(whichField & TorqueFieldMask)
+    {
+	    dBodySetTorque(_BodyID, getTorque().x(),getTorque().y(),getTorque().z());
+    }
+    if(whichField & EnableFieldMask)
+    {
+	    if(getEnable())
+		    dBodyEnable(_BodyID);
+	    else
+		    dBodyDisable(_BodyID);
+    }
+    if(whichField & AutoDisableFlagFieldMask)
+    {
+	    dBodySetAutoDisableFlag(_BodyID, getAutoDisableFlag());
+    }
+    if(whichField & AutoDisableLinearThresholdFieldMask)
+    {
+	    dBodySetAutoDisableLinearThreshold(_BodyID, getAutoDisableLinearThreshold());
+    }
+    if(whichField & AutoDisableAngularThresholdFieldMask)
+    {
+	    dBodySetAutoDisableAngularThreshold(_BodyID, getAutoDisableAngularThreshold());
+    }
+    if(whichField & AutoDisableStepsFieldMask)
+    {
+	    dBodySetAutoDisableSteps(_BodyID, getAutoDisableSteps());
+    }
+    if(whichField & AutoDisableTimeFieldMask)
+    {
+	    dBodySetAutoDisableTime(_BodyID, getAutoDisableTime());
+    }
+    if(whichField & FiniteRotationModeFieldMask)
+    {
+	    dBodySetFiniteRotationMode(_BodyID, getFiniteRotationMode());
+    }
+    if(whichField & FiniteRotationModeFieldMask)
+    {
+	    dBodySetFiniteRotationMode(_BodyID, getFiniteRotationMode());
+    }
+    if(whichField & FiniteRotationAxisFieldMask)
+    {
+	    dBodySetFiniteRotationAxis(_BodyID, getFiniteRotationAxis().x(),getFiniteRotationAxis().y(),getFiniteRotationAxis().z());
+    }
+    if(whichField & GravityModeFieldMask)
+    {
+	    dBodySetFiniteRotationMode(_BodyID, getGravityMode());
+    }
+    if(whichField & LinearDampingFieldMask)
+    {
+	    dBodySetLinearDamping(_BodyID, getLinearDamping());
+    }
+    if(whichField & AngularDampingFieldMask)
+    {
+	    dBodySetAngularDamping(_BodyID, getAngularDamping());
+    }
+    if(whichField & LinearDampingThresholdFieldMask)
+    {
+	    dBodySetLinearDampingThreshold(_BodyID, getLinearDampingThreshold());
+    }
+    if(whichField & AngularDampingThresholdFieldMask)
+    {
+	    dBodySetAngularDampingThreshold(_BodyID, getAngularDampingThreshold());
+    }
+    if(whichField & MaxAngularSpeedFieldMask)
+    {
+	    dBodySetMaxAngularSpeed(_BodyID, getMaxAngularSpeed());
+    }
 }
 
 void PhysicsBody::dump(      UInt32    , 
@@ -775,7 +590,7 @@ void PhysicsBody::dump(      UInt32    ,
 
 
 /*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
+/*                              cvs _BodyID's                                  */
 
 #ifdef OSG_SGI_CC
 #pragma set woff 1174

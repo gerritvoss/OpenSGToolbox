@@ -100,22 +100,6 @@ void PhysicsWorld::onCreate(const PhysicsWorld *)
 {
 	PhysicsWorldPtr tmpPtr(*this);
 	tmpPtr->_World = dWorldCreate();
-    /*  should set ode to the loaded values but this does only work
-        in the initWorld method and I do not know why...!?
-    beginEditCP(tmpPtr);
-        setGravity(PhysicsWorldBase::getGravity());
-        PhysicsWorld::setCfm(PhysicsWorldBase::getCfm());
-        PhysicsWorld::setErp(PhysicsWorldBase::getErp());
-        PhysicsWorld::setWorldContactSurfaceLayer(PhysicsWorldBase::getWorldContactSurfaceLayer());
-        PhysicsWorld::setWorldContactMaxCorrectingVel(PhysicsWorldBase::getWorldContactMaxCorrectingVel());
-        PhysicsWorld::setWorldQuickStepNumIterations(PhysicsWorldBase::getWorldQuickStepNumIterations());
-        PhysicsWorld::setAutoDisableTime(PhysicsWorldBase::getAutoDisableTime());
-        PhysicsWorld::setAutoDisableSteps(PhysicsWorldBase::getAutoDisableSteps());
-        PhysicsWorld::setAutoDisableAngularThreshold(PhysicsWorldBase::getAutoDisableAngularThreshold());
-        PhysicsWorld::setAutoDisableLinearThreshold(PhysicsWorldBase::getAutoDisableLinearThreshold());
-        PhysicsWorld::setAutoDisableFlag(PhysicsWorldBase::getAutoDisableFlag());
-    endEditCP(tmpPtr);
-    */
 }
 
 void PhysicsWorld::onDestroy()

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -76,13 +76,18 @@
 #include <OpenSG/OSGVec3fFields.h> // Torque type
 #include <OpenSG/OSGBoolFields.h> // Enable type
 #include <OpenSG/OSGInt32Fields.h> // AutoDisableFlag type
-#include <OpenSG/OSGReal32Fields.h> // AutoDisableLinearThreshol type
-#include <OpenSG/OSGReal32Fields.h> // AutoDisableAngularThreshol type
+#include <OpenSG/OSGReal32Fields.h> // AutoDisableLinearThreshold type
+#include <OpenSG/OSGReal32Fields.h> // AutoDisableAngularThreshold type
 #include <OpenSG/OSGInt32Fields.h> // AutoDisableSteps type
 #include <OpenSG/OSGReal32Fields.h> // AutoDisableTime type
 #include <OpenSG/OSGInt32Fields.h> // FiniteRotationMode type
 #include <OpenSG/OSGVec3fFields.h> // FiniteRotationAxis type
 #include <OpenSG/OSGBoolFields.h> // GravityMode type
+#include <OpenSG/OSGReal32Fields.h> // LinearDamping type
+#include <OpenSG/OSGReal32Fields.h> // AngularDamping type
+#include <OpenSG/OSGReal32Fields.h> // LinearDampingThreshold type
+#include <OpenSG/OSGReal32Fields.h> // AngularDampingThreshold type
+#include <OpenSG/OSGReal32Fields.h> // MaxAngularSpeed type
 #include "OSGPhysicsWorld.h" // World type
 
 #include "OSGPhysicsBodyFields.h"
@@ -107,24 +112,29 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
 
     enum
     {
-        PositionFieldId                   = Inherited::NextFieldId,
-        RotationFieldId                   = PositionFieldId                   + 1,
-        QuaternionFieldId                 = RotationFieldId                   + 1,
-        LinearVelFieldId                  = QuaternionFieldId                 + 1,
-        AngularVelFieldId                 = LinearVelFieldId                  + 1,
-        ForceFieldId                      = AngularVelFieldId                 + 1,
-        TorqueFieldId                     = ForceFieldId                      + 1,
-        EnableFieldId                     = TorqueFieldId                     + 1,
-        AutoDisableFlagFieldId            = EnableFieldId                     + 1,
-        AutoDisableLinearThresholFieldId  = AutoDisableFlagFieldId            + 1,
-        AutoDisableAngularThresholFieldId = AutoDisableLinearThresholFieldId  + 1,
-        AutoDisableStepsFieldId           = AutoDisableAngularThresholFieldId + 1,
-        AutoDisableTimeFieldId            = AutoDisableStepsFieldId           + 1,
-        FiniteRotationModeFieldId         = AutoDisableTimeFieldId            + 1,
-        FiniteRotationAxisFieldId         = FiniteRotationModeFieldId         + 1,
-        GravityModeFieldId                = FiniteRotationAxisFieldId         + 1,
-        WorldFieldId                      = GravityModeFieldId                + 1,
-        NextFieldId                       = WorldFieldId                      + 1
+        PositionFieldId                    = Inherited::NextFieldId,
+        RotationFieldId                    = PositionFieldId                    + 1,
+        QuaternionFieldId                  = RotationFieldId                    + 1,
+        LinearVelFieldId                   = QuaternionFieldId                  + 1,
+        AngularVelFieldId                  = LinearVelFieldId                   + 1,
+        ForceFieldId                       = AngularVelFieldId                  + 1,
+        TorqueFieldId                      = ForceFieldId                       + 1,
+        EnableFieldId                      = TorqueFieldId                      + 1,
+        AutoDisableFlagFieldId             = EnableFieldId                      + 1,
+        AutoDisableLinearThresholdFieldId  = AutoDisableFlagFieldId             + 1,
+        AutoDisableAngularThresholdFieldId = AutoDisableLinearThresholdFieldId  + 1,
+        AutoDisableStepsFieldId            = AutoDisableAngularThresholdFieldId + 1,
+        AutoDisableTimeFieldId             = AutoDisableStepsFieldId            + 1,
+        FiniteRotationModeFieldId          = AutoDisableTimeFieldId             + 1,
+        FiniteRotationAxisFieldId          = FiniteRotationModeFieldId          + 1,
+        GravityModeFieldId                 = FiniteRotationAxisFieldId          + 1,
+        LinearDampingFieldId               = GravityModeFieldId                 + 1,
+        AngularDampingFieldId              = LinearDampingFieldId               + 1,
+        LinearDampingThresholdFieldId      = AngularDampingFieldId              + 1,
+        AngularDampingThresholdFieldId     = LinearDampingThresholdFieldId      + 1,
+        MaxAngularSpeedFieldId             = AngularDampingThresholdFieldId     + 1,
+        WorldFieldId                       = MaxAngularSpeedFieldId             + 1,
+        NextFieldId                        = WorldFieldId                       + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -136,13 +146,18 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     static const OSG::BitVector TorqueFieldMask;
     static const OSG::BitVector EnableFieldMask;
     static const OSG::BitVector AutoDisableFlagFieldMask;
-    static const OSG::BitVector AutoDisableLinearThresholFieldMask;
-    static const OSG::BitVector AutoDisableAngularThresholFieldMask;
+    static const OSG::BitVector AutoDisableLinearThresholdFieldMask;
+    static const OSG::BitVector AutoDisableAngularThresholdFieldMask;
     static const OSG::BitVector AutoDisableStepsFieldMask;
     static const OSG::BitVector AutoDisableTimeFieldMask;
     static const OSG::BitVector FiniteRotationModeFieldMask;
     static const OSG::BitVector FiniteRotationAxisFieldMask;
     static const OSG::BitVector GravityModeFieldMask;
+    static const OSG::BitVector LinearDampingFieldMask;
+    static const OSG::BitVector AngularDampingFieldMask;
+    static const OSG::BitVector LinearDampingThresholdFieldMask;
+    static const OSG::BitVector AngularDampingThresholdFieldMask;
+    static const OSG::BitVector MaxAngularSpeedFieldMask;
     static const OSG::BitVector WorldFieldMask;
 
 
@@ -179,13 +194,18 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
            SFVec3f             *getSFTorque         (void);
            SFBool              *getSFEnable         (void);
            SFInt32             *getSFAutoDisableFlag(void);
-           SFReal32            *getSFAutoDisableLinearThreshol(void);
-           SFReal32            *getSFAutoDisableAngularThreshol(void);
+           SFReal32            *getSFAutoDisableLinearThreshold(void);
+           SFReal32            *getSFAutoDisableAngularThreshold(void);
            SFInt32             *getSFAutoDisableSteps(void);
            SFReal32            *getSFAutoDisableTime(void);
            SFInt32             *getSFFiniteRotationMode(void);
            SFVec3f             *getSFFiniteRotationAxis(void);
            SFBool              *getSFGravityMode    (void);
+           SFReal32            *getSFLinearDamping  (void);
+           SFReal32            *getSFAngularDamping (void);
+           SFReal32            *getSFLinearDampingThreshold(void);
+           SFReal32            *getSFAngularDampingThreshold(void);
+           SFReal32            *getSFMaxAngularSpeed(void);
            SFPhysicsWorldPtr   *getSFWorld          (void);
 
            Vec3f               &getPosition       (void);
@@ -206,10 +226,10 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      const bool                &getEnable         (void) const;
            Int32               &getAutoDisableFlag(void);
      const Int32               &getAutoDisableFlag(void) const;
-           Real32              &getAutoDisableLinearThreshol(void);
-     const Real32              &getAutoDisableLinearThreshol(void) const;
-           Real32              &getAutoDisableAngularThreshol(void);
-     const Real32              &getAutoDisableAngularThreshol(void) const;
+           Real32              &getAutoDisableLinearThreshold(void);
+     const Real32              &getAutoDisableLinearThreshold(void) const;
+           Real32              &getAutoDisableAngularThreshold(void);
+     const Real32              &getAutoDisableAngularThreshold(void) const;
            Int32               &getAutoDisableSteps(void);
      const Int32               &getAutoDisableSteps(void) const;
            Real32              &getAutoDisableTime(void);
@@ -220,6 +240,16 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      const Vec3f               &getFiniteRotationAxis(void) const;
            bool                &getGravityMode    (void);
      const bool                &getGravityMode    (void) const;
+           Real32              &getLinearDamping  (void);
+     const Real32              &getLinearDamping  (void) const;
+           Real32              &getAngularDamping (void);
+     const Real32              &getAngularDamping (void) const;
+           Real32              &getLinearDampingThreshold(void);
+     const Real32              &getLinearDampingThreshold(void) const;
+           Real32              &getAngularDampingThreshold(void);
+     const Real32              &getAngularDampingThreshold(void) const;
+           Real32              &getMaxAngularSpeed(void);
+     const Real32              &getMaxAngularSpeed(void) const;
            PhysicsWorldPtr     &getWorld          (void);
      const PhysicsWorldPtr     &getWorld          (void) const;
 
@@ -237,14 +267,18 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      void setTorque         ( const Vec3f &value );
      void setEnable         ( const bool &value );
      void setAutoDisableFlag( const Int32 &value );
-     void setAutoDisableLinearThreshol( const Real32 &value );
-     void setAutoDisableAngularThreshol( const Real32 &value );
+     void setAutoDisableLinearThreshold( const Real32 &value );
+     void setAutoDisableAngularThreshold( const Real32 &value );
      void setAutoDisableSteps( const Int32 &value );
      void setAutoDisableTime( const Real32 &value );
      void setFiniteRotationMode( const Int32 &value );
      void setFiniteRotationAxis( const Vec3f &value );
      void setGravityMode    ( const bool &value );
-     void setWorld          ( const PhysicsWorldPtr &value );
+     void setLinearDamping  ( const Real32 &value );
+     void setAngularDamping ( const Real32 &value );
+     void setLinearDampingThreshold( const Real32 &value );
+     void setAngularDampingThreshold( const Real32 &value );
+     void setMaxAngularSpeed( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -268,7 +302,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PhysicsBodyPtr      create          (void); 
     static  PhysicsBodyPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
@@ -296,13 +329,18 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     SFVec3f             _sfTorque;
     SFBool              _sfEnable;
     SFInt32             _sfAutoDisableFlag;
-    SFReal32            _sfAutoDisableLinearThreshol;
-    SFReal32            _sfAutoDisableAngularThreshol;
+    SFReal32            _sfAutoDisableLinearThreshold;
+    SFReal32            _sfAutoDisableAngularThreshold;
     SFInt32             _sfAutoDisableSteps;
     SFReal32            _sfAutoDisableTime;
     SFInt32             _sfFiniteRotationMode;
     SFVec3f             _sfFiniteRotationAxis;
     SFBool              _sfGravityMode;
+    SFReal32            _sfLinearDamping;
+    SFReal32            _sfAngularDamping;
+    SFReal32            _sfLinearDampingThreshold;
+    SFReal32            _sfAngularDampingThreshold;
+    SFReal32            _sfMaxAngularSpeed;
     SFPhysicsWorldPtr   _sfWorld;
 
     /*! \}                                                                 */
@@ -321,6 +359,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     virtual ~PhysicsBodyBase(void); 
 
     /*! \}                                                                 */
+     void setWorld          ( const PhysicsWorldPtr &value );
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
@@ -381,6 +420,6 @@ typedef RefPtr<PhysicsBodyPtr> PhysicsBodyRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSBODYBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsBodyBase.h,v 1.2 2006/02/20 17:04:20 dirk Exp $"
+#define OSGPHYSICSBODYBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSBODYBASE_H_ */

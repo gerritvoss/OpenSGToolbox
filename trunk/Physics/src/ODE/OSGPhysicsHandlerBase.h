@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,8 +67,10 @@
 
 #include <OpenSG/OSGAttachment.h> // Parent
 
-#include "OSGPhysicsWorldFields.h" // World type
-#include "ODE/Spaces/OSGPhysicsSpaceFields.h" // Space type
+#include <OpenSG/OSGPhysicsWorldFields.h> // World type
+#include <OpenSG/OSGPhysicsSpaceFields.h> // Space type
+#include <OpenSG/OSGReal32Fields.h> // StepSize type
+#include <OpenSG/OSGUInt32Fields.h> // MaxStepsPerUpdate type
 
 #include "OSGPhysicsHandlerFields.h"
 
@@ -92,13 +94,17 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
 
     enum
     {
-        WorldFieldId = Inherited::NextFieldId,
-        SpaceFieldId = WorldFieldId + 1,
-        NextFieldId  = SpaceFieldId + 1
+        WorldFieldId             = Inherited::NextFieldId,
+        SpaceFieldId             = WorldFieldId             + 1,
+        StepSizeFieldId          = SpaceFieldId             + 1,
+        MaxStepsPerUpdateFieldId = StepSizeFieldId          + 1,
+        NextFieldId              = MaxStepsPerUpdateFieldId + 1
     };
 
     static const OSG::BitVector WorldFieldMask;
     static const OSG::BitVector SpaceFieldMask;
+    static const OSG::BitVector StepSizeFieldMask;
+    static const OSG::BitVector MaxStepsPerUpdateFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -127,11 +133,17 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
 
            SFPhysicsWorldPtr   *getSFWorld          (void);
            SFPhysicsSpacePtr   *getSFSpace          (void);
+           SFReal32            *getSFStepSize       (void);
+           SFUInt32            *getSFMaxStepsPerUpdate(void);
 
            PhysicsWorldPtr     &getWorld          (void);
      const PhysicsWorldPtr     &getWorld          (void) const;
            PhysicsSpacePtr     &getSpace          (void);
      const PhysicsSpacePtr     &getSpace          (void) const;
+           Real32              &getStepSize       (void);
+     const Real32              &getStepSize       (void) const;
+           UInt32              &getMaxStepsPerUpdate(void);
+     const UInt32              &getMaxStepsPerUpdate(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,6 +152,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
 
      void setWorld          ( const PhysicsWorldPtr &value );
      void setSpace          ( const PhysicsSpacePtr &value );
+     void setStepSize       ( const Real32 &value );
+     void setMaxStepsPerUpdate( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,6 +198,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
 
     SFPhysicsWorldPtr   _sfWorld;
     SFPhysicsSpacePtr   _sfSpace;
+    SFReal32            _sfStepSize;
+    SFUInt32            _sfMaxStepsPerUpdate;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -261,6 +277,6 @@ typedef RefPtr<PhysicsHandlerPtr> PhysicsHandlerRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSHANDLERBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsHandlerBase.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSHANDLERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSHANDLERBASE_H_ */

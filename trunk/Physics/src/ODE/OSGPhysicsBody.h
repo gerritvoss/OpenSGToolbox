@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,6 +47,7 @@
 #include <ode/ode.h>
 
 #include "OSGPhysicsBodyBase.h"
+#include "OSGPhysicsWorldFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -61,49 +62,25 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Get Field                    */
 	  /*! \{                                                                 */
-	  Vec3f getPosition(void);
-	  Matrix getRotation(void);
-	  Quaternion getQuaternion(void);
-	  Vec3f getLinearVel(void);
-	  Vec3f getAngularVel(void);
-	  Vec3f getForce(void);
-	  Vec3f getTorque(void);
-	  bool getEnable(void);
-	  Int32	getAutoDisableFlag(void);
-	  Real32 getAutoDisableLinearThreshold(void);
-	  Real32 getAutoDisableAngularThreshold(void);
-	  Int32	getAutoDisableSteps(void);
-	  Real32 getAutoDisableTime(void);
-	  Int32 getFiniteRotationMode(void);
-	  Vec3f getFiniteRotationAxis(void);
-	  bool getGravityMode(void);
-      PhysicsWorldPtr getWorld(void);
       dBodyID getBodyID(void);
 
 	  /*! \}                                                                 */
 
+      void updateToODEState(void);
+
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Set Field                    */
 	  /*! \{                                                                 */
-	  void setPosition(const Vec3f &value );
-	  void setRotation(const Matrix &value );
-	  void setQuaternion(const Quaternion &value );
-	  void setLinearVel(const Vec3f &value );
-	  void setAngularVel(const Vec3f &value );
-	  void setForce(const Vec3f &value );
-	  void setTorque(const Vec3f &value );
-	  void setEnable(const bool &value );
-	  void setAutoDisableFlag(const Int32 &value );
-	  void setAutoDisableLinearThreshold(const Real32 &value );
-	  void setAutoDisableAngularThreshold(const Real32 &value );
-	  void setAutoDisableSteps(const Int32 &value );
-	  void setAutoDisableTime(const Real32 &value );
-	  void setFiniteRotationMode(const Int32 &value );
-	  void setFiniteRotationAxis(const Vec3f &value );
-	  void setGravityMode(const bool &value );
       void setBodyID(const dBodyID &value );
-      void setWorld(const PhysicsWorldPtr &value );
 	  /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  PhysicsBodyPtr      create          (PhysicsWorldPtr World);
+
+    /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
@@ -129,7 +106,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
 	  void* getData(void);
 	  Int32 getNumJoints(void);
 	  dJointID getJoint(Int32 index);
-      void initBody();
+      void initDefaults(void);
 
       //Mass
       void resetMass();
@@ -150,22 +127,10 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
       void addMassOf( dBodyID otherBody );
 
       //Damping
-      Real32 getLinearDamping (void);
-      Real32 getAngularDamping (void);
-      void setLinearDamping (Real32 scale);
-      void setAngularDamping (Real32 scale);
-
       void setDamping (Real32 linear_scale, Real32 angular_scale);
 
-      Real32 getLinearDampingThreshold (void);
-      Real32 getAngularDampingThreshold (void);
-      void setLinearDampingThreshold (Real32 threshold);
-      void setAngularDampingThreshold (Real32 threshold);
 
       void setDampingDefaults (void);
-
-      Real32 getMaxAngularSpeed (void);
-      void setMaxAngularSpeed (Real32 max_speed);
 	  /*! \}                                                                 */
 
 
@@ -227,7 +192,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
 
     void operator =(const PhysicsBody &source);
 
-    dBodyID id;
+    dBodyID _BodyID;
 };
 
 typedef PhysicsBody *PhysicsBodyP;

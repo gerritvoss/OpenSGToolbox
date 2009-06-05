@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -110,6 +110,20 @@ SFPhysicsSpacePtr *PhysicsHandlerBase::getSFSpace(void)
     return &_sfSpace;
 }
 
+//! Get the PhysicsHandler::_sfStepSize field.
+inline
+SFReal32 *PhysicsHandlerBase::getSFStepSize(void)
+{
+    return &_sfStepSize;
+}
+
+//! Get the PhysicsHandler::_sfMaxStepsPerUpdate field.
+inline
+SFUInt32 *PhysicsHandlerBase::getSFMaxStepsPerUpdate(void)
+{
+    return &_sfMaxStepsPerUpdate;
+}
+
 
 //! Get the value of the PhysicsHandler::_sfWorld field.
 inline
@@ -153,8 +167,50 @@ void PhysicsHandlerBase::setSpace(const PhysicsSpacePtr &value)
     _sfSpace.setValue(value);
 }
 
+//! Get the value of the PhysicsHandler::_sfStepSize field.
+inline
+Real32 &PhysicsHandlerBase::getStepSize(void)
+{
+    return _sfStepSize.getValue();
+}
+
+//! Get the value of the PhysicsHandler::_sfStepSize field.
+inline
+const Real32 &PhysicsHandlerBase::getStepSize(void) const
+{
+    return _sfStepSize.getValue();
+}
+
+//! Set the value of the PhysicsHandler::_sfStepSize field.
+inline
+void PhysicsHandlerBase::setStepSize(const Real32 &value)
+{
+    _sfStepSize.setValue(value);
+}
+
+//! Get the value of the PhysicsHandler::_sfMaxStepsPerUpdate field.
+inline
+UInt32 &PhysicsHandlerBase::getMaxStepsPerUpdate(void)
+{
+    return _sfMaxStepsPerUpdate.getValue();
+}
+
+//! Get the value of the PhysicsHandler::_sfMaxStepsPerUpdate field.
+inline
+const UInt32 &PhysicsHandlerBase::getMaxStepsPerUpdate(void) const
+{
+    return _sfMaxStepsPerUpdate.getValue();
+}
+
+//! Set the value of the PhysicsHandler::_sfMaxStepsPerUpdate field.
+inline
+void PhysicsHandlerBase::setMaxStepsPerUpdate(const UInt32 &value)
+{
+    _sfMaxStepsPerUpdate.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSHANDLERBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsHandlerBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSHANDLERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

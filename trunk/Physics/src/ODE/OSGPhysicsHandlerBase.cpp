@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,19 +57,24 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsHandlerBase.h"
 #include "OSGPhysicsHandler.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsHandlerBase::WorldFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsHandlerBase::WorldFieldId);
 
 const OSG::BitVector  PhysicsHandlerBase::SpaceFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsHandlerBase::SpaceFieldId);
+
+const OSG::BitVector  PhysicsHandlerBase::StepSizeFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHandlerBase::StepSizeFieldId);
+
+const OSG::BitVector  PhysicsHandlerBase::MaxStepsPerUpdateFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHandlerBase::MaxStepsPerUpdateFieldId);
 
 const OSG::BitVector PhysicsHandlerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -82,6 +87,12 @@ const OSG::BitVector PhysicsHandlerBase::MTInfluenceMask =
     
 */
 /*! \var PhysicsSpacePtr PhysicsHandlerBase::_sfSpace
+    
+*/
+/*! \var Real32          PhysicsHandlerBase::_sfStepSize
+    
+*/
+/*! \var UInt32          PhysicsHandlerBase::_sfMaxStepsPerUpdate
     
 */
 
@@ -98,7 +109,17 @@ FieldDescription *PhysicsHandlerBase::_desc[] =
                      "space", 
                      SpaceFieldId, SpaceFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsHandlerBase::getSFSpace)
+                     (FieldAccessMethod) &PhysicsHandlerBase::getSFSpace),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "StepSize", 
+                     StepSizeFieldId, StepSizeFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHandlerBase::getSFStepSize),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "MaxStepsPerUpdate", 
+                     MaxStepsPerUpdateFieldId, MaxStepsPerUpdateFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHandlerBase::getSFMaxStepsPerUpdate)
 };
 
 
@@ -176,6 +197,8 @@ void PhysicsHandlerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 PhysicsHandlerBase::PhysicsHandlerBase(void) :
     _sfWorld                  (PhysicsWorldPtr(NullFC)), 
     _sfSpace                  (PhysicsSpacePtr(NullFC)), 
+    _sfStepSize               (Real32(0.001)), 
+    _sfMaxStepsPerUpdate      (UInt32(75)), 
     Inherited() 
 {
 }
@@ -187,6 +210,8 @@ PhysicsHandlerBase::PhysicsHandlerBase(void) :
 PhysicsHandlerBase::PhysicsHandlerBase(const PhysicsHandlerBase &source) :
     _sfWorld                  (source._sfWorld                  ), 
     _sfSpace                  (source._sfSpace                  ), 
+    _sfStepSize               (source._sfStepSize               ), 
+    _sfMaxStepsPerUpdate      (source._sfMaxStepsPerUpdate      ), 
     Inherited                 (source)
 {
 }
@@ -213,6 +238,16 @@ UInt32 PhysicsHandlerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSpace.getBinSize();
     }
 
+    if(FieldBits::NoField != (StepSizeFieldMask & whichField))
+    {
+        returnValue += _sfStepSize.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MaxStepsPerUpdateFieldMask & whichField))
+    {
+        returnValue += _sfMaxStepsPerUpdate.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -230,6 +265,16 @@ void PhysicsHandlerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SpaceFieldMask & whichField))
     {
         _sfSpace.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StepSizeFieldMask & whichField))
+    {
+        _sfStepSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxStepsPerUpdateFieldMask & whichField))
+    {
+        _sfMaxStepsPerUpdate.copyToBin(pMem);
     }
 
 
@@ -250,6 +295,16 @@ void PhysicsHandlerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSpace.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (StepSizeFieldMask & whichField))
+    {
+        _sfStepSize.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxStepsPerUpdateFieldMask & whichField))
+    {
+        _sfMaxStepsPerUpdate.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -265,6 +320,12 @@ void PhysicsHandlerBase::executeSyncImpl(      PhysicsHandlerBase *pOther,
 
     if(FieldBits::NoField != (SpaceFieldMask & whichField))
         _sfSpace.syncWith(pOther->_sfSpace);
+
+    if(FieldBits::NoField != (StepSizeFieldMask & whichField))
+        _sfStepSize.syncWith(pOther->_sfStepSize);
+
+    if(FieldBits::NoField != (MaxStepsPerUpdateFieldMask & whichField))
+        _sfMaxStepsPerUpdate.syncWith(pOther->_sfMaxStepsPerUpdate);
 
 
 }
@@ -282,6 +343,12 @@ void PhysicsHandlerBase::executeSyncImpl(      PhysicsHandlerBase *pOther,
     if(FieldBits::NoField != (SpaceFieldMask & whichField))
         _sfSpace.syncWith(pOther->_sfSpace);
 
+    if(FieldBits::NoField != (StepSizeFieldMask & whichField))
+        _sfStepSize.syncWith(pOther->_sfStepSize);
+
+    if(FieldBits::NoField != (MaxStepsPerUpdateFieldMask & whichField))
+        _sfMaxStepsPerUpdate.syncWith(pOther->_sfMaxStepsPerUpdate);
+
 
 
 }
@@ -297,6 +364,8 @@ void PhysicsHandlerBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -308,8 +377,6 @@ DataType FieldDataTraits<PhysicsHandlerPtr>::_type("PhysicsHandlerPtr", "Attachm
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsHandlerPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsHandlerPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -325,10 +392,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsHandlerBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSHANDLERBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSHANDLERBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSHANDLERFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

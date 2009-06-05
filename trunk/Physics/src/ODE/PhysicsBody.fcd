@@ -6,7 +6,7 @@
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="true"
+	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
 	useLocalIncludes="false"
@@ -85,7 +85,7 @@
 	>
 	</Field>
 	<Field
-		name="autoDisableLinearThreshol"
+		name="autoDisableLinearThreshold"
 		type="Real32"
 		cardinality="single"
 		visibility="external"
@@ -93,7 +93,7 @@
 	>
 	</Field>
 	<Field
-		name="autoDisableAngularThreshol"
+		name="autoDisableAngularThreshold"
 		type="Real32"
 		cardinality="single"
 		visibility="external"
@@ -138,6 +138,46 @@
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="linearDamping"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="angularDamping"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="linearDampingThreshold"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="angularDampingThreshold"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="maxAngularSpeed"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
 		access="public"
 	>
 	</Field>

@@ -2,11 +2,11 @@
  *                                                                     *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -125,15 +125,6 @@ Action::ResultE initOde(NodePtr& node)
 
         return Action::Continue;
     }
-
-    a = node->findAttachment(PhysicsBody::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsBodyPtr body = PhysicsBodyPtr::dcast(a);
-        body->initBody();
-
-        return Action::Continue;
-    }
     a = node->findAttachment(PhysicsTriMeshGeom::getClassType());
     if(a!=NullFC)
     {
@@ -212,14 +203,16 @@ Action::ResultE updateOsgOde(NodePtr& node)
         {
             //SLOG << "found a bodyNode " << endLog;
             PhysicsBodyPtr body = PhysicsBodyPtr::dcast(a);
+            body->updateToODEState();
             // If the object is moving normally, dampen the movement a bit to simulate low-level friction
             // (the amount of dampening should depend on whether the object is contacting another or not,
             // and a contact-type-specific dampening amount, but oh well, this generally works)
-            CPEdit(body, PhysicsBody::ForceFieldMask | PhysicsBody::TorqueFieldMask);
-            Vec3f vel = body->getLinearVel();
-            body->addForce(vel * -0.01f);
-            vel = body->getAngularVel();
-            body->addTorque(vel * -0.01f);
+            //beginEditCP(body, PhysicsBody::ForceFieldMask | PhysicsBody::TorqueFieldMask);
+            //    Vec3f vel = body->getLinearVel();
+            //    body->addForce(vel * -0.01f);
+            //    vel = body->getAngularVel();
+            //    body->addTorque(vel * -0.01f);
+            //endEditCP(body, PhysicsBody::ForceFieldMask | PhysicsBody::TorqueFieldMask);
 
             //update the position
             m.setIdentity();
@@ -331,16 +324,51 @@ void PhysicsHandler::setStatistics(StatCollector *stat)
 *                              Class Specific                              *
 \***************************************************************************/
 
+void PhysicsHandler::addForceToBody(PhysicsBodyPtr body, Vec3f force)
+{
+    BodyForce NewBodyForce;
+    NewBodyForce._Body = body;
+    NewBodyForce._Force = force;
+    _ApplyForcePerStep.push_back(NewBodyForce);
+}
+
+void PhysicsHandler::clearForceToBody(void)
+{
+    _ApplyForcePerStep.clear();
+}
+
+
 void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
 {
-    //collide
-    getSpace()->Collide(getWorld());
 
-    //step the world
-    getWorld()->worldQuickStep(ElapsedTime);
+    getStatistics()->getElem(statPhysicsTime)->start();
+    _TimeSinceLast += ElapsedTime;
 
-    //update matrices
-    updateWorld(UpdateNode);
+    while(_TimeSinceLast > getStepSize())
+    {
+        for(UInt32 i(0) ; i<_ApplyForcePerStep.size() ; ++i)
+        {
+            _ApplyForcePerStep[i]._Body->addForce(_ApplyForcePerStep[i]._Force);
+        }
+
+        //Update
+        getStatistics()->getElem(statNPhysicsSteps)->inc();
+        //collide
+        getStatistics()->getElem(statCollisionTime)->start();
+        getSpace()->Collide(getWorld());
+        getStatistics()->getElem(statCollisionTime)->stop();
+
+        //step the world
+        getStatistics()->getElem(statSimulationTime)->start();
+        getWorld()->worldQuickStep(getStepSize());
+        getStatistics()->getElem(statSimulationTime)->stop();
+
+        //update matrices
+        updateWorld(UpdateNode);
+
+        _TimeSinceLast -= getStepSize();
+    }
+    getStatistics()->getElem(statPhysicsTime)->stop();
 }
 
 void PhysicsHandler::updateWorld(NodePtr node)
@@ -367,14 +395,16 @@ void PhysicsHandler::odeInit(NodePtr node)
 PhysicsHandler::PhysicsHandler(void) :
     Inherited(),
         _statistics(NULL),
-        _ownStat(false)
+        _ownStat(false),
+        _TimeSinceLast(0.0f)
 {
 }
 
 PhysicsHandler::PhysicsHandler(const PhysicsHandler &source) :
     Inherited(source),
         _statistics(NULL),
-        _ownStat(false)
+        _ownStat(false),
+        _TimeSinceLast(0.0f)
 {
 }
 
