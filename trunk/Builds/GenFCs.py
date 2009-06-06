@@ -83,20 +83,22 @@ def main():
    #Cleanup License
 
    #Determine which library this is for
-   if os.path.join("OpenSGToolbox","Dynamics", "src") in sys.argv[1]:
+   if os.path.join("Dynamics", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpDynamicsLicense.sed"
-   elif os.path.join("OpenSGToolbox","Input", "src") in sys.argv[1]:
+   elif os.path.join("Input", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpInputLicense.sed"
-   elif os.path.join("OpenSGToolbox","ParticleSystem", "src") in sys.argv[1]:
+   elif os.path.join("ParticleSystem", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpParticleSystemLicense.sed"
-   elif os.path.join("OpenSGToolbox","Toolbox", "src") in sys.argv[1]:
+   elif os.path.join("Toolbox", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpToolboxLicense.sed"
-   elif os.path.join("OpenSGToolbox","Animation", "src") in sys.argv[1]:
+   elif os.path.join("Animation", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpAnimationLicense.sed"
-   elif os.path.join("OpenSGToolbox","Game", "src") in sys.argv[1]:
+   elif os.path.join("Game", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpGameLicense.sed"
-   elif os.path.join("OpenSGToolbox","Sound", "src") in sys.argv[1]:
+   elif os.path.join("Sound", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpSoundLicense.sed"
+   elif os.path.join("Physics", "src") in sys.argv[1]:
+       SedLicenseScript = "CleanUpPhysicsLicense.sed"
    else:
        SedLicenseScript = "CleanUpUILicense.sed"
    SedLicenseScriptPath = convertPathToOutput(os.path.join(GenFCsPyDir, SedLicenseScript))
