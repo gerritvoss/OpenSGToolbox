@@ -463,6 +463,23 @@ void PhysicsBody::updateToODEState(void)
     setQuaternion(osgQuat);
 }
 
+void PhysicsBody::setEnable(bool enable)
+{
+    if(enable)
+    {
+        dBodyEnable(_BodyID);
+    }
+    else
+    {
+        dBodyDisable(_BodyID);
+    }
+}
+
+bool PhysicsBody::getEnable(void) const
+{
+    return dBodyIsEnabled(_BodyID);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -551,13 +568,6 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
     if(whichField & TorqueFieldMask)
     {
 	    dBodySetTorque(_BodyID, getTorque().x(),getTorque().y(),getTorque().z());
-    }
-    if(whichField & EnableFieldMask)
-    {
-	    if(getEnable())
-		    dBodyEnable(_BodyID);
-	    else
-		    dBodyDisable(_BodyID);
     }
     if(whichField & AutoDisableFlagFieldMask)
     {

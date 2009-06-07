@@ -84,6 +84,9 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
+      void setEnable(bool enable);
+      bool getEnable(void) const;
+
 	  void setMassStruct(const dMass &mass );
 	  void getMassStruct(dMass &mass );
 	  void addForce(const Vec3f &v);

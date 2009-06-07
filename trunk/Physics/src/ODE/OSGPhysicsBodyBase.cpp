@@ -94,9 +94,6 @@ const OSG::BitVector  PhysicsBodyBase::MassCenterOfGravityFieldMask =
 const OSG::BitVector  PhysicsBodyBase::MassInertiaTensorFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::MassInertiaTensorFieldId);
 
-const OSG::BitVector  PhysicsBodyBase::EnableFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsBodyBase::EnableFieldId);
-
 const OSG::BitVector  PhysicsBodyBase::AutoDisableFlagFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::AutoDisableFlagFieldId);
 
@@ -174,9 +171,6 @@ const OSG::BitVector PhysicsBodyBase::MTInfluenceMask =
     
 */
 /*! \var Matrix          PhysicsBodyBase::_sfMassInertiaTensor
-    
-*/
-/*! \var bool            PhysicsBodyBase::_sfEnable
     
 */
 /*! \var Int32           PhysicsBodyBase::_sfAutoDisableFlag
@@ -276,11 +270,6 @@ FieldDescription *PhysicsBodyBase::_desc[] =
                      MassInertiaTensorFieldId, MassInertiaTensorFieldMask,
                      false,
                      (FieldAccessMethod) &PhysicsBodyBase::getSFMassInertiaTensor),
-    new FieldDescription(SFBool::getClassType(), 
-                     "enable", 
-                     EnableFieldId, EnableFieldMask,
-                     false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFEnable),
     new FieldDescription(SFInt32::getClassType(), 
                      "autoDisableFlag", 
                      AutoDisableFlagFieldId, AutoDisableFlagFieldMask,
@@ -436,7 +425,6 @@ PhysicsBodyBase::PhysicsBodyBase(void) :
     _sfMass                   (), 
     _sfMassCenterOfGravity    (), 
     _sfMassInertiaTensor      (), 
-    _sfEnable                 (bool(true)), 
     _sfAutoDisableFlag        (), 
     _sfAutoDisableLinearThreshold(), 
     _sfAutoDisableAngularThreshold(), 
@@ -470,7 +458,6 @@ PhysicsBodyBase::PhysicsBodyBase(const PhysicsBodyBase &source) :
     _sfMass                   (source._sfMass                   ), 
     _sfMassCenterOfGravity    (source._sfMassCenterOfGravity    ), 
     _sfMassInertiaTensor      (source._sfMassInertiaTensor      ), 
-    _sfEnable                 (source._sfEnable                 ), 
     _sfAutoDisableFlag        (source._sfAutoDisableFlag        ), 
     _sfAutoDisableLinearThreshold(source._sfAutoDisableLinearThreshold), 
     _sfAutoDisableAngularThreshold(source._sfAutoDisableAngularThreshold), 
@@ -549,11 +536,6 @@ UInt32 PhysicsBodyBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (MassInertiaTensorFieldMask & whichField))
     {
         returnValue += _sfMassInertiaTensor.getBinSize();
-    }
-
-    if(FieldBits::NoField != (EnableFieldMask & whichField))
-    {
-        returnValue += _sfEnable.getBinSize();
     }
 
     if(FieldBits::NoField != (AutoDisableFlagFieldMask & whichField))
@@ -685,11 +667,6 @@ void PhysicsBodyBase::copyToBin(      BinaryDataHandler &pMem,
         _sfMassInertiaTensor.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (EnableFieldMask & whichField))
-    {
-        _sfEnable.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (AutoDisableFlagFieldMask & whichField))
     {
         _sfAutoDisableFlag.copyToBin(pMem);
@@ -818,11 +795,6 @@ void PhysicsBodyBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMassInertiaTensor.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (EnableFieldMask & whichField))
-    {
-        _sfEnable.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (AutoDisableFlagFieldMask & whichField))
     {
         _sfAutoDisableFlag.copyFromBin(pMem);
@@ -933,9 +905,6 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
     if(FieldBits::NoField != (MassInertiaTensorFieldMask & whichField))
         _sfMassInertiaTensor.syncWith(pOther->_sfMassInertiaTensor);
 
-    if(FieldBits::NoField != (EnableFieldMask & whichField))
-        _sfEnable.syncWith(pOther->_sfEnable);
-
     if(FieldBits::NoField != (AutoDisableFlagFieldMask & whichField))
         _sfAutoDisableFlag.syncWith(pOther->_sfAutoDisableFlag);
 
@@ -1017,9 +986,6 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
 
     if(FieldBits::NoField != (MassInertiaTensorFieldMask & whichField))
         _sfMassInertiaTensor.syncWith(pOther->_sfMassInertiaTensor);
-
-    if(FieldBits::NoField != (EnableFieldMask & whichField))
-        _sfEnable.syncWith(pOther->_sfEnable);
 
     if(FieldBits::NoField != (AutoDisableFlagFieldMask & whichField))
         _sfAutoDisableFlag.syncWith(pOther->_sfAutoDisableFlag);

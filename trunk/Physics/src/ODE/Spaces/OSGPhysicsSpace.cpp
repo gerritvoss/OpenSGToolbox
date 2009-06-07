@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -49,6 +49,8 @@
 
 #include "OSGPhysicsSpace.h"
 #include "ODE/OSGPhysicsWorld.h"
+#include "ODE/OSGPhysicsHandler.h"
+#include <OpenSG/OSGStatCollector.h>
 
 OSG_USING_NAMESPACE
 
@@ -101,6 +103,8 @@ void PhysicsSpace::onDestroy()
 
 void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
 {
+    getParentHandler()->getStatistics()->getElem(PhysicsHandler::statNCollisionTests)->inc();
+
     if (dGeomIsSpace (o1) || dGeomIsSpace (o2))
     {
         // colliding a space with something
@@ -115,6 +119,8 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
         // points between o1 and o2
         Int32 numContacts = dCollide(o1, o2, _ContactJoints.size(), 
             &(_ContactJoints[0].geom), sizeof(dContact));
+    
+        getParentHandler()->getStatistics()->getElem(PhysicsHandler::statNCollisions)->add(numContacts);
 
         // add these contact points to the simulation
         for (Int32 i=0; i < numContacts; i++)

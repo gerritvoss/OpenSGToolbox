@@ -110,7 +110,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
 
     /*! \}                                                                 */
     static StatElemDesc<StatTimeElem   > statCollisionTime;
+    static StatElemDesc<StatTimeElem   > statPerStepCollisionTime;
     static StatElemDesc<StatTimeElem   > statSimulationTime;
+    static StatElemDesc<StatTimeElem   > statPerStepSimulationTime;
     static StatElemDesc<StatTimeElem   > statPhysicsTime;
     static StatElemDesc<StatIntElem    > statNPhysicsSteps;
     static StatElemDesc<StatIntElem    > statNCollisionTests;

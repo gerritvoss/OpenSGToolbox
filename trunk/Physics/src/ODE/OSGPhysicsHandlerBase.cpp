@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
+ *                          www.vrac.iastate.edu                             *
  *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
@@ -67,8 +67,8 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  PhysicsHandlerBase::WorldFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsHandlerBase::WorldFieldId);
 
-const OSG::BitVector  PhysicsHandlerBase::SpaceFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsHandlerBase::SpaceFieldId);
+const OSG::BitVector  PhysicsHandlerBase::SpacesFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHandlerBase::SpacesFieldId);
 
 const OSG::BitVector  PhysicsHandlerBase::StepSizeFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsHandlerBase::StepSizeFieldId);
@@ -86,7 +86,7 @@ const OSG::BitVector PhysicsHandlerBase::MTInfluenceMask =
 /*! \var PhysicsWorldPtr PhysicsHandlerBase::_sfWorld
     
 */
-/*! \var PhysicsSpacePtr PhysicsHandlerBase::_sfSpace
+/*! \var PhysicsSpacePtr PhysicsHandlerBase::_mfSpaces
     
 */
 /*! \var Real32          PhysicsHandlerBase::_sfStepSize
@@ -105,11 +105,11 @@ FieldDescription *PhysicsHandlerBase::_desc[] =
                      WorldFieldId, WorldFieldMask,
                      false,
                      (FieldAccessMethod) &PhysicsHandlerBase::getSFWorld),
-    new FieldDescription(SFPhysicsSpacePtr::getClassType(), 
-                     "space", 
-                     SpaceFieldId, SpaceFieldMask,
+    new FieldDescription(MFPhysicsSpacePtr::getClassType(), 
+                     "spaces", 
+                     SpacesFieldId, SpacesFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsHandlerBase::getSFSpace),
+                     (FieldAccessMethod) &PhysicsHandlerBase::getMFSpaces),
     new FieldDescription(SFReal32::getClassType(), 
                      "StepSize", 
                      StepSizeFieldId, StepSizeFieldMask,
@@ -185,6 +185,7 @@ void PhysicsHandlerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfSpaces.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -196,7 +197,7 @@ void PhysicsHandlerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 PhysicsHandlerBase::PhysicsHandlerBase(void) :
     _sfWorld                  (PhysicsWorldPtr(NullFC)), 
-    _sfSpace                  (PhysicsSpacePtr(NullFC)), 
+    _mfSpaces                 (), 
     _sfStepSize               (Real32(0.001)), 
     _sfMaxStepsPerUpdate      (UInt32(75)), 
     Inherited() 
@@ -209,7 +210,7 @@ PhysicsHandlerBase::PhysicsHandlerBase(void) :
 
 PhysicsHandlerBase::PhysicsHandlerBase(const PhysicsHandlerBase &source) :
     _sfWorld                  (source._sfWorld                  ), 
-    _sfSpace                  (source._sfSpace                  ), 
+    _mfSpaces                 (source._mfSpaces                 ), 
     _sfStepSize               (source._sfStepSize               ), 
     _sfMaxStepsPerUpdate      (source._sfMaxStepsPerUpdate      ), 
     Inherited                 (source)
@@ -233,9 +234,9 @@ UInt32 PhysicsHandlerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfWorld.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpaceFieldMask & whichField))
+    if(FieldBits::NoField != (SpacesFieldMask & whichField))
     {
-        returnValue += _sfSpace.getBinSize();
+        returnValue += _mfSpaces.getBinSize();
     }
 
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
@@ -262,9 +263,9 @@ void PhysicsHandlerBase::copyToBin(      BinaryDataHandler &pMem,
         _sfWorld.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpaceFieldMask & whichField))
+    if(FieldBits::NoField != (SpacesFieldMask & whichField))
     {
-        _sfSpace.copyToBin(pMem);
+        _mfSpaces.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
@@ -290,9 +291,9 @@ void PhysicsHandlerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfWorld.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpaceFieldMask & whichField))
+    if(FieldBits::NoField != (SpacesFieldMask & whichField))
     {
-        _sfSpace.copyFromBin(pMem);
+        _mfSpaces.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
@@ -318,8 +319,8 @@ void PhysicsHandlerBase::executeSyncImpl(      PhysicsHandlerBase *pOther,
     if(FieldBits::NoField != (WorldFieldMask & whichField))
         _sfWorld.syncWith(pOther->_sfWorld);
 
-    if(FieldBits::NoField != (SpaceFieldMask & whichField))
-        _sfSpace.syncWith(pOther->_sfSpace);
+    if(FieldBits::NoField != (SpacesFieldMask & whichField))
+        _mfSpaces.syncWith(pOther->_mfSpaces);
 
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
         _sfStepSize.syncWith(pOther->_sfStepSize);
@@ -340,15 +341,15 @@ void PhysicsHandlerBase::executeSyncImpl(      PhysicsHandlerBase *pOther,
     if(FieldBits::NoField != (WorldFieldMask & whichField))
         _sfWorld.syncWith(pOther->_sfWorld);
 
-    if(FieldBits::NoField != (SpaceFieldMask & whichField))
-        _sfSpace.syncWith(pOther->_sfSpace);
-
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
         _sfStepSize.syncWith(pOther->_sfStepSize);
 
     if(FieldBits::NoField != (MaxStepsPerUpdateFieldMask & whichField))
         _sfMaxStepsPerUpdate.syncWith(pOther->_sfMaxStepsPerUpdate);
 
+
+    if(FieldBits::NoField != (SpacesFieldMask & whichField))
+        _mfSpaces.syncWith(pOther->_mfSpaces, sInfo);
 
 
 }
@@ -358,6 +359,9 @@ void PhysicsHandlerBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (SpacesFieldMask & whichField))
+        _mfSpaces.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

@@ -6,7 +6,7 @@
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="true"
+	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
 	useLocalIncludes="false"
@@ -17,6 +17,16 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="InternalParentHandler"
+		type="PhysicsHandlerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+        header="ODE/OSGPhysicsHandlerFields.h"
+		access="protected"
 	>
 	</Field>
 </FieldContainer>

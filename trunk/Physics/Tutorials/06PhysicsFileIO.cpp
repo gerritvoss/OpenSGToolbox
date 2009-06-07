@@ -29,7 +29,7 @@
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/OSGSceneFileHandler.h>
 
-#include <OpenSG/OSGSimpleStatisticsForeground.h>
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -312,48 +312,19 @@ int main(int argc, char **argv)
 	beginEditCP(scene, Node::ChildrenFieldMask);
 	    scene->addChild(spaceGroupNode);
 	endEditCP(scene, Node::ChildrenFieldMask);
-    
-    //Create Statistics Foreground
-    SimpleStatisticsForegroundPtr PhysicsStatForeground = SimpleStatisticsForeground::create();
-    beginEditCP(PhysicsStatForeground);
-        PhysicsStatForeground->setSize(25);
-        PhysicsStatForeground->setColor(Color4f(0,1,0,0.7));
-        PhysicsStatForeground->addElement(PhysicsHandler::statPhysicsTime, 
-            "Physics time: %.3f s");
-        PhysicsStatForeground->addElement(PhysicsHandler::statCollisionTime, 
-            "Collision time: %.3f s");
-        PhysicsStatForeground->addElement(PhysicsHandler::statSimulationTime, 
-            "Simulation time: %.3f s");
-        PhysicsStatForeground->addElement(PhysicsHandler::statNCollisions, 
-            "%d collisions");
-        PhysicsStatForeground->addElement(PhysicsHandler::statNCollisionTests, 
-            "%d collision tests");
-        PhysicsStatForeground->addElement(PhysicsHandler::statNPhysicsSteps, 
-            "%d simulation steps per frame");
-        PhysicsStatForeground->setVerticalAlign(SimpleStatisticsForeground::Center);
-    endEditCP(PhysicsStatForeground);
-    
-    SimpleStatisticsForegroundPtr RenderStatForeground = SimpleStatisticsForeground::create();
-    beginEditCP(RenderStatForeground);
-        RenderStatForeground->setSize(25);
-        RenderStatForeground->setColor(Color4f(0,1,0,0.7));
-        RenderStatForeground->addElement(RenderAction::statDrawTime, "Draw FPS: %r.3f");
-        RenderStatForeground->addElement(RenderAction::statNGeometries, 
-                           "%d Nodes drawn");
-    endEditCP(RenderStatForeground);
 
+    //Save the Physics Sim
+	FCFileType::FCPtrStore Containers;
+	Containers.insert(physHandler);
 
+	FCFileType::FCTypeVector IgnoreTypes;
+	//IgnoreTypes.push_back(Node::getClassType().getId());
+	//Save the Field Containers to a xml file
+	FCFileHandler::the()->write(Containers,Path("./01PhysicsData.xml"),IgnoreTypes);
 
 
     // tell the manager what to manage
     mgr->setRoot  (rootNode);
-
-    beginEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
-        mgr->getWindow()->getPort(0)->getForegrounds().push_back(PhysicsStatForeground);
-        mgr->getWindow()->getPort(0)->getForegrounds().push_back(RenderStatForeground);
-    endEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
-    physHandler->setStatistics(&PhysicsStatForeground->getCollector());
-    mgr->getAction()->setStatistics(&RenderStatForeground->getCollector());
 
     // show the whole rootNode
     mgr->showAll();

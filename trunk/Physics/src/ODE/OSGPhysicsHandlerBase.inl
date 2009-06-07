@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -103,11 +103,11 @@ SFPhysicsWorldPtr *PhysicsHandlerBase::getSFWorld(void)
     return &_sfWorld;
 }
 
-//! Get the PhysicsHandler::_sfSpace field.
+//! Get the PhysicsHandler::_mfSpaces field.
 inline
-SFPhysicsSpacePtr *PhysicsHandlerBase::getSFSpace(void)
+MFPhysicsSpacePtr *PhysicsHandlerBase::getMFSpaces(void)
 {
-    return &_sfSpace;
+    return &_mfSpaces;
 }
 
 //! Get the PhysicsHandler::_sfStepSize field.
@@ -144,27 +144,6 @@ inline
 void PhysicsHandlerBase::setWorld(const PhysicsWorldPtr &value)
 {
     _sfWorld.setValue(value);
-}
-
-//! Get the value of the PhysicsHandler::_sfSpace field.
-inline
-PhysicsSpacePtr &PhysicsHandlerBase::getSpace(void)
-{
-    return _sfSpace.getValue();
-}
-
-//! Get the value of the PhysicsHandler::_sfSpace field.
-inline
-const PhysicsSpacePtr &PhysicsHandlerBase::getSpace(void) const
-{
-    return _sfSpace.getValue();
-}
-
-//! Set the value of the PhysicsHandler::_sfSpace field.
-inline
-void PhysicsHandlerBase::setSpace(const PhysicsSpacePtr &value)
-{
-    _sfSpace.setValue(value);
 }
 
 //! Get the value of the PhysicsHandler::_sfStepSize field.
@@ -209,6 +188,27 @@ void PhysicsHandlerBase::setMaxStepsPerUpdate(const UInt32 &value)
     _sfMaxStepsPerUpdate.setValue(value);
 }
 
+
+//! Get the value of the \a index element the PhysicsHandler::_mfSpaces field.
+inline
+PhysicsSpacePtr &PhysicsHandlerBase::getSpaces(const UInt32 index)
+{
+    return _mfSpaces[index];
+}
+
+//! Get the PhysicsHandler::_mfSpaces field.
+inline
+MFPhysicsSpacePtr &PhysicsHandlerBase::getSpaces(void)
+{
+    return _mfSpaces;
+}
+
+//! Get the PhysicsHandler::_mfSpaces field.
+inline
+const MFPhysicsSpacePtr &PhysicsHandlerBase::getSpaces(void) const
+{
+    return _mfSpaces;
+}
 
 OSG_END_NAMESPACE
 

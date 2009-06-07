@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
+ *                          www.vrac.iastate.edu                             *
  *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
@@ -68,7 +68,7 @@
 #include <OpenSG/OSGAttachment.h> // Parent
 
 #include <OpenSG/OSGPhysicsWorldFields.h> // World type
-#include <OpenSG/OSGPhysicsSpaceFields.h> // Space type
+#include <OpenSG/OSGPhysicsSpaceFields.h> // Spaces type
 #include <OpenSG/OSGReal32Fields.h> // StepSize type
 #include <OpenSG/OSGUInt32Fields.h> // MaxStepsPerUpdate type
 
@@ -95,14 +95,14 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
     enum
     {
         WorldFieldId             = Inherited::NextFieldId,
-        SpaceFieldId             = WorldFieldId             + 1,
-        StepSizeFieldId          = SpaceFieldId             + 1,
+        SpacesFieldId            = WorldFieldId             + 1,
+        StepSizeFieldId          = SpacesFieldId            + 1,
         MaxStepsPerUpdateFieldId = StepSizeFieldId          + 1,
         NextFieldId              = MaxStepsPerUpdateFieldId + 1
     };
 
     static const OSG::BitVector WorldFieldMask;
-    static const OSG::BitVector SpaceFieldMask;
+    static const OSG::BitVector SpacesFieldMask;
     static const OSG::BitVector StepSizeFieldMask;
     static const OSG::BitVector MaxStepsPerUpdateFieldMask;
 
@@ -132,18 +132,19 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
     /*! \{                                                                 */
 
            SFPhysicsWorldPtr   *getSFWorld          (void);
-           SFPhysicsSpacePtr   *getSFSpace          (void);
+           MFPhysicsSpacePtr   *getMFSpaces         (void);
            SFReal32            *getSFStepSize       (void);
            SFUInt32            *getSFMaxStepsPerUpdate(void);
 
            PhysicsWorldPtr     &getWorld          (void);
      const PhysicsWorldPtr     &getWorld          (void) const;
-           PhysicsSpacePtr     &getSpace          (void);
-     const PhysicsSpacePtr     &getSpace          (void) const;
            Real32              &getStepSize       (void);
      const Real32              &getStepSize       (void) const;
            UInt32              &getMaxStepsPerUpdate(void);
      const UInt32              &getMaxStepsPerUpdate(void) const;
+           PhysicsSpacePtr     &getSpaces         (const UInt32 index);
+           MFPhysicsSpacePtr   &getSpaces         (void);
+     const MFPhysicsSpacePtr   &getSpaces         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -151,7 +152,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
     /*! \{                                                                 */
 
      void setWorld          ( const PhysicsWorldPtr &value );
-     void setSpace          ( const PhysicsSpacePtr &value );
      void setStepSize       ( const Real32 &value );
      void setMaxStepsPerUpdate( const UInt32 &value );
 
@@ -197,7 +197,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
     /*! \{                                                                 */
 
     SFPhysicsWorldPtr   _sfWorld;
-    SFPhysicsSpacePtr   _sfSpace;
+    MFPhysicsSpacePtr   _mfSpaces;
     SFReal32            _sfStepSize;
     SFUInt32            _sfMaxStepsPerUpdate;
 

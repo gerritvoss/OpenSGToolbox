@@ -92,15 +92,6 @@
 	>
 	</Field>
 	<Field
-		name="enable"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		defaultValue="true"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="autoDisableFlag"
 		type="Int32"
 		cardinality="single"

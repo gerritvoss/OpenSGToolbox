@@ -75,6 +75,7 @@ void PhysicsWorld::initMethod (void)
 bool PhysicsWorld::odeInitFunc(void)
 {
     SLOG << "Initializing ODE." << std::endl;
+    SLOG << "ODE Configuration: " << dGetConfiguration() << std::endl;
     return dInitODE2(0);
 }
 

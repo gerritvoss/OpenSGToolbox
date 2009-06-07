@@ -77,7 +77,6 @@
 #include <OpenSG/OSGReal32Fields.h> // Mass type
 #include <OpenSG/OSGVec3fFields.h> // MassCenterOfGravity type
 #include <OpenSG/OSGMatrixFields.h> // MassInertiaTensor type
-#include <OpenSG/OSGBoolFields.h> // Enable type
 #include <OpenSG/OSGInt32Fields.h> // AutoDisableFlag type
 #include <OpenSG/OSGReal32Fields.h> // AutoDisableLinearThreshold type
 #include <OpenSG/OSGReal32Fields.h> // AutoDisableAngularThreshold type
@@ -125,8 +124,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
         MassFieldId                        = TorqueFieldId                      + 1,
         MassCenterOfGravityFieldId         = MassFieldId                        + 1,
         MassInertiaTensorFieldId           = MassCenterOfGravityFieldId         + 1,
-        EnableFieldId                      = MassInertiaTensorFieldId           + 1,
-        AutoDisableFlagFieldId             = EnableFieldId                      + 1,
+        AutoDisableFlagFieldId             = MassInertiaTensorFieldId           + 1,
         AutoDisableLinearThresholdFieldId  = AutoDisableFlagFieldId             + 1,
         AutoDisableAngularThresholdFieldId = AutoDisableLinearThresholdFieldId  + 1,
         AutoDisableStepsFieldId            = AutoDisableAngularThresholdFieldId + 1,
@@ -153,7 +151,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     static const OSG::BitVector MassFieldMask;
     static const OSG::BitVector MassCenterOfGravityFieldMask;
     static const OSG::BitVector MassInertiaTensorFieldMask;
-    static const OSG::BitVector EnableFieldMask;
     static const OSG::BitVector AutoDisableFlagFieldMask;
     static const OSG::BitVector AutoDisableLinearThresholdFieldMask;
     static const OSG::BitVector AutoDisableAngularThresholdFieldMask;
@@ -204,7 +201,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
            SFReal32            *getSFMass           (void);
            SFVec3f             *getSFMassCenterOfGravity(void);
            SFMatrix            *getSFMassInertiaTensor(void);
-           SFBool              *getSFEnable         (void);
            SFInt32             *getSFAutoDisableFlag(void);
            SFReal32            *getSFAutoDisableLinearThreshold(void);
            SFReal32            *getSFAutoDisableAngularThreshold(void);
@@ -239,8 +235,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      const Vec3f               &getMassCenterOfGravity(void) const;
            Matrix              &getMassInertiaTensor(void);
      const Matrix              &getMassInertiaTensor(void) const;
-           bool                &getEnable         (void);
-     const bool                &getEnable         (void) const;
            Int32               &getAutoDisableFlag(void);
      const Int32               &getAutoDisableFlag(void) const;
            Real32              &getAutoDisableLinearThreshold(void);
@@ -270,7 +264,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
 
            PhysicsWorldPtr     &getWorld          (void);
      const PhysicsWorldPtr     &getWorld          (void) const;
-
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -286,7 +279,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      void setMass           ( const Real32 &value );
      void setMassCenterOfGravity( const Vec3f &value );
      void setMassInertiaTensor( const Matrix &value );
-     void setEnable         ( const bool &value );
      void setAutoDisableFlag( const Int32 &value );
      void setAutoDisableLinearThreshold( const Real32 &value );
      void setAutoDisableAngularThreshold( const Real32 &value );
@@ -351,7 +343,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     SFReal32            _sfMass;
     SFVec3f             _sfMassCenterOfGravity;
     SFMatrix            _sfMassInertiaTensor;
-    SFBool              _sfEnable;
     SFInt32             _sfAutoDisableFlag;
     SFReal32            _sfAutoDisableLinearThreshold;
     SFReal32            _sfAutoDisableAngularThreshold;

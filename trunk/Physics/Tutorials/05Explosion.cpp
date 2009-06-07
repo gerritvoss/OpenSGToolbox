@@ -23,6 +23,7 @@
 #include <OpenSG/OSGComponentTransform.h>
 #include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGTypeFactory.h>
+#include <OpenSG/OSGSimpleStatisticsForeground.h>
 #include <OpenSG/OSGFieldFactory.h>
 
 #include <OpenSG/OSGFieldContainerFactory.h>
@@ -89,6 +90,24 @@ public:
             }
             break;
        case KeyEvent::KEY_E:
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 10000.0f);
+           break;
+       case KeyEvent::KEY_1:
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 625.0f);
+           break;
+       case KeyEvent::KEY_2:
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 1250.0f);
+           break;
+       case KeyEvent::KEY_3:
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 2500.0f);
+           break;
+       case KeyEvent::KEY_4:
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 5000.0f);
+           break;
+       case KeyEvent::KEY_5:
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 10000.0f);
+           break;
+       case KeyEvent::KEY_6:
            makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 20000.0f);
            break;
        }
@@ -172,6 +191,10 @@ void makeExplosion(Pnt3f Location, Real32 Force)
         Direction.normalize();
 
         allPhysicsBodies[i]->addForce(Direction*Force*(1.0f/Distance));
+        //The bodies need to be enabled because they may be auto-disabled when they
+        //come to rest
+        //The bodies are not re-enabled untill a new collision is detected
+        allPhysicsBodies[i]->setEnable(true);
     }
 }
 
@@ -257,10 +280,10 @@ int main(int argc, char **argv)
     hashSpace = PhysicsHashSpace::create();
 
     physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
+    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
         physHandler->setWorld(physicsWorld);
-        physHandler->setSpace(hashSpace);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
+        physHandler->getSpaces().push_back(hashSpace);
+    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);
@@ -313,8 +336,32 @@ int main(int argc, char **argv)
 	    scene->addChild(spaceGroupNode);
 	endEditCP(scene, Node::ChildrenFieldMask);
 
+    //Create Statistics Foreground
+    SimpleStatisticsForegroundPtr PhysicsStatForeground = SimpleStatisticsForeground::create();
+    beginEditCP(PhysicsStatForeground);
+        PhysicsStatForeground->setSize(25);
+        PhysicsStatForeground->setColor(Color4f(0,1,0,0.7));
+        PhysicsStatForeground->addElement(PhysicsHandler::statPhysicsTime, 
+            "Physics time: %.3f s");
+        PhysicsStatForeground->addElement(PhysicsHandler::statCollisionTime, 
+            "Collision time: %.3f s");
+        PhysicsStatForeground->addElement(PhysicsHandler::statSimulationTime, 
+            "Simulation time: %.3f s");
+        PhysicsStatForeground->addElement(PhysicsHandler::statNCollisions, 
+            "%d collisions");
+        PhysicsStatForeground->addElement(PhysicsHandler::statNCollisionTests, 
+            "%d collision tests");
+        PhysicsStatForeground->addElement(PhysicsHandler::statNPhysicsSteps, 
+            "%d simulation steps per frame");
+    endEditCP(PhysicsStatForeground);
+
     // tell the manager what to manage
     mgr->setRoot  (rootNode);
+
+    beginEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
+        mgr->getWindow()->getPort(0)->getForegrounds().push_back(PhysicsStatForeground);
+    endEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
+    physHandler->setStatistics(&PhysicsStatForeground->getCollector());
 
     // show the whole rootNode
     mgr->showAll();

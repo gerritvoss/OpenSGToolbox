@@ -223,8 +223,11 @@ class TutorialUpdateListener : public UpdateListener
         {
             ForceOnCharacter += Vec3f(0.0, 0.0, -PushForce);
         }
-        physHandler->clearForceToBody();
-        physHandler->addForceToBody(CharacterPhysicsBody, ForceOnCharacter);
+        CharacterPhysicsBody->addForce(ForceOnCharacter);
+        //The body needs to be enabled because they may be auto-disabled when they
+        //come to rest
+        //The bodies are not re-enabled untill a new collision is detected
+        CharacterPhysicsBody->setEnable(true);
         physHandler->update(e.getElapsedTime(), rootNode);
     }
 };
@@ -329,10 +332,10 @@ int main(int argc, char **argv)
     hashSpace = PhysicsHashSpace::create();
 
     physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
+    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
         physHandler->setWorld(physicsWorld);
-        physHandler->setSpace(hashSpace);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
+        physHandler->getSpaces().push_back(hashSpace);
+    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);

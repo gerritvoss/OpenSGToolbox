@@ -199,7 +199,14 @@ class TutorialUpdateListener : public UpdateListener
         {
             ForceOnCharacter += Vec3f(PushForce, 0.0, 0.0);
         }
-        CharacterPhysicsBody->addForce(ForceOnCharacter);
+        if(ForceOnCharacter != Vec3f(0.0,0.0,0.0))
+        {
+            CharacterPhysicsBody->addForce(ForceOnCharacter);
+            //The body needs to be enabled because they may be auto-disabled when they
+            //come to rest
+            //The bodies are not re-enabled untill a new collision is detected
+            CharacterPhysicsBody->setEnable(true);
+        }
         physHandler->update(e.getElapsedTime(), rootNode);
     }
 };

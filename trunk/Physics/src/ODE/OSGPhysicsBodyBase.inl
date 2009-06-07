@@ -151,13 +151,6 @@ SFMatrix *PhysicsBodyBase::getSFMassInertiaTensor(void)
     return &_sfMassInertiaTensor;
 }
 
-//! Get the PhysicsBody::_sfEnable field.
-inline
-SFBool *PhysicsBodyBase::getSFEnable(void)
-{
-    return &_sfEnable;
-}
-
 //! Get the PhysicsBody::_sfAutoDisableFlag field.
 inline
 SFInt32 *PhysicsBodyBase::getSFAutoDisableFlag(void)
@@ -465,27 +458,6 @@ inline
 void PhysicsBodyBase::setMassInertiaTensor(const Matrix &value)
 {
     _sfMassInertiaTensor.setValue(value);
-}
-
-//! Get the value of the PhysicsBody::_sfEnable field.
-inline
-bool &PhysicsBodyBase::getEnable(void)
-{
-    return _sfEnable.getValue();
-}
-
-//! Get the value of the PhysicsBody::_sfEnable field.
-inline
-const bool &PhysicsBodyBase::getEnable(void) const
-{
-    return _sfEnable.getValue();
-}
-
-//! Set the value of the PhysicsBody::_sfEnable field.
-inline
-void PhysicsBodyBase::setEnable(const bool &value)
-{
-    _sfEnable.setValue(value);
 }
 
 //! Get the value of the PhysicsBody::_sfAutoDisableFlag field.

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,6 +68,7 @@
 #include <OpenSG/OSGAttachment.h> // Parent
 
 #include <OpenSG/OSGBoolFields.h> // Cleanup type
+#include "ODE/OSGPhysicsHandlerFields.h" // InternalParentHandler type
 
 #include "OSGPhysicsSpaceFields.h"
 
@@ -91,11 +92,13 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 
     enum
     {
-        CleanupFieldId = Inherited::NextFieldId,
-        NextFieldId    = CleanupFieldId + 1
+        CleanupFieldId               = Inherited::NextFieldId,
+        InternalParentHandlerFieldId = CleanupFieldId               + 1,
+        NextFieldId                  = InternalParentHandlerFieldId + 1
     };
 
     static const OSG::BitVector CleanupFieldMask;
+    static const OSG::BitVector InternalParentHandlerFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -176,6 +179,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \{                                                                 */
 
     SFBool              _sfCleanup;
+    SFPhysicsHandlerPtr   _sfInternalParentHandler;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -191,6 +195,23 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \{                                                                 */
 
     virtual ~PhysicsSpaceBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPhysicsHandlerPtr *getSFInternalParentHandler(void);
+
+           PhysicsHandlerPtr   &getInternalParentHandler(void);
+     const PhysicsHandlerPtr   &getInternalParentHandler(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setInternalParentHandler(const PhysicsHandlerPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -253,6 +274,6 @@ typedef RefPtr<PhysicsSpacePtr> PhysicsSpaceRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSSPACEBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsSpaceBase.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSSPACEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSSPACEBASE_H_ */

@@ -21,11 +21,10 @@
 	>
 	</Field>
 	<Field
-		name="space"
+		name="spaces"
 		type="PhysicsSpacePtr"
-		cardinality="single"
+		cardinality="multi"
 		visibility="external"
-		defaultValue="NullFC"
 		access="public"
 	>
 	</Field>

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -41,6 +41,12 @@
 #include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
+
+inline
+PhysicsHandlerPtr PhysicsSpace::getParentHandler(void) const
+{
+    return getInternalParentHandler();
+}
 
 OSG_END_NAMESPACE
 

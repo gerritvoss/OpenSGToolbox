@@ -248,10 +248,10 @@ int main(int argc, char **argv)
     hashSpace = PhysicsHashSpace::create();
 
     physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
+    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
         physHandler->setWorld(physicsWorld);
-        physHandler->setSpace(hashSpace);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
+        physHandler->getSpaces().push_back(hashSpace);
+    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);

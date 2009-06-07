@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -72,6 +72,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 	  /*! \{                                                                 */
 	  bool getCleanup(void);
       dSpaceID getSpaceID(void);
+      PhysicsHandlerPtr getParentHandler(void) const;
 	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
@@ -146,6 +147,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
     friend class FieldContainer;
     friend class PhysicsSpaceBase;
+    friend class PhysicsHandler;
 
     static void initMethod(void);
 

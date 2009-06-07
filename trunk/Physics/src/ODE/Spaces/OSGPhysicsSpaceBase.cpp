@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,16 +57,18 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsSpaceBase.h"
 #include "OSGPhysicsSpace.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsSpaceBase::CleanupFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsSpaceBase::CleanupFieldId);
+
+const OSG::BitVector  PhysicsSpaceBase::InternalParentHandlerFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsSpaceBase::InternalParentHandlerFieldId);
 
 const OSG::BitVector PhysicsSpaceBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -78,6 +80,9 @@ const OSG::BitVector PhysicsSpaceBase::MTInfluenceMask =
 /*! \var bool            PhysicsSpaceBase::_sfCleanup
     
 */
+/*! \var PhysicsHandlerPtr PhysicsSpaceBase::_sfInternalParentHandler
+    
+*/
 
 //! PhysicsSpace description
 
@@ -87,7 +92,12 @@ FieldDescription *PhysicsSpaceBase::_desc[] =
                      "cleanup", 
                      CleanupFieldId, CleanupFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getSFCleanup)
+                     (FieldAccessMethod) &PhysicsSpaceBase::getSFCleanup),
+    new FieldDescription(SFPhysicsHandlerPtr::getClassType(), 
+                     "InternalParentHandler", 
+                     InternalParentHandlerFieldId, InternalParentHandlerFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsSpaceBase::getSFInternalParentHandler)
 };
 
 
@@ -164,6 +174,7 @@ void PhysicsSpaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 PhysicsSpaceBase::PhysicsSpaceBase(void) :
     _sfCleanup                (), 
+    _sfInternalParentHandler  (PhysicsHandlerPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -174,6 +185,7 @@ PhysicsSpaceBase::PhysicsSpaceBase(void) :
 
 PhysicsSpaceBase::PhysicsSpaceBase(const PhysicsSpaceBase &source) :
     _sfCleanup                (source._sfCleanup                ), 
+    _sfInternalParentHandler  (source._sfInternalParentHandler  ), 
     Inherited                 (source)
 {
 }
@@ -195,6 +207,11 @@ UInt32 PhysicsSpaceBase::getBinSize(const BitVector &whichField)
         returnValue += _sfCleanup.getBinSize();
     }
 
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    {
+        returnValue += _sfInternalParentHandler.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +224,11 @@ void PhysicsSpaceBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CleanupFieldMask & whichField))
     {
         _sfCleanup.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    {
+        _sfInternalParentHandler.copyToBin(pMem);
     }
 
 
@@ -222,6 +244,11 @@ void PhysicsSpaceBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCleanup.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    {
+        _sfInternalParentHandler.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -235,6 +262,9 @@ void PhysicsSpaceBase::executeSyncImpl(      PhysicsSpaceBase *pOther,
     if(FieldBits::NoField != (CleanupFieldMask & whichField))
         _sfCleanup.syncWith(pOther->_sfCleanup);
 
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+        _sfInternalParentHandler.syncWith(pOther->_sfInternalParentHandler);
+
 
 }
 #else
@@ -247,6 +277,9 @@ void PhysicsSpaceBase::executeSyncImpl(      PhysicsSpaceBase *pOther,
 
     if(FieldBits::NoField != (CleanupFieldMask & whichField))
         _sfCleanup.syncWith(pOther->_sfCleanup);
+
+    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+        _sfInternalParentHandler.syncWith(pOther->_sfInternalParentHandler);
 
 
 
@@ -263,6 +296,8 @@ void PhysicsSpaceBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -274,8 +309,6 @@ DataType FieldDataTraits<PhysicsSpacePtr>::_type("PhysicsSpacePtr", "AttachmentP
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -291,10 +324,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsSpaceBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSSPACEBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSSPACEBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSSPACEFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

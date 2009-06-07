@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -103,6 +103,13 @@ SFBool *PhysicsSpaceBase::getSFCleanup(void)
     return &_sfCleanup;
 }
 
+//! Get the PhysicsSpace::_sfInternalParentHandler field.
+inline
+SFPhysicsHandlerPtr *PhysicsSpaceBase::getSFInternalParentHandler(void)
+{
+    return &_sfInternalParentHandler;
+}
+
 
 //! Get the value of the PhysicsSpace::_sfCleanup field.
 inline
@@ -125,8 +132,29 @@ void PhysicsSpaceBase::setCleanup(const bool &value)
     _sfCleanup.setValue(value);
 }
 
+//! Get the value of the PhysicsSpace::_sfInternalParentHandler field.
+inline
+PhysicsHandlerPtr &PhysicsSpaceBase::getInternalParentHandler(void)
+{
+    return _sfInternalParentHandler.getValue();
+}
+
+//! Get the value of the PhysicsSpace::_sfInternalParentHandler field.
+inline
+const PhysicsHandlerPtr &PhysicsSpaceBase::getInternalParentHandler(void) const
+{
+    return _sfInternalParentHandler.getValue();
+}
+
+//! Set the value of the PhysicsSpace::_sfInternalParentHandler field.
+inline
+void PhysicsSpaceBase::setInternalParentHandler(const PhysicsHandlerPtr &value)
+{
+    _sfInternalParentHandler.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSSPACEBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsSpaceBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSSPACEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

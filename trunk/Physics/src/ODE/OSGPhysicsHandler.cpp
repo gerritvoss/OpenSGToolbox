@@ -243,9 +243,13 @@ Action::ResultE updateOsgOde(NodePtr& node)
 \***************************************************************************/
 StatElemDesc<StatTimeElem> PhysicsHandler::statCollisionTime("collisionTime", 
                                                       "time for collision tests per update");
+StatElemDesc<StatTimeElem> PhysicsHandler::statPerStepCollisionTime("perStepCollisionTime", 
+                                                      "time for collision tests per step");
 
 StatElemDesc<StatTimeElem> PhysicsHandler::statSimulationTime("simulationTime", 
                                                       "time for physics simulation per update");
+StatElemDesc<StatTimeElem> PhysicsHandler::statPerStepSimulationTime("perStepSimulationTime", 
+                                                      "time for physics simulation per step");
 
 StatElemDesc<StatTimeElem> PhysicsHandler::statPhysicsTime("physicsTime", 
                                                       "time for entire physics update");
@@ -255,10 +259,10 @@ StatElemDesc<StatIntElem> PhysicsHandler::statNPhysicsSteps("NPhysicsSteps",
                                                       "number of physics steps performed this update");
 
 StatElemDesc<StatIntElem> PhysicsHandler::statNCollisionTests("NCollisionTests", 
-                                                      "number of collision tests");
+                                                      "number of collision tests per step");
 
 StatElemDesc<StatIntElem> PhysicsHandler::statNCollisions("NCollisions", 
-                                                      "number of collisions");
+                                                      "number of collisions per step");
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -317,9 +321,20 @@ void PhysicsHandler::setStatistics(StatCollector *stat)
 
 void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
 {
+    getStatistics()->reset();
+    getStatistics()->getElem(statCollisionTime)->start();
+    getStatistics()->getElem(statCollisionTime)->stop();
+    getStatistics()->getElem(statSimulationTime)->start();
+    getStatistics()->getElem(statSimulationTime)->stop();
 
     getStatistics()->getElem(statPhysicsTime)->start();
     _TimeSinceLast += ElapsedTime;
+
+    if(osgfloor(_TimeSinceLast/getStepSize()) > getMaxStepsPerUpdate())
+    {
+        SWARNING << "Physics Simulation slowing: droping " << osgfloor(_TimeSinceLast/getStepSize())-getMaxStepsPerUpdate() << " steps.\n";
+        _TimeSinceLast = getMaxStepsPerUpdate()*getStepSize();
+    }
 
     while(_TimeSinceLast > getStepSize())
     {
@@ -331,15 +346,23 @@ void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
 
         //Update
         getStatistics()->getElem(statNPhysicsSteps)->inc();
+
         //collide
-        getStatistics()->getElem(statCollisionTime)->start();
-        getSpace()->Collide(getWorld());
-        getStatistics()->getElem(statCollisionTime)->stop();
+        getStatistics()->getElem(statPerStepCollisionTime)->start();
+        getStatistics()->getElem(statNCollisionTests)->reset();
+        getStatistics()->getElem(statNCollisions)->reset();
+        for(UInt32 i(0) ; i<getSpaces().size() ; ++i)
+        {
+            getSpaces(i)->Collide(getWorld());
+        }
+        getStatistics()->getElem(statPerStepCollisionTime)->stop();
+        (*getStatistics()->getElem(statCollisionTime)) += *(getStatistics()->getElem(statPerStepCollisionTime));
 
         //step the world
-        getStatistics()->getElem(statSimulationTime)->start();
+        getStatistics()->getElem(statPerStepSimulationTime)->start();
         getWorld()->worldQuickStep(getStepSize());
-        getStatistics()->getElem(statSimulationTime)->stop();
+        getStatistics()->getElem(statPerStepSimulationTime)->stop();
+        (*getStatistics()->getElem(statSimulationTime)) += *(getStatistics()->getElem(statPerStepSimulationTime));
 
         //update matrices
         updateWorld(UpdateNode);
@@ -402,6 +425,15 @@ void PhysicsHandler::changed(BitVector whichField, UInt32 origin)
         beginEditCP(getWorld(), PhysicsWorld::InternalParentHandlerFieldMask);
             getWorld()->setInternalParentHandler(PhysicsHandlerPtr(this));
         endEditCP(getWorld(), PhysicsWorld::InternalParentHandlerFieldMask);
+    }
+    if(whichField & SpacesFieldMask)
+    {
+        for(UInt32 i(0) ; i<getSpaces().size() ; ++i)
+        {
+            beginEditCP(getSpaces(i), PhysicsSpace::InternalParentHandlerFieldMask);
+                getSpaces(i)->setInternalParentHandler(PhysicsHandlerPtr(this));
+            endEditCP(getSpaces(i), PhysicsSpace::InternalParentHandlerFieldMask);
+        }
     }
 }
 
