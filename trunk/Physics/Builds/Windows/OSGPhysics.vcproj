@@ -623,6 +623,34 @@
 						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSpaceFields.h"
 						>
 					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSweepAndPruneSpace.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSweepAndPruneSpace.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSweepAndPruneSpace.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSweepAndPruneSpaceBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSweepAndPruneSpaceBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSweepAndPruneSpaceBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsSweepAndPruneSpaceFields.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Joints"

@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PhysicsHashSpace!
+ **     class PhysicsSweepAndPruneSpace!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &PhysicsHashSpaceBase::getClassType(void)
+OSG::FieldContainerType &PhysicsSweepAndPruneSpaceBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 PhysicsHashSpaceBase::getClassTypeId(void) 
+OSG::UInt32 PhysicsSweepAndPruneSpaceBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-PhysicsHashSpacePtr PhysicsHashSpaceBase::create(void) 
+PhysicsSweepAndPruneSpacePtr PhysicsSweepAndPruneSpaceBase::create(void) 
 {
-    PhysicsHashSpacePtr fc; 
+    PhysicsSweepAndPruneSpacePtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = PhysicsHashSpacePtr::dcast(
+        fc = PhysicsSweepAndPruneSpacePtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ PhysicsHashSpacePtr PhysicsHashSpaceBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-PhysicsHashSpacePtr PhysicsHashSpaceBase::createEmpty(void) 
+PhysicsSweepAndPruneSpacePtr PhysicsSweepAndPruneSpaceBase::createEmpty(void) 
 { 
-    PhysicsHashSpacePtr returnValue; 
+    PhysicsSweepAndPruneSpacePtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,37 +96,37 @@ PhysicsHashSpacePtr PhysicsHashSpaceBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PhysicsHashSpace::_sfLevels field.
+//! Get the PhysicsSweepAndPruneSpace::_sfAxisOrder field.
 inline
-SFVec2f *PhysicsHashSpaceBase::getSFLevels(void)
+SFInt32 *PhysicsSweepAndPruneSpaceBase::getSFAxisOrder(void)
 {
-    return &_sfLevels;
+    return &_sfAxisOrder;
 }
 
 
-//! Get the value of the PhysicsHashSpace::_sfLevels field.
+//! Get the value of the PhysicsSweepAndPruneSpace::_sfAxisOrder field.
 inline
-Vec2f &PhysicsHashSpaceBase::getLevels(void)
+Int32 &PhysicsSweepAndPruneSpaceBase::getAxisOrder(void)
 {
-    return _sfLevels.getValue();
+    return _sfAxisOrder.getValue();
 }
 
-//! Get the value of the PhysicsHashSpace::_sfLevels field.
+//! Get the value of the PhysicsSweepAndPruneSpace::_sfAxisOrder field.
 inline
-const Vec2f &PhysicsHashSpaceBase::getLevels(void) const
+const Int32 &PhysicsSweepAndPruneSpaceBase::getAxisOrder(void) const
 {
-    return _sfLevels.getValue();
+    return _sfAxisOrder.getValue();
 }
 
-//! Set the value of the PhysicsHashSpace::_sfLevels field.
+//! Set the value of the PhysicsSweepAndPruneSpace::_sfAxisOrder field.
 inline
-void PhysicsHashSpaceBase::setLevels(const Vec2f &value)
+void PhysicsSweepAndPruneSpaceBase::setAxisOrder(const Int32 &value)
 {
-    _sfLevels.setValue(value);
+    _sfAxisOrder.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSHASHSPACEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGPHYSICSSWEEPANDPRUNESPACEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

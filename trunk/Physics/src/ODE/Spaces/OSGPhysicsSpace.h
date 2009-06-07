@@ -70,16 +70,13 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Get Field                    */
 	  /*! \{                                                                 */
-	  bool getCleanup(void);
-      dSpaceID getSpaceID(void);
+      dSpaceID getSpaceID(void) const;
       PhysicsHandlerPtr getParentHandler(void) const;
 	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Set Field                    */
 	  /*! \{                                                                 */
-	  void setCleanup(const bool &value );
-      void setSpaceID(const dSpaceID &value );
 	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
@@ -119,11 +116,13 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
   protected:
 
     // Variables should all be in PhysicsSpaceBase.
-    dSpaceID sID;
+    dSpaceID _SpaceID;
     dWorldID _CollideWorldID;
 
     dJointGroupID _ColJointGroupId;
     std::vector<dContact> _ContactJoints;
+
+    void setSpaceID(dSpaceID id);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -148,6 +147,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
     friend class FieldContainer;
     friend class PhysicsSpaceBase;
     friend class PhysicsHandler;
+    friend class PhysicsGeom;
 
     static void initMethod(void);
 

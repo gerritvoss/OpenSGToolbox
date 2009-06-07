@@ -68,6 +68,7 @@
 #include <OpenSG/OSGAttachment.h> // Parent
 
 #include <OpenSG/OSGBoolFields.h> // Cleanup type
+#include <OpenSG/OSGInt32Fields.h> // Sublevel type
 #include "ODE/OSGPhysicsHandlerFields.h" // InternalParentHandler type
 
 #include "OSGPhysicsSpaceFields.h"
@@ -93,11 +94,13 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     enum
     {
         CleanupFieldId               = Inherited::NextFieldId,
-        InternalParentHandlerFieldId = CleanupFieldId               + 1,
+        SublevelFieldId              = CleanupFieldId               + 1,
+        InternalParentHandlerFieldId = SublevelFieldId              + 1,
         NextFieldId                  = InternalParentHandlerFieldId + 1
     };
 
     static const OSG::BitVector CleanupFieldMask;
+    static const OSG::BitVector SublevelFieldMask;
     static const OSG::BitVector InternalParentHandlerFieldMask;
 
 
@@ -126,9 +129,12 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \{                                                                 */
 
            SFBool              *getSFCleanup        (void);
+           SFInt32             *getSFSublevel       (void);
 
            bool                &getCleanup        (void);
      const bool                &getCleanup        (void) const;
+           Int32               &getSublevel       (void);
+     const Int32               &getSublevel       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -136,6 +142,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \{                                                                 */
 
      void setCleanup        ( const bool &value );
+     void setSublevel       ( const Int32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -179,6 +186,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \{                                                                 */
 
     SFBool              _sfCleanup;
+    SFInt32             _sfSublevel;
     SFPhysicsHandlerPtr   _sfInternalParentHandler;
 
     /*! \}                                                                 */

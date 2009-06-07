@@ -670,6 +670,17 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
         
         dBodySetMass(_BodyID, &TheMass);
     }
+    if(whichField & KinematicFieldMask)
+    {
+        if(getKinematic())
+        {
+            dBodySetKinematic(_BodyID);
+        }
+        else
+        {
+            dBodySetDynamic(_BodyID);
+        }
+    }
 }
 
 void PhysicsBody::dump(      UInt32    , 

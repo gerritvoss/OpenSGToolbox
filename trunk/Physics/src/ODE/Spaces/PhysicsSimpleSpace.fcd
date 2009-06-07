@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PhysicsQuadTreeSpace"
+	name="PhysicsSimpleSpace"
 	parent="PhysicsSpace"
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="true"
-	parentsystemcomponent="true"
+	systemcomponent="false"
+	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="false"
 >

@@ -133,6 +133,9 @@ const OSG::BitVector  PhysicsBodyBase::AngularDampingThresholdFieldMask =
 const OSG::BitVector  PhysicsBodyBase::MaxAngularSpeedFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::MaxAngularSpeedFieldId);
 
+const OSG::BitVector  PhysicsBodyBase::KinematicFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsBodyBase::KinematicFieldId);
+
 const OSG::BitVector  PhysicsBodyBase::WorldFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsBodyBase::WorldFieldId);
 
@@ -210,6 +213,9 @@ const OSG::BitVector PhysicsBodyBase::MTInfluenceMask =
     
 */
 /*! \var Real32          PhysicsBodyBase::_sfMaxAngularSpeed
+    
+*/
+/*! \var bool            PhysicsBodyBase::_sfKinematic
     
 */
 /*! \var PhysicsWorldPtr PhysicsBodyBase::_sfWorld
@@ -335,6 +341,11 @@ FieldDescription *PhysicsBodyBase::_desc[] =
                      MaxAngularSpeedFieldId, MaxAngularSpeedFieldMask,
                      false,
                      (FieldAccessMethod) &PhysicsBodyBase::getSFMaxAngularSpeed),
+    new FieldDescription(SFBool::getClassType(), 
+                     "kinematic", 
+                     KinematicFieldId, KinematicFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsBodyBase::getSFKinematic),
     new FieldDescription(SFPhysicsWorldPtr::getClassType(), 
                      "world", 
                      WorldFieldId, WorldFieldMask,
@@ -438,6 +449,7 @@ PhysicsBodyBase::PhysicsBodyBase(void) :
     _sfLinearDampingThreshold (), 
     _sfAngularDampingThreshold(), 
     _sfMaxAngularSpeed        (), 
+    _sfKinematic              (), 
     _sfWorld                  (PhysicsWorldPtr(NullFC)), 
     Inherited() 
 {
@@ -471,6 +483,7 @@ PhysicsBodyBase::PhysicsBodyBase(const PhysicsBodyBase &source) :
     _sfLinearDampingThreshold (source._sfLinearDampingThreshold ), 
     _sfAngularDampingThreshold(source._sfAngularDampingThreshold), 
     _sfMaxAngularSpeed        (source._sfMaxAngularSpeed        ), 
+    _sfKinematic              (source._sfKinematic              ), 
     _sfWorld                  (source._sfWorld                  ), 
     Inherited                 (source)
 {
@@ -603,6 +616,11 @@ UInt32 PhysicsBodyBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMaxAngularSpeed.getBinSize();
     }
 
+    if(FieldBits::NoField != (KinematicFieldMask & whichField))
+    {
+        returnValue += _sfKinematic.getBinSize();
+    }
+
     if(FieldBits::NoField != (WorldFieldMask & whichField))
     {
         returnValue += _sfWorld.getBinSize();
@@ -730,6 +748,11 @@ void PhysicsBodyBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MaxAngularSpeedFieldMask & whichField))
     {
         _sfMaxAngularSpeed.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (KinematicFieldMask & whichField))
+    {
+        _sfKinematic.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
@@ -860,6 +883,11 @@ void PhysicsBodyBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMaxAngularSpeed.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (KinematicFieldMask & whichField))
+    {
+        _sfKinematic.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (WorldFieldMask & whichField))
     {
         _sfWorld.copyFromBin(pMem);
@@ -944,6 +972,9 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
     if(FieldBits::NoField != (MaxAngularSpeedFieldMask & whichField))
         _sfMaxAngularSpeed.syncWith(pOther->_sfMaxAngularSpeed);
 
+    if(FieldBits::NoField != (KinematicFieldMask & whichField))
+        _sfKinematic.syncWith(pOther->_sfKinematic);
+
     if(FieldBits::NoField != (WorldFieldMask & whichField))
         _sfWorld.syncWith(pOther->_sfWorld);
 
@@ -1025,6 +1056,9 @@ void PhysicsBodyBase::executeSyncImpl(      PhysicsBodyBase *pOther,
 
     if(FieldBits::NoField != (MaxAngularSpeedFieldMask & whichField))
         _sfMaxAngularSpeed.syncWith(pOther->_sfMaxAngularSpeed);
+
+    if(FieldBits::NoField != (KinematicFieldMask & whichField))
+        _sfKinematic.syncWith(pOther->_sfKinematic);
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
         _sfWorld.syncWith(pOther->_sfWorld);

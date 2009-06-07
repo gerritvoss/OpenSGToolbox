@@ -36,28 +36,31 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGPHYSICSQUADTREESPACE_H_
-#define _OSGPHYSICSQUADTREESPACE_H_
+#ifndef _OSGPHYSICSSWEEPANDPRUNESPACE_H_
+#define _OSGPHYSICSSWEEPANDPRUNESPACE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
-#include "OSGPhysicsQuadTreeSpaceBase.h"
+#include "OSGPhysicsSweepAndPruneSpaceBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class  OSG_PHYSICSLIB_DLLMAPPING PhysicsQuadTreeSpace : public PhysicsQuadTreeSpaceBase
+/*! \brief PhysicsSweepAndPruneSpace class. See \ref 
+           PagePhysicsPhysicsSweepAndPruneSpace for a description.
+*/
+
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsSweepAndPruneSpace : public PhysicsSweepAndPruneSpaceBase
 {
   private:
 
-    typedef PhysicsQuadTreeSpaceBase Inherited;
+    typedef PhysicsSweepAndPruneSpaceBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  void initQuadTree(dSpaceID space);
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -77,49 +80,50 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsQuadTreeSpace : public PhysicsQuadTreeSp
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in PhysicsQuadTreeSpaceBase.
+    // Variables should all be in PhysicsSweepAndPruneSpaceBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    PhysicsQuadTreeSpace(void);
-    PhysicsQuadTreeSpace(const PhysicsQuadTreeSpace &source);
+    PhysicsSweepAndPruneSpace(void);
+    PhysicsSweepAndPruneSpace(const PhysicsSweepAndPruneSpace &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PhysicsQuadTreeSpace(void); 
+    virtual ~PhysicsSweepAndPruneSpace(void); 
 
     /*! \}                                                                 */
 	/*---------------------------------------------------------------------*/
 	/*! \name                   Class Specific                             */
 	/*! \{                                                                 */
-	void onCreate(const PhysicsQuadTreeSpace *id = NULL);
+	void onCreate(const PhysicsSweepAndPruneSpace *id = NULL);
 	void onDestroy();
 	/*! \}                                                                 */
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class PhysicsQuadTreeSpaceBase;
+    friend class PhysicsSweepAndPruneSpaceBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const PhysicsQuadTreeSpace &source);
+    void operator =(const PhysicsSweepAndPruneSpace &source);
 };
 
-typedef PhysicsQuadTreeSpace *PhysicsQuadTreeSpaceP;
+typedef PhysicsSweepAndPruneSpace *PhysicsSweepAndPruneSpaceP;
 
 OSG_END_NAMESPACE
 
-#include "OSGPhysicsQuadTreeSpaceBase.inl"
-#include "OSGPhysicsQuadTreeSpace.inl"
+#include "OSGPhysicsSweepAndPruneSpaceBase.inl"
+#include "OSGPhysicsSweepAndPruneSpace.inl"
 
-#define OSGPHYSICSQUADTREESPACE_HEADER_CVSID "@(#)$Id: OSGPhysicsQuadTreeSpace.h,v 1.2 2006/08/19 00:21:46 dirk Exp $"
+#define OSGPHYSICSSWEEPANDPRUNESPACE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGPHYSICSQUADTREESPACE_H_ */
+#endif /* _OSGPHYSICSSWEEPANDPRUNESPACE_H_ */

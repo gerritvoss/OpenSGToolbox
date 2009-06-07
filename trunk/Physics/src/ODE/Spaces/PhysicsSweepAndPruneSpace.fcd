@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PhysicsSweepAndPruneSpace"
+	parent="PhysicsSpace"
+	library="Physics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="false"
+>
+	<Field
+		name="axisOrder"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="dSAP_AXES_XYZ"
+		defaultHeader="ode/collision_space.h"
+	>
+	</Field>
+</FieldContainer>

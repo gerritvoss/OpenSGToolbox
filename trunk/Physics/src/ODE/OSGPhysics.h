@@ -10,6 +10,7 @@
 #include "ODE/Geom/OSGPhysicsTriMeshGeom.h"
 #include "ODE/Spaces/OSGPhysicsSimpleSpace.h"
 #include "ODE/Spaces/OSGPhysicsHashSpace.h"
+#include "ODE/Spaces/OSGPhysicsSweepAndPruneSpace.h"
 #include "ODE/OSGPhysicsBody.h"
 #include "ODE/Joints/OSGPhysicsHinge2Joint.h"
 #include "ODE/Geom/OSGPhysicsRayGeom.h"

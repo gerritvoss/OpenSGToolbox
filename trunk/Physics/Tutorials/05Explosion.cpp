@@ -56,7 +56,7 @@ SimpleSceneManager *mgr;
 
 PhysicsHandlerPtr physHandler;
 PhysicsWorldPtr physicsWorld;
-PhysicsHashSpacePtr hashSpace;
+PhysicsSpacePtr physicsSpace;
 
 //just for hierarchy
 NodePtr spaceGroupNode;
@@ -277,19 +277,22 @@ int main(int argc, char **argv)
                               PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
                               PhysicsWorld::GravityFieldMask);
 
-    hashSpace = PhysicsHashSpace::create();
+    //physicsSpace = PhysicsSimpleSpace::create();
+    //physicsSpace = PhysicsQuadTreeSpace::create();
+    //physicsSpace = PhysicsHashSpace::create();
+    physicsSpace = PhysicsSweepAndPruneSpace::create();
 
     physHandler = PhysicsHandler::create();
     beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
         physHandler->setWorld(physicsWorld);
-        physHandler->getSpaces().push_back(hashSpace);
+        physHandler->getSpaces().push_back(physicsSpace);
     endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);
         rootNode->addAttachment(physHandler);    
         rootNode->addAttachment(physicsWorld);
-        rootNode->addAttachment(hashSpace);
+        rootNode->addAttachment(physicsSpace);
     endEditCP(rootNode, Node::AttachmentsFieldMask);
 
 
@@ -319,12 +322,12 @@ int main(int argc, char **argv)
     beginEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
         planeGeom->setLengths(Vec3f(30.0, 30.0, 1.0));
         //add geoms to space for collision
-        planeGeom->setSpace(hashSpace);
+        planeGeom->setSpace(physicsSpace);
     endEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
 
 	//add Attachments to nodes...
     beginEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
-	    spaceGroupNode->addAttachment(hashSpace);
+	    spaceGroupNode->addAttachment(physicsSpace);
         spaceGroupNode->addChild(planeNode);
     endEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 
@@ -430,7 +433,7 @@ PhysicsBodyPtr buildBox(void)
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
     beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
         boxGeom->setBody(boxBody);
-        boxGeom->setSpace(hashSpace);
+        boxGeom->setSpace(physicsSpace);
     endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
 
     //add attachments
@@ -489,7 +492,7 @@ PhysicsBodyPtr buildSphere(void)
     PhysicsSphereGeomPtr sphereGeom = PhysicsSphereGeom::create();
     CPEdit(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask);
         sphereGeom->setBody(sphereBody);
-        sphereGeom->setSpace(hashSpace);
+        sphereGeom->setSpace(physicsSpace);
     
     //add attachments
     beginEditCP(sphereNode, Node::AttachmentsFieldMask);

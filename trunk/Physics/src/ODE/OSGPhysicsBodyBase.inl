@@ -242,6 +242,13 @@ SFReal32 *PhysicsBodyBase::getSFMaxAngularSpeed(void)
     return &_sfMaxAngularSpeed;
 }
 
+//! Get the PhysicsBody::_sfKinematic field.
+inline
+SFBool *PhysicsBodyBase::getSFKinematic(void)
+{
+    return &_sfKinematic;
+}
+
 //! Get the PhysicsBody::_sfWorld field.
 inline
 SFPhysicsWorldPtr *PhysicsBodyBase::getSFWorld(void)
@@ -731,6 +738,27 @@ inline
 void PhysicsBodyBase::setMaxAngularSpeed(const Real32 &value)
 {
     _sfMaxAngularSpeed.setValue(value);
+}
+
+//! Get the value of the PhysicsBody::_sfKinematic field.
+inline
+bool &PhysicsBodyBase::getKinematic(void)
+{
+    return _sfKinematic.getValue();
+}
+
+//! Get the value of the PhysicsBody::_sfKinematic field.
+inline
+const bool &PhysicsBodyBase::getKinematic(void) const
+{
+    return _sfKinematic.getValue();
+}
+
+//! Set the value of the PhysicsBody::_sfKinematic field.
+inline
+void PhysicsBodyBase::setKinematic(const bool &value)
+{
+    _sfKinematic.setValue(value);
 }
 
 //! Get the value of the PhysicsBody::_sfWorld field.

@@ -45,132 +45,111 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PhysicsSpace!
+ **     class PhysicsSweepAndPruneSpace!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEPHYSICSSPACEINST
+#define OSG_COMPILEPHYSICSSWEEPANDPRUNESPACEINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGPhysicsSpaceBase.h"
-#include "OSGPhysicsSpace.h"
+#include "OSGPhysicsSweepAndPruneSpaceBase.h"
+#include "OSGPhysicsSweepAndPruneSpace.h"
 
+#include <ode/collision_space.h>          // AxisOrder default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PhysicsSpaceBase::CleanupFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsSpaceBase::CleanupFieldId);
+const OSG::BitVector  PhysicsSweepAndPruneSpaceBase::AxisOrderFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsSweepAndPruneSpaceBase::AxisOrderFieldId);
 
-const OSG::BitVector  PhysicsSpaceBase::SublevelFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsSpaceBase::SublevelFieldId);
-
-const OSG::BitVector  PhysicsSpaceBase::InternalParentHandlerFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsSpaceBase::InternalParentHandlerFieldId);
-
-const OSG::BitVector PhysicsSpaceBase::MTInfluenceMask = 
+const OSG::BitVector PhysicsSweepAndPruneSpaceBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var bool            PhysicsSpaceBase::_sfCleanup
-    
-*/
-/*! \var Int32           PhysicsSpaceBase::_sfSublevel
-    
-*/
-/*! \var PhysicsHandlerPtr PhysicsSpaceBase::_sfInternalParentHandler
+/*! \var Int32           PhysicsSweepAndPruneSpaceBase::_sfAxisOrder
     
 */
 
-//! PhysicsSpace description
+//! PhysicsSweepAndPruneSpace description
 
-FieldDescription *PhysicsSpaceBase::_desc[] = 
+FieldDescription *PhysicsSweepAndPruneSpaceBase::_desc[] = 
 {
-    new FieldDescription(SFBool::getClassType(), 
-                     "cleanup", 
-                     CleanupFieldId, CleanupFieldMask,
-                     false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getSFCleanup),
     new FieldDescription(SFInt32::getClassType(), 
-                     "sublevel", 
-                     SublevelFieldId, SublevelFieldMask,
+                     "axisOrder", 
+                     AxisOrderFieldId, AxisOrderFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getSFSublevel),
-    new FieldDescription(SFPhysicsHandlerPtr::getClassType(), 
-                     "InternalParentHandler", 
-                     InternalParentHandlerFieldId, InternalParentHandlerFieldMask,
-                     false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getSFInternalParentHandler)
+                     (FieldAccessMethod) &PhysicsSweepAndPruneSpaceBase::getSFAxisOrder)
 };
 
 
-FieldContainerType PhysicsSpaceBase::_type(
+FieldContainerType PhysicsSweepAndPruneSpaceBase::_type(
+    "PhysicsSweepAndPruneSpace",
     "PhysicsSpace",
-    "Attachment",
     NULL,
-    (PrototypeCreateF) &PhysicsSpaceBase::createEmpty,
-    PhysicsSpace::initMethod,
+    (PrototypeCreateF) &PhysicsSweepAndPruneSpaceBase::createEmpty,
+    PhysicsSweepAndPruneSpace::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(PhysicsSpaceBase, PhysicsSpacePtr)
+//OSG_FIELD_CONTAINER_DEF(PhysicsSweepAndPruneSpaceBase, PhysicsSweepAndPruneSpacePtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PhysicsSpaceBase::getType(void) 
+FieldContainerType &PhysicsSweepAndPruneSpaceBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &PhysicsSpaceBase::getType(void) const 
+const FieldContainerType &PhysicsSweepAndPruneSpaceBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr PhysicsSpaceBase::shallowCopy(void) const 
+FieldContainerPtr PhysicsSweepAndPruneSpaceBase::shallowCopy(void) const 
 { 
-    PhysicsSpacePtr returnValue; 
+    PhysicsSweepAndPruneSpacePtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const PhysicsSpace *>(this)); 
+    newPtr(returnValue, dynamic_cast<const PhysicsSweepAndPruneSpace *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 PhysicsSpaceBase::getContainerSize(void) const 
+UInt32 PhysicsSweepAndPruneSpaceBase::getContainerSize(void) const 
 { 
-    return sizeof(PhysicsSpace); 
+    return sizeof(PhysicsSweepAndPruneSpace); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void PhysicsSpaceBase::executeSync(      FieldContainer &other,
+void PhysicsSweepAndPruneSpaceBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((PhysicsSpaceBase *) &other, whichField);
+    this->executeSyncImpl((PhysicsSweepAndPruneSpaceBase *) &other, whichField);
 }
 #else
-void PhysicsSpaceBase::executeSync(      FieldContainer &other,
+void PhysicsSweepAndPruneSpaceBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((PhysicsSpaceBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((PhysicsSweepAndPruneSpaceBase *) &other, whichField, sInfo);
 }
-void PhysicsSpaceBase::execBeginEdit(const BitVector &whichField, 
+void PhysicsSweepAndPruneSpaceBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void PhysicsSpaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void PhysicsSweepAndPruneSpaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -183,10 +162,8 @@ void PhysicsSpaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-PhysicsSpaceBase::PhysicsSpaceBase(void) :
-    _sfCleanup                (), 
-    _sfSublevel               (), 
-    _sfInternalParentHandler  (PhysicsHandlerPtr(NullFC)), 
+PhysicsSweepAndPruneSpaceBase::PhysicsSweepAndPruneSpaceBase(void) :
+    _sfAxisOrder              (Int32(dSAP_AXES_XYZ)), 
     Inherited() 
 {
 }
@@ -195,131 +172,87 @@ PhysicsSpaceBase::PhysicsSpaceBase(void) :
 #pragma warning (default : 383)
 #endif
 
-PhysicsSpaceBase::PhysicsSpaceBase(const PhysicsSpaceBase &source) :
-    _sfCleanup                (source._sfCleanup                ), 
-    _sfSublevel               (source._sfSublevel               ), 
-    _sfInternalParentHandler  (source._sfInternalParentHandler  ), 
+PhysicsSweepAndPruneSpaceBase::PhysicsSweepAndPruneSpaceBase(const PhysicsSweepAndPruneSpaceBase &source) :
+    _sfAxisOrder              (source._sfAxisOrder              ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-PhysicsSpaceBase::~PhysicsSpaceBase(void)
+PhysicsSweepAndPruneSpaceBase::~PhysicsSweepAndPruneSpaceBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PhysicsSpaceBase::getBinSize(const BitVector &whichField)
+UInt32 PhysicsSweepAndPruneSpaceBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (CleanupFieldMask & whichField))
+    if(FieldBits::NoField != (AxisOrderFieldMask & whichField))
     {
-        returnValue += _sfCleanup.getBinSize();
-    }
-
-    if(FieldBits::NoField != (SublevelFieldMask & whichField))
-    {
-        returnValue += _sfSublevel.getBinSize();
-    }
-
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
-    {
-        returnValue += _sfInternalParentHandler.getBinSize();
+        returnValue += _sfAxisOrder.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void PhysicsSpaceBase::copyToBin(      BinaryDataHandler &pMem,
+void PhysicsSweepAndPruneSpaceBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (CleanupFieldMask & whichField))
+    if(FieldBits::NoField != (AxisOrderFieldMask & whichField))
     {
-        _sfCleanup.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (SublevelFieldMask & whichField))
-    {
-        _sfSublevel.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
-    {
-        _sfInternalParentHandler.copyToBin(pMem);
+        _sfAxisOrder.copyToBin(pMem);
     }
 
 
 }
 
-void PhysicsSpaceBase::copyFromBin(      BinaryDataHandler &pMem,
+void PhysicsSweepAndPruneSpaceBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (CleanupFieldMask & whichField))
+    if(FieldBits::NoField != (AxisOrderFieldMask & whichField))
     {
-        _sfCleanup.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (SublevelFieldMask & whichField))
-    {
-        _sfSublevel.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
-    {
-        _sfInternalParentHandler.copyFromBin(pMem);
+        _sfAxisOrder.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void PhysicsSpaceBase::executeSyncImpl(      PhysicsSpaceBase *pOther,
+void PhysicsSweepAndPruneSpaceBase::executeSyncImpl(      PhysicsSweepAndPruneSpaceBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (CleanupFieldMask & whichField))
-        _sfCleanup.syncWith(pOther->_sfCleanup);
-
-    if(FieldBits::NoField != (SublevelFieldMask & whichField))
-        _sfSublevel.syncWith(pOther->_sfSublevel);
-
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
-        _sfInternalParentHandler.syncWith(pOther->_sfInternalParentHandler);
+    if(FieldBits::NoField != (AxisOrderFieldMask & whichField))
+        _sfAxisOrder.syncWith(pOther->_sfAxisOrder);
 
 
 }
 #else
-void PhysicsSpaceBase::executeSyncImpl(      PhysicsSpaceBase *pOther,
+void PhysicsSweepAndPruneSpaceBase::executeSyncImpl(      PhysicsSweepAndPruneSpaceBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (CleanupFieldMask & whichField))
-        _sfCleanup.syncWith(pOther->_sfCleanup);
-
-    if(FieldBits::NoField != (SublevelFieldMask & whichField))
-        _sfSublevel.syncWith(pOther->_sfSublevel);
-
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
-        _sfInternalParentHandler.syncWith(pOther->_sfInternalParentHandler);
+    if(FieldBits::NoField != (AxisOrderFieldMask & whichField))
+        _sfAxisOrder.syncWith(pOther->_sfAxisOrder);
 
 
 
 }
 
-void PhysicsSpaceBase::execBeginEditImpl (const BitVector &whichField, 
+void PhysicsSweepAndPruneSpaceBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -338,11 +271,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PhysicsSpacePtr>::_type("PhysicsSpacePtr", "AttachmentPtr");
+DataType FieldDataTraits<PhysicsSweepAndPruneSpacePtr>::_type("PhysicsSweepAndPruneSpacePtr", "PhysicsSpacePtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(PhysicsSweepAndPruneSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(PhysicsSweepAndPruneSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -359,10 +292,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPHYSICSSPACEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPHYSICSSPACEBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGPHYSICSSWEEPANDPRUNESPACEBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGPHYSICSSWEEPANDPRUNESPACEBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPHYSICSSPACEFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGPHYSICSSWEEPANDPRUNESPACEFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

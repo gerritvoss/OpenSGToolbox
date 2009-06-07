@@ -43,18 +43,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define OSG_COMPILEPHYSICSLIB
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
-#include "OSGPhysicsSimpleSpace.h"
+#include "OSGPhysicsSweepAndPruneSpace.h"
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::PhysicsSimpleSpace
+/*! \class osg::PhysicsSweepAndPruneSpace
 
 */
 
@@ -66,7 +67,7 @@ OSG_USING_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PhysicsSimpleSpace::initMethod (void)
+void PhysicsSweepAndPruneSpace::initMethod (void)
 {
 }
 
@@ -75,48 +76,51 @@ void PhysicsSimpleSpace::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 /*-------------------------------------------------------------------------*\
--  public                                                                 -
-\*-------------------------------------------------------------------------*/
-void PhysicsSimpleSpace::onCreate(const PhysicsSimpleSpace *id /* = NULL */)
-{
-	_SpaceID =  dSimpleSpaceCreate(0);
-}
-
-void PhysicsSimpleSpace::onDestroy()
-{
-	//empty
-}
-/*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-PhysicsSimpleSpace::PhysicsSimpleSpace(void) :
+PhysicsSweepAndPruneSpace::PhysicsSweepAndPruneSpace(void) :
     Inherited()
 {
 }
 
-PhysicsSimpleSpace::PhysicsSimpleSpace(const PhysicsSimpleSpace &source) :
+PhysicsSweepAndPruneSpace::PhysicsSweepAndPruneSpace(const PhysicsSweepAndPruneSpace &source) :
     Inherited(source)
 {
 }
 
-PhysicsSimpleSpace::~PhysicsSimpleSpace(void)
+PhysicsSweepAndPruneSpace::~PhysicsSweepAndPruneSpace(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void PhysicsSimpleSpace::changed(BitVector whichField, UInt32 origin)
+void PhysicsSweepAndPruneSpace::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & AxisOrderFieldMask)
+    {
+        dSweepAndPruneSpaceCreate(_SpaceID, getAxisOrder());
+    }
 }
 
-void PhysicsSimpleSpace::dump(      UInt32    , 
+void PhysicsSweepAndPruneSpace::onCreate(const PhysicsSweepAndPruneSpace *id /* = NULL */)
+{
+    _SpaceID = dSweepAndPruneSpaceCreate(0, getAxisOrder());
+}
+
+void PhysicsSweepAndPruneSpace::onDestroy()
+{
+	//empty
+}
+
+void PhysicsSweepAndPruneSpace::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump PhysicsSimpleSpace NI" << std::endl;
+    SLOG << "Dump PhysicsSweepAndPruneSpace NI" << std::endl;
 }
 
 
@@ -133,14 +137,16 @@ void PhysicsSimpleSpace::dump(      UInt32    ,
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsSimpleSpace.cpp,v 1.1 2005/10/21 15:44:25 a-m-z Exp $";
-    static Char8 cvsid_hpp       [] = OSGPHYSICSSIMPLESPACEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPHYSICSSIMPLESPACEBASE_INLINE_CVSID;
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGPHYSICSSWEEPANDPRUNESPACEBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGPHYSICSSWEEPANDPRUNESPACEBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPHYSICSSIMPLESPACEFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGPHYSICSSWEEPANDPRUNESPACEFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi
 #pragma reset woff 1174
 #endif
+
+OSG_END_NAMESPACE
 

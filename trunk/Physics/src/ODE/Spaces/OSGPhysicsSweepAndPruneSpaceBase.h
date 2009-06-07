@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PhysicsHashSpace
+ **     class PhysicsSweepAndPruneSpace
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPHYSICSHASHSPACEBASE_H_
-#define _OSGPHYSICSHASHSPACEBASE_H_
+#ifndef _OSGPHYSICSSWEEPANDPRUNESPACEBASE_H_
+#define _OSGPHYSICSSWEEPANDPRUNESPACEBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -67,18 +67,18 @@
 
 #include "OSGPhysicsSpace.h" // Parent
 
-#include <OpenSG/OSGVec2fFields.h> // Levels type
+#include <OpenSG/OSGInt32Fields.h> // AxisOrder type
 
-#include "OSGPhysicsHashSpaceFields.h"
+#include "OSGPhysicsSweepAndPruneSpaceFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class PhysicsHashSpace;
+class PhysicsSweepAndPruneSpace;
 class BinaryDataHandler;
 
-//! \brief PhysicsHashSpace Base Class.
+//! \brief PhysicsSweepAndPruneSpace Base Class.
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsSweepAndPruneSpaceBase : public PhysicsSpace
 {
   private:
 
@@ -87,15 +87,15 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PhysicsHashSpacePtr  Ptr;
+    typedef PhysicsSweepAndPruneSpacePtr  Ptr;
 
     enum
     {
-        LevelsFieldId = Inherited::NextFieldId,
-        NextFieldId   = LevelsFieldId + 1
+        AxisOrderFieldId = Inherited::NextFieldId,
+        NextFieldId      = AxisOrderFieldId + 1
     };
 
-    static const OSG::BitVector LevelsFieldMask;
+    static const OSG::BitVector AxisOrderFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +122,17 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec2f             *getSFLevels         (void);
+           SFInt32             *getSFAxisOrder      (void);
 
-           Vec2f               &getLevels         (void);
-     const Vec2f               &getLevels         (void) const;
+           Int32               &getAxisOrder      (void);
+     const Int32               &getAxisOrder      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setLevels         ( const Vec2f &value );
+     void setAxisOrder      ( const Int32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -156,8 +156,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PhysicsHashSpacePtr      create          (void); 
-    static  PhysicsHashSpacePtr      createEmpty     (void); 
+    static  PhysicsSweepAndPruneSpacePtr      create          (void); 
+    static  PhysicsSweepAndPruneSpacePtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -175,22 +175,22 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFVec2f             _sfLevels;
+    SFInt32             _sfAxisOrder;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    PhysicsHashSpaceBase(void);
-    PhysicsHashSpaceBase(const PhysicsHashSpaceBase &source);
+    PhysicsSweepAndPruneSpaceBase(void);
+    PhysicsSweepAndPruneSpaceBase(const PhysicsSweepAndPruneSpaceBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PhysicsHashSpaceBase(void); 
+    virtual ~PhysicsSweepAndPruneSpaceBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,13 +198,13 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PhysicsHashSpaceBase *pOther,
+    void executeSyncImpl(      PhysicsSweepAndPruneSpaceBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      PhysicsHashSpaceBase *pOther,
+    void executeSyncImpl(      PhysicsSweepAndPruneSpaceBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -234,7 +234,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const PhysicsHashSpaceBase &source);
+    void operator =(const PhysicsSweepAndPruneSpaceBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -242,17 +242,17 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
 //---------------------------------------------------------------------------
 
 
-typedef PhysicsHashSpaceBase *PhysicsHashSpaceBaseP;
+typedef PhysicsSweepAndPruneSpaceBase *PhysicsSweepAndPruneSpaceBaseP;
 
-typedef osgIF<PhysicsHashSpaceBase::isNodeCore,
-              CoredNodePtr<PhysicsHashSpace>,
+typedef osgIF<PhysicsSweepAndPruneSpaceBase::isNodeCore,
+              CoredNodePtr<PhysicsSweepAndPruneSpace>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PhysicsHashSpaceNodePtr;
+              >::_IRet PhysicsSweepAndPruneSpaceNodePtr;
 
-typedef RefPtr<PhysicsHashSpacePtr> PhysicsHashSpaceRefPtr;
+typedef RefPtr<PhysicsSweepAndPruneSpacePtr> PhysicsSweepAndPruneSpaceRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSHASHSPACEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGPHYSICSSWEEPANDPRUNESPACEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGPHYSICSHASHSPACEBASE_H_ */
+#endif /* _OSGPHYSICSSWEEPANDPRUNESPACEBASE_H_ */

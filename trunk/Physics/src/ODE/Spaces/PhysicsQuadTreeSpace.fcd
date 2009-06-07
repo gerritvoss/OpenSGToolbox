@@ -1,40 +1,38 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PhysicsSpace"
-	parent="Attachment"
+	name="PhysicsQuadTreeSpace"
+	parent="PhysicsSpace"
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
-	parentsystemcomponent="true"
+	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="false"
 >
 	<Field
-		name="cleanup"
-		type="bool"
+		name="center"
+		type="Pnt3f"
 		cardinality="single"
 		visibility="external"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="sublevel"
+		name="extent"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="depth"
 		type="Int32"
 		cardinality="single"
 		visibility="external"
 		access="public"
-	>
-	</Field>
-	<Field
-		name="InternalParentHandler"
-		type="PhysicsHandlerPtr"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NullFC"
-        header="ODE/OSGPhysicsHandlerFields.h"
-		access="protected"
 	>
 	</Field>
 </FieldContainer>

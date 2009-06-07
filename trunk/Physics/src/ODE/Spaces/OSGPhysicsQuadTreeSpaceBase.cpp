@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,18 +57,59 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsQuadTreeSpaceBase.h"
 #include "OSGPhysicsQuadTreeSpace.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
+
+const OSG::BitVector  PhysicsQuadTreeSpaceBase::CenterFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsQuadTreeSpaceBase::CenterFieldId);
+
+const OSG::BitVector  PhysicsQuadTreeSpaceBase::ExtentFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsQuadTreeSpaceBase::ExtentFieldId);
+
+const OSG::BitVector  PhysicsQuadTreeSpaceBase::DepthFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsQuadTreeSpaceBase::DepthFieldId);
 
 const OSG::BitVector PhysicsQuadTreeSpaceBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var Pnt3f           PhysicsQuadTreeSpaceBase::_sfCenter
+    
+*/
+/*! \var Vec3f           PhysicsQuadTreeSpaceBase::_sfExtent
+    
+*/
+/*! \var Int32           PhysicsQuadTreeSpaceBase::_sfDepth
+    
+*/
+
+//! PhysicsQuadTreeSpace description
+
+FieldDescription *PhysicsQuadTreeSpaceBase::_desc[] = 
+{
+    new FieldDescription(SFPnt3f::getClassType(), 
+                     "center", 
+                     CenterFieldId, CenterFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsQuadTreeSpaceBase::getSFCenter),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "extent", 
+                     ExtentFieldId, ExtentFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsQuadTreeSpaceBase::getSFExtent),
+    new FieldDescription(SFInt32::getClassType(), 
+                     "depth", 
+                     DepthFieldId, DepthFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsQuadTreeSpaceBase::getSFDepth)
+};
 
 
 FieldContainerType PhysicsQuadTreeSpaceBase::_type(
@@ -77,8 +118,8 @@ FieldContainerType PhysicsQuadTreeSpaceBase::_type(
     NULL,
     (PrototypeCreateF) &PhysicsQuadTreeSpaceBase::createEmpty,
     PhysicsQuadTreeSpace::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(PhysicsQuadTreeSpaceBase, PhysicsQuadTreeSpacePtr)
 
@@ -143,6 +184,9 @@ void PhysicsQuadTreeSpaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PhysicsQuadTreeSpaceBase::PhysicsQuadTreeSpaceBase(void) :
+    _sfCenter                 (), 
+    _sfExtent                 (), 
+    _sfDepth                  (), 
     Inherited() 
 {
 }
@@ -152,6 +196,9 @@ PhysicsQuadTreeSpaceBase::PhysicsQuadTreeSpaceBase(void) :
 #endif
 
 PhysicsQuadTreeSpaceBase::PhysicsQuadTreeSpaceBase(const PhysicsQuadTreeSpaceBase &source) :
+    _sfCenter                 (source._sfCenter                 ), 
+    _sfExtent                 (source._sfExtent                 ), 
+    _sfDepth                  (source._sfDepth                  ), 
     Inherited                 (source)
 {
 }
@@ -168,6 +215,21 @@ UInt32 PhysicsQuadTreeSpaceBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+    {
+        returnValue += _sfCenter.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ExtentFieldMask & whichField))
+    {
+        returnValue += _sfExtent.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DepthFieldMask & whichField))
+    {
+        returnValue += _sfDepth.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -177,6 +239,21 @@ void PhysicsQuadTreeSpaceBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+    {
+        _sfCenter.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ExtentFieldMask & whichField))
+    {
+        _sfExtent.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DepthFieldMask & whichField))
+    {
+        _sfDepth.copyToBin(pMem);
+    }
+
 
 }
 
@@ -184,6 +261,21 @@ void PhysicsQuadTreeSpaceBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+    {
+        _sfCenter.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ExtentFieldMask & whichField))
+    {
+        _sfExtent.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DepthFieldMask & whichField))
+    {
+        _sfDepth.copyFromBin(pMem);
+    }
 
 
 }
@@ -195,6 +287,15 @@ void PhysicsQuadTreeSpaceBase::executeSyncImpl(      PhysicsQuadTreeSpaceBase *p
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+        _sfCenter.syncWith(pOther->_sfCenter);
+
+    if(FieldBits::NoField != (ExtentFieldMask & whichField))
+        _sfExtent.syncWith(pOther->_sfExtent);
+
+    if(FieldBits::NoField != (DepthFieldMask & whichField))
+        _sfDepth.syncWith(pOther->_sfDepth);
+
 
 }
 #else
@@ -204,6 +305,15 @@ void PhysicsQuadTreeSpaceBase::executeSyncImpl(      PhysicsQuadTreeSpaceBase *p
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+        _sfCenter.syncWith(pOther->_sfCenter);
+
+    if(FieldBits::NoField != (ExtentFieldMask & whichField))
+        _sfExtent.syncWith(pOther->_sfExtent);
+
+    if(FieldBits::NoField != (DepthFieldMask & whichField))
+        _sfDepth.syncWith(pOther->_sfDepth);
 
 
 
@@ -220,6 +330,8 @@ void PhysicsQuadTreeSpaceBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -231,8 +343,6 @@ DataType FieldDataTraits<PhysicsQuadTreeSpacePtr>::_type("PhysicsQuadTreeSpacePt
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsQuadTreeSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsQuadTreeSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -248,10 +358,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsQuadTreeSpaceBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSQUADTREESPACEBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSQUADTREESPACEBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSQUADTREESPACEFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

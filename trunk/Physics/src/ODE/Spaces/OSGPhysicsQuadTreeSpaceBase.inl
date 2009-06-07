@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,9 +96,93 @@ PhysicsQuadTreeSpacePtr PhysicsQuadTreeSpaceBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the PhysicsQuadTreeSpace::_sfCenter field.
+inline
+SFPnt3f *PhysicsQuadTreeSpaceBase::getSFCenter(void)
+{
+    return &_sfCenter;
+}
+
+//! Get the PhysicsQuadTreeSpace::_sfExtent field.
+inline
+SFVec3f *PhysicsQuadTreeSpaceBase::getSFExtent(void)
+{
+    return &_sfExtent;
+}
+
+//! Get the PhysicsQuadTreeSpace::_sfDepth field.
+inline
+SFInt32 *PhysicsQuadTreeSpaceBase::getSFDepth(void)
+{
+    return &_sfDepth;
+}
+
+
+//! Get the value of the PhysicsQuadTreeSpace::_sfCenter field.
+inline
+Pnt3f &PhysicsQuadTreeSpaceBase::getCenter(void)
+{
+    return _sfCenter.getValue();
+}
+
+//! Get the value of the PhysicsQuadTreeSpace::_sfCenter field.
+inline
+const Pnt3f &PhysicsQuadTreeSpaceBase::getCenter(void) const
+{
+    return _sfCenter.getValue();
+}
+
+//! Set the value of the PhysicsQuadTreeSpace::_sfCenter field.
+inline
+void PhysicsQuadTreeSpaceBase::setCenter(const Pnt3f &value)
+{
+    _sfCenter.setValue(value);
+}
+
+//! Get the value of the PhysicsQuadTreeSpace::_sfExtent field.
+inline
+Vec3f &PhysicsQuadTreeSpaceBase::getExtent(void)
+{
+    return _sfExtent.getValue();
+}
+
+//! Get the value of the PhysicsQuadTreeSpace::_sfExtent field.
+inline
+const Vec3f &PhysicsQuadTreeSpaceBase::getExtent(void) const
+{
+    return _sfExtent.getValue();
+}
+
+//! Set the value of the PhysicsQuadTreeSpace::_sfExtent field.
+inline
+void PhysicsQuadTreeSpaceBase::setExtent(const Vec3f &value)
+{
+    _sfExtent.setValue(value);
+}
+
+//! Get the value of the PhysicsQuadTreeSpace::_sfDepth field.
+inline
+Int32 &PhysicsQuadTreeSpaceBase::getDepth(void)
+{
+    return _sfDepth.getValue();
+}
+
+//! Get the value of the PhysicsQuadTreeSpace::_sfDepth field.
+inline
+const Int32 &PhysicsQuadTreeSpaceBase::getDepth(void) const
+{
+    return _sfDepth.getValue();
+}
+
+//! Set the value of the PhysicsQuadTreeSpace::_sfDepth field.
+inline
+void PhysicsQuadTreeSpaceBase::setDepth(const Int32 &value)
+{
+    _sfDepth.setValue(value);
+}
 
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSQUADTREESPACEBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsQuadTreeSpaceBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSQUADTREESPACEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

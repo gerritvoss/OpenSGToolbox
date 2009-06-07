@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,16 +57,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsHashSpace : public PhysicsHashSpaceBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Vec2f getLevels(void);
-	  /*! \} 		
-
-	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Set Field                    */
 	  /*! \{                                                                 */
-	  void setLevels(const Vec2f &value );
 	  /*! \}                                                                 */
     void initHashSpace();
     /*---------------------------------------------------------------------*/

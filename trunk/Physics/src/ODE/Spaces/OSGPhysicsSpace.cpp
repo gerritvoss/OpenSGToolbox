@@ -93,11 +93,10 @@ void PhysicsSpace::onCreate(const PhysicsSpace *id /* = NULL */)
 
 void PhysicsSpace::onDestroy()
 {
-	PhysicsSpacePtr tmpPtr(*this);
-    if(tmpPtr->sID)
+    if(_SpaceID)
     {
-	    //dSpaceDestroy(tmpPtr->sID);
-        tmpPtr->sID = 0;
+	    //dSpaceDestroy(_SpaceID);
+        _SpaceID = 0;
     }
 }
 
@@ -133,34 +132,18 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
         }
     }
 }
+
+void PhysicsSpace::setSpaceID(dSpaceID id)
+{
+    _SpaceID = id;
+}
+
 /***************************************************************************\
 *                              Field Get	                               *
 \***************************************************************************/
-
-bool PhysicsSpace::getCleanup(void)
+dSpaceID PhysicsSpace::getSpaceID(void) const
 {
-	PhysicsSpacePtr tmpPtr(*this);
-	return dSpaceGetCleanup(tmpPtr->sID)==1;
-}
-
-dSpaceID PhysicsSpace::getSpaceID(void)
-{
-    PhysicsSpacePtr tmpPtr(*this);
-    return tmpPtr->sID;
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-void PhysicsSpace::setCleanup(const bool &value )
-{
-	PhysicsSpacePtr tmpPtr(*this);
-	dSpaceSetCleanup(tmpPtr->sID, value ? 1 : 0);
-}
-
-void PhysicsSpace::setSpaceID(const dSpaceID &value )
-{
-    PhysicsSpacePtr tmpPtr(*this);
-    tmpPtr->sID = value;
+    return _SpaceID;
 }
 /***************************************************************************\
 *                              Class Specific                              *
@@ -172,49 +155,49 @@ void PhysicsSpace::initSpace()
 void PhysicsSpace::AddGeom( dGeomID g)
 {
 	PhysicsSpacePtr tmpPtr(*this);
-	dSpaceAdd(tmpPtr->sID, g);
+	dSpaceAdd(tmpPtr->_SpaceID, g);
 }
 
 void PhysicsSpace::RemoveGeom( dGeomID g)
 {
 	PhysicsSpacePtr tmpPtr(*this);
-	dSpaceRemove(tmpPtr->sID, g);
+	dSpaceRemove(tmpPtr->_SpaceID, g);
 }
 
 bool PhysicsSpace::ContainsGeom( dGeomID g)
 {
 	PhysicsSpacePtr tmpPtr(*this);
-	return dSpaceQuery(tmpPtr->sID, g) == 1;
+	return dSpaceQuery(tmpPtr->_SpaceID, g) == 1;
 }
 
 void PhysicsSpace::AddSpace( dSpaceID s)
 {
 	PhysicsSpacePtr tmpPtr(*this);
-	dSpaceAdd(tmpPtr->sID, (dGeomID)s);
+	dSpaceAdd(tmpPtr->_SpaceID, (dGeomID)s);
 }
 
 void PhysicsSpace::RemoveSpace( dSpaceID s)
 {
 	PhysicsSpacePtr tmpPtr(*this);
-	dSpaceRemove(tmpPtr->sID, (dGeomID)s);
+	dSpaceRemove(tmpPtr->_SpaceID, (dGeomID)s);
 }
 
 bool PhysicsSpace::ContainsSpace( dSpaceID s)
 {
 	PhysicsSpacePtr tmpPtr(*this);
-	return dSpaceQuery(tmpPtr->sID, (dGeomID)s) == 1;
+	return dSpaceQuery(tmpPtr->_SpaceID, (dGeomID)s) == 1;
 }
 
 Int32 PhysicsSpace::GetNumGeoms()
 {
 	PhysicsSpacePtr tmpPtr(*this);
-	return dSpaceGetNumGeoms(tmpPtr->sID);
+	return dSpaceGetNumGeoms(tmpPtr->_SpaceID);
 }
 
 dGeomID PhysicsSpace::GetGeom( Int32 i )
 {
 	PhysicsSpacePtr tmpPtr(*this);
-	return dSpaceGetGeom(tmpPtr->sID, i);
+	return dSpaceGetGeom(tmpPtr->_SpaceID, i);
 }
 
 void PhysicsSpace::Collide( PhysicsWorldPtr w )
@@ -225,7 +208,7 @@ void PhysicsSpace::Collide( PhysicsWorldPtr w )
     dJointGroupEmpty(_ColJointGroupId);
 
 	PhysicsSpacePtr tmpPtr(*this);
-	dSpaceCollide(tmpPtr->sID, reinterpret_cast<void *>(this), &PhysicsSpace::collisionCallback);
+	dSpaceCollide(tmpPtr->_SpaceID, reinterpret_cast<void *>(this), &PhysicsSpace::collisionCallback);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -273,6 +256,15 @@ PhysicsSpace::~PhysicsSpace(void)
 void PhysicsSpace::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & CleanupFieldMask)
+    {
+	    dSpaceSetCleanup(_SpaceID, getCleanup() ? 1 : 0);
+    }
+    if(whichField & SublevelFieldMask)
+    {
+	    dSpaceSetSublevel(_SpaceID, getSublevel());
+    }
 }
 
 void PhysicsSpace::dump(      UInt32    , 

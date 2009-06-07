@@ -197,6 +197,14 @@
 	>
 	</Field>
 	<Field
+		name="kinematic"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="world"
 		type="PhysicsWorldPtr"
 		cardinality="single"

@@ -90,6 +90,7 @@
 #include <OpenSG/OSGReal32Fields.h> // LinearDampingThreshold type
 #include <OpenSG/OSGReal32Fields.h> // AngularDampingThreshold type
 #include <OpenSG/OSGReal32Fields.h> // MaxAngularSpeed type
+#include <OpenSG/OSGBoolFields.h> // Kinematic type
 #include "OSGPhysicsWorld.h" // World type
 
 #include "OSGPhysicsBodyFields.h"
@@ -137,7 +138,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
         LinearDampingThresholdFieldId      = AngularDampingFieldId              + 1,
         AngularDampingThresholdFieldId     = LinearDampingThresholdFieldId      + 1,
         MaxAngularSpeedFieldId             = AngularDampingThresholdFieldId     + 1,
-        WorldFieldId                       = MaxAngularSpeedFieldId             + 1,
+        KinematicFieldId                   = MaxAngularSpeedFieldId             + 1,
+        WorldFieldId                       = KinematicFieldId                   + 1,
         NextFieldId                        = WorldFieldId                       + 1
     };
 
@@ -164,6 +166,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     static const OSG::BitVector LinearDampingThresholdFieldMask;
     static const OSG::BitVector AngularDampingThresholdFieldMask;
     static const OSG::BitVector MaxAngularSpeedFieldMask;
+    static const OSG::BitVector KinematicFieldMask;
     static const OSG::BitVector WorldFieldMask;
 
 
@@ -214,6 +217,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
            SFReal32            *getSFLinearDampingThreshold(void);
            SFReal32            *getSFAngularDampingThreshold(void);
            SFReal32            *getSFMaxAngularSpeed(void);
+           SFBool              *getSFKinematic      (void);
 
            Vec3f               &getPosition       (void);
      const Vec3f               &getPosition       (void) const;
@@ -261,6 +265,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      const Real32              &getAngularDampingThreshold(void) const;
            Real32              &getMaxAngularSpeed(void);
      const Real32              &getMaxAngularSpeed(void) const;
+           bool                &getKinematic      (void);
+     const bool                &getKinematic      (void) const;
 
            PhysicsWorldPtr     &getWorld          (void);
      const PhysicsWorldPtr     &getWorld          (void) const;
@@ -292,6 +298,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      void setLinearDampingThreshold( const Real32 &value );
      void setAngularDampingThreshold( const Real32 &value );
      void setMaxAngularSpeed( const Real32 &value );
+     void setKinematic      ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -356,6 +363,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     SFReal32            _sfLinearDampingThreshold;
     SFReal32            _sfAngularDampingThreshold;
     SFReal32            _sfMaxAngularSpeed;
+    SFBool              _sfKinematic;
     SFPhysicsWorldPtr   _sfWorld;
 
     /*! \}                                                                 */

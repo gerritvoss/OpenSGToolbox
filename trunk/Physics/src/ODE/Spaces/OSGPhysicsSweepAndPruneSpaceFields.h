@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -42,91 +44,88 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
- **     Do not change this file, changes should be done in the derived      **
- **     class PhysicsHashSpace!
- **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
+
+#ifndef _OSGPHYSICSSWEEPANDPRUNESPACEFIELDS_H_
+#define _OSGPHYSICSSWEEPANDPRUNESPACEFIELDS_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGPhysicsDef.h"
+
+#include "OSGPhysicsSpaceFields.h"
 
 OSG_BEGIN_NAMESPACE
 
+class PhysicsSweepAndPruneSpace;
 
-//! access the type of the class
-inline
-OSG::FieldContainerType &PhysicsHashSpaceBase::getClassType(void)
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//! PhysicsSweepAndPruneSpacePtr
+
+typedef FCPtr<PhysicsSpacePtr, PhysicsSweepAndPruneSpace> PhysicsSweepAndPruneSpacePtr;
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpPhysicsFieldTraits
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldDataTraits<PhysicsSweepAndPruneSpacePtr> : 
+    public FieldTraitsRecurseMapper<PhysicsSweepAndPruneSpacePtr, true>
 {
-    return _type; 
-} 
+    static DataType             _type;                       
 
-//! access the numerical type of the class
-inline
-OSG::UInt32 PhysicsHashSpaceBase::getClassTypeId(void) 
-{
-    return _type.getId(); 
-} 
+    enum                        { StringConvertable = 0x00 };
+    enum                        { bHasParent        = 0x01 };
 
-//! create a new instance of the class
-inline
-PhysicsHashSpacePtr PhysicsHashSpaceBase::create(void) 
-{
-    PhysicsHashSpacePtr fc; 
+    static DataType   &getType (void) { return _type;        }
 
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PhysicsHashSpacePtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
+    static const char *getSName(void) { return "SFPhysicsSweepAndPruneSpacePtr"; }
+    static const char *getMName(void) { return "MFPhysicsSweepAndPruneSpacePtr"; }
+};
 
-//! create an empty new instance of the class, do not copy the prototype
-inline
-PhysicsHashSpacePtr PhysicsHashSpaceBase::createEmpty(void) 
-{ 
-    PhysicsHashSpacePtr returnValue; 
-    
-    newPtr(returnValue); 
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \class  FieldTraitsRecurseMapper<PhysicsSweepAndPruneSpacePtr, true>
+    \hideinhierarchy
+ */
+#endif
 
-    return returnValue; 
-}
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 
-/*------------------------------ get -----------------------------------*/
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpPhysicsFieldSingle */
 
-//! Get the PhysicsHashSpace::_sfLevels field.
-inline
-SFVec2f *PhysicsHashSpaceBase::getSFLevels(void)
-{
-    return &_sfLevels;
-}
+typedef SField<PhysicsSweepAndPruneSpacePtr> SFPhysicsSweepAndPruneSpacePtr;
+#endif
 
+#ifndef OSG_COMPILEPHYSICSSWEEPANDPRUNESPACEINST
+OSG_DLLEXPORT_DECL1(SField, PhysicsSweepAndPruneSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
+#endif
 
-//! Get the value of the PhysicsHashSpace::_sfLevels field.
-inline
-Vec2f &PhysicsHashSpaceBase::getLevels(void)
-{
-    return _sfLevels.getValue();
-}
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpPhysicsFieldMulti */
 
-//! Get the value of the PhysicsHashSpace::_sfLevels field.
-inline
-const Vec2f &PhysicsHashSpaceBase::getLevels(void) const
-{
-    return _sfLevels.getValue();
-}
+typedef MField<PhysicsSweepAndPruneSpacePtr> MFPhysicsSweepAndPruneSpacePtr;
+#endif
 
-//! Set the value of the PhysicsHashSpace::_sfLevels field.
-inline
-void PhysicsHashSpaceBase::setLevels(const Vec2f &value)
-{
-    _sfLevels.setValue(value);
-}
-
+#ifndef OSG_COMPILEPHYSICSSWEEPANDPRUNESPACEINST
+OSG_DLLEXPORT_DECL1(MField, PhysicsSweepAndPruneSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
+#endif
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSHASHSPACEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGPHYSICSSWEEPANDPRUNESPACEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
+#endif /* _OSGPHYSICSSWEEPANDPRUNESPACEFIELDS_H_ */

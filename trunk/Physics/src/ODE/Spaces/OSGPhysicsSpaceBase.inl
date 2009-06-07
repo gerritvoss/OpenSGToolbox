@@ -103,6 +103,13 @@ SFBool *PhysicsSpaceBase::getSFCleanup(void)
     return &_sfCleanup;
 }
 
+//! Get the PhysicsSpace::_sfSublevel field.
+inline
+SFInt32 *PhysicsSpaceBase::getSFSublevel(void)
+{
+    return &_sfSublevel;
+}
+
 //! Get the PhysicsSpace::_sfInternalParentHandler field.
 inline
 SFPhysicsHandlerPtr *PhysicsSpaceBase::getSFInternalParentHandler(void)
@@ -130,6 +137,27 @@ inline
 void PhysicsSpaceBase::setCleanup(const bool &value)
 {
     _sfCleanup.setValue(value);
+}
+
+//! Get the value of the PhysicsSpace::_sfSublevel field.
+inline
+Int32 &PhysicsSpaceBase::getSublevel(void)
+{
+    return _sfSublevel.getValue();
+}
+
+//! Get the value of the PhysicsSpace::_sfSublevel field.
+inline
+const Int32 &PhysicsSpaceBase::getSublevel(void) const
+{
+    return _sfSublevel.getValue();
+}
+
+//! Set the value of the PhysicsSpace::_sfSublevel field.
+inline
+void PhysicsSpaceBase::setSublevel(const Int32 &value)
+{
+    _sfSublevel.setValue(value);
 }
 
 //! Get the value of the PhysicsSpace::_sfInternalParentHandler field.

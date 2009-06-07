@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,8 +79,7 @@ void PhysicsQuadTreeSpace::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsQuadTreeSpace::onCreate(const PhysicsQuadTreeSpace *id /* = NULL */)
 {
-	PhysicsQuadTreeSpacePtr tmpPtr(*this);
-	//call initQuadTree
+    initQuadTree(0);
 }
 
 void PhysicsQuadTreeSpace::onDestroy()
@@ -88,17 +87,16 @@ void PhysicsQuadTreeSpace::onDestroy()
 	//empty
 }
 
-void PhysicsQuadTreeSpace::initQuadTree(dSpaceID space, Vec3f center, Vec3f ex, Int32 depth)
+void PhysicsQuadTreeSpace::initQuadTree(dSpaceID space)
 {
-	PhysicsQuadTreeSpacePtr tmpPtr(*this);
 	dVector3 c, e;
-	c[0]=center.x();
-	c[1]=center.y();
-	c[2]=center.z();
-	e[0]=ex.x();
-	e[1]=ex.y();
-	e[2]=ex.z();
-	tmpPtr->sID = dQuadTreeSpaceCreate(space, c, e, depth);
+	c[0]=getCenter().x();
+	c[1]=getCenter().y();
+	c[2]=getCenter().z();
+	e[0]=getExtent().x();
+	e[1]=getExtent().y();
+	e[2]=getExtent().z();
+	_SpaceID = dQuadTreeSpaceCreate(space, c, e, getDepth());
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -125,6 +123,13 @@ PhysicsQuadTreeSpace::~PhysicsQuadTreeSpace(void)
 void PhysicsQuadTreeSpace::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if((whichField & CenterFieldMask) ||
+        (whichField & ExtentFieldMask) ||
+        (whichField & DepthFieldMask))
+    {
+        initQuadTree(_SpaceID);
+    }
 }
 
 void PhysicsQuadTreeSpace::dump(      UInt32    , 

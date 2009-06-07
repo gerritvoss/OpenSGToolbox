@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,8 +79,7 @@ void PhysicsHashSpace::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsHashSpace::onCreate(const PhysicsHashSpace *id /* = NULL */)
 {
-	PhysicsHashSpacePtr tmpPtr(*this);
-	    tmpPtr->sID = dHashSpaceCreate(0);
+    _SpaceID = dHashSpaceCreate(0);
 }
 
 void PhysicsHashSpace::onDestroy()
@@ -88,29 +87,11 @@ void PhysicsHashSpace::onDestroy()
 	//empty
 }
 /***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-Vec2f PhysicsHashSpace::getLevels(void)
-{
-	PhysicsHashSpacePtr tmpPtr(*this);
-	Int32 i,j;
-	dHashSpaceGetLevels(tmpPtr->sID, &i, &j);
-	return Vec2f(i, j);
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-void PhysicsHashSpace::setLevels(const Vec2f &value )
-{
-	PhysicsHashSpacePtr tmpPtr(*this);
-	dHashSpaceSetLevels(tmpPtr->sID, (Int32)value.x(), (Int32)value.y());
-}
-/***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
 void PhysicsHashSpace::initHashSpace()
 {
-    setLevels(PhysicsHashSpaceBase::getLevels());
+    setLevels(getLevels());
     initSpace();
 }
 /*-------------------------------------------------------------------------*\
@@ -138,6 +119,11 @@ PhysicsHashSpace::~PhysicsHashSpace(void)
 void PhysicsHashSpace::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & LevelsFieldMask)
+    {
+	    dHashSpaceSetLevels(_SpaceID, (Int32)getLevels().x(), (Int32)getLevels().y());
+    }
 }
 
 void PhysicsHashSpace::dump(      UInt32    , 

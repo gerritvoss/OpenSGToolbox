@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,9 @@
 
 #include "OSGPhysicsSpace.h" // Parent
 
+#include <OpenSG/OSGPnt3fFields.h> // Center type
+#include <OpenSG/OSGVec3fFields.h> // Extent type
+#include <OpenSG/OSGInt32Fields.h> // Depth type
 
 #include "OSGPhysicsQuadTreeSpaceFields.h"
 
@@ -88,6 +91,18 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsQuadTreeSpaceBase : public PhysicsSpace
 
     typedef PhysicsQuadTreeSpacePtr  Ptr;
 
+    enum
+    {
+        CenterFieldId = Inherited::NextFieldId,
+        ExtentFieldId = CenterFieldId + 1,
+        DepthFieldId  = ExtentFieldId + 1,
+        NextFieldId   = DepthFieldId  + 1
+    };
+
+    static const OSG::BitVector CenterFieldMask;
+    static const OSG::BitVector ExtentFieldMask;
+    static const OSG::BitVector DepthFieldMask;
+
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -107,6 +122,31 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsQuadTreeSpaceBase : public PhysicsSpace
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPnt3f             *getSFCenter         (void);
+           SFVec3f             *getSFExtent         (void);
+           SFInt32             *getSFDepth          (void);
+
+           Pnt3f               &getCenter         (void);
+     const Pnt3f               &getCenter         (void) const;
+           Vec3f               &getExtent         (void);
+     const Vec3f               &getExtent         (void) const;
+           Int32               &getDepth          (void);
+     const Int32               &getDepth          (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setCenter         ( const Pnt3f &value );
+     void setExtent         ( const Vec3f &value );
+     void setDepth          ( const Int32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,6 +185,15 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsQuadTreeSpaceBase : public PhysicsSpace
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFPnt3f             _sfCenter;
+    SFVec3f             _sfExtent;
+    SFInt32             _sfDepth;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -196,6 +245,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsQuadTreeSpaceBase : public PhysicsSpace
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
@@ -219,6 +269,6 @@ typedef RefPtr<PhysicsQuadTreeSpacePtr> PhysicsQuadTreeSpaceRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSQUADTREESPACEBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsQuadTreeSpaceBase.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSQUADTREESPACEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSQUADTREESPACEBASE_H_ */
