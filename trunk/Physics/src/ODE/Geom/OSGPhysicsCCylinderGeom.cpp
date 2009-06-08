@@ -76,11 +76,10 @@ void PhysicsCCylinderGeom::initMethod (void)
 \***************************************************************************/
 void PhysicsCCylinderGeom::onCreate(const PhysicsCCylinderGeom *)
 {
-	PhysicsCCylinderGeomPtr tmpPtr(*this);
-	tmpPtr->id = dCreateCCylinder(0, 1.0f, 1.0f);
-	PhysicsCCylinderGeomBase::setParams(tmpPtr->getParams());
-    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(id));
-    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(id));
+	_GeomID = dCreateCCylinder(0, 1.0f, 1.0f);
+	PhysicsCCylinderGeomBase::setParams(getParams());
+    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(_GeomID));
+    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
 void PhysicsCCylinderGeom::onDestroy()
@@ -92,9 +91,8 @@ void PhysicsCCylinderGeom::onDestroy()
 \***************************************************************************/
 Vec2f PhysicsCCylinderGeom::getParams(void)
 {
-	PhysicsCCylinderGeomPtr tmpPtr(*this);
 	dReal u,v;
-	dGeomCCylinderGetParams(tmpPtr->id, &u, &v);
+	dGeomCCylinderGetParams(_GeomID, &u, &v);
 	return Vec2f(u, v);
 }
 /***************************************************************************\
@@ -103,8 +101,7 @@ Vec2f PhysicsCCylinderGeom::getParams(void)
 
 void PhysicsCCylinderGeom::setParams(const Vec2f &value )
 {
-	PhysicsCCylinderGeomPtr tmpPtr(*this);
-	dGeomCCylinderSetParams(tmpPtr->id, value.x(), value.y());
+	dGeomCCylinderSetParams(_GeomID, value.x(), value.y());
 	PhysicsCCylinderGeomBase::setParams(value);
 }
 /***************************************************************************\
@@ -113,12 +110,10 @@ void PhysicsCCylinderGeom::setParams(const Vec2f &value )
 void PhysicsCCylinderGeom::initCCylinderGeom()
 {
     setParams(PhysicsCCylinderGeomBase::getParams());
-    initGeom();
 }
 Real32 PhysicsCCylinderGeom::getPointDepth(const Vec3f& p)
 {
-	PhysicsCCylinderGeomPtr tmpPtr(*this);
-	return (Real32)dGeomCCylinderPointDepth(tmpPtr->id, p.x(), p.y(), p.z());
+	return (Real32)dGeomCCylinderPointDepth(_GeomID, p.x(), p.y(), p.z());
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -128,5 +128,5 @@ void PhysicsBoxGeomBase::setLengths(const Vec3f &value)
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSBOXGEOMBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsBoxGeomBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSBOXGEOMBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

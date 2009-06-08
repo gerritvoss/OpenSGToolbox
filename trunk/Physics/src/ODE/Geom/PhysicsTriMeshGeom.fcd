@@ -1,22 +1,23 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PhysicsBoxGeom"
+	name="PhysicsTriMeshGeom"
 	parent="PhysicsGeom"
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="true"
-	parentsystemcomponent="true"
+	systemcomponent="false"
+	parentsystemcomponent="false"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 	<Field
-		name="lengths"
-		type="Vec3f"
+		name="geometryNode"
+		type="NodePtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 	>
+	this node should contain a geometrynode core with geo data!
 	</Field>
 </FieldContainer>

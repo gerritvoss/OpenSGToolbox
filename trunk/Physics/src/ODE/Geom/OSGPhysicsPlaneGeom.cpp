@@ -76,11 +76,10 @@ void PhysicsPlaneGeom::initMethod (void)
 \***************************************************************************/
 void PhysicsPlaneGeom::onCreate(const PhysicsPlaneGeom *)
 {
-	PhysicsPlaneGeomPtr tmpPtr(*this);
-	tmpPtr->id = dCreatePlane(0, 0, 0, 1, 0);
-	PhysicsPlaneGeomBase::setParams(tmpPtr->getParams());
-    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(id));
-    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(id));
+	_GeomID = dCreatePlane(0, 0, 0, 1, 0);
+	PhysicsPlaneGeomBase::setParams(getParams());
+    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(_GeomID));
+    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
 void PhysicsPlaneGeom::onDestroy()
@@ -92,9 +91,8 @@ void PhysicsPlaneGeom::onDestroy()
 \***************************************************************************/
 Vec4f PhysicsPlaneGeom::getParams(void)
 {
-	PhysicsPlaneGeomPtr tmpPtr(*this);
 	dVector4 t;
-	dGeomPlaneGetParams(tmpPtr->id, t);
+	dGeomPlaneGetParams(_GeomID, t);
 	return Vec4f(t[0], t[1],t[2], t[3]);
 }
 /***************************************************************************\
@@ -103,8 +101,7 @@ Vec4f PhysicsPlaneGeom::getParams(void)
 
 void PhysicsPlaneGeom::setParams(const Vec4f &value )
 {
-	PhysicsPlaneGeomPtr tmpPtr(*this);
-	dGeomPlaneSetParams(tmpPtr->id, value.x(), value.y(), value.z(), value.w());
+	dGeomPlaneSetParams(_GeomID, value.x(), value.y(), value.z(), value.w());
 	PhysicsPlaneGeomBase::setParams(value);
 }
 /***************************************************************************\
@@ -113,12 +110,10 @@ void PhysicsPlaneGeom::setParams(const Vec4f &value )
 void PhysicsPlaneGeom::initPlaneGeom()
 {
     setParams(PhysicsPlaneGeomBase::getParams());
-    initGeom();
 }
 Real32 PhysicsPlaneGeom::getPointDepth(const Vec3f& p)
 {
-	PhysicsPlaneGeomPtr tmpPtr(*this);
-	return (Real32)dGeomPlanePointDepth(tmpPtr->id, p.x(), p.y(), p.z());
+	return (Real32)dGeomPlanePointDepth(_GeomID, p.x(), p.y(), p.z());
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -83,9 +83,8 @@ void PhysicsTriMeshGeom::initMethod (void)
 \***************************************************************************/
 NodePtr PhysicsTriMeshGeom::getGeometryNode(void)
 {
-    PhysicsTriMeshGeomPtr tmpPtr(*this);
-    if(tmpPtr->geoNode!=NullFC)
-        return tmpPtr->geoNode;
+    if(geoNode!=NullFC)
+        return geoNode;
     else
         return NullFC;
 }
@@ -94,7 +93,6 @@ NodePtr PhysicsTriMeshGeom::getGeometryNode(void)
 \***************************************************************************/
 void PhysicsTriMeshGeom::setGeometryNode(NodePtr& node)
 {
-    PhysicsTriMeshGeomPtr tmpPtr(*this);
 
     GeometryPtr geo = GeometryPtr::dcast(node->getCore());
     if(geo!=NullFC)
@@ -135,31 +133,31 @@ void PhysicsTriMeshGeom::setGeometryNode(NodePtr& node)
         UInt32 indexStride = 3*sizeof(UInt32);
 
         //pass the pointers to ODE
-        if(tmpPtr->data)
-            dGeomTriMeshDataDestroy(tmpPtr->data);
-        tmpPtr->data = dGeomTriMeshDataCreate();
+        if(data)
+            dGeomTriMeshDataDestroy(data);
+        data = dGeomTriMeshDataCreate();
         if(triangles)
         {
-            dGeomTriMeshDataBuildSingle(tmpPtr->data, (Real32*)&positions->front(), 
+            dGeomTriMeshDataBuildSingle(data, (Real32*)&positions->front(), 
                 vertexStride, vertexCount, (Int32*)&indices->front(), indexCount, 
                 indexStride/* just can't use this, (Real32*)&normals->front()*/);
-            tmpPtr->setData(tmpPtr->data);
+            setData(data);
                 
             /* use this method if you build with single precision
-            dGeomTriMeshDataBuildSingle1(tmpPtr->data, (Real32*)&positions->front(), 
+            dGeomTriMeshDataBuildSingle1(data, (Real32*)&positions->front(), 
                 vertexStride, vertexCount, (Int32*)&indices->front(), indexCount, 
                 indexStride, (Real32*)&normals->front());
-            tmpPtr->setData(tmpPtr->data);
+            setData(data);
             */
             
         }
         else
         {
             FWARNING(("No triangle mesh given to ODE! Convert to triangles first!\n"));
-            tmpPtr->setData(tmpPtr->data);
+            setData(data);
         }
     }
-    tmpPtr->geoNode=node;
+    geoNode=node;
     PhysicsTriMeshGeomBase::setGeometryNode(node);
 }
 /*-------------------------------------------------------------------------*\
@@ -167,8 +165,7 @@ void PhysicsTriMeshGeom::setGeometryNode(NodePtr& node)
 \*-------------------------------------------------------------------------*/
 void PhysicsTriMeshGeom::onCreate(const PhysicsTriMeshGeom *)
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	tmpPtr->id = dCreateTriMesh(0, 0, 0, 0, 0);
+	_GeomID = dCreateTriMesh(0, 0, 0, 0, 0);
 	data = 0;
     numVertices = 0;
     numFaces = 0;
@@ -176,14 +173,13 @@ void PhysicsTriMeshGeom::onCreate(const PhysicsTriMeshGeom *)
     faceData = 0;
     normalData = 0;
     geoNode=NullFC;
-    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(id));
-    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(id));
+    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(_GeomID));
+    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
 void PhysicsTriMeshGeom::onDestroy()
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	if (tmpPtr->data) dGeomTriMeshDataDestroy(tmpPtr->data);
+	if (data) dGeomTriMeshDataDestroy(data);
     if(vertexData) free((void*)vertexData);
     if(faceData) free((void*)faceData);
     if(normalData) free((void*)normalData);
@@ -197,67 +193,56 @@ void PhysicsTriMeshGeom::onDestroy()
 void PhysicsTriMeshGeom::initTriMeshGeom()
 {
     setGeometryNode(PhysicsTriMeshGeomBase::getGeometryNode());
-    initGeom();
 }
 void PhysicsTriMeshGeom::setCallback( dTriCallback* callback )
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	dGeomTriMeshSetCallback(tmpPtr->id, callback);
+	dGeomTriMeshSetCallback(_GeomID, callback);
 }
 
 dTriCallback* PhysicsTriMeshGeom::getCallback(void)
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	return dGeomTriMeshGetCallback(tmpPtr->id);
+	return dGeomTriMeshGetCallback(_GeomID);
 }
 
 dTriArrayCallback* PhysicsTriMeshGeom::getArrayCallback(void)
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	return dGeomTriMeshGetArrayCallback(tmpPtr->id);
+	return dGeomTriMeshGetArrayCallback(_GeomID);
 }
 
 void PhysicsTriMeshGeom::setRayCallback( dTriRayCallback* callback )
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	dGeomTriMeshSetRayCallback(tmpPtr->id, callback);
+	dGeomTriMeshSetRayCallback(_GeomID, callback);
 }
 
 dTriRayCallback* PhysicsTriMeshGeom::getRayCallback(void)
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	return dGeomTriMeshGetRayCallback(tmpPtr->id);
+	return dGeomTriMeshGetRayCallback(_GeomID);
 }
 
 void PhysicsTriMeshGeom::setData( dTriMeshDataID data )
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	dGeomTriMeshSetData(tmpPtr->id, data);
+	dGeomTriMeshSetData(_GeomID, data);
 }
 
 void PhysicsTriMeshGeom::enableTC( Int32 geomClass, bool enable )
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	dGeomTriMeshEnableTC(tmpPtr->id, geomClass, enable ? 1:0);
+	dGeomTriMeshEnableTC(_GeomID, geomClass, enable ? 1:0);
 }
 
 bool PhysicsTriMeshGeom::isTCEnabled( Int32 geomClass)
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	return dGeomTriMeshIsTCEnabled(tmpPtr->id, geomClass) == 1;
+	return dGeomTriMeshIsTCEnabled(_GeomID, geomClass) == 1;
 }
 
 void PhysicsTriMeshGeom::clearTCCache(void)
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
-	dGeomTriMeshClearTCCache(tmpPtr->id);
+	dGeomTriMeshClearTCCache(_GeomID);
 }
 
 void PhysicsTriMeshGeom::getTriangle( Int32 index, Vec3f& v0, Vec3f& v1, Vec3f& v2 )
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
 	dVector3 _v0, _v1, _v2;
-	dGeomTriMeshGetTriangle(tmpPtr->id, index, &_v0, &_v1, &_v2);
+	dGeomTriMeshGetTriangle(_GeomID, index, &_v0, &_v1, &_v2);
 	v0.setValue(Vec3f(_v0[0], _v0[1], _v0[2]));
 	v1.setValue(Vec3f(_v1[0], _v1[1], _v1[2]));
 	v2.setValue(Vec3f(_v2[0], _v2[1], _v2[2]));
@@ -265,9 +250,8 @@ void PhysicsTriMeshGeom::getTriangle( Int32 index, Vec3f& v0, Vec3f& v1, Vec3f& 
 
 void PhysicsTriMeshGeom::getPoint( Int32 index, Real32 u, Real32 v, Vec3f& out )
 {
-	PhysicsTriMeshGeomPtr tmpPtr(*this);
 	dVector3 _out;
-	dGeomTriMeshGetPoint(tmpPtr->id, index, u, v, _out);
+	dGeomTriMeshGetPoint(_GeomID, index, u, v, _out);
 	out.setValue(Vec3f(_out[0], _out[1], _out[2]));
 }
 /*-------------------------------------------------------------------------*\

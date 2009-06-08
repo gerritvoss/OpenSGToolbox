@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -253,6 +253,6 @@ typedef RefPtr<PhysicsBoxGeomPtr> PhysicsBoxGeomRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSBOXGEOMBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsBoxGeomBase.h,v 1.2 2006/02/20 17:04:20 dirk Exp $"
+#define OSGPHYSICSBOXGEOMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSBOXGEOMBASE_H_ */

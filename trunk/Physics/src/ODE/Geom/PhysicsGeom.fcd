@@ -5,11 +5,11 @@
 	parent="Attachment"
 	library="Physics"
 	pointerfieldtypes="both"
-	structure="concrete"
-	systemcomponent="true"
+	structure="abstract"
+	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="body"
@@ -18,6 +18,7 @@
 		visibility="external"
 		defaultValue="NullFC"
 		access="public"
+		header="ODE/OSGPhysicsBodyFields.h"
 	>
 	</Field>
 	<Field
@@ -38,6 +39,30 @@
 	</Field>
 	<Field
 		name="quaternion"
+		type="Quaternion"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="offsetPosition"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="offsetRotation"
+		type="Matrix"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="offsetQuaternion"
 		type="Quaternion"
 		cardinality="single"
 		visibility="external"
@@ -67,6 +92,7 @@
 		visibility="external"
 		defaultValue="NullFC"
 		access="public"
+		header="ODE/Spaces/OSGPhysicsSpaceFields.h"
 	>
 	</Field>
 	<Field

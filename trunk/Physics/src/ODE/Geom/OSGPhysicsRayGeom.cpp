@@ -79,9 +79,8 @@ void PhysicsRayGeom::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsRayGeom::onCreate(const PhysicsRayGeom *)
 {
-	PhysicsRayGeomPtr tmpPtr(*this);
-	tmpPtr->id = dCreateRay(0, 1.0f);
-	PhysicsRayGeomBase::setLenght(tmpPtr->getLenght());
+	_GeomID = dCreateRay(0, 1.0f);
+	PhysicsRayGeomBase::setLenght(getLenght());
 }
 
 void PhysicsRayGeom::onDestroy()
@@ -93,8 +92,7 @@ void PhysicsRayGeom::onDestroy()
 \***************************************************************************/
 Real32 PhysicsRayGeom::getLenght(void)
 {
-	PhysicsRayGeomPtr tmpPtr(*this);
-	return dGeomRayGetLength(tmpPtr->id);
+	return dGeomRayGetLength(_GeomID);
 }
 
 /***************************************************************************\
@@ -103,8 +101,7 @@ Real32 PhysicsRayGeom::getLenght(void)
 
 void PhysicsRayGeom::setLenght(const Real32 &value )
 {
-	PhysicsRayGeomPtr tmpPtr(*this);
-	dGeomRaySetLength(tmpPtr->id, value);
+	dGeomRaySetLength(_GeomID, value);
 	PhysicsRayGeomBase::setLenght(value);
 }
 
@@ -114,33 +111,28 @@ void PhysicsRayGeom::setLenght(const Real32 &value )
 void PhysicsRayGeom::initRayGeom()
 {
     setLenght(PhysicsRayGeomBase::getLenght());
-    initGeom();
 }
 void PhysicsRayGeom::set(const Vec3f& pos, const Vec3f& dir)
 {
-	PhysicsRayGeomPtr tmpPtr(*this);
-	dGeomRaySet(tmpPtr->id,pos.x(), pos.y(), pos.z(), dir.x(), dir.y(), dir.z());
+	dGeomRaySet(_GeomID,pos.x(), pos.y(), pos.z(), dir.x(), dir.y(), dir.z());
 }
 
 void PhysicsRayGeom::get(Vec3f& start, Vec3f& dir)
 {
-	PhysicsRayGeomPtr tmpPtr(*this);
 	dVector3 s,d;
-	dGeomRayGet(tmpPtr->id,s, d);
+	dGeomRayGet(_GeomID,s, d);
 	start.setValue(Vec3f(s[0], s[1], s[2]));
 	dir.setValue(Vec3f(d[0], d[1], d[2]));
 }
 
 void PhysicsRayGeom::setClosestHit(bool closestHit)
 {
-	PhysicsRayGeomPtr tmpPtr(*this);
-	dGeomRaySetClosestHit(tmpPtr->id, closestHit ? 1:0);
+	dGeomRaySetClosestHit(_GeomID, closestHit ? 1:0);
 }
 
 bool PhysicsRayGeom::getClosestHit(void)
 {
-	PhysicsRayGeomPtr tmpPtr(*this);
-	return dGeomRayGetClosestHit(tmpPtr->id) ==1;
+	return dGeomRayGetClosestHit(_GeomID) ==1;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,13 +57,12 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsGeomBase.h"
 #include "OSGPhysicsGeom.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsGeomBase::BodyFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsGeomBase::BodyFieldId);
@@ -76,6 +75,15 @@ const OSG::BitVector  PhysicsGeomBase::RotationFieldMask =
 
 const OSG::BitVector  PhysicsGeomBase::QuaternionFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsGeomBase::QuaternionFieldId);
+
+const OSG::BitVector  PhysicsGeomBase::OffsetPositionFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsGeomBase::OffsetPositionFieldId);
+
+const OSG::BitVector  PhysicsGeomBase::OffsetRotationFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsGeomBase::OffsetRotationFieldId);
+
+const OSG::BitVector  PhysicsGeomBase::OffsetQuaternionFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsGeomBase::OffsetQuaternionFieldId);
 
 const OSG::BitVector  PhysicsGeomBase::CategoryBitsFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsGeomBase::CategoryBitsFieldId);
@@ -106,6 +114,15 @@ const OSG::BitVector PhysicsGeomBase::MTInfluenceMask =
     
 */
 /*! \var Quaternion      PhysicsGeomBase::_sfQuaternion
+    
+*/
+/*! \var Vec3f           PhysicsGeomBase::_sfOffsetPosition
+    
+*/
+/*! \var Matrix          PhysicsGeomBase::_sfOffsetRotation
+    
+*/
+/*! \var Quaternion      PhysicsGeomBase::_sfOffsetQuaternion
     
 */
 /*! \var UInt64          PhysicsGeomBase::_sfCategoryBits
@@ -145,6 +162,21 @@ FieldDescription *PhysicsGeomBase::_desc[] =
                      QuaternionFieldId, QuaternionFieldMask,
                      false,
                      (FieldAccessMethod) &PhysicsGeomBase::getSFQuaternion),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "offsetPosition", 
+                     OffsetPositionFieldId, OffsetPositionFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsGeomBase::getSFOffsetPosition),
+    new FieldDescription(SFMatrix::getClassType(), 
+                     "offsetRotation", 
+                     OffsetRotationFieldId, OffsetRotationFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsGeomBase::getSFOffsetRotation),
+    new FieldDescription(SFQuaternion::getClassType(), 
+                     "offsetQuaternion", 
+                     OffsetQuaternionFieldId, OffsetQuaternionFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsGeomBase::getSFOffsetQuaternion),
     new FieldDescription(SFUInt64::getClassType(), 
                      "categoryBits", 
                      CategoryBitsFieldId, CategoryBitsFieldMask,
@@ -172,7 +204,7 @@ FieldContainerType PhysicsGeomBase::_type(
     "PhysicsGeom",
     "Attachment",
     NULL,
-    (PrototypeCreateF) &PhysicsGeomBase::createEmpty,
+    NULL, 
     PhysicsGeom::initMethod,
     _desc,
     sizeof(_desc));
@@ -191,15 +223,6 @@ const FieldContainerType &PhysicsGeomBase::getType(void) const
     return _type;
 } 
 
-
-FieldContainerPtr PhysicsGeomBase::shallowCopy(void) const 
-{ 
-    PhysicsGeomPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const PhysicsGeom *>(this)); 
-
-    return returnValue; 
-}
 
 UInt32 PhysicsGeomBase::getContainerSize(void) const 
 { 
@@ -244,6 +267,9 @@ PhysicsGeomBase::PhysicsGeomBase(void) :
     _sfPosition               (), 
     _sfRotation               (), 
     _sfQuaternion             (), 
+    _sfOffsetPosition         (), 
+    _sfOffsetRotation         (), 
+    _sfOffsetQuaternion       (), 
     _sfCategoryBits           (), 
     _sfCollideBits            (), 
     _sfSpace                  (PhysicsSpacePtr(NullFC)), 
@@ -261,6 +287,9 @@ PhysicsGeomBase::PhysicsGeomBase(const PhysicsGeomBase &source) :
     _sfPosition               (source._sfPosition               ), 
     _sfRotation               (source._sfRotation               ), 
     _sfQuaternion             (source._sfQuaternion             ), 
+    _sfOffsetPosition         (source._sfOffsetPosition         ), 
+    _sfOffsetRotation         (source._sfOffsetRotation         ), 
+    _sfOffsetQuaternion       (source._sfOffsetQuaternion       ), 
     _sfCategoryBits           (source._sfCategoryBits           ), 
     _sfCollideBits            (source._sfCollideBits            ), 
     _sfSpace                  (source._sfSpace                  ), 
@@ -299,6 +328,21 @@ UInt32 PhysicsGeomBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (QuaternionFieldMask & whichField))
     {
         returnValue += _sfQuaternion.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OffsetPositionFieldMask & whichField))
+    {
+        returnValue += _sfOffsetPosition.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OffsetRotationFieldMask & whichField))
+    {
+        returnValue += _sfOffsetRotation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OffsetQuaternionFieldMask & whichField))
+    {
+        returnValue += _sfOffsetQuaternion.getBinSize();
     }
 
     if(FieldBits::NoField != (CategoryBitsFieldMask & whichField))
@@ -350,6 +394,21 @@ void PhysicsGeomBase::copyToBin(      BinaryDataHandler &pMem,
         _sfQuaternion.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (OffsetPositionFieldMask & whichField))
+    {
+        _sfOffsetPosition.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OffsetRotationFieldMask & whichField))
+    {
+        _sfOffsetRotation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OffsetQuaternionFieldMask & whichField))
+    {
+        _sfOffsetQuaternion.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (CategoryBitsFieldMask & whichField))
     {
         _sfCategoryBits.copyToBin(pMem);
@@ -398,6 +457,21 @@ void PhysicsGeomBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfQuaternion.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (OffsetPositionFieldMask & whichField))
+    {
+        _sfOffsetPosition.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OffsetRotationFieldMask & whichField))
+    {
+        _sfOffsetRotation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OffsetQuaternionFieldMask & whichField))
+    {
+        _sfOffsetQuaternion.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (CategoryBitsFieldMask & whichField))
     {
         _sfCategoryBits.copyFromBin(pMem);
@@ -440,6 +514,15 @@ void PhysicsGeomBase::executeSyncImpl(      PhysicsGeomBase *pOther,
     if(FieldBits::NoField != (QuaternionFieldMask & whichField))
         _sfQuaternion.syncWith(pOther->_sfQuaternion);
 
+    if(FieldBits::NoField != (OffsetPositionFieldMask & whichField))
+        _sfOffsetPosition.syncWith(pOther->_sfOffsetPosition);
+
+    if(FieldBits::NoField != (OffsetRotationFieldMask & whichField))
+        _sfOffsetRotation.syncWith(pOther->_sfOffsetRotation);
+
+    if(FieldBits::NoField != (OffsetQuaternionFieldMask & whichField))
+        _sfOffsetQuaternion.syncWith(pOther->_sfOffsetQuaternion);
+
     if(FieldBits::NoField != (CategoryBitsFieldMask & whichField))
         _sfCategoryBits.syncWith(pOther->_sfCategoryBits);
 
@@ -474,6 +557,15 @@ void PhysicsGeomBase::executeSyncImpl(      PhysicsGeomBase *pOther,
     if(FieldBits::NoField != (QuaternionFieldMask & whichField))
         _sfQuaternion.syncWith(pOther->_sfQuaternion);
 
+    if(FieldBits::NoField != (OffsetPositionFieldMask & whichField))
+        _sfOffsetPosition.syncWith(pOther->_sfOffsetPosition);
+
+    if(FieldBits::NoField != (OffsetRotationFieldMask & whichField))
+        _sfOffsetRotation.syncWith(pOther->_sfOffsetRotation);
+
+    if(FieldBits::NoField != (OffsetQuaternionFieldMask & whichField))
+        _sfOffsetQuaternion.syncWith(pOther->_sfOffsetQuaternion);
+
     if(FieldBits::NoField != (CategoryBitsFieldMask & whichField))
         _sfCategoryBits.syncWith(pOther->_sfCategoryBits);
 
@@ -501,6 +593,8 @@ void PhysicsGeomBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -512,8 +606,6 @@ DataType FieldDataTraits<PhysicsGeomPtr>::_type("PhysicsGeomPtr", "AttachmentPtr
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -529,10 +621,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsGeomBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSGEOMBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSGEOMBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSGEOMFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

@@ -67,9 +67,9 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/OSGPhysicsWorldFields.h> // World type
-#include <OpenSG/OSGPhysicsBodyFields.h> // FirstBody type
-#include <OpenSG/OSGPhysicsBodyFields.h> // SecondBody type
+#include "ODE/OSGPhysicsWorldFields.h" // World type
+#include "ODE/OSGPhysicsBodyFields.h" // FirstBody type
+#include "ODE/OSGPhysicsBodyFields.h" // SecondBody type
 
 #include "OSGPhysicsJointFields.h"
 

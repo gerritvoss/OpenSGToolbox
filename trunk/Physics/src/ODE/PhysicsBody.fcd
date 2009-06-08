@@ -210,7 +210,7 @@
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="OSGPhysicsWorld.h"
+		header="OSGPhysicsWorldFields.h"
 		access="protected"
 	>
 	</Field>

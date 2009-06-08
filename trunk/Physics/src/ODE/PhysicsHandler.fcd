@@ -18,6 +18,7 @@
 		visibility="external"
 		defaultValue="NullFC"
 		access="public"
+      header="OSGPhysicsWorldFields.h"
 	>
 	</Field>
 	<Field
@@ -26,6 +27,7 @@
 		cardinality="multi"
 		visibility="external"
 		access="public"
+      header="ODE/Spaces/OSGPhysicsSpaceFields.h"
 	>
 	</Field>
 	<Field

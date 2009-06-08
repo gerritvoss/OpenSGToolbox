@@ -1,23 +1,22 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PhysicsTriMeshGeom"
+	name="PhysicsPlaneGeom"
 	parent="PhysicsGeom"
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="true"
-	parentsystemcomponent="true"
+	systemcomponent="false"
+	parentsystemcomponent="false"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 	<Field
-		name="geometryNode"
-		type="NodePtr"
+		name="params"
+		type="Vec4f"
 		cardinality="single"
 		visibility="external"
 		access="public"
 	>
-	this node should contain a geometrynode core with geo data!
 	</Field>
 </FieldContainer>

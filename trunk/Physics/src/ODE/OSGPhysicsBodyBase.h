@@ -91,7 +91,7 @@
 #include <OpenSG/OSGReal32Fields.h> // AngularDampingThreshold type
 #include <OpenSG/OSGReal32Fields.h> // MaxAngularSpeed type
 #include <OpenSG/OSGBoolFields.h> // Kinematic type
-#include "OSGPhysicsWorld.h" // World type
+#include "OSGPhysicsWorldFields.h" // World type
 
 #include "OSGPhysicsBodyFields.h"
 

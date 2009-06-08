@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,11 +79,9 @@ void PhysicsBoxGeom::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsBoxGeom::onCreate(const PhysicsBoxGeom *)
 {
-	PhysicsBoxGeomPtr tmpPtr(*this);
-	tmpPtr->id = dCreateBox(0, 1.0f, 1.0f, 1.0f);
-	PhysicsBoxGeomBase::setLengths(tmpPtr->getLengths());
-    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(id));
-    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(id));
+	_GeomID = dCreateBox(0, getLengths().x(), getLengths().y(), getLengths().z());
+    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(_GeomID));
+    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
 void PhysicsBoxGeom::onDestroy()
@@ -91,37 +89,11 @@ void PhysicsBoxGeom::onDestroy()
 	//empty
 }
 /***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-Vec3f PhysicsBoxGeom::getLengths(void)
-{
-	PhysicsBoxGeomPtr tmpPtr(*this);
-	dVector3 t;
-	dGeomBoxGetLengths(tmpPtr->id, t);
-    return Vec3f(t[0], t[1], t[2]);
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-
-void PhysicsBoxGeom::setLengths(const Vec3f &value )
-{
-	PhysicsBoxGeomPtr tmpPtr(*this);
-	dGeomBoxSetLengths(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsBoxGeomBase::setLengths(value);
-}
-/***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsBoxGeom::initBoxGeom()
-{
-    setLengths(PhysicsBoxGeomBase::getLengths());
-    initGeom();
-}
 Real32 PhysicsBoxGeom::getPointDepth(const Vec3f& p)
 {
-	PhysicsBoxGeomPtr tmpPtr(*this);
-	return (Real32)dGeomBoxPointDepth(tmpPtr->id, p.x(), p.y(), p.z());
+	return (Real32)dGeomBoxPointDepth(_GeomID, p.x(), p.y(), p.z());
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -148,6 +120,11 @@ PhysicsBoxGeom::~PhysicsBoxGeom(void)
 void PhysicsBoxGeom::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & LengthsFieldMask)
+    {
+        dGeomBoxSetLengths(_GeomID, getLengths().x(),getLengths().y(),getLengths().z() );
+    }
 }
 
 void PhysicsBoxGeom::dump(      UInt32    , 

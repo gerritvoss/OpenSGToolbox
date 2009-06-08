@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PhysicsPlaneGeom"
+	name="PhysicsSphereGeom"
 	parent="PhysicsGeom"
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="true"
-	parentsystemcomponent="true"
+	systemcomponent="false"
+	parentsystemcomponent="false"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 	<Field
-		name="params"
-		type="Vec4f"
+		name="radius"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		access="public"

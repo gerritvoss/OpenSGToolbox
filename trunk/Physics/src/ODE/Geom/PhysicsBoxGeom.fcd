@@ -1,22 +1,23 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PhysicsCCylinderGeom"
+	name="PhysicsBoxGeom"
 	parent="PhysicsGeom"
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="true"
-	parentsystemcomponent="true"
+	systemcomponent="false"
+	parentsystemcomponent="false"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 	<Field
-		name="params"
-		type="Vec2f"
+		name="lengths"
+		type="Vec3f"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="1.0f,1.0f,1.0f"
 	>
 	</Field>
 </FieldContainer>

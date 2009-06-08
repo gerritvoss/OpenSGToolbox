@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,32 +67,6 @@ OSG::UInt32 PhysicsGeomBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
-//! create a new instance of the class
-inline
-PhysicsGeomPtr PhysicsGeomBase::create(void) 
-{
-    PhysicsGeomPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PhysicsGeomPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-PhysicsGeomPtr PhysicsGeomBase::createEmpty(void) 
-{ 
-    PhysicsGeomPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
@@ -122,6 +96,27 @@ inline
 SFQuaternion *PhysicsGeomBase::getSFQuaternion(void)
 {
     return &_sfQuaternion;
+}
+
+//! Get the PhysicsGeom::_sfOffsetPosition field.
+inline
+SFVec3f *PhysicsGeomBase::getSFOffsetPosition(void)
+{
+    return &_sfOffsetPosition;
+}
+
+//! Get the PhysicsGeom::_sfOffsetRotation field.
+inline
+SFMatrix *PhysicsGeomBase::getSFOffsetRotation(void)
+{
+    return &_sfOffsetRotation;
+}
+
+//! Get the PhysicsGeom::_sfOffsetQuaternion field.
+inline
+SFQuaternion *PhysicsGeomBase::getSFOffsetQuaternion(void)
+{
+    return &_sfOffsetQuaternion;
 }
 
 //! Get the PhysicsGeom::_sfCategoryBits field.
@@ -237,6 +232,69 @@ void PhysicsGeomBase::setQuaternion(const Quaternion &value)
     _sfQuaternion.setValue(value);
 }
 
+//! Get the value of the PhysicsGeom::_sfOffsetPosition field.
+inline
+Vec3f &PhysicsGeomBase::getOffsetPosition(void)
+{
+    return _sfOffsetPosition.getValue();
+}
+
+//! Get the value of the PhysicsGeom::_sfOffsetPosition field.
+inline
+const Vec3f &PhysicsGeomBase::getOffsetPosition(void) const
+{
+    return _sfOffsetPosition.getValue();
+}
+
+//! Set the value of the PhysicsGeom::_sfOffsetPosition field.
+inline
+void PhysicsGeomBase::setOffsetPosition(const Vec3f &value)
+{
+    _sfOffsetPosition.setValue(value);
+}
+
+//! Get the value of the PhysicsGeom::_sfOffsetRotation field.
+inline
+Matrix &PhysicsGeomBase::getOffsetRotation(void)
+{
+    return _sfOffsetRotation.getValue();
+}
+
+//! Get the value of the PhysicsGeom::_sfOffsetRotation field.
+inline
+const Matrix &PhysicsGeomBase::getOffsetRotation(void) const
+{
+    return _sfOffsetRotation.getValue();
+}
+
+//! Set the value of the PhysicsGeom::_sfOffsetRotation field.
+inline
+void PhysicsGeomBase::setOffsetRotation(const Matrix &value)
+{
+    _sfOffsetRotation.setValue(value);
+}
+
+//! Get the value of the PhysicsGeom::_sfOffsetQuaternion field.
+inline
+Quaternion &PhysicsGeomBase::getOffsetQuaternion(void)
+{
+    return _sfOffsetQuaternion.getValue();
+}
+
+//! Get the value of the PhysicsGeom::_sfOffsetQuaternion field.
+inline
+const Quaternion &PhysicsGeomBase::getOffsetQuaternion(void) const
+{
+    return _sfOffsetQuaternion.getValue();
+}
+
+//! Set the value of the PhysicsGeom::_sfOffsetQuaternion field.
+inline
+void PhysicsGeomBase::setOffsetQuaternion(const Quaternion &value)
+{
+    _sfOffsetQuaternion.setValue(value);
+}
+
 //! Get the value of the PhysicsGeom::_sfCategoryBits field.
 inline
 UInt64 &PhysicsGeomBase::getCategoryBits(void)
@@ -324,5 +382,5 @@ void PhysicsGeomBase::setEnable(const bool &value)
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSGEOMBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsGeomBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSGEOMBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

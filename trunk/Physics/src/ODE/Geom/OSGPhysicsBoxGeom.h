@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,21 +58,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBoxGeom : public PhysicsBoxGeomBase
     /*==========================  PUBLIC  =================================*/
   public:
 	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Vec3f getLengths(void);
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-	  void setLengths(const Vec3f &value );
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initBoxGeom();
 	  Real32 getPointDepth(const Vec3f& p);
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

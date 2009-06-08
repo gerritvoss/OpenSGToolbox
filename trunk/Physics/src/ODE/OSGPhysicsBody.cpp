@@ -47,6 +47,7 @@
 #include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsBody.h"
+#include "OSGPhysicsWorld.h"
 #include "OSGPhysicsHandler.h"
 
 OSG_USING_NAMESPACE
@@ -624,7 +625,6 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
         dMass TheMass;
         dBodyGetMass(_BodyID, &TheMass);
         
-        dMatrix3 rotation;
         Vec4f v1 =  getMassInertiaTensor()[0];
         Vec4f v2 =  getMassInertiaTensor()[1];
         Vec4f v3 =  getMassInertiaTensor()[2];

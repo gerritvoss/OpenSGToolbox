@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -71,6 +71,9 @@
 #include <OpenSG/OSGVec3fFields.h> // Position type
 #include <OpenSG/OSGMatrixFields.h> // Rotation type
 #include <OpenSG/OSGQuaternionFields.h> // Quaternion type
+#include <OpenSG/OSGVec3fFields.h> // OffsetPosition type
+#include <OpenSG/OSGMatrixFields.h> // OffsetRotation type
+#include <OpenSG/OSGQuaternionFields.h> // OffsetQuaternion type
 #include <OpenSG/OSGUInt64Fields.h> // CategoryBits type
 #include <OpenSG/OSGUInt64Fields.h> // CollideBits type
 #include "ODE/Spaces/OSGPhysicsSpaceFields.h" // Space type
@@ -98,21 +101,27 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsGeomBase : public Attachment
 
     enum
     {
-        BodyFieldId         = Inherited::NextFieldId,
-        PositionFieldId     = BodyFieldId         + 1,
-        RotationFieldId     = PositionFieldId     + 1,
-        QuaternionFieldId   = RotationFieldId     + 1,
-        CategoryBitsFieldId = QuaternionFieldId   + 1,
-        CollideBitsFieldId  = CategoryBitsFieldId + 1,
-        SpaceFieldId        = CollideBitsFieldId  + 1,
-        EnableFieldId       = SpaceFieldId        + 1,
-        NextFieldId         = EnableFieldId       + 1
+        BodyFieldId             = Inherited::NextFieldId,
+        PositionFieldId         = BodyFieldId             + 1,
+        RotationFieldId         = PositionFieldId         + 1,
+        QuaternionFieldId       = RotationFieldId         + 1,
+        OffsetPositionFieldId   = QuaternionFieldId       + 1,
+        OffsetRotationFieldId   = OffsetPositionFieldId   + 1,
+        OffsetQuaternionFieldId = OffsetRotationFieldId   + 1,
+        CategoryBitsFieldId     = OffsetQuaternionFieldId + 1,
+        CollideBitsFieldId      = CategoryBitsFieldId     + 1,
+        SpaceFieldId            = CollideBitsFieldId      + 1,
+        EnableFieldId           = SpaceFieldId            + 1,
+        NextFieldId             = EnableFieldId           + 1
     };
 
     static const OSG::BitVector BodyFieldMask;
     static const OSG::BitVector PositionFieldMask;
     static const OSG::BitVector RotationFieldMask;
     static const OSG::BitVector QuaternionFieldMask;
+    static const OSG::BitVector OffsetPositionFieldMask;
+    static const OSG::BitVector OffsetRotationFieldMask;
+    static const OSG::BitVector OffsetQuaternionFieldMask;
     static const OSG::BitVector CategoryBitsFieldMask;
     static const OSG::BitVector CollideBitsFieldMask;
     static const OSG::BitVector SpaceFieldMask;
@@ -147,6 +156,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsGeomBase : public Attachment
            SFVec3f             *getSFPosition       (void);
            SFMatrix            *getSFRotation       (void);
            SFQuaternion        *getSFQuaternion     (void);
+           SFVec3f             *getSFOffsetPosition (void);
+           SFMatrix            *getSFOffsetRotation (void);
+           SFQuaternion        *getSFOffsetQuaternion(void);
            SFUInt64            *getSFCategoryBits   (void);
            SFUInt64            *getSFCollideBits    (void);
            SFPhysicsSpacePtr   *getSFSpace          (void);
@@ -160,6 +172,12 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsGeomBase : public Attachment
      const Matrix              &getRotation       (void) const;
            Quaternion          &getQuaternion     (void);
      const Quaternion          &getQuaternion     (void) const;
+           Vec3f               &getOffsetPosition (void);
+     const Vec3f               &getOffsetPosition (void) const;
+           Matrix              &getOffsetRotation (void);
+     const Matrix              &getOffsetRotation (void) const;
+           Quaternion          &getOffsetQuaternion(void);
+     const Quaternion          &getOffsetQuaternion(void) const;
            UInt64              &getCategoryBits   (void);
      const UInt64              &getCategoryBits   (void) const;
            UInt64              &getCollideBits    (void);
@@ -178,6 +196,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsGeomBase : public Attachment
      void setPosition       ( const Vec3f &value );
      void setRotation       ( const Matrix &value );
      void setQuaternion     ( const Quaternion &value );
+     void setOffsetPosition ( const Vec3f &value );
+     void setOffsetRotation ( const Matrix &value );
+     void setOffsetQuaternion( const Quaternion &value );
      void setCategoryBits   ( const UInt64 &value );
      void setCollideBits    ( const UInt64 &value );
      void setSpace          ( const PhysicsSpacePtr &value );
@@ -201,22 +222,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsGeomBase : public Attachment
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  PhysicsGeomPtr      create          (void); 
-    static  PhysicsGeomPtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -228,6 +233,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsGeomBase : public Attachment
     SFVec3f             _sfPosition;
     SFMatrix            _sfRotation;
     SFQuaternion        _sfQuaternion;
+    SFVec3f             _sfOffsetPosition;
+    SFMatrix            _sfOffsetRotation;
+    SFQuaternion        _sfOffsetQuaternion;
     SFUInt64            _sfCategoryBits;
     SFUInt64            _sfCollideBits;
     SFPhysicsSpacePtr   _sfSpace;
@@ -309,6 +317,6 @@ typedef RefPtr<PhysicsGeomPtr> PhysicsGeomRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSGEOMBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsGeomBase.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSGEOMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSGEOMBASE_H_ */

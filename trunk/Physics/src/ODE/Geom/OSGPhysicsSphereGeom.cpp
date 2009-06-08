@@ -76,11 +76,10 @@ void PhysicsSphereGeom::initMethod (void)
 \***************************************************************************/
 void PhysicsSphereGeom::onCreate(const PhysicsSphereGeom *)
 {
-	PhysicsSphereGeomPtr tmpPtr(*this);
-	tmpPtr->id = dCreateSphere(0, 1.0f);
-	PhysicsSphereGeomBase::setRadius(tmpPtr->getRadius());
-    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(id));
-    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(id));
+	_GeomID = dCreateSphere(0, 1.0f);
+	PhysicsSphereGeomBase::setRadius(getRadius());
+    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(_GeomID));
+    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
 void PhysicsSphereGeom::onDestroy()
@@ -92,8 +91,7 @@ void PhysicsSphereGeom::onDestroy()
 \***************************************************************************/
 Real32 PhysicsSphereGeom::getRadius(void)
 {
-	PhysicsSphereGeomPtr tmpPtr(*this);
-	return dGeomSphereGetRadius(tmpPtr->id);
+	return dGeomSphereGetRadius(_GeomID);
 }
 /***************************************************************************\
 *                              Field Set	                               *
@@ -101,8 +99,7 @@ Real32 PhysicsSphereGeom::getRadius(void)
 
 void PhysicsSphereGeom::setRadius(const Real32 &value )
 {
-	PhysicsSphereGeomPtr tmpPtr(*this);
-	dGeomSphereSetRadius(tmpPtr->id, value);
+	dGeomSphereSetRadius(_GeomID, value);
 	PhysicsSphereGeomBase::setRadius(value);
 }
 /***************************************************************************\
@@ -111,12 +108,10 @@ void PhysicsSphereGeom::setRadius(const Real32 &value )
 void PhysicsSphereGeom::initSphereGeom()
 {
     setRadius(PhysicsSphereGeomBase::getRadius());
-    initGeom();
 }
 Real32 PhysicsSphereGeom::getPointDepth(const Vec3f& p)
 {
-	PhysicsSphereGeomPtr tmpPtr(*this);
-	return (Real32)dGeomSpherePointDepth(tmpPtr->id, p.x(), p.y(), p.z());
+	return (Real32)dGeomSpherePointDepth(_GeomID, p.x(), p.y(), p.z());
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -9,7 +9,7 @@
 	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="world"
@@ -17,6 +17,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+      header="ODE/OSGPhysicsWorldFields.h"
 	>
 	</Field>
 	<Field
@@ -26,6 +27,7 @@
 		visibility="external"
 		defaultValue="NullFC"
 		access="public"
+      header="ODE/OSGPhysicsBodyFields.h"
 	>
 	</Field>
 	<Field
@@ -35,6 +37,7 @@
 		visibility="external"
 		defaultValue="NullFC"
 		access="public"
+      header="ODE/OSGPhysicsBodyFields.h"
 	>
 	</Field>
 </FieldContainer>

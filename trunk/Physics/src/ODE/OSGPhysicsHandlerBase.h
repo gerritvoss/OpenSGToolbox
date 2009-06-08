@@ -67,8 +67,8 @@
 
 #include <OpenSG/OSGAttachment.h> // Parent
 
-#include <OpenSG/OSGPhysicsWorldFields.h> // World type
-#include <OpenSG/OSGPhysicsSpaceFields.h> // Spaces type
+#include "OSGPhysicsWorldFields.h" // World type
+#include "ODE/Spaces/OSGPhysicsSpaceFields.h" // Spaces type
 #include <OpenSG/OSGReal32Fields.h> // StepSize type
 #include <OpenSG/OSGUInt32Fields.h> // MaxStepsPerUpdate type
 

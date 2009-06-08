@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -81,200 +81,38 @@ void PhysicsGeom::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsGeom::onCreate(const PhysicsGeom *)
 {
-	PhysicsGeomPtr tmpPtr(*this);
 	// geom will be created in subclass
 }
 
 void PhysicsGeom::onDestroy()
 {
-	PhysicsGeomPtr tmpPtr(*this);
-	if (tmpPtr->id) {
-   		//dGeomDestroy(tmpPtr->id);
-        tmpPtr->id = 0;
+	if (_GeomID) {
+   		//dGeomDestroy(_GeomID);
+        _GeomID = 0;
 	}
 }
 
 /***************************************************************************\
 *                              Field Get	                               *
 \***************************************************************************/
-
-Vec3f PhysicsGeom::getPosition(void)
+dGeomID PhysicsGeom::getGeomID(void) const
 {
-	PhysicsGeomPtr tmpPtr(*this);
-	const dReal* tmp = dGeomGetPosition(tmpPtr->id);
-	return Vec3f(tmp[0], tmp[1], tmp[2]);
-}
-
-Matrix PhysicsGeom::getRotation(void)
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	const dReal* tmp = dGeomGetRotation(tmpPtr->id);
-	const dMatrix3& rotation = *(const dMatrix3*)tmp;
-    return Matrix(rotation[0],rotation[1], rotation[2],0,
-        rotation[4], rotation[5], rotation[6], 0,
-        rotation[8], rotation[9], rotation[10], 0,
-        0,0,0,1);
-}
-
-Quaternion PhysicsGeom::getQuaternion(void)
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	dQuaternion q;
-	dGeomGetQuaternion(tmpPtr->id, q);
-    Quaternion result;
-    result.setValueAsQuat(q[1], q[2], q[3], q[0]);
-    return result;
-}
-
-UInt64 PhysicsGeom::getCategoryBits(void)
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	return (UInt64) dGeomGetCategoryBits(tmpPtr->id);
-}
-
-UInt64 PhysicsGeom::getCollideBits(void)
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	return (UInt64) dGeomGetCollideBits(tmpPtr->id);
-}
-
-PhysicsSpacePtr PhysicsGeom::getSpace(void)
-{
-    PhysicsGeomPtr tmpPtr(*this);
-    dSpaceID sID = dGeomGetSpace(tmpPtr->id);
-    PhysicsSpacePtr space = PhysicsSpacePtr::dcast(PhysicsGeomBase::getSpace());
-    assert(space!=NullFC);
-    if(sID != space->getSpaceID())
-        space->setSpaceID(sID);
-    return space;
-}
-
-bool PhysicsGeom::getEnable(void)
-{
-    PhysicsGeomPtr tmpPtr(*this);
-    return (dGeomIsEnabled(tmpPtr->id)) ? true : false;
-}
-
-dGeomID PhysicsGeom::getGeomID(void)
-{
-    PhysicsGeomPtr tmpPtr(*this);
-    return tmpPtr->id;
+    return _GeomID;
 }
 /***************************************************************************\
 *                              Field Set	                               *
 \***************************************************************************/
-
-void PhysicsGeom::setBody(const PhysicsBodyPtr &value )
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	dGeomSetBody(tmpPtr->id, value->getBodyID());
-	PhysicsGeomBase::setBody(value);
-}
-
-void PhysicsGeom::setPosition(const Vec3f &value )
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	dGeomSetPosition(tmpPtr->id, value.x(),value.y(),value.z());
-	PhysicsGeomBase::setPosition(value);
-}
-
-void PhysicsGeom::setRotation(const Matrix &value )
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	dMatrix3 rotation;
-	Vec4f v1 =  value[0];
-	Vec4f v2 =  value[1];
-	Vec4f v3 =  value[2];
-	rotation[0]   = v1.x();
-	rotation[1]   = v1.y();
-	rotation[2]   = v1.z();
-	rotation[3]   = 0;
-	rotation[4]   = v2.x();
-	rotation[5]   = v2.y();
-	rotation[6]   = v2.z();
-	rotation[7]   = 0;
-	rotation[8]   = v3.x();
-	rotation[9]   = v3.y();
-	rotation[10]  = v3.z();
-	rotation[11]  = 0;
-	dGeomSetRotation(tmpPtr->id, rotation);
-	PhysicsGeomBase::setRotation(value);
-}
-
-void PhysicsGeom::setQuaternion(const Quaternion &value )
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	dQuaternion q;
-	q[0]=value.w();
-	q[1]=value.x();
-	q[2]=value.y();
-	q[3]=value.z();
-	dGeomSetQuaternion(tmpPtr->id,q);
-	PhysicsGeomBase::setQuaternion(value);
-}
-
-void PhysicsGeom::setCategoryBits(const UInt64 &value )
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	dGeomSetCategoryBits(tmpPtr->id, value);
-	PhysicsGeomBase::setCategoryBits(value);
-}
-
-void PhysicsGeom::setCollideBits(const UInt64 &value )
-{
-	PhysicsGeomPtr tmpPtr(*this);
-	dGeomSetCollideBits(tmpPtr->id, value);
-	PhysicsGeomBase::setCollideBits(value);
-}
-
-void PhysicsGeom::setSpace(const PhysicsSpacePtr &value )
-{
-    PhysicsGeomPtr tmpPtr(*this);
-    dSpaceAdd(value->getSpaceID(), tmpPtr->id);
-    PhysicsGeomBase::setSpace(value);
-}
-
-void PhysicsGeom::setEnable(const bool &value )
-{
-    PhysicsGeomPtr tmpPtr(*this);
-    if(value)
-        dGeomEnable(tmpPtr->id);
-    else
-        dGeomDisable(tmpPtr->id);
-    PhysicsGeomBase::setEnable(value);
-}
-
 void PhysicsGeom::setGeomID(const dGeomID &value)
 {
-    PhysicsGeomPtr tmpPtr(*this);
-    tmpPtr->id = value;
+    _GeomID = value;
 }
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsGeom::initGeom()
+void PhysicsGeom::getAABB(Real32 aabb[6]) const
 {
-
-    if(PhysicsGeomBase::getBody()!=NullFC)
-    {
-        setBody(PhysicsGeomBase::getBody());
-    }
-    else
-    {
-        setPosition(PhysicsGeomBase::getPosition());
-        setRotation(PhysicsGeomBase::getRotation());
-        setQuaternion(PhysicsGeomBase::getQuaternion());
-    }
-    setCategoryBits(PhysicsGeomBase::getCategoryBits());
-    setCollideBits(PhysicsGeomBase::getCollideBits());
-    setSpace(PhysicsGeomBase::getSpace());
-    setEnable(PhysicsGeomBase::getEnable());
-}
-void PhysicsGeom::getAABB(Real32 aabb[6])
-{
-	PhysicsGeomPtr tmpPtr(*this);
 	dReal t[6];
-	dGeomGetAABB(tmpPtr->id, t);
+	dGeomGetAABB(_GeomID, t);
 	aabb[0] = t[0];
 	aabb[1] = t[1];
 	aabb[2] = t[2];
@@ -283,35 +121,35 @@ void PhysicsGeom::getAABB(Real32 aabb[6])
 	aabb[5] = t[5];
 }
 
-Int32 PhysicsGeom::isSpace(void)
+bool PhysicsGeom::isSpace(void) const
 {
-	PhysicsGeomPtr tmpPtr(*this);
-	return dGeomIsSpace(tmpPtr->id);
+	return static_cast<bool>(dGeomIsSpace(_GeomID));
 }
 
-Int32 PhysicsGeom::getGeomClass(void)
+void PhysicsGeom::clearOffset(void)
 {
-	PhysicsGeomPtr tmpPtr(*this);
-	return dGeomGetClass(tmpPtr->id);
+    dGeomClearOffset(_GeomID);
+}
+
+Int32 PhysicsGeom::getGeomClass(void) const
+{
+	return dGeomGetClass(_GeomID);
 }
 
 void PhysicsGeom::setData( void* someData)
 {
-	PhysicsGeomPtr tmpPtr(*this);
-	dGeomSetData(tmpPtr->id, someData);
+	dGeomSetData(_GeomID, someData);
 }
 
-void* PhysicsGeom::getData(void)
+void* PhysicsGeom::getData(void) const
 {
-	PhysicsGeomPtr tmpPtr(*this);
-	return dGeomGetData(tmpPtr->id);
+	return dGeomGetData(_GeomID);
 
 }
 
 void PhysicsGeom::Collide2(dGeomID otherGID, void* someData, dNearCallback* callback)
 {
-	PhysicsGeomPtr tmpPtr(*this);
-	dSpaceCollide2(tmpPtr->id, otherGID, someData, callback);
+	dSpaceCollide2(_GeomID, otherGID, someData, callback);
 }
 
 
@@ -340,6 +178,100 @@ PhysicsGeom::~PhysicsGeom(void)
 void PhysicsGeom::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & BodyFieldMask)
+    {
+	    dGeomSetBody(_GeomID, getBody()->getBodyID());
+    }
+    if(whichField & PositionFieldMask)
+    {
+	    dGeomSetPosition(_GeomID, getPosition().x(),getPosition().y(),getPosition().z());
+    }
+    if(whichField & RotationFieldMask)
+    {
+	    dMatrix3 rotation;
+	    Vec4f v1 =  getRotation()[0];
+	    Vec4f v2 =  getRotation()[1];
+	    Vec4f v3 =  getRotation()[2];
+	    rotation[0]   = v1.x();
+	    rotation[1]   = v1.y();
+	    rotation[2]   = v1.z();
+	    rotation[3]   = 0;
+	    rotation[4]   = v2.x();
+	    rotation[5]   = v2.y();
+	    rotation[6]   = v2.z();
+	    rotation[7]   = 0;
+	    rotation[8]   = v3.x();
+	    rotation[9]   = v3.y();
+	    rotation[10]  = v3.z();
+	    rotation[11]  = 0;
+	    dGeomSetRotation(_GeomID, rotation);
+    }
+    if(whichField & QuaternionFieldMask)
+    {
+	    dQuaternion q;
+	    q[0]=getQuaternion().w();
+	    q[1]=getQuaternion().x();
+	    q[2]=getQuaternion().y();
+	    q[3]=getQuaternion().z();
+	    dGeomSetQuaternion(_GeomID,q);
+    }
+    if(whichField & OffsetPositionFieldMask)
+    {
+	    dGeomSetOffsetPosition(_GeomID, getOffsetPosition().x(),getOffsetPosition().y(),getOffsetPosition().z());
+    }
+    if(whichField & OffsetRotationFieldMask)
+    {
+	    dMatrix3 rotation;
+	    Vec4f v1 =  getOffsetRotation()[0];
+	    Vec4f v2 =  getOffsetRotation()[1];
+	    Vec4f v3 =  getOffsetRotation()[2];
+	    rotation[0]   = v1.x();
+	    rotation[1]   = v1.y();
+	    rotation[2]   = v1.z();
+	    rotation[3]   = 0;
+	    rotation[4]   = v2.x();
+	    rotation[5]   = v2.y();
+	    rotation[6]   = v2.z();
+	    rotation[7]   = 0;
+	    rotation[8]   = v3.x();
+	    rotation[9]   = v3.y();
+	    rotation[10]  = v3.z();
+	    rotation[11]  = 0;
+	    dGeomSetOffsetRotation(_GeomID, rotation);
+    }
+    if(whichField & OffsetQuaternionFieldMask)
+    {
+	    dQuaternion q;
+	    q[0]=getOffsetQuaternion().w();
+	    q[1]=getOffsetQuaternion().x();
+	    q[2]=getOffsetQuaternion().y();
+	    q[3]=getOffsetQuaternion().z();
+	    dGeomSetOffsetQuaternion(_GeomID,q);
+    }
+    if(whichField & CategoryBitsFieldMask)
+    {
+	    dGeomSetCategoryBits(_GeomID, getCategoryBits());
+    }
+    if(whichField & CollideBitsFieldMask)
+    {
+	    dGeomSetCollideBits(_GeomID, getCollideBits());
+    }
+    if(whichField & SpaceFieldMask)
+    {
+	    dSpaceAdd(getSpace()->getSpaceID(), _GeomID);
+    }
+    if(whichField & EnableFieldMask)
+    {
+        if(getEnable())
+        {
+            dGeomEnable(_GeomID);
+        }
+        else
+        {
+            dGeomDisable(_GeomID);
+        }
+    }
 }
 
 void PhysicsGeom::dump(      UInt32    , 

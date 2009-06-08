@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PhysicsHeightMapGeom"
+	parent="PhysicsGeom"
+	library="Physics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="heights"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	The heightfield data
+	</Field>
+	<Field
+		name="dimensions"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	world space heightfield dimensions on the geom's local X and Z axes
+	</Field>
+	<Field
+		name="widthSamples"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	specifies the number of vertices to sample along the width of the heightfield. Naturally this value must be at least two or more
+	</Field>
+	<Field
+		name="heightSamples"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	specifies the number of vertices to sample along the depth of the heightfield. Naturally this value must be at least two or more
+	</Field>
+	<Field
+		name="scale"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	vertical sample height multiplier, a uniform scale applied to all raw height data
+	</Field>
+	<Field
+		name="offset"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	vertical sample offset, added to the scaled height data
+	</Field>
+	<Field
+		name="thickness"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	thickness of AABB which is added below the lowest point, to prevent objects from falling through very thin heightfields
+	</Field>
+	<Field
+		name="wrap"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	is FALSE if the heightfield should be finite, TRUE if should tile infinitely
+	</Field>
+</FieldContainer>

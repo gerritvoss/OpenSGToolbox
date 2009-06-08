@@ -487,11 +487,11 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
     boxBody->setBoxMass(1.0,Dimensions.x(), Dimensions.y(), Dimensions.z());
 
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
-    beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+    beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
         boxGeom->setBody(boxBody);
         boxGeom->setSpace(hashSpace);
         boxGeom->setLengths(Dimensions);
-    endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+        endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
 
     //add attachments
     beginEditCP(boxNode, Node::AttachmentsFieldMask);

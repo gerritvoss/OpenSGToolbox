@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -62,42 +62,26 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsGeom : public PhysicsGeomBase
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Get Field                    */
 	  /*! \{                                                                 */
-	  PhysicsBodyPtr getBody(void);
-	  Vec3f getPosition(void);
-	  Matrix getRotation(void);
-	  Quaternion getQuaternion(void);
-	  UInt64 getCategoryBits(void);
-	  UInt64 getCollideBits(void);
-      PhysicsSpacePtr getSpace(void);
-      bool getEnable(void);
-      dGeomID getGeomID(void);
+      dGeomID getGeomID(void) const;
 	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific Set Field                    */
 	  /*! \{                                                                 */
-	  void setBody(const PhysicsBodyPtr &value);
-	  void setPosition(const Vec3f &value );
-	  void setRotation(const Matrix &value );
-	  void setQuaternion(const Quaternion &value );
-	  void setCategoryBits(const UInt64 &value );
-	  void setCollideBits(const UInt64 &value );
-      void setSpace(const PhysicsSpacePtr &value );
-      void setEnable(const bool &value );
-      void setGeomID(const dGeomID &value);
 	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-	  void getAABB(Real32 aabb[6]);
-	  Int32 isSpace(void);
-	  Int32 getGeomClass(void);
-	  bool isEnabled(void);
+	  void getAABB(Real32 aabb[6]) const;
+      void clearOffset(void);
+	  bool isSpace(void) const;
+	  Int32 getGeomClass(void) const;
+	  bool isEnabled(void) const;
 	  void setData(void* someData);
-	  void* getData(void);
+	  void* getData(void) const;
 	  void Collide2(dGeomID  otherGID, void* someData, dNearCallback* callback);
-      void initGeom();
+
 	  /*! \}                                                                 */
 
     /*---------------------------------------------------------------------*/
@@ -122,7 +106,9 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsGeom : public PhysicsGeomBase
     // Variables should all be in PhysicsGeomBase.
     // hmmm...not for this class
     //ode Geometry Id
-    dGeomID id;
+    dGeomID _GeomID;
+    void setGeomID(const dGeomID &value);
+
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
