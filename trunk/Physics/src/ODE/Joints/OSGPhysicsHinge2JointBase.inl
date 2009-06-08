@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -117,6 +117,104 @@ SFVec3f *PhysicsHinge2JointBase::getSFAxis2(void)
     return &_sfAxis2;
 }
 
+//! Get the PhysicsHinge2Joint::_sfHiStop field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFHiStop(void)
+{
+    return &_sfHiStop;
+}
+
+//! Get the PhysicsHinge2Joint::_sfLoStop field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFLoStop(void)
+{
+    return &_sfLoStop;
+}
+
+//! Get the PhysicsHinge2Joint::_sfBounce field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFBounce(void)
+{
+    return &_sfBounce;
+}
+
+//! Get the PhysicsHinge2Joint::_sfCFM field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFCFM(void)
+{
+    return &_sfCFM;
+}
+
+//! Get the PhysicsHinge2Joint::_sfStopERP field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFStopERP(void)
+{
+    return &_sfStopERP;
+}
+
+//! Get the PhysicsHinge2Joint::_sfStopCFM field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFStopCFM(void)
+{
+    return &_sfStopCFM;
+}
+
+//! Get the PhysicsHinge2Joint::_sfHiStop2 field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFHiStop2(void)
+{
+    return &_sfHiStop2;
+}
+
+//! Get the PhysicsHinge2Joint::_sfLoStop2 field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFLoStop2(void)
+{
+    return &_sfLoStop2;
+}
+
+//! Get the PhysicsHinge2Joint::_sfBounce2 field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFBounce2(void)
+{
+    return &_sfBounce2;
+}
+
+//! Get the PhysicsHinge2Joint::_sfCFM2 field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFCFM2(void)
+{
+    return &_sfCFM2;
+}
+
+//! Get the PhysicsHinge2Joint::_sfStopERP2 field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFStopERP2(void)
+{
+    return &_sfStopERP2;
+}
+
+//! Get the PhysicsHinge2Joint::_sfStopCFM2 field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFStopCFM2(void)
+{
+    return &_sfStopCFM2;
+}
+
+//! Get the PhysicsHinge2Joint::_sfSuspensionERP field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFSuspensionERP(void)
+{
+    return &_sfSuspensionERP;
+}
+
+//! Get the PhysicsHinge2Joint::_sfSuspensionCFM field.
+inline
+SFReal32 *PhysicsHinge2JointBase::getSFSuspensionCFM(void)
+{
+    return &_sfSuspensionCFM;
+}
+
 
 //! Get the value of the PhysicsHinge2Joint::_sfAnchor field.
 inline
@@ -181,8 +279,302 @@ void PhysicsHinge2JointBase::setAxis2(const Vec3f &value)
     _sfAxis2.setValue(value);
 }
 
+//! Get the value of the PhysicsHinge2Joint::_sfHiStop field.
+inline
+Real32 &PhysicsHinge2JointBase::getHiStop(void)
+{
+    return _sfHiStop.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfHiStop field.
+inline
+const Real32 &PhysicsHinge2JointBase::getHiStop(void) const
+{
+    return _sfHiStop.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfHiStop field.
+inline
+void PhysicsHinge2JointBase::setHiStop(const Real32 &value)
+{
+    _sfHiStop.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfLoStop field.
+inline
+Real32 &PhysicsHinge2JointBase::getLoStop(void)
+{
+    return _sfLoStop.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfLoStop field.
+inline
+const Real32 &PhysicsHinge2JointBase::getLoStop(void) const
+{
+    return _sfLoStop.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfLoStop field.
+inline
+void PhysicsHinge2JointBase::setLoStop(const Real32 &value)
+{
+    _sfLoStop.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfBounce field.
+inline
+Real32 &PhysicsHinge2JointBase::getBounce(void)
+{
+    return _sfBounce.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfBounce field.
+inline
+const Real32 &PhysicsHinge2JointBase::getBounce(void) const
+{
+    return _sfBounce.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfBounce field.
+inline
+void PhysicsHinge2JointBase::setBounce(const Real32 &value)
+{
+    _sfBounce.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfCFM field.
+inline
+Real32 &PhysicsHinge2JointBase::getCFM(void)
+{
+    return _sfCFM.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfCFM field.
+inline
+const Real32 &PhysicsHinge2JointBase::getCFM(void) const
+{
+    return _sfCFM.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfCFM field.
+inline
+void PhysicsHinge2JointBase::setCFM(const Real32 &value)
+{
+    _sfCFM.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfStopERP field.
+inline
+Real32 &PhysicsHinge2JointBase::getStopERP(void)
+{
+    return _sfStopERP.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfStopERP field.
+inline
+const Real32 &PhysicsHinge2JointBase::getStopERP(void) const
+{
+    return _sfStopERP.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfStopERP field.
+inline
+void PhysicsHinge2JointBase::setStopERP(const Real32 &value)
+{
+    _sfStopERP.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfStopCFM field.
+inline
+Real32 &PhysicsHinge2JointBase::getStopCFM(void)
+{
+    return _sfStopCFM.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfStopCFM field.
+inline
+const Real32 &PhysicsHinge2JointBase::getStopCFM(void) const
+{
+    return _sfStopCFM.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfStopCFM field.
+inline
+void PhysicsHinge2JointBase::setStopCFM(const Real32 &value)
+{
+    _sfStopCFM.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfHiStop2 field.
+inline
+Real32 &PhysicsHinge2JointBase::getHiStop2(void)
+{
+    return _sfHiStop2.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfHiStop2 field.
+inline
+const Real32 &PhysicsHinge2JointBase::getHiStop2(void) const
+{
+    return _sfHiStop2.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfHiStop2 field.
+inline
+void PhysicsHinge2JointBase::setHiStop2(const Real32 &value)
+{
+    _sfHiStop2.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfLoStop2 field.
+inline
+Real32 &PhysicsHinge2JointBase::getLoStop2(void)
+{
+    return _sfLoStop2.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfLoStop2 field.
+inline
+const Real32 &PhysicsHinge2JointBase::getLoStop2(void) const
+{
+    return _sfLoStop2.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfLoStop2 field.
+inline
+void PhysicsHinge2JointBase::setLoStop2(const Real32 &value)
+{
+    _sfLoStop2.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfBounce2 field.
+inline
+Real32 &PhysicsHinge2JointBase::getBounce2(void)
+{
+    return _sfBounce2.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfBounce2 field.
+inline
+const Real32 &PhysicsHinge2JointBase::getBounce2(void) const
+{
+    return _sfBounce2.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfBounce2 field.
+inline
+void PhysicsHinge2JointBase::setBounce2(const Real32 &value)
+{
+    _sfBounce2.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfCFM2 field.
+inline
+Real32 &PhysicsHinge2JointBase::getCFM2(void)
+{
+    return _sfCFM2.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfCFM2 field.
+inline
+const Real32 &PhysicsHinge2JointBase::getCFM2(void) const
+{
+    return _sfCFM2.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfCFM2 field.
+inline
+void PhysicsHinge2JointBase::setCFM2(const Real32 &value)
+{
+    _sfCFM2.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfStopERP2 field.
+inline
+Real32 &PhysicsHinge2JointBase::getStopERP2(void)
+{
+    return _sfStopERP2.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfStopERP2 field.
+inline
+const Real32 &PhysicsHinge2JointBase::getStopERP2(void) const
+{
+    return _sfStopERP2.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfStopERP2 field.
+inline
+void PhysicsHinge2JointBase::setStopERP2(const Real32 &value)
+{
+    _sfStopERP2.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfStopCFM2 field.
+inline
+Real32 &PhysicsHinge2JointBase::getStopCFM2(void)
+{
+    return _sfStopCFM2.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfStopCFM2 field.
+inline
+const Real32 &PhysicsHinge2JointBase::getStopCFM2(void) const
+{
+    return _sfStopCFM2.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfStopCFM2 field.
+inline
+void PhysicsHinge2JointBase::setStopCFM2(const Real32 &value)
+{
+    _sfStopCFM2.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfSuspensionERP field.
+inline
+Real32 &PhysicsHinge2JointBase::getSuspensionERP(void)
+{
+    return _sfSuspensionERP.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfSuspensionERP field.
+inline
+const Real32 &PhysicsHinge2JointBase::getSuspensionERP(void) const
+{
+    return _sfSuspensionERP.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfSuspensionERP field.
+inline
+void PhysicsHinge2JointBase::setSuspensionERP(const Real32 &value)
+{
+    _sfSuspensionERP.setValue(value);
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfSuspensionCFM field.
+inline
+Real32 &PhysicsHinge2JointBase::getSuspensionCFM(void)
+{
+    return _sfSuspensionCFM.getValue();
+}
+
+//! Get the value of the PhysicsHinge2Joint::_sfSuspensionCFM field.
+inline
+const Real32 &PhysicsHinge2JointBase::getSuspensionCFM(void) const
+{
+    return _sfSuspensionCFM.getValue();
+}
+
+//! Set the value of the PhysicsHinge2Joint::_sfSuspensionCFM field.
+inline
+void PhysicsHinge2JointBase::setSuspensionCFM(const Real32 &value)
+{
+    _sfSuspensionCFM.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSHINGE2JOINTBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsHinge2JointBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSHINGE2JOINTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

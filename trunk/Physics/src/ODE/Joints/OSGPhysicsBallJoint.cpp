@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -71,6 +71,24 @@ void PhysicsBallJoint::initMethod (void)
 {
 }
 
+PhysicsBallJointPtr PhysicsBallJoint::create(PhysicsWorldPtr w)
+{
+    PhysicsBallJointPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PhysicsBallJointPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    if(fc != NullFC)
+    {
+        beginEditCP(fc, PhysicsBallJoint::WorldFieldMask);
+            fc->setWorld(w);
+        endEditCP(fc, PhysicsBallJoint::WorldFieldMask);
+    }
+    
+    return fc; 
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -80,7 +98,6 @@ void PhysicsBallJoint::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsBallJoint::onCreate(const PhysicsBallJoint *)
 {
-	PhysicsBallJointPtr tmpPtr(*this);
 	//call initJoint!
 }
 
@@ -90,47 +107,13 @@ void PhysicsBallJoint::onDestroy()
 }
 
 /***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-Vec3f PhysicsBallJoint::getAnchor(void)
-{
-	PhysicsBallJointPtr tmpPtr(*this);
-	dVector3 a;
-	dJointGetBallAnchor(tmpPtr->id, a);
-	return Vec3f(a[0], a[1], a[2]);
-}
-
-
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-void PhysicsBallJoint::setAnchor(const Vec3f &value )
-{
-	PhysicsBallJointPtr tmpPtr(*this);
-	dJointSetBallAnchor(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsBallJointBase::setAnchor(value);
-}
-
-void PhysicsBallJoint::setWorld(const PhysicsWorldPtr &value )
-{
-    PhysicsBallJointPtr tmpPtr(*this);
-    tmpPtr->setJointID(dJointCreateBall(value->getWorldID(), 0));
-    PhysicsJointBase::setWorld(value);
-}
-/***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsBallJoint::initBallJoint()
-{
-    setAnchor(PhysicsBallJointBase::getAnchor());
-    setWorld(PhysicsBallJointBase::getWorld());
-    initJoint();
-}
 Vec3f PhysicsBallJoint::getAnchor2(void)
 {
 	PhysicsBallJointPtr tmpPtr(*this);
 	dVector3 a;
-	dJointGetBallAnchor2(tmpPtr->id, a);
+	dJointGetBallAnchor2(_JointID, a);
 	return Vec3f(a[0], a[1], a[2]);
 }
 /*-------------------------------------------------------------------------*\
@@ -157,7 +140,21 @@ PhysicsBallJoint::~PhysicsBallJoint(void)
 
 void PhysicsBallJoint::changed(BitVector whichField, UInt32 origin)
 {
+    if(whichField & WorldFieldMask)
+    {
+        if(_JointID)
+        {
+            dJointDestroy(_JointID);
+        }
+        _JointID = dJointCreateBall(getWorld()->getWorldID(), 0);
+    }
+    
     Inherited::changed(whichField, origin);
+
+    if((whichField & AnchorFieldMask) || (whichField & WorldFieldMask))
+    {
+	    dJointSetBallAnchor(_JointID, getAnchor().x(), getAnchor().y(), getAnchor().z());
+    }
 }
 
 void PhysicsBallJoint::dump(      UInt32    , 

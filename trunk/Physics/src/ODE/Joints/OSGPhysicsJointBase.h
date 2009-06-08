@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,12 +65,11 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachment.h> // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/OSGVec2fFields.h> // Param type
-#include "ODE/OSGPhysicsWorldFields.h" // World type
-#include "ODE/OSGPhysicsBodyFields.h" // FirstBody type
-#include "ODE/OSGPhysicsBodyFields.h" // SecondBody type
+#include <OpenSG/OSGPhysicsWorldFields.h> // World type
+#include <OpenSG/OSGPhysicsBodyFields.h> // FirstBody type
+#include <OpenSG/OSGPhysicsBodyFields.h> // SecondBody type
 
 #include "OSGPhysicsJointFields.h"
 
@@ -81,11 +80,11 @@ class BinaryDataHandler;
 
 //! \brief PhysicsJoint Base Class.
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsJointBase : public Attachment
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsJointBase : public AttachmentContainer
 {
   private:
 
-    typedef Attachment    Inherited;
+    typedef AttachmentContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -94,14 +93,12 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsJointBase : public Attachment
 
     enum
     {
-        ParamFieldId      = Inherited::NextFieldId,
-        WorldFieldId      = ParamFieldId      + 1,
+        WorldFieldId      = Inherited::NextFieldId,
         FirstBodyFieldId  = WorldFieldId      + 1,
         SecondBodyFieldId = FirstBodyFieldId  + 1,
         NextFieldId       = SecondBodyFieldId + 1
     };
 
-    static const OSG::BitVector ParamFieldMask;
     static const OSG::BitVector WorldFieldMask;
     static const OSG::BitVector FirstBodyFieldMask;
     static const OSG::BitVector SecondBodyFieldMask;
@@ -131,13 +128,10 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsJointBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec2f             *getSFParam          (void);
            SFPhysicsWorldPtr   *getSFWorld          (void);
            SFPhysicsBodyPtr    *getSFFirstBody      (void);
            SFPhysicsBodyPtr    *getSFSecondBody     (void);
 
-           Vec2f               &getParam          (void);
-     const Vec2f               &getParam          (void) const;
            PhysicsWorldPtr     &getWorld          (void);
      const PhysicsWorldPtr     &getWorld          (void) const;
            PhysicsBodyPtr      &getFirstBody      (void);
@@ -150,7 +144,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsJointBase : public Attachment
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setParam          ( const Vec2f &value );
      void setWorld          ( const PhysicsWorldPtr &value );
      void setFirstBody      ( const PhysicsBodyPtr &value );
      void setSecondBody     ( const PhysicsBodyPtr &value );
@@ -173,22 +166,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsJointBase : public Attachment
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  PhysicsJointPtr      create          (void); 
-    static  PhysicsJointPtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -196,7 +173,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsJointBase : public Attachment
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFVec2f             _sfParam;
     SFPhysicsWorldPtr   _sfWorld;
     SFPhysicsBodyPtr    _sfFirstBody;
     SFPhysicsBodyPtr    _sfSecondBody;
@@ -277,6 +253,6 @@ typedef RefPtr<PhysicsJointPtr> PhysicsJointRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSJOINTBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsJointBase.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSJOINTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSJOINTBASE_H_ */

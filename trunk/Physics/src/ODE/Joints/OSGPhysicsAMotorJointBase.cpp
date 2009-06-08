@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,19 +57,118 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsAMotorJointBase.h"
 #include "OSGPhysicsAMotorJoint.h"
 
+#include <ode/ode.h>                      // Mode default header
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsAMotorJointBase::ModeFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::ModeFieldId);
 
 const OSG::BitVector  PhysicsAMotorJointBase::NumAxesFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::NumAxesFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Axis1FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Axis1FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Axis2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Axis2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Axis3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Axis3FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Axis1ReferenceFrameFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Axis1ReferenceFrameFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Axis2ReferenceFrameFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Axis2ReferenceFrameFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Axis3ReferenceFrameFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Axis3ReferenceFrameFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::VelFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::VelFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::FMaxFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::FMaxFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::FudgeFactorFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::FudgeFactorFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Vel2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Vel2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::FMax2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::FMax2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::FudgeFactor2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::FudgeFactor2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Vel3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Vel3FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::FMax3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::FMax3FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::FudgeFactor3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::FudgeFactor3FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::HiStopFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::HiStopFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::LoStopFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::LoStopFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::BounceFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::BounceFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::CFMFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::CFMFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::StopERPFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::StopERPFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::StopCFMFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::StopCFMFieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::HiStop2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::HiStop2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::LoStop2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::LoStop2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Bounce2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Bounce2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::CFM2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::CFM2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::StopERP2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::StopERP2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::StopCFM2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::StopCFM2FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::HiStop3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::HiStop3FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::LoStop3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::LoStop3FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::Bounce3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::Bounce3FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::CFM3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::CFM3FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::StopERP3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::StopERP3FieldId);
+
+const OSG::BitVector  PhysicsAMotorJointBase::StopCFM3FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsAMotorJointBase::StopCFM3FieldId);
 
 const OSG::BitVector PhysicsAMotorJointBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -78,27 +177,291 @@ const OSG::BitVector PhysicsAMotorJointBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Int32           PhysicsAMotorJointBase::_sfMode
+/*! \var Int8            PhysicsAMotorJointBase::_sfMode
     
 */
-/*! \var Int32           PhysicsAMotorJointBase::_sfNumAxes
+/*! \var UInt8           PhysicsAMotorJointBase::_sfNumAxes
     
+*/
+/*! \var Vec3f           PhysicsAMotorJointBase::_sfAxis1
+    
+*/
+/*! \var Vec3f           PhysicsAMotorJointBase::_sfAxis2
+    
+*/
+/*! \var Vec3f           PhysicsAMotorJointBase::_sfAxis3
+    
+*/
+/*! \var UInt8           PhysicsAMotorJointBase::_sfAxis1ReferenceFrame
+    
+*/
+/*! \var UInt8           PhysicsAMotorJointBase::_sfAxis2ReferenceFrame
+    
+*/
+/*! \var UInt8           PhysicsAMotorJointBase::_sfAxis3ReferenceFrame
+    
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfVel
+    Desired motor angular velocity.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfFMax
+    The maximum torque that the motor will use to achieve the desired velocity. This must always be greater than or equal to zero. Setting this to zero (the default value) turns off the motor.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfFudgeFactor
+    The current joint stop/motor implementation has a small problem: when the joint is at one stop and the motor is set to move it away from the stop, too much force may be applied for one time step, causing a jumping motion. This fudge factor is used to scale this excess force. It should have a value between zero and one (the default value). If the jumping motion is too visible in a joint, the value can be reduced. Making this value too small can prevent the motor from being able to move the joint away from a stop.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfVel2
+    Desired motor linear velocity.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfFMax2
+    The maximum force that the motor will use to achieve the desired velocity. This must always be greater than or equal to zero. Setting this to zero (the default value) turns off the motor.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfFudgeFactor2
+    The current joint stop/motor implementation has a small problem: when the joint is at one stop and the motor is set to move it away from the stop, too much force may be applied for one time step, causing a jumping motion. This fudge factor is used to scale this excess force. It should have a value between zero and one (the default value). If the jumping motion is too visible in a joint, the value can be reduced. Making this value too small can prevent the motor from being able to move the joint away from a stop.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfVel3
+    Desired motor linear velocity.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfFMax3
+    The maximum force that the motor will use to achieve the desired velocity. This must always be greater than or equal to zero. Setting this to zero (the default value) turns off the motor.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfFudgeFactor3
+    The current joint stop/motor implementation has a small problem: when the joint is at one stop and the motor is set to move it away from the stop, too much force may be applied for one time step, causing a jumping motion. This fudge factor is used to scale this excess force. It should have a value between zero and one (the default value). If the jumping motion is too visible in a joint, the value can be reduced. Making this value too small can prevent the motor from being able to move the joint away from a stop.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfHiStop
+    High stop angle or position. Setting this to dInfinity (the default value) turns off the high stop. For rotational joints, this stop must be less than pi to be effective. If the high stop is less than the low stop then both stops will be ineffective.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfLoStop
+    Low stop angle or position. Setting this to -dInfinity (the default value) turns off the low stop.  For rotational joints, this stop must be greater than - pi to be effective.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfBounce
+    The bouncyness of the stops. This is a restitution parameter in the range 0..1. 0 means the stops are not bouncy at all, 1 means maximum bouncyness.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfCFM
+    The constraint force mixing (CFM) value used when not at a stop.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfStopERP
+    The error reduction parameter (ERP) used by the stops.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfStopCFM
+    The constraint force mixing (CFM) value used by the stops. Together with the ERP value this can be used to get spongy or soft stops. Note that this is intended for unpowered joints, it does not really work as expected when a powered joint reaches its limit.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfHiStop2
+    High stop angle or position. Setting this to dInfinity (the default value) turns off the high stop. For rotational joints, this stop must be less than pi to be effective. If the high stop is less than the low stop then both stops will be ineffective.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfLoStop2
+    Low stop angle or position. Setting this to -dInfinity (the default value) turns off the low stop.  For rotational joints, this stop must be greater than - pi to be effective.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfBounce2
+    The bouncyness of the stops. This is a restitution parameter in the range 0..1. 0 means the stops are not bouncy at all, 1 means maximum bouncyness.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfCFM2
+    The constraint force mixing (CFM) value used when not at a stop.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfStopERP2
+    The error reduction parameter (ERP) used by the stops.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfStopCFM2
+    The constraint force mixing (CFM) value used by the stops. Together with the ERP value this can be used to get spongy or soft stops. Note that this is intended for unpowered joints, it does not really work as expected when a powered joint reaches its limit.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfHiStop3
+    High stop angle or position. Setting this to dInfinity (the default value) turns off the high stop. For rotational joints, this stop must be less than pi to be effective. If the high stop is less than the low stop then both stops will be ineffective.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfLoStop3
+    Low stop angle or position. Setting this to -dInfinity (the default value) turns off the low stop.  For rotational joints, this stop must be greater than - pi to be effective.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfBounce3
+    The bouncyness of the stops. This is a restitution parameter in the range 0..1. 0 means the stops are not bouncy at all, 1 means maximum bouncyness.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfCFM3
+    The constraint force mixing (CFM) value used when not at a stop.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfStopERP3
+    The error reduction parameter (ERP) used by the stops.
+*/
+/*! \var Real32          PhysicsAMotorJointBase::_sfStopCFM3
+    The constraint force mixing (CFM) value used by the stops. Together with the ERP value this can be used to get spongy or soft stops. Note that this is intended for unpowered joints, it does not really work as expected when a powered joint reaches its limit.
 */
 
 //! PhysicsAMotorJoint description
 
 FieldDescription *PhysicsAMotorJointBase::_desc[] = 
 {
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFInt8::getClassType(), 
                      "mode", 
                      ModeFieldId, ModeFieldMask,
                      false,
                      (FieldAccessMethod) &PhysicsAMotorJointBase::getSFMode),
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFUInt8::getClassType(), 
                      "numAxes", 
                      NumAxesFieldId, NumAxesFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFNumAxes)
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFNumAxes),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "axis1", 
+                     Axis1FieldId, Axis1FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFAxis1),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "axis2", 
+                     Axis2FieldId, Axis2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFAxis2),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "axis3", 
+                     Axis3FieldId, Axis3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFAxis3),
+    new FieldDescription(SFUInt8::getClassType(), 
+                     "axis1ReferenceFrame", 
+                     Axis1ReferenceFrameFieldId, Axis1ReferenceFrameFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFAxis1ReferenceFrame),
+    new FieldDescription(SFUInt8::getClassType(), 
+                     "axis2ReferenceFrame", 
+                     Axis2ReferenceFrameFieldId, Axis2ReferenceFrameFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFAxis2ReferenceFrame),
+    new FieldDescription(SFUInt8::getClassType(), 
+                     "axis3ReferenceFrame", 
+                     Axis3ReferenceFrameFieldId, Axis3ReferenceFrameFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFAxis3ReferenceFrame),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "vel", 
+                     VelFieldId, VelFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFVel),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "fMax", 
+                     FMaxFieldId, FMaxFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFFMax),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "fudgeFactor", 
+                     FudgeFactorFieldId, FudgeFactorFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFFudgeFactor),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "vel2", 
+                     Vel2FieldId, Vel2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFVel2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "fMax2", 
+                     FMax2FieldId, FMax2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFFMax2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "fudgeFactor2", 
+                     FudgeFactor2FieldId, FudgeFactor2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFFudgeFactor2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "vel3", 
+                     Vel3FieldId, Vel3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFVel3),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "fMax3", 
+                     FMax3FieldId, FMax3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFFMax3),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "fudgeFactor3", 
+                     FudgeFactor3FieldId, FudgeFactor3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFFudgeFactor3),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "hiStop", 
+                     HiStopFieldId, HiStopFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFHiStop),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "loStop", 
+                     LoStopFieldId, LoStopFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFLoStop),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "bounce", 
+                     BounceFieldId, BounceFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFBounce),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "CFM", 
+                     CFMFieldId, CFMFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFCFM),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopERP", 
+                     StopERPFieldId, StopERPFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFStopERP),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopCFM", 
+                     StopCFMFieldId, StopCFMFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFStopCFM),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "hiStop2", 
+                     HiStop2FieldId, HiStop2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFHiStop2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "loStop2", 
+                     LoStop2FieldId, LoStop2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFLoStop2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "bounce2", 
+                     Bounce2FieldId, Bounce2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFBounce2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "CFM2", 
+                     CFM2FieldId, CFM2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFCFM2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopERP2", 
+                     StopERP2FieldId, StopERP2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFStopERP2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopCFM2", 
+                     StopCFM2FieldId, StopCFM2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFStopCFM2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "hiStop3", 
+                     HiStop3FieldId, HiStop3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFHiStop3),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "loStop3", 
+                     LoStop3FieldId, LoStop3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFLoStop3),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "bounce3", 
+                     Bounce3FieldId, Bounce3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFBounce3),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "CFM3", 
+                     CFM3FieldId, CFM3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFCFM3),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopERP3", 
+                     StopERP3FieldId, StopERP3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFStopERP3),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopCFM3", 
+                     StopCFM3FieldId, StopCFM3FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsAMotorJointBase::getSFStopCFM3)
 };
 
 
@@ -174,8 +537,41 @@ void PhysicsAMotorJointBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PhysicsAMotorJointBase::PhysicsAMotorJointBase(void) :
-    _sfMode                   (), 
-    _sfNumAxes                (), 
+    _sfMode                   (Int8( dAMotorUser)), 
+    _sfNumAxes                (UInt8(3)), 
+    _sfAxis1                  (Vec3f(1.0, 0.0, 0.0)), 
+    _sfAxis2                  (Vec3f(0.0, 1.0, 0.0)), 
+    _sfAxis3                  (Vec3f(0.0, 0.0, 1.0)), 
+    _sfAxis1ReferenceFrame    (UInt8(0)), 
+    _sfAxis2ReferenceFrame    (UInt8(0)), 
+    _sfAxis3ReferenceFrame    (UInt8(0)), 
+    _sfVel                    (), 
+    _sfFMax                   (), 
+    _sfFudgeFactor            (), 
+    _sfVel2                   (), 
+    _sfFMax2                  (), 
+    _sfFudgeFactor2           (), 
+    _sfVel3                   (), 
+    _sfFMax3                  (), 
+    _sfFudgeFactor3           (), 
+    _sfHiStop                 (), 
+    _sfLoStop                 (), 
+    _sfBounce                 (), 
+    _sfCFM                    (), 
+    _sfStopERP                (), 
+    _sfStopCFM                (), 
+    _sfHiStop2                (), 
+    _sfLoStop2                (), 
+    _sfBounce2                (), 
+    _sfCFM2                   (), 
+    _sfStopERP2               (), 
+    _sfStopCFM2               (), 
+    _sfHiStop3                (), 
+    _sfLoStop3                (), 
+    _sfBounce3                (), 
+    _sfCFM3                   (), 
+    _sfStopERP3               (), 
+    _sfStopCFM3               (), 
     Inherited() 
 {
 }
@@ -187,6 +583,39 @@ PhysicsAMotorJointBase::PhysicsAMotorJointBase(void) :
 PhysicsAMotorJointBase::PhysicsAMotorJointBase(const PhysicsAMotorJointBase &source) :
     _sfMode                   (source._sfMode                   ), 
     _sfNumAxes                (source._sfNumAxes                ), 
+    _sfAxis1                  (source._sfAxis1                  ), 
+    _sfAxis2                  (source._sfAxis2                  ), 
+    _sfAxis3                  (source._sfAxis3                  ), 
+    _sfAxis1ReferenceFrame    (source._sfAxis1ReferenceFrame    ), 
+    _sfAxis2ReferenceFrame    (source._sfAxis2ReferenceFrame    ), 
+    _sfAxis3ReferenceFrame    (source._sfAxis3ReferenceFrame    ), 
+    _sfVel                    (source._sfVel                    ), 
+    _sfFMax                   (source._sfFMax                   ), 
+    _sfFudgeFactor            (source._sfFudgeFactor            ), 
+    _sfVel2                   (source._sfVel2                   ), 
+    _sfFMax2                  (source._sfFMax2                  ), 
+    _sfFudgeFactor2           (source._sfFudgeFactor2           ), 
+    _sfVel3                   (source._sfVel3                   ), 
+    _sfFMax3                  (source._sfFMax3                  ), 
+    _sfFudgeFactor3           (source._sfFudgeFactor3           ), 
+    _sfHiStop                 (source._sfHiStop                 ), 
+    _sfLoStop                 (source._sfLoStop                 ), 
+    _sfBounce                 (source._sfBounce                 ), 
+    _sfCFM                    (source._sfCFM                    ), 
+    _sfStopERP                (source._sfStopERP                ), 
+    _sfStopCFM                (source._sfStopCFM                ), 
+    _sfHiStop2                (source._sfHiStop2                ), 
+    _sfLoStop2                (source._sfLoStop2                ), 
+    _sfBounce2                (source._sfBounce2                ), 
+    _sfCFM2                   (source._sfCFM2                   ), 
+    _sfStopERP2               (source._sfStopERP2               ), 
+    _sfStopCFM2               (source._sfStopCFM2               ), 
+    _sfHiStop3                (source._sfHiStop3                ), 
+    _sfLoStop3                (source._sfLoStop3                ), 
+    _sfBounce3                (source._sfBounce3                ), 
+    _sfCFM3                   (source._sfCFM3                   ), 
+    _sfStopERP3               (source._sfStopERP3               ), 
+    _sfStopCFM3               (source._sfStopCFM3               ), 
     Inherited                 (source)
 {
 }
@@ -213,6 +642,171 @@ UInt32 PhysicsAMotorJointBase::getBinSize(const BitVector &whichField)
         returnValue += _sfNumAxes.getBinSize();
     }
 
+    if(FieldBits::NoField != (Axis1FieldMask & whichField))
+    {
+        returnValue += _sfAxis1.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Axis2FieldMask & whichField))
+    {
+        returnValue += _sfAxis2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Axis3FieldMask & whichField))
+    {
+        returnValue += _sfAxis3.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Axis1ReferenceFrameFieldMask & whichField))
+    {
+        returnValue += _sfAxis1ReferenceFrame.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Axis2ReferenceFrameFieldMask & whichField))
+    {
+        returnValue += _sfAxis2ReferenceFrame.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Axis3ReferenceFrameFieldMask & whichField))
+    {
+        returnValue += _sfAxis3ReferenceFrame.getBinSize();
+    }
+
+    if(FieldBits::NoField != (VelFieldMask & whichField))
+    {
+        returnValue += _sfVel.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FMaxFieldMask & whichField))
+    {
+        returnValue += _sfFMax.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FudgeFactorFieldMask & whichField))
+    {
+        returnValue += _sfFudgeFactor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Vel2FieldMask & whichField))
+    {
+        returnValue += _sfVel2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FMax2FieldMask & whichField))
+    {
+        returnValue += _sfFMax2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FudgeFactor2FieldMask & whichField))
+    {
+        returnValue += _sfFudgeFactor2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Vel3FieldMask & whichField))
+    {
+        returnValue += _sfVel3.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FMax3FieldMask & whichField))
+    {
+        returnValue += _sfFMax3.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FudgeFactor3FieldMask & whichField))
+    {
+        returnValue += _sfFudgeFactor3.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+    {
+        returnValue += _sfHiStop.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+    {
+        returnValue += _sfLoStop.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+    {
+        returnValue += _sfBounce.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+    {
+        returnValue += _sfCFM.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+    {
+        returnValue += _sfStopERP.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+    {
+        returnValue += _sfStopCFM.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+    {
+        returnValue += _sfHiStop2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+    {
+        returnValue += _sfLoStop2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+    {
+        returnValue += _sfBounce2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+    {
+        returnValue += _sfCFM2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+    {
+        returnValue += _sfStopERP2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+    {
+        returnValue += _sfStopCFM2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HiStop3FieldMask & whichField))
+    {
+        returnValue += _sfHiStop3.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LoStop3FieldMask & whichField))
+    {
+        returnValue += _sfLoStop3.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Bounce3FieldMask & whichField))
+    {
+        returnValue += _sfBounce3.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CFM3FieldMask & whichField))
+    {
+        returnValue += _sfCFM3.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopERP3FieldMask & whichField))
+    {
+        returnValue += _sfStopERP3.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopCFM3FieldMask & whichField))
+    {
+        returnValue += _sfStopCFM3.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -230,6 +824,171 @@ void PhysicsAMotorJointBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (NumAxesFieldMask & whichField))
     {
         _sfNumAxes.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis1FieldMask & whichField))
+    {
+        _sfAxis1.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis2FieldMask & whichField))
+    {
+        _sfAxis2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis3FieldMask & whichField))
+    {
+        _sfAxis3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis1ReferenceFrameFieldMask & whichField))
+    {
+        _sfAxis1ReferenceFrame.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis2ReferenceFrameFieldMask & whichField))
+    {
+        _sfAxis2ReferenceFrame.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis3ReferenceFrameFieldMask & whichField))
+    {
+        _sfAxis3ReferenceFrame.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VelFieldMask & whichField))
+    {
+        _sfVel.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FMaxFieldMask & whichField))
+    {
+        _sfFMax.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FudgeFactorFieldMask & whichField))
+    {
+        _sfFudgeFactor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Vel2FieldMask & whichField))
+    {
+        _sfVel2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FMax2FieldMask & whichField))
+    {
+        _sfFMax2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FudgeFactor2FieldMask & whichField))
+    {
+        _sfFudgeFactor2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Vel3FieldMask & whichField))
+    {
+        _sfVel3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FMax3FieldMask & whichField))
+    {
+        _sfFMax3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FudgeFactor3FieldMask & whichField))
+    {
+        _sfFudgeFactor3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+    {
+        _sfHiStop.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+    {
+        _sfLoStop.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+    {
+        _sfBounce.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+    {
+        _sfCFM.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+    {
+        _sfStopERP.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+    {
+        _sfStopCFM.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+    {
+        _sfHiStop2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+    {
+        _sfLoStop2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+    {
+        _sfBounce2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+    {
+        _sfCFM2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+    {
+        _sfStopERP2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+    {
+        _sfStopCFM2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStop3FieldMask & whichField))
+    {
+        _sfHiStop3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStop3FieldMask & whichField))
+    {
+        _sfLoStop3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Bounce3FieldMask & whichField))
+    {
+        _sfBounce3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFM3FieldMask & whichField))
+    {
+        _sfCFM3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERP3FieldMask & whichField))
+    {
+        _sfStopERP3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFM3FieldMask & whichField))
+    {
+        _sfStopCFM3.copyToBin(pMem);
     }
 
 
@@ -250,6 +1009,171 @@ void PhysicsAMotorJointBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfNumAxes.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (Axis1FieldMask & whichField))
+    {
+        _sfAxis1.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis2FieldMask & whichField))
+    {
+        _sfAxis2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis3FieldMask & whichField))
+    {
+        _sfAxis3.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis1ReferenceFrameFieldMask & whichField))
+    {
+        _sfAxis1ReferenceFrame.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis2ReferenceFrameFieldMask & whichField))
+    {
+        _sfAxis2ReferenceFrame.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Axis3ReferenceFrameFieldMask & whichField))
+    {
+        _sfAxis3ReferenceFrame.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VelFieldMask & whichField))
+    {
+        _sfVel.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FMaxFieldMask & whichField))
+    {
+        _sfFMax.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FudgeFactorFieldMask & whichField))
+    {
+        _sfFudgeFactor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Vel2FieldMask & whichField))
+    {
+        _sfVel2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FMax2FieldMask & whichField))
+    {
+        _sfFMax2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FudgeFactor2FieldMask & whichField))
+    {
+        _sfFudgeFactor2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Vel3FieldMask & whichField))
+    {
+        _sfVel3.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FMax3FieldMask & whichField))
+    {
+        _sfFMax3.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FudgeFactor3FieldMask & whichField))
+    {
+        _sfFudgeFactor3.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+    {
+        _sfHiStop.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+    {
+        _sfLoStop.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+    {
+        _sfBounce.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+    {
+        _sfCFM.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+    {
+        _sfStopERP.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+    {
+        _sfStopCFM.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+    {
+        _sfHiStop2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+    {
+        _sfLoStop2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+    {
+        _sfBounce2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+    {
+        _sfCFM2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+    {
+        _sfStopERP2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+    {
+        _sfStopCFM2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStop3FieldMask & whichField))
+    {
+        _sfHiStop3.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStop3FieldMask & whichField))
+    {
+        _sfLoStop3.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Bounce3FieldMask & whichField))
+    {
+        _sfBounce3.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFM3FieldMask & whichField))
+    {
+        _sfCFM3.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERP3FieldMask & whichField))
+    {
+        _sfStopERP3.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFM3FieldMask & whichField))
+    {
+        _sfStopCFM3.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -265,6 +1189,105 @@ void PhysicsAMotorJointBase::executeSyncImpl(      PhysicsAMotorJointBase *pOthe
 
     if(FieldBits::NoField != (NumAxesFieldMask & whichField))
         _sfNumAxes.syncWith(pOther->_sfNumAxes);
+
+    if(FieldBits::NoField != (Axis1FieldMask & whichField))
+        _sfAxis1.syncWith(pOther->_sfAxis1);
+
+    if(FieldBits::NoField != (Axis2FieldMask & whichField))
+        _sfAxis2.syncWith(pOther->_sfAxis2);
+
+    if(FieldBits::NoField != (Axis3FieldMask & whichField))
+        _sfAxis3.syncWith(pOther->_sfAxis3);
+
+    if(FieldBits::NoField != (Axis1ReferenceFrameFieldMask & whichField))
+        _sfAxis1ReferenceFrame.syncWith(pOther->_sfAxis1ReferenceFrame);
+
+    if(FieldBits::NoField != (Axis2ReferenceFrameFieldMask & whichField))
+        _sfAxis2ReferenceFrame.syncWith(pOther->_sfAxis2ReferenceFrame);
+
+    if(FieldBits::NoField != (Axis3ReferenceFrameFieldMask & whichField))
+        _sfAxis3ReferenceFrame.syncWith(pOther->_sfAxis3ReferenceFrame);
+
+    if(FieldBits::NoField != (VelFieldMask & whichField))
+        _sfVel.syncWith(pOther->_sfVel);
+
+    if(FieldBits::NoField != (FMaxFieldMask & whichField))
+        _sfFMax.syncWith(pOther->_sfFMax);
+
+    if(FieldBits::NoField != (FudgeFactorFieldMask & whichField))
+        _sfFudgeFactor.syncWith(pOther->_sfFudgeFactor);
+
+    if(FieldBits::NoField != (Vel2FieldMask & whichField))
+        _sfVel2.syncWith(pOther->_sfVel2);
+
+    if(FieldBits::NoField != (FMax2FieldMask & whichField))
+        _sfFMax2.syncWith(pOther->_sfFMax2);
+
+    if(FieldBits::NoField != (FudgeFactor2FieldMask & whichField))
+        _sfFudgeFactor2.syncWith(pOther->_sfFudgeFactor2);
+
+    if(FieldBits::NoField != (Vel3FieldMask & whichField))
+        _sfVel3.syncWith(pOther->_sfVel3);
+
+    if(FieldBits::NoField != (FMax3FieldMask & whichField))
+        _sfFMax3.syncWith(pOther->_sfFMax3);
+
+    if(FieldBits::NoField != (FudgeFactor3FieldMask & whichField))
+        _sfFudgeFactor3.syncWith(pOther->_sfFudgeFactor3);
+
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+        _sfHiStop.syncWith(pOther->_sfHiStop);
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+        _sfLoStop.syncWith(pOther->_sfLoStop);
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+        _sfBounce.syncWith(pOther->_sfBounce);
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+        _sfCFM.syncWith(pOther->_sfCFM);
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+        _sfStopERP.syncWith(pOther->_sfStopERP);
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+        _sfStopCFM.syncWith(pOther->_sfStopCFM);
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+        _sfHiStop2.syncWith(pOther->_sfHiStop2);
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+        _sfLoStop2.syncWith(pOther->_sfLoStop2);
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+        _sfBounce2.syncWith(pOther->_sfBounce2);
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+        _sfCFM2.syncWith(pOther->_sfCFM2);
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+        _sfStopERP2.syncWith(pOther->_sfStopERP2);
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+        _sfStopCFM2.syncWith(pOther->_sfStopCFM2);
+
+    if(FieldBits::NoField != (HiStop3FieldMask & whichField))
+        _sfHiStop3.syncWith(pOther->_sfHiStop3);
+
+    if(FieldBits::NoField != (LoStop3FieldMask & whichField))
+        _sfLoStop3.syncWith(pOther->_sfLoStop3);
+
+    if(FieldBits::NoField != (Bounce3FieldMask & whichField))
+        _sfBounce3.syncWith(pOther->_sfBounce3);
+
+    if(FieldBits::NoField != (CFM3FieldMask & whichField))
+        _sfCFM3.syncWith(pOther->_sfCFM3);
+
+    if(FieldBits::NoField != (StopERP3FieldMask & whichField))
+        _sfStopERP3.syncWith(pOther->_sfStopERP3);
+
+    if(FieldBits::NoField != (StopCFM3FieldMask & whichField))
+        _sfStopCFM3.syncWith(pOther->_sfStopCFM3);
 
 
 }
@@ -282,6 +1305,105 @@ void PhysicsAMotorJointBase::executeSyncImpl(      PhysicsAMotorJointBase *pOthe
     if(FieldBits::NoField != (NumAxesFieldMask & whichField))
         _sfNumAxes.syncWith(pOther->_sfNumAxes);
 
+    if(FieldBits::NoField != (Axis1FieldMask & whichField))
+        _sfAxis1.syncWith(pOther->_sfAxis1);
+
+    if(FieldBits::NoField != (Axis2FieldMask & whichField))
+        _sfAxis2.syncWith(pOther->_sfAxis2);
+
+    if(FieldBits::NoField != (Axis3FieldMask & whichField))
+        _sfAxis3.syncWith(pOther->_sfAxis3);
+
+    if(FieldBits::NoField != (Axis1ReferenceFrameFieldMask & whichField))
+        _sfAxis1ReferenceFrame.syncWith(pOther->_sfAxis1ReferenceFrame);
+
+    if(FieldBits::NoField != (Axis2ReferenceFrameFieldMask & whichField))
+        _sfAxis2ReferenceFrame.syncWith(pOther->_sfAxis2ReferenceFrame);
+
+    if(FieldBits::NoField != (Axis3ReferenceFrameFieldMask & whichField))
+        _sfAxis3ReferenceFrame.syncWith(pOther->_sfAxis3ReferenceFrame);
+
+    if(FieldBits::NoField != (VelFieldMask & whichField))
+        _sfVel.syncWith(pOther->_sfVel);
+
+    if(FieldBits::NoField != (FMaxFieldMask & whichField))
+        _sfFMax.syncWith(pOther->_sfFMax);
+
+    if(FieldBits::NoField != (FudgeFactorFieldMask & whichField))
+        _sfFudgeFactor.syncWith(pOther->_sfFudgeFactor);
+
+    if(FieldBits::NoField != (Vel2FieldMask & whichField))
+        _sfVel2.syncWith(pOther->_sfVel2);
+
+    if(FieldBits::NoField != (FMax2FieldMask & whichField))
+        _sfFMax2.syncWith(pOther->_sfFMax2);
+
+    if(FieldBits::NoField != (FudgeFactor2FieldMask & whichField))
+        _sfFudgeFactor2.syncWith(pOther->_sfFudgeFactor2);
+
+    if(FieldBits::NoField != (Vel3FieldMask & whichField))
+        _sfVel3.syncWith(pOther->_sfVel3);
+
+    if(FieldBits::NoField != (FMax3FieldMask & whichField))
+        _sfFMax3.syncWith(pOther->_sfFMax3);
+
+    if(FieldBits::NoField != (FudgeFactor3FieldMask & whichField))
+        _sfFudgeFactor3.syncWith(pOther->_sfFudgeFactor3);
+
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+        _sfHiStop.syncWith(pOther->_sfHiStop);
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+        _sfLoStop.syncWith(pOther->_sfLoStop);
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+        _sfBounce.syncWith(pOther->_sfBounce);
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+        _sfCFM.syncWith(pOther->_sfCFM);
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+        _sfStopERP.syncWith(pOther->_sfStopERP);
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+        _sfStopCFM.syncWith(pOther->_sfStopCFM);
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+        _sfHiStop2.syncWith(pOther->_sfHiStop2);
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+        _sfLoStop2.syncWith(pOther->_sfLoStop2);
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+        _sfBounce2.syncWith(pOther->_sfBounce2);
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+        _sfCFM2.syncWith(pOther->_sfCFM2);
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+        _sfStopERP2.syncWith(pOther->_sfStopERP2);
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+        _sfStopCFM2.syncWith(pOther->_sfStopCFM2);
+
+    if(FieldBits::NoField != (HiStop3FieldMask & whichField))
+        _sfHiStop3.syncWith(pOther->_sfHiStop3);
+
+    if(FieldBits::NoField != (LoStop3FieldMask & whichField))
+        _sfLoStop3.syncWith(pOther->_sfLoStop3);
+
+    if(FieldBits::NoField != (Bounce3FieldMask & whichField))
+        _sfBounce3.syncWith(pOther->_sfBounce3);
+
+    if(FieldBits::NoField != (CFM3FieldMask & whichField))
+        _sfCFM3.syncWith(pOther->_sfCFM3);
+
+    if(FieldBits::NoField != (StopERP3FieldMask & whichField))
+        _sfStopERP3.syncWith(pOther->_sfStopERP3);
+
+    if(FieldBits::NoField != (StopCFM3FieldMask & whichField))
+        _sfStopCFM3.syncWith(pOther->_sfStopCFM3);
+
 
 
 }
@@ -297,6 +1419,8 @@ void PhysicsAMotorJointBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -308,8 +1432,6 @@ DataType FieldDataTraits<PhysicsAMotorJointPtr>::_type("PhysicsAMotorJointPtr", 
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsAMotorJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsAMotorJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -325,10 +1447,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsAMotorJointBase.cpp,v 1.2 2006/02/20 17:04:20 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSAMOTORJOINTBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSAMOTORJOINTBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSAMOTORJOINTFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

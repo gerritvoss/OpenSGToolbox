@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,6 +68,12 @@
 #include "OSGPhysicsJoint.h" // Parent
 
 #include <OpenSG/OSGVec3fFields.h> // Axis type
+#include <OpenSG/OSGReal32Fields.h> // HiStop type
+#include <OpenSG/OSGReal32Fields.h> // LoStop type
+#include <OpenSG/OSGReal32Fields.h> // Bounce type
+#include <OpenSG/OSGReal32Fields.h> // CFM type
+#include <OpenSG/OSGReal32Fields.h> // StopERP type
+#include <OpenSG/OSGReal32Fields.h> // StopCFM type
 
 #include "OSGPhysicsSliderJointFields.h"
 
@@ -91,11 +97,23 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSliderJointBase : public PhysicsJoint
 
     enum
     {
-        AxisFieldId = Inherited::NextFieldId,
-        NextFieldId = AxisFieldId + 1
+        AxisFieldId    = Inherited::NextFieldId,
+        HiStopFieldId  = AxisFieldId    + 1,
+        LoStopFieldId  = HiStopFieldId  + 1,
+        BounceFieldId  = LoStopFieldId  + 1,
+        CFMFieldId     = BounceFieldId  + 1,
+        StopERPFieldId = CFMFieldId     + 1,
+        StopCFMFieldId = StopERPFieldId + 1,
+        NextFieldId    = StopCFMFieldId + 1
     };
 
     static const OSG::BitVector AxisFieldMask;
+    static const OSG::BitVector HiStopFieldMask;
+    static const OSG::BitVector LoStopFieldMask;
+    static const OSG::BitVector BounceFieldMask;
+    static const OSG::BitVector CFMFieldMask;
+    static const OSG::BitVector StopERPFieldMask;
+    static const OSG::BitVector StopCFMFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +141,27 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSliderJointBase : public PhysicsJoint
     /*! \{                                                                 */
 
            SFVec3f             *getSFAxis           (void);
+           SFReal32            *getSFHiStop         (void);
+           SFReal32            *getSFLoStop         (void);
+           SFReal32            *getSFBounce         (void);
+           SFReal32            *getSFCFM            (void);
+           SFReal32            *getSFStopERP        (void);
+           SFReal32            *getSFStopCFM        (void);
 
            Vec3f               &getAxis           (void);
      const Vec3f               &getAxis           (void) const;
+           Real32              &getHiStop         (void);
+     const Real32              &getHiStop         (void) const;
+           Real32              &getLoStop         (void);
+     const Real32              &getLoStop         (void) const;
+           Real32              &getBounce         (void);
+     const Real32              &getBounce         (void) const;
+           Real32              &getCFM            (void);
+     const Real32              &getCFM            (void) const;
+           Real32              &getStopERP        (void);
+     const Real32              &getStopERP        (void) const;
+           Real32              &getStopCFM        (void);
+     const Real32              &getStopCFM        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +169,12 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSliderJointBase : public PhysicsJoint
     /*! \{                                                                 */
 
      void setAxis           ( const Vec3f &value );
+     void setHiStop         ( const Real32 &value );
+     void setLoStop         ( const Real32 &value );
+     void setBounce         ( const Real32 &value );
+     void setCFM            ( const Real32 &value );
+     void setStopERP        ( const Real32 &value );
+     void setStopCFM        ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +218,12 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSliderJointBase : public PhysicsJoint
     /*! \{                                                                 */
 
     SFVec3f             _sfAxis;
+    SFReal32            _sfHiStop;
+    SFReal32            _sfLoStop;
+    SFReal32            _sfBounce;
+    SFReal32            _sfCFM;
+    SFReal32            _sfStopERP;
+    SFReal32            _sfStopCFM;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -253,6 +301,6 @@ typedef RefPtr<PhysicsSliderJointPtr> PhysicsSliderJointRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSSLIDERJOINTBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsSliderJointBase.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSSLIDERJOINTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSSLIDERJOINTBASE_H_ */

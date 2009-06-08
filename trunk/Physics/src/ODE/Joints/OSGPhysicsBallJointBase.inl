@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -49,7 +49,6 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -67,21 +66,6 @@ OSG::UInt32 PhysicsBallJointBase::getClassTypeId(void)
 {
     return _type.getId(); 
 } 
-
-//! create a new instance of the class
-inline
-PhysicsBallJointPtr PhysicsBallJointBase::create(void) 
-{
-    PhysicsBallJointPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PhysicsBallJointPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
@@ -129,5 +113,5 @@ void PhysicsBallJointBase::setAnchor(const Vec3f &value)
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSBALLJOINTBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsBallJointBase.inl,v 1.2 2006/02/20 17:04:20 dirk Exp $"
+#define OSGPHYSICSBALLJOINTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

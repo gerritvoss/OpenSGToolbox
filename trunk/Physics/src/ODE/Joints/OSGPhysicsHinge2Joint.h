@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,34 +57,14 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsHinge2Joint : public PhysicsHinge2JointB
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Vec3f getAnchor(void);
-	  Vec3f getAxis1(void);
-	  Vec3f getAxis2(void);
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-	  void setAnchor(const Vec3f &value );
-	  void setAxis1(const Vec3f &value );
-	  void setAxis2(const Vec3f &value );
-      void setWorld(const PhysicsWorldPtr &value);
-	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initHinge2Joint();
-	  Vec3f getAnchor2(void);
-	  Real32 getAngle1(void);
-	  Real32 getAngle1Rate(void);
-	  Real32 getAngle2Rate(void);
-
-	  virtual void setParam(Int32 param, Real32 value );
-	  virtual Real32 getParam(Int32 param );
+	  Vec3f getAnchor2(void) const;
+	  Real32 getAngle1(void) const;
+	  Real32 getAngle1Rate(void) const;
+	  Real32 getAngle2Rate(void) const;
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -102,6 +82,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsHinge2Joint : public PhysicsHinge2JointB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    static PhysicsHinge2JointPtr create(PhysicsWorldPtr w); 
     /*=========================  PROTECTED  ===============================*/
   protected:
 

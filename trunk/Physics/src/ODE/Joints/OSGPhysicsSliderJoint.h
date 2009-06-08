@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,29 +57,12 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSliderJoint : public PhysicsSliderJointB
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Vec3f getAxis(void);
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-
-	  void setAxis(const Vec3f &value );
-      void setWorld(const PhysicsWorldPtr &value);
-	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initSliderJoint();
 	  Real32 getPosition(void);
 	  Real32 getPositionRate(void);
-
-	  virtual void setParam(Int32 param, Real32 value );
-	  virtual Real32 getParam(Int32 param );
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -97,6 +80,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSliderJoint : public PhysicsSliderJointB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    static PhysicsSliderJointPtr create(PhysicsWorldPtr w); 
     /*=========================  PROTECTED  ===============================*/
   protected:
 

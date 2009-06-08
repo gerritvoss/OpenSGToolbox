@@ -1,26 +1,18 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PhysicsHingeJoint"
+	name="PhysicsBallJoint"
 	parent="PhysicsJoint"
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="true"
-	parentsystemcomponent="true"
+	systemcomponent="false"
+	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="false"
 >
 	<Field
 		name="anchor"
-		type="Vec3f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="axis"
 		type="Vec3f"
 		cardinality="single"
 		visibility="external"

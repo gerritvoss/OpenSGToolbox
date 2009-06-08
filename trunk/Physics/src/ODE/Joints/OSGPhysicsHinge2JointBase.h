@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,20 @@
 #include <OpenSG/OSGVec3fFields.h> // Anchor type
 #include <OpenSG/OSGVec3fFields.h> // Axis1 type
 #include <OpenSG/OSGVec3fFields.h> // Axis2 type
+#include <OpenSG/OSGReal32Fields.h> // HiStop type
+#include <OpenSG/OSGReal32Fields.h> // LoStop type
+#include <OpenSG/OSGReal32Fields.h> // Bounce type
+#include <OpenSG/OSGReal32Fields.h> // CFM type
+#include <OpenSG/OSGReal32Fields.h> // StopERP type
+#include <OpenSG/OSGReal32Fields.h> // StopCFM type
+#include <OpenSG/OSGReal32Fields.h> // HiStop2 type
+#include <OpenSG/OSGReal32Fields.h> // LoStop2 type
+#include <OpenSG/OSGReal32Fields.h> // Bounce2 type
+#include <OpenSG/OSGReal32Fields.h> // CFM2 type
+#include <OpenSG/OSGReal32Fields.h> // StopERP2 type
+#include <OpenSG/OSGReal32Fields.h> // StopCFM2 type
+#include <OpenSG/OSGReal32Fields.h> // SuspensionERP type
+#include <OpenSG/OSGReal32Fields.h> // SuspensionCFM type
 
 #include "OSGPhysicsHinge2JointFields.h"
 
@@ -93,15 +107,43 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHinge2JointBase : public PhysicsJoint
 
     enum
     {
-        AnchorFieldId = Inherited::NextFieldId,
-        Axis1FieldId  = AnchorFieldId + 1,
-        Axis2FieldId  = Axis1FieldId  + 1,
-        NextFieldId   = Axis2FieldId  + 1
+        AnchorFieldId        = Inherited::NextFieldId,
+        Axis1FieldId         = AnchorFieldId        + 1,
+        Axis2FieldId         = Axis1FieldId         + 1,
+        HiStopFieldId        = Axis2FieldId         + 1,
+        LoStopFieldId        = HiStopFieldId        + 1,
+        BounceFieldId        = LoStopFieldId        + 1,
+        CFMFieldId           = BounceFieldId        + 1,
+        StopERPFieldId       = CFMFieldId           + 1,
+        StopCFMFieldId       = StopERPFieldId       + 1,
+        HiStop2FieldId       = StopCFMFieldId       + 1,
+        LoStop2FieldId       = HiStop2FieldId       + 1,
+        Bounce2FieldId       = LoStop2FieldId       + 1,
+        CFM2FieldId          = Bounce2FieldId       + 1,
+        StopERP2FieldId      = CFM2FieldId          + 1,
+        StopCFM2FieldId      = StopERP2FieldId      + 1,
+        SuspensionERPFieldId = StopCFM2FieldId      + 1,
+        SuspensionCFMFieldId = SuspensionERPFieldId + 1,
+        NextFieldId          = SuspensionCFMFieldId + 1
     };
 
     static const OSG::BitVector AnchorFieldMask;
     static const OSG::BitVector Axis1FieldMask;
     static const OSG::BitVector Axis2FieldMask;
+    static const OSG::BitVector HiStopFieldMask;
+    static const OSG::BitVector LoStopFieldMask;
+    static const OSG::BitVector BounceFieldMask;
+    static const OSG::BitVector CFMFieldMask;
+    static const OSG::BitVector StopERPFieldMask;
+    static const OSG::BitVector StopCFMFieldMask;
+    static const OSG::BitVector HiStop2FieldMask;
+    static const OSG::BitVector LoStop2FieldMask;
+    static const OSG::BitVector Bounce2FieldMask;
+    static const OSG::BitVector CFM2FieldMask;
+    static const OSG::BitVector StopERP2FieldMask;
+    static const OSG::BitVector StopCFM2FieldMask;
+    static const OSG::BitVector SuspensionERPFieldMask;
+    static const OSG::BitVector SuspensionCFMFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,6 +173,20 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHinge2JointBase : public PhysicsJoint
            SFVec3f             *getSFAnchor         (void);
            SFVec3f             *getSFAxis1          (void);
            SFVec3f             *getSFAxis2          (void);
+           SFReal32            *getSFHiStop         (void);
+           SFReal32            *getSFLoStop         (void);
+           SFReal32            *getSFBounce         (void);
+           SFReal32            *getSFCFM            (void);
+           SFReal32            *getSFStopERP        (void);
+           SFReal32            *getSFStopCFM        (void);
+           SFReal32            *getSFHiStop2        (void);
+           SFReal32            *getSFLoStop2        (void);
+           SFReal32            *getSFBounce2        (void);
+           SFReal32            *getSFCFM2           (void);
+           SFReal32            *getSFStopERP2       (void);
+           SFReal32            *getSFStopCFM2       (void);
+           SFReal32            *getSFSuspensionERP  (void);
+           SFReal32            *getSFSuspensionCFM  (void);
 
            Vec3f               &getAnchor         (void);
      const Vec3f               &getAnchor         (void) const;
@@ -138,6 +194,34 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHinge2JointBase : public PhysicsJoint
      const Vec3f               &getAxis1          (void) const;
            Vec3f               &getAxis2          (void);
      const Vec3f               &getAxis2          (void) const;
+           Real32              &getHiStop         (void);
+     const Real32              &getHiStop         (void) const;
+           Real32              &getLoStop         (void);
+     const Real32              &getLoStop         (void) const;
+           Real32              &getBounce         (void);
+     const Real32              &getBounce         (void) const;
+           Real32              &getCFM            (void);
+     const Real32              &getCFM            (void) const;
+           Real32              &getStopERP        (void);
+     const Real32              &getStopERP        (void) const;
+           Real32              &getStopCFM        (void);
+     const Real32              &getStopCFM        (void) const;
+           Real32              &getHiStop2        (void);
+     const Real32              &getHiStop2        (void) const;
+           Real32              &getLoStop2        (void);
+     const Real32              &getLoStop2        (void) const;
+           Real32              &getBounce2        (void);
+     const Real32              &getBounce2        (void) const;
+           Real32              &getCFM2           (void);
+     const Real32              &getCFM2           (void) const;
+           Real32              &getStopERP2       (void);
+     const Real32              &getStopERP2       (void) const;
+           Real32              &getStopCFM2       (void);
+     const Real32              &getStopCFM2       (void) const;
+           Real32              &getSuspensionERP  (void);
+     const Real32              &getSuspensionERP  (void) const;
+           Real32              &getSuspensionCFM  (void);
+     const Real32              &getSuspensionCFM  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -147,6 +231,20 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHinge2JointBase : public PhysicsJoint
      void setAnchor         ( const Vec3f &value );
      void setAxis1          ( const Vec3f &value );
      void setAxis2          ( const Vec3f &value );
+     void setHiStop         ( const Real32 &value );
+     void setLoStop         ( const Real32 &value );
+     void setBounce         ( const Real32 &value );
+     void setCFM            ( const Real32 &value );
+     void setStopERP        ( const Real32 &value );
+     void setStopCFM        ( const Real32 &value );
+     void setHiStop2        ( const Real32 &value );
+     void setLoStop2        ( const Real32 &value );
+     void setBounce2        ( const Real32 &value );
+     void setCFM2           ( const Real32 &value );
+     void setStopERP2       ( const Real32 &value );
+     void setStopCFM2       ( const Real32 &value );
+     void setSuspensionERP  ( const Real32 &value );
+     void setSuspensionCFM  ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,6 +290,20 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHinge2JointBase : public PhysicsJoint
     SFVec3f             _sfAnchor;
     SFVec3f             _sfAxis1;
     SFVec3f             _sfAxis2;
+    SFReal32            _sfHiStop;
+    SFReal32            _sfLoStop;
+    SFReal32            _sfBounce;
+    SFReal32            _sfCFM;
+    SFReal32            _sfStopERP;
+    SFReal32            _sfStopCFM;
+    SFReal32            _sfHiStop2;
+    SFReal32            _sfLoStop2;
+    SFReal32            _sfBounce2;
+    SFReal32            _sfCFM2;
+    SFReal32            _sfStopERP2;
+    SFReal32            _sfStopCFM2;
+    SFReal32            _sfSuspensionERP;
+    SFReal32            _sfSuspensionCFM;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -269,6 +381,6 @@ typedef RefPtr<PhysicsHinge2JointPtr> PhysicsHinge2JointRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSHINGE2JOINTBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsHinge2JointBase.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSHINGE2JOINTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSHINGE2JOINTBASE_H_ */

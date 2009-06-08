@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -71,6 +71,24 @@ void PhysicsSliderJoint::initMethod (void)
 {
 }
 
+PhysicsSliderJointPtr PhysicsSliderJoint::create(PhysicsWorldPtr w)
+{
+    PhysicsSliderJointPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PhysicsSliderJointPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    if(fc != NullFC)
+    {
+        beginEditCP(fc, PhysicsSliderJoint::WorldFieldMask);
+            fc->setWorld(w);
+        endEditCP(fc, PhysicsSliderJoint::WorldFieldMask);
+    }
+    
+    return fc; 
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -80,7 +98,6 @@ void PhysicsSliderJoint::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsSliderJoint::onCreate(const PhysicsSliderJoint *)
 {
-	PhysicsSliderJointPtr tmpPtr(*this);
 	//call initJoint!
 }
 
@@ -88,67 +105,18 @@ void PhysicsSliderJoint::onDestroy()
 {
 	//empty
 }
-
-/***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-
-Vec3f PhysicsSliderJoint::getAxis(void)
-{
-	PhysicsSliderJointPtr tmpPtr(*this);
-	dVector3 a;
-	dJointGetSliderAxis(tmpPtr->id, a);
-	return Vec3f(a[0], a[1], a[2]);
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-
-void PhysicsSliderJoint::setAxis(const Vec3f &value )
-{
-	PhysicsSliderJointPtr tmpPtr(*this);
-	dJointSetSliderAxis(tmpPtr->id, value.x(), value.y(), value.z());
-	//PhysicsJointBase::setAxis(value);
-}
-
-void PhysicsSliderJoint::setWorld(const PhysicsWorldPtr &value )
-{
-    PhysicsSliderJointPtr tmpPtr(*this);
-    tmpPtr->setJointID(dJointCreateSlider(value->getWorldID(), 0));
-    PhysicsJointBase::setWorld(value);
-}
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsSliderJoint::initSliderJoint()
-{
-    setAxis(PhysicsSliderJointBase::getAxis());
-    setWorld(PhysicsSliderJointBase::getWorld());
-    initJoint();
-}
 
 Real32 PhysicsSliderJoint::getPosition(void)
 {
-	PhysicsSliderJointPtr tmpPtr(*this);
-	return dJointGetSliderPosition(tmpPtr->id);
+	return dJointGetSliderPosition(_JointID);
 }
 
 Real32 PhysicsSliderJoint::getPositionRate(void)
 {
-	PhysicsSliderJointPtr tmpPtr(*this);
-	return dJointGetSliderPositionRate(tmpPtr->id);
-}
-
-void PhysicsSliderJoint::setParam(Int32 param, Real32 value )
-{
-	PhysicsSliderJointPtr tmpPtr(*this);
-	dJointSetSliderParam(tmpPtr->id, param, value);
-}
-
-Real32 PhysicsSliderJoint::getParam(Int32 param )
-{
-	PhysicsSliderJointPtr tmpPtr(*this);
-	return dJointGetSliderParam(tmpPtr->id, param);
+	return dJointGetSliderPositionRate(_JointID);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -174,7 +142,73 @@ PhysicsSliderJoint::~PhysicsSliderJoint(void)
 
 void PhysicsSliderJoint::changed(BitVector whichField, UInt32 origin)
 {
+    if(whichField & WorldFieldMask)
+    {
+        if(_JointID)
+        {
+            dJointDestroy(_JointID);
+            _JointID = dJointCreateSlider(getWorld()->getWorldID(), 0);
+        }
+        else
+        {
+            _JointID = dJointCreateSlider(getWorld()->getWorldID(), 0);
+            if(!(whichField & HiStopFieldMask))
+            {
+                setHiStop(dJointGetSliderParam(_JointID,dParamHiStop));
+            }
+            if(!(whichField & LoStopFieldMask))
+            {
+                setLoStop(dJointGetSliderParam(_JointID,dParamLoStop));
+            }
+            if(!(whichField & BounceFieldMask))
+            {
+                setBounce(dJointGetSliderParam(_JointID,dParamBounce));
+            }
+            if(!(whichField & CFMFieldMask))
+            {
+                setCFM(dJointGetSliderParam(_JointID,dParamCFM));
+            }
+            if(!(whichField & StopCFMFieldMask))
+            {
+                setStopCFM(dJointGetSliderParam(_JointID,dParamStopCFM));
+            }
+            if(!(whichField & StopERPFieldMask))
+            {
+                setStopERP(dJointGetSliderParam(_JointID,dParamStopERP));
+            }
+        }
+    }
+
     Inherited::changed(whichField, origin);
+
+    if((whichField & AxisFieldMask) || (whichField & WorldFieldMask))
+    {
+	    dJointSetSliderAxis(_JointID, getAxis().x(), getAxis().y(), getAxis().z());
+    }
+    if((whichField & HiStopFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetSliderParam(_JointID,  dParamHiStop, getHiStop());
+    }
+    if((whichField & LoStopFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetSliderParam(_JointID,  dParamLoStop, getLoStop());
+    }
+    if((whichField & BounceFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetSliderParam(_JointID,  dParamBounce, getBounce());
+    }
+    if((whichField & CFMFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetSliderParam(_JointID,  dParamCFM, getCFM());
+    }
+    if((whichField & StopERPFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetSliderParam(_JointID,  dParamStopERP, getStopERP());
+    }
+    if((whichField & StopCFMFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetSliderParam(_JointID,  dParamStopCFM, getStopCFM());
+    }
 }
 
 void PhysicsSliderJoint::dump(      UInt32    , 

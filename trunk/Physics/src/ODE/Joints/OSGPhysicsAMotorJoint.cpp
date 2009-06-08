@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -71,6 +71,24 @@ void PhysicsAMotorJoint::initMethod (void)
 {
 }
 
+PhysicsAMotorJointPtr PhysicsAMotorJoint::create(PhysicsWorldPtr w)
+{
+    PhysicsAMotorJointPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PhysicsAMotorJointPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    if(fc != NullFC)
+    {
+        beginEditCP(fc, PhysicsAMotorJoint::WorldFieldMask);
+            fc->setWorld(w);
+        endEditCP(fc, PhysicsAMotorJoint::WorldFieldMask);
+    }
+    
+    return fc; 
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -80,7 +98,6 @@ void PhysicsAMotorJoint::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsAMotorJoint::onCreate(const PhysicsAMotorJoint *)
 {
-	PhysicsAMotorJointPtr tmpPtr(*this);
 	//call initJoint!
 }
 
@@ -89,100 +106,40 @@ void PhysicsAMotorJoint::onDestroy()
 	//empty
 }
 /***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-Int32 PhysicsAMotorJoint::getMode(void)
-{
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	return dJointGetAMotorMode(tmpPtr->id);
-}
-
-Int32 PhysicsAMotorJoint::getNumAxes(void)
-{
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	return dJointGetAMotorNumAxes(tmpPtr->id);
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-void PhysicsAMotorJoint::setMode(const Int32 &value )
-{
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	dJointSetAMotorMode(tmpPtr->id, value);
-	PhysicsAMotorJointBase::setMode(value);
-}
-
-void PhysicsAMotorJoint::setNumAxes(const Int32 &value )
-{
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	dJointSetAMotorNumAxes(tmpPtr->id, value);
-	PhysicsAMotorJointBase::setNumAxes(value);
-}
-
-void PhysicsAMotorJoint::setWorld(const PhysicsWorldPtr &value )
-{
-    PhysicsAMotorJointPtr tmpPtr(*this);
-    tmpPtr->setJointID(dJointCreateAMotor(value->getWorldID(), 0));
-    PhysicsJointBase::setWorld(value);
-}
-/***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsAMotorJoint::initAMotorJoint()
+
+void PhysicsAMotorJoint::setAxis1Properties(const Vec3f& Axis, UInt8 ReferenceFrame)
 {
-    setMode(PhysicsAMotorJointBase::getMode());
-    setNumAxes(PhysicsAMotorJointBase::getNumAxes());
-    setWorld(PhysicsAMotorJointBase::getWorld());
-    initJoint();
-}
-void PhysicsAMotorJoint::setAxis(Int32 anum, Int32 rel, const Vec3f& axis)
-{
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	dJointSetAMotorAxis(tmpPtr->id, anum, rel, axis.x(), axis.y(), axis.z());
+    setAxis1(Axis);
+    setAxis3ReferenceFrame(ReferenceFrame);
 }
 
-void PhysicsAMotorJoint::getAxis(Int32 anum, Vec3f& result)
+void PhysicsAMotorJoint::setAxis2Properties(const Vec3f& Axis, UInt8 ReferenceFrame)
 {
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	dVector3 res;
-	dJointGetAMotorAxis(tmpPtr->id, anum, res);
-	result.setValue(Vec3f(res[0], res[1], res[2]));
+    setAxis2(Axis);
+    setAxis2ReferenceFrame(ReferenceFrame);
 }
 
-Int32 PhysicsAMotorJoint::getAxisRel(Int32 anum)
+void PhysicsAMotorJoint::setAxis3Properties(const Vec3f& Axis, UInt8 ReferenceFrame)
 {
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	return dJointGetAMotorAxisRel(tmpPtr->id, anum);
+    setAxis3(Axis);
+    setAxis3ReferenceFrame(ReferenceFrame);
 }
 
 void PhysicsAMotorJoint::setAngle(Int32 anum, Real32 angle)
 {
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	dJointSetAMotorAngle(tmpPtr->id, anum, angle);
+	dJointSetAMotorAngle(_JointID, anum, angle);
 }
 
 Real32 PhysicsAMotorJoint::getAngle(Int32 anum)
 {
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	return dJointGetAMotorAngle(tmpPtr->id, anum);
+	return dJointGetAMotorAngle(_JointID, anum);
 }
 
 Real32 PhysicsAMotorJoint::getAngleRate(Int32 anum)
 {
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	return dJointGetAMotorAngleRate(tmpPtr->id, anum);
-}
-
-void PhysicsAMotorJoint::setParam(Int32 param, Real32 value )
-{
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	dJointSetAMotorParam(tmpPtr->id, param, value);
-}
-
-Real32 PhysicsAMotorJoint::getParam(Int32 param )
-{
-	PhysicsAMotorJointPtr tmpPtr(*this);
-	return dJointGetAMotorParam(tmpPtr->id, param);
+	return dJointGetAMotorAngleRate(_JointID, anum);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -208,7 +165,260 @@ PhysicsAMotorJoint::~PhysicsAMotorJoint(void)
 
 void PhysicsAMotorJoint::changed(BitVector whichField, UInt32 origin)
 {
+    if(whichField & WorldFieldMask)
+    {
+        if(_JointID)
+        {
+            dJointDestroy(_JointID);
+            _JointID = dJointCreateAMotor(getWorld()->getWorldID(), 0);
+        }
+        else
+        {
+            _JointID = dJointCreateAMotor(getWorld()->getWorldID(), 0);
+            if(!(whichField & VelFieldMask))
+            {
+                setVel(dJointGetAMotorParam(_JointID,dParamVel));
+            }
+            if(!(whichField & FMaxFieldMask))
+            {
+                setFMax(dJointGetAMotorParam(_JointID,dParamFMax));
+            }
+            if(!(whichField & FudgeFactorFieldMask))
+            {
+                setFudgeFactor(dJointGetAMotorParam(_JointID,dParamFudgeFactor));
+            }
+            if(!(whichField & Vel2FieldMask))
+            {
+                setVel2(dJointGetAMotorParam(_JointID,dParamVel2));
+            }
+            if(!(whichField & FMax2FieldMask))
+            {
+                setFMax2(dJointGetAMotorParam(_JointID,dParamFMax2));
+            }
+            if(!(whichField & FudgeFactor2FieldMask))
+            {
+                setFudgeFactor2(dJointGetAMotorParam(_JointID,dParamFudgeFactor2));
+            }
+            if(!(whichField & Vel3FieldMask))
+            {
+                setVel3(dJointGetAMotorParam(_JointID,dParamVel3));
+            }
+            if(!(whichField & FMax3FieldMask))
+            {
+                setFMax3(dJointGetAMotorParam(_JointID,dParamFMax3));
+            }
+            if(!(whichField & FudgeFactor3FieldMask))
+            {
+                setFudgeFactor3(dJointGetAMotorParam(_JointID,dParamFudgeFactor3));
+            }
+            if(!(whichField & HiStopFieldMask))
+            {
+                setHiStop(dJointGetAMotorParam(_JointID,dParamHiStop));
+            }
+            if(!(whichField & LoStopFieldMask))
+            {
+                setLoStop(dJointGetAMotorParam(_JointID,dParamLoStop));
+            }
+            if(!(whichField & BounceFieldMask))
+            {
+                setBounce(dJointGetAMotorParam(_JointID,dParamBounce));
+            }
+            if(!(whichField & CFMFieldMask))
+            {
+                setCFM(dJointGetAMotorParam(_JointID,dParamCFM));
+            }
+            if(!(whichField & StopCFMFieldMask))
+            {
+                setStopCFM(dJointGetAMotorParam(_JointID,dParamStopCFM));
+            }
+            if(!(whichField & StopERPFieldMask))
+            {
+                setStopERP(dJointGetAMotorParam(_JointID,dParamStopERP));
+            }
+            if(!(whichField & HiStop2FieldMask))
+            {
+                setHiStop2(dJointGetAMotorParam(_JointID,dParamHiStop2));
+            }
+            if(!(whichField & LoStop2FieldMask))
+            {
+                setLoStop2(dJointGetAMotorParam(_JointID,dParamLoStop2));
+            }
+            if(!(whichField & Bounce2FieldMask))
+            {
+                setBounce2(dJointGetAMotorParam(_JointID,dParamBounce2));
+            }
+            if(!(whichField & CFM2FieldMask))
+            {
+                setCFM2(dJointGetAMotorParam(_JointID,dParamCFM2));
+            }
+            if(!(whichField & StopCFM2FieldMask))
+            {
+                setStopCFM2(dJointGetAMotorParam(_JointID,dParamStopCFM2));
+            }
+            if(!(whichField & StopERP2FieldMask))
+            {
+                setStopERP2(dJointGetAMotorParam(_JointID,dParamStopERP2));
+            }
+            if(!(whichField & HiStop3FieldMask))
+            {
+                setHiStop3(dJointGetAMotorParam(_JointID,dParamHiStop3));
+            }
+            if(!(whichField & LoStop3FieldMask))
+            {
+                setLoStop3(dJointGetAMotorParam(_JointID,dParamLoStop3));
+            }
+            if(!(whichField & Bounce3FieldMask))
+            {
+                setBounce3(dJointGetAMotorParam(_JointID,dParamBounce3));
+            }
+            if(!(whichField & CFM3FieldMask))
+            {
+                setCFM3(dJointGetAMotorParam(_JointID,dParamCFM3));
+            }
+            if(!(whichField & StopCFM3FieldMask))
+            {
+                setStopCFM3(dJointGetAMotorParam(_JointID,dParamStopCFM3));
+            }
+            if(!(whichField & StopERP3FieldMask))
+            {
+                setStopERP3(dJointGetAMotorParam(_JointID,dParamStopERP3));
+            }
+        }
+    }
+
     Inherited::changed(whichField, origin);
+
+    if((whichField & NumAxesFieldMask) ||
+       (whichField & WorldFieldMask))
+    {
+	    dJointSetAMotorNumAxes(_JointID,getNumAxes());
+    }
+    if((whichField & Axis1FieldMask) ||
+       (whichField & Axis1ReferenceFrameFieldMask) ||
+       (whichField & WorldFieldMask))
+    {
+	    dJointSetAMotorAxis(_JointID,0, getAxis1ReferenceFrame(), getAxis1().x(), getAxis1().y(), getAxis1().z());
+    }
+    if((whichField & Axis2FieldMask) ||
+       (whichField & Axis2ReferenceFrameFieldMask) ||
+       (whichField & WorldFieldMask))
+    {
+	    dJointSetAMotorAxis(_JointID,1, getAxis2ReferenceFrame(), getAxis2().x(), getAxis2().y(), getAxis2().z());
+    }
+    if((whichField & Axis3FieldMask) ||
+       (whichField & Axis3ReferenceFrameFieldMask) ||
+       (whichField & WorldFieldMask))
+    {
+	    dJointSetAMotorAxis(_JointID,2, getAxis3ReferenceFrame(), getAxis3().x(), getAxis3().y(), getAxis3().z());
+    }
+    if((whichField & VelFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamVel, getVel());
+    }
+    if((whichField & FMaxFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamFMax, getFMax());
+    }
+    if((whichField & FudgeFactorFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamFudgeFactor, getFudgeFactor());
+    }
+    if((whichField & Vel2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamVel2, getVel2());
+    }
+    if((whichField & FMax2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamFMax2, getFMax2());
+    }
+    if((whichField & FudgeFactor2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamFudgeFactor2, getFudgeFactor2());
+    }
+    if((whichField & Vel3FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamVel3, getVel3());
+    }
+    if((whichField & FMax3FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamFMax3, getFMax3());
+    }
+    if((whichField & FudgeFactor3FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamFudgeFactor3, getFudgeFactor3());
+    }
+    if((whichField & HiStopFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamHiStop, getHiStop());
+    }
+    if((whichField & LoStopFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamLoStop, getLoStop());
+    }
+    if((whichField & BounceFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamBounce, getBounce());
+    }
+    if((whichField & CFMFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamCFM, getCFM());
+    }
+    if((whichField & StopERPFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamStopERP, getStopERP());
+    }
+    if((whichField & StopCFMFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamStopCFM, getStopCFM());
+    }
+    if((whichField & HiStop2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamHiStop2, getHiStop2());
+    }
+    if((whichField & LoStop2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamLoStop2, getLoStop2());
+    }
+    if((whichField & Bounce2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamBounce2, getBounce2());
+    }
+    if((whichField & CFM2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamCFM2, getCFM2());
+    }
+    if((whichField & StopERP2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamStopERP2, getStopERP2());
+    }
+    if((whichField & StopCFM2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamStopCFM2, getStopCFM2());
+    }
+    if((whichField & HiStop3FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamHiStop3, getHiStop3());
+    }
+    if((whichField & LoStop3FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamLoStop3, getLoStop3());
+    }
+    if((whichField & Bounce3FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamBounce3, getBounce3());
+    }
+    if((whichField & CFM3FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamCFM3, getCFM3());
+    }
+    if((whichField & StopERP3FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamStopERP3, getStopERP3());
+    }
+    if((whichField & StopCFM3FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetAMotorParam(_JointID,  dParamStopCFM3, getStopCFM3());
+    }
 }
 
 void PhysicsAMotorJoint::dump(      UInt32    , 

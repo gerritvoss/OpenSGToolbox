@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,41 +67,8 @@ OSG::UInt32 PhysicsJointBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
-//! create a new instance of the class
-inline
-PhysicsJointPtr PhysicsJointBase::create(void) 
-{
-    PhysicsJointPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PhysicsJointPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-PhysicsJointPtr PhysicsJointBase::createEmpty(void) 
-{ 
-    PhysicsJointPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
-
-//! Get the PhysicsJoint::_sfParam field.
-inline
-SFVec2f *PhysicsJointBase::getSFParam(void)
-{
-    return &_sfParam;
-}
 
 //! Get the PhysicsJoint::_sfWorld field.
 inline
@@ -124,27 +91,6 @@ SFPhysicsBodyPtr *PhysicsJointBase::getSFSecondBody(void)
     return &_sfSecondBody;
 }
 
-
-//! Get the value of the PhysicsJoint::_sfParam field.
-inline
-Vec2f &PhysicsJointBase::getParam(void)
-{
-    return _sfParam.getValue();
-}
-
-//! Get the value of the PhysicsJoint::_sfParam field.
-inline
-const Vec2f &PhysicsJointBase::getParam(void) const
-{
-    return _sfParam.getValue();
-}
-
-//! Set the value of the PhysicsJoint::_sfParam field.
-inline
-void PhysicsJointBase::setParam(const Vec2f &value)
-{
-    _sfParam.setValue(value);
-}
 
 //! Get the value of the PhysicsJoint::_sfWorld field.
 inline
@@ -212,5 +158,5 @@ void PhysicsJointBase::setSecondBody(const PhysicsBodyPtr &value)
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSJOINTBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsJointBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSJOINTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

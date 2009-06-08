@@ -6,7 +6,7 @@
  *                                                                           *
  *                          www.vrac.iastate.edu                             *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,12 +69,13 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsWorld : public PhysicsWorldBase
 	/*---------------------------------------------------------------------*/
 	/*! \name                   Class Specific                             */
 	/*! \{                                                                 */
-	void worldImpulseToForce(Real32 stepsize, Real32 x, Real32 y, Real32 z, Vec3f force);
+	Vec3f impulseToForce(Real32 stepsize, const Vec3f& Impulse);
 	void worldStep(Real32 stepsize);
 	void worldQuickStep(Real32 stepsize);
     void initWorld();
 
     PhysicsHandlerPtr getParentHandler(void) const;
+
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

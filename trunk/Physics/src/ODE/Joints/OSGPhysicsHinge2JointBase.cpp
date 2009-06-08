@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,13 +57,12 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsHinge2JointBase.h"
 #include "OSGPhysicsHinge2Joint.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsHinge2JointBase::AnchorFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::AnchorFieldId);
@@ -73,6 +72,48 @@ const OSG::BitVector  PhysicsHinge2JointBase::Axis1FieldMask =
 
 const OSG::BitVector  PhysicsHinge2JointBase::Axis2FieldMask = 
     (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::Axis2FieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::HiStopFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::HiStopFieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::LoStopFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::LoStopFieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::BounceFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::BounceFieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::CFMFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::CFMFieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::StopERPFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::StopERPFieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::StopCFMFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::StopCFMFieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::HiStop2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::HiStop2FieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::LoStop2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::LoStop2FieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::Bounce2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::Bounce2FieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::CFM2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::CFM2FieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::StopERP2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::StopERP2FieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::StopCFM2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::StopCFM2FieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::SuspensionERPFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::SuspensionERPFieldId);
+
+const OSG::BitVector  PhysicsHinge2JointBase::SuspensionCFMFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHinge2JointBase::SuspensionCFMFieldId);
 
 const OSG::BitVector PhysicsHinge2JointBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -89,6 +130,48 @@ const OSG::BitVector PhysicsHinge2JointBase::MTInfluenceMask =
 */
 /*! \var Vec3f           PhysicsHinge2JointBase::_sfAxis2
     
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfHiStop
+    High stop angle or position. Setting this to dInfinity (the default value) turns off the high stop. For rotational joints, this stop must be less than pi to be effective. If the high stop is less than the low stop then both stops will be ineffective.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfLoStop
+    Low stop angle or position. Setting this to -dInfinity (the default value) turns off the low stop.  For rotational joints, this stop must be greater than - pi to be effective.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfBounce
+    The bouncyness of the stops. This is a restitution parameter in the range 0..1. 0 means the stops are not bouncy at all, 1 means maximum bouncyness.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfCFM
+    The constraint force mixing (CFM) value used when not at a stop.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfStopERP
+    The error reduction parameter (ERP) used by the stops.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfStopCFM
+    The constraint force mixing (CFM) value used by the stops. Together with the ERP value this can be used to get spongy or soft stops. Note that this is intended for unpowered joints, it does not really work as expected when a powered joint reaches its limit.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfHiStop2
+    High stop angle or position. Setting this to dInfinity (the default value) turns off the high stop. For rotational joints, this stop must be less than pi to be effective. If the high stop is less than the low stop then both stops will be ineffective.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfLoStop2
+    Low stop angle or position. Setting this to -dInfinity (the default value) turns off the low stop.  For rotational joints, this stop must be greater than - pi to be effective.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfBounce2
+    The bouncyness of the stops. This is a restitution parameter in the range 0..1. 0 means the stops are not bouncy at all, 1 means maximum bouncyness.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfCFM2
+    The constraint force mixing (CFM) value used when not at a stop.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfStopERP2
+    The error reduction parameter (ERP) used by the stops.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfStopCFM2
+    The constraint force mixing (CFM) value used by the stops. Together with the ERP value this can be used to get spongy or soft stops. Note that this is intended for unpowered joints, it does not really work as expected when a powered joint reaches its limit.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfSuspensionERP
+    Suspension error reduction parameter (ERP). Currently this is only implemented on the hinge-2 joint.
+*/
+/*! \var Real32          PhysicsHinge2JointBase::_sfSuspensionCFM
+    Suspension constraint force mixing (CFM) value. Currently this is only implemented on the hinge-2 joint.
 */
 
 //! PhysicsHinge2Joint description
@@ -109,7 +192,77 @@ FieldDescription *PhysicsHinge2JointBase::_desc[] =
                      "axis2", 
                      Axis2FieldId, Axis2FieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFAxis2)
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFAxis2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "hiStop", 
+                     HiStopFieldId, HiStopFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFHiStop),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "loStop", 
+                     LoStopFieldId, LoStopFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFLoStop),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "bounce", 
+                     BounceFieldId, BounceFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFBounce),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "CFM", 
+                     CFMFieldId, CFMFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFCFM),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopERP", 
+                     StopERPFieldId, StopERPFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFStopERP),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopCFM", 
+                     StopCFMFieldId, StopCFMFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFStopCFM),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "hiStop2", 
+                     HiStop2FieldId, HiStop2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFHiStop2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "loStop2", 
+                     LoStop2FieldId, LoStop2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFLoStop2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "bounce2", 
+                     Bounce2FieldId, Bounce2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFBounce2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "CFM2", 
+                     CFM2FieldId, CFM2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFCFM2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopERP2", 
+                     StopERP2FieldId, StopERP2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFStopERP2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopCFM2", 
+                     StopCFM2FieldId, StopCFM2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFStopCFM2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "suspensionERP", 
+                     SuspensionERPFieldId, SuspensionERPFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFSuspensionERP),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "suspensionCFM", 
+                     SuspensionCFMFieldId, SuspensionCFMFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHinge2JointBase::getSFSuspensionCFM)
 };
 
 
@@ -188,6 +341,20 @@ PhysicsHinge2JointBase::PhysicsHinge2JointBase(void) :
     _sfAnchor                 (), 
     _sfAxis1                  (), 
     _sfAxis2                  (), 
+    _sfHiStop                 (), 
+    _sfLoStop                 (), 
+    _sfBounce                 (), 
+    _sfCFM                    (), 
+    _sfStopERP                (), 
+    _sfStopCFM                (), 
+    _sfHiStop2                (), 
+    _sfLoStop2                (), 
+    _sfBounce2                (), 
+    _sfCFM2                   (), 
+    _sfStopERP2               (), 
+    _sfStopCFM2               (), 
+    _sfSuspensionERP          (), 
+    _sfSuspensionCFM          (), 
     Inherited() 
 {
 }
@@ -200,6 +367,20 @@ PhysicsHinge2JointBase::PhysicsHinge2JointBase(const PhysicsHinge2JointBase &sou
     _sfAnchor                 (source._sfAnchor                 ), 
     _sfAxis1                  (source._sfAxis1                  ), 
     _sfAxis2                  (source._sfAxis2                  ), 
+    _sfHiStop                 (source._sfHiStop                 ), 
+    _sfLoStop                 (source._sfLoStop                 ), 
+    _sfBounce                 (source._sfBounce                 ), 
+    _sfCFM                    (source._sfCFM                    ), 
+    _sfStopERP                (source._sfStopERP                ), 
+    _sfStopCFM                (source._sfStopCFM                ), 
+    _sfHiStop2                (source._sfHiStop2                ), 
+    _sfLoStop2                (source._sfLoStop2                ), 
+    _sfBounce2                (source._sfBounce2                ), 
+    _sfCFM2                   (source._sfCFM2                   ), 
+    _sfStopERP2               (source._sfStopERP2               ), 
+    _sfStopCFM2               (source._sfStopCFM2               ), 
+    _sfSuspensionERP          (source._sfSuspensionERP          ), 
+    _sfSuspensionCFM          (source._sfSuspensionCFM          ), 
     Inherited                 (source)
 {
 }
@@ -231,6 +412,76 @@ UInt32 PhysicsHinge2JointBase::getBinSize(const BitVector &whichField)
         returnValue += _sfAxis2.getBinSize();
     }
 
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+    {
+        returnValue += _sfHiStop.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+    {
+        returnValue += _sfLoStop.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+    {
+        returnValue += _sfBounce.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+    {
+        returnValue += _sfCFM.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+    {
+        returnValue += _sfStopERP.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+    {
+        returnValue += _sfStopCFM.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+    {
+        returnValue += _sfHiStop2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+    {
+        returnValue += _sfLoStop2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+    {
+        returnValue += _sfBounce2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+    {
+        returnValue += _sfCFM2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+    {
+        returnValue += _sfStopERP2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+    {
+        returnValue += _sfStopCFM2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SuspensionERPFieldMask & whichField))
+    {
+        returnValue += _sfSuspensionERP.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SuspensionCFMFieldMask & whichField))
+    {
+        returnValue += _sfSuspensionCFM.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -253,6 +504,76 @@ void PhysicsHinge2JointBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (Axis2FieldMask & whichField))
     {
         _sfAxis2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+    {
+        _sfHiStop.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+    {
+        _sfLoStop.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+    {
+        _sfBounce.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+    {
+        _sfCFM.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+    {
+        _sfStopERP.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+    {
+        _sfStopCFM.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+    {
+        _sfHiStop2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+    {
+        _sfLoStop2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+    {
+        _sfBounce2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+    {
+        _sfCFM2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+    {
+        _sfStopERP2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+    {
+        _sfStopCFM2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SuspensionERPFieldMask & whichField))
+    {
+        _sfSuspensionERP.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SuspensionCFMFieldMask & whichField))
+    {
+        _sfSuspensionCFM.copyToBin(pMem);
     }
 
 
@@ -278,6 +599,76 @@ void PhysicsHinge2JointBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfAxis2.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+    {
+        _sfHiStop.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+    {
+        _sfLoStop.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+    {
+        _sfBounce.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+    {
+        _sfCFM.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+    {
+        _sfStopERP.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+    {
+        _sfStopCFM.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+    {
+        _sfHiStop2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+    {
+        _sfLoStop2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+    {
+        _sfBounce2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+    {
+        _sfCFM2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+    {
+        _sfStopERP2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+    {
+        _sfStopCFM2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SuspensionERPFieldMask & whichField))
+    {
+        _sfSuspensionERP.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SuspensionCFMFieldMask & whichField))
+    {
+        _sfSuspensionCFM.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -296,6 +687,48 @@ void PhysicsHinge2JointBase::executeSyncImpl(      PhysicsHinge2JointBase *pOthe
 
     if(FieldBits::NoField != (Axis2FieldMask & whichField))
         _sfAxis2.syncWith(pOther->_sfAxis2);
+
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+        _sfHiStop.syncWith(pOther->_sfHiStop);
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+        _sfLoStop.syncWith(pOther->_sfLoStop);
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+        _sfBounce.syncWith(pOther->_sfBounce);
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+        _sfCFM.syncWith(pOther->_sfCFM);
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+        _sfStopERP.syncWith(pOther->_sfStopERP);
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+        _sfStopCFM.syncWith(pOther->_sfStopCFM);
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+        _sfHiStop2.syncWith(pOther->_sfHiStop2);
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+        _sfLoStop2.syncWith(pOther->_sfLoStop2);
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+        _sfBounce2.syncWith(pOther->_sfBounce2);
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+        _sfCFM2.syncWith(pOther->_sfCFM2);
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+        _sfStopERP2.syncWith(pOther->_sfStopERP2);
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+        _sfStopCFM2.syncWith(pOther->_sfStopCFM2);
+
+    if(FieldBits::NoField != (SuspensionERPFieldMask & whichField))
+        _sfSuspensionERP.syncWith(pOther->_sfSuspensionERP);
+
+    if(FieldBits::NoField != (SuspensionCFMFieldMask & whichField))
+        _sfSuspensionCFM.syncWith(pOther->_sfSuspensionCFM);
 
 
 }
@@ -316,6 +749,48 @@ void PhysicsHinge2JointBase::executeSyncImpl(      PhysicsHinge2JointBase *pOthe
     if(FieldBits::NoField != (Axis2FieldMask & whichField))
         _sfAxis2.syncWith(pOther->_sfAxis2);
 
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+        _sfHiStop.syncWith(pOther->_sfHiStop);
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+        _sfLoStop.syncWith(pOther->_sfLoStop);
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+        _sfBounce.syncWith(pOther->_sfBounce);
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+        _sfCFM.syncWith(pOther->_sfCFM);
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+        _sfStopERP.syncWith(pOther->_sfStopERP);
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+        _sfStopCFM.syncWith(pOther->_sfStopCFM);
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+        _sfHiStop2.syncWith(pOther->_sfHiStop2);
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+        _sfLoStop2.syncWith(pOther->_sfLoStop2);
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+        _sfBounce2.syncWith(pOther->_sfBounce2);
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+        _sfCFM2.syncWith(pOther->_sfCFM2);
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+        _sfStopERP2.syncWith(pOther->_sfStopERP2);
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+        _sfStopCFM2.syncWith(pOther->_sfStopCFM2);
+
+    if(FieldBits::NoField != (SuspensionERPFieldMask & whichField))
+        _sfSuspensionERP.syncWith(pOther->_sfSuspensionERP);
+
+    if(FieldBits::NoField != (SuspensionCFMFieldMask & whichField))
+        _sfSuspensionCFM.syncWith(pOther->_sfSuspensionCFM);
+
 
 
 }
@@ -331,6 +806,8 @@ void PhysicsHinge2JointBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -342,8 +819,6 @@ DataType FieldDataTraits<PhysicsHinge2JointPtr>::_type("PhysicsHinge2JointPtr", 
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsHinge2JointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsHinge2JointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -359,10 +834,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsHinge2JointBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSHINGE2JOINTBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSHINGE2JOINTBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSHINGE2JOINTFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

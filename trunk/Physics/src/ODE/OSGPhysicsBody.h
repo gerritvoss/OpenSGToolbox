@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -153,8 +153,6 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    void applyAccumForces(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -184,8 +182,6 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
 	
 	/*! \}                                                                 */
 
-    void updateAddedForceTorque(void);
-
     /*==========================  PRIVATE  ================================*/
   private:
 
@@ -199,8 +195,6 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
     void operator =(const PhysicsBody &source);
 
     dBodyID _BodyID;
-    Vec3f _AccumulatedForce;
-    Vec3f _AccumulatedTorque;
 };
 
 typedef PhysicsBody *PhysicsBodyP;

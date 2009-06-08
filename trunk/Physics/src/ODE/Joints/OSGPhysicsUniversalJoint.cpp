@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -18,7 +18,7 @@
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR UniversalRPOSE.  See the GNU         *
  * Library General Public License for more details.                          *
  *                                                                           *
  * You should have received a copy of the GNU Library General Public         *
@@ -72,6 +72,24 @@ void PhysicsUniversalJoint::initMethod (void)
 }
 
 
+PhysicsUniversalJointPtr PhysicsUniversalJoint::create(PhysicsWorldPtr w)
+{
+    PhysicsUniversalJointPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PhysicsUniversalJointPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    if(fc != NullFC)
+    {
+        beginEditCP(fc, PhysicsUniversalJoint::WorldFieldMask);
+            fc->setWorld(w);
+        endEditCP(fc, PhysicsUniversalJoint::WorldFieldMask);
+    }
+    
+    return fc; 
+}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -80,7 +98,6 @@ void PhysicsUniversalJoint::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsUniversalJoint::onCreate(const PhysicsUniversalJoint *)
 {
-	PhysicsUniversalJointPtr tmpPtr(*this);
 	//call initJoint!
 }
 
@@ -88,92 +105,34 @@ void PhysicsUniversalJoint::onDestroy()
 {
 	//empty
 }
-
-/***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-Vec3f PhysicsUniversalJoint::getAnchor(void)
-{
-	PhysicsUniversalJointPtr tmpPtr(*this);
-	dVector3 a;
-	dJointGetUniversalAnchor(tmpPtr->id, a);
-	return Vec3f(a[0], a[1], a[2]);
-}
-
-Vec3f PhysicsUniversalJoint::getAxis1(void)
-{
-	PhysicsUniversalJointPtr tmpPtr(*this);
-	dVector3 a;
-	dJointGetUniversalAxis1(tmpPtr->id, a);
-	return Vec3f(a[0], a[1], a[2]);
-}
-
-Vec3f PhysicsUniversalJoint::getAxis2(void)
-{
-	PhysicsUniversalJointPtr tmpPtr(*this);
-	dVector3 a;
-	dJointGetUniversalAxis2(tmpPtr->id, a);
-	return Vec3f(a[0], a[1], a[2]);
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-void PhysicsUniversalJoint::setAnchor(const Vec3f &value )
-{
-	PhysicsUniversalJointPtr tmpPtr(*this);
-	dJointSetUniversalAnchor(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsUniversalJointBase::setAnchor(value);
-}
-
-void PhysicsUniversalJoint::setAxis1(const Vec3f &value )
-{
-	PhysicsUniversalJointPtr tmpPtr(*this);
-	dJointSetUniversalAxis1(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsUniversalJointBase::setAxis1(value);
-}
-
-void PhysicsUniversalJoint::setAxis2(const Vec3f &value )
-{
-	PhysicsUniversalJointPtr tmpPtr(*this);
-	dJointSetUniversalAxis2(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsUniversalJointBase::setAxis2(value);
-}
-
-void PhysicsUniversalJoint::setWorld(const PhysicsWorldPtr &value )
-{
-    PhysicsUniversalJointPtr tmpPtr(*this);
-    tmpPtr->setJointID(dJointCreateUniversal(value->getWorldID(), 0));
-    PhysicsJointBase::setWorld(value);
-}
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsUniversalJoint::initUniversalJoint()
-{
-    setAnchor(PhysicsUniversalJointBase::getAnchor());
-    setAxis1(PhysicsUniversalJointBase::getAxis1());
-    setAxis2(PhysicsUniversalJointBase::getAxis2());
-    setWorld(PhysicsUniversalJointBase::getWorld());
-    initJoint();
-}
 Vec3f PhysicsUniversalJoint::getAnchor2(void)
 {
-	PhysicsUniversalJointPtr tmpPtr(*this);
 	dVector3 a;
-	dJointGetUniversalAnchor2(tmpPtr->id, a);
+	dJointGetUniversalAnchor2(_JointID, a);
 	return Vec3f(a[0], a[1], a[2]);
 }
 
-void PhysicsUniversalJoint::setParam(Int32 param, Real32 value )
+Real32 PhysicsUniversalJoint::getUniversalAngle1(void) const
 {
-	PhysicsUniversalJointPtr tmpPtr(*this);
-	dJointSetUniversalParam(tmpPtr->id, param, value);
+    return dJointGetUniversalAngle1(_JointID);
 }
 
-Real32 PhysicsUniversalJoint::getParam(Int32 param )
+Real32 PhysicsUniversalJoint::getUniversalAngle1Rate(void) const
 {
-	PhysicsUniversalJointPtr tmpPtr(*this);
-	return dJointGetUniversalParam(tmpPtr->id, param);
+    return dJointGetUniversalAngle1Rate(_JointID);
+}
+
+Real32 PhysicsUniversalJoint::getUniversalAngle2(void) const
+{
+    return dJointGetUniversalAngle2(_JointID);
+}
+
+Real32 PhysicsUniversalJoint::getUniversalAngle2Rate(void) const
+{
+    return dJointGetUniversalAngle2Rate(_JointID);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -199,7 +158,129 @@ PhysicsUniversalJoint::~PhysicsUniversalJoint(void)
 
 void PhysicsUniversalJoint::changed(BitVector whichField, UInt32 origin)
 {
+    if(whichField & WorldFieldMask)
+    {
+        if(_JointID)
+        {
+            dJointDestroy(_JointID);
+            _JointID = dJointCreateUniversal(getWorld()->getWorldID(), 0);
+        }
+        else
+        {
+            _JointID = dJointCreateUniversal(getWorld()->getWorldID(), 0);
+            if(!(whichField & HiStopFieldMask))
+            {
+                setHiStop(dJointGetUniversalParam(_JointID,dParamHiStop));
+            }
+            if(!(whichField & LoStopFieldMask))
+            {
+                setLoStop(dJointGetUniversalParam(_JointID,dParamLoStop));
+            }
+            if(!(whichField & BounceFieldMask))
+            {
+                setBounce(dJointGetUniversalParam(_JointID,dParamBounce));
+            }
+            if(!(whichField & CFMFieldMask))
+            {
+                setCFM(dJointGetUniversalParam(_JointID,dParamCFM));
+            }
+            if(!(whichField & StopCFMFieldMask))
+            {
+                setStopCFM(dJointGetUniversalParam(_JointID,dParamStopCFM));
+            }
+            if(!(whichField & StopERPFieldMask))
+            {
+                setStopERP(dJointGetUniversalParam(_JointID,dParamStopERP));
+            }
+            if(!(whichField & HiStop2FieldMask))
+            {
+                setHiStop2(dJointGetUniversalParam(_JointID,dParamHiStop2));
+            }
+            if(!(whichField & LoStop2FieldMask))
+            {
+                setLoStop2(dJointGetUniversalParam(_JointID,dParamLoStop2));
+            }
+            if(!(whichField & Bounce2FieldMask))
+            {
+                setBounce2(dJointGetUniversalParam(_JointID,dParamBounce2));
+            }
+            if(!(whichField & CFM2FieldMask))
+            {
+                setCFM2(dJointGetUniversalParam(_JointID,dParamCFM2));
+            }
+            if(!(whichField & StopCFM2FieldMask))
+            {
+                setStopCFM2(dJointGetUniversalParam(_JointID,dParamStopCFM2));
+            }
+            if(!(whichField & StopERP2FieldMask))
+            {
+                setStopERP2(dJointGetUniversalParam(_JointID,dParamStopERP2));
+            }
+        }
+    }
+
     Inherited::changed(whichField, origin);
+
+    if((whichField & AnchorFieldMask) || (whichField & WorldFieldMask))
+    {
+	    dJointSetUniversalAnchor(_JointID, getAnchor().x(), getAnchor().y(), getAnchor().z());
+    }
+    if((whichField & Axis1FieldMask) || (whichField & WorldFieldMask))
+    {
+	    dJointSetUniversalAxis1(_JointID, getAxis1().x(), getAxis1().y(), getAxis1().z());
+    }
+    if((whichField & Axis2FieldMask) || (whichField & WorldFieldMask))
+    {
+	    dJointSetUniversalAxis2(_JointID, getAxis2().x(), getAxis2().y(), getAxis2().z());
+    }
+    if((whichField & HiStopFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamHiStop, getHiStop());
+    }
+    if((whichField & LoStopFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamLoStop, getLoStop());
+    }
+    if((whichField & BounceFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamBounce, getBounce());
+    }
+    if((whichField & CFMFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamCFM, getCFM());
+    }
+    if((whichField & StopERPFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamStopERP, getStopERP());
+    }
+    if((whichField & StopCFMFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamStopCFM, getStopCFM());
+    }
+    if((whichField & HiStop2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamHiStop2, getHiStop2());
+    }
+    if((whichField & LoStop2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamLoStop2, getLoStop2());
+    }
+    if((whichField & Bounce2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamBounce2, getBounce2());
+    }
+    if((whichField & CFM2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamCFM2, getCFM2());
+    }
+    if((whichField & StopERP2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamStopERP2, getStopERP2());
+    }
+    if((whichField & StopCFM2FieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetUniversalParam(_JointID,  dParamStopCFM2, getStopCFM2());
+    }
 }
 
 void PhysicsUniversalJoint::dump(      UInt32    , 

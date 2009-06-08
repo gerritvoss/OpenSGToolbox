@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -129,25 +129,6 @@ dBodyID PhysicsBody::getBodyID(void)
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-
-void PhysicsBody::applyAccumForces(void)
-{
-    dBodySetForce(_BodyID, _AccumulatedForce.x(),_AccumulatedForce.y(),_AccumulatedForce.z());
-    dBodySetTorque(_BodyID, _AccumulatedTorque.x(),_AccumulatedTorque.y(),_AccumulatedTorque.z());
-}
-
-void PhysicsBody::updateAddedForceTorque(void)
-{
-    const dReal *odeVec;
-    odeVec = dBodyGetForce(_BodyID);
-    _AccumulatedForce = Vec3f(odeVec);
-
-    odeVec = dBodyGetTorque(_BodyID);
-    _AccumulatedTorque = Vec3f(odeVec);
-
-    getWorld()->getParentHandler()->addAccumForcesThisUpdate(PhysicsBodyPtr(this));
-}
-
 void PhysicsBody::initDefaults(void)
 {
     setAutoDisableFlag(dBodyGetAutoDisableFlag(_BodyID));
@@ -196,49 +177,41 @@ void PhysicsBody::getMassStruct(dMass &mass )
 void PhysicsBody::addForce(const Vec3f &v)
 {
 	dBodyAddForce(_BodyID,v.x(), v.y(), v.z());
-    updateAddedForceTorque();
 }
 
 void PhysicsBody::addTorque(const Vec3f &v)
 {
 	dBodyAddTorque(_BodyID,v.x(), v.y(), v.z());
-    updateAddedForceTorque();
 }
 
 void PhysicsBody::addRelForce(const Vec3f &v)
 {
 	dBodyAddRelForce(_BodyID,v.x(), v.y(), v.z());
-    updateAddedForceTorque();
 }
 
 void PhysicsBody::addRelTorque(const Vec3f &v)
 {
 	dBodyAddRelTorque(_BodyID,v.x(), v.y(), v.z());
-    updateAddedForceTorque();
 }
 
 void PhysicsBody::addForceAtPos(const Vec3f &v, const Vec3f &p)
 {
 	dBodyAddForceAtPos(_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
-    updateAddedForceTorque();
 }
 
 void PhysicsBody::addForceAtRelPos(const Vec3f &v, const Vec3f &p)
 {
 	dBodyAddForceAtRelPos(_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
-    updateAddedForceTorque();
 }
 
 void PhysicsBody::addRelForceAtPos(const Vec3f &v, const Vec3f &p)
 {
 	dBodyAddRelForceAtPos(_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
-    updateAddedForceTorque();
 }
 
 void PhysicsBody::addRelForceAtRelPos(const Vec3f &v, const Vec3f &p)
 {
 	dBodyAddRelForceAtRelPos(_BodyID, v.x(), v.y(), v.z(), p.x(), p.y(), p.z());
-    updateAddedForceTorque();
 }
 
 void PhysicsBody::getRelPointPos(const Vec3f &v, Vec3f &result)

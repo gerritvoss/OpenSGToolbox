@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,21 +67,6 @@ OSG::UInt32 PhysicsHingeJointBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
-//! create a new instance of the class
-inline
-PhysicsHingeJointPtr PhysicsHingeJointBase::create(void) 
-{
-    PhysicsHingeJointPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PhysicsHingeJointPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
-
 //! create an empty new instance of the class, do not copy the prototype
 inline
 PhysicsHingeJointPtr PhysicsHingeJointBase::createEmpty(void) 
@@ -108,6 +93,48 @@ inline
 SFVec3f *PhysicsHingeJointBase::getSFAxis(void)
 {
     return &_sfAxis;
+}
+
+//! Get the PhysicsHingeJoint::_sfHiStop field.
+inline
+SFReal32 *PhysicsHingeJointBase::getSFHiStop(void)
+{
+    return &_sfHiStop;
+}
+
+//! Get the PhysicsHingeJoint::_sfLoStop field.
+inline
+SFReal32 *PhysicsHingeJointBase::getSFLoStop(void)
+{
+    return &_sfLoStop;
+}
+
+//! Get the PhysicsHingeJoint::_sfBounce field.
+inline
+SFReal32 *PhysicsHingeJointBase::getSFBounce(void)
+{
+    return &_sfBounce;
+}
+
+//! Get the PhysicsHingeJoint::_sfCFM field.
+inline
+SFReal32 *PhysicsHingeJointBase::getSFCFM(void)
+{
+    return &_sfCFM;
+}
+
+//! Get the PhysicsHingeJoint::_sfStopERP field.
+inline
+SFReal32 *PhysicsHingeJointBase::getSFStopERP(void)
+{
+    return &_sfStopERP;
+}
+
+//! Get the PhysicsHingeJoint::_sfStopCFM field.
+inline
+SFReal32 *PhysicsHingeJointBase::getSFStopCFM(void)
+{
+    return &_sfStopCFM;
 }
 
 
@@ -153,8 +180,134 @@ void PhysicsHingeJointBase::setAxis(const Vec3f &value)
     _sfAxis.setValue(value);
 }
 
+//! Get the value of the PhysicsHingeJoint::_sfHiStop field.
+inline
+Real32 &PhysicsHingeJointBase::getHiStop(void)
+{
+    return _sfHiStop.getValue();
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfHiStop field.
+inline
+const Real32 &PhysicsHingeJointBase::getHiStop(void) const
+{
+    return _sfHiStop.getValue();
+}
+
+//! Set the value of the PhysicsHingeJoint::_sfHiStop field.
+inline
+void PhysicsHingeJointBase::setHiStop(const Real32 &value)
+{
+    _sfHiStop.setValue(value);
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfLoStop field.
+inline
+Real32 &PhysicsHingeJointBase::getLoStop(void)
+{
+    return _sfLoStop.getValue();
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfLoStop field.
+inline
+const Real32 &PhysicsHingeJointBase::getLoStop(void) const
+{
+    return _sfLoStop.getValue();
+}
+
+//! Set the value of the PhysicsHingeJoint::_sfLoStop field.
+inline
+void PhysicsHingeJointBase::setLoStop(const Real32 &value)
+{
+    _sfLoStop.setValue(value);
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfBounce field.
+inline
+Real32 &PhysicsHingeJointBase::getBounce(void)
+{
+    return _sfBounce.getValue();
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfBounce field.
+inline
+const Real32 &PhysicsHingeJointBase::getBounce(void) const
+{
+    return _sfBounce.getValue();
+}
+
+//! Set the value of the PhysicsHingeJoint::_sfBounce field.
+inline
+void PhysicsHingeJointBase::setBounce(const Real32 &value)
+{
+    _sfBounce.setValue(value);
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfCFM field.
+inline
+Real32 &PhysicsHingeJointBase::getCFM(void)
+{
+    return _sfCFM.getValue();
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfCFM field.
+inline
+const Real32 &PhysicsHingeJointBase::getCFM(void) const
+{
+    return _sfCFM.getValue();
+}
+
+//! Set the value of the PhysicsHingeJoint::_sfCFM field.
+inline
+void PhysicsHingeJointBase::setCFM(const Real32 &value)
+{
+    _sfCFM.setValue(value);
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfStopERP field.
+inline
+Real32 &PhysicsHingeJointBase::getStopERP(void)
+{
+    return _sfStopERP.getValue();
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfStopERP field.
+inline
+const Real32 &PhysicsHingeJointBase::getStopERP(void) const
+{
+    return _sfStopERP.getValue();
+}
+
+//! Set the value of the PhysicsHingeJoint::_sfStopERP field.
+inline
+void PhysicsHingeJointBase::setStopERP(const Real32 &value)
+{
+    _sfStopERP.setValue(value);
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfStopCFM field.
+inline
+Real32 &PhysicsHingeJointBase::getStopCFM(void)
+{
+    return _sfStopCFM.getValue();
+}
+
+//! Get the value of the PhysicsHingeJoint::_sfStopCFM field.
+inline
+const Real32 &PhysicsHingeJointBase::getStopCFM(void) const
+{
+    return _sfStopCFM.getValue();
+}
+
+//! Set the value of the PhysicsHingeJoint::_sfStopCFM field.
+inline
+void PhysicsHingeJointBase::setStopCFM(const Real32 &value)
+{
+    _sfStopCFM.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSHINGEJOINTBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsHingeJointBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSHINGEJOINTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

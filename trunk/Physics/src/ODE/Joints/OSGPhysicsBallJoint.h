@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,23 +57,10 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBallJoint : public PhysicsBallJointBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Vec3f getAnchor(void);
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-	  void setAnchor(const Vec3f &value );
-      void setWorld(const PhysicsWorldPtr &value);
-	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initBallJoint();
 	  Vec3f getAnchor2(void);
 
 	  /*! \}                                                                 */
@@ -93,6 +80,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBallJoint : public PhysicsBallJointBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    static PhysicsBallJointPtr create(PhysicsWorldPtr w); 
     /*=========================  PROTECTED  ===============================*/
   protected:
 

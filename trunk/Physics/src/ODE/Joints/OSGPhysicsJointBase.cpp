@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,16 +57,12 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsJointBase.h"
 #include "OSGPhysicsJoint.h"
 
 
-OSG_USING_NAMESPACE
-
-const OSG::BitVector  PhysicsJointBase::ParamFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsJointBase::ParamFieldId);
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsJointBase::WorldFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsJointBase::WorldFieldId);
@@ -84,9 +80,6 @@ const OSG::BitVector PhysicsJointBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Vec2f           PhysicsJointBase::_sfParam
-    
-*/
 /*! \var PhysicsWorldPtr PhysicsJointBase::_sfWorld
     
 */
@@ -101,11 +94,6 @@ const OSG::BitVector PhysicsJointBase::MTInfluenceMask =
 
 FieldDescription *PhysicsJointBase::_desc[] = 
 {
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "param", 
-                     ParamFieldId, ParamFieldMask,
-                     false,
-                     (FieldAccessMethod) &PhysicsJointBase::getSFParam),
     new FieldDescription(SFPhysicsWorldPtr::getClassType(), 
                      "world", 
                      WorldFieldId, WorldFieldMask,
@@ -126,9 +114,9 @@ FieldDescription *PhysicsJointBase::_desc[] =
 
 FieldContainerType PhysicsJointBase::_type(
     "PhysicsJoint",
-    "Attachment",
+    "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &PhysicsJointBase::createEmpty,
+    NULL, 
     PhysicsJoint::initMethod,
     _desc,
     sizeof(_desc));
@@ -147,15 +135,6 @@ const FieldContainerType &PhysicsJointBase::getType(void) const
     return _type;
 } 
 
-
-FieldContainerPtr PhysicsJointBase::shallowCopy(void) const 
-{ 
-    PhysicsJointPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const PhysicsJoint *>(this)); 
-
-    return returnValue; 
-}
 
 UInt32 PhysicsJointBase::getContainerSize(void) const 
 { 
@@ -196,7 +175,6 @@ void PhysicsJointBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PhysicsJointBase::PhysicsJointBase(void) :
-    _sfParam                  (), 
     _sfWorld                  (), 
     _sfFirstBody              (PhysicsBodyPtr(NullFC)), 
     _sfSecondBody             (PhysicsBodyPtr(NullFC)), 
@@ -209,7 +187,6 @@ PhysicsJointBase::PhysicsJointBase(void) :
 #endif
 
 PhysicsJointBase::PhysicsJointBase(const PhysicsJointBase &source) :
-    _sfParam                  (source._sfParam                  ), 
     _sfWorld                  (source._sfWorld                  ), 
     _sfFirstBody              (source._sfFirstBody              ), 
     _sfSecondBody             (source._sfSecondBody             ), 
@@ -228,11 +205,6 @@ PhysicsJointBase::~PhysicsJointBase(void)
 UInt32 PhysicsJointBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
-
-    if(FieldBits::NoField != (ParamFieldMask & whichField))
-    {
-        returnValue += _sfParam.getBinSize();
-    }
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
     {
@@ -258,11 +230,6 @@ void PhysicsJointBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ParamFieldMask & whichField))
-    {
-        _sfParam.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (WorldFieldMask & whichField))
     {
         _sfWorld.copyToBin(pMem);
@@ -285,11 +252,6 @@ void PhysicsJointBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (ParamFieldMask & whichField))
-    {
-        _sfParam.copyFromBin(pMem);
-    }
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
     {
@@ -316,9 +278,6 @@ void PhysicsJointBase::executeSyncImpl(      PhysicsJointBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ParamFieldMask & whichField))
-        _sfParam.syncWith(pOther->_sfParam);
-
     if(FieldBits::NoField != (WorldFieldMask & whichField))
         _sfWorld.syncWith(pOther->_sfWorld);
 
@@ -337,9 +296,6 @@ void PhysicsJointBase::executeSyncImpl(      PhysicsJointBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ParamFieldMask & whichField))
-        _sfParam.syncWith(pOther->_sfParam);
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
         _sfWorld.syncWith(pOther->_sfWorld);
@@ -365,19 +321,19 @@ void PhysicsJointBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PhysicsJointPtr>::_type("PhysicsJointPtr", "AttachmentPtr");
+DataType FieldDataTraits<PhysicsJointPtr>::_type("PhysicsJointPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -393,10 +349,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsJointBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSJOINTBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSJOINTBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSJOINTFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

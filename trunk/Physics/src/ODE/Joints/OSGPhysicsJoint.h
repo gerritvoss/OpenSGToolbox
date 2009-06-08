@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -66,18 +66,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsJoint : public PhysicsJointBase
 	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-      void setJointID(const dJointID &value );
-      void setFirstBody(const PhysicsBodyPtr &value );
-      void setSecondBody(const PhysicsBodyPtr &value );
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initJoint();
-	  void attachTo( dBodyID body1, dBodyID body2 );
 	  void setData( void* someData );
 	  void* getData(void);
 	  Int32 getJointType(void);
@@ -85,12 +75,6 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsJoint : public PhysicsJointBase
 	  // the raw feedback interface
 	  void setFeedback( dJointFeedback* );
 	  dJointFeedback* getFeedback(void);
-	  //void getFeedback( Vec3f& force1, Vec3f& torque1,
-		//  Vec3f& force2, Vec3f& torque2 );
-	  /// set a joint parameter
-	  virtual void setParam( Int32 param, Real32 value );
-	  /// get a joint parameter
-	  virtual Real32 getParam( Int32 param );
 	  /*! \}                                                                 */
 
 
@@ -114,7 +98,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsJoint : public PhysicsJointBase
   protected:
 
     // Variables should all be in PhysicsJointBase.
-    dJointID id;
+    dJointID _JointID;
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
@@ -128,6 +112,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsJoint : public PhysicsJointBase
 	/*! \{                                                                 */
 	void onCreate(const PhysicsJoint *id = NULL);
 	void onDestroy();
+    void setJointID(const dJointID &value );
 	/*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,34 +57,17 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsAMotorJoint : public PhysicsAMotorJointB
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Int32 getMode(void);
-	  Int32 getNumAxes(void);
-	  /*! \} 		                                                       */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-	  void setMode(const Int32 &value );
-	  void setNumAxes(const Int32 &value );
-      void setWorld(const PhysicsWorldPtr &value);
-	  /*! \} 		                                                       */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initAMotorJoint();
-	  void setAxis(Int32 anum, Int32 rel, const Vec3f& axis);
-	  void getAxis(Int32 anum, Vec3f& result);
-	  Int32 getAxisRel(Int32 anum);
+      void setAxis1Properties(const Vec3f& Axis, UInt8 ReferenceFrame);
+      void setAxis2Properties(const Vec3f& Axis, UInt8 ReferenceFrame);
+      void setAxis3Properties(const Vec3f& Axis, UInt8 ReferenceFrame);
+
 	  void setAngle(Int32 anum, Real32 angle);
 	  Real32 getAngle(Int32 anum);
 	  Real32 getAngleRate(Int32 anum);
-
-	  virtual void setParam(Int32 param, Real32 value );
-	  virtual Real32 getParam(Int32 param );
 
 	  /*! \} 		                                                       */
 
@@ -104,6 +87,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsAMotorJoint : public PhysicsAMotorJointB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    static PhysicsAMotorJointPtr create(PhysicsWorldPtr w); 
     /*=========================  PROTECTED  ===============================*/
   protected:
 

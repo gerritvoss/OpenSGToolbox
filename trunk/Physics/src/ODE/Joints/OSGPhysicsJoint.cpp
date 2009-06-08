@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -80,17 +80,15 @@ void PhysicsJoint::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsJoint::onCreate(const PhysicsJoint *)
 {
-	PhysicsJointPtr tmpPtr(*this);
 	//will be created in subclasses
 }
 
 void PhysicsJoint::onDestroy()
 {
-	PhysicsJointPtr tmpPtr(*this);
-	if(tmpPtr->id)
+	if(_JointID)
     {
-        //dJointDestroy(tmpPtr->id);
-        tmpPtr->id = 0;
+        //dJointDestroy(_JointID);
+        _JointID = 0;
     }
 }
 
@@ -99,8 +97,7 @@ void PhysicsJoint::onDestroy()
 \***************************************************************************/
 dJointID PhysicsJoint::getJointID()
 {
-    PhysicsJointPtr tmpPtr(*this);
-    return tmpPtr->id;
+    return _JointID;
 }
 
 /***************************************************************************\
@@ -108,84 +105,40 @@ dJointID PhysicsJoint::getJointID()
 \***************************************************************************/
 void PhysicsJoint::setJointID(const dJointID &value)
 {
-    PhysicsJointPtr tmpPtr(*this);
-    tmpPtr->id = value;
-}
-
-void PhysicsJoint::setFirstBody(const PhysicsBodyPtr &value )
-{
-    PhysicsJointPtr tmpPtr(*this);
-    if(PhysicsJointBase::getSecondBody()!= NullFC)
-        tmpPtr->attachTo(value->getBodyID(), PhysicsJointBase::getSecondBody()->getBodyID());
-    PhysicsJointBase::setFirstBody(value);
-}
-
-void PhysicsJoint::setSecondBody(const PhysicsBodyPtr &value )
-{
-    PhysicsJointPtr tmpPtr(*this);
-    if(PhysicsJointBase::getFirstBody()!= NullFC)
-        tmpPtr->attachTo(value->getBodyID(), PhysicsJointBase::getFirstBody()->getBodyID());
-    PhysicsJointBase::setSecondBody(value);
+    _JointID = value;
 }
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsJoint::initJoint()
-{
-    setFirstBody(PhysicsJointBase::getFirstBody());
-    setSecondBody(PhysicsJointBase::getSecondBody());
-}
-void PhysicsJoint::attachTo( dBodyID body1, dBodyID body2 )
-{
-	PhysicsJointPtr tmpPtr(*this);
-	dJointAttach(tmpPtr->id, body1, body2);
-}
 
 void PhysicsJoint::setData( void* someData)
 {
-	PhysicsJointPtr tmpPtr(*this);
-	dJointSetData(tmpPtr->id, someData);
+	dJointSetData(_JointID, someData);
 }
 
 void* PhysicsJoint::getData( void)
 {
-	PhysicsJointPtr tmpPtr(*this);
-	return dJointGetData(tmpPtr->id);
+	return dJointGetData(_JointID);
 }
 
 Int32 PhysicsJoint::getJointType(void)
 {
-	PhysicsJointPtr tmpPtr(*this);
-	return dJointGetType(tmpPtr->id);
+	return dJointGetType(_JointID);
 }
 
 dBodyID PhysicsJoint::getBody( Int32 i)
 {
-	PhysicsJointPtr tmpPtr(*this);
-	return dJointGetBody(tmpPtr->id, i);
+	return dJointGetBody(_JointID, i);
 }
 
 void PhysicsJoint::setFeedback( dJointFeedback* feed)
 {
-	PhysicsJointPtr tmpPtr(*this);
-	dJointSetFeedback(tmpPtr->id, feed);
+	dJointSetFeedback(_JointID, feed);
 }
 
 dJointFeedback* PhysicsJoint::getFeedback( void)
 {
-	PhysicsJointPtr tmpPtr(*this);
-	return dJointGetFeedback(tmpPtr->id);
-}
-
-void PhysicsJoint::setParam( Int32 param, Real32 value )
-{
-	//pure virtual function
-}
-
-Real32 PhysicsJoint::getParam( Int32 param )
-{
-	//pure virtual function
-	return 0.0f;
+	return dJointGetFeedback(_JointID);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -195,12 +148,14 @@ Real32 PhysicsJoint::getParam( Int32 param )
 /*----------------------- constructors & destructors ----------------------*/
 
 PhysicsJoint::PhysicsJoint(void) :
-    Inherited()
+    Inherited(),
+        _JointID(NULL)
 {
 }
 
 PhysicsJoint::PhysicsJoint(const PhysicsJoint &source) :
-    Inherited(source)
+    Inherited(source),
+        _JointID(NULL)
 {
 }
 
@@ -213,6 +168,22 @@ PhysicsJoint::~PhysicsJoint(void)
 void PhysicsJoint::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(((whichField & FirstBodyFieldMask) || (whichField & WorldFieldMask)) ||
+       ((whichField & SecondBodyFieldMask) || (whichField & WorldFieldMask)))
+    {
+        dBodyID First(NULL);
+        dBodyID Second(NULL);
+        if(getFirstBody() != NullFC)
+        {
+            First = getFirstBody()->getBodyID();
+        }
+        if(getSecondBody() != NullFC)
+        {
+            Second = getSecondBody()->getBodyID();
+        }
+        dJointAttach(_JointID, First, Second);
+    }
 }
 
 void PhysicsJoint::dump(      UInt32    , 
@@ -223,7 +194,7 @@ void PhysicsJoint::dump(      UInt32    ,
 
 
 /*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
+/*                              cvs _JointID's                                  */
 
 #ifdef OSG_SGI_CC
 #pragma set woff 1174

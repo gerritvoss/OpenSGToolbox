@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,13 +57,12 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsUniversalJointBase.h"
 #include "OSGPhysicsUniversalJoint.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsUniversalJointBase::AnchorFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::AnchorFieldId);
@@ -73,6 +72,42 @@ const OSG::BitVector  PhysicsUniversalJointBase::Axis1FieldMask =
 
 const OSG::BitVector  PhysicsUniversalJointBase::Axis2FieldMask = 
     (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::Axis2FieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::HiStopFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::HiStopFieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::LoStopFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::LoStopFieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::BounceFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::BounceFieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::CFMFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::CFMFieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::StopERPFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::StopERPFieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::StopCFMFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::StopCFMFieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::HiStop2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::HiStop2FieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::LoStop2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::LoStop2FieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::Bounce2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::Bounce2FieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::CFM2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::CFM2FieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::StopERP2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::StopERP2FieldId);
+
+const OSG::BitVector  PhysicsUniversalJointBase::StopCFM2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsUniversalJointBase::StopCFM2FieldId);
 
 const OSG::BitVector PhysicsUniversalJointBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -89,6 +124,42 @@ const OSG::BitVector PhysicsUniversalJointBase::MTInfluenceMask =
 */
 /*! \var Vec3f           PhysicsUniversalJointBase::_sfAxis2
     
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfHiStop
+    High stop angle or position. Setting this to dInfinity (the default value) turns off the high stop. For rotational joints, this stop must be less than pi to be effective. If the high stop is less than the low stop then both stops will be ineffective.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfLoStop
+    Low stop angle or position. Setting this to -dInfinity (the default value) turns off the low stop.  For rotational joints, this stop must be greater than - pi to be effective.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfBounce
+    The bouncyness of the stops. This is a restitution parameter in the range 0..1. 0 means the stops are not bouncy at all, 1 means maximum bouncyness.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfCFM
+    The constraint force mixing (CFM) value used when not at a stop.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfStopERP
+    The error reduction parameter (ERP) used by the stops.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfStopCFM
+    The constraint force mixing (CFM) value used by the stops. Together with the ERP value this can be used to get spongy or soft stops. Note that this is intended for unpowered joints, it does not really work as expected when a powered joint reaches its limit.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfHiStop2
+    High stop angle or position. Setting this to dInfinity (the default value) turns off the high stop. For rotational joints, this stop must be less than pi to be effective. If the high stop is less than the low stop then both stops will be ineffective.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfLoStop2
+    Low stop angle or position. Setting this to -dInfinity (the default value) turns off the low stop.  For rotational joints, this stop must be greater than - pi to be effective.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfBounce2
+    The bouncyness of the stops. This is a restitution parameter in the range 0..1. 0 means the stops are not bouncy at all, 1 means maximum bouncyness.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfCFM2
+    The constraint force mixing (CFM) value used when not at a stop.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfStopERP2
+    The error reduction parameter (ERP) used by the stops.
+*/
+/*! \var Real32          PhysicsUniversalJointBase::_sfStopCFM2
+    The constraint force mixing (CFM) value used by the stops. Together with the ERP value this can be used to get spongy or soft stops. Note that this is intended for unpowered joints, it does not really work as expected when a powered joint reaches its limit.
 */
 
 //! PhysicsUniversalJoint description
@@ -109,7 +180,67 @@ FieldDescription *PhysicsUniversalJointBase::_desc[] =
                      "axis2", 
                      Axis2FieldId, Axis2FieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFAxis2)
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFAxis2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "hiStop", 
+                     HiStopFieldId, HiStopFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFHiStop),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "loStop", 
+                     LoStopFieldId, LoStopFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFLoStop),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "bounce", 
+                     BounceFieldId, BounceFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFBounce),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "CFM", 
+                     CFMFieldId, CFMFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFCFM),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopERP", 
+                     StopERPFieldId, StopERPFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFStopERP),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopCFM", 
+                     StopCFMFieldId, StopCFMFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFStopCFM),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "hiStop2", 
+                     HiStop2FieldId, HiStop2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFHiStop2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "loStop2", 
+                     LoStop2FieldId, LoStop2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFLoStop2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "bounce2", 
+                     Bounce2FieldId, Bounce2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFBounce2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "CFM2", 
+                     CFM2FieldId, CFM2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFCFM2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopERP2", 
+                     StopERP2FieldId, StopERP2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFStopERP2),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "stopCFM2", 
+                     StopCFM2FieldId, StopCFM2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsUniversalJointBase::getSFStopCFM2)
 };
 
 
@@ -188,6 +319,18 @@ PhysicsUniversalJointBase::PhysicsUniversalJointBase(void) :
     _sfAnchor                 (), 
     _sfAxis1                  (), 
     _sfAxis2                  (), 
+    _sfHiStop                 (), 
+    _sfLoStop                 (), 
+    _sfBounce                 (), 
+    _sfCFM                    (), 
+    _sfStopERP                (), 
+    _sfStopCFM                (), 
+    _sfHiStop2                (), 
+    _sfLoStop2                (), 
+    _sfBounce2                (), 
+    _sfCFM2                   (), 
+    _sfStopERP2               (), 
+    _sfStopCFM2               (), 
     Inherited() 
 {
 }
@@ -200,6 +343,18 @@ PhysicsUniversalJointBase::PhysicsUniversalJointBase(const PhysicsUniversalJoint
     _sfAnchor                 (source._sfAnchor                 ), 
     _sfAxis1                  (source._sfAxis1                  ), 
     _sfAxis2                  (source._sfAxis2                  ), 
+    _sfHiStop                 (source._sfHiStop                 ), 
+    _sfLoStop                 (source._sfLoStop                 ), 
+    _sfBounce                 (source._sfBounce                 ), 
+    _sfCFM                    (source._sfCFM                    ), 
+    _sfStopERP                (source._sfStopERP                ), 
+    _sfStopCFM                (source._sfStopCFM                ), 
+    _sfHiStop2                (source._sfHiStop2                ), 
+    _sfLoStop2                (source._sfLoStop2                ), 
+    _sfBounce2                (source._sfBounce2                ), 
+    _sfCFM2                   (source._sfCFM2                   ), 
+    _sfStopERP2               (source._sfStopERP2               ), 
+    _sfStopCFM2               (source._sfStopCFM2               ), 
     Inherited                 (source)
 {
 }
@@ -231,6 +386,66 @@ UInt32 PhysicsUniversalJointBase::getBinSize(const BitVector &whichField)
         returnValue += _sfAxis2.getBinSize();
     }
 
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+    {
+        returnValue += _sfHiStop.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+    {
+        returnValue += _sfLoStop.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+    {
+        returnValue += _sfBounce.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+    {
+        returnValue += _sfCFM.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+    {
+        returnValue += _sfStopERP.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+    {
+        returnValue += _sfStopCFM.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+    {
+        returnValue += _sfHiStop2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+    {
+        returnValue += _sfLoStop2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+    {
+        returnValue += _sfBounce2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+    {
+        returnValue += _sfCFM2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+    {
+        returnValue += _sfStopERP2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+    {
+        returnValue += _sfStopCFM2.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -253,6 +468,66 @@ void PhysicsUniversalJointBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (Axis2FieldMask & whichField))
     {
         _sfAxis2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+    {
+        _sfHiStop.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+    {
+        _sfLoStop.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+    {
+        _sfBounce.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+    {
+        _sfCFM.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+    {
+        _sfStopERP.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+    {
+        _sfStopCFM.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+    {
+        _sfHiStop2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+    {
+        _sfLoStop2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+    {
+        _sfBounce2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+    {
+        _sfCFM2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+    {
+        _sfStopERP2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+    {
+        _sfStopCFM2.copyToBin(pMem);
     }
 
 
@@ -278,6 +553,66 @@ void PhysicsUniversalJointBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfAxis2.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+    {
+        _sfHiStop.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+    {
+        _sfLoStop.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+    {
+        _sfBounce.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+    {
+        _sfCFM.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+    {
+        _sfStopERP.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+    {
+        _sfStopCFM.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+    {
+        _sfHiStop2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+    {
+        _sfLoStop2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+    {
+        _sfBounce2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+    {
+        _sfCFM2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+    {
+        _sfStopERP2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+    {
+        _sfStopCFM2.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -296,6 +631,42 @@ void PhysicsUniversalJointBase::executeSyncImpl(      PhysicsUniversalJointBase 
 
     if(FieldBits::NoField != (Axis2FieldMask & whichField))
         _sfAxis2.syncWith(pOther->_sfAxis2);
+
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+        _sfHiStop.syncWith(pOther->_sfHiStop);
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+        _sfLoStop.syncWith(pOther->_sfLoStop);
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+        _sfBounce.syncWith(pOther->_sfBounce);
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+        _sfCFM.syncWith(pOther->_sfCFM);
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+        _sfStopERP.syncWith(pOther->_sfStopERP);
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+        _sfStopCFM.syncWith(pOther->_sfStopCFM);
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+        _sfHiStop2.syncWith(pOther->_sfHiStop2);
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+        _sfLoStop2.syncWith(pOther->_sfLoStop2);
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+        _sfBounce2.syncWith(pOther->_sfBounce2);
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+        _sfCFM2.syncWith(pOther->_sfCFM2);
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+        _sfStopERP2.syncWith(pOther->_sfStopERP2);
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+        _sfStopCFM2.syncWith(pOther->_sfStopCFM2);
 
 
 }
@@ -316,6 +687,42 @@ void PhysicsUniversalJointBase::executeSyncImpl(      PhysicsUniversalJointBase 
     if(FieldBits::NoField != (Axis2FieldMask & whichField))
         _sfAxis2.syncWith(pOther->_sfAxis2);
 
+    if(FieldBits::NoField != (HiStopFieldMask & whichField))
+        _sfHiStop.syncWith(pOther->_sfHiStop);
+
+    if(FieldBits::NoField != (LoStopFieldMask & whichField))
+        _sfLoStop.syncWith(pOther->_sfLoStop);
+
+    if(FieldBits::NoField != (BounceFieldMask & whichField))
+        _sfBounce.syncWith(pOther->_sfBounce);
+
+    if(FieldBits::NoField != (CFMFieldMask & whichField))
+        _sfCFM.syncWith(pOther->_sfCFM);
+
+    if(FieldBits::NoField != (StopERPFieldMask & whichField))
+        _sfStopERP.syncWith(pOther->_sfStopERP);
+
+    if(FieldBits::NoField != (StopCFMFieldMask & whichField))
+        _sfStopCFM.syncWith(pOther->_sfStopCFM);
+
+    if(FieldBits::NoField != (HiStop2FieldMask & whichField))
+        _sfHiStop2.syncWith(pOther->_sfHiStop2);
+
+    if(FieldBits::NoField != (LoStop2FieldMask & whichField))
+        _sfLoStop2.syncWith(pOther->_sfLoStop2);
+
+    if(FieldBits::NoField != (Bounce2FieldMask & whichField))
+        _sfBounce2.syncWith(pOther->_sfBounce2);
+
+    if(FieldBits::NoField != (CFM2FieldMask & whichField))
+        _sfCFM2.syncWith(pOther->_sfCFM2);
+
+    if(FieldBits::NoField != (StopERP2FieldMask & whichField))
+        _sfStopERP2.syncWith(pOther->_sfStopERP2);
+
+    if(FieldBits::NoField != (StopCFM2FieldMask & whichField))
+        _sfStopCFM2.syncWith(pOther->_sfStopCFM2);
+
 
 
 }
@@ -331,6 +738,8 @@ void PhysicsUniversalJointBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -342,8 +751,6 @@ DataType FieldDataTraits<PhysicsUniversalJointPtr>::_type("PhysicsUniversalJoint
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsUniversalJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsUniversalJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -359,10 +766,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsUniversalJointBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSUNIVERSALJOINTBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSUNIVERSALJOINTBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSUNIVERSALJOINTFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

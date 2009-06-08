@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -61,130 +61,6 @@
 
 
 OSG_USING_NAMESPACE
-/************************************************************************/
-/* init ode stuff!call this once when you have loaded a ode scene from
-    file                                                                */
-/************************************************************************/
-Action::ResultE initOde(NodePtr& node)
-{   
-    AttachmentPtr a;
-    a = node->findAttachment(PhysicsWorld::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsWorldPtr world = PhysicsWorldPtr::dcast(a);
-        world->initWorld();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsHashSpace::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsHashSpacePtr space = PhysicsHashSpacePtr::dcast(a);
-        space->initHashSpace();
-
-        return Action::Continue;
-    }
-
-    a = node->findAttachment(PhysicsBoxGeom::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsBoxGeomPtr box = PhysicsBoxGeomPtr::dcast(a);
-        box->initBoxGeom();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsSphereGeom::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsSphereGeomPtr sphere = PhysicsSphereGeomPtr::dcast(a);
-        sphere->initSphereGeom();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsPlaneGeom::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsPlaneGeomPtr sphere = PhysicsPlaneGeomPtr::dcast(a);
-        sphere->initPlaneGeom();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsCCylinderGeom::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsCCylinderGeomPtr ccylinder = PhysicsCCylinderGeomPtr::dcast(a);
-        ccylinder->initCCylinderGeom();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsRayGeom::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsRayGeomPtr ray = PhysicsRayGeomPtr::dcast(a);
-        ray->initRayGeom();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsTriMeshGeom::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsTriMeshGeomPtr tri = PhysicsTriMeshGeomPtr::dcast(a);
-        tri->initTriMeshGeom();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsAMotorJoint::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsAMotorJointPtr joint = PhysicsAMotorJointPtr::dcast(a);
-        joint->initAMotorJoint();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsSliderJoint::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsSliderJointPtr joint = PhysicsSliderJointPtr::dcast(a);
-        joint->initSliderJoint();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsHinge2Joint::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsHinge2JointPtr joint = PhysicsHinge2JointPtr::dcast(a);
-        joint->initHinge2Joint();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsHingeJoint::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsHingeJointPtr joint = PhysicsHingeJointPtr::dcast(a);
-        joint->initHingeJoint();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsUniversalJoint::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsUniversalJointPtr joint = PhysicsUniversalJointPtr::dcast(a);
-        joint->initUniversalJoint();
-
-        return Action::Continue;
-    }
-    a = node->findAttachment(PhysicsBallJoint::getClassType());
-    if(a!=NullFC)
-    {
-        PhysicsBallJointPtr joint = PhysicsBallJointPtr::dcast(a);
-        joint->initBallJoint();
-
-        return Action::Continue;
-    }
-    return Action::Continue;
-
-}
-
 
 //////////////////////////////////////////////////////////////////////////
 //! this action traverses the graph to match the OpenSG representation 
@@ -338,12 +214,6 @@ void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
 
     while(_TimeSinceLast > getStepSize())
     {
-        std::set<PhysicsBodyPtr>::iterator Itor(_ApplyAccumForcesPerStep.begin());
-        for( ; Itor!=_ApplyAccumForcesPerStep.end() ; ++Itor)
-        {
-            (*Itor)->applyAccumForces();
-        }
-
         //Update
         getStatistics()->getElem(statNPhysicsSteps)->inc();
 
@@ -370,7 +240,6 @@ void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
         _TimeSinceLast -= getStepSize();
     }
     getStatistics()->getElem(statPhysicsTime)->stop();
-    _ApplyAccumForcesPerStep.clear();
 }
 
 void PhysicsHandler::updateWorld(NodePtr node)
@@ -379,13 +248,6 @@ void PhysicsHandler::updateWorld(NodePtr node)
     traverse(node, 
         osgTypedFunctionFunctor1CPtrRef<Action::ResultE,
         NodePtr        >(updateOsgOde));
-}
-
-void PhysicsHandler::odeInit(NodePtr node)
-{
-    traverse(node, 
-        osgTypedFunctionFunctor1CPtrRef<Action::ResultE,
-        NodePtr        >(initOde));
 }
 
 /*-------------------------------------------------------------------------*\

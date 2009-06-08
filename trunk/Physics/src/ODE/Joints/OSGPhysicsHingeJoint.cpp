@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -72,6 +72,25 @@ void PhysicsHingeJoint::initMethod (void)
 }
 
 
+PhysicsHingeJointPtr PhysicsHingeJoint::create(PhysicsWorldPtr w)
+{
+    PhysicsHingeJointPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PhysicsHingeJointPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    if(fc != NullFC)
+    {
+        beginEditCP(fc, PhysicsHingeJoint::WorldFieldMask);
+            fc->setWorld(w);
+        endEditCP(fc, PhysicsHingeJoint::WorldFieldMask);
+    }
+    
+    return fc; 
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -80,7 +99,6 @@ void PhysicsHingeJoint::initMethod (void)
 \*-------------------------------------------------------------------------*/
 void PhysicsHingeJoint::onCreate(const PhysicsHingeJoint *)
 {
-	PhysicsHingeJointPtr tmpPtr(*this);
 	//call initJoint!
 }
 
@@ -90,87 +108,25 @@ void PhysicsHingeJoint::onDestroy()
 }
 
 /***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-Vec3f PhysicsHingeJoint::getAnchor(void)
-{
-	PhysicsHingeJointPtr tmpPtr(*this);
-	dVector3 a;
-	dJointGetHingeAnchor(tmpPtr->id, a);
-	return Vec3f(a[0], a[1], a[2]);
-}
-
-Vec3f PhysicsHingeJoint::getAxis(void)
-{
-	PhysicsHingeJointPtr tmpPtr(*this);
-	dVector3 a;
-	dJointGetHingeAxis(tmpPtr->id, a);
-	return Vec3f(a[0], a[1], a[2]);
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-void PhysicsHingeJoint::setAnchor(const Vec3f &value )
-{
-	PhysicsHingeJointPtr tmpPtr(*this);
-	dJointSetHingeAnchor(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsHingeJointBase::setAnchor(value);
-}
-
-void PhysicsHingeJoint::setAxis(const Vec3f &value )
-{
-	PhysicsHingeJointPtr tmpPtr(*this);
-	dJointSetHingeAxis(tmpPtr->id, value.x(), value.y(), value.z());
-	PhysicsHingeJointBase::setAxis(value);
-}
-
-void PhysicsHingeJoint::setWorld(const PhysicsWorldPtr &value )
-{
-    PhysicsHingeJointPtr tmpPtr(*this);
-    tmpPtr->id = dJointCreateHinge(value->getWorldID(), 0);
-    PhysicsJointBase::setWorld(value);
-}
-/***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsHingeJoint::initHingeJoint()
-{
-    setAnchor(PhysicsHingeJointBase::getAnchor());
-    setAxis(PhysicsHingeJointBase::getAxis());
-    setWorld(PhysicsHingeJointBase::getWorld());
-    initJoint();
-}
 Vec3f PhysicsHingeJoint::getAnchor2(void)
 {
-	PhysicsHingeJointPtr tmpPtr(*this);
 	dVector3 a;
-	dJointGetHingeAnchor2(tmpPtr->id, a);
+	dJointGetHingeAnchor2(_JointID, a);
 	return Vec3f(a[0], a[1], a[2]);
 }
 
 Real32 PhysicsHingeJoint::getAngle(void)
 {
-	PhysicsHingeJointPtr tmpPtr(*this);
-	return dJointGetHingeAngle(tmpPtr->id);
+	return dJointGetHingeAngle(_JointID);
 }
 
 Real32 PhysicsHingeJoint::getAngleRate(void)
 {
-	PhysicsHingeJointPtr tmpPtr(*this);
-	return dJointGetHingeAngleRate(tmpPtr->id);
+	return dJointGetHingeAngleRate(_JointID);
 }
 
-void PhysicsHingeJoint::setParam(Int32 param, Real32 value )
-{
-	PhysicsHingeJointPtr tmpPtr(*this);
-	dJointSetHingeParam(tmpPtr->id, param, value);
-}
-
-Real32 PhysicsHingeJoint::getParam(Int32 param )
-{
-	PhysicsHingeJointPtr tmpPtr(*this);
-	return dJointGetHingeParam(tmpPtr->id, param);
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -195,7 +151,77 @@ PhysicsHingeJoint::~PhysicsHingeJoint(void)
 
 void PhysicsHingeJoint::changed(BitVector whichField, UInt32 origin)
 {
+    if(whichField & WorldFieldMask)
+    {
+        if(_JointID)
+        {
+            dJointDestroy(_JointID);
+            _JointID = dJointCreateHinge(getWorld()->getWorldID(), 0);
+        }
+        else
+        {
+            _JointID = dJointCreateHinge(getWorld()->getWorldID(), 0);
+            if(!(whichField & HiStopFieldMask))
+            {
+                setHiStop(dJointGetHingeParam(_JointID,dParamHiStop));
+            }
+            if(!(whichField & LoStopFieldMask))
+            {
+                setLoStop(dJointGetHingeParam(_JointID,dParamLoStop));
+            }
+            if(!(whichField & BounceFieldMask))
+            {
+                setBounce(dJointGetHingeParam(_JointID,dParamBounce));
+            }
+            if(!(whichField & CFMFieldMask))
+            {
+                setCFM(dJointGetHingeParam(_JointID,dParamCFM));
+            }
+            if(!(whichField & StopCFMFieldMask))
+            {
+                setStopCFM(dJointGetHingeParam(_JointID,dParamStopCFM));
+            }
+            if(!(whichField & StopERPFieldMask))
+            {
+                setStopERP(dJointGetHingeParam(_JointID,dParamStopERP));
+            }
+        }
+    }
+
     Inherited::changed(whichField, origin);
+
+    if((whichField & AnchorFieldMask) || (whichField & WorldFieldMask))
+    {
+	    dJointSetHingeAnchor(_JointID, getAnchor().x(), getAnchor().y(), getAnchor().z());
+    }
+    if((whichField & AxisFieldMask) || (whichField & WorldFieldMask))
+    {
+	    dJointSetHingeAxis(_JointID, getAxis().x(), getAxis().y(), getAxis().z());
+    }
+    if((whichField & HiStopFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetHingeParam(_JointID,  dParamHiStop, getHiStop());
+    }
+    if((whichField & LoStopFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetHingeParam(_JointID,  dParamLoStop, getLoStop());
+    }
+    if((whichField & BounceFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetHingeParam(_JointID,  dParamBounce, getBounce());
+    }
+    if((whichField & CFMFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetHingeParam(_JointID,  dParamCFM, getCFM());
+    }
+    if((whichField & StopERPFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetHingeParam(_JointID,  dParamStopERP, getStopERP());
+    }
+    if((whichField & StopCFMFieldMask) || (whichField & WorldFieldMask))
+    {
+        dJointSetHingeParam(_JointID,  dParamStopCFM, getStopCFM());
+    }
 }
 
 void PhysicsHingeJoint::dump(      UInt32    , 

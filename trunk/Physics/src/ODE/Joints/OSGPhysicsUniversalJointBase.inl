@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -117,6 +117,90 @@ SFVec3f *PhysicsUniversalJointBase::getSFAxis2(void)
     return &_sfAxis2;
 }
 
+//! Get the PhysicsUniversalJoint::_sfHiStop field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFHiStop(void)
+{
+    return &_sfHiStop;
+}
+
+//! Get the PhysicsUniversalJoint::_sfLoStop field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFLoStop(void)
+{
+    return &_sfLoStop;
+}
+
+//! Get the PhysicsUniversalJoint::_sfBounce field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFBounce(void)
+{
+    return &_sfBounce;
+}
+
+//! Get the PhysicsUniversalJoint::_sfCFM field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFCFM(void)
+{
+    return &_sfCFM;
+}
+
+//! Get the PhysicsUniversalJoint::_sfStopERP field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFStopERP(void)
+{
+    return &_sfStopERP;
+}
+
+//! Get the PhysicsUniversalJoint::_sfStopCFM field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFStopCFM(void)
+{
+    return &_sfStopCFM;
+}
+
+//! Get the PhysicsUniversalJoint::_sfHiStop2 field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFHiStop2(void)
+{
+    return &_sfHiStop2;
+}
+
+//! Get the PhysicsUniversalJoint::_sfLoStop2 field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFLoStop2(void)
+{
+    return &_sfLoStop2;
+}
+
+//! Get the PhysicsUniversalJoint::_sfBounce2 field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFBounce2(void)
+{
+    return &_sfBounce2;
+}
+
+//! Get the PhysicsUniversalJoint::_sfCFM2 field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFCFM2(void)
+{
+    return &_sfCFM2;
+}
+
+//! Get the PhysicsUniversalJoint::_sfStopERP2 field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFStopERP2(void)
+{
+    return &_sfStopERP2;
+}
+
+//! Get the PhysicsUniversalJoint::_sfStopCFM2 field.
+inline
+SFReal32 *PhysicsUniversalJointBase::getSFStopCFM2(void)
+{
+    return &_sfStopCFM2;
+}
+
 
 //! Get the value of the PhysicsUniversalJoint::_sfAnchor field.
 inline
@@ -181,8 +265,260 @@ void PhysicsUniversalJointBase::setAxis2(const Vec3f &value)
     _sfAxis2.setValue(value);
 }
 
+//! Get the value of the PhysicsUniversalJoint::_sfHiStop field.
+inline
+Real32 &PhysicsUniversalJointBase::getHiStop(void)
+{
+    return _sfHiStop.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfHiStop field.
+inline
+const Real32 &PhysicsUniversalJointBase::getHiStop(void) const
+{
+    return _sfHiStop.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfHiStop field.
+inline
+void PhysicsUniversalJointBase::setHiStop(const Real32 &value)
+{
+    _sfHiStop.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfLoStop field.
+inline
+Real32 &PhysicsUniversalJointBase::getLoStop(void)
+{
+    return _sfLoStop.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfLoStop field.
+inline
+const Real32 &PhysicsUniversalJointBase::getLoStop(void) const
+{
+    return _sfLoStop.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfLoStop field.
+inline
+void PhysicsUniversalJointBase::setLoStop(const Real32 &value)
+{
+    _sfLoStop.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfBounce field.
+inline
+Real32 &PhysicsUniversalJointBase::getBounce(void)
+{
+    return _sfBounce.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfBounce field.
+inline
+const Real32 &PhysicsUniversalJointBase::getBounce(void) const
+{
+    return _sfBounce.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfBounce field.
+inline
+void PhysicsUniversalJointBase::setBounce(const Real32 &value)
+{
+    _sfBounce.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfCFM field.
+inline
+Real32 &PhysicsUniversalJointBase::getCFM(void)
+{
+    return _sfCFM.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfCFM field.
+inline
+const Real32 &PhysicsUniversalJointBase::getCFM(void) const
+{
+    return _sfCFM.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfCFM field.
+inline
+void PhysicsUniversalJointBase::setCFM(const Real32 &value)
+{
+    _sfCFM.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfStopERP field.
+inline
+Real32 &PhysicsUniversalJointBase::getStopERP(void)
+{
+    return _sfStopERP.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfStopERP field.
+inline
+const Real32 &PhysicsUniversalJointBase::getStopERP(void) const
+{
+    return _sfStopERP.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfStopERP field.
+inline
+void PhysicsUniversalJointBase::setStopERP(const Real32 &value)
+{
+    _sfStopERP.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfStopCFM field.
+inline
+Real32 &PhysicsUniversalJointBase::getStopCFM(void)
+{
+    return _sfStopCFM.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfStopCFM field.
+inline
+const Real32 &PhysicsUniversalJointBase::getStopCFM(void) const
+{
+    return _sfStopCFM.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfStopCFM field.
+inline
+void PhysicsUniversalJointBase::setStopCFM(const Real32 &value)
+{
+    _sfStopCFM.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfHiStop2 field.
+inline
+Real32 &PhysicsUniversalJointBase::getHiStop2(void)
+{
+    return _sfHiStop2.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfHiStop2 field.
+inline
+const Real32 &PhysicsUniversalJointBase::getHiStop2(void) const
+{
+    return _sfHiStop2.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfHiStop2 field.
+inline
+void PhysicsUniversalJointBase::setHiStop2(const Real32 &value)
+{
+    _sfHiStop2.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfLoStop2 field.
+inline
+Real32 &PhysicsUniversalJointBase::getLoStop2(void)
+{
+    return _sfLoStop2.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfLoStop2 field.
+inline
+const Real32 &PhysicsUniversalJointBase::getLoStop2(void) const
+{
+    return _sfLoStop2.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfLoStop2 field.
+inline
+void PhysicsUniversalJointBase::setLoStop2(const Real32 &value)
+{
+    _sfLoStop2.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfBounce2 field.
+inline
+Real32 &PhysicsUniversalJointBase::getBounce2(void)
+{
+    return _sfBounce2.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfBounce2 field.
+inline
+const Real32 &PhysicsUniversalJointBase::getBounce2(void) const
+{
+    return _sfBounce2.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfBounce2 field.
+inline
+void PhysicsUniversalJointBase::setBounce2(const Real32 &value)
+{
+    _sfBounce2.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfCFM2 field.
+inline
+Real32 &PhysicsUniversalJointBase::getCFM2(void)
+{
+    return _sfCFM2.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfCFM2 field.
+inline
+const Real32 &PhysicsUniversalJointBase::getCFM2(void) const
+{
+    return _sfCFM2.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfCFM2 field.
+inline
+void PhysicsUniversalJointBase::setCFM2(const Real32 &value)
+{
+    _sfCFM2.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfStopERP2 field.
+inline
+Real32 &PhysicsUniversalJointBase::getStopERP2(void)
+{
+    return _sfStopERP2.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfStopERP2 field.
+inline
+const Real32 &PhysicsUniversalJointBase::getStopERP2(void) const
+{
+    return _sfStopERP2.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfStopERP2 field.
+inline
+void PhysicsUniversalJointBase::setStopERP2(const Real32 &value)
+{
+    _sfStopERP2.setValue(value);
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfStopCFM2 field.
+inline
+Real32 &PhysicsUniversalJointBase::getStopCFM2(void)
+{
+    return _sfStopCFM2.getValue();
+}
+
+//! Get the value of the PhysicsUniversalJoint::_sfStopCFM2 field.
+inline
+const Real32 &PhysicsUniversalJointBase::getStopCFM2(void) const
+{
+    return _sfStopCFM2.getValue();
+}
+
+//! Set the value of the PhysicsUniversalJoint::_sfStopCFM2 field.
+inline
+void PhysicsUniversalJointBase::setStopCFM2(const Real32 &value)
+{
+    _sfStopCFM2.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSUNIVERSALJOINTBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsUniversalJointBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSUNIVERSALJOINTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

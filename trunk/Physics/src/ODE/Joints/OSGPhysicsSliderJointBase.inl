@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -103,6 +103,48 @@ SFVec3f *PhysicsSliderJointBase::getSFAxis(void)
     return &_sfAxis;
 }
 
+//! Get the PhysicsSliderJoint::_sfHiStop field.
+inline
+SFReal32 *PhysicsSliderJointBase::getSFHiStop(void)
+{
+    return &_sfHiStop;
+}
+
+//! Get the PhysicsSliderJoint::_sfLoStop field.
+inline
+SFReal32 *PhysicsSliderJointBase::getSFLoStop(void)
+{
+    return &_sfLoStop;
+}
+
+//! Get the PhysicsSliderJoint::_sfBounce field.
+inline
+SFReal32 *PhysicsSliderJointBase::getSFBounce(void)
+{
+    return &_sfBounce;
+}
+
+//! Get the PhysicsSliderJoint::_sfCFM field.
+inline
+SFReal32 *PhysicsSliderJointBase::getSFCFM(void)
+{
+    return &_sfCFM;
+}
+
+//! Get the PhysicsSliderJoint::_sfStopERP field.
+inline
+SFReal32 *PhysicsSliderJointBase::getSFStopERP(void)
+{
+    return &_sfStopERP;
+}
+
+//! Get the PhysicsSliderJoint::_sfStopCFM field.
+inline
+SFReal32 *PhysicsSliderJointBase::getSFStopCFM(void)
+{
+    return &_sfStopCFM;
+}
+
 
 //! Get the value of the PhysicsSliderJoint::_sfAxis field.
 inline
@@ -125,8 +167,134 @@ void PhysicsSliderJointBase::setAxis(const Vec3f &value)
     _sfAxis.setValue(value);
 }
 
+//! Get the value of the PhysicsSliderJoint::_sfHiStop field.
+inline
+Real32 &PhysicsSliderJointBase::getHiStop(void)
+{
+    return _sfHiStop.getValue();
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfHiStop field.
+inline
+const Real32 &PhysicsSliderJointBase::getHiStop(void) const
+{
+    return _sfHiStop.getValue();
+}
+
+//! Set the value of the PhysicsSliderJoint::_sfHiStop field.
+inline
+void PhysicsSliderJointBase::setHiStop(const Real32 &value)
+{
+    _sfHiStop.setValue(value);
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfLoStop field.
+inline
+Real32 &PhysicsSliderJointBase::getLoStop(void)
+{
+    return _sfLoStop.getValue();
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfLoStop field.
+inline
+const Real32 &PhysicsSliderJointBase::getLoStop(void) const
+{
+    return _sfLoStop.getValue();
+}
+
+//! Set the value of the PhysicsSliderJoint::_sfLoStop field.
+inline
+void PhysicsSliderJointBase::setLoStop(const Real32 &value)
+{
+    _sfLoStop.setValue(value);
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfBounce field.
+inline
+Real32 &PhysicsSliderJointBase::getBounce(void)
+{
+    return _sfBounce.getValue();
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfBounce field.
+inline
+const Real32 &PhysicsSliderJointBase::getBounce(void) const
+{
+    return _sfBounce.getValue();
+}
+
+//! Set the value of the PhysicsSliderJoint::_sfBounce field.
+inline
+void PhysicsSliderJointBase::setBounce(const Real32 &value)
+{
+    _sfBounce.setValue(value);
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfCFM field.
+inline
+Real32 &PhysicsSliderJointBase::getCFM(void)
+{
+    return _sfCFM.getValue();
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfCFM field.
+inline
+const Real32 &PhysicsSliderJointBase::getCFM(void) const
+{
+    return _sfCFM.getValue();
+}
+
+//! Set the value of the PhysicsSliderJoint::_sfCFM field.
+inline
+void PhysicsSliderJointBase::setCFM(const Real32 &value)
+{
+    _sfCFM.setValue(value);
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfStopERP field.
+inline
+Real32 &PhysicsSliderJointBase::getStopERP(void)
+{
+    return _sfStopERP.getValue();
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfStopERP field.
+inline
+const Real32 &PhysicsSliderJointBase::getStopERP(void) const
+{
+    return _sfStopERP.getValue();
+}
+
+//! Set the value of the PhysicsSliderJoint::_sfStopERP field.
+inline
+void PhysicsSliderJointBase::setStopERP(const Real32 &value)
+{
+    _sfStopERP.setValue(value);
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfStopCFM field.
+inline
+Real32 &PhysicsSliderJointBase::getStopCFM(void)
+{
+    return _sfStopCFM.getValue();
+}
+
+//! Get the value of the PhysicsSliderJoint::_sfStopCFM field.
+inline
+const Real32 &PhysicsSliderJointBase::getStopCFM(void) const
+{
+    return _sfStopCFM.getValue();
+}
+
+//! Set the value of the PhysicsSliderJoint::_sfStopCFM field.
+inline
+void PhysicsSliderJointBase::setStopCFM(const Real32 &value)
+{
+    _sfStopCFM.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSSLIDERJOINTBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsSliderJointBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSSLIDERJOINTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

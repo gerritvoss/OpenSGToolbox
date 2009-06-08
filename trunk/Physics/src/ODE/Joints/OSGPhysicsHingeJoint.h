@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsHingeJointBase.h"
+#include "ODE/OSGPhysicsWorldFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,31 +58,13 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsHingeJoint : public PhysicsHingeJointBas
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Vec3f getAnchor(void);
-	  Vec3f getAxis(void);
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-	  void setAnchor(const Vec3f &value );
-	  void setAxis(const Vec3f &value );
-      void setWorld(const PhysicsWorldPtr &value);
-	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initHingeJoint();
 	  Vec3f getAnchor2(void);
 	  Real32 getAngle(void);
 	  Real32 getAngleRate(void);
-
-	  virtual void setParam(Int32 param, Real32 value );
-	  virtual Real32 getParam(Int32 param );
 
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -100,6 +83,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsHingeJoint : public PhysicsHingeJointBas
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    static PhysicsHingeJointPtr create(PhysicsWorldPtr w); 
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

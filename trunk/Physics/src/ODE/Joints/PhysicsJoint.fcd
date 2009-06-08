@@ -2,23 +2,15 @@
 
 <FieldContainer
 	name="PhysicsJoint"
-	parent="Attachment"
+	parent="AttachmentContainer"
 	library="Physics"
 	pointerfieldtypes="both"
-	structure="concrete"
-	systemcomponent="true"
+	structure="abstract"
+	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
 	useLocalIncludes="false"
 >
-	<Field
-		name="param"
-		type="Vec2f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
 	<Field
 		name="world"
 		type="PhysicsWorldPtr"

@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -41,11 +41,6 @@
 #include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
-inline
-void PhysicsHandler::addAccumForcesThisUpdate(PhysicsBodyPtr b)
-{
-    _ApplyAccumForcesPerStep.insert(b);
-}
 
 OSG_END_NAMESPACE
 

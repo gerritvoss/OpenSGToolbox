@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -51,8 +51,6 @@
 #include <OpenSG/OSGStatElemTypes.h>
 #include "OSGPhysicsBodyFields.h"
 
-#include <set>
-
 
 OSG_BEGIN_NAMESPACE
 
@@ -68,10 +66,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-      //I know this is not good...please fix this if you know how!!!
-      /*
-      dJointGroupID physColJointGroupId;
-      dContact *physContactArray;
     /*---------------------------------------------------------------------*/
 	/*! \name                   Class Specific Get Field                    */
 	/*! \{                                                                 */
@@ -83,15 +77,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
 	/*! \{                                                                 */
 	
 	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Class Specific                             */
-    /*! \{																*/
-      /*
-      void doPhysicsOnNode(NodePtr rootNode);
-      static void physCollisionCallback(void* somedata, dGeomID o1, dGeomID o2);*/
-      void odeInit(NodePtr node);
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
+
+      /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
@@ -120,8 +107,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
 
     StatCollector* getStatistics(void);
     void setStatistics(StatCollector *stat);
-
-    void addAccumForcesThisUpdate(PhysicsBodyPtr b);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -152,8 +137,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     StatCollector* _statistics;
     bool _ownStat;
     Time _TimeSinceLast;
-
-    std::set<PhysicsBodyPtr> _ApplyAccumForcesPerStep;
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/

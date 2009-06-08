@@ -6,7 +6,7 @@
  *                                                                           *
  *                          www.vrac.iastate.edu                             *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -99,16 +99,14 @@ dWorldID PhysicsWorld::getWorldID(void)
 
 void PhysicsWorld::onCreate(const PhysicsWorld *)
 {
-	PhysicsWorldPtr tmpPtr(*this);
-	tmpPtr->_World = dWorldCreate();
+	_World = dWorldCreate();
 }
 
 void PhysicsWorld::onDestroy()
 {
-	PhysicsWorldPtr tmpPtr(*this);
-    if(tmpPtr->_World)
+    if(_World)
     {
-	    dWorldDestroy(tmpPtr->_World);
+	    dWorldDestroy(_World);
     }
 }
 
@@ -129,26 +127,23 @@ void PhysicsWorld::initWorld()
     setAutoDisableLinearThreshold(PhysicsWorldBase::getAutoDisableLinearThreshold());
     setAutoDisableFlag(PhysicsWorldBase::getAutoDisableFlag());
 }
-void PhysicsWorld::worldImpulseToForce(Real32 stepsize, Real32 x, Real32 y, Real32 z, Vec3f force)
+
+Vec3f PhysicsWorld::impulseToForce(Real32 stepsize, const Vec3f& Impulse)
 {
-	PhysicsWorldPtr tmpPtr(*this);
 	dVector3 f;
-	f[0]=force.x();
-	f[1]=force.y();
-	f[2]=force.z();
-	dWorldImpulseToForce(tmpPtr->_World, stepsize, x, y, z, f);
+	dWorldImpulseToForce(_World, stepsize, Impulse.x(), Impulse.y(), Impulse.z(), f);
+
+    return Vec3f(&f[0]);
 }
 
 void PhysicsWorld::worldStep(Real32 stepsize)
 {
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldStep(tmpPtr->_World, stepsize);
+	dWorldStep(_World, stepsize);
 }
 
 void PhysicsWorld::worldQuickStep(Real32 stepsize)
 {
-	PhysicsWorldPtr tmpPtr(*this);
-	dWorldQuickStep(tmpPtr->_World, stepsize);
+	dWorldQuickStep(_World, stepsize);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -179,58 +174,47 @@ void PhysicsWorld::changed(BitVector whichField, UInt32 origin)
 
     if(whichField & ErpFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetERP(tmpPtr->_World, getErp());
+	    dWorldSetERP(_World, getErp());
     }
     if(whichField & CfmFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetCFM(tmpPtr->_World, getCfm());
+	    dWorldSetCFM(_World, getCfm());
     }
     if(whichField & GravityFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetGravity(tmpPtr->_World,getGravity().x(), getGravity().y(), getGravity().z());
+	    dWorldSetGravity(_World,getGravity().x(), getGravity().y(), getGravity().z());
     }
     if(whichField & AutoDisableFlagFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetAutoDisableFlag(tmpPtr->_World, getAutoDisableFlag());
+	    dWorldSetAutoDisableFlag(_World, getAutoDisableFlag());
     }
     if(whichField & AutoDisableLinearThresholdFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetAutoDisableLinearThreshold(tmpPtr->_World, getAutoDisableLinearThreshold());
+	    dWorldSetAutoDisableLinearThreshold(_World, getAutoDisableLinearThreshold());
     }
     if(whichField & AutoDisableAngularThresholdFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetAutoDisableAngularThreshold(tmpPtr->_World, getAutoDisableAngularThreshold());
+	    dWorldSetAutoDisableAngularThreshold(_World, getAutoDisableAngularThreshold());
     }
     if(whichField & AutoDisableStepsFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetAutoDisableSteps(tmpPtr->_World, getAutoDisableSteps());
+	    dWorldSetAutoDisableSteps(_World, getAutoDisableSteps());
     }
     if(whichField & AutoDisableTimeFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetAutoDisableTime(tmpPtr->_World, getAutoDisableTime());
+	    dWorldSetAutoDisableTime(_World, getAutoDisableTime());
     }
     if(whichField & WorldQuickStepNumIterationsFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetQuickStepNumIterations(tmpPtr->_World, getWorldQuickStepNumIterations());
+	    dWorldSetQuickStepNumIterations(_World, getWorldQuickStepNumIterations());
     }
     if(whichField & WorldContactMaxCorrectingVelFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetContactMaxCorrectingVel(tmpPtr->_World, getWorldContactMaxCorrectingVel());
+	    dWorldSetContactMaxCorrectingVel(_World, getWorldContactMaxCorrectingVel());
     }
     if(whichField & WorldContactSurfaceLayerFieldMask)
     {
-	    PhysicsWorldPtr tmpPtr(*this);
-	    dWorldSetContactSurfaceLayer(tmpPtr->_World, getWorldContactSurfaceLayer());
+	    dWorldSetContactSurfaceLayer(_World, getWorldContactSurfaceLayer());
     }
 }
 

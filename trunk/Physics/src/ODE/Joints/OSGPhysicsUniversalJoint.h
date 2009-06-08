@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -18,7 +18,7 @@
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR UniversalRPOSE.  See the GNU         *
  * Library General Public License for more details.                          *
  *                                                                           *
  * You should have received a copy of the GNU Library General Public         *
@@ -55,33 +55,17 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsUniversalJoint : public PhysicsUniversal
 
     typedef PhysicsUniversalJointBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
+    /*==========================  UniversalBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Vec3f getAnchor(void);
-	  Vec3f getAxis1(void);
-	  Vec3f getAxis2(void);
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-	  void setAnchor(const Vec3f &value );
-	  void setAxis1(const Vec3f &value );
-	  void setAxis2(const Vec3f &value );
-      void setWorld(const PhysicsWorldPtr &value);
-	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initUniversalJoint();
 	  Vec3f getAnchor2(void);
-
-	  virtual void setParam(Int32 param, Real32 value );
-	  virtual Real32 getParam(Int32 param );
+      Real32 getUniversalAngle1(void) const;
+      Real32 getUniversalAngle1Rate(void) const;
+      Real32 getUniversalAngle2(void) const;
+      Real32 getUniversalAngle2Rate(void) const;
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -99,6 +83,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsUniversalJoint : public PhysicsUniversal
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    static PhysicsUniversalJointPtr create(PhysicsWorldPtr w); 
     /*=========================  PROTECTED  ===============================*/
   protected:
 
