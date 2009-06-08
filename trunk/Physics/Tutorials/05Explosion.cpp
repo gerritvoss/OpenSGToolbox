@@ -90,25 +90,25 @@ public:
             }
             break;
        case KeyEvent::KEY_E:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 10000.0f);
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 640.0f);
            break;
        case KeyEvent::KEY_1:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 625.0f);
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 20.0f);
            break;
        case KeyEvent::KEY_2:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 1250.0f);
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 40.0f);
            break;
        case KeyEvent::KEY_3:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 2500.0f);
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 80.0f);
            break;
        case KeyEvent::KEY_4:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 5000.0f);
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 160.0f);
            break;
        case KeyEvent::KEY_5:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 10000.0f);
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 320.0f);
            break;
        case KeyEvent::KEY_6:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 20000.0f);
+           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 640.0f);
            break;
        }
    }
@@ -181,7 +181,7 @@ class TutorialUpdateListener : public UpdateListener
     }
 };
 
-void makeExplosion(Pnt3f Location, Real32 Force)
+void makeExplosion(Pnt3f Location, Real32 Impulse)
 {
     for(UInt32 i(0) ; i<allPhysicsBodies.size() ; ++i)
     {
@@ -190,7 +190,7 @@ void makeExplosion(Pnt3f Location, Real32 Force)
         Real32 Distance(Direction.length());
         Direction.normalize();
 
-        allPhysicsBodies[i]->addForce(Direction*Force*(1.0f/Distance));
+        allPhysicsBodies[i]->addForce(physicsWorld->impulseToForce(physHandler->getStepSize(), Direction*Impulse*(1.0f/Distance)));
         //The bodies need to be enabled because they may be auto-disabled when they
         //come to rest
         //The bodies are not re-enabled untill a new collision is detected

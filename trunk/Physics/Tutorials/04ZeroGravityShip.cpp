@@ -50,6 +50,7 @@ void display(void);
 void reshape(Vec2f Size);
 PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position);
 PhysicsBodyPtr buildShip(Vec3f Dimensions, Pnt3f Position);
+PhysicsLMotorJointPtr buildMotor(PhysicsBodyPtr ship);
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
@@ -57,7 +58,8 @@ SimpleSceneManager *mgr;
 PhysicsHandlerPtr physHandler;
 PhysicsWorldPtr physicsWorld;
 PhysicsHashSpacePtr hashSpace;
-PhysicsBodyPtr CharacterPhysicsBody;
+PhysicsBodyPtr ShipBody;
+PhysicsLMotorJointPtr ShipMotor;
 Vec3f ForceOnCharacter;
 bool _IsUpKeyDown(false);
 bool _IsDownKeyDown(false);
@@ -183,6 +185,7 @@ class TutorialUpdateListener : public UpdateListener
     {
         ForceOnCharacter.setValues(0.0,0.0,0.0);
         Real32 PushForce(10000.0);
+        Real32 Speed(20.0);
         if(_IsUpKeyDown)
         {
             ForceOnCharacter += Vec3f(0.0, PushForce, 0.0);
@@ -201,15 +204,85 @@ class TutorialUpdateListener : public UpdateListener
         }
         if(ForceOnCharacter != Vec3f(0.0,0.0,0.0))
         {
-            CharacterPhysicsBody->addForce(ForceOnCharacter);
-            //The body needs to be enabled because they may be auto-disabled when they
-            //come to rest
-            //The bodies are not re-enabled untill a new collision is detected
-            CharacterPhysicsBody->setEnable(true);
+            ShipBody->setEnable(true);
         }
+        beginEditCP(ShipMotor, PhysicsLMotorJoint::FMaxFieldMask | 
+                               PhysicsLMotorJoint::VelFieldMask |
+                               PhysicsLMotorJoint::FMax2FieldMask | 
+                               PhysicsLMotorJoint::Vel2FieldMask |
+                               PhysicsLMotorJoint::FMax3FieldMask | 
+                               PhysicsLMotorJoint::Vel3FieldMask);
+            if(ForceOnCharacter.x() !=0.0)
+            {
+                ShipMotor->setFMax(osgabs(ForceOnCharacter.x()));
+                ShipMotor->setVel(osgSgn(ForceOnCharacter.x())*Speed);
+            }
+            else
+            {
+                ShipMotor->setFMax(0.0);
+                ShipMotor->setVel(0.0);
+            }
+            if(ForceOnCharacter.y() !=0.0)
+            {
+                ShipMotor->setFMax2(osgabs(ForceOnCharacter.y()));
+                ShipMotor->setVel2(osgSgn(ForceOnCharacter.y())*Speed);
+            }
+            else
+            {
+                ShipMotor->setFMax2(0.0);
+                ShipMotor->setVel2(0.0);
+            }
+            if(ForceOnCharacter.z() !=0.0)
+            {
+                ShipMotor->setFMax3(osgabs(ForceOnCharacter.z()));
+                ShipMotor->setVel3(osgSgn(ForceOnCharacter.z())*Speed);
+            }
+            else
+            {
+                ShipMotor->setFMax3(0.0);
+                ShipMotor->setVel3(0.0);
+            }
+        endEditCP(ShipMotor, PhysicsLMotorJoint::FMaxFieldMask | 
+                               PhysicsLMotorJoint::VelFieldMask |
+                               PhysicsLMotorJoint::FMax2FieldMask | 
+                               PhysicsLMotorJoint::Vel2FieldMask |
+                               PhysicsLMotorJoint::FMax3FieldMask | 
+                               PhysicsLMotorJoint::Vel3FieldMask);
         physHandler->update(e.getElapsedTime(), rootNode);
     }
 };
+
+PhysicsLMotorJointPtr buildMotor(PhysicsBodyPtr ship)
+{
+    //Create LMotor Joint
+    PhysicsLMotorJointPtr TutorialLMotorJoint = PhysicsLMotorJoint::create(ship->getWorld());
+    beginEditCP(TutorialLMotorJoint, PhysicsLMotorJoint::FirstBodyFieldMask | 
+                                    PhysicsLMotorJoint::SecondBodyFieldMask | 
+                                    PhysicsLMotorJoint::NumAxesFieldMask | 
+                                    PhysicsLMotorJoint::Axis1FieldMask | 
+                                    PhysicsLMotorJoint::Axis1ReferenceFrameFieldMask |
+                                    PhysicsLMotorJoint::Axis2FieldMask | 
+                                    PhysicsLMotorJoint::Axis2ReferenceFrameFieldMask |
+                                    PhysicsLMotorJoint::Axis3FieldMask | 
+                                    PhysicsLMotorJoint::Axis3ReferenceFrameFieldMask);
+        TutorialLMotorJoint->setFirstBody(ship);
+        TutorialLMotorJoint->setSecondBody(NullFC);
+        TutorialLMotorJoint->setNumAxes(3);
+        TutorialLMotorJoint->setAxis1Properties(Vec3f(1.0,0.0,0.0),1);
+        TutorialLMotorJoint->setAxis2Properties(Vec3f(0.0,1.0,0.0),1);
+        TutorialLMotorJoint->setAxis3Properties(Vec3f(0.0,0.0,1.0),1);
+    endEditCP(TutorialLMotorJoint, PhysicsLMotorJoint::FirstBodyFieldMask | 
+                                    PhysicsLMotorJoint::SecondBodyFieldMask | 
+                                    PhysicsLMotorJoint::NumAxesFieldMask | 
+                                    PhysicsLMotorJoint::Axis1FieldMask | 
+                                    PhysicsLMotorJoint::Axis1ReferenceFrameFieldMask |
+                                    PhysicsLMotorJoint::Axis2FieldMask | 
+                                    PhysicsLMotorJoint::Axis2ReferenceFrameFieldMask |
+                                    PhysicsLMotorJoint::Axis3FieldMask | 
+                                    PhysicsLMotorJoint::Axis3ReferenceFrameFieldMask);
+
+    return TutorialLMotorJoint;
+}
 
 // Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
@@ -311,10 +384,10 @@ int main(int argc, char **argv)
     hashSpace = PhysicsHashSpace::create();
 
     physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
+    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
         physHandler->setWorld(physicsWorld);
-        physHandler->setSpace(hashSpace);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpaceFieldMask);
+        physHandler->getSpaces().push_back(hashSpace);
+    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);
@@ -340,7 +413,8 @@ int main(int argc, char **argv)
 	endEditCP(TutorialLightNode, Node::ChildrenFieldMask);
 
     //Create Character
-    CharacterPhysicsBody = buildShip(Vec3f(3.0,3.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
+    ShipBody = buildShip(Vec3f(3.0,3.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
+    ShipMotor = buildMotor(ShipBody);
 
     for(UInt32 i(0) ; i<5 ; ++i)
     {

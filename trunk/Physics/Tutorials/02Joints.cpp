@@ -395,20 +395,31 @@ void buildHingeJointMesh(void)
     Vec3f Box1Size(1.0,1.0,0.1),
           Box2Size(1.0,1.0,1.0);
     Pnt3f Box1Position((Real32)(rand()%10)-5.0, (Real32)(rand()%10)-5.0, 10.0);
-    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x()+.01,0.0,0.0)));
+    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x()+.05,0.0,0.0)));
 
     PhysicsBodyPtr Box1Body = buildBox(Box1Size, Box1Position);
     PhysicsBodyPtr Box2Body = buildBox(Box2Size, Box2Position);
 
     //Create Hinge Joint
-    PhysicsHingeJointPtr TutorialHingeJoint = PhysicsHingeJoint::create();
-    beginEditCP(TutorialHingeJoint);
-        TutorialHingeJoint->setWorld(Box1Body->getWorld());
+    PhysicsHingeJointPtr TutorialHingeJoint = PhysicsHingeJoint::create(Box1Body->getWorld());
+    beginEditCP(TutorialHingeJoint, PhysicsHingeJoint::FirstBodyFieldMask | 
+                                    PhysicsHingeJoint::SecondBodyFieldMask | 
+                                    PhysicsHingeJoint::AxisFieldMask | 
+                                    PhysicsHingeJoint::AnchorFieldMask | 
+                                    PhysicsHingeJoint::LoStopFieldMask | 
+                                    PhysicsHingeJoint::HiStopFieldMask);
         TutorialHingeJoint->setFirstBody(Box1Body);
         TutorialHingeJoint->setSecondBody(Box2Body);
         TutorialHingeJoint->setAxis(Vec3f(0.0,1.0,0.0));
         TutorialHingeJoint->setAnchor(Box1Position + (Vec3f(Box1Size.x()/2,0.0,0.0)));
-    endEditCP(TutorialHingeJoint);
+        TutorialHingeJoint->setLoStop(-0.3);
+        TutorialHingeJoint->setHiStop(0.3);
+    endEditCP(TutorialHingeJoint, PhysicsHingeJoint::FirstBodyFieldMask | 
+                                    PhysicsHingeJoint::SecondBodyFieldMask | 
+                                    PhysicsHingeJoint::AxisFieldMask | 
+                                    PhysicsHingeJoint::AnchorFieldMask | 
+                                    PhysicsHingeJoint::LoStopFieldMask | 
+                                    PhysicsHingeJoint::HiStopFieldMask);
 
 }
 
@@ -423,29 +434,78 @@ void buildMotorJointMesh(void)
     PhysicsBodyPtr Box2Body = buildBox(Box2Size, Box2Position);
 
     //Create AMotor Joint
-    PhysicsAMotorJointPtr TutorialAMotorJoint = PhysicsAMotorJoint::create();
-    beginEditCP(TutorialAMotorJoint);
-        TutorialAMotorJoint->setWorld(Box1Body->getWorld());
+    PhysicsAMotorJointPtr TutorialAMotorJoint = PhysicsAMotorJoint::create(Box1Body->getWorld());
+    beginEditCP(TutorialAMotorJoint, PhysicsAMotorJoint::FirstBodyFieldMask | 
+                                    PhysicsAMotorJoint::SecondBodyFieldMask | 
+                                    PhysicsAMotorJoint::ModeFieldMask | 
+                                    PhysicsAMotorJoint::NumAxesFieldMask | 
+                                    PhysicsAMotorJoint::Axis1FieldMask | 
+                                    PhysicsAMotorJoint::Axis1ReferenceFrameFieldMask | 
+                                    PhysicsAMotorJoint::FMaxFieldMask | 
+                                    PhysicsAMotorJoint::VelFieldMask);
         TutorialAMotorJoint->setFirstBody(Box1Body);
-        TutorialAMotorJoint->setSecondBody(Box2Body);
+        TutorialAMotorJoint->setSecondBody(NullFC);
         TutorialAMotorJoint->setMode(dAMotorUser);
         TutorialAMotorJoint->setNumAxes(1);
-        TutorialAMotorJoint->setAxis(0,2,Vec3f(1.0,0.0,0.0));
+        TutorialAMotorJoint->setAxis1Properties(Vec3f(1.0,0.0,0.0),1);
 
-        TutorialAMotorJoint->setParam(dParamFMax, 10.0);
-        TutorialAMotorJoint->setParam(dParamVel, 8.0);
-    endEditCP(TutorialAMotorJoint);
+        TutorialAMotorJoint->setFMax(13.0);
+        TutorialAMotorJoint->setVel(6.0);
+    endEditCP(TutorialAMotorJoint, PhysicsAMotorJoint::FirstBodyFieldMask | 
+                                    PhysicsAMotorJoint::SecondBodyFieldMask | 
+                                    PhysicsAMotorJoint::ModeFieldMask | 
+                                    PhysicsAMotorJoint::NumAxesFieldMask | 
+                                    PhysicsAMotorJoint::Axis1FieldMask | 
+                                    PhysicsAMotorJoint::Axis1ReferenceFrameFieldMask | 
+                                    PhysicsAMotorJoint::FMaxFieldMask | 
+                                    PhysicsAMotorJoint::VelFieldMask);
     
-    PhysicsBallJointPtr TutorialBallJoint = PhysicsBallJoint::create();
-    beginEditCP(TutorialBallJoint);
-        TutorialBallJoint->setWorld(Box1Body->getWorld());
-        TutorialBallJoint->setFirstBody(Box1Body);
-        TutorialBallJoint->setSecondBody(Box2Body);
-        TutorialBallJoint->setAnchor(Box1Position + (Vec3f(Box1Size.x()/2+0.005,0.0,0.0)));
-        //TutorialBallJoint->setParam(dParamLoStop, -0.57);
-        //TutorialBallJoint->setParam(dParamHiStop, 0.57);
-    endEditCP(TutorialBallJoint);
+    PhysicsHingeJointPtr TutorialHingeJoint = PhysicsHingeJoint::create(Box1Body->getWorld());
+    beginEditCP(TutorialHingeJoint, PhysicsHingeJoint::FirstBodyFieldMask | 
+                                    PhysicsHingeJoint::SecondBodyFieldMask | 
+                                    PhysicsHingeJoint::AxisFieldMask | 
+                                    PhysicsHingeJoint::AnchorFieldMask);
+        TutorialHingeJoint->setFirstBody(Box1Body);
+        TutorialHingeJoint->setSecondBody(Box2Body);
+        TutorialHingeJoint->setAxis(Vec3f(1.0,0.0,0.0));
+        TutorialHingeJoint->setAnchor(Box1Position + (Vec3f(Box1Size.x()/2,0.0,0.0)));
+    endEditCP(TutorialHingeJoint, PhysicsHingeJoint::FirstBodyFieldMask | 
+                                    PhysicsHingeJoint::SecondBodyFieldMask | 
+                                    PhysicsHingeJoint::AxisFieldMask | 
+                                    PhysicsHingeJoint::AnchorFieldMask );
 
+}
+
+void buildUniversalJointMesh(void)
+{
+    /*PhysicsUniversalJointPtr TutorialUniversalJoint = PhysicsUniversalJoint::create(Box1Body->getWorld());
+    beginEditCP(TutorialUniversalJoint, PhysicsUniversalJoint::FirstBodyFieldMask | 
+                                    PhysicsUniversalJoint::SecondBodyFieldMask | 
+                                    PhysicsUniversalJoint::AnchorFieldMask | 
+                                    PhysicsUniversalJoint::Axis1FieldMask | 
+                                    PhysicsUniversalJoint::Axis2FieldMask | 
+                                    PhysicsUniversalJoint::HiStopFieldMask | 
+                                    PhysicsUniversalJoint::LoStopFieldMask | 
+                                    PhysicsUniversalJoint::HiStop2FieldMask | 
+                                    PhysicsUniversalJoint::LoStop2FieldMask);
+        TutorialUniversalJoint->setFirstBody(Box1Body);
+        TutorialUniversalJoint->setSecondBody(Box2Body);
+        TutorialUniversalJoint->setAnchor(Box1Position + (Vec3f(Box1Size.x()/2+0.005,0.0,0.0)));
+        TutorialUniversalJoint->setAxis1(Vec3f(0.0,0.0,1.0));
+        TutorialUniversalJoint->setAxis2(Vec3f(0.0,1.0,0.0));
+        TutorialUniversalJoint->setLoStop(-0.3);
+        TutorialUniversalJoint->setHiStop(0.3);
+        TutorialUniversalJoint->setLoStop2(-0.3);
+        TutorialUniversalJoint->setHiStop2(0.3);
+    endEditCP(TutorialUniversalJoint, PhysicsUniversalJoint::FirstBodyFieldMask | 
+                                    PhysicsUniversalJoint::SecondBodyFieldMask | 
+                                    PhysicsUniversalJoint::AnchorFieldMask | 
+                                    PhysicsUniversalJoint::Axis1FieldMask | 
+                                    PhysicsUniversalJoint::Axis2FieldMask | 
+                                    PhysicsUniversalJoint::HiStopFieldMask | 
+                                    PhysicsUniversalJoint::LoStopFieldMask | 
+                                    PhysicsUniversalJoint::HiStop2FieldMask | 
+                                    PhysicsUniversalJoint::LoStop2FieldMask);*/
 }
 
 void buildBallJointMesh(void)
@@ -459,14 +519,15 @@ void buildBallJointMesh(void)
     PhysicsBodyPtr Box2Body = buildBox(Box2Size, Box2Position);
 
     //Create Ball Joint
-    PhysicsBallJointPtr TutorialBallJoint = PhysicsBallJoint::create();
-    beginEditCP(TutorialBallJoint);
-        TutorialBallJoint->setWorld(Box1Body->getWorld());
+    PhysicsBallJointPtr TutorialBallJoint = PhysicsBallJoint::create(Box1Body->getWorld());
+    beginEditCP(TutorialBallJoint, PhysicsBallJoint::FirstBodyFieldMask | 
+                                    PhysicsBallJoint::SecondBodyFieldMask | 
+                                    PhysicsBallJoint::AnchorFieldMask);
         TutorialBallJoint->setFirstBody(Box1Body);
         TutorialBallJoint->setSecondBody(Box2Body);
         TutorialBallJoint->setAnchor(Box1Position + (Vec3f(Box1Size.x()/2+0.05,0.0,0.0)));
-        //TutorialBallJoint->setParam(dParamLoStop, -0.57);
-        //TutorialBallJoint->setParam(dParamHiStop, 0.57);
-    endEditCP(TutorialBallJoint);
+    endEditCP(TutorialBallJoint, PhysicsBallJoint::FirstBodyFieldMask | 
+                                    PhysicsBallJoint::SecondBodyFieldMask | 
+                                    PhysicsBallJoint::AnchorFieldMask);
 
 }

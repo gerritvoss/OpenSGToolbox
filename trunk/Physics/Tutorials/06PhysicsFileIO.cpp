@@ -48,14 +48,12 @@ OSG_USING_NAMESPACE
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-void buildCar();
-void buildTriMesh(void);
-void buildSphere(void);
-void buildBox(void);
+PhysicsJointPtr buildHingeJointMesh(void);
+void buildBallJointMesh(void);
+void buildMotorJointMesh(void);
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-NodePtr TriGeometryBase;
 
 PhysicsHandlerPtr physHandler;
 PhysicsWorldPtr physicsWorld;
@@ -81,24 +79,19 @@ public:
        }
        switch(e.getKey())
        {
-       case KeyEvent::KEY_S:
+       case KeyEvent::KEY_H:
             {
-                buildSphere();
+                buildHingeJointMesh();
             }
             break;
        case KeyEvent::KEY_B:
             {
-                buildBox();
+                buildBallJointMesh();
             }
             break;
-       case KeyEvent::KEY_Z:
+       case KeyEvent::KEY_M:
             {
-                //SceneFileHandler::the().write(rootNode, "scene.osb");
-            }
-            break;
-       case KeyEvent::KEY_T:
-            {
-                buildTriMesh();
+                buildMotorJointMesh();
             }
             break;
        }
@@ -209,16 +202,10 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 01SimplePhysics Window");
+                                        "OpenSG 02Joints Window");
 
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
-
-    //Make Base Geometry Node
-    TriGeometryBase = SceneFileHandler::the().read("./Data/Ship.osb");
-
-    //Make Torus Node
-    NodePtr TorusNode = makeTorus(.5, 2, 32, 32);
 
     //Make Main Scene Node
 	NodePtr scene = makeCoredNode<Group>();
@@ -242,17 +229,23 @@ int main(int argc, char **argv)
                               PhysicsWorld::AutoDisableFlagFieldMask | 
                               PhysicsWorld::AutoDisableTimeFieldMask | 
                               PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
-                              PhysicsWorld::GravityFieldMask);
+                              PhysicsWorld::GravityFieldMask | 
+                              PhysicsWorld::CfmFieldMask | 
+                              PhysicsWorld::ErpFieldMask);
         physicsWorld->setWorldContactSurfaceLayer(0.005);
         physicsWorld->setAutoDisableFlag(1);
         physicsWorld->setAutoDisableTime(0.75);
         physicsWorld->setWorldContactMaxCorrectingVel(100.0);
         physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
+        physicsWorld->setCfm(0.001);
+        physicsWorld->setErp(0.2);
     endEditCP(physicsWorld, PhysicsWorld::WorldContactSurfaceLayerFieldMask | 
                               PhysicsWorld::AutoDisableFlagFieldMask | 
                               PhysicsWorld::AutoDisableTimeFieldMask | 
                               PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
-                              PhysicsWorld::GravityFieldMask);
+                              PhysicsWorld::GravityFieldMask | 
+                              PhysicsWorld::CfmFieldMask | 
+                              PhysicsWorld::ErpFieldMask);
 
     hashSpace = PhysicsHashSpace::create();
 
@@ -313,16 +306,6 @@ int main(int argc, char **argv)
 	    scene->addChild(spaceGroupNode);
 	endEditCP(scene, Node::ChildrenFieldMask);
 
-    //Save the Physics Sim
-	FCFileType::FCPtrStore Containers;
-	Containers.insert(physHandler);
-
-	FCFileType::FCTypeVector IgnoreTypes;
-	//IgnoreTypes.push_back(Node::getClassType().getId());
-	//Save the Field Containers to a xml file
-	FCFileHandler::the()->write(Containers,Path("./01PhysicsData.xml"),IgnoreTypes);
-
-
     // tell the manager what to manage
     mgr->setRoot  (rootNode);
 
@@ -353,15 +336,12 @@ void reshape(Vec2f Size)
 }
 
 
-//////////////////////////////////////////////////////////////////////////
-//! build a box
-//////////////////////////////////////////////////////////////////////////
-void buildBox(void)
+PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
 {
     Matrix m;
     //create OpenSG mesh
     GeometryPtr box;
-    NodePtr boxNode = makeBox(1.0, 1.0, 1.0, 1, 1, 1);
+    NodePtr boxNode = makeBox(Dimensions.x(), Dimensions.y(), Dimensions.z(), 1, 1, 1);
     box = GeometryPtr::dcast(boxNode->getCore());
     SimpleMaterialPtr box_mat = SimpleMaterial::create();
     beginEditCP(box_mat);
@@ -374,25 +354,23 @@ void buildBox(void)
     TransformPtr boxTrans;
     NodePtr boxTransNode = makeCoredNode<Transform>(&boxTrans);
     m.setIdentity();
-    Real32 randX = (Real32)(rand()%10)-5.0;
-    Real32 randY = (Real32)(rand()%10)-5.0;
-    m.setTranslate(randX, randY, 10.0);
+    m.setTranslate(Position);
     beginEditCP(boxTrans, Transform::MatrixFieldMask);
         boxTrans->setMatrix(m);
     endEditCP(boxTrans, Transform::MatrixFieldMask);
 
     //create ODE data
     PhysicsBodyPtr boxBody = PhysicsBody::create(physicsWorld);
-    beginEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
-        boxBody->setPosition(Vec3f(randX, randY, 10.0));
+    CPEdit(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+        boxBody->setPosition(Vec3f(Position));
+        boxBody->setBoxMass(1.0,Dimensions.x(), Dimensions.y(), Dimensions.z());
         boxBody->setLinearDamping(0.0001);
         boxBody->setAngularDamping(0.0001);
-    endEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
-
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
     beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
         boxGeom->setBody(boxBody);
         boxGeom->setSpace(hashSpace);
+        boxGeom->setLengths(Dimensions);
     endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
 
     //add attachments
@@ -408,128 +386,106 @@ void buildBox(void)
     beginEditCP(spaceGroupNode, Node::ChildrenFieldMask);
         spaceGroupNode->addChild(boxTransNode);
     endEditCP(spaceGroupNode, Node::ChildrenFieldMask);
+
+    return boxBody;
 }
-
 //////////////////////////////////////////////////////////////////////////
-//! build a sphere
+//! build a Hinge joint with attached Meshes
 //////////////////////////////////////////////////////////////////////////
-void buildSphere(void)
+PhysicsJointPtr buildHingeJointMesh(void)
 {
-    Matrix m;
-    //create OpenSG mesh
-    GeometryPtr sphere;
-    NodePtr sphereNode = makeSphere(2, 1);
-    sphere = GeometryPtr::dcast(sphereNode->getCore());
-    SimpleMaterialPtr sphere_mat = SimpleMaterial::create();
-    beginEditCP(sphere_mat);
-    sphere_mat->setAmbient(Color3f(0.0,0.0,0.0));
-    sphere_mat->setDiffuse(Color3f(0.0,0.0,1.0));
-    endEditCP(sphere_mat);
-    beginEditCP(sphere, Geometry::MaterialFieldMask);
-    sphere->setMaterial(sphere_mat);
-    endEditCP(sphere);
-    TransformPtr sphereTrans;
-    NodePtr sphereTransNode = makeCoredNode<Transform>(&sphereTrans);
-    m.setIdentity();
-    Real32 randX = (Real32)(rand()%10)-5.0;
-    Real32 randY = (Real32)(rand()%10)-5.0;
-    m.setTranslate(randX, randY, 10.0);
-    beginEditCP(sphereTrans, Transform::MatrixFieldMask);
-    sphereTrans->setMatrix(m);
-    endEditCP(sphereTrans);
-    //create ODE data
-    PhysicsBodyPtr sphereBody = PhysicsBody::create(physicsWorld);
-    beginEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
-        sphereBody->setPosition(Vec3f(randX, randY, 10.0));
-        sphereBody->setLinearDamping(0.0001);
-        sphereBody->setAngularDamping(0.0001);
-    endEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+    Vec3f Box1Size(1.0,1.0,0.1),
+          Box2Size(1.0,1.0,1.0);
+    Pnt3f Box1Position((Real32)(rand()%10)-5.0, (Real32)(rand()%10)-5.0, 10.0);
+    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x()+.05,0.0,0.0)));
 
-    PhysicsSphereGeomPtr sphereGeom = PhysicsSphereGeom::create();
-    CPEdit(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask);
-        sphereGeom->setBody(sphereBody);
-        sphereGeom->setSpace(hashSpace);
+    PhysicsBodyPtr Box1Body = buildBox(Box1Size, Box1Position);
+    PhysicsBodyPtr Box2Body = buildBox(Box2Size, Box2Position);
+
+    //Create Hinge Joint
+    PhysicsHingeJointPtr TutorialHingeJoint;
+
+	FCFileType::FCPtrStore Containers;
+	Containers = FCFileHandler::the()->read(Path("./Data/06HingeJoint.xml"));
+
+    for(FCFileType::FCPtrStore::iterator Itor(Containers.begin()) ; Itor != Containers.end() ; ++Itor)
+    {
+        if((*Itor)->getType().isDerivedFrom(PhysicsHingeJoint::getClassType()))
+        {
+            TutorialHingeJoint = PhysicsHingeJoint::Ptr::dcast(*Itor);
+        }
+    }
     
-    //add attachments
-    beginEditCP(sphereNode, Node::AttachmentsFieldMask);
-    sphereNode->addAttachment(sphereGeom);
-    endEditCP(sphereNode);
-    beginEditCP(sphereTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
-    sphereTransNode->addAttachment(sphereBody);
-    sphereTransNode->addChild(sphereNode);
-    endEditCP(sphereTransNode);
-    //add to SceneGraph
-    beginEditCP(spaceGroupNode, Node::ChildrenFieldMask);
-    spaceGroupNode->addChild(sphereTransNode);
-    endEditCP(spaceGroupNode);
+    beginEditCP(TutorialHingeJoint, PhysicsHingeJoint::WorldFieldMask | 
+                                    PhysicsHingeJoint::FirstBodyFieldMask | 
+                                    PhysicsHingeJoint::SecondBodyFieldMask);
+        TutorialHingeJoint->setWorld(Box1Body->getWorld());
+        TutorialHingeJoint->setFirstBody(Box1Body);
+        TutorialHingeJoint->setSecondBody(Box2Body);
+    endEditCP(TutorialHingeJoint, PhysicsHingeJoint::WorldFieldMask | 
+                                    PhysicsHingeJoint::FirstBodyFieldMask | 
+                                    PhysicsHingeJoint::SecondBodyFieldMask);
+
+    return TutorialHingeJoint;
+
 }
 
-//////////////////////////////////////////////////////////////////////////
-//! trimesh defined by filenode will be loaded
-//////////////////////////////////////////////////////////////////////////
-void buildTriMesh(void)
+void buildMotorJointMesh(void)
 {
-    //NodePtr tri = makeTorus(0.5, 1.0, 24, 12);
-    //NodePtr tri = makeBox(10.0, 10.0, 10.0, 1, 1, 1);
-    NodePtr tri = Node::Ptr::dcast(TriGeometryBase->shallowCopy());
-    if(tri!=NullFC)
-    {
-        GeometryPtr triGeo = GeometryPtr::dcast(tri->getCore()); 
-        Matrix m;
-        SimpleMaterialPtr tri_mat = SimpleMaterial::create();
-        beginEditCP(tri_mat);
-        tri_mat->setAmbient(Color3f(0.1,0.1,0.2));
-        tri_mat->setDiffuse(Color3f(1.0,0.1,0.7));
-        endEditCP(tri_mat);
-        triGeo->setMaterial(tri_mat);
-        TransformPtr triTrans;
-        NodePtr triTransNode = makeCoredNode<Transform>(&triTrans);
-        m.setIdentity();
-        Real32 randX = (Real32)(rand()%10)-5.0;
-        Real32 randY = (Real32)(rand()%10)-5.0;
-        m.setTranslate(randX, randY, 18.0);
-        triTrans->setMatrix(m);
+    /*Vec3f Box1Size(1.0,1.5,0.1),
+          Box2Size(1.0,1.0,1.0);
+    Pnt3f Box1Position((Real32)(rand()%10)-5.0, (Real32)(rand()%10)-5.0, 10.0);
+    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x()+0.01,0.0,0.0)));
 
-        //create ODE data
-        PhysicsBodyPtr triBody = PhysicsBody::create(physicsWorld);
-        beginEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
-            triBody->setPosition(Vec3f(randX, randY, 18.0));
-            triBody->setLinearDamping(0.0001);
-            triBody->setAngularDamping(0.0001);
-        endEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
-        PhysicsGeomPtr triGeom;
-        if(false)
-        {
-            triGeom = PhysicsTriMeshGeom::create();
-            CPEdit(triGeom, PhysicsTriMeshGeom::BodyFieldMask | 
-                            PhysicsTriMeshGeom::SpaceFieldMask | 
-                            PhysicsTriMeshGeom::GeometryNodeFieldMask);
-                triGeom->setBody(triBody);
-                //add geom to space for collision
-                triGeom->setSpace(hashSpace);
-                //set the geometryNode to fill the ode-triMesh
-                PhysicsTriMeshGeom::Ptr::dcast(triGeom)->setGeometryNode(tri);
-        }
-        else
-        {
+    PhysicsBodyPtr Box1Body = buildBox(Box1Size, Box1Position);
+    PhysicsBodyPtr Box2Body = buildBox(Box2Size, Box2Position);
 
-            triGeom = PhysicsBoxGeom::create();
-            beginEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
-                triGeom->setBody(triBody);
-                triGeom->setSpace(hashSpace);
-                PhysicsBoxGeom::Ptr::dcast(triGeom)->setLengths(calcMinGeometryBounds(triGeo));
-            endEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
-        }
-        
-        //add attachments
-        tri->addAttachment(triGeom);
-        triTransNode->addAttachment(triBody);
-        //add to SceneGraph
-        triTransNode->addChild(tri);
-        spaceGroupNode->addChild(triTransNode);
-    }
-    else
-    {
-        SLOG << "Could not read MeshData!" << endLog;
-    }
+    //Create AMotor Joint
+    PhysicsAMotorJointPtr TutorialAMotorJoint = PhysicsAMotorJoint::create();
+    beginEditCP(TutorialAMotorJoint);
+        TutorialAMotorJoint->setWorld(Box1Body->getWorld());
+        TutorialAMotorJoint->setFirstBody(Box1Body);
+        TutorialAMotorJoint->setSecondBody(Box2Body);
+        TutorialAMotorJoint->setMode(dAMotorUser);
+        TutorialAMotorJoint->setNumAxes(1);
+        TutorialAMotorJoint->setAxis(0,2,Vec3f(1.0,0.0,0.0));
+
+        TutorialAMotorJoint->setParam(dParamFMax, 10.0);
+        TutorialAMotorJoint->setParam(dParamVel, 8.0);
+    endEditCP(TutorialAMotorJoint);
+    
+    PhysicsBallJointPtr TutorialBallJoint = PhysicsBallJoint::create();
+    beginEditCP(TutorialBallJoint);
+        TutorialBallJoint->setWorld(Box1Body->getWorld());
+        TutorialBallJoint->setFirstBody(Box1Body);
+        TutorialBallJoint->setSecondBody(Box2Body);
+        TutorialBallJoint->setAnchor(Box1Position + (Vec3f(Box1Size.x()/2+0.005,0.0,0.0)));
+        //TutorialBallJoint->setParam(dParamLoStop, -0.57);
+        //TutorialBallJoint->setParam(dParamHiStop, 0.57);
+    endEditCP(TutorialBallJoint);*/
+
+}
+
+void buildBallJointMesh(void)
+{
+    Vec3f Box1Size(1.0,0.1,0.1),
+          Box2Size(1.0,1.0,1.0);
+    Pnt3f Box1Position((Real32)(rand()%10)-5.0, (Real32)(rand()%10)-5.0, 10.0);
+    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x()+0.1,0.0,0.0)));
+
+    PhysicsBodyPtr Box1Body = buildBox(Box1Size, Box1Position);
+    PhysicsBodyPtr Box2Body = buildBox(Box2Size, Box2Position);
+
+    //Create Ball Joint
+    PhysicsBallJointPtr TutorialBallJoint = PhysicsBallJoint::create(Box1Body->getWorld());
+    beginEditCP(TutorialBallJoint, PhysicsBallJoint::FirstBodyFieldMask | 
+                                    PhysicsBallJoint::SecondBodyFieldMask | 
+                                    PhysicsBallJoint::AnchorFieldMask);
+        TutorialBallJoint->setFirstBody(Box1Body);
+        TutorialBallJoint->setSecondBody(Box2Body);
+        TutorialBallJoint->setAnchor(Box1Position + (Vec3f(Box1Size.x()/2+0.05,0.0,0.0)));
+    endEditCP(TutorialBallJoint, PhysicsBallJoint::FirstBodyFieldMask | 
+                                    PhysicsBallJoint::SecondBodyFieldMask | 
+                                    PhysicsBallJoint::AnchorFieldMask);
+
 }
