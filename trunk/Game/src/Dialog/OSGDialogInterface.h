@@ -69,6 +69,8 @@ class OSG_GAMELIB_DLLMAPPING DialogInterface : public DialogInterfaceBase
     /*==========================  PUBLIC  =================================*/
   public:
 
+      void setHierarchy();
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

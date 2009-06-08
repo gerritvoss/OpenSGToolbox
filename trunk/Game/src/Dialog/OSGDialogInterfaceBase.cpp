@@ -70,6 +70,9 @@ const OSG::BitVector  DialogInterfaceBase::ComponentGeneratorFieldMask =
 const OSG::BitVector  DialogInterfaceBase::ParentContainerFieldMask = 
     (TypeTraits<BitVector>::One << DialogInterfaceBase::ParentContainerFieldId);
 
+const OSG::BitVector  DialogInterfaceBase::SourceDialogHierarchyFieldMask = 
+    (TypeTraits<BitVector>::One << DialogInterfaceBase::SourceDialogHierarchyFieldId);
+
 const OSG::BitVector DialogInterfaceBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -81,6 +84,9 @@ const OSG::BitVector DialogInterfaceBase::MTInfluenceMask =
     
 */
 /*! \var ContainerPtr    DialogInterfaceBase::_sfParentContainer
+    
+*/
+/*! \var DialogHierarchyPtr DialogInterfaceBase::_sfSourceDialogHierarchy
     
 */
 
@@ -97,7 +103,12 @@ FieldDescription *DialogInterfaceBase::_desc[] =
                      "ParentContainer", 
                      ParentContainerFieldId, ParentContainerFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogInterfaceBase::getSFParentContainer)
+                     (FieldAccessMethod) &DialogInterfaceBase::getSFParentContainer),
+    new FieldDescription(SFDialogHierarchyPtr::getClassType(), 
+                     "SourceDialogHierarchy", 
+                     SourceDialogHierarchyFieldId, SourceDialogHierarchyFieldMask,
+                     false,
+                     (FieldAccessMethod) &DialogInterfaceBase::getSFSourceDialogHierarchy)
 };
 
 
@@ -175,6 +186,7 @@ void DialogInterfaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 DialogInterfaceBase::DialogInterfaceBase(void) :
     _sfComponentGenerator     (), 
     _sfParentContainer        (), 
+    _sfSourceDialogHierarchy  (), 
     Inherited() 
 {
 }
@@ -186,6 +198,7 @@ DialogInterfaceBase::DialogInterfaceBase(void) :
 DialogInterfaceBase::DialogInterfaceBase(const DialogInterfaceBase &source) :
     _sfComponentGenerator     (source._sfComponentGenerator     ), 
     _sfParentContainer        (source._sfParentContainer        ), 
+    _sfSourceDialogHierarchy  (source._sfSourceDialogHierarchy  ), 
     Inherited                 (source)
 {
 }
@@ -212,6 +225,11 @@ UInt32 DialogInterfaceBase::getBinSize(const BitVector &whichField)
         returnValue += _sfParentContainer.getBinSize();
     }
 
+    if(FieldBits::NoField != (SourceDialogHierarchyFieldMask & whichField))
+    {
+        returnValue += _sfSourceDialogHierarchy.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -229,6 +247,11 @@ void DialogInterfaceBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
     {
         _sfParentContainer.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SourceDialogHierarchyFieldMask & whichField))
+    {
+        _sfSourceDialogHierarchy.copyToBin(pMem);
     }
 
 
@@ -249,6 +272,11 @@ void DialogInterfaceBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfParentContainer.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SourceDialogHierarchyFieldMask & whichField))
+    {
+        _sfSourceDialogHierarchy.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -265,6 +293,9 @@ void DialogInterfaceBase::executeSyncImpl(      DialogInterfaceBase *pOther,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
         _sfParentContainer.syncWith(pOther->_sfParentContainer);
 
+    if(FieldBits::NoField != (SourceDialogHierarchyFieldMask & whichField))
+        _sfSourceDialogHierarchy.syncWith(pOther->_sfSourceDialogHierarchy);
+
 
 }
 #else
@@ -280,6 +311,9 @@ void DialogInterfaceBase::executeSyncImpl(      DialogInterfaceBase *pOther,
 
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
         _sfParentContainer.syncWith(pOther->_sfParentContainer);
+
+    if(FieldBits::NoField != (SourceDialogHierarchyFieldMask & whichField))
+        _sfSourceDialogHierarchy.syncWith(pOther->_sfSourceDialogHierarchy);
 
 
 

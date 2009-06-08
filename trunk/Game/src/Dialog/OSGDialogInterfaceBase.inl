@@ -110,6 +110,13 @@ SFContainerPtr *DialogInterfaceBase::getSFParentContainer(void)
     return &_sfParentContainer;
 }
 
+//! Get the DialogInterface::_sfSourceDialogHierarchy field.
+inline
+SFDialogHierarchyPtr *DialogInterfaceBase::getSFSourceDialogHierarchy(void)
+{
+    return &_sfSourceDialogHierarchy;
+}
+
 
 //! Get the value of the DialogInterface::_sfComponentGenerator field.
 inline
@@ -151,6 +158,27 @@ inline
 void DialogInterfaceBase::setParentContainer(const ContainerPtr &value)
 {
     _sfParentContainer.setValue(value);
+}
+
+//! Get the value of the DialogInterface::_sfSourceDialogHierarchy field.
+inline
+DialogHierarchyPtr &DialogInterfaceBase::getSourceDialogHierarchy(void)
+{
+    return _sfSourceDialogHierarchy.getValue();
+}
+
+//! Get the value of the DialogInterface::_sfSourceDialogHierarchy field.
+inline
+const DialogHierarchyPtr &DialogInterfaceBase::getSourceDialogHierarchy(void) const
+{
+    return _sfSourceDialogHierarchy.getValue();
+}
+
+//! Set the value of the DialogInterface::_sfSourceDialogHierarchy field.
+inline
+void DialogInterfaceBase::setSourceDialogHierarchy(const DialogHierarchyPtr &value)
+{
+    _sfSourceDialogHierarchy.setValue(value);
 }
 
 

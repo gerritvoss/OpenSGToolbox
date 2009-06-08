@@ -60,6 +60,9 @@ listens for:
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/Game/OSGCaptionListener.h>
+#include <OpenSG/Game/OSGDialogListener.h>
+#include <OpenSG/Game/OSGDefaultDialogComponentGenerator.h>
+#include <OpenSG/Game/OSGDialogInterface.h>
 
 //Dialog Includes
 #include <OpenSG/Game/OSGDialog.h>
@@ -237,39 +240,10 @@ public:
     }
     virtual void responseSelected(const DialogEvent& e)
     {
-        beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask);
-            MainInternalWindow->getChildren().clear();
-        endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask);
     }
     virtual void responsesReady(const DialogEvent& e)
     {
-        
-        for(UInt32 c = 0; TutorialDialog->getCurrentDialogResponses().getSize() > c; c++)
-        {
-            ButtonPtr Response = osg::Button::create();
-            beginEditCP(Response, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-                Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
-                    Response->setMinSize(Vec2f(50, 25));
-                    Response->setMaxSize(Vec2f(200, 100));
-                    Response->setPreferredSize(Vec2f(100, 50));
-                    Response->setToolTipText("These buttons are for selecting a response!");
 
-                    Response->setText(TutorialDialog->getCurrentDialogResponses(c)->getResponse());
-                    Response->setFont(ButtonFont);
-                    Response->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-                    Response->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
-                    Response->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            endEditCP(Response, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-                Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
-
-            beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask);
-                MainInternalWindow->getChildren().push_back(Response);
-            endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask);
-
-            Response->addActionListener(&TutorialResponseListener);
-
-            _ButtonToResponseMap[Response] = TutorialDialog->getCurrentDialogResponses(c);
-        }
     }
     virtual void terminated(const DialogEvent& e)
     {
@@ -307,16 +281,68 @@ int main(int argc, char **argv)
     TutorialUpdateListener TheTutorialUpdateListener;
     TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
 
+
+    // Create the SimpleSceneManager helper
+    mgr = new SimpleSceneManager;
+
+    // Tell the Manager what to manage
+    mgr->setWindow(MainWindow);
+	
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
+                                        "OpenSG 06Dialog Window");
+										
+    // Make Torus Node (creates Torus in background of scene)
+    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+
+    // Make Main Scene Node and add the Torus
+    scene = osg::Node::create();
+    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        scene->setCore(osg::Group::create());
+        scene->addChild(TorusGeometryNode);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
+
     //Create Start and stop buttons for the caption
     ButtonPtr StartButton = osg::Button::create();
     ButtonPtr StopButton = osg::Button::create();
     ButtonPtr PauseButton = osg::Button::create();
+
+    DefaultDialogComponentGeneratorPtr TutorialDialogGenerator = DefaultDialogComponentGenerator::create();
 
     ButtonFont = osg::UIFont::create();
 
     beginEditCP(ButtonFont, UIFont::SizeFieldMask);
         ButtonFont->setSize(16);
     endEditCP(ButtonFont, UIFont::SizeFieldMask);
+
+    ButtonPtr Response = osg::Button::create();
+    beginEditCP(Response, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+            Response->setMinSize(Vec2f(50, 25));
+            Response->setMaxSize(Vec2f(200, 100));
+            Response->setPreferredSize(Vec2f(100, 50));
+            Response->setToolTipText("These buttons are for selecting a response!");
+
+            Response->setFont(ButtonFont);
+            Response->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            Response->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            Response->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+    endEditCP(Response, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+
+    DialogInterfacePtr TutorialDialogInterface = osg::DialogInterface::create();
+
+    beginEditCP(TutorialDialogGenerator, DefaultDialogComponentGenerator::ResponseButtonPrototypeFieldMask);
+        TutorialDialogGenerator->setResponseButtonPrototype(Response);
+    endEditCP(TutorialDialogGenerator, DefaultDialogComponentGenerator::ResponseButtonPrototypeFieldMask);
+
 
     TutorialDialog = osg::DialogHierarchy::create();
 
@@ -337,6 +363,7 @@ int main(int argc, char **argv)
     End4 = TutorialDialog->addDialog("End", 0.0, NullFC, true, BDialogChildB);
 
 
+    
     TutorialDialogListener TheTutorialDialogListener;
     rootDialog->addDialogListener(&TheTutorialDialogListener);
     RootDialogChildA->addDialogListener(&TheTutorialDialogListener);
@@ -353,34 +380,6 @@ int main(int argc, char **argv)
     End3->addDialogListener(&TheTutorialDialogListener);
     Restart4->addDialogListener(&TheTutorialDialogListener);
     End4->addDialogListener(&TheTutorialDialogListener);
-
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-    // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
-	
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
-                                        "OpenSG 05Caption Window");
-										
-    // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
-
-    // Make Main Scene Node and add the Torus
-    scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
-        scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-
-
-    // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
-
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
-
     
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
     
@@ -399,6 +398,12 @@ int main(int argc, char **argv)
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+
+    beginEditCP(TutorialDialogInterface, DialogInterface::ComponentGeneratorFieldMask | DialogInterface::ParentContainerFieldMask | DialogInterface::SourceDialogHierarchyFieldMask);
+        TutorialDialogInterface->setComponentGenerator(TutorialDialogGenerator);
+        TutorialDialogInterface->setParentContainer(MainInternalWindow);
+        TutorialDialogInterface->setSourceDialogHierarchy(TutorialDialog);
+    endEditCP(TutorialDialogInterface, DialogInterface::ComponentGeneratorFieldMask | DialogInterface::ParentContainerFieldMask | DialogInterface::SourceDialogHierarchyFieldMask);
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();

@@ -93,13 +93,13 @@ void DialogInterface::DialogInterfaceListener::dialogResponsesReady(const Dialog
 {
     for(UInt32 c = 0; DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses().getSize() > c; c++)
     {
-        ButtonPtr Response = ButtonPtr::dcast(_DialogInterface->getComponentGenerator()->getResponseComponent(_DialogInterface,DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c)));
+        ButtonPtr Response = ButtonPtr::dcast(_DialogInterface->getComponentGenerator()->getResponseComponent(_DialogInterface,DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c)->getResponse()));
 
         beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
             _DialogInterface->getParentContainer()->getChildren().push_back(Response);
         endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
 
-        Response->addActionListener(&DialogInterfacePtr::dcast(e.getSource())->_DialogInterfaceListener);
+        Response->addActionListener(&_DialogInterface->_DialogInterfaceListener);
         _DialogInterface->_ButtonToResponseMap[Response] = DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c);
     }
 }
@@ -110,6 +110,11 @@ void DialogInterface::DialogInterfaceListener::actionPerformed(const ActionEvent
 {
     _DialogInterface->_ButtonToResponseMap[ButtonPtr::dcast(e.getSource())]->selectResponse();
 }
+void DialogInterface::setHierarchy()
+{
+    getSourceDialogHierarchy()->addDialogHierarchyListener(&_DialogInterfaceListener);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -137,6 +142,11 @@ DialogInterface::~DialogInterface(void)
 void DialogInterface::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & SourceDialogHierarchyFieldMask && getSourceDialogHierarchy() != NullFC)
+    {
+        setHierarchy();
+    }
 }
 
 void DialogInterface::dump(      UInt32    , 

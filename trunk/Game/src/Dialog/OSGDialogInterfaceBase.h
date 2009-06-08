@@ -69,6 +69,7 @@
 
 #include "OSGDefaultDialogComponentGeneratorFields.h" // ComponentGenerator type
 #include <OpenSG/UserInterface/OSGContainerFields.h> // ParentContainer type
+#include "OSGDialogHierarchyFields.h" // SourceDialogHierarchy type
 
 #include "OSGDialogInterfaceFields.h"
 
@@ -92,13 +93,15 @@ class OSG_GAMELIB_DLLMAPPING DialogInterfaceBase : public AttachmentContainer
 
     enum
     {
-        ComponentGeneratorFieldId = Inherited::NextFieldId,
-        ParentContainerFieldId    = ComponentGeneratorFieldId + 1,
-        NextFieldId               = ParentContainerFieldId    + 1
+        ComponentGeneratorFieldId    = Inherited::NextFieldId,
+        ParentContainerFieldId       = ComponentGeneratorFieldId    + 1,
+        SourceDialogHierarchyFieldId = ParentContainerFieldId       + 1,
+        NextFieldId                  = SourceDialogHierarchyFieldId + 1
     };
 
     static const OSG::BitVector ComponentGeneratorFieldMask;
     static const OSG::BitVector ParentContainerFieldMask;
+    static const OSG::BitVector SourceDialogHierarchyFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -127,11 +130,14 @@ class OSG_GAMELIB_DLLMAPPING DialogInterfaceBase : public AttachmentContainer
 
            SFDefaultDialogComponentGeneratorPtr *getSFComponentGenerator(void);
            SFContainerPtr      *getSFParentContainer(void);
+           SFDialogHierarchyPtr *getSFSourceDialogHierarchy(void);
 
            DefaultDialogComponentGeneratorPtr &getComponentGenerator(void);
      const DefaultDialogComponentGeneratorPtr &getComponentGenerator(void) const;
            ContainerPtr        &getParentContainer(void);
      const ContainerPtr        &getParentContainer(void) const;
+           DialogHierarchyPtr  &getSourceDialogHierarchy(void);
+     const DialogHierarchyPtr  &getSourceDialogHierarchy(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,6 +146,7 @@ class OSG_GAMELIB_DLLMAPPING DialogInterfaceBase : public AttachmentContainer
 
      void setComponentGenerator( const DefaultDialogComponentGeneratorPtr &value );
      void setParentContainer( const ContainerPtr &value );
+     void setSourceDialogHierarchy( const DialogHierarchyPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,6 +191,7 @@ class OSG_GAMELIB_DLLMAPPING DialogInterfaceBase : public AttachmentContainer
 
     SFDefaultDialogComponentGeneratorPtr   _sfComponentGenerator;
     SFContainerPtr      _sfParentContainer;
+    SFDialogHierarchyPtr   _sfSourceDialogHierarchy;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

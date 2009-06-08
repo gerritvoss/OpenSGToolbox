@@ -32,5 +32,15 @@ A Dialog.
 	>
 	</Field>
 
+	<Field
+		name="SourceDialogHierarchy"
+		type="DialogHierarchyPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+
 
 </FieldContainer>

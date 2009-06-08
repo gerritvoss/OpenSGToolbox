@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDialogHierarchy.h"
+#include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -178,6 +179,9 @@ void DialogHierarchy::DialogHierarchyListener::ended(const DialogEvent& e)
 
 void DialogHierarchy::DialogHierarchyListener::responseSelected(const DialogEvent& e)
 {
+    DialogHierarchyEvent de = DialogHierarchyEvent(_DialogHierarchy,getSystemTime());
+    _DialogHierarchy->produceDialogResponseSelected(de);
+
     DialogEvent Pe = DialogEvent(_DialogHierarchy->getCurrentDialog(),getSystemTime());
     _DialogHierarchy->getCurrentDialog()->produceEnded(Pe);
     _DialogHierarchy->getCurrentDialog()->_displayed = false;
@@ -185,9 +189,6 @@ void DialogHierarchy::DialogHierarchyListener::responseSelected(const DialogEven
     _DialogHierarchy->setCurrentDialog(DialogPtr::dcast(e.getSource()));
     _DialogHierarchy->retrieveReponses();
     _DialogHierarchy->getCurrentDialog()->start();
-
-    DialogHierarchyEvent de = DialogHierarchyEvent(_DialogHierarchy,getSystemTime());
-    _DialogHierarchy->produceDialogResponseSelected(de);
 }
 
 void DialogHierarchy::DialogHierarchyListener::responsesReady(const DialogEvent& e)
@@ -200,6 +201,23 @@ void DialogHierarchy::DialogHierarchyListener::terminated(const DialogEvent& e)
 {
     DialogHierarchyEvent de = DialogHierarchyEvent(_DialogHierarchy,getSystemTime());
     _DialogHierarchy->produceTerminated(de);
+}
+
+EventConnection DialogHierarchy::addDialogHierarchyListener(DialogHierarchyListenerPtr Listener)
+{
+   _DialogHierarchyListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&DialogHierarchy::isDialogHierarchyListenerAttached, this, Listener),
+       boost::bind(&DialogHierarchy::removeDialogHierarchyListener, this, Listener));
+}
+
+void DialogHierarchy::removeDialogHierarchyListener(DialogHierarchyListenerPtr Listener)
+{
+   DialogHierarchyListenerSetItor EraseIter(_DialogHierarchyListeners.find(Listener));
+   if(EraseIter != _DialogHierarchyListeners.end())
+   {
+      _DialogHierarchyListeners.erase(EraseIter);
+   }
 }
 
 /*-------------------------------------------------------------------------*\

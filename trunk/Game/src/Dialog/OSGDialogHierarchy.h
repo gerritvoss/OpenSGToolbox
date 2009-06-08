@@ -48,6 +48,7 @@
 #include "OSGDialog.h"
 #include "Event/OSGDialogListener.h"
 #include "Event/OSGDialogHierarchyListener.h"
+#include "OSGDialogInterface.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -71,6 +72,8 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
 
     virtual void changed(BitVector  whichField, 
                          UInt32     origin    );
+
+    DialogInterfacePtr _ParentDialogInterface;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
