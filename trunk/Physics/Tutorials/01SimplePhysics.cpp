@@ -387,10 +387,11 @@ void reshape(Vec2f Size)
 //////////////////////////////////////////////////////////////////////////
 void buildBox(void)
 {
+    Vec3f Lengths((Real32)(rand()%2)+1.0, (Real32)(rand()%2)+1.0, (Real32)(rand()%2)+1.0);
     Matrix m;
     //create OpenSG mesh
     GeometryPtr box;
-    NodePtr boxNode = makeBox(1.0, 1.0, 1.0, 1, 1, 1);
+    NodePtr boxNode = makeBox(Lengths.x(), Lengths.y(), Lengths.z(), 1, 1, 1);
     box = GeometryPtr::dcast(boxNode->getCore());
     SimpleMaterialPtr box_mat = SimpleMaterial::create();
     beginEditCP(box_mat);
@@ -412,17 +413,17 @@ void buildBox(void)
 
     //create ODE data
     PhysicsBodyPtr boxBody = PhysicsBody::create(physicsWorld);
-    beginEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+    beginEditCP(boxBody, PhysicsBody::PositionFieldMask);
         boxBody->setPosition(Vec3f(randX, randY, 10.0));
-        boxBody->setLinearDamping(0.0001);
-        boxBody->setAngularDamping(0.0001);
-    endEditCP(boxBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+    endEditCP(boxBody, PhysicsBody::PositionFieldMask);
+    boxBody->setBoxMass(1.0, Lengths.x(), Lengths.y(), Lengths.z());
 
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
-    beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+    beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask  | PhysicsBoxGeom::LengthsFieldMask);
         boxGeom->setBody(boxBody);
         boxGeom->setSpace(hashSpace);
-    endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+        boxGeom->setLengths(Lengths);
+    endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
 
     //add attachments
     beginEditCP(boxNode, Node::AttachmentsFieldMask);
@@ -444,10 +445,11 @@ void buildBox(void)
 //////////////////////////////////////////////////////////////////////////
 void buildSphere(void)
 {
+    Real32 Radius((Real32)(rand()%2)*0.5+0.5);
     Matrix m;
     //create OpenSG mesh
     GeometryPtr sphere;
-    NodePtr sphereNode = makeSphere(2, 1);
+    NodePtr sphereNode = makeSphere(2, Radius);
     sphere = GeometryPtr::dcast(sphereNode->getCore());
     SimpleMaterialPtr sphere_mat = SimpleMaterial::create();
     beginEditCP(sphere_mat);
@@ -468,16 +470,18 @@ void buildSphere(void)
     endEditCP(sphereTrans);
     //create ODE data
     PhysicsBodyPtr sphereBody = PhysicsBody::create(physicsWorld);
-    beginEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+    beginEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::AngularDampingFieldMask);
         sphereBody->setPosition(Vec3f(randX, randY, 10.0));
-        sphereBody->setLinearDamping(0.0001);
         sphereBody->setAngularDamping(0.0001);
-    endEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+    endEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::AngularDampingFieldMask);
+    sphereBody->setSphereMass(1.0,Radius);
 
     PhysicsSphereGeomPtr sphereGeom = PhysicsSphereGeom::create();
-    CPEdit(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask);
+    beginEditCP(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask | PhysicsSphereGeom::RadiusFieldMask);
         sphereGeom->setBody(sphereBody);
         sphereGeom->setSpace(hashSpace);
+        sphereGeom->setRadius(Radius);
+    endEditCP(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask | PhysicsSphereGeom::RadiusFieldMask);
     
     //add attachments
     beginEditCP(sphereNode, Node::AttachmentsFieldMask);
@@ -543,11 +547,11 @@ void buildTriMesh(void)
         {
 
             triGeom = PhysicsBoxGeom::create();
-            beginEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+            beginEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
                 triGeom->setBody(triBody);
                 triGeom->setSpace(hashSpace);
                 PhysicsBoxGeom::Ptr::dcast(triGeom)->setLengths(calcMinGeometryBounds(triGeo));
-            endEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+            endEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
         }
         
         //add attachments

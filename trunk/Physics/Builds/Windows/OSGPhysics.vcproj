@@ -512,6 +512,34 @@
 					Name="Spaces"
 					>
 					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGCollisionContactParameters.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGCollisionContactParameters.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGCollisionContactParameters.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGCollisionContactParametersBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGCollisionContactParametersBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGCollisionContactParametersBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Spaces\OSGCollisionContactParametersFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ODE\Spaces\OSGPhysicsHashSpace.cpp"
 						>
 					</File>

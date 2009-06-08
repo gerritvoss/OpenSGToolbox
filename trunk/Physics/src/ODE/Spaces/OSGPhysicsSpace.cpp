@@ -51,6 +51,7 @@
 #include "ODE/OSGPhysicsWorld.h"
 #include "ODE/OSGPhysicsHandler.h"
 #include <OpenSG/OSGStatCollector.h>
+#include "OSGCollisionContactParameters.h"
 
 OSG_USING_NAMESPACE
 
@@ -124,6 +125,7 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
         // add these contact points to the simulation
         for (Int32 i=0; i < numContacts; i++)
         {
+            getCollisionContact(dGeomGetCategoryBits(o1), dGeomGetCategoryBits(o2))->updateODEContactJoint(_ContactJoints[i]);
             dJointID jointId = dJointCreateContact(_CollideWorldID, 
                 _ColJointGroupId, 
                 &_ContactJoints[i]);
@@ -136,6 +138,92 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
 void PhysicsSpace::setSpaceID(dSpaceID id)
 {
     _SpaceID = id;
+}
+
+CollisionContactParametersPtr PhysicsSpace::createDefaultContactParams(void) const
+{
+    CollisionContactParametersPtr Params = CollisionContactParameters::createEmpty();
+    beginEditCP(Params);
+        Params->setMode(dContactApprox1);
+        Params->setMu(1.0);
+        Params->setMu2(1.0);
+        Params->setBounce(0.0);
+        Params->setBounceSpeedThreshold(0.0);
+        Params->setSoftCFM(0.1);
+        Params->setSoftERP(0.2);
+        Params->setMotion1(0.0);
+        Params->setMotion2(0.0);
+        Params->setMotionN(0.0);
+        Params->setSlip1(0.0);
+        Params->setSlip2(0.0);
+    endEditCP(Params);
+
+    return Params;
+}
+
+void PhysicsSpace::addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParametersPtr ContactParams)
+{
+    for(UInt32 i(0) ; i<getCategory1().size() ; ++i)
+    {
+        if((getCategory1(i) == Category1 && getCategory2(i) == Category2) || (getCategory1(i) == Category2 && getCategory2(i) == Category1))
+        {
+            beginEditCP(PhysicsSpacePtr(this), CategoryCollisionParametersFieldMask);
+                getCategoryCollisionParameters(i) = ContactParams;
+            endEditCP(PhysicsSpacePtr(this), CategoryCollisionParametersFieldMask);
+            return;
+        }
+    }
+
+    beginEditCP(PhysicsSpacePtr(this), Category1FieldMask | Category2FieldMask | CategoryCollisionParametersFieldMask);
+        getCategory1().push_back(Category1);
+        getCategory2().push_back(Category2);
+        getCategoryCollisionParameters().push_back(ContactParams);
+    endEditCP(PhysicsSpacePtr(this), Category1FieldMask | Category2FieldMask | CategoryCollisionParametersFieldMask);
+
+}
+
+void PhysicsSpace::removeCollisionContactCategory(UInt64 Category1, UInt64 Category2)
+{
+    for(UInt32 i(0) ; i<getCategory1().size() ; ++i)
+    {
+        if((getCategory1(i) == Category1 && getCategory2(i) == Category2) || (getCategory1(i) == Category2 && getCategory2(i) == Category1))
+        {
+            beginEditCP(PhysicsSpacePtr(this), Category1FieldMask | Category2FieldMask | CategoryCollisionParametersFieldMask);
+                MFUInt64::iterator Cat1Itor(getCategory1().begin() + i);
+                MFUInt64::iterator Cat2Itor(getCategory2().begin() + i);
+                MFCollisionContactParametersPtr::iterator CatParamsItor(getCategoryCollisionParameters().begin() + i);
+
+                getCategory1().erase(Cat1Itor);
+                getCategory2().erase(Cat2Itor);
+                getCategoryCollisionParameters().erase(CatParamsItor);
+            endEditCP(PhysicsSpacePtr(this), Category1FieldMask | Category2FieldMask | CategoryCollisionParametersFieldMask);
+        }
+    }
+}
+
+CollisionContactParametersPtr PhysicsSpace::getCollisionContactCategory(UInt64 Category1, UInt64 Category2)
+{
+    for(UInt32 i(0) ; i<getCategory1().size() ; ++i)
+    {
+        if((getCategory1(i) == Category1 && getCategory2(i) == Category2) || (getCategory1(i) == Category2 && getCategory2(i) == Category1))
+        {
+            return getCategoryCollisionParameters(i);
+        }
+    }
+    return NullFC;
+}
+
+CollisionContactParametersPtr PhysicsSpace::getCollisionContact(UInt64 Category1, UInt64 Category2)
+{
+    CollisionContactParametersPtr Params(getCollisionContactCategory(Category1, Category2));
+    if(Params != NullFC)
+    {
+        return Params;
+    }
+    else
+    {
+        return getDefaultCollisionParameters();
+    }
 }
 
 /***************************************************************************\
@@ -222,10 +310,12 @@ PhysicsSpace::PhysicsSpace(void) :
 {
     _ContactJoints.resize(MAX_PHYS_CONTACTS);
     _ColJointGroupId = dJointGroupCreate(0);
-    for (Int32 index = 0; index < _ContactJoints.size(); index++)
+
+    if(getDefaultCollisionParameters() == NullFC)
     {
-        _ContactJoints[index].surface.mode = dContactApprox1;
-        _ContactJoints[index].surface.mu = 0.75;
+        beginEditCP(PhysicsSpacePtr(), DefaultCollisionParametersFieldMask);
+            setDefaultCollisionParameters(createDefaultContactParams());
+        endEditCP(PhysicsSpacePtr(), DefaultCollisionParametersFieldMask);
     }
 }
 
@@ -234,17 +324,6 @@ PhysicsSpace::PhysicsSpace(const PhysicsSpace &source) :
 {
     _ContactJoints.resize(MAX_PHYS_CONTACTS);
     _ColJointGroupId = dJointGroupCreate(0);
-    for (Int32 index = 0; index < _ContactJoints.size(); index++)
-    {
-        _ContactJoints[index].surface.mode = dContactApprox1;
-        _ContactJoints[index].surface.mu = 0.75;
-        //_ContactJoints[index].surface.mode = dContactApprox1 | dContactBounce;
-        //_ContactJoints[index].surface.mu = 0.75;
-        //_ContactJoints[index].surface.bounce = 0.1;
-        //_ContactJoints[index].surface.mode = dContactBounce;
-        //_ContactJoints[index].surface.mu = 0.75;
-        //_ContactJoints[index].surface.bounce = 0.9;
-    }
 }
 
 PhysicsSpace::~PhysicsSpace(void)

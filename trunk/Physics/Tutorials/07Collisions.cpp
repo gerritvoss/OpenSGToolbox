@@ -23,12 +23,13 @@
 #include <OpenSG/OSGComponentTransform.h>
 #include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGTypeFactory.h>
-#include <OpenSG/OSGSimpleStatisticsForeground.h>
 #include <OpenSG/OSGFieldFactory.h>
 
 #include <OpenSG/OSGFieldContainerFactory.h>
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/OSGSceneFileHandler.h>
+
+#include <OpenSG/OSGSimpleStatisticsForeground.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -47,24 +48,38 @@ OSG_USING_NAMESPACE
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-PhysicsBodyPtr buildSphere(void);
-PhysicsBodyPtr buildBox(void);
-void makeExplosion(Pnt3f Location, Real32 Force);
+void buildCar();
+void buildTriMesh(void);
+void buildSphere(void);
+void buildBox(void);
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+NodePtr TriGeometryBase;
 
 PhysicsHandlerPtr physHandler;
 PhysicsWorldPtr physicsWorld;
-PhysicsSpacePtr physicsSpace;
+PhysicsHashSpacePtr physicsSpace;
 
 //just for hierarchy
 NodePtr spaceGroupNode;
-std::vector<PhysicsBodyPtr> allPhysicsBodies;
 
 NodePtr rootNode;
 
 bool ExitApp = false;
+
+//Define the different Geom Categories
+//These are used as bit masks
+UInt64 TerrainCategory = 1;
+UInt64 BoxCategory = 2;
+UInt64 SphereCategory = 4;
+UInt64 TriCategory = 8;
+
+
+Real32 frand(void)
+{
+    return static_cast<Real32>(rand()%RAND_MAX)/static_cast<Real32>(RAND_MAX);
+}
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -81,35 +96,24 @@ public:
        {
        case KeyEvent::KEY_S:
             {
-                allPhysicsBodies.push_back(buildSphere());
+                buildSphere();
             }
             break;
        case KeyEvent::KEY_B:
             {
-                allPhysicsBodies.push_back(buildBox());
+                buildBox();
             }
             break;
-       case KeyEvent::KEY_E:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 1280.0f);
-           break;
-       case KeyEvent::KEY_1:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 20.0f);
-           break;
-       case KeyEvent::KEY_2:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 80.0f);
-           break;
-       case KeyEvent::KEY_3:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 320.0f);
-           break;
-       case KeyEvent::KEY_4:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 1280.0f);
-           break;
-       case KeyEvent::KEY_5:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 5120.0f);
-           break;
-       case KeyEvent::KEY_6:
-           makeExplosion(Pnt3f(0.0f,0.0f,-5.0f), 20480.0f);
-           break;
+       case KeyEvent::KEY_Z:
+            {
+                //SceneFileHandler::the().write(rootNode, "scene.osb");
+            }
+            break;
+       case KeyEvent::KEY_T:
+            {
+                buildTriMesh();
+            }
+            break;
        }
    }
 
@@ -181,23 +185,6 @@ class TutorialUpdateListener : public UpdateListener
     }
 };
 
-void makeExplosion(Pnt3f Location, Real32 Impulse)
-{
-    for(UInt32 i(0) ; i<allPhysicsBodies.size() ; ++i)
-    {
-        Vec3f Direction(allPhysicsBodies[i]->getPosition()-Location);
-
-        Real32 Distance(Direction.length());
-        Direction.normalize();
-
-        allPhysicsBodies[i]->addForce(physicsWorld->impulseToForce(physHandler->getStepSize(), Direction*Impulse*(1.0f/Distance)));
-        //The bodies need to be enabled because they may be auto-disabled when they
-        //come to rest
-        //The bodies are not re-enabled untill a new collision is detected
-        allPhysicsBodies[i]->setEnable(true);
-    }
-}
-
 // Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
 {
@@ -235,13 +222,13 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 05Explosion Window");
+                                        "OpenSG 07Collisions Window");
 
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
 
     //Make Torus Node
-    NodePtr TorusNode = makeTorus(.5, 2, 32, 32);
+    TriGeometryBase = makeTorus(.55, 1.5, 16, 16);
 
     //Make Main Scene Node
 	NodePtr scene = makeCoredNode<Group>();
@@ -277,18 +264,17 @@ int main(int argc, char **argv)
                               PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
                               PhysicsWorld::GravityFieldMask);
 
-    //physicsSpace = PhysicsSimpleSpace::create();
-    //physicsSpace = PhysicsQuadTreeSpace::create();
-    //physicsSpace = PhysicsHashSpace::create();
-    physicsSpace = PhysicsSweepAndPruneSpace::create();
+    //Create the Collision Space
+    physicsSpace = PhysicsHashSpace::create();
 
+    //Setup the default collision parameters
     CollisionContactParametersPtr DefaultCollisionParams = CollisionContactParameters::createEmpty();
     beginEditCP(DefaultCollisionParams);
-        DefaultCollisionParams->setMode(dContactApprox1 | dContactBounce);
+        DefaultCollisionParams->setMode(dContactApprox1);
         DefaultCollisionParams->setMu(0.3);
         DefaultCollisionParams->setMu2(0.0);
-        DefaultCollisionParams->setBounce(0.2);
-        DefaultCollisionParams->setBounceSpeedThreshold(0.1);
+        DefaultCollisionParams->setBounce(0.0);
+        DefaultCollisionParams->setBounceSpeedThreshold(0.0);
         DefaultCollisionParams->setSoftCFM(0.1);
         DefaultCollisionParams->setSoftERP(0.2);
         DefaultCollisionParams->setMotion1(0.0);
@@ -301,6 +287,48 @@ int main(int argc, char **argv)
     beginEditCP(physicsSpace, PhysicsSpace::DefaultCollisionParametersFieldMask);
         physicsSpace->setDefaultCollisionParameters(DefaultCollisionParams);
     endEditCP(physicsSpace, PhysicsSpace::DefaultCollisionParametersFieldMask);
+
+    //Bouncy Sphere collision parameters
+    CollisionContactParametersPtr BouncySphereCollisionParams = CollisionContactParameters::createEmpty();
+    beginEditCP(BouncySphereCollisionParams);
+        BouncySphereCollisionParams->setMode(dContactApprox1 | dContactBounce);
+        BouncySphereCollisionParams->setMu(0.3);
+        BouncySphereCollisionParams->setMu2(0.0);
+        BouncySphereCollisionParams->setBounce(0.8);
+        BouncySphereCollisionParams->setBounceSpeedThreshold(0.1);
+        BouncySphereCollisionParams->setSoftCFM(0.1);
+        BouncySphereCollisionParams->setSoftERP(0.2);
+        BouncySphereCollisionParams->setMotion1(0.0);
+        BouncySphereCollisionParams->setMotion2(0.0);
+        BouncySphereCollisionParams->setMotionN(0.0);
+        BouncySphereCollisionParams->setSlip1(0.0);
+        BouncySphereCollisionParams->setSlip2(0.0);
+    endEditCP(BouncySphereCollisionParams);
+    physicsSpace->addCollisionContactCategory(SphereCategory, TerrainCategory, BouncySphereCollisionParams);
+    physicsSpace->addCollisionContactCategory(SphereCategory, BoxCategory, BouncySphereCollisionParams);
+    physicsSpace->addCollisionContactCategory(SphereCategory, SphereCategory, BouncySphereCollisionParams);
+    physicsSpace->addCollisionContactCategory(SphereCategory, TriCategory, BouncySphereCollisionParams);
+
+    //Soft Box collision parameters
+    CollisionContactParametersPtr SlickBoxParams = CollisionContactParameters::createEmpty();
+    beginEditCP(SlickBoxParams);
+        SlickBoxParams->setMode(dContactApprox1);
+        SlickBoxParams->setMu(0.01);
+        SlickBoxParams->setMu2(0.0);
+        SlickBoxParams->setBounce(0.0);
+        SlickBoxParams->setBounceSpeedThreshold(0.0);
+        SlickBoxParams->setSoftCFM(0.0);
+        SlickBoxParams->setSoftERP(0.2);
+        SlickBoxParams->setMotion1(0.0);
+        SlickBoxParams->setMotion2(0.0);
+        SlickBoxParams->setMotionN(0.0);
+        SlickBoxParams->setSlip1(0.0);
+        SlickBoxParams->setSlip2(0.0);
+    endEditCP(SlickBoxParams);
+    physicsSpace->addCollisionContactCategory(BoxCategory, TerrainCategory, SlickBoxParams);
+    physicsSpace->addCollisionContactCategory(BoxCategory, BoxCategory, SlickBoxParams);
+    //physicsSpace->addCollisionContactCategory(BoxCategory, SphereCategory, SlickBoxParams);
+    physicsSpace->addCollisionContactCategory(BoxCategory, TriCategory, SlickBoxParams);
 
     physHandler = PhysicsHandler::create();
     beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
@@ -339,11 +367,15 @@ int main(int argc, char **argv)
 
     //create Physical Attachments
 	PhysicsBoxGeomPtr planeGeom = PhysicsBoxGeom::create();
-    beginEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+    beginEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::CategoryBitsFieldMask);
         planeGeom->setLengths(Vec3f(30.0, 30.0, 1.0));
         //add geoms to space for collision
         planeGeom->setSpace(physicsSpace);
-    endEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
+        //Set the Geoms Category - this will be used by the collision space 
+        //for determining if collision tests should occur
+        //and for selecting the collision contact parameters when a collision does occur
+        planeGeom->setCategoryBits(TerrainCategory);
+    endEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::CategoryBitsFieldMask);
 
 	//add Attachments to nodes...
     beginEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
@@ -358,7 +390,7 @@ int main(int argc, char **argv)
 	beginEditCP(scene, Node::ChildrenFieldMask);
 	    scene->addChild(spaceGroupNode);
 	endEditCP(scene, Node::ChildrenFieldMask);
-
+    
     //Create Statistics Foreground
     SimpleStatisticsForegroundPtr PhysicsStatForeground = SimpleStatisticsForeground::create();
     beginEditCP(PhysicsStatForeground);
@@ -377,6 +409,9 @@ int main(int argc, char **argv)
         PhysicsStatForeground->addElement(PhysicsHandler::statNPhysicsSteps, 
             "%d simulation steps per frame");
     endEditCP(PhysicsStatForeground);
+
+
+
 
     // tell the manager what to manage
     mgr->setRoot  (rootNode);
@@ -411,14 +446,12 @@ void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }
-
-
 //////////////////////////////////////////////////////////////////////////
 //! build a box
 //////////////////////////////////////////////////////////////////////////
-PhysicsBodyPtr buildBox(void)
+void buildBox(void)
 {
-    Vec3f Lengths((Real32)(rand()%2)+1.0, (Real32)(rand()%2)+1.0, (Real32)(rand()%2)+1.0);
+    Vec3f Lengths(frand()*2.0+0.5, frand()*2.0+0.5, frand()*2.0+0.5);
     Matrix m;
     //create OpenSG mesh
     GeometryPtr box;
@@ -435,8 +468,8 @@ PhysicsBodyPtr buildBox(void)
     TransformPtr boxTrans;
     NodePtr boxTransNode = makeCoredNode<Transform>(&boxTrans);
     m.setIdentity();
-    Real32 randX = (Real32)(rand()%10)-5.0;
-    Real32 randY = (Real32)(rand()%10)-5.0;
+    Real32 randX = frand()*10.0-5.0;
+    Real32 randY = frand()*10.0-5.0;
     m.setTranslate(randX, randY, 10.0);
     beginEditCP(boxTrans, Transform::MatrixFieldMask);
         boxTrans->setMatrix(m);
@@ -450,11 +483,12 @@ PhysicsBodyPtr buildBox(void)
     boxBody->setBoxMass(1.0, Lengths.x(), Lengths.y(), Lengths.z());
 
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
-    beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask  | PhysicsBoxGeom::LengthsFieldMask);
+    beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask  | PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::CategoryBitsFieldMask);
         boxGeom->setBody(boxBody);
         boxGeom->setSpace(physicsSpace);
         boxGeom->setLengths(Lengths);
-    endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
+        boxGeom->setCategoryBits(BoxCategory);
+    endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::CategoryBitsFieldMask);
 
     //add attachments
     beginEditCP(boxNode, Node::AttachmentsFieldMask);
@@ -469,16 +503,14 @@ PhysicsBodyPtr buildBox(void)
     beginEditCP(spaceGroupNode, Node::ChildrenFieldMask);
         spaceGroupNode->addChild(boxTransNode);
     endEditCP(spaceGroupNode, Node::ChildrenFieldMask);
-
-    return boxBody;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //! build a sphere
 //////////////////////////////////////////////////////////////////////////
-PhysicsBodyPtr buildSphere(void)
+void buildSphere(void)
 {
-    Real32 Radius((Real32)(rand()%2)*0.5+0.5);
+    Real32 Radius(frand()*1.5+0.2);
     Matrix m;
     //create OpenSG mesh
     GeometryPtr sphere;
@@ -495,27 +527,27 @@ PhysicsBodyPtr buildSphere(void)
     TransformPtr sphereTrans;
     NodePtr sphereTransNode = makeCoredNode<Transform>(&sphereTrans);
     m.setIdentity();
-    Real32 randX = (Real32)(rand()%10)-5.0;
-    Real32 randY = (Real32)(rand()%10)-5.0;
+    Real32 randX = frand()*10.0-5.0;
+    Real32 randY = frand()*10.0-5.0;
     m.setTranslate(randX, randY, 10.0);
     beginEditCP(sphereTrans, Transform::MatrixFieldMask);
     sphereTrans->setMatrix(m);
     endEditCP(sphereTrans);
     //create ODE data
     PhysicsBodyPtr sphereBody = PhysicsBody::create(physicsWorld);
-    beginEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+    beginEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::AngularDampingFieldMask);
         sphereBody->setPosition(Vec3f(randX, randY, 10.0));
-        sphereBody->setLinearDamping(0.0001);
         sphereBody->setAngularDamping(0.0001);
-    endEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
-    sphereBody->setSphereMass(1.0,Radius);
+    endEditCP(sphereBody, PhysicsBody::PositionFieldMask | PhysicsBody::AngularDampingFieldMask);
+    sphereBody->setSphereMass(0.4,Radius);
 
     PhysicsSphereGeomPtr sphereGeom = PhysicsSphereGeom::create();
-    beginEditCP(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask | PhysicsSphereGeom::RadiusFieldMask);
+    beginEditCP(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask | PhysicsSphereGeom::RadiusFieldMask | PhysicsSphereGeom::CategoryBitsFieldMask);
         sphereGeom->setBody(sphereBody);
         sphereGeom->setSpace(physicsSpace);
         sphereGeom->setRadius(Radius);
-    endEditCP(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask | PhysicsSphereGeom::RadiusFieldMask);
+        sphereGeom->setCategoryBits(SphereCategory);
+    endEditCP(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask | PhysicsSphereGeom::RadiusFieldMask | PhysicsSphereGeom::CategoryBitsFieldMask);
     
     //add attachments
     beginEditCP(sphereNode, Node::AttachmentsFieldMask);
@@ -529,6 +561,83 @@ PhysicsBodyPtr buildSphere(void)
     beginEditCP(spaceGroupNode, Node::ChildrenFieldMask);
     spaceGroupNode->addChild(sphereTransNode);
     endEditCP(spaceGroupNode);
+}
 
-    return sphereBody;
+//////////////////////////////////////////////////////////////////////////
+//! trimesh defined by filenode will be loaded
+//////////////////////////////////////////////////////////////////////////
+void buildTriMesh(void)
+{
+    //NodePtr tri = makeTorus(0.5, 1.0, 24, 12);
+    //NodePtr tri = makeBox(10.0, 10.0, 10.0, 1, 1, 1);
+    NodePtr tri = Node::Ptr::dcast(TriGeometryBase->shallowCopy());
+    if(tri!=NullFC)
+    {
+        GeometryPtr triGeo = GeometryPtr::dcast(tri->getCore()); 
+        Matrix m;
+        SimpleMaterialPtr tri_mat = SimpleMaterial::create();
+        beginEditCP(tri_mat);
+        tri_mat->setAmbient(Color3f(0.1,0.1,0.2));
+        tri_mat->setDiffuse(Color3f(1.0,0.1,0.7));
+        endEditCP(tri_mat);
+        triGeo->setMaterial(tri_mat);
+        TransformPtr triTrans;
+        NodePtr triTransNode = makeCoredNode<Transform>(&triTrans);
+        m.setIdentity();
+        Real32 randX = frand()*10.0-5.0;
+        Real32 randY = frand()*10.0-5.0;
+        m.setTranslate(randX, randY, 18.0);
+        triTrans->setMatrix(m);
+
+        //create ODE data
+        Vec3f GeometryBounds(calcMinGeometryBounds(triGeo));
+        PhysicsBodyPtr triBody = PhysicsBody::create(physicsWorld);
+        beginEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+            triBody->setPosition(Vec3f(randX, randY, 18.0));
+            triBody->setLinearDamping(0.0001);
+            triBody->setAngularDamping(0.0001);
+        endEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+            triBody->setBoxMass(1.0,GeometryBounds.x(), GeometryBounds.y(), GeometryBounds.z());
+        PhysicsGeomPtr triGeom;
+        if(true)
+        {
+            triGeom = PhysicsTriMeshGeom::create();
+            beginEditCP(triGeom, PhysicsTriMeshGeom::BodyFieldMask | 
+                            PhysicsTriMeshGeom::SpaceFieldMask | 
+                            PhysicsTriMeshGeom::GeometryNodeFieldMask);
+                triGeom->setBody(triBody);
+                //add geom to space for collision
+                triGeom->setSpace(physicsSpace);
+                //set the geometryNode to fill the ode-triMesh
+                PhysicsTriMeshGeom::Ptr::dcast(triGeom)->setGeometryNode(tri);
+            endEditCP(triGeom, PhysicsTriMeshGeom::BodyFieldMask | 
+                            PhysicsTriMeshGeom::SpaceFieldMask | 
+                            PhysicsTriMeshGeom::GeometryNodeFieldMask);
+        }
+        else
+        {
+
+            triGeom = PhysicsBoxGeom::create();
+            beginEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
+                triGeom->setBody(triBody);
+                triGeom->setSpace(physicsSpace);
+                PhysicsBoxGeom::Ptr::dcast(triGeom)->setLengths(GeometryBounds);
+
+            endEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
+        }
+        beginEditCP(triGeom, PhysicsGeom::CategoryBitsFieldMask);
+            triGeom->setCategoryBits(TriCategory);
+        endEditCP(triGeom, PhysicsGeom::CategoryBitsFieldMask);
+        
+        //add attachments
+        tri->addAttachment(triGeom);
+        triTransNode->addAttachment(triBody);
+        //add to SceneGraph
+        triTransNode->addChild(tri);
+        spaceGroupNode->addChild(triTransNode);
+    }
+    else
+    {
+        SLOG << "Could not read MeshData!" << endLog;
+    }
 }

@@ -5,11 +5,11 @@
 	parent="Attachment"
 	library="Physics"
 	pointerfieldtypes="both"
-	structure="concrete"
+	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="cleanup"
@@ -34,6 +34,41 @@
 		visibility="external"
 		defaultValue="NullFC"
         header="ODE/OSGPhysicsHandlerFields.h"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="defaultCollisionParameters"
+		type="CollisionContactParametersPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+        header="OSGCollisionContactParametersFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="category1"
+		type="UInt64"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="category2"
+		type="UInt64"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="categoryCollisionParameters"
+		type="CollisionContactParametersPtr"
+		cardinality="multi"
+		visibility="external"
+        header="OSGCollisionContactParametersFields.h"
 		access="protected"
 	>
 	</Field>

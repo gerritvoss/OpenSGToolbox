@@ -36,72 +36,31 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGPHYSICSSPACE_H_
-#define _OSGPHYSICSSPACE_H_
+#ifndef _OSGCOLLISIONCONTACTPARAMETERS_H_
+#define _OSGCOLLISIONCONTACTPARAMETERS_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
+
+#include "OSGCollisionContactParametersBase.h"
 #include <ode/ode.h>
-
-#include "OSGPhysicsSpaceBase.h"
-#include "ODE/OSGPhysicsWorldFields.h"
-
-#define MAX_PHYS_CONTACTS 32
 
 OSG_BEGIN_NAMESPACE
 
-class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
+/*! \brief CollisionContactParameters class. See \ref 
+           PagePhysicsCollisionContactParameters for a description.
+*/
+
+class OSG_PHYSICSLIB_DLLMAPPING CollisionContactParameters : public CollisionContactParametersBase
 {
   private:
 
-    typedef PhysicsSpaceBase Inherited;
+    typedef CollisionContactParametersBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific                             */
-	  /*! \{                                                                 */
-	  void onCreate(const PhysicsSpace *id = NULL);
-	  void onDestroy();
-	  /*! \}                                                                 */
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-      dSpaceID getSpaceID(void) const;
-      PhysicsHandlerPtr getParentHandler(void) const;
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific                             */
-	  /*! \{																*/
-      void initSpace();
-	  void AddGeom( dGeomID );
-	  void RemoveGeom( dGeomID );
-	  bool ContainsGeom( dGeomID );
-	  void AddSpace( dSpaceID );
-	  void RemoveSpace( dSpaceID );
-	  bool ContainsSpace( dSpaceID );
-	  Int32 GetNumGeoms();
-	  dGeomID GetGeom( Int32 i );
-
-	  void Collide( PhysicsWorldPtr w );
-      static void collisionCallback (void *data, dGeomID o1, dGeomID o2);
-
-      void addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParametersPtr ContactParams);
-      void removeCollisionContactCategory(UInt64 Category1, UInt64 Category2);
-      CollisionContactParametersPtr getCollisionContactCategory(UInt64 Category1, UInt64 Category2);
-      CollisionContactParametersPtr getCollisionContact(UInt64 Category1, UInt64 Category2);
-
-
-	  /*! \}                                                                 */
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -119,58 +78,49 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    void updateODEContactJoint(dContact &d) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in PhysicsSpaceBase.
-    dSpaceID _SpaceID;
-    dWorldID _CollideWorldID;
-
-    dJointGroupID _ColJointGroupId;
-    std::vector<dContact> _ContactJoints;
-
-    void setSpaceID(dSpaceID id);
-    CollisionContactParametersPtr createDefaultContactParams(void) const;
+    // Variables should all be in CollisionContactParametersBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    PhysicsSpace(void);
-    PhysicsSpace(const PhysicsSpace &source);
+    CollisionContactParameters(void);
+    CollisionContactParameters(const CollisionContactParameters &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PhysicsSpace(void); 
+    virtual ~CollisionContactParameters(void); 
 
-    void collisionCallback (dGeomID o1, dGeomID o2);
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class PhysicsSpaceBase;
-    friend class PhysicsHandler;
-    friend class PhysicsGeom;
+    friend class CollisionContactParametersBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const PhysicsSpace &source);
+    void operator =(const CollisionContactParameters &source);
 };
 
-typedef PhysicsSpace *PhysicsSpaceP;
+typedef CollisionContactParameters *CollisionContactParametersP;
 
 OSG_END_NAMESPACE
 
-#include "OSGPhysicsSpaceBase.inl"
-#include "OSGPhysicsSpace.inl"
+#include "OSGCollisionContactParametersBase.inl"
+#include "OSGCollisionContactParameters.inl"
 
-#define OSGPHYSICSSPACE_HEADER_CVSID "@(#)$Id: OSGPhysicsSpace.h,v 1.2 2006/08/19 00:21:47 dirk Exp $"
+#define OSGCOLLISIONCONTACTPARAMETERS_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGPHYSICSSPACE_H_ */
+#endif /* _OSGCOLLISIONCONTACTPARAMETERS_H_ */

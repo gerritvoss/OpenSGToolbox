@@ -1,6 +1,9 @@
 /************************************************************************/
 /* add includes                                                         */
 /************************************************************************/
+#include <OpenSG/OSGConfig.h>
+#include "OSGPhysicsDef.h"
+
 #include "ODE/OSGPhysicsHandler.h"
 #include "ODE/OSGPhysicsWorld.h"
 #include "ODE/OSGPhysicsBody.h"
@@ -16,6 +19,7 @@
 #include "ODE/Spaces/OSGPhysicsHashSpace.h"
 #include "ODE/Spaces/OSGPhysicsSweepAndPruneSpace.h"
 #include "ODE/Spaces/OSGPhysicsQuadTreeSpace.h"
+#include "ODE/Spaces/OSGCollisionContactParameters.h"
 
 #include "ODE/Joints/OSGPhysicsAMotorJoint.h"
 #include "ODE/Joints/OSGPhysicsLMotorJoint.h"

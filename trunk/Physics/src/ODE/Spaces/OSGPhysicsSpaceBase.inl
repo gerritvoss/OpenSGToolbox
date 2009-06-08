@@ -67,32 +67,6 @@ OSG::UInt32 PhysicsSpaceBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
-//! create a new instance of the class
-inline
-PhysicsSpacePtr PhysicsSpaceBase::create(void) 
-{
-    PhysicsSpacePtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PhysicsSpacePtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-PhysicsSpacePtr PhysicsSpaceBase::createEmpty(void) 
-{ 
-    PhysicsSpacePtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
@@ -115,6 +89,34 @@ inline
 SFPhysicsHandlerPtr *PhysicsSpaceBase::getSFInternalParentHandler(void)
 {
     return &_sfInternalParentHandler;
+}
+
+//! Get the PhysicsSpace::_sfDefaultCollisionParameters field.
+inline
+SFCollisionContactParametersPtr *PhysicsSpaceBase::getSFDefaultCollisionParameters(void)
+{
+    return &_sfDefaultCollisionParameters;
+}
+
+//! Get the PhysicsSpace::_mfCategory1 field.
+inline
+MFUInt64 *PhysicsSpaceBase::getMFCategory1(void)
+{
+    return &_mfCategory1;
+}
+
+//! Get the PhysicsSpace::_mfCategory2 field.
+inline
+MFUInt64 *PhysicsSpaceBase::getMFCategory2(void)
+{
+    return &_mfCategory2;
+}
+
+//! Get the PhysicsSpace::_mfCategoryCollisionParameters field.
+inline
+MFCollisionContactParametersPtr *PhysicsSpaceBase::getMFCategoryCollisionParameters(void)
+{
+    return &_mfCategoryCollisionParameters;
 }
 
 
@@ -181,6 +183,90 @@ void PhysicsSpaceBase::setInternalParentHandler(const PhysicsHandlerPtr &value)
     _sfInternalParentHandler.setValue(value);
 }
 
+//! Get the value of the PhysicsSpace::_sfDefaultCollisionParameters field.
+inline
+CollisionContactParametersPtr &PhysicsSpaceBase::getDefaultCollisionParameters(void)
+{
+    return _sfDefaultCollisionParameters.getValue();
+}
+
+//! Get the value of the PhysicsSpace::_sfDefaultCollisionParameters field.
+inline
+const CollisionContactParametersPtr &PhysicsSpaceBase::getDefaultCollisionParameters(void) const
+{
+    return _sfDefaultCollisionParameters.getValue();
+}
+
+//! Set the value of the PhysicsSpace::_sfDefaultCollisionParameters field.
+inline
+void PhysicsSpaceBase::setDefaultCollisionParameters(const CollisionContactParametersPtr &value)
+{
+    _sfDefaultCollisionParameters.setValue(value);
+}
+
+
+//! Get the value of the \a index element the PhysicsSpace::_mfCategory1 field.
+inline
+UInt64 &PhysicsSpaceBase::getCategory1(const UInt32 index)
+{
+    return _mfCategory1[index];
+}
+
+//! Get the PhysicsSpace::_mfCategory1 field.
+inline
+MFUInt64 &PhysicsSpaceBase::getCategory1(void)
+{
+    return _mfCategory1;
+}
+
+//! Get the PhysicsSpace::_mfCategory1 field.
+inline
+const MFUInt64 &PhysicsSpaceBase::getCategory1(void) const
+{
+    return _mfCategory1;
+}
+
+//! Get the value of the \a index element the PhysicsSpace::_mfCategory2 field.
+inline
+UInt64 &PhysicsSpaceBase::getCategory2(const UInt32 index)
+{
+    return _mfCategory2[index];
+}
+
+//! Get the PhysicsSpace::_mfCategory2 field.
+inline
+MFUInt64 &PhysicsSpaceBase::getCategory2(void)
+{
+    return _mfCategory2;
+}
+
+//! Get the PhysicsSpace::_mfCategory2 field.
+inline
+const MFUInt64 &PhysicsSpaceBase::getCategory2(void) const
+{
+    return _mfCategory2;
+}
+
+//! Get the value of the \a index element the PhysicsSpace::_mfCategoryCollisionParameters field.
+inline
+CollisionContactParametersPtr &PhysicsSpaceBase::getCategoryCollisionParameters(const UInt32 index)
+{
+    return _mfCategoryCollisionParameters[index];
+}
+
+//! Get the PhysicsSpace::_mfCategoryCollisionParameters field.
+inline
+MFCollisionContactParametersPtr &PhysicsSpaceBase::getCategoryCollisionParameters(void)
+{
+    return _mfCategoryCollisionParameters;
+}
+
+//! Get the PhysicsSpace::_mfCategoryCollisionParameters field.
+inline
+const MFCollisionContactParametersPtr &PhysicsSpaceBase::getCategoryCollisionParameters(void) const
+{
+    return _mfCategoryCollisionParameters;
+}
 
 OSG_END_NAMESPACE
 

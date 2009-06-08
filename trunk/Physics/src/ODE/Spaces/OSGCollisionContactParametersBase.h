@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PhysicsSpace
+ **     class CollisionContactParameters
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPHYSICSSPACEBASE_H_
-#define _OSGPHYSICSSPACEBASE_H_
+#ifndef _OSGCOLLISIONCONTACTPARAMETERSBASE_H_
+#define _OSGCOLLISIONCONTACTPARAMETERSBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,55 +65,70 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachment.h> // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/OSGBoolFields.h> // Cleanup type
-#include <OpenSG/OSGInt32Fields.h> // Sublevel type
-#include "ODE/OSGPhysicsHandlerFields.h" // InternalParentHandler type
-#include "OSGCollisionContactParametersFields.h" // DefaultCollisionParameters type
-#include <OpenSG/OSGUInt64Fields.h> // Category1 type
-#include <OpenSG/OSGUInt64Fields.h> // Category2 type
-#include "OSGCollisionContactParametersFields.h" // CategoryCollisionParameters type
+#include <OpenSG/OSGInt32Fields.h> // Mode type
+#include <OpenSG/OSGReal32Fields.h> // Mu type
+#include <OpenSG/OSGReal32Fields.h> // Mu2 type
+#include <OpenSG/OSGReal32Fields.h> // Bounce type
+#include <OpenSG/OSGReal32Fields.h> // BounceSpeedThreshold type
+#include <OpenSG/OSGReal32Fields.h> // SoftCFM type
+#include <OpenSG/OSGReal32Fields.h> // SoftERP type
+#include <OpenSG/OSGReal32Fields.h> // Motion1 type
+#include <OpenSG/OSGReal32Fields.h> // Motion2 type
+#include <OpenSG/OSGReal32Fields.h> // MotionN type
+#include <OpenSG/OSGReal32Fields.h> // Slip1 type
+#include <OpenSG/OSGReal32Fields.h> // Slip2 type
 
-#include "OSGPhysicsSpaceFields.h"
+#include "OSGCollisionContactParametersFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class PhysicsSpace;
+class CollisionContactParameters;
 class BinaryDataHandler;
 
-//! \brief PhysicsSpace Base Class.
+//! \brief CollisionContactParameters Base Class.
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
+class OSG_PHYSICSLIB_DLLMAPPING CollisionContactParametersBase : public AttachmentContainer
 {
   private:
 
-    typedef Attachment    Inherited;
+    typedef AttachmentContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PhysicsSpacePtr  Ptr;
+    typedef CollisionContactParametersPtr  Ptr;
 
     enum
     {
-        CleanupFieldId                     = Inherited::NextFieldId,
-        SublevelFieldId                    = CleanupFieldId                     + 1,
-        InternalParentHandlerFieldId       = SublevelFieldId                    + 1,
-        DefaultCollisionParametersFieldId  = InternalParentHandlerFieldId       + 1,
-        Category1FieldId                   = DefaultCollisionParametersFieldId  + 1,
-        Category2FieldId                   = Category1FieldId                   + 1,
-        CategoryCollisionParametersFieldId = Category2FieldId                   + 1,
-        NextFieldId                        = CategoryCollisionParametersFieldId + 1
+        ModeFieldId                 = Inherited::NextFieldId,
+        MuFieldId                   = ModeFieldId                 + 1,
+        Mu2FieldId                  = MuFieldId                   + 1,
+        BounceFieldId               = Mu2FieldId                  + 1,
+        BounceSpeedThresholdFieldId = BounceFieldId               + 1,
+        SoftCFMFieldId              = BounceSpeedThresholdFieldId + 1,
+        SoftERPFieldId              = SoftCFMFieldId              + 1,
+        Motion1FieldId              = SoftERPFieldId              + 1,
+        Motion2FieldId              = Motion1FieldId              + 1,
+        MotionNFieldId              = Motion2FieldId              + 1,
+        Slip1FieldId                = MotionNFieldId              + 1,
+        Slip2FieldId                = Slip1FieldId                + 1,
+        NextFieldId                 = Slip2FieldId                + 1
     };
 
-    static const OSG::BitVector CleanupFieldMask;
-    static const OSG::BitVector SublevelFieldMask;
-    static const OSG::BitVector InternalParentHandlerFieldMask;
-    static const OSG::BitVector DefaultCollisionParametersFieldMask;
-    static const OSG::BitVector Category1FieldMask;
-    static const OSG::BitVector Category2FieldMask;
-    static const OSG::BitVector CategoryCollisionParametersFieldMask;
+    static const OSG::BitVector ModeFieldMask;
+    static const OSG::BitVector MuFieldMask;
+    static const OSG::BitVector Mu2FieldMask;
+    static const OSG::BitVector BounceFieldMask;
+    static const OSG::BitVector BounceSpeedThresholdFieldMask;
+    static const OSG::BitVector SoftCFMFieldMask;
+    static const OSG::BitVector SoftERPFieldMask;
+    static const OSG::BitVector Motion1FieldMask;
+    static const OSG::BitVector Motion2FieldMask;
+    static const OSG::BitVector MotionNFieldMask;
+    static const OSG::BitVector Slip1FieldMask;
+    static const OSG::BitVector Slip2FieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -140,25 +155,61 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFCleanup        (void);
-           SFInt32             *getSFSublevel       (void);
-           SFCollisionContactParametersPtr *getSFDefaultCollisionParameters(void);
+           SFInt32             *getSFMode           (void);
+           SFReal32            *getSFMu             (void);
+           SFReal32            *getSFMu2            (void);
+           SFReal32            *getSFBounce         (void);
+           SFReal32            *getSFBounceSpeedThreshold(void);
+           SFReal32            *getSFSoftCFM        (void);
+           SFReal32            *getSFSoftERP        (void);
+           SFReal32            *getSFMotion1        (void);
+           SFReal32            *getSFMotion2        (void);
+           SFReal32            *getSFMotionN        (void);
+           SFReal32            *getSFSlip1          (void);
+           SFReal32            *getSFSlip2          (void);
 
-           bool                &getCleanup        (void);
-     const bool                &getCleanup        (void) const;
-           Int32               &getSublevel       (void);
-     const Int32               &getSublevel       (void) const;
-           CollisionContactParametersPtr &getDefaultCollisionParameters(void);
-     const CollisionContactParametersPtr &getDefaultCollisionParameters(void) const;
+           Int32               &getMode           (void);
+     const Int32               &getMode           (void) const;
+           Real32              &getMu             (void);
+     const Real32              &getMu             (void) const;
+           Real32              &getMu2            (void);
+     const Real32              &getMu2            (void) const;
+           Real32              &getBounce         (void);
+     const Real32              &getBounce         (void) const;
+           Real32              &getBounceSpeedThreshold(void);
+     const Real32              &getBounceSpeedThreshold(void) const;
+           Real32              &getSoftCFM        (void);
+     const Real32              &getSoftCFM        (void) const;
+           Real32              &getSoftERP        (void);
+     const Real32              &getSoftERP        (void) const;
+           Real32              &getMotion1        (void);
+     const Real32              &getMotion1        (void) const;
+           Real32              &getMotion2        (void);
+     const Real32              &getMotion2        (void) const;
+           Real32              &getMotionN        (void);
+     const Real32              &getMotionN        (void) const;
+           Real32              &getSlip1          (void);
+     const Real32              &getSlip1          (void) const;
+           Real32              &getSlip2          (void);
+     const Real32              &getSlip2          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCleanup        ( const bool &value );
-     void setSublevel       ( const Int32 &value );
-     void setDefaultCollisionParameters( const CollisionContactParametersPtr &value );
+     void setMode           ( const Int32 &value );
+     void setMu             ( const Real32 &value );
+     void setMu2            ( const Real32 &value );
+     void setBounce         ( const Real32 &value );
+     void setBounceSpeedThreshold( const Real32 &value );
+     void setSoftCFM        ( const Real32 &value );
+     void setSoftERP        ( const Real32 &value );
+     void setMotion1        ( const Real32 &value );
+     void setMotion2        ( const Real32 &value );
+     void setMotionN        ( const Real32 &value );
+     void setSlip1          ( const Real32 &value );
+     void setSlip2          ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -178,6 +229,22 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  CollisionContactParametersPtr      create          (void); 
+    static  CollisionContactParametersPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -185,57 +252,33 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFBool              _sfCleanup;
-    SFInt32             _sfSublevel;
-    SFPhysicsHandlerPtr   _sfInternalParentHandler;
-    SFCollisionContactParametersPtr   _sfDefaultCollisionParameters;
-    MFUInt64            _mfCategory1;
-    MFUInt64            _mfCategory2;
-    MFCollisionContactParametersPtr   _mfCategoryCollisionParameters;
+    SFInt32             _sfMode;
+    SFReal32            _sfMu;
+    SFReal32            _sfMu2;
+    SFReal32            _sfBounce;
+    SFReal32            _sfBounceSpeedThreshold;
+    SFReal32            _sfSoftCFM;
+    SFReal32            _sfSoftERP;
+    SFReal32            _sfMotion1;
+    SFReal32            _sfMotion2;
+    SFReal32            _sfMotionN;
+    SFReal32            _sfSlip1;
+    SFReal32            _sfSlip2;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    PhysicsSpaceBase(void);
-    PhysicsSpaceBase(const PhysicsSpaceBase &source);
+    CollisionContactParametersBase(void);
+    CollisionContactParametersBase(const CollisionContactParametersBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PhysicsSpaceBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFPhysicsHandlerPtr *getSFInternalParentHandler(void);
-           MFUInt64            *getMFCategory1      (void);
-           MFUInt64            *getMFCategory2      (void);
-           MFCollisionContactParametersPtr *getMFCategoryCollisionParameters(void);
-
-           PhysicsHandlerPtr   &getInternalParentHandler(void);
-     const PhysicsHandlerPtr   &getInternalParentHandler(void) const;
-           UInt64              &getCategory1      (UInt32 index);
-           MFUInt64            &getCategory1      (void);
-     const MFUInt64            &getCategory1      (void) const;
-           UInt64              &getCategory2      (UInt32 index);
-           MFUInt64            &getCategory2      (void);
-     const MFUInt64            &getCategory2      (void) const;
-           CollisionContactParametersPtr &getCategoryCollisionParameters(UInt32 index);
-           MFCollisionContactParametersPtr &getCategoryCollisionParameters(void);
-     const MFCollisionContactParametersPtr &getCategoryCollisionParameters(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setInternalParentHandler(const PhysicsHandlerPtr &value);
+    virtual ~CollisionContactParametersBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -243,13 +286,13 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PhysicsSpaceBase *pOther,
+    void executeSyncImpl(      CollisionContactParametersBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      PhysicsSpaceBase *pOther,
+    void executeSyncImpl(      CollisionContactParametersBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -279,7 +322,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const PhysicsSpaceBase &source);
+    void operator =(const CollisionContactParametersBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -287,17 +330,17 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 //---------------------------------------------------------------------------
 
 
-typedef PhysicsSpaceBase *PhysicsSpaceBaseP;
+typedef CollisionContactParametersBase *CollisionContactParametersBaseP;
 
-typedef osgIF<PhysicsSpaceBase::isNodeCore,
-              CoredNodePtr<PhysicsSpace>,
+typedef osgIF<CollisionContactParametersBase::isNodeCore,
+              CoredNodePtr<CollisionContactParameters>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PhysicsSpaceNodePtr;
+              >::_IRet CollisionContactParametersNodePtr;
 
-typedef RefPtr<PhysicsSpacePtr> PhysicsSpaceRefPtr;
+typedef RefPtr<CollisionContactParametersPtr> CollisionContactParametersRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSSPACEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGCOLLISIONCONTACTPARAMETERSBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGPHYSICSSPACEBASE_H_ */
+#endif /* _OSGCOLLISIONCONTACTPARAMETERSBASE_H_ */

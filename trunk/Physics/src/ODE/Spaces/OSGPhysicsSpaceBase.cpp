@@ -73,6 +73,18 @@ const OSG::BitVector  PhysicsSpaceBase::SublevelFieldMask =
 const OSG::BitVector  PhysicsSpaceBase::InternalParentHandlerFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsSpaceBase::InternalParentHandlerFieldId);
 
+const OSG::BitVector  PhysicsSpaceBase::DefaultCollisionParametersFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsSpaceBase::DefaultCollisionParametersFieldId);
+
+const OSG::BitVector  PhysicsSpaceBase::Category1FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsSpaceBase::Category1FieldId);
+
+const OSG::BitVector  PhysicsSpaceBase::Category2FieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsSpaceBase::Category2FieldId);
+
+const OSG::BitVector  PhysicsSpaceBase::CategoryCollisionParametersFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsSpaceBase::CategoryCollisionParametersFieldId);
+
 const OSG::BitVector PhysicsSpaceBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +99,18 @@ const OSG::BitVector PhysicsSpaceBase::MTInfluenceMask =
     
 */
 /*! \var PhysicsHandlerPtr PhysicsSpaceBase::_sfInternalParentHandler
+    
+*/
+/*! \var CollisionContactParametersPtr PhysicsSpaceBase::_sfDefaultCollisionParameters
+    
+*/
+/*! \var UInt64          PhysicsSpaceBase::_mfCategory1
+    
+*/
+/*! \var UInt64          PhysicsSpaceBase::_mfCategory2
+    
+*/
+/*! \var CollisionContactParametersPtr PhysicsSpaceBase::_mfCategoryCollisionParameters
     
 */
 
@@ -108,7 +132,27 @@ FieldDescription *PhysicsSpaceBase::_desc[] =
                      "InternalParentHandler", 
                      InternalParentHandlerFieldId, InternalParentHandlerFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getSFInternalParentHandler)
+                     (FieldAccessMethod) &PhysicsSpaceBase::getSFInternalParentHandler),
+    new FieldDescription(SFCollisionContactParametersPtr::getClassType(), 
+                     "defaultCollisionParameters", 
+                     DefaultCollisionParametersFieldId, DefaultCollisionParametersFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsSpaceBase::getSFDefaultCollisionParameters),
+    new FieldDescription(MFUInt64::getClassType(), 
+                     "category1", 
+                     Category1FieldId, Category1FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsSpaceBase::getMFCategory1),
+    new FieldDescription(MFUInt64::getClassType(), 
+                     "category2", 
+                     Category2FieldId, Category2FieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsSpaceBase::getMFCategory2),
+    new FieldDescription(MFCollisionContactParametersPtr::getClassType(), 
+                     "categoryCollisionParameters", 
+                     CategoryCollisionParametersFieldId, CategoryCollisionParametersFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsSpaceBase::getMFCategoryCollisionParameters)
 };
 
 
@@ -116,7 +160,7 @@ FieldContainerType PhysicsSpaceBase::_type(
     "PhysicsSpace",
     "Attachment",
     NULL,
-    (PrototypeCreateF) &PhysicsSpaceBase::createEmpty,
+    NULL, 
     PhysicsSpace::initMethod,
     _desc,
     sizeof(_desc));
@@ -135,15 +179,6 @@ const FieldContainerType &PhysicsSpaceBase::getType(void) const
     return _type;
 } 
 
-
-FieldContainerPtr PhysicsSpaceBase::shallowCopy(void) const 
-{ 
-    PhysicsSpacePtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const PhysicsSpace *>(this)); 
-
-    return returnValue; 
-}
 
 UInt32 PhysicsSpaceBase::getContainerSize(void) const 
 { 
@@ -174,6 +209,9 @@ void PhysicsSpaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfCategory1.terminateShare(uiAspect, this->getContainerSize());
+    _mfCategory2.terminateShare(uiAspect, this->getContainerSize());
+    _mfCategoryCollisionParameters.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -187,6 +225,10 @@ PhysicsSpaceBase::PhysicsSpaceBase(void) :
     _sfCleanup                (), 
     _sfSublevel               (), 
     _sfInternalParentHandler  (PhysicsHandlerPtr(NullFC)), 
+    _sfDefaultCollisionParameters(CollisionContactParametersPtr(NullFC)), 
+    _mfCategory1              (), 
+    _mfCategory2              (), 
+    _mfCategoryCollisionParameters(), 
     Inherited() 
 {
 }
@@ -199,6 +241,10 @@ PhysicsSpaceBase::PhysicsSpaceBase(const PhysicsSpaceBase &source) :
     _sfCleanup                (source._sfCleanup                ), 
     _sfSublevel               (source._sfSublevel               ), 
     _sfInternalParentHandler  (source._sfInternalParentHandler  ), 
+    _sfDefaultCollisionParameters(source._sfDefaultCollisionParameters), 
+    _mfCategory1              (source._mfCategory1              ), 
+    _mfCategory2              (source._mfCategory2              ), 
+    _mfCategoryCollisionParameters(source._mfCategoryCollisionParameters), 
     Inherited                 (source)
 {
 }
@@ -230,6 +276,26 @@ UInt32 PhysicsSpaceBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInternalParentHandler.getBinSize();
     }
 
+    if(FieldBits::NoField != (DefaultCollisionParametersFieldMask & whichField))
+    {
+        returnValue += _sfDefaultCollisionParameters.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Category1FieldMask & whichField))
+    {
+        returnValue += _mfCategory1.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Category2FieldMask & whichField))
+    {
+        returnValue += _mfCategory2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
+    {
+        returnValue += _mfCategoryCollisionParameters.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -252,6 +318,26 @@ void PhysicsSpaceBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
     {
         _sfInternalParentHandler.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DefaultCollisionParametersFieldMask & whichField))
+    {
+        _sfDefaultCollisionParameters.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Category1FieldMask & whichField))
+    {
+        _mfCategory1.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Category2FieldMask & whichField))
+    {
+        _mfCategory2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
+    {
+        _mfCategoryCollisionParameters.copyToBin(pMem);
     }
 
 
@@ -277,6 +363,26 @@ void PhysicsSpaceBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfInternalParentHandler.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (DefaultCollisionParametersFieldMask & whichField))
+    {
+        _sfDefaultCollisionParameters.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Category1FieldMask & whichField))
+    {
+        _mfCategory1.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Category2FieldMask & whichField))
+    {
+        _mfCategory2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
+    {
+        _mfCategoryCollisionParameters.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -295,6 +401,18 @@ void PhysicsSpaceBase::executeSyncImpl(      PhysicsSpaceBase *pOther,
 
     if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
         _sfInternalParentHandler.syncWith(pOther->_sfInternalParentHandler);
+
+    if(FieldBits::NoField != (DefaultCollisionParametersFieldMask & whichField))
+        _sfDefaultCollisionParameters.syncWith(pOther->_sfDefaultCollisionParameters);
+
+    if(FieldBits::NoField != (Category1FieldMask & whichField))
+        _mfCategory1.syncWith(pOther->_mfCategory1);
+
+    if(FieldBits::NoField != (Category2FieldMask & whichField))
+        _mfCategory2.syncWith(pOther->_mfCategory2);
+
+    if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
+        _mfCategoryCollisionParameters.syncWith(pOther->_mfCategoryCollisionParameters);
 
 
 }
@@ -315,6 +433,18 @@ void PhysicsSpaceBase::executeSyncImpl(      PhysicsSpaceBase *pOther,
     if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
         _sfInternalParentHandler.syncWith(pOther->_sfInternalParentHandler);
 
+    if(FieldBits::NoField != (DefaultCollisionParametersFieldMask & whichField))
+        _sfDefaultCollisionParameters.syncWith(pOther->_sfDefaultCollisionParameters);
+
+
+    if(FieldBits::NoField != (Category1FieldMask & whichField))
+        _mfCategory1.syncWith(pOther->_mfCategory1, sInfo);
+
+    if(FieldBits::NoField != (Category2FieldMask & whichField))
+        _mfCategory2.syncWith(pOther->_mfCategory2, sInfo);
+
+    if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
+        _mfCategoryCollisionParameters.syncWith(pOther->_mfCategoryCollisionParameters, sInfo);
 
 
 }
@@ -324,6 +454,15 @@ void PhysicsSpaceBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (Category1FieldMask & whichField))
+        _mfCategory1.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (Category2FieldMask & whichField))
+        _mfCategory2.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
+        _mfCategoryCollisionParameters.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
