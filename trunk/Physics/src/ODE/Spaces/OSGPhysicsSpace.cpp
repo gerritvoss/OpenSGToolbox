@@ -125,12 +125,55 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
         // add these contact points to the simulation
         for (Int32 i=0; i < numContacts; i++)
         {
+
             getCollisionContact(dGeomGetCategoryBits(o1), dGeomGetCategoryBits(o2))->updateODEContactJoint(_ContactJoints[i]);
             dJointID jointId = dJointCreateContact(_CollideWorldID, 
                 _ColJointGroupId, 
                 &_ContactJoints[i]);
 
             dJointAttach(jointId, dGeomGetBody(o1), dGeomGetBody(o2));
+        }
+        if(numContacts>0)
+        {
+            UInt32 Index(0);
+            for(; Index<_CollisionListenParamsVec.size() ; ++Index)
+            {
+                if((dGeomGetCategoryBits(o1) & _CollisionListenParamsVec[Index].Category) || (dGeomGetCategoryBits(o2) & _CollisionListenParamsVec[Index].Category))
+                {
+                    break;
+                }
+            }
+            if(Index < _CollisionListenParamsVec.size())
+            {
+                // add these contact points to the simulation
+                Vec3f v1,v2,normal;
+                dVector3 odeVec;
+                for (Int32 i=0; i < numContacts; i++)
+                {
+                    normal += Vec3f(&_ContactJoints[i].geom.normal[0]);
+                    if(dGeomGetBody(o1))
+                    {
+                        dBodyGetPointVel(dGeomGetBody(o1), _ContactJoints[i].geom.pos[0], _ContactJoints[i].geom.pos[1], _ContactJoints[i].geom.pos[2],odeVec);
+                        v1 += Vec3f(&odeVec[0]);
+                    }
+                    if(dGeomGetBody(o2))
+                    {
+                        dBodyGetPointVel(dGeomGetBody(o2), _ContactJoints[i].geom.pos[0], _ContactJoints[i].geom.pos[1], _ContactJoints[i].geom.pos[2],odeVec);
+                        v2 += Vec3f(&odeVec[0]);
+                    }
+                }
+
+                normal = normal * (1.0f/static_cast<Real32>(numContacts));
+                v1 = v1 * (1.0f/static_cast<Real32>(numContacts));
+                v2 = v2 * (1.0f/static_cast<Real32>(numContacts));
+
+                v1.projectTo(normal);
+                v2.projectTo(normal);
+                if((v1+v2).length() > _CollisionListenParamsVec[Index].SpeedThreshold)
+                {
+                    std::cout << "Large Average Velocity at Collision Points: " << (v1+v2).length() << std::endl;
+                }
+            }
         }
     }
 }
@@ -159,6 +202,14 @@ CollisionContactParametersPtr PhysicsSpace::createDefaultContactParams(void) con
     endEditCP(Params);
 
     return Params;
+}
+
+void PhysicsSpace::addCollisionListenerCategory(UInt64 Category, Real32 SpeedThreshold)
+{
+    CollisionListenParams newParams;
+    newParams.Category = Category;
+    newParams.SpeedThreshold = SpeedThreshold;
+    _CollisionListenParamsVec.push_back(newParams);
 }
 
 void PhysicsSpace::addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParametersPtr ContactParams)
@@ -291,6 +342,7 @@ dGeomID PhysicsSpace::GetGeom( Int32 i )
 void PhysicsSpace::Collide( PhysicsWorldPtr w )
 {
     _CollideWorldID = w->getWorldID();
+
     
     //free contact Joints
     dJointGroupEmpty(_ColJointGroupId);

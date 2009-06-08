@@ -100,6 +100,9 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
       CollisionContactParametersPtr getCollisionContactCategory(UInt64 Category1, UInt64 Category2);
       CollisionContactParametersPtr getCollisionContact(UInt64 Category1, UInt64 Category2);
 
+      
+      void addCollisionListenerCategory(UInt64 Category, Real32 SpeedThreshold);
+
 
 	  /*! \}                                                                 */
 
@@ -131,6 +134,13 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
     void setSpaceID(dSpaceID id);
     CollisionContactParametersPtr createDefaultContactParams(void) const;
+
+    struct CollisionListenParams
+    {
+        UInt64 Category;
+        Real32 SpeedThreshold;
+    };
+    std::vector<CollisionListenParams> _CollisionListenParamsVec; 
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

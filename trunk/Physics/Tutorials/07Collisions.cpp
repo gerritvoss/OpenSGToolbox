@@ -330,6 +330,9 @@ int main(int argc, char **argv)
     //physicsSpace->addCollisionContactCategory(BoxCategory, SphereCategory, SlickBoxParams);
     physicsSpace->addCollisionContactCategory(BoxCategory, TriCategory, SlickBoxParams);
 
+    
+    physicsSpace->addCollisionListenerCategory(BoxCategory, 5.0);
+
     physHandler = PhysicsHandler::create();
     beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
         physHandler->setWorld(physicsWorld);
