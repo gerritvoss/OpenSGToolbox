@@ -85,6 +85,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
     void subSkeleton(SkeletonPtr TheSkeleton);
     UInt32 numSkeletons(void) const;
     void subSkeleton(UInt32 Index);
+	void printStats(void);
+	void printInfluences(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

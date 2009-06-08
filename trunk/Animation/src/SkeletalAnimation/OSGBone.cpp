@@ -262,29 +262,65 @@ void Bone::setBindPosition()
 	endEditCP(BonePtr(this), DefaultRotationFieldMask | DefaultTranslationFieldMask | DefaultLengthFieldMask);
 }
 
-void Bone::updateTransformation(void)
+void Bone::calculateRelativeTransformation(bool isDefault)
 {
-	//=====Update relative & absolute transformations=====//
 	//Calculate Relative Transformation
 	Vec3f Translation;
 	if(getInternalParent() != NullFC)
 	{
-		Translation += Vec3f(0.0,0.0,getInternalParent()->getLength());
+		if (isDefault)
+		{
+			Translation += Vec3f(0.0,0.0,getInternalParent()->getDefaultLength());
+		}
+		else
+		{
+			Translation += Vec3f(0.0,0.0,getInternalParent()->getLength());
+		}
 	}
-	Translation += getTranslation();
-	_InternalRelativeTransformation.setTransform(Translation , getRotation()); //calculates the the rotation of the bone
 
-	//Calculate Absolute Transformation
-	if(getInternalParent() !=NullFC)
+	if(isDefault)
 	{
-		_InternalAbsoluteTransformation = getInternalParent()->getInternalAbsoluteTransformation();
-		_InternalAbsoluteTransformation.mult( getInternalRelativeTransformation() );
+		Translation += getDefaultTranslation();
+		_InternalDefaultRelativeTransformation.setTransform(Translation , getDefaultRotation()); //calculates the the rotation of the bone
 	}
 	else
 	{
-		_InternalAbsoluteTransformation = getInternalRelativeTransformation();
+		Translation += getTranslation();
+		_InternalRelativeTransformation.setTransform(Translation , getRotation()); //calculates the the rotation of the bone
+	}	
+}
+
+void Bone::calculateAbsoluteTransformation(bool isDefault)
+{
+	//Calculate Absolute Transformation
+	if(isDefault)
+	{
+		if(getInternalParent() !=NullFC)
+		{
+			_InternalDefaultAbsoluteTransformation = getInternalParent()->getInternalDefaultAbsoluteTransformation();
+			_InternalDefaultAbsoluteTransformation.mult( getInternalDefaultRelativeTransformation() );
+		}
+		else
+		{
+			_InternalDefaultAbsoluteTransformation = getInternalDefaultRelativeTransformation();
+		}
 	}
-	
+	else
+	{
+		if(getInternalParent() !=NullFC)
+		{
+			_InternalAbsoluteTransformation = getInternalParent()->getInternalAbsoluteTransformation();
+			_InternalAbsoluteTransformation.mult( getInternalRelativeTransformation() );
+		}
+		else
+		{
+			_InternalAbsoluteTransformation = getInternalRelativeTransformation();
+		}
+	}
+}
+
+void Bone::calculateDifferenceTransformations(void)
+{
 	_InternalRelativeDifferenceTransformation = getInternalDefaultRelativeTransformation();
 	_InternalRelativeDifferenceTransformation.invert();
 	_InternalRelativeDifferenceTransformation.multLeft(getInternalRelativeTransformation());
@@ -293,6 +329,48 @@ void Bone::updateTransformation(void)
 	_InternalAbsoluteDifferenceTransformation = getInternalDefaultAbsoluteTransformation();
 	_InternalAbsoluteDifferenceTransformation.invert();
 	_InternalAbsoluteDifferenceTransformation.multLeft(getInternalAbsoluteTransformation());
+}
+
+void Bone::updateTransformation(void)
+{
+	//=====Update relative & absolute transformations=====//
+	//Vec3f Translation;
+	//if(getInternalParent() != NullFC)
+	//{
+	//	Translation += Vec3f(0.0,0.0,getInternalParent()->getLength());
+	//}
+	//Translation += getTranslation();
+	//_InternalRelativeTransformation.setTransform(Translation , getRotation()); //calculates the the rotation of the bone
+	
+	calculateRelativeTransformation(true);
+	calculateAbsoluteTransformation(true);
+
+	calculateRelativeTransformation(false);
+
+	//Calculate Absolute Transformation
+	/*if(getInternalParent() !=NullFC)
+	{
+		_InternalAbsoluteTransformation = getInternalParent()->getInternalAbsoluteTransformation();
+		_InternalAbsoluteTransformation.mult( getInternalRelativeTransformation() );
+	}
+	else
+	{
+		_InternalAbsoluteTransformation = getInternalRelativeTransformation();
+	}*/
+	
+	
+	calculateAbsoluteTransformation(false);
+	
+	/*_InternalRelativeDifferenceTransformation = getInternalDefaultRelativeTransformation();
+	_InternalRelativeDifferenceTransformation.invert();
+	_InternalRelativeDifferenceTransformation.multLeft(getInternalRelativeTransformation());
+
+	
+	_InternalAbsoluteDifferenceTransformation = getInternalDefaultAbsoluteTransformation();
+	_InternalAbsoluteDifferenceTransformation.invert();
+	_InternalAbsoluteDifferenceTransformation.multLeft(getInternalAbsoluteTransformation());*/
+
+	calculateDifferenceTransformations();
 	
 
 	//Tell all children to update Transformations
@@ -336,33 +414,36 @@ void Bone::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if((whichField & DefaultRotationFieldMask) ||
-		(whichField & DefaultLengthFieldMask) ||
-		(whichField & DefaultTranslationFieldMask) ||
-		(whichField & InternalParentFieldMask))
-	{
+	//if((whichField & DefaultRotationFieldMask) ||
+	//	(whichField & DefaultLengthFieldMask) ||
+	//	(whichField & DefaultTranslationFieldMask) ||
+	//	(whichField & InternalParentFieldMask))
+	//{
 
-		//=====Set default internal relative & absolute transformations; no need to calculate them again=====//
-		//Calculate Default Relative Transformation
-		Vec3f DefaultTranslation;
-		if(getInternalParent() != NullFC)
-		{
-			DefaultTranslation += Vec3f(0.0,0.0,getInternalParent()->getDefaultLength());
-		}
-		DefaultTranslation += getTranslation();
-		_InternalDefaultRelativeTransformation.setTransform(DefaultTranslation , getDefaultRotation()); //calculates the the rotation of the bone
-		
-		//Calculate Default Absolute Transformation
-		if(getInternalParent() !=NullFC)
-		{
-			_InternalDefaultAbsoluteTransformation = getInternalParent()->getInternalDefaultAbsoluteTransformation();
-			_InternalDefaultAbsoluteTransformation.mult( getInternalDefaultRelativeTransformation() );
-		}
-		else
-		{
-			_InternalDefaultAbsoluteTransformation = getInternalDefaultRelativeTransformation();
-		}
-	}
+	//	//=====Set default internal relative & absolute transformations; no need to calculate them again=====//
+	//	//Calculate Default Relative Transformation
+	//	//Vec3f DefaultTranslation;
+	//	//if(getInternalParent() != NullFC)
+	//	//{
+	//	//	DefaultTranslation += Vec3f(0.0,0.0,getInternalParent()->getDefaultLength());
+	//	//}
+	//	//DefaultTranslation += getDefaultTranslation();
+	//	//_InternalDefaultRelativeTransformation.setTransform(DefaultTranslation , getDefaultRotation()); //calculates the the rotation of the bone
+	//	
+	//	calculateRelativeTransformation(true);
+	//	
+	//	//Calculate Default Absolute Transformation
+	//	/*if(getInternalParent() !=NullFC)
+	//	{
+	//		_InternalDefaultAbsoluteTransformation = getInternalParent()->getInternalDefaultAbsoluteTransformation();
+	//		_InternalDefaultAbsoluteTransformation.mult( getInternalDefaultRelativeTransformation() );
+	//	}
+	//	else
+	//	{
+	//		_InternalDefaultAbsoluteTransformation = getInternalDefaultRelativeTransformation();
+	//	}*/
+	//	calculateAbsoluteTransformation(true);
+	//}
 
 	if((whichField & RotationFieldMask) ||
 		(whichField & InternalParentFieldMask) ||
@@ -373,8 +454,6 @@ void Bone::changed(BitVector whichField, UInt32 origin)
 		(whichField & DefaultTranslationFieldMask) ||
 		(whichField & InternalSkeletonFieldMask))
 	{
-
-
 		updateTransformation();
 	}
 }

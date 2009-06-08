@@ -262,6 +262,23 @@ void SkeletonBlendedGeometry::skeletonUpdated(void)
     calculatePositions();
 }
 
+void SkeletonBlendedGeometry::printStats(void)
+{
+	std::cout << "     # Bones:         " << getBones().size() << std::endl;
+	std::cout << "     # Positions:     " << getPositionIndexes().size() << std::endl;
+	std::cout << "     # BlendAmounts:  " << getBlendAmounts().size() << std::endl;
+	std::cout << "     # AttachedToEnd: " << getAttachedToEnd().size() << std::endl;
+	std::cout << "     Blend Mode:      " << getBlendMode() << std::endl;
+}
+
+void SkeletonBlendedGeometry::printInfluences(void)
+{
+	for (int i(0); i < getBones().size(); ++i)
+	{
+		std::cout << "INFLUENCE " << i << ":     PositionIndex: " << getPositionIndexes()[i] << "  BlendAmount: " << getBlendAmounts()[i] << "  AttachedToEnd: " << getAttachedToEnd()[i] << std::endl;
+	}
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

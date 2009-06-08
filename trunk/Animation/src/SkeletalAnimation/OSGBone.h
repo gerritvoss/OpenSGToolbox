@@ -132,6 +132,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
     /*==========================  PRIVATE  ================================*/
 
 	void updateTransformation(void);
+	void calculateRelativeTransformation(bool isDefault);
+	void calculateAbsoluteTransformation(bool isDefault);
+	void calculateDifferenceTransformations(void);
+
   private:
 
     friend class FieldContainer;

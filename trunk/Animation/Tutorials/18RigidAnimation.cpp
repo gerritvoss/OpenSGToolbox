@@ -552,6 +552,7 @@ int main(int argc, char **argv)
 	beginEditCP(TheNewSkeletonGeometry);
 		TheNewSkeletonGeometry->addSkeleton(ExampleSkeleton);
 		TheNewSkeletonGeometry->setBaseGeometry(geo);
+		TheNewSkeletonGeometry->setBlendMode(SkeletonBlendedGeometry::BLEND_RIGID);
 		
 
 		TheNewSkeletonGeometry->addBoneBlending(4,LeftFemur,1.0f,true);
