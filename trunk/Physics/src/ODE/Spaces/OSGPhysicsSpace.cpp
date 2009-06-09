@@ -52,6 +52,7 @@
 #include "ODE/OSGPhysicsHandler.h"
 #include <OpenSG/OSGStatCollector.h>
 #include "OSGCollisionContactParameters.h"
+#include <boost/bind.hpp>
 
 OSG_USING_NAMESPACE
 
@@ -99,6 +100,24 @@ void PhysicsSpace::onDestroy()
 	    //dSpaceDestroy(_SpaceID);
         _SpaceID = 0;
     }
+}
+
+
+EventConnection PhysicsSpace::addCollisionListener(CollisionListenerPtr Listener)
+{
+   _CollisionListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&PhysicsSpace::isCollisionListenerAttached, this, Listener),
+       boost::bind(&PhysicsSpace::removeCollisionListener, this, Listener));
+}
+
+void PhysicsSpace::removeCollisionListener(CollisionListenerPtr Listener)
+{
+   CollisionListenerSetItor EraseIter(_CollisionListeners.find(Listener));
+   if(EraseIter != _CollisionListeners.end())
+   {
+      _CollisionListeners.erase(EraseIter);
+   }
 }
 
 void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
@@ -354,6 +373,16 @@ void PhysicsSpace::Collide( PhysicsWorldPtr w )
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void PhysicsSpace::produceCollision(const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2) const
+{
+   CollisionEvent TheEvent( PhysicsSpacePtr(this), getSystemTime(), Position, Normal, Geom1, Geom2,Velocity1,Velocity2);
+   CollisionListenerSet ListenerSet(_CollisionListeners);
+   for(CollisionListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+   {
+       (*SetItor)->collision(TheEvent);
+   }
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 

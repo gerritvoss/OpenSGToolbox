@@ -48,6 +48,9 @@
 
 #include "OSGPhysicsSpaceBase.h"
 #include "ODE/OSGPhysicsWorldFields.h"
+#include <set>
+#include "Events/OSGCollisionListener.h"
+#include <OpenSG/Input/OSGEventConnection.h>
 
 #define MAX_PHYS_CONTACTS 32
 
@@ -105,6 +108,10 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
 
 	  /*! \}                                                                 */
+    EventConnection addCollisionListener(CollisionListenerPtr Listener);
+    bool isCollisionListenerAttached(CollisionListenerPtr Listener) const;
+    void removeCollisionListener(CollisionListenerPtr Listener);
+      
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -158,6 +165,14 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
     void collisionCallback (dGeomID o1, dGeomID o2);
     /*! \}                                                                 */
+    
+	typedef std::set<CollisionListenerPtr> CollisionListenerSet;
+    typedef CollisionListenerSet::iterator CollisionListenerSetItor;
+    typedef CollisionListenerSet::const_iterator CollisionListenerSetConstItor;
+    CollisionListenerSet       _CollisionListeners;
+        
+    void produceCollision(const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2) const;
+
     
     /*==========================  PRIVATE  ================================*/
   private:

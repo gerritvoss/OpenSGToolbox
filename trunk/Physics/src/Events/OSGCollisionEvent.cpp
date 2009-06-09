@@ -37,4 +37,6 @@ const EventType &CollisionEvent::getType(void) const
     return _Type;
 }
 
+
+
 OSG_END_NAMESPACE
