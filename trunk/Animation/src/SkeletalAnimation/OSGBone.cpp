@@ -331,7 +331,7 @@ void Bone::calculateDifferenceTransformations(void)
 	_InternalAbsoluteDifferenceTransformation.multLeft(getInternalAbsoluteTransformation());
 }
 
-void Bone::updateTransformation(void)
+void Bone::updateTransformation(bool IsRecursiveUpdate = false)
 {
 	//=====Update relative & absolute transformations=====//
 	//Vec3f Translation;
@@ -376,12 +376,12 @@ void Bone::updateTransformation(void)
 	//Tell all children to update Transformations
 	for(UInt32 i(0) ; i<getNumChildren() ; ++i)
 	{
-		getChild(i)->updateTransformation();
+		getChild(i)->updateTransformation(true);
 	}
 	
 
 	//Tell skeleton that the bone has changed
-	if(getInternalSkeleton() != NullFC)
+	if(!IsRecursiveUpdate && getInternalSkeleton() != NullFC)
 	{
 		getInternalSkeleton()->Skeleton::skeletonUpdated();
 	}	
@@ -454,7 +454,7 @@ void Bone::changed(BitVector whichField, UInt32 origin)
 		(whichField & DefaultTranslationFieldMask) ||
 		(whichField & InternalSkeletonFieldMask))
 	{
-		updateTransformation();
+		updateTransformation(false);
 	}
 }
 
