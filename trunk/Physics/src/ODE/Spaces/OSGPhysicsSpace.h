@@ -104,11 +104,11 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
       CollisionContactParametersPtr getCollisionContact(UInt64 Category1, UInt64 Category2);
 
       
-      void addCollisionListenerCategory(UInt64 Category, Real32 SpeedThreshold);
+      void addCollisionListenerCategory();
 
 
 	  /*! \}                                                                 */
-    EventConnection addCollisionListener(CollisionListenerPtr Listener);
+    EventConnection addCollisionListener(CollisionListenerPtr Listener, UInt64 Category, Real32 SpeedThreshold);
     bool isCollisionListenerAttached(CollisionListenerPtr Listener) const;
     void removeCollisionListener(CollisionListenerPtr Listener);
       
@@ -144,8 +144,9 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
     struct CollisionListenParams
     {
-        UInt64 Category;
-        Real32 SpeedThreshold;
+        UInt64 _Category;
+        Real32 _SpeedThreshold;
+        CollisionListenerPtr _Listener;
     };
     std::vector<CollisionListenParams> _CollisionListenParamsVec; 
 
@@ -171,7 +172,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
     typedef CollisionListenerSet::const_iterator CollisionListenerSetConstItor;
     CollisionListenerSet       _CollisionListeners;
         
-    void produceCollision(const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2) const;
+    void produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2) const;
 
     
     /*==========================  PRIVATE  ================================*/

@@ -50,6 +50,8 @@
 
 #include <OpenSG/OSGStatElemTypes.h>
 #include "OSGPhysicsBodyFields.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/Input/OSGUpdateListener.h>
 
 
 OSG_BEGIN_NAMESPACE
@@ -58,7 +60,7 @@ OSG_BEGIN_NAMESPACE
            PageContribPhysicsHandler for a description.
 */
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, public UpdateListener
 {
   private:
 
@@ -93,7 +95,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    void update(Time ElapsedTime, NodePtr UpdateNode);
+
+    void attachUpdateProducer(WindowEventProducerPtr TheProducer);
+    virtual void update(const UpdateEvent& e);
 
     /*! \}                                                                 */
     static StatElemDesc<StatTimeElem   > statCollisionTime;
@@ -110,6 +114,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
 
     /*=========================  PROTECTED  ===============================*/
   protected:
+    void update(Time ElapsedTime, NodePtr UpdateNode);
 
     // Variables should all be in PhysicsHandlerBase.
     /*---------------------------------------------------------------------*/

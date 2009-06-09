@@ -69,6 +69,7 @@
 
 #include "OSGPhysicsWorldFields.h" // World type
 #include "ODE/Spaces/OSGPhysicsSpaceFields.h" // Spaces type
+#include <OpenSG/OSGNodeFields.h> // UpdateNode type
 #include <OpenSG/OSGReal32Fields.h> // StepSize type
 #include <OpenSG/OSGUInt32Fields.h> // MaxStepsPerUpdate type
 
@@ -96,13 +97,15 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
     {
         WorldFieldId             = Inherited::NextFieldId,
         SpacesFieldId            = WorldFieldId             + 1,
-        StepSizeFieldId          = SpacesFieldId            + 1,
+        UpdateNodeFieldId        = SpacesFieldId            + 1,
+        StepSizeFieldId          = UpdateNodeFieldId        + 1,
         MaxStepsPerUpdateFieldId = StepSizeFieldId          + 1,
         NextFieldId              = MaxStepsPerUpdateFieldId + 1
     };
 
     static const OSG::BitVector WorldFieldMask;
     static const OSG::BitVector SpacesFieldMask;
+    static const OSG::BitVector UpdateNodeFieldMask;
     static const OSG::BitVector StepSizeFieldMask;
     static const OSG::BitVector MaxStepsPerUpdateFieldMask;
 
@@ -133,11 +136,14 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
 
            SFPhysicsWorldPtr   *getSFWorld          (void);
            MFPhysicsSpacePtr   *getMFSpaces         (void);
+           SFNodePtr           *getSFUpdateNode     (void);
            SFReal32            *getSFStepSize       (void);
            SFUInt32            *getSFMaxStepsPerUpdate(void);
 
            PhysicsWorldPtr     &getWorld          (void);
      const PhysicsWorldPtr     &getWorld          (void) const;
+           NodePtr             &getUpdateNode     (void);
+     const NodePtr             &getUpdateNode     (void) const;
            Real32              &getStepSize       (void);
      const Real32              &getStepSize       (void) const;
            UInt32              &getMaxStepsPerUpdate(void);
@@ -152,6 +158,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
     /*! \{                                                                 */
 
      void setWorld          ( const PhysicsWorldPtr &value );
+     void setUpdateNode     ( const NodePtr &value );
      void setStepSize       ( const Real32 &value );
      void setMaxStepsPerUpdate( const UInt32 &value );
 
@@ -198,6 +205,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandlerBase : public Attachment
 
     SFPhysicsWorldPtr   _sfWorld;
     MFPhysicsSpacePtr   _mfSpaces;
+    SFNodePtr           _sfUpdateNode;
     SFReal32            _sfStepSize;
     SFUInt32            _sfMaxStepsPerUpdate;
 

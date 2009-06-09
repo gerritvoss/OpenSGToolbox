@@ -248,7 +248,6 @@ class TutorialUpdateListener : public UpdateListener
                                PhysicsLMotorJoint::Vel2FieldMask |
                                PhysicsLMotorJoint::FMax3FieldMask | 
                                PhysicsLMotorJoint::Vel3FieldMask);
-        physHandler->update(e.getElapsedTime(), rootNode);
     }
 };
 
@@ -384,10 +383,12 @@ int main(int argc, char **argv)
     hashSpace = PhysicsHashSpace::create();
 
     physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
         physHandler->setWorld(physicsWorld);
         physHandler->getSpaces().push_back(hashSpace);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+        physHandler->setUpdateNode(rootNode);
+    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
+    physHandler->attachUpdateProducer(TutorialWindowEventProducer);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);

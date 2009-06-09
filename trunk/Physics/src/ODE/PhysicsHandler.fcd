@@ -31,6 +31,15 @@
 	>
 	</Field>
 	<Field
+		name="UpdateNode"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="StepSize"
 		type="Real32"
 		cardinality="single"

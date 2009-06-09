@@ -156,15 +156,6 @@ class TutorialMouseMotionListener : public MouseMotionListener
     }
 };
 
-class TutorialUpdateListener : public UpdateListener
-{
-  public:
-    virtual void update(const UpdateEvent& e)
-    {
-        physHandler->update(e.getElapsedTime(), rootNode);
-    }
-};
-
 // Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
 {
@@ -192,9 +183,6 @@ int main(int argc, char **argv)
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
     TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
     TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
-	TutorialUpdateListener TheTutorialUpdateListener;
-    TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
-
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
@@ -250,10 +238,12 @@ int main(int argc, char **argv)
     hashSpace = PhysicsHashSpace::create();
 
     physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
         physHandler->setWorld(physicsWorld);
         physHandler->getSpaces().push_back(hashSpace);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+        physHandler->setUpdateNode(rootNode);
+    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
+    physHandler->attachUpdateProducer(TutorialWindowEventProducer);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);

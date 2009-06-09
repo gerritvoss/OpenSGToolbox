@@ -42,6 +42,13 @@
 
 OSG_BEGIN_NAMESPACE
 
+
+inline
+void PhysicsHandler::attachUpdateProducer(WindowEventProducerPtr TheProducer)
+{
+    TheProducer->addUpdateListener(this);
+}
+
 OSG_END_NAMESPACE
 
 #define OSGPHYSICSHANDLER_INLINE_CVSID "@(#)$Id: OSGPhysicsHandler.inl,v 1.1 2005/10/21 15:44:25 a-m-z Exp $"

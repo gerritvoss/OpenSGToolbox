@@ -195,7 +195,7 @@ void PhysicsHandler::setStatistics(StatCollector *stat)
 *                              Class Specific                              *
 \***************************************************************************/
 
-void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
+void PhysicsHandler::update(const UpdateEvent& e)
 {
     getStatistics()->reset();
     getStatistics()->getElem(statCollisionTime)->start();
@@ -204,7 +204,7 @@ void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
     getStatistics()->getElem(statSimulationTime)->stop();
 
     getStatistics()->getElem(statPhysicsTime)->start();
-    _TimeSinceLast += ElapsedTime;
+    _TimeSinceLast += e.getElapsedTime();
 
     if(osgfloor(_TimeSinceLast/getStepSize()) > getMaxStepsPerUpdate())
     {
@@ -234,11 +234,12 @@ void PhysicsHandler::update(Time ElapsedTime, NodePtr UpdateNode)
         getStatistics()->getElem(statPerStepSimulationTime)->stop();
         (*getStatistics()->getElem(statSimulationTime)) += *(getStatistics()->getElem(statPerStepSimulationTime));
 
-        //update matrices
-        updateWorld(UpdateNode);
-
         _TimeSinceLast -= getStepSize();
     }
+
+    //update matrices
+    updateWorld(getUpdateNode());
+
     getStatistics()->getElem(statPhysicsTime)->stop();
 }
 

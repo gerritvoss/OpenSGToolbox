@@ -172,15 +172,6 @@ class TutorialMouseMotionListener : public MouseMotionListener
     }
 };
 
-class TutorialUpdateListener : public UpdateListener
-{
-  public:
-    virtual void update(const UpdateEvent& e)
-    {
-        physHandler->update(e.getElapsedTime(), rootNode);
-    }
-};
-
 void makeExplosion(Pnt3f Location, Real32 Impulse)
 {
     for(UInt32 i(0) ; i<allPhysicsBodies.size() ; ++i)
@@ -225,9 +216,6 @@ int main(int argc, char **argv)
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
     TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
     TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
-	TutorialUpdateListener TheTutorialUpdateListener;
-    TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
-
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
@@ -303,10 +291,12 @@ int main(int argc, char **argv)
     endEditCP(physicsSpace, PhysicsSpace::DefaultCollisionParametersFieldMask);
 
     physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
         physHandler->setWorld(physicsWorld);
         physHandler->getSpaces().push_back(physicsSpace);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+        physHandler->setUpdateNode(rootNode);
+    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
+    physHandler->attachUpdateProducer(TutorialWindowEventProducer);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);

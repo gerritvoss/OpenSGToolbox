@@ -163,15 +163,6 @@ class TutorialMouseMotionListener : public MouseMotionListener
     }
 };
 
-class TutorialUpdateListener : public UpdateListener
-{
-  public:
-    virtual void update(const UpdateEvent& e)
-    {
-        physHandler->update(e.getElapsedTime(), rootNode);
-    }
-};
-
 // Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
 {
@@ -199,8 +190,6 @@ int main(int argc, char **argv)
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
     TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
     TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
-	TutorialUpdateListener TheTutorialUpdateListener;
-    TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
 
 
     // Create the SimpleSceneManager helper
@@ -257,10 +246,12 @@ int main(int argc, char **argv)
     hashSpace = PhysicsHashSpace::create();
 
     physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
         physHandler->setWorld(physicsWorld);
         physHandler->getSpaces().push_back(hashSpace);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+        physHandler->setUpdateNode(rootNode);
+    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
+    physHandler->attachUpdateProducer(TutorialWindowEventProducer);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);
@@ -502,9 +493,9 @@ void buildSphere(void)
 //////////////////////////////////////////////////////////////////////////
 void buildTriMesh(void)
 {
-    //NodePtr tri = makeTorus(0.5, 1.0, 24, 12);
+    NodePtr tri = makeTorus(0.5, 1.0, 24, 12);
     //NodePtr tri = makeBox(10.0, 10.0, 10.0, 1, 1, 1);
-    NodePtr tri = Node::Ptr::dcast(TriGeometryBase->shallowCopy());
+    //NodePtr tri = Node::Ptr::dcast(TriGeometryBase->shallowCopy());
     if(tri!=NullFC)
     {
         GeometryPtr triGeo = GeometryPtr::dcast(tri->getCore()); 
@@ -531,7 +522,7 @@ void buildTriMesh(void)
             triBody->setAngularDamping(0.0001);
         endEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
         PhysicsGeomPtr triGeom;
-        if(false)
+        if(true)
         {
             triGeom = PhysicsTriMeshGeom::create();
             CPEdit(triGeom, PhysicsTriMeshGeom::BodyFieldMask | 

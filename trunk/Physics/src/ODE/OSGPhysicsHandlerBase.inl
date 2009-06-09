@@ -110,6 +110,13 @@ MFPhysicsSpacePtr *PhysicsHandlerBase::getMFSpaces(void)
     return &_mfSpaces;
 }
 
+//! Get the PhysicsHandler::_sfUpdateNode field.
+inline
+SFNodePtr *PhysicsHandlerBase::getSFUpdateNode(void)
+{
+    return &_sfUpdateNode;
+}
+
 //! Get the PhysicsHandler::_sfStepSize field.
 inline
 SFReal32 *PhysicsHandlerBase::getSFStepSize(void)
@@ -144,6 +151,27 @@ inline
 void PhysicsHandlerBase::setWorld(const PhysicsWorldPtr &value)
 {
     _sfWorld.setValue(value);
+}
+
+//! Get the value of the PhysicsHandler::_sfUpdateNode field.
+inline
+NodePtr &PhysicsHandlerBase::getUpdateNode(void)
+{
+    return _sfUpdateNode.getValue();
+}
+
+//! Get the value of the PhysicsHandler::_sfUpdateNode field.
+inline
+const NodePtr &PhysicsHandlerBase::getUpdateNode(void) const
+{
+    return _sfUpdateNode.getValue();
+}
+
+//! Set the value of the PhysicsHandler::_sfUpdateNode field.
+inline
+void PhysicsHandlerBase::setUpdateNode(const NodePtr &value)
+{
+    _sfUpdateNode.setValue(value);
 }
 
 //! Get the value of the PhysicsHandler::_sfStepSize field.

@@ -38,6 +38,7 @@
 
 //Physics
 #include <OpenSG/Physics/OSGPhysics.h>
+#include <OpenSG/Physics/OSGCollisionListener.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -80,6 +81,25 @@ Real32 frand(void)
 {
     return static_cast<Real32>(rand()%RAND_MAX)/static_cast<Real32>(RAND_MAX);
 }
+
+class TutorialCollisionListener : public CollisionListener
+{
+    /*=========================  PUBLIC  ===============================*/
+  public:
+  
+    virtual void collision(const CollisionEvent& e)
+    {
+        Vec3f NormalProjVel(e.getVelocity1() + e.getVelocity2());
+        NormalProjVel.projectTo(e.getNormal());
+
+        std::cout << "Collision Occured: " << std::endl
+                  << "    Position: " << e.getPosition() << std::endl
+                  << "    Normal: " << e.getNormal() << std::endl
+                  << "    Body 1 Velocity: " << e.getVelocity1() << std::endl
+                  << "    Body 2 Velocity: " << e.getVelocity2() << std::endl
+                  << "    Normal projected Velocity: " << NormalProjVel << std::endl<< std::endl;
+    }
+};
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -176,15 +196,6 @@ class TutorialMouseMotionListener : public MouseMotionListener
     }
 };
 
-class TutorialUpdateListener : public UpdateListener
-{
-  public:
-    virtual void update(const UpdateEvent& e)
-    {
-        physHandler->update(e.getElapsedTime(), rootNode);
-    }
-};
-
 // Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
 {
@@ -212,9 +223,6 @@ int main(int argc, char **argv)
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
     TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
     TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
-	TutorialUpdateListener TheTutorialUpdateListener;
-    TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
-
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
@@ -331,13 +339,17 @@ int main(int argc, char **argv)
     physicsSpace->addCollisionContactCategory(BoxCategory, TriCategory, SlickBoxParams);
 
     
-    physicsSpace->addCollisionListenerCategory(BoxCategory, 5.0);
+    TutorialCollisionListener ColListener;
+    physicsSpace->addCollisionListener(&ColListener,BoxCategory, 5.0);
 
     physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
         physHandler->setWorld(physicsWorld);
         physHandler->getSpaces().push_back(physicsSpace);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask);
+        physHandler->setStepSize(0.001);
+        physHandler->setUpdateNode(rootNode);
+    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
+    physHandler->attachUpdateProducer(TutorialWindowEventProducer);
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);

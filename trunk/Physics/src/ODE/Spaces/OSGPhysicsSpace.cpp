@@ -103,9 +103,17 @@ void PhysicsSpace::onDestroy()
 }
 
 
-EventConnection PhysicsSpace::addCollisionListener(CollisionListenerPtr Listener)
+EventConnection PhysicsSpace::addCollisionListener(CollisionListenerPtr Listener, UInt64 Category, Real32 SpeedThreshold)
 {
    _CollisionListeners.insert(Listener);
+   
+   
+    CollisionListenParams newParams;
+    newParams._Category = Category;
+    newParams._SpeedThreshold = SpeedThreshold;
+    newParams._Listener = Listener;
+    _CollisionListenParamsVec.push_back(newParams);
+
    return EventConnection(
        boost::bind(&PhysicsSpace::isCollisionListenerAttached, this, Listener),
        boost::bind(&PhysicsSpace::removeCollisionListener, this, Listener));
@@ -113,11 +121,21 @@ EventConnection PhysicsSpace::addCollisionListener(CollisionListenerPtr Listener
 
 void PhysicsSpace::removeCollisionListener(CollisionListenerPtr Listener)
 {
-   CollisionListenerSetItor EraseIter(_CollisionListeners.find(Listener));
-   if(EraseIter != _CollisionListeners.end())
-   {
-      _CollisionListeners.erase(EraseIter);
-   }
+    CollisionListenerSetItor EraseIter(_CollisionListeners.find(Listener));
+    if(EraseIter != _CollisionListeners.end())
+    {
+        _CollisionListeners.erase(EraseIter);
+    }
+   
+    std::vector<CollisionListenParams>::iterator ParamsEraseItor(_CollisionListenParamsVec.begin());
+    for(; ParamsEraseItor!=_CollisionListenParamsVec.end() ; ++ParamsEraseItor)
+    {
+        if(ParamsEraseItor->_Listener == Listener)
+        {
+            _CollisionListenParamsVec.erase(ParamsEraseItor);
+            break;
+        }
+    }
 }
 
 void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
@@ -157,7 +175,7 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
             UInt32 Index(0);
             for(; Index<_CollisionListenParamsVec.size() ; ++Index)
             {
-                if((dGeomGetCategoryBits(o1) & _CollisionListenParamsVec[Index].Category) || (dGeomGetCategoryBits(o2) & _CollisionListenParamsVec[Index].Category))
+                if((dGeomGetCategoryBits(o1) & _CollisionListenParamsVec[Index]._Category) || (dGeomGetCategoryBits(o2) & _CollisionListenParamsVec[Index]._Category))
                 {
                     break;
                 }
@@ -166,10 +184,12 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
             {
                 // add these contact points to the simulation
                 Vec3f v1,v2,normal;
+                Pnt3f position;
                 dVector3 odeVec;
                 for (Int32 i=0; i < numContacts; i++)
                 {
                     normal += Vec3f(&_ContactJoints[i].geom.normal[0]);
+                    position += Vec3f(&_ContactJoints[i].geom.pos[0]);
                     if(dGeomGetBody(o1))
                     {
                         dBodyGetPointVel(dGeomGetBody(o1), _ContactJoints[i].geom.pos[0], _ContactJoints[i].geom.pos[1], _ContactJoints[i].geom.pos[2],odeVec);
@@ -183,14 +203,20 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
                 }
 
                 normal = normal * (1.0f/static_cast<Real32>(numContacts));
+                position = position * (1.0f/static_cast<Real32>(numContacts));
                 v1 = v1 * (1.0f/static_cast<Real32>(numContacts));
                 v2 = v2 * (1.0f/static_cast<Real32>(numContacts));
 
-                v1.projectTo(normal);
-                v2.projectTo(normal);
-                if((v1+v2).length() > _CollisionListenParamsVec[Index].SpeedThreshold)
+                for(UInt32 i(0); i<_CollisionListenParamsVec.size() ; ++i)
                 {
-                    std::cout << "Large Average Velocity at Collision Points: " << (v1+v2).length() << std::endl;
+                    if( ((dGeomGetCategoryBits(o1) & _CollisionListenParamsVec[i]._Category) || (dGeomGetCategoryBits(o2) & _CollisionListenParamsVec[i]._Category)) &&
+                        (osgabs((v1+v2).projectTo(normal)) > _CollisionListenParamsVec[i]._SpeedThreshold)
+                        )
+                    {
+                        //TODO: Add a way to get the PhysicsGeomPtr from the GeomIDs so that the PhysicsGeomPtr can be 
+                        //sent to the collision event
+                        produceCollision(_CollisionListenParamsVec[i]._Listener,position,normal,NullFC,NullFC,v1,v2);
+                    }
                 }
             }
         }
@@ -221,14 +247,6 @@ CollisionContactParametersPtr PhysicsSpace::createDefaultContactParams(void) con
     endEditCP(Params);
 
     return Params;
-}
-
-void PhysicsSpace::addCollisionListenerCategory(UInt64 Category, Real32 SpeedThreshold)
-{
-    CollisionListenParams newParams;
-    newParams.Category = Category;
-    newParams.SpeedThreshold = SpeedThreshold;
-    _CollisionListenParamsVec.push_back(newParams);
 }
 
 void PhysicsSpace::addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParametersPtr ContactParams)
@@ -374,14 +392,10 @@ void PhysicsSpace::Collide( PhysicsWorldPtr w )
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void PhysicsSpace::produceCollision(const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2) const
+void PhysicsSpace::produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2) const
 {
-   CollisionEvent TheEvent( PhysicsSpacePtr(this), getSystemTime(), Position, Normal, Geom1, Geom2,Velocity1,Velocity2);
-   CollisionListenerSet ListenerSet(_CollisionListeners);
-   for(CollisionListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-   {
-       (*SetItor)->collision(TheEvent);
-   }
+    CollisionEvent TheEvent( PhysicsSpacePtr(this), getSystemTime(), Position, Normal, Geom1, Geom2,Velocity1,Velocity2);
+    _Listener->collision(TheEvent);
 }
 
 /*----------------------- constructors & destructors ----------------------*/

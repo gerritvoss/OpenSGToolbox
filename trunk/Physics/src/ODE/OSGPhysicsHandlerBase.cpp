@@ -70,6 +70,9 @@ const OSG::BitVector  PhysicsHandlerBase::WorldFieldMask =
 const OSG::BitVector  PhysicsHandlerBase::SpacesFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsHandlerBase::SpacesFieldId);
 
+const OSG::BitVector  PhysicsHandlerBase::UpdateNodeFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsHandlerBase::UpdateNodeFieldId);
+
 const OSG::BitVector  PhysicsHandlerBase::StepSizeFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsHandlerBase::StepSizeFieldId);
 
@@ -87,6 +90,9 @@ const OSG::BitVector PhysicsHandlerBase::MTInfluenceMask =
     
 */
 /*! \var PhysicsSpacePtr PhysicsHandlerBase::_mfSpaces
+    
+*/
+/*! \var NodePtr         PhysicsHandlerBase::_sfUpdateNode
     
 */
 /*! \var Real32          PhysicsHandlerBase::_sfStepSize
@@ -110,6 +116,11 @@ FieldDescription *PhysicsHandlerBase::_desc[] =
                      SpacesFieldId, SpacesFieldMask,
                      false,
                      (FieldAccessMethod) &PhysicsHandlerBase::getMFSpaces),
+    new FieldDescription(SFNodePtr::getClassType(), 
+                     "UpdateNode", 
+                     UpdateNodeFieldId, UpdateNodeFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsHandlerBase::getSFUpdateNode),
     new FieldDescription(SFReal32::getClassType(), 
                      "StepSize", 
                      StepSizeFieldId, StepSizeFieldMask,
@@ -198,6 +209,7 @@ void PhysicsHandlerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 PhysicsHandlerBase::PhysicsHandlerBase(void) :
     _sfWorld                  (PhysicsWorldPtr(NullFC)), 
     _mfSpaces                 (), 
+    _sfUpdateNode             (NodePtr(NullFC)), 
     _sfStepSize               (Real32(0.001)), 
     _sfMaxStepsPerUpdate      (UInt32(75)), 
     Inherited() 
@@ -211,6 +223,7 @@ PhysicsHandlerBase::PhysicsHandlerBase(void) :
 PhysicsHandlerBase::PhysicsHandlerBase(const PhysicsHandlerBase &source) :
     _sfWorld                  (source._sfWorld                  ), 
     _mfSpaces                 (source._mfSpaces                 ), 
+    _sfUpdateNode             (source._sfUpdateNode             ), 
     _sfStepSize               (source._sfStepSize               ), 
     _sfMaxStepsPerUpdate      (source._sfMaxStepsPerUpdate      ), 
     Inherited                 (source)
@@ -237,6 +250,11 @@ UInt32 PhysicsHandlerBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (SpacesFieldMask & whichField))
     {
         returnValue += _mfSpaces.getBinSize();
+    }
+
+    if(FieldBits::NoField != (UpdateNodeFieldMask & whichField))
+    {
+        returnValue += _sfUpdateNode.getBinSize();
     }
 
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
@@ -268,6 +286,11 @@ void PhysicsHandlerBase::copyToBin(      BinaryDataHandler &pMem,
         _mfSpaces.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (UpdateNodeFieldMask & whichField))
+    {
+        _sfUpdateNode.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
     {
         _sfStepSize.copyToBin(pMem);
@@ -296,6 +319,11 @@ void PhysicsHandlerBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfSpaces.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (UpdateNodeFieldMask & whichField))
+    {
+        _sfUpdateNode.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
     {
         _sfStepSize.copyFromBin(pMem);
@@ -322,6 +350,9 @@ void PhysicsHandlerBase::executeSyncImpl(      PhysicsHandlerBase *pOther,
     if(FieldBits::NoField != (SpacesFieldMask & whichField))
         _mfSpaces.syncWith(pOther->_mfSpaces);
 
+    if(FieldBits::NoField != (UpdateNodeFieldMask & whichField))
+        _sfUpdateNode.syncWith(pOther->_sfUpdateNode);
+
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
         _sfStepSize.syncWith(pOther->_sfStepSize);
 
@@ -340,6 +371,9 @@ void PhysicsHandlerBase::executeSyncImpl(      PhysicsHandlerBase *pOther,
 
     if(FieldBits::NoField != (WorldFieldMask & whichField))
         _sfWorld.syncWith(pOther->_sfWorld);
+
+    if(FieldBits::NoField != (UpdateNodeFieldMask & whichField))
+        _sfUpdateNode.syncWith(pOther->_sfUpdateNode);
 
     if(FieldBits::NoField != (StepSizeFieldMask & whichField))
         _sfStepSize.syncWith(pOther->_sfStepSize);
