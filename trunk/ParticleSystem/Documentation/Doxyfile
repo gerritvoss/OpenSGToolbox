@@ -7,7 +7,7 @@
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = OSGUserInterface
+PROJECT_NAME           = OSGParticleSystem
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. 
 # This could be handy for archiving the generated documentation or 
@@ -487,7 +487,7 @@ GENERATE_HTML          = YES
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be 
 # put in front of it. If left blank `html' will be used as the default path.
 
-HTML_OUTPUT            = OSGUserInterface
+HTML_OUTPUT            = OSGParticleSystem
 
 # The HTML_FILE_EXTENSION tag can be used to specify the file extension for 
 # each generated HTML page (for example: .htm,.php,.asp). If it is left blank 
@@ -864,7 +864,7 @@ ALIASES =       "hint=\e Hint! "                                            \
 # Use the PREDEFINED tag if you want to use a different macro definition.
 
 EXPAND_AS_DEFINED      = \
-    OSG_USERINTERFACELIB_DLLMAPPING                                       
+    OSG_PARTICLESYSTEMLIB_DLLMAPPING                                       
     
 # If the SKIP_FUNCTION_MACROS tag is set to YES (the default) then 
 # doxygen's preprocessor will remove all function-like macros that are alone 
