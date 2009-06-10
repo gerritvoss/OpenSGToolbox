@@ -666,6 +666,19 @@ void FModSound::changed(BitVector whichField, UInt32 origin)
                 result = FModSoundManager::the()->getSystem()->createSound(getFile().string().c_str(), soundMode, 0, &_FModSound);		// FMOD_DEFAULT uses the defaults.  These are the same as FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE.
             }
             FMOD_ERRCHECK(result);
+
+            if(result != FMOD_OK)
+            {
+                if(getStreaming())
+                {
+                    result = FModSoundManager::the()->getSystem()->createStream(getFile().string().c_str(), FMOD_SOFTWARE, 0, &_FModSound);		// FMOD_DEFAULT uses the defaults.  These are the same as FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE.
+                }
+                else
+                {
+                    result = FModSoundManager::the()->getSystem()->createSound(getFile().string().c_str(), FMOD_SOFTWARE, 0, &_FModSound);		// FMOD_DEFAULT uses the defaults.  These are the same as FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE.
+                }
+            }
+            FMOD_ERRCHECK(result);
         }
     }
     if(whichField & VolumeFieldMask ||

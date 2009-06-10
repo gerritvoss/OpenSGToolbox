@@ -26,15 +26,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
+/**************************************************************************//**
+ * @class   PhysicsSweepAndPruneSpace : public PhysicsHashSpaceBase
+ * 
+ * @brief	A wapper around the ODE Sweep and prune space type. 
+ * 
+ * @ingroup PhysicsSpaces
+ *
+ * @see    @htmlonly <A href="http://www.ode.org/">ODE</A> @endhtmlonly
+ *****************************************************************************/
 
 #ifndef _OSGPHYSICSSWEEPANDPRUNESPACE_H_
 #define _OSGPHYSICSSWEEPANDPRUNESPACE_H_

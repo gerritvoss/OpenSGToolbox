@@ -95,8 +95,29 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, publ
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-
+    /**************************************************************************//**
+     * @fn	void attachUpdateProducer(WindowEventProducerPtr TheProducer)
+     * 
+     * @brief	Attaches this Physics Handler to the update event produced by
+     *          TheProducer. 
+     * 
+     * @param	TheProducer	the Event producer that sends update events. 
+     *
+     * @see     PhysicsHandler::update
+     *****************************************************************************/
     void attachUpdateProducer(WindowEventProducerPtr TheProducer);
+
+    /**************************************************************************//**
+     * @fn	virtual void update(const UpdateEvent& e)
+     * 
+     * @brief	Updates the Collision, simulation, and scene graph.
+     *
+     *          You will never need to call this function explicitly use 
+     *          attachUpdateProducer to attach this Handler to an update event 
+     * 
+     * @param	e	The specific information of this update, including the elapsed 
+     *              time in seconds since the last update
+     *****************************************************************************/
     virtual void update(const UpdateEvent& e);
 
     /*! \}                                                                 */

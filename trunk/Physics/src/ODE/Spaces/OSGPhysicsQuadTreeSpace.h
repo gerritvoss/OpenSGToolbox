@@ -26,15 +26,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
+/**************************************************************************//**
+ * @class   PhysicsQuadTreeSpace : public PhysicsHashSpaceBase
+ * 
+ * @brief	A wapper around the ODE QuadTree space type. 
+ * 
+ * @ingroup PhysicsSpaces
+ *
+ * @see    @htmlonly <A href="http://www.ode.org/">ODE</A> @endhtmlonly
+ *****************************************************************************/
 
 #ifndef _OSGPHYSICSQUADTREESPACE_H_
 #define _OSGPHYSICSQUADTREESPACE_H_

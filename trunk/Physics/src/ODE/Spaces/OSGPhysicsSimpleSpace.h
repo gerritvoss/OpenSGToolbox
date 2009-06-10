@@ -26,15 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
+
+/**************************************************************************//**
+ * @class   PhysicsSimpleSpace : public PhysicsSimpleSpaceBase
+ * 
+ * @brief	A wapper around the ODE simple space type. 
+ * 
+ * @ingroup PhysicsSpaces
+ *
+ * @see    @htmlonly <A href="http://www.ode.org/">ODE</A> @endhtmlonly
+ *****************************************************************************/
 
 #ifndef _OSGPHYSICSSIMPLESPACE_H_
 #define _OSGPHYSICSSIMPLESPACE_H_

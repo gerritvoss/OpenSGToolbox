@@ -26,15 +26,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
+/**************************************************************************//**
+ * @class   PhysicsHashSpace : public PhysicsHashSpaceBase
+ * 
+ * @brief	A wapper around the ODE Hash space type. 
+ * 
+ * @ingroup PhysicsSpaces
+ *
+ * @see    @htmlonly <A href="http://www.ode.org/">ODE</A> @endhtmlonly
+ *****************************************************************************/
 
 #ifndef _OSGPHYSICSHASHSPACE_H_
 #define _OSGPHYSICSHASHSPACE_H_
