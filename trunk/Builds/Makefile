@@ -12,9 +12,9 @@ endif
 
 # program dependencies
 
-default:	toolbox input animation sound dynamics particlesystem userinterface game
+default:	toolbox input animation sound dynamics particlesystem userinterface game physics
 
-doc: toolbox-doc
+doc: toolbox-doc input-doc animation-doc sound-doc dynamics-doc particlesystem-doc userinterface-doc game-doc physics-doc
 
 # make rules
 
@@ -58,6 +58,10 @@ input-clean-opt:
         
 input-clean: input-clean-dbg input-clean-opt
 
+input-doc:
+	cd ../Input/Documentation; \
+	$(DOXYGEN) Doxyfile
+    
 #UserInterface 
 userinterface-dbg:
 	gmake -C ../UserInterface/Builds/Linux/dbg -j6 install
@@ -75,6 +79,10 @@ userinterface-clean-opt:
         
 userinterface-clean: userinterface-clean-dbg userinterface-clean-opt
 
+userinterface-doc:
+	cd ../UserInterface/Documentation; \
+	$(DOXYGEN) Doxyfile
+    
 #Animation
 animation-dbg:
 	   gmake -C ../Animation/Builds/Linux/dbg -j6 install
@@ -92,6 +100,10 @@ animation-clean-opt:
 
 animation-clean: animation-clean-dbg animation-clean-opt
 
+animation-doc:
+	cd ../Animation/Documentation; \
+	$(DOXYGEN) Doxyfile
+    
 #ParticleSystem
 particlesystem-dbg:
 	   gmake -C ../ParticleSystem/Builds/Linux/dbg -j6 install
@@ -109,6 +121,10 @@ particlesystem-clean-opt:
 
 particlesystem-clean: particlesystem-clean-dbg particlesystem-clean-opt
 
+particlesystem-doc:
+	cd ../ParticleSystem/Documentation; \
+	$(DOXYGEN) Doxyfile
+    
 #Dynamics
 dynamics-dbg:
 	   gmake -C ../Dynamics/Builds/Linux/dbg -j6 install
@@ -126,6 +142,10 @@ dynamics-clean-opt:
 
 dynamics-clean: dynamics-clean-dbg dynamics-clean-opt
 
+dynamics-doc:
+	cd ../Dynamics/Documentation; \
+	$(DOXYGEN) Doxyfile
+    
 #Sound
 sound-dbg:
 	   gmake -C ../Sound/Builds/Linux/dbg -j6 install
@@ -143,6 +163,10 @@ sound-clean-opt:
 
 sound-clean: sound-clean-dbg sound-clean-opt
 
+sound-doc:
+	cd ../Sound/Documentation; \
+	$(DOXYGEN) Doxyfile
+    
 #Game
 game-dbg:
 	   gmake -C ../Game/Builds/Linux/dbg -j6 install
@@ -160,4 +184,29 @@ game-clean-opt:
 
 game-clean: game-clean-dbg game-clean-opt
 
-clean: toolbox-clean input-clean animation-clean sound-clean dynamics-clean particlesystem-clean userinterface-clean game-clean
+game-doc:
+	cd ../Game/Documentation; \
+	$(DOXYGEN) Doxyfile
+    
+#Physics
+physics-dbg:
+	   gmake -C ../Physics/Builds/Linux/dbg -j6 install
+
+physics-opt:
+	   gmake -C ../Physics/Builds/Linux/opt -j6 install
+
+physics: physics-dbg physics-opt
+
+physics-clean-dbg:
+	   gmake -C ../Physics/Builds/Linux/dbg clean
+
+physics-clean-opt:
+	   gmake -C ../Physics/Builds/Linux/opt clean
+
+physics-clean: physics-clean-dbg physics-clean-opt
+
+physics-doc:
+	cd ../Physics/Documentation; \
+	$(DOXYGEN) Doxyfile
+    
+clean: toolbox-clean input-clean animation-clean sound-clean dynamics-clean particlesystem-clean userinterface-clean game-clean physics-clean
