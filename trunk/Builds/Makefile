@@ -4,6 +4,8 @@
 LIBTYPE ?= dbg
 OSGUSERINTERFACEROOT ?= ../../Builds/Linux
 
+DOXYGEN ?= doxygen
+
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D
 endif
@@ -12,6 +14,7 @@ endif
 
 default:	toolbox input animation sound dynamics particlesystem userinterface game
 
+doc: toolbox-doc
 
 # make rules
 
@@ -33,7 +36,11 @@ toolbox-clean-opt:
 	gmake -C ../Toolbox/Builds/Linux/opt clean
         
 toolbox-clean: toolbox-clean-dbg toolbox-clean-opt
-  
+
+toolbox-doc:
+	cd ../Toolbox/Documentation; \
+	$(DOXYGEN) Doxyfile
+
 #Input 
 input-dbg:
 	gmake -C ../Input/Builds/Linux/dbg -j6 install
