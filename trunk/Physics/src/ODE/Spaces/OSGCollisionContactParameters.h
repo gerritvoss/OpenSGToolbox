@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGPhysicsDef.h"
 
 #include "OSGCollisionContactParametersBase.h"
 #include <ode/ode.h>

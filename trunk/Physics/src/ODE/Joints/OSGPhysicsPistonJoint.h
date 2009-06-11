@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsPistonJointBase.h"
 #include "ODE/OSGPhysicsWorldFields.h"
