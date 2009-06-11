@@ -44,6 +44,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGQuaternion.h>
 
 #include "OSGConeDistribution3D.h"
 #include <OpenSG/Toolbox/OSGRandomPoolManager.h>
@@ -122,25 +123,36 @@ Pnt3f ConeDistribution3D:: generate(void)
 	*/
 	
 	Pnt3f Result = getPosition();
-	Real32 scalar = 0.0;
-	if((getMax() > 0.0f) && (getMax() > getMin())) 
-	{	
-		scalar = RandomPoolManager::getRandomReal32(getMin(),getMax());;
-	}
-
+	Real32 radius = 0.0;
+	
 	switch(getSurfaceOrVolume())
 	{
 	case SURFACE:
-		{
-
+		{	// get either max or min for radius
+			if(RandomPoolManager::getRandomInt32(0,100)%2 == 0) radius = getMax();
+			else radius = getMin();
+			break;
 		}
 	case VOLUME:
-		{
-
+		{	// get random val. between max and min for radius
+			if((getMax() > 0.0f) && (getMax() > getMin())) 
+				radius = RandomPoolManager::getRandomReal32(getMin(),getMax());
+			else radius = getMax();
+			break;
 		}
 	}
 	Vec3f normal = getDirection(); 
 	normal.normalize();
+	Real32 theta = (getSpread() > 0.0) ? RandomPoolManager::getRandomReal32(-getSpread()/2,getSpread()/2) : 0.0;
+	Real32 phi = (getSpread() > 0.0) ? RandomPoolManager::getRandomReal32(0.0,3.141597*2) : 0.0;
+
+	Vec3f SpherePoint( osgcos(phi)*osgsin(theta)*radius, osgsin(theta)*osgsin(phi)*radius, osgcos(theta)*radius );
+
+	Quaternion DirectionRotation(Vec3f(0.0f,0.0f,1.0f), normal);;
+	DirectionRotation.multVec(SpherePoint, SpherePoint);
+
+	Result += SpherePoint;
+
 	return Result;
 }
 /*-------------------------------------------------------------------------*\
