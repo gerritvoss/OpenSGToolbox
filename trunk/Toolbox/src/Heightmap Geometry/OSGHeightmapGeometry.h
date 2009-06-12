@@ -106,6 +106,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING HeightmapGeometry : public HeightmapGeometryBase
     friend class HeightmapGeometryBase;
 
     static void initMethod(void);
+	bool _InternallyCalculatingNormals;
 
     // prohibit default functions (move to 'public' if you need one)
 

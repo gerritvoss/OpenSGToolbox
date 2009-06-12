@@ -171,11 +171,11 @@ void HeightmapGeometry::createHeightMapGeometry(void)
 			setPositions( GeoPositions3f::create() );
 		}
 		getPositions()->clear();
-		if(getNormals() == NullFC)
-		{
-			setNormals( GeoNormals3f::create() );
-		}
-		getNormals()->clear();
+		//if(getNormals() == NullFC)
+		//{
+		//	setNormals( GeoNormals3f::create() );
+		//}
+		//getNormals()->clear();
 		if(getTexCoords() == NullFC)
 		{
 			setTexCoords( GeoTexCoords2f::create() );
@@ -226,32 +226,36 @@ void HeightmapGeometry::createHeightMapGeometry(void)
 
 				//Triangle 1
 				getPositions()->addValue(p1);
-				getNormals()->addValue(tri1Normal);
+				//getNormals()->addValue(tri1Normal);
 				getTexCoords()->addValue(t1);
 
-				getPositions()->addValue(p2);
-				getNormals()->addValue(tri1Normal);
-				getTexCoords()->addValue(t2);
-
 				getPositions()->addValue(p3);
-				getNormals()->addValue(tri1Normal);
+				//getNormals()->addValue(tri1Normal);
 				getTexCoords()->addValue(t3);
+
+				getPositions()->addValue(p2);
+				//getNormals()->addValue(tri1Normal);
+				getTexCoords()->addValue(t2);
 
 				//Triangle 2
 				getPositions()->addValue(p1);
-				getNormals()->addValue(tri2Normal);
+				//getNormals()->addValue(tri2Normal);
 				getTexCoords()->addValue(t1);
 
-				getPositions()->addValue(p3);
-				getNormals()->addValue(tri2Normal);
-				getTexCoords()->addValue(t3);
-
 				getPositions()->addValue(p4);
-				getNormals()->addValue(tri2Normal);
+				//getNormals()->addValue(tri2Normal);
 				getTexCoords()->addValue(t4);
+
+				getPositions()->addValue(p3);
+				//getNormals()->addValue(tri2Normal);
+				getTexCoords()->addValue(t3);
 			}
 		}
 	endEditCP(HeightmapGeometryPtr(this), PositionsFieldMask | TypesFieldMask | LengthsFieldMask | NormalsFieldMask | TexCoordsFieldMask);
+
+	_InternallyCalculatingNormals = true;
+	calcVertexNormals(GeometryPtr(this));
+	_InternallyCalculatingNormals = false;
 
 }
 /*-------------------------------------------------------------------------*\
@@ -261,12 +265,14 @@ void HeightmapGeometry::createHeightMapGeometry(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 HeightmapGeometry::HeightmapGeometry(void) :
-    Inherited()
+    Inherited(),
+		_InternallyCalculatingNormals(false)
 {
 }
 
 HeightmapGeometry::HeightmapGeometry(const HeightmapGeometry &source) :
-    Inherited(source)
+    Inherited(source),
+		_InternallyCalculatingNormals(false)
 {
 }
 
@@ -280,11 +286,12 @@ void HeightmapGeometry::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if((whichField & HeightImageFieldMask) ||
+	if(((whichField & HeightImageFieldMask) ||
 		(whichField & DimensionsFieldMask) ||
 		(whichField & ScaleFieldMask) ||
 		(whichField & OffsetFieldMask) ||
-		(whichField & SegmentsFieldMask))
+		(whichField & SegmentsFieldMask)) &&
+		!_InternallyCalculatingNormals)
 	{
 		createHeightMapGeometry();
 	}
