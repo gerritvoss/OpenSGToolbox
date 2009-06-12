@@ -254,7 +254,7 @@ void Bone::removeChild(UInt32 Index)
 
 void Bone::setBindPosition()
 {
-	//Update Rotation, Translation, and Length Field Containers
+	//Update DefaultRotation, DefaultTranslation, and DefaultLength Field Containers
 	beginEditCP(BonePtr(this), DefaultRotationFieldMask | DefaultTranslationFieldMask | DefaultLengthFieldMask);
 		setDefaultRotation(getRotation());
 		setDefaultTranslation(getTranslation());

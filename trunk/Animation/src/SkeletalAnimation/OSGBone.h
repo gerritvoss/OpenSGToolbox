@@ -53,6 +53,14 @@ OSG_BEGIN_NAMESPACE
            PageAnimationBone for a description.
 */
 
+/**************************************************************************//**
+ * @class	OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
+ * 
+ * @brief	Osg animationlib dllmapping. 
+ * 
+ * @author	Dtnaylor
+ * @date	6/10/2009
+*****************************************************************************/
 class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
 {
   private:
@@ -79,11 +87,58 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
 
     /*! \}                                                                 */
 
+    /**************************************************************************//**
+     * @fn	void addChild(BonePtr TheBone)
+     * 
+     * @brief	Adds a child to the bone. 
+     * 
+     * @param	TheBone	the bone. 
+    *****************************************************************************/
     void addChild(BonePtr TheBone);
+
+    /**************************************************************************//**
+     * @fn	void removeChild(BonePtr TheBone)
+     * 
+     * @brief	Removes a child from the bone. 
+     * 
+     * @param	TheBone	The bone to remove. 
+    *****************************************************************************/
     void removeChild(BonePtr TheBone);
+
+    /**************************************************************************//**
+     * @fn	void removeChild(UInt32 Index)
+     * 
+     * @brief	Removes a child from the bone. 
+     * 
+     * @param	Index	Zero-based index of the bone to remove. 
+    *****************************************************************************/
     void removeChild(UInt32 Index);
+
+	/**************************************************************************//**
+	 * @fn	void setBindPosition()
+	 * 
+	 * @brief	Sets the bone's current position as its bind (default) position. 
+	*****************************************************************************/
 	void setBindPosition();
+
+    /**************************************************************************//**
+     * @fn	UInt32 getNumChildren(void) const
+     * 
+     * @brief	Gets the number of children of the bone. 
+     * 
+     * @return	The number children. 
+    *****************************************************************************/
     UInt32 getNumChildren(void) const;
+
+    /**************************************************************************//**
+     * @fn	BonePtr getChild(UInt32 Index) const
+     * 
+     * @brief	Gets a child of the bone. 
+     * 
+     * @param	Index	Zero-based index of the child. 
+     * 
+     * @return	The child. 
+    *****************************************************************************/
     BonePtr getChild(UInt32 Index) const;
 
 	Matrix getInternalRelativeTransformation(void);
@@ -131,7 +186,22 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
     
     /*==========================  PRIVATE  ================================*/
 
+	/**************************************************************************//**
+	 * @fn	void updateTransformation(bool IsRecursiveUpdate)
+	 * 
+	 * @brief	Updates the transformation described by IsRecursiveUpdate. 
+	 * 
+	 * @param	IsRecursiveUpdate	true if is recursive update. 
+	*****************************************************************************/
 	void updateTransformation(bool IsRecursiveUpdate);
+
+	/**************************************************************************//**
+	 * @fn	void calculateRelativeTransformation(bool isDefault)
+	 * 
+	 * @brief	Calculates the relative transformation. 
+	 * 
+	 * @param	isDefault	true if is default. 
+	*****************************************************************************/
 	void calculateRelativeTransformation(bool isDefault);
 	void calculateAbsoluteTransformation(bool isDefault);
 	void calculateDifferenceTransformations(void);
