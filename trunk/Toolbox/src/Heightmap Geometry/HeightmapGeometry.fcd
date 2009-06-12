@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="HeightmapGeometry"
+	parent="Geometry"
+	library="Toolbox"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="HeightImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	The Image to create the heightfield from.
+	</Field>
+	<Field
+		name="Dimensions"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="100.0f,100.0f"
+	>
+	The world space heightfield dimensions on the geom's local X and Z axes
+	</Field>
+	<Field
+		name="Scale"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0f"
+	>
+	The vertical sample height multiplier, a uniform scale applied to all raw height data
+	</Field>
+	<Field
+		name="Offset"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f"
+	>
+	The vertical sample offset, added to the scaled height data
+	</Field>
+	<Field
+		name="Segments"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="10.0,10.0"
+	>
+	The number of segments to create along the width and length
+	</Field>
+</FieldContainer>

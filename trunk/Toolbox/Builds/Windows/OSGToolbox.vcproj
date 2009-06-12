@@ -246,6 +246,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Util\OSGImageUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGImageUtils.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Util\OSGInterpolations.h"
 					>
 				</File>
@@ -399,6 +407,38 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Attachments\OSGFilePathAttachmentFields.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Heightmap Geometry"
+				>
+				<File
+					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometry.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometry.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometry.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometryBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometryBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometryBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometryFields.h"
 					>
 				</File>
 			</Filter>
