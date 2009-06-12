@@ -166,8 +166,10 @@ class TutorialMouseMotionListener : public MouseMotionListener
 // Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
 {
+	std::cout << "Initing OpenSG" << std::endl;
     // OSG init
     osgInit(argc,argv);
+	std::cout << "Inited OpenSG" << std::endl;
 
     // Set up Window
     WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();

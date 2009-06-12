@@ -207,7 +207,7 @@ class TutorialUpdateListener : public UpdateListener
     virtual void update(const UpdateEvent& e)
     {
         ForceOnCharacter.setValues(0.0,0.0,0.0);
-        Real32 PushForce(5000.0);
+        Real32 PushForce(15000.0);
         Real32 Speed(10.0);
         if(_IsUpKeyDown)
         {
@@ -679,8 +679,8 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
     Matrix m;
     //create OpenSG mesh
     GeometryPtr box;
-    NodePtr boxNode = makeBox(Dimensions.x(), Dimensions.y(), Dimensions.z(), 1, 1, 1);
-    box = GeometryPtr::dcast(boxNode->getCore());
+    NodePtr characterNode = makeBox(Dimensions.x(), Dimensions.y(), Dimensions.z(), 1, 1, 1);
+    box = GeometryPtr::dcast(characterNode->getCore());
     SimpleMaterialPtr box_mat = SimpleMaterial::create();
     beginEditCP(box_mat);
         box_mat->setAmbient(Color3f(0.0,0.0,0.0));
@@ -714,12 +714,12 @@ PhysicsBodyPtr buildBox(Vec3f Dimensions, Pnt3f Position)
         endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
 
     //add attachments
-    beginEditCP(boxNode, Node::AttachmentsFieldMask);
-        boxNode->addAttachment(boxGeom);
-    endEditCP(boxNode, Node::AttachmentsFieldMask);
+    beginEditCP(characterNode, Node::AttachmentsFieldMask);
+        characterNode->addAttachment(boxGeom);
+    endEditCP(characterNode, Node::AttachmentsFieldMask);
     beginEditCP(boxTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
         boxTransNode->addAttachment(boxBody);
-        boxTransNode->addChild(boxNode);
+        boxTransNode->addChild(characterNode);
     endEditCP(boxTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 
     //add to SceneGraph
@@ -742,16 +742,13 @@ PhysicsBodyPtr buildCharacter(Vec3f Dimensions, Pnt3f Position)
     Matrix m;
     //create OpenSG mesh
     GeometryPtr box;
-    NodePtr boxNode = makeBox(Dimensions.x(), Dimensions.y(), Dimensions.z(), 1, 1, 1);
-    box = GeometryPtr::dcast(boxNode->getCore());
-    SimpleMaterialPtr box_mat = SimpleMaterial::create();
-    beginEditCP(box_mat);
-        box_mat->setAmbient(Color3f(0.0,0.0,0.0));
-        box_mat->setDiffuse(Color3f(1.0,1.0 ,0.0));
-    endEditCP(box_mat);
-    beginEditCP(box, Geometry::MaterialFieldMask);
-        box->setMaterial(box_mat);
-    endEditCP(box, Geometry::MaterialFieldMask);
+    //NodePtr characterNode = makeBox(Dimensions.x(), Dimensions.y(), Dimensions.z(), 1, 1, 1);
+    NodePtr characterNode = SceneFileHandler::the().read("Data/Jack.osb");
+	if(characterNode == NullFC)
+	{
+		characterNode = makeBox(Dimensions.x(), Dimensions.y(), Dimensions.z(), 1, 1, 1);
+	}
+    box = GeometryPtr::dcast(characterNode->getCore());
     TransformPtr boxTrans;
     NodePtr boxTransNode = makeCoredNode<Transform>(&boxTrans);
     m.setIdentity();
@@ -778,12 +775,12 @@ PhysicsBodyPtr buildCharacter(Vec3f Dimensions, Pnt3f Position)
     endEditCP(CapsuleGeom, PhysicsCCylinderGeom::BodyFieldMask | PhysicsCCylinderGeom::SpaceFieldMask | PhysicsCCylinderGeom::ParamsFieldMask);
 
     //add attachments
-    beginEditCP(boxNode, Node::AttachmentsFieldMask);
-        boxNode->addAttachment(CapsuleGeom);
-    endEditCP(boxNode, Node::AttachmentsFieldMask);
+    beginEditCP(characterNode, Node::AttachmentsFieldMask);
+        characterNode->addAttachment(CapsuleGeom);
+    endEditCP(characterNode, Node::AttachmentsFieldMask);
     beginEditCP(boxTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
         boxTransNode->addAttachment(boxBody);
-        boxTransNode->addChild(boxNode);
+        boxTransNode->addChild(characterNode);
     endEditCP(boxTransNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 
     //add to SceneGraph
