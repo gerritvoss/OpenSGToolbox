@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -55,7 +55,6 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
@@ -75,7 +74,7 @@ typedef FCPtr<PhysicsGeomPtr, PhysicsSphereGeom> PhysicsSphereGeomPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpContribFieldTraits
+/*! \ingroup GrpPhysicsFieldTraits
  */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
@@ -106,7 +105,7 @@ struct FieldDataTraits<PhysicsSphereGeomPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpContribFieldSingle */
+/*! \ingroup GrpPhysicsFieldSingle */
 
 typedef SField<PhysicsSphereGeomPtr> SFPhysicsSphereGeomPtr;
 #endif
@@ -116,7 +115,7 @@ OSG_DLLEXPORT_DECL1(SField, PhysicsSphereGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpContribFieldMulti */
+/*! \ingroup GrpPhysicsFieldMulti */
 
 typedef MField<PhysicsSphereGeomPtr> MFPhysicsSphereGeomPtr;
 #endif
@@ -127,6 +126,6 @@ OSG_DLLEXPORT_DECL1(MField, PhysicsSphereGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSSPHEREGEOMFIELDS_HEADER_CVSID "@(#)$Id: OSGPhysicsSphereGeomFields.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSSPHEREGEOMFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGPHYSICSSPHEREGEOMFIELDS_H_ */

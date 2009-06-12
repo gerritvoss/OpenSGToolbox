@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,23 +57,11 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsPlaneGeom : public PhysicsPlaneGeomBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Vec4f getParams(void);
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-	  void setParams(const Vec4f &value );
-	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initPlaneGeom();
-	  Real32 getPointDepth(const Vec3f& p);
+	  Real32 getPointDepth(const Vec3f& p) const;
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

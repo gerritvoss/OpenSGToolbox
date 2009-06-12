@@ -315,7 +315,7 @@ void PhysicsBody::setSphereMassTotal( Real32 totalMass, Real32 radius )
     endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
-void PhysicsBody::setCCylinderMass( Real32 density, Int32 direction, 
+void PhysicsBody::setCapsuleMass( Real32 density, Int32 direction, 
                                    Real32 radius, Real32 length )
 {
     beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
@@ -325,7 +325,7 @@ void PhysicsBody::setCCylinderMass( Real32 density, Int32 direction,
     endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
 
-void PhysicsBody::setCCylinderMassTotal( Real32 totalMass, Int32 direction, 
+void PhysicsBody::setCapsuleMassTotal( Real32 totalMass, Int32 direction, 
                                         Real32 radius, Real32 length )
 {
     beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,37 +96,37 @@ PhysicsPlaneGeomPtr PhysicsPlaneGeomBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PhysicsPlaneGeom::_sfParams field.
+//! Get the PhysicsPlaneGeom::_sfParameters field.
 inline
-SFVec4f *PhysicsPlaneGeomBase::getSFParams(void)
+SFVec4f *PhysicsPlaneGeomBase::getSFParameters(void)
 {
-    return &_sfParams;
+    return &_sfParameters;
 }
 
 
-//! Get the value of the PhysicsPlaneGeom::_sfParams field.
+//! Get the value of the PhysicsPlaneGeom::_sfParameters field.
 inline
-Vec4f &PhysicsPlaneGeomBase::getParams(void)
+Vec4f &PhysicsPlaneGeomBase::getParameters(void)
 {
-    return _sfParams.getValue();
+    return _sfParameters.getValue();
 }
 
-//! Get the value of the PhysicsPlaneGeom::_sfParams field.
+//! Get the value of the PhysicsPlaneGeom::_sfParameters field.
 inline
-const Vec4f &PhysicsPlaneGeomBase::getParams(void) const
+const Vec4f &PhysicsPlaneGeomBase::getParameters(void) const
 {
-    return _sfParams.getValue();
+    return _sfParameters.getValue();
 }
 
-//! Set the value of the PhysicsPlaneGeom::_sfParams field.
+//! Set the value of the PhysicsPlaneGeom::_sfParameters field.
 inline
-void PhysicsPlaneGeomBase::setParams(const Vec4f &value)
+void PhysicsPlaneGeomBase::setParameters(const Vec4f &value)
 {
-    _sfParams.setValue(value);
+    _sfParameters.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSPLANEGEOMBASE_INLINE_CVSID "@(#)$Id: OSGPhysicsPlaneGeomBase.inl,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSPLANEGEOMBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

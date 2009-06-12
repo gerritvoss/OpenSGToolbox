@@ -12,11 +12,12 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="params"
+		name="parameters"
 		type="Vec4f"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		default="0.0,1.0,0.0,0.0"
 	>
 	</Field>
 </FieldContainer>

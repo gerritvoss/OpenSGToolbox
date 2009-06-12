@@ -60,7 +60,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBoxGeom : public PhysicsBoxGeomBase
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-	  Real32 getPointDepth(const Vec3f& p);
+	  Real32 getPointDepth(const Vec3f& p) const;
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

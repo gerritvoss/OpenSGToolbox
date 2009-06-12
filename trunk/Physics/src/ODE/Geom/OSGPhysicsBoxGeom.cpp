@@ -80,8 +80,8 @@ void PhysicsBoxGeom::initMethod (void)
 void PhysicsBoxGeom::onCreate(const PhysicsBoxGeom *)
 {
 	_GeomID = dCreateBox(0, getLengths().x(), getLengths().y(), getLengths().z());
-    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(_GeomID));
-    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(_GeomID));
+    setCategoryBits(dGeomGetCategoryBits(_GeomID));
+    setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
 void PhysicsBoxGeom::onDestroy()
@@ -91,7 +91,7 @@ void PhysicsBoxGeom::onDestroy()
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-Real32 PhysicsBoxGeom::getPointDepth(const Vec3f& p)
+Real32 PhysicsBoxGeom::getPointDepth(const Vec3f& p) const
 {
 	return (Real32)dGeomBoxPointDepth(_GeomID, p.x(), p.y(), p.z());
 }

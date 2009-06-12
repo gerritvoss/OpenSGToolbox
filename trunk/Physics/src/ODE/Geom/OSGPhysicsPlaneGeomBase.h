@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,7 +67,7 @@
 
 #include "OSGPhysicsGeom.h" // Parent
 
-#include <OpenSG/OSGVec4fFields.h> // Params type
+#include <OpenSG/OSGVec4fFields.h> // Parameters type
 
 #include "OSGPhysicsPlaneGeomFields.h"
 
@@ -91,11 +91,11 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsPlaneGeomBase : public PhysicsGeom
 
     enum
     {
-        ParamsFieldId = Inherited::NextFieldId,
-        NextFieldId   = ParamsFieldId + 1
+        ParametersFieldId = Inherited::NextFieldId,
+        NextFieldId       = ParametersFieldId + 1
     };
 
-    static const OSG::BitVector ParamsFieldMask;
+    static const OSG::BitVector ParametersFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +122,17 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsPlaneGeomBase : public PhysicsGeom
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec4f             *getSFParams         (void);
+           SFVec4f             *getSFParameters     (void);
 
-           Vec4f               &getParams         (void);
-     const Vec4f               &getParams         (void) const;
+           Vec4f               &getParameters     (void);
+     const Vec4f               &getParameters     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setParams         ( const Vec4f &value );
+     void setParameters     ( const Vec4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsPlaneGeomBase : public PhysicsGeom
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFVec4f             _sfParams;
+    SFVec4f             _sfParameters;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -253,6 +253,6 @@ typedef RefPtr<PhysicsPlaneGeomPtr> PhysicsPlaneGeomRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSPLANEGEOMBASE_HEADER_CVSID "@(#)$Id: OSGPhysicsPlaneGeomBase.h,v 1.2 2006/02/20 17:04:21 dirk Exp $"
+#define OSGPHYSICSPLANEGEOMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSPLANEGEOMBASE_H_ */

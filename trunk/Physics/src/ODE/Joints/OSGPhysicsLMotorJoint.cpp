@@ -98,7 +98,7 @@ PhysicsLMotorJointPtr PhysicsLMotorJoint::create(PhysicsWorldPtr w)
 void PhysicsLMotorJoint::setAxis1Properties(const Vec3f& Axis, UInt8 ReferenceFrame)
 {
     setAxis1(Axis);
-    setAxis3ReferenceFrame(ReferenceFrame);
+    setAxis1ReferenceFrame(ReferenceFrame);
 }
 
 void PhysicsLMotorJoint::setAxis2Properties(const Vec3f& Axis, UInt8 ReferenceFrame)

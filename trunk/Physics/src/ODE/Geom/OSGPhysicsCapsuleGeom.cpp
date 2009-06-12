@@ -46,7 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGPhysicsDef.h"
 
-#include "OSGPhysicsRayGeom.h"
+#include "OSGPhysicsCapsuleGeom.h"
 
 OSG_USING_NAMESPACE
 
@@ -54,7 +54,7 @@ OSG_USING_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::PhysicsRayGeom
+/*! \class osg::PhysicsCapsuleGeom
 
 */
 
@@ -66,7 +66,7 @@ OSG_USING_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PhysicsRayGeom::initMethod (void)
+void PhysicsCapsuleGeom::initMethod (void)
 {
 }
 
@@ -74,70 +74,60 @@ void PhysicsRayGeom::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-/*-------------------------------------------------------------------------*\
--  public                                                                 -
-\*-------------------------------------------------------------------------*/
-void PhysicsRayGeom::onCreate(const PhysicsRayGeom *)
+void PhysicsCapsuleGeom::onCreate(const PhysicsCapsuleGeom *)
 {
-	_GeomID = dCreateRay(0, getLength());
+	_GeomID = dCreateCapsule(0, getRadius(), getLength());
     setCategoryBits(dGeomGetCategoryBits(_GeomID));
     setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
-void PhysicsRayGeom::onDestroy()
+void PhysicsCapsuleGeom::onDestroy()
 {
 	//empty
 }
-
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-
+Real32 PhysicsCapsuleGeom::getPointDepth(const Vec3f& p) const
+{
+	return (Real32)dGeomCapsulePointDepth(_GeomID, p.x(), p.y(), p.z());
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-PhysicsRayGeom::PhysicsRayGeom(void) :
+PhysicsCapsuleGeom::PhysicsCapsuleGeom(void) :
     Inherited()
 {
 }
 
-PhysicsRayGeom::PhysicsRayGeom(const PhysicsRayGeom &source) :
+PhysicsCapsuleGeom::PhysicsCapsuleGeom(const PhysicsCapsuleGeom &source) :
     Inherited(source)
 {
 }
 
-PhysicsRayGeom::~PhysicsRayGeom(void)
+PhysicsCapsuleGeom::~PhysicsCapsuleGeom(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void PhysicsRayGeom::changed(BitVector whichField, UInt32 origin)
+void PhysicsCapsuleGeom::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if(whichField & LengthFieldMask)
+	if((whichField & RadiusFieldMask) || (whichField & LengthFieldMask))
 	{
-		dGeomRaySetLength(_GeomID, getLength());
-	}
-	if((whichField & PositionFieldMask) || (whichField & DirectionFieldMask))
-	{
-		dGeomRaySet(_GeomID, getPosition().x(), getPosition().y(), getPosition().z(), getDirection().x(), getDirection().y(), getDirection().z() );
-	}
-	
-	if(whichField & ClosestHitFieldMask)
-	{
-		dGeomRaySetClosestHit(_GeomID, getClosestHit() ? 1:0);
+		dGeomCapsuleSetParams(_GeomID, getRadius(), getLength());
 	}
 }
 
-void PhysicsRayGeom::dump(      UInt32    , 
+void PhysicsCapsuleGeom::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump PhysicsRayGeom NI" << std::endl;
+    SLOG << "Dump PhysicsCapsuleGeom NI" << std::endl;
 }
 
 
@@ -154,11 +144,11 @@ void PhysicsRayGeom::dump(      UInt32    ,
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsRayGeom.cpp,v 1.1 2005/10/21 15:44:25 a-m-z Exp $";
-    static Char8 cvsid_hpp       [] = OSGPHYSICSRAYGEOMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPHYSICSRAYGEOMBASE_INLINE_CVSID;
+    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsCapsuleGeom.cpp,v 1.1 2005/10/21 15:44:24 a-m-z Exp $";
+    static Char8 cvsid_hpp       [] = OSGPHYSICSCAPSULEGEOMBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGPHYSICSCAPSULEGEOMBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPHYSICSRAYGEOMFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGPHYSICSCAPSULEGEOMFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

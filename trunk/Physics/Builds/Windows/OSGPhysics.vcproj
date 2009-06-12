@@ -340,31 +340,31 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeom.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCapsuleGeom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeom.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCapsuleGeom.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeom.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCapsuleGeom.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeomBase.cpp"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCapsuleGeomBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeomBase.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCapsuleGeomBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeomBase.inl"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCapsuleGeomBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCCylinderGeomFields.h"
+						RelativePath="..\..\src\ODE\Geom\OSGPhysicsCapsuleGeomFields.h"
 						>
 					</File>
 					<File

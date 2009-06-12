@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          www.vrac.iastate.edu                             *
- *                                                                           *
  *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -44,88 +42,119 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class PhysicsCapsuleGeom!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGPHYSICSRAYGEOMFIELDS_H_
-#define _OSGPHYSICSRAYGEOMFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGPhysicsDef.h"
-
-#include "OSGPhysicsGeomFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class PhysicsRayGeom;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! PhysicsRayGeomPtr
-
-typedef FCPtr<PhysicsGeomPtr, PhysicsRayGeom> PhysicsRayGeomPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpPhysicsFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<PhysicsRayGeomPtr> : 
-    public FieldTraitsRecurseMapper<PhysicsRayGeomPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &PhysicsCapsuleGeomBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+//! access the numerical type of the class
+inline
+OSG::UInt32 PhysicsCapsuleGeomBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
-    static DataType   &getType (void) { return _type;        }
+//! create a new instance of the class
+inline
+PhysicsCapsuleGeomPtr PhysicsCapsuleGeomBase::create(void) 
+{
+    PhysicsCapsuleGeomPtr fc; 
 
-    static const char *getSName(void) { return "SFPhysicsRayGeomPtr"; }
-    static const char *getMName(void) { return "MFPhysicsRayGeomPtr"; }
-};
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PhysicsCapsuleGeomPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<PhysicsRayGeomPtr, true>
-    \hideinhierarchy
- */
-#endif
+//! create an empty new instance of the class, do not copy the prototype
+inline
+PhysicsCapsuleGeomPtr PhysicsCapsuleGeomBase::createEmpty(void) 
+{ 
+    PhysicsCapsuleGeomPtr returnValue; 
+    
+    newPtr(returnValue); 
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+    return returnValue; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpPhysicsFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<PhysicsRayGeomPtr> SFPhysicsRayGeomPtr;
-#endif
+//! Get the PhysicsCapsuleGeom::_sfRadius field.
+inline
+SFReal32 *PhysicsCapsuleGeomBase::getSFRadius(void)
+{
+    return &_sfRadius;
+}
 
-#ifndef OSG_COMPILEPHYSICSRAYGEOMINST
-OSG_DLLEXPORT_DECL1(SField, PhysicsRayGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
-#endif
+//! Get the PhysicsCapsuleGeom::_sfLength field.
+inline
+SFReal32 *PhysicsCapsuleGeomBase::getSFLength(void)
+{
+    return &_sfLength;
+}
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpPhysicsFieldMulti */
 
-typedef MField<PhysicsRayGeomPtr> MFPhysicsRayGeomPtr;
-#endif
+//! Get the value of the PhysicsCapsuleGeom::_sfRadius field.
+inline
+Real32 &PhysicsCapsuleGeomBase::getRadius(void)
+{
+    return _sfRadius.getValue();
+}
 
-#ifndef OSG_COMPILEPHYSICSRAYGEOMINST
-OSG_DLLEXPORT_DECL1(MField, PhysicsRayGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
-#endif
+//! Get the value of the PhysicsCapsuleGeom::_sfRadius field.
+inline
+const Real32 &PhysicsCapsuleGeomBase::getRadius(void) const
+{
+    return _sfRadius.getValue();
+}
+
+//! Set the value of the PhysicsCapsuleGeom::_sfRadius field.
+inline
+void PhysicsCapsuleGeomBase::setRadius(const Real32 &value)
+{
+    _sfRadius.setValue(value);
+}
+
+//! Get the value of the PhysicsCapsuleGeom::_sfLength field.
+inline
+Real32 &PhysicsCapsuleGeomBase::getLength(void)
+{
+    return _sfLength.getValue();
+}
+
+//! Get the value of the PhysicsCapsuleGeom::_sfLength field.
+inline
+const Real32 &PhysicsCapsuleGeomBase::getLength(void) const
+{
+    return _sfLength.getValue();
+}
+
+//! Set the value of the PhysicsCapsuleGeom::_sfLength field.
+inline
+void PhysicsCapsuleGeomBase::setLength(const Real32 &value)
+{
+    _sfLength.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSRAYGEOMFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGPHYSICSCAPSULEGEOMBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
-#endif /* _OSGPHYSICSRAYGEOMFIELDS_H_ */

@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGPHYSICSSPHEREGEOM_H_
-#define _OSGPHYSICSSPHEREGEOM_H_
+#ifndef _OSGPHYSICSCAPSULEGEOM_H_
+#define _OSGPHYSICSCAPSULEGEOM_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,15 +45,15 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGPhysicsDef.h"
 
-#include "OSGPhysicsSphereGeomBase.h"
+#include "OSGPhysicsCapsuleGeomBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSphereGeom : public PhysicsSphereGeomBase
+class  OSG_PHYSICSLIB_DLLMAPPING PhysicsCapsuleGeom : public PhysicsCapsuleGeomBase
 {
   private:
 
-    typedef PhysicsSphereGeomBase Inherited;
+    typedef PhysicsCapsuleGeomBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -83,49 +83,49 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSphereGeom : public PhysicsSphereGeomBas
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in PhysicsSphereGeomBase.
+    // Variables should all be in PhysicsCapsuleGeomBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    PhysicsSphereGeom(void);
-    PhysicsSphereGeom(const PhysicsSphereGeom &source);
+    PhysicsCapsuleGeom(void);
+    PhysicsCapsuleGeom(const PhysicsCapsuleGeom &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PhysicsSphereGeom(void); 
+    virtual ~PhysicsCapsuleGeom(void); 
 
     /*! \}                                                                 */
 	/*---------------------------------------------------------------------*/
 	/*! \name                   Class Specific                             */
 	/*! \{                                                                 */
-	void onCreate(const PhysicsSphereGeom *id = NULL);
+	void onCreate(const PhysicsCapsuleGeom *id = NULL);
 	void onDestroy();
 	/*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class PhysicsSphereGeomBase;
+    friend class PhysicsCapsuleGeomBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const PhysicsSphereGeom &source);
+    void operator =(const PhysicsCapsuleGeom &source);
 };
 
-typedef PhysicsSphereGeom *PhysicsSphereGeomP;
+typedef PhysicsCapsuleGeom *PhysicsCapsuleGeomP;
 
 OSG_END_NAMESPACE
 
-#include "OSGPhysicsSphereGeomBase.inl"
-#include "OSGPhysicsSphereGeom.inl"
+#include "OSGPhysicsCapsuleGeomBase.inl"
+#include "OSGPhysicsCapsuleGeom.inl"
 
-#define OSGPHYSICSSPHEREGEOM_HEADER_CVSID "@(#)$Id: OSGPhysicsSphereGeom.h,v 1.2 2006/08/19 00:21:47 dirk Exp $"
+#define OSGPHYSICSCAPSULEGEOM_HEADER_CVSID "@(#)$Id: OSGPhysicsCapsuleGeom.h,v 1.2 2006/08/19 00:21:46 dirk Exp $"
 
-#endif /* _OSGPHYSICSSPHEREGEOM_H_ */
+#endif /* _OSGPHYSICSCAPSULEGEOM_H_ */

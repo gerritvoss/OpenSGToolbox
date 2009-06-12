@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -78,20 +78,7 @@ void PhysicsTriMeshGeom::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-/***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-NodePtr PhysicsTriMeshGeom::getGeometryNode(void)
-{
-    if(geoNode!=NullFC)
-        return geoNode;
-    else
-        return NullFC;
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-void PhysicsTriMeshGeom::setGeometryNode(NodePtr& node)
+void PhysicsTriMeshGeom::createODEGeometry(NodePtr& node)
 {
 
     GeometryPtr geo = GeometryPtr::dcast(node->getCore());
@@ -153,12 +140,10 @@ void PhysicsTriMeshGeom::setGeometryNode(NodePtr& node)
         }
         else
         {
-            FWARNING(("No triangle mesh given to ODE! Convert to triangles first!\n"));
+            SWARNING << "No triangle mesh given to ODE! Convert to triangles first!\n";
             setData(data);
         }
     }
-    geoNode=node;
-    PhysicsTriMeshGeomBase::setGeometryNode(node);
 }
 /*-------------------------------------------------------------------------*\
 -  public                                                                 -
@@ -167,44 +152,30 @@ void PhysicsTriMeshGeom::onCreate(const PhysicsTriMeshGeom *)
 {
 	_GeomID = dCreateTriMesh(0, 0, 0, 0, 0);
 	data = 0;
-    numVertices = 0;
-    numFaces = 0;
-    vertexData = 0;
-    faceData = 0;
-    normalData = 0;
-    geoNode=NullFC;
-    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(_GeomID));
-    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(_GeomID));
+    setCategoryBits(dGeomGetCategoryBits(_GeomID));
+    setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
 void PhysicsTriMeshGeom::onDestroy()
 {
 	if (data) dGeomTriMeshDataDestroy(data);
-    if(vertexData) free((void*)vertexData);
-    if(faceData) free((void*)faceData);
-    if(normalData) free((void*)normalData);
-    geoNode=NullFC;
 }
 
 
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsTriMeshGeom::initTriMeshGeom()
-{
-    setGeometryNode(PhysicsTriMeshGeomBase::getGeometryNode());
-}
 void PhysicsTriMeshGeom::setCallback( dTriCallback* callback )
 {
 	dGeomTriMeshSetCallback(_GeomID, callback);
 }
 
-dTriCallback* PhysicsTriMeshGeom::getCallback(void)
+dTriCallback* PhysicsTriMeshGeom::getCallback(void) const
 {
 	return dGeomTriMeshGetCallback(_GeomID);
 }
 
-dTriArrayCallback* PhysicsTriMeshGeom::getArrayCallback(void)
+dTriArrayCallback* PhysicsTriMeshGeom::getArrayCallback(void) const
 {
 	return dGeomTriMeshGetArrayCallback(_GeomID);
 }
@@ -214,7 +185,7 @@ void PhysicsTriMeshGeom::setRayCallback( dTriRayCallback* callback )
 	dGeomTriMeshSetRayCallback(_GeomID, callback);
 }
 
-dTriRayCallback* PhysicsTriMeshGeom::getRayCallback(void)
+dTriRayCallback* PhysicsTriMeshGeom::getRayCallback(void) const
 {
 	return dGeomTriMeshGetRayCallback(_GeomID);
 }
@@ -229,7 +200,7 @@ void PhysicsTriMeshGeom::enableTC( Int32 geomClass, bool enable )
 	dGeomTriMeshEnableTC(_GeomID, geomClass, enable ? 1:0);
 }
 
-bool PhysicsTriMeshGeom::isTCEnabled( Int32 geomClass)
+bool PhysicsTriMeshGeom::isTCEnabled( Int32 geomClass) const
 {
 	return dGeomTriMeshIsTCEnabled(_GeomID, geomClass) == 1;
 }
@@ -239,7 +210,7 @@ void PhysicsTriMeshGeom::clearTCCache(void)
 	dGeomTriMeshClearTCCache(_GeomID);
 }
 
-void PhysicsTriMeshGeom::getTriangle( Int32 index, Vec3f& v0, Vec3f& v1, Vec3f& v2 )
+void PhysicsTriMeshGeom::getTriangle( Int32 index, Vec3f& v0, Vec3f& v1, Vec3f& v2 ) const
 {
 	dVector3 _v0, _v1, _v2;
 	dGeomTriMeshGetTriangle(_GeomID, index, &_v0, &_v1, &_v2);
@@ -248,7 +219,7 @@ void PhysicsTriMeshGeom::getTriangle( Int32 index, Vec3f& v0, Vec3f& v1, Vec3f& 
 	v2.setValue(Vec3f(_v2[0], _v2[1], _v2[2]));
 }
 
-void PhysicsTriMeshGeom::getPoint( Int32 index, Real32 u, Real32 v, Vec3f& out )
+void PhysicsTriMeshGeom::getPoint( Int32 index, Real32 u, Real32 v, Vec3f& out ) const
 {
 	dVector3 _out;
 	dGeomTriMeshGetPoint(_GeomID, index, u, v, _out);
@@ -279,6 +250,11 @@ PhysicsTriMeshGeom::~PhysicsTriMeshGeom(void)
 void PhysicsTriMeshGeom::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & GeometryNodeFieldMask)
+	{
+		createODEGeometry(getGeometryNode());
+	}
 }
 
 void PhysicsTriMeshGeom::dump(      UInt32    , 

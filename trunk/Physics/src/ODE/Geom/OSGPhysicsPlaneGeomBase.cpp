@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,16 +57,15 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsPlaneGeomBase.h"
 #include "OSGPhysicsPlaneGeom.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PhysicsPlaneGeomBase::ParamsFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsPlaneGeomBase::ParamsFieldId);
+const OSG::BitVector  PhysicsPlaneGeomBase::ParametersFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsPlaneGeomBase::ParametersFieldId);
 
 const OSG::BitVector PhysicsPlaneGeomBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -75,7 +74,7 @@ const OSG::BitVector PhysicsPlaneGeomBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Vec4f           PhysicsPlaneGeomBase::_sfParams
+/*! \var Vec4f           PhysicsPlaneGeomBase::_sfParameters
     
 */
 
@@ -84,10 +83,10 @@ const OSG::BitVector PhysicsPlaneGeomBase::MTInfluenceMask =
 FieldDescription *PhysicsPlaneGeomBase::_desc[] = 
 {
     new FieldDescription(SFVec4f::getClassType(), 
-                     "params", 
-                     ParamsFieldId, ParamsFieldMask,
+                     "parameters", 
+                     ParametersFieldId, ParametersFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsPlaneGeomBase::getSFParams)
+                     (FieldAccessMethod) &PhysicsPlaneGeomBase::getSFParameters)
 };
 
 
@@ -163,7 +162,7 @@ void PhysicsPlaneGeomBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PhysicsPlaneGeomBase::PhysicsPlaneGeomBase(void) :
-    _sfParams                 (), 
+    _sfParameters             (), 
     Inherited() 
 {
 }
@@ -173,7 +172,7 @@ PhysicsPlaneGeomBase::PhysicsPlaneGeomBase(void) :
 #endif
 
 PhysicsPlaneGeomBase::PhysicsPlaneGeomBase(const PhysicsPlaneGeomBase &source) :
-    _sfParams                 (source._sfParams                 ), 
+    _sfParameters             (source._sfParameters             ), 
     Inherited                 (source)
 {
 }
@@ -190,9 +189,9 @@ UInt32 PhysicsPlaneGeomBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ParamsFieldMask & whichField))
+    if(FieldBits::NoField != (ParametersFieldMask & whichField))
     {
-        returnValue += _sfParams.getBinSize();
+        returnValue += _sfParameters.getBinSize();
     }
 
 
@@ -204,9 +203,9 @@ void PhysicsPlaneGeomBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ParamsFieldMask & whichField))
+    if(FieldBits::NoField != (ParametersFieldMask & whichField))
     {
-        _sfParams.copyToBin(pMem);
+        _sfParameters.copyToBin(pMem);
     }
 
 
@@ -217,9 +216,9 @@ void PhysicsPlaneGeomBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ParamsFieldMask & whichField))
+    if(FieldBits::NoField != (ParametersFieldMask & whichField))
     {
-        _sfParams.copyFromBin(pMem);
+        _sfParameters.copyFromBin(pMem);
     }
 
 
@@ -232,8 +231,8 @@ void PhysicsPlaneGeomBase::executeSyncImpl(      PhysicsPlaneGeomBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ParamsFieldMask & whichField))
-        _sfParams.syncWith(pOther->_sfParams);
+    if(FieldBits::NoField != (ParametersFieldMask & whichField))
+        _sfParameters.syncWith(pOther->_sfParameters);
 
 
 }
@@ -245,8 +244,8 @@ void PhysicsPlaneGeomBase::executeSyncImpl(      PhysicsPlaneGeomBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ParamsFieldMask & whichField))
-        _sfParams.syncWith(pOther->_sfParams);
+    if(FieldBits::NoField != (ParametersFieldMask & whichField))
+        _sfParameters.syncWith(pOther->_sfParameters);
 
 
 
@@ -263,6 +262,8 @@ void PhysicsPlaneGeomBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -274,8 +275,6 @@ DataType FieldDataTraits<PhysicsPlaneGeomPtr>::_type("PhysicsPlaneGeomPtr", "Phy
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsPlaneGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsPlaneGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -291,10 +290,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsPlaneGeomBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSPLANEGEOMBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSPLANEGEOMBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSPLANEGEOMFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

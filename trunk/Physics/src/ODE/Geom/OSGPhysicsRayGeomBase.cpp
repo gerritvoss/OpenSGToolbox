@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,16 +57,24 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsRayGeomBase.h"
 #include "OSGPhysicsRayGeom.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PhysicsRayGeomBase::LenghtFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsRayGeomBase::LenghtFieldId);
+const OSG::BitVector  PhysicsRayGeomBase::LengthFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsRayGeomBase::LengthFieldId);
+
+const OSG::BitVector  PhysicsRayGeomBase::PositionFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsRayGeomBase::PositionFieldId);
+
+const OSG::BitVector  PhysicsRayGeomBase::DirectionFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsRayGeomBase::DirectionFieldId);
+
+const OSG::BitVector  PhysicsRayGeomBase::ClosestHitFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsRayGeomBase::ClosestHitFieldId);
 
 const OSG::BitVector PhysicsRayGeomBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -75,7 +83,16 @@ const OSG::BitVector PhysicsRayGeomBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Real32          PhysicsRayGeomBase::_sfLenght
+/*! \var Real32          PhysicsRayGeomBase::_sfLength
+    
+*/
+/*! \var Pnt3f           PhysicsRayGeomBase::_sfPosition
+    
+*/
+/*! \var Vec3f           PhysicsRayGeomBase::_sfDirection
+    
+*/
+/*! \var bool            PhysicsRayGeomBase::_sfClosestHit
     
 */
 
@@ -84,10 +101,25 @@ const OSG::BitVector PhysicsRayGeomBase::MTInfluenceMask =
 FieldDescription *PhysicsRayGeomBase::_desc[] = 
 {
     new FieldDescription(SFReal32::getClassType(), 
-                     "lenght", 
-                     LenghtFieldId, LenghtFieldMask,
+                     "length", 
+                     LengthFieldId, LengthFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsRayGeomBase::getSFLenght)
+                     (FieldAccessMethod) &PhysicsRayGeomBase::getSFLength),
+    new FieldDescription(SFPnt3f::getClassType(), 
+                     "position", 
+                     PositionFieldId, PositionFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsRayGeomBase::getSFPosition),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "direction", 
+                     DirectionFieldId, DirectionFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsRayGeomBase::getSFDirection),
+    new FieldDescription(SFBool::getClassType(), 
+                     "closestHit", 
+                     ClosestHitFieldId, ClosestHitFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsRayGeomBase::getSFClosestHit)
 };
 
 
@@ -163,7 +195,10 @@ void PhysicsRayGeomBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PhysicsRayGeomBase::PhysicsRayGeomBase(void) :
-    _sfLenght                 (), 
+    _sfLength                 (), 
+    _sfPosition               (), 
+    _sfDirection              (), 
+    _sfClosestHit             (), 
     Inherited() 
 {
 }
@@ -173,7 +208,10 @@ PhysicsRayGeomBase::PhysicsRayGeomBase(void) :
 #endif
 
 PhysicsRayGeomBase::PhysicsRayGeomBase(const PhysicsRayGeomBase &source) :
-    _sfLenght                 (source._sfLenght                 ), 
+    _sfLength                 (source._sfLength                 ), 
+    _sfPosition               (source._sfPosition               ), 
+    _sfDirection              (source._sfDirection              ), 
+    _sfClosestHit             (source._sfClosestHit             ), 
     Inherited                 (source)
 {
 }
@@ -190,9 +228,24 @@ UInt32 PhysicsRayGeomBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (LenghtFieldMask & whichField))
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
     {
-        returnValue += _sfLenght.getBinSize();
+        returnValue += _sfLength.getBinSize();
+    }
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        returnValue += _sfPosition.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+    {
+        returnValue += _sfDirection.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ClosestHitFieldMask & whichField))
+    {
+        returnValue += _sfClosestHit.getBinSize();
     }
 
 
@@ -204,9 +257,24 @@ void PhysicsRayGeomBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (LenghtFieldMask & whichField))
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
     {
-        _sfLenght.copyToBin(pMem);
+        _sfLength.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        _sfPosition.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+    {
+        _sfDirection.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ClosestHitFieldMask & whichField))
+    {
+        _sfClosestHit.copyToBin(pMem);
     }
 
 
@@ -217,9 +285,24 @@ void PhysicsRayGeomBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (LenghtFieldMask & whichField))
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
     {
-        _sfLenght.copyFromBin(pMem);
+        _sfLength.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        _sfPosition.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+    {
+        _sfDirection.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ClosestHitFieldMask & whichField))
+    {
+        _sfClosestHit.copyFromBin(pMem);
     }
 
 
@@ -232,8 +315,17 @@ void PhysicsRayGeomBase::executeSyncImpl(      PhysicsRayGeomBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (LenghtFieldMask & whichField))
-        _sfLenght.syncWith(pOther->_sfLenght);
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
+        _sfLength.syncWith(pOther->_sfLength);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pOther->_sfPosition);
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+        _sfDirection.syncWith(pOther->_sfDirection);
+
+    if(FieldBits::NoField != (ClosestHitFieldMask & whichField))
+        _sfClosestHit.syncWith(pOther->_sfClosestHit);
 
 
 }
@@ -245,8 +337,17 @@ void PhysicsRayGeomBase::executeSyncImpl(      PhysicsRayGeomBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (LenghtFieldMask & whichField))
-        _sfLenght.syncWith(pOther->_sfLenght);
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
+        _sfLength.syncWith(pOther->_sfLength);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pOther->_sfPosition);
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+        _sfDirection.syncWith(pOther->_sfDirection);
+
+    if(FieldBits::NoField != (ClosestHitFieldMask & whichField))
+        _sfClosestHit.syncWith(pOther->_sfClosestHit);
 
 
 
@@ -263,6 +364,8 @@ void PhysicsRayGeomBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -274,8 +377,6 @@ DataType FieldDataTraits<PhysicsRayGeomPtr>::_type("PhysicsRayGeomPtr", "Physics
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsRayGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsRayGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -291,10 +392,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsRayGeomBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSRAYGEOMBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSRAYGEOMBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSRAYGEOMFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

@@ -59,7 +59,7 @@ NodePtr TriGeometryBase;
 
 PhysicsHandlerPtr physHandler;
 PhysicsWorldPtr physicsWorld;
-PhysicsHashSpacePtr hashSpace;
+PhysicsHashSpacePtr physicsSpace;
 
 //just for hierarchy
 NodePtr spaceGroupNode;
@@ -166,10 +166,8 @@ class TutorialMouseMotionListener : public MouseMotionListener
 // Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
 {
-	std::cout << "Initing OpenSG" << std::endl;
     // OSG init
     osgInit(argc,argv);
-	std::cout << "Inited OpenSG" << std::endl;
 
     // Set up Window
     WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
@@ -206,10 +204,7 @@ int main(int argc, char **argv)
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
 
     //Make Base Geometry Node
-    TriGeometryBase = SceneFileHandler::the().read("./Data/Ship.osb");
-
-    //Make Torus Node
-    NodePtr TorusNode = makeTorus(.5, 2, 32, 32);
+    TriGeometryBase = makeTorus(0.5, 1.0, 24, 24);
 
     //Make Main Scene Node
 	NodePtr scene = makeCoredNode<Group>();
@@ -245,12 +240,12 @@ int main(int argc, char **argv)
                               PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
                               PhysicsWorld::GravityFieldMask);
 
-    hashSpace = PhysicsHashSpace::create();
+    physicsSpace = PhysicsHashSpace::create();
 
     physHandler = PhysicsHandler::create();
     beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
         physHandler->setWorld(physicsWorld);
-        physHandler->getSpaces().push_back(hashSpace);
+        physHandler->getSpaces().push_back(physicsSpace);
         physHandler->setUpdateNode(rootNode);
     endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
     physHandler->attachUpdateProducer(TutorialWindowEventProducer);
@@ -259,7 +254,7 @@ int main(int argc, char **argv)
     beginEditCP(rootNode, Node::AttachmentsFieldMask);
         rootNode->addAttachment(physHandler);    
         rootNode->addAttachment(physicsWorld);
-        rootNode->addAttachment(hashSpace);
+        rootNode->addAttachment(physicsSpace);
     endEditCP(rootNode, Node::AttachmentsFieldMask);
 
 
@@ -289,12 +284,12 @@ int main(int argc, char **argv)
     beginEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
         planeGeom->setLengths(Vec3f(30.0, 30.0, 1.0));
         //add geoms to space for collision
-        planeGeom->setSpace(hashSpace);
+        planeGeom->setSpace(physicsSpace);
     endEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
 
 	//add Attachments to nodes...
     beginEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
-	    spaceGroupNode->addAttachment(hashSpace);
+	    spaceGroupNode->addAttachment(physicsSpace);
         spaceGroupNode->addChild(planeNode);
     endEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 
@@ -414,7 +409,7 @@ void buildBox(void)
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
     beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask  | PhysicsBoxGeom::LengthsFieldMask);
         boxGeom->setBody(boxBody);
-        boxGeom->setSpace(hashSpace);
+        boxGeom->setSpace(physicsSpace);
         boxGeom->setLengths(Lengths);
     endEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
 
@@ -472,7 +467,7 @@ void buildSphere(void)
     PhysicsSphereGeomPtr sphereGeom = PhysicsSphereGeom::create();
     beginEditCP(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask | PhysicsSphereGeom::RadiusFieldMask);
         sphereGeom->setBody(sphereBody);
-        sphereGeom->setSpace(hashSpace);
+        sphereGeom->setSpace(physicsSpace);
         sphereGeom->setRadius(Radius);
     endEditCP(sphereGeom, PhysicsSphereGeom::BodyFieldMask | PhysicsSphereGeom::SpaceFieldMask | PhysicsSphereGeom::RadiusFieldMask);
     
@@ -490,111 +485,14 @@ void buildSphere(void)
     endEditCP(spaceGroupNode);
 }
 
-NodePtr buildTerrain(Vec2f Dimensions, UInt32 XSubdivisions, UInt32 YSubdivisions)
-{
-	GeoPTypesPtr type = GeoPTypesUI8::create();        
-    beginEditCP(type, GeoPTypesUI8::GeoPropDataFieldMask);
-    {
-        type->addValue(GL_TRIANGLES);
-    }
-    endEditCP  (type, GeoPTypesUI8::GeoPropDataFieldMask);
-
-	GeoPositions3fPtr pnts = GeoPositions3f::create();
-	GeoNormals3fPtr norms = GeoNormals3f::create();
-    beginEditCP(pnts, GeoPositions3f::GeoPropDataFieldMask);
-    beginEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
-    {
-        Real32 ZScale(10.0);
-        for(UInt32 i(0) ; i<XSubdivisions ; ++i)
-        {
-            for(UInt32 j(0) ; j<YSubdivisions ; ++j)
-            {
-                Real32 Theta(5*3.14159*(static_cast<Real32>(i)/static_cast<Real32>(XSubdivisions))),
-                       ThetaNext(5*3.14159*(static_cast<Real32>(i+1)/static_cast<Real32>(XSubdivisions)));
-		        // the points of the Tris
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+i*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-j*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(Theta)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+(i+1)*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-j*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(ThetaNext)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+i*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-(j+1)*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(Theta)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+i*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-(j+1)*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(Theta)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+(i+1)*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-j*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(ThetaNext)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-                pnts->addValue(Pnt3f(-Dimensions.x()/2.0+(i+1)*(Dimensions.x()/static_cast<Real32>(XSubdivisions)),  Dimensions.y()/2.0-(j+1)*(Dimensions.y()/static_cast<Real32>(YSubdivisions)),  ZScale*osgcos(ThetaNext)));
-                norms->addValue(Vec3f( 0.0,0.0,1.0));
-            }
-        }
-
-    }
-    endEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
-    endEditCP  (pnts, GeoPositions3f::GeoPropDataFieldMask);
-    
-    GeoIndicesUI32Ptr indicies = GeoIndicesUI32::create();
-    beginEditCP(indicies, GeoIndicesUI16::GeoPropDataFieldMask);
-    for(UInt32 i(0) ; i<pnts->size() ; ++i)
-    {
-        indicies->addValue(i);
-    }
-    endEditCP(indicies, GeoIndicesUI16::GeoPropDataFieldMask);
-    
-	GeoPLengthsPtr lens = GeoPLengthsUI32::create();    
-    beginEditCP(lens, GeoPLengthsUI32::GeoPropDataFieldMask);
-    {
-        lens->addValue(pnts->size());
-    }
-    endEditCP  (lens, GeoPLengthsUI32::GeoPropDataFieldMask);
-
-    GeometryPtr Terrain = Geometry::create();
-    beginEditCP(Terrain, Geometry::TypesFieldMask     |
-                     Geometry::LengthsFieldMask   |
-                     Geometry::PositionsFieldMask |
-                     Geometry::NormalsFieldMask |
-                     Geometry::IndicesFieldMask  );
-    {
-        Terrain->setTypes    (type);
-        Terrain->setLengths  (lens);
-        Terrain->setPositions(pnts);
-        Terrain->setNormals(norms);
-        Terrain->setIndices(indicies);
-    }
-    endEditCP  (Terrain, Geometry::TypesFieldMask     |
-                     Geometry::LengthsFieldMask   |
-                     Geometry::PositionsFieldMask |
-                     Geometry::NormalsFieldMask |
-                     Geometry::IndicesFieldMask  );
-
-    //calcVertexNormals(Terrain);
-    
-    //and its Material
-	SimpleMaterialPtr TerrainMat = SimpleMaterial::create();
-	beginEditCP(TerrainMat);
-		TerrainMat->setAmbient(Color3f(0.1,0.3,0.1));
-		TerrainMat->setDiffuse(Color3f(0.3,0.9,0.3));
-	endEditCP(TerrainMat);
-    beginEditCP(Terrain, Geometry::MaterialFieldMask);
-	    Terrain->setMaterial(TerrainMat);
-    endEditCP(Terrain, Geometry::MaterialFieldMask);
-    
-    NodePtr TerrainNode = Node::create();
-    beginEditCP(TerrainNode, Node::CoreFieldMask);
-	    TerrainNode->setCore(Terrain);
-    endEditCP(TerrainNode, Node::CoreFieldMask);
-
-    return TerrainNode;
-}
-
 //////////////////////////////////////////////////////////////////////////
 //! trimesh defined by filenode will be loaded
 //////////////////////////////////////////////////////////////////////////
 void buildTriMesh(void)
 {
     //NodePtr tri = makeTorus(0.5, 1.0, 24, 12);
-    NodePtr tri = buildTerrain(Vec2f(100.0,100.0),25,25);
     //NodePtr tri = makeBox(10.0, 10.0, 10.0, 1, 1, 1);
-    //NodePtr tri = Node::Ptr::dcast(TriGeometryBase->shallowCopy());
+    NodePtr tri = Node::Ptr::dcast(TriGeometryBase->shallowCopy());
     if(tri!=NullFC)
     {
         GeometryPtr triGeo = GeometryPtr::dcast(tri->getCore()); 
@@ -608,31 +506,51 @@ void buildTriMesh(void)
         TransformPtr triTrans;
         NodePtr triTransNode = makeCoredNode<Transform>(&triTrans);
         m.setIdentity();
-        Real32 randX = (Real32)(rand()%10)-5.0;
-        Real32 randY = (Real32)(rand()%10)-5.0;
+		Real32 randX = (Real32)(rand()%10)-5.0;
+		Real32 randY = (Real32)(rand()%10)-5.0;
         m.setTranslate(randX, randY, 18.0);
         triTrans->setMatrix(m);
 
         //create ODE data
-        //PhysicsBodyPtr triBody = PhysicsBody::create(physicsWorld);
-        //beginEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
-        //    triBody->setPosition(Vec3f(randX, randY, 18.0));
-        //    triBody->setLinearDamping(0.0001);
-        //    triBody->setAngularDamping(0.0001);
-        //endEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+        Vec3f GeometryBounds(calcMinGeometryBounds(triGeo));
+        PhysicsBodyPtr triBody = PhysicsBody::create(physicsWorld);
+        beginEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+            triBody->setPosition(Vec3f(randX, randY, 18.0));
+            triBody->setLinearDamping(0.0001);
+            triBody->setAngularDamping(0.0001);
+        endEditCP(triBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::AngularDampingFieldMask);
+            triBody->setBoxMass(1.0,GeometryBounds.x(), GeometryBounds.y(), GeometryBounds.z());
         PhysicsGeomPtr triGeom;
+        if(true)
+        {
             triGeom = PhysicsTriMeshGeom::create();
-            CPEdit(triGeom, PhysicsTriMeshGeom::SpaceFieldMask | 
+            beginEditCP(triGeom, PhysicsTriMeshGeom::BodyFieldMask | 
+                            PhysicsTriMeshGeom::SpaceFieldMask | 
                             PhysicsTriMeshGeom::GeometryNodeFieldMask);
-               // triGeom->setBody(triBody);
+                triGeom->setBody(triBody);
                 //add geom to space for collision
-                triGeom->setSpace(hashSpace);
+                triGeom->setSpace(physicsSpace);
                 //set the geometryNode to fill the ode-triMesh
-                PhysicsTriMeshGeom::Ptr::dcast(triGeom)->setGeometryNode(tri);
+                PhysicsTriMeshGeom::Ptr::dcast(triGeom)->setGeometryNode(makeTorus(0.5, 1.0, 10, 10));
+            endEditCP(triGeom, PhysicsTriMeshGeom::BodyFieldMask | 
+                            PhysicsTriMeshGeom::SpaceFieldMask | 
+                            PhysicsTriMeshGeom::GeometryNodeFieldMask);
+        }
+        else
+        {
+
+            triGeom = PhysicsBoxGeom::create();
+            beginEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
+                triGeom->setBody(triBody);
+                triGeom->setSpace(physicsSpace);
+                PhysicsBoxGeom::Ptr::dcast(triGeom)->setLengths(GeometryBounds);
+
+            endEditCP(triGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask | PhysicsBoxGeom::LengthsFieldMask);
+		}
         
         //add attachments
         tri->addAttachment(triGeom);
-        //triTransNode->addAttachment(triBody);
+        triTransNode->addAttachment(triBody);
         //add to SceneGraph
         triTransNode->addChild(tri);
         spaceGroupNode->addChild(triTransNode);

@@ -17,6 +17,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="NullFC"
 	>
 	this node should contain a geometrynode core with geo data!
 	</Field>

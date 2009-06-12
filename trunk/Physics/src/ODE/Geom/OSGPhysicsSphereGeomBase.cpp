@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,13 +57,12 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
 #include "OSGPhysicsSphereGeomBase.h"
 #include "OSGPhysicsSphereGeom.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  PhysicsSphereGeomBase::RadiusFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsSphereGeomBase::RadiusFieldId);
@@ -163,7 +162,7 @@ void PhysicsSphereGeomBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PhysicsSphereGeomBase::PhysicsSphereGeomBase(void) :
-    _sfRadius                 (), 
+    _sfRadius                 (Real32(1.0f)), 
     Inherited() 
 {
 }
@@ -263,6 +262,8 @@ void PhysicsSphereGeomBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -274,8 +275,6 @@ DataType FieldDataTraits<PhysicsSphereGeomPtr>::_type("PhysicsSphereGeomPtr", "P
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsSphereGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsSphereGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-
-OSG_END_NAMESPACE
 
 
 /*------------------------------------------------------------------------*/
@@ -291,10 +290,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsSphereGeomBase.cpp,v 1.2 2006/02/20 17:04:21 dirk Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGPHYSICSSPHEREGEOMBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGPHYSICSSPHEREGEOMBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGPHYSICSSPHEREGEOMFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

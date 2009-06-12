@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PhysicsRayGeom
+ **     class PhysicsCapsuleGeom
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPHYSICSRAYGEOMBASE_H_
-#define _OSGPHYSICSRAYGEOMBASE_H_
+#ifndef _OSGPHYSICSCAPSULEGEOMBASE_H_
+#define _OSGPHYSICSCAPSULEGEOMBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -67,21 +67,19 @@
 
 #include "OSGPhysicsGeom.h" // Parent
 
+#include <OpenSG/OSGReal32Fields.h> // Radius type
 #include <OpenSG/OSGReal32Fields.h> // Length type
-#include <OpenSG/OSGPnt3fFields.h> // Position type
-#include <OpenSG/OSGVec3fFields.h> // Direction type
-#include <OpenSG/OSGBoolFields.h> // ClosestHit type
 
-#include "OSGPhysicsRayGeomFields.h"
+#include "OSGPhysicsCapsuleGeomFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class PhysicsRayGeom;
+class PhysicsCapsuleGeom;
 class BinaryDataHandler;
 
-//! \brief PhysicsRayGeom Base Class.
+//! \brief PhysicsCapsuleGeom Base Class.
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsCapsuleGeomBase : public PhysicsGeom
 {
   private:
 
@@ -90,21 +88,17 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PhysicsRayGeomPtr  Ptr;
+    typedef PhysicsCapsuleGeomPtr  Ptr;
 
     enum
     {
-        LengthFieldId     = Inherited::NextFieldId,
-        PositionFieldId   = LengthFieldId     + 1,
-        DirectionFieldId  = PositionFieldId   + 1,
-        ClosestHitFieldId = DirectionFieldId  + 1,
-        NextFieldId       = ClosestHitFieldId + 1
+        RadiusFieldId = Inherited::NextFieldId,
+        LengthFieldId = RadiusFieldId + 1,
+        NextFieldId   = LengthFieldId + 1
     };
 
+    static const OSG::BitVector RadiusFieldMask;
     static const OSG::BitVector LengthFieldMask;
-    static const OSG::BitVector PositionFieldMask;
-    static const OSG::BitVector DirectionFieldMask;
-    static const OSG::BitVector ClosestHitFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,29 +125,21 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           SFReal32            *getSFRadius         (void);
            SFReal32            *getSFLength         (void);
-           SFPnt3f             *getSFPosition       (void);
-           SFVec3f             *getSFDirection      (void);
-           SFBool              *getSFClosestHit     (void);
 
+           Real32              &getRadius         (void);
+     const Real32              &getRadius         (void) const;
            Real32              &getLength         (void);
      const Real32              &getLength         (void) const;
-           Pnt3f               &getPosition       (void);
-     const Pnt3f               &getPosition       (void) const;
-           Vec3f               &getDirection      (void);
-     const Vec3f               &getDirection      (void) const;
-           bool                &getClosestHit     (void);
-     const bool                &getClosestHit     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setRadius         ( const Real32 &value );
      void setLength         ( const Real32 &value );
-     void setPosition       ( const Pnt3f &value );
-     void setDirection      ( const Vec3f &value );
-     void setClosestHit     ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -177,8 +163,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PhysicsRayGeomPtr      create          (void); 
-    static  PhysicsRayGeomPtr      createEmpty     (void); 
+    static  PhysicsCapsuleGeomPtr      create          (void); 
+    static  PhysicsCapsuleGeomPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -196,25 +182,23 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFReal32            _sfRadius;
     SFReal32            _sfLength;
-    SFPnt3f             _sfPosition;
-    SFVec3f             _sfDirection;
-    SFBool              _sfClosestHit;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    PhysicsRayGeomBase(void);
-    PhysicsRayGeomBase(const PhysicsRayGeomBase &source);
+    PhysicsCapsuleGeomBase(void);
+    PhysicsCapsuleGeomBase(const PhysicsCapsuleGeomBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PhysicsRayGeomBase(void); 
+    virtual ~PhysicsCapsuleGeomBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,13 +206,13 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PhysicsRayGeomBase *pOther,
+    void executeSyncImpl(      PhysicsCapsuleGeomBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      PhysicsRayGeomBase *pOther,
+    void executeSyncImpl(      PhysicsCapsuleGeomBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -258,7 +242,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const PhysicsRayGeomBase &source);
+    void operator =(const PhysicsCapsuleGeomBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -266,17 +250,17 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
 //---------------------------------------------------------------------------
 
 
-typedef PhysicsRayGeomBase *PhysicsRayGeomBaseP;
+typedef PhysicsCapsuleGeomBase *PhysicsCapsuleGeomBaseP;
 
-typedef osgIF<PhysicsRayGeomBase::isNodeCore,
-              CoredNodePtr<PhysicsRayGeom>,
+typedef osgIF<PhysicsCapsuleGeomBase::isNodeCore,
+              CoredNodePtr<PhysicsCapsuleGeom>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PhysicsRayGeomNodePtr;
+              >::_IRet PhysicsCapsuleGeomNodePtr;
 
-typedef RefPtr<PhysicsRayGeomPtr> PhysicsRayGeomRefPtr;
+typedef RefPtr<PhysicsCapsuleGeomPtr> PhysicsCapsuleGeomRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSRAYGEOMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGPHYSICSCAPSULEGEOMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGPHYSICSRAYGEOMBASE_H_ */
+#endif /* _OSGPHYSICSCAPSULEGEOMBASE_H_ */

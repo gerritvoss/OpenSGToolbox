@@ -44,5 +44,5 @@ OSG_BEGIN_NAMESPACE
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSRAYGEOM_INLINE_CVSID "@(#)$Id: OSGPhysicsRayGeom.inl,v 1.1 2005/10/21 15:44:25 a-m-z Exp $"
+#define OSGPHYSICSCAPSULEGEOM_INLINE_CVSID "@(#)$Id: OSGPhysicsCapsuleGeom.inl,v 1.1 2005/10/21 15:44:24 a-m-z Exp $"
 

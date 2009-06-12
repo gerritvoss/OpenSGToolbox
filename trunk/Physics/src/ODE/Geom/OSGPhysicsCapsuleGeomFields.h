@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGPHYSICSRAYGEOMFIELDS_H_
-#define _OSGPHYSICSRAYGEOMFIELDS_H_
+#ifndef _OSGPHYSICSCAPSULEGEOMFIELDS_H_
+#define _OSGPHYSICSCAPSULEGEOMFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,12 +64,12 @@
 
 OSG_BEGIN_NAMESPACE
 
-class PhysicsRayGeom;
+class PhysicsCapsuleGeom;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! PhysicsRayGeomPtr
+//! PhysicsCapsuleGeomPtr
 
-typedef FCPtr<PhysicsGeomPtr, PhysicsRayGeom> PhysicsRayGeomPtr;
+typedef FCPtr<PhysicsGeomPtr, PhysicsCapsuleGeom> PhysicsCapsuleGeomPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<PhysicsGeomPtr, PhysicsRayGeom> PhysicsRayGeomPtr;
 #endif
 
 template <>
-struct FieldDataTraits<PhysicsRayGeomPtr> : 
-    public FieldTraitsRecurseMapper<PhysicsRayGeomPtr, true>
+struct FieldDataTraits<PhysicsCapsuleGeomPtr> : 
+    public FieldTraitsRecurseMapper<PhysicsCapsuleGeomPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<PhysicsRayGeomPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFPhysicsRayGeomPtr"; }
-    static const char *getMName(void) { return "MFPhysicsRayGeomPtr"; }
+    static const char *getSName(void) { return "SFPhysicsCapsuleGeomPtr"; }
+    static const char *getMName(void) { return "MFPhysicsCapsuleGeomPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<PhysicsRayGeomPtr, true>
+/*! \class  FieldTraitsRecurseMapper<PhysicsCapsuleGeomPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<PhysicsRayGeomPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpPhysicsFieldSingle */
 
-typedef SField<PhysicsRayGeomPtr> SFPhysicsRayGeomPtr;
+typedef SField<PhysicsCapsuleGeomPtr> SFPhysicsCapsuleGeomPtr;
 #endif
 
-#ifndef OSG_COMPILEPHYSICSRAYGEOMINST
-OSG_DLLEXPORT_DECL1(SField, PhysicsRayGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEPHYSICSCAPSULEGEOMINST
+OSG_DLLEXPORT_DECL1(SField, PhysicsCapsuleGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpPhysicsFieldMulti */
 
-typedef MField<PhysicsRayGeomPtr> MFPhysicsRayGeomPtr;
+typedef MField<PhysicsCapsuleGeomPtr> MFPhysicsCapsuleGeomPtr;
 #endif
 
-#ifndef OSG_COMPILEPHYSICSRAYGEOMINST
-OSG_DLLEXPORT_DECL1(MField, PhysicsRayGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEPHYSICSCAPSULEGEOMINST
+OSG_DLLEXPORT_DECL1(MField, PhysicsCapsuleGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSRAYGEOMFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGPHYSICSCAPSULEGEOMFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGPHYSICSRAYGEOMFIELDS_H_ */
+#endif /* _OSGPHYSICSCAPSULEGEOMFIELDS_H_ */

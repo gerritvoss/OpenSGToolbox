@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,38 +58,22 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsTriMeshGeom : public PhysicsTriMeshGeomB
     /*==========================  PUBLIC  =================================*/
   public:
 
-	  //the ODE object (don't destroy!)
-	  dTriMeshDataID data;
-      NodePtr geoNode;
-      /*---------------------------------------------------------------------*/
-      /*! \name                   Class Specific Get Field                    */
-      /*! \{                                                                 */
-      NodePtr getGeometryNode(void);
-      /*! \}                                                                 */
-
-      /*---------------------------------------------------------------------*/
-      /*! \name                   Class Specific Set Field                    */
-      /*! \{                                                                 */
-      void setGeometryNode(NodePtr& node);
-      /*! \}                                                                 */
-
 	  /*---------------------------------------------------------------------*/
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
-      void initTriMeshGeom();
 	  void setCallback( dTriCallback* callback );
-	  dTriCallback* getCallback();
+	  dTriCallback* getCallback(void) const;
 	  void setArrayCallback( dTriArrayCallback* arrayCallback );
-	  dTriArrayCallback* getArrayCallback();
+	  dTriArrayCallback* getArrayCallback(void) const;
 	  void setRayCallback( dTriRayCallback* callback );
-	  dTriRayCallback* getRayCallback();
+	  dTriRayCallback* getRayCallback(void) const;
 	  void setData( dTriMeshDataID data );
 
 	  void enableTC( Int32 geomClass, bool enable );
-	  bool isTCEnabled( Int32 geomClass );
-	  void clearTCCache();
-	  void getTriangle( Int32 index, Vec3f& v0, Vec3f& v1, Vec3f& v2 );
-	  void getPoint( Int32 index, Real32 u, Real32 v, Vec3f& out );
+	  bool isTCEnabled( Int32 geomClass ) const;
+	  void clearTCCache(void);
+	  void getTriangle( Int32 index, Vec3f& v0, Vec3f& v1, Vec3f& v2 ) const;
+	  void getPoint( Int32 index, Real32 u, Real32 v, Vec3f& out ) const;
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -132,13 +116,11 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsTriMeshGeom : public PhysicsTriMeshGeomB
 	/*! \{                                                                 */
 	void onCreate(const PhysicsTriMeshGeom *id = NULL);
 	void onDestroy();
+	void createODEGeometry(NodePtr& node);
 	/*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
   private:
-      UInt32 numVertices, numFaces;
-      UInt32* faceData;
-      Real32* vertexData;
-      Real32* normalData;
+	  dTriMeshDataID data;
 
 
     friend class FieldContainer;

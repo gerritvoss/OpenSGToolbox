@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,27 +57,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeom : public PhysicsRayGeomBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Get Field                    */
-	  /*! \{                                                                 */
-	  Real32 getLenght(void);
-	  /*! \}                                                                 */
 
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific Set Field                    */
-	  /*! \{                                                                 */
-	  void setLenght(const Real32 &value );
-	  /*! \}                                                                 */
-
-	  /*---------------------------------------------------------------------*/
-	  /*! \name                   Class Specific                             */
-	  /*! \{																*/
-      void initRayGeom();
-	  void set(const Vec3f& pos, const Vec3f& dir);
-	  void get(Vec3f& start, Vec3f& dir);
-	  void setClosestHit(bool );
-	  bool getClosestHit(void);
-	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -76,10 +76,9 @@ void PhysicsPlaneGeom::initMethod (void)
 \***************************************************************************/
 void PhysicsPlaneGeom::onCreate(const PhysicsPlaneGeom *)
 {
-	_GeomID = dCreatePlane(0, 0, 0, 1, 0);
-	PhysicsPlaneGeomBase::setParams(getParams());
-    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(_GeomID));
-    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(_GeomID));
+	_GeomID = dCreatePlane(0, getParameters().x(), getParameters().y(), getParameters().z(), getParameters().w());
+    setCategoryBits(dGeomGetCategoryBits(_GeomID));
+    setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
 void PhysicsPlaneGeom::onDestroy()
@@ -87,31 +86,9 @@ void PhysicsPlaneGeom::onDestroy()
 	//empty
 }
 /***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-Vec4f PhysicsPlaneGeom::getParams(void)
-{
-	dVector4 t;
-	dGeomPlaneGetParams(_GeomID, t);
-	return Vec4f(t[0], t[1],t[2], t[3]);
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-
-void PhysicsPlaneGeom::setParams(const Vec4f &value )
-{
-	dGeomPlaneSetParams(_GeomID, value.x(), value.y(), value.z(), value.w());
-	PhysicsPlaneGeomBase::setParams(value);
-}
-/***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsPlaneGeom::initPlaneGeom()
-{
-    setParams(PhysicsPlaneGeomBase::getParams());
-}
-Real32 PhysicsPlaneGeom::getPointDepth(const Vec3f& p)
+Real32 PhysicsPlaneGeom::getPointDepth(const Vec3f& p) const
 {
 	return (Real32)dGeomPlanePointDepth(_GeomID, p.x(), p.y(), p.z());
 }
@@ -140,6 +117,11 @@ PhysicsPlaneGeom::~PhysicsPlaneGeom(void)
 void PhysicsPlaneGeom::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & ParametersFieldMask)
+	{
+		dGeomPlaneSetParams(_GeomID, getParameters().x(), getParameters().y(), getParameters().z(), getParameters().w());
+	}
 }
 
 void PhysicsPlaneGeom::dump(      UInt32    , 

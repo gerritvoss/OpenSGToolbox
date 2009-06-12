@@ -11,7 +11,7 @@
 #include "ODE/Geom/OSGPhysicsBoxGeom.h"
 #include "ODE/Geom/OSGPhysicsPlaneGeom.h"
 #include "ODE/Geom/OSGPhysicsSphereGeom.h"
-#include "ODE/Geom/OSGPhysicsCCylinderGeom.h"
+#include "ODE/Geom/OSGPhysicsCapsuleGeom.h"
 #include "ODE/Geom/OSGPhysicsTriMeshGeom.h"
 #include "ODE/Geom/OSGPhysicsRayGeom.h"
 

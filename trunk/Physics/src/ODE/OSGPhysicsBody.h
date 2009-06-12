@@ -117,9 +117,9 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
           Real32 I12, Real32 I13, Real32 I23 );
       void setSphereMass( Real32 density, Real32 radius );
       void setSphereMassTotal( Real32 totalMass, Real32 radius );
-      void setCCylinderMass( Real32 density, Int32 direction,
+      void setCapsuleMass( Real32 density, Int32 direction,
           Real32 radius, Real32 length );
-      void setCCylinderMassTotal( Real32 totalMass, Int32 direction,
+      void setCapsuleMassTotal( Real32 totalMass, Int32 direction,
           Real32 radius, Real32 length );
       void setBoxMass( Real32 density, Real32 lx, Real32 ly, Real32 lz );
       void setBoxMassTotal( Real32 totalMass, Real32 lx, Real32 ly, Real32 lz );

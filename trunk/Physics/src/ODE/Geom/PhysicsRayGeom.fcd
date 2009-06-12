@@ -21,10 +21,29 @@
 	</Field>
 	<Field
 		name="position"
-		type="Real32"
+		type="Pnt3f"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defualtValue="0.0f,0.0f,0.0f"
+	>
+	</Field>
+	<Field
+		name="direction"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defualtValue="0.0f,0.0f,1.0f"
+	>
+	</Field>
+	<Field
+		name="closestHit"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defualtValue="true"
 	>
 	</Field>
 </FieldContainer>

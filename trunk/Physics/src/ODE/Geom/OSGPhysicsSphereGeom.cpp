@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                          www.vrac.iastate.edu                             *
+ *                                                                           *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -76,10 +76,9 @@ void PhysicsSphereGeom::initMethod (void)
 \***************************************************************************/
 void PhysicsSphereGeom::onCreate(const PhysicsSphereGeom *)
 {
-	_GeomID = dCreateSphere(0, 1.0f);
-	PhysicsSphereGeomBase::setRadius(getRadius());
-    PhysicsGeomBase::setCategoryBits(dGeomGetCategoryBits(_GeomID));
-    PhysicsGeomBase::setCollideBits(dGeomGetCollideBits(_GeomID));
+	_GeomID = dCreateSphere(0, getRadius());
+    setCategoryBits(dGeomGetCategoryBits(_GeomID));
+    setCollideBits(dGeomGetCollideBits(_GeomID));
 }
 
 void PhysicsSphereGeom::onDestroy()
@@ -87,29 +86,9 @@ void PhysicsSphereGeom::onDestroy()
 	//empty
 }
 /***************************************************************************\
-*                              Field Get	                               *
-\***************************************************************************/
-Real32 PhysicsSphereGeom::getRadius(void)
-{
-	return dGeomSphereGetRadius(_GeomID);
-}
-/***************************************************************************\
-*                              Field Set	                               *
-\***************************************************************************/
-
-void PhysicsSphereGeom::setRadius(const Real32 &value )
-{
-	dGeomSphereSetRadius(_GeomID, value);
-	PhysicsSphereGeomBase::setRadius(value);
-}
-/***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
-void PhysicsSphereGeom::initSphereGeom()
-{
-    setRadius(PhysicsSphereGeomBase::getRadius());
-}
-Real32 PhysicsSphereGeom::getPointDepth(const Vec3f& p)
+Real32 PhysicsSphereGeom::getPointDepth(const Vec3f& p) const
 {
 	return (Real32)dGeomSpherePointDepth(_GeomID, p.x(), p.y(), p.z());
 }
@@ -138,6 +117,11 @@ PhysicsSphereGeom::~PhysicsSphereGeom(void)
 void PhysicsSphereGeom::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & RadiusFieldMask)
+	{
+		dGeomSphereSetRadius(_GeomID, getRadius());
+	}
 }
 
 void PhysicsSphereGeom::dump(      UInt32    , 

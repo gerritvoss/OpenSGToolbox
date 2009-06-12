@@ -45,110 +45,121 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PhysicsTriMeshGeom!
+ **     class PhysicsCapsuleGeom!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEPHYSICSTRIMESHGEOMINST
+#define OSG_COMPILEPHYSICSCAPSULEGEOMINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGPhysicsTriMeshGeomBase.h"
-#include "OSGPhysicsTriMeshGeom.h"
+#include "OSGPhysicsCapsuleGeomBase.h"
+#include "OSGPhysicsCapsuleGeom.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PhysicsTriMeshGeomBase::GeometryNodeFieldMask = 
-    (TypeTraits<BitVector>::One << PhysicsTriMeshGeomBase::GeometryNodeFieldId);
+const OSG::BitVector  PhysicsCapsuleGeomBase::RadiusFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsCapsuleGeomBase::RadiusFieldId);
 
-const OSG::BitVector PhysicsTriMeshGeomBase::MTInfluenceMask = 
+const OSG::BitVector  PhysicsCapsuleGeomBase::LengthFieldMask = 
+    (TypeTraits<BitVector>::One << PhysicsCapsuleGeomBase::LengthFieldId);
+
+const OSG::BitVector PhysicsCapsuleGeomBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var NodePtr         PhysicsTriMeshGeomBase::_sfGeometryNode
-    this node should contain a geometrynode core with geo data!
+/*! \var Real32          PhysicsCapsuleGeomBase::_sfRadius
+    
+*/
+/*! \var Real32          PhysicsCapsuleGeomBase::_sfLength
+    
 */
 
-//! PhysicsTriMeshGeom description
+//! PhysicsCapsuleGeom description
 
-FieldDescription *PhysicsTriMeshGeomBase::_desc[] = 
+FieldDescription *PhysicsCapsuleGeomBase::_desc[] = 
 {
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "geometryNode", 
-                     GeometryNodeFieldId, GeometryNodeFieldMask,
+    new FieldDescription(SFReal32::getClassType(), 
+                     "radius", 
+                     RadiusFieldId, RadiusFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsTriMeshGeomBase::getSFGeometryNode)
+                     (FieldAccessMethod) &PhysicsCapsuleGeomBase::getSFRadius),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "length", 
+                     LengthFieldId, LengthFieldMask,
+                     false,
+                     (FieldAccessMethod) &PhysicsCapsuleGeomBase::getSFLength)
 };
 
 
-FieldContainerType PhysicsTriMeshGeomBase::_type(
-    "PhysicsTriMeshGeom",
+FieldContainerType PhysicsCapsuleGeomBase::_type(
+    "PhysicsCapsuleGeom",
     "PhysicsGeom",
     NULL,
-    (PrototypeCreateF) &PhysicsTriMeshGeomBase::createEmpty,
-    PhysicsTriMeshGeom::initMethod,
+    (PrototypeCreateF) &PhysicsCapsuleGeomBase::createEmpty,
+    PhysicsCapsuleGeom::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(PhysicsTriMeshGeomBase, PhysicsTriMeshGeomPtr)
+//OSG_FIELD_CONTAINER_DEF(PhysicsCapsuleGeomBase, PhysicsCapsuleGeomPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PhysicsTriMeshGeomBase::getType(void) 
+FieldContainerType &PhysicsCapsuleGeomBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &PhysicsTriMeshGeomBase::getType(void) const 
+const FieldContainerType &PhysicsCapsuleGeomBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr PhysicsTriMeshGeomBase::shallowCopy(void) const 
+FieldContainerPtr PhysicsCapsuleGeomBase::shallowCopy(void) const 
 { 
-    PhysicsTriMeshGeomPtr returnValue; 
+    PhysicsCapsuleGeomPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const PhysicsTriMeshGeom *>(this)); 
+    newPtr(returnValue, dynamic_cast<const PhysicsCapsuleGeom *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 PhysicsTriMeshGeomBase::getContainerSize(void) const 
+UInt32 PhysicsCapsuleGeomBase::getContainerSize(void) const 
 { 
-    return sizeof(PhysicsTriMeshGeom); 
+    return sizeof(PhysicsCapsuleGeom); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void PhysicsTriMeshGeomBase::executeSync(      FieldContainer &other,
+void PhysicsCapsuleGeomBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((PhysicsTriMeshGeomBase *) &other, whichField);
+    this->executeSyncImpl((PhysicsCapsuleGeomBase *) &other, whichField);
 }
 #else
-void PhysicsTriMeshGeomBase::executeSync(      FieldContainer &other,
+void PhysicsCapsuleGeomBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((PhysicsTriMeshGeomBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((PhysicsCapsuleGeomBase *) &other, whichField, sInfo);
 }
-void PhysicsTriMeshGeomBase::execBeginEdit(const BitVector &whichField, 
+void PhysicsCapsuleGeomBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void PhysicsTriMeshGeomBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void PhysicsCapsuleGeomBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -161,8 +172,9 @@ void PhysicsTriMeshGeomBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-PhysicsTriMeshGeomBase::PhysicsTriMeshGeomBase(void) :
-    _sfGeometryNode           (NodePtr(NullFC)), 
+PhysicsCapsuleGeomBase::PhysicsCapsuleGeomBase(void) :
+    _sfRadius                 (), 
+    _sfLength                 (), 
     Inherited() 
 {
 }
@@ -171,87 +183,109 @@ PhysicsTriMeshGeomBase::PhysicsTriMeshGeomBase(void) :
 #pragma warning (default : 383)
 #endif
 
-PhysicsTriMeshGeomBase::PhysicsTriMeshGeomBase(const PhysicsTriMeshGeomBase &source) :
-    _sfGeometryNode           (source._sfGeometryNode           ), 
+PhysicsCapsuleGeomBase::PhysicsCapsuleGeomBase(const PhysicsCapsuleGeomBase &source) :
+    _sfRadius                 (source._sfRadius                 ), 
+    _sfLength                 (source._sfLength                 ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-PhysicsTriMeshGeomBase::~PhysicsTriMeshGeomBase(void)
+PhysicsCapsuleGeomBase::~PhysicsCapsuleGeomBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PhysicsTriMeshGeomBase::getBinSize(const BitVector &whichField)
+UInt32 PhysicsCapsuleGeomBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (GeometryNodeFieldMask & whichField))
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
     {
-        returnValue += _sfGeometryNode.getBinSize();
+        returnValue += _sfRadius.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
+    {
+        returnValue += _sfLength.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void PhysicsTriMeshGeomBase::copyToBin(      BinaryDataHandler &pMem,
+void PhysicsCapsuleGeomBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (GeometryNodeFieldMask & whichField))
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
     {
-        _sfGeometryNode.copyToBin(pMem);
+        _sfRadius.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
+    {
+        _sfLength.copyToBin(pMem);
     }
 
 
 }
 
-void PhysicsTriMeshGeomBase::copyFromBin(      BinaryDataHandler &pMem,
+void PhysicsCapsuleGeomBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (GeometryNodeFieldMask & whichField))
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
     {
-        _sfGeometryNode.copyFromBin(pMem);
+        _sfRadius.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
+    {
+        _sfLength.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void PhysicsTriMeshGeomBase::executeSyncImpl(      PhysicsTriMeshGeomBase *pOther,
+void PhysicsCapsuleGeomBase::executeSyncImpl(      PhysicsCapsuleGeomBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (GeometryNodeFieldMask & whichField))
-        _sfGeometryNode.syncWith(pOther->_sfGeometryNode);
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
+        _sfRadius.syncWith(pOther->_sfRadius);
+
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
+        _sfLength.syncWith(pOther->_sfLength);
 
 
 }
 #else
-void PhysicsTriMeshGeomBase::executeSyncImpl(      PhysicsTriMeshGeomBase *pOther,
+void PhysicsCapsuleGeomBase::executeSyncImpl(      PhysicsCapsuleGeomBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (GeometryNodeFieldMask & whichField))
-        _sfGeometryNode.syncWith(pOther->_sfGeometryNode);
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
+        _sfRadius.syncWith(pOther->_sfRadius);
+
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
+        _sfLength.syncWith(pOther->_sfLength);
 
 
 
 }
 
-void PhysicsTriMeshGeomBase::execBeginEditImpl (const BitVector &whichField, 
+void PhysicsCapsuleGeomBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -270,11 +304,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PhysicsTriMeshGeomPtr>::_type("PhysicsTriMeshGeomPtr", "PhysicsGeomPtr");
+DataType FieldDataTraits<PhysicsCapsuleGeomPtr>::_type("PhysicsCapsuleGeomPtr", "PhysicsGeomPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(PhysicsTriMeshGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PhysicsTriMeshGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(PhysicsCapsuleGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(PhysicsCapsuleGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -291,10 +325,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(PhysicsTriMeshGeomPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPHYSICSTRIMESHGEOMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPHYSICSTRIMESHGEOMBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGPHYSICSCAPSULEGEOMBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGPHYSICSCAPSULEGEOMBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPHYSICSTRIMESHGEOMFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGPHYSICSCAPSULEGEOMFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE
