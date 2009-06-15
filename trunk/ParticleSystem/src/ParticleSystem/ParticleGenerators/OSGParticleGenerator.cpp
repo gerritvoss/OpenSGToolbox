@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGParticleGenerator.h"
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,6 +77,63 @@ void ParticleGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+void ParticleGenerator::generate(ParticleSystemPtr System,
+		Pnt3f& PositionReturnValue, 
+		Pnt3f& SecPositionReturnValue, 
+		Vec3f& NormalReturnValue,
+		Color4f& ColorReturnValue,
+		Vec3f& SizeReturnValue,
+		Time& LifespanReturnValue,
+		Time& AgeReturnValue,
+		Vec3f& VelocityReturnValue,
+		Vec3f& SecVelocityReturnValue,
+		Vec3f& AccelerationReturnValue,
+		UInt64& PropertyReturnValue) const
+{
+	if(System != NullFC)
+	{
+		if(getBeacon() == NullFC)
+		{
+			System->addParticle(PositionReturnValue,
+				SecPositionReturnValue,
+				NormalReturnValue,
+				ColorReturnValue,
+				SizeReturnValue,
+				LifespanReturnValue,
+				AgeReturnValue,
+				VelocityReturnValue,
+				SecVelocityReturnValue,
+				AccelerationReturnValue,
+				PropertyReturnValue);
+		}
+		else
+		{
+			Matrix BeaconToWorld(getBeacon()->getToWorld());
+			
+			BeaconToWorld.multPntMatrix(PositionReturnValue, PositionReturnValue);
+			BeaconToWorld.multPntMatrix(SecPositionReturnValue, SecPositionReturnValue);
+			BeaconToWorld.multVecMatrix(NormalReturnValue, NormalReturnValue);
+			BeaconToWorld.multVecMatrix(SizeReturnValue, SizeReturnValue);
+			BeaconToWorld.multVecMatrix(VelocityReturnValue, VelocityReturnValue);
+			BeaconToWorld.multVecMatrix(SecVelocityReturnValue, SecVelocityReturnValue);
+			BeaconToWorld.multVecMatrix(AccelerationReturnValue, AccelerationReturnValue);
+		
+			System->addParticle(PositionReturnValue,
+				SecPositionReturnValue,
+				NormalReturnValue,
+				ColorReturnValue,
+				SizeReturnValue,
+				LifespanReturnValue,
+				AgeReturnValue,
+				VelocityReturnValue,
+				SecVelocityReturnValue,
+				AccelerationReturnValue,
+				PropertyReturnValue);
+
+		}
+	}
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

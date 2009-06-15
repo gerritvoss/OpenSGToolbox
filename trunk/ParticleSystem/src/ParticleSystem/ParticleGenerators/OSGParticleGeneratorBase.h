@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,7 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+#include <OpenSG/OSGNodeFields.h> // Beacon type
 
 #include "OSGParticleGeneratorFields.h"
 
@@ -87,6 +88,14 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
   public:
 
     typedef ParticleGeneratorPtr  Ptr;
+
+    enum
+    {
+        BeaconFieldId = Inherited::NextFieldId,
+        NextFieldId   = BeaconFieldId + 1
+    };
+
+    static const OSG::BitVector BeaconFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +119,23 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFNodePtr           *getSFBeacon         (void);
+
+           NodePtr             &getBeacon         (void);
+     const NodePtr             &getBeacon         (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setBeacon         ( const NodePtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -129,6 +155,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFNodePtr           _sfBeacon;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -180,6 +213,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

@@ -102,6 +102,18 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGenerator : public ParticleGenera
 
     /*! \}                                                                 */
     
+    virtual void generate(ParticleSystemPtr System,
+		Pnt3f& PositionReturnValue, 
+		Pnt3f& SecPositionReturnValue, 
+		Vec3f& NormalReturnValue,
+		Color4f& ColorReturnValue,
+		Vec3f& SizeReturnValue,
+		Time& LifespanReturnValue,
+		Time& AgeReturnValue,
+		Vec3f& VelocityReturnValue,
+		Vec3f& SecVelocityReturnValue,
+		Vec3f& AccelerationReturnValue,
+		UInt64& PropertyReturnValue) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

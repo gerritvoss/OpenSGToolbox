@@ -11,4 +11,13 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
+	<Field
+		name="Beacon"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>

@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,34 @@ OSG::UInt32 ParticleGeneratorBase::getClassTypeId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the ParticleGenerator::_sfBeacon field.
+inline
+SFNodePtr *ParticleGeneratorBase::getSFBeacon(void)
+{
+    return &_sfBeacon;
+}
+
+
+//! Get the value of the ParticleGenerator::_sfBeacon field.
+inline
+NodePtr &ParticleGeneratorBase::getBeacon(void)
+{
+    return _sfBeacon.getValue();
+}
+
+//! Get the value of the ParticleGenerator::_sfBeacon field.
+inline
+const NodePtr &ParticleGeneratorBase::getBeacon(void) const
+{
+    return _sfBeacon.getValue();
+}
+
+//! Set the value of the ParticleGenerator::_sfBeacon field.
+inline
+void ParticleGeneratorBase::setBeacon(const NodePtr &value)
+{
+    _sfBeacon.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

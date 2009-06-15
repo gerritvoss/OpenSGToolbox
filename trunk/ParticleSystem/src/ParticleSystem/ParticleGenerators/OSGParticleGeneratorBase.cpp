@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  ParticleGeneratorBase::BeaconFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleGeneratorBase::BeaconFieldId);
+
 const OSG::BitVector ParticleGeneratorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var NodePtr         ParticleGeneratorBase::_sfBeacon
+    
+*/
+
+//! ParticleGenerator description
+
+FieldDescription *ParticleGeneratorBase::_desc[] = 
+{
+    new FieldDescription(SFNodePtr::getClassType(), 
+                     "Beacon", 
+                     BeaconFieldId, BeaconFieldMask,
+                     false,
+                     (FieldAccessMethod) &ParticleGeneratorBase::getSFBeacon)
+};
 
 
 FieldContainerType ParticleGeneratorBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType ParticleGeneratorBase::_type(
     NULL,
     NULL, 
     ParticleGenerator::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(ParticleGeneratorBase, ParticleGeneratorPtr)
 
@@ -133,6 +153,7 @@ void ParticleGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ParticleGeneratorBase::ParticleGeneratorBase(void) :
+    _sfBeacon                 (NodePtr(NullFC)), 
     Inherited() 
 {
 }
@@ -142,6 +163,7 @@ ParticleGeneratorBase::ParticleGeneratorBase(void) :
 #endif
 
 ParticleGeneratorBase::ParticleGeneratorBase(const ParticleGeneratorBase &source) :
+    _sfBeacon                 (source._sfBeacon                 ), 
     Inherited                 (source)
 {
 }
@@ -158,6 +180,11 @@ UInt32 ParticleGeneratorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+    {
+        returnValue += _sfBeacon.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -167,6 +194,11 @@ void ParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+    {
+        _sfBeacon.copyToBin(pMem);
+    }
+
 
 }
 
@@ -174,6 +206,11 @@ void ParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+    {
+        _sfBeacon.copyFromBin(pMem);
+    }
 
 
 }
@@ -185,6 +222,9 @@ void ParticleGeneratorBase::executeSyncImpl(      ParticleGeneratorBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+        _sfBeacon.syncWith(pOther->_sfBeacon);
+
 
 }
 #else
@@ -194,6 +234,9 @@ void ParticleGeneratorBase::executeSyncImpl(      ParticleGeneratorBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+        _sfBeacon.syncWith(pOther->_sfBeacon);
 
 
 

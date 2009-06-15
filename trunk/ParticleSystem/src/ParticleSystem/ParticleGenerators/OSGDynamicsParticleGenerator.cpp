@@ -171,20 +171,18 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32
 			)->getData();
 	}
 
-	if(System != NullFC)
-	{
-		System->addParticle(PositionReturnValue,
-			SecPositionReturnValue,
-			NormalReturnValue,
-			ColorReturnValue,
-			SizeReturnValue,
-			LifespanReturnValue,
-			AgeReturnValue,
-			VelocityReturnValue,
-			SecVelocityReturnValue,
-			AccelerationReturnValue,
-			PropertyReturnValue);
-	}
+	generate(System,
+		PositionReturnValue, 
+		SecPositionReturnValue, 
+		NormalReturnValue,
+		ColorReturnValue,
+		SizeReturnValue,
+		LifespanReturnValue,
+		AgeReturnValue,
+		VelocityReturnValue,
+		SecVelocityReturnValue,
+		AccelerationReturnValue,
+		PropertyReturnValue);
 }
 
 /*-------------------------------------------------------------------------*\
