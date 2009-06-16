@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="ParticleGenerator"
-	parent="AttachmentContainer"
+	name="BurstParticleDecorator"
+	parent="ParticleGeneratorDecorator"
 	library="ParticleSystem"
 	pointerfieldtypes="both"
-	structure="abstract"
+	structure="concrete"
 	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="true"
+	parentsystemcomponent="false"
+	decoratable="false"
 	useLocalIncludes="true"
 >
 	<Field
-		name="Beacon"
-		type="NodePtr"
+		name="BurstAmount"
+		type="UInt32"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+		defaultValue="1"
 	>
 	</Field>
 </FieldContainer>

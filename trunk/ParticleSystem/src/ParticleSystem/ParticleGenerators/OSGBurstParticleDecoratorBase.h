@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ParticleGenerator
+ **     class BurstParticleDecorator
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPARTICLEGENERATORBASE_H_
-#define _OSGPARTICLEGENERATORBASE_H_
+#ifndef _OSGBURSTPARTICLEDECORATORBASE_H_
+#define _OSGBURSTPARTICLEDECORATORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,37 +65,37 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGParticleGeneratorDecorator.h" // Parent
 
-#include <OpenSG/OSGNodeFields.h> // Beacon type
+#include <OpenSG/OSGUInt32Fields.h> // BurstAmount type
 
-#include "OSGParticleGeneratorFields.h"
+#include "OSGBurstParticleDecoratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ParticleGenerator;
+class BurstParticleDecorator;
 class BinaryDataHandler;
 
-//! \brief ParticleGenerator Base Class.
+//! \brief BurstParticleDecorator Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public AttachmentContainer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING BurstParticleDecoratorBase : public ParticleGeneratorDecorator
 {
   private:
 
-    typedef AttachmentContainer    Inherited;
+    typedef ParticleGeneratorDecorator    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ParticleGeneratorPtr  Ptr;
+    typedef BurstParticleDecoratorPtr  Ptr;
 
     enum
     {
-        BeaconFieldId = Inherited::NextFieldId,
-        NextFieldId   = BeaconFieldId + 1
+        BurstAmountFieldId = Inherited::NextFieldId,
+        NextFieldId        = BurstAmountFieldId + 1
     };
 
-    static const OSG::BitVector BeaconFieldMask;
+    static const OSG::BitVector BurstAmountFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +122,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-    virtual       SFNodePtr           *getSFBeacon         (void);
+           SFUInt32            *getSFBurstAmount    (void);
 
-    virtual       NodePtr             &getBeacon         (void);
-    virtual const NodePtr             &getBeacon         (void) const;
+           UInt32              &getBurstAmount    (void);
+     const UInt32              &getBurstAmount    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-    virtual void setBeacon         ( const NodePtr &value );
+     void setBurstAmount    ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -152,6 +152,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  BurstParticleDecoratorPtr      create          (void); 
+    static  BurstParticleDecoratorPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -159,22 +175,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFNodePtr           _sfBeacon;
+    SFUInt32            _sfBurstAmount;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ParticleGeneratorBase(void);
-    ParticleGeneratorBase(const ParticleGeneratorBase &source);
+    BurstParticleDecoratorBase(void);
+    BurstParticleDecoratorBase(const BurstParticleDecoratorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleGeneratorBase(void); 
+    virtual ~BurstParticleDecoratorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,13 +198,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ParticleGeneratorBase *pOther,
+    void executeSyncImpl(      BurstParticleDecoratorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ParticleGeneratorBase *pOther,
+    void executeSyncImpl(      BurstParticleDecoratorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -218,7 +234,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ParticleGeneratorBase &source);
+    void operator =(const BurstParticleDecoratorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -226,17 +242,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
 //---------------------------------------------------------------------------
 
 
-typedef ParticleGeneratorBase *ParticleGeneratorBaseP;
+typedef BurstParticleDecoratorBase *BurstParticleDecoratorBaseP;
 
-typedef osgIF<ParticleGeneratorBase::isNodeCore,
-              CoredNodePtr<ParticleGenerator>,
+typedef osgIF<BurstParticleDecoratorBase::isNodeCore,
+              CoredNodePtr<BurstParticleDecorator>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ParticleGeneratorNodePtr;
+              >::_IRet BurstParticleDecoratorNodePtr;
 
-typedef RefPtr<ParticleGeneratorPtr> ParticleGeneratorRefPtr;
+typedef RefPtr<BurstParticleDecoratorPtr> BurstParticleDecoratorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPARTICLEGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGBURSTPARTICLEDECORATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGPARTICLEGENERATORBASE_H_ */
+#endif /* _OSGBURSTPARTICLEDECORATORBASE_H_ */

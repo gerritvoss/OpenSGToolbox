@@ -1,23 +1,24 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="ParticleGenerator"
-	parent="AttachmentContainer"
+	name="ParticleGeneratorDecorator"
+	parent="ParticleGenerator"
 	library="ParticleSystem"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="true"
+	parentsystemcomponent="false"
+	decoratable="false"
 	useLocalIncludes="true"
 >
 	<Field
-		name="Beacon"
-		type="NodePtr"
+		name="Decoratee"
+		type="ParticleGeneratorPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
+            header="OSGParticleGeneratorFields.h"
 	>
 	</Field>
 </FieldContainer>

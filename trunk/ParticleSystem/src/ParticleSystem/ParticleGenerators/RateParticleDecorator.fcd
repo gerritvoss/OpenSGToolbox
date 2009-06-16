@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="RateParticleDecorator"
+	parent="ParticleGeneratorDecorator"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="GenerationRate"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0f"
+	>
+	</Field>
+	<Field
+		name="TimeSinceLastGeneration"
+		type="Real32"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="0.0f"
+	>
+	</Field>
+</FieldContainer>

@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ParticleGenerator!
+ **     class ParticleGeneratorDecorator!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,20 +55,52 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &ParticleGeneratorBase::getClassType(void)
+OSG::FieldContainerType &ParticleGeneratorDecoratorBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ParticleGeneratorBase::getClassTypeId(void) 
+OSG::UInt32 ParticleGeneratorDecoratorBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 
+/*------------------------------ get -----------------------------------*/
+
+//! Get the ParticleGeneratorDecorator::_sfDecoratee field.
+inline
+SFParticleGeneratorPtr *ParticleGeneratorDecoratorBase::getSFDecoratee(void)
+{
+    return &_sfDecoratee;
+}
+
+
+//! Get the value of the ParticleGeneratorDecorator::_sfDecoratee field.
+inline
+ParticleGeneratorPtr &ParticleGeneratorDecoratorBase::getDecoratee(void)
+{
+    return _sfDecoratee.getValue();
+}
+
+//! Get the value of the ParticleGeneratorDecorator::_sfDecoratee field.
+inline
+const ParticleGeneratorPtr &ParticleGeneratorDecoratorBase::getDecoratee(void) const
+{
+    return _sfDecoratee.getValue();
+}
+
+//! Set the value of the ParticleGeneratorDecorator::_sfDecoratee field.
+inline
+void ParticleGeneratorDecoratorBase::setDecoratee(const ParticleGeneratorPtr &value)
+{
+    _sfDecoratee.setValue(value);
+}
+
+
 OSG_END_NAMESPACE
 
-#define OSGPARTICLEGENERATORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGPARTICLEGENERATORDECORATORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

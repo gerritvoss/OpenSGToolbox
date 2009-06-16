@@ -45,101 +45,101 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ParticleGenerator!
+ **     class ParticleGeneratorDecorator!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEPARTICLEGENERATORINST
+#define OSG_COMPILEPARTICLEGENERATORDECORATORINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGParticleGeneratorBase.h"
-#include "OSGParticleGenerator.h"
+#include "OSGParticleGeneratorDecoratorBase.h"
+#include "OSGParticleGeneratorDecorator.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ParticleGeneratorBase::BeaconFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleGeneratorBase::BeaconFieldId);
+const OSG::BitVector  ParticleGeneratorDecoratorBase::DecorateeFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleGeneratorDecoratorBase::DecorateeFieldId);
 
-const OSG::BitVector ParticleGeneratorBase::MTInfluenceMask = 
+const OSG::BitVector ParticleGeneratorDecoratorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var NodePtr         ParticleGeneratorBase::_sfBeacon
+/*! \var ParticleGeneratorPtr ParticleGeneratorDecoratorBase::_sfDecoratee
     
 */
 
-//! ParticleGenerator description
+//! ParticleGeneratorDecorator description
 
-FieldDescription *ParticleGeneratorBase::_desc[] = 
+FieldDescription *ParticleGeneratorDecoratorBase::_desc[] = 
 {
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "Beacon", 
-                     BeaconFieldId, BeaconFieldMask,
+    new FieldDescription(SFParticleGeneratorPtr::getClassType(), 
+                     "Decoratee", 
+                     DecorateeFieldId, DecorateeFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleGeneratorBase::getSFBeacon)
+                     (FieldAccessMethod) &ParticleGeneratorDecoratorBase::getSFDecoratee)
 };
 
 
-FieldContainerType ParticleGeneratorBase::_type(
+FieldContainerType ParticleGeneratorDecoratorBase::_type(
+    "ParticleGeneratorDecorator",
     "ParticleGenerator",
-    "AttachmentContainer",
     NULL,
     NULL, 
-    ParticleGenerator::initMethod,
+    ParticleGeneratorDecorator::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(ParticleGeneratorBase, ParticleGeneratorPtr)
+//OSG_FIELD_CONTAINER_DEF(ParticleGeneratorDecoratorBase, ParticleGeneratorDecoratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ParticleGeneratorBase::getType(void) 
+FieldContainerType &ParticleGeneratorDecoratorBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &ParticleGeneratorBase::getType(void) const 
+const FieldContainerType &ParticleGeneratorDecoratorBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 ParticleGeneratorBase::getContainerSize(void) const 
+UInt32 ParticleGeneratorDecoratorBase::getContainerSize(void) const 
 { 
-    return sizeof(ParticleGenerator); 
+    return sizeof(ParticleGeneratorDecorator); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleGeneratorBase::executeSync(      FieldContainer &other,
+void ParticleGeneratorDecoratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ParticleGeneratorBase *) &other, whichField);
+    this->executeSyncImpl((ParticleGeneratorDecoratorBase *) &other, whichField);
 }
 #else
-void ParticleGeneratorBase::executeSync(      FieldContainer &other,
+void ParticleGeneratorDecoratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((ParticleGeneratorBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((ParticleGeneratorDecoratorBase *) &other, whichField, sInfo);
 }
-void ParticleGeneratorBase::execBeginEdit(const BitVector &whichField, 
+void ParticleGeneratorDecoratorBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void ParticleGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void ParticleGeneratorDecoratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -152,8 +152,8 @@ void ParticleGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-ParticleGeneratorBase::ParticleGeneratorBase(void) :
-    _sfBeacon                 (NodePtr(NullFC)), 
+ParticleGeneratorDecoratorBase::ParticleGeneratorDecoratorBase(void) :
+    _sfDecoratee              (ParticleGeneratorPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -162,87 +162,87 @@ ParticleGeneratorBase::ParticleGeneratorBase(void) :
 #pragma warning (default : 383)
 #endif
 
-ParticleGeneratorBase::ParticleGeneratorBase(const ParticleGeneratorBase &source) :
-    _sfBeacon                 (source._sfBeacon                 ), 
+ParticleGeneratorDecoratorBase::ParticleGeneratorDecoratorBase(const ParticleGeneratorDecoratorBase &source) :
+    _sfDecoratee              (source._sfDecoratee              ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-ParticleGeneratorBase::~ParticleGeneratorBase(void)
+ParticleGeneratorDecoratorBase::~ParticleGeneratorDecoratorBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ParticleGeneratorBase::getBinSize(const BitVector &whichField)
+UInt32 ParticleGeneratorDecoratorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+    if(FieldBits::NoField != (DecorateeFieldMask & whichField))
     {
-        returnValue += _sfBeacon.getBinSize();
+        returnValue += _sfDecoratee.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void ParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
+void ParticleGeneratorDecoratorBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+    if(FieldBits::NoField != (DecorateeFieldMask & whichField))
     {
-        _sfBeacon.copyToBin(pMem);
+        _sfDecoratee.copyToBin(pMem);
     }
 
 
 }
 
-void ParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
+void ParticleGeneratorDecoratorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+    if(FieldBits::NoField != (DecorateeFieldMask & whichField))
     {
-        _sfBeacon.copyFromBin(pMem);
+        _sfDecoratee.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleGeneratorBase::executeSyncImpl(      ParticleGeneratorBase *pOther,
+void ParticleGeneratorDecoratorBase::executeSyncImpl(      ParticleGeneratorDecoratorBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
+    if(FieldBits::NoField != (DecorateeFieldMask & whichField))
+        _sfDecoratee.syncWith(pOther->_sfDecoratee);
 
 
 }
 #else
-void ParticleGeneratorBase::executeSyncImpl(      ParticleGeneratorBase *pOther,
+void ParticleGeneratorDecoratorBase::executeSyncImpl(      ParticleGeneratorDecoratorBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
+    if(FieldBits::NoField != (DecorateeFieldMask & whichField))
+        _sfDecoratee.syncWith(pOther->_sfDecoratee);
 
 
 
 }
 
-void ParticleGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
+void ParticleGeneratorDecoratorBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -250,34 +250,6 @@ void ParticleGeneratorBase::execBeginEditImpl (const BitVector &whichField,
 
 }
 #endif
-
-/*------------------------------ get -----------------------------------*/
-
-OSG_PARTICLESYSTEMLIB_DLLMAPPING
-SFNodePtr *ParticleGeneratorBase::getSFBeacon(void)
-{
-    return &_sfBeacon;
-}
-
-
-OSG_PARTICLESYSTEMLIB_DLLMAPPING
-NodePtr &ParticleGeneratorBase::getBeacon(void)
-{
-    return _sfBeacon.getValue();
-}
-
-OSG_PARTICLESYSTEMLIB_DLLMAPPING
-const NodePtr &ParticleGeneratorBase::getBeacon(void) const
-{
-    return _sfBeacon.getValue();
-}
-
-OSG_PARTICLESYSTEMLIB_DLLMAPPING
-void ParticleGeneratorBase::setBeacon(const NodePtr &value)
-{
-    _sfBeacon.setValue(value);
-}
-
 
 
 
@@ -289,11 +261,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ParticleGeneratorPtr>::_type("ParticleGeneratorPtr", "AttachmentContainerPtr");
+DataType FieldDataTraits<ParticleGeneratorDecoratorPtr>::_type("ParticleGeneratorDecoratorPtr", "ParticleGeneratorPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(ParticleGeneratorDecoratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(ParticleGeneratorDecoratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -310,10 +282,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(ParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAP
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLEGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLEGENERATORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGPARTICLEGENERATORDECORATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGPARTICLEGENERATORDECORATORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLEGENERATORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGPARTICLEGENERATORDECORATORFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

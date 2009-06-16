@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,8 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGParticleGenerator.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGBurstParticleDecorator.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::ParticleGenerator
+/*! \class osg::BurstParticleDecorator
 
 */
 
@@ -68,7 +67,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleGenerator::initMethod (void)
+void BurstParticleDecorator::initMethod (void)
 {
 }
 
@@ -76,63 +75,10 @@ void ParticleGenerator::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-
-void ParticleGenerator::generate(ParticleSystemPtr System,
-		Pnt3f& PositionReturnValue, 
-		Pnt3f& SecPositionReturnValue, 
-		Vec3f& NormalReturnValue,
-		Color4f& ColorReturnValue,
-		Vec3f& SizeReturnValue,
-		Time& LifespanReturnValue,
-		Time& AgeReturnValue,
-		Vec3f& VelocityReturnValue,
-		Vec3f& SecVelocityReturnValue,
-		Vec3f& AccelerationReturnValue,
-		UInt64& PropertyReturnValue) const
+bool BurstParticleDecorator::generate(ParticleSystemPtr System, const Time& elps)
 {
-	if(System != NullFC)
-	{
-		if(getBeacon() == NullFC)
-		{
-			System->addParticle(PositionReturnValue,
-				SecPositionReturnValue,
-				NormalReturnValue,
-				ColorReturnValue,
-				SizeReturnValue,
-				LifespanReturnValue,
-				AgeReturnValue,
-				VelocityReturnValue,
-				SecVelocityReturnValue,
-				AccelerationReturnValue,
-				PropertyReturnValue);
-		}
-		else
-		{
-			Matrix BeaconToWorld(getBeacon()->getToWorld());
-			
-			BeaconToWorld.mult(PositionReturnValue, PositionReturnValue);
-			BeaconToWorld.mult(SecPositionReturnValue, SecPositionReturnValue);
-			BeaconToWorld.mult(NormalReturnValue, NormalReturnValue);
-			BeaconToWorld.mult(SizeReturnValue, SizeReturnValue);
-			BeaconToWorld.mult(VelocityReturnValue, VelocityReturnValue);
-			BeaconToWorld.mult(SecVelocityReturnValue, SecVelocityReturnValue);
-			BeaconToWorld.mult(AccelerationReturnValue, AccelerationReturnValue);
-		
-			System->addParticle(PositionReturnValue,
-				SecPositionReturnValue,
-				NormalReturnValue,
-				ColorReturnValue,
-				SizeReturnValue,
-				LifespanReturnValue,
-				AgeReturnValue,
-				VelocityReturnValue,
-				SecVelocityReturnValue,
-				AccelerationReturnValue,
-				PropertyReturnValue);
-
-		}
-	}
+	getDecoratee()->generate(System, elps);
+	return false;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -140,31 +86,31 @@ void ParticleGenerator::generate(ParticleSystemPtr System,
 
 /*----------------------- constructors & destructors ----------------------*/
 
-ParticleGenerator::ParticleGenerator(void) :
+BurstParticleDecorator::BurstParticleDecorator(void) :
     Inherited()
 {
 }
 
-ParticleGenerator::ParticleGenerator(const ParticleGenerator &source) :
+BurstParticleDecorator::BurstParticleDecorator(const BurstParticleDecorator &source) :
     Inherited(source)
 {
 }
 
-ParticleGenerator::~ParticleGenerator(void)
+BurstParticleDecorator::~BurstParticleDecorator(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleGenerator::changed(BitVector whichField, UInt32 origin)
+void BurstParticleDecorator::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void ParticleGenerator::dump(      UInt32    , 
+void BurstParticleDecorator::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump ParticleGenerator NI" << std::endl;
+    SLOG << "Dump BurstParticleDecorator NI" << std::endl;
 }
 
 
@@ -182,10 +128,10 @@ void ParticleGenerator::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLEGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLEGENERATORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGBURSTPARTICLEDECORATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGBURSTPARTICLEDECORATORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLEGENERATORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGBURSTPARTICLEDECORATORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ParticleGenerator
+ **     class RateParticleDecorator
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPARTICLEGENERATORBASE_H_
-#define _OSGPARTICLEGENERATORBASE_H_
+#ifndef _OSGRATEPARTICLEDECORATORBASE_H_
+#define _OSGRATEPARTICLEDECORATORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,37 +65,40 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGParticleGeneratorDecorator.h" // Parent
 
-#include <OpenSG/OSGNodeFields.h> // Beacon type
+#include <OpenSG/OSGReal32Fields.h> // GenerationRate type
+#include <OpenSG/OSGReal32Fields.h> // TimeSinceLastGeneration type
 
-#include "OSGParticleGeneratorFields.h"
+#include "OSGRateParticleDecoratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ParticleGenerator;
+class RateParticleDecorator;
 class BinaryDataHandler;
 
-//! \brief ParticleGenerator Base Class.
+//! \brief RateParticleDecorator Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public AttachmentContainer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleDecoratorBase : public ParticleGeneratorDecorator
 {
   private:
 
-    typedef AttachmentContainer    Inherited;
+    typedef ParticleGeneratorDecorator    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ParticleGeneratorPtr  Ptr;
+    typedef RateParticleDecoratorPtr  Ptr;
 
     enum
     {
-        BeaconFieldId = Inherited::NextFieldId,
-        NextFieldId   = BeaconFieldId + 1
+        GenerationRateFieldId          = Inherited::NextFieldId,
+        TimeSinceLastGenerationFieldId = GenerationRateFieldId          + 1,
+        NextFieldId                    = TimeSinceLastGenerationFieldId + 1
     };
 
-    static const OSG::BitVector BeaconFieldMask;
+    static const OSG::BitVector GenerationRateFieldMask;
+    static const OSG::BitVector TimeSinceLastGenerationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +125,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-    virtual       SFNodePtr           *getSFBeacon         (void);
+           SFReal32            *getSFGenerationRate (void);
 
-    virtual       NodePtr             &getBeacon         (void);
-    virtual const NodePtr             &getBeacon         (void) const;
+           Real32              &getGenerationRate (void);
+     const Real32              &getGenerationRate (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-    virtual void setBeacon         ( const NodePtr &value );
+     void setGenerationRate ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -152,6 +155,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  RateParticleDecoratorPtr      create          (void); 
+    static  RateParticleDecoratorPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -159,22 +178,40 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFNodePtr           _sfBeacon;
+    SFReal32            _sfGenerationRate;
+    SFReal32            _sfTimeSinceLastGeneration;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ParticleGeneratorBase(void);
-    ParticleGeneratorBase(const ParticleGeneratorBase &source);
+    RateParticleDecoratorBase(void);
+    RateParticleDecoratorBase(const RateParticleDecoratorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleGeneratorBase(void); 
+    virtual ~RateParticleDecoratorBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFReal32            *getSFTimeSinceLastGeneration(void);
+
+           Real32              &getTimeSinceLastGeneration(void);
+     const Real32              &getTimeSinceLastGeneration(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setTimeSinceLastGeneration(const Real32 &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,13 +219,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ParticleGeneratorBase *pOther,
+    void executeSyncImpl(      RateParticleDecoratorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ParticleGeneratorBase *pOther,
+    void executeSyncImpl(      RateParticleDecoratorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -218,7 +255,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ParticleGeneratorBase &source);
+    void operator =(const RateParticleDecoratorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -226,17 +263,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
 //---------------------------------------------------------------------------
 
 
-typedef ParticleGeneratorBase *ParticleGeneratorBaseP;
+typedef RateParticleDecoratorBase *RateParticleDecoratorBaseP;
 
-typedef osgIF<ParticleGeneratorBase::isNodeCore,
-              CoredNodePtr<ParticleGenerator>,
+typedef osgIF<RateParticleDecoratorBase::isNodeCore,
+              CoredNodePtr<RateParticleDecorator>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ParticleGeneratorNodePtr;
+              >::_IRet RateParticleDecoratorNodePtr;
 
-typedef RefPtr<ParticleGeneratorPtr> ParticleGeneratorRefPtr;
+typedef RefPtr<RateParticleDecoratorPtr> RateParticleDecoratorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPARTICLEGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGRATEPARTICLEDECORATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGPARTICLEGENERATORBASE_H_ */
+#endif /* _OSGRATEPARTICLEDECORATORBASE_H_ */
