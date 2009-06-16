@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 	
 	// parse XML file to get particle system data
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/TestFieldContainers.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/mayaExport1.xml"));
 
 	// find root node from container, attach update listeners to particle systems
 	std::vector<NodePtr> RootNodes;

@@ -452,6 +452,34 @@
 					Name="ParticleGenerators"
 					>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGBurstParticleDecorator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGBurstParticleDecorator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGBurstParticleDecorator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGBurstParticleDecoratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGBurstParticleDecoratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGBurstParticleDecoratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGBurstParticleDecoratorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGBurstParticleGenerator.cpp"
 						>
 					</File>
@@ -532,7 +560,63 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorDecorator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorDecorator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorDecorator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorDecoratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorDecoratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorDecoratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorDecoratorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGParticleGeneratorFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGRateParticleDecorator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGRateParticleDecorator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGRateParticleDecorator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGRateParticleDecoratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGRateParticleDecoratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGRateParticleDecoratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGRateParticleDecoratorFields.h"
 						>
 					</File>
 					<File
@@ -561,6 +645,34 @@
 					</File>
 					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGRateParticleGeneratorFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGSurfaceParticleGenerator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGSurfaceParticleGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGSurfaceParticleGenerator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGSurfaceParticleGeneratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGSurfaceParticleGeneratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGSurfaceParticleGeneratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleGenerators\OSGSurfaceParticleGeneratorFields.h"
 						>
 					</File>
 				</Filter>

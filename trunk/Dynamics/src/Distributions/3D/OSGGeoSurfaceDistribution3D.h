@@ -48,9 +48,11 @@
 
 OSG_BEGIN_NAMESPACE
 
-#define OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS (1, \
+#define OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS (3, \
     (\
-      ("RandomPoint", Pnt3f) \
+      ("Position", Pnt3f), \
+      ("Normal", Vec3f), \
+      ("Tangent", Vec3f) \
     ))
 
 #define OSG_GEO_SURFACE_3D_DIST_INPUTPARAMETERS (0, ())
@@ -101,7 +103,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING GeoSurfaceDistribution3D : public GeoSurfaceDis
 
     virtual ~GeoSurfaceDistribution3D(void); 
 
-    virtual Pnt3f generate(void);
+    virtual void generate(Pnt3f& Pos, Vec3f& Normal, Vec3f& Tangent);
     /*! \}                                                                 */
 	
 	void updateSurfaceArea(void);

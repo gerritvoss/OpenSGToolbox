@@ -25,9 +25,15 @@
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
 #include <OpenSG/ParticleSystem/OSGBurstParticleGenerator.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/Dynamics/OSGSegmentDistribution1D.h>
+#include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
+#include <OpenSG/Dynamics/OSGGeoSurfaceDistribution3D.h>
 #include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
+#include <OpenSG/Dynamics/OSGConeDistribution3D.h>
+#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
 #include <OpenSG/Dynamics/OSGDataConverter.h>
 #include <OpenSG/Dynamics/OSGCompoundFunction.h>
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -44,6 +50,7 @@ void reshape(Vec2f Size);
 // Particle Generator Functions
 FunctionPtr createPositionDistribution(void);
 FunctionPtr createLifespanDistribution(void);
+FunctionPtr createVelocityDistribution(void);
 
 //Particle System
 ParticleSystemCorePtr ParticleNodeCore;
@@ -241,17 +248,17 @@ int main(int argc, char **argv)
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-	for(UInt32 i(0) ; i<1 ; ++i)
-	{
-		ExampleParticleSystem->addParticle(Pnt3f(i,i,i), //Position
-			Vec3f(0.0,0.0f,1.0f), //Normal
-			Color4f(1.0,0.5,0.3,0.3), //Color
-			Vec3f(4.0,4.0,4.0), //Size
-			-1, //Lifespan (-1 = infinite)
-			Vec3f(0.0f,0.0f,0.0f), //Velocity
-			Vec3f(0.0f,0.0f,0.0f) //Acceleration
-			,0);	// properties
-	}
+	//for(UInt32 i(0) ; i<10 ; ++i)
+	//{
+	//	ExampleParticleSystem->addParticle(Pnt3f(i,i,i), //Position
+	//		Vec3f(0.0,0.0f,1.0f), //Normal
+	//		Color4f(1.0,0.5,0.3,0.3), //Color
+	//		Vec3f(4.0,4.0,4.0), //Size
+	//		-1, //Lifespan (-1 = infinite)
+	//		Vec3f(0.0f,0.0f,0.0f), //Velocity
+	//		Vec3f(0.0f,0.0f,0.0f) //Acceleration
+	//		,0);	// properties
+	//}
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
@@ -271,24 +278,36 @@ int main(int argc, char **argv)
 		//Create a Rate Particle Generator
 	BurstParticleGeneratorPtr ExampleGenerator = osg::BurstParticleGenerator::create();
 
+	//RateParticleGeneratorPtr ExampleGeneratorTheSequel = osg::RateParticleGenerator::create();
+
 	//Attach the function objects to the Generator
 	beginEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
 		ExampleGenerator->setPositionFunction(createPositionDistribution());
 		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
 		ExampleGenerator->setBurstAmount(1000);
 	endEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
 	
+	/*Attach the function objects to the Generator
+	beginEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		ExampleGeneratorTheSequel->setPositionFunction(createPositionDistribution());
+		ExampleGeneratorTheSequel->setLifespanFunction(createLifespanDistribution());
+		ExampleGeneratorTheSequel->setGenerationRate(1000.0);
+		ExampleGeneratorTheSequel->setVelocityFunction(createVelocityDistribution());
+	endEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);*/
+
 	//Attach the Generator to the Particle System
 	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
 		ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
 		ExampleParticleSystem->setMaxParticles(1000);
+		//ExampleParticleSystem->getGenerators().push_back(ExampleGeneratorTheSequel);
 	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
 	
 	//Particle System Node
     ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
+		ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
     
@@ -312,6 +331,12 @@ int main(int argc, char **argv)
 
 	mgr->getCamera()->setFar(500.0);
 
+	FCFileType::FCPtrStore Containers;
+	Containers.insert(scene);
+
+	FCFileType::FCTypeVector IgnoreTypes;
+	//Save the Field Containers to a xml file
+	FCFileHandler::the()->write(Containers,Path("./TestFieldContainers4.xml"),IgnoreTypes);
 
     while(!ExitApp)
     {
@@ -343,29 +368,49 @@ void reshape(Vec2f Size)
 FunctionPtr createPositionDistribution(void)
 {
 		 //Sphere Distribution
-    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
-    beginEditCP(TheSphereDistribution);
-      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheSphereDistribution->setInnerRadius(1.0);
-      TheSphereDistribution->setOuterRadius(30.0);
-      TheSphereDistribution->setMinTheta(-3.141950);
-      TheSphereDistribution->setMaxTheta(3.141950);
-      TheSphereDistribution->setMinZ(-1.0);
-      TheSphereDistribution->setMaxZ(1.0);
-	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
-    endEditCP(TheSphereDistribution);
+    ConeDistribution3DPtr TheConeDistribution = ConeDistribution3D::create();
+    beginEditCP(TheConeDistribution);
+      TheConeDistribution->setPosition(Pnt3f(0.0,0.0,0.0));
+      TheConeDistribution->setDirection(Vec3f(0.0,0.0,1.0));
+      TheConeDistribution->setSpread(3.14159);
+	  TheConeDistribution->setMin(1.4);
+	  TheConeDistribution->setMax(1.5);
+	  TheConeDistribution->setSurfaceOrVolume(ConeDistribution3D::VOLUME);
+    endEditCP(TheConeDistribution);
 
-    return TheSphereDistribution;
+    return TheConeDistribution;
 }
 
 FunctionPtr createLifespanDistribution(void)
 {
-	 GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
+	 SegmentDistribution1DPtr TheLifespanDistribution = SegmentDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setMean(400.0f);
-      TheLifespanDistribution->setStandardDeviation(2.0);
+      TheLifespanDistribution->setSegment(Pnt2f(100.0,200.0));
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;
+}
+
+FunctionPtr createVelocityDistribution(void)
+{
+	 //Line Distribution
+   LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,0.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,0.0));
+    endEditCP(TheLineDistribution);
+
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
+
+	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
+	beginEditCP(TheVelocityDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
+		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
+	endEditCP(TheVelocityDistribution);
+
+    return TheVelocityDistribution;
 }
 

@@ -84,6 +84,8 @@ FunctionIOTypeVector GeoSurfaceDistribution3D::getOutputTypes(FunctionIOTypeVect
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS));
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(1,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS));
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(2,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
@@ -102,12 +104,18 @@ FunctionIOParameterVector GeoSurfaceDistribution3D::evaluate(FunctionIOParameter
     }
     FunctionIOParameterVector ResultVector;
     ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS));
-    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS, generate()));
+	Pnt3f Position;
+	Vec3f Normal,Tangent;
+	generate(Position,Normal,Tangent);
+
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS, Position));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(1,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS, Normal));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(2,OSG_GEO_SURFACE_3D_DIST_OUTPUTPARAMETERS, Tangent));
 
     return ResultVector;
 }
 
-Pnt3f GeoSurfaceDistribution3D::generate(void)
+void GeoSurfaceDistribution3D::generate(Pnt3f& Pos, Vec3f& Normal, Vec3f& Tangent)
 {
 
 	if(getSurface() != NullFC && mAreaVector.size() > 0)
@@ -118,9 +126,6 @@ Pnt3f GeoSurfaceDistribution3D::generate(void)
 	   
 	    TriangleIterator ti(getSurface());
 	    ti.seek(index);
-	    Pnt3f p1 = ti.getPosition(0);
-	    Pnt3f p2 = ti.getPosition(1);
-		Pnt3f p3 = ti.getPosition(2);
 		
 		Real32 s(RandomPoolManager::getRandomReal32(0.0,1.0)),
 			   t(RandomPoolManager::getRandomReal32(0.0,1.0));
@@ -131,15 +136,36 @@ Pnt3f GeoSurfaceDistribution3D::generate(void)
 			t = 1.0f - t;
 		}
 
-		Pnt3f Result = p1
-			     	+ s*(p2 - p1)
-					+ t*(p3 - p1);
-		
-        return Pnt3f(Result);
+	    Pnt3f p1 = ti.getPosition(0),
+			  p2 =  ti.getPosition(1),
+			  p3 =  ti.getPosition(2);
+
+		Pos = p1
+	     	+ s*(p2 - p1)
+			+ t*(p3 - p1);
+
+	    Vec3f n1 = ti.getNormal(0),
+			  n2 = ti.getNormal(1),
+			  n3 = ti.getNormal(2);
+
+		Normal = n1
+	     	+ s*(n2 - n1)
+			+ t*(n3 - n1);
+
+
+	    Vec3f t1 = ti.getTexCoords7(0),
+			  t2 = ti.getTexCoords7(1),
+			  t3 = ti.getTexCoords7(2);
+
+		Tangent = t1
+	     	+ s*(t2 - t1)
+			+ t*(t3 - t1);
 	}
 	else
 	{
-        return Pnt3f(0.0f,0.0f,0.0f);
+        Pos.setValues(0.0f,0.0f,0.0f);
+        Normal.setValues(0.0f,0.0f,0.0f);
+        Tangent.setValues(0.0f,0.0f,0.0f);
 	}
 }
 
