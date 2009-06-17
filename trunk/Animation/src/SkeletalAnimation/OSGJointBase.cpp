@@ -45,114 +45,147 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Skeleton!
+ **     class Joint!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILESKELETONINST
+#define OSG_COMPILEJOINTINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGSkeletonBase.h"
-#include "OSGSkeleton.h"
+#include "OSGJointBase.h"
+#include "OSGJoint.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SkeletonBase::RootJointsFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonBase::RootJointsFieldId);
+const OSG::BitVector  JointBase::TransformationFieldMask = 
+    (TypeTraits<BitVector>::One << JointBase::TransformationFieldId);
 
-const OSG::BitVector SkeletonBase::MTInfluenceMask = 
+const OSG::BitVector  JointBase::BindTransformationFieldMask = 
+    (TypeTraits<BitVector>::One << JointBase::BindTransformationFieldId);
+
+const OSG::BitVector  JointBase::ChildJointsFieldMask = 
+    (TypeTraits<BitVector>::One << JointBase::ChildJointsFieldId);
+
+const OSG::BitVector  JointBase::ParentJointFieldMask = 
+    (TypeTraits<BitVector>::One << JointBase::ParentJointFieldId);
+
+const OSG::BitVector JointBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var JointPtr        SkeletonBase::_mfRootJoints
+/*! \var Matrix          JointBase::_sfTransformation
+    
+*/
+/*! \var Matrix          JointBase::_sfBindTransformation
+    
+*/
+/*! \var Joint           JointBase::_mfChildJoints
+    
+*/
+/*! \var Joint           JointBase::_sfParentJoint
     
 */
 
-//! Skeleton description
+//! Joint description
 
-FieldDescription *SkeletonBase::_desc[] = 
+FieldDescription *JointBase::_desc[] = 
 {
-    new FieldDescription(MFJointPtr::getClassType(), 
-                     "RootJoints", 
-                     RootJointsFieldId, RootJointsFieldMask,
+    new FieldDescription(SFMatrix::getClassType(), 
+                     "Transformation", 
+                     TransformationFieldId, TransformationFieldMask,
                      false,
-                     (FieldAccessMethod) &SkeletonBase::getMFRootJoints)
+                     (FieldAccessMethod) &JointBase::getSFTransformation),
+    new FieldDescription(SFMatrix::getClassType(), 
+                     "BindTransformation", 
+                     BindTransformationFieldId, BindTransformationFieldMask,
+                     false,
+                     (FieldAccessMethod) &JointBase::getSFBindTransformation),
+    new FieldDescription(MFJoint::getClassType(), 
+                     "ChildJoints", 
+                     ChildJointsFieldId, ChildJointsFieldMask,
+                     false,
+                     (FieldAccessMethod) &JointBase::getMFChildJoints),
+    new FieldDescription(SFJoint::getClassType(), 
+                     "ParentJoint", 
+                     ParentJointFieldId, ParentJointFieldMask,
+                     false,
+                     (FieldAccessMethod) &JointBase::getSFParentJoint)
 };
 
 
-FieldContainerType SkeletonBase::_type(
-    "Skeleton",
+FieldContainerType JointBase::_type(
+    "Joint",
     "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &SkeletonBase::createEmpty,
-    Skeleton::initMethod,
+    (PrototypeCreateF) &JointBase::createEmpty,
+    Joint::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(SkeletonBase, SkeletonPtr)
+//OSG_FIELD_CONTAINER_DEF(JointBase, JointPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SkeletonBase::getType(void) 
+FieldContainerType &JointBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &SkeletonBase::getType(void) const 
+const FieldContainerType &JointBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr SkeletonBase::shallowCopy(void) const 
+FieldContainerPtr JointBase::shallowCopy(void) const 
 { 
-    SkeletonPtr returnValue; 
+    JointPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const Skeleton *>(this)); 
+    newPtr(returnValue, dynamic_cast<const Joint *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 SkeletonBase::getContainerSize(void) const 
+UInt32 JointBase::getContainerSize(void) const 
 { 
-    return sizeof(Skeleton); 
+    return sizeof(Joint); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void SkeletonBase::executeSync(      FieldContainer &other,
+void JointBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((SkeletonBase *) &other, whichField);
+    this->executeSyncImpl((JointBase *) &other, whichField);
 }
 #else
-void SkeletonBase::executeSync(      FieldContainer &other,
+void JointBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((SkeletonBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((JointBase *) &other, whichField, sInfo);
 }
-void SkeletonBase::execBeginEdit(const BitVector &whichField, 
+void JointBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void SkeletonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void JointBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfRootJoints.terminateShare(uiAspect, this->getContainerSize());
+    _mfChildJoints.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -162,8 +195,11 @@ void SkeletonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-SkeletonBase::SkeletonBase(void) :
-    _mfRootJoints             (), 
+JointBase::JointBase(void) :
+    _sfTransformation         (), 
+    _sfBindTransformation     (), 
+    _mfChildJoints            (), 
+    _sfParentJoint            (), 
     Inherited() 
 {
 }
@@ -172,94 +208,160 @@ SkeletonBase::SkeletonBase(void) :
 #pragma warning (default : 383)
 #endif
 
-SkeletonBase::SkeletonBase(const SkeletonBase &source) :
-    _mfRootJoints             (source._mfRootJoints             ), 
+JointBase::JointBase(const JointBase &source) :
+    _sfTransformation         (source._sfTransformation         ), 
+    _sfBindTransformation     (source._sfBindTransformation     ), 
+    _mfChildJoints            (source._mfChildJoints            ), 
+    _sfParentJoint            (source._sfParentJoint            ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-SkeletonBase::~SkeletonBase(void)
+JointBase::~JointBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SkeletonBase::getBinSize(const BitVector &whichField)
+UInt32 JointBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (RootJointsFieldMask & whichField))
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
     {
-        returnValue += _mfRootJoints.getBinSize();
+        returnValue += _sfTransformation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+    {
+        returnValue += _sfBindTransformation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
+    {
+        returnValue += _mfChildJoints.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ParentJointFieldMask & whichField))
+    {
+        returnValue += _sfParentJoint.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void SkeletonBase::copyToBin(      BinaryDataHandler &pMem,
+void JointBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootJointsFieldMask & whichField))
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
     {
-        _mfRootJoints.copyToBin(pMem);
+        _sfTransformation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+    {
+        _sfBindTransformation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
+    {
+        _mfChildJoints.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentJointFieldMask & whichField))
+    {
+        _sfParentJoint.copyToBin(pMem);
     }
 
 
 }
 
-void SkeletonBase::copyFromBin(      BinaryDataHandler &pMem,
+void JointBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootJointsFieldMask & whichField))
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
     {
-        _mfRootJoints.copyFromBin(pMem);
+        _sfTransformation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+    {
+        _sfBindTransformation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
+    {
+        _mfChildJoints.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentJointFieldMask & whichField))
+    {
+        _sfParentJoint.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void SkeletonBase::executeSyncImpl(      SkeletonBase *pOther,
+void JointBase::executeSyncImpl(      JointBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (RootJointsFieldMask & whichField))
-        _mfRootJoints.syncWith(pOther->_mfRootJoints);
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+        _sfTransformation.syncWith(pOther->_sfTransformation);
+
+    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+        _sfBindTransformation.syncWith(pOther->_sfBindTransformation);
+
+    if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
+        _mfChildJoints.syncWith(pOther->_mfChildJoints);
+
+    if(FieldBits::NoField != (ParentJointFieldMask & whichField))
+        _sfParentJoint.syncWith(pOther->_sfParentJoint);
 
 
 }
 #else
-void SkeletonBase::executeSyncImpl(      SkeletonBase *pOther,
+void JointBase::executeSyncImpl(      JointBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+        _sfTransformation.syncWith(pOther->_sfTransformation);
 
-    if(FieldBits::NoField != (RootJointsFieldMask & whichField))
-        _mfRootJoints.syncWith(pOther->_mfRootJoints, sInfo);
+    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+        _sfBindTransformation.syncWith(pOther->_sfBindTransformation);
+
+    if(FieldBits::NoField != (ParentJointFieldMask & whichField))
+        _sfParentJoint.syncWith(pOther->_sfParentJoint);
+
+
+    if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
+        _mfChildJoints.syncWith(pOther->_mfChildJoints, sInfo);
 
 
 }
 
-void SkeletonBase::execBeginEditImpl (const BitVector &whichField, 
+void JointBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (RootJointsFieldMask & whichField))
-        _mfRootJoints.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
+        _mfChildJoints.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -274,11 +376,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SkeletonPtr>::_type("SkeletonPtr", "AttachmentContainerPtr");
+DataType FieldDataTraits<JointPtr>::_type("JointPtr", "AttachmentContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SkeletonPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SkeletonPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(JointPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(JointPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -295,10 +397,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(SkeletonPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSKELETONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSKELETONBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGJOINTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGJOINTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGSKELETONFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGJOINTFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

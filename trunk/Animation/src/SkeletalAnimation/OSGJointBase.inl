@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Skeleton!
+ **     class Joint!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &SkeletonBase::getClassType(void)
+OSG::FieldContainerType &JointBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SkeletonBase::getClassTypeId(void) 
+OSG::UInt32 JointBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-SkeletonPtr SkeletonBase::create(void) 
+JointPtr JointBase::create(void) 
 {
-    SkeletonPtr fc; 
+    JointPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = SkeletonPtr::dcast(
+        fc = JointPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ SkeletonPtr SkeletonBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-SkeletonPtr SkeletonBase::createEmpty(void) 
+JointPtr JointBase::createEmpty(void) 
 { 
-    SkeletonPtr returnValue; 
+    JointPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,37 +96,121 @@ SkeletonPtr SkeletonBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Skeleton::_mfRootJoints field.
+//! Get the Joint::_sfTransformation field.
 inline
-MFJointPtr *SkeletonBase::getMFRootJoints(void)
+SFMatrix *JointBase::getSFTransformation(void)
 {
-    return &_mfRootJoints;
+    return &_sfTransformation;
+}
+
+//! Get the Joint::_sfBindTransformation field.
+inline
+SFMatrix *JointBase::getSFBindTransformation(void)
+{
+    return &_sfBindTransformation;
+}
+
+//! Get the Joint::_mfChildJoints field.
+inline
+MFJoint *JointBase::getMFChildJoints(void)
+{
+    return &_mfChildJoints;
+}
+
+//! Get the Joint::_sfParentJoint field.
+inline
+SFJoint *JointBase::getSFParentJoint(void)
+{
+    return &_sfParentJoint;
 }
 
 
-
-//! Get the value of the \a index element the Skeleton::_mfRootJoints field.
+//! Get the value of the Joint::_sfTransformation field.
 inline
-JointPtr &SkeletonBase::getRootJoints(const UInt32 index)
+Matrix &JointBase::getTransformation(void)
 {
-    return _mfRootJoints[index];
+    return _sfTransformation.getValue();
 }
 
-//! Get the Skeleton::_mfRootJoints field.
+//! Get the value of the Joint::_sfTransformation field.
 inline
-MFJointPtr &SkeletonBase::getRootJoints(void)
+const Matrix &JointBase::getTransformation(void) const
 {
-    return _mfRootJoints;
+    return _sfTransformation.getValue();
 }
 
-//! Get the Skeleton::_mfRootJoints field.
+//! Set the value of the Joint::_sfTransformation field.
 inline
-const MFJointPtr &SkeletonBase::getRootJoints(void) const
+void JointBase::setTransformation(const Matrix &value)
 {
-    return _mfRootJoints;
+    _sfTransformation.setValue(value);
+}
+
+//! Get the value of the Joint::_sfBindTransformation field.
+inline
+Matrix &JointBase::getBindTransformation(void)
+{
+    return _sfBindTransformation.getValue();
+}
+
+//! Get the value of the Joint::_sfBindTransformation field.
+inline
+const Matrix &JointBase::getBindTransformation(void) const
+{
+    return _sfBindTransformation.getValue();
+}
+
+//! Set the value of the Joint::_sfBindTransformation field.
+inline
+void JointBase::setBindTransformation(const Matrix &value)
+{
+    _sfBindTransformation.setValue(value);
+}
+
+//! Get the value of the Joint::_sfParentJoint field.
+inline
+Joint &JointBase::getParentJoint(void)
+{
+    return _sfParentJoint.getValue();
+}
+
+//! Get the value of the Joint::_sfParentJoint field.
+inline
+const Joint &JointBase::getParentJoint(void) const
+{
+    return _sfParentJoint.getValue();
+}
+
+//! Set the value of the Joint::_sfParentJoint field.
+inline
+void JointBase::setParentJoint(const Joint &value)
+{
+    _sfParentJoint.setValue(value);
+}
+
+
+//! Get the value of the \a index element the Joint::_mfChildJoints field.
+inline
+Joint &JointBase::getChildJoints(const UInt32 index)
+{
+    return _mfChildJoints[index];
+}
+
+//! Get the Joint::_mfChildJoints field.
+inline
+MFJoint &JointBase::getChildJoints(void)
+{
+    return _mfChildJoints;
+}
+
+//! Get the Joint::_mfChildJoints field.
+inline
+const MFJoint &JointBase::getChildJoints(void) const
+{
+    return _mfChildJoints;
 }
 
 OSG_END_NAMESPACE
 
-#define OSGSKELETONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGJOINTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

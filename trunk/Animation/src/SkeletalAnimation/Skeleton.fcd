@@ -5,28 +5,19 @@
 	parent="AttachmentContainer"
 	library="Animation"
 	pointerfieldtypes="both"
-	structure="concreate"
+	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
 	useLocalIncludes="true"
 >
 	<Field
-		name="RootBones"
-		type="BonePtr"
+		name="RootJoints"
+		type="JointPtr"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="SkeletalAnimation/OSGBoneFields.h"
-	>
-	</Field>
-	<Field
-		name="AttachedGeometries"
-		type="SkeletonBlendedGeometryPtr"
-		cardinality="multi"
-		visibility="external"
-		access="public"
-		header="SkeletalAnimation/OSGSkeletonBlendedGeometryFields.h"
+		header="SkeletalAnimation/OSGJointFields.h"
 	>
 	</Field>
 </FieldContainer>

@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -42,91 +44,88 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
- **     Do not change this file, changes should be done in the derived      **
- **     class Skeleton!
- **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
+
+#ifndef _OSGJOINTFIELDS_H_
+#define _OSGJOINTFIELDS_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGAnimationDef.h"
+
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
+class Joint;
 
-//! access the type of the class
-inline
-OSG::FieldContainerType &SkeletonBase::getClassType(void)
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//! JointPtr
+
+typedef FCPtr<AttachmentContainerPtr, Joint> JointPtr;
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpAnimationFieldTraits
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldDataTraits<JointPtr> : 
+    public FieldTraitsRecurseMapper<JointPtr, true>
 {
-    return _type; 
-} 
+    static DataType             _type;                       
 
-//! access the numerical type of the class
-inline
-OSG::UInt32 SkeletonBase::getClassTypeId(void) 
-{
-    return _type.getId(); 
-} 
+    enum                        { StringConvertable = 0x00 };
+    enum                        { bHasParent        = 0x01 };
 
-//! create a new instance of the class
-inline
-SkeletonPtr SkeletonBase::create(void) 
-{
-    SkeletonPtr fc; 
+    static DataType   &getType (void) { return _type;        }
 
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SkeletonPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
+    static const char *getSName(void) { return "SFJointPtr"; }
+    static const char *getMName(void) { return "MFJointPtr"; }
+};
 
-//! create an empty new instance of the class, do not copy the prototype
-inline
-SkeletonPtr SkeletonBase::createEmpty(void) 
-{ 
-    SkeletonPtr returnValue; 
-    
-    newPtr(returnValue); 
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \class  FieldTraitsRecurseMapper<JointPtr, true>
+    \hideinhierarchy
+ */
+#endif
 
-    return returnValue; 
-}
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 
-/*------------------------------ get -----------------------------------*/
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldSingle */
 
-//! Get the Skeleton::_mfRootJoints field.
-inline
-MFJointPtr *SkeletonBase::getMFRootJoints(void)
-{
-    return &_mfRootJoints;
-}
+typedef SField<JointPtr> SFJointPtr;
+#endif
 
+#ifndef OSG_COMPILEJOINTINST
+OSG_DLLEXPORT_DECL1(SField, JointPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
+#endif
 
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldMulti */
 
-//! Get the value of the \a index element the Skeleton::_mfRootJoints field.
-inline
-JointPtr &SkeletonBase::getRootJoints(const UInt32 index)
-{
-    return _mfRootJoints[index];
-}
+typedef MField<JointPtr> MFJointPtr;
+#endif
 
-//! Get the Skeleton::_mfRootJoints field.
-inline
-MFJointPtr &SkeletonBase::getRootJoints(void)
-{
-    return _mfRootJoints;
-}
-
-//! Get the Skeleton::_mfRootJoints field.
-inline
-const MFJointPtr &SkeletonBase::getRootJoints(void) const
-{
-    return _mfRootJoints;
-}
+#ifndef OSG_COMPILEJOINTINST
+OSG_DLLEXPORT_DECL1(MField, JointPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
+#endif
 
 OSG_END_NAMESPACE
 
-#define OSGSKELETONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGJOINTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
+#endif /* _OSGJOINTFIELDS_H_ */

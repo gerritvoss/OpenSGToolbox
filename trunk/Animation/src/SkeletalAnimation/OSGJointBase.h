@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Skeleton
+ **     class Joint
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGSKELETONBASE_H_
-#define _OSGSKELETONBASE_H_
+#ifndef _OSGJOINTBASE_H_
+#define _OSGJOINTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -67,18 +67,21 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include "SkeletalAnimation/OSGJointFields.h" // RootJoints type
+#include <OpenSG/OSGMatrixFields.h> // Transformation type
+#include <OpenSG/OSGMatrixFields.h> // BindTransformation type
+#include <OpenSG/OSGJointFields.h> // ChildJoints type
+#include <OpenSG/OSGJointFields.h> // ParentJoint type
 
-#include "OSGSkeletonFields.h"
+#include "OSGJointFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Skeleton;
+class Joint;
 class BinaryDataHandler;
 
-//! \brief Skeleton Base Class.
+//! \brief Joint Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
+class OSG_ANIMATIONLIB_DLLMAPPING JointBase : public AttachmentContainer
 {
   private:
 
@@ -87,15 +90,21 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SkeletonPtr  Ptr;
+    typedef JointPtr  Ptr;
 
     enum
     {
-        RootJointsFieldId = Inherited::NextFieldId,
-        NextFieldId       = RootJointsFieldId + 1
+        TransformationFieldId     = Inherited::NextFieldId,
+        BindTransformationFieldId = TransformationFieldId     + 1,
+        ChildJointsFieldId        = BindTransformationFieldId + 1,
+        ParentJointFieldId        = ChildJointsFieldId        + 1,
+        NextFieldId               = ParentJointFieldId        + 1
     };
 
-    static const OSG::BitVector RootJointsFieldMask;
+    static const OSG::BitVector TransformationFieldMask;
+    static const OSG::BitVector BindTransformationFieldMask;
+    static const OSG::BitVector ChildJointsFieldMask;
+    static const OSG::BitVector ParentJointFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +131,29 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFJointPtr          *getMFRootJoints     (void);
+           SFMatrix            *getSFTransformation (void);
+           SFMatrix            *getSFBindTransformation(void);
+           MFJoint             *getMFChildJoints    (void);
+           SFJoint             *getSFParentJoint    (void);
 
-           JointPtr            &getRootJoints     (const UInt32 index);
-           MFJointPtr          &getRootJoints     (void);
-     const MFJointPtr          &getRootJoints     (void) const;
+           Matrix              &getTransformation (void);
+     const Matrix              &getTransformation (void) const;
+           Matrix              &getBindTransformation(void);
+     const Matrix              &getBindTransformation(void) const;
+           Joint               &getParentJoint    (void);
+     const Joint               &getParentJoint    (void) const;
+           Joint               &getChildJoints    (const UInt32 index);
+           MFJoint             &getChildJoints    (void);
+     const MFJoint             &getChildJoints    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setTransformation ( const Matrix &value );
+     void setBindTransformation( const Matrix &value );
+     void setParentJoint    ( const Joint &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -156,8 +177,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SkeletonPtr      create          (void); 
-    static  SkeletonPtr      createEmpty     (void); 
+    static  JointPtr      create          (void); 
+    static  JointPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -175,22 +196,25 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFJointPtr          _mfRootJoints;
+    SFMatrix            _sfTransformation;
+    SFMatrix            _sfBindTransformation;
+    MFJoint             _mfChildJoints;
+    SFJoint             _sfParentJoint;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    SkeletonBase(void);
-    SkeletonBase(const SkeletonBase &source);
+    JointBase(void);
+    JointBase(const JointBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SkeletonBase(void); 
+    virtual ~JointBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,13 +222,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SkeletonBase *pOther,
+    void executeSyncImpl(      JointBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      SkeletonBase *pOther,
+    void executeSyncImpl(      JointBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -234,7 +258,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const SkeletonBase &source);
+    void operator =(const JointBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -242,17 +266,17 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
 //---------------------------------------------------------------------------
 
 
-typedef SkeletonBase *SkeletonBaseP;
+typedef JointBase *JointBaseP;
 
-typedef osgIF<SkeletonBase::isNodeCore,
-              CoredNodePtr<Skeleton>,
+typedef osgIF<JointBase::isNodeCore,
+              CoredNodePtr<Joint>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SkeletonNodePtr;
+              >::_IRet JointNodePtr;
 
-typedef RefPtr<SkeletonPtr> SkeletonRefPtr;
+typedef RefPtr<JointPtr> JointRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSKELETONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGJOINTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGSKELETONBASE_H_ */
+#endif /* _OSGJOINTBASE_H_ */

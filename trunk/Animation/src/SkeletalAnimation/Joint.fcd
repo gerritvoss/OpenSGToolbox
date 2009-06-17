@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Joint"
+	parent="AttachmentContainer"
+	library="Animation"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Transformation"
+		type="Matrix"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="BindTransformation"
+		type="Matrix"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ChildJoints"
+		type="Joint"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ParentJoint"
+		type="Joint"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
