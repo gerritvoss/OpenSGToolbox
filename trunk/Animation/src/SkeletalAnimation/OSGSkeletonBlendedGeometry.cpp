@@ -49,7 +49,7 @@
 
 #include "OSGSkeletonBlendedGeometry.h"
 #include "OSGSkeleton.h"
-#include "OSGBone.h"
+#include "OSGJoint.h"
 #include <OpenSG/OSGAction.h>
 #include <OpenSG/OSGDrawAction.h>
 #include <OpenSG/OSGRenderAction.h>
@@ -177,14 +177,13 @@ void SkeletonBlendedGeometry::subSkeleton(UInt32 Index)
     }
 }
 
-void SkeletonBlendedGeometry::addBoneBlending(const UInt32& PositionIndex, const BonePtr TheBone, const Real32& BlendAmount,  bool AttachedToEnd)
+void SkeletonBlendedGeometry::addJointBlending(const UInt32& PositionIndex, const JointPtr TheJoint, const Real32& BlendAmount)
 {
-	beginEditCP(SkeletonBlendedGeometryPtr(this), BonesFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask | AttachedToEndFieldMask);
+	beginEditCP(SkeletonBlendedGeometryPtr(this), JointsFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask);
 		getPositionIndexes().push_back(PositionIndex);
-		getBones().push_back(TheBone);
+		getJoints().push_back(TheJoint);
 		getBlendAmounts().push_back(BlendAmount);
-		getAttachedToEnd().push_back(AttachedToEnd);
-	endEditCP(SkeletonBlendedGeometryPtr(this), BonesFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask | AttachedToEndFieldMask);
+	endEditCP(SkeletonBlendedGeometryPtr(this), JointsFieldMask | PositionIndexesFieldMask | BlendAmountsFieldMask);
 }
 
 void SkeletonBlendedGeometry::calculatePositions(void)
@@ -192,7 +191,7 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 	if(getBaseGeometry() != NullFC &&
 		getPositions() != NullFC &&
         getBaseGeometry()->getPositions() != NullFC &&
-		(getPositionIndexes().size() == getBones().size() &&
+		(getPositionIndexes().size() == getJoints().size() &&
 		getPositionIndexes().size() == getBlendAmounts().size()))
 	{
 		Pnt3f CalculatedPoint;
@@ -202,41 +201,10 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 		//UInt32 VertexesTransformations[n];
 		for(UInt32 i(0) ; i < getPositionIndexes().size() ; ++i)
 		{
-			if(getPositionIndexes(i) == 1075)
-			{
-				std::cout << "stop here" << std::endl;
+			Matrix temp = getJoints(i)->getAbsoluteDifferenceTransformation();
+			temp.scale(getBlendAmounts(i));
+			temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
 
-
-				double blendAmt = getBlendAmounts(i);
-
-				Pnt3f geomPnt = getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i));
-			}
-
-
-			Matrix ident = Matrix();
-			if(getBones(i)->getEndInternalAbsoluteDifferenceTransformation() != ident)
-			{
-				Matrix absolute = getBones(i)->getInternalAbsoluteTransformation();
-				Matrix defaultAbsolute = getBones(i)->getInternalDefaultAbsoluteTransformation();
-			}
-
-
-
-			if(getAttachedToEnd(i))
-			{
-				
-
-				Matrix temp = getBones(i)->getEndInternalAbsoluteDifferenceTransformation();
-				temp.scale(getBlendAmounts(i));
-				temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
-
-			}
-			else
-			{
-				Matrix temp = getBones(i)->getInternalAbsoluteDifferenceTransformation(getBlendMode());
-				temp.scale(getBlendAmounts(i));
-				temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
-			}
 
 
 			if(VisitedIndicies.find(getPositionIndexes(i)) == VisitedIndicies.end())
@@ -252,10 +220,75 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 			getPositions()->setValue(CalculatedPoint, getPositionIndexes(i));
 		}
 
+
+
 		for(UInt32 i = 0; i < _parents.size(); i++)
 		{
 			_parents[i]->invalidateVolume();
 		}
+
+
+		//Pnt3f CalculatedPoint;
+		////Update the Positions and Normals
+		//std::set<UInt32> VisitedIndicies;
+
+		////UInt32 VertexesTransformations[n];
+		//for(UInt32 i(0) ; i < getPositionIndexes().size() ; ++i)
+		//{
+		//	if(getPositionIndexes(i) == 1075)
+		//	{
+		//		std::cout << "stop here" << std::endl;
+
+
+		//		double blendAmt = getBlendAmounts(i);
+
+		//		Pnt3f geomPnt = getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i));
+		//	}
+
+
+		//	Matrix ident = Matrix();
+		//	if(getBones(i)->getEndInternalAbsoluteDifferenceTransformation() != ident)
+		//	{
+		//		Matrix absolute = getBones(i)->getInternalAbsoluteTransformation();
+		//		Matrix defaultAbsolute = getBones(i)->getInternalDefaultAbsoluteTransformation();
+		//	}
+
+
+
+		//	if(getAttachedToEnd(i))
+		//	{
+		//		
+
+		//		Matrix temp = getBones(i)->getEndInternalAbsoluteDifferenceTransformation();
+		//		temp.scale(getBlendAmounts(i));
+		//		temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
+
+		//	}
+		//	else
+		//	{
+		//		Matrix temp = getBones(i)->getInternalAbsoluteDifferenceTransformation(getBlendMode());
+		//		temp.scale(getBlendAmounts(i));
+		//		temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
+		//	}
+
+
+		//	if(VisitedIndicies.find(getPositionIndexes(i)) == VisitedIndicies.end())
+		//	{
+		//		//Overwrite
+		//		VisitedIndicies.insert(getPositionIndexes(i));
+		//	}
+		//	else
+		//	{
+		//		//Add
+		//		CalculatedPoint += getPositions()->getValue(getPositionIndexes(i));
+		//	}
+		//	getPositions()->setValue(CalculatedPoint, getPositionIndexes(i));
+		//}
+
+		//for(UInt32 i = 0; i < _parents.size(); i++)
+		//{
+		//	_parents[i]->invalidateVolume();
+		//}
 	}
 	else
 	{
@@ -270,22 +303,6 @@ void SkeletonBlendedGeometry::changed(const SkeletonEvent& e)
     calculatePositions();
 }
 
-void SkeletonBlendedGeometry::printStats(void)
-{
-	std::cout << "     # Bones:         " << getBones().size() << std::endl;
-	std::cout << "     # Positions:     " << getPositionIndexes().size() << std::endl;
-	std::cout << "     # BlendAmounts:  " << getBlendAmounts().size() << std::endl;
-	std::cout << "     # AttachedToEnd: " << getAttachedToEnd().size() << std::endl;
-	std::cout << "     Blend Mode:      " << getBlendMode() << std::endl;
-}
-
-void SkeletonBlendedGeometry::printInfluences(void)
-{
-	for (int i(0); i < getBones().size(); ++i)
-	{
-		//std::cout << "INFLUENCE " << i << ":     PositionIndex: " << getPositionIndexes()[i] << "  BlendAmount: " << getBlendAmounts()[i] << "  AttachedToEnd: " << getAttachedToEnd()[i] << std::endl;
-	}
-}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -417,7 +434,7 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 	    endEditCP(SkeletonBlendedGeometryPtr(this), Geometry::DlistCacheFieldMask | Geometry::MaterialFieldMask | Geometry::HighindicesFieldMask | Geometry::LowindicesFieldMask | Geometry::MaxindexFieldMask | Geometry::MinindexFieldMask | Geometry::IndexMappingFieldMask);
     }
 
-	if((whichField & BonesFieldMask) ||
+	if((whichField & JointsFieldMask) ||
 		(whichField & PositionIndexesFieldMask) ||
 		(whichField & BlendAmountsFieldMask))
 	{

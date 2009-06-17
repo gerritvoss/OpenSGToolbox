@@ -80,14 +80,12 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
 
     /*! \}                                                                 */
     
-    void addBoneBlending(const UInt32& PositionIndex, const BonePtr TheBone, const Real32& BlendAmount, bool AttachedToEnd);
+    void addJointBlending(const UInt32& PositionIndex, const JointPtr TheJoint, const Real32& BlendAmount);
 
     void addSkeleton(SkeletonPtr TheSkeleton);
     void subSkeleton(SkeletonPtr TheSkeleton);
     UInt32 numSkeletons(void) const;
     void subSkeleton(UInt32 Index);
-	void printStats(void);
-	void printInfluences(void);
 
 	
    virtual void changed(const SkeletonEvent& e);

@@ -20,11 +20,11 @@
 	>
 	</Field>
 	<Field
-		name="Bones"
-		type="BonePtr"
+		name="Joints"
+		type="JointPtr"
 		cardinality="multi"
 		visibility="external"
-		header="SkeletalAnimation/OSGBoneFields.h"
+		header="SkeletalAnimation/OSGJointFields.h"
 		access="protected"
 	>
 	</Field>
@@ -39,14 +39,6 @@
 	<Field
 		name="BlendAmounts"
 		type="Real32"
-		cardinality="multi"
-		visibility="external"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="AttachedToEnd"
-		type="UInt8"
 		cardinality="multi"
 		visibility="external"
 		access="protected"

@@ -90,7 +90,7 @@ void Skeleton::updateJointTransformations(void)
 	//Loop through bone hierarchy and update their transformations
 	for(UInt32 i(0); i < getRootJoints().size(); ++i)
 	{
-		//getRootJoints(i)->updateTransformation(false);
+		getRootJoints(i)->updateTransformations(false);
 	}
 }
 

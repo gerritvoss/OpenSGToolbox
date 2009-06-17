@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -103,11 +103,11 @@ SFGeometryPtr *SkeletonBlendedGeometryBase::getSFBaseGeometry(void)
     return &_sfBaseGeometry;
 }
 
-//! Get the SkeletonBlendedGeometry::_mfBones field.
+//! Get the SkeletonBlendedGeometry::_mfJoints field.
 inline
-MFBonePtr *SkeletonBlendedGeometryBase::getMFBones(void)
+MFJointPtr *SkeletonBlendedGeometryBase::getMFJoints(void)
 {
-    return &_mfBones;
+    return &_mfJoints;
 }
 
 //! Get the SkeletonBlendedGeometry::_mfPositionIndexes field.
@@ -122,13 +122,6 @@ inline
 MFReal32 *SkeletonBlendedGeometryBase::getMFBlendAmounts(void)
 {
     return &_mfBlendAmounts;
-}
-
-//! Get the SkeletonBlendedGeometry::_mfAttachedToEnd field.
-inline
-MFUInt8 *SkeletonBlendedGeometryBase::getMFAttachedToEnd(void)
-{
-    return &_mfAttachedToEnd;
 }
 
 //! Get the SkeletonBlendedGeometry::_mfSkeletons field.
@@ -189,25 +182,25 @@ void SkeletonBlendedGeometryBase::setBlendMode(const UInt32 &value)
 }
 
 
-//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfBones field.
+//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfJoints field.
 inline
-BonePtr &SkeletonBlendedGeometryBase::getBones(const UInt32 index)
+JointPtr &SkeletonBlendedGeometryBase::getJoints(const UInt32 index)
 {
-    return _mfBones[index];
+    return _mfJoints[index];
 }
 
-//! Get the SkeletonBlendedGeometry::_mfBones field.
+//! Get the SkeletonBlendedGeometry::_mfJoints field.
 inline
-MFBonePtr &SkeletonBlendedGeometryBase::getBones(void)
+MFJointPtr &SkeletonBlendedGeometryBase::getJoints(void)
 {
-    return _mfBones;
+    return _mfJoints;
 }
 
-//! Get the SkeletonBlendedGeometry::_mfBones field.
+//! Get the SkeletonBlendedGeometry::_mfJoints field.
 inline
-const MFBonePtr &SkeletonBlendedGeometryBase::getBones(void) const
+const MFJointPtr &SkeletonBlendedGeometryBase::getJoints(void) const
 {
-    return _mfBones;
+    return _mfJoints;
 }
 
 //! Get the value of the \a index element the SkeletonBlendedGeometry::_mfPositionIndexes field.
@@ -250,27 +243,6 @@ inline
 const MFReal32 &SkeletonBlendedGeometryBase::getBlendAmounts(void) const
 {
     return _mfBlendAmounts;
-}
-
-//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfAttachedToEnd field.
-inline
-UInt8 &SkeletonBlendedGeometryBase::getAttachedToEnd(const UInt32 index)
-{
-    return _mfAttachedToEnd[index];
-}
-
-//! Get the SkeletonBlendedGeometry::_mfAttachedToEnd field.
-inline
-MFUInt8 &SkeletonBlendedGeometryBase::getAttachedToEnd(void)
-{
-    return _mfAttachedToEnd;
-}
-
-//! Get the SkeletonBlendedGeometry::_mfAttachedToEnd field.
-inline
-const MFUInt8 &SkeletonBlendedGeometryBase::getAttachedToEnd(void) const
-{
-    return _mfAttachedToEnd;
 }
 
 //! Get the value of the \a index element the SkeletonBlendedGeometry::_mfSkeletons field.

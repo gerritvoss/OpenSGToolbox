@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGJoint.h"
+#include "OSGSkeleton.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -119,7 +120,18 @@ void Joint::calculateTransformations(void)
 
 void Joint::updateTransformations(bool isRecursive)
 {
+	calculateTransformations();
 
+	for (int i(0); i < getChildJoints().size(); ++i)
+	{
+		getChildJoints(i)->updateTransformations(true);
+	}
+
+	if(!isRecursive)
+	{
+		//Tell skeleton joint has been updated
+		getParentSkeleton()->skeletonUpdated();
+	}
 }
 
 

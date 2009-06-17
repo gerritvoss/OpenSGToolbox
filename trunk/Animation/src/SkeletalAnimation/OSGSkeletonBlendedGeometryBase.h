@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -68,10 +68,9 @@
 #include <OpenSG/OSGGeometry.h> // Parent
 
 #include <OpenSG/OSGGeometryFields.h> // BaseGeometry type
-#include "SkeletalAnimation/OSGBoneFields.h" // Bones type
+#include "SkeletalAnimation/OSGJointFields.h" // Joints type
 #include <OpenSG/OSGUInt32Fields.h> // PositionIndexes type
 #include <OpenSG/OSGReal32Fields.h> // BlendAmounts type
-#include <OpenSG/OSGUInt8Fields.h> // AttachedToEnd type
 #include "OSGSkeletonFields.h" // Skeletons type
 #include <OpenSG/OSGUInt32Fields.h> // BlendMode type
 
@@ -98,20 +97,18 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     enum
     {
         BaseGeometryFieldId    = Inherited::NextFieldId,
-        BonesFieldId           = BaseGeometryFieldId    + 1,
-        PositionIndexesFieldId = BonesFieldId           + 1,
+        JointsFieldId          = BaseGeometryFieldId    + 1,
+        PositionIndexesFieldId = JointsFieldId          + 1,
         BlendAmountsFieldId    = PositionIndexesFieldId + 1,
-        AttachedToEndFieldId   = BlendAmountsFieldId    + 1,
-        SkeletonsFieldId       = AttachedToEndFieldId   + 1,
+        SkeletonsFieldId       = BlendAmountsFieldId    + 1,
         BlendModeFieldId       = SkeletonsFieldId       + 1,
         NextFieldId            = BlendModeFieldId       + 1
     };
 
     static const OSG::BitVector BaseGeometryFieldMask;
-    static const OSG::BitVector BonesFieldMask;
+    static const OSG::BitVector JointsFieldMask;
     static const OSG::BitVector PositionIndexesFieldMask;
     static const OSG::BitVector BlendAmountsFieldMask;
-    static const OSG::BitVector AttachedToEndFieldMask;
     static const OSG::BitVector SkeletonsFieldMask;
     static const OSG::BitVector BlendModeFieldMask;
 
@@ -198,10 +195,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     /*! \{                                                                 */
 
     SFGeometryPtr       _sfBaseGeometry;
-    MFBonePtr           _mfBones;
+    MFJointPtr          _mfJoints;
     MFUInt32            _mfPositionIndexes;
     MFReal32            _mfBlendAmounts;
-    MFUInt8             _mfAttachedToEnd;
     MFSkeletonPtr       _mfSkeletons;
     SFUInt32            _sfBlendMode;
 
@@ -225,24 +221,20 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFBonePtr           *getMFBones          (void);
+           MFJointPtr          *getMFJoints         (void);
            MFUInt32            *getMFPositionIndexes(void);
            MFReal32            *getMFBlendAmounts   (void);
-           MFUInt8             *getMFAttachedToEnd  (void);
            MFSkeletonPtr       *getMFSkeletons      (void);
 
-           BonePtr             &getBones          (UInt32 index);
-           MFBonePtr           &getBones          (void);
-     const MFBonePtr           &getBones          (void) const;
+           JointPtr            &getJoints         (UInt32 index);
+           MFJointPtr          &getJoints         (void);
+     const MFJointPtr          &getJoints         (void) const;
            UInt32              &getPositionIndexes(UInt32 index);
            MFUInt32            &getPositionIndexes(void);
      const MFUInt32            &getPositionIndexes(void) const;
            Real32              &getBlendAmounts   (UInt32 index);
            MFReal32            &getBlendAmounts   (void);
      const MFReal32            &getBlendAmounts   (void) const;
-           UInt8               &getAttachedToEnd  (UInt32 index);
-           MFUInt8             &getAttachedToEnd  (void);
-     const MFUInt8             &getAttachedToEnd  (void) const;
            SkeletonPtr         &getSkeletons      (UInt32 index);
            MFSkeletonPtr       &getSkeletons      (void);
      const MFSkeletonPtr       &getSkeletons      (void) const;
