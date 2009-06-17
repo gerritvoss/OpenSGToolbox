@@ -61,8 +61,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
     /*==========================  PUBLIC  =================================*/
   public:
 	Matrix getAbsoluteTransformation(void) const;
+	Matrix getBindAbsoluteTransformation(void) const;
 	const Matrix& getAbsoluteDifferenceTransformation(void) const;
 	const Matrix& getRelativeDifferenceTransformation(void) const;
+	void calculateTransformations(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -82,6 +84,11 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+
+	  Matrix _AbsoluteTransformation;
+	  Matrix _BindAbsoluteTransformation;
+	  Matrix _AbsoluteDifferenceTransformation;
+	  Matrix _RelativeDifferenceTransformation;
 
     // Variables should all be in JointBase.
 

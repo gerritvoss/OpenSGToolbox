@@ -124,6 +124,13 @@ SFJointPtr *JointBase::getSFParentJoint(void)
     return &_sfParentJoint;
 }
 
+//! Get the Joint::_sfParentSkeleton field.
+inline
+SFSkeletonPtr *JointBase::getSFParentSkeleton(void)
+{
+    return &_sfParentSkeleton;
+}
+
 
 //! Get the value of the Joint::_sfRelativeTransformation field.
 inline
@@ -186,6 +193,27 @@ inline
 void JointBase::setParentJoint(const JointPtr &value)
 {
     _sfParentJoint.setValue(value);
+}
+
+//! Get the value of the Joint::_sfParentSkeleton field.
+inline
+SkeletonPtr &JointBase::getParentSkeleton(void)
+{
+    return _sfParentSkeleton.getValue();
+}
+
+//! Get the value of the Joint::_sfParentSkeleton field.
+inline
+const SkeletonPtr &JointBase::getParentSkeleton(void) const
+{
+    return _sfParentSkeleton.getValue();
+}
+
+//! Set the value of the Joint::_sfParentSkeleton field.
+inline
+void JointBase::setParentSkeleton(const SkeletonPtr &value)
+{
+    _sfParentSkeleton.setValue(value);
 }
 
 

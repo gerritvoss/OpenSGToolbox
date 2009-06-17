@@ -71,6 +71,7 @@
 #include <OpenSG/OSGMatrixFields.h> // BindRelativeTransformation type
 #include "OSGJointFields.h" // ChildJoints type
 #include "OSGJointFields.h" // ParentJoint type
+#include "SkeletalAnimation/OSGSkeletonFields.h" // ParentSkeleton type
 
 #include "OSGJointFields.h"
 
@@ -98,13 +99,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING JointBase : public AttachmentContainer
         BindRelativeTransformationFieldId = RelativeTransformationFieldId     + 1,
         ChildJointsFieldId                = BindRelativeTransformationFieldId + 1,
         ParentJointFieldId                = ChildJointsFieldId                + 1,
-        NextFieldId                       = ParentJointFieldId                + 1
+        ParentSkeletonFieldId             = ParentJointFieldId                + 1,
+        NextFieldId                       = ParentSkeletonFieldId             + 1
     };
 
     static const OSG::BitVector RelativeTransformationFieldMask;
     static const OSG::BitVector BindRelativeTransformationFieldMask;
     static const OSG::BitVector ChildJointsFieldMask;
     static const OSG::BitVector ParentJointFieldMask;
+    static const OSG::BitVector ParentSkeletonFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -135,6 +138,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING JointBase : public AttachmentContainer
            SFMatrix            *getSFBindRelativeTransformation(void);
            MFJointPtr          *getMFChildJoints    (void);
            SFJointPtr          *getSFParentJoint    (void);
+           SFSkeletonPtr       *getSFParentSkeleton (void);
 
            Matrix              &getRelativeTransformation(void);
      const Matrix              &getRelativeTransformation(void) const;
@@ -142,6 +146,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING JointBase : public AttachmentContainer
      const Matrix              &getBindRelativeTransformation(void) const;
            JointPtr            &getParentJoint    (void);
      const JointPtr            &getParentJoint    (void) const;
+           SkeletonPtr         &getParentSkeleton (void);
+     const SkeletonPtr         &getParentSkeleton (void) const;
            JointPtr            &getChildJoints    (const UInt32 index);
            MFJointPtr          &getChildJoints    (void);
      const MFJointPtr          &getChildJoints    (void) const;
@@ -154,6 +160,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING JointBase : public AttachmentContainer
      void setRelativeTransformation( const Matrix &value );
      void setBindRelativeTransformation( const Matrix &value );
      void setParentJoint    ( const JointPtr &value );
+     void setParentSkeleton ( const SkeletonPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -200,6 +207,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING JointBase : public AttachmentContainer
     SFMatrix            _sfBindRelativeTransformation;
     MFJointPtr          _mfChildJoints;
     SFJointPtr          _sfParentJoint;
+    SFSkeletonPtr       _sfParentSkeleton;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

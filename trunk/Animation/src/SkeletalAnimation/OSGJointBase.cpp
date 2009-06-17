@@ -76,6 +76,9 @@ const OSG::BitVector  JointBase::ChildJointsFieldMask =
 const OSG::BitVector  JointBase::ParentJointFieldMask = 
     (TypeTraits<BitVector>::One << JointBase::ParentJointFieldId);
 
+const OSG::BitVector  JointBase::ParentSkeletonFieldMask = 
+    (TypeTraits<BitVector>::One << JointBase::ParentSkeletonFieldId);
+
 const OSG::BitVector JointBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -93,6 +96,9 @@ const OSG::BitVector JointBase::MTInfluenceMask =
     
 */
 /*! \var JointPtr        JointBase::_sfParentJoint
+    
+*/
+/*! \var SkeletonPtr     JointBase::_sfParentSkeleton
     
 */
 
@@ -119,7 +125,12 @@ FieldDescription *JointBase::_desc[] =
                      "ParentJoint", 
                      ParentJointFieldId, ParentJointFieldMask,
                      false,
-                     (FieldAccessMethod) &JointBase::getSFParentJoint)
+                     (FieldAccessMethod) &JointBase::getSFParentJoint),
+    new FieldDescription(SFSkeletonPtr::getClassType(), 
+                     "ParentSkeleton", 
+                     ParentSkeletonFieldId, ParentSkeletonFieldMask,
+                     false,
+                     (FieldAccessMethod) &JointBase::getSFParentSkeleton)
 };
 
 
@@ -200,6 +211,7 @@ JointBase::JointBase(void) :
     _sfBindRelativeTransformation(), 
     _mfChildJoints            (), 
     _sfParentJoint            (), 
+    _sfParentSkeleton         (), 
     Inherited() 
 {
 }
@@ -213,6 +225,7 @@ JointBase::JointBase(const JointBase &source) :
     _sfBindRelativeTransformation(source._sfBindRelativeTransformation), 
     _mfChildJoints            (source._mfChildJoints            ), 
     _sfParentJoint            (source._sfParentJoint            ), 
+    _sfParentSkeleton         (source._sfParentSkeleton         ), 
     Inherited                 (source)
 {
 }
@@ -249,6 +262,11 @@ UInt32 JointBase::getBinSize(const BitVector &whichField)
         returnValue += _sfParentJoint.getBinSize();
     }
 
+    if(FieldBits::NoField != (ParentSkeletonFieldMask & whichField))
+    {
+        returnValue += _sfParentSkeleton.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -276,6 +294,11 @@ void JointBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ParentJointFieldMask & whichField))
     {
         _sfParentJoint.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentSkeletonFieldMask & whichField))
+    {
+        _sfParentSkeleton.copyToBin(pMem);
     }
 
 
@@ -306,6 +329,11 @@ void JointBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfParentJoint.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ParentSkeletonFieldMask & whichField))
+    {
+        _sfParentSkeleton.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -328,6 +356,9 @@ void JointBase::executeSyncImpl(      JointBase *pOther,
     if(FieldBits::NoField != (ParentJointFieldMask & whichField))
         _sfParentJoint.syncWith(pOther->_sfParentJoint);
 
+    if(FieldBits::NoField != (ParentSkeletonFieldMask & whichField))
+        _sfParentSkeleton.syncWith(pOther->_sfParentSkeleton);
+
 
 }
 #else
@@ -346,6 +377,9 @@ void JointBase::executeSyncImpl(      JointBase *pOther,
 
     if(FieldBits::NoField != (ParentJointFieldMask & whichField))
         _sfParentJoint.syncWith(pOther->_sfParentJoint);
+
+    if(FieldBits::NoField != (ParentSkeletonFieldMask & whichField))
+        _sfParentSkeleton.syncWith(pOther->_sfParentSkeleton);
 
 
     if(FieldBits::NoField != (ChildJointsFieldMask & whichField))

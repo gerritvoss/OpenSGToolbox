@@ -78,19 +78,44 @@ void Joint::initMethod (void)
 
 Matrix Joint::getAbsoluteTransformation(void) const
 {
-	return (getParentJoint()->getAbsoluteTransformation()).mult(getRelativeTransformation());
+	return _AbsoluteTransformation;
+}
+
+Matrix Joint::getBindAbsoluteTransformation(void) const
+{
+	return _BindAbsoluteTransformation;
 }
 
 const Matrix& Joint::getAbsoluteDifferenceTransformation(void) const
 {
-
+	return _AbsoluteDifferenceTransformation;
 }
 
 const Matrix& Joint::getRelativeDifferenceTransformation(void) const
 {
-
+	return _RelativeDifferenceTransformation;
 }
 
+void Joint::calculateTransformations(void)
+{
+	//Absolute transformation
+	_AbsoluteTransformation = getParentJoint()->getAbsoluteTransformation();
+	_AbsoluteTransformation.mult(getRelativeTransformation());
+
+	//Absolute bind transformation
+	_BindAbsoluteTransformation = getParentJoint()->getBindAbsoluteTransformation();
+	_BindAbsoluteTransformation.mult(getBindRelativeTransformation());
+
+	//Absolute difference transformation
+	_AbsoluteDifferenceTransformation = getBindAbsoluteTransformation();
+	_AbsoluteDifferenceTransformation.invert();
+	_AbsoluteDifferenceTransformation.multLeft(getAbsoluteTransformation());
+
+	//Relative difference transformation
+	_RelativeDifferenceTransformation = getBindRelativeTransformation();
+	_RelativeDifferenceTransformation.invert();
+	_RelativeDifferenceTransformation.multLeft(getRelativeTransformation());
+}
 
 
 

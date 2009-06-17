@@ -45,4 +45,13 @@
 		header="OSGJointFields.h"
 	>
 	</Field>
+	<Field
+		name="ParentSkeleton"
+		type="SkeletonPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="SkeletalAnimation/OSGSkeletonFields.h"
+	>
+	</Field>
 </FieldContainer>
