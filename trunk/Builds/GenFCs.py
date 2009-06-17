@@ -10,10 +10,10 @@ def convertPathToOutput(Path):
       return '"' + Path + '"'
 
 def main():
-   print "Operating System:", os.name
-   print "System Platform:", sys.platform
+   print("Operating System:", os.name)
+   print("System Platform:", sys.platform)
    if len(sys.argv) != 2:
-      print "Must specify a Field Container Description file(.fcd)."
+      print("Must specify a Field Container Description file(.fcd).")
       sys.exit(1)
       
    GenFCsPyDir = os.path.split(sys.argv[0])[0]
@@ -25,7 +25,7 @@ def main():
    else:
       FcdCompilePath = convertPathToOutput(os.path.join(GenFCsPyDir, "..\\External\\fcdCompile\\Windows\\fcdCompile.exe")) 
       
-   print "Using fcdCompile to Generate Code..."
+   print("Using fcdCompile to Generate Code...")
 
    
    os.system(convertPathToOutput(FcdCompilePath + " -b -f " + convertPathToOutput(sys.argv[1])))
@@ -47,23 +47,23 @@ def main():
    if(not os.path.exists(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))):
       shutil.move(HeaderFile, os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))
    else:
-      print os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + " already exists."
+      print(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + " already exists.")
       os.remove(HeaderFile)
       
    if(not os.path.exists(os.path.join(os.path.split(sys.argv[1])[0],InlineFile))):
       shutil.move(InlineFile, os.path.join(os.path.split(sys.argv[1])[0],InlineFile))
    else:
-      print os.path.join(os.path.split(sys.argv[1])[0],InlineFile) + " already exists."
+      print(os.path.join(os.path.split(sys.argv[1])[0],InlineFile) + " already exists.")
       os.remove(InlineFile)
       
    if(not os.path.exists(os.path.join(os.path.split(sys.argv[1])[0],CodeFile))):
       shutil.move(CodeFile, os.path.join(os.path.split(sys.argv[1])[0],CodeFile))
    else:
-      print os.path.join(os.path.split(sys.argv[1])[0],CodeFile) + " already exists."
+      print(os.path.join(os.path.split(sys.argv[1])[0],CodeFile) + " already exists.")
       os.remove(CodeFile)
       
    #Cleanup code with sed script
-   print "Running Sed script to clean up generated code ..."
+   print("Running Sed script to clean up generated code ...")
    
    if os.name == "posix":
       SedPath = "sed"
@@ -128,6 +128,6 @@ def main():
 
    #shutil.move(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))
    
-   print "Done"
+   print("Done")
 
 main()
