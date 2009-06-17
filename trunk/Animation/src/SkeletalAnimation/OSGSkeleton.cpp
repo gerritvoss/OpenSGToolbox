@@ -48,7 +48,6 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSkeleton.h"
-#include "OSGSkeletonBlendedGeometry.h"
 
 #include "OSGJoint.h"
 #include <boost/bind.hpp>

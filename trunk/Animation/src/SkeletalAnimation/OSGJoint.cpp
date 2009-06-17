@@ -100,11 +100,25 @@ const Matrix& Joint::getRelativeDifferenceTransformation(void) const
 void Joint::calculateTransformations(void)
 {
 	//Absolute transformation
-	_AbsoluteTransformation = getParentJoint()->getAbsoluteTransformation();
+	if(getParentJoint() != NullFC)
+	{
+		_AbsoluteTransformation = getParentJoint()->getAbsoluteTransformation();
+	}
+	else
+	{
+		_AbsoluteTransformation.setIdentity();
+	}
 	_AbsoluteTransformation.mult(getRelativeTransformation());
 
 	//Absolute bind transformation
-	_BindAbsoluteTransformation = getParentJoint()->getBindAbsoluteTransformation();
+	if(getParentJoint() != NullFC)
+	{
+		_BindAbsoluteTransformation = getParentJoint()->getBindAbsoluteTransformation();
+	}
+	else
+	{
+		_BindAbsoluteTransformation.setIdentity();
+	}
 	_BindAbsoluteTransformation.mult(getBindRelativeTransformation());
 
 	//Absolute difference transformation
@@ -161,6 +175,25 @@ Joint::~Joint(void)
 void Joint::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & RelativeTransformationFieldMask)
+	{
+		calculateTransformations();
+	}
+	if(whichField & BindRelativeTransformationFieldMask)
+	{
+		calculateTransformations();
+	}
+
+	if(whichField & ChildJointsFieldMask)
+	{
+		for(UInt32 i(0) ; i<getChildJoints().size() ; ++i)
+		{
+			beginEditCP(getChildJoints(i), ParentJointFieldMask);
+				getChildJoints(i)->setParentJoint(JointPtr(this));
+			endEditCP(getChildJoints(i), ParentJointFieldMask);
+		}
+	}
 }
 
 void Joint::dump(      UInt32    , 

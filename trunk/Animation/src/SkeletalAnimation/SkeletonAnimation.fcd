@@ -47,7 +47,7 @@ Skeleton Animation Class.
 		visibility="external"
 		access="public"
 		defaultValue="LINEAR_INTERPOLATION"
-		defaultHeader="OpenSG/Toolbox/OSGInterpolations.h"
+		defaultHeader="Interpolation/OSGKeyframeInterpolations.h"
 	>
 	</Field>
 </FieldContainer>

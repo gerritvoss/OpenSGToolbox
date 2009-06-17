@@ -18,7 +18,7 @@
 #include <OpenSG/OSGMaterialChunk.h>
 
 //Animation
-#include <OpenSG/Animation/OSGBone.h>
+#include <OpenSG/Animation/OSGJoint.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGSkeletonDrawable.h>
 
@@ -175,52 +175,36 @@ int main(int argc, char **argv)
 		ExampleMaterial->addChunk(ExampleBlendChunk);
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
-    //Bone
-	BonePtr ExampleRootBone = Bone::create();
-	BonePtr TempRootBone;
-	TempRootBone = ExampleRootBone;
+    //Joint
+	JointPtr ExampleRootJoint = Joint::create();
+	JointPtr TempRootJoint;
+	TempRootJoint = ExampleRootJoint;
+	Matrix TempMat;
 
-	for (double i = 1; i < 9; i++)
+	for (Real32 i = 1.0f; i < 9.0f; i++)
 	{
+		JointPtr ExampleChildJoint;
+
+		TempMat.setTranslate(RandomPoolManager::getRandomReal32(0.0, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f));
+		ExampleChildJoint = Joint::create(); //create a bone called ExampleChildbone
+		beginEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask);//use the field masks
+			ExampleChildJoint->setRelativeTransformation(TempMat);
+		endEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask);
+
+	
+		beginEditCP(TempRootJoint, Joint::ChildJointsFieldMask);
+			TempRootJoint->getChildJoints().push_back(ExampleChildJoint);//add a Child to the root bone
+		endEditCP(TempRootJoint, Joint::ChildJointsFieldMask);
 		
 
-		Real32 Rand = RandomPoolManager::getRandomReal32(9.0f, 180.0);  // opsg 32 bit real random number generator
-		BonePtr ExampleChildBone;                                       // check OSGRandomPoolManager.h in 
-                                                                        // vs-8.0-ToolBoxTutorials
-
-		ExampleChildBone = Bone::create(); //create a bone called ExampleChildbone
-		beginEditCP(ExampleChildBone, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-			ExampleChildBone->setLength(5.0f);
-			ExampleChildBone->setRotation(Quaternion(Vec3f((Rand/i),(Rand/i),(Rand/i)), osgdegree2rad(Rand)));
-		endEditCP(ExampleChildBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-		
-
-		TempRootBone->addChild(ExampleChildBone);//add a Child to the root bone
-		
-
-		TempRootBone = TempRootBone->getChild(0);
+		TempRootJoint = TempRootJoint->getChildJoints(0);
 	}
-	
-		//glMultMatrixf(m.getValues());
-		// const Matrix              &getTransformation(void) const;
-
-
-
-	//BonePtr ExampleRootBone = Bone::create();
-	//beginEditCP(ExampleRootBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
-		//ExampleRootBone->setLength(5.0f);
-		//ExampleRootBone->setRotation(Quaternion(Vec3f(1.0f,0.0f,0.0f), osgdegree2rad(225.0f)));
-	//endEditCP(ExampleRootBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
-	//ExampleRootBone->addChild(SecondChildBone);
-	//SecondChildBone->addChild(ThirdChildBone);
-	
 
     //Skeleton
     SkeletonPtr ExampleSkeleton = Skeleton::create();
-	beginEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
-		ExampleSkeleton->getRootBones().push_back(ExampleRootBone);
-	endEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
+	beginEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
+		ExampleSkeleton->getRootJoints().push_back(ExampleRootJoint);
+	endEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
 
     //SkeletonDrawer
     SkeletonDrawablePtr ExampleSkeletonDrawable = osg::SkeletonDrawable::create();
