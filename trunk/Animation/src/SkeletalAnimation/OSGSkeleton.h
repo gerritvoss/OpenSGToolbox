@@ -85,6 +85,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
     /*! \}                                                                 */
 
     void skeletonUpdated(void);
+    void updateBoneTransformations(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

@@ -88,6 +88,15 @@ void Skeleton::skeletonUpdated(void)
 	}
 }
 
+void Skeleton::updateBoneTransformations(void)
+{
+	//Loop through bone hierarchy and set their parent Skeleton this instance
+	for(UInt32 i(0); i < getRootBones().size(); ++i)
+	{
+		getRootBones(i)->updateTransformation(false);
+	}
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

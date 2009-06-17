@@ -451,10 +451,14 @@ void Bone::changed(BitVector whichField, UInt32 origin)
 		(whichField & TranslationFieldMask) ||
 		(whichField & DefaultRotationFieldMask) ||
 		(whichField & DefaultLengthFieldMask) ||
-		(whichField & DefaultTranslationFieldMask) ||
-		(whichField & InternalSkeletonFieldMask))
+		(whichField & DefaultTranslationFieldMask)
+		)
 	{
 		updateTransformation(false);
+	}
+	if((whichField & InternalSkeletonFieldMask))
+	{
+		updateTransformation(true);
 	}
 }
 

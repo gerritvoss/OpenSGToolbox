@@ -191,7 +191,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 20LoadXMLBlendedGeometryWindow");
+                                        "OpenSG 21LoadXMLSceneFromMayaWindow");
 
 
 
@@ -223,7 +223,7 @@ int main(int argc, char **argv)
 	GeoPLengthsPtr lens = GeoPLengthsUI32::create();    
     beginEditCP(lens, GeoPLengthsUI32::GeoPropDataFieldMask);
     {
-        lens->addValue(6);
+        lens->addValue(92);
     }
     endEditCP  (lens, GeoPLengthsUI32::GeoPropDataFieldMask);
 	 GeoPositions3fPtr pnts = GeoPositions3f::create();
@@ -240,6 +240,148 @@ int main(int argc, char **argv)
 		// Z-Axis
         pnts->addValue(Pnt3f(0,  0, 0));
         pnts->addValue(Pnt3f(0,  0, 15));
+
+		//Line at z = 10
+		pnts->addValue(Pnt3f(-10, 10, 0));
+		pnts->addValue(Pnt3f(10, 10, 0));
+
+		//GRID
+		float height = 0;
+
+		pnts->addValue(Pnt3f(-10, height, 0));
+		if(height == 0)
+			pnts->addValue(Pnt3f(0, height, 0));
+		else
+			pnts->addValue(Pnt3f(10, height, 0));
+
+		pnts->addValue(Pnt3f(-10, height, 1));
+		pnts->addValue(Pnt3f(10, height, 1));
+
+		pnts->addValue(Pnt3f(-10, height, 2));
+		pnts->addValue(Pnt3f(10, height, 2));
+
+		pnts->addValue(Pnt3f(-10, height, 3));
+		pnts->addValue(Pnt3f(10, height, 3));
+
+		pnts->addValue(Pnt3f(-10, height, 4));
+		pnts->addValue(Pnt3f(10, height, 4));
+
+		pnts->addValue(Pnt3f(-10, height, 5));
+		pnts->addValue(Pnt3f(10, height, 5));
+
+		pnts->addValue(Pnt3f(-10, height, 6));
+		pnts->addValue(Pnt3f(10, height, 6));
+
+		pnts->addValue(Pnt3f(-10, height, 7));
+		pnts->addValue(Pnt3f(10, height, 7));
+
+		pnts->addValue(Pnt3f(-10, height, 8));
+		pnts->addValue(Pnt3f(10, height, 8));
+
+		pnts->addValue(Pnt3f(-10, height, 9));
+		pnts->addValue(Pnt3f(10, height, 9));
+
+		pnts->addValue(Pnt3f(-10, height, 10));
+		pnts->addValue(Pnt3f(10, height, 10));
+
+		pnts->addValue(Pnt3f(-10, height, -1));
+		pnts->addValue(Pnt3f(10, height, -1));
+
+		pnts->addValue(Pnt3f(-10, height, -2));
+		pnts->addValue(Pnt3f(10, height, -2));
+
+		pnts->addValue(Pnt3f(-10, height, -3));
+		pnts->addValue(Pnt3f(10, height, -3));
+
+		pnts->addValue(Pnt3f(-10, height, -4));
+		pnts->addValue(Pnt3f(10, height, -4));
+
+		pnts->addValue(Pnt3f(-10, height, -5));
+		pnts->addValue(Pnt3f(10, height, -5));
+
+		pnts->addValue(Pnt3f(-10, height, -6));
+		pnts->addValue(Pnt3f(10, height, -6));
+
+		pnts->addValue(Pnt3f(-10, height, -7));
+		pnts->addValue(Pnt3f(10, height, -7));
+
+		pnts->addValue(Pnt3f(-10, height, -8));
+		pnts->addValue(Pnt3f(10, height, -8));
+
+		pnts->addValue(Pnt3f(-10, height, -9));
+		pnts->addValue(Pnt3f(10, height, -9));
+
+		pnts->addValue(Pnt3f(-10, height, -10));
+		pnts->addValue(Pnt3f(10, height, -10));
+
+
+		pnts->addValue(Pnt3f(0, height, -10));
+		if(height == 0)
+			pnts->addValue(Pnt3f(0, height, 0));
+		else
+			pnts->addValue(Pnt3f(0, height, 10));
+		
+		pnts->addValue(Pnt3f(1, height, -10));
+		pnts->addValue(Pnt3f(1, height, 10));
+
+		pnts->addValue(Pnt3f(2, height, -10));
+		pnts->addValue(Pnt3f(2, height, 10));
+
+		pnts->addValue(Pnt3f(3, height, -10));
+		pnts->addValue(Pnt3f(3, height, 10));
+
+		pnts->addValue(Pnt3f(4, height, -10));
+		pnts->addValue(Pnt3f(4, height, 10));
+
+		pnts->addValue(Pnt3f(5, height, -10));
+		pnts->addValue(Pnt3f(5, height, 10));
+
+		pnts->addValue(Pnt3f(6, height, -10));
+		pnts->addValue(Pnt3f(6, height, 10));
+
+		pnts->addValue(Pnt3f(7, height, -10));
+		pnts->addValue(Pnt3f(7, height, 10));
+
+		pnts->addValue(Pnt3f(8, height, -10));
+		pnts->addValue(Pnt3f(8, height, 10));
+
+		pnts->addValue(Pnt3f(9, height, -10));
+		pnts->addValue(Pnt3f(9, height, 10));
+
+		pnts->addValue(Pnt3f(10, height, -10));
+		pnts->addValue(Pnt3f(10, height, 10));
+
+		pnts->addValue(Pnt3f(-1, height, -10));
+		pnts->addValue(Pnt3f(-1, height, 10));
+
+		pnts->addValue(Pnt3f(-2, height, -10));
+		pnts->addValue(Pnt3f(-2, height, 10));
+
+		pnts->addValue(Pnt3f(-3, height, -10));
+		pnts->addValue(Pnt3f(-3, height, 10));
+
+		pnts->addValue(Pnt3f(-4, height, -10));
+		pnts->addValue(Pnt3f(-4, height, 10));
+
+		pnts->addValue(Pnt3f(-5, height, -10));
+		pnts->addValue(Pnt3f(-5, height, 10));
+
+		pnts->addValue(Pnt3f(-6, height, -10));
+		pnts->addValue(Pnt3f(-6, height, 10));
+
+		pnts->addValue(Pnt3f(-7, height, -10));
+		pnts->addValue(Pnt3f(-7, height, 10));
+
+		pnts->addValue(Pnt3f(-8, height, -10));
+		pnts->addValue(Pnt3f(-8, height, 10));
+
+		pnts->addValue(Pnt3f(-9, height, -10));
+		pnts->addValue(Pnt3f(-9, height, 10));
+
+		pnts->addValue(Pnt3f(-10, height, -10));
+		pnts->addValue(Pnt3f(-10, height, 10));
+
+		
     }
     endEditCP  (pnts, GeoPositions3f::GeoPropDataFieldMask);
     
@@ -254,6 +396,136 @@ int main(int argc, char **argv)
 
         norms->addValue(Vec3f( 1.0,0.0,0.0));
         norms->addValue(Vec3f( 1.0,0.0,0.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		//GRID
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
+
+		norms->addValue(Vec3f( 0.0,0.0,1.0));
+        norms->addValue(Vec3f( 0.0,0.0,1.0));
     endEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
 
 	 GeoColors3fPtr colors = GeoColors3f::create();
@@ -266,6 +538,136 @@ int main(int argc, char **argv)
 
         colors->addValue(Color3f( 0.0,0.0,1.0));
         colors->addValue(Color3f( 0.0,0.0,1.0));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		//GRID
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
+
+		colors->addValue(Color3f( 0.5,0.5,0.5));
+        colors->addValue(Color3f( 0.5,0.5,0.5));
     endEditCP(colors, GeoColors3f::GeoPropDataFieldMask);
 
 	GeometryPtr axesGeo = Geometry::create();
@@ -319,7 +721,7 @@ int main(int argc, char **argv)
 
 
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/21SceneFromMaya.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/21SceneFromMaya2.xml"));
 
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
@@ -336,7 +738,7 @@ int main(int argc, char **argv)
 		{
 			SkeletonBlendedGeometryPtrs.push_back(SkeletonBlendedGeometry::Ptr::dcast(*Itor));
 		}
-		if( (*Itor)->getType().isDerivedFrom(Animation::getClassType()))
+		if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
 		{
 			TheSkeletonAnimation = (Animation::Ptr::dcast(*Itor));
 		}
@@ -395,9 +797,9 @@ int main(int argc, char **argv)
 
 		MeshNodes.push_back(MeshNode);
 
-		SkeletonBlendedGeometryPtrs[i]->printStats();
+		//SkeletonBlendedGeometryPtrs[i]->printStats();
 
-		SkeletonBlendedGeometryPtrs[i]->printInfluences();
+		//SkeletonBlendedGeometryPtrs[i]->printInfluences();
 	}
 
 

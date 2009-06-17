@@ -210,6 +210,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING Bone : public BoneBase
 
     friend class FieldContainer;
     friend class BoneBase;
+	friend class Skeleton;
 
     static void initMethod(void);
 

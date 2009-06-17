@@ -105,8 +105,8 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 	//Apply all of the Rotation Animators
 	for(UInt32 i(0) ; i<getRotationAnimators().size() ; ++i)
 	{
-		UInt32 RotationFieldId = Bone::getClassType().findFieldDescription("Rotation")->getFieldId();
-	   osg::beginEditCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask() );
+		//UInt32 RotationFieldId = Bone::getClassType().findFieldDescription("Rotation")->getFieldId();
+	   osg::beginEditCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(Bone::RotationFieldId)->getFieldMask() );
 	   
 	   if( getRotationAnimators(i)->animate(
 				   static_cast<osg::InterpolationType>(getInterpolationType()), 
@@ -114,13 +114,15 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 				   -1, 
 				   t,
 				   prev_t,
-				   *getRotationAnimatorBones(i)->getField( RotationFieldId )) )
+				   *getRotationAnimatorBones(i)->getField( Bone::RotationFieldId )) )
 	   {
-		  osg::endEditCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask());
+		   //std::cout << "Change " << i << std::endl;
+		  osg::endEditNotChangedCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(Bone::RotationFieldId)->getFieldMask());
 	   }
 	   else
 	   {
-		  osg::endEditNotChangedCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(RotationFieldId)->getFieldMask());
+		   //std::cout << "No Change" << i << std::endl;
+		  osg::endEditNotChangedCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(Bone::RotationFieldId)->getFieldMask());
 	   }
 	}
 
@@ -130,8 +132,8 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
     //==================================================================================================================
 	for(UInt32 i(0) ; i<getLengthAnimators().size() ; ++i)
 	{
-		UInt32 LengthFieldId = Bone::getClassType().findFieldDescription("Length")->getFieldId();
-	   osg::beginEditCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(LengthFieldId)->getFieldMask() );
+		//UInt32 LengthFieldId = Bone::getClassType().findFieldDescription("Length")->getFieldId();
+	   osg::beginEditCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(Bone::LengthFieldId)->getFieldMask() );
 	   
 	   if( getLengthAnimators(i)->animate(
 				   static_cast<osg::InterpolationType>(getInterpolationType()), 
@@ -139,13 +141,13 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 				   -1, 
 				   t,
 				   prev_t,
-				   *getLengthAnimatorBones(i)->getField( LengthFieldId )) )
+				   *getLengthAnimatorBones(i)->getField( Bone::LengthFieldId )) )
 	   {
-		  osg::endEditCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(LengthFieldId)->getFieldMask());
+		  osg::endEditNotChangedCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(Bone::LengthFieldId)->getFieldMask());
 	   }
 	   else
 	   {
-		  osg::endEditNotChangedCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(LengthFieldId)->getFieldMask());
+		  osg::endEditNotChangedCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(Bone::LengthFieldId)->getFieldMask());
 	   }
 	}
 
@@ -154,8 +156,8 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
     //==================================================================================================================
 	for(UInt32 i(0) ; i<getTranslationAnimators().size() ; ++i)
 	{
-		UInt32 TranslationFieldId = Bone::getClassType().findFieldDescription("Translation")->getFieldId();
-	   osg::beginEditCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(TranslationFieldId)->getFieldMask() );
+		//UInt32 TranslationFieldId = Bone::g etClassType().findFieldDescription("Translation")->getFieldId();
+	   osg::beginEditCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(Bone::TranslationFieldId)->getFieldMask() );
 	   
 	   if( getTranslationAnimators(i)->animate(
 				   static_cast<osg::InterpolationType>(getInterpolationType()), 
@@ -163,18 +165,19 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 				   -1, 
 				   t,
 				   prev_t,
-				   *getTranslationAnimatorBones(i)->getField( TranslationFieldId )) )
+				   *getTranslationAnimatorBones(i)->getField( Bone::TranslationFieldId )) )
 	   {
-		  osg::endEditCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(TranslationFieldId)->getFieldMask());
+		  osg::endEditNotChangedCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(Bone::TranslationFieldId)->getFieldMask());
 	   }
 	   else
 	   {
-		  osg::endEditNotChangedCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(TranslationFieldId)->getFieldMask());
+		  osg::endEditNotChangedCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(Bone::TranslationFieldId)->getFieldMask());
 	   }
 	}
 
     if(getSkeleton() != NullFC)
     {
+        getSkeleton()->updateBoneTransformations();
         getSkeleton()->skeletonUpdated();
     }
 }

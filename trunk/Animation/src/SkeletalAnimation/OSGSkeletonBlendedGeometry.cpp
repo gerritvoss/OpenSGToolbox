@@ -216,8 +216,30 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 		//UInt32 VertexesTransformations[n];
 		for(UInt32 i(0) ; i < getPositionIndexes().size() ; ++i)
 		{
+			if(getPositionIndexes(i) == 1075)
+			{
+				std::cout << "stop here" << std::endl;
+
+
+				double blendAmt = getBlendAmounts(i);
+
+				Pnt3f geomPnt = getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i));
+			}
+
+
+			Matrix ident = Matrix();
+			if(getBones(i)->getEndInternalAbsoluteDifferenceTransformation() != ident)
+			{
+				Matrix absolute = getBones(i)->getInternalAbsoluteTransformation();
+				Matrix defaultAbsolute = getBones(i)->getInternalDefaultAbsoluteTransformation();
+			}
+
+
+
 			if(getAttachedToEnd(i))
 			{
+				
+
 				Matrix temp = getBones(i)->getEndInternalAbsoluteDifferenceTransformation();
 				temp.scale(getBlendAmounts(i));
 				temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
@@ -275,7 +297,7 @@ void SkeletonBlendedGeometry::printInfluences(void)
 {
 	for (int i(0); i < getBones().size(); ++i)
 	{
-		std::cout << "INFLUENCE " << i << ":     PositionIndex: " << getPositionIndexes()[i] << "  BlendAmount: " << getBlendAmounts()[i] << "  AttachedToEnd: " << getAttachedToEnd()[i] << std::endl;
+		//std::cout << "INFLUENCE " << i << ":     PositionIndex: " << getPositionIndexes()[i] << "  BlendAmount: " << getBlendAmounts()[i] << "  AttachedToEnd: " << getAttachedToEnd()[i] << std::endl;
 	}
 }
 
