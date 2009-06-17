@@ -49,6 +49,7 @@
 #include "Animations/Advancers/OSGAnimationAdvancer.h"
 #include "Events/OSGAnimationListener.h"
 #include <set>
+#include <OpenSG/Input/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,7 +95,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
     
     virtual bool update(const AnimationAdvancerPtr& advancer);
 
-    void addAnimationListener(AnimationListenerPtr Listener);
+    EventConnection addAnimationListener(AnimationListenerPtr Listener);
+    bool isAnimationListenerAttached(AnimationListenerPtr Listener) const;
 
     void removeAnimationListener(AnimationListenerPtr Listener);
 

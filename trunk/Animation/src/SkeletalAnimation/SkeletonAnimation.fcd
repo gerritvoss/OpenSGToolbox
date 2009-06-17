@@ -11,9 +11,9 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-Field Animation Class.
+Skeleton Animation Class.
 	<Field
-		name="RotationAnimators"
+		name="TransformationAnimators"
 		type="KeyframeAnimatorPtr"
 		cardinality="multi"
 		visibility="external"
@@ -22,47 +22,11 @@ Field Animation Class.
 	>
 	</Field>
 	<Field
-		name="RotationAnimatorBones"
-		type="BonePtr"
+		name="AnimatorJoints"
+		type="JointPtr"
 		cardinality="multi"
 		visibility="external"
-		header="OSGBoneFields.h"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="TranslationAnimators"
-		type="KeyframeAnimatorPtr"
-		cardinality="multi"
-		visibility="external"
-		header="Animators/OSGKeyframeAnimatorFields.h"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="LengthAnimatorBones"
-		type="BonePtr"
-		cardinality="multi"
-		visibility="external"
-		header="OSGBoneFields.h"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="LengthAnimators"
-		type="KeyframeAnimatorPtr"
-		cardinality="multi"
-		visibility="external"
-		header="Animators/OSGKeyframeAnimatorFields.h"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="TranslationAnimatorBones"
-		type="BonePtr"
-		cardinality="multi"
-		visibility="external"
-		header="OSGBoneFields.h"
+		header="OSGJointFields.h"
 		access="protected"
 	>
 	</Field>

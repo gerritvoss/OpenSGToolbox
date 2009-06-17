@@ -79,9 +79,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
     /*! \}                                                                 */
     virtual Real32 getLength(void) const;
 
-	void addRotationAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone);
-	void addTranslationAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone);
-	void addLengthAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone);
+	void addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

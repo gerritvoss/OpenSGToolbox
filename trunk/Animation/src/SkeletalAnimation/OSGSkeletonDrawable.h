@@ -46,7 +46,7 @@
 #include "OSGAnimationDef.h"
 
 #include "OSGSkeletonDrawableBase.h"
-#include "OSGBoneFields.h"
+#include "OSGJointFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -107,8 +107,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
 
     /*! \}                                                                 */
     void    adjustVolume(Volume & volume);
-    void drawBone (BonePtr TheBone, DrawActionBase *action);
-    void expandVolumeByBone (BonePtr TheBone, Volume &volume);
+    void drawJointHierarchy (JointPtr TheJoint, DrawActionBase *action);
+    void expandVolumeByJoint (JointPtr TheJoint, Volume &volume);
     
     /*==========================  PRIVATE  ================================*/
   private:

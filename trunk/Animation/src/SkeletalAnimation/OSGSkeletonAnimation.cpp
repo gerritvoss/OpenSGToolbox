@@ -49,7 +49,7 @@
 
 #include "OSGSkeletonAnimation.h"
 
-#include "OSGBone.h"
+#include "OSGJoint.h"
 #include "OSGSkeleton.h"
 #include "Animators/OSGKeyframeAnimator.h"
 
@@ -84,17 +84,9 @@ Real32 SkeletonAnimation::getLength(void) const
 {
     Real32 MaxLength(0.0f);
 	
-    for(UInt32 i(0) ; i<getRotationAnimators().size() ; ++i)
+    for(UInt32 i(0) ; i<getTransformationAnimators().size() ; ++i)
 	{
-        MaxLength = osgMax(MaxLength,getRotationAnimators()[i]->getLength());
-    }
-    for(UInt32 i(0) ; i<getTranslationAnimators().size() ; ++i)
-	{
-        MaxLength = osgMax(MaxLength,getTranslationAnimators()[i]->getLength());
-    }
-    for(UInt32 i(0) ; i<getLengthAnimators().size() ; ++i)
-	{
-        MaxLength = osgMax(MaxLength,getLengthAnimators()[i]->getLength());
+        MaxLength = osgMax(MaxLength,getTransformationAnimators()[i]->getLength());
     }
 
     return MaxLength;
@@ -102,135 +94,52 @@ Real32 SkeletonAnimation::getLength(void) const
 
 void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 {
-	//Apply all of the Rotation Animators
-	for(UInt32 i(0) ; i<getRotationAnimators().size() ; ++i)
+	//Apply all of the Transformation Animators
+	for(UInt32 i(0) ; i<getTransformationAnimators().size() ; ++i)
 	{
-		//UInt32 RotationFieldId = Bone::getClassType().findFieldDescription("Rotation")->getFieldId();
-	   osg::beginEditCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(Bone::RotationFieldId)->getFieldMask() );
+		//UInt32 TransformationFieldId = Joint::getClassType().findFieldDescription("Transformation")->getFieldId();
+	   osg::beginEditCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask() );
 	   
-	   if( getRotationAnimators(i)->animate(
+	   if( getTransformationAnimators(i)->animate(
 				   static_cast<osg::InterpolationType>(getInterpolationType()), 
 				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
 				   -1, 
 				   t,
 				   prev_t,
-				   *getRotationAnimatorBones(i)->getField( Bone::RotationFieldId )) )
+				   *getAnimatorJoints(i)->getField( Joint::RelativeTransformationFieldId )) )
 	   {
 		   //std::cout << "Change " << i << std::endl;
-		  osg::endEditNotChangedCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(Bone::RotationFieldId)->getFieldMask());
+		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
 	   }
 	   else
 	   {
 		   //std::cout << "No Change" << i << std::endl;
-		  osg::endEditNotChangedCP(getRotationAnimatorBones(i), getRotationAnimatorBones(i)->getType().getFieldDescription(Bone::RotationFieldId)->getFieldMask());
-	   }
-	}
-
-
-    //==================================================================================================================
-    //Apply all of the Length Animators
-    //==================================================================================================================
-	for(UInt32 i(0) ; i<getLengthAnimators().size() ; ++i)
-	{
-		//UInt32 LengthFieldId = Bone::getClassType().findFieldDescription("Length")->getFieldId();
-	   osg::beginEditCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(Bone::LengthFieldId)->getFieldMask() );
-	   
-	   if( getLengthAnimators(i)->animate(
-				   static_cast<osg::InterpolationType>(getInterpolationType()), 
-				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
-				   -1, 
-				   t,
-				   prev_t,
-				   *getLengthAnimatorBones(i)->getField( Bone::LengthFieldId )) )
-	   {
-		  osg::endEditNotChangedCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(Bone::LengthFieldId)->getFieldMask());
-	   }
-	   else
-	   {
-		  osg::endEditNotChangedCP(getLengthAnimatorBones(i), getLengthAnimatorBones(i)->getType().getFieldDescription(Bone::LengthFieldId)->getFieldMask());
-	   }
-	}
-
-    //==================================================================================================================
-    //Apply all of the Translation Animators
-    //==================================================================================================================
-	for(UInt32 i(0) ; i<getTranslationAnimators().size() ; ++i)
-	{
-		//UInt32 TranslationFieldId = Bone::g etClassType().findFieldDescription("Translation")->getFieldId();
-	   osg::beginEditCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(Bone::TranslationFieldId)->getFieldMask() );
-	   
-	   if( getTranslationAnimators(i)->animate(
-				   static_cast<osg::InterpolationType>(getInterpolationType()), 
-				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
-				   -1, 
-				   t,
-				   prev_t,
-				   *getTranslationAnimatorBones(i)->getField( Bone::TranslationFieldId )) )
-	   {
-		  osg::endEditNotChangedCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(Bone::TranslationFieldId)->getFieldMask());
-	   }
-	   else
-	   {
-		  osg::endEditNotChangedCP(getTranslationAnimatorBones(i), getTranslationAnimatorBones(i)->getType().getFieldDescription(Bone::TranslationFieldId)->getFieldMask());
+		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
 	   }
 	}
 
     if(getSkeleton() != NullFC)
     {
-        getSkeleton()->updateBoneTransformations();
+        getSkeleton()->updateJointTransformations();
         getSkeleton()->skeletonUpdated();
     }
 }
 //===============================================================================================================
 // END HERE
 //================================================================================================================
-void SkeletonAnimation::addRotationAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone)
+void SkeletonAnimation::addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint)
 {
-	if(TheAnimator != NullFC && TheBone != NullFC && 
+	if(TheAnimator != NullFC && TheJoint != NullFC && 
         TheAnimator->getDataType() == FieldDataTraits<Quaternion>::getType())
 	{
-		beginEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::RotationAnimatorsFieldMask | SkeletonAnimation::RotationAnimatorBonesFieldMask);
-			getRotationAnimators().push_back(TheAnimator);
-			getRotationAnimatorBones().push_back(TheBone);
-		endEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::RotationAnimatorsFieldMask | SkeletonAnimation::RotationAnimatorBonesFieldMask);
+		beginEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::TransformationAnimatorsFieldMask | SkeletonAnimation::AnimatorJointsFieldMask);
+			getTransformationAnimators().push_back(TheAnimator);
+			getAnimatorJoints().push_back(TheJoint);
+		endEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::TransformationAnimatorsFieldMask | SkeletonAnimation::AnimatorJointsFieldMask);
 	}
 	else
 	{
-		SWARNING << "SkeletonAnimation::addRotationAnimator: could not add Animator" << std::endl;
-	}
-}
-
-
-void SkeletonAnimation::addTranslationAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone)
-{
-	if(TheAnimator != NullFC && TheBone != NullFC && 
-		TheAnimator->getDataType() == FieldDataTraits<Vec3f>::getType())
-	{
-		beginEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::TranslationAnimatorsFieldMask | SkeletonAnimation::TranslationAnimatorBonesFieldMask);
-			getTranslationAnimators().push_back(TheAnimator);
-			getTranslationAnimatorBones().push_back(TheBone);
-		endEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::TranslationAnimatorsFieldMask | SkeletonAnimation::TranslationAnimatorBonesFieldMask);
-	}
-	else
-	{
-		SWARNING << "SkeletonAnimation::addTranslationAnimator: could not add Animator" << std::endl;
-	}
-}
-
-
-void SkeletonAnimation::addLengthAnimator(KeyframeAnimatorPtr TheAnimator, BonePtr TheBone)
-{
-	if(TheAnimator != NullFC && TheBone != NullFC && 
-		TheAnimator->getDataType() == FieldDataTraits<Real32>::getType())
-	{
-		beginEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::LengthAnimatorsFieldMask | SkeletonAnimation::LengthAnimatorBonesFieldMask);
-			getLengthAnimators().push_back(TheAnimator);
-			getLengthAnimatorBones().push_back(TheBone);
-		endEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::LengthAnimatorsFieldMask | SkeletonAnimation::LengthAnimatorBonesFieldMask);
-	}
-	else
-	{
-		SWARNING << "SkeletonAnimation::addLengthAnimator: could not add Animator" << std::endl;
+		SWARNING << "SkeletonAnimation::addTransformationAnimator: could not add Animator" << std::endl;
 	}
 }
 

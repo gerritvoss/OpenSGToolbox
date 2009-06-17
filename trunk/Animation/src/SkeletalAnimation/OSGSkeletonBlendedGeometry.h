@@ -45,6 +45,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSkeletonBlendedGeometryBase.h"
+#include "Events/OSGSkeletonListener.h"
+#include <OpenSG/Input/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -52,7 +54,7 @@ OSG_BEGIN_NAMESPACE
            PageAnimationSkeletonBlendedGeometry for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlendedGeometryBase
+class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlendedGeometryBase, public SkeletonListener
 {
   private:
 
@@ -79,7 +81,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
     /*! \}                                                                 */
     
     void addBoneBlending(const UInt32& PositionIndex, const BonePtr TheBone, const Real32& BlendAmount, bool AttachedToEnd);
-	void skeletonUpdated(void);
 
     void addSkeleton(SkeletonPtr TheSkeleton);
     void subSkeleton(SkeletonPtr TheSkeleton);
@@ -87,6 +88,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
     void subSkeleton(UInt32 Index);
 	void printStats(void);
 	void printInfluences(void);
+
+	
+   virtual void changed(const SkeletonEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -121,6 +125,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const SkeletonBlendedGeometry &source);
+
+	std::vector<EventConnection> _SkeletonListenerConnections;
 };
 
 typedef SkeletonBlendedGeometry *SkeletonBlendedGeometryP;

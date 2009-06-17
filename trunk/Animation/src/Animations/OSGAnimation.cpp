@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGAnimation.h"
+#include <boost/bind.hpp>
 
 OSG_USING_NAMESPACE
 
@@ -67,13 +68,20 @@ Animation is the base class of all Animation
  *                           Class methods                                 *
 \***************************************************************************/
 
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
 void Animation::initMethod (void)
 {
 
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+EventConnection Animation::addAnimationListener(AnimationListenerPtr Listener)
+{
+   _AnimationListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Animation::isAnimationListenerAttached, this, Listener),
+       boost::bind(&Animation::removeAnimationListener, this, Listener));
 }
 
 void Animation::start(void)

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -61,27 +61,15 @@
 #include "OSGSkeletonAnimationBase.h"
 #include "OSGSkeletonAnimation.h"
 
-#include "Interpolation/OSGKeyframeInterpolations.h"   // InterpolationType default header
+#include <OpenSG/Toolbox/OSGInterpolations.h>   // InterpolationType default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SkeletonAnimationBase::RotationAnimatorsFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::RotationAnimatorsFieldId);
+const OSG::BitVector  SkeletonAnimationBase::TransformationAnimatorsFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonAnimationBase::TransformationAnimatorsFieldId);
 
-const OSG::BitVector  SkeletonAnimationBase::RotationAnimatorBonesFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::RotationAnimatorBonesFieldId);
-
-const OSG::BitVector  SkeletonAnimationBase::TranslationAnimatorsFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::TranslationAnimatorsFieldId);
-
-const OSG::BitVector  SkeletonAnimationBase::LengthAnimatorBonesFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::LengthAnimatorBonesFieldId);
-
-const OSG::BitVector  SkeletonAnimationBase::LengthAnimatorsFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::LengthAnimatorsFieldId);
-
-const OSG::BitVector  SkeletonAnimationBase::TranslationAnimatorBonesFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::TranslationAnimatorBonesFieldId);
+const OSG::BitVector  SkeletonAnimationBase::AnimatorJointsFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonAnimationBase::AnimatorJointsFieldId);
 
 const OSG::BitVector  SkeletonAnimationBase::SkeletonFieldMask = 
     (TypeTraits<BitVector>::One << SkeletonAnimationBase::SkeletonFieldId);
@@ -96,22 +84,10 @@ const OSG::BitVector SkeletonAnimationBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var KeyframeAnimatorPtr SkeletonAnimationBase::_mfRotationAnimators
+/*! \var KeyframeAnimatorPtr SkeletonAnimationBase::_mfTransformationAnimators
     
 */
-/*! \var BonePtr         SkeletonAnimationBase::_mfRotationAnimatorBones
-    
-*/
-/*! \var KeyframeAnimatorPtr SkeletonAnimationBase::_mfTranslationAnimators
-    
-*/
-/*! \var BonePtr         SkeletonAnimationBase::_mfLengthAnimatorBones
-    
-*/
-/*! \var KeyframeAnimatorPtr SkeletonAnimationBase::_mfLengthAnimators
-    
-*/
-/*! \var BonePtr         SkeletonAnimationBase::_mfTranslationAnimatorBones
+/*! \var JointPtr        SkeletonAnimationBase::_mfAnimatorJoints
     
 */
 /*! \var SkeletonPtr     SkeletonAnimationBase::_sfSkeleton
@@ -126,35 +102,15 @@ const OSG::BitVector SkeletonAnimationBase::MTInfluenceMask =
 FieldDescription *SkeletonAnimationBase::_desc[] = 
 {
     new FieldDescription(MFKeyframeAnimatorPtr::getClassType(), 
-                     "RotationAnimators", 
-                     RotationAnimatorsFieldId, RotationAnimatorsFieldMask,
+                     "TransformationAnimators", 
+                     TransformationAnimatorsFieldId, TransformationAnimatorsFieldMask,
                      false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getMFRotationAnimators),
-    new FieldDescription(MFBonePtr::getClassType(), 
-                     "RotationAnimatorBones", 
-                     RotationAnimatorBonesFieldId, RotationAnimatorBonesFieldMask,
+                     (FieldAccessMethod) &SkeletonAnimationBase::getMFTransformationAnimators),
+    new FieldDescription(MFJointPtr::getClassType(), 
+                     "AnimatorJoints", 
+                     AnimatorJointsFieldId, AnimatorJointsFieldMask,
                      false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getMFRotationAnimatorBones),
-    new FieldDescription(MFKeyframeAnimatorPtr::getClassType(), 
-                     "TranslationAnimators", 
-                     TranslationAnimatorsFieldId, TranslationAnimatorsFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getMFTranslationAnimators),
-    new FieldDescription(MFBonePtr::getClassType(), 
-                     "LengthAnimatorBones", 
-                     LengthAnimatorBonesFieldId, LengthAnimatorBonesFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getMFLengthAnimatorBones),
-    new FieldDescription(MFKeyframeAnimatorPtr::getClassType(), 
-                     "LengthAnimators", 
-                     LengthAnimatorsFieldId, LengthAnimatorsFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getMFLengthAnimators),
-    new FieldDescription(MFBonePtr::getClassType(), 
-                     "TranslationAnimatorBones", 
-                     TranslationAnimatorBonesFieldId, TranslationAnimatorBonesFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getMFTranslationAnimatorBones),
+                     (FieldAccessMethod) &SkeletonAnimationBase::getMFAnimatorJoints),
     new FieldDescription(SFSkeletonPtr::getClassType(), 
                      "Skeleton", 
                      SkeletonFieldId, SkeletonFieldMask,
@@ -230,12 +186,8 @@ void SkeletonAnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfRotationAnimators.terminateShare(uiAspect, this->getContainerSize());
-    _mfRotationAnimatorBones.terminateShare(uiAspect, this->getContainerSize());
-    _mfTranslationAnimators.terminateShare(uiAspect, this->getContainerSize());
-    _mfLengthAnimatorBones.terminateShare(uiAspect, this->getContainerSize());
-    _mfLengthAnimators.terminateShare(uiAspect, this->getContainerSize());
-    _mfTranslationAnimatorBones.terminateShare(uiAspect, this->getContainerSize());
+    _mfTransformationAnimators.terminateShare(uiAspect, this->getContainerSize());
+    _mfAnimatorJoints.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -246,12 +198,8 @@ void SkeletonAnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SkeletonAnimationBase::SkeletonAnimationBase(void) :
-    _mfRotationAnimators      (), 
-    _mfRotationAnimatorBones  (), 
-    _mfTranslationAnimators   (), 
-    _mfLengthAnimatorBones    (), 
-    _mfLengthAnimators        (), 
-    _mfTranslationAnimatorBones(), 
+    _mfTransformationAnimators(), 
+    _mfAnimatorJoints         (), 
     _sfSkeleton               (SkeletonPtr(NullFC)), 
     _sfInterpolationType      (UInt32(LINEAR_INTERPOLATION)), 
     Inherited() 
@@ -263,12 +211,8 @@ SkeletonAnimationBase::SkeletonAnimationBase(void) :
 #endif
 
 SkeletonAnimationBase::SkeletonAnimationBase(const SkeletonAnimationBase &source) :
-    _mfRotationAnimators      (source._mfRotationAnimators      ), 
-    _mfRotationAnimatorBones  (source._mfRotationAnimatorBones  ), 
-    _mfTranslationAnimators   (source._mfTranslationAnimators   ), 
-    _mfLengthAnimatorBones    (source._mfLengthAnimatorBones    ), 
-    _mfLengthAnimators        (source._mfLengthAnimators        ), 
-    _mfTranslationAnimatorBones(source._mfTranslationAnimatorBones), 
+    _mfTransformationAnimators(source._mfTransformationAnimators), 
+    _mfAnimatorJoints         (source._mfAnimatorJoints         ), 
     _sfSkeleton               (source._sfSkeleton               ), 
     _sfInterpolationType      (source._sfInterpolationType      ), 
     Inherited                 (source)
@@ -287,34 +231,14 @@ UInt32 SkeletonAnimationBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (RotationAnimatorsFieldMask & whichField))
+    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
     {
-        returnValue += _mfRotationAnimators.getBinSize();
+        returnValue += _mfTransformationAnimators.getBinSize();
     }
 
-    if(FieldBits::NoField != (RotationAnimatorBonesFieldMask & whichField))
+    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
     {
-        returnValue += _mfRotationAnimatorBones.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TranslationAnimatorsFieldMask & whichField))
-    {
-        returnValue += _mfTranslationAnimators.getBinSize();
-    }
-
-    if(FieldBits::NoField != (LengthAnimatorBonesFieldMask & whichField))
-    {
-        returnValue += _mfLengthAnimatorBones.getBinSize();
-    }
-
-    if(FieldBits::NoField != (LengthAnimatorsFieldMask & whichField))
-    {
-        returnValue += _mfLengthAnimators.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TranslationAnimatorBonesFieldMask & whichField))
-    {
-        returnValue += _mfTranslationAnimatorBones.getBinSize();
+        returnValue += _mfAnimatorJoints.getBinSize();
     }
 
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
@@ -336,34 +260,14 @@ void SkeletonAnimationBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RotationAnimatorsFieldMask & whichField))
+    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
     {
-        _mfRotationAnimators.copyToBin(pMem);
+        _mfTransformationAnimators.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (RotationAnimatorBonesFieldMask & whichField))
+    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
     {
-        _mfRotationAnimatorBones.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TranslationAnimatorsFieldMask & whichField))
-    {
-        _mfTranslationAnimators.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LengthAnimatorBonesFieldMask & whichField))
-    {
-        _mfLengthAnimatorBones.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LengthAnimatorsFieldMask & whichField))
-    {
-        _mfLengthAnimators.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TranslationAnimatorBonesFieldMask & whichField))
-    {
-        _mfTranslationAnimatorBones.copyToBin(pMem);
+        _mfAnimatorJoints.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
@@ -384,34 +288,14 @@ void SkeletonAnimationBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RotationAnimatorsFieldMask & whichField))
+    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
     {
-        _mfRotationAnimators.copyFromBin(pMem);
+        _mfTransformationAnimators.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (RotationAnimatorBonesFieldMask & whichField))
+    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
     {
-        _mfRotationAnimatorBones.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TranslationAnimatorsFieldMask & whichField))
-    {
-        _mfTranslationAnimators.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LengthAnimatorBonesFieldMask & whichField))
-    {
-        _mfLengthAnimatorBones.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LengthAnimatorsFieldMask & whichField))
-    {
-        _mfLengthAnimators.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TranslationAnimatorBonesFieldMask & whichField))
-    {
-        _mfTranslationAnimatorBones.copyFromBin(pMem);
+        _mfAnimatorJoints.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
@@ -434,23 +318,11 @@ void SkeletonAnimationBase::executeSyncImpl(      SkeletonAnimationBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (RotationAnimatorsFieldMask & whichField))
-        _mfRotationAnimators.syncWith(pOther->_mfRotationAnimators);
+    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
+        _mfTransformationAnimators.syncWith(pOther->_mfTransformationAnimators);
 
-    if(FieldBits::NoField != (RotationAnimatorBonesFieldMask & whichField))
-        _mfRotationAnimatorBones.syncWith(pOther->_mfRotationAnimatorBones);
-
-    if(FieldBits::NoField != (TranslationAnimatorsFieldMask & whichField))
-        _mfTranslationAnimators.syncWith(pOther->_mfTranslationAnimators);
-
-    if(FieldBits::NoField != (LengthAnimatorBonesFieldMask & whichField))
-        _mfLengthAnimatorBones.syncWith(pOther->_mfLengthAnimatorBones);
-
-    if(FieldBits::NoField != (LengthAnimatorsFieldMask & whichField))
-        _mfLengthAnimators.syncWith(pOther->_mfLengthAnimators);
-
-    if(FieldBits::NoField != (TranslationAnimatorBonesFieldMask & whichField))
-        _mfTranslationAnimatorBones.syncWith(pOther->_mfTranslationAnimatorBones);
+    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
+        _mfAnimatorJoints.syncWith(pOther->_mfAnimatorJoints);
 
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
         _sfSkeleton.syncWith(pOther->_sfSkeleton);
@@ -475,23 +347,11 @@ void SkeletonAnimationBase::executeSyncImpl(      SkeletonAnimationBase *pOther,
         _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
 
 
-    if(FieldBits::NoField != (RotationAnimatorsFieldMask & whichField))
-        _mfRotationAnimators.syncWith(pOther->_mfRotationAnimators, sInfo);
+    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
+        _mfTransformationAnimators.syncWith(pOther->_mfTransformationAnimators, sInfo);
 
-    if(FieldBits::NoField != (RotationAnimatorBonesFieldMask & whichField))
-        _mfRotationAnimatorBones.syncWith(pOther->_mfRotationAnimatorBones, sInfo);
-
-    if(FieldBits::NoField != (TranslationAnimatorsFieldMask & whichField))
-        _mfTranslationAnimators.syncWith(pOther->_mfTranslationAnimators, sInfo);
-
-    if(FieldBits::NoField != (LengthAnimatorBonesFieldMask & whichField))
-        _mfLengthAnimatorBones.syncWith(pOther->_mfLengthAnimatorBones, sInfo);
-
-    if(FieldBits::NoField != (LengthAnimatorsFieldMask & whichField))
-        _mfLengthAnimators.syncWith(pOther->_mfLengthAnimators, sInfo);
-
-    if(FieldBits::NoField != (TranslationAnimatorBonesFieldMask & whichField))
-        _mfTranslationAnimatorBones.syncWith(pOther->_mfTranslationAnimatorBones, sInfo);
+    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
+        _mfAnimatorJoints.syncWith(pOther->_mfAnimatorJoints, sInfo);
 
 
 }
@@ -502,23 +362,11 @@ void SkeletonAnimationBase::execBeginEditImpl (const BitVector &whichField,
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (RotationAnimatorsFieldMask & whichField))
-        _mfRotationAnimators.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
+        _mfTransformationAnimators.beginEdit(uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (RotationAnimatorBonesFieldMask & whichField))
-        _mfRotationAnimatorBones.beginEdit(uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (TranslationAnimatorsFieldMask & whichField))
-        _mfTranslationAnimators.beginEdit(uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (LengthAnimatorBonesFieldMask & whichField))
-        _mfLengthAnimatorBones.beginEdit(uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (LengthAnimatorsFieldMask & whichField))
-        _mfLengthAnimators.beginEdit(uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (TranslationAnimatorBonesFieldMask & whichField))
-        _mfTranslationAnimatorBones.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
+        _mfAnimatorJoints.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

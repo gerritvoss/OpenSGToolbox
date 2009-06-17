@@ -46,6 +46,9 @@
 #include "OSGAnimationDef.h"
 
 #include "OSGSkeletonBase.h"
+#include "Events/OSGSkeletonListener.h"
+#include <set>
+#include <OpenSG/Input/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -61,8 +64,11 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+    EventConnection addSkeletonListener(SkeletonListenerPtr Listener);
+    bool isSkeletonListenerAttached(SkeletonListenerPtr Listener) const;
+    void removeSkeletonListener(SkeletonListenerPtr Listener);
 
-	void setBoneParentSkeleton(BonePtr Bone);
+	void setJointParentSkeleton(JointPtr TheJoint);
 	//void updateBlendedGeometry();
 
     /*---------------------------------------------------------------------*/
@@ -85,7 +91,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
     /*! \}                                                                 */
 
     void skeletonUpdated(void);
-    void updateBoneTransformations(void);
+    void updateJointTransformations(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -106,6 +112,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
     virtual ~Skeleton(void); 
 
     /*! \}                                                                 */
+	typedef std::set<SkeletonListenerPtr> SkeletonListenerSet;
+    typedef SkeletonListenerSet::iterator SkeletonListenerSetItor;
+    typedef SkeletonListenerSet::const_iterator SkeletonListenerSetConstItor;
+	
+    SkeletonListenerSet       _SkeletonListeners;
+
+	void produceChangedEvent(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

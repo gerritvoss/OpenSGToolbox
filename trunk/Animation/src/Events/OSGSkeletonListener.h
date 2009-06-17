@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                        OpenSG ToolBox Animation                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * by the Free Software Foundation, version 3.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,31 +26,32 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGSKELETONLISTENER_H_
+#define _OSGSKELETONLISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
+
+#include <OpenSG/Input/OSGEventListener.h>
+#include "OSGSkeletonEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool Skeleton::isSkeletonListenerAttached(SkeletonListenerPtr Listener) const
+class SkeletonEvent;
+class OSG_ANIMATIONLIB_DLLMAPPING SkeletonListener : public EventListener
 {
-    return _SkeletonListeners.find(Listener) != _SkeletonListeners.end();
-}
+   /*=========================  PUBLIC  ===============================*/
+public:
+
+   virtual void changed(const SkeletonEvent& e) = 0;
+};
+
+typedef SkeletonListener* SkeletonListenerPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSKELETON_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-
+#endif /* _OSGSKELETONLISTENER_H_ */

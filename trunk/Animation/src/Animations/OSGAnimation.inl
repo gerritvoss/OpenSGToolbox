@@ -42,11 +42,10 @@
 
 OSG_BEGIN_NAMESPACE
 
-
 inline
-void Animation::addAnimationListener(AnimationListenerPtr Listener)
+bool Animation::isAnimationListenerAttached(AnimationListenerPtr Listener) const
 {
-   _AnimationListeners.insert(Listener);
+    return _AnimationListeners.find(Listener) != _AnimationListeners.end();
 }
 
 OSG_END_NAMESPACE

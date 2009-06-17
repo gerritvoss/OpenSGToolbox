@@ -877,59 +877,31 @@
 				Name="SkeletalAnimation"
 				>
 				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGBone.cpp"
+					RelativePath="..\..\src\SkeletalAnimation\OSGJoint.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGBone.h"
+					RelativePath="..\..\src\SkeletalAnimation\OSGJoint.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGBone.inl"
+					RelativePath="..\..\src\SkeletalAnimation\OSGJoint.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGBoneBase.cpp"
+					RelativePath="..\..\src\SkeletalAnimation\OSGJointBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGBoneBase.h"
+					RelativePath="..\..\src\SkeletalAnimation\OSGJointBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGBoneBase.inl"
+					RelativePath="..\..\src\SkeletalAnimation\OSGJointBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGBoneFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBone.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBone.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBone.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBoneBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBoneBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBoneBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\SkeletalAnimation\OSGHingedBoneFields.h"
+					RelativePath="..\..\src\SkeletalAnimation\OSGJointFields.h"
 					>
 				</File>
 				<File
@@ -1062,6 +1034,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Events\OSGAnimationListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonListener.h"
 					>
 				</File>
 			</Filter>

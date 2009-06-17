@@ -144,11 +144,6 @@ void SkeletonBlendedGeometry::addSkeleton(SkeletonPtr TheSkeleton)
 {
     if(TheSkeleton != NullFC && getSkeletons().find(TheSkeleton) == getSkeletons().end())
     {
-        beginEditCP(TheSkeleton, Skeleton::AttachedGeometriesFieldMask);
-            TheSkeleton->getAttachedGeometries().push_back(SkeletonBlendedGeometryPtr(this));
-        endEditCP(TheSkeleton, Skeleton::AttachedGeometriesFieldMask);
-
-        
         beginEditCP(SkeletonBlendedGeometryPtr(this), SkeletonsFieldMask);
             getSkeletons().push_back(TheSkeleton);
         endEditCP(SkeletonBlendedGeometryPtr(this), SkeletonsFieldMask);
@@ -162,15 +157,6 @@ void SkeletonBlendedGeometry::subSkeleton(SkeletonPtr TheSkeleton)
         MFSkeletonPtr::iterator SearchItor(getSkeletons().find(TheSkeleton));
         if(SearchItor != getSkeletons().end())
         {
-            MFSkeletonBlendedGeometryPtr::iterator GeoSearchItor((*SearchItor)->getAttachedGeometries().find(SkeletonBlendedGeometryPtr(this)));
-            if(GeoSearchItor != (*SearchItor)->getAttachedGeometries().end())
-            {
-                beginEditCP((*SearchItor), Skeleton::AttachedGeometriesFieldMask);
-                    (*SearchItor)->getAttachedGeometries().erase(GeoSearchItor);
-                endEditCP((*SearchItor), Skeleton::AttachedGeometriesFieldMask);
-            }
-
-            
             beginEditCP(SkeletonBlendedGeometryPtr(this), SkeletonsFieldMask);
                 getSkeletons().erase(SearchItor);
             endEditCP(SkeletonBlendedGeometryPtr(this), SkeletonsFieldMask);
@@ -279,7 +265,7 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 
 }
 
-void SkeletonBlendedGeometry::skeletonUpdated(void)
+void SkeletonBlendedGeometry::changed(const SkeletonEvent& e)
 {
     calculatePositions();
 }
@@ -436,6 +422,21 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 		(whichField & BlendAmountsFieldMask))
 	{
 		calculatePositions();
+	}
+
+	if(whichField & SkeletonsFieldMask)
+	{
+		for(std::vector<EventConnection>::iterator Itor(_SkeletonListenerConnections.begin()) ; Itor != _SkeletonListenerConnections.end() ; ++Itor)
+		{
+			Itor->disconnect();
+		}
+		
+		_SkeletonListenerConnections.clear();
+
+		for(UInt32 i(0) ; i<getSkeletons().size() ; ++i)
+		{
+			_SkeletonListenerConnections.push_back(getSkeletons(i)->addSkeletonListener(this));
+		}
 	}
 }
 

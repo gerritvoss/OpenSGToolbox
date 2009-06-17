@@ -55,8 +55,8 @@
 #include <OpenSG/OSGSimpleGeometry.h>
 
 #include <OpenSG/OSGGL.h>
-#include "OSGBone.h"
 #include "OSGSkeleton.h"
+#include "OSGJoint.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -104,38 +104,35 @@ Action::ResultE SkeletonDrawable::drawPrimitives (DrawActionBase *action)
     }
     else
     {
-		for(UInt32 i(0) ; i<getSkeleton()->getRootBones().size() ; ++i)
+		for(UInt32 i(0) ; i<getSkeleton()->getRootJoints().size() ; ++i)
 		{
-			//Draw all Root Bones of Skeleton
-			drawBone(getSkeleton()->getRootBones()[i], action);
+			//Draw all Root Joints of Skeleton
+			drawJointHierarchy(getSkeleton()->getRootJoints()[i], action);
 		}
     }
 
     return Action::Continue;
 }
 
-void SkeletonDrawable::drawBone (BonePtr TheBone, DrawActionBase *action)
+void SkeletonDrawable::drawJointHierarchy(JointPtr TheJoint, DrawActionBase *action)
 {
-	//Draw the Bone
-		//Set up the transformation to Object Space
-	
-
-		glPushMatrix();
-			glMultMatrixf(TheBone->getInternalAbsoluteTransformation().getValues());
-			//Draw the bone as a line from it traslation point to the point
-			//in the direction of the bones rotation, that is the length of the bone
-			glBegin(GL_LINES);
-				glVertex3f(0.0f,0.0f,0.0f);
-				glVertex3f(0.0,0.0,TheBone->getLength());
-			glEnd();
-		glPopMatrix();
-
-		
-
-	//Draw all of the bones children
-	for(UInt32 i(0) ; i<TheBone->getNumChildren() ; ++i)
+	//Draw the bone made by this joint and it's parnet joint
+	if(TheJoint->getParentJoint() != NullFC)
 	{
-		drawBone(TheBone->getChild(i), action);
+		Pnt3f BoneStart(0.0,0.0,0.0),BoneEnd(0.0,0.0,0.0);
+		TheJoint->getAbsoluteTransformation().mult(BoneStart);
+		TheJoint->getParentJoint()->getAbsoluteTransformation().mult(BoneEnd);
+
+		glBegin(GL_LINES);
+			glVertex3fv(BoneStart.getValues());
+			glVertex3fv(BoneEnd.getValues());
+		glEnd();
+	}	
+
+	//Draw all of the child joint hierarchys
+	for(UInt32 i(0) ; i<TheJoint->getChildJoints().size() ; ++i)
+	{
+		drawJointHierarchy(TheJoint->getChildJoints(i), action);
 	}
 }
 
@@ -198,68 +195,34 @@ Action::ResultE SkeletonDrawable::intersect( Action* action )
 
 void SkeletonDrawable::adjustVolume(Volume & volume)
 {
-    //TODO: Implement
 	Inherited::adjustVolume(volume);
 
-	//Extend the volume by all the Root Bones of Skeleton
-	//You will want to make a recursive function, similar to drawBone above
-	    //This function will essentially do the same thing but instead of drawing
-	    //point of the line, simply extend the volume by the endpoints of those
-	    //lines
+	//Extend the volume by all the Root Joints of Skeleton
     if(getSkeleton() == NullFC)
     {
         FWARNING(("SkeletonDrawable::drawPrimitives:: no skeleton!\n"));;
     }
     else
     {
-		for(UInt32 i(0) ; i<getSkeleton()->getRootBones().size() ; ++i)
+		for(UInt32 i(0) ; i<getSkeleton()->getRootJoints().size() ; ++i)
 		{
-			expandVolumeByBone(getSkeleton()->getRootBones()[i], volume);
+			expandVolumeByJoint(getSkeleton()->getRootJoints()[i], volume);
 		}
 	}
 
 }
 
-void SkeletonDrawable::expandVolumeByBone (BonePtr TheBone, Volume &volume) 
-{/*Function to get the translation 
-	void getTransform (VectorType3f &translation, QuaternionType &rotation, \
-	VectorType3f &scaleFactor, QuaternionType &scaleOrientation) const 
-	
-	void multVec (const VectorType &src, VectorType &dst) const 
-	ecuation: p1= Translation(AbsoluteTransformation)
-			  p2= p1+Zaxis(AbsoluteTransformation)*Length
-			  Vec3f Seg
-			  rotate seg
-			  p2= p1+seg
-			  Vec3f(0,0,getLength)
+void SkeletonDrawable::expandVolumeByJoint (JointPtr TheJoint, Volume &volume) 
+{
+	Pnt3f JointLocation(0.0,0.0,0.0);
+	TheJoint->getAbsoluteTransformation().mult(JointLocation);
+	volume.extendBy(JointLocation);
 
- */
-
-
-	//Expand the volume by TheBones two endpoints
-	//Caluculate the Absolute positions of the endpoints of this bone
-	
-	Vec3f Translation, Scale, Zaxis,Zlength;
-	Quaternion Rotation, ScaleOrientation;
-	TheBone->getInternalAbsoluteTransformation().getTransform(Translation, Rotation, Scale, ScaleOrientation);
-	
-	
-	Zaxis.setValues(TheBone->getInternalAbsoluteTransformation()[2][0],TheBone->getInternalAbsoluteTransformation()[2][1],TheBone->getInternalAbsoluteTransformation()[2][2]);
-	Translation+Zaxis;
-
-	volume.extendBy(Pnt3f(Translation));
-	volume.extendBy(Pnt3f(Translation+Zaxis));
-	//volume.extendBy(Pnt3f(0.0,0.0,TheBone->getLength()));
-
-	
-
-	//Then for each of TheBones children; call expandVolumeByBone on them
-	for(UInt32 i(0) ; i<TheBone->getNumChildren() ; ++i)
+	//Then for each of TheJoints children; call expandVolumeByJoint on them
+	for(UInt32 i(0) ; i<TheJoint->getChildJoints().size() ; ++i)
 	{
-		expandVolumeByBone(TheBone->getChild(i), volume);
+		expandVolumeByJoint(TheJoint->getChildJoints(i), volume);
 	}
-	
-	
 }
 
 /*-------------------------------------------------------------------------*\

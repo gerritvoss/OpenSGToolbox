@@ -113,16 +113,6 @@ bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFString>(RawInterpFuncion& InterpF
                               osg::Field& Result,
                               UInt32 Index);
 
-//Boolean Replace
-template<>
-bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFBool>(RawInterpFuncion& InterpFunc,
-                              const osg::Real32& time,
-                              const osg::Real32& prevtime,
-                              const osg::ValueReplacementPolicy& ReplacePolicy,
-                              bool isCyclic,
-                              osg::Field& Result,
-                              UInt32 Index);
-
 //Generic Step
 template<class MFieldTypeT,class SFieldTypeT>
 bool  stepKeyframeSequence(  const MFieldTypeT& KeyValues, const osg::MFReal32& Keys, const osg::Real32& time, osg::Field& Value, bool isCyclic=false )
@@ -445,98 +435,6 @@ bool  squadKeyframeSequence(  const MFieldTypeT& KeyValues, const osg::MFReal32&
    static_cast<SFieldTypeT&>(Value).setValue(squad(Q, T, t));
    return true;
 }
-
-/*
-//Floor
-template <class FieldTypeT, osg::Int32 fieldNameSpace>
-bool  floor(  const osg::MField<FieldTypeT, fieldNameSpace>& KeyValues, const osg::MFReal32& Keys, const osg::Real32& time, FieldTypeT& Value, bool isCyclic=false )
-{
-   osg::Real32 t;
-   osg::UInt32 LastKeyframeIndex, NextKeyframeIndex;
-   FieldTypeT Result;
-   
-   if( getInterpolationIndexes(Keys, time, LastKeyframeIndex, NextKeyframeIndex, t, isCyclic) )
-   {
-      Result = KeyValues[KeyValues.size()-1];
-   }  
-   else
-   {  
-      //Return the floor
-      Result = KeyValues[LastKeyframeIndex];
-   }
-   if(Result == Value)
-   {
-      return false;
-   }
-   else
-   {
-      Value = Result;
-      return true;
-   }
-}
-
-//Ceil
-template <class FieldTypeT, osg::Int32 fieldNameSpace>
-bool  ceil(  const osg::MField<FieldTypeT, fieldNameSpace>& KeyValues, const osg::MFReal32& Keys, const osg::Real32& time, FieldTypeT& Value, bool isCyclic=false )
-{
-   osg::Real32 t;
-   osg::UInt32 LastKeyframeIndex, NextKeyframeIndex;
-   FieldTypeT Result;
-   
-   if( getInterpolationIndexes(Keys, time, LastKeyframeIndex, NextKeyframeIndex, t, isCyclic) )
-   {
-      Result = KeyValues[KeyValues.size()-1];
-   }
-   else
-   {  
-      //Return the floor
-      Result = KeyValues[NextKeyframeIndex];
-   }
-   if(Result == Value)
-   {
-      return false;
-   }
-   else
-   {
-      Value = Result;
-      return true;
-   }
-}
-
-//Closest
-template <class FieldTypeT, osg::Int32 fieldNameSpace>
-bool  closest(  const osg::MField<FieldTypeT, fieldNameSpace>& KeyValues, const osg::MFReal32& Keys, const osg::Real32& time, FieldTypeT& Value, bool isCyclic=false )
-{
-   osg::Real32 t;
-   osg::UInt32 LastKeyframeIndex, NextKeyframeIndex;
-   FieldTypeT Result;
-   
-   if( getInterpolationIndexes(Keys, time, LastKeyframeIndex, NextKeyframeIndex, t, isCyclic) )
-   {
-      Result = KeyValues[KeyValues.size()-1];
-   }
-   else
-   {
-      //Return the closest
-      if(t <= 0.5)
-      {
-         Result = KeyValues[LastKeyframeIndex];
-      }
-      else
-      {
-         Result = KeyValues[NextKeyframeIndex];
-      }
-   }
-   if(Result == Value)
-   {
-      return false;
-   }
-   else
-   {
-      Value = Result;
-      return true;
-   }
-}*/
 
 OSG_END_NAMESPACE
 

@@ -50,7 +50,8 @@
 #include "OSGSkeleton.h"
 #include "OSGSkeletonBlendedGeometry.h"
 
-#include "OSGBone.h"
+#include "OSGJoint.h"
+#include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,22 +82,47 @@ void Skeleton::initMethod (void)
 
 void Skeleton::skeletonUpdated(void)
 {
-    //Tell all attached Blended Geometry that the skeleton has been updated
-	for(UInt32 i(0) ; i<getAttachedGeometries().size() ; ++i)
-	{
-		getAttachedGeometries(i)->skeletonUpdated();
-	}
+	produceChangedEvent();
 }
 
-void Skeleton::updateBoneTransformations(void)
+void Skeleton::updateJointTransformations(void)
 {
-	//Loop through bone hierarchy and set their parent Skeleton this instance
-	for(UInt32 i(0); i < getRootBones().size(); ++i)
+	//Loop through bone hierarchy and update their transformations
+	for(UInt32 i(0); i < getRootJoints().size(); ++i)
 	{
-		getRootBones(i)->updateTransformation(false);
+		//getRootJoints(i)->updateTransformation(false);
 	}
 }
 
+
+EventConnection Skeleton::addSkeletonListener(SkeletonListenerPtr Listener)
+{
+   _SkeletonListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Skeleton::isSkeletonListenerAttached, this, Listener),
+       boost::bind(&Skeleton::removeSkeletonListener, this, Listener));
+}
+
+
+void Skeleton::removeSkeletonListener(SkeletonListenerPtr Listener)
+{
+   SkeletonListenerSetItor EraseIter(_SkeletonListeners.find(Listener));
+   if(EraseIter != _SkeletonListeners.end())
+   {
+      _SkeletonListeners.erase(EraseIter);
+   }
+}
+
+void Skeleton::produceChangedEvent(void)
+{
+	SkeletonEvent TheEvent( SkeletonPtr(this), getTimeStamp(), SkeletonPtr(this));
+
+	SkeletonListenerSet ListenerSet(_SkeletonListeners);
+	for(SkeletonListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+	{
+	   (*SetItor)->changed(TheEvent);
+	}
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -119,35 +145,30 @@ Skeleton::~Skeleton(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-//void Skeleton::updateBlendedGeometry()
-//{
-//	//Do something with a listener...
-//}
-
-void Skeleton::setBoneParentSkeleton(BonePtr theBone)
+void Skeleton::setJointParentSkeleton(JointPtr theJoint)
 {
-	beginEditCP(theBone, Bone::InternalSkeletonFieldMask);
-		theBone->setInternalSkeleton(SkeletonPtr(this));
-	endEditCP(theBone, Bone::InternalSkeletonFieldMask);
+	/*beginEditCP(theJoint, Joint::InternalSkeletonFieldMask);
+		theJoint->setInternalSkeleton(SkeletonPtr(this));
+	endEditCP(theJoint, Joint::InternalSkeletonFieldMask);
 
 
-	for (UInt32 i(0); i < theBone->getNumChildren(); ++i)
+	for (UInt32 i(0); i < theJoint->getNumChildren(); ++i)
 	{
-		setBoneParentSkeleton(theBone->getChild(i));
-	}
+		setJointParentSkeleton(theJoint->getChild(i));
+	}*/
 }
 
 void Skeleton::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if(whichField & RootBonesFieldMask)
+	if(whichField & RootJointsFieldMask)
 	{
 		//Loop through bone hierarchy and set their parent Skeleton this instance
-		MFBonePtr CurrentBones = getRootBones();
-		for(UInt32 i(0); i < CurrentBones.size(); ++i)
+		MFJointPtr CurrentJoints = getRootJoints();
+		for(UInt32 i(0); i < CurrentJoints.size(); ++i)
 		{
-			Skeleton::setBoneParentSkeleton(CurrentBones[i]);
+			setJointParentSkeleton(CurrentJoints[i]);
 		}
 	}
 }

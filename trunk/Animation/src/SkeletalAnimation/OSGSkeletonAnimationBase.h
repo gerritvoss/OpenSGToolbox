@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,12 +67,8 @@
 
 #include "Animations/OSGAnimation.h" // Parent
 
-#include "Animators/OSGKeyframeAnimatorFields.h" // RotationAnimators type
-#include "OSGBoneFields.h" // RotationAnimatorBones type
-#include "Animators/OSGKeyframeAnimatorFields.h" // TranslationAnimators type
-#include "OSGBoneFields.h" // LengthAnimatorBones type
-#include "Animators/OSGKeyframeAnimatorFields.h" // LengthAnimators type
-#include "OSGBoneFields.h" // TranslationAnimatorBones type
+#include "Animators/OSGKeyframeAnimatorFields.h" // TransformationAnimators type
+#include "OSGJointFields.h" // AnimatorJoints type
 #include "OSGSkeletonFields.h" // Skeleton type
 #include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
 
@@ -98,23 +94,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimationBase : public Animation
 
     enum
     {
-        RotationAnimatorsFieldId        = Inherited::NextFieldId,
-        RotationAnimatorBonesFieldId    = RotationAnimatorsFieldId        + 1,
-        TranslationAnimatorsFieldId     = RotationAnimatorBonesFieldId    + 1,
-        LengthAnimatorBonesFieldId      = TranslationAnimatorsFieldId     + 1,
-        LengthAnimatorsFieldId          = LengthAnimatorBonesFieldId      + 1,
-        TranslationAnimatorBonesFieldId = LengthAnimatorsFieldId          + 1,
-        SkeletonFieldId                 = TranslationAnimatorBonesFieldId + 1,
-        InterpolationTypeFieldId        = SkeletonFieldId                 + 1,
-        NextFieldId                     = InterpolationTypeFieldId        + 1
+        TransformationAnimatorsFieldId = Inherited::NextFieldId,
+        AnimatorJointsFieldId          = TransformationAnimatorsFieldId + 1,
+        SkeletonFieldId                = AnimatorJointsFieldId          + 1,
+        InterpolationTypeFieldId       = SkeletonFieldId                + 1,
+        NextFieldId                    = InterpolationTypeFieldId       + 1
     };
 
-    static const OSG::BitVector RotationAnimatorsFieldMask;
-    static const OSG::BitVector RotationAnimatorBonesFieldMask;
-    static const OSG::BitVector TranslationAnimatorsFieldMask;
-    static const OSG::BitVector LengthAnimatorBonesFieldMask;
-    static const OSG::BitVector LengthAnimatorsFieldMask;
-    static const OSG::BitVector TranslationAnimatorBonesFieldMask;
+    static const OSG::BitVector TransformationAnimatorsFieldMask;
+    static const OSG::BitVector AnimatorJointsFieldMask;
     static const OSG::BitVector SkeletonFieldMask;
     static const OSG::BitVector InterpolationTypeFieldMask;
 
@@ -200,12 +188,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimationBase : public Animation
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFKeyframeAnimatorPtr   _mfRotationAnimators;
-    MFBonePtr           _mfRotationAnimatorBones;
-    MFKeyframeAnimatorPtr   _mfTranslationAnimators;
-    MFBonePtr           _mfLengthAnimatorBones;
-    MFKeyframeAnimatorPtr   _mfLengthAnimators;
-    MFBonePtr           _mfTranslationAnimatorBones;
+    MFKeyframeAnimatorPtr   _mfTransformationAnimators;
+    MFJointPtr          _mfAnimatorJoints;
     SFSkeletonPtr       _sfSkeleton;
     SFUInt32            _sfInterpolationType;
 
@@ -229,31 +213,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimationBase : public Animation
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFKeyframeAnimatorPtr *getMFRotationAnimators(void);
-           MFBonePtr           *getMFRotationAnimatorBones(void);
-           MFKeyframeAnimatorPtr *getMFTranslationAnimators(void);
-           MFBonePtr           *getMFLengthAnimatorBones(void);
-           MFKeyframeAnimatorPtr *getMFLengthAnimators(void);
-           MFBonePtr           *getMFTranslationAnimatorBones(void);
+           MFKeyframeAnimatorPtr *getMFTransformationAnimators(void);
+           MFJointPtr          *getMFAnimatorJoints (void);
 
-           KeyframeAnimatorPtr &getRotationAnimators(UInt32 index);
-           MFKeyframeAnimatorPtr &getRotationAnimators(void);
-     const MFKeyframeAnimatorPtr &getRotationAnimators(void) const;
-           BonePtr             &getRotationAnimatorBones(UInt32 index);
-           MFBonePtr           &getRotationAnimatorBones(void);
-     const MFBonePtr           &getRotationAnimatorBones(void) const;
-           KeyframeAnimatorPtr &getTranslationAnimators(UInt32 index);
-           MFKeyframeAnimatorPtr &getTranslationAnimators(void);
-     const MFKeyframeAnimatorPtr &getTranslationAnimators(void) const;
-           BonePtr             &getLengthAnimatorBones(UInt32 index);
-           MFBonePtr           &getLengthAnimatorBones(void);
-     const MFBonePtr           &getLengthAnimatorBones(void) const;
-           KeyframeAnimatorPtr &getLengthAnimators(UInt32 index);
-           MFKeyframeAnimatorPtr &getLengthAnimators(void);
-     const MFKeyframeAnimatorPtr &getLengthAnimators(void) const;
-           BonePtr             &getTranslationAnimatorBones(UInt32 index);
-           MFBonePtr           &getTranslationAnimatorBones(void);
-     const MFBonePtr           &getTranslationAnimatorBones(void) const;
+           KeyframeAnimatorPtr &getTransformationAnimators(UInt32 index);
+           MFKeyframeAnimatorPtr &getTransformationAnimators(void);
+     const MFKeyframeAnimatorPtr &getTransformationAnimators(void) const;
+           JointPtr            &getAnimatorJoints (UInt32 index);
+           MFJointPtr          &getAnimatorJoints (void);
+     const MFJointPtr          &getAnimatorJoints (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

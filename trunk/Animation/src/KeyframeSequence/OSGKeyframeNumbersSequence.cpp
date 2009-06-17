@@ -41,22 +41,6 @@
 
 OSG_USING_NAMESPACE
 
-FieldDescription *KeyframeNumbersSequenceBoolDesc::_desc[] =
-{
-    new FieldDescription(
-        StoredFieldType::getClassType(), 
-        getFieldName(), 
-        OSG_FC_FIELD_IDM_DESC(KeyframeSequenceTmpl<
-                                KeyframeNumbersSequenceBoolDesc>::KeyframePropDataField),
-        false,
-#ifdef OSG_MICROSOFT_COMPILER_HACKS
-        KeyframeSequenceTmpl<KeyframeNumbersSequenceBoolDesc>::getFPtrAccessMethod())
-#else
-        (FieldAccessMethod) &KeyframeSequenceTmpl<
-                                KeyframeNumbersSequenceBoolDesc>::getFieldPtr)
-#endif
-};
-
 FieldDescription *KeyframeNumbersSequenceUInt8Desc::_desc[] =
 {
     new FieldDescription(
@@ -223,10 +207,6 @@ OSG_GEO_PROP_TYPE_TMPL_DEF(KeyframeSequenceTmpl, KeyframeSequenceDesc, PtrType)
 
 //Deal with Exporting symbols
 OSG_BEGIN_NAMESPACE
-
-OSG_KEYFRAMEPROP_DLLEXPORT_DEF (KeyframeSequenceTmpl        , 
-                           KeyframeNumbersSequenceBoolDesc, 
-                           OSG_ANIMATIONLIB_DLLMAPPING);
 
 OSG_KEYFRAMEPROP_DLLEXPORT_DEF (KeyframeSequenceTmpl        , 
                            KeyframeNumbersSequenceUInt8Desc, 

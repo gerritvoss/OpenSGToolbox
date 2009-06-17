@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,46 +96,18 @@ SkeletonAnimationPtr SkeletonAnimationBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SkeletonAnimation::_mfRotationAnimators field.
+//! Get the SkeletonAnimation::_mfTransformationAnimators field.
 inline
-MFKeyframeAnimatorPtr *SkeletonAnimationBase::getMFRotationAnimators(void)
+MFKeyframeAnimatorPtr *SkeletonAnimationBase::getMFTransformationAnimators(void)
 {
-    return &_mfRotationAnimators;
+    return &_mfTransformationAnimators;
 }
 
-//! Get the SkeletonAnimation::_mfRotationAnimatorBones field.
+//! Get the SkeletonAnimation::_mfAnimatorJoints field.
 inline
-MFBonePtr *SkeletonAnimationBase::getMFRotationAnimatorBones(void)
+MFJointPtr *SkeletonAnimationBase::getMFAnimatorJoints(void)
 {
-    return &_mfRotationAnimatorBones;
-}
-
-//! Get the SkeletonAnimation::_mfTranslationAnimators field.
-inline
-MFKeyframeAnimatorPtr *SkeletonAnimationBase::getMFTranslationAnimators(void)
-{
-    return &_mfTranslationAnimators;
-}
-
-//! Get the SkeletonAnimation::_mfLengthAnimatorBones field.
-inline
-MFBonePtr *SkeletonAnimationBase::getMFLengthAnimatorBones(void)
-{
-    return &_mfLengthAnimatorBones;
-}
-
-//! Get the SkeletonAnimation::_mfLengthAnimators field.
-inline
-MFKeyframeAnimatorPtr *SkeletonAnimationBase::getMFLengthAnimators(void)
-{
-    return &_mfLengthAnimators;
-}
-
-//! Get the SkeletonAnimation::_mfTranslationAnimatorBones field.
-inline
-MFBonePtr *SkeletonAnimationBase::getMFTranslationAnimatorBones(void)
-{
-    return &_mfTranslationAnimatorBones;
+    return &_mfAnimatorJoints;
 }
 
 //! Get the SkeletonAnimation::_sfSkeleton field.
@@ -196,130 +168,46 @@ void SkeletonAnimationBase::setInterpolationType(const UInt32 &value)
 }
 
 
-//! Get the value of the \a index element the SkeletonAnimation::_mfRotationAnimators field.
+//! Get the value of the \a index element the SkeletonAnimation::_mfTransformationAnimators field.
 inline
-KeyframeAnimatorPtr &SkeletonAnimationBase::getRotationAnimators(const UInt32 index)
+KeyframeAnimatorPtr &SkeletonAnimationBase::getTransformationAnimators(const UInt32 index)
 {
-    return _mfRotationAnimators[index];
+    return _mfTransformationAnimators[index];
 }
 
-//! Get the SkeletonAnimation::_mfRotationAnimators field.
+//! Get the SkeletonAnimation::_mfTransformationAnimators field.
 inline
-MFKeyframeAnimatorPtr &SkeletonAnimationBase::getRotationAnimators(void)
+MFKeyframeAnimatorPtr &SkeletonAnimationBase::getTransformationAnimators(void)
 {
-    return _mfRotationAnimators;
+    return _mfTransformationAnimators;
 }
 
-//! Get the SkeletonAnimation::_mfRotationAnimators field.
+//! Get the SkeletonAnimation::_mfTransformationAnimators field.
 inline
-const MFKeyframeAnimatorPtr &SkeletonAnimationBase::getRotationAnimators(void) const
+const MFKeyframeAnimatorPtr &SkeletonAnimationBase::getTransformationAnimators(void) const
 {
-    return _mfRotationAnimators;
+    return _mfTransformationAnimators;
 }
 
-//! Get the value of the \a index element the SkeletonAnimation::_mfRotationAnimatorBones field.
+//! Get the value of the \a index element the SkeletonAnimation::_mfAnimatorJoints field.
 inline
-BonePtr &SkeletonAnimationBase::getRotationAnimatorBones(const UInt32 index)
+JointPtr &SkeletonAnimationBase::getAnimatorJoints(const UInt32 index)
 {
-    return _mfRotationAnimatorBones[index];
+    return _mfAnimatorJoints[index];
 }
 
-//! Get the SkeletonAnimation::_mfRotationAnimatorBones field.
+//! Get the SkeletonAnimation::_mfAnimatorJoints field.
 inline
-MFBonePtr &SkeletonAnimationBase::getRotationAnimatorBones(void)
+MFJointPtr &SkeletonAnimationBase::getAnimatorJoints(void)
 {
-    return _mfRotationAnimatorBones;
+    return _mfAnimatorJoints;
 }
 
-//! Get the SkeletonAnimation::_mfRotationAnimatorBones field.
+//! Get the SkeletonAnimation::_mfAnimatorJoints field.
 inline
-const MFBonePtr &SkeletonAnimationBase::getRotationAnimatorBones(void) const
+const MFJointPtr &SkeletonAnimationBase::getAnimatorJoints(void) const
 {
-    return _mfRotationAnimatorBones;
-}
-
-//! Get the value of the \a index element the SkeletonAnimation::_mfTranslationAnimators field.
-inline
-KeyframeAnimatorPtr &SkeletonAnimationBase::getTranslationAnimators(const UInt32 index)
-{
-    return _mfTranslationAnimators[index];
-}
-
-//! Get the SkeletonAnimation::_mfTranslationAnimators field.
-inline
-MFKeyframeAnimatorPtr &SkeletonAnimationBase::getTranslationAnimators(void)
-{
-    return _mfTranslationAnimators;
-}
-
-//! Get the SkeletonAnimation::_mfTranslationAnimators field.
-inline
-const MFKeyframeAnimatorPtr &SkeletonAnimationBase::getTranslationAnimators(void) const
-{
-    return _mfTranslationAnimators;
-}
-
-//! Get the value of the \a index element the SkeletonAnimation::_mfLengthAnimatorBones field.
-inline
-BonePtr &SkeletonAnimationBase::getLengthAnimatorBones(const UInt32 index)
-{
-    return _mfLengthAnimatorBones[index];
-}
-
-//! Get the SkeletonAnimation::_mfLengthAnimatorBones field.
-inline
-MFBonePtr &SkeletonAnimationBase::getLengthAnimatorBones(void)
-{
-    return _mfLengthAnimatorBones;
-}
-
-//! Get the SkeletonAnimation::_mfLengthAnimatorBones field.
-inline
-const MFBonePtr &SkeletonAnimationBase::getLengthAnimatorBones(void) const
-{
-    return _mfLengthAnimatorBones;
-}
-
-//! Get the value of the \a index element the SkeletonAnimation::_mfLengthAnimators field.
-inline
-KeyframeAnimatorPtr &SkeletonAnimationBase::getLengthAnimators(const UInt32 index)
-{
-    return _mfLengthAnimators[index];
-}
-
-//! Get the SkeletonAnimation::_mfLengthAnimators field.
-inline
-MFKeyframeAnimatorPtr &SkeletonAnimationBase::getLengthAnimators(void)
-{
-    return _mfLengthAnimators;
-}
-
-//! Get the SkeletonAnimation::_mfLengthAnimators field.
-inline
-const MFKeyframeAnimatorPtr &SkeletonAnimationBase::getLengthAnimators(void) const
-{
-    return _mfLengthAnimators;
-}
-
-//! Get the value of the \a index element the SkeletonAnimation::_mfTranslationAnimatorBones field.
-inline
-BonePtr &SkeletonAnimationBase::getTranslationAnimatorBones(const UInt32 index)
-{
-    return _mfTranslationAnimatorBones[index];
-}
-
-//! Get the SkeletonAnimation::_mfTranslationAnimatorBones field.
-inline
-MFBonePtr &SkeletonAnimationBase::getTranslationAnimatorBones(void)
-{
-    return _mfTranslationAnimatorBones;
-}
-
-//! Get the SkeletonAnimation::_mfTranslationAnimatorBones field.
-inline
-const MFBonePtr &SkeletonAnimationBase::getTranslationAnimatorBones(void) const
-{
-    return _mfTranslationAnimatorBones;
+    return _mfAnimatorJoints;
 }
 
 OSG_END_NAMESPACE
