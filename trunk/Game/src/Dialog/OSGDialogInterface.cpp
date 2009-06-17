@@ -79,28 +79,42 @@ void DialogInterface::initMethod (void)
 \***************************************************************************/
 void DialogInterface::DialogInterfaceListener::newDialogStarted(const DialogHierarchyEvent& e)
 {
+    if(DialogHierarchyPtr::dcast(e.getSource())->getDualNodeStyle())
+    {
+        if(DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialog()->getInteractive())
+        {
+            LabelPtr Response = LabelPtr::dcast(_DialogInterface->getComponentGenerator()->getQuestionComponent(_DialogInterface, DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialog()->getResponse()));
+
+            beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
+                _DialogInterface->getParentContainer()->getChildren().push_back(Response);
+            endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
+        }
+    }
 }
 void DialogInterface::DialogInterfaceListener::dialogEnded(const DialogHierarchyEvent& e)
 {
 }
 void DialogInterface::DialogInterfaceListener::dialogResponseSelected(const DialogHierarchyEvent& e)
 {
-    beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
-        _DialogInterface->getParentContainer()->getChildren().clear();
-    endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
+        beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
+            _DialogInterface->getParentContainer()->getChildren().clear();
+        endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
 }
 void DialogInterface::DialogInterfaceListener::dialogResponsesReady(const DialogHierarchyEvent& e)
 {
-    for(UInt32 c = 0; DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses().getSize() > c; c++)
+    if(DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialog()->getInteractive())
     {
-        ButtonPtr Response = ButtonPtr::dcast(_DialogInterface->getComponentGenerator()->getResponseComponent(_DialogInterface,DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c)->getResponse()));
+        for(UInt32 c = 0; DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses().getSize() > c; c++)
+        {
+            ButtonPtr Response = ButtonPtr::dcast(_DialogInterface->getComponentGenerator()->getResponseComponent(_DialogInterface,DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c)->getResponse()));
 
-        beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
-            _DialogInterface->getParentContainer()->getChildren().push_back(Response);
-        endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
+            beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
+                _DialogInterface->getParentContainer()->getChildren().push_back(Response);
+            endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
 
-        Response->addActionListener(&_DialogInterface->_DialogInterfaceListener);
-        _DialogInterface->_ButtonToResponseMap[Response] = DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c);
+            Response->addActionListener(&_DialogInterface->_DialogInterfaceListener);
+            _DialogInterface->_ButtonToResponseMap[Response] = DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c);
+        }
     }
 }
 void DialogInterface::DialogInterfaceListener::terminated(const DialogHierarchyEvent& e)

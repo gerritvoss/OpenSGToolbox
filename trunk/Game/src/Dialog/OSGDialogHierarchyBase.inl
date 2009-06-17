@@ -117,6 +117,13 @@ MFDialogPtr *DialogHierarchyBase::getMFCurrentDialogResponses(void)
     return &_mfCurrentDialogResponses;
 }
 
+//! Get the DialogHierarchy::_sfDualNodeStyle field.
+inline
+SFBool *DialogHierarchyBase::getSFDualNodeStyle(void)
+{
+    return &_sfDualNodeStyle;
+}
+
 
 //! Get the value of the DialogHierarchy::_sfRootDialog field.
 inline
@@ -158,6 +165,27 @@ inline
 void DialogHierarchyBase::setCurrentDialog(const DialogPtr &value)
 {
     _sfCurrentDialog.setValue(value);
+}
+
+//! Get the value of the DialogHierarchy::_sfDualNodeStyle field.
+inline
+bool &DialogHierarchyBase::getDualNodeStyle(void)
+{
+    return _sfDualNodeStyle.getValue();
+}
+
+//! Get the value of the DialogHierarchy::_sfDualNodeStyle field.
+inline
+const bool &DialogHierarchyBase::getDualNodeStyle(void) const
+{
+    return _sfDualNodeStyle.getValue();
+}
+
+//! Set the value of the DialogHierarchy::_sfDualNodeStyle field.
+inline
+void DialogHierarchyBase::setDualNodeStyle(const bool &value)
+{
+    _sfDualNodeStyle.setValue(value);
 }
 
 

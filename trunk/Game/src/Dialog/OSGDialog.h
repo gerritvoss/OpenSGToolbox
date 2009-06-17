@@ -75,6 +75,17 @@ class OSG_GAMELIB_DLLMAPPING Dialog : public DialogBase
     virtual void changed(BitVector  whichField, 
                          UInt32     origin    );
 
+    /**************************************************************************//**
+     * @fn	void start()
+     * 
+     * @brief	askldjfl;kjsldkaflkjsdf asdf
+     *          asdflkjasdfkl;
+     *
+     * asdfsdaf.
+     * 
+     * @author	Langkamp. 
+     * @date	6/15/2009. 
+     *******************************************************`**********************/
     void start();
     void terminate();
     void selectResponse();

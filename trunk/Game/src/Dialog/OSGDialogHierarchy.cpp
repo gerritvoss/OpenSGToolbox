@@ -173,6 +173,7 @@ void DialogHierarchy::DialogHierarchyListener::started(const DialogEvent& e)
 
 void DialogHierarchy::DialogHierarchyListener::ended(const DialogEvent& e)
 {
+    DialogPtr::dcast(e.getSource())->_displayed = false;
     DialogHierarchyEvent de = DialogHierarchyEvent(_DialogHierarchy,getSystemTime());
     _DialogHierarchy->produceDialogEnded(de);
 }
@@ -184,7 +185,6 @@ void DialogHierarchy::DialogHierarchyListener::responseSelected(const DialogEven
 
     DialogEvent Pe = DialogEvent(_DialogHierarchy->getCurrentDialog(),getSystemTime());
     _DialogHierarchy->getCurrentDialog()->produceEnded(Pe);
-    _DialogHierarchy->getCurrentDialog()->_displayed = false;
 
     _DialogHierarchy->setCurrentDialog(DialogPtr::dcast(e.getSource()));
     _DialogHierarchy->retrieveReponses();

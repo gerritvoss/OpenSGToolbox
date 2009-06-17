@@ -103,9 +103,10 @@ void Dialog::start()
         produceResponsesReady(e);
     }
 
-    if(!_displayed && !getInteractive() && getDialogSound() == NullFC)
+    if(!_displayed && !getInteractive() && getDialogSound() == NullFC && !getResponses().isEmpty())
     {
-        produceResponseSelected(e);
+        _displayed = true;
+        getResponses(0)->selectResponse();
     }
     if(getDialogSound() == NullFC && getResponses().isEmpty())
     {

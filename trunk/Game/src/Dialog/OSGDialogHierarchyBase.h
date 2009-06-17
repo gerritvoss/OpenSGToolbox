@@ -67,7 +67,8 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include "OSGDialogFields.h" // RootDialog type // CurrentDialog type // CurrentDialogResponses type
+#include "OSGDialogFields.h" // RootDialog type
+#include <OpenSG/OSGBoolFields.h> // DualNodeStyle type
 
 #include "OSGDialogHierarchyFields.h"
 
@@ -94,12 +95,14 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
         RootDialogFieldId             = Inherited::NextFieldId,
         CurrentDialogFieldId          = RootDialogFieldId             + 1,
         CurrentDialogResponsesFieldId = CurrentDialogFieldId          + 1,
-        NextFieldId                   = CurrentDialogResponsesFieldId + 1
+        DualNodeStyleFieldId          = CurrentDialogResponsesFieldId + 1,
+        NextFieldId                   = DualNodeStyleFieldId          + 1
     };
 
     static const OSG::BitVector RootDialogFieldMask;
     static const OSG::BitVector CurrentDialogFieldMask;
     static const OSG::BitVector CurrentDialogResponsesFieldMask;
+    static const OSG::BitVector DualNodeStyleFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -129,11 +132,14 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
            SFDialogPtr         *getSFRootDialog     (void);
            SFDialogPtr         *getSFCurrentDialog  (void);
            MFDialogPtr         *getMFCurrentDialogResponses(void);
+           SFBool              *getSFDualNodeStyle  (void);
 
            DialogPtr           &getRootDialog     (void);
      const DialogPtr           &getRootDialog     (void) const;
            DialogPtr           &getCurrentDialog  (void);
      const DialogPtr           &getCurrentDialog  (void) const;
+           bool                &getDualNodeStyle  (void);
+     const bool                &getDualNodeStyle  (void) const;
            DialogPtr           &getCurrentDialogResponses(const UInt32 index);
            MFDialogPtr         &getCurrentDialogResponses(void);
      const MFDialogPtr         &getCurrentDialogResponses(void) const;
@@ -145,6 +151,7 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
 
      void setRootDialog     ( const DialogPtr &value );
      void setCurrentDialog  ( const DialogPtr &value );
+     void setDualNodeStyle  ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -190,6 +197,7 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
     SFDialogPtr         _sfRootDialog;
     SFDialogPtr         _sfCurrentDialog;
     MFDialogPtr         _mfCurrentDialogResponses;
+    SFBool              _sfDualNodeStyle;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

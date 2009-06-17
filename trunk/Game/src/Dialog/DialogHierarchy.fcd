@@ -40,4 +40,13 @@ A Dialog.
 	>
 	</Field>
 
+	<Field
+		name="DualNodeStyle"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
 </FieldContainer>
