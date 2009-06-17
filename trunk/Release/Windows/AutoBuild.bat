@@ -26,7 +26,7 @@ md "%PROJECT_DIR%"
 "%SUBVERSION_PATH%\svn.exe" checkout "%REPOSITORY_URL%" "%PROJECT_DIR%" --non-interactive
 
 :Move to Main Build Directory
-cd "%PROJECT_DIR%"
+pushd "%PROJECT_DIR%"
 pushd "%BUILD_DIR%"
 
 :Build the Libraries
@@ -55,6 +55,3 @@ popd
 
 :Move back to original Directory
 popd
-
-:Update the Website
-UpdateWebsite.bat

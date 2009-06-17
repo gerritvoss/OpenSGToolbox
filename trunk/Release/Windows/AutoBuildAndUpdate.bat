@@ -7,7 +7,7 @@ set dd=%date:~-10,2%
 erase *.log
 
 :Run the Build
-AutoBuild.bat > WindowsBuild-%mm%-%dd%-%yy%.log
+CMD /c AutoBuild.bat > WindowsBuild-%mm%-%dd%-%yy%.log
 
 :Update the Website
-UpdateWebsite.bat
+CMD /c UpdateWebsite.bat
