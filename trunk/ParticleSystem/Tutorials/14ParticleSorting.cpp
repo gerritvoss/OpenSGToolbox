@@ -276,31 +276,31 @@ int main(int argc, char **argv)
 	ExampleQuadParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
 	
 		//Create a Rate Particle Generator
-	BurstParticleGeneratorPtr ExampleGenerator = osg::BurstParticleGenerator::create();
+	//BurstParticleGeneratorPtr ExampleGenerator = osg::BurstParticleGenerator::create();
 
-	//RateParticleGeneratorPtr ExampleGeneratorTheSequel = osg::RateParticleGenerator::create();
+	RateParticleGeneratorPtr ExampleGeneratorTheSequel = osg::RateParticleGenerator::create();
 
+	////Attach the function objects to the Generator
+	//beginEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
+	//	ExampleGenerator->setPositionFunction(createPositionDistribution());
+	//	ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+	//	ExampleGenerator->setVelocityFunction(createVelocityDistribution());
+	//	ExampleGenerator->setBurstAmount(1000);
+	//endEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
+	//
 	//Attach the function objects to the Generator
-	beginEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
-		ExampleGenerator->setPositionFunction(createPositionDistribution());
-		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
-		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
-		ExampleGenerator->setBurstAmount(1000);
-	endEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
-	
-	/*Attach the function objects to the Generator
 	beginEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 		ExampleGeneratorTheSequel->setPositionFunction(createPositionDistribution());
 		ExampleGeneratorTheSequel->setLifespanFunction(createLifespanDistribution());
-		ExampleGeneratorTheSequel->setGenerationRate(1000.0);
+		ExampleGeneratorTheSequel->setGenerationRate(300.0);
 		ExampleGeneratorTheSequel->setVelocityFunction(createVelocityDistribution());
-	endEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);*/
+	endEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 
 	//Attach the Generator to the Particle System
 	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
-		ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
-		ExampleParticleSystem->setMaxParticles(1000);
-		//ExampleParticleSystem->getGenerators().push_back(ExampleGeneratorTheSequel);
+		//ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
+		ExampleParticleSystem->setMaxParticles(500);
+		ExampleParticleSystem->getGenerators().push_back(ExampleGeneratorTheSequel);
 	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
 	
 	//Particle System Node
@@ -385,7 +385,7 @@ FunctionPtr createLifespanDistribution(void)
 {
 	 SegmentDistribution1DPtr TheLifespanDistribution = SegmentDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setSegment(Pnt2f(100.0,200.0));
+      TheLifespanDistribution->setSegment(Pnt2f(2.0,3.0));
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;
