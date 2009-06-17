@@ -65,6 +65,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
 	const Matrix& getAbsoluteDifferenceTransformation(void) const;
 	const Matrix& getRelativeDifferenceTransformation(void) const;
 	void calculateTransformations(void);
+	void updateTransformations(bool isRecursive);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

@@ -147,15 +147,15 @@ Skeleton::~Skeleton(void)
 
 void Skeleton::setJointParentSkeleton(JointPtr theJoint)
 {
-	/*beginEditCP(theJoint, Joint::InternalSkeletonFieldMask);
-		theJoint->setInternalSkeleton(SkeletonPtr(this));
-	endEditCP(theJoint, Joint::InternalSkeletonFieldMask);
+	beginEditCP(theJoint, Joint::ParentSkeletonFieldMask);
+		theJoint->setParentSkeleton(SkeletonPtr(this));
+	endEditCP(theJoint, Joint::ParentSkeletonFieldMask);
 
 
-	for (UInt32 i(0); i < theJoint->getNumChildren(); ++i)
+	for (UInt32 i(0); i < theJoint->getChildJoints().size() ; ++i)
 	{
-		setJointParentSkeleton(theJoint->getChild(i));
-	}*/
+		setJointParentSkeleton(theJoint->getChildJoints(i));
+	}
 }
 
 void Skeleton::changed(BitVector whichField, UInt32 origin)

@@ -117,6 +117,11 @@ void Joint::calculateTransformations(void)
 	_RelativeDifferenceTransformation.multLeft(getRelativeTransformation());
 }
 
+void Joint::updateTransformations(bool isRecursive)
+{
+
+}
+
 
 
 /*-------------------------------------------------------------------------*\
