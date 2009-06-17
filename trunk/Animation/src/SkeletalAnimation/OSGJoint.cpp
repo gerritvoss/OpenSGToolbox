@@ -76,6 +76,24 @@ void Joint::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Matrix Joint::getAbsoluteTransformation(void) const
+{
+	return (getParentJoint()->getAbsoluteTransformation()).mult(getRelativeTransformation());
+}
+
+const Matrix& Joint::getAbsoluteDifferenceTransformation(void) const
+{
+
+}
+
+const Matrix& Joint::getRelativeDifferenceTransformation(void) const
+{
+
+}
+
+
+
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

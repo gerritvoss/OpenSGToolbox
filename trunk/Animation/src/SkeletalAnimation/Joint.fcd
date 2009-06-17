@@ -12,7 +12,7 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="Transformation"
+		name="RelativeTransformation"
 		type="Matrix"
 		cardinality="single"
 		visibility="external"
@@ -20,7 +20,7 @@
 	>
 	</Field>
 	<Field
-		name="BindTransformation"
+		name="BindRelativeTransformation"
 		type="Matrix"
 		cardinality="single"
 		visibility="external"
@@ -29,18 +29,20 @@
 	</Field>
 	<Field
 		name="ChildJoints"
-		type="Joint"
+		type="JointPtr"
 		cardinality="multi"
 		visibility="external"
 		access="public"
+		header="OSGJointFields.h"
 	>
 	</Field>
 	<Field
 		name="ParentJoint"
-		type="Joint"
+		type="JointPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		header="OSGJointFields.h"
 	>
 	</Field>
 </FieldContainer>

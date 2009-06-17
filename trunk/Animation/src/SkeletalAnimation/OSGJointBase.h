@@ -67,10 +67,10 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/OSGMatrixFields.h> // Transformation type
-#include <OpenSG/OSGMatrixFields.h> // BindTransformation type
-#include <OpenSG/OSGJointFields.h> // ChildJoints type
-#include <OpenSG/OSGJointFields.h> // ParentJoint type
+#include <OpenSG/OSGMatrixFields.h> // RelativeTransformation type
+#include <OpenSG/OSGMatrixFields.h> // BindRelativeTransformation type
+#include "OSGJointFields.h" // ChildJoints type
+#include "OSGJointFields.h" // ParentJoint type
 
 #include "OSGJointFields.h"
 
@@ -94,15 +94,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING JointBase : public AttachmentContainer
 
     enum
     {
-        TransformationFieldId     = Inherited::NextFieldId,
-        BindTransformationFieldId = TransformationFieldId     + 1,
-        ChildJointsFieldId        = BindTransformationFieldId + 1,
-        ParentJointFieldId        = ChildJointsFieldId        + 1,
-        NextFieldId               = ParentJointFieldId        + 1
+        RelativeTransformationFieldId     = Inherited::NextFieldId,
+        BindRelativeTransformationFieldId = RelativeTransformationFieldId     + 1,
+        ChildJointsFieldId                = BindRelativeTransformationFieldId + 1,
+        ParentJointFieldId                = ChildJointsFieldId                + 1,
+        NextFieldId                       = ParentJointFieldId                + 1
     };
 
-    static const OSG::BitVector TransformationFieldMask;
-    static const OSG::BitVector BindTransformationFieldMask;
+    static const OSG::BitVector RelativeTransformationFieldMask;
+    static const OSG::BitVector BindRelativeTransformationFieldMask;
     static const OSG::BitVector ChildJointsFieldMask;
     static const OSG::BitVector ParentJointFieldMask;
 
@@ -131,29 +131,29 @@ class OSG_ANIMATIONLIB_DLLMAPPING JointBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFMatrix            *getSFTransformation (void);
-           SFMatrix            *getSFBindTransformation(void);
-           MFJoint             *getMFChildJoints    (void);
-           SFJoint             *getSFParentJoint    (void);
+           SFMatrix            *getSFRelativeTransformation(void);
+           SFMatrix            *getSFBindRelativeTransformation(void);
+           MFJointPtr          *getMFChildJoints    (void);
+           SFJointPtr          *getSFParentJoint    (void);
 
-           Matrix              &getTransformation (void);
-     const Matrix              &getTransformation (void) const;
-           Matrix              &getBindTransformation(void);
-     const Matrix              &getBindTransformation(void) const;
-           Joint               &getParentJoint    (void);
-     const Joint               &getParentJoint    (void) const;
-           Joint               &getChildJoints    (const UInt32 index);
-           MFJoint             &getChildJoints    (void);
-     const MFJoint             &getChildJoints    (void) const;
+           Matrix              &getRelativeTransformation(void);
+     const Matrix              &getRelativeTransformation(void) const;
+           Matrix              &getBindRelativeTransformation(void);
+     const Matrix              &getBindRelativeTransformation(void) const;
+           JointPtr            &getParentJoint    (void);
+     const JointPtr            &getParentJoint    (void) const;
+           JointPtr            &getChildJoints    (const UInt32 index);
+           MFJointPtr          &getChildJoints    (void);
+     const MFJointPtr          &getChildJoints    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTransformation ( const Matrix &value );
-     void setBindTransformation( const Matrix &value );
-     void setParentJoint    ( const Joint &value );
+     void setRelativeTransformation( const Matrix &value );
+     void setBindRelativeTransformation( const Matrix &value );
+     void setParentJoint    ( const JointPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,10 +196,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING JointBase : public AttachmentContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFMatrix            _sfTransformation;
-    SFMatrix            _sfBindTransformation;
-    MFJoint             _mfChildJoints;
-    SFJoint             _sfParentJoint;
+    SFMatrix            _sfRelativeTransformation;
+    SFMatrix            _sfBindRelativeTransformation;
+    MFJointPtr          _mfChildJoints;
+    SFJointPtr          _sfParentJoint;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

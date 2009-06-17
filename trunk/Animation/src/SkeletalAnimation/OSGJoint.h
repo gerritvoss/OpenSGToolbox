@@ -60,6 +60,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+	Matrix getAbsoluteTransformation(void) const;
+	const Matrix& getAbsoluteDifferenceTransformation(void) const;
+	const Matrix& getRelativeDifferenceTransformation(void) const;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

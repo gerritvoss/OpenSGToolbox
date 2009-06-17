@@ -64,11 +64,11 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  JointBase::TransformationFieldMask = 
-    (TypeTraits<BitVector>::One << JointBase::TransformationFieldId);
+const OSG::BitVector  JointBase::RelativeTransformationFieldMask = 
+    (TypeTraits<BitVector>::One << JointBase::RelativeTransformationFieldId);
 
-const OSG::BitVector  JointBase::BindTransformationFieldMask = 
-    (TypeTraits<BitVector>::One << JointBase::BindTransformationFieldId);
+const OSG::BitVector  JointBase::BindRelativeTransformationFieldMask = 
+    (TypeTraits<BitVector>::One << JointBase::BindRelativeTransformationFieldId);
 
 const OSG::BitVector  JointBase::ChildJointsFieldMask = 
     (TypeTraits<BitVector>::One << JointBase::ChildJointsFieldId);
@@ -83,16 +83,16 @@ const OSG::BitVector JointBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Matrix          JointBase::_sfTransformation
+/*! \var Matrix          JointBase::_sfRelativeTransformation
     
 */
-/*! \var Matrix          JointBase::_sfBindTransformation
+/*! \var Matrix          JointBase::_sfBindRelativeTransformation
     
 */
-/*! \var Joint           JointBase::_mfChildJoints
+/*! \var JointPtr        JointBase::_mfChildJoints
     
 */
-/*! \var Joint           JointBase::_sfParentJoint
+/*! \var JointPtr        JointBase::_sfParentJoint
     
 */
 
@@ -101,21 +101,21 @@ const OSG::BitVector JointBase::MTInfluenceMask =
 FieldDescription *JointBase::_desc[] = 
 {
     new FieldDescription(SFMatrix::getClassType(), 
-                     "Transformation", 
-                     TransformationFieldId, TransformationFieldMask,
+                     "RelativeTransformation", 
+                     RelativeTransformationFieldId, RelativeTransformationFieldMask,
                      false,
-                     (FieldAccessMethod) &JointBase::getSFTransformation),
+                     (FieldAccessMethod) &JointBase::getSFRelativeTransformation),
     new FieldDescription(SFMatrix::getClassType(), 
-                     "BindTransformation", 
-                     BindTransformationFieldId, BindTransformationFieldMask,
+                     "BindRelativeTransformation", 
+                     BindRelativeTransformationFieldId, BindRelativeTransformationFieldMask,
                      false,
-                     (FieldAccessMethod) &JointBase::getSFBindTransformation),
-    new FieldDescription(MFJoint::getClassType(), 
+                     (FieldAccessMethod) &JointBase::getSFBindRelativeTransformation),
+    new FieldDescription(MFJointPtr::getClassType(), 
                      "ChildJoints", 
                      ChildJointsFieldId, ChildJointsFieldMask,
                      false,
                      (FieldAccessMethod) &JointBase::getMFChildJoints),
-    new FieldDescription(SFJoint::getClassType(), 
+    new FieldDescription(SFJointPtr::getClassType(), 
                      "ParentJoint", 
                      ParentJointFieldId, ParentJointFieldMask,
                      false,
@@ -196,8 +196,8 @@ void JointBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 JointBase::JointBase(void) :
-    _sfTransformation         (), 
-    _sfBindTransformation     (), 
+    _sfRelativeTransformation (), 
+    _sfBindRelativeTransformation(), 
     _mfChildJoints            (), 
     _sfParentJoint            (), 
     Inherited() 
@@ -209,8 +209,8 @@ JointBase::JointBase(void) :
 #endif
 
 JointBase::JointBase(const JointBase &source) :
-    _sfTransformation         (source._sfTransformation         ), 
-    _sfBindTransformation     (source._sfBindTransformation     ), 
+    _sfRelativeTransformation (source._sfRelativeTransformation ), 
+    _sfBindRelativeTransformation(source._sfBindRelativeTransformation), 
     _mfChildJoints            (source._mfChildJoints            ), 
     _sfParentJoint            (source._sfParentJoint            ), 
     Inherited                 (source)
@@ -229,14 +229,14 @@ UInt32 JointBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    if(FieldBits::NoField != (RelativeTransformationFieldMask & whichField))
     {
-        returnValue += _sfTransformation.getBinSize();
+        returnValue += _sfRelativeTransformation.getBinSize();
     }
 
-    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+    if(FieldBits::NoField != (BindRelativeTransformationFieldMask & whichField))
     {
-        returnValue += _sfBindTransformation.getBinSize();
+        returnValue += _sfBindRelativeTransformation.getBinSize();
     }
 
     if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
@@ -258,14 +258,14 @@ void JointBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    if(FieldBits::NoField != (RelativeTransformationFieldMask & whichField))
     {
-        _sfTransformation.copyToBin(pMem);
+        _sfRelativeTransformation.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+    if(FieldBits::NoField != (BindRelativeTransformationFieldMask & whichField))
     {
-        _sfBindTransformation.copyToBin(pMem);
+        _sfBindRelativeTransformation.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
@@ -286,14 +286,14 @@ void JointBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    if(FieldBits::NoField != (RelativeTransformationFieldMask & whichField))
     {
-        _sfTransformation.copyFromBin(pMem);
+        _sfRelativeTransformation.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+    if(FieldBits::NoField != (BindRelativeTransformationFieldMask & whichField))
     {
-        _sfBindTransformation.copyFromBin(pMem);
+        _sfBindRelativeTransformation.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
@@ -316,11 +316,11 @@ void JointBase::executeSyncImpl(      JointBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
-        _sfTransformation.syncWith(pOther->_sfTransformation);
+    if(FieldBits::NoField != (RelativeTransformationFieldMask & whichField))
+        _sfRelativeTransformation.syncWith(pOther->_sfRelativeTransformation);
 
-    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
-        _sfBindTransformation.syncWith(pOther->_sfBindTransformation);
+    if(FieldBits::NoField != (BindRelativeTransformationFieldMask & whichField))
+        _sfBindRelativeTransformation.syncWith(pOther->_sfBindRelativeTransformation);
 
     if(FieldBits::NoField != (ChildJointsFieldMask & whichField))
         _mfChildJoints.syncWith(pOther->_mfChildJoints);
@@ -338,11 +338,11 @@ void JointBase::executeSyncImpl(      JointBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
-        _sfTransformation.syncWith(pOther->_sfTransformation);
+    if(FieldBits::NoField != (RelativeTransformationFieldMask & whichField))
+        _sfRelativeTransformation.syncWith(pOther->_sfRelativeTransformation);
 
-    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
-        _sfBindTransformation.syncWith(pOther->_sfBindTransformation);
+    if(FieldBits::NoField != (BindRelativeTransformationFieldMask & whichField))
+        _sfBindRelativeTransformation.syncWith(pOther->_sfBindRelativeTransformation);
 
     if(FieldBits::NoField != (ParentJointFieldMask & whichField))
         _sfParentJoint.syncWith(pOther->_sfParentJoint);

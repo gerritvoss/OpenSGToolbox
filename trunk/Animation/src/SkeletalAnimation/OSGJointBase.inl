@@ -96,94 +96,94 @@ JointPtr JointBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Joint::_sfTransformation field.
+//! Get the Joint::_sfRelativeTransformation field.
 inline
-SFMatrix *JointBase::getSFTransformation(void)
+SFMatrix *JointBase::getSFRelativeTransformation(void)
 {
-    return &_sfTransformation;
+    return &_sfRelativeTransformation;
 }
 
-//! Get the Joint::_sfBindTransformation field.
+//! Get the Joint::_sfBindRelativeTransformation field.
 inline
-SFMatrix *JointBase::getSFBindTransformation(void)
+SFMatrix *JointBase::getSFBindRelativeTransformation(void)
 {
-    return &_sfBindTransformation;
+    return &_sfBindRelativeTransformation;
 }
 
 //! Get the Joint::_mfChildJoints field.
 inline
-MFJoint *JointBase::getMFChildJoints(void)
+MFJointPtr *JointBase::getMFChildJoints(void)
 {
     return &_mfChildJoints;
 }
 
 //! Get the Joint::_sfParentJoint field.
 inline
-SFJoint *JointBase::getSFParentJoint(void)
+SFJointPtr *JointBase::getSFParentJoint(void)
 {
     return &_sfParentJoint;
 }
 
 
-//! Get the value of the Joint::_sfTransformation field.
+//! Get the value of the Joint::_sfRelativeTransformation field.
 inline
-Matrix &JointBase::getTransformation(void)
+Matrix &JointBase::getRelativeTransformation(void)
 {
-    return _sfTransformation.getValue();
+    return _sfRelativeTransformation.getValue();
 }
 
-//! Get the value of the Joint::_sfTransformation field.
+//! Get the value of the Joint::_sfRelativeTransformation field.
 inline
-const Matrix &JointBase::getTransformation(void) const
+const Matrix &JointBase::getRelativeTransformation(void) const
 {
-    return _sfTransformation.getValue();
+    return _sfRelativeTransformation.getValue();
 }
 
-//! Set the value of the Joint::_sfTransformation field.
+//! Set the value of the Joint::_sfRelativeTransformation field.
 inline
-void JointBase::setTransformation(const Matrix &value)
+void JointBase::setRelativeTransformation(const Matrix &value)
 {
-    _sfTransformation.setValue(value);
+    _sfRelativeTransformation.setValue(value);
 }
 
-//! Get the value of the Joint::_sfBindTransformation field.
+//! Get the value of the Joint::_sfBindRelativeTransformation field.
 inline
-Matrix &JointBase::getBindTransformation(void)
+Matrix &JointBase::getBindRelativeTransformation(void)
 {
-    return _sfBindTransformation.getValue();
+    return _sfBindRelativeTransformation.getValue();
 }
 
-//! Get the value of the Joint::_sfBindTransformation field.
+//! Get the value of the Joint::_sfBindRelativeTransformation field.
 inline
-const Matrix &JointBase::getBindTransformation(void) const
+const Matrix &JointBase::getBindRelativeTransformation(void) const
 {
-    return _sfBindTransformation.getValue();
+    return _sfBindRelativeTransformation.getValue();
 }
 
-//! Set the value of the Joint::_sfBindTransformation field.
+//! Set the value of the Joint::_sfBindRelativeTransformation field.
 inline
-void JointBase::setBindTransformation(const Matrix &value)
+void JointBase::setBindRelativeTransformation(const Matrix &value)
 {
-    _sfBindTransformation.setValue(value);
+    _sfBindRelativeTransformation.setValue(value);
 }
 
 //! Get the value of the Joint::_sfParentJoint field.
 inline
-Joint &JointBase::getParentJoint(void)
+JointPtr &JointBase::getParentJoint(void)
 {
     return _sfParentJoint.getValue();
 }
 
 //! Get the value of the Joint::_sfParentJoint field.
 inline
-const Joint &JointBase::getParentJoint(void) const
+const JointPtr &JointBase::getParentJoint(void) const
 {
     return _sfParentJoint.getValue();
 }
 
 //! Set the value of the Joint::_sfParentJoint field.
 inline
-void JointBase::setParentJoint(const Joint &value)
+void JointBase::setParentJoint(const JointPtr &value)
 {
     _sfParentJoint.setValue(value);
 }
@@ -191,21 +191,21 @@ void JointBase::setParentJoint(const Joint &value)
 
 //! Get the value of the \a index element the Joint::_mfChildJoints field.
 inline
-Joint &JointBase::getChildJoints(const UInt32 index)
+JointPtr &JointBase::getChildJoints(const UInt32 index)
 {
     return _mfChildJoints[index];
 }
 
 //! Get the Joint::_mfChildJoints field.
 inline
-MFJoint &JointBase::getChildJoints(void)
+MFJointPtr &JointBase::getChildJoints(void)
 {
     return _mfChildJoints;
 }
 
 //! Get the Joint::_mfChildJoints field.
 inline
-const MFJoint &JointBase::getChildJoints(void) const
+const MFJointPtr &JointBase::getChildJoints(void) const
 {
     return _mfChildJoints;
 }
