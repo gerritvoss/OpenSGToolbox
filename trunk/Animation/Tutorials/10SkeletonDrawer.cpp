@@ -239,7 +239,7 @@ int main(int argc, char **argv)
 	Containers.insert(SkeletonNode);
 
 	FCFileType::FCTypeVector IgnoreTypes;
-	FCFileHandler::the()->write(Containers,Path("./Skeleton.xml"),IgnoreTypes);
+	FCFileHandler::the()->write(Containers,Path("./Data/14Skeleton.xml"),IgnoreTypes);
 
     while(!ExitApp)
     {

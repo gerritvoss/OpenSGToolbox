@@ -18,7 +18,7 @@
 #include <OpenSG/OSGMaterialChunk.h>
 
 //Animation
-#include <OpenSG/Animation/OSGBone.h>
+#include <OpenSG/Animation/OSGJoint.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGSkeletonDrawable.h>
 
@@ -177,27 +177,27 @@ int main(int argc, char **argv)
     //Skeleton
     SkeletonPtr ExampleSkeleton = Skeleton::create();
 
-    //Bones
-	Path SkeletonFile(argv[1]);
-	if(boost::filesystem::exists(SkeletonFile))
-	{
-		FCFileHandler::FCPtrStore Contianers = FCFileHandler::the()->read(SkeletonFile);
-		beginEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
-			for(FCFileHandler::FCPtrStore::iterator i(Contianers.begin()) ; i!=Contianers.end() ; i++)
-			{
-				if( (*i)->getType().isDerivedFrom(Bone::getClassType()) &&
-					Bone::Ptr::dcast(*i)->getParent() == NullFC)
-				{
-					ExampleSkeleton->getRootBones().push_back(Bone::Ptr::dcast(*i));
-				}
-			}
-		endEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
-	}
+
+	FCFileType::FCPtrStore NewContainers;
+	NewContainers = FCFileHandler::the()->read(Path("./Data/14Skeleton.xml"));
+
+
+	FCFileType::FCPtrStore::iterator Itor;
+    for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
+    {
+		if( (*Itor)->getType() == (Skeleton::getClassType()))
+		{
+			ExampleSkeleton = (Skeleton::Ptr::dcast(*Itor));
+		}
+    }
+
+
+
 
 
     //SkeletonDrawer
     SkeletonDrawablePtr ExampleSkeletonDrawable = osg::SkeletonDrawable::create();
-    beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+	beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
