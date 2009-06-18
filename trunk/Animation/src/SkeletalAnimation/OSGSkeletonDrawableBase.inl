@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -103,6 +103,34 @@ SFSkeletonPtr *SkeletonDrawableBase::getSFSkeleton(void)
     return &_sfSkeleton;
 }
 
+//! Get the SkeletonDrawable::_sfDrawBindPose field.
+inline
+SFBool *SkeletonDrawableBase::getSFDrawBindPose(void)
+{
+    return &_sfDrawBindPose;
+}
+
+//! Get the SkeletonDrawable::_sfDrawPose field.
+inline
+SFBool *SkeletonDrawableBase::getSFDrawPose(void)
+{
+    return &_sfDrawPose;
+}
+
+//! Get the SkeletonDrawable::_sfBindPoseColor field.
+inline
+SFColor4f *SkeletonDrawableBase::getSFBindPoseColor(void)
+{
+    return &_sfBindPoseColor;
+}
+
+//! Get the SkeletonDrawable::_sfPoseColor field.
+inline
+SFColor4f *SkeletonDrawableBase::getSFPoseColor(void)
+{
+    return &_sfPoseColor;
+}
+
 
 //! Get the value of the SkeletonDrawable::_sfSkeleton field.
 inline
@@ -123,6 +151,90 @@ inline
 void SkeletonDrawableBase::setSkeleton(const SkeletonPtr &value)
 {
     _sfSkeleton.setValue(value);
+}
+
+//! Get the value of the SkeletonDrawable::_sfDrawBindPose field.
+inline
+bool &SkeletonDrawableBase::getDrawBindPose(void)
+{
+    return _sfDrawBindPose.getValue();
+}
+
+//! Get the value of the SkeletonDrawable::_sfDrawBindPose field.
+inline
+const bool &SkeletonDrawableBase::getDrawBindPose(void) const
+{
+    return _sfDrawBindPose.getValue();
+}
+
+//! Set the value of the SkeletonDrawable::_sfDrawBindPose field.
+inline
+void SkeletonDrawableBase::setDrawBindPose(const bool &value)
+{
+    _sfDrawBindPose.setValue(value);
+}
+
+//! Get the value of the SkeletonDrawable::_sfDrawPose field.
+inline
+bool &SkeletonDrawableBase::getDrawPose(void)
+{
+    return _sfDrawPose.getValue();
+}
+
+//! Get the value of the SkeletonDrawable::_sfDrawPose field.
+inline
+const bool &SkeletonDrawableBase::getDrawPose(void) const
+{
+    return _sfDrawPose.getValue();
+}
+
+//! Set the value of the SkeletonDrawable::_sfDrawPose field.
+inline
+void SkeletonDrawableBase::setDrawPose(const bool &value)
+{
+    _sfDrawPose.setValue(value);
+}
+
+//! Get the value of the SkeletonDrawable::_sfBindPoseColor field.
+inline
+Color4f &SkeletonDrawableBase::getBindPoseColor(void)
+{
+    return _sfBindPoseColor.getValue();
+}
+
+//! Get the value of the SkeletonDrawable::_sfBindPoseColor field.
+inline
+const Color4f &SkeletonDrawableBase::getBindPoseColor(void) const
+{
+    return _sfBindPoseColor.getValue();
+}
+
+//! Set the value of the SkeletonDrawable::_sfBindPoseColor field.
+inline
+void SkeletonDrawableBase::setBindPoseColor(const Color4f &value)
+{
+    _sfBindPoseColor.setValue(value);
+}
+
+//! Get the value of the SkeletonDrawable::_sfPoseColor field.
+inline
+Color4f &SkeletonDrawableBase::getPoseColor(void)
+{
+    return _sfPoseColor.getValue();
+}
+
+//! Get the value of the SkeletonDrawable::_sfPoseColor field.
+inline
+const Color4f &SkeletonDrawableBase::getPoseColor(void) const
+{
+    return _sfPoseColor.getValue();
+}
+
+//! Set the value of the SkeletonDrawable::_sfPoseColor field.
+inline
+void SkeletonDrawableBase::setPoseColor(const Color4f &value)
+{
+    _sfPoseColor.setValue(value);
 }
 
 

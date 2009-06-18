@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,6 +68,10 @@
 #include <OpenSG/OSGMaterialDrawable.h> // Parent
 
 #include "SkeletalAnimation/OSGSkeletonFields.h" // Skeleton type
+#include <OpenSG/OSGBoolFields.h> // DrawBindPose type
+#include <OpenSG/OSGBoolFields.h> // DrawPose type
+#include <OpenSG/OSGColor4fFields.h> // BindPoseColor type
+#include <OpenSG/OSGColor4fFields.h> // PoseColor type
 
 #include "OSGSkeletonDrawableFields.h"
 
@@ -91,11 +95,19 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
 
     enum
     {
-        SkeletonFieldId = Inherited::NextFieldId,
-        NextFieldId     = SkeletonFieldId + 1
+        SkeletonFieldId      = Inherited::NextFieldId,
+        DrawBindPoseFieldId  = SkeletonFieldId      + 1,
+        DrawPoseFieldId      = DrawBindPoseFieldId  + 1,
+        BindPoseColorFieldId = DrawPoseFieldId      + 1,
+        PoseColorFieldId     = BindPoseColorFieldId + 1,
+        NextFieldId          = PoseColorFieldId     + 1
     };
 
     static const OSG::BitVector SkeletonFieldMask;
+    static const OSG::BitVector DrawBindPoseFieldMask;
+    static const OSG::BitVector DrawPoseFieldMask;
+    static const OSG::BitVector BindPoseColorFieldMask;
+    static const OSG::BitVector PoseColorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +135,21 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
     /*! \{                                                                 */
 
            SFSkeletonPtr       *getSFSkeleton       (void);
+           SFBool              *getSFDrawBindPose   (void);
+           SFBool              *getSFDrawPose       (void);
+           SFColor4f           *getSFBindPoseColor  (void);
+           SFColor4f           *getSFPoseColor      (void);
 
            SkeletonPtr         &getSkeleton       (void);
      const SkeletonPtr         &getSkeleton       (void) const;
+           bool                &getDrawBindPose   (void);
+     const bool                &getDrawBindPose   (void) const;
+           bool                &getDrawPose       (void);
+     const bool                &getDrawPose       (void) const;
+           Color4f             &getBindPoseColor  (void);
+     const Color4f             &getBindPoseColor  (void) const;
+           Color4f             &getPoseColor      (void);
+     const Color4f             &getPoseColor      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +157,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
     /*! \{                                                                 */
 
      void setSkeleton       ( const SkeletonPtr &value );
+     void setDrawBindPose   ( const bool &value );
+     void setDrawPose       ( const bool &value );
+     void setBindPoseColor  ( const Color4f &value );
+     void setPoseColor      ( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +204,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
     /*! \{                                                                 */
 
     SFSkeletonPtr       _sfSkeleton;
+    SFBool              _sfDrawBindPose;
+    SFBool              _sfDrawPose;
+    SFColor4f           _sfBindPoseColor;
+    SFColor4f           _sfPoseColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

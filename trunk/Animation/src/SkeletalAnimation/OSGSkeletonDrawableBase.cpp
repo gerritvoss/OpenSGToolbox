@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,18 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  SkeletonDrawableBase::SkeletonFieldMask = 
     (TypeTraits<BitVector>::One << SkeletonDrawableBase::SkeletonFieldId);
 
+const OSG::BitVector  SkeletonDrawableBase::DrawBindPoseFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonDrawableBase::DrawBindPoseFieldId);
+
+const OSG::BitVector  SkeletonDrawableBase::DrawPoseFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonDrawableBase::DrawPoseFieldId);
+
+const OSG::BitVector  SkeletonDrawableBase::BindPoseColorFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonDrawableBase::BindPoseColorFieldId);
+
+const OSG::BitVector  SkeletonDrawableBase::PoseColorFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonDrawableBase::PoseColorFieldId);
+
 const OSG::BitVector SkeletonDrawableBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +87,18 @@ const OSG::BitVector SkeletonDrawableBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var SkeletonPtr     SkeletonDrawableBase::_sfSkeleton
+    
+*/
+/*! \var bool            SkeletonDrawableBase::_sfDrawBindPose
+    
+*/
+/*! \var bool            SkeletonDrawableBase::_sfDrawPose
+    
+*/
+/*! \var Color4f         SkeletonDrawableBase::_sfBindPoseColor
+    
+*/
+/*! \var Color4f         SkeletonDrawableBase::_sfPoseColor
     
 */
 
@@ -86,7 +110,27 @@ FieldDescription *SkeletonDrawableBase::_desc[] =
                      "Skeleton", 
                      SkeletonFieldId, SkeletonFieldMask,
                      false,
-                     (FieldAccessMethod) &SkeletonDrawableBase::getSFSkeleton)
+                     (FieldAccessMethod) &SkeletonDrawableBase::getSFSkeleton),
+    new FieldDescription(SFBool::getClassType(), 
+                     "DrawBindPose", 
+                     DrawBindPoseFieldId, DrawBindPoseFieldMask,
+                     false,
+                     (FieldAccessMethod) &SkeletonDrawableBase::getSFDrawBindPose),
+    new FieldDescription(SFBool::getClassType(), 
+                     "DrawPose", 
+                     DrawPoseFieldId, DrawPoseFieldMask,
+                     false,
+                     (FieldAccessMethod) &SkeletonDrawableBase::getSFDrawPose),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "BindPoseColor", 
+                     BindPoseColorFieldId, BindPoseColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &SkeletonDrawableBase::getSFBindPoseColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "PoseColor", 
+                     PoseColorFieldId, PoseColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &SkeletonDrawableBase::getSFPoseColor)
 };
 
 
@@ -162,7 +206,11 @@ void SkeletonDrawableBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SkeletonDrawableBase::SkeletonDrawableBase(void) :
-    _sfSkeleton               (), 
+    _sfSkeleton               (SkeletonPtr(NullFC)), 
+    _sfDrawBindPose           (bool(false)), 
+    _sfDrawPose               (bool(true)), 
+    _sfBindPoseColor          (Color4f(1.0,1.0,1.0,1.0)), 
+    _sfPoseColor              (Color4f(1.0,1.0,1.0,1.0)), 
     Inherited() 
 {
 }
@@ -173,6 +221,10 @@ SkeletonDrawableBase::SkeletonDrawableBase(void) :
 
 SkeletonDrawableBase::SkeletonDrawableBase(const SkeletonDrawableBase &source) :
     _sfSkeleton               (source._sfSkeleton               ), 
+    _sfDrawBindPose           (source._sfDrawBindPose           ), 
+    _sfDrawPose               (source._sfDrawPose               ), 
+    _sfBindPoseColor          (source._sfBindPoseColor          ), 
+    _sfPoseColor              (source._sfPoseColor              ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +246,26 @@ UInt32 SkeletonDrawableBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSkeleton.getBinSize();
     }
 
+    if(FieldBits::NoField != (DrawBindPoseFieldMask & whichField))
+    {
+        returnValue += _sfDrawBindPose.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DrawPoseFieldMask & whichField))
+    {
+        returnValue += _sfDrawPose.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BindPoseColorFieldMask & whichField))
+    {
+        returnValue += _sfBindPoseColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (PoseColorFieldMask & whichField))
+    {
+        returnValue += _sfPoseColor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +278,26 @@ void SkeletonDrawableBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
     {
         _sfSkeleton.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawBindPoseFieldMask & whichField))
+    {
+        _sfDrawBindPose.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawPoseFieldMask & whichField))
+    {
+        _sfDrawPose.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BindPoseColorFieldMask & whichField))
+    {
+        _sfBindPoseColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PoseColorFieldMask & whichField))
+    {
+        _sfPoseColor.copyToBin(pMem);
     }
 
 
@@ -221,6 +313,26 @@ void SkeletonDrawableBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSkeleton.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (DrawBindPoseFieldMask & whichField))
+    {
+        _sfDrawBindPose.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawPoseFieldMask & whichField))
+    {
+        _sfDrawPose.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BindPoseColorFieldMask & whichField))
+    {
+        _sfBindPoseColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PoseColorFieldMask & whichField))
+    {
+        _sfPoseColor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +346,18 @@ void SkeletonDrawableBase::executeSyncImpl(      SkeletonDrawableBase *pOther,
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
         _sfSkeleton.syncWith(pOther->_sfSkeleton);
 
+    if(FieldBits::NoField != (DrawBindPoseFieldMask & whichField))
+        _sfDrawBindPose.syncWith(pOther->_sfDrawBindPose);
+
+    if(FieldBits::NoField != (DrawPoseFieldMask & whichField))
+        _sfDrawPose.syncWith(pOther->_sfDrawPose);
+
+    if(FieldBits::NoField != (BindPoseColorFieldMask & whichField))
+        _sfBindPoseColor.syncWith(pOther->_sfBindPoseColor);
+
+    if(FieldBits::NoField != (PoseColorFieldMask & whichField))
+        _sfPoseColor.syncWith(pOther->_sfPoseColor);
+
 
 }
 #else
@@ -246,6 +370,18 @@ void SkeletonDrawableBase::executeSyncImpl(      SkeletonDrawableBase *pOther,
 
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
         _sfSkeleton.syncWith(pOther->_sfSkeleton);
+
+    if(FieldBits::NoField != (DrawBindPoseFieldMask & whichField))
+        _sfDrawBindPose.syncWith(pOther->_sfDrawBindPose);
+
+    if(FieldBits::NoField != (DrawPoseFieldMask & whichField))
+        _sfDrawPose.syncWith(pOther->_sfDrawPose);
+
+    if(FieldBits::NoField != (BindPoseColorFieldMask & whichField))
+        _sfBindPoseColor.syncWith(pOther->_sfBindPoseColor);
+
+    if(FieldBits::NoField != (PoseColorFieldMask & whichField))
+        _sfPoseColor.syncWith(pOther->_sfPoseColor);
 
 
 

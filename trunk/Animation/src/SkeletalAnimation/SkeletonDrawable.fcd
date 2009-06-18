@@ -18,6 +18,43 @@
 		visibility="external"
 		access="public"
 		header="SkeletalAnimation/OSGSkeletonFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="DrawBindPose"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+	</Field>
+	<Field
+		name="DrawPose"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
+	<Field
+		name="BindPoseColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0,1.0,1.0,1.0"
+	>
+	</Field>
+	<Field
+		name="PoseColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0,1.0,1.0,1.0"
 	>
 	</Field>
 </FieldContainer>

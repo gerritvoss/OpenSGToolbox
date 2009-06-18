@@ -120,12 +120,26 @@ void SkeletonDrawable::drawJointHierarchy(JointPtr TheJoint, DrawActionBase *act
 	if(TheJoint->getParentJoint() != NullFC)
 	{
 		Pnt3f BoneStart(0.0,0.0,0.0),BoneEnd(0.0,0.0,0.0);
-		TheJoint->getAbsoluteTransformation().mult(BoneStart);
-		TheJoint->getParentJoint()->getAbsoluteTransformation().mult(BoneEnd);
 
 		glBegin(GL_LINES);
-			glVertex3fv(BoneStart.getValues());
-			glVertex3fv(BoneEnd.getValues());
+			if(getDrawPose())
+			{
+				TheJoint->getAbsoluteTransformation().mult(BoneStart);
+				TheJoint->getParentJoint()->getAbsoluteTransformation().mult(BoneEnd);
+				glColor4fv(getPoseColor().getValuesRGBA());
+				glVertex3fv(BoneStart.getValues());
+				glVertex3fv(BoneEnd.getValues());
+			}
+			if(getDrawBindPose())
+			{
+				BoneStart.setValues(0.0f,0.0f,0.0f);
+				BoneEnd.setValues(0.0f,0.0f,0.0f);
+				TheJoint->getBindAbsoluteTransformation().mult(BoneStart);
+				TheJoint->getParentJoint()->getBindAbsoluteTransformation().mult(BoneEnd);
+				glColor4fv(getBindPoseColor().getValuesRGBA());
+				glVertex3fv(BoneStart.getValues());
+				glVertex3fv(BoneEnd.getValues());
+			}
 		glEnd();
 	}	
 
