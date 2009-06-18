@@ -99,6 +99,8 @@ def main():
        SedLicenseScript = "CleanUpSoundLicense.sed"
    elif os.path.join("Physics", "src") in sys.argv[1]:
        SedLicenseScript = "CleanUpPhysicsLicense.sed"
+   elif os.path.join("Metabolic", "src") in sys.argv[1]:
+       SedLicenseScript = "CleanUpMetabolicLicense.sed"
    else:
        SedLicenseScript = "CleanUpUILicense.sed"
    SedLicenseScriptPath = convertPathToOutput(os.path.join(GenFCsPyDir, SedLicenseScript))
