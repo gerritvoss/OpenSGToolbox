@@ -176,11 +176,7 @@ void Joint::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if(whichField & RelativeTransformationFieldMask)
-	{
-		calculateTransformations();
-	}
-	if(whichField & BindRelativeTransformationFieldMask)
+	if((whichField & BindRelativeTransformationFieldMask) || (whichField & RelativeTransformationFieldMask) || (whichField & ParentJointFieldMask))
 	{
 		calculateTransformations();
 	}
