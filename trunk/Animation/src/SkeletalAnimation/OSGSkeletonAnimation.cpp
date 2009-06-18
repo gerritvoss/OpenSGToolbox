@@ -130,7 +130,7 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 void SkeletonAnimation::addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint)
 {
 	if(TheAnimator != NullFC && TheJoint != NullFC && 
-        TheAnimator->getDataType() == FieldDataTraits<Quaternion>::getType())
+        TheAnimator->getDataType() == FieldDataTraits<Matrix>::getType())
 	{
 		beginEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::TransformationAnimatorsFieldMask | SkeletonAnimation::AnimatorJointsFieldMask);
 			getTransformationAnimators().push_back(TheAnimator);

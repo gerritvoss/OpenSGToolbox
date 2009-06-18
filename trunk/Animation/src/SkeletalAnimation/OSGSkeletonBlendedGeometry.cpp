@@ -195,6 +195,7 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 		getPositionIndexes().size() == getBlendAmounts().size()))
 	{
 		Pnt3f CalculatedPoint;
+		Vec3f CalculatedNormal;
 		//Update the Positions and Normals
 		std::set<UInt32> VisitedIndicies;
 
@@ -204,6 +205,7 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 			Matrix temp = getJoints(i)->getAbsoluteDifferenceTransformation();
 			temp.scale(getBlendAmounts(i));
 			temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
+			//temp.mult(getBaseGeometry()->getNormals()->getValue(getPositionIndexes(i)), CalculatedNormal);
 
 
 
@@ -226,69 +228,6 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 		{
 			_parents[i]->invalidateVolume();
 		}
-
-
-		//Pnt3f CalculatedPoint;
-		////Update the Positions and Normals
-		//std::set<UInt32> VisitedIndicies;
-
-		////UInt32 VertexesTransformations[n];
-		//for(UInt32 i(0) ; i < getPositionIndexes().size() ; ++i)
-		//{
-		//	if(getPositionIndexes(i) == 1075)
-		//	{
-		//		std::cout << "stop here" << std::endl;
-
-
-		//		double blendAmt = getBlendAmounts(i);
-
-		//		Pnt3f geomPnt = getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i));
-		//	}
-
-
-		//	Matrix ident = Matrix();
-		//	if(getBones(i)->getEndInternalAbsoluteDifferenceTransformation() != ident)
-		//	{
-		//		Matrix absolute = getBones(i)->getInternalAbsoluteTransformation();
-		//		Matrix defaultAbsolute = getBones(i)->getInternalDefaultAbsoluteTransformation();
-		//	}
-
-
-
-		//	if(getAttachedToEnd(i))
-		//	{
-		//		
-
-		//		Matrix temp = getBones(i)->getEndInternalAbsoluteDifferenceTransformation();
-		//		temp.scale(getBlendAmounts(i));
-		//		temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
-
-		//	}
-		//	else
-		//	{
-		//		Matrix temp = getBones(i)->getInternalAbsoluteDifferenceTransformation(getBlendMode());
-		//		temp.scale(getBlendAmounts(i));
-		//		temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
-		//	}
-
-
-		//	if(VisitedIndicies.find(getPositionIndexes(i)) == VisitedIndicies.end())
-		//	{
-		//		//Overwrite
-		//		VisitedIndicies.insert(getPositionIndexes(i));
-		//	}
-		//	else
-		//	{
-		//		//Add
-		//		CalculatedPoint += getPositions()->getValue(getPositionIndexes(i));
-		//	}
-		//	getPositions()->setValue(CalculatedPoint, getPositionIndexes(i));
-		//}
-
-		//for(UInt32 i = 0; i < _parents.size(); i++)
-		//{
-		//	_parents[i]->invalidateVolume();
-		//}
 	}
 	else
 	{

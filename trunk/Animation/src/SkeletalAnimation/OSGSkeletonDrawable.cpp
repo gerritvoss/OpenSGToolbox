@@ -124,8 +124,8 @@ void SkeletonDrawable::drawJointHierarchy(JointPtr TheJoint, DrawActionBase *act
 		glBegin(GL_LINES);
 			if(getDrawPose())
 			{
-				TheJoint->getAbsoluteTransformation().mult(BoneStart);
-				TheJoint->getParentJoint()->getAbsoluteTransformation().mult(BoneEnd);
+				TheJoint->getAbsoluteTransformation().mult(BoneEnd);
+				TheJoint->getParentJoint()->getAbsoluteTransformation().mult(BoneStart);
 				glColor4fv(getPoseColor().getValuesRGBA());
 				glVertex3fv(BoneStart.getValues());
 				glVertex3fv(BoneEnd.getValues());
@@ -134,8 +134,8 @@ void SkeletonDrawable::drawJointHierarchy(JointPtr TheJoint, DrawActionBase *act
 			{
 				BoneStart.setValues(0.0f,0.0f,0.0f);
 				BoneEnd.setValues(0.0f,0.0f,0.0f);
-				TheJoint->getBindAbsoluteTransformation().mult(BoneStart);
-				TheJoint->getParentJoint()->getBindAbsoluteTransformation().mult(BoneEnd);
+				TheJoint->getBindAbsoluteTransformation().mult(BoneEnd);
+				TheJoint->getParentJoint()->getBindAbsoluteTransformation().mult(BoneStart);
 				glColor4fv(getBindPoseColor().getValuesRGBA());
 				glVertex3fv(BoneStart.getValues());
 				glVertex3fv(BoneEnd.getValues());
@@ -229,8 +229,18 @@ void SkeletonDrawable::adjustVolume(Volume & volume)
 void SkeletonDrawable::expandVolumeByJoint (JointPtr TheJoint, Volume &volume) 
 {
 	Pnt3f JointLocation(0.0,0.0,0.0);
-	TheJoint->getAbsoluteTransformation().mult(JointLocation);
-	volume.extendBy(JointLocation);
+	
+	if(getDrawPose())
+	{
+		TheJoint->getAbsoluteTransformation().mult(JointLocation);
+		volume.extendBy(JointLocation);
+	}
+	if(getDrawBindPose())
+	{
+		JointLocation.setValues(0.0,0.0,0.0);
+		TheJoint->getBindAbsoluteTransformation().mult(JointLocation);
+		volume.extendBy(JointLocation);
+	}
 
 	//Then for each of TheJoints children; call expandVolumeByJoint on them
 	for(UInt32 i(0) ; i<TheJoint->getChildJoints().size() ; ++i)
@@ -264,6 +274,15 @@ SkeletonDrawable::~SkeletonDrawable(void)
 void SkeletonDrawable::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if((whichField & DrawBindPoseFieldMask) || (whichField & DrawPoseFieldMask))
+	{
+		invalidateVolume();
+		for(UInt32 i = 0; i < _parents.size(); i++)
+		{
+			_parents[i]->invalidateVolume();
+		}
+	}
 }
 
 void SkeletonDrawable::dump(      UInt32    , 

@@ -43,6 +43,7 @@
 		visibility="external"
 		access="public"
 		header="OSGJointFields.h"
+      defaultValue="NullFC"
 	>
 	</Field>
 	<Field
@@ -52,6 +53,7 @@
 		visibility="external"
 		access="public"
 		header="SkeletalAnimation/OSGSkeletonFields.h"
+      defaultValue="NullFC"
 	>
 	</Field>
 	<Field
@@ -60,6 +62,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+      defaultValue="true"
 	>
 	</Field>
 </FieldContainer>

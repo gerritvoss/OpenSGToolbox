@@ -221,9 +221,9 @@ JointBase::JointBase(void) :
     _sfRelativeTransformation (), 
     _sfBindRelativeTransformation(), 
     _mfChildJoints            (), 
-    _sfParentJoint            (), 
-    _sfParentSkeleton         (), 
-    _sfUseParentTranslation   (), 
+    _sfParentJoint            (NullFC), 
+    _sfParentSkeleton         (NullFC), 
+    _sfUseParentTranslation   (true), 
     Inherited() 
 {
 }

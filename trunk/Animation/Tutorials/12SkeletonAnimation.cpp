@@ -34,7 +34,7 @@
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/Animation/OSGSkeletonAnimation.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
-#include <OpenSG/Animation/OSGBone.h>
+#include <OpenSG/Animation/OSGJoint.h>
 
 
 
@@ -44,16 +44,19 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
-osg::Time TimeLastIdle;
-osg::AnimationPtr TheSkeletonAnimation;
-osg::AnimationAdvancerPtr TheAnimationAdvancer;
+Time TimeLastIdle;
+SkeletonAnimationPtr TheSkeletonAnimation;
+AnimationAdvancerPtr TheAnimationAdvancer;
 
 bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeftHand,BonePtr TheLeftFemur,BonePtr TheRightHumerus,BonePtr TheRightRadius,BonePtr TheRightHand,BonePtr TheRightFemur,BonePtr TheTorso);
+void setupAnimation(void);
+
+JointPtr Pelvis,LeftHip,RightHip,LeftKnee,RightKnee,LeftFoot,RightFoot,LeftToes,RightToes, Clavicle, LeftShoulder,RightShoulder,LeftElbow,RightElbow,LeftHand,RightHand,LeftFingers,RightFingers,Head; 
+SkeletonPtr ExampleSkeleton;
 
 
 // Create a class to allow for the use of the Ctrl+q
@@ -133,7 +136,7 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-		osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+		ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
 
 		TheSkeletonAnimation->update(TheAnimationAdvancer);
     }
@@ -177,7 +180,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 10SkeletonDrawer Window");
+                                        "OpenSG 12SkeletonAnimation Window");
 										
 
 	//SkeletonDrawer System Material
@@ -207,202 +210,203 @@ int main(int argc, char **argv)
 		ExampleMaterial->addChunk(ExampleBlendChunk);
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
-//===========================================BONE==================================================================
-	const int num = 9;
-	BonePtr Torso, LeftHumerus, LeftRadius, LeftHand, LeftFemur, LeftTibia, LeftFeet,
-		           RightHumerus, RightRadius, RightHand, RightFemur, RightTibia, RightFeet; 
+	//===========================================BONE==================================================================
+	Matrix TempMat;
 
+	/*================================================================================================*/
+	/*                                       Left Fingers                                                 */
+	LeftFingers = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(1.0,0.0,0.0);
+	beginEditCP(LeftFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
+		LeftFingers->setRelativeTransformation(TempMat);
+		LeftFingers->setBindRelativeTransformation(TempMat);
+	endEditCP(LeftFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 
+	/*================================================================================================*/
+	/*                                       Right Fingers                                                 */
+	RightFingers = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(-1.0,0.0,0.0);
+	beginEditCP(RightFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
+		RightFingers->setRelativeTransformation(TempMat);
+		RightFingers->setBindRelativeTransformation(TempMat);
+	endEditCP(RightFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
+	/*================================================================================================*/
+	/*                                       Left Hand                                                 */
+	LeftHand = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(2.0,0.0,0.0);
+	beginEditCP(LeftHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		LeftHand->setRelativeTransformation(TempMat);
+		LeftHand->setBindRelativeTransformation(TempMat);
+		LeftHand->getChildJoints().push_back(LeftFingers);
+	endEditCP(LeftHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 
-/*================================================================================================*/
-/*                                       TORSO                                                    */
+	/*================================================================================================*/
+	/*                                       Right Hand                                                 */
+	RightHand = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(-2.0,0.0,0.0);
+	beginEditCP(RightHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		RightHand->setRelativeTransformation(TempMat);
+		RightHand->setBindRelativeTransformation(TempMat);
+		RightHand->getChildJoints().push_back(RightFingers);
+	endEditCP(RightHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+	/*================================================================================================*/
+	/*                                       Left Elbow                                                 */
+	LeftElbow = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(2.0,0.0,0.0);
+	beginEditCP(LeftElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		LeftElbow->setRelativeTransformation(TempMat);
+		LeftElbow->setBindRelativeTransformation(TempMat);
+		LeftElbow->getChildJoints().push_back(LeftHand);
+	endEditCP(LeftElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 
-	Torso = Bone::create(); //create a bone called ExampleChildbone
-	beginEditCP(Torso, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-		Torso->setLength(15.0f);
-		Torso->setRotation(Quaternion(Vec3f(10,0,5), osgdegree2rad(90)));
-	endEditCP(Torso, Bone::RotationFieldMask | Bone::LengthFieldMask);
+	/*================================================================================================*/
+	/*                                       Right Elbow                                                 */
+	RightElbow = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(-2.0,0.0,0.0);
+	beginEditCP(RightElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		RightElbow->setRelativeTransformation(TempMat);
+		RightElbow->setBindRelativeTransformation(TempMat);
+		RightElbow->getChildJoints().push_back(RightHand);
+	endEditCP(RightElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+	/*================================================================================================*/
+	/*                                       Left Shoulder                                                 */
+	LeftShoulder = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(1.0,-0.5,0.0);
+	beginEditCP(LeftShoulder, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		LeftShoulder->setRelativeTransformation(TempMat);
+		LeftShoulder->setBindRelativeTransformation(TempMat);
+		LeftShoulder->getChildJoints().push_back(LeftElbow);
+	endEditCP(LeftShoulder, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Right Shoulder                                                 */
+	RightShoulder = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(-1.0,-0.5,0.0);
+	beginEditCP(RightShoulder, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		RightShoulder->setRelativeTransformation(TempMat);
+		RightShoulder->setBindRelativeTransformation(TempMat);
+		RightShoulder->getChildJoints().push_back(RightElbow);
+	endEditCP(RightShoulder, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Head                                                 */
+	Head = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(0.0,1.0,0.0);
+	beginEditCP(Head, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
+		Head->setRelativeTransformation(TempMat);
+		Head->setBindRelativeTransformation(TempMat);
+	endEditCP(Head, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Clavicle                                                   */
+	Clavicle = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(0.0,5.0,0.0);
+	beginEditCP(Clavicle, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		Clavicle->setRelativeTransformation(TempMat);
+		Clavicle->setBindRelativeTransformation(TempMat);
+		Clavicle->getChildJoints().push_back(LeftShoulder);
+		Clavicle->getChildJoints().push_back(RightShoulder);
+		Clavicle->getChildJoints().push_back(Head);
+	endEditCP(Clavicle, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Left Toes                                                 */
+	LeftToes = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(0.0,0.0,1.0);
+	beginEditCP(LeftToes, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
+		LeftToes->setRelativeTransformation(TempMat);
+		LeftToes->setBindRelativeTransformation(TempMat);
+	endEditCP(LeftToes, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Right Toes                                                 */
+	RightToes = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(0.0,0.0,1.0);
+	beginEditCP(RightToes, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
+		RightToes->setRelativeTransformation(TempMat);
+		RightToes->setBindRelativeTransformation(TempMat);
+	endEditCP(RightToes, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
+	/*================================================================================================*/
+	/*                                       Left Foot                                                 */
+	LeftFoot = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(0.0,-3.0,0.0);
+	beginEditCP(LeftFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		LeftFoot->setRelativeTransformation(TempMat);
+		LeftFoot->setBindRelativeTransformation(TempMat);
+		LeftFoot->getChildJoints().push_back(LeftToes);
+	endEditCP(LeftFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Right Foot                                                 */
+	RightFoot = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(0.0,-3.0,0.0);
+	beginEditCP(RightFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		RightFoot->setRelativeTransformation(TempMat);
+		RightFoot->setBindRelativeTransformation(TempMat);
+		RightFoot->getChildJoints().push_back(RightToes);
+	endEditCP(RightFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+	/*================================================================================================*/
+	/*                                       Left Knee                                                 */
+	LeftKnee = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(0.0,-3.0,0.0);
+	beginEditCP(LeftKnee, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		LeftKnee->setRelativeTransformation(TempMat);
+		LeftKnee->setBindRelativeTransformation(TempMat);
+		LeftKnee->getChildJoints().push_back(LeftFoot);
+	endEditCP(LeftKnee, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Right Knee                                                 */
+	RightKnee = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(0.0,-3.0,0.0);
+	beginEditCP(RightKnee, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		RightKnee->setRelativeTransformation(TempMat);
+		RightKnee->setBindRelativeTransformation(TempMat);
+		RightKnee->getChildJoints().push_back(RightFoot);
+	endEditCP(RightKnee, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Left Hip                                                 */
+	LeftHip = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(1.0,-1.0,0.0);
+	beginEditCP(LeftHip, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		LeftHip->setRelativeTransformation(TempMat);
+		LeftHip->setBindRelativeTransformation(TempMat);
+		LeftHip->getChildJoints().push_back(LeftKnee);
+	endEditCP(LeftHip, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Right Hip                                                 */
+	RightHip = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(-1.0,-1.0,0.0);
+	beginEditCP(RightHip, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		RightHip->setRelativeTransformation(TempMat);
+		RightHip->setBindRelativeTransformation(TempMat);
+		RightHip->getChildJoints().push_back(RightKnee);
+	endEditCP(RightHip, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+
+	/*================================================================================================*/
+	/*                                       Pelvis                                                   */
+	Pelvis = Joint::create(); //create a bone called ExampleChildbone
+	TempMat.setTranslate(0.0,7.0,0.0);
+	beginEditCP(Pelvis, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+		Pelvis->setRelativeTransformation(TempMat);
+		Pelvis->setBindRelativeTransformation(TempMat);
+		Pelvis->getChildJoints().push_back(LeftHip);
+		Pelvis->getChildJoints().push_back(RightHip);
+		Pelvis->getChildJoints().push_back(Clavicle);
+	endEditCP(Pelvis, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 	
-
-/*================================================================================================*/
-/*                                    LEFT HUMERUS                                                */
-
-	LeftHumerus = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(LeftHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);//use the field masks
-				LeftHumerus->setLength(4.0f);
-				LeftHumerus->setRotation(Quaternion(Vec3f(1,0,1), osgdegree2rad(180)));
-				LeftHumerus->setTranslation(Vec3f(0,0,-10));
-			endEditCP(LeftHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);
-
-/*================================================================================================*/
-/*                                    LEFT RADIUS                                                 */
-
-
-	LeftRadius = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(LeftRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-				LeftRadius->setLength(4.0f);
-				LeftRadius->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
-			endEditCP(LeftRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-
-
-/*================================================================================================*/
-/*                                    LEFT HAND                                                   */
-
-	LeftHand = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(LeftHand, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-				LeftHand->setLength(1.0f);
-				LeftHand->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
-			endEditCP(LeftHand, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-/*================================================================================================*/
-/*                                    LEFT FEMUR                                                  */
-
-	LeftFemur = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(LeftFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-				LeftFemur->setLength(5.0f);
-				LeftFemur->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(45)));
-			endEditCP(LeftFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-/*================================================================================================*/
-/*                                    LEFT TIBIA                                                  */
-
-	LeftTibia = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(LeftTibia, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);//use the field masks
-				LeftTibia->setLength(8.0f);
-				LeftTibia->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(0)));
-			endEditCP(LeftTibia, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);
-
-/*================================================================================================*/
-/*                                    LEFT FEET                                                   */
-
-	LeftFeet = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(LeftFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-				LeftFeet->setLength(2.0f);
-				LeftFeet->setRotation(Quaternion(Vec3f(0,1,1), osgdegree2rad(180)));
-			endEditCP(LeftFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-
-/*================================================================================================*/
-/*                                    RIGHT HUMERUS                                               */
-
-	RightHumerus = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(RightHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);//use the field masks
-				RightHumerus->setLength(4.0f);
-				RightHumerus->setRotation(Quaternion(Vec3f(-1,0,1), osgdegree2rad(180)));
-				RightHumerus->setTranslation(Vec3f(0,0,-10));
-			endEditCP(RightHumerus, Bone::RotationFieldMask | Bone::LengthFieldMask| Bone::TranslationFieldMask);
-
-
-/*================================================================================================*/
-/*                                    RIGHT RADIUS                                                */
-
-	RightRadius = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(RightRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-				RightRadius->setLength(4.0f);
-				RightRadius->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
-			endEditCP(RightRadius, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-
-/*================================================================================================*/
-/*                                     RIGHT HAND                                                 */
-
-
-	RightHand = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(RightHand, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-				RightHand->setLength(1.0f);
-				RightHand->setRotation(Quaternion(Vec3f(0,0,1), osgdegree2rad(180)));
-				
-			endEditCP(RightHand, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-/*================================================================================================*/
-/*                                     RIGHT FEMUR                                                */
-
-
-	RightFemur = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(RightFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-				RightFemur->setLength(5.0f);
-				RightFemur->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(-45)));
-			endEditCP(RightFemur, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-/*================================================================================================*/
-/*                                     RIGHT TIBIA                                                */
-
-
-	RightTibia = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(RightTibia, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-				RightTibia->setLength(8.0f);
-				RightTibia->setRotation(Quaternion(Vec3f(0,1,0), osgdegree2rad(0)));
-				
-			endEditCP(RightTibia, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-/*================================================================================================*/
-/*                                     RIGHT FEET                                                 */
-
-
-	RightFeet = Bone::create(); //create a bone called ExampleChildbone
-			beginEditCP(RightFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-				RightFeet->setLength(2.0f);
-				RightFeet->setRotation(Quaternion(Vec3f(0,1,1), osgdegree2rad(180)));
-			endEditCP(RightFeet, Bone::RotationFieldMask | Bone::LengthFieldMask);
-
-
-
-			Torso->addChild(LeftHumerus);
-			Torso->addChild(RightHumerus);
-			Torso->addChild(LeftFemur);
-			Torso->addChild(RightFemur);
-
-			LeftHumerus->addChild(LeftRadius);
-			LeftRadius->addChild(LeftHand);
-			RightHumerus->addChild(RightRadius);
-			RightRadius->addChild(RightHand);
-
-			LeftFemur->addChild(LeftTibia);
-			LeftTibia->addChild(LeftFeet);
-			RightFemur->addChild(RightTibia);
-			RightTibia->addChild(RightFeet);
-
-			//get the Childrens
-
-			BonePtr TheLeftHumerus, TheLeftRadius, TheLeftHand, TheLeftFemur, TheLeftTibia, TheLeftFeet,
-		            TheRightHumerus, TheRightRadius, TheRightHand, TheRightFemur, TheRightTibia, TheRightFeet; 
-
-
-			LeftHumerus  = Torso->getChild(0);
-			RightHumerus = Torso->getChild(1);
-			LeftFemur    = Torso->getChild(2);
-			RightFemur   = Torso->getChild(3);
-			LeftRadius   = LeftHumerus->getChild(0);
-			LeftHand     = LeftRadius->getChild(0);
-			RightRadius  = RightHumerus->getChild(0);
-			RightHand    = RightRadius->getChild(0);
-			LeftTibia    = LeftFemur->getChild(0);
-			LeftFeet     = LeftTibia->getChild(0);
-			RightTibia   = RightFemur->getChild(0);
-			RightFeet    = RightTibia->getChild(0);
-
-
-
-/*=================================================================================================*/
-
-	//UInt32 SelectedChildDepth=4;
-	//BonePtr TheSelectedBone = ExampleRootBone;
-	//for(UInt32 i(0) ; i<SelectedChildDepth && TheSelectedBone->getNumChildren() >0 ; ++i )
-	//{
-	//	TheSelectedBone = TheSelectedBone->getChild(0);
-	//	
-	//}
 
 
     //Skeleton
-    SkeletonPtr ExampleSkeleton = Skeleton::create();
-	beginEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
-		ExampleSkeleton->getRootBones().push_back(Torso);
-	endEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
+    ExampleSkeleton = Skeleton::create();
+	beginEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
+		ExampleSkeleton->getRootJoints().push_back(Pelvis);
+	endEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
 
     //SkeletonDrawer
-    SkeletonDrawablePtr ExampleSkeletonDrawable = osg::SkeletonDrawable::create();
+    SkeletonDrawablePtr ExampleSkeletonDrawable = SkeletonDrawable::create();
     beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
@@ -410,29 +414,29 @@ int main(int argc, char **argv)
 	
 	//Skeleton Node
     
-	NodePtr SkeletonNode = osg::Node::create();
+	NodePtr SkeletonNode = Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);
     endEditCP(SkeletonNode, Node::CoreFieldMask);
 	
    //Animation Advancer
-   TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
-   osg::beginEditCP(TheAnimationAdvancer);
-   osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
-   osg::beginEditCP(TheAnimationAdvancer);
+   TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();
+   beginEditCP(TheAnimationAdvancer);
+   ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
+   beginEditCP(TheAnimationAdvancer);
 
 
     
-    NodePtr scene = osg::Node::create();
+    NodePtr scene = Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+        scene->setCore(Group::create());
         scene->addChild(SkeletonNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
 
 	//Setup the Animation
-	setupAnimation(LeftHumerus,LeftRadius,LeftHand,LeftFemur,RightHumerus,RightRadius,RightHand,RightFemur,Torso);
+	setupAnimation();
 	
 
 
@@ -466,237 +470,137 @@ void reshape(Vec2f Size)
 
 
 
-void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeftHand,BonePtr TheLeftFemur,BonePtr TheRightHumerus,BonePtr TheRightRadius,BonePtr TheRightHand,BonePtr TheRightFemur,BonePtr TheTorso)
+void setupAnimation(void)
 {
- 
-/* ================================ ANIMATION OF THE BONES ==============================================*/
+	Matrix TempMat;
 
-/*================================================================================================*/
-/*                                       TORSO                                                    */
- //Length
-   osg::KeyframeNumbersSequencePtr TorsoLenghtFrame = osg::KeyframeNumbersSequenceReal32::create();
+	//Left Elbow
+	KeyframeTransformationsSequencePtr LeftElbowKeyframes = KeyframeTransformationsSequence44f::create();
+
+	TempMat.setTransform(Vec3f(2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	LeftElbowKeyframes->addKeyframe(TempMat,0.0f);
+	TempMat.setTransform(Vec3f(2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),1.57));
+	LeftElbowKeyframes->addKeyframe(TempMat,3.0f);
+	TempMat.setTransform(Vec3f(2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	LeftElbowKeyframes->addKeyframe(TempMat,6.0f);
    
-   TorsoLenghtFrame->addKeyframe(15.0f,0.0f);
-   TorsoLenghtFrame->addKeyframe(10.0f,3.0f);
-   TorsoLenghtFrame->addKeyframe(15.0f,4.0f);
-   TorsoLenghtFrame->addKeyframe(10.0f,5.0f);
-   TorsoLenghtFrame->addKeyframe(15.0f,6.0f);
+	//Left Elbow Animator
+    KeyframeAnimatorPtr LeftElbowAnimator = KeyframeAnimator::create();
+    beginEditCP(LeftElbowAnimator);
+       LeftElbowAnimator->setKeyframeSequence(LeftElbowKeyframes);
+    endEditCP(LeftElbowAnimator);
 
-  //Length Animator
-   osg::KeyframeAnimatorPtr TorsoLengthAnimator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(TorsoLengthAnimator);
-      osg::KeyframeAnimatorPtr::dcast(TorsoLengthAnimator)->setKeyframeSequence(TorsoLenghtFrame);
-   osg::endEditCP(TorsoLengthAnimator);
+	//Right Elbow
+	KeyframeTransformationsSequencePtr RightElbowKeyframes = KeyframeTransformationsSequence44f::create();
 
-/*================================================================================================*/
-/*                                    LEFT HUMERUS                                                */
- //Quaternion
-   osg::KeyframeRotationsSequencePtr LeftHumerusKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
+	TempMat.setTransform(Vec3f(-2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	RightElbowKeyframes->addKeyframe(TempMat,0.0f);
+	TempMat.setTransform(Vec3f(-2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),-1.57));
+	RightElbowKeyframes->addKeyframe(TempMat,3.0f);
+	TempMat.setTransform(Vec3f(-2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	RightElbowKeyframes->addKeyframe(TempMat,6.0f);
    
-   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(130.0)), 0.0f);
-   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.5)) , 2.0f);
-   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)) , 4.0f);
-   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.5)) , 5.0f);
-   LeftHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(130.0)), 6.0f);
+	//Right Elbow Animator
+    KeyframeAnimatorPtr RightElbowAnimator = KeyframeAnimator::create();
+    beginEditCP(RightElbowAnimator);
+       RightElbowAnimator->setKeyframeSequence(RightElbowKeyframes);
+    endEditCP(RightElbowAnimator);
+	
+	//Left Shoulder
+	KeyframeTransformationsSequencePtr LeftShoulderKeyframes = KeyframeTransformationsSequence44f::create();
 
-    //Rotation Animator
-    osg::KeyframeAnimatorPtr  LeftHumerusAnimator = osg::KeyframeAnimator::create();
-    osg::beginEditCP(LeftHumerusAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LeftHumerusAnimator)->setKeyframeSequence(LeftHumerusKeyFrame);
-    osg::endEditCP(LeftHumerusAnimator);
-
-
-
- 
-
-
-/*================================================================================================*/
-/*                                    LEFT RADIUS                                                 */
-
-//Quaternion
-   osg::KeyframeRotationsSequencePtr LeftRadiusKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
+	TempMat.setTransform(Vec3f(1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	LeftShoulderKeyframes->addKeyframe(TempMat,0.0f);
+	TempMat.setTransform(Vec3f(1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.4));
+	LeftShoulderKeyframes->addKeyframe(TempMat,3.0f);
+	TempMat.setTransform(Vec3f(1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	LeftShoulderKeyframes->addKeyframe(TempMat,6.0f);
    
-   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)) , 0.0f);
-   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)) , 2.0f);
-   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 4.0f);
-   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 5.0f);
-   LeftRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 6.0f);
+	//Left Shoulder Animator
+    KeyframeAnimatorPtr LeftShoulderAnimator = KeyframeAnimator::create();
+    beginEditCP(LeftShoulderAnimator);
+       LeftShoulderAnimator->setKeyframeSequence(LeftShoulderKeyframes);
+    endEditCP(LeftShoulderAnimator);
+	
+	//Right Shoulder
+	KeyframeTransformationsSequencePtr RightShoulderKeyframes = KeyframeTransformationsSequence44f::create();
 
+	TempMat.setTransform(Vec3f(-1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	RightShoulderKeyframes->addKeyframe(TempMat,0.0f);
+	TempMat.setTransform(Vec3f(-1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),-0.4));
+	RightShoulderKeyframes->addKeyframe(TempMat,3.0f);
+	TempMat.setTransform(Vec3f(-1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	RightShoulderKeyframes->addKeyframe(TempMat,6.0f);
+   
+	//Right Shoulder Animator
+    KeyframeAnimatorPtr RightShoulderAnimator = KeyframeAnimator::create();
+    beginEditCP(RightShoulderAnimator);
+       RightShoulderAnimator->setKeyframeSequence(RightShoulderKeyframes);
+    endEditCP(RightShoulderAnimator);
+	
+	//Left Hip
+	KeyframeTransformationsSequencePtr LeftHipKeyframes = KeyframeTransformationsSequence44f::create();
 
-   //Rotation Animator
-   osg::KeyframeAnimatorPtr LeftRadiusAnimator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(LeftRadiusAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LeftRadiusAnimator)->setKeyframeSequence(LeftRadiusKeyFrame);
-   osg::endEditCP(LeftRadiusAnimator);
+	TempMat.setTransform(Vec3f(1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	LeftHipKeyframes->addKeyframe(TempMat,0.0f);
+	TempMat.setTransform(Vec3f(1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.4));
+	LeftHipKeyframes->addKeyframe(TempMat,3.0f);
+	TempMat.setTransform(Vec3f(1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	LeftHipKeyframes->addKeyframe(TempMat,6.0f);
+   
+	//Left Hip Animator
+    KeyframeAnimatorPtr LeftHipAnimator = KeyframeAnimator::create();
+    beginEditCP(LeftHipAnimator);
+       LeftHipAnimator->setKeyframeSequence(LeftHipKeyframes);
+    endEditCP(LeftHipAnimator);
 
+	//Right Hip
+	KeyframeTransformationsSequencePtr RightHipKeyframes = KeyframeTransformationsSequence44f::create();
 
+	TempMat.setTransform(Vec3f(-1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	RightHipKeyframes->addKeyframe(TempMat,0.0f);
+	TempMat.setTransform(Vec3f(-1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),-0.4));
+	RightHipKeyframes->addKeyframe(TempMat,3.0f);
+	TempMat.setTransform(Vec3f(-1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
+	RightHipKeyframes->addKeyframe(TempMat,6.0f);
+   
+	//Right Hip Animator
+    KeyframeAnimatorPtr RightHipAnimator = KeyframeAnimator::create();
+    beginEditCP(RightHipAnimator);
+       RightHipAnimator->setKeyframeSequence(RightHipKeyframes);
+    endEditCP(RightHipAnimator);
 	
 
+	//Clavicle
+	KeyframeTransformationsSequencePtr ClavicleKeyframes = KeyframeTransformationsSequence44f::create();
 
-/*================================================================================================*/
-/*                                    LEFT HAND                                                   */
-
-//Quaternion
-   osg::KeyframeRotationsSequencePtr  LeftHandKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
+	TempMat.setTransform(Vec3f(0.0,5.0,0.0));
+	ClavicleKeyframes->addKeyframe(TempMat,0.0f);
+	TempMat.setTransform(Vec3f(0.0,3.0,0.0));
+	ClavicleKeyframes->addKeyframe(TempMat,2.0f);
+	TempMat.setTransform(Vec3f(0.0,3.0,0.0));
+	ClavicleKeyframes->addKeyframe(TempMat,4.0f);
+	TempMat.setTransform(Vec3f(0.0,5.0,0.0));
+	ClavicleKeyframes->addKeyframe(TempMat,6.0f);
    
-   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(70.0)), 0.0f);
-   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)) , 2.0f);
-   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)) , 4.0f);
-   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)) , 5.0f);
-   LeftHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0)) , 6.0f);
+	//Clavicle Animator
+    KeyframeAnimatorPtr ClavicleAnimator = KeyframeAnimator::create();
+    beginEditCP(ClavicleAnimator);
+       ClavicleAnimator->setKeyframeSequence(ClavicleKeyframes);
+    endEditCP(ClavicleAnimator);
 
-
-   //Rotation Animator
-   osg::KeyframeAnimatorPtr  LeftHandAnimator= osg::KeyframeAnimator::create();
-   osg::beginEditCP(LeftHandAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LeftHandAnimator)->setKeyframeSequence(LeftHandKeyFrame);
-   osg::endEditCP(LeftHandAnimator);
-
-
-
-/*================================================================================================*/
-/*                                    LEFT FEMUR                                                  */
-
- //Quaternion
-   osg::KeyframeRotationsSequencePtr  LeftFemurKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
-   
-   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)), 0.0f);
-   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)), 2.0f);
-   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(5.0)) , 4.0f);
-   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(20.0)), 5.0f);
-   LeftFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(50.0)), 6.0f);
-
-
-   //Rotation Animator
-   osg::KeyframeAnimatorPtr  LeftFemurAnimator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(LeftFemurAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LeftFemurAnimator)->setKeyframeSequence(LeftFemurKeyFrame);
-   osg::endEditCP(LeftFemurAnimator);
-
-
-
-///*================================================================================================*/
-///*                                    LEFT TIBIA                                                  */
-//
-//	
-//
-///*================================================================================================*/
-///*                                    LEFT FEET                                                   */
-//
-//	
-//
-//
-/*================================================================================================*/
-/*                                    RIGHT HUMERUS                                               */
-
- //Quaternion
-   osg::KeyframeRotationsSequencePtr  RightHumerusKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
-   
-   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-130.0)), 0.0f);
-   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.5)) , 2.0f);
-   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)) , 4.0f);
-   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.5)) , 5.0f);
-   RightHumerusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-130.0)), 6.0f);
-
-
-   //Rotation Animator
-   osg::KeyframeAnimatorPtr RightHumerusAnimator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(RightHumerusAnimator);
-      osg::KeyframeAnimatorPtr::dcast(RightHumerusAnimator)->setKeyframeSequence(RightHumerusKeyFrame);
-   osg::endEditCP(RightHumerusAnimator);
-
-
-
-
-/*================================================================================================*/
-/*                                    RIGHT RADIUS                                                */
-
-//Quaternion
-   osg::KeyframeRotationsSequencePtr  RightRadiusKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
-   
-   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)), 0.0f);
-   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)), 2.0f);
-   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 4.0f);
-   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 5.0f);
-   RightRadiusKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 6.0f);
-
-
-   //Rotation Animator
-   osg::KeyframeAnimatorPtr  RightRadiusAnimator= osg::KeyframeAnimator::create();
-   osg::beginEditCP(RightRadiusAnimator);
-      osg::KeyframeAnimatorPtr::dcast(RightRadiusAnimator)->setKeyframeSequence(RightRadiusKeyFrame);
-   osg::endEditCP(RightRadiusAnimator);
-
-
-
-
-/*================================================================================================*/
-/*                                     RIGHT HAND                                                 */
-
- //Quaternion
-   osg::KeyframeRotationsSequencePtr RightHandKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
-   
-   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-70.0)), 0.0f);
-   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 2.0f);
-   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 4.0f);
-   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 5.0f);
-   RightHandKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(0.0))  , 6.0f);
-
-
-   //Rotation Animator
-   osg::KeyframeAnimatorPtr RightHandAnimator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(RightHandAnimator);
-      osg::KeyframeAnimatorPtr::dcast(RightHandAnimator)->setKeyframeSequence(RightHandKeyFrame);
-   osg::endEditCP(RightHandAnimator);
-
-
-
-
-/*================================================================================================*/
-/*                                     RIGHT FEMUR                                                */
-
- //Quaternion
-   osg::KeyframeRotationsSequencePtr RightFemurKeyFrame = osg::KeyframeRotationsSequenceQuat::create();
-   
-   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)), 0.0f);
-   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)), 2.0f);
-   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-5.0)) , 4.0f);
-   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-20.0)), 5.0f);
-   RightFemurKeyFrame->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),deg2rad(-50.0)), 6.0f);
-
-
-   //Rotation Animator
-   osg::KeyframeAnimatorPtr RightFemurAnimator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(RightFemurAnimator);
-      osg::KeyframeAnimatorPtr::dcast(RightFemurAnimator)->setKeyframeSequence(RightFemurKeyFrame);
-   osg::endEditCP(RightFemurAnimator);
-
-
-
-	
-
-///*================================================================================================*/
-///*                                     RIGHT TIBIA                                                */
-//
-//
-//	
-//
-///*================================================================================================*/
-///*                                     RIGHT FEET                                                 */
-//
-
-   
 //  Skeleton Animation
-   TheSkeletonAnimation = osg::SkeletonAnimation::create();
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftHumerusAnimator, TheLeftHumerus);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftRadiusAnimator,  TheLeftRadius);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftHandAnimator,    TheLeftHand);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(LeftFemurAnimator,   TheLeftFemur);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightHumerusAnimator,TheRightHumerus );
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightRadiusAnimator, TheRightRadius);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightHandAnimator,   TheRightHand);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addRotationAnimator(RightFemurAnimator,  TheRightFemur);
-   osg::SkeletonAnimationPtr::dcast(TheSkeletonAnimation)->addLengthAnimator  (TorsoLengthAnimator, TheTorso);
+   TheSkeletonAnimation = SkeletonAnimation::create();
+   beginEditCP(TheSkeletonAnimation);
+		TheSkeletonAnimation->addTransformationAnimator(LeftElbowAnimator, LeftElbow);
+		TheSkeletonAnimation->addTransformationAnimator(RightElbowAnimator, RightElbow);
+		TheSkeletonAnimation->addTransformationAnimator(LeftShoulderAnimator, LeftShoulder);
+		TheSkeletonAnimation->addTransformationAnimator(RightShoulderAnimator, RightShoulder);
+		TheSkeletonAnimation->addTransformationAnimator(LeftHipAnimator, LeftHip);
+		TheSkeletonAnimation->addTransformationAnimator(RightHipAnimator, RightHip);
+		TheSkeletonAnimation->addTransformationAnimator(ClavicleAnimator, Clavicle);
+		TheSkeletonAnimation->setSkeleton(ExampleSkeleton);
+   endEditCP(TheSkeletonAnimation);
 
 
 }
