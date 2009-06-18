@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGAnimation", "..\Builds\Windows\OSGAnimation.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
@@ -29,8 +29,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04ShaderAnimation", "04ShaderAnimation.vcproj", "{F959AA31-C66E-4F25-BD8B-47E9681DD040}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15LoadXMLAnimation", "15LoadXMLAnimation.vcproj", "{66E2C0CB-836C-44F1-9FF9-67AB1AC23583}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "16LoadXMLSkeleton", "16LoadXMLSkeleton.vcproj", "{B72618FF-2010-4DDA-8747-888EB14DF988}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "17LoadXMLSkeletonAnimation", "17LoadXMLSkeletonAnimation.vcproj", "{E988DBCD-2831-46EA-BFFB-9380BC75B722}"
 EndProject
@@ -108,10 +106,6 @@ Global
 		{66E2C0CB-836C-44F1-9FF9-67AB1AC23583}.Debug|Win32.Build.0 = Debug|Win32
 		{66E2C0CB-836C-44F1-9FF9-67AB1AC23583}.Release|Win32.ActiveCfg = Release|Win32
 		{66E2C0CB-836C-44F1-9FF9-67AB1AC23583}.Release|Win32.Build.0 = Release|Win32
-		{B72618FF-2010-4DDA-8747-888EB14DF988}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B72618FF-2010-4DDA-8747-888EB14DF988}.Debug|Win32.Build.0 = Debug|Win32
-		{B72618FF-2010-4DDA-8747-888EB14DF988}.Release|Win32.ActiveCfg = Release|Win32
-		{B72618FF-2010-4DDA-8747-888EB14DF988}.Release|Win32.Build.0 = Release|Win32
 		{E988DBCD-2831-46EA-BFFB-9380BC75B722}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E988DBCD-2831-46EA-BFFB-9380BC75B722}.Debug|Win32.Build.0 = Debug|Win32
 		{E988DBCD-2831-46EA-BFFB-9380BC75B722}.Release|Win32.ActiveCfg = Release|Win32

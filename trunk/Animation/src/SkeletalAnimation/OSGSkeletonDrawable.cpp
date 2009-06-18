@@ -275,7 +275,7 @@ void SkeletonDrawable::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if((whichField & DrawBindPoseFieldMask) || (whichField & DrawPoseFieldMask))
+	if((whichField & DrawBindPoseFieldMask) || (whichField & DrawPoseFieldMask) || (whichField & SkeletonFieldMask))
 	{
 		invalidateVolume();
 		for(UInt32 i = 0; i < _parents.size(); i++)
