@@ -179,8 +179,8 @@ int main(int argc, char **argv)
 
 
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/14Skeleton.xml"));
-
+	//NewContainers = FCFileHandler::the()->read(Path("./Data/14Skeleton.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/SkeletonExportTest.xml"));
 
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
@@ -191,6 +191,13 @@ int main(int argc, char **argv)
 		}
     }
 
+	std::cout << "# root joints: " << ExampleSkeleton->getRootJoints().size() << std::endl;
+	std::cout << "root transform:\n" << ExampleSkeleton->getRootJoints(0)->getRelativeTransformation() << std::endl;
+	
+	for(int i(0); i < ExampleSkeleton->getRootJoints(0)->getChildJoints().size(); ++i)
+	{
+		std::cout << ExampleSkeleton->getRootJoints(0)->getChildJoints(i)->getRelativeTransformation() << "\n" << std::endl;
+	}
 
 
 

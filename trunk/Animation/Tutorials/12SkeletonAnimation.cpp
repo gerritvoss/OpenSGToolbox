@@ -36,6 +36,8 @@
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGJoint.h>
 
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
+
 
 
 // Activate the OpenSG namespace
@@ -601,6 +603,15 @@ void setupAnimation(void)
 		TheSkeletonAnimation->addTransformationAnimator(ClavicleAnimator, Clavicle);
 		TheSkeletonAnimation->setSkeleton(ExampleSkeleton);
    endEditCP(TheSkeletonAnimation);
+
+
+
+   //Export the Skeleton
+	FCFileType::FCPtrStore Containers;
+	Containers.insert(TheSkeletonAnimation);
+
+	FCFileType::FCTypeVector IgnoreTypes;
+	FCFileHandler::the()->write(Containers,Path("./SkeletonAnimation.xml"),IgnoreTypes);
 
 
 }

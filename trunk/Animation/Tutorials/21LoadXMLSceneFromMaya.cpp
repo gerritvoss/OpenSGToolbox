@@ -19,7 +19,7 @@
 #include <OpenSG/OSGMaterialChunk.h>
 
 //Animation
-#include <OpenSG/Animation/OSGBone.h>
+#include <OpenSG/Animation/OSGJoint.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGSkeletonDrawable.h>
 
@@ -223,7 +223,7 @@ int main(int argc, char **argv)
 	GeoPLengthsPtr lens = GeoPLengthsUI32::create();    
     beginEditCP(lens, GeoPLengthsUI32::GeoPropDataFieldMask);
     {
-        lens->addValue(92);
+        lens->addValue(90);
     }
     endEditCP  (lens, GeoPLengthsUI32::GeoPropDataFieldMask);
 	 GeoPositions3fPtr pnts = GeoPositions3f::create();
@@ -240,10 +240,6 @@ int main(int argc, char **argv)
 		// Z-Axis
         pnts->addValue(Pnt3f(0,  0, 0));
         pnts->addValue(Pnt3f(0,  0, 15));
-
-		//Line at z = 10
-		pnts->addValue(Pnt3f(-10, 10, 0));
-		pnts->addValue(Pnt3f(10, 10, 0));
 
 		//GRID
 		float height = 0;
@@ -397,9 +393,6 @@ int main(int argc, char **argv)
         norms->addValue(Vec3f( 1.0,0.0,0.0));
         norms->addValue(Vec3f( 1.0,0.0,0.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
-
 		//GRID
 		norms->addValue(Vec3f( 0.0,0.0,1.0));
         norms->addValue(Vec3f( 0.0,0.0,1.0));
@@ -538,9 +531,6 @@ int main(int argc, char **argv)
 
         colors->addValue(Color3f( 0.0,0.0,1.0));
         colors->addValue(Color3f( 0.0,0.0,1.0));
-
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
 
 		//GRID
 		colors->addValue(Color3f( 0.5,0.5,0.5));
@@ -721,7 +711,7 @@ int main(int argc, char **argv)
 
 
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/21SceneFromMaya2.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/SkeletonExportTest.xml"));
 
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)

@@ -19,7 +19,7 @@
 #include <OpenSG/OSGMaterialChunk.h>
 
 //Animation
-#include <OpenSG/Animation/OSGBone.h>
+#include <OpenSG/Animation/OSGJoint.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGSkeletonDrawable.h>
 
@@ -215,7 +215,8 @@ int main(int argc, char **argv)
 
 	//Import skeleton from XML file
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/17SkeletonAnimation.xml"));
+	//NewContainers = FCFileHandler::the()->read(Path("./Data/17SkeletonAnimation.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/SkeletonExportTest.xml"));
 
 	SkeletonPtr ExampleSkeleton;
 	
