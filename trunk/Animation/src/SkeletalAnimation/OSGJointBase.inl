@@ -131,6 +131,13 @@ SFSkeletonPtr *JointBase::getSFParentSkeleton(void)
     return &_sfParentSkeleton;
 }
 
+//! Get the Joint::_sfUseParentTranslation field.
+inline
+SFBool *JointBase::getSFUseParentTranslation(void)
+{
+    return &_sfUseParentTranslation;
+}
+
 
 //! Get the value of the Joint::_sfRelativeTransformation field.
 inline
@@ -214,6 +221,27 @@ inline
 void JointBase::setParentSkeleton(const SkeletonPtr &value)
 {
     _sfParentSkeleton.setValue(value);
+}
+
+//! Get the value of the Joint::_sfUseParentTranslation field.
+inline
+bool &JointBase::getUseParentTranslation(void)
+{
+    return _sfUseParentTranslation.getValue();
+}
+
+//! Get the value of the Joint::_sfUseParentTranslation field.
+inline
+const bool &JointBase::getUseParentTranslation(void) const
+{
+    return _sfUseParentTranslation.getValue();
+}
+
+//! Set the value of the Joint::_sfUseParentTranslation field.
+inline
+void JointBase::setUseParentTranslation(const bool &value)
+{
+    _sfUseParentTranslation.setValue(value);
 }
 
 

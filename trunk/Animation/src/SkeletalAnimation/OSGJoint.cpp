@@ -103,6 +103,12 @@ void Joint::calculateTransformations(void)
 	if(getParentJoint() != NullFC)
 	{
 		_AbsoluteTransformation = getParentJoint()->getAbsoluteTransformation();
+
+		if(!getUseParentTranslation())
+		{
+			_AbsoluteTransformation.setTranslate(0.0, 0.0, 0.0);
+			
+		}
 	}
 	else
 	{
@@ -114,6 +120,11 @@ void Joint::calculateTransformations(void)
 	if(getParentJoint() != NullFC)
 	{
 		_BindAbsoluteTransformation = getParentJoint()->getBindAbsoluteTransformation();
+
+		if(!getUseParentTranslation())
+		{
+			_BindAbsoluteTransformation.setTranslate(0.0, 0.0, 0.0);
+		}
 	}
 	else
 	{
@@ -141,7 +152,7 @@ void Joint::updateTransformations(bool isRecursive)
 		getChildJoints(i)->updateTransformations(true);
 	}
 
-	if(!isRecursive)
+	if(!isRecursive && getParentSkeleton() != NullFC)
 	{
 		//Tell skeleton joint has been updated
 		getParentSkeleton()->skeletonUpdated();
@@ -178,7 +189,7 @@ void Joint::changed(BitVector whichField, UInt32 origin)
 
 	if((whichField & BindRelativeTransformationFieldMask) || (whichField & RelativeTransformationFieldMask) || (whichField & ParentJointFieldMask))
 	{
-		calculateTransformations();
+		updateTransformations(false);
 	}
 
 	if(whichField & ChildJointsFieldMask)

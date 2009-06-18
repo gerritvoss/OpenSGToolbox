@@ -19,7 +19,7 @@
 #include <OpenSG/OSGMaterialChunk.h>
 
 //Animation
-#include <OpenSG/Animation/OSGBone.h>
+#include <OpenSG/Animation/OSGJoint.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGSkeletonDrawable.h>
 
@@ -42,18 +42,17 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
-osg::Time TimeLastIdle;
-osg::AnimationPtr TheAnimation;
-osg::AnimationPtr TheChildAnimation;
-osg::AnimationPtr TheChildLengthAnimation;
-osg::AnimationAdvancerPtr TheAnimationAdvancer;
+Time TimeLastIdle;
+AnimationPtr TheJointAnimation;
+AnimationPtr TheChildJointAnimation;
+AnimationAdvancerPtr TheAnimationAdvancer;
 
 bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-void setupAnimation(BonePtr TheBone, BonePtr TheChildBone, BonePtr TheBoneLength);
+void setupAnimation(JointPtr TheJoint, JointPtr TheChildJoint);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -132,11 +131,10 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-		osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+		ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
 
-		TheAnimation->update(TheAnimationAdvancer);
-		TheChildAnimation ->update(TheAnimationAdvancer);
-		TheChildLengthAnimation->update(TheAnimationAdvancer);
+		//TheJointAnimation->update(TheAnimationAdvancer);
+		TheChildJointAnimation ->update(TheAnimationAdvancer);
     }
 };
 
@@ -208,80 +206,72 @@ int main(int argc, char **argv)
 		ExampleMaterial->addChunk(ExampleBlendChunk);
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
-    //Bone
-	const int num = 9;
-	
-	BonePtr ExampleRootBone = Bone::create();
-	BonePtr TempRootBone;
-	BonePtr ExampleChildBone;
-	TempRootBone = ExampleRootBone;
+    //Joint
+	JointPtr ExampleRootJoint = Joint::create();
+	JointPtr TempRootJoint;
+	TempRootJoint = ExampleRootJoint;
+	Matrix TempMat;
 
-
-	for (int i = 1; i < num; i++)
+	for (Real32 i = 1.0f; i < 9.0f; i++)
 	{
-		
+		JointPtr ExampleChildJoint;
 
-		Real32 Rand = RandomPoolManager::getRandomReal32(9.0f, 180.0);  // opsg 32 bit real random number generator
-																		// check OSGRandomPoolManager.h in 
-                                                                        // vs-8.0-ToolBoxTutorials
+		TempMat.setTranslate(RandomPoolManager::getRandomReal32(0.0, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f));
+		ExampleChildJoint = Joint::create(); //create a bone called ExampleChildbone
+		beginEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::UseParentTranslationFieldMask);//use the field masks
+			ExampleChildJoint->setRelativeTransformation(TempMat);
+			ExampleChildJoint->setBindRelativeTransformation(TempMat);
+			ExampleChildJoint->setUseParentTranslation(true);
+		endEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::UseParentTranslationFieldMask);
 
-		// Pic a bone and animate it 
-
-		ExampleChildBone = Bone::create(); //create a bone called ExampleChildbone
-		beginEditCP(ExampleChildBone, Bone::RotationFieldMask | Bone::LengthFieldMask);//use the field masks
-			ExampleChildBone->setLength(5.0f);
-			ExampleChildBone->setRotation(Quaternion(Vec3f((Rand/i),(Rand/i),(Rand/i)), osgdegree2rad(Rand)));
-		endEditCP(ExampleChildBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
-		
-		
-		TempRootBone->addChild(ExampleChildBone);//add a Child to the root bone
-		TempRootBone = TempRootBone->getChild(0);
 	
-	}
-
-	UInt32 SelectedChildDepth=1;
-	BonePtr TheSelectedBone = ExampleRootBone;
-	for(UInt32 i(0) ; i<SelectedChildDepth && TheSelectedBone->getNumChildren() >0 ; ++i )
-	{
-		TheSelectedBone = TheSelectedBone->getChild(0);
+		beginEditCP(TempRootJoint, Joint::ChildJointsFieldMask);
+			TempRootJoint->getChildJoints().push_back(ExampleChildJoint);//add a Child to the root bone
+		endEditCP(TempRootJoint, Joint::ChildJointsFieldMask);
 		
-	}
 
+		TempRootJoint = TempRootJoint->getChildJoints(0);
+	}
 
 	
 
     //Skeleton
     SkeletonPtr ExampleSkeleton = Skeleton::create();
-	beginEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
-		ExampleSkeleton->getRootBones().push_back(ExampleRootBone);
-	endEditCP(ExampleSkeleton, Skeleton::RootBonesFieldMask);
+	beginEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
+		ExampleSkeleton->getRootJoints().push_back(ExampleRootJoint);
+	endEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
 
     //SkeletonDrawer
-    SkeletonDrawablePtr ExampleSkeletonDrawable = osg::SkeletonDrawable::create();
-    beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+    SkeletonDrawablePtr ExampleSkeletonDrawable = SkeletonDrawable::create();
+	beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-    endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+		ExampleSkeletonDrawable->setDrawBindPose(true);
+		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
+		ExampleSkeletonDrawable->setDrawPose(true);
+		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		
+    endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
 	//Particle System Node
     
-	NodePtr SkeletonNode = osg::Node::create();
+	NodePtr SkeletonNode = Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);
     endEditCP(SkeletonNode, Node::CoreFieldMask);
 
 
     
-    NodePtr scene = osg::Node::create();
+    NodePtr scene = Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+        scene->setCore(Group::create());
         scene->addChild(SkeletonNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
 
 	//Setup the Animation
-	setupAnimation(ExampleRootBone,TheSelectedBone,TheSelectedBone);
+	setupAnimation(ExampleRootJoint, ExampleRootJoint->getChildJoints(0));
 
 
     // Show the whole Scene
@@ -314,103 +304,173 @@ void reshape(Vec2f Size)
 
 
 
-void setupAnimation(BonePtr TheBone,BonePtr TheChildBone,BonePtr TheBoneLength )
+void setupAnimation(JointPtr TheJoint, JointPtr TheChildJoint)
 {
+	//TheJoint Transformation keyframes (setting translation)
+	Matrix transform = TheJoint->getRelativeTransformation();
 
-   //Quaternion
-   osg::KeyframeRotationsSequencePtr RotationKeyframes = osg::KeyframeRotationsSequenceQuat::create();
-   
-   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.0),0.0f);
-   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),0.5*osg::Pi),2.0f);
-   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),osg::Pi),4.0f);
-   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),1.5*osg::Pi),6.0f);
-   RotationKeyframes->addKeyframe(osg::Quaternion(osg::Vec3f(0.0,1.0,0.0),2.0*osg::Pi),8.0f);
+	KeyframeTransformationsSequencePtr TheJointTranformationKeyframes = KeyframeTransformationsSequence44f::create();
+	
+	TheJointTranformationKeyframes->addKeyframe(transform, 0.0f);
 
+	transform.setTranslate(5.0, 0.0, 0.0);
+	TheJointTranformationKeyframes->addKeyframe(transform, 2.0f);
 
-   //Length
-   osg::KeyframeNumbersSequencePtr LengthKeyframeSequence = osg::KeyframeNumbersSequenceReal32::create();
-   
-   LengthKeyframeSequence->addKeyframe(0.7,0.0f);
-   LengthKeyframeSequence->addKeyframe(20.2,0.0f);
-   LengthKeyframeSequence->addKeyframe(0.7,4.0f);
-   LengthKeyframeSequence->addKeyframe(99.0,6.0f);
-   LengthKeyframeSequence->addKeyframe(0.7,8.0f);
-   
+	transform.setTranslate(0.0, 5.0, 0.0);
+	TheJointTranformationKeyframes->addKeyframe(transform, 4.0f);
 
+	transform.setTranslate(0.0, 0.0, 5.0);
+	TheJointTranformationKeyframes->addKeyframe(transform, 6.0f);
 
-   //Animator
-   osg::AnimatorPtr Animator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(Animator);
-      osg::KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(RotationKeyframes);
-   osg::endEditCP(Animator);
-   
-   //Animator
-   osg::AnimatorPtr LengthAnimator = osg::KeyframeAnimator::create();
-   osg::beginEditCP(LengthAnimator);
-      osg::KeyframeAnimatorPtr::dcast(LengthAnimator)->setKeyframeSequence(LengthKeyframeSequence);
-   osg::endEditCP(LengthAnimator);
-         
-   //Animated Object
-   //osg::FieldContainerPtr AnimatedObject = TheBone;
-   
-   //Animation
-   TheAnimation = osg::FieldAnimation::create();
-   osg::beginEditCP(TheAnimation);
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setAnimator(Animator);
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(osg::CUBIC_INTERPOLATION);
-      osg::FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
-   osg::endEditCP(TheAnimation);
-   osg::FieldAnimationPtr::dcast(TheAnimation)->setAnimatedField(TheBone, std::string("Rotation"));
+	transform = TheJoint->getRelativeTransformation();
+	TheJointTranformationKeyframes->addKeyframe(transform, 8.0f);
+
+	//TheJoint Animator
+    AnimatorPtr TheJointAnimator = KeyframeAnimator::create();
+    beginEditCP(TheJointAnimator);
+       KeyframeAnimatorPtr::dcast(TheJointAnimator)->setKeyframeSequence(TheJointTranformationKeyframes);
+    endEditCP(TheJointAnimator);
+
+    //TheJoint Animation
+    TheJointAnimation = FieldAnimation::create();
+    beginEditCP(TheJointAnimation);
+       FieldAnimationPtr::dcast(TheJointAnimation)->setAnimator(TheJointAnimator);
+       FieldAnimationPtr::dcast(TheJointAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
+       FieldAnimationPtr::dcast(TheJointAnimation)->setCycling(-1);
+    endEditCP(TheJointAnimation);
+    FieldAnimationPtr::dcast(TheJointAnimation)->setAnimatedField(TheJoint, std::string("RelativeTransformation"));
+	
 
 
-   //ChildBone Animation
-   TheChildAnimation = osg::FieldAnimation::create();
-   osg::beginEditCP(TheChildAnimation);
-      osg::FieldAnimationPtr::dcast(TheChildAnimation)->setAnimator(Animator);
-      osg::FieldAnimationPtr::dcast(TheChildAnimation)->setInterpolationType(osg::CUBIC_INTERPOLATION);
-      osg::FieldAnimationPtr::dcast(TheChildAnimation)->setCycling(-1);
-   osg::endEditCP(TheChildAnimation);
-   osg::FieldAnimationPtr::dcast(TheChildAnimation)->setAnimatedField(TheChildBone, std::string("Rotation"));
+	//TheChildJoint Transformation keyframes (setting rotation)
+	transform = TheChildJoint->getRelativeTransformation();
+
+	KeyframeTransformationsSequencePtr TheChildJointTransformationKeyframes = KeyframeTransformationsSequence44f::create();
+
+	TheChildJointTransformationKeyframes->addKeyframe(transform, 0.0f);
+
+	transform.setRotate(Quaternion(Vec3f(0.0,1.0,0.0),0.0));
+	TheChildJointTransformationKeyframes->addKeyframe(transform, 2.0f);
+
+	transform.setRotate(Quaternion(Vec3f(0.0,1.0,0.0),0.5*Pi));
+	TheChildJointTransformationKeyframes->addKeyframe(transform, 4.0f);
+
+	transform.setRotate(Quaternion(Vec3f(0.0,1.0,0.0),Pi));
+	TheChildJointTransformationKeyframes->addKeyframe(transform, 6.0f);
+
+	transform.setRotate(Quaternion(Vec3f(0.0,1.0,0.0),1.5*Pi));
+	TheChildJointTransformationKeyframes->addKeyframe(transform, 8.0f);
+
+	//TheChildJoint Animator
+    AnimatorPtr TheChildJointAnimator = KeyframeAnimator::create();
+    beginEditCP(TheChildJointAnimator);
+       KeyframeAnimatorPtr::dcast(TheChildJointAnimator)->setKeyframeSequence(TheChildJointTransformationKeyframes);
+    endEditCP(TheChildJointAnimator);
+
+	//TheChildJoint Animation
+    TheChildJointAnimation = FieldAnimation::create();
+    beginEditCP(TheChildJointAnimation);
+       FieldAnimationPtr::dcast(TheChildJointAnimation)->setAnimator(TheChildJointAnimator);
+       FieldAnimationPtr::dcast(TheChildJointAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
+       FieldAnimationPtr::dcast(TheChildJointAnimation)->setCycling(-1);
+    endEditCP(TheChildJointAnimation);
+    FieldAnimationPtr::dcast(TheChildJointAnimation)->setAnimatedField(TheChildJoint, std::string("RelativeTransformation"));
+	
+	
+	
+	
+	
+	////Quaternion
+ //  KeyframeRotationsSequencePtr RotationKeyframes = KeyframeRotationsSequenceQuat::create();
+ //  
+ //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),0.0),0.0f);
+ //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),0.5*Pi),2.0f);
+ //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),Pi),4.0f);
+ //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),1.5*Pi),6.0f);
+ //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),2.0*Pi),8.0f);
+
+
+ //  //Length
+ //  KeyframeNumbersSequencePtr LengthKeyframeSequence = KeyframeNumbersSequenceReal32::create();
+ //  
+ //  LengthKeyframeSequence->addKeyframe(0.7,0.0f);
+ //  LengthKeyframeSequence->addKeyframe(20.2,0.0f);
+ //  LengthKeyframeSequence->addKeyframe(0.7,4.0f);
+ //  LengthKeyframeSequence->addKeyframe(99.0,6.0f);
+ //  LengthKeyframeSequence->addKeyframe(0.7,8.0f);
+ //  
+
+
+ //  //Animator
+ //  AnimatorPtr Animator = KeyframeAnimator::create();
+ //  beginEditCP(Animator);
+ //     KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(RotationKeyframes);
+ //  endEditCP(Animator);
+ //  
+ //  //Animator
+ //  AnimatorPtr LengthAnimator = KeyframeAnimator::create();
+ //  beginEditCP(LengthAnimator);
+ //     KeyframeAnimatorPtr::dcast(LengthAnimator)->setKeyframeSequence(LengthKeyframeSequence);
+ //  endEditCP(LengthAnimator);
+ //  
+ //  //Animation
+ //  TheAnimation = FieldAnimation::create();
+ //  beginEditCP(TheAnimation);
+ //     FieldAnimationPtr::dcast(TheAnimation)->setAnimator(Animator);
+ //     FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
+ //     FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
+ //  endEditCP(TheAnimation);
+ //  FieldAnimationPtr::dcast(TheAnimation)->setAnimatedField(TheJoint, std::string("Rotation"));
+
+
+ //  //ChildBone Animation
+ //  TheChildAnimation = FieldAnimation::create();
+ //  beginEditCP(TheChildAnimation);
+ //     FieldAnimationPtr::dcast(TheChildAnimation)->setAnimator(Animator);
+ //     FieldAnimationPtr::dcast(TheChildAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
+ //     FieldAnimationPtr::dcast(TheChildAnimation)->setCycling(-1);
+ //  endEditCP(TheChildAnimation);
+ //  FieldAnimationPtr::dcast(TheChildAnimation)->setAnimatedField(TheChildJoint, std::string("Rotation"));
 
 
 
-  //Length For Bones
-   TheChildLengthAnimation = osg::FieldAnimation::create();
-   osg::beginEditCP(TheChildLengthAnimation);
-      osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setAnimator(LengthAnimator);
-      osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setInterpolationType(osg::CUBIC_INTERPOLATION);
-      osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setCycling(-1);
-   osg::endEditCP(TheChildLengthAnimation);
-   osg::FieldAnimationPtr::dcast(TheChildLengthAnimation)->setAnimatedField(TheBoneLength, std::string("Length"));
+ // //Length For Bones
+ //  TheChildLengthAnimation = FieldAnimation::create();
+ //  beginEditCP(TheChildLengthAnimation);
+ //     FieldAnimationPtr::dcast(TheChildLengthAnimation)->setAnimator(LengthAnimator);
+ //     FieldAnimationPtr::dcast(TheChildLengthAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
+ //     FieldAnimationPtr::dcast(TheChildLengthAnimation)->setCycling(-1);
+ //  endEditCP(TheChildLengthAnimation);
+ //  FieldAnimationPtr::dcast(TheChildLengthAnimation)->setAnimatedField(TheChildJoint, std::string("Length"));
 
 
    //Animation Advancer
-   TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
-   osg::beginEditCP(TheAnimationAdvancer);
-   osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
-   osg::beginEditCP(TheAnimationAdvancer);
+   TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();
+   beginEditCP(TheAnimationAdvancer);
+   ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
+   beginEditCP(TheAnimationAdvancer);
 }
 
 
 
 
 
-osg::FieldContainerPtr getFieldContainer(const osg::Char8 *szTypeName, const std::string &namestring)
+FieldContainerPtr getFieldContainer(const Char8 *szTypeName, const std::string &namestring)
 {
-   const osg::FieldContainerType * TheFieldType( osg::FieldContainerFactory::the()->findType(szTypeName) );
+   const FieldContainerType * TheFieldType( FieldContainerFactory::the()->findType(szTypeName) );
    if(TheFieldType == NULL)
    {
       std::cout << "The " << szTypeName << " Field type is not defined." << std::endl;
    }
 
-   const std::vector<osg::FieldContainerPtr>* FCStore(	osg::FieldContainerFactory::the()->getFieldContainerStore () );
+   const std::vector<FieldContainerPtr>* FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
 
-   std::vector<osg::FieldContainerPtr>::const_iterator FCStoreIter;
+   std::vector<FieldContainerPtr>::const_iterator FCStoreIter;
    for(FCStoreIter = FCStore->begin() ; FCStoreIter != FCStore->end() ; ++FCStoreIter)
    {
-      if( (*FCStoreIter) != osg::NullFC && (*FCStoreIter)->getType() == (*TheFieldType) )
+      if( (*FCStoreIter) != NullFC && (*FCStoreIter)->getType() == (*TheFieldType) )
       {
-         const osg::Char8 *Name( osg::getName(osg::AttachmentContainerPtr::dcast(*FCStoreIter)) );
+         const Char8 *Name( getName(AttachmentContainerPtr::dcast(*FCStoreIter)) );
          if(Name != NULL && namestring.compare(Name) == 0)
          {
             return (*FCStoreIter);
@@ -418,7 +478,7 @@ osg::FieldContainerPtr getFieldContainer(const osg::Char8 *szTypeName, const std
       }
    }
 
-   return osg::NullFC;
+   return NullFC;
 }
 
 

@@ -54,4 +54,12 @@
 		header="SkeletalAnimation/OSGSkeletonFields.h"
 	>
 	</Field>
+	<Field
+		name="UseParentTranslation"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

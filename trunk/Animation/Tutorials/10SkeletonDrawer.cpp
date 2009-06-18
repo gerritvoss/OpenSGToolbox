@@ -187,9 +187,10 @@ int main(int argc, char **argv)
 
 		TempMat.setTranslate(RandomPoolManager::getRandomReal32(0.0, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f));
 		ExampleChildJoint = Joint::create(); //create a bone called ExampleChildbone
-		beginEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask);//use the field masks
+		beginEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);//use the field masks
 			ExampleChildJoint->setRelativeTransformation(TempMat);
-		endEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask);
+			ExampleChildJoint->setBindRelativeTransformation(TempMat);
+		endEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 
 	
 		beginEditCP(TempRootJoint, Joint::ChildJointsFieldMask);
