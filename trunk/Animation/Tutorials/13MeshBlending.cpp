@@ -38,6 +38,7 @@
 
 #include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/Animation/OSGSkeletonBlendedGeometry.h>
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 
 
@@ -852,6 +853,22 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
+
+
+
+
+
+	//Export the SkeletonBlendedGeometry
+	FCFileType::FCPtrStore Containers;
+	Containers.insert(TheNewSkeletonGeometry);
+
+	FCFileType::FCTypeVector IgnoreTypes;
+	FCFileHandler::the()->write(Containers,Path("./Data/SkeletonBlendedGeometry.xml"),IgnoreTypes);
+
+
+
+
+
 
 
     while(!ExitApp)

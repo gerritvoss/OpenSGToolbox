@@ -234,12 +234,6 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-	//Export the Skeleton
-	FCFileType::FCPtrStore Containers;
-	Containers.insert(SkeletonNode);
-
-	FCFileType::FCTypeVector IgnoreTypes;
-	FCFileHandler::the()->write(Containers,Path("./Data/14Skeleton.xml"),IgnoreTypes);
 
     while(!ExitApp)
     {

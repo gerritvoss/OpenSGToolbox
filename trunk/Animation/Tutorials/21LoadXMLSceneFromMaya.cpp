@@ -760,10 +760,14 @@ int main(int argc, char **argv)
 	{
 		//SkeletonDrawer
 		SkeletonDrawablePtr ExampleSkeletonDrawable = osg::SkeletonDrawable::create();
-		beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+		beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask  | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask);
 			ExampleSkeletonDrawable->setSkeleton(SkeletonPtrs[i]);
 			ExampleSkeletonDrawable->setMaterial(AxesMaterial);
-		endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+			ExampleSkeletonDrawable->setDrawPose(true);
+			ExampleSkeletonDrawable->setPoseColor(Color4f(1.0, 0.0, 1.0, 1.0));
+			ExampleSkeletonDrawable->setDrawBindPose(true);
+			ExampleSkeletonDrawable->setBindPoseColor(Color4f(1.0, 1.0, 0.0, 1.0));
+		endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask  | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask);
 		
 		//Skeleton Node
 		NodePtr SkeletonNode = osg::Node::create();
@@ -814,7 +818,7 @@ int main(int argc, char **argv)
 
 		for (int i(0); i < UnboundGeometries.size(); ++i)
 		{
-			//scene->addChild(UnboundGeometries[i]);
+			scene->addChild(UnboundGeometries[i]);
 		}
 
 		for (int i(0); i < MeshNodes.size(); ++i)
