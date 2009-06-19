@@ -8,5 +8,4 @@ set SSH_PRIVATE_KEY_FILE=C:\Documents and Settings\David\My Documents\PuTTY\dkab
 :Transfer the build
 "%PSFTP_DIR%\psftp.exe" -i "%SSH_PRIVATE_KEY_FILE%" -pw YUguqu9uChuSaChUspatRapha7eSTadRuSwemAfrUStufrUsWUKadEwrubRAgusT -batch -b "%PSFTP_BATCH_DIR%\TransferDailyBuild.scr" dkabala@keymaker.vrac.iastate.edu
 
-pause
 

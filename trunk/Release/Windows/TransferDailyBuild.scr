@@ -1,3 +1,3 @@
-cd public_html/OpenSGToolbox/downloads/Releases/Version_0.8.0
-put "C:\Documents and Settings\David\My Documents\Work\OpenSGToolbox Daily Build\OpenSGToolbox.exe"
+cd public_html/OpenSGToolbox/downloads/daily_builds/trunk
+put "C:\Documents and Settings\David\My Documents\Work\OpenSGToolbox Daily Build\OpenSGToolbox*.exe"
 mput "C:\Documents and Settings\David\My Documents\Work\OpenSGToolbox Daily Build\*.log"
