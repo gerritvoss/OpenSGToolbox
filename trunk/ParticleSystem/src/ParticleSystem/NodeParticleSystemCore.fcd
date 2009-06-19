@@ -45,7 +45,7 @@
 		name="ParticleNodes"
 		type="NodePtr"
 		cardinality="multi"
-		visibility="external"
+		visibility="internal"
 		defaultValue=""
 		access="protected"
 	>
