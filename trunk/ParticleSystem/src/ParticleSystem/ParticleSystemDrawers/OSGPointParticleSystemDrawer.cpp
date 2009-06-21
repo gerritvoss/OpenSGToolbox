@@ -47,6 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGGL.h>
+#include <OpenSG/OSGDrawable.h>
 
 #include "OSGPointParticleSystemDrawer.h"
 #include "ParticleSystem/OSGParticleSystem.h"
@@ -159,6 +160,10 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, Particle
 			}
 		glEnd();
 	}
+
+    action->getStatistics()->getElem(Drawable::statNPoints)->add(NumParticles);
+    action->getStatistics()->getElem(Drawable::statNVertices)->add(NumParticles);
+    action->getStatistics()->getElem(Drawable::statNPrimitives)->add(NumParticles);
 
     return Action::Continue;
 }

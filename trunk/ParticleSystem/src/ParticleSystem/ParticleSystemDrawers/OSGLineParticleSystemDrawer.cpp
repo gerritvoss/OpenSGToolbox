@@ -49,6 +49,7 @@
 
 #include "OSGLineParticleSystemDrawer.h"
 #include "ParticleSystem/OSGParticleSystem.h"
+#include <OpenSG/OSGDrawable.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -127,6 +128,10 @@ Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 			}
 		glEnd();
 	}
+    action->getStatistics()->getElem(Drawable::statNLines)->add(NumParticles);
+    action->getStatistics()->getElem(Drawable::statNVertices)->add(2*NumParticles);
+    action->getStatistics()->getElem(Drawable::statNPrimitives)->add(NumParticles);
+
 
     return Action::Continue;
 }

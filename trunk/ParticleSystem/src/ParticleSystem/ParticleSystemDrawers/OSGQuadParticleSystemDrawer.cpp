@@ -49,6 +49,7 @@
 
 #include "OSGQuadParticleSystemDrawer.h"
 #include "ParticleSystem/OSGParticleSystem.h"
+#include <OpenSG/OSGDrawable.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -145,6 +146,10 @@ glBegin(GL_QUADS);
 		glVertex3fv(P4.getValues());
 	}
 glEnd();
+    action->getStatistics()->getElem(Drawable::statNTriangles)->add(2*NumParticles);
+    action->getStatistics()->getElem(Drawable::statNVertices)->add(4*NumParticles);
+    action->getStatistics()->getElem(Drawable::statNPrimitives)->add(2*NumParticles);
+
 	//Generate a local space for the particle
     return Action::Continue;
 }
