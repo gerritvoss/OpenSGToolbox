@@ -6,7 +6,8 @@ set dd=%date:~-10,2%
 set BuildFileNameInfix=-vs2005-%mm%-%dd%-%yy%
 
 :erase Old log files
-erase *.log
+erase OpenSGTooblox*.log
+erase OpenSGToolbox*.log
 
 :Run the Build
 CMD /c AutoBuild.bat > WindowsBuild%BuildFileNameInfix%.log

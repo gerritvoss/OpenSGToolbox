@@ -56,7 +56,7 @@ std::vector<ForegroundPtr> GlobalForegrounds;
 std::vector<AnimationPtr> GlobalAnimations;
 std::vector<ParticleSystemPtr> GlobalParticleSystems;
 std::vector<CameraPtr> GlobalCameras;
-SimpleStatisticsForegroundPtr TheStatForeground;
+SimpleStatisticsForegroundPtr RenderStatisticeForeground;
 
 bool IsPaused(false);
 
@@ -183,16 +183,16 @@ public:
 
             case KeyEvent::KEY_F4:
                 //Toggle the stat foreground
-                if(mgr->getWindow()->getPort(0)->getForegrounds().find(TheStatForeground) == mgr->getWindow()->getPort(0)->getForegrounds().end())
+                if(mgr->getWindow()->getPort(0)->getForegrounds().find(RenderStatisticeForeground) == mgr->getWindow()->getPort(0)->getForegrounds().end())
                 {
                     beginEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
-                        mgr->getWindow()->getPort(0)->getForegrounds().push_back(TheStatForeground);
+                        mgr->getWindow()->getPort(0)->getForegrounds().push_back(RenderStatisticeForeground);
                     endEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
                 }
                 else
                 {
                     beginEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
-                        mgr->getWindow()->getPort(0)->getForegrounds().erase(mgr->getWindow()->getPort(0)->getForegrounds().find(TheStatForeground));
+                        mgr->getWindow()->getPort(0)->getForegrounds().erase(mgr->getWindow()->getPort(0)->getForegrounds().find(RenderStatisticeForeground));
                     endEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
                 }
                 break;
@@ -348,43 +348,43 @@ int main(int argc, char **argv)
     }
 
     //Create Statistics Foreground
-    TheStatForeground = SimpleStatisticsForeground::create();
-    beginEditCP(TheStatForeground);
-        TheStatForeground->setSize(25);
-        TheStatForeground->setColor(Color4f(0,1,0,0.7));
-        TheStatForeground->addElement(RenderAction::statDrawTime, "Draw FPS: %r.3f");
-        TheStatForeground->addElement(DrawActionBase::statTravTime, "TravTime: %.3f s");
-        TheStatForeground->addElement(RenderAction::statDrawTime, "DrawTime: %.3f s");
-        TheStatForeground->addElement(DrawActionBase::statCullTestedNodes, 
+    RenderStatisticeForeground = SimpleStatisticsForeground::create();
+    beginEditCP(RenderStatisticeForeground);
+        RenderStatisticeForeground->setSize(25);
+        RenderStatisticeForeground->setColor(Color4f(0,1,0,0.7));
+        RenderStatisticeForeground->addElement(RenderAction::statDrawTime, "Draw FPS: %r.3f");
+        RenderStatisticeForeground->addElement(DrawActionBase::statTravTime, "TravTime: %.3f s");
+        RenderStatisticeForeground->addElement(RenderAction::statDrawTime, "DrawTime: %.3f s");
+        RenderStatisticeForeground->addElement(DrawActionBase::statCullTestedNodes, 
                            "%d Nodes culltested");
-        TheStatForeground->addElement(DrawActionBase::statCulledNodes, 
+        RenderStatisticeForeground->addElement(DrawActionBase::statCulledNodes, 
                            "%d Nodes culled");
-        TheStatForeground->addElement(RenderAction::statNMaterials, 
+        RenderStatisticeForeground->addElement(RenderAction::statNMaterials, 
                            "%d material changes");
-        TheStatForeground->addElement(RenderAction::statNMatrices, 
+        RenderStatisticeForeground->addElement(RenderAction::statNMatrices, 
                            "%d matrix changes");
-        TheStatForeground->addElement(RenderAction::statNGeometries, 
+        RenderStatisticeForeground->addElement(RenderAction::statNGeometries, 
                            "%d Nodes drawn");
-        TheStatForeground->addElement(RenderAction::statNLights, 
+        RenderStatisticeForeground->addElement(RenderAction::statNLights, 
                            "%d Lights");
-        TheStatForeground->addElement(RenderAction::statNTransGeometries, 
+        RenderStatisticeForeground->addElement(RenderAction::statNTransGeometries, 
                            "%d transparent Nodes drawn");
-        TheStatForeground->addElement(Drawable::statNTriangles, 
+        RenderStatisticeForeground->addElement(Drawable::statNTriangles, 
                            "%d triangles drawn");
-        TheStatForeground->addElement(Drawable::statNLines, 
+        RenderStatisticeForeground->addElement(Drawable::statNLines, 
                            "%d lines drawn");
-        TheStatForeground->addElement(Drawable::statNPoints, 
+        RenderStatisticeForeground->addElement(Drawable::statNPoints, 
                            "%d points drawn");
-        TheStatForeground->addElement(Drawable::statNPrimitives,
+        RenderStatisticeForeground->addElement(Drawable::statNPrimitives,
                             "%d primitive groups drawn");
-        TheStatForeground->addElement(Drawable::statNVertices, 
+        RenderStatisticeForeground->addElement(Drawable::statNVertices, 
                            "%d vertices transformed");
-        TheStatForeground->addElement(Drawable::statNGeoBytes, "%d bytes of geometry used");
-        TheStatForeground->addElement(RenderAction::statNTextures, "%d textures used");
-        TheStatForeground->addElement(RenderAction::statNTexBytes, "%d bytes of texture used");
-    endEditCP(TheStatForeground);
+        RenderStatisticeForeground->addElement(Drawable::statNGeoBytes, "%d bytes of geometry used");
+        RenderStatisticeForeground->addElement(RenderAction::statNTextures, "%d textures used");
+        RenderStatisticeForeground->addElement(RenderAction::statNTexBytes, "%d bytes of texture used");
+    endEditCP(RenderStatisticeForeground);
 
-    StatCollector *collector = &TheStatForeground->getCollector();
+    StatCollector *collector = &RenderStatisticeForeground->getCollector();
     
     // add optional elements
     collector->getElem(Drawable::statNTriangles);
@@ -423,7 +423,7 @@ int main(int argc, char **argv)
     
     //Setup Foregrounds
     beginEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
-        mgr->getWindow()->getPort(0)->getForegrounds().push_back(TheStatForeground);
+        mgr->getWindow()->getPort(0)->getForegrounds().push_back(RenderStatisticeForeground);
     endEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
     mgr->getAction()->setStatistics(collector);
     
