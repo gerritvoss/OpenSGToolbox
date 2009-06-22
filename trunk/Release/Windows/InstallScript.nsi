@@ -101,6 +101,11 @@ Function InstallVideoTutorialLinks
 	Push "Continue"
 FunctionEnd
 
+Function InstallMetabolicTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Metabolic\$R3.lnk" "$R4"
+	Push "Continue"
+FunctionEnd
+
 Function InstallUserInterfaceTutorialLinks
    createShortCut "${SMPROGRAMSFolder}\Tutorials\User Interface\$R3.lnk" "$R4"
 	Push "Continue"
@@ -248,6 +253,12 @@ SectionGroup "Devolopment"
       File /nonfatal "${ProjectRootDirName}\Video\Tutorials\*.cpp"
       File /nonfatal "${ProjectRootDirName}\Video\Tutorials\*.vcproj"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Video\Tutorials\Data"
+		
+      CreateDirectory $INSTDIR\Tutorials\Metabolic
+      setOutPath $INSTDIR\Tutorials\Metabolic
+      File /nonfatal "${ProjectRootDirName}\Metabolic\Tutorials\*.cpp"
+      File /nonfatal "${ProjectRootDirName}\Metabolic\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Metabolic\Tutorials\Data"
       
    sectionEnd
 SectionGroupEnd
@@ -424,6 +435,21 @@ SectionGroup "Release"
 		Push "$INSTDIR\Tutorials\Video" ;Path where to search for the file or folder.
 		Push $0
 		GetFunctionAddress $0 "InstallVideoTutorialLinks" ;Custom callback function name
+		Exch $0
+		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
+		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
+		Call SearchFile
+      
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Metabolic"
+      CreateDirectory $INSTDIR\Tutorials\Metabolic
+      setOutPath $INSTDIR\Tutorials\Metabolic
+      File /nonfatal "${ProjectRootDirName}\Metabolic\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Metabolic\Tutorials\Data"
+		
+		Push "*.exe" ;File or folder to search. Wildcards are supported.
+		Push "$INSTDIR\Tutorials\Metabolic" ;Path where to search for the file or folder.
+		Push $0
+		GetFunctionAddress $0 "InstallMetabolicTutorialLinks" ;Custom callback function name
 		Exch $0
 		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
 		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)

@@ -9,12 +9,13 @@ set NSIS_PATH=C:\Program Files\NSIS
 set VS_PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE
 
 
+:Location of the subversion repository trunk
 set REPOSITORY_URL=https://opensgtoolbox.svn.sourceforge.net/svnroot/opensgtoolbox/trunk
 set PROJECT_DIR=OpenSGToolbox
 set BUILD_DIR=Builds\Windows
 set SOLUTION_NAME=vs-8.0-OpenSGToolbox.sln
 
-set LIBRARY_BUILD_ORDER=(Toolbox Input Physics Sound Video Animation Dynamics ParticleSystem UserInterface Game)
+set LIBRARY_BUILD_ORDER=(Toolbox Input Physics Sound Video Animation Dynamics ParticleSystem Metabolic UserInterface Game)
 set LIBRARY_BUILD_CONFIGURATIONS=(Debug Release)
 set TUTORIAL_BUILD_CONFIGURATIONS=(Release)
 
