@@ -175,22 +175,6 @@ bool SurfaceParticleGenerator::generate(ParticleSystemPtr System, const Time& el
 	return false;
 }
 
-/*
-  virtual void generate(ParticleSystemPtr System,
-		Pnt3f& PositionReturnValue, 
-		Pnt3f& SecPositionReturnValue, 
-		Vec3f& NormalReturnValue,
-		Color4f& ColorReturnValue,
-		Vec3f& SizeReturnValue,
-		Time& LifespanReturnValue,
-		Time& AgeReturnValue,
-		Vec3f& VelocityReturnValue,
-		Vec3f& SecVelocityReturnValue,
-		Vec3f& AccelerationReturnValue,
-		UInt64& PropertyReturnValue) const;
-
-
-*/
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
