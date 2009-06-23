@@ -68,6 +68,7 @@ listens for:
 #include <OpenSG/Game/OSGDialog.h>
 #include <OpenSG/Game/OSGDialogHierarchy.h>
 #include <OpenSG/Game/OSGDialogListener.h>
+#include <OpenSG/Game/OSGDialogHierarchyListener.h>>
 
 //Sound
 #include <OpenSG/Sound/OSGSoundManager.h>
@@ -99,10 +100,14 @@ DialogPtr End4;
 
 ColorLayerPtr MainInternalWindowBackground;
 
+DialogHierarchyPtr ExampleDialogHierarchy;
+
 DialogPtr BDialogChildA;
 DialogPtr BDialogChildB;
 DialogPtr ADialogChildA;
 DialogPtr ADialogChildB;
+
+std::vector<DialogPtr> ExampleDialogArray;
 
 SoundPtr TutorialSound;
 UInt32 TutorialSoundChannelID;
@@ -175,6 +180,27 @@ public:
     }
 
 };
+class TutorialHierarchyListener : public DialogHierarchyListener
+{
+public:
+
+	virtual void newDialogStarted(const DialogHierarchyEvent& e)
+	{
+	}
+	virtual void dialogEnded(const DialogHierarchyEvent& e)
+	{
+	}
+	virtual void dialogResponseSelected(const DialogHierarchyEvent& e)
+	{
+	}
+	virtual void dialogResponsesReady(const DialogHierarchyEvent& e)
+	{
+	}
+	virtual void terminated(const DialogHierarchyEvent& e)
+	{
+	}
+
+};
 ResponseButtonActionListener TutorialResponseListener;
 
 class TutorialDialogListener : public DialogListener
@@ -183,7 +209,7 @@ public:
 
     virtual void started(const DialogEvent& e)
     {
-        if(DialogPtr::dcast(e.getSource()) == BDialogChildB)
+		if(DialogPtr::dcast(e.getSource())->getResponse() == "Sphere")
         {
             NodePtr s = makeSphere(1,2);
             beginEditCP(scene, Node::ChildrenFieldMask);
@@ -194,7 +220,7 @@ public:
                 scene->addChild(s);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource()) == BDialogChildA)
+        if(DialogPtr::dcast(e.getSource())->getResponse() == "Square")
         {
             NodePtr s = makeBox(3,3,3,2,2,2);
             beginEditCP(scene, Node::ChildrenFieldMask);
@@ -205,23 +231,23 @@ public:
                 scene->addChild(s);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource()) == ADialogChildA)
+        if(DialogPtr::dcast(e.getSource())->getResponse() == "Blue")
         {
             beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
                 MainInternalWindowBackground->setColor(Color4f(0.0,0.0,1.0,0.5));
             endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource()) == ADialogChildB)
+        if(DialogPtr::dcast(e.getSource())->getResponse() == "Red")
         {
             beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
                 MainInternalWindowBackground->setColor(Color4f(1.0,0.0,0.0,0.5));
             endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource()) == End1 || DialogPtr::dcast(e.getSource()) == End2 || DialogPtr::dcast(e.getSource()) == End3 || DialogPtr::dcast(e.getSource()) == End4 )
+        if(DialogPtr::dcast(e.getSource())->getResponse() == "End")
         {
             ExitApp = true;
         }
-        if(DialogPtr::dcast(e.getSource()) == Restart1 || DialogPtr::dcast(e.getSource()) == Restart2 || DialogPtr::dcast(e.getSource()) == Restart3 || DialogPtr::dcast(e.getSource()) == Restart4)
+        if(DialogPtr::dcast(e.getSource())->getResponse() == "Restart")
         {
             beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
                 MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
@@ -416,7 +442,7 @@ int main(int argc, char **argv)
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 
 
-    //XML Writing
+    //XML Writing!!!
 
     FCFileType::FCPtrStore Containers;
 	Containers.insert(TutorialDialog);
@@ -426,6 +452,27 @@ int main(int argc, char **argv)
 	//Save the Field Containers to a xml file
 	FCFileHandler::the()->write(Containers,Path("./DialogHierarchy.xml"),IgnoreTypes);
 
+	//XML READING!!
+
+	FCFileType::FCPtrStore NewContainers;
+	NewContainers = FCFileHandler::the()->read(Path("./DialogHierarchy.xml"));
+	
+    TutorialHierarchyListener TheTutorialHierarchyListener;
+
+
+    for(FCFileType::FCPtrStore::iterator Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
+    {
+		if( (*Itor)->getType() == DialogHierarchy::getClassType())
+		{
+			ExampleDialogHierarchy = DialogHierarchy::Ptr::dcast(*Itor);
+			ExampleDialogHierarchy->addDialogHierarchyListener(&TheTutorialHierarchyListener);
+		}
+		else if( (*Itor)->getType() == Dialog::getClassType())
+		{
+			ExampleDialogArray.push_back(Dialog::Ptr::dcast(*Itor));
+			ExampleDialogArray.back()->addDialogListener(&ExampleDialogHierarchy->_DialogHierarchyListener);
+		}
+    }
 
     
     // Create The Main InternalWindow
@@ -447,7 +494,7 @@ int main(int argc, char **argv)
     beginEditCP(TutorialDialogInterface, DialogInterface::ComponentGeneratorFieldMask | DialogInterface::ParentContainerFieldMask | DialogInterface::SourceDialogHierarchyFieldMask);
         TutorialDialogInterface->setComponentGenerator(TutorialDialogGenerator);
         TutorialDialogInterface->setParentContainer(MainInternalWindow);
-        TutorialDialogInterface->setSourceDialogHierarchy(TutorialDialog);
+        TutorialDialogInterface->setSourceDialogHierarchy(ExampleDialogHierarchy);
     endEditCP(TutorialDialogInterface, DialogInterface::ComponentGeneratorFieldMask | DialogInterface::ParentContainerFieldMask | DialogInterface::SourceDialogHierarchyFieldMask);
 
     // Create the Drawing Surface
@@ -478,7 +525,7 @@ int main(int argc, char **argv)
     mgr->showAll();
     SoundManager::the()->setCamera(mgr->getCamera());
 
-    TutorialDialog->start();
+    ExampleDialogHierarchy->start();
 
     while(!ExitApp)
     {

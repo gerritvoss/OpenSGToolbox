@@ -92,19 +92,8 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
-
-    /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
-  protected:
-
-    // Variables should all be in DialogHierarchyBase.
-
-    typedef std::set<DialogHierarchyListenerPtr> DialogHierarchyListenerSet;
-    typedef DialogHierarchyListenerSet::iterator DialogHierarchyListenerSetItor;
-    typedef DialogHierarchyListenerSet::const_iterator DialogHierarchyListenerSetConstItor;
-
-
-    class DialogHierarchyListener : public DialogListener
+	
+	class DialogHierarchyListener : public DialogListener
     {
 	public :
 		DialogHierarchyListener(DialogHierarchyPtr TheDialogHierarchy);
@@ -120,9 +109,24 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
         DialogHierarchyPtr _DialogHierarchy;
 	};
 
+	DialogHierarchyListener          _DialogHierarchyListener;
+
+
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in DialogHierarchyBase.
+
+    typedef std::set<DialogHierarchyListenerPtr> DialogHierarchyListenerSet;
+    typedef DialogHierarchyListenerSet::iterator DialogHierarchyListenerSetItor;
+    typedef DialogHierarchyListenerSet::const_iterator DialogHierarchyListenerSetConstItor;
+
+
+    
+
     
     DialogHierarchyListenerSet       _DialogHierarchyListeners;
-    DialogHierarchyListener          _DialogHierarchyListener;
 
     virtual void produceNewDialogStarted(const DialogHierarchyEvent& e);
     virtual void produceDialogEnded(const DialogHierarchyEvent& e);

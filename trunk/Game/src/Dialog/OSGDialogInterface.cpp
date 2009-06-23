@@ -49,7 +49,7 @@
 
 #include "OSGDialogInterface.h"
 
-#include <OpenSG/Game/OSGDialog.h>
+#include "OSGDialog.h"
 
 OSG_BEGIN_NAMESPACE
 
