@@ -48,8 +48,63 @@
 #include "OSGKeyframeSequenceTmplBase.h"
 #include "OSGKeyframeSequenceTmplFields.h"
 
+#include <OpenSG/OSGTextureChunk.h>
+
 OSG_BEGIN_NAMESPACE
 
+//TextureChunk Replace
+template<>
+bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFTextureChunkPtr>(RawInterpFuncion& InterpFunc,
+                              const osg::Real32& time,
+                              const osg::Real32& prevtime,
+                              const osg::ValueReplacementPolicy& ReplacePolicy,
+                              bool isCyclic,
+                              osg::Field& Result,
+                              UInt32 Index);
+
+struct KeyframeFCPtrsSequenceTextureChunkDesc : public KeyframeFCPtrsSequenceDesc
+{
+    static FieldDescription *_desc[];
+
+    /*---------------------------------------------------------------------*/
+    static const Char8 *getTypeName (void) { return "KeyframeFCPtrsSequenceTextureChunk";         }
+    static const Char8 *getClassName(void) { return "KeyframeFCPtrsSequenceTextureChunkProperty"; }
+    static const Char8 *getFieldName(void) { return "textures";              }
+    static const Char8 *getGroupName(void) { return "KeyframeFCPtrsSequence";           }
+    static InitContainerF     getInitMethod(void) { return NULL; }
+
+    static FieldDescription **getDesc      (void) { return _desc;           }
+
+
+    /*---------------------------------------------------------------------*/
+    typedef KeyframeFCPtrsSequence               Inherited;
+    typedef KeyframeFCPtrsSequence::PtrType      InheritedPtr;
+
+    typedef KeyframeFCPtrsSequenceDesc   InheritedDesc;
+
+    typedef MFTextureChunkPtr                    StoredFieldType;
+    typedef SFTextureChunkPtr                    SingleFieldType;
+    typedef InheritedDesc::GenericType GenericType;
+    
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+
+    /*---------------------------------------------------------------------*/
+     
+    static ConcreteInterpFunction getStepConcreteInterpFuncion(void) {return stepKeyframeSequence<StoredFieldType,SingleFieldType>;}
+    static ConcreteInterpFunction getLinearConcreteInterpFuncion(void) {return NULL;}
+    static ConcreteInterpFunction getCubicConcreteInterpFuncion(void) {return NULL;}
+    static ConcreteInterpFunction getLinearNormalConcreteInterpFuncion(void) {return NULL;}
+};
+
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+typedef KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc> KeyframeFCPtrsSequenceTextureChunk;
+#endif
+
+#if !defined(OSG_COMPILEKEYFRAMEFCPTRSEQUENCEINST) && !defined(OSG_DO_DOC)
+OSG_FC_DLLEXPORT_DECL(KeyframeSequenceTmpl,
+                      KeyframeFCPtrsSequenceTextureChunkDesc,
+                      OSG_ANIMATIONLIB_DLLMAPPING)
+#endif
 OSG_END_NAMESPACE
 
 #include "OSGKeyframeFCPtrsSequence.inl"

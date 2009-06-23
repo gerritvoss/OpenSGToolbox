@@ -42,6 +42,89 @@ OSG_BEGIN_NAMESPACE
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
+//FCPtrsTextureChunk
+template<> inline 
+FieldContainerPtr KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::getKeyValue(const UInt32 index)
+{
+    return _field[index];
+}
+
+template<> inline 
+FieldContainerPtr KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::getKeyValue( 
+    const UInt32 index) const
+{
+    return _field[index];
+}
+
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::getKeyValue(
+          FieldContainerPtr   &res,
+    const UInt32   index)
+{
+    res = _field[index];
+}
+
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::getKeyValue(
+          FieldContainerPtr  &res,
+    const UInt32  index) const
+{
+    res = _field[index];
+}
+
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::setKeyframe(const FieldContainerPtr  &val,
+                                          const Real32 &key,
+                                                       const UInt32  index)
+{
+    //if(val->getType().isDerivedFrom(TextureChunk::getClassType()))
+    {
+        _field[index] = TextureChunkPtr::dcast(val);
+        _mfInternalKeys[index] = key;
+    }
+}
+
+template<>
+inline
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::addKeyframe(const FieldContainerPtr &val,
+                                          const Real32 &key)
+{
+    //if(val->getType().isDerivedFrom(TextureChunk::getClassType()))
+    {
+        _field.push_back(TextureChunkPtr::dcast(val));
+        _mfInternalKeys.push_back(key);
+    }
+}
+
+template <> inline
+bool KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::insertKeyframe(const FieldContainerPtr &val,
+                                          const Real32 &key,
+                                                          const UInt32 index)
+{
+    if(_field.size() < index)
+    {
+        return false;
+    }
+    else if(_field.size() == index)
+    {
+        addKeyframe(val,key);
+        return true;
+    }
+    else
+    {
+        //if(val->getType().isDerivedFrom(TextureChunk::getClassType()))
+        {
+            _field.insert(_field.begin() + index, TextureChunkPtr::dcast(val));
+            _mfInternalKeys.insert(_mfInternalKeys.begin() + index, key);
+            return true;
+        }
+        //else
+        //{
+        //    return false;
+        //}
+    }
+}
+
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 OSG_END_NAMESPACE

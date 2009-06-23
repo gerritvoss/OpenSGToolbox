@@ -92,7 +92,7 @@ typedef KeyframeColorsSequence4ub::PtrType  KeyframeTransformationsSequence4ubPt
 typedef KeyframeColorsSequence4f::PtrType  KeyframeTransformationsSequence4fPtr;
 
 //Numbers
-typedef KeyframeNumbersSequenceBool::PtrType  KeyframeNumbersSequenceBoolPtr;
+//typedef KeyframeNumbersSequenceBool::PtrType  KeyframeNumbersSequenceBoolPtr;
 typedef KeyframeNumbersSequenceUInt8::PtrType  KeyframeNumbersSequenceUInt8Ptr;
 typedef KeyframeNumbersSequenceUInt16::PtrType  KeyframeNumbersSequenceUInt16Ptr;
 typedef KeyframeNumbersSequenceUInt32::PtrType  KeyframeNumbersSequenceUInt32Ptr;
@@ -109,7 +109,7 @@ typedef KeyframeDiscreetSequenceString::PtrType  KeyframeDiscreetSequenceStringP
 typedef KeyframeDiscreetSequenceGLenum::PtrType  KeyframeDiscreetSequenceGLenumPtr;
 
 //FCPtrs
-//FieldContainer
+typedef KeyframeFCPtrsSequenceTextureChunk::PtrType  KeyframeFCPtrsSequenceTextureChunkPtr;
 OSG_END_NAMESPACE
 
 #endif /* _OSGKEYFRAMEPTRS_H_ */
