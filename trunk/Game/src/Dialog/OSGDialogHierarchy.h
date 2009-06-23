@@ -83,6 +83,7 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
     void start();
     DialogPtr addDialog(std::string response, Real32 delayResponses, SoundPtr dialogSound, bool interactive, DialogPtr parentDialog);
     void retrieveReponses();
+    void AddXMLDialog(DialogPtr dialogNode);
     /*! \{                                                                 */
 
     EventConnection addDialogHierarchyListener(DialogHierarchyListenerPtr Listener);

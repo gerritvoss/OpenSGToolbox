@@ -90,9 +90,13 @@ void DialogHierarchy::start()
     getCurrentDialog()->start();
 }
 
+void DialogHierarchy::AddXMLDialog(DialogPtr dialogNode)
+{
+    dialogNode->addDialogListener(&_DialogHierarchyListener);
+}
+
 DialogPtr DialogHierarchy::addDialog(std::string response, Real32 delayResponses, SoundPtr dialogSound, bool interactive, DialogPtr parentDialog)
 {
-
     DialogPtr d = osg::Dialog::create();
     beginEditCP(d, Dialog::ResponseFieldMask | Dialog::ResponsePresentationDelayFieldMask | Dialog::DialogSoundFieldMask | Dialog::InteractiveFieldMask | Dialog::ParentDialogHierarchyFieldMask);
         d->setResponse(response);

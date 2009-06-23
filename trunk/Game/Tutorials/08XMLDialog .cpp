@@ -209,6 +209,7 @@ public:
 
     virtual void started(const DialogEvent& e)
     {
+        std::cout<<DialogPtr::dcast(e.getSource())->getResponse()<<std::endl;
 		if(DialogPtr::dcast(e.getSource())->getResponse() == "Sphere")
         {
             NodePtr s = makeSphere(1,2);
@@ -278,10 +279,10 @@ public:
     virtual void terminated(const DialogEvent& e)
     {
         std::cout<<"Dialog Terminated"<<std::endl;
-        if(DialogPtr::dcast(e.getSource()) == Restart1 || DialogPtr::dcast(e.getSource()) == Restart2 || DialogPtr::dcast(e.getSource()) == Restart3 || DialogPtr::dcast(e.getSource()) == Restart4)
+        if(DialogPtr::dcast(e.getSource())->getResponse() == "Restart")
         {
-            TutorialDialog->reset();
-            TutorialDialog->start();
+            ExampleDialogHierarchy->reset();
+            ExampleDialogHierarchy->start();
         }
     }
 };
@@ -470,7 +471,8 @@ int main(int argc, char **argv)
 		else if( (*Itor)->getType() == Dialog::getClassType())
 		{
 			ExampleDialogArray.push_back(Dialog::Ptr::dcast(*Itor));
-			ExampleDialogArray.back()->addDialogListener(&ExampleDialogHierarchy->_DialogHierarchyListener);
+            ExampleDialogHierarchy->AddXMLDialog(ExampleDialogArray.back());
+            ExampleDialogArray.back()->addDialogListener(&TheTutorialDialogListener);
 		}
     }
 
