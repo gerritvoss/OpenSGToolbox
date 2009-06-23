@@ -22,8 +22,6 @@ listens for:
 
 *************************************************/
 
-
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -51,7 +49,6 @@ listens for:
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorLayer.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
@@ -75,7 +72,6 @@ OSG_USING_NAMESPACE
 InternalWindowPtr MainInternalWindow;
 CaptionPtr TutorialCaption;
 DefaultCaptionComponentGeneratorPtr TutorialCapGen;
-double timee = 0.0;
 Int32 segUpdate = 0;
 NodePtr scene;
 
@@ -233,7 +229,6 @@ public:
     }
 };
 
-
 int main(int argc, char **argv)
 {
     // OSG init
@@ -250,7 +245,7 @@ int main(int argc, char **argv)
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
-
+    
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
@@ -337,7 +332,7 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
                                         Vec2f(550,550),
                                         "OpenSG 05Caption Window");
-										
+
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
@@ -495,3 +490,5 @@ void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }
+
+							

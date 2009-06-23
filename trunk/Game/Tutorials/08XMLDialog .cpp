@@ -475,7 +475,6 @@ int main(int argc, char **argv)
             ExampleDialogArray.back()->addDialogListener(&TheTutorialDialogListener);
 		}
     }
-
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
