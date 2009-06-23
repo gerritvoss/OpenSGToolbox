@@ -55,20 +55,22 @@ osg::AnimationAdvancerPtr TheAnimationAdvancer;
 bool ExitApp = false;
 
 
-// The pointer to the transformation
-TransformPtr trans;
+//Store nodes for scene
+std::vector<NodePtr> UnboundGeometries;
+std::vector<NodePtr> SkeletonNodes;
+std::vector<NodePtr> MeshNodes;
+NodePtr Axes;
+NodePtr Grid;
 
-// The pointer to the geometry core
-GeometryPtr geo;
 
-
+//Used to control animation
+bool animationPaused;
 
 
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeftHand,BonePtr TheLeftFemur,BonePtr TheRightHumerus,BonePtr TheRightRadius,BonePtr TheRightHand,BonePtr TheRightFemur,BonePtr TheTorso, SkeletonPtr TheSkeleton);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -81,6 +83,121 @@ public:
        {
            ExitApp = true;
        }
+
+	   //Toggle animation
+	   if(e.getKey() == KeyEvent::KEY_SPACE)
+	   {
+		   if(animationPaused)
+			   animationPaused = false;
+		   else
+			   animationPaused = true;
+	   }
+
+
+	   //Toggle bind pose
+	   if(e.getKey() == KeyEvent::KEY_B)
+	   {
+		   if(e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		   {
+			   //Toggle mesh
+			   for(int i(0); i < UnboundGeometries.size(); ++i)
+			   {
+				   if(UnboundGeometries[i]->getTravMask() == 0)
+				   {
+					   beginEditCP(UnboundGeometries[i], Node::TravMaskFieldMask);
+							UnboundGeometries[i]->setTravMask(1);
+						endEditCP(UnboundGeometries[i], Node::TravMaskFieldMask);
+				   } 
+				   else
+				   {
+					   beginEditCP(UnboundGeometries[i], Node::TravMaskFieldMask);
+							UnboundGeometries[i]->setTravMask(0);
+						endEditCP(UnboundGeometries[i], Node::TravMaskFieldMask);
+				   }
+			   }
+		   }
+		   else
+		   {
+			   //Toggle skeleton
+			   for(int i(0); i < SkeletonNodes.size(); ++i)
+			   {
+				   if(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore())->getDrawBindPose() == false)
+				   {
+					   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+						 SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore())->setDrawBindPose(true);
+						endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+				   } 
+				   else
+				   {
+					   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+						 SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore())->setDrawBindPose(false);
+						endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+				   }
+			   }
+		   }
+	   }
+
+	   //Toggle current pose
+	   if(e.getKey() == KeyEvent::KEY_P)
+	   {
+		   if(e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		   {
+			   //Toggle mesh
+			   for(int i(0); i < MeshNodes.size(); ++i)
+			   {
+				   if(MeshNodes[i]->getTravMask() == 0)
+				   {
+					   beginEditCP(MeshNodes[i], Node::TravMaskFieldMask);
+							MeshNodes[i]->setTravMask(1);
+						endEditCP(MeshNodes[i], Node::TravMaskFieldMask);
+				   } 
+				   else
+				   {
+					   beginEditCP(MeshNodes[i], Node::TravMaskFieldMask);
+							MeshNodes[i]->setTravMask(0);
+						endEditCP(MeshNodes[i], Node::TravMaskFieldMask);
+				   }
+			   }
+		   }
+		   else
+		   {
+			   //Toggle skeleton
+			   for(int i(0); i < SkeletonNodes.size(); ++i)
+			   {
+				   if(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore())->getDrawPose() == false)
+				   {
+					   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+						 SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore())->setDrawPose(true);
+						endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+				   } 
+				   else
+				   {
+					   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+						 SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore())->setDrawPose(false);
+						endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+				   }
+			   }
+		   }
+	   }
+
+	   //Toggle axes
+	   if(e.getKey() == KeyEvent::KEY_A)
+	   {
+		   std::cout << "push A" << std::endl;
+		   if(Axes->getTravMask() == 0)
+			   Axes->setTravMask(1);
+		   else
+			   Axes->setTravMask(0);
+	   }
+
+	   //Toggle grid
+	   if(e.getKey() == KeyEvent::KEY_G)
+	   {
+			if(Grid->getTravMask() == 0)
+			   Grid->setTravMask(1);
+			else
+			   Grid->setTravMask(0);
+	   }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -147,9 +264,12 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-		osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+		if(!animationPaused)
+		{
+			osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
 
-		TheSkeletonAnimation->update(TheAnimationAdvancer);
+			TheSkeletonAnimation->update(TheAnimationAdvancer);
+		}	
     }
 };
 
@@ -205,461 +325,498 @@ int main(int argc, char **argv)
 		AxesLineChunk->setSmooth(true);
 	endEditCP(AxesLineChunk);
 
+	//Axes material
 	ChunkMaterialPtr AxesMaterial = ChunkMaterial::create();
 	beginEditCP(AxesMaterial, ChunkMaterial::ChunksFieldMask);
 		AxesMaterial->addChunk(AxesLineChunk);
-		//AxesMaterial->addChunk(ExampleMaterialChunk);
-		//AxesMaterial->addChunk(ExampleBlendChunk);
 	endEditCP(AxesMaterial, ChunkMaterial::ChunksFieldMask);
 
+	//Grid material
+	ChunkMaterialPtr gridMaterial = ChunkMaterial::create();
+	beginEditCP(gridMaterial, ChunkMaterial::ChunksFieldMask);
+		gridMaterial->addChunk(AxesLineChunk);
+	endEditCP(gridMaterial, ChunkMaterial::ChunksFieldMask);
 
-	GeoPTypesPtr type = GeoPTypesUI8::create();        
-    beginEditCP(type, GeoPTypesUI8::GeoPropDataFieldMask);
+	//Axes type
+	GeoPTypesPtr axesType = GeoPTypesUI8::create();        
+    beginEditCP(axesType, GeoPTypesUI8::GeoPropDataFieldMask);
     {
-        type->addValue(GL_LINES);
+        axesType->addValue(GL_LINES);
     }
-    endEditCP  (type, GeoPTypesUI8::GeoPropDataFieldMask);
+    endEditCP  (axesType, GeoPTypesUI8::GeoPropDataFieldMask);
 
-	GeoPLengthsPtr lens = GeoPLengthsUI32::create();    
-    beginEditCP(lens, GeoPLengthsUI32::GeoPropDataFieldMask);
+	//Grid type
+	GeoPTypesPtr gridType = GeoPTypesUI8::create();        
+    beginEditCP(gridType, GeoPTypesUI8::GeoPropDataFieldMask);
     {
-        lens->addValue(90);
+        gridType->addValue(GL_LINES);
     }
-    endEditCP  (lens, GeoPLengthsUI32::GeoPropDataFieldMask);
-	 GeoPositions3fPtr pnts = GeoPositions3f::create();
-    beginEditCP(pnts, GeoPositions3f::GeoPropDataFieldMask);
+    endEditCP  (gridType, GeoPTypesUI8::GeoPropDataFieldMask);
+
+	//Axes lens
+	GeoPLengthsPtr axesLens = GeoPLengthsUI32::create();    
+    beginEditCP(axesLens, GeoPLengthsUI32::GeoPropDataFieldMask);
+    {
+        axesLens->addValue(6);
+    }
+    endEditCP  (axesLens, GeoPLengthsUI32::GeoPropDataFieldMask);
+
+	//Grid lens
+	GeoPLengthsPtr gridLens = GeoPLengthsUI32::create();    
+    beginEditCP(gridLens, GeoPLengthsUI32::GeoPropDataFieldMask);
+    {
+        gridLens->addValue(84);
+    }
+    endEditCP  (gridLens, GeoPLengthsUI32::GeoPropDataFieldMask);
+	
+	//Axes points
+	GeoPositions3fPtr axesPnts = GeoPositions3f::create();
+    beginEditCP(axesPnts, GeoPositions3f::GeoPropDataFieldMask);
     {
 		// X-Axis
-        pnts->addValue(Pnt3f(0,  0,  0));
-        pnts->addValue(Pnt3f(15,  0,  0));
+        axesPnts->addValue(Pnt3f(0,  0,  0));
+        axesPnts->addValue(Pnt3f(15,  0,  0));
         
 		// Y-Axis
-		pnts->addValue(Pnt3f(0,  0,  0));
-        pnts->addValue(Pnt3f(0,  15,  0));
+		axesPnts->addValue(Pnt3f(0,  0,  0));
+        axesPnts->addValue(Pnt3f(0,  15,  0));
 
 		// Z-Axis
-        pnts->addValue(Pnt3f(0,  0, 0));
-        pnts->addValue(Pnt3f(0,  0, 15));
+        axesPnts->addValue(Pnt3f(0,  0, 0));
+        axesPnts->addValue(Pnt3f(0,  0, 15));
+    }
+    endEditCP  (axesPnts, GeoPositions3f::GeoPropDataFieldMask);
 
-		//GRID
+	//Grid points
+	GeoPositions3fPtr gridPnts = GeoPositions3f::create();
+    beginEditCP(gridPnts, GeoPositions3f::GeoPropDataFieldMask);
+    {
 		float height = 0;
 
-		pnts->addValue(Pnt3f(-10, height, 0));
+		gridPnts->addValue(Pnt3f(-10, height, 0));
 		if(height == 0)
-			pnts->addValue(Pnt3f(0, height, 0));
+			gridPnts->addValue(Pnt3f(0, height, 0));
 		else
-			pnts->addValue(Pnt3f(10, height, 0));
+			gridPnts->addValue(Pnt3f(10, height, 0));
 
-		pnts->addValue(Pnt3f(-10, height, 1));
-		pnts->addValue(Pnt3f(10, height, 1));
+		gridPnts->addValue(Pnt3f(-10, height, 1));
+		gridPnts->addValue(Pnt3f(10, height, 1));
 
-		pnts->addValue(Pnt3f(-10, height, 2));
-		pnts->addValue(Pnt3f(10, height, 2));
+		gridPnts->addValue(Pnt3f(-10, height, 2));
+		gridPnts->addValue(Pnt3f(10, height, 2));
 
-		pnts->addValue(Pnt3f(-10, height, 3));
-		pnts->addValue(Pnt3f(10, height, 3));
+		gridPnts->addValue(Pnt3f(-10, height, 3));
+		gridPnts->addValue(Pnt3f(10, height, 3));
 
-		pnts->addValue(Pnt3f(-10, height, 4));
-		pnts->addValue(Pnt3f(10, height, 4));
+		gridPnts->addValue(Pnt3f(-10, height, 4));
+		gridPnts->addValue(Pnt3f(10, height, 4));
 
-		pnts->addValue(Pnt3f(-10, height, 5));
-		pnts->addValue(Pnt3f(10, height, 5));
+		gridPnts->addValue(Pnt3f(-10, height, 5));
+		gridPnts->addValue(Pnt3f(10, height, 5));
 
-		pnts->addValue(Pnt3f(-10, height, 6));
-		pnts->addValue(Pnt3f(10, height, 6));
+		gridPnts->addValue(Pnt3f(-10, height, 6));
+		gridPnts->addValue(Pnt3f(10, height, 6));
 
-		pnts->addValue(Pnt3f(-10, height, 7));
-		pnts->addValue(Pnt3f(10, height, 7));
+		gridPnts->addValue(Pnt3f(-10, height, 7));
+		gridPnts->addValue(Pnt3f(10, height, 7));
 
-		pnts->addValue(Pnt3f(-10, height, 8));
-		pnts->addValue(Pnt3f(10, height, 8));
+		gridPnts->addValue(Pnt3f(-10, height, 8));
+		gridPnts->addValue(Pnt3f(10, height, 8));
 
-		pnts->addValue(Pnt3f(-10, height, 9));
-		pnts->addValue(Pnt3f(10, height, 9));
+		gridPnts->addValue(Pnt3f(-10, height, 9));
+		gridPnts->addValue(Pnt3f(10, height, 9));
 
-		pnts->addValue(Pnt3f(-10, height, 10));
-		pnts->addValue(Pnt3f(10, height, 10));
+		gridPnts->addValue(Pnt3f(-10, height, 10));
+		gridPnts->addValue(Pnt3f(10, height, 10));
 
-		pnts->addValue(Pnt3f(-10, height, -1));
-		pnts->addValue(Pnt3f(10, height, -1));
+		gridPnts->addValue(Pnt3f(-10, height, -1));
+		gridPnts->addValue(Pnt3f(10, height, -1));
 
-		pnts->addValue(Pnt3f(-10, height, -2));
-		pnts->addValue(Pnt3f(10, height, -2));
+		gridPnts->addValue(Pnt3f(-10, height, -2));
+		gridPnts->addValue(Pnt3f(10, height, -2));
 
-		pnts->addValue(Pnt3f(-10, height, -3));
-		pnts->addValue(Pnt3f(10, height, -3));
+		gridPnts->addValue(Pnt3f(-10, height, -3));
+		gridPnts->addValue(Pnt3f(10, height, -3));
 
-		pnts->addValue(Pnt3f(-10, height, -4));
-		pnts->addValue(Pnt3f(10, height, -4));
+		gridPnts->addValue(Pnt3f(-10, height, -4));
+		gridPnts->addValue(Pnt3f(10, height, -4));
 
-		pnts->addValue(Pnt3f(-10, height, -5));
-		pnts->addValue(Pnt3f(10, height, -5));
+		gridPnts->addValue(Pnt3f(-10, height, -5));
+		gridPnts->addValue(Pnt3f(10, height, -5));
 
-		pnts->addValue(Pnt3f(-10, height, -6));
-		pnts->addValue(Pnt3f(10, height, -6));
+		gridPnts->addValue(Pnt3f(-10, height, -6));
+		gridPnts->addValue(Pnt3f(10, height, -6));
 
-		pnts->addValue(Pnt3f(-10, height, -7));
-		pnts->addValue(Pnt3f(10, height, -7));
+		gridPnts->addValue(Pnt3f(-10, height, -7));
+		gridPnts->addValue(Pnt3f(10, height, -7));
 
-		pnts->addValue(Pnt3f(-10, height, -8));
-		pnts->addValue(Pnt3f(10, height, -8));
+		gridPnts->addValue(Pnt3f(-10, height, -8));
+		gridPnts->addValue(Pnt3f(10, height, -8));
 
-		pnts->addValue(Pnt3f(-10, height, -9));
-		pnts->addValue(Pnt3f(10, height, -9));
+		gridPnts->addValue(Pnt3f(-10, height, -9));
+		gridPnts->addValue(Pnt3f(10, height, -9));
 
-		pnts->addValue(Pnt3f(-10, height, -10));
-		pnts->addValue(Pnt3f(10, height, -10));
+		gridPnts->addValue(Pnt3f(-10, height, -10));
+		gridPnts->addValue(Pnt3f(10, height, -10));
 
 
-		pnts->addValue(Pnt3f(0, height, -10));
+		gridPnts->addValue(Pnt3f(0, height, -10));
 		if(height == 0)
-			pnts->addValue(Pnt3f(0, height, 0));
+			gridPnts->addValue(Pnt3f(0, height, 0));
 		else
-			pnts->addValue(Pnt3f(0, height, 10));
+			gridPnts->addValue(Pnt3f(0, height, 10));
 		
-		pnts->addValue(Pnt3f(1, height, -10));
-		pnts->addValue(Pnt3f(1, height, 10));
+		gridPnts->addValue(Pnt3f(1, height, -10));
+		gridPnts->addValue(Pnt3f(1, height, 10));
 
-		pnts->addValue(Pnt3f(2, height, -10));
-		pnts->addValue(Pnt3f(2, height, 10));
+		gridPnts->addValue(Pnt3f(2, height, -10));
+		gridPnts->addValue(Pnt3f(2, height, 10));
 
-		pnts->addValue(Pnt3f(3, height, -10));
-		pnts->addValue(Pnt3f(3, height, 10));
+		gridPnts->addValue(Pnt3f(3, height, -10));
+		gridPnts->addValue(Pnt3f(3, height, 10));
 
-		pnts->addValue(Pnt3f(4, height, -10));
-		pnts->addValue(Pnt3f(4, height, 10));
+		gridPnts->addValue(Pnt3f(4, height, -10));
+		gridPnts->addValue(Pnt3f(4, height, 10));
 
-		pnts->addValue(Pnt3f(5, height, -10));
-		pnts->addValue(Pnt3f(5, height, 10));
+		gridPnts->addValue(Pnt3f(5, height, -10));
+		gridPnts->addValue(Pnt3f(5, height, 10));
 
-		pnts->addValue(Pnt3f(6, height, -10));
-		pnts->addValue(Pnt3f(6, height, 10));
+		gridPnts->addValue(Pnt3f(6, height, -10));
+		gridPnts->addValue(Pnt3f(6, height, 10));
 
-		pnts->addValue(Pnt3f(7, height, -10));
-		pnts->addValue(Pnt3f(7, height, 10));
+		gridPnts->addValue(Pnt3f(7, height, -10));
+		gridPnts->addValue(Pnt3f(7, height, 10));
 
-		pnts->addValue(Pnt3f(8, height, -10));
-		pnts->addValue(Pnt3f(8, height, 10));
+		gridPnts->addValue(Pnt3f(8, height, -10));
+		gridPnts->addValue(Pnt3f(8, height, 10));
 
-		pnts->addValue(Pnt3f(9, height, -10));
-		pnts->addValue(Pnt3f(9, height, 10));
+		gridPnts->addValue(Pnt3f(9, height, -10));
+		gridPnts->addValue(Pnt3f(9, height, 10));
 
-		pnts->addValue(Pnt3f(10, height, -10));
-		pnts->addValue(Pnt3f(10, height, 10));
+		gridPnts->addValue(Pnt3f(10, height, -10));
+		gridPnts->addValue(Pnt3f(10, height, 10));
 
-		pnts->addValue(Pnt3f(-1, height, -10));
-		pnts->addValue(Pnt3f(-1, height, 10));
+		gridPnts->addValue(Pnt3f(-1, height, -10));
+		gridPnts->addValue(Pnt3f(-1, height, 10));
 
-		pnts->addValue(Pnt3f(-2, height, -10));
-		pnts->addValue(Pnt3f(-2, height, 10));
+		gridPnts->addValue(Pnt3f(-2, height, -10));
+		gridPnts->addValue(Pnt3f(-2, height, 10));
 
-		pnts->addValue(Pnt3f(-3, height, -10));
-		pnts->addValue(Pnt3f(-3, height, 10));
+		gridPnts->addValue(Pnt3f(-3, height, -10));
+		gridPnts->addValue(Pnt3f(-3, height, 10));
 
-		pnts->addValue(Pnt3f(-4, height, -10));
-		pnts->addValue(Pnt3f(-4, height, 10));
+		gridPnts->addValue(Pnt3f(-4, height, -10));
+		gridPnts->addValue(Pnt3f(-4, height, 10));
 
-		pnts->addValue(Pnt3f(-5, height, -10));
-		pnts->addValue(Pnt3f(-5, height, 10));
+		gridPnts->addValue(Pnt3f(-5, height, -10));
+		gridPnts->addValue(Pnt3f(-5, height, 10));
 
-		pnts->addValue(Pnt3f(-6, height, -10));
-		pnts->addValue(Pnt3f(-6, height, 10));
+		gridPnts->addValue(Pnt3f(-6, height, -10));
+		gridPnts->addValue(Pnt3f(-6, height, 10));
 
-		pnts->addValue(Pnt3f(-7, height, -10));
-		pnts->addValue(Pnt3f(-7, height, 10));
+		gridPnts->addValue(Pnt3f(-7, height, -10));
+		gridPnts->addValue(Pnt3f(-7, height, 10));
 
-		pnts->addValue(Pnt3f(-8, height, -10));
-		pnts->addValue(Pnt3f(-8, height, 10));
+		gridPnts->addValue(Pnt3f(-8, height, -10));
+		gridPnts->addValue(Pnt3f(-8, height, 10));
 
-		pnts->addValue(Pnt3f(-9, height, -10));
-		pnts->addValue(Pnt3f(-9, height, 10));
+		gridPnts->addValue(Pnt3f(-9, height, -10));
+		gridPnts->addValue(Pnt3f(-9, height, 10));
 
-		pnts->addValue(Pnt3f(-10, height, -10));
-		pnts->addValue(Pnt3f(-10, height, 10));
+		gridPnts->addValue(Pnt3f(-10, height, -10));
+		gridPnts->addValue(Pnt3f(-10, height, 10));
 
 		
     }
-    endEditCP  (pnts, GeoPositions3f::GeoPropDataFieldMask);
+    endEditCP  (gridPnts, GeoPositions3f::GeoPropDataFieldMask);
     
-    //Normals
-	GeoNormals3fPtr norms = GeoNormals3f::create();
-    beginEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+    //Axes normals
+	GeoNormals3fPtr axesNorms = GeoNormals3f::create();
+    beginEditCP(axesNorms, GeoNormals3f::GeoPropDataFieldMask);
+        axesNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        axesNorms->addValue(Vec3f( 0.0,0.0,1.0));
         
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		axesNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        axesNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-        norms->addValue(Vec3f( 1.0,0.0,0.0));
-        norms->addValue(Vec3f( 1.0,0.0,0.0));
+        axesNorms->addValue(Vec3f( 1.0,0.0,0.0));
+        axesNorms->addValue(Vec3f( 1.0,0.0,0.0));
+    endEditCP(axesNorms, GeoNormals3f::GeoPropDataFieldMask);
 
-		//GRID
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+	//Grid normals
+	GeoNormals3fPtr gridNorms = GeoNormals3f::create();
+    beginEditCP(gridNorms, GeoNormals3f::GeoPropDataFieldMask);
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
 
-		norms->addValue(Vec3f( 0.0,0.0,1.0));
-        norms->addValue(Vec3f( 0.0,0.0,1.0));
-    endEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
+		gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+        gridNorms->addValue(Vec3f( 0.0,0.0,1.0));
+    endEditCP(gridNorms, GeoNormals3f::GeoPropDataFieldMask);
 
-	 GeoColors3fPtr colors = GeoColors3f::create();
-    beginEditCP(colors, GeoColors3f::GeoPropDataFieldMask);
-        colors->addValue(Color3f( 1.0,0.0,0.0));
-        colors->addValue(Color3f( 1.0,0.0,0.0));
+	//Axes colors
+	GeoColors3fPtr axesColors = GeoColors3f::create();
+    beginEditCP(axesColors, GeoColors3f::GeoPropDataFieldMask);
+        axesColors->addValue(Color3f( 1.0,0.0,0.0));
+        axesColors->addValue(Color3f( 1.0,0.0,0.0));
         
-		colors->addValue(Color3f( 0.0,1.0,0.0));
-        colors->addValue(Color3f( 0.0,1.0,0.0));
+		axesColors->addValue(Color3f( 0.0,1.0,0.0));
+        axesColors->addValue(Color3f( 0.0,1.0,0.0));
 
-        colors->addValue(Color3f( 0.0,0.0,1.0));
-        colors->addValue(Color3f( 0.0,0.0,1.0));
+        axesColors->addValue(Color3f( 0.0,0.0,1.0));
+        axesColors->addValue(Color3f( 0.0,0.0,1.0));
+    endEditCP(axesColors, GeoColors3f::GeoPropDataFieldMask);
 
-		//GRID
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+	//Grid gridColors
+	GeoColors3fPtr gridColors = GeoColors3f::create();
+    beginEditCP(gridColors, GeoColors3f::GeoPropDataFieldMask);
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
 
-		colors->addValue(Color3f( 0.5,0.5,0.5));
-        colors->addValue(Color3f( 0.5,0.5,0.5));
-    endEditCP(colors, GeoColors3f::GeoPropDataFieldMask);
+		gridColors->addValue(Color3f( 0.5,0.5,0.5));
+        gridColors->addValue(Color3f( 0.5,0.5,0.5));
+    endEditCP(gridColors, GeoColors3f::GeoPropDataFieldMask);
 
+	//Create axes geometry
 	GeometryPtr axesGeo = Geometry::create();
     beginEditCP(axesGeo, Geometry::TypesFieldMask     |
                      Geometry::LengthsFieldMask   |
@@ -668,11 +825,11 @@ int main(int argc, char **argv)
                      Geometry::MaterialFieldMask |
 					 Geometry::ColorsFieldMask);
     {
-        axesGeo->setTypes    (type);
-        axesGeo->setLengths  (lens);
-        axesGeo->setPositions(pnts);
-        axesGeo->setNormals(norms);
-        axesGeo->setColors(colors);
+        axesGeo->setTypes    (axesType);
+        axesGeo->setLengths  (axesLens);
+        axesGeo->setPositions(axesPnts);
+        axesGeo->setNormals(axesNorms);
+        axesGeo->setColors(axesColors);
 
         // assign a material to the geometry to make it visible. The details
         // of materials are defined later.
@@ -685,33 +842,53 @@ int main(int argc, char **argv)
                      Geometry::MaterialFieldMask |
 					 Geometry::ColorsFieldMask  );
 
+	//Create grid geometry
+	GeometryPtr gridGeo = Geometry::create();
+    beginEditCP(gridGeo, Geometry::TypesFieldMask     |
+                     Geometry::LengthsFieldMask   |
+                     Geometry::PositionsFieldMask |
+                     Geometry::NormalsFieldMask |
+                     Geometry::MaterialFieldMask |
+					 Geometry::ColorsFieldMask);
+    {
+        gridGeo->setTypes    (gridType);
+        gridGeo->setLengths  (gridLens);
+        gridGeo->setPositions(gridPnts);
+        gridGeo->setNormals(gridNorms);
+        gridGeo->setColors(gridColors);
+
+        // assign a material to the geometry to make it visible. The details
+        // of materials are defined later.
+        gridGeo->setMaterial(AxesMaterial);   
+    }
+    endEditCP  (gridGeo, Geometry::TypesFieldMask     |
+                     Geometry::LengthsFieldMask   |
+                     Geometry::PositionsFieldMask |
+                     Geometry::NormalsFieldMask |
+                     Geometry::MaterialFieldMask |
+					 Geometry::ColorsFieldMask  );
+
 	//Create unbound geometry Node
-	NodePtr Axes = Node::create();
+	Axes = osg::Node::create();
 	beginEditCP(Axes, Node::CoreFieldMask);
 		Axes->setCore(axesGeo);
 	endEditCP(Axes, Node::CoreFieldMask);
 
-
-
-
-
-	
+	//Create unbound geometry Node
+	Grid = osg::Node::create();
+	beginEditCP(Grid, Node::CoreFieldMask);
+		Grid->setCore(gridGeo);
+	endEditCP(Grid, Node::CoreFieldMask);
 
 
 	//Import scene from XML
 	ChunkMaterialPtr ExampleMaterial;
-	
-	SkeletonPtr ExampleSkeleton;
-
 	std::vector<SkeletonPtr> SkeletonPtrs;
-
 	std::vector<SkeletonBlendedGeometryPtr> SkeletonBlendedGeometryPtrs;
-
 	std::vector<GeometryPtr> GeometryPtrs;
 
-
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/SkeletonExportTest.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/21SceneFromMaya.xml"));
 
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
@@ -737,12 +914,8 @@ int main(int argc, char **argv)
 			GeometryPtrs.push_back(Geometry::Ptr::dcast(*Itor));
 		}
     }
-
 	
-	
-	
-	//Create unbound geometry Node
-	std::vector<NodePtr> UnboundGeometries;
+	//Create unbound geometry Node (to show the mesh in its bind pose)
 	for (int i(0); i < GeometryPtrs.size(); ++i)
 	{
 		NodePtr UnboundGeometry = Node::create();
@@ -754,8 +927,7 @@ int main(int argc, char **argv)
 	}
 
 
-	//Skeletons
-	std::vector<NodePtr> SkeletonNodes;
+	//Create skeleton nodes
 	for (int i(0); i < SkeletonPtrs.size(); ++i)
 	{
 		//SkeletonDrawer
@@ -763,10 +935,10 @@ int main(int argc, char **argv)
 		beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask  | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask);
 			ExampleSkeletonDrawable->setSkeleton(SkeletonPtrs[i]);
 			ExampleSkeletonDrawable->setMaterial(AxesMaterial);
-			ExampleSkeletonDrawable->setDrawPose(true);
-			ExampleSkeletonDrawable->setPoseColor(Color4f(1.0, 0.0, 1.0, 1.0));
-			ExampleSkeletonDrawable->setDrawBindPose(true);
-			ExampleSkeletonDrawable->setBindPoseColor(Color4f(1.0, 1.0, 0.0, 1.0));
+			ExampleSkeletonDrawable->setDrawPose(true);								  //By default we draw the current skeleton
+			ExampleSkeletonDrawable->setPoseColor(Color4f(1.0, 0.0, 1.0, 1.0));       //Set color of current skeleton
+			ExampleSkeletonDrawable->setDrawBindPose(true);                           //By default we draw the bind pose skeleton
+			ExampleSkeletonDrawable->setBindPoseColor(Color4f(1.0, 1.0, 0.0, 1.0));   //Set color of bind pose skeleton
 		endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask  | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask);
 		
 		//Skeleton Node
@@ -780,8 +952,7 @@ int main(int argc, char **argv)
 
 
 
-	//Skeleton Blended Geometry Node
-	std::vector<NodePtr> MeshNodes;
+	//Create skeleton blended geometry nodes
 	for (int i(0); i < SkeletonBlendedGeometryPtrs.size(); ++i)
 	{
 		NodePtr MeshNode = osg::Node::create();
@@ -790,26 +961,23 @@ int main(int argc, char **argv)
 		endEditCP(MeshNode, Node::CoreFieldMask);
 
 		MeshNodes.push_back(MeshNode);
-
-		//SkeletonBlendedGeometryPtrs[i]->printStats();
-
-		//SkeletonBlendedGeometryPtrs[i]->printInfluences();
 	}
 
 
 
-    //Animation Advancer
+    //Create Animation Advancer
     TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
     osg::beginEditCP(TheAnimationAdvancer);
     osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
     osg::beginEditCP(TheAnimationAdvancer);
 
 
-    
+    //Add nodes to scene
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
 		scene->addChild(Axes);
+		scene->addChild(Grid);
 
 		for (int i(0); i < SkeletonNodes.size(); ++i)
 		{
@@ -830,15 +998,11 @@ int main(int argc, char **argv)
     mgr->setRoot(scene);
 
 
+	//By default the animation is not paused
+	animationPaused = false;
+
     // Show the whole Scene
     mgr->showAll();
-
-
-
-
-
-
-
 
 
     while(!ExitApp)

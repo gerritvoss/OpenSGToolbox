@@ -107,40 +107,41 @@ void Animation::stop(void)
 
 bool Animation::update(const AnimationAdvancerPtr& advancer)
 {
-    UInt32 PreUpdateCycleCount(getCycles());
-    if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
-    {
-        Real32 Length(getLength()),
-               t(advancer->getValue());
+	UInt32 PreUpdateCycleCount(getCycles());
+	if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
+	{
+		Real32 Length(getLength()),
+			   t(advancer->getValue());
         
-        //Check if the Animation Time is past the end
-        if(t >= Length)
-        {
-            //Update the number of cycles completed
-            beginEditCP(AnimationPtr(this), CyclesFieldMask);
-                setCycles( (Length <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / Length ) )) );
-            endEditCP(AnimationPtr(this), CyclesFieldMask);
-        }
-        //Internal Update
-        if(getCycling() > 0 && getCycles() >= getCycling())
-        {
-            internalUpdate(Length-.0001, advancer->getPrevValue());
-        }
-        else
-        {
-            internalUpdate(t, advancer->getPrevValue());
-        }
+		//Check if the Animation Time is past the end
+		if(t >= Length)
+		{
+			//Update the number of cycles completed
+			beginEditCP(AnimationPtr(this), CyclesFieldMask);
+				setCycles( (Length <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / Length ) )) );
+			endEditCP(AnimationPtr(this), CyclesFieldMask);
+		}
+		//Internal Update
+		if(getCycling() > 0 && getCycles() >= getCycling())
+		{
+			internalUpdate(Length-.0001, advancer->getPrevValue());
+		}
+		else
+		{
+			internalUpdate(t, advancer->getPrevValue());
+		}
 
 
-        //If the number of cycles has changed
-        if(getCycles() != PreUpdateCycleCount)
-        {
-            produceAnimationCycled();
-        }
-    }
+		//If the number of cycles has changed
+		if(getCycles() != PreUpdateCycleCount)
+		{
+			produceAnimationCycled();
+		}
+	}
 
-    //Return true if the animation has completed its number of cycles, false otherwise
-    return (getCycling() > 0 && getCycles() >= getCycling());
+	//Return true if the animation has completed its number of cycles, false otherwise
+	return (getCycling() > 0 && getCycles() >= getCycling());
+
 }
 
 void Animation::pause(void)

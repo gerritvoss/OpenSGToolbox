@@ -60,11 +60,66 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+
+	/**************************************************************************//**
+	 * @fn	Matrix getAbsoluteTransformation(void) const
+	 * 
+	 * @brief	Gets the absolute transformation of the joint in its current
+	 *			position.
+	 * 
+	 * @return	The joint's absolute transformation matrix. 
+	*****************************************************************************/
 	Matrix getAbsoluteTransformation(void) const;
+
+	/**************************************************************************//**
+	 * @fn	Matrix getBindAbsoluteTransformation(void) const
+	 * 
+	 * @brief	Gets the absolute transformation of the joint in its bind
+	 *			position. 
+	 * 
+	 * @return	The joint's bind absolute transformation matrix. 
+	*****************************************************************************/
 	Matrix getBindAbsoluteTransformation(void) const;
+
+	/**************************************************************************//**
+	 * @fn	const Matrix& getAbsoluteDifferenceTransformation(void) const
+	 * 
+	 * @brief	Gets the transformation representing the difference between the
+	 *			joint's current absolute transformation and its bind absolute
+	 *			transformation.
+	 * 
+	 * @return	The absolute difference transformation. 
+	*****************************************************************************/
 	const Matrix& getAbsoluteDifferenceTransformation(void) const;
+
+	/**************************************************************************//**
+	 * @fn	const Matrix& getRelativeDifferenceTransformation(void) const
+	 * 
+	 * @brief	Gets the transformation representing the difference between the
+	 *			joint's current relative transformation and its bind relative
+	 *			transformation. 
+	 * 
+	 * @return	The relative difference transformation. 
+	*****************************************************************************/
 	const Matrix& getRelativeDifferenceTransformation(void) const;
+
+	/**************************************************************************//**
+	 * @fn	void calculateTransformations(void)
+	 * 
+	 * @brief	Updates the joint's absolute transformation matrix, bind absolute
+	 *			transformation matrix, absolute difference matrix, and relative
+	 *			difference matrix.
+	*****************************************************************************/
 	void calculateTransformations(void);
+
+	/**************************************************************************//**
+	 * @fn	void updateTransformations(bool isRecursive)
+	 * 
+	 * @brief	Same as calculateTransformations() only it will also tell its
+	 *			children to update. 
+	 * 
+	 * @param	isRecursive	-- Set to true to tell skeleton about the update.
+	*****************************************************************************/
 	void updateTransformations(bool isRecursive);
 
     /*---------------------------------------------------------------------*/
