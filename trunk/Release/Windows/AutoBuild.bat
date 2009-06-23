@@ -9,7 +9,6 @@ set NSIS_PATH=C:\Program Files\NSIS
 set VS_PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE
 
 
-:Location of the subversion repository trunk
 set REPOSITORY_URL=https://opensgtoolbox.svn.sourceforge.net/svnroot/opensgtoolbox/trunk
 set PROJECT_DIR=OpenSGToolbox
 set BUILD_DIR=Builds\Windows
