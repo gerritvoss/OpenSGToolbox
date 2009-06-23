@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -138,6 +138,13 @@ SFReal32 *LineParticleSystemDrawerBase::getSFLineLength(void)
     return &_sfLineLength;
 }
 
+//! Get the LineParticleSystemDrawer::_sfEndPointFading field.
+inline
+SFVec2f *LineParticleSystemDrawerBase::getSFEndPointFading(void)
+{
+    return &_sfEndPointFading;
+}
+
 
 //! Get the value of the LineParticleSystemDrawer::_sfLineWidthScaling field.
 inline
@@ -263,6 +270,27 @@ inline
 void LineParticleSystemDrawerBase::setLineLength(const Real32 &value)
 {
     _sfLineLength.setValue(value);
+}
+
+//! Get the value of the LineParticleSystemDrawer::_sfEndPointFading field.
+inline
+Vec2f &LineParticleSystemDrawerBase::getEndPointFading(void)
+{
+    return _sfEndPointFading.getValue();
+}
+
+//! Get the value of the LineParticleSystemDrawer::_sfEndPointFading field.
+inline
+const Vec2f &LineParticleSystemDrawerBase::getEndPointFading(void) const
+{
+    return _sfEndPointFading.getValue();
+}
+
+//! Set the value of the LineParticleSystemDrawer::_sfEndPointFading field.
+inline
+void LineParticleSystemDrawerBase::setEndPointFading(const Vec2f &value)
+{
+    _sfEndPointFading.setValue(value);
 }
 
 

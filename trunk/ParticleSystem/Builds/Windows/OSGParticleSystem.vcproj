@@ -308,6 +308,34 @@
 					Name="ParticleSystemDrawers"
 					>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGDiscParticleSystemDrawer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGDiscParticleSystemDrawer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGDiscParticleSystemDrawer.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGDiscParticleSystemDrawerBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGDiscParticleSystemDrawerBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGDiscParticleSystemDrawerBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGDiscParticleSystemDrawerFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleSystemDrawers\OSGLineParticleSystemDrawer.cpp"
 						>
 					</File>

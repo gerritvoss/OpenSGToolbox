@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -82,6 +82,9 @@ const OSG::BitVector  LineParticleSystemDrawerBase::LineLengthSourceFieldMask =
 const OSG::BitVector  LineParticleSystemDrawerBase::LineLengthFieldMask = 
     (TypeTraits<BitVector>::One << LineParticleSystemDrawerBase::LineLengthFieldId);
 
+const OSG::BitVector  LineParticleSystemDrawerBase::EndPointFadingFieldMask = 
+    (TypeTraits<BitVector>::One << LineParticleSystemDrawerBase::EndPointFadingFieldId);
+
 const OSG::BitVector LineParticleSystemDrawerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -106,6 +109,9 @@ const OSG::BitVector LineParticleSystemDrawerBase::MTInfluenceMask =
 */
 /*! \var Real32          LineParticleSystemDrawerBase::_sfLineLength
     The length to draw the line.  This is only used when LineLengthSource is LENGTH_STATIC.
+*/
+/*! \var Vec2f           LineParticleSystemDrawerBase::_sfEndPointFading
+    The x value is multiplied to the alpha portion of the particles color and applied to the orgin vertex.     The y value is multiplied to the alpha portion of the particles color and applied to the destination vertex.
 */
 
 //! LineParticleSystemDrawer description
@@ -141,7 +147,12 @@ FieldDescription *LineParticleSystemDrawerBase::_desc[] =
                      "LineLength", 
                      LineLengthFieldId, LineLengthFieldMask,
                      false,
-                     (FieldAccessMethod) &LineParticleSystemDrawerBase::getSFLineLength)
+                     (FieldAccessMethod) &LineParticleSystemDrawerBase::getSFLineLength),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "EndPointFading", 
+                     EndPointFadingFieldId, EndPointFadingFieldMask,
+                     false,
+                     (FieldAccessMethod) &LineParticleSystemDrawerBase::getSFEndPointFading)
 };
 
 
@@ -223,6 +234,7 @@ LineParticleSystemDrawerBase::LineParticleSystemDrawerBase(void) :
     _sfLineDirection          (Vec3f(0.0,1.0,0.0)), 
     _sfLineLengthSource       (UInt32(LineParticleSystemDrawer::LENGTH_SIZE_X)), 
     _sfLineLength             (Real32(1.0)), 
+    _sfEndPointFading         (Vec2f(1.0,1.0)), 
     Inherited() 
 {
 }
@@ -238,6 +250,7 @@ LineParticleSystemDrawerBase::LineParticleSystemDrawerBase(const LineParticleSys
     _sfLineDirection          (source._sfLineDirection          ), 
     _sfLineLengthSource       (source._sfLineLengthSource       ), 
     _sfLineLength             (source._sfLineLength             ), 
+    _sfEndPointFading         (source._sfEndPointFading         ), 
     Inherited                 (source)
 {
 }
@@ -284,6 +297,11 @@ UInt32 LineParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfLineLength.getBinSize();
     }
 
+    if(FieldBits::NoField != (EndPointFadingFieldMask & whichField))
+    {
+        returnValue += _sfEndPointFading.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -321,6 +339,11 @@ void LineParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (LineLengthFieldMask & whichField))
     {
         _sfLineLength.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EndPointFadingFieldMask & whichField))
+    {
+        _sfEndPointFading.copyToBin(pMem);
     }
 
 
@@ -361,6 +384,11 @@ void LineParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfLineLength.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EndPointFadingFieldMask & whichField))
+    {
+        _sfEndPointFading.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -389,6 +417,9 @@ void LineParticleSystemDrawerBase::executeSyncImpl(      LineParticleSystemDrawe
     if(FieldBits::NoField != (LineLengthFieldMask & whichField))
         _sfLineLength.syncWith(pOther->_sfLineLength);
 
+    if(FieldBits::NoField != (EndPointFadingFieldMask & whichField))
+        _sfEndPointFading.syncWith(pOther->_sfEndPointFading);
+
 
 }
 #else
@@ -416,6 +447,9 @@ void LineParticleSystemDrawerBase::executeSyncImpl(      LineParticleSystemDrawe
 
     if(FieldBits::NoField != (LineLengthFieldMask & whichField))
         _sfLineLength.syncWith(pOther->_sfLineLength);
+
+    if(FieldBits::NoField != (EndPointFadingFieldMask & whichField))
+        _sfEndPointFading.syncWith(pOther->_sfEndPointFading);
 
 
 

@@ -21,6 +21,7 @@
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
+#include <OpenSG/ParticleSystem/OSGDiscParticleSystemDrawer.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -39,6 +40,9 @@ ParticleSystemCorePtr ParticleNodeCore;
 PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
 LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
 QuadParticleSystemDrawerPtr ExampleQuadParticleSystemDrawer;
+DiscParticleSystemDrawerPtr ExampleDiscParticleSystemDrawer;
+
+bool StatisticsOn(false);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -59,25 +63,34 @@ public:
 
    virtual void keyTyped(const KeyEvent& e)
    {
-	   if(e.getKey()== KeyEvent::KEY_1) // Use the Point Drawer
+	   switch(e.getKey())
 	   {
+	   case KeyEvent::KEY_1: // Use the Point Drawer
 			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
 				ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
-	   }
+			break;
 
-	   if(e.getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
-	   {
+	   case KeyEvent::KEY_2://Use the Line Drawer for 2
 			 beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
 				ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
-	   }
+			break;
 
-	   if(e.getKey()== KeyEvent::KEY_3)//Use the Quad Drawer for 3
-	   {
+	   case KeyEvent::KEY_3://Use the Quad Drawer for 3
 			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
 				ParticleNodeCore->setDrawer(ExampleQuadParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
+			break;
+	   case KeyEvent::KEY_4://Use the Disc Drawer for 4
+			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
+				ParticleNodeCore->setDrawer(ExampleDiscParticleSystemDrawer);
+			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
+			break;
+	   case KeyEvent::KEY_S://Toggle the statistics
+		    StatisticsOn = !StatisticsOn;
+		    mgr->setStatistics(StatisticsOn);
+			break;
 	   }
    }
 };
@@ -187,9 +200,9 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,0.3f));
-		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,0.3f));
-		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,0.3f));
+		PSMaterialChunkChunk->setAmbient(Color4f(0.5f,0.5f,0.5f,0.3f));
+		PSMaterialChunkChunk->setDiffuse(Color4f(0.8f,0.8f,0.8f,0.3f));
+		PSMaterialChunkChunk->setSpecular(Color4f(1.0f,1.0f,1.0f,0.3f));
 		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSMaterialChunkChunk);
 
@@ -206,7 +219,7 @@ int main(int argc, char **argv)
 	{
 		ExampleParticleSystem->addParticle(Pnt3f(i,i,i),
 			Vec3f(0.0,0.0f,1.0f),
-			Color4f(1.0,0.0,0.0,0.3), 
+			Color4f(1.0,0.0,0.0,0.5), 
 			Vec3f(1.0,1.0,1.0), 
 			-1.0, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
@@ -228,6 +241,14 @@ int main(int argc, char **argv)
 	endEditCP(ExampleLineParticleSystemDrawer);
 		//Quad
 	ExampleQuadParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
+
+	//Disc
+	ExampleDiscParticleSystemDrawer = osg::DiscParticleSystemDrawer::create();
+	beginEditCP(ExampleDiscParticleSystemDrawer);
+		ExampleDiscParticleSystemDrawer->setSegments(16);
+		ExampleDiscParticleSystemDrawer->setCenterAlpha(1.0);
+		ExampleDiscParticleSystemDrawer->setEdgeAlpha(0.0);
+	endEditCP(ExampleDiscParticleSystemDrawer);
 	
 	//Particle System Node
     ParticleNodeCore = osg::ParticleSystemCore::create();

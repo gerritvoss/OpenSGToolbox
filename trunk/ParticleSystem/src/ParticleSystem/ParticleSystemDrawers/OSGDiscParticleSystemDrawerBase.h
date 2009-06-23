@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class QuadParticleSystemDrawer
+ **     class DiscParticleSystemDrawer
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGQUADPARTICLESYSTEMDRAWERBASE_H_
-#define _OSGQUADPARTICLESYSTEMDRAWERBASE_H_
+#ifndef _OSGDISCPARTICLESYSTEMDRAWERBASE_H_
+#define _OSGDISCPARTICLESYSTEMDRAWERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -67,25 +67,26 @@
 
 #include "OSGParticleSystemDrawer.h" // Parent
 
-#include <OpenSG/OSGVec2fFields.h> // QuadSizeScaling type
-#include <OpenSG/OSGBoolFields.h> // UseImageSizeRatio type
+#include <OpenSG/OSGReal32Fields.h> // Radius type
+#include <OpenSG/OSGUInt32Fields.h> // Segments type
 #include <OpenSG/OSGUInt32Fields.h> // NormalSource type
 #include <OpenSG/OSGVec3fFields.h> // Normal type
 #include <OpenSG/OSGUInt32Fields.h> // UpSource type
 #include <OpenSG/OSGVec3fFields.h> // Up type
 #include <OpenSG/OSGBoolFields.h> // UseNormalAsObjectSpaceRotation type
-#include <OpenSG/OSGReal32Fields.h> // Twist type
+#include <OpenSG/OSGReal32Fields.h> // CenterAlpha type
+#include <OpenSG/OSGReal32Fields.h> // EdgeAlpha type
 
-#include "OSGQuadParticleSystemDrawerFields.h"
+#include "OSGDiscParticleSystemDrawerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class QuadParticleSystemDrawer;
+class DiscParticleSystemDrawer;
 class BinaryDataHandler;
 
-//! \brief QuadParticleSystemDrawer Base Class.
+//! \brief DiscParticleSystemDrawer Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public ParticleSystemDrawer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscParticleSystemDrawerBase : public ParticleSystemDrawer
 {
   private:
 
@@ -94,29 +95,31 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef QuadParticleSystemDrawerPtr  Ptr;
+    typedef DiscParticleSystemDrawerPtr  Ptr;
 
     enum
     {
-        QuadSizeScalingFieldId                = Inherited::NextFieldId,
-        UseImageSizeRatioFieldId              = QuadSizeScalingFieldId                + 1,
-        NormalSourceFieldId                   = UseImageSizeRatioFieldId              + 1,
+        RadiusFieldId                         = Inherited::NextFieldId,
+        SegmentsFieldId                       = RadiusFieldId                         + 1,
+        NormalSourceFieldId                   = SegmentsFieldId                       + 1,
         NormalFieldId                         = NormalSourceFieldId                   + 1,
         UpSourceFieldId                       = NormalFieldId                         + 1,
         UpFieldId                             = UpSourceFieldId                       + 1,
         UseNormalAsObjectSpaceRotationFieldId = UpFieldId                             + 1,
-        TwistFieldId                          = UseNormalAsObjectSpaceRotationFieldId + 1,
-        NextFieldId                           = TwistFieldId                          + 1
+        CenterAlphaFieldId                    = UseNormalAsObjectSpaceRotationFieldId + 1,
+        EdgeAlphaFieldId                      = CenterAlphaFieldId                    + 1,
+        NextFieldId                           = EdgeAlphaFieldId                      + 1
     };
 
-    static const OSG::BitVector QuadSizeScalingFieldMask;
-    static const OSG::BitVector UseImageSizeRatioFieldMask;
+    static const OSG::BitVector RadiusFieldMask;
+    static const OSG::BitVector SegmentsFieldMask;
     static const OSG::BitVector NormalSourceFieldMask;
     static const OSG::BitVector NormalFieldMask;
     static const OSG::BitVector UpSourceFieldMask;
     static const OSG::BitVector UpFieldMask;
     static const OSG::BitVector UseNormalAsObjectSpaceRotationFieldMask;
-    static const OSG::BitVector TwistFieldMask;
+    static const OSG::BitVector CenterAlphaFieldMask;
+    static const OSG::BitVector EdgeAlphaFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,19 +146,20 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec2f             *getSFQuadSizeScaling(void);
-           SFBool              *getSFUseImageSizeRatio(void);
+           SFReal32            *getSFRadius         (void);
+           SFUInt32            *getSFSegments       (void);
            SFUInt32            *getSFNormalSource   (void);
            SFVec3f             *getSFNormal         (void);
            SFUInt32            *getSFUpSource       (void);
            SFVec3f             *getSFUp             (void);
            SFBool              *getSFUseNormalAsObjectSpaceRotation(void);
-           SFReal32            *getSFTwist          (void);
+           SFReal32            *getSFCenterAlpha    (void);
+           SFReal32            *getSFEdgeAlpha      (void);
 
-           Vec2f               &getQuadSizeScaling(void);
-     const Vec2f               &getQuadSizeScaling(void) const;
-           bool                &getUseImageSizeRatio(void);
-     const bool                &getUseImageSizeRatio(void) const;
+           Real32              &getRadius         (void);
+     const Real32              &getRadius         (void) const;
+           UInt32              &getSegments       (void);
+     const UInt32              &getSegments       (void) const;
            UInt32              &getNormalSource   (void);
      const UInt32              &getNormalSource   (void) const;
            Vec3f               &getNormal         (void);
@@ -166,22 +170,25 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
      const Vec3f               &getUp             (void) const;
            bool                &getUseNormalAsObjectSpaceRotation(void);
      const bool                &getUseNormalAsObjectSpaceRotation(void) const;
-           Real32              &getTwist          (void);
-     const Real32              &getTwist          (void) const;
+           Real32              &getCenterAlpha    (void);
+     const Real32              &getCenterAlpha    (void) const;
+           Real32              &getEdgeAlpha      (void);
+     const Real32              &getEdgeAlpha      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setQuadSizeScaling( const Vec2f &value );
-     void setUseImageSizeRatio( const bool &value );
+     void setRadius         ( const Real32 &value );
+     void setSegments       ( const UInt32 &value );
      void setNormalSource   ( const UInt32 &value );
      void setNormal         ( const Vec3f &value );
      void setUpSource       ( const UInt32 &value );
      void setUp             ( const Vec3f &value );
      void setUseNormalAsObjectSpaceRotation( const bool &value );
-     void setTwist          ( const Real32 &value );
+     void setCenterAlpha    ( const Real32 &value );
+     void setEdgeAlpha      ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -205,8 +212,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  QuadParticleSystemDrawerPtr      create          (void); 
-    static  QuadParticleSystemDrawerPtr      createEmpty     (void); 
+    static  DiscParticleSystemDrawerPtr      create          (void); 
+    static  DiscParticleSystemDrawerPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -224,29 +231,30 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFVec2f             _sfQuadSizeScaling;
-    SFBool              _sfUseImageSizeRatio;
+    SFReal32            _sfRadius;
+    SFUInt32            _sfSegments;
     SFUInt32            _sfNormalSource;
     SFVec3f             _sfNormal;
     SFUInt32            _sfUpSource;
     SFVec3f             _sfUp;
     SFBool              _sfUseNormalAsObjectSpaceRotation;
-    SFReal32            _sfTwist;
+    SFReal32            _sfCenterAlpha;
+    SFReal32            _sfEdgeAlpha;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    QuadParticleSystemDrawerBase(void);
-    QuadParticleSystemDrawerBase(const QuadParticleSystemDrawerBase &source);
+    DiscParticleSystemDrawerBase(void);
+    DiscParticleSystemDrawerBase(const DiscParticleSystemDrawerBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~QuadParticleSystemDrawerBase(void); 
+    virtual ~DiscParticleSystemDrawerBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,13 +262,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      QuadParticleSystemDrawerBase *pOther,
+    void executeSyncImpl(      DiscParticleSystemDrawerBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      QuadParticleSystemDrawerBase *pOther,
+    void executeSyncImpl(      DiscParticleSystemDrawerBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -290,7 +298,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const QuadParticleSystemDrawerBase &source);
+    void operator =(const DiscParticleSystemDrawerBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -298,17 +306,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
 //---------------------------------------------------------------------------
 
 
-typedef QuadParticleSystemDrawerBase *QuadParticleSystemDrawerBaseP;
+typedef DiscParticleSystemDrawerBase *DiscParticleSystemDrawerBaseP;
 
-typedef osgIF<QuadParticleSystemDrawerBase::isNodeCore,
-              CoredNodePtr<QuadParticleSystemDrawer>,
+typedef osgIF<DiscParticleSystemDrawerBase::isNodeCore,
+              CoredNodePtr<DiscParticleSystemDrawer>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet QuadParticleSystemDrawerNodePtr;
+              >::_IRet DiscParticleSystemDrawerNodePtr;
 
-typedef RefPtr<QuadParticleSystemDrawerPtr> QuadParticleSystemDrawerRefPtr;
+typedef RefPtr<DiscParticleSystemDrawerPtr> DiscParticleSystemDrawerRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGQUADPARTICLESYSTEMDRAWERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGDISCPARTICLESYSTEMDRAWERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGQUADPARTICLESYSTEMDRAWERBASE_H_ */
+#endif /* _OSGDISCPARTICLESYSTEMDRAWERBASE_H_ */

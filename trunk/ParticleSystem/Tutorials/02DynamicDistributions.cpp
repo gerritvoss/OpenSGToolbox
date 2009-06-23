@@ -13,7 +13,7 @@
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
 #include <OpenSG/OSGBlendChunk.h>
-#include <OpenSG/OSGPointChunk.h>
+#include <OpenSG/OSGLineChunk.h>
 #include <OpenSG/OSGChunkMaterial.h>
 #include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
@@ -166,14 +166,16 @@ int main(int argc, char **argv)
 										
 
 	//Particle System Material
-	PointChunkPtr PSPointChunk = PointChunk::create();
-	beginEditCP(PSPointChunk);
-		PSPointChunk->setSize(5.0f);
-		PSPointChunk->setSmooth(true);
-	endEditCP(PSPointChunk);
+	LineChunkPtr PSLineChunk = LineChunk::create();
+	beginEditCP(PSLineChunk);
+		PSLineChunk->setWidth(1.0f);
+	endEditCP(PSLineChunk);
+
 	BlendChunkPtr PSBlendChunk = BlendChunk::create();
-	PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
-	PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+	beginEditCP(PSBlendChunk);
+		PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+		PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+	beginEditCP(PSBlendChunk);
 
 	MaterialChunkPtr PSMaterialChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunk);
@@ -186,7 +188,7 @@ int main(int argc, char **argv)
 
 	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
 	beginEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
-		PSMaterial->addChunk(PSPointChunk);
+		PSMaterial->addChunk(PSLineChunk);
 		PSMaterial->addChunk(PSMaterialChunk);
 		PSMaterial->addChunk(PSBlendChunk);
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
@@ -272,12 +274,11 @@ int main(int argc, char **argv)
     }
 
 	//Particle System Drawer
-	//PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
-
 	LineParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
 	beginEditCP(ExampleParticleSystemDrawer);
 		ExampleParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_VELOCITY);
 		ExampleParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
+		ExampleParticleSystemDrawer->setEndPointFading(Vec3f(0.0f,1.0f));
 	endEditCP(ExampleParticleSystemDrawer);
 
 	//Particle System Node
@@ -464,8 +465,8 @@ FunctionPtr createSizeDistribution(void)
 {
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
-      TheLineDistribution->setPoint1(Pnt3f(6.0,6.0,6.0));
-      TheLineDistribution->setPoint2(Pnt3f(2.0,2.0,2.0));
+      TheLineDistribution->setPoint1(Pnt3f(3.0,3.0,3.0));
+      TheLineDistribution->setPoint2(Pnt3f(1.0,1.0,1.0));
     endEditCP(TheLineDistribution);
 	
 	DataConverterPtr TheVec3fConverter = DataConverter::create();

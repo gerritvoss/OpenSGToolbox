@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="QuadParticleSystemDrawer"
+	name="DiscParticleSystemDrawer"
 	parent="ParticleSystemDrawer"
 	library="ParticleSystem"
 	pointerfieldtypes="both"
@@ -12,31 +12,31 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="QuadSizeScaling"
-		type="Vec2f"
+		name="Radius"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="1.0,1.0"
+		defaultValue="0.5"
 		access="public"
 	>
-	This value is used to scale the size of the particle and apply that size to the quad for that particle.
+	This value is used to scale the size of the particle and apply that size to the radius for that disc.
 	</Field>
 	<Field
-		name="UseImageSizeRatio"
-		type="bool"
+		name="Segments"
+		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="false"
+		defaultValue="12"
 		access="public"
 	>
-   If true the aspect ratio of the Image of the first TextureChunk is used to set the aspect ratio of the quad.  The width is not scaled, but the height is scaled to ensure the quad has the correct aspect ratio.  This may override QuadSizeScaling.
+	The number of segments to use to render the disc.
 	</Field>
 	<Field
 		name="NormalSource"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="QuadParticleSystemDrawer::NORMAL_VIEW_DIRECTION"
+		defaultValue="DiscParticleSystemDrawer::NORMAL_VIEW_DIRECTION"
 		access="public"
 	>
 	This enum is used to determine what is used for the direction of the line.
@@ -64,7 +64,7 @@
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="QuadParticleSystemDrawer::UP_VIEW_DIRECTION"
+		defaultValue="DiscParticleSystemDrawer::UP_VIEW_DIRECTION"
 		access="public"
 	>
 	This enum is used to determine what is used for the direction of the line.
@@ -96,13 +96,21 @@
 	>
 	</Field>
 	<Field
-		name="Twist"
+		name="CenterAlpha"
 		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0.0"
+		defaultValue="1.0"
 		access="public"
 	>
-   Twists the quad around the normal axis by the angle given.
+	</Field>
+	<Field
+		name="EdgeAlpha"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0"
+		access="public"
+	>
 	</Field>
 </FieldContainer>

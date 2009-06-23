@@ -80,8 +80,10 @@ void LineParticleSystemDrawer::initMethod (void)
 
 Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
 {
-    //TODO: Implement
 	UInt32 NumParticles(System->getNumParticles());
+
+	bool areEndpointsFadeSame(getEndPointFading().x() == getEndPointFading().y());
+	Color4f Color;
 
 	if(NumParticles != 0)
 	{
@@ -91,9 +93,11 @@ Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 		bool SeparateNormals(System->getNumNormals() > 1);
 
 		glBegin(GL_LINES);
-			if(!SeparateColors)
+			//Colors
+			if(!SeparateColors && areEndpointsFadeSame)
 			{
-				glColor4fv(System->getColor(0).getValuesRGBA());
+				Color = System->getColor(0);
+				glColor4f(Color.red(), Color.green(), Color.blue(), Color.alpha() * getEndPointFading().x());
 			}
 			//Sizes
 			if(!SeparateSizes)
@@ -107,10 +111,16 @@ Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 			}
 			for(UInt32 i(0) ; i<NumParticles ; ++i)
 			{
-				//Colors
+				//Start Color
 				if(SeparateColors)
 				{
-					glColor4fv(System->getColor(i).getValuesRGBA());
+					Color = System->getColor(i);
+					glColor4f(Color.red(), Color.green(), Color.blue(), Color.alpha() * getEndPointFading().x());
+				}
+				else if(!SeparateColors && !areEndpointsFadeSame)
+				{
+					Color = System->getColor(0);
+					glColor4f(Color.red(), Color.green(), Color.blue(), Color.alpha() * getEndPointFading().x());
 				}
 				//Sizes
 				if(SeparateSizes)
@@ -124,6 +134,18 @@ Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 				}
 				//Positions
 				glVertex3fv(System->getPosition(i).getValues());
+				
+				//End Color
+				if(SeparateColors && !areEndpointsFadeSame)
+				{
+					Color = System->getColor(i);
+					glColor4f(Color.red(), Color.green(), Color.blue(), Color.alpha() * getEndPointFading().y());
+				}
+				else if(!SeparateColors && !areEndpointsFadeSame)
+				{
+					Color = System->getColor(0);
+					glColor4f(Color.red(), Color.green(), Color.blue(), Color.alpha() * getEndPointFading().y());
+				}
 				glVertex3fv(getLineEndpoint(System, i).getValues());
 			}
 		glEnd();

@@ -82,4 +82,15 @@
 	>
    The length to draw the line.  This is only used when LineLengthSource is LENGTH_STATIC.
    </Field>
+	<Field
+		name="EndPointFading"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,1.0"
+		access="public"
+	>
+   The x value is multiplied to the alpha portion of the particles color and applied to the orgin vertex. 
+   The y value is multiplied to the alpha portion of the particles color and applied to the destination vertex.  
+   </Field>
 </FieldContainer>

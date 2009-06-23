@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -143,6 +143,13 @@ inline
 SFBool *QuadParticleSystemDrawerBase::getSFUseNormalAsObjectSpaceRotation(void)
 {
     return &_sfUseNormalAsObjectSpaceRotation;
+}
+
+//! Get the QuadParticleSystemDrawer::_sfTwist field.
+inline
+SFReal32 *QuadParticleSystemDrawerBase::getSFTwist(void)
+{
+    return &_sfTwist;
 }
 
 
@@ -291,6 +298,27 @@ inline
 void QuadParticleSystemDrawerBase::setUseNormalAsObjectSpaceRotation(const bool &value)
 {
     _sfUseNormalAsObjectSpaceRotation.setValue(value);
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfTwist field.
+inline
+Real32 &QuadParticleSystemDrawerBase::getTwist(void)
+{
+    return _sfTwist.getValue();
+}
+
+//! Get the value of the QuadParticleSystemDrawer::_sfTwist field.
+inline
+const Real32 &QuadParticleSystemDrawerBase::getTwist(void) const
+{
+    return _sfTwist.getValue();
+}
+
+//! Set the value of the QuadParticleSystemDrawer::_sfTwist field.
+inline
+void QuadParticleSystemDrawerBase::setTwist(const Real32 &value)
+{
+    _sfTwist.setValue(value);
 }
 
 

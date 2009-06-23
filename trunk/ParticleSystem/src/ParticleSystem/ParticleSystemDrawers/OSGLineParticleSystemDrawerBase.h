@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,7 @@
 #include <OpenSG/OSGVec3fFields.h> // LineDirection type
 #include <OpenSG/OSGUInt32Fields.h> // LineLengthSource type
 #include <OpenSG/OSGReal32Fields.h> // LineLength type
+#include <OpenSG/OSGVec2fFields.h> // EndPointFading type
 
 #include "OSGLineParticleSystemDrawerFields.h"
 
@@ -102,7 +103,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
         LineDirectionFieldId         = LineDirectionSourceFieldId   + 1,
         LineLengthSourceFieldId      = LineDirectionFieldId         + 1,
         LineLengthFieldId            = LineLengthSourceFieldId      + 1,
-        NextFieldId                  = LineLengthFieldId            + 1
+        EndPointFadingFieldId        = LineLengthFieldId            + 1,
+        NextFieldId                  = EndPointFadingFieldId        + 1
     };
 
     static const OSG::BitVector LineWidthScalingFieldMask;
@@ -111,6 +113,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
     static const OSG::BitVector LineDirectionFieldMask;
     static const OSG::BitVector LineLengthSourceFieldMask;
     static const OSG::BitVector LineLengthFieldMask;
+    static const OSG::BitVector EndPointFadingFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,6 +146,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
            SFVec3f             *getSFLineDirection  (void);
            SFUInt32            *getSFLineLengthSource(void);
            SFReal32            *getSFLineLength     (void);
+           SFVec2f             *getSFEndPointFading (void);
 
            Real32              &getLineWidthScaling(void);
      const Real32              &getLineWidthScaling(void) const;
@@ -156,6 +160,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
      const UInt32              &getLineLengthSource(void) const;
            Real32              &getLineLength     (void);
      const Real32              &getLineLength     (void) const;
+           Vec2f               &getEndPointFading (void);
+     const Vec2f               &getEndPointFading (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -168,6 +174,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
      void setLineDirection  ( const Vec3f &value );
      void setLineLengthSource( const UInt32 &value );
      void setLineLength     ( const Real32 &value );
+     void setEndPointFading ( const Vec2f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -216,6 +223,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawerBase : public Par
     SFVec3f             _sfLineDirection;
     SFUInt32            _sfLineLengthSource;
     SFReal32            _sfLineLength;
+    SFVec2f             _sfEndPointFading;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

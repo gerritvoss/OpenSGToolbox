@@ -45,187 +45,198 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class QuadParticleSystemDrawer!
+ **     class DiscParticleSystemDrawer!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEQUADPARTICLESYSTEMDRAWERINST
+#define OSG_COMPILEDISCPARTICLESYSTEMDRAWERINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGQuadParticleSystemDrawerBase.h"
-#include "OSGQuadParticleSystemDrawer.h"
+#include "OSGDiscParticleSystemDrawerBase.h"
+#include "OSGDiscParticleSystemDrawer.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  QuadParticleSystemDrawerBase::QuadSizeScalingFieldMask = 
-    (TypeTraits<BitVector>::One << QuadParticleSystemDrawerBase::QuadSizeScalingFieldId);
+const OSG::BitVector  DiscParticleSystemDrawerBase::RadiusFieldMask = 
+    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::RadiusFieldId);
 
-const OSG::BitVector  QuadParticleSystemDrawerBase::UseImageSizeRatioFieldMask = 
-    (TypeTraits<BitVector>::One << QuadParticleSystemDrawerBase::UseImageSizeRatioFieldId);
+const OSG::BitVector  DiscParticleSystemDrawerBase::SegmentsFieldMask = 
+    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::SegmentsFieldId);
 
-const OSG::BitVector  QuadParticleSystemDrawerBase::NormalSourceFieldMask = 
-    (TypeTraits<BitVector>::One << QuadParticleSystemDrawerBase::NormalSourceFieldId);
+const OSG::BitVector  DiscParticleSystemDrawerBase::NormalSourceFieldMask = 
+    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::NormalSourceFieldId);
 
-const OSG::BitVector  QuadParticleSystemDrawerBase::NormalFieldMask = 
-    (TypeTraits<BitVector>::One << QuadParticleSystemDrawerBase::NormalFieldId);
+const OSG::BitVector  DiscParticleSystemDrawerBase::NormalFieldMask = 
+    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::NormalFieldId);
 
-const OSG::BitVector  QuadParticleSystemDrawerBase::UpSourceFieldMask = 
-    (TypeTraits<BitVector>::One << QuadParticleSystemDrawerBase::UpSourceFieldId);
+const OSG::BitVector  DiscParticleSystemDrawerBase::UpSourceFieldMask = 
+    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::UpSourceFieldId);
 
-const OSG::BitVector  QuadParticleSystemDrawerBase::UpFieldMask = 
-    (TypeTraits<BitVector>::One << QuadParticleSystemDrawerBase::UpFieldId);
+const OSG::BitVector  DiscParticleSystemDrawerBase::UpFieldMask = 
+    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::UpFieldId);
 
-const OSG::BitVector  QuadParticleSystemDrawerBase::UseNormalAsObjectSpaceRotationFieldMask = 
-    (TypeTraits<BitVector>::One << QuadParticleSystemDrawerBase::UseNormalAsObjectSpaceRotationFieldId);
+const OSG::BitVector  DiscParticleSystemDrawerBase::UseNormalAsObjectSpaceRotationFieldMask = 
+    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::UseNormalAsObjectSpaceRotationFieldId);
 
-const OSG::BitVector  QuadParticleSystemDrawerBase::TwistFieldMask = 
-    (TypeTraits<BitVector>::One << QuadParticleSystemDrawerBase::TwistFieldId);
+const OSG::BitVector  DiscParticleSystemDrawerBase::CenterAlphaFieldMask = 
+    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::CenterAlphaFieldId);
 
-const OSG::BitVector QuadParticleSystemDrawerBase::MTInfluenceMask = 
+const OSG::BitVector  DiscParticleSystemDrawerBase::EdgeAlphaFieldMask = 
+    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::EdgeAlphaFieldId);
+
+const OSG::BitVector DiscParticleSystemDrawerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var Vec2f           QuadParticleSystemDrawerBase::_sfQuadSizeScaling
-    This value is used to scale the size of the particle and apply that size to the quad for that particle.
+/*! \var Real32          DiscParticleSystemDrawerBase::_sfRadius
+    This value is used to scale the size of the particle and apply that size to the radius for that disc.
 */
-/*! \var bool            QuadParticleSystemDrawerBase::_sfUseImageSizeRatio
-    If true the aspect ratio of the Image of the first TextureChunk is used to set the aspect ratio of the quad.  The width is not scaled, but the height is scaled to ensure the quad has the correct aspect ratio.  This may override QuadSizeScaling.
+/*! \var UInt32          DiscParticleSystemDrawerBase::_sfSegments
+    The number of segments to use to render the disc.
 */
-/*! \var UInt32          QuadParticleSystemDrawerBase::_sfNormalSource
+/*! \var UInt32          DiscParticleSystemDrawerBase::_sfNormalSource
     This enum is used to determine what is used for the direction of the line.    NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.    NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    NORMAL_VELOCITY uses the velocity.    NORMAL_ACCELERATION uses the acceleration.    NORMAL_PARTICLE_NORMAL uses the normal of the particle.    NORMAL_VIEW_DIRECTION uses the z axis of the view space.    NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.    NORMAL_STATIC uses the normal of this drawer.
 */
-/*! \var Vec3f           QuadParticleSystemDrawerBase::_sfNormal
+/*! \var Vec3f           DiscParticleSystemDrawerBase::_sfNormal
     The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.
 */
-/*! \var UInt32          QuadParticleSystemDrawerBase::_sfUpSource
+/*! \var UInt32          DiscParticleSystemDrawerBase::_sfUpSource
     This enum is used to determine what is used for the direction of the line.    UP_POSITION_CHANGE uses the diference between Position and SecPosition.    UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    UP_VELOCITY uses the velocity.    UP_ACCELERATION uses the acceleration.    UP_PARTICLE_NORMAL uses the normal of the particle.    UP_VIEW_DIRECTION uses the y axis of the view space.    UP_STATIC uses the normal of this drawer.
 */
-/*! \var Vec3f           QuadParticleSystemDrawerBase::_sfUp
+/*! \var Vec3f           DiscParticleSystemDrawerBase::_sfUp
     The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.
 */
-/*! \var bool            QuadParticleSystemDrawerBase::_sfUseNormalAsObjectSpaceRotation
+/*! \var bool            DiscParticleSystemDrawerBase::_sfUseNormalAsObjectSpaceRotation
     
 */
-/*! \var Real32          QuadParticleSystemDrawerBase::_sfTwist
-    Twists the quad around the normal axis by the angle given.
+/*! \var Real32          DiscParticleSystemDrawerBase::_sfCenterAlpha
+    
+*/
+/*! \var Real32          DiscParticleSystemDrawerBase::_sfEdgeAlpha
+    
 */
 
-//! QuadParticleSystemDrawer description
+//! DiscParticleSystemDrawer description
 
-FieldDescription *QuadParticleSystemDrawerBase::_desc[] = 
+FieldDescription *DiscParticleSystemDrawerBase::_desc[] = 
 {
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "QuadSizeScaling", 
-                     QuadSizeScalingFieldId, QuadSizeScalingFieldMask,
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Radius", 
+                     RadiusFieldId, RadiusFieldMask,
                      false,
-                     (FieldAccessMethod) &QuadParticleSystemDrawerBase::getSFQuadSizeScaling),
-    new FieldDescription(SFBool::getClassType(), 
-                     "UseImageSizeRatio", 
-                     UseImageSizeRatioFieldId, UseImageSizeRatioFieldMask,
+                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFRadius),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "Segments", 
+                     SegmentsFieldId, SegmentsFieldMask,
                      false,
-                     (FieldAccessMethod) &QuadParticleSystemDrawerBase::getSFUseImageSizeRatio),
+                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFSegments),
     new FieldDescription(SFUInt32::getClassType(), 
                      "NormalSource", 
                      NormalSourceFieldId, NormalSourceFieldMask,
                      false,
-                     (FieldAccessMethod) &QuadParticleSystemDrawerBase::getSFNormalSource),
+                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFNormalSource),
     new FieldDescription(SFVec3f::getClassType(), 
                      "Normal", 
                      NormalFieldId, NormalFieldMask,
                      false,
-                     (FieldAccessMethod) &QuadParticleSystemDrawerBase::getSFNormal),
+                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFNormal),
     new FieldDescription(SFUInt32::getClassType(), 
                      "UpSource", 
                      UpSourceFieldId, UpSourceFieldMask,
                      false,
-                     (FieldAccessMethod) &QuadParticleSystemDrawerBase::getSFUpSource),
+                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFUpSource),
     new FieldDescription(SFVec3f::getClassType(), 
                      "Up", 
                      UpFieldId, UpFieldMask,
                      false,
-                     (FieldAccessMethod) &QuadParticleSystemDrawerBase::getSFUp),
+                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFUp),
     new FieldDescription(SFBool::getClassType(), 
                      "UseNormalAsObjectSpaceRotation", 
                      UseNormalAsObjectSpaceRotationFieldId, UseNormalAsObjectSpaceRotationFieldMask,
                      false,
-                     (FieldAccessMethod) &QuadParticleSystemDrawerBase::getSFUseNormalAsObjectSpaceRotation),
+                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFUseNormalAsObjectSpaceRotation),
     new FieldDescription(SFReal32::getClassType(), 
-                     "Twist", 
-                     TwistFieldId, TwistFieldMask,
+                     "CenterAlpha", 
+                     CenterAlphaFieldId, CenterAlphaFieldMask,
                      false,
-                     (FieldAccessMethod) &QuadParticleSystemDrawerBase::getSFTwist)
+                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFCenterAlpha),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "EdgeAlpha", 
+                     EdgeAlphaFieldId, EdgeAlphaFieldMask,
+                     false,
+                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFEdgeAlpha)
 };
 
 
-FieldContainerType QuadParticleSystemDrawerBase::_type(
-    "QuadParticleSystemDrawer",
+FieldContainerType DiscParticleSystemDrawerBase::_type(
+    "DiscParticleSystemDrawer",
     "ParticleSystemDrawer",
     NULL,
-    (PrototypeCreateF) &QuadParticleSystemDrawerBase::createEmpty,
-    QuadParticleSystemDrawer::initMethod,
+    (PrototypeCreateF) &DiscParticleSystemDrawerBase::createEmpty,
+    DiscParticleSystemDrawer::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(QuadParticleSystemDrawerBase, QuadParticleSystemDrawerPtr)
+//OSG_FIELD_CONTAINER_DEF(DiscParticleSystemDrawerBase, DiscParticleSystemDrawerPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &QuadParticleSystemDrawerBase::getType(void) 
+FieldContainerType &DiscParticleSystemDrawerBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &QuadParticleSystemDrawerBase::getType(void) const 
+const FieldContainerType &DiscParticleSystemDrawerBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr QuadParticleSystemDrawerBase::shallowCopy(void) const 
+FieldContainerPtr DiscParticleSystemDrawerBase::shallowCopy(void) const 
 { 
-    QuadParticleSystemDrawerPtr returnValue; 
+    DiscParticleSystemDrawerPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const QuadParticleSystemDrawer *>(this)); 
+    newPtr(returnValue, dynamic_cast<const DiscParticleSystemDrawer *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 QuadParticleSystemDrawerBase::getContainerSize(void) const 
+UInt32 DiscParticleSystemDrawerBase::getContainerSize(void) const 
 { 
-    return sizeof(QuadParticleSystemDrawer); 
+    return sizeof(DiscParticleSystemDrawer); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void QuadParticleSystemDrawerBase::executeSync(      FieldContainer &other,
+void DiscParticleSystemDrawerBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((QuadParticleSystemDrawerBase *) &other, whichField);
+    this->executeSyncImpl((DiscParticleSystemDrawerBase *) &other, whichField);
 }
 #else
-void QuadParticleSystemDrawerBase::executeSync(      FieldContainer &other,
+void DiscParticleSystemDrawerBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((QuadParticleSystemDrawerBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((DiscParticleSystemDrawerBase *) &other, whichField, sInfo);
 }
-void QuadParticleSystemDrawerBase::execBeginEdit(const BitVector &whichField, 
+void DiscParticleSystemDrawerBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void QuadParticleSystemDrawerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void DiscParticleSystemDrawerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -238,15 +249,16 @@ void QuadParticleSystemDrawerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-QuadParticleSystemDrawerBase::QuadParticleSystemDrawerBase(void) :
-    _sfQuadSizeScaling        (Vec2f(1.0,1.0)), 
-    _sfUseImageSizeRatio      (bool(false)), 
-    _sfNormalSource           (UInt32(QuadParticleSystemDrawer::NORMAL_VIEW_DIRECTION)), 
+DiscParticleSystemDrawerBase::DiscParticleSystemDrawerBase(void) :
+    _sfRadius                 (Real32(0.5)), 
+    _sfSegments               (UInt32(12)), 
+    _sfNormalSource           (UInt32(DiscParticleSystemDrawer::NORMAL_VIEW_DIRECTION)), 
     _sfNormal                 (Vec3f(1.0,0.0,0.0)), 
-    _sfUpSource               (UInt32(QuadParticleSystemDrawer::UP_VIEW_DIRECTION)), 
+    _sfUpSource               (UInt32(DiscParticleSystemDrawer::UP_VIEW_DIRECTION)), 
     _sfUp                     (Vec3f(0.0,1.0,0.0)), 
     _sfUseNormalAsObjectSpaceRotation(bool(false)), 
-    _sfTwist                  (Real32(0.0)), 
+    _sfCenterAlpha            (Real32(1.0)), 
+    _sfEdgeAlpha              (Real32(1.0)), 
     Inherited() 
 {
 }
@@ -255,39 +267,40 @@ QuadParticleSystemDrawerBase::QuadParticleSystemDrawerBase(void) :
 #pragma warning (default : 383)
 #endif
 
-QuadParticleSystemDrawerBase::QuadParticleSystemDrawerBase(const QuadParticleSystemDrawerBase &source) :
-    _sfQuadSizeScaling        (source._sfQuadSizeScaling        ), 
-    _sfUseImageSizeRatio      (source._sfUseImageSizeRatio      ), 
+DiscParticleSystemDrawerBase::DiscParticleSystemDrawerBase(const DiscParticleSystemDrawerBase &source) :
+    _sfRadius                 (source._sfRadius                 ), 
+    _sfSegments               (source._sfSegments               ), 
     _sfNormalSource           (source._sfNormalSource           ), 
     _sfNormal                 (source._sfNormal                 ), 
     _sfUpSource               (source._sfUpSource               ), 
     _sfUp                     (source._sfUp                     ), 
     _sfUseNormalAsObjectSpaceRotation(source._sfUseNormalAsObjectSpaceRotation), 
-    _sfTwist                  (source._sfTwist                  ), 
+    _sfCenterAlpha            (source._sfCenterAlpha            ), 
+    _sfEdgeAlpha              (source._sfEdgeAlpha              ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-QuadParticleSystemDrawerBase::~QuadParticleSystemDrawerBase(void)
+DiscParticleSystemDrawerBase::~DiscParticleSystemDrawerBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 QuadParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
+UInt32 DiscParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (QuadSizeScalingFieldMask & whichField))
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
     {
-        returnValue += _sfQuadSizeScaling.getBinSize();
+        returnValue += _sfRadius.getBinSize();
     }
 
-    if(FieldBits::NoField != (UseImageSizeRatioFieldMask & whichField))
+    if(FieldBits::NoField != (SegmentsFieldMask & whichField))
     {
-        returnValue += _sfUseImageSizeRatio.getBinSize();
+        returnValue += _sfSegments.getBinSize();
     }
 
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
@@ -315,28 +328,33 @@ UInt32 QuadParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfUseNormalAsObjectSpaceRotation.getBinSize();
     }
 
-    if(FieldBits::NoField != (TwistFieldMask & whichField))
+    if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
     {
-        returnValue += _sfTwist.getBinSize();
+        returnValue += _sfCenterAlpha.getBinSize();
+    }
+
+    if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
+    {
+        returnValue += _sfEdgeAlpha.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void QuadParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
+void DiscParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (QuadSizeScalingFieldMask & whichField))
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
     {
-        _sfQuadSizeScaling.copyToBin(pMem);
+        _sfRadius.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (UseImageSizeRatioFieldMask & whichField))
+    if(FieldBits::NoField != (SegmentsFieldMask & whichField))
     {
-        _sfUseImageSizeRatio.copyToBin(pMem);
+        _sfSegments.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
@@ -364,27 +382,32 @@ void QuadParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
         _sfUseNormalAsObjectSpaceRotation.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (TwistFieldMask & whichField))
+    if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
     {
-        _sfTwist.copyToBin(pMem);
+        _sfCenterAlpha.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
+    {
+        _sfEdgeAlpha.copyToBin(pMem);
     }
 
 
 }
 
-void QuadParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
+void DiscParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (QuadSizeScalingFieldMask & whichField))
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
     {
-        _sfQuadSizeScaling.copyFromBin(pMem);
+        _sfRadius.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (UseImageSizeRatioFieldMask & whichField))
+    if(FieldBits::NoField != (SegmentsFieldMask & whichField))
     {
-        _sfUseImageSizeRatio.copyFromBin(pMem);
+        _sfSegments.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
@@ -412,26 +435,31 @@ void QuadParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfUseNormalAsObjectSpaceRotation.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (TwistFieldMask & whichField))
+    if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
     {
-        _sfTwist.copyFromBin(pMem);
+        _sfCenterAlpha.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
+    {
+        _sfEdgeAlpha.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void QuadParticleSystemDrawerBase::executeSyncImpl(      QuadParticleSystemDrawerBase *pOther,
+void DiscParticleSystemDrawerBase::executeSyncImpl(      DiscParticleSystemDrawerBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (QuadSizeScalingFieldMask & whichField))
-        _sfQuadSizeScaling.syncWith(pOther->_sfQuadSizeScaling);
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
+        _sfRadius.syncWith(pOther->_sfRadius);
 
-    if(FieldBits::NoField != (UseImageSizeRatioFieldMask & whichField))
-        _sfUseImageSizeRatio.syncWith(pOther->_sfUseImageSizeRatio);
+    if(FieldBits::NoField != (SegmentsFieldMask & whichField))
+        _sfSegments.syncWith(pOther->_sfSegments);
 
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
         _sfNormalSource.syncWith(pOther->_sfNormalSource);
@@ -448,24 +476,27 @@ void QuadParticleSystemDrawerBase::executeSyncImpl(      QuadParticleSystemDrawe
     if(FieldBits::NoField != (UseNormalAsObjectSpaceRotationFieldMask & whichField))
         _sfUseNormalAsObjectSpaceRotation.syncWith(pOther->_sfUseNormalAsObjectSpaceRotation);
 
-    if(FieldBits::NoField != (TwistFieldMask & whichField))
-        _sfTwist.syncWith(pOther->_sfTwist);
+    if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
+        _sfCenterAlpha.syncWith(pOther->_sfCenterAlpha);
+
+    if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
+        _sfEdgeAlpha.syncWith(pOther->_sfEdgeAlpha);
 
 
 }
 #else
-void QuadParticleSystemDrawerBase::executeSyncImpl(      QuadParticleSystemDrawerBase *pOther,
+void DiscParticleSystemDrawerBase::executeSyncImpl(      DiscParticleSystemDrawerBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (QuadSizeScalingFieldMask & whichField))
-        _sfQuadSizeScaling.syncWith(pOther->_sfQuadSizeScaling);
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
+        _sfRadius.syncWith(pOther->_sfRadius);
 
-    if(FieldBits::NoField != (UseImageSizeRatioFieldMask & whichField))
-        _sfUseImageSizeRatio.syncWith(pOther->_sfUseImageSizeRatio);
+    if(FieldBits::NoField != (SegmentsFieldMask & whichField))
+        _sfSegments.syncWith(pOther->_sfSegments);
 
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
         _sfNormalSource.syncWith(pOther->_sfNormalSource);
@@ -482,14 +513,17 @@ void QuadParticleSystemDrawerBase::executeSyncImpl(      QuadParticleSystemDrawe
     if(FieldBits::NoField != (UseNormalAsObjectSpaceRotationFieldMask & whichField))
         _sfUseNormalAsObjectSpaceRotation.syncWith(pOther->_sfUseNormalAsObjectSpaceRotation);
 
-    if(FieldBits::NoField != (TwistFieldMask & whichField))
-        _sfTwist.syncWith(pOther->_sfTwist);
+    if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
+        _sfCenterAlpha.syncWith(pOther->_sfCenterAlpha);
+
+    if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
+        _sfEdgeAlpha.syncWith(pOther->_sfEdgeAlpha);
 
 
 
 }
 
-void QuadParticleSystemDrawerBase::execBeginEditImpl (const BitVector &whichField, 
+void DiscParticleSystemDrawerBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -508,11 +542,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<QuadParticleSystemDrawerPtr>::_type("QuadParticleSystemDrawerPtr", "ParticleSystemDrawerPtr");
+DataType FieldDataTraits<DiscParticleSystemDrawerPtr>::_type("DiscParticleSystemDrawerPtr", "ParticleSystemDrawerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(QuadParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(QuadParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(DiscParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(DiscParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -529,10 +563,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(QuadParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLL
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGQUADPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGQUADPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDISCPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDISCPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGQUADPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDISCPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

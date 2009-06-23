@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGLINEPARTICLESYSTEMDRAWERFIELDS_H_
-#define _OSGLINEPARTICLESYSTEMDRAWERFIELDS_H_
+#ifndef _OSGDISCPARTICLESYSTEMDRAWERFIELDS_H_
+#define _OSGDISCPARTICLESYSTEMDRAWERFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,12 +64,12 @@
 
 OSG_BEGIN_NAMESPACE
 
-class LineParticleSystemDrawer;
+class DiscParticleSystemDrawer;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! LineParticleSystemDrawerPtr
+//! DiscParticleSystemDrawerPtr
 
-typedef FCPtr<ParticleSystemDrawerPtr, LineParticleSystemDrawer> LineParticleSystemDrawerPtr;
+typedef FCPtr<ParticleSystemDrawerPtr, DiscParticleSystemDrawer> DiscParticleSystemDrawerPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ParticleSystemDrawerPtr, LineParticleSystemDrawer> LineParticleSys
 #endif
 
 template <>
-struct FieldDataTraits<LineParticleSystemDrawerPtr> : 
-    public FieldTraitsRecurseMapper<LineParticleSystemDrawerPtr, true>
+struct FieldDataTraits<DiscParticleSystemDrawerPtr> : 
+    public FieldTraitsRecurseMapper<DiscParticleSystemDrawerPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<LineParticleSystemDrawerPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFLineParticleSystemDrawerPtr"; }
-    static const char *getMName(void) { return "MFLineParticleSystemDrawerPtr"; }
+    static const char *getSName(void) { return "SFDiscParticleSystemDrawerPtr"; }
+    static const char *getMName(void) { return "MFDiscParticleSystemDrawerPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<LineParticleSystemDrawerPtr, true>
+/*! \class  FieldTraitsRecurseMapper<DiscParticleSystemDrawerPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<LineParticleSystemDrawerPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpParticleSystemFieldSingle */
 
-typedef SField<LineParticleSystemDrawerPtr> SFLineParticleSystemDrawerPtr;
+typedef SField<DiscParticleSystemDrawerPtr> SFDiscParticleSystemDrawerPtr;
 #endif
 
-#ifndef OSG_COMPILELINEPARTICLESYSTEMDRAWERINST
-OSG_DLLEXPORT_DECL1(SField, LineParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDISCPARTICLESYSTEMDRAWERINST
+OSG_DLLEXPORT_DECL1(SField, DiscParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<LineParticleSystemDrawerPtr> MFLineParticleSystemDrawerPtr;
+typedef MField<DiscParticleSystemDrawerPtr> MFDiscParticleSystemDrawerPtr;
 #endif
 
-#ifndef OSG_COMPILELINEPARTICLESYSTEMDRAWERINST
-OSG_DLLEXPORT_DECL1(MField, LineParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDISCPARTICLESYSTEMDRAWERINST
+OSG_DLLEXPORT_DECL1(MField, DiscParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGLINEPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGDISCPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGLINEPARTICLESYSTEMDRAWERFIELDS_H_ */
+#endif /* _OSGDISCPARTICLESYSTEMDRAWERFIELDS_H_ */
