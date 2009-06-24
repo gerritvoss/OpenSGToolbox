@@ -123,7 +123,7 @@ void FieldAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
    //Check if it's the right type
    if(TheField.getContentType() != getAnimator()->getDataType())
    {
-         SWARNING << "The data type of the field connected to this animation, " << TheField.getContentType().getCName() << ", is not the same data type that the animator works on, " << getAnimator()->getDataType().getCName() << "."  << std::endl;
+       SWARNING << "The data type of the field: " << getContainer()->getType().getFieldDescription(getFieldId())->getName() << " with type: "  << TheField.getContentType().getCName() << " connected to this animation is not the same data type: " << getAnimator()->getDataType().getCName() << ", that the animator works on."  << std::endl;
          return;
    }
 

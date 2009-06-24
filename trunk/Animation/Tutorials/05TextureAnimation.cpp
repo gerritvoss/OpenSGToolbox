@@ -19,6 +19,9 @@
 #include <OpenSG/OSGSimpleSceneManager.h>
 
 #include <OpenSG/OSGChunkMaterial.h>
+#include <OpenSG/OSGMaterialChunk.h>
+#include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/OSGImageFileHandler.h>
 
 #include <OpenSG/OSGComponentTransform.h>
 #include <OpenSG/OSGTransform.h>
@@ -46,6 +49,7 @@
 // with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
+ChunkMaterialPtr TheBoxMaterial;
 
 // forward declaration so we can have the interesting stuff upfront
 void setupAnimation(void);
@@ -218,34 +222,29 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
 
-    //Torus Material
-    ChunkMaterialPtr TheTorusMaterial = ChunkMaterial::create();
-    beginEditCP(TheTorusMaterial);
-        SimpleMaterialPtr::dcast(TheTorusMaterial)->setAmbient(Color3f(0.3,0.3,0.3));
-        SimpleMaterialPtr::dcast(TheTorusMaterial)->setDiffuse(Color3f(0.7,0.7,0.7));
-        SimpleMaterialPtr::dcast(TheTorusMaterial)->setSpecular(Color3f(1.0,1.0,1.0));
-    endEditCP(TheTorusMaterial);
+    //Setup the Animation
+    setupAnimation();
 
-    //Torus Geometry
-    GeometryPtr TorusGeometry = makeTorusGeo(.5, 2, 32, 32);
-    beginEditCP(TorusGeometry);
-        TorusGeometry->setMaterial(TheTorusMaterial);
-    endEditCP  (TorusGeometry);
+    //Box Geometry
+    GeometryPtr BoxGeometry = makeBoxGeo(1.0,1.0,1.0,1,1,1);
+    beginEditCP(BoxGeometry);
+        BoxGeometry->setMaterial(TheBoxMaterial);
+    endEditCP  (BoxGeometry);
     
-    NodePtr TorusGeometryNode = Node::create();
-    beginEditCP(TorusGeometryNode, Node::CoreFieldMask);
-        TorusGeometryNode->setCore(TorusGeometry);
-    endEditCP  (TorusGeometryNode, Node::CoreFieldMask);
+    NodePtr BoxGeometryNode = Node::create();
+    beginEditCP(BoxGeometryNode, Node::CoreFieldMask);
+        BoxGeometryNode->setCore(BoxGeometry);
+    endEditCP  (BoxGeometryNode, Node::CoreFieldMask);
 
-    //Make Torus Node
-    NodePtr TorusNode = Node::create();
-    TransformPtr TorusNodeTrans;
-    TorusNodeTrans = Transform::create();
+    //Make Box Node
+    NodePtr BoxNode = Node::create();
+    TransformPtr BoxNodeTrans;
+    BoxNodeTrans = Transform::create();
 
-    beginEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        TorusNode->setCore(TorusNodeTrans);
-        TorusNode->addChild(TorusGeometryNode);
-    endEditCP  (TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    beginEditCP(BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        BoxNode->setCore(BoxNodeTrans);
+        BoxNode->addChild(BoxGeometryNode);
+    endEditCP  (BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     //Make Main Scene Node
     NodePtr scene = Node::create();
@@ -255,11 +254,8 @@ int main(int argc, char **argv)
         scene->setCore(Trans);
  
         // add the torus as a child
-        scene->addChild(TorusNode);
+        scene->addChild(BoxNode);
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-
-    //Setup the Animation
-    setupAnimation();
 
     // tell the manager what to manage
     mgr->setRoot  (scene);
@@ -295,16 +291,46 @@ void reshape(Vec2f Size)
 void setupAnimation(void)
 {
     std::vector<Path> _ImagePaths;
+    _ImagePaths.push_back(Path("./Data/Anim001.jpg"));
+    _ImagePaths.push_back(Path("./Data/Anim002.jpg"));
+    _ImagePaths.push_back(Path("./Data/Anim003.jpg"));
+    _ImagePaths.push_back(Path("./Data/Anim004.jpg"));
+    _ImagePaths.push_back(Path("./Data/Anim005.jpg"));
+
     std::vector<TextureChunkPtr> _Textures;
     //Make the textures
     for(UInt32 i(0) ; i<_ImagePaths.size(); ++i)
     {
-    }
+        ImagePtr AnimFrameImage = ImageFileHandler::the().read(_ImagePaths[i].string().c_str());
+           
+        TextureChunkPtr AnimFrameTexture = TextureChunk::create();
+        beginEditCP(AnimFrameTexture, TextureChunk::ImageFieldMask | TextureChunk::EnvModeFieldMask);
+            AnimFrameTexture->setImage(AnimFrameImage);
+		    AnimFrameTexture->setEnvMode(GL_REPLACE);
+        endEditCP(AnimFrameTexture, TextureChunk::ImageFieldMask | TextureChunk::EnvModeFieldMask);
 
-    //Color Keyframe Sequence
-    TextureKeyframes = KeyframeColorsSequence3f::create();
+        _Textures.push_back(AnimFrameTexture);
+        addRefCP(AnimFrameTexture);
+    }
+    
+    //Box Material
+    MaterialChunkPtr TheMaterialChunk = MaterialChunk::create();
+    beginEditCP(TheMaterialChunk);
+    TheMaterialChunk->setAmbient(Color4f(0.4,0.4,0.4,1.0));
+    TheMaterialChunk->setDiffuse(Color4f(0.8,0.8,0.8,1.0));
+    TheMaterialChunk->setSpecular(Color4f(1.0,1.0,1.0,1.0));
+    endEditCP(TheMaterialChunk);
+
+    TheBoxMaterial = ChunkMaterial::create();
+    beginEditCP(TheBoxMaterial);
+        TheBoxMaterial->addChunk(_Textures.front());
+    endEditCP(TheBoxMaterial);
+
+    //Texture Keyframe Sequence
+    KeyframeFCPtrsSequencePtr TextureKeyframes = KeyframeFCPtrsSequenceStateChunk::create();
     for(UInt32 i(0) ; i<_Textures.size(); ++i)
     {
+        TextureKeyframes->addKeyframe(_Textures[i],static_cast<Real32>(i)*0.5f);
     }
     
     //Animator
@@ -320,7 +346,8 @@ void setupAnimation(void)
         TutorialTextureAnimation->setInterpolationType(STEP_INTERPOLATION);
         TutorialTextureAnimation->setCycling(-1);
     endEditCP(TutorialTextureAnimation);
-	//TutorialTextureAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
+    TutorialTextureAnimation->setAnimatedMultiField(TheBoxMaterial,ChunkMaterial::ChunksFieldId,0);
+	//TutorialTextureAnimation->setAnimatedField(getFieldContainer("Transform",std::string("BoxNodeTransformationCore")), std::string("matrix"));
 
     //Animation Listener
     TutorialTextureAnimation->addAnimationListener(&TutorialTextureAnimationListener);

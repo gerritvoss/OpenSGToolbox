@@ -125,6 +125,90 @@ bool KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::insertKeyfram
     }
 }
 
+
+//FCPtrsStateChunk
+template<> inline 
+FieldContainerPtr KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::getKeyValue(const UInt32 index)
+{
+    return _field[index];
+}
+
+template<> inline 
+FieldContainerPtr KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::getKeyValue( 
+    const UInt32 index) const
+{
+    return _field[index];
+}
+
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::getKeyValue(
+          FieldContainerPtr   &res,
+    const UInt32   index)
+{
+    res = _field[index];
+}
+
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::getKeyValue(
+          FieldContainerPtr  &res,
+    const UInt32  index) const
+{
+    res = _field[index];
+}
+
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::setKeyframe(const FieldContainerPtr  &val,
+                                          const Real32 &key,
+                                                       const UInt32  index)
+{
+    //if(val->getType().isDerivedFrom(StateChunk::getClassType()))
+    {
+        _field[index] = StateChunkPtr::dcast(val);
+        _mfInternalKeys[index] = key;
+    }
+}
+
+template<>
+inline
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::addKeyframe(const FieldContainerPtr &val,
+                                          const Real32 &key)
+{
+    //if(val->getType().isDerivedFrom(StateChunk::getClassType()))
+    {
+        _field.push_back(StateChunkPtr::dcast(val));
+        _mfInternalKeys.push_back(key);
+    }
+}
+
+template <> inline
+bool KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::insertKeyframe(const FieldContainerPtr &val,
+                                          const Real32 &key,
+                                                          const UInt32 index)
+{
+    if(_field.size() < index)
+    {
+        return false;
+    }
+    else if(_field.size() == index)
+    {
+        addKeyframe(val,key);
+        return true;
+    }
+    else
+    {
+        //if(val->getType().isDerivedFrom(StateChunk::getClassType()))
+        {
+            _field.insert(_field.begin() + index, StateChunkPtr::dcast(val));
+            _mfInternalKeys.insert(_mfInternalKeys.begin() + index, key);
+            return true;
+        }
+        //else
+        //{
+        //    return false;
+        //}
+    }
+}
+
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 OSG_END_NAMESPACE

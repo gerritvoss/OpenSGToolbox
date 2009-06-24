@@ -110,6 +110,7 @@ typedef KeyframeDiscreetSequenceGLenum::PtrType  KeyframeDiscreetSequenceGLenumP
 
 //FCPtrs
 typedef KeyframeFCPtrsSequenceTextureChunk::PtrType  KeyframeFCPtrsSequenceTextureChunkPtr;
+typedef KeyframeFCPtrsSequenceStateChunk::PtrType  KeyframeFCPtrsSequenceStateChunkPtr;
 OSG_END_NAMESPACE
 
 #endif /* _OSGKEYFRAMEPTRS_H_ */
