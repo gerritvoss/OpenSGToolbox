@@ -51,7 +51,6 @@ listens for:
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorLayer.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
@@ -59,23 +58,20 @@ listens for:
 #include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/Game/OSGCaptionListener.h>
-#include <OpenSG/Game/OSGDialogListener.h>
-#include <OpenSG/Game/OSGDefaultDialogComponentGenerator.h>
-#include <OpenSG/Game/OSGDialogInterface.h>
 
 //Dialog Includes
 #include <OpenSG/Game/OSGDialog.h>
 #include <OpenSG/Game/OSGDialogHierarchy.h>
 #include <OpenSG/Game/OSGDialogListener.h>
-#include <OpenSG/Game/OSGDialogHierarchyListener.h>>
+#include <OpenSG/Game/OSGDialogHierarchyListener.h>
+#include <OpenSG/Game/OSGDefaultDialogComponentGenerator.h>
+#include <OpenSG/Game/OSGDialogInterface.h>
 
 //Sound
 #include <OpenSG/Sound/OSGSoundManager.h>
 #include <OpenSG/Sound/OSGSound.h>
 
 #include <map>
-
 
 //XML header files
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
@@ -85,7 +81,6 @@ OSG_USING_NAMESPACE
 
 DialogHierarchyPtr TutorialDialog;
 InternalWindowPtr MainInternalWindow;
-Int32 segUpdate = 0;
 NodePtr scene;
 UIFontPtr ButtonFont;
 
@@ -340,11 +335,6 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //Create Start and stop buttons for the caption
-    ButtonPtr StartButton = osg::Button::create();
-    ButtonPtr StopButton = osg::Button::create();
-    ButtonPtr PauseButton = osg::Button::create();
-
     DefaultDialogComponentGeneratorPtr TutorialDialogGenerator = DefaultDialogComponentGenerator::create();
 
     ButtonFont = osg::UIFont::create();
@@ -379,7 +369,6 @@ int main(int argc, char **argv)
         TutorialDialogGenerator->setQuestionPrototype(LabelPrototype);
     endEditCP(TutorialDialogGenerator, DefaultDialogComponentGenerator::ResponseButtonPrototypeFieldMask | DefaultDialogComponentGenerator::QuestionPrototypeFieldMask);
 
-
     TutorialDialog = osg::DialogHierarchy::create();
 
     beginEditCP(TutorialDialog, DialogHierarchy::DualNodeStyleFieldMask);
@@ -413,8 +402,6 @@ int main(int argc, char **argv)
     End3 = TutorialDialog->addDialog("End", 0.0, NullFC, false, RestartEnd3);
     Restart4 = TutorialDialog->addDialog("Restart", 0.0, NullFC, false, RestartEnd4);
     End4 = TutorialDialog->addDialog("End", 0.0, NullFC, false, RestartEnd4);
-
-
     
     TutorialDialogListener TheTutorialDialogListener;
     rootDialog->addDialogListener(&TheTutorialDialogListener);
@@ -442,7 +429,6 @@ int main(int argc, char **argv)
     
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 
-
     //XML Writing!!!
 
     FCFileType::FCPtrStore Containers;
@@ -459,7 +445,6 @@ int main(int argc, char **argv)
 	NewContainers = FCFileHandler::the()->read(Path("./DialogHierarchy.xml"));
 	
     TutorialHierarchyListener TheTutorialHierarchyListener;
-
 
     for(FCFileType::FCPtrStore::iterator Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {

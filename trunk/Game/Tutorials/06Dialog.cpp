@@ -51,7 +51,6 @@ listens for:
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorLayer.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
@@ -59,7 +58,6 @@ listens for:
 #include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/Game/OSGCaptionListener.h>
 #include <OpenSG/Game/OSGDialogListener.h>
 #include <OpenSG/Game/OSGDefaultDialogComponentGenerator.h>
 #include <OpenSG/Game/OSGDialogInterface.h>
@@ -80,7 +78,6 @@ OSG_USING_NAMESPACE
 
 DialogHierarchyPtr TutorialDialog;
 InternalWindowPtr MainInternalWindow;
-Int32 segUpdate = 0;
 NodePtr scene;
 UIFontPtr ButtonFont;
 
@@ -309,11 +306,6 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //Create Start and stop buttons for the caption
-    ButtonPtr StartButton = osg::Button::create();
-    ButtonPtr StopButton = osg::Button::create();
-    ButtonPtr PauseButton = osg::Button::create();
-
     DefaultDialogComponentGeneratorPtr TutorialDialogGenerator = DefaultDialogComponentGenerator::create();
 
     ButtonFont = osg::UIFont::create();
@@ -342,7 +334,6 @@ int main(int argc, char **argv)
     beginEditCP(TutorialDialogGenerator, DefaultDialogComponentGenerator::ResponseButtonPrototypeFieldMask);
         TutorialDialogGenerator->setResponseButtonPrototype(Response);
     endEditCP(TutorialDialogGenerator, DefaultDialogComponentGenerator::ResponseButtonPrototypeFieldMask);
-
 
     TutorialDialog = osg::DialogHierarchy::create();
 

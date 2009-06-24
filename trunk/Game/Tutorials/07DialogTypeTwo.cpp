@@ -80,7 +80,6 @@ OSG_USING_NAMESPACE
 
 DialogHierarchyPtr TutorialDialog;
 InternalWindowPtr MainInternalWindow;
-Int32 segUpdate = 0;
 NodePtr scene;
 UIFontPtr ButtonFont;
 
@@ -309,11 +308,6 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //Create Start and stop buttons for the caption
-    ButtonPtr StartButton = osg::Button::create();
-    ButtonPtr StopButton = osg::Button::create();
-    ButtonPtr PauseButton = osg::Button::create();
-
     DefaultDialogComponentGeneratorPtr TutorialDialogGenerator = DefaultDialogComponentGenerator::create();
 
     ButtonFont = osg::UIFont::create();
@@ -347,7 +341,6 @@ int main(int argc, char **argv)
         TutorialDialogGenerator->setResponseButtonPrototype(Response);
         TutorialDialogGenerator->setQuestionPrototype(LabelPrototype);
     endEditCP(TutorialDialogGenerator, DefaultDialogComponentGenerator::ResponseButtonPrototypeFieldMask | DefaultDialogComponentGenerator::QuestionPrototypeFieldMask);
-
 
     TutorialDialog = osg::DialogHierarchy::create();
 
@@ -383,8 +376,6 @@ int main(int argc, char **argv)
     Restart4 = TutorialDialog->addDialog("Restart", 0.0, NullFC, false, RestartEnd4);
     End4 = TutorialDialog->addDialog("End", 0.0, NullFC, false, RestartEnd4);
 
-
-    
     TutorialDialogListener TheTutorialDialogListener;
     rootDialog->addDialogListener(&TheTutorialDialogListener);
     RootDialogChildA->addDialogListener(&TheTutorialDialogListener);
