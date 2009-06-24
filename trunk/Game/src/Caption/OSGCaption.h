@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                         OpenSG ToolBox Game                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                   Authors: David Kabala, Eric Langkamp                    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -91,14 +91,101 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
 
     /*! \}                                                                 */
 
+    /**************************************************************************//**
+     * @fn	void captionSegment(std::string s, Real32 start, Real32 end)
+     * 
+     * @brief	Adds a segment of text to the caption object with a given start and end.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     * 
+     * @param	s		The string to be added to the caption object. 
+     * @param	start	The time in which string s should start being displayed(in seconds). 
+     * @param	end		The time in which string s should stop being displayed(in seconds). 
+     *****************************************************************************/
     void captionSegment(std::string s, Real32 start, Real32 end);
 
+    /**************************************************************************//**
+     * @fn	EventConnection addCaptionListener(CaptionListenerPtr Listener)
+     * 
+     * @brief	Simply adds a caption listener to the given caption object.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     * 
+     * @param	Listener	The pointer of the caption listener to be add. 
+     * 
+     * @return	. 
+     *****************************************************************************/
     EventConnection addCaptionListener(CaptionListenerPtr Listener);
+
+	/**************************************************************************//**
+	 * @fn	bool isCaptionListenerAttached(CaptionListenerPtr Listener) const
+	 * 
+	 * @brief	Verifies whether or not a given CaptionListener is attached.
+	 * 
+	 * @author	Langkamp. 
+	 * @date	6/24/2009. 
+	 * 
+	 * @param	Listener	The CaptionListenerPtr to be verified. 
+	 * 
+	 * @return	returns true if the listener given is attached. 
+	 *****************************************************************************/
 	bool isCaptionListenerAttached(CaptionListenerPtr Listener) const;
+
+    /**************************************************************************//**
+     * @fn	void removeCaptionListener(CaptionListenerPtr Listener)
+     * 
+     * @brief	Removes a given Caption Listener.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     * 
+     * @param	Listener	The CaptionListnerPtr of the Caption Listener to be removed. 
+     *****************************************************************************/
     void removeCaptionListener(CaptionListenerPtr Listener);
+
+    /**************************************************************************//**
+     * @fn	void attachWindowEventProducer(WindowEventProducerPtr TheEventProducer)
+     * 
+     * 
+     * @brief	Adds a window event producer to handle the events the caption object gives off.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     * 
+     * @param	TheEventProducer	The Event Producer to be add. 
+     *****************************************************************************/
     void attachWindowEventProducer(WindowEventProducerPtr TheEventProducer);
+
+    /**************************************************************************//**
+     * @fn	void setupCaption()
+     * 
+     * @brief	Helper method for internal functions with the caption object.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     *****************************************************************************/
     void setupCaption();
+
+    /**************************************************************************//**
+     * @fn	void stop()
+     * 
+     * @brief	Helper method to stop the caption when the sound is stoped.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     *****************************************************************************/
     void stop();
+
+    /**************************************************************************//**
+     * @fn	void pause()
+     * 
+     * @brief	Helper method to pause the caption when the sound is paused.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     *****************************************************************************/
     void pause();
     void attachSoundListener();
 

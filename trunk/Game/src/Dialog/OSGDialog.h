@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                   Authors: David Kabala, Eric Langkamp                    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -78,18 +78,51 @@ class OSG_GAMELIB_DLLMAPPING Dialog : public DialogBase
     /**************************************************************************//**
      * @fn	void start()
      * 
-     * @brief	askldjfl;kjsldkaflkjsdf asdf
-     *          asdflkjasdfkl;
-     *
-     * asdfsdaf.
+     * @brief	Starts the given dialog object.
      * 
      * @author	Langkamp. 
      * @date	6/15/2009. 
      *******************************************************`**********************/
     void start();
+
+    /**************************************************************************//**
+     * @fn	void terminate()
+     * 
+     * @brief	Simply produces a terminated event.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     *****************************************************************************/
     void terminate();
+
+    /**************************************************************************//**
+     * @fn	void selectResponse()
+     * 
+     * @brief	Used to select the given dialog object and produces a dialog selected event.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     *****************************************************************************/
     void selectResponse();
+
+    /**************************************************************************//**
+     * @fn	void pause()
+     * 
+     * @brief	Toggles the paused variable.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     *****************************************************************************/
     void pause();
+
+    /**************************************************************************//**
+     * @fn	void unpause()
+     * 
+     * @brief	Toggles the paused variable.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     *****************************************************************************/
     void unpause();
     virtual void produceEnded(const DialogEvent& e);
 
@@ -98,8 +131,44 @@ class OSG_GAMELIB_DLLMAPPING Dialog : public DialogBase
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
+    /**************************************************************************//**
+     * @fn	EventConnection addDialogListener(DialogListenerPtr Listener)
+     * 
+     * @brief	Simply adds a dialog listener to the given dialog object.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     * 
+     * @param	Listener	The pointer of the dialog listener to be add. 
+     * 
+     * @return	. 
+     *****************************************************************************/
     EventConnection addDialogListener(DialogListenerPtr Listener);
+
+	/**************************************************************************//**
+	 * @fn	bool isDialogListenerAttached(DialogListenerPtr Listener) const
+	 * 
+	 * @brief	Verifies whether or not a given DialogListener is attached.
+	 * 
+	 * @author	Langkamp. 
+	 * @date	6/24/2009. 
+	 * 
+	 * @param	Listener	The DialogListenerPtr to be verified. 
+	 * 
+	 * @return	. 
+	 *****************************************************************************/
 	bool isDialogListenerAttached(DialogListenerPtr Listener) const;
+
+    /**************************************************************************//**
+     * @fn	void removeDialogListener(DialogListenerPtr Listener)
+     * 
+     * @brief	Removes a given Dialog Listener.
+     * 
+     * @author	Langkamp. 
+     * @date	6/24/2009. 
+     * 
+     * @param	Listener	The DialogListnerPtr of the Dialog Listener to be removed. 
+     *****************************************************************************/
     void removeDialogListener(DialogListenerPtr Listener);
 
     virtual void dump(      UInt32     uiIndent = 0, 
