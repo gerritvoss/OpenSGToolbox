@@ -305,12 +305,13 @@ int main(int argc, char **argv)
 	
 	//Particle System Node
     ParticleNodeCore = osg::ParticleSystemCore::create();
-    beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
+    beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
+		ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
-    endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
-    
+		ParticleNodeCore->setSortingMode(ParticleSystemCore::FRONT_TO_BACK);
+    endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
+
 	NodePtr ParticleNode = osg::Node::create();
     beginEditCP(ParticleNode, Node::CoreFieldMask);
         ParticleNode->setCore(ParticleNodeCore);
@@ -336,7 +337,7 @@ int main(int argc, char **argv)
 
 	FCFileType::FCTypeVector IgnoreTypes;
 	//Save the Field Containers to a xml file
-	FCFileHandler::the()->write(Containers,Path("./TestFieldContainers4.xml"),IgnoreTypes);
+	FCFileHandler::the()->write(Containers,Path("./Data/TestFieldContainers.xml"),IgnoreTypes);
 
     while(!ExitApp)
     {

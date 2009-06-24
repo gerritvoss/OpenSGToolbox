@@ -197,19 +197,6 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
 {
     //This should be called if the ParticleSystem has
     //just finished an update
-	
-	//initialize _mfSort
-	static bool firstCall = true;
-	if(firstCall){
-		//add each particle index from the particle system to _mfSort the first time 
-		//this function is called
-		firstCall = false;
-		ParticleSystemPtr sys = getSystem();
-		for(UInt32 i(0); i < sys->getNumParticles(); ++i)
-		{
-			_mfSort.push_back(i);
-		}
-	}
 
 	//extract camera position
 	Pnt3f CameraLocation(0.0,0.0,0.0);
@@ -328,6 +315,17 @@ void ParticleSystemCore::changed(BitVector whichField, UInt32 origin)
              getParents()[i]->invalidateVolume();
          }
     }
+
+	if((whichField & SystemFieldMask) || (whichField & SortFieldMask))
+	{
+		getSort().resize(getSystem()->getNumParticles());
+
+		//initialize _mfSort
+		for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
+		{
+			getSort()[i] = i;
+		}
+	}
 }
 
 void ParticleSystemCore::dump(      UInt32    , 
@@ -362,11 +360,11 @@ void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEven
 	_Core->handleParticleStolen(e);
 }
 
-// TODO: make these more efficient
+
 void ParticleSystemCore::handleParticleGenerated(const ParticleEvent& e)
 {
 	//add particle to _mfSort
-	_mfSort.addValue(e.getIndex());
+	if(getSortingMode() != NONE) getSort().addValue(getSort().size());
 }
 
 void ParticleSystemCore::handleParticleKilled(const ParticleEvent& e)
@@ -374,12 +372,12 @@ void ParticleSystemCore::handleParticleKilled(const ParticleEvent& e)
 	// remove highest indexed particle from _mfSort
 	for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
 	{
-		if((int)*theItor == _mfSort.size() - 1 ) 
+		if((*theItor) == _mfSort.size() - 1 ) 
 		{
 			_mfSort.erase(theItor);
 			break;
 		}
-	}	
+	}
 }
 
 void ParticleSystemCore::handleParticleStolen(const ParticleEvent& e)

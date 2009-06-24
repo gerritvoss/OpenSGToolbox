@@ -271,6 +271,7 @@ LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd, UINT uMsg,
       }
    }
    return 0;
+
 }
 
 std::string Win32WindowEventProducer::getClipboard(void) const
