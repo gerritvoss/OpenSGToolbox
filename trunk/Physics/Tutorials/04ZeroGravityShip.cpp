@@ -557,14 +557,15 @@ PhysicsBodyPtr buildShip(Vec3f Dimensions, Pnt3f Position)
         CapsuleBody->setLinearDamping(0.01);
         CapsuleBody->setMaxAngularSpeed(0.0);
     endEditCP(CapsuleBody, PhysicsBody::PositionFieldMask | PhysicsBody::LinearDampingFieldMask | PhysicsBody::MaxAngularSpeedFieldMask);
-    CapsuleBody->setCCylinderMass(1.0,3,Radius, Length);
+    CapsuleBody->setCapsuleMass(1.0,3,Radius, Length);
 
-    PhysicsCCylinderGeomPtr CapsuleGeom = PhysicsCCylinderGeom::create();
-    beginEditCP(CapsuleGeom, PhysicsRayGeom::BodyFieldMask | PhysicsRayGeom::SpaceFieldMask);
+    PhysicsCapsuleGeomPtr CapsuleGeom = PhysicsCapsuleGeom::create();
+    beginEditCP(CapsuleGeom, PhysicsCapsuleGeom::BodyFieldMask | PhysicsCapsuleGeom::SpaceFieldMask | PhysicsCapsuleGeom::RadiusFieldMask | PhysicsCapsuleGeom::LengthFieldMask);
         CapsuleGeom->setBody(CapsuleBody);
         CapsuleGeom->setSpace(hashSpace);
-        CapsuleGeom->setParams(Vec2f(Radius,Length));
-    endEditCP(CapsuleGeom, PhysicsRayGeom::BodyFieldMask | PhysicsRayGeom::SpaceFieldMask);
+        CapsuleGeom->setRadius(Radius);
+        CapsuleGeom->setLength(Length);
+    endEditCP(CapsuleGeom, PhysicsCapsuleGeom::BodyFieldMask | PhysicsCapsuleGeom::SpaceFieldMask | PhysicsCapsuleGeom::RadiusFieldMask | PhysicsCapsuleGeom::LengthFieldMask);
 
     //add attachments
     beginEditCP(boxNode, Node::AttachmentsFieldMask);
