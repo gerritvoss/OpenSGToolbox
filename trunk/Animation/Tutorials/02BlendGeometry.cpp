@@ -557,7 +557,7 @@ NodePtr createBlendRootNode(void)
 
 ComponentPtr createGLPanel(void)
 {
-	//Create the nessicary parts for a viewport
+	//Create the nessecary parts for a viewport
 
     //Camera Beacon
 	Matrix TransformMatrix;

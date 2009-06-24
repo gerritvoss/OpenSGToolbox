@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,27 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSKELETONANIMATION_H_
-#define _OSGSKELETONANIMATION_H_
+#ifndef _OSGSKELETONBLENDEDANIMATION_H_
+#define _OSGSKELETONBLENDEDANIMATION_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGSkeletonAnimationBase.h"
+#include "OSGSkeletonBlendedAnimationBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SkeletonAnimation class. See \ref 
-           PageAnimationSkeletonAnimation for a description.
+/*! \brief SkeletonBlendedAnimation class. See \ref 
+           PageAnimationSkeletonBlendedAnimation for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBase
+class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlendedAnimationBase
 {
   private:
 
-    typedef SkeletonAnimationBase Inherited;
+    typedef SkeletonBlendedAnimationBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -77,55 +77,53 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Real32 getLength(void) const;
 
-	void addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint);
+	virtual Real32 getLength(void) const;
 
+	void addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimation, const Real32& BlendAmount);
+	void setBlendAmount(unsigned int Index, Real32 BlendAmount);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in SkeletonAnimationBase.
+    // Variables should all be in SkeletonBlendedAnimationBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    SkeletonAnimation(void);
-    SkeletonAnimation(const SkeletonAnimation &source);
+    SkeletonBlendedAnimation(void);
+    SkeletonBlendedAnimation(const SkeletonBlendedAnimation &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SkeletonAnimation(void); 
+    virtual ~SkeletonBlendedAnimation(void); 
 
     /*! \}                                                                 */
-    virtual void internalUpdate(const Real32& t, const Real32 prev_t);
-	void internalBlendUpdate(std::map<unsigned long, Matrix> ScaledTransformations);
-	std::map<unsigned long, Matrix> getRelDifTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints);
+	virtual void internalUpdate(const Real32& t, const Real32 prev_t);
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class SkeletonAnimationBase;
-	friend class SkeletonBlendedAnimation;
+    friend class SkeletonBlendedAnimationBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const SkeletonAnimation &source);
+    void operator =(const SkeletonBlendedAnimation &source);
 };
 
-typedef SkeletonAnimation *SkeletonAnimationP;
+typedef SkeletonBlendedAnimation *SkeletonBlendedAnimationP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSkeletonAnimationBase.inl"
-#include "OSGSkeletonAnimation.inl"
+#include "OSGSkeletonBlendedAnimationBase.inl"
+#include "OSGSkeletonBlendedAnimation.inl"
 
-#define OSGSKELETONANIMATION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGSKELETONBLENDEDANIMATION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSKELETONANIMATION_H_ */
+#endif /* _OSGSKELETONBLENDEDANIMATION_H_ */

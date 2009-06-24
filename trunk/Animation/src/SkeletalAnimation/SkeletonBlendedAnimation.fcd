@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SkeletonBlendedAnimation"
+	parent="Animation"
+	library="Animation"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="SkeletonAnimations"
+		type="SkeletonAnimationPtr"
+		cardinality="multi"
+		visibility="external"
+		header="SkeletalAnimation/OSGSkeletonAnimationFields.h"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="BlendAmounts"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+</FieldContainer>

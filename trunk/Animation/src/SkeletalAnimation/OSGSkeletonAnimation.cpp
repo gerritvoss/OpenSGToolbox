@@ -92,6 +92,67 @@ Real32 SkeletonAnimation::getLength(void) const
     return MaxLength;
 }
 
+std::map<unsigned long, Matrix> SkeletonAnimation::getRelDifTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints)
+{
+	//std::vector<Matrix> scaledTransformations;
+	std::map<unsigned long, Matrix> relDifTransformations;
+	//SFMatrix MatrixField;
+	for(UInt32 i(0); i < getTransformationAnimators().size(); ++i)
+	{
+		//UInt32 TransformationFieldId = Joint::getClassType().findFieldDescription("Transformation")->getFieldId();
+	   osg::beginEditCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask() );
+	   
+	   if( getTransformationAnimators(i)->animate(
+				   static_cast<osg::InterpolationType>(getInterpolationType()), 
+				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
+				   -1, 
+				   t,
+				   prev_t,
+				   *getAnimatorJoints(i)->getField( Joint::RelativeTransformationFieldId )) )
+	   {
+		   //scaledTransformations.push_back(ScaledMat);
+		   
+		   //getAnimatorJoints(i)->setRelativeTransformation(ScaledMat);
+		   //std::cout << "Change " << i << std::endl;
+		   osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
+	   }
+	   else
+	   {
+		   //std::cout << "No Change" << i << std::endl;
+		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
+	   }
+
+	   relDifTransformations[getAnimatorJoints(i).getFieldContainerId()] = getAnimatorJoints(i)->getRelativeDifferenceTransformation();
+	   AnimatedJoints.insert(getAnimatorJoints(i));
+	}
+
+    /*if(getSkeleton() != NullFC)
+    {
+        getSkeleton()->updateJointTransformations();
+        getSkeleton()->skeletonUpdated();
+    }*/
+
+	return relDifTransformations;
+}
+
+void SkeletonAnimation::internalBlendUpdate(std::map<unsigned long, Matrix> ScaledTransformations)
+{
+	//Apply the combined scaled transformations to the joints
+	for (int i(0); i < getAnimatorJoints().size(); ++i)
+	{
+		osg::beginEditCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
+			getAnimatorJoints(i)->setRelativeTransformation(ScaledTransformations[getAnimatorJoints(i).getFieldContainerId()]);
+		osg::endEditCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
+	}
+
+	//for (int i(0); i < ScaledTransformations.size(); ++i)
+	//{
+	//	osg::beginEditCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
+	//		getAnimatorJoints(i)->setRelativeTransformation(ScaledTransformations[i]);
+	//	osg::endEditCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
+	//}
+}
+
 void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 {
 	//Apply all of the Transformation Animators

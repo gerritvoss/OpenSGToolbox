@@ -957,6 +957,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBlendedAnimation.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBlendedAnimation.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBlendedAnimation.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBlendedAnimationBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBlendedAnimationBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBlendedAnimationBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBlendedAnimationFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\SkeletalAnimation\OSGSkeletonBlendedGeometry.cpp"
 					>
 				</File>
