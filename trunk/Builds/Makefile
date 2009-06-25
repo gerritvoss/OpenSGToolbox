@@ -4,7 +4,7 @@
 LIBTYPE ?= dbg
 OSGUSERINTERFACEROOT ?= ../../Builds/Linux
 
-DOXYGEN ?= doxygen
+DOXYGEN ?= doxygen-1.5.9
 
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D
@@ -12,9 +12,9 @@ endif
 
 # program dependencies
 
-default:	toolbox input animation sound dynamics particlesystem userinterface game physics
+default:	toolbox input animation sound dynamics particlesystem userinterface game physics metabolic
 
-doc: toolbox-doc input-doc animation-doc sound-doc dynamics-doc particlesystem-doc userinterface-doc game-doc physics-doc
+doc: toolbox-doc input-doc animation-doc sound-doc dynamics-doc particlesystem-doc userinterface-doc game-doc physics-doc metabolic-doc
 
 # make rules
 
@@ -208,5 +208,25 @@ physics-clean: physics-clean-dbg physics-clean-opt
 physics-doc:
 	cd ../Physics/Documentation; \
 	$(DOXYGEN) Doxyfile
-    
-clean: toolbox-clean input-clean animation-clean sound-clean dynamics-clean particlesystem-clean userinterface-clean game-clean physics-clean
+
+#Metabolic
+metabolic-dbg:
+	   gmake -C ../Metabolic/Builds/Linux/dbg -j6 install
+
+metabolic-opt:
+	   gmake -C ../Metabolic/Builds/Linux/opt -j6 install
+
+metabolic: metabolic-dbg metabolic-opt
+
+metabolic-clean-dbg:
+	   gmake -C ../Metabolic/Builds/Linux/dbg clean
+
+metabolic-clean-opt:
+	   gmake -C ../Metabolic/Builds/Linux/opt clean
+
+metabolic-clean: metabolic-clean-dbg metabolic-clean-opt
+
+metabolic-doc:
+	cd ../Metabolic/Documentation; \
+	$(DOXYGEN) Doxyfile
+clean: toolbox-clean input-clean animation-clean sound-clean dynamics-clean particlesystem-clean userinterface-clean game-clean physics-clean metabolic-clean
