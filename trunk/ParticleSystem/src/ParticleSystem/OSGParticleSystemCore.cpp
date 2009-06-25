@@ -105,8 +105,10 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
     //If I have a Drawer tell it to draw the particles
     if(getDrawer() != NullFC && getSystem() != NullFC)
     {
+		
+		checkAndInitializeSort();
 		sortParticles(action);
-		getDrawer()->draw(action, getSystem(), getSort() );
+		getDrawer()->draw(action, getSystem(), getSort());
     }
     else
     {
@@ -121,6 +123,21 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
     }
 
     return Action::Continue;
+}
+
+void ParticleSystemCore::checkAndInitializeSort(void)
+{
+
+	if(getSort().size() != getSystem()->getNumParticles() && getSortingMode() != NONE)
+	{	// re-init _mfSort if there is a discrepency between number of particles in each
+		getSort().resize(getSystem()->getNumParticles());
+		//initialize _mfSort
+		for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
+		{
+			getSort()[i] = i;
+		}
+	}
+
 }
 
 Action::ResultE ParticleSystemCore::drawActionHandler( Action* action )
@@ -201,7 +218,6 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
 	//extract camera position
 	Pnt3f CameraLocation(0.0,0.0,0.0);
 	action->getCameraToWorld().mult(CameraLocation);
-	
     if(getSystem() != NullFC && getSortingMode() != NONE && _mfSort.size() > 0)
     {
 		// initialize sort funcion struct
@@ -222,6 +238,8 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
 		
 		// particles sorted using stdlib's quicksort
 		std::qsort(&_mfSort[0],_mfSort.size(), sizeof(MFUInt32::StoredType),qSortComp);
+		// sort with std::sort
+		//std::sort(getSort().begin(), getSort().end(), TheSorter);
     }
 }
 
@@ -319,7 +337,6 @@ void ParticleSystemCore::changed(BitVector whichField, UInt32 origin)
 	if((whichField & SystemFieldMask) || (whichField & SortFieldMask))
 	{
 		getSort().resize(getSystem()->getNumParticles());
-
 		//initialize _mfSort
 		for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
 		{

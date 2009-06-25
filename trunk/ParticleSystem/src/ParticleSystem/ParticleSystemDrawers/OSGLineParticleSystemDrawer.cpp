@@ -226,8 +226,6 @@ Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemPtr System, UInt32
 		break;
 		}
 		
-
-
 	return System->getPosition(Index)+(LineLength*Direction);
 
 }

@@ -151,7 +151,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 	SystemUpdateListener _SystemUpdateListener;
 	
     void sortParticles(DrawActionBase *action);
-
+	void checkAndInitializeSort(void);
 	void handleParticleGenerated(const ParticleEvent& e);
 	void handleParticleKilled(const ParticleEvent& e);
 	void handleParticleStolen(const ParticleEvent& e);

@@ -22,6 +22,7 @@
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
+#include <OpenSG/ParticleSystem/OSGDiscParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
 #include <OpenSG/ParticleSystem/OSGBurstParticleGenerator.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
@@ -59,6 +60,7 @@ ParticleSystemCorePtr ParticleNodeCore;
 PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
 LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
 QuadParticleSystemDrawerPtr ExampleQuadParticleSystemDrawer;
+DiscParticleSystemDrawerPtr ExampleDiscParticleSystemDrawer;
 
 //Particle System Generator
 RateParticleGeneratorPtr ExampleGenerator;
@@ -271,10 +273,17 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleLineParticleSystemDrawer);
 		ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
 		ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
+		ExampleLineParticleSystemDrawer->setEndPointFading(Vec2f(1.0,0.0));
 	endEditCP(ExampleLineParticleSystemDrawer);
 		//Quad
 	ExampleQuadParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
+	beginEditCP(ExampleQuadParticleSystemDrawer);
+		ExampleQuadParticleSystemDrawer->setQuadSizeScaling(Vec2f(0.8,1.2));
+		ExampleQuadParticleSystemDrawer->setNormalSource(QuadParticleSystemDrawer::NORMAL_PARTICLE_NORMAL);
+	endEditCP(ExampleQuadParticleSystemDrawer);
 	
+	ExampleDiscParticleSystemDrawer = osg::DiscParticleSystemDrawer::create();
+
 		//Create a Rate Particle Generator
 	//BurstParticleGeneratorPtr ExampleGenerator = osg::BurstParticleGenerator::create();
 
@@ -307,7 +316,7 @@ int main(int argc, char **argv)
     ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
+		ParticleNodeCore->setDrawer(ExampleDiscParticleSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
 		ParticleNodeCore->setSortingMode(ParticleSystemCore::FRONT_TO_BACK);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
