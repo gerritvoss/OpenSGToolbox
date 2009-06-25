@@ -122,7 +122,8 @@ std::map<unsigned long, Matrix> SkeletonAnimation::getRelDifTransformations(cons
 		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
 	   }
 
-	   relDifTransformations[getAnimatorJoints(i).getFieldContainerId()] = getAnimatorJoints(i)->getRelativeDifferenceTransformation();
+	   Matrix preview = getAnimatorJoints(i)->previewRelativeDifferenceTransformation();
+	   relDifTransformations[getAnimatorJoints(i).getFieldContainerId()] = getAnimatorJoints(i)->previewRelativeDifferenceTransformation();
 	   AnimatedJoints.insert(getAnimatorJoints(i));
 	}
 

@@ -64,10 +64,46 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+
+    /**************************************************************************//**
+     * @fn	EventConnection addSkeletonListener(SkeletonListenerPtr Listener)
+     * 
+     * @brief	Adds a skeleton listener to this instance. 
+     * 
+     * @param	Listener	The listener to add. 
+     * 
+     * @return	
+    *****************************************************************************/
     EventConnection addSkeletonListener(SkeletonListenerPtr Listener);
+
+    /**************************************************************************//**
+     * @fn	bool isSkeletonListenerAttached(SkeletonListenerPtr Listener) const
+     * 
+     * @brief	Query if skeleton listener 'Listener' is attached to this instance. 
+     * 
+     * @param	Listener	The listener. 
+     * 
+     * @return	true if skeleton listener attached, false if not. 
+    *****************************************************************************/
     bool isSkeletonListenerAttached(SkeletonListenerPtr Listener) const;
+
+    /**************************************************************************//**
+     * @fn	void removeSkeletonListener(SkeletonListenerPtr Listener)
+     * 
+     * @brief	Removes the skeleton listener described by Listener. 
+     * 
+     * @param	Listener	The listener to remove. 
+    *****************************************************************************/
     void removeSkeletonListener(SkeletonListenerPtr Listener);
 
+	/**************************************************************************//**
+	 * @fn	void setJointParentSkeleton(JointPtr TheJoint)
+	 * 
+	 * @brief	Sets a TheJoint's parent skeleton to this instance and recursively
+	 *			does the same for all of TheJoint's descendants.
+	 * 
+	 * @param	The joint to update.
+	*****************************************************************************/
 	void setJointParentSkeleton(JointPtr TheJoint);
 	//void updateBlendedGeometry();
 
@@ -90,7 +126,18 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
 
     /*! \}                                                                 */
 
+    /**************************************************************************//**
+     * @fn	void skeletonUpdated(void)
+     * 
+     * @brief	Skeleton updated.
+    *****************************************************************************/
     void skeletonUpdated(void);
+
+    /**************************************************************************//**
+     * @fn	void updateJointTransformations(void)
+     * 
+     * @brief	Updates the transformations of all joints in this skeleton. 
+    *****************************************************************************/
     void updateJointTransformations(void);
     /*=========================  PROTECTED  ===============================*/
   protected:

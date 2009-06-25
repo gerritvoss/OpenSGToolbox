@@ -183,7 +183,6 @@ public:
 	   //Toggle axes
 	   if(e.getKey() == KeyEvent::KEY_A)
 	   {
-		   std::cout << "push A" << std::endl;
 		   if(Axes->getTravMask() == 0)
 			   Axes->setTravMask(1);
 		   else
@@ -888,8 +887,8 @@ int main(int argc, char **argv)
 	std::vector<GeometryPtr> GeometryPtrs;
 
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/21SceneFromMaya.xml"));
-
+	//NewContainers = FCFileHandler::the()->read(Path("./Data/21SceneFromMaya.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/23WalkingAnimation.xml"));
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {

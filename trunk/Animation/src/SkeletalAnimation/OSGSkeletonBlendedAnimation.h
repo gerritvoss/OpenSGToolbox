@@ -80,7 +80,25 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlen
 
 	virtual Real32 getLength(void) const;
 
+	/**************************************************************************//**
+	 * @fn	void addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimati
+	 * 		on, const Real32& BlendAmount)
+	 * 
+	 * @brief	Adds an animation to this blended animation.
+	 * 
+	 * @param	TheSkeletonAnimation	The skeleton animation. 
+	 * @param	BlendAmount				The blend amount. (0 to 1) 
+	*****************************************************************************/
 	void addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimation, const Real32& BlendAmount);
+
+	/**************************************************************************//**
+	 * @fn	void setBlendAmount(unsigned int Index, Real32 BlendAmount)
+	 * 
+	 * @brief	Sets a blend amount for an existing skeleton animation.
+	 * 
+	 * @param	Index		Zero-based index of the blend amount to be set. 
+	 * @param	BlendAmount	The new blend amount. 
+	*****************************************************************************/
 	void setBlendAmount(unsigned int Index, Real32 BlendAmount);
     /*=========================  PROTECTED  ===============================*/
   protected:

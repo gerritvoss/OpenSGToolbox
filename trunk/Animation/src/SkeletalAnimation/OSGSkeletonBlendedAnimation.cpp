@@ -46,6 +46,7 @@
 #define OSG_COMPILEANIMATIONLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/Toolbox/OSGInterpolations.h>
 
 #include "OSGSkeletonBlendedAnimation.h"
 #include "OSGSkeletonAnimation.h"
@@ -116,28 +117,47 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 		std::set<JointPtr>::iterator iter;
 		for (iter = animatedJoints.begin(); iter != animatedJoints.end(); ++iter)
 		{
-			std::cout << (*iter)->getRelativeTransformation();
-			//Clear the joint's relative transformation
-			(*iter)->setRelativeTransformation(Matrix());
-			std::cout << (*iter)->getRelativeTransformation();
-
 			//Find all of the rel dif transformations for this joint
 			//Note that i will correspond to the skeleton animation from which these rel dif trans matrices came
 			//(so it we should scale them by blendAmounts[i])
+			Matrix blendedRelDifTrans;
 			for(int i(0); i < relDifTransformations.size(); ++i)
 			{
 				int exists = relDifTransformations[i].count(iter->getFieldContainerId());
 				if(exists)
 				{
-					//This joint is animated by skeletonAnimations[i]
-					Matrix relativeDifferenceMat = relDifTransformations[i][iter->getFieldContainerId()];
-					relativeDifferenceMat.scale(getBlendAmounts(i));
-					relativeDifferenceMat.mult((*iter)->getBindRelativeTransformation());
-					(*iter)->getRelativeTransformation().add(relativeDifferenceMat);
+					Matrix scaledRelDifTrans = relDifTransformations[i][iter->getFieldContainerId()];
+					blendedRelDifTrans.mult(osg::lerp(Matrix().identity(), scaledRelDifTrans, getBlendAmounts(i)));
+					
+					
+					
+					
+					//scaledRelDifTrans.scale(getBlendAmounts(i));
+					//blendedRelDifTrans.add(scaledRelDifTrans);
+
+					//Real32 blend = getBlendAmounts(i);
+					//int stop = 1;
+
+
+					////This joint is animated by skeletonAnimations[i]
+					//Matrix bindRelTrans = (*iter)->getBindRelativeTransformation();
+					//Matrix relativeDifferenceMat = relDifTransformations[i][iter->getFieldContainerId()];
+
+					//relativeDifferenceMat.scale(getBlendAmounts(i));
+					//bindRelTrans.mult(relativeDifferenceMat);
+
+					//(*iter)->getRelativeTransformation().add(bindRelTrans);
 				}
 			}
+			//Matrix zero = (*iter)->getBindRelativeTransformation();
+			//zero.scale(0);
+			blendedRelDifTrans.mult((*iter)->getBindRelativeTransformation());
+			(*iter)->setRelativeTransformation(blendedRelDifTrans);
 
-			std::cout << (*iter)->getRelativeTransformation();
+			Matrix m = (*iter)->getRelativeTransformation();
+
+			(*iter)->updateTransformations(false);
+
 		}
 		/*for (int i(0); i < getSkeletonAnimations().size(); ++i)
 		{

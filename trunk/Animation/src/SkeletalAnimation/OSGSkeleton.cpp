@@ -163,7 +163,7 @@ void Skeleton::changed(BitVector whichField, UInt32 origin)
 
 	if(whichField & RootJointsFieldMask)
 	{
-		//Loop through bone hierarchy and set their parent Skeleton this instance
+		//Loop through bone hierarchy and set their parent Skeleton to this instance
 		MFJointPtr CurrentJoints = getRootJoints();
 		for(UInt32 i(0); i < CurrentJoints.size(); ++i)
 		{

@@ -122,6 +122,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
 	*****************************************************************************/
 	void updateTransformations(bool isRecursive);
 
+	/**************************************************************************//**
+	 * @fn	Matrix previewRelativeDifferenceTransformation()
+	 * 
+	 * @brief	Calculates and returns the joint's relative difference
+     *			transformation without updating any of the joint's values.
+	 * 
+	 * @return	A matrix representing the joint's relative difference transform. 
+	*****************************************************************************/
+	Matrix previewRelativeDifferenceTransformation();
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -139,8 +149,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
-  protected:
-
+  protected: 
 	  Matrix _AbsoluteTransformation;
 	  Matrix _BindAbsoluteTransformation;
 	  Matrix _AbsoluteDifferenceTransformation;

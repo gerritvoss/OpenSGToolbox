@@ -86,6 +86,8 @@ SimpleSceneManager *mgr;
 SkeletonBlendedAnimationPtr TheSkeletonBlendedAnimation;
 SkeletonAnimationPtr TheUpperSkeletonAnimation;
 SkeletonAnimationPtr TheLowerSkeletonAnimation;
+Real32 BlendUpper = 1;
+Real32 BlendLower = 1;
 AnimationAdvancerPtr TheAnimationAdvancer;
 JointPtr Pelvis,LeftHip,RightHip,LeftKnee,RightKnee,LeftFoot,RightFoot,LeftToes,RightToes, Clavicle, LeftShoulder,RightShoulder,LeftElbow,RightElbow,LeftHand,RightHand,LeftFingers,RightFingers,Head; 
 SkeletonPtr ExampleSkeleton;
@@ -312,34 +314,23 @@ int main(int argc, char **argv)
     // Create the DefaultBoundedRangeModelPtr and 
     // set its values
     DefaultBoundedRangeModelPtr UpperAnimationSliderRangeModel = DefaultBoundedRangeModel::create();
-    UpperAnimationSliderRangeModel->setMinimum(-200);
-    UpperAnimationSliderRangeModel->setMaximum(200);
-    UpperAnimationSliderRangeModel->setValue(0);
+    UpperAnimationSliderRangeModel->setMinimum(0);
+    UpperAnimationSliderRangeModel->setMaximum(100);
+    UpperAnimationSliderRangeModel->setValue(BlendUpper * 100);
     UpperAnimationSliderRangeModel->setExtent(0);
     
-    //Create the slider
+    //Create the upper animation slider
     LabelPtr TempLabel;
     SliderPtr UpperAnimationSlider = Slider::create();
     beginEditCP(UpperAnimationSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
-        TempLabel = Label::Ptr::dcast(UpperAnimationSlider->getLabelPrototype()->shallowCopy());
-        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("-2.0"); endEditCP(TempLabel, Label::TextFieldMask);
-        UpperAnimationSlider->getLabelMap()[-200] = TempLabel;
-        
-        TempLabel = Label::Ptr::dcast(UpperAnimationSlider->getLabelPrototype()->shallowCopy());
-        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("-1.0"); endEditCP(TempLabel, Label::TextFieldMask);
-        UpperAnimationSlider->getLabelMap()[-100] = TempLabel;
 
-        TempLabel = Label::Ptr::dcast(UpperAnimationSlider->getLabelPrototype()->shallowCopy());
+		TempLabel = Label::Ptr::dcast(UpperAnimationSlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("0.0"); endEditCP(TempLabel, Label::TextFieldMask);
         UpperAnimationSlider->getLabelMap()[0] = TempLabel;
 
         TempLabel = Label::Ptr::dcast(UpperAnimationSlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("1.0"); endEditCP(TempLabel, Label::TextFieldMask);
         UpperAnimationSlider->getLabelMap()[100] = TempLabel;
-
-        TempLabel = Label::Ptr::dcast(UpperAnimationSlider->getLabelPrototype()->shallowCopy());
-        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("2.0"); endEditCP(TempLabel, Label::TextFieldMask);
-        UpperAnimationSlider->getLabelMap()[200] = TempLabel;
 
 
         UpperAnimationSlider->setPreferredSize(Vec2f(100, 300));
@@ -353,21 +344,14 @@ int main(int argc, char **argv)
     endEditCP(UpperAnimationSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
     
     DefaultBoundedRangeModelPtr LowerAnimationSliderRangeModel = DefaultBoundedRangeModel::create();
-    LowerAnimationSliderRangeModel->setMinimum(-200);
-    LowerAnimationSliderRangeModel->setMaximum(200);
-    LowerAnimationSliderRangeModel->setValue(0);
+    LowerAnimationSliderRangeModel->setMinimum(0);
+    LowerAnimationSliderRangeModel->setMaximum(100);
+    LowerAnimationSliderRangeModel->setValue(BlendLower * 100);
     LowerAnimationSliderRangeModel->setExtent(0);
     
-    //Create the slider
+    //Create the lower animation slider
     SliderPtr LowerAnimationSlider = Slider::create();
     beginEditCP(LowerAnimationSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
-        TempLabel = Label::Ptr::dcast(LowerAnimationSlider->getLabelPrototype()->shallowCopy());
-        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("-2.0"); endEditCP(TempLabel, Label::TextFieldMask);
-        LowerAnimationSlider->getLabelMap()[-200] = TempLabel;
-        
-        TempLabel = Label::Ptr::dcast(LowerAnimationSlider->getLabelPrototype()->shallowCopy());
-        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("-1.0"); endEditCP(TempLabel, Label::TextFieldMask);
-        LowerAnimationSlider->getLabelMap()[-100] = TempLabel;
 
         TempLabel = Label::Ptr::dcast(LowerAnimationSlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("0.0"); endEditCP(TempLabel, Label::TextFieldMask);
@@ -376,10 +360,6 @@ int main(int argc, char **argv)
         TempLabel = Label::Ptr::dcast(LowerAnimationSlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("1.0"); endEditCP(TempLabel, Label::TextFieldMask);
         LowerAnimationSlider->getLabelMap()[100] = TempLabel;
-
-        TempLabel = Label::Ptr::dcast(LowerAnimationSlider->getLabelPrototype()->shallowCopy());
-        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("2.0"); endEditCP(TempLabel, Label::TextFieldMask);
-        LowerAnimationSlider->getLabelMap()[200] = TempLabel;
 
 
         LowerAnimationSlider->setPreferredSize(Vec2f(100, 300));
@@ -455,7 +435,6 @@ int main(int argc, char **argv)
     beginEditCP(TheAnimationAdvancer);
     ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
     beginEditCP(TheAnimationAdvancer);
-
 	
 	// Show the whole Scene
     mgr->showAll();
@@ -699,20 +678,12 @@ NodePtr createSkeleton(void)
 		Pelvis->getChildJoints().push_back(Clavicle);
 	endEditCP(Pelvis, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 	
-
-
     //Skeleton
     ExampleSkeleton = Skeleton::create();
 	beginEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
 		ExampleSkeleton->getRootJoints().push_back(Pelvis);
 	endEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
 
-
-	    //Skeleton
-    SkeletonPtr ExampleSkeleton = Skeleton::create();
-	beginEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
-		ExampleSkeleton->getRootJoints().push_back(Pelvis);
-	endEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
 
     //SkeletonDrawer
     SkeletonDrawablePtr ExampleSkeletonDrawable = SkeletonDrawable::create();
@@ -1282,12 +1253,9 @@ void setupAnimation(void)
     //SkeletonBlendedAnimation
     TheSkeletonBlendedAnimation = SkeletonBlendedAnimation::create();
     beginEditCP(TheSkeletonBlendedAnimation);
-		TheSkeletonBlendedAnimation->addAnimationBlending(TheUpperSkeletonAnimation, 1);
-		TheSkeletonBlendedAnimation->addAnimationBlending(TheLowerSkeletonAnimation, 1);
+		TheSkeletonBlendedAnimation->addAnimationBlending(TheUpperSkeletonAnimation, BlendUpper);
+		TheSkeletonBlendedAnimation->addAnimationBlending(TheLowerSkeletonAnimation, BlendLower);
     endEditCP(TheSkeletonBlendedAnimation);
-   
-
-
 }
 
 

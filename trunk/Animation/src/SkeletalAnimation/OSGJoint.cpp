@@ -159,6 +159,16 @@ void Joint::updateTransformations(bool isRecursive)
 	}
 }
 
+Matrix Joint::previewRelativeDifferenceTransformation()
+{
+	//Relative difference transformation
+	Matrix RelDifTrans = getBindRelativeTransformation();
+	RelDifTrans.invert();
+	RelDifTrans.multLeft(getRelativeTransformation());
+
+	return RelDifTrans;
+}
+
 
 
 /*-------------------------------------------------------------------------*\
@@ -186,7 +196,11 @@ Joint::~Joint(void)
 void Joint::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-
+	if(this->getParentSkeleton() != NullFC)
+	{
+		int id = this->getParentSkeleton().getFieldContainerId();
+		int stop = 0;
+	}
 	if((whichField & BindRelativeTransformationFieldMask) || (whichField & RelativeTransformationFieldMask) || (whichField & ParentJointFieldMask))
 	{
 		updateTransformations(false);
