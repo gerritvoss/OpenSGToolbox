@@ -89,28 +89,11 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 	if(getSkeletonAnimations().size() == getBlendAmounts().size())
 	{
 		//Get scaled transformations and add them together
-		std::vector<std::map<unsigned long, Matrix>> relDifTransformations;  //Each map in the vector contains the rel dif trans matrices for skeletonAnimation[i]
+		std::vector<std::map<unsigned long, Matrix>> relTransformations;  //Each map in the vector contains the rel trans matrices for skeletonAnimation[i]
 		std::set<JointPtr> animatedJoints;
 		for (int i(0); i < getSkeletonAnimations().size(); ++i)
 		{
-			relDifTransformations.push_back(getSkeletonAnimations(i)->getRelDifTransformations(t, prev_t, animatedJoints));
-
-
-			////Add temp values to scaledTransformations
-			//std::map<unsigned long, Matrix>::iterator iter;
-			//for(iter = temp.begin(); iter != temp.end(); ++iter)
-			//{
-			//	scaledTransformations[iter->first].add(iter->second);
-			//}
-
-			//if(scaledTransformations.size() == temp.size())
-			//{
-			//	//Add temps values to scaledTransformations
-			//	for(int i(0); i < temp.size(); ++i)
-			//	{
-			//		scaledTransformations[i].add(temp[i]);
-			//	}
-			//}
+			relTransformations.push_back(getSkeletonAnimations(i)->getRelTransformations(t, prev_t, animatedJoints));
 		}
 
 		//Apply the transformations to the joints
@@ -121,36 +104,46 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 			//Note that i will correspond to the skeleton animation from which these rel dif trans matrices came
 			//(so it we should scale them by blendAmounts[i])
 			Matrix blendedRelDifTrans;
-			for(int i(0); i < relDifTransformations.size(); ++i)
+			bool firstForThisJoint = true;
+			for(int i(0); i < relTransformations.size(); ++i)
 			{
-				int exists = relDifTransformations[i].count(iter->getFieldContainerId());
+				int exists = relTransformations[i].count(iter->getFieldContainerId());
 				if(exists)
 				{
-					Matrix scaledRelDifTrans = relDifTransformations[i][iter->getFieldContainerId()];
-					blendedRelDifTrans.mult(osg::lerp(Matrix().identity(), scaledRelDifTrans, getBlendAmounts(i)));
-					
-					
-					
-					
-					//scaledRelDifTrans.scale(getBlendAmounts(i));
-					//blendedRelDifTrans.add(scaledRelDifTrans);
-
-					//Real32 blend = getBlendAmounts(i);
-					//int stop = 1;
-
-
-					////This joint is animated by skeletonAnimations[i]
-					//Matrix bindRelTrans = (*iter)->getBindRelativeTransformation();
-					//Matrix relativeDifferenceMat = relDifTransformations[i][iter->getFieldContainerId()];
-
-					//relativeDifferenceMat.scale(getBlendAmounts(i));
-					//bindRelTrans.mult(relativeDifferenceMat);
-
-					//(*iter)->getRelativeTransformation().add(bindRelTrans);
+					if(getOverrideStatuses(i) && getBlendAmounts(i) != 0)
+					{
+						//If this skeleton animation is set to override, we don't consider any other difference transformations
+						Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][iter->getFieldContainerId()]);
+						blendedRelDifTrans = osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i));
+						break;
+					}
+					else
+					{
+						if(firstForThisJoint)
+						{
+							//Use the calculated relative difference transformation from bind pose to the transformation defined by
+							//the skeleton animation
+							Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][iter->getFieldContainerId()]);
+							blendedRelDifTrans.mult(osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+						}
+						else
+						{
+							//Use the difference transformation between the joint's current transformation and the transformation
+							//defined by the skeleton animation
+							Matrix relDifTrans = blendedRelDifTrans;
+							relDifTrans.invert();
+							relDifTrans.multLeft(relTransformations[i][iter->getFieldContainerId()]);
+							
+							blendedRelDifTrans.mult(osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+						}
+						
+					}
+					if(getBlendAmounts(i) != 0)
+					{
+						firstForThisJoint = false;
+					}
 				}
 			}
-			//Matrix zero = (*iter)->getBindRelativeTransformation();
-			//zero.scale(0);
 			blendedRelDifTrans.mult((*iter)->getBindRelativeTransformation());
 			(*iter)->setRelativeTransformation(blendedRelDifTrans);
 
@@ -159,19 +152,19 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 			(*iter)->updateTransformations(false);
 
 		}
-		/*for (int i(0); i < getSkeletonAnimations().size(); ++i)
-		{
-			getSkeletonAnimations(i)->internalBlendUpdate(scaledTransformations);
-		}*/
 	}
 }
 
-void SkeletonBlendedAnimation::addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimation, const Real32& BlendAmount)
+void SkeletonBlendedAnimation::addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimation, const Real32& BlendAmount, bool Override)
 {
-	beginEditCP(SkeletonBlendedAnimationPtr(this), SkeletonAnimationsFieldMask | BlendAmountsFieldMask);
+	beginEditCP(SkeletonBlendedAnimationPtr(this), SkeletonAnimationsFieldMask | BlendAmountsFieldMask | OverrideStatusesFieldMask);
 		getSkeletonAnimations().push_back(TheSkeletonAnimation);
 		getBlendAmounts().push_back(BlendAmount);
-	endEditCP(SkeletonBlendedAnimationPtr(this), SkeletonAnimationsFieldMask | BlendAmountsFieldMask);
+		getOverrideStatuses().push_back(Override);
+	endEditCP(SkeletonBlendedAnimationPtr(this), SkeletonAnimationsFieldMask | BlendAmountsFieldMask | OverrideStatusesFieldMask);
+
+	//Update blending information
+
 }
 
 void SkeletonBlendedAnimation::setBlendAmount(unsigned int Index, Real32 BlendAmount)

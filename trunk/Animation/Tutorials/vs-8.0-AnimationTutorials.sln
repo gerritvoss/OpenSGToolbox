@@ -44,6 +44,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05TextureAnimation", "05Tex
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "22SkeletonBlendedAnimation", "22SkeletonBlendedAnimation.vcproj", "{D998043C-B025-4677-B3E3-8FE3FE1ADB1E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "23BlendXMLAnimations", "23BlendXMLAnimations.vcproj", "{23647FA7-0F1E-4C6D-B460-D69EE78F65F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -138,6 +140,10 @@ Global
 		{D998043C-B025-4677-B3E3-8FE3FE1ADB1E}.Debug|Win32.Build.0 = Debug|Win32
 		{D998043C-B025-4677-B3E3-8FE3FE1ADB1E}.Release|Win32.ActiveCfg = Release|Win32
 		{D998043C-B025-4677-B3E3-8FE3FE1ADB1E}.Release|Win32.Build.0 = Release|Win32
+		{23647FA7-0F1E-4C6D-B460-D69EE78F65F4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{23647FA7-0F1E-4C6D-B460-D69EE78F65F4}.Debug|Win32.Build.0 = Debug|Win32
+		{23647FA7-0F1E-4C6D-B460-D69EE78F65F4}.Release|Win32.ActiveCfg = Release|Win32
+		{23647FA7-0F1E-4C6D-B460-D69EE78F65F4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

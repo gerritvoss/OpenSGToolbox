@@ -288,9 +288,9 @@ class TutorialUpdateListener : public UpdateListener
     {
 		if(!animationPaused)
 		{
-			//ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+			ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
 
-			//TheTouchScreenAnimation->update(TheAnimationAdvancer);
+			TheSkeletonBlendedAnimation->update(TheAnimationAdvancer);
 		}
     }
 };
@@ -457,12 +457,11 @@ int main(int argc, char **argv)
     }
 
 	//LOAD SECOND ANIMATION
-	NewContainers = FCFileHandler::the()->read(Path("./Data/23TouchScreenAnimation.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/23SamAnimation.xml"));
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
 		if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
 		{
-			std::cout << "Loading touch screen animation" << std::endl;
 			TheTouchScreenAnimation = (SkeletonAnimation::Ptr::dcast(*Itor));
 		}
     }
@@ -470,8 +469,8 @@ int main(int argc, char **argv)
 	//Blend the two animations
     TheSkeletonBlendedAnimation = SkeletonBlendedAnimation::create();
     beginEditCP(TheSkeletonBlendedAnimation);
-		TheSkeletonBlendedAnimation->addAnimationBlending(TheWalkingAnimation, BlendWalking);
-		TheSkeletonBlendedAnimation->addAnimationBlending(TheTouchScreenAnimation, BlendTouchScreen);
+		TheSkeletonBlendedAnimation->addAnimationBlending(TheWalkingAnimation, BlendWalking, false);
+		TheSkeletonBlendedAnimation->addAnimationBlending(TheTouchScreenAnimation, BlendTouchScreen, false);
     endEditCP(TheSkeletonBlendedAnimation);
 
 
@@ -811,7 +810,7 @@ ComponentPtr createGLPanel(void)
 	GLViewportPtr TheGLViewport = GLViewport::create();
 	beginEditCP(TheGLViewport, GLViewport::PortFieldMask | GLViewport::PreferredSizeFieldMask | GLViewport::BordersFieldMask);
 		TheGLViewport->setPort(DefaultViewport);
-		TheGLViewport->setPreferredSize(Vec2f(800.0f,600.0f));
+		TheGLViewport->setPreferredSize(Vec2f(1024.0f,768.0f));
 	endEditCP(TheGLViewport, GLViewport::PortFieldMask | GLViewport::PreferredSizeFieldMask | GLViewport::BordersFieldMask);
 	
     TheGLViewport->showAll();

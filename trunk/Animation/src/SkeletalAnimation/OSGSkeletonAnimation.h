@@ -112,7 +112,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
     *****************************************************************************/
     virtual void internalUpdate(const Real32& t, const Real32 prev_t);
 	void internalBlendUpdate(std::map<unsigned long, Matrix> ScaledTransformations);
-	std::map<unsigned long, Matrix> getRelDifTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints);
+	std::map<unsigned long, Matrix> getRelTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints);
+
+	/**************************************************************************//**
+	 * @fn	std::set<JointPtr> getAnimatedJoints(void)
+	 * 
+	 * @brief	Returns a set of all joints animated by this animation.
+	 * 
+	 * @return	The animated joints. 
+	*****************************************************************************/
+	std::set<JointPtr> getAnimatedJoints(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

@@ -28,4 +28,13 @@
 		access="protected"
 	>
 	</Field>
+	<Field
+		name="OverrideStatuses"
+		type="bool"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+		defaultValue="false"
+	>
+	</Field>
 </FieldContainer>

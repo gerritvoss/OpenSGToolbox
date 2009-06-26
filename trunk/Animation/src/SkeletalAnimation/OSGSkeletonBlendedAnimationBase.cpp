@@ -70,6 +70,9 @@ const OSG::BitVector  SkeletonBlendedAnimationBase::SkeletonAnimationsFieldMask 
 const OSG::BitVector  SkeletonBlendedAnimationBase::BlendAmountsFieldMask = 
     (TypeTraits<BitVector>::One << SkeletonBlendedAnimationBase::BlendAmountsFieldId);
 
+const OSG::BitVector  SkeletonBlendedAnimationBase::OverrideStatusesFieldMask = 
+    (TypeTraits<BitVector>::One << SkeletonBlendedAnimationBase::OverrideStatusesFieldId);
+
 const OSG::BitVector SkeletonBlendedAnimationBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -81,6 +84,9 @@ const OSG::BitVector SkeletonBlendedAnimationBase::MTInfluenceMask =
     
 */
 /*! \var Real32          SkeletonBlendedAnimationBase::_mfBlendAmounts
+    
+*/
+/*! \var bool            SkeletonBlendedAnimationBase::_mfOverrideStatuses
     
 */
 
@@ -97,7 +103,12 @@ FieldDescription *SkeletonBlendedAnimationBase::_desc[] =
                      "BlendAmounts", 
                      BlendAmountsFieldId, BlendAmountsFieldMask,
                      false,
-                     (FieldAccessMethod) &SkeletonBlendedAnimationBase::getMFBlendAmounts)
+                     (FieldAccessMethod) &SkeletonBlendedAnimationBase::getMFBlendAmounts),
+    new FieldDescription(MFBool::getClassType(), 
+                     "OverrideStatuses", 
+                     OverrideStatusesFieldId, OverrideStatusesFieldMask,
+                     false,
+                     (FieldAccessMethod) &SkeletonBlendedAnimationBase::getMFOverrideStatuses)
 };
 
 
@@ -165,6 +176,7 @@ void SkeletonBlendedAnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
     _mfSkeletonAnimations.terminateShare(uiAspect, this->getContainerSize());
     _mfBlendAmounts.terminateShare(uiAspect, this->getContainerSize());
+    _mfOverrideStatuses.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -177,6 +189,7 @@ void SkeletonBlendedAnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 SkeletonBlendedAnimationBase::SkeletonBlendedAnimationBase(void) :
     _mfSkeletonAnimations     (), 
     _mfBlendAmounts           (), 
+    _mfOverrideStatuses       (bool(false)), 
     Inherited() 
 {
 }
@@ -188,6 +201,7 @@ SkeletonBlendedAnimationBase::SkeletonBlendedAnimationBase(void) :
 SkeletonBlendedAnimationBase::SkeletonBlendedAnimationBase(const SkeletonBlendedAnimationBase &source) :
     _mfSkeletonAnimations     (source._mfSkeletonAnimations     ), 
     _mfBlendAmounts           (source._mfBlendAmounts           ), 
+    _mfOverrideStatuses       (source._mfOverrideStatuses       ), 
     Inherited                 (source)
 {
 }
@@ -214,6 +228,11 @@ UInt32 SkeletonBlendedAnimationBase::getBinSize(const BitVector &whichField)
         returnValue += _mfBlendAmounts.getBinSize();
     }
 
+    if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
+    {
+        returnValue += _mfOverrideStatuses.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -231,6 +250,11 @@ void SkeletonBlendedAnimationBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
     {
         _mfBlendAmounts.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
+    {
+        _mfOverrideStatuses.copyToBin(pMem);
     }
 
 
@@ -251,6 +275,11 @@ void SkeletonBlendedAnimationBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfBlendAmounts.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
+    {
+        _mfOverrideStatuses.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -266,6 +295,9 @@ void SkeletonBlendedAnimationBase::executeSyncImpl(      SkeletonBlendedAnimatio
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
         _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts);
+
+    if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
+        _mfOverrideStatuses.syncWith(pOther->_mfOverrideStatuses);
 
 
 }
@@ -284,6 +316,9 @@ void SkeletonBlendedAnimationBase::executeSyncImpl(      SkeletonBlendedAnimatio
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
         _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts, sInfo);
 
+    if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
+        _mfOverrideStatuses.syncWith(pOther->_mfOverrideStatuses, sInfo);
+
 
 }
 
@@ -298,6 +333,9 @@ void SkeletonBlendedAnimationBase::execBeginEditImpl (const BitVector &whichFiel
 
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
         _mfBlendAmounts.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
+        _mfOverrideStatuses.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

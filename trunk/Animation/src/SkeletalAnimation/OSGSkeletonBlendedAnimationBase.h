@@ -69,6 +69,7 @@
 
 #include "SkeletalAnimation/OSGSkeletonAnimationFields.h" // SkeletonAnimations type
 #include <OpenSG/OSGReal32Fields.h> // BlendAmounts type
+#include <OpenSG/OSGBoolFields.h> // OverrideStatuses type
 
 #include "OSGSkeletonBlendedAnimationFields.h"
 
@@ -94,11 +95,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimationBase : public Animatio
     {
         SkeletonAnimationsFieldId = Inherited::NextFieldId,
         BlendAmountsFieldId       = SkeletonAnimationsFieldId + 1,
-        NextFieldId               = BlendAmountsFieldId       + 1
+        OverrideStatusesFieldId   = BlendAmountsFieldId       + 1,
+        NextFieldId               = OverrideStatusesFieldId   + 1
     };
 
     static const OSG::BitVector SkeletonAnimationsFieldMask;
     static const OSG::BitVector BlendAmountsFieldMask;
+    static const OSG::BitVector OverrideStatusesFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -163,6 +166,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimationBase : public Animatio
 
     MFSkeletonAnimationPtr   _mfSkeletonAnimations;
     MFReal32            _mfBlendAmounts;
+    MFBool              _mfOverrideStatuses;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -186,6 +190,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimationBase : public Animatio
 
            MFSkeletonAnimationPtr *getMFSkeletonAnimations(void);
            MFReal32            *getMFBlendAmounts   (void);
+           MFBool              *getMFOverrideStatuses(void);
 
            SkeletonAnimationPtr &getSkeletonAnimations(UInt32 index);
            MFSkeletonAnimationPtr &getSkeletonAnimations(void);
@@ -193,6 +198,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimationBase : public Animatio
            Real32              &getBlendAmounts   (UInt32 index);
            MFReal32            &getBlendAmounts   (void);
      const MFReal32            &getBlendAmounts   (void) const;
+           bool                getOverrideStatuses(UInt32 index);
+           MFBool              &getOverrideStatuses(void);
+     const MFBool              &getOverrideStatuses(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

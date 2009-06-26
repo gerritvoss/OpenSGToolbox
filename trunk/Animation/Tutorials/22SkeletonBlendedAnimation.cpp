@@ -86,8 +86,8 @@ SimpleSceneManager *mgr;
 SkeletonBlendedAnimationPtr TheSkeletonBlendedAnimation;
 SkeletonAnimationPtr TheUpperSkeletonAnimation;
 SkeletonAnimationPtr TheLowerSkeletonAnimation;
-Real32 BlendUpper = 1;
-Real32 BlendLower = 1;
+Real32 BlendUpper = 0;
+Real32 BlendLower = 0;
 AnimationAdvancerPtr TheAnimationAdvancer;
 JointPtr Pelvis,LeftHip,RightHip,LeftKnee,RightKnee,LeftFoot,RightFoot,LeftToes,RightToes, Clavicle, LeftShoulder,RightShoulder,LeftElbow,RightElbow,LeftHand,RightHand,LeftFingers,RightFingers,Head; 
 SkeletonPtr ExampleSkeleton;
@@ -1253,8 +1253,8 @@ void setupAnimation(void)
     //SkeletonBlendedAnimation
     TheSkeletonBlendedAnimation = SkeletonBlendedAnimation::create();
     beginEditCP(TheSkeletonBlendedAnimation);
-		TheSkeletonBlendedAnimation->addAnimationBlending(TheUpperSkeletonAnimation, BlendUpper);
-		TheSkeletonBlendedAnimation->addAnimationBlending(TheLowerSkeletonAnimation, BlendLower);
+		TheSkeletonBlendedAnimation->addAnimationBlending(TheUpperSkeletonAnimation, BlendUpper, false);
+		TheSkeletonBlendedAnimation->addAnimationBlending(TheLowerSkeletonAnimation, BlendLower, false);
     endEditCP(TheSkeletonBlendedAnimation);
 }
 

@@ -887,8 +887,8 @@ int main(int argc, char **argv)
 	std::vector<GeometryPtr> GeometryPtrs;
 
 	FCFileType::FCPtrStore NewContainers;
-	//NewContainers = FCFileHandler::the()->read(Path("./Data/21SceneFromMaya.xml"));
-	NewContainers = FCFileHandler::the()->read(Path("./Data/23WalkingAnimation.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/21SceneFromMaya.xml"));
+	//NewContainers = FCFileHandler::the()->read(Path("./Data/23WalkingAnimation.xml"));
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {

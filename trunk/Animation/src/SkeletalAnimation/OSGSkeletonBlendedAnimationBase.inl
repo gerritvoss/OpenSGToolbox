@@ -110,6 +110,13 @@ MFReal32 *SkeletonBlendedAnimationBase::getMFBlendAmounts(void)
     return &_mfBlendAmounts;
 }
 
+//! Get the SkeletonBlendedAnimation::_mfOverrideStatuses field.
+inline
+MFBool *SkeletonBlendedAnimationBase::getMFOverrideStatuses(void)
+{
+    return &_mfOverrideStatuses;
+}
+
 
 
 //! Get the value of the \a index element the SkeletonBlendedAnimation::_mfSkeletonAnimations field.
@@ -152,6 +159,27 @@ inline
 const MFReal32 &SkeletonBlendedAnimationBase::getBlendAmounts(void) const
 {
     return _mfBlendAmounts;
+}
+
+//! Get the value of the \a index element the SkeletonBlendedAnimation::_mfOverrideStatuses field.
+inline
+bool SkeletonBlendedAnimationBase::getOverrideStatuses(const UInt32 index)
+{
+    return _mfOverrideStatuses[index];
+}
+
+//! Get the SkeletonBlendedAnimation::_mfOverrideStatuses field.
+inline
+MFBool &SkeletonBlendedAnimationBase::getOverrideStatuses(void)
+{
+    return _mfOverrideStatuses;
+}
+
+//! Get the SkeletonBlendedAnimation::_mfOverrideStatuses field.
+inline
+const MFBool &SkeletonBlendedAnimationBase::getOverrideStatuses(void) const
+{
+    return _mfOverrideStatuses;
 }
 
 OSG_END_NAMESPACE

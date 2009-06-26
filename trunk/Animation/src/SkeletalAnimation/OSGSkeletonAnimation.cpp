@@ -46,6 +46,7 @@
 #define OSG_COMPILEANIMATIONLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGSimpleAttachments.h>
 
 #include "OSGSkeletonAnimation.h"
 
@@ -92,10 +93,10 @@ Real32 SkeletonAnimation::getLength(void) const
     return MaxLength;
 }
 
-std::map<unsigned long, Matrix> SkeletonAnimation::getRelDifTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints)
+std::map<unsigned long, Matrix> SkeletonAnimation::getRelTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints)
 {
 	//std::vector<Matrix> scaledTransformations;
-	std::map<unsigned long, Matrix> relDifTransformations;
+	std::map<unsigned long, Matrix> relTransformations;
 	//SFMatrix MatrixField;
 	for(UInt32 i(0); i < getTransformationAnimators().size(); ++i)
 	{
@@ -122,8 +123,8 @@ std::map<unsigned long, Matrix> SkeletonAnimation::getRelDifTransformations(cons
 		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
 	   }
 
-	   Matrix preview = getAnimatorJoints(i)->previewRelativeDifferenceTransformation();
-	   relDifTransformations[getAnimatorJoints(i).getFieldContainerId()] = getAnimatorJoints(i)->previewRelativeDifferenceTransformation();
+	   //relDifTransformations[getAnimatorJoints(i).getFieldContainerId()] = getAnimatorJoints(i)->previewRelativeDifferenceTransformation();
+	   relTransformations[getAnimatorJoints(i).getFieldContainerId()] = getAnimatorJoints(i)->getRelativeTransformation();
 	   AnimatedJoints.insert(getAnimatorJoints(i));
 	}
 
@@ -133,7 +134,7 @@ std::map<unsigned long, Matrix> SkeletonAnimation::getRelDifTransformations(cons
         getSkeleton()->skeletonUpdated();
     }*/
 
-	return relDifTransformations;
+	return relTransformations;
 }
 
 void SkeletonAnimation::internalBlendUpdate(std::map<unsigned long, Matrix> ScaledTransformations)
@@ -186,6 +187,19 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
         getSkeleton()->skeletonUpdated();
     }
 }
+
+std::set<JointPtr> SkeletonAnimation::getAnimatedJoints(void)
+{
+	std::set<JointPtr> animatedJoints;
+	
+	for(int i(0); i < getAnimatorJoints().size(); ++i)
+	{
+		animatedJoints.insert(getAnimatorJoints(i));
+	}
+
+	return animatedJoints;
+}
+
 //===============================================================================================================
 // END HERE
 //================================================================================================================

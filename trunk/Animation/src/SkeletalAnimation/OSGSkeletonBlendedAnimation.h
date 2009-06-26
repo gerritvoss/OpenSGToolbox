@@ -88,8 +88,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlen
 	 * 
 	 * @param	TheSkeletonAnimation	The skeleton animation. 
 	 * @param	BlendAmount				The blend amount. (0 to 1) 
+	 * @param	Override				If true, this skeleton animation will have
+	 *									complete control over its animated joints.
+	 *									The values of any other attached skeleton
+	 *									animations affecting these joints will be
+	 *									ignored.
 	*****************************************************************************/
-	void addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimation, const Real32& BlendAmount);
+	void addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimation, const Real32& BlendAmount, bool Override);
 
 	/**************************************************************************//**
 	 * @fn	void setBlendAmount(unsigned int Index, Real32 BlendAmount)
@@ -104,6 +109,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlen
   protected:
 
     // Variables should all be in SkeletonBlendedAnimationBase.
+
+	  
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

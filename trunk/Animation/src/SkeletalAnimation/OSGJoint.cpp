@@ -159,12 +159,12 @@ void Joint::updateTransformations(bool isRecursive)
 	}
 }
 
-Matrix Joint::previewRelativeDifferenceTransformation()
+Matrix Joint::previewRelativeDifferenceTransformation(Matrix relativeTransformation)
 {
 	//Relative difference transformation
 	Matrix RelDifTrans = getBindRelativeTransformation();
 	RelDifTrans.invert();
-	RelDifTrans.multLeft(getRelativeTransformation());
+	RelDifTrans.multLeft(relativeTransformation);
 
 	return RelDifTrans;
 }
