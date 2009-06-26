@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Inventory"
+	parent="AttachmentContainer"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Inventory.
+	
+	<Field
+		name="InventoryItems"
+		type="InventoryItemPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+</FieldContainer>

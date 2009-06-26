@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="InventoryItem"
+	parent="AttachmentContainer"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A InventoryItem.
+	
+	<Field
+		name="Name"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="Classes"
+		type="std::string"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	
+</FieldContainer>
