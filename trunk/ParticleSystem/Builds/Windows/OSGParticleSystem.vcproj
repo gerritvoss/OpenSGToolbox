@@ -876,6 +876,34 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGGravityParticleAffector.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGGravityParticleAffector.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGGravityParticleAffector.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGGravityParticleAffectorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGGravityParticleAffectorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGGravityParticleAffectorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGGravityParticleAffectorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffector.cpp"
 						>
 					</File>
@@ -901,6 +929,34 @@
 					</File>
 					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGParticleAffectorFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGRadialParticleAffector.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGRadialParticleAffector.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGRadialParticleAffector.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGRadialParticleAffectorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGRadialParticleAffectorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGRadialParticleAffectorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGRadialParticleAffectorFields.h"
 						>
 					</File>
 				</Filter>

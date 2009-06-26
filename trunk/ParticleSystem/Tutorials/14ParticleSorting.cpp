@@ -25,6 +25,7 @@
 #include <OpenSG/ParticleSystem/OSGDiscParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
 #include <OpenSG/ParticleSystem/OSGBurstParticleGenerator.h>
+#include <OpenSG/ParticleSystem/OSGGravityParticleAffector.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGSegmentDistribution1D.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
@@ -305,12 +306,21 @@ int main(int argc, char **argv)
 		ExampleGeneratorTheSequel->setVelocityFunction(createVelocityDistribution());
 	endEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 
+	// create a gravity affector
+
+	GravityParticleAffectorPtr ExampleGravityAffector = osg::GravityParticleAffector::create();
+	beginEditCP(ExampleGravityAffector);
+		ExampleGravityAffector->setBeacon(osg::Node::create());
+	endEditCP(ExampleGravityAffector);
+
+
 	//Attach the Generator to the Particle System
-	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
+	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 		//ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
 		ExampleParticleSystem->setMaxParticles(500);
 		ExampleParticleSystem->getGenerators().push_back(ExampleGeneratorTheSequel);
-	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask);
+		ExampleParticleSystem->getAffectors().push_back(ExampleGravityAffector);
+	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 	
 	//Particle System Node
     ParticleNodeCore = osg::ParticleSystemCore::create();
