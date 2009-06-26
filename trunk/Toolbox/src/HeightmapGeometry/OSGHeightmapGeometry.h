@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
 
 #include "OSGHeightmapGeometryBase.h"
 
