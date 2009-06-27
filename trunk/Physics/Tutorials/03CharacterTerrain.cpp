@@ -207,7 +207,7 @@ class TutorialUpdateListener : public UpdateListener
     virtual void update(const UpdateEvent& e)
     {
         ForceOnCharacter.setValues(0.0,0.0,0.0);
-        Real32 PushForce(15000.0);
+        Real32 PushForce(55000.0);
         Real32 Speed(10.0);
         if(_IsUpKeyDown)
         {
@@ -389,7 +389,7 @@ int main(int argc, char **argv)
 
     //Light Beacon
     Matrix LightTransformMat;
-    LightTransformMat.setTranslate(Vec3f(0.0,0.0,30.0));
+    LightTransformMat.setTranslate(Vec3f(50.0,0.0,100.0));
 
     TransformPtr LightTransform = Transform::create();
     beginEditCP(LightTransform, Transform::MatrixFieldMask);
@@ -523,7 +523,7 @@ int main(int argc, char **argv)
 	endEditCP(TutorialLightNode, Node::ChildrenFieldMask);
 
     //Create Character
-    CharacterPhysicsBody = buildCharacter(Vec3f(3.0,3.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
+    CharacterPhysicsBody = buildCharacter(Vec3f(5.0,5.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
     CharacterMover = buildMover(CharacterPhysicsBody);
 
     //Create the Shadowing

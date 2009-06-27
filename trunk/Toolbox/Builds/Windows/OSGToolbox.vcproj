@@ -422,31 +422,31 @@
 				Name="Heightmap Geometry"
 				>
 				<File
-					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometry.cpp"
+					RelativePath="..\..\src\HeightmapGeometry\OSGHeightmapGeometry.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometry.h"
+					RelativePath="..\..\src\HeightmapGeometry\OSGHeightmapGeometry.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometry.inl"
+					RelativePath="..\..\src\HeightmapGeometry\OSGHeightmapGeometry.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometryBase.cpp"
+					RelativePath="..\..\src\HeightmapGeometry\OSGHeightmapGeometryBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometryBase.h"
+					RelativePath="..\..\src\HeightmapGeometry\OSGHeightmapGeometryBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometryBase.inl"
+					RelativePath="..\..\src\HeightmapGeometry\OSGHeightmapGeometryBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Heightmap Geometry\OSGHeightmapGeometryFields.h"
+					RelativePath="..\..\src\HeightmapGeometry\OSGHeightmapGeometryFields.h"
 					>
 				</File>
 			</Filter>
