@@ -49,6 +49,8 @@
 // with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
+bool animationPaused = false;
+
 
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
@@ -96,7 +98,6 @@ class NamedNodeFinder
     NodePtr  _found;
     std::string  *_name;
 };
-
 
 class TutorialAnimationListener : public AnimationListener
 {
@@ -226,9 +227,12 @@ void idle(void)
    Time Elps(Now - TimeLastIdle);
    TimeLastIdle = Now;
    
-   ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(Elps);
+   if(!animationPaused)
+   {
+	   ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(Elps);
 
-   TheAnimation->update(TheAnimationAdvancer);
+	   TheAnimation->update(TheAnimationAdvancer);
+   }
 
    glutPostRedisplay();
 }
@@ -275,6 +279,15 @@ void keyboard(unsigned char k, int x, int y)
             exit(0);
         }
         break;
+
+		case ' ':
+		{
+			if(animationPaused)
+			   animationPaused = false;
+		   else
+			   animationPaused = true;
+		}
+		break;
     }
 }
 

@@ -47,6 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/Toolbox/OSGInterpolations.h>
+#include <OpenSG/OSGSimpleAttachments.h>
 
 #include "OSGSkeletonBlendedAnimation.h"
 #include "OSGSkeletonAnimation.h"
@@ -125,16 +126,31 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 							//the skeleton animation
 							Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][iter->getFieldContainerId()]);
 							blendedRelDifTrans.mult(osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+
+
+							//std::cout << getName((*iter)) << std::endl;
+
+							if(getName((*iter)) == std::string("left_elbow"))
+							{
+								std::cout << "FIRST: " << getName((*iter)) << "\n" << blendedRelDifTrans << std::endl;
+							}
+
+
 						}
-						else
+						else if (true)
 						{
 							//Use the difference transformation between the joint's current transformation and the transformation
 							//defined by the skeleton animation
 							Matrix relDifTrans = blendedRelDifTrans;
 							relDifTrans.invert();
 							relDifTrans.multLeft(relTransformations[i][iter->getFieldContainerId()]);
-							
+
 							blendedRelDifTrans.mult(osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+
+							if(getName((*iter)) == std::string("left_elbow"))
+							{
+								std::cout << "NOT FIRST: " << getName((*iter)) << "\n" << blendedRelDifTrans << std::endl;
+							}
 						}
 						
 					}

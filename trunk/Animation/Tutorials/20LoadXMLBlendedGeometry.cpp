@@ -19,7 +19,7 @@
 #include <OpenSG/OSGMaterialChunk.h>
 
 //Animation
-#include <OpenSG/Animation/OSGBone.h>
+#include <OpenSG/Animation/OSGJoint.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGSkeletonDrawable.h>
 
@@ -33,8 +33,6 @@
 #include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/Animation/OSGSkeletonAnimation.h>
-#include <OpenSG/Animation/OSGSkeleton.h>
-#include <OpenSG/Animation/OSGBone.h>
 
 #include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/Animation/OSGSkeletonBlendedGeometry.h>
@@ -48,9 +46,13 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
-osg::Time TimeLastIdle;
-osg::AnimationPtr TheSkeletonAnimation;
-osg::AnimationAdvancerPtr TheAnimationAdvancer;
+Time TimeLastIdle;
+NodePtr SkeletonNode;
+NodePtr MeshNode;
+NodePtr UnboundGeometry;
+AnimationPtr TheSkeletonAnimation;
+AnimationAdvancerPtr TheAnimationAdvancer;
+bool animationPaused = false;
 
 bool ExitApp = false;
 
@@ -68,7 +70,6 @@ GeometryPtr geo;
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-void setupAnimation(BonePtr TheLeftHumerus,BonePtr TheLeftRadius,BonePtr TheLeftHand,BonePtr TheLeftFemur,BonePtr TheRightHumerus,BonePtr TheRightRadius,BonePtr TheRightHand,BonePtr TheRightFemur,BonePtr TheTorso, SkeletonPtr TheSkeleton);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -77,10 +78,94 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
+	   //Exit
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
        }
+
+	   //Toggle animation
+	   if(e.getKey() == KeyEvent::KEY_SPACE)
+	   {
+		   if(animationPaused)
+			   animationPaused = false;
+		   else
+			   animationPaused = true;
+	   }
+
+	   //Toggle bind pose
+	   if(e.getKey() == KeyEvent::KEY_B)
+	   {
+		   if(e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		   {
+			   //Toggle mesh
+			   if(UnboundGeometry->getTravMask() == 0)
+			   {
+				   beginEditCP(UnboundGeometry, Node::TravMaskFieldMask);
+						UnboundGeometry->setTravMask(1);
+					endEditCP(UnboundGeometry, Node::TravMaskFieldMask);
+			   } 
+			   else
+			   {
+				   beginEditCP(UnboundGeometry, Node::TravMaskFieldMask);
+						UnboundGeometry->setTravMask(0);
+					endEditCP(UnboundGeometry, Node::TravMaskFieldMask);
+			   }
+		   }
+		   else
+		   {
+				//Toggle skeleton
+			   if(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->getDrawBindPose() == false)
+			   {
+				   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+					 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawBindPose(true);
+					endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+			   } 
+			   else
+			   {
+				   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+					 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawBindPose(false);
+					endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+			   }
+		   }
+	   }
+
+	   //Toggle current pose
+	   if(e.getKey() == KeyEvent::KEY_P)
+	   {
+		   if(e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		   {
+			   //Toggle mesh
+			   if(MeshNode->getTravMask() == 0)
+			   {
+				   beginEditCP(MeshNode, Node::TravMaskFieldMask);
+						MeshNode->setTravMask(1);
+					endEditCP(MeshNode, Node::TravMaskFieldMask);
+			   } 
+			   else
+			   {
+				   beginEditCP(MeshNode, Node::TravMaskFieldMask);
+						MeshNode->setTravMask(0);
+					endEditCP(MeshNode, Node::TravMaskFieldMask);
+			   }
+		   }
+		   else
+		   {
+			   //Toggle skeleton
+			   if(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->getDrawPose() == false)
+			   {
+				   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+					 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawPose(true);
+					endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+			   } 
+			   else
+			   {
+				   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+					 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawPose(false);
+					endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+			   }
+		   }
+	   }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -147,9 +232,12 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-		osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+		if(!animationPaused)
+		{
+			osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
 
-		TheSkeletonAnimation->update(TheAnimationAdvancer);
+			TheSkeletonAnimation->update(TheAnimationAdvancer);
+		}
     }
 };
 
@@ -199,6 +287,7 @@ int main(int argc, char **argv)
 	ChunkMaterialPtr ExampleMaterial;// = ChunkMaterial::create();
 	SkeletonPtr ExampleSkeleton;// = Skeleton::create();
 	SkeletonBlendedGeometryPtr TheNewSkeletonGeometry;// = SkeletonBlendedGeometry::create();
+	GeometryPtr ExampleGeometry;
 
 	FCFileType::FCPtrStore NewContainers;
 	NewContainers = FCFileHandler::the()->read(Path("./Data/20BlendedGeometry.xml"));
@@ -214,6 +303,10 @@ int main(int argc, char **argv)
 		{
 			ExampleSkeleton = (Skeleton::Ptr::dcast(*Itor));
 		}
+		if( (*Itor)->getType() == (Geometry::getClassType()))
+		{
+			ExampleGeometry = (Geometry::Ptr::dcast(*Itor));
+		}
 		if( (*Itor)->getType() == (SkeletonBlendedGeometry::getClassType()))
 		{
 			TheNewSkeletonGeometry = (SkeletonBlendedGeometry::Ptr::dcast(*Itor));
@@ -224,25 +317,35 @@ int main(int argc, char **argv)
 		}
     }
 
+	//UnboundGeometry
+	UnboundGeometry = Node::create();
+	beginEditCP(UnboundGeometry, Node::CoreFieldMask | Node::TravMaskFieldMask);
+        UnboundGeometry->setCore(ExampleGeometry);
+		UnboundGeometry->setTravMask(0);
+    endEditCP(UnboundGeometry, Node::CoreFieldMask | Node::TravMaskFieldMask);
+
 	//SkeletonDrawer
     SkeletonDrawablePtr ExampleSkeletonDrawable = osg::SkeletonDrawable::create();
-    beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+    beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-    endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+		ExampleSkeletonDrawable->setDrawBindPose(false);
+		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
+		ExampleSkeletonDrawable->setDrawPose(true);
+		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
+    endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
 	//Skeleton Node
-	NodePtr SkeletonNode = osg::Node::create();
+	SkeletonNode = osg::Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);
     endEditCP(SkeletonNode, Node::CoreFieldMask);
 
 	//Skeleton Blended Geometry Node
-	NodePtr MeshNode = osg::Node::create();
+	MeshNode = osg::Node::create();
     beginEditCP(MeshNode, Node::CoreFieldMask);
         MeshNode->setCore(TheNewSkeletonGeometry);
     endEditCP(MeshNode, Node::CoreFieldMask);
-
 	
    //Animation Advancer
    TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
@@ -251,10 +354,11 @@ int main(int argc, char **argv)
    osg::beginEditCP(TheAnimationAdvancer);
 
 
-    
+    //Create scene
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
+		scene->addChild(UnboundGeometry);
         scene->addChild(SkeletonNode);
         scene->addChild(MeshNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);

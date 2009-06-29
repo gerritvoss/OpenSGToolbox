@@ -34,7 +34,6 @@
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/Animation/OSGSkeletonAnimation.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
-#include <OpenSG/Animation/OSGBone.h>
 
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
@@ -46,18 +45,17 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
-osg::Time TimeLastIdle;
-osg::AnimationPtr TheSkeletonAnimation;
-osg::AnimationAdvancerPtr TheAnimationAdvancer;
-FCFileType::FCPtrStore Containers;
-FCFileType::FCTypeVector IgnoreTypes;
+Time TimeLastIdle;
+NodePtr SkeletonNode;
+AnimationPtr TheSkeletonAnimation;
+AnimationAdvancerPtr TheAnimationAdvancer;
+bool animationPaused = false;
 
 bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-void setupAnimation(FCFileType::FCPtrStore Containers);
 
 
 // Create a class to allow for the use of the Ctrl+q
@@ -67,10 +65,56 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
+	   //Exit
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
        }
+
+	   //Toggle animation
+	   if(e.getKey() == KeyEvent::KEY_SPACE)
+	   {
+		   if(animationPaused)
+			   animationPaused = false;
+		   else
+			   animationPaused = true;
+	   }
+
+	   //Toggle bind pose
+	   if(e.getKey() == KeyEvent::KEY_B)
+	   {
+		   //Toggle skeleton
+		   if(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->getDrawBindPose() == false)
+		   {
+			   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+				 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawBindPose(true);
+				endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+		   } 
+		   else
+		   {
+			   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+				 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawBindPose(false);
+				endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+		   }
+	   }
+
+	   //Toggle current pose
+	   if(e.getKey() == KeyEvent::KEY_P)
+	   {
+		   //Toggle skeleton
+		   if(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->getDrawPose() == false)
+		   {
+			   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+				 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawPose(true);
+				endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+		   } 
+		   else
+		   {
+			   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+				 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawPose(false);
+				endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+		   }
+	   }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -137,9 +181,12 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-		osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+		if(!animationPaused)
+		{
+			osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
 
-		TheSkeletonAnimation->update(TheAnimationAdvancer);
+			TheSkeletonAnimation->update(TheAnimationAdvancer);
+		}
     }
 };
 
@@ -181,7 +228,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 10SkeletonDrawer Window");
+                                        "OpenSG 17LoadXMLSkeletonAnimation Window");
 										
 
 	//SkeletonDrawer System Material
@@ -213,10 +260,9 @@ int main(int argc, char **argv)
 
 
 
-	//Import skeleton from XML file
+	//Import skeleton and animation from XML file
 	FCFileType::FCPtrStore NewContainers;
-	//NewContainers = FCFileHandler::the()->read(Path("./Data/17SkeletonAnimation.xml"));
-	NewContainers = FCFileHandler::the()->read(Path("./Data/SkeletonExportTest.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/17SkeletonAnimation.xml"));
 
 	SkeletonPtr ExampleSkeleton;
 	
@@ -228,25 +274,28 @@ int main(int argc, char **argv)
 			//Set the Skeleton to the one we just read in
 			ExampleSkeleton = (Skeleton::Ptr::dcast(*Itor));
 		}
+		if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
+		{
+			TheSkeletonAnimation = (SkeletonAnimation::Ptr::dcast(*Itor));
+		}
     }
-
-
 
     //SkeletonDrawer
     SkeletonDrawablePtr ExampleSkeletonDrawable = osg::SkeletonDrawable::create();
-    beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+    beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-    endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+		ExampleSkeletonDrawable->setDrawBindPose(false);
+		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
+		ExampleSkeletonDrawable->setDrawPose(true);
+		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
+    endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
 	//Skeleton Node
-    
-	NodePtr SkeletonNode = osg::Node::create();
+	SkeletonNode = osg::Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);
     endEditCP(SkeletonNode, Node::CoreFieldMask);
-
-
 	
    //Animation Advancer
    TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
@@ -254,8 +303,7 @@ int main(int argc, char **argv)
    osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
    osg::beginEditCP(TheAnimationAdvancer);
 
-
-    
+   //Create scene
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
@@ -263,10 +311,6 @@ int main(int argc, char **argv)
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
-
-	//Setup the Animation
-	setupAnimation(NewContainers);
-	
 
 
     // Show the whole Scene
@@ -295,20 +339,4 @@ void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
     
-}
-
-
-
-void setupAnimation(FCFileType::FCPtrStore Containers)
-{
-	//Import animation from XML file
-	FCFileType::FCPtrStore::iterator Itor;
-    for(Itor = Containers.begin() ; Itor != Containers.end() ; ++Itor)
-    {
-		if( (*Itor)->getType().isDerivedFrom(Animation::getClassType()))
-		{
-			//Set the animation to the one we just read in
-			TheSkeletonAnimation = (Animation::Ptr::dcast(*Itor));
-		}
-    }
 }

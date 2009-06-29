@@ -90,7 +90,7 @@ SkeletonBlendedAnimationPtr TheSkeletonBlendedAnimation;
 SkeletonAnimationPtr TheWalkingAnimation;
 SkeletonAnimationPtr TheTouchScreenAnimation;
 Real32 BlendWalking = 1;
-Real32 BlendTouchScreen = 0;
+Real32 BlendTouchScreen = 1;
 AnimationAdvancerPtr TheAnimationAdvancer;
 
 std::vector<NodePtr> UnboundGeometries;

@@ -44,6 +44,7 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
+	   //Exit
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
@@ -144,7 +145,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 10SkeletonDrawer Window");
+                                        "OpenSG 14SkeletonLoader Window");
 										
 
 	//SkeletonDrawer System Material
@@ -177,10 +178,9 @@ int main(int argc, char **argv)
     //Skeleton
     SkeletonPtr ExampleSkeleton = Skeleton::create();
 
-
+	//Load skeleton from XML
 	FCFileType::FCPtrStore NewContainers;
-	//NewContainers = FCFileHandler::the()->read(Path("./Data/14Skeleton.xml"));
-	NewContainers = FCFileHandler::the()->read(Path("./Data/SkeletonExportTest.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/14Skeleton.xml"));
 
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
@@ -190,16 +190,7 @@ int main(int argc, char **argv)
 			ExampleSkeleton = (Skeleton::Ptr::dcast(*Itor));
 		}
     }
-
-	std::cout << "# root joints: " << ExampleSkeleton->getRootJoints().size() << std::endl;
-	std::cout << "root transform:\n" << ExampleSkeleton->getRootJoints(0)->getRelativeTransformation() << std::endl;
 	
-	for(int i(0); i < ExampleSkeleton->getRootJoints(0)->getChildJoints().size(); ++i)
-	{
-		std::cout << ExampleSkeleton->getRootJoints(0)->getChildJoints(i)->getRelativeTransformation() << "\n" << std::endl;
-	}
-
-
 
 
     //SkeletonDrawer

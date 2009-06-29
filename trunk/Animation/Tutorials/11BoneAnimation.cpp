@@ -43,9 +43,12 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 
 Time TimeLastIdle;
+NodePtr SkeletonNode;
 AnimationPtr TheJointAnimation;
 AnimationPtr TheChildJointAnimation;
+AnimationPtr TheCurrentAnimation;
 AnimationAdvancerPtr TheAnimationAdvancer;
+bool animationPaused = false;
 
 bool ExitApp = false;
 
@@ -61,10 +64,66 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
+	   //Exit
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
        }
+
+	   //Toggle animation
+	   if(e.getKey() == KeyEvent::KEY_SPACE)
+	   {
+		   if(animationPaused)
+			   animationPaused = false;
+		   else
+			   animationPaused = true;
+	   }
+
+	   //Toggle bind pose
+	   if(e.getKey() == KeyEvent::KEY_B)
+	   {
+		   //Toggle skeleton
+		   if(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->getDrawBindPose() == false)
+		   {
+			   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+				 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawBindPose(true);
+				endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+		   } 
+		   else
+		   {
+			   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+				 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawBindPose(false);
+				endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+		   }
+	   }
+
+	   //Toggle current pose
+	   if(e.getKey() == KeyEvent::KEY_P)
+	   {
+		   //Toggle skeleton
+		   if(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->getDrawPose() == false)
+		   {
+			   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+				 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawPose(true);
+				endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+		   } 
+		   else
+		   {
+			   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+				 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawPose(false);
+				endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+		   }
+	   }
+
+	   //Switch animation
+	   if(e.getKey() == KeyEvent::KEY_1)
+	   {
+			TheCurrentAnimation = TheJointAnimation;
+	   }
+	   else if(e.getKey() == KeyEvent::KEY_2)
+	   {
+			TheCurrentAnimation = TheChildJointAnimation;
+	   }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -131,10 +190,12 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-		ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+		if(!animationPaused)
+		{
+			ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
 
-		//TheJointAnimation->update(TheAnimationAdvancer);
-		TheChildJointAnimation ->update(TheAnimationAdvancer);
+			TheCurrentAnimation->update(TheAnimationAdvancer);
+		}
     }
 };
 
@@ -176,7 +237,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 10SkeletonDrawer Window");
+                                        "OpenSG 11BoneAnimation Window");
 										
 
 	//SkeletonDrawer System Material
@@ -246,22 +307,19 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-		ExampleSkeletonDrawable->setDrawBindPose(true);
+		ExampleSkeletonDrawable->setDrawBindPose(false);
 		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
 		ExampleSkeletonDrawable->setDrawPose(true);
 		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
-		
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
-	//Particle System Node
-    
-	NodePtr SkeletonNode = Node::create();
+	//Skeleton Node
+	SkeletonNode = Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);
     endEditCP(SkeletonNode, Node::CoreFieldMask);
 
-
-    
+    //Create scene
     NodePtr scene = Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(Group::create());
@@ -272,6 +330,9 @@ int main(int argc, char **argv)
 
 	//Setup the Animation
 	setupAnimation(ExampleRootJoint, ExampleRootJoint->getChildJoints(0));
+
+	//Set the currently playing animation to TheJointAnimation
+	TheCurrentAnimation = TheJointAnimation;
 
 
     // Show the whole Scene
@@ -377,78 +438,11 @@ void setupAnimation(JointPtr TheJoint, JointPtr TheChildJoint)
     FieldAnimationPtr::dcast(TheChildJointAnimation)->setAnimatedField(TheChildJoint, std::string("RelativeTransformation"));
 	
 	
-	
-	
-	
-	////Quaternion
- //  KeyframeRotationsSequencePtr RotationKeyframes = KeyframeRotationsSequenceQuat::create();
- //  
- //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),0.0),0.0f);
- //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),0.5*Pi),2.0f);
- //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),Pi),4.0f);
- //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),1.5*Pi),6.0f);
- //  RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0,1.0,0.0),2.0*Pi),8.0f);
-
-
- //  //Length
- //  KeyframeNumbersSequencePtr LengthKeyframeSequence = KeyframeNumbersSequenceReal32::create();
- //  
- //  LengthKeyframeSequence->addKeyframe(0.7,0.0f);
- //  LengthKeyframeSequence->addKeyframe(20.2,0.0f);
- //  LengthKeyframeSequence->addKeyframe(0.7,4.0f);
- //  LengthKeyframeSequence->addKeyframe(99.0,6.0f);
- //  LengthKeyframeSequence->addKeyframe(0.7,8.0f);
- //  
-
-
- //  //Animator
- //  AnimatorPtr Animator = KeyframeAnimator::create();
- //  beginEditCP(Animator);
- //     KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(RotationKeyframes);
- //  endEditCP(Animator);
- //  
- //  //Animator
- //  AnimatorPtr LengthAnimator = KeyframeAnimator::create();
- //  beginEditCP(LengthAnimator);
- //     KeyframeAnimatorPtr::dcast(LengthAnimator)->setKeyframeSequence(LengthKeyframeSequence);
- //  endEditCP(LengthAnimator);
- //  
- //  //Animation
- //  TheAnimation = FieldAnimation::create();
- //  beginEditCP(TheAnimation);
- //     FieldAnimationPtr::dcast(TheAnimation)->setAnimator(Animator);
- //     FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
- //     FieldAnimationPtr::dcast(TheAnimation)->setCycling(-1);
- //  endEditCP(TheAnimation);
- //  FieldAnimationPtr::dcast(TheAnimation)->setAnimatedField(TheJoint, std::string("Rotation"));
-
-
- //  //ChildBone Animation
- //  TheChildAnimation = FieldAnimation::create();
- //  beginEditCP(TheChildAnimation);
- //     FieldAnimationPtr::dcast(TheChildAnimation)->setAnimator(Animator);
- //     FieldAnimationPtr::dcast(TheChildAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
- //     FieldAnimationPtr::dcast(TheChildAnimation)->setCycling(-1);
- //  endEditCP(TheChildAnimation);
- //  FieldAnimationPtr::dcast(TheChildAnimation)->setAnimatedField(TheChildJoint, std::string("Rotation"));
-
-
-
- // //Length For Bones
- //  TheChildLengthAnimation = FieldAnimation::create();
- //  beginEditCP(TheChildLengthAnimation);
- //     FieldAnimationPtr::dcast(TheChildLengthAnimation)->setAnimator(LengthAnimator);
- //     FieldAnimationPtr::dcast(TheChildLengthAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
- //     FieldAnimationPtr::dcast(TheChildLengthAnimation)->setCycling(-1);
- //  endEditCP(TheChildLengthAnimation);
- //  FieldAnimationPtr::dcast(TheChildLengthAnimation)->setAnimatedField(TheChildJoint, std::string("Length"));
-
-
-   //Animation Advancer
-   TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();
-   beginEditCP(TheAnimationAdvancer);
-   ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
-   beginEditCP(TheAnimationAdvancer);
+    //Animation Advancer
+    TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();
+	beginEditCP(TheAnimationAdvancer);
+		ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
+    endEditCP(TheAnimationAdvancer);
 }
 
 
@@ -480,18 +474,3 @@ FieldContainerPtr getFieldContainer(const Char8 *szTypeName, const std::string &
 
    return NullFC;
 }
-
-
-
-//glMultMatrixf(m.getValues());
-		// const Matrix              &getTransformation(void) const;
-
-
-
-	//BonePtr ExampleRootBone = Bone::create();
-	//beginEditCP(ExampleRootBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
-		//ExampleRootBone->setLength(5.0f);
-		//ExampleRootBone->setRotation(Quaternion(Vec3f(1.0f,0.0f,0.0f), osgdegree2rad(225.0f)));
-	//endEditCP(ExampleRootBone, Bone::RotationFieldMask | Bone::LengthFieldMask);
-	//ExampleRootBone->addChild(SecondChildBone);
-	//SecondChildBone->addChild(ThirdChildBone);

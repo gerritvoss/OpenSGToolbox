@@ -79,15 +79,63 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
+
+    /**************************************************************************//**
+     * @fn	void addJointBlending(const UInt32& PositionIndex,
+     * 		const JointPtr TheJoint, const Real32& BlendAmount)
+     * 
+     * @brief	Attaches a point in the mesh to a joint with the given blend weight
+     * 
+     * @param	PositionIndex	Index of the point to be attached.
+     * @param	TheJoint		The joint to which the point is being attached.
+     * @param	BlendAmount		The blend weight.
+    *****************************************************************************/
     void addJointBlending(const UInt32& PositionIndex, const JointPtr TheJoint, const Real32& BlendAmount);
 
+    /**************************************************************************//**
+     * @fn	void addSkeleton(SkeletonPtr TheSkeleton)
+     * 
+     * @brief	Adds a skeleton to the blended geometry.
+     * 
+     * @param	TheSkeleton	The Skeleton to be added. 
+    *****************************************************************************/
     void addSkeleton(SkeletonPtr TheSkeleton);
+
+    /**************************************************************************//**
+     * @fn	void subSkeleton(SkeletonPtr TheSkeleton)
+     * 
+     * @brief	Removes a skeleton from the blended geometry.
+     * 
+     * @param	TheSkeleton	The skeleton to be removed.
+    *****************************************************************************/
     void subSkeleton(SkeletonPtr TheSkeleton);
+
+    /**************************************************************************//**
+     * @fn	UInt32 numSkeletons(void) const
+     * 
+     * @brief	Returns the number of skeletons attached to the blended geometry.
+     * 
+     * @return	The total number of skeletons. 
+    *****************************************************************************/
     UInt32 numSkeletons(void) const;
+
+    /**************************************************************************//**
+     * @fn	void subSkeleton(UInt32 Index)
+     * 
+     * @brief	Removes a skeleton from the blended geometry.
+     * 
+     * @param	Index	Index of the skeleton to be removed. 
+    *****************************************************************************/
     void subSkeleton(UInt32 Index);
 
-	
+   /**************************************************************************//**
+    * @fn	virtual void changed(const SkeletonEvent& e)
+    * 
+    * @brief	Called when the skeleton changes. Tells all attached geometries
+	*			to update their positions.
+    * 
+    * @param	e	The SkeletonEvent. 
+   *****************************************************************************/
    virtual void changed(const SkeletonEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -110,6 +158,12 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
 
     /*! \}                                                                 */
 
+	/**************************************************************************//**
+	 * @fn	void calculatePositions(void)
+	 * 
+	 * @brief	Calculates the positions of the attached meshes based on the
+	 *			current positions of the attached skeletons.
+	*****************************************************************************/
 	void calculatePositions(void);
     
     /*==========================  PRIVATE  ================================*/

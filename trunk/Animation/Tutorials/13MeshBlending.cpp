@@ -39,6 +39,7 @@
 #include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/Animation/OSGSkeletonBlendedGeometry.h>
 
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 
 // Activate the OpenSG namespace
@@ -48,8 +49,12 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 
 Time TimeLastIdle;
+NodePtr SkeletonNode;
+NodePtr UnboundGeometry;
+NodePtr MeshNode;
 SkeletonAnimationPtr TheSkeletonAnimation;
 AnimationAdvancerPtr TheAnimationAdvancer;
+bool animationPaused = false;
 
 JointPtr Pelvis,LeftHip,RightHip,LeftKnee,RightKnee,LeftFoot,RightFoot,LeftToes,RightToes, Clavicle, LeftShoulder,RightShoulder,LeftElbow,RightElbow,LeftHand,RightHand,LeftFingers,RightFingers,Head; 
 SkeletonPtr ExampleSkeleton;
@@ -78,10 +83,94 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
+	   //Exit
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
        }
+
+	   //Toggle animation
+	   if(e.getKey() == KeyEvent::KEY_SPACE)
+	   {
+		   if(animationPaused)
+			   animationPaused = false;
+		   else
+			   animationPaused = true;
+	   }
+
+	   //Toggle bind pose
+	   if(e.getKey() == KeyEvent::KEY_B)
+	   {
+		   if(e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		   {
+			   //Toggle mesh
+			   if(UnboundGeometry->getTravMask() == 0)
+			   {
+				   beginEditCP(UnboundGeometry, Node::TravMaskFieldMask);
+						UnboundGeometry->setTravMask(1);
+					endEditCP(UnboundGeometry, Node::TravMaskFieldMask);
+			   } 
+			   else
+			   {
+				   beginEditCP(UnboundGeometry, Node::TravMaskFieldMask);
+						UnboundGeometry->setTravMask(0);
+					endEditCP(UnboundGeometry, Node::TravMaskFieldMask);
+			   }
+		   }
+		   else
+		   {
+				//Toggle skeleton
+			   if(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->getDrawBindPose() == false)
+			   {
+				   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+					 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawBindPose(true);
+					endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+			   } 
+			   else
+			   {
+				   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+					 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawBindPose(false);
+					endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawBindPoseFieldMask);
+			   }
+		   }
+	   }
+
+	   //Toggle current pose
+	   if(e.getKey() == KeyEvent::KEY_P)
+	   {
+		   if(e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		   {
+			   //Toggle mesh
+			   if(MeshNode->getTravMask() == 0)
+			   {
+				   beginEditCP(MeshNode, Node::TravMaskFieldMask);
+						MeshNode->setTravMask(1);
+					endEditCP(MeshNode, Node::TravMaskFieldMask);
+			   } 
+			   else
+			   {
+				   beginEditCP(MeshNode, Node::TravMaskFieldMask);
+						MeshNode->setTravMask(0);
+					endEditCP(MeshNode, Node::TravMaskFieldMask);
+			   }
+		   }
+		   else
+		   {
+			   //Toggle skeleton
+			   if(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->getDrawPose() == false)
+			   {
+				   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+					 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawPose(true);
+					endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+			   } 
+			   else
+			   {
+				   beginEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+					 SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore())->setDrawPose(false);
+					endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNode->getCore()), SkeletonDrawable::DrawPoseFieldMask);
+			   }
+		   }
+	   }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -148,9 +237,12 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-		ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+		if(!animationPaused)
+		{
+			ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
 
-		TheSkeletonAnimation->update(TheAnimationAdvancer);
+			TheSkeletonAnimation->update(TheAnimationAdvancer);
+		}
     }
 };
 
@@ -674,32 +766,30 @@ int main(int argc, char **argv)
                      Geometry::PositionsFieldMask |
                      Geometry::NormalsFieldMask |
                      Geometry::MaterialFieldMask  );
-    
-    // put the geometry core into a node
-    NodePtr n = Node::create();
-    beginEditCP(n, Node::CoreFieldMask);
-    {
-        n->setCore(geo);
-    }
-    endEditCP  (n, Node::CoreFieldMask);
+
+	//Create unbound geometry node (for displaying mesh in its bind pose)
+	UnboundGeometry = Node::create();
+	beginEditCP(UnboundGeometry, Node::CoreFieldMask | Node::TravMaskFieldMask);
+        UnboundGeometry->setCore(geo);
+		UnboundGeometry->setTravMask(0);  //By default, we won't show the mesh's bind pose
+    endEditCP  (UnboundGeometry, Node::CoreFieldMask | Node::TravMaskFieldMask);
    
 
 
-    //Skeleton
-    SkeletonPtr ExampleSkeleton = Skeleton::create();
-	beginEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
-		ExampleSkeleton->getRootJoints().push_back(Pelvis);
-	endEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
 
     //SkeletonDrawer
     SkeletonDrawablePtr ExampleSkeletonDrawable = SkeletonDrawable::create();
-    beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+    beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-    endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
+		ExampleSkeletonDrawable->setDrawBindPose(false);
+		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
+		ExampleSkeletonDrawable->setDrawPose(true);
+		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
+    endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
 	//Skeleton Node
-	NodePtr SkeletonNode = Node::create();
+	SkeletonNode = Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);
     endEditCP(SkeletonNode, Node::CoreFieldMask);
@@ -822,7 +912,7 @@ int main(int argc, char **argv)
 		TheNewSkeletonGeometry->addJointBlending(71,RightToes,1.0f);
     endEditCP(TheNewSkeletonGeometry);
 	
-	NodePtr MeshNode = Node::create();
+	MeshNode = Node::create();
     beginEditCP(MeshNode, Node::CoreFieldMask);
         MeshNode->setCore(TheNewSkeletonGeometry);
     endEditCP(MeshNode, Node::CoreFieldMask);
@@ -840,6 +930,7 @@ int main(int argc, char **argv)
     NodePtr scene = Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(Group::create());
+		scene->addChild(UnboundGeometry);
         scene->addChild(SkeletonNode);
         scene->addChild(MeshNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
@@ -852,6 +943,17 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
+
+
+
+	FCFileType::FCPtrStore Containers;
+	Containers.insert(MeshNode);
+	Containers.insert(TheSkeletonAnimation);
+
+	FCFileType::FCTypeVector IgnoreTypes;
+	//IgnoreTypes.push_back(Node::getClassType().getId());
+	//Save the Field Containers to a xml file
+	FCFileHandler::the()->write(Containers,Path("./Data/20BlendedGeometry.xml"),IgnoreTypes);
 
 
     while(!ExitApp)
