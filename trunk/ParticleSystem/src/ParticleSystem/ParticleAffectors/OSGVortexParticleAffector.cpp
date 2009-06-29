@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGRadialParticleAffector.h"
+#include "OSGVortexParticleAffector.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::RadialParticleAffector
+/*! \class osg::VortexParticleAffector
 
 */
 
@@ -67,7 +67,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void RadialParticleAffector::initMethod (void)
+void VortexParticleAffector::initMethod (void)
 {
 }
 
@@ -76,12 +76,11 @@ void RadialParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool RadialParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool VortexParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
 	// still need to implement
 	return false;
 }
-
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -89,31 +88,31 @@ bool RadialParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInde
 
 /*----------------------- constructors & destructors ----------------------*/
 
-RadialParticleAffector::RadialParticleAffector(void) :
+VortexParticleAffector::VortexParticleAffector(void) :
     Inherited()
 {
 }
 
-RadialParticleAffector::RadialParticleAffector(const RadialParticleAffector &source) :
+VortexParticleAffector::VortexParticleAffector(const VortexParticleAffector &source) :
     Inherited(source)
 {
 }
 
-RadialParticleAffector::~RadialParticleAffector(void)
+VortexParticleAffector::~VortexParticleAffector(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void RadialParticleAffector::changed(BitVector whichField, UInt32 origin)
+void VortexParticleAffector::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void RadialParticleAffector::dump(      UInt32    , 
+void VortexParticleAffector::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump RadialParticleAffector NI" << std::endl;
+    SLOG << "Dump VortexParticleAffector NI" << std::endl;
 }
 
 
@@ -131,10 +130,10 @@ void RadialParticleAffector::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGRADIALPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRADIALPARTICLEAFFECTORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGVORTEXPARTICLEAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGVORTEXPARTICLEAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGRADIALPARTICLEAFFECTORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGVORTEXPARTICLEAFFECTORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi
