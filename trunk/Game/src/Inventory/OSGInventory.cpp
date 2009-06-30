@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGInventory.h"
+#include "OSGInventoryItem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,7 +79,20 @@ void Inventory::initMethod (void)
 
 void Inventory::addItem(InventoryItemPtr Item)
 {
-
+	getInventoryItems().push_back(Item);
+	sortInventory();
+	if(getRootInventory())
+	{
+		if(!Item->getClasses().isEmpty())
+		{
+			for(UInt32 i = 0; i < Item->getClasses().getSize(); i++)
+			{
+				for(UInt32 c = 0; c < getInventoryClasses().getSize(); c++)
+				{
+				}
+			}
+		}
+	}
 }
 void Inventory::sortInventory()
 {
