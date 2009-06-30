@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = Game
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/MiniMap:$(srcdir)/MiniMap/Indicators:$(srcdir)/MiniMap/Overlays:$(srcdir)/MiniMap/Events:$(srcdir)/Cameras:$(srcdir)/Caption:$(srcdir)/Caption/Event:
+VPATH = $(srcdir)/:$(srcdir)/MiniMap:$(srcdir)/MiniMap/Indicators:$(srcdir)/MiniMap/Overlays:$(srcdir)/MiniMap/Events:$(srcdir)/Cameras:$(srcdir)/Caption:$(srcdir)/Caption/Event:$(srcdir)/Dialog:$(srcdir)/Dialog/Event:
 
 
 #.SUFFIX = .cpp .o
@@ -46,7 +46,19 @@ OBJECTS = OSGMiniMapBase.o \
 	OSGDefaultCaptionComponentGenerator.o \
 	OSGCaption.o \
 	OSGCaptionComponentGeneratorBase.o \
-	OSGCaptionEvent.o
+	OSGCaptionEvent.o \
+	OSGDialogHierarchyBase.o \
+	OSGDialogBase.o \
+	OSGDialogHierarchy.o \
+	OSGDialog.o \
+	OSGDefaultDialogComponentGenerator.o \
+	OSGDialogInterfaceBase.o \
+	OSGDefaultDialogComponentGeneratorBase.o \
+	OSGDialogComponentGenerator.o \
+	OSGDialogInterface.o \
+	OSGDialogComponentGeneratorBase.o \
+	OSGDialogEvent.o \
+	OSGDialogHierarchyEvent.o
         
         
 include $(commondir)/CommonMake.mk

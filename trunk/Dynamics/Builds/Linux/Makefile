@@ -48,6 +48,8 @@ OBJECTS = OSGDynamicsUtils.o \
 	OSGLineDistribution3DBase.o \
 	OSGGeoSurfaceDistribution3D.o \
 	OSGTriDistribution3DBase.o \
+	OSGConeDistribution3DBase.o \
+	OSGConeDistribution3D.o \
 	OSGBooleanFunctionBase.o \
 	OSGBooleanFunction.o \
 	OSGFunctionConnectionsBase.o \

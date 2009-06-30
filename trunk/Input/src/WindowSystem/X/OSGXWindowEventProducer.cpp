@@ -575,7 +575,7 @@ void XWindowEventProducer::setVisible(bool Visible)
 bool XWindowEventProducer::getVisible(void) const
 {
    //TODO:Implement
-   return false;
+   return true;
 }
 
 void XWindowEventProducer::setIconify(bool Iconify)

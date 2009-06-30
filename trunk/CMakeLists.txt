@@ -6,7 +6,22 @@ IF(COMMAND cmake_policy)
       cmake_policy(SET CMP0003 OLD)
 ENDIF(COMMAND cmake_policy)
 
-#SET (CMAKE_VERBOSE_MAKEFILE TRUE)
+SET (CMAKE_VERBOSE_MAKEFILE TRUE)
+
+######### Revision number
+FIND_PACKAGE(Subversion)
+IF(Subversion_FOUND)
+   Subversion_WC_INFO(${CMAKE_HOME_DIRECTORY} Project)
+   MESSAGE("Current revision is ${Project_WC_REVISION}")
+ENDIF(Subversion_FOUND)
+
+######### Build Directory
+SET(BUILD_PATH "${CMAKE_SOURCE_DIR}/Builds/${CMAKE_SYSTEM}")
+
+######### Doxygen
+FIND_PROGRAM(DOXYGEN_EXECUTABLE doxygen)
+OPTION(ENABLE_USER_DOCUMENTATION "Generate user level documentation." ON)
+OPTION(ENABLE_DEVELOPER_DOCUMENTATION "Generate developer level documentation." OFF)
 
 ######### FMod
 FIND_PATH(FMOD_BASE_DIR NAMES api/inc/fmod.h PATHS "/Developer/FMOD Programmers API")
@@ -25,22 +40,23 @@ SET(OPENSG_LIB_DIR ${OPENSG_BASE_DIR}/lib)
 
 IF (UNIX)
    FIND_PROGRAM(OSG_CONFIG osg-config ${OPENSG_BASE_DIR}/bin)
-   IF (${OSG_CONFIG})
+   #IF (${OSG_CONFIG})
      IF(APPLE)
-	SET(OPENSG_CXX_FLAGS "`${OSG_CONFIG} --cflags Base System Carbon`")
-	SET(OPENSG_LD_FLAGS "`${OSG_CONFIG} --lflags Base System Carbon`")
-	SET(OPENSG_LIBS "`${OSG_CONFIG} --llibs Base System Carbon`")
+	    SET(OPENSG_CXX_FLAGS "`${OSG_CONFIG} --cflags Base System Carbon`")
+	    SET(OPENSG_LD_FLAGS "`${OSG_CONFIG} --lflags Base System Carbon`")
+	    SET(OPENSG_LIBS "`${OSG_CONFIG} --llibs Base System Carbon`")
      ELSE(APPLE)
-	    SET(OPENSG_CXX_FLAGS_DBG "`${OSG_CONFIG} --dbg --cflags Base System`")
+	    SET(OPENSG_CXX_FLAGS "`${OPENSG_CONFIG} --opt --cflags Base System`")
+       SET(OPENSG_CXX_FLAGS_DBG "`${OSG_CONFIG} --dbg --cflags Base System`")
 	    SET(OPENSG_CXX_FLAGS_OPT "`${OSG_CONFIG} --opt --cflags Base System`")
 	    SET(OPENSG_LD_FLAGS_DBG "`${OSG_CONFIG} --dbg --lflags Base System`")
 	    SET(OPENSG_LD_FLAGS_OPT "`${OSG_CONFIG} --opt --lflags Base System`")
-	    SET(OPENSG_LIBS_DBG "`${OSG_CONFIG} --dbg --llibs Base System`")
-	    SET(OPENSG_LIBS_OPT "`${OSG_CONFIG} --opt --llibs Base System`")
+	    SET(OPENSG_LIBS_DBG "-lOSGBase -lOSGSystem")
+	    SET(OPENSG_LIBS_OPT "-lOSGBase -lOSGSystem")
      ENDIF(APPLE)
-   ELSE(${OSG_CONFIG})
-      MESSAGE("osg-config not found")
-   ENDIF (${OSG_CONFIG})
+     #ELSE(${OSG_CONFIG})
+     #   MESSAGE("osg-config not found")
+     #ENDIF (${OSG_CONFIG})
 ENDIF(UNIX)
 
 IF(WIN32)
@@ -54,27 +70,30 @@ IF(WIN32)
    SET(OPENSG_WINDOW_LIBS debug OSGWindowWIN32D optimized OSGWindowWIN32)                
 ENDIF(WIN32)
 
-SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${OPENSG_CXX_FLAGS})
-SET(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS};${OPENSG_LD_FLAGS})
-
 ######## BOOST
 FIND_PACKAGE(Boost REQUIRED)
 
 
 ######### ODE
 
+######### Documentation
+ADD_CUSTOM_TARGET(documentation ALL COMMENT "Building Documentation")
 
-##Sub components
-IF(UNIX)
-   IF(APPLE)
-   ELSE(APPLE)
-      SET(BUILD_PATH "Builds/Linux")
-   ENDIF(APPLE)
-ENDIF(UNIX)
+IF(ENABLE_USER_DOCUMENTATION)
+   ADD_CUSTOM_TARGET(user_doc COMMENT "Building User Documentation")
+   ADD_DEPENDENCIES(documentation user_doc)
+ENDIF(ENABLE_USER_DOCUMENTATION)
 
-IF(WIN32)
-   SET(BUILD_PATH "Builds/Windows")
-ENDIF(WIN32)
+IF(ENABLE_DEVELOPER_DOCUMENTATION)
+   ADD_CUSTOM_TARGET(dev_doc COMMENT "Building Developer Documentation")
+   ADD_DEPENDENCIES(documentation dev_doc)
+ENDIF(ENABLE_DEVELOPER_DOCUMENTATION)
 
-ADD_SUBDIRECTORY(Toolbox/src ${BUILD_PATH})
-#ADD_SUBDIRECTORY(Input/src ${BUILD_PATH})
+# Install directories
+SET(OPENSG_TOOLBOX_INC_DIR "${CMAKE_INSTALL_PREFIX}/include")
+SET(OPENSG_TOOLBOX_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+
+SET(TOOLBOX_BUILD_PATH "${BUILD_PATH}/Toolbox")
+ADD_SUBDIRECTORY(Toolbox/src ${TOOLBOX_BUILD_PATH})
+SET(INPUT_BUILD_PATH "${BUILD_PATH}/Input")
+ADD_SUBDIRECTORY(Input/src ${INPUT_BUILD_PATH})

@@ -232,6 +232,7 @@ public:
 	   {
 	   case KeyEvent::KEY_LEFT:
 		   {
+            std::cout << "LEFT" << std::endl;
 		   }
 		   break;
 		   break;

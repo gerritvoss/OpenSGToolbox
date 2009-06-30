@@ -14,20 +14,20 @@ VPATH = $(srcdir)/:$(srcdir)/FMod:$(srcdir)/Sound:$(srcdir)/Sound/Events:$(srcdi
 EXTRA_CCFLAGS = -fPIC -I$(FMOD_BASE_DIR)/inc -I$(srcdir) -I$(BOOST_BASE_DIR)/include -I../../../../Builds/Linux/include -D_OSG_TOOLBOX_USE_FMOD_
 #EXTRA_LDFLAGS = -L$(FMOD_BASE_DIR)/lib -lfmodex64 -L$(BOOST_BASE_DIR)/lib -lboost_filesystem-gcc41-mt-1_38 -lboost_system-gcc41-mt-1_38 
 
-OBJECTS = 	OSGFModSoundManager.o \
-	OSGFModSoundBase.o \
+OBJECTS = OSGFModSoundBase.o \
+	OSGFModSoundManager.o \
 	OSGFModSound.o \
 	OSGSound.o \
 	OSGSoundGroupBase.o \
 	OSGSoundGroup.o \
+	OSGSoundEmitterBase.o \
 	OSGSoundEmitter.o \
 	OSGSoundBase.o \
 	OSGSoundManager.o \
-	OSGSoundEmitterBase.o \
 	OSGSoundEvent.o \
 	OSGStubSound.o \
-	OSGStubSoundManager.o \
-	OSGStubSoundBase.o
+	OSGStubSoundBase.o \
+	OSGStubSoundManager.o
         
         
 include $(commondir)/CommonMake.mk

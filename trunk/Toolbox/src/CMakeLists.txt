@@ -1,73 +1,126 @@
+SET(LIBRARY_SHORT_NAME Toolbox)
+SET(LIBRARY_NAME OSG${LIBRARY_SHORT_NAME})
 
+#Get a listing of the Header, source, and inline files
+FILE(GLOB_RECURSE HEADERS *.h)
+FILE(GLOB_RECURSE SOURCES *.cpp)
+FILE(GLOB_RECURSE INLINES *.inl)
 
-SET(HEADERS ./Types/OSGFieldContainerMapType.h
-./Types/OSGStringMapType.h
-./Types/OSGPathType.h
-./FileIO/OSGBinFCFileType.h
-./FileIO/OSGFCFileHandler.h
-./FileIO/OSGFCFileType.h
-./FileIO/OSGXMLFCFileType.h
-./Attachments/OSGFilePathAttachmentBase.h
-./Attachments/OSGFilePathAttachment.h
-./Attachments/OSGFilePathAttachmentFields.h
-./Util/OSGTextureUtils.h
-./Util/OSGStringUtils.h
-./Util/OSGIntrusivePtrImplBase.h
-./Util/OSGRandomPoolManager.h
-./Util/OSGFieldContainerUtils.h
-./Util/OSGGLenumUtils.h
-./Util/OSGCameraUtils.h
-./Util/OSGMathUtils.h
-./Util/OSGInterpolations.h
-./Util/OSGQuatOperations.h
-./OSGToolboxDef.h)
-
-SET(SOURCES ./Types/OSGFieldContainerMapType.cpp
-./Types/OSGStringMapType.cpp
-./Types/OSGPathType.cpp
-./FileIO/OSGFCFileHandler.cpp
-./FileIO/OSGFCFileType.cpp
-./FileIO/OSGXMLFCFileType.cpp
-./FileIO/OSGBinFCFileType.cpp
-./Attachments/OSGFilePathAttachmentBase.cpp
-./Attachments/OSGFilePathAttachment.cpp
-./Util/OSGStringUtils.cpp
-./Util/OSGIntrusivePtrImplBase.cpp
-./Util/OSGRandomPoolManager.cpp
-./Util/OSGFieldContainerUtils.cpp
-./Util/OSGGLenumUtils.cpp
-./Util/OSGCameraUtils.cpp
-./Util/OSGMathUtils.cpp
-./Util/OSGTextureUtils.cpp)
-
-SET(INLINES ./FileIO/OSGFCFileHandler.inl
-./FileIO/OSGFCFileType.inl
-./FileIO/OSGXMLFCFileType.inl
-./FileIO/OSGBinFCFileType.inl
-./Attachments/OSGFilePathAttachment.inl
-./Attachments/OSGFilePathAttachmentBase.inl
-./Util/OSGRandomPoolManager.inl
-./Util/OSGIntrusivePtrImplBase.inl)
-
+#Definition required when building the library
 ADD_DEFINITIONS(-DOSG_COMPILETOOLBOXLIB)
 
-SET(LIBRARY_NAME OSGToolbox)
-
+#Include Boost and OpenSG
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${OPENSG_INC_DIR} "./")
+
+#Link to bost and OpenSG
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSG_LIB_DIR})
+
+#Configure shared library creation
 ADD_LIBRARY(${LIBRARY_NAME} SHARED ${HEADERS} ${SOURCES} ${INLINES})
+
+#Configure the debug shared library
 ADD_LIBRARY(${LIBRARY_NAME}D SHARED ${HEADERS} ${SOURCES} ${INLINES})
+
+#Header files build
+FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include")
+FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG")
+FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}")
+ADD_CUSTOM_TARGET(${LIBRARY_NAME}_headers
+                  ALL
+                  COMMAND ${CMAKE_BINARY_DIR}/Builds/Common/CopyIncludes.sh
+                  ${CMAKE_BINARY_DIR}/Builds/Common/
+                  ${CMAKE_SOURCE_DIR}/${LIBRARY_SHORT_NAME}/src
+                  ${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}
+                  DEPENDS ${HEADERS} ${INLINES})
+
+#Attach all of the Compile flags
 SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_DEBUG "${OPENSG_CXX_FLAGS_DBG} ${OPENSG_CXX_BUILDDLL_FLAGS}")
 SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_RELEASE "${OPENSG_CXX_FLAGS_OPT} ${OPENSG_CXX_BUILDDLL_FLAGS}")
 SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_MINSIZEREL "${OPENSG_CXX_FLAGS_OPT} ${OPENSG_CXX_BUILDDLL_FLAGS}")
 SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_RELWITHDEBINFO "${OPENSG_CXX_FLAGS_OPT} ${OPENSG_CXX_BUILDDLL_FLAGS}")
-TARGET_LINK_LIBRARIES(${LIBRARY_NAME} optimized ${OPENSG_LIBS_DBG})
-TARGET_LINK_LIBRARIES(${LIBRARY_NAME}D debug ${OPENSG_LIBS_OPT})
-INSTALL(CODE "MESSAGE(\"Installing OSGToolbox\")")
-EXECUTE_PROCESS(COMMAND ${CMAKE_BINARY_DIR}/Builds/Common/CopyIncludes.sh ${CMAKE_BINARY_DIR}/Builds/Common/ ${CMAKE_SOURCE_DIR}  ${CMAKE_BINARY_DIR}/Builds/Linux/include
-                OUTPUT_FILE CopyIncludes.log)
+
+#Attach all of the linker libraries
+TARGET_LINK_LIBRARIES(${LIBRARY_NAME} optimized ${OPENSG_LIBS_OPT})
+TARGET_LINK_LIBRARIES(${LIBRARY_NAME}D debug ${OPENSG_LIBS_DBG})
+
+
+#Installing instructions
+INSTALL(CODE "MESSAGE(\"Installing ${LIBRARY_NAME}\")")
+
+#Install the headers
+INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/OpenSG)
+
+#install the libraries
 INSTALL(TARGETS ${LIBRARY_NAME} ${LIBRARY_NAME}D
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
 
+#Doxygen documentation
+# Generating documentation with doxygen
+#
+if(DOXYGEN_EXECUTABLE)
+    
+    IF(ENABLE_USER_DOCUMENTATION)
+      # The initial rm command gets rid of everything previously built by this
+      # custom command.
+      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
+      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc/user")
+      
+      ADD_CUSTOM_COMMAND(
+      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html/index.html
+      COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html
+      COMMAND DOC_REVISION_NUMBER=${Project_WC_REVISION} DOC_OUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}/doc/user ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.user
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.user
+              ${HEADERS}
+              ${INLINES}
+              ${SOURCES}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation
+      )
+      
+      ADD_CUSTOM_TARGET(${LIBRARY_SHORT_NAME}_user_doc
+                        COMMENT "Building ${LIBRARY_SHORT_NAME} User Documentation"
+                        DEPENDS
+                        ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html/index.html)
+
+      ADD_DEPENDENCIES(user_doc ${LIBRARY_SHORT_NAME}_user_doc)
+
+      #Installing the documentation
+      INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html
+              DESTINATION ${CMAKE_INSTALL_PREFIX}/doc/user/${LIBRARY_SHORT_NAME})
+
+    ENDIF(ENABLE_USER_DOCUMENTATION)
+    
+    # The initial rm command gets rid of everything previously built by this
+    # custom command.
+    IF(ENABLE_DEVELOPER_DOCUMENTATION)
+      # The initial rm command gets rid of everything previously built by this
+      # custom command.
+      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
+      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc/developer")
+      
+      ADD_CUSTOM_COMMAND(
+      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html/index.html
+      COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html
+      COMMAND DOC_REVISION_NUMBER=${Project_WC_REVISION} DOC_OUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}/doc/developer ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.developer
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.developer
+              ${HEADERS}
+              ${INLINES}
+              ${SOURCES}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation
+      )
+      
+      ADD_CUSTOM_TARGET(${LIBRARY_SHORT_NAME}_dev_doc
+                        COMMENT "Building ${LIBRARY_SHORT_NAME} Developer  Documentation"
+                        DEPENDS
+                        ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html/index.html)
+
+      ADD_DEPENDENCIES(dev_doc ${LIBRARY_SHORT_NAME}_dev_doc)
+
+      #Installing the documentation
+      INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html
+              DESTINATION ${CMAKE_INSTALL_PREFIX}/doc/developer/${LIBRARY_SHORT_NAME})
+    ENDIF(ENABLE_DEVELOPER_DOCUMENTATION)
+    
+endif(DOXYGEN_EXECUTABLE)

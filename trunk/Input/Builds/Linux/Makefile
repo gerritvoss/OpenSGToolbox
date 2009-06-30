@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = Input
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Utils:$(srcdir)/Event:$(srcdir)/WindowSystem:$(srcdir)/WindowSystem/QT:$(srcdir)/WindowSystem/Cocoa:$(srcdir)/WindowSystem/Win32:$(srcdir)/WindowSystem/Carbon:$(srcdir)/WindowSystem/X:$(srcdir)/WindowSystem/QT4:$(srcdir)/WindowSystem/GLUT:$(srcdir)/WindowSystem/CoreGL:
+VPATH = $(srcdir)/:$(srcdir)/Utils:$(srcdir)/Event:$(srcdir)/WindowSystem:$(srcdir)/WindowSystem/QT:$(srcdir)/WindowSystem/Cocoa:$(srcdir)/WindowSystem/Win32:$(srcdir)/WindowSystem/Carbon:$(srcdir)/WindowSystem/X:$(srcdir)/WindowSystem/QT4:$(srcdir)/WindowSystem/CoreGL:
 
 
 #.SUFFIX = .o .o
@@ -37,6 +37,10 @@ OBJECTS = OSGStringUtils.o \
 	OSGWindowEventProducerFactory.o \
 	OSGWindowEventProducerBase.o \
 	OSGWindowEventProducer.o \
+	OSGWin32WindowEventProducerBase.o \
+	OSGWin32WindowEventProducer.o \
+	OSGCarbonWindowEventProducerBase.o \
+	OSGCarbonWindowEventProducer.o \
 	OSGXWindowEventProducer.o \
 	OSGXWindowEventProducerBase.o \
 	OSGInputSettings.o

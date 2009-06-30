@@ -13,9 +13,11 @@ VPATH = $(srcdir)/:$(srcdir)/Animations:$(srcdir)/Animations/Advancers:$(srcdir)
 
 EXTRA_CCFLAGS = -I$(srcdir) -I$(installdir)/include -fPIC
 
-OBJECTS = 	OSGShaderAnimation.o \
+OBJECTS = OSGGeometryAnimationBase.o \
+	OSGShaderAnimation.o \
 	OSGAnimationBase.o \
 	OSGFieldAnimation.o \
+	OSGGeometryAnimation.o \
 	OSGShaderAnimationBase.o \
 	OSGFieldAnimationBase.o \
 	OSGAnimation.o \
@@ -41,6 +43,7 @@ OBJECTS = 	OSGShaderAnimation.o \
 	OSGSkeletonDrawableBase.o \
 	OSGSkeleton.o \
 	OSGGeometryInterpolations.o \
+	OSGMFieldInterpolations.o \
 	OSGKeyframeInterpolations.o \
 	OSGInterpolationFactory.o \
 	OSGGeoPositionDifferenceSet.o \
@@ -67,6 +70,14 @@ OBJECTS = 	OSGShaderAnimation.o \
 	OSGKeyframeFCPtrsSequence.o \
 	OSGKeyframeDiscreetSequence.o \
 	OSGKeyframeSequenceTmplBase.o \
+	OSGKeyframeSequenceGeoColorsPtrBase.o \
+	OSGKeyframeSequenceGeoTexCoordsPtrBase.o \
+	OSGKeyframeSequenceGeoTexCoordsPtr.o \
+	OSGKeyframeSequenceGeoNormalsPtr.o \
+	OSGKeyframeSequenceGeoPositionsPtr.o \
+	OSGKeyframeSequenceGeoColorsPtr.o \
+	OSGKeyframeSequenceGeoNormalsPtrBase.o \
+	OSGKeyframeSequenceGeoPositionsPtrBase.o \
 	OSGKeyframeAnimatorBase.o \
 	OSGKeyframeAnimator.o \
 	OSGAnimatorBase.o \
