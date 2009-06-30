@@ -49,7 +49,7 @@
 #include <OpenSG/OSGMatrix.h>
 #include <OpenSG/OSGQuaternion.h>
 
-#include "OSGRadialParticleAffector.h"
+#include "OSGUniformParticleAffector.h"
 #include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
@@ -58,7 +58,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::RadialParticleAffector
+/*! \class osg::UniformParticleAffector
 
 */
 
@@ -70,7 +70,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void RadialParticleAffector::initMethod (void)
+void UniformParticleAffector::initMethod (void)
 {
 }
 
@@ -79,9 +79,9 @@ void RadialParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool RadialParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool UniformParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
-		// getting affector's translation.  No affect is applied if the beacon cannot be found
+	// getting affector's translation.  No affect is applied if the beacon cannot be found
 	if(getBeacon() != NullFC)
 	{
 		Matrix BeaconToWorld(getBeacon()->getToWorld());
@@ -90,18 +90,16 @@ bool RadialParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInde
 		BeaconToWorld.getTransform(translation,tmp2,tmp,tmp2);
 
 		//distance from affector to particle
-		Pnt3f particlePos = System->getPosition(ParticleIndex);
-		Real32 distanceFromAffector = particlePos.dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
+		Real32 distanceFromAffector = System->getPosition(ParticleIndex).dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
 
 		if((getMaxDistance() < 0.0) || (distanceFromAffector <= getMaxDistance())) //only affect the particle if it is in range
 		{	
-			// get direction from particle to the affector
-			Vec3f radialForceDirection(particlePos.x() - translation.x(), particlePos.y() - translation.y(), particlePos.z() - translation.z());
-			radialForceDirection.normalize();
-			// computing velocity change due to field
-			radialForceDirection *= (getMagnitude() * elps)/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
+			// calculate affect of feild
+			Vec3f force(getDirection());
+			force.normalize();
+			force *= ((getMagnitude()/getParticleMass()) * elps)/(osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
 			// set new particle velocity
-			System->setVelocity(radialForceDirection + System->getVelocity(ParticleIndex),ParticleIndex);
+			System->setVelocity(force + System->getVelocity(ParticleIndex),ParticleIndex);
 		}
 	}
 
@@ -114,31 +112,31 @@ bool RadialParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInde
 
 /*----------------------- constructors & destructors ----------------------*/
 
-RadialParticleAffector::RadialParticleAffector(void) :
+UniformParticleAffector::UniformParticleAffector(void) :
     Inherited()
 {
 }
 
-RadialParticleAffector::RadialParticleAffector(const RadialParticleAffector &source) :
+UniformParticleAffector::UniformParticleAffector(const UniformParticleAffector &source) :
     Inherited(source)
 {
 }
 
-RadialParticleAffector::~RadialParticleAffector(void)
+UniformParticleAffector::~UniformParticleAffector(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void RadialParticleAffector::changed(BitVector whichField, UInt32 origin)
+void UniformParticleAffector::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void RadialParticleAffector::dump(      UInt32    , 
+void UniformParticleAffector::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump RadialParticleAffector NI" << std::endl;
+    SLOG << "Dump UniformParticleAffector NI" << std::endl;
 }
 
 
@@ -156,10 +154,10 @@ void RadialParticleAffector::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGRADIALPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRADIALPARTICLEAFFECTORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGUNIFORMPARTICLEAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGUNIFORMPARTICLEAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGRADIALPARTICLEAFFECTORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGUNIFORMPARTICLEAFFECTORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

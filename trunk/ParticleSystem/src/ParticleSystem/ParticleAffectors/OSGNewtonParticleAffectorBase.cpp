@@ -45,143 +45,154 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class RadialParticleAffector!
+ **     class NewtonParticleAffector!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILERADIALPARTICLEAFFECTORINST
+#define OSG_COMPILENEWTONPARTICLEAFFECTORINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGRadialParticleAffectorBase.h"
-#include "OSGRadialParticleAffector.h"
+#include "OSGNewtonParticleAffectorBase.h"
+#include "OSGNewtonParticleAffector.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RadialParticleAffectorBase::MagnitudeFieldMask = 
-    (TypeTraits<BitVector>::One << RadialParticleAffectorBase::MagnitudeFieldId);
+const OSG::BitVector  NewtonParticleAffectorBase::MagnitudeFieldMask = 
+    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::MagnitudeFieldId);
 
-const OSG::BitVector  RadialParticleAffectorBase::AttenuationFieldMask = 
-    (TypeTraits<BitVector>::One << RadialParticleAffectorBase::AttenuationFieldId);
+const OSG::BitVector  NewtonParticleAffectorBase::AttenuationFieldMask = 
+    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::AttenuationFieldId);
 
-const OSG::BitVector  RadialParticleAffectorBase::MaxDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << RadialParticleAffectorBase::MaxDistanceFieldId);
+const OSG::BitVector  NewtonParticleAffectorBase::MaxDistanceFieldMask = 
+    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::MaxDistanceFieldId);
 
-const OSG::BitVector  RadialParticleAffectorBase::BeaconFieldMask = 
-    (TypeTraits<BitVector>::One << RadialParticleAffectorBase::BeaconFieldId);
+const OSG::BitVector  NewtonParticleAffectorBase::BeaconFieldMask = 
+    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::BeaconFieldId);
 
-const OSG::BitVector RadialParticleAffectorBase::MTInfluenceMask = 
+const OSG::BitVector  NewtonParticleAffectorBase::ParticleMassFieldMask = 
+    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::ParticleMassFieldId);
+
+const OSG::BitVector NewtonParticleAffectorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var Real32          RadialParticleAffectorBase::_sfMagnitude
+/*! \var Real32          NewtonParticleAffectorBase::_sfMagnitude
     
 */
-/*! \var Real32          RadialParticleAffectorBase::_sfAttenuation
+/*! \var Real32          NewtonParticleAffectorBase::_sfAttenuation
     
 */
-/*! \var Real32          RadialParticleAffectorBase::_sfMaxDistance
+/*! \var Real32          NewtonParticleAffectorBase::_sfMaxDistance
     
 */
-/*! \var NodePtr         RadialParticleAffectorBase::_sfBeacon
+/*! \var NodePtr         NewtonParticleAffectorBase::_sfBeacon
+    
+*/
+/*! \var Real32          NewtonParticleAffectorBase::_sfParticleMass
     
 */
 
-//! RadialParticleAffector description
+//! NewtonParticleAffector description
 
-FieldDescription *RadialParticleAffectorBase::_desc[] = 
+FieldDescription *NewtonParticleAffectorBase::_desc[] = 
 {
     new FieldDescription(SFReal32::getClassType(), 
                      "Magnitude", 
                      MagnitudeFieldId, MagnitudeFieldMask,
                      false,
-                     (FieldAccessMethod) &RadialParticleAffectorBase::getSFMagnitude),
+                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFMagnitude),
     new FieldDescription(SFReal32::getClassType(), 
                      "Attenuation", 
                      AttenuationFieldId, AttenuationFieldMask,
                      false,
-                     (FieldAccessMethod) &RadialParticleAffectorBase::getSFAttenuation),
+                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFAttenuation),
     new FieldDescription(SFReal32::getClassType(), 
                      "MaxDistance", 
                      MaxDistanceFieldId, MaxDistanceFieldMask,
                      false,
-                     (FieldAccessMethod) &RadialParticleAffectorBase::getSFMaxDistance),
+                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFMaxDistance),
     new FieldDescription(SFNodePtr::getClassType(), 
                      "Beacon", 
                      BeaconFieldId, BeaconFieldMask,
                      false,
-                     (FieldAccessMethod) &RadialParticleAffectorBase::getSFBeacon)
+                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFBeacon),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "ParticleMass", 
+                     ParticleMassFieldId, ParticleMassFieldMask,
+                     false,
+                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFParticleMass)
 };
 
 
-FieldContainerType RadialParticleAffectorBase::_type(
-    "RadialParticleAffector",
+FieldContainerType NewtonParticleAffectorBase::_type(
+    "NewtonParticleAffector",
     "ParticleAffector",
     NULL,
-    (PrototypeCreateF) &RadialParticleAffectorBase::createEmpty,
-    RadialParticleAffector::initMethod,
+    (PrototypeCreateF) &NewtonParticleAffectorBase::createEmpty,
+    NewtonParticleAffector::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(RadialParticleAffectorBase, RadialParticleAffectorPtr)
+//OSG_FIELD_CONTAINER_DEF(NewtonParticleAffectorBase, NewtonParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &RadialParticleAffectorBase::getType(void) 
+FieldContainerType &NewtonParticleAffectorBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &RadialParticleAffectorBase::getType(void) const 
+const FieldContainerType &NewtonParticleAffectorBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr RadialParticleAffectorBase::shallowCopy(void) const 
+FieldContainerPtr NewtonParticleAffectorBase::shallowCopy(void) const 
 { 
-    RadialParticleAffectorPtr returnValue; 
+    NewtonParticleAffectorPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const RadialParticleAffector *>(this)); 
+    newPtr(returnValue, dynamic_cast<const NewtonParticleAffector *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 RadialParticleAffectorBase::getContainerSize(void) const 
+UInt32 NewtonParticleAffectorBase::getContainerSize(void) const 
 { 
-    return sizeof(RadialParticleAffector); 
+    return sizeof(NewtonParticleAffector); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void RadialParticleAffectorBase::executeSync(      FieldContainer &other,
+void NewtonParticleAffectorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((RadialParticleAffectorBase *) &other, whichField);
+    this->executeSyncImpl((NewtonParticleAffectorBase *) &other, whichField);
 }
 #else
-void RadialParticleAffectorBase::executeSync(      FieldContainer &other,
+void NewtonParticleAffectorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((RadialParticleAffectorBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((NewtonParticleAffectorBase *) &other, whichField, sInfo);
 }
-void RadialParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
+void NewtonParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void RadialParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void NewtonParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -194,11 +205,12 @@ void RadialParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-RadialParticleAffectorBase::RadialParticleAffectorBase(void) :
-    _sfMagnitude              (Real32(9.800)), 
-    _sfAttenuation            (Real32(1.0)), 
+NewtonParticleAffectorBase::NewtonParticleAffectorBase(void) :
+    _sfMagnitude              (Real32(5.000)), 
+    _sfAttenuation            (Real32(2.0)), 
     _sfMaxDistance            (Real32(-1.0)), 
     _sfBeacon                 (NodePtr(NullFC)), 
+    _sfParticleMass           (Real32(1.0)), 
     Inherited() 
 {
 }
@@ -207,24 +219,25 @@ RadialParticleAffectorBase::RadialParticleAffectorBase(void) :
 #pragma warning (default : 383)
 #endif
 
-RadialParticleAffectorBase::RadialParticleAffectorBase(const RadialParticleAffectorBase &source) :
+NewtonParticleAffectorBase::NewtonParticleAffectorBase(const NewtonParticleAffectorBase &source) :
     _sfMagnitude              (source._sfMagnitude              ), 
     _sfAttenuation            (source._sfAttenuation            ), 
     _sfMaxDistance            (source._sfMaxDistance            ), 
     _sfBeacon                 (source._sfBeacon                 ), 
+    _sfParticleMass           (source._sfParticleMass           ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-RadialParticleAffectorBase::~RadialParticleAffectorBase(void)
+NewtonParticleAffectorBase::~NewtonParticleAffectorBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 RadialParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 NewtonParticleAffectorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -248,11 +261,16 @@ UInt32 RadialParticleAffectorBase::getBinSize(const BitVector &whichField)
         returnValue += _sfBeacon.getBinSize();
     }
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+    {
+        returnValue += _sfParticleMass.getBinSize();
+    }
+
 
     return returnValue;
 }
 
-void RadialParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
+void NewtonParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -277,10 +295,15 @@ void RadialParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
         _sfBeacon.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+    {
+        _sfParticleMass.copyToBin(pMem);
+    }
+
 
 }
 
-void RadialParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
+void NewtonParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -305,11 +328,16 @@ void RadialParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfBeacon.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+    {
+        _sfParticleMass.copyFromBin(pMem);
+    }
+
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBase *pOther,
+void NewtonParticleAffectorBase::executeSyncImpl(      NewtonParticleAffectorBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -327,10 +355,13 @@ void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBas
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+        _sfParticleMass.syncWith(pOther->_sfParticleMass);
+
 
 }
 #else
-void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBase *pOther,
+void NewtonParticleAffectorBase::executeSyncImpl(      NewtonParticleAffectorBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -349,11 +380,14 @@ void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBas
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+        _sfParticleMass.syncWith(pOther->_sfParticleMass);
+
 
 
 }
 
-void RadialParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
+void NewtonParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -372,11 +406,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RadialParticleAffectorPtr>::_type("RadialParticleAffectorPtr", "ParticleAffectorPtr");
+DataType FieldDataTraits<NewtonParticleAffectorPtr>::_type("NewtonParticleAffectorPtr", "ParticleAffectorPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(RadialParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RadialParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(NewtonParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(NewtonParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -393,10 +427,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(RadialParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTM
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGRADIALPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRADIALPARTICLEAFFECTORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGNEWTONPARTICLEAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGNEWTONPARTICLEAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGRADIALPARTICLEAFFECTORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGNEWTONPARTICLEAFFECTORFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

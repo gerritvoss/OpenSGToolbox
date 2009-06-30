@@ -36,27 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGRADIALPARTICLEAFFECTOR_H_
-#define _OSGRADIALPARTICLEAFFECTOR_H_
+#ifndef _OSGNEWTONPARTICLEAFFECTOR_H_
+#define _OSGNEWTONPARTICLEAFFECTOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGRadialParticleAffectorBase.h"
+#include "OSGNewtonParticleAffectorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief RadialParticleAffector class. See \ref 
-           PageParticleSystemRadialParticleAffector for a description.
+/*! \brief NewtonParticleAffector class. See \ref 
+           PageParticleSystemNewtonParticleAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffector : public RadialParticleAffectorBase
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING NewtonParticleAffector : public NewtonParticleAffectorBase
 {
   private:
 
-    typedef RadialParticleAffectorBase Inherited;
+    typedef NewtonParticleAffectorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -83,21 +83,21 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffector : public RadialPar
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in RadialParticleAffectorBase.
+    // Variables should all be in NewtonParticleAffectorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    RadialParticleAffector(void);
-    RadialParticleAffector(const RadialParticleAffector &source);
+    NewtonParticleAffector(void);
+    NewtonParticleAffector(const NewtonParticleAffector &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RadialParticleAffector(void); 
+    virtual ~NewtonParticleAffector(void); 
 
     /*! \}                                                                 */
     
@@ -105,22 +105,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffector : public RadialPar
   private:
 
     friend class FieldContainer;
-    friend class RadialParticleAffectorBase;
+    friend class NewtonParticleAffectorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const RadialParticleAffector &source);
+    void operator =(const NewtonParticleAffector &source);
 };
 
-typedef RadialParticleAffector *RadialParticleAffectorP;
+typedef NewtonParticleAffector *NewtonParticleAffectorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGRadialParticleAffectorBase.inl"
-#include "OSGRadialParticleAffector.inl"
+#include "OSGNewtonParticleAffectorBase.inl"
+#include "OSGNewtonParticleAffector.inl"
 
-#define OSGRADIALPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGNEWTONPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGRADIALPARTICLEAFFECTOR_H_ */
+#endif /* _OSGNEWTONPARTICLEAFFECTOR_H_ */

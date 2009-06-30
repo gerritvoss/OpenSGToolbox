@@ -91,14 +91,14 @@ bool GravityParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInd
 		BeaconToWorld.getTransform(translation,tmp2,tmp,tmp2);
 
 		//distance from affector to particle
-		Real32 distance = System->getPosition(ParticleIndex).dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
+		Real32 distanceFromAffector = System->getPosition(ParticleIndex).dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
 
-		if((getMaxDistance() < 0.0) || (distance <= getMaxDistance())) //only affect the particle if it is in range
+		if((getMaxDistance() < 0.0) || (distanceFromAffector <= getMaxDistance())) //only affect the particle if it is in range
 		{	
 			// calculate gravitational affect
 			Vec3f grav(getDirection());
 			grav.normalize();
-			grav *= (getMagnitude() * elps)/(std::pow(distance,getAttenuation()));
+			grav *= (getMagnitude() * elps)/(osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
 			// set new particle velocity
 			System->setVelocity(grav + System->getVelocity(ParticleIndex),ParticleIndex);
 		}

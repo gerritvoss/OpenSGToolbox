@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class RadialParticleAffector
+ **     class NewtonParticleAffector
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGRADIALPARTICLEAFFECTORBASE_H_
-#define _OSGRADIALPARTICLEAFFECTORBASE_H_
+#ifndef _OSGNEWTONPARTICLEAFFECTORBASE_H_
+#define _OSGNEWTONPARTICLEAFFECTORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -71,17 +71,18 @@
 #include <OpenSG/OSGReal32Fields.h> // Attenuation type
 #include <OpenSG/OSGReal32Fields.h> // MaxDistance type
 #include <OpenSG/OSGNodeFields.h> // Beacon type
+#include <OpenSG/OSGReal32Fields.h> // ParticleMass type
 
-#include "OSGRadialParticleAffectorFields.h"
+#include "OSGNewtonParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class RadialParticleAffector;
+class NewtonParticleAffector;
 class BinaryDataHandler;
 
-//! \brief RadialParticleAffector Base Class.
+//! \brief NewtonParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public ParticleAffector
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING NewtonParticleAffectorBase : public ParticleAffector
 {
   private:
 
@@ -90,21 +91,23 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public Parti
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef RadialParticleAffectorPtr  Ptr;
+    typedef NewtonParticleAffectorPtr  Ptr;
 
     enum
     {
-        MagnitudeFieldId   = Inherited::NextFieldId,
-        AttenuationFieldId = MagnitudeFieldId   + 1,
-        MaxDistanceFieldId = AttenuationFieldId + 1,
-        BeaconFieldId      = MaxDistanceFieldId + 1,
-        NextFieldId        = BeaconFieldId      + 1
+        MagnitudeFieldId    = Inherited::NextFieldId,
+        AttenuationFieldId  = MagnitudeFieldId    + 1,
+        MaxDistanceFieldId  = AttenuationFieldId  + 1,
+        BeaconFieldId       = MaxDistanceFieldId  + 1,
+        ParticleMassFieldId = BeaconFieldId       + 1,
+        NextFieldId         = ParticleMassFieldId + 1
     };
 
     static const OSG::BitVector MagnitudeFieldMask;
     static const OSG::BitVector AttenuationFieldMask;
     static const OSG::BitVector MaxDistanceFieldMask;
     static const OSG::BitVector BeaconFieldMask;
+    static const OSG::BitVector ParticleMassFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -135,6 +138,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public Parti
            SFReal32            *getSFAttenuation    (void);
            SFReal32            *getSFMaxDistance    (void);
            SFNodePtr           *getSFBeacon         (void);
+           SFReal32            *getSFParticleMass   (void);
 
            Real32              &getMagnitude      (void);
      const Real32              &getMagnitude      (void) const;
@@ -144,6 +148,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public Parti
      const Real32              &getMaxDistance    (void) const;
            NodePtr             &getBeacon         (void);
      const NodePtr             &getBeacon         (void) const;
+           Real32              &getParticleMass   (void);
+     const Real32              &getParticleMass   (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -154,6 +160,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public Parti
      void setAttenuation    ( const Real32 &value );
      void setMaxDistance    ( const Real32 &value );
      void setBeacon         ( const NodePtr &value );
+     void setParticleMass   ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -177,8 +184,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public Parti
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  RadialParticleAffectorPtr      create          (void); 
-    static  RadialParticleAffectorPtr      createEmpty     (void); 
+    static  NewtonParticleAffectorPtr      create          (void); 
+    static  NewtonParticleAffectorPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -200,21 +207,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public Parti
     SFReal32            _sfAttenuation;
     SFReal32            _sfMaxDistance;
     SFNodePtr           _sfBeacon;
+    SFReal32            _sfParticleMass;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    RadialParticleAffectorBase(void);
-    RadialParticleAffectorBase(const RadialParticleAffectorBase &source);
+    NewtonParticleAffectorBase(void);
+    NewtonParticleAffectorBase(const NewtonParticleAffectorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RadialParticleAffectorBase(void); 
+    virtual ~NewtonParticleAffectorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,13 +230,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public Parti
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      RadialParticleAffectorBase *pOther,
+    void executeSyncImpl(      NewtonParticleAffectorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      RadialParticleAffectorBase *pOther,
+    void executeSyncImpl(      NewtonParticleAffectorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -258,7 +266,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public Parti
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const RadialParticleAffectorBase &source);
+    void operator =(const NewtonParticleAffectorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -266,17 +274,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffectorBase : public Parti
 //---------------------------------------------------------------------------
 
 
-typedef RadialParticleAffectorBase *RadialParticleAffectorBaseP;
+typedef NewtonParticleAffectorBase *NewtonParticleAffectorBaseP;
 
-typedef osgIF<RadialParticleAffectorBase::isNodeCore,
-              CoredNodePtr<RadialParticleAffector>,
+typedef osgIF<NewtonParticleAffectorBase::isNodeCore,
+              CoredNodePtr<NewtonParticleAffector>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet RadialParticleAffectorNodePtr;
+              >::_IRet NewtonParticleAffectorNodePtr;
 
-typedef RefPtr<RadialParticleAffectorPtr> RadialParticleAffectorRefPtr;
+typedef RefPtr<NewtonParticleAffectorPtr> NewtonParticleAffectorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGRADIALPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGNEWTONPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGRADIALPARTICLEAFFECTORBASE_H_ */
+#endif /* _OSGNEWTONPARTICLEAFFECTORBASE_H_ */

@@ -36,27 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGRADIALPARTICLEAFFECTOR_H_
-#define _OSGRADIALPARTICLEAFFECTOR_H_
+#ifndef _OSGUNIFORMPARTICLEAFFECTOR_H_
+#define _OSGUNIFORMPARTICLEAFFECTOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGRadialParticleAffectorBase.h"
+#include "OSGUniformParticleAffectorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief RadialParticleAffector class. See \ref 
-           PageParticleSystemRadialParticleAffector for a description.
+/*! \brief UniformParticleAffector class. See \ref 
+           PageParticleSystemUniformParticleAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffector : public RadialParticleAffectorBase
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING UniformParticleAffector : public UniformParticleAffectorBase
 {
   private:
 
-    typedef RadialParticleAffectorBase Inherited;
+    typedef UniformParticleAffectorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -76,28 +76,27 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffector : public RadialPar
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    /*! \}                                                                 */
-
 	virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps);
 
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in RadialParticleAffectorBase.
+    // Variables should all be in UniformParticleAffectorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    RadialParticleAffector(void);
-    RadialParticleAffector(const RadialParticleAffector &source);
+    UniformParticleAffector(void);
+    UniformParticleAffector(const UniformParticleAffector &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RadialParticleAffector(void); 
+    virtual ~UniformParticleAffector(void); 
 
     /*! \}                                                                 */
     
@@ -105,22 +104,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RadialParticleAffector : public RadialPar
   private:
 
     friend class FieldContainer;
-    friend class RadialParticleAffectorBase;
+    friend class UniformParticleAffectorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const RadialParticleAffector &source);
+    void operator =(const UniformParticleAffector &source);
 };
 
-typedef RadialParticleAffector *RadialParticleAffectorP;
+typedef UniformParticleAffector *UniformParticleAffectorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGRadialParticleAffectorBase.inl"
-#include "OSGRadialParticleAffector.inl"
+#include "OSGUniformParticleAffectorBase.inl"
+#include "OSGUniformParticleAffector.inl"
 
-#define OSGRADIALPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGUNIFORMPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGRADIALPARTICLEAFFECTOR_H_ */
+#endif /* _OSGUNIFORMPARTICLEAFFECTOR_H_ */

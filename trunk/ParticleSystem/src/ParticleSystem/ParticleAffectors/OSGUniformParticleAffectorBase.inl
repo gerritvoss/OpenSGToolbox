@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class RadialParticleAffector!
+ **     class UniformParticleAffector!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &RadialParticleAffectorBase::getClassType(void)
+OSG::FieldContainerType &UniformParticleAffectorBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 RadialParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 UniformParticleAffectorBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-RadialParticleAffectorPtr RadialParticleAffectorBase::create(void) 
+UniformParticleAffectorPtr UniformParticleAffectorBase::create(void) 
 {
-    RadialParticleAffectorPtr fc; 
+    UniformParticleAffectorPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = RadialParticleAffectorPtr::dcast(
+        fc = UniformParticleAffectorPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ RadialParticleAffectorPtr RadialParticleAffectorBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-RadialParticleAffectorPtr RadialParticleAffectorBase::createEmpty(void) 
+UniformParticleAffectorPtr UniformParticleAffectorBase::createEmpty(void) 
 { 
-    RadialParticleAffectorPtr returnValue; 
+    UniformParticleAffectorPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,121 +96,177 @@ RadialParticleAffectorPtr RadialParticleAffectorBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the RadialParticleAffector::_sfMagnitude field.
+//! Get the UniformParticleAffector::_sfMagnitude field.
 inline
-SFReal32 *RadialParticleAffectorBase::getSFMagnitude(void)
+SFReal32 *UniformParticleAffectorBase::getSFMagnitude(void)
 {
     return &_sfMagnitude;
 }
 
-//! Get the RadialParticleAffector::_sfAttenuation field.
+//! Get the UniformParticleAffector::_sfDirection field.
 inline
-SFReal32 *RadialParticleAffectorBase::getSFAttenuation(void)
+SFVec3f *UniformParticleAffectorBase::getSFDirection(void)
+{
+    return &_sfDirection;
+}
+
+//! Get the UniformParticleAffector::_sfAttenuation field.
+inline
+SFReal32 *UniformParticleAffectorBase::getSFAttenuation(void)
 {
     return &_sfAttenuation;
 }
 
-//! Get the RadialParticleAffector::_sfMaxDistance field.
+//! Get the UniformParticleAffector::_sfMaxDistance field.
 inline
-SFReal32 *RadialParticleAffectorBase::getSFMaxDistance(void)
+SFReal32 *UniformParticleAffectorBase::getSFMaxDistance(void)
 {
     return &_sfMaxDistance;
 }
 
-//! Get the RadialParticleAffector::_sfBeacon field.
+//! Get the UniformParticleAffector::_sfBeacon field.
 inline
-SFNodePtr *RadialParticleAffectorBase::getSFBeacon(void)
+SFNodePtr *UniformParticleAffectorBase::getSFBeacon(void)
 {
     return &_sfBeacon;
 }
 
-
-//! Get the value of the RadialParticleAffector::_sfMagnitude field.
+//! Get the UniformParticleAffector::_sfParticleMass field.
 inline
-Real32 &RadialParticleAffectorBase::getMagnitude(void)
+SFReal32 *UniformParticleAffectorBase::getSFParticleMass(void)
+{
+    return &_sfParticleMass;
+}
+
+
+//! Get the value of the UniformParticleAffector::_sfMagnitude field.
+inline
+Real32 &UniformParticleAffectorBase::getMagnitude(void)
 {
     return _sfMagnitude.getValue();
 }
 
-//! Get the value of the RadialParticleAffector::_sfMagnitude field.
+//! Get the value of the UniformParticleAffector::_sfMagnitude field.
 inline
-const Real32 &RadialParticleAffectorBase::getMagnitude(void) const
+const Real32 &UniformParticleAffectorBase::getMagnitude(void) const
 {
     return _sfMagnitude.getValue();
 }
 
-//! Set the value of the RadialParticleAffector::_sfMagnitude field.
+//! Set the value of the UniformParticleAffector::_sfMagnitude field.
 inline
-void RadialParticleAffectorBase::setMagnitude(const Real32 &value)
+void UniformParticleAffectorBase::setMagnitude(const Real32 &value)
 {
     _sfMagnitude.setValue(value);
 }
 
-//! Get the value of the RadialParticleAffector::_sfAttenuation field.
+//! Get the value of the UniformParticleAffector::_sfDirection field.
 inline
-Real32 &RadialParticleAffectorBase::getAttenuation(void)
+Vec3f &UniformParticleAffectorBase::getDirection(void)
+{
+    return _sfDirection.getValue();
+}
+
+//! Get the value of the UniformParticleAffector::_sfDirection field.
+inline
+const Vec3f &UniformParticleAffectorBase::getDirection(void) const
+{
+    return _sfDirection.getValue();
+}
+
+//! Set the value of the UniformParticleAffector::_sfDirection field.
+inline
+void UniformParticleAffectorBase::setDirection(const Vec3f &value)
+{
+    _sfDirection.setValue(value);
+}
+
+//! Get the value of the UniformParticleAffector::_sfAttenuation field.
+inline
+Real32 &UniformParticleAffectorBase::getAttenuation(void)
 {
     return _sfAttenuation.getValue();
 }
 
-//! Get the value of the RadialParticleAffector::_sfAttenuation field.
+//! Get the value of the UniformParticleAffector::_sfAttenuation field.
 inline
-const Real32 &RadialParticleAffectorBase::getAttenuation(void) const
+const Real32 &UniformParticleAffectorBase::getAttenuation(void) const
 {
     return _sfAttenuation.getValue();
 }
 
-//! Set the value of the RadialParticleAffector::_sfAttenuation field.
+//! Set the value of the UniformParticleAffector::_sfAttenuation field.
 inline
-void RadialParticleAffectorBase::setAttenuation(const Real32 &value)
+void UniformParticleAffectorBase::setAttenuation(const Real32 &value)
 {
     _sfAttenuation.setValue(value);
 }
 
-//! Get the value of the RadialParticleAffector::_sfMaxDistance field.
+//! Get the value of the UniformParticleAffector::_sfMaxDistance field.
 inline
-Real32 &RadialParticleAffectorBase::getMaxDistance(void)
+Real32 &UniformParticleAffectorBase::getMaxDistance(void)
 {
     return _sfMaxDistance.getValue();
 }
 
-//! Get the value of the RadialParticleAffector::_sfMaxDistance field.
+//! Get the value of the UniformParticleAffector::_sfMaxDistance field.
 inline
-const Real32 &RadialParticleAffectorBase::getMaxDistance(void) const
+const Real32 &UniformParticleAffectorBase::getMaxDistance(void) const
 {
     return _sfMaxDistance.getValue();
 }
 
-//! Set the value of the RadialParticleAffector::_sfMaxDistance field.
+//! Set the value of the UniformParticleAffector::_sfMaxDistance field.
 inline
-void RadialParticleAffectorBase::setMaxDistance(const Real32 &value)
+void UniformParticleAffectorBase::setMaxDistance(const Real32 &value)
 {
     _sfMaxDistance.setValue(value);
 }
 
-//! Get the value of the RadialParticleAffector::_sfBeacon field.
+//! Get the value of the UniformParticleAffector::_sfBeacon field.
 inline
-NodePtr &RadialParticleAffectorBase::getBeacon(void)
+NodePtr &UniformParticleAffectorBase::getBeacon(void)
 {
     return _sfBeacon.getValue();
 }
 
-//! Get the value of the RadialParticleAffector::_sfBeacon field.
+//! Get the value of the UniformParticleAffector::_sfBeacon field.
 inline
-const NodePtr &RadialParticleAffectorBase::getBeacon(void) const
+const NodePtr &UniformParticleAffectorBase::getBeacon(void) const
 {
     return _sfBeacon.getValue();
 }
 
-//! Set the value of the RadialParticleAffector::_sfBeacon field.
+//! Set the value of the UniformParticleAffector::_sfBeacon field.
 inline
-void RadialParticleAffectorBase::setBeacon(const NodePtr &value)
+void UniformParticleAffectorBase::setBeacon(const NodePtr &value)
 {
     _sfBeacon.setValue(value);
+}
+
+//! Get the value of the UniformParticleAffector::_sfParticleMass field.
+inline
+Real32 &UniformParticleAffectorBase::getParticleMass(void)
+{
+    return _sfParticleMass.getValue();
+}
+
+//! Get the value of the UniformParticleAffector::_sfParticleMass field.
+inline
+const Real32 &UniformParticleAffectorBase::getParticleMass(void) const
+{
+    return _sfParticleMass.getValue();
+}
+
+//! Set the value of the UniformParticleAffector::_sfParticleMass field.
+inline
+void UniformParticleAffectorBase::setParticleMass(const Real32 &value)
+{
+    _sfParticleMass.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGRADIALPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGUNIFORMPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -1,3 +1,5 @@
+// This tutorial can be used to test anything that needs to be tested for the particle system.  Sorting, drawers, affectors, etc.
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -26,6 +28,7 @@
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
 #include <OpenSG/ParticleSystem/OSGBurstParticleGenerator.h>
 #include <OpenSG/ParticleSystem/OSGGravityParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGRadialParticleAffector.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGSegmentDistribution1D.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
@@ -61,7 +64,7 @@ ParticleSystemCorePtr ParticleNodeCore;
 PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
 LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
 QuadParticleSystemDrawerPtr ExampleQuadParticleSystemDrawer;
-
+DiscParticleSystemDrawerPtr ExampleDiscParticleSystemDrawer;
 
 //Particle System Generator
 RateParticleGeneratorPtr ExampleGenerator;
@@ -214,7 +217,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "Particle Sorting Demo");
+                                        "Particle System Tester");
 										
 
 	//Particle System Material
@@ -251,6 +254,7 @@ int main(int argc, char **argv)
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
+
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
@@ -271,31 +275,62 @@ int main(int argc, char **argv)
 		ExampleQuadParticleSystemDrawer->setQuadSizeScaling(Vec2f(0.8,1.2));
 		ExampleQuadParticleSystemDrawer->setNormalSource(QuadParticleSystemDrawer::NORMAL_PARTICLE_NORMAL);
 	endEditCP(ExampleQuadParticleSystemDrawer);
+	
+	ExampleDiscParticleSystemDrawer = osg::DiscParticleSystemDrawer::create();
+
+		//Create a Rate Particle Generator
+	//BurstParticleGeneratorPtr ExampleGenerator = osg::BurstParticleGenerator::create();
 
 	RateParticleGeneratorPtr ExampleGeneratorTheSequel = osg::RateParticleGenerator::create();
 
+	////Attach the function objects to the Generator
+	//beginEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
+	//	ExampleGenerator->setPositionFunction(createPositionDistribution());
+	//	ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+	//	ExampleGenerator->setVelocityFunction(createVelocityDistribution());
+	//	ExampleGenerator->setBurstAmount(1000);
+	//endEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
+	//
 	//Attach the function objects to the Generator
 	beginEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 		ExampleGeneratorTheSequel->setPositionFunction(createPositionDistribution());
-		ExampleGeneratorTheSequel->setLifespanFunction(createLifespanDistribution());
+		//ExampleGeneratorTheSequel->setLifespanFunction(createLifespanDistribution());
 		ExampleGeneratorTheSequel->setGenerationRate(300.0);
 		ExampleGeneratorTheSequel->setVelocityFunction(createVelocityDistribution());
 	endEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+
+	// create a gravity affector
+
+	//NodePtr AffectorBeacon = osg::Node::create();
+
+	//beginEditCP(AffectorBeacon)
+	//	AffectorBeacon->
+	//
+	//endEditCP(AffectorBeacon);
+
+	RadialParticleAffectorPtr ExampleRadialAffector = osg::RadialParticleAffector::create();
+	beginEditCP(ExampleRadialAffector);
+		ExampleRadialAffector->setBeacon(osg::Node::create());
+		ExampleRadialAffector->setMagnitude(-9.5);
+		ExampleRadialAffector->setAttenuation(2.0);
+	endEditCP(ExampleRadialAffector);
 
 
 	//Attach the Generator to the Particle System
 	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 		//ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
-		ExampleParticleSystem->setMaxParticles(500);
+		ExampleParticleSystem->setMaxParticles(100);
 		ExampleParticleSystem->getGenerators().push_back(ExampleGeneratorTheSequel);
+		ExampleParticleSystem->getAffectors().push_back(ExampleRadialAffector);
 	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 	
 	//Particle System Node
     ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
+		ParticleNodeCore->setDrawer(ExampleDiscParticleSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
+		ParticleNodeCore->setSortingMode(ParticleSystemCore::FRONT_TO_BACK);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 
 	NodePtr ParticleNode = osg::Node::create();
@@ -317,6 +352,13 @@ int main(int argc, char **argv)
     mgr->showAll();
 
 	mgr->getCamera()->setFar(500.0);
+
+	FCFileType::FCPtrStore Containers;
+	Containers.insert(scene);
+
+	FCFileType::FCTypeVector IgnoreTypes;
+	//Save the Field Containers to a xml file
+	FCFileHandler::the()->write(Containers,Path("./Data/TestFieldContainers.xml"),IgnoreTypes);
 
     while(!ExitApp)
     {
@@ -347,25 +389,37 @@ void reshape(Vec2f Size)
 
 FunctionPtr createPositionDistribution(void)
 {
-		 //Cone Distribution
+		 //Sphere Distribution
     ConeDistribution3DPtr TheConeDistribution = ConeDistribution3D::create();
     beginEditCP(TheConeDistribution);
       TheConeDistribution->setPosition(Pnt3f(0.0,0.0,0.0));
       TheConeDistribution->setDirection(Vec3f(0.0,0.0,1.0));
       TheConeDistribution->setSpread(3.14159);
-	  TheConeDistribution->setMin(1.0);
+	  TheConeDistribution->setMin(1.4);
 	  TheConeDistribution->setMax(1.5);
 	  TheConeDistribution->setSurfaceOrVolume(ConeDistribution3D::VOLUME);
     endEditCP(TheConeDistribution);
 
-    return TheConeDistribution;
+	SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+	beginEditCP(TheSphereDistribution);
+		TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+		TheSphereDistribution->setInnerRadius(1.0);
+		TheSphereDistribution->setOuterRadius(2.0);
+		TheSphereDistribution->setMinTheta(0.0);
+		TheSphereDistribution->setMaxTheta(6.283185);
+		TheSphereDistribution->setMinZ(-1.0);
+		TheSphereDistribution->setMaxZ(1.0);
+		TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
+	endEditCP(TheSphereDistribution);
+
+    return TheSphereDistribution;
 }
 
 FunctionPtr createLifespanDistribution(void)
 {
 	 SegmentDistribution1DPtr TheLifespanDistribution = SegmentDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setSegment(Pnt2f(2.0,3.0));
+      TheLifespanDistribution->setSegment(Pnt2f(10.0,20.1));
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;
@@ -373,7 +427,7 @@ FunctionPtr createLifespanDistribution(void)
 
 FunctionPtr createVelocityDistribution(void)
 {
-	 //Line Distribution, no velocity
+	 //Line Distribution
    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
  		TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,0.0));

@@ -45,143 +45,165 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class RadialParticleAffector!
+ **     class UniformParticleAffector!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILERADIALPARTICLEAFFECTORINST
+#define OSG_COMPILEUNIFORMPARTICLEAFFECTORINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGRadialParticleAffectorBase.h"
-#include "OSGRadialParticleAffector.h"
+#include "OSGUniformParticleAffectorBase.h"
+#include "OSGUniformParticleAffector.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RadialParticleAffectorBase::MagnitudeFieldMask = 
-    (TypeTraits<BitVector>::One << RadialParticleAffectorBase::MagnitudeFieldId);
+const OSG::BitVector  UniformParticleAffectorBase::MagnitudeFieldMask = 
+    (TypeTraits<BitVector>::One << UniformParticleAffectorBase::MagnitudeFieldId);
 
-const OSG::BitVector  RadialParticleAffectorBase::AttenuationFieldMask = 
-    (TypeTraits<BitVector>::One << RadialParticleAffectorBase::AttenuationFieldId);
+const OSG::BitVector  UniformParticleAffectorBase::DirectionFieldMask = 
+    (TypeTraits<BitVector>::One << UniformParticleAffectorBase::DirectionFieldId);
 
-const OSG::BitVector  RadialParticleAffectorBase::MaxDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << RadialParticleAffectorBase::MaxDistanceFieldId);
+const OSG::BitVector  UniformParticleAffectorBase::AttenuationFieldMask = 
+    (TypeTraits<BitVector>::One << UniformParticleAffectorBase::AttenuationFieldId);
 
-const OSG::BitVector  RadialParticleAffectorBase::BeaconFieldMask = 
-    (TypeTraits<BitVector>::One << RadialParticleAffectorBase::BeaconFieldId);
+const OSG::BitVector  UniformParticleAffectorBase::MaxDistanceFieldMask = 
+    (TypeTraits<BitVector>::One << UniformParticleAffectorBase::MaxDistanceFieldId);
 
-const OSG::BitVector RadialParticleAffectorBase::MTInfluenceMask = 
+const OSG::BitVector  UniformParticleAffectorBase::BeaconFieldMask = 
+    (TypeTraits<BitVector>::One << UniformParticleAffectorBase::BeaconFieldId);
+
+const OSG::BitVector  UniformParticleAffectorBase::ParticleMassFieldMask = 
+    (TypeTraits<BitVector>::One << UniformParticleAffectorBase::ParticleMassFieldId);
+
+const OSG::BitVector UniformParticleAffectorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var Real32          RadialParticleAffectorBase::_sfMagnitude
+/*! \var Real32          UniformParticleAffectorBase::_sfMagnitude
     
 */
-/*! \var Real32          RadialParticleAffectorBase::_sfAttenuation
+/*! \var Vec3f           UniformParticleAffectorBase::_sfDirection
     
 */
-/*! \var Real32          RadialParticleAffectorBase::_sfMaxDistance
+/*! \var Real32          UniformParticleAffectorBase::_sfAttenuation
     
 */
-/*! \var NodePtr         RadialParticleAffectorBase::_sfBeacon
+/*! \var Real32          UniformParticleAffectorBase::_sfMaxDistance
+    
+*/
+/*! \var NodePtr         UniformParticleAffectorBase::_sfBeacon
+    
+*/
+/*! \var Real32          UniformParticleAffectorBase::_sfParticleMass
     
 */
 
-//! RadialParticleAffector description
+//! UniformParticleAffector description
 
-FieldDescription *RadialParticleAffectorBase::_desc[] = 
+FieldDescription *UniformParticleAffectorBase::_desc[] = 
 {
     new FieldDescription(SFReal32::getClassType(), 
                      "Magnitude", 
                      MagnitudeFieldId, MagnitudeFieldMask,
                      false,
-                     (FieldAccessMethod) &RadialParticleAffectorBase::getSFMagnitude),
+                     (FieldAccessMethod) &UniformParticleAffectorBase::getSFMagnitude),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Direction", 
+                     DirectionFieldId, DirectionFieldMask,
+                     false,
+                     (FieldAccessMethod) &UniformParticleAffectorBase::getSFDirection),
     new FieldDescription(SFReal32::getClassType(), 
                      "Attenuation", 
                      AttenuationFieldId, AttenuationFieldMask,
                      false,
-                     (FieldAccessMethod) &RadialParticleAffectorBase::getSFAttenuation),
+                     (FieldAccessMethod) &UniformParticleAffectorBase::getSFAttenuation),
     new FieldDescription(SFReal32::getClassType(), 
                      "MaxDistance", 
                      MaxDistanceFieldId, MaxDistanceFieldMask,
                      false,
-                     (FieldAccessMethod) &RadialParticleAffectorBase::getSFMaxDistance),
+                     (FieldAccessMethod) &UniformParticleAffectorBase::getSFMaxDistance),
     new FieldDescription(SFNodePtr::getClassType(), 
                      "Beacon", 
                      BeaconFieldId, BeaconFieldMask,
                      false,
-                     (FieldAccessMethod) &RadialParticleAffectorBase::getSFBeacon)
+                     (FieldAccessMethod) &UniformParticleAffectorBase::getSFBeacon),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "ParticleMass", 
+                     ParticleMassFieldId, ParticleMassFieldMask,
+                     false,
+                     (FieldAccessMethod) &UniformParticleAffectorBase::getSFParticleMass)
 };
 
 
-FieldContainerType RadialParticleAffectorBase::_type(
-    "RadialParticleAffector",
+FieldContainerType UniformParticleAffectorBase::_type(
+    "UniformParticleAffector",
     "ParticleAffector",
     NULL,
-    (PrototypeCreateF) &RadialParticleAffectorBase::createEmpty,
-    RadialParticleAffector::initMethod,
+    (PrototypeCreateF) &UniformParticleAffectorBase::createEmpty,
+    UniformParticleAffector::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(RadialParticleAffectorBase, RadialParticleAffectorPtr)
+//OSG_FIELD_CONTAINER_DEF(UniformParticleAffectorBase, UniformParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &RadialParticleAffectorBase::getType(void) 
+FieldContainerType &UniformParticleAffectorBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &RadialParticleAffectorBase::getType(void) const 
+const FieldContainerType &UniformParticleAffectorBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr RadialParticleAffectorBase::shallowCopy(void) const 
+FieldContainerPtr UniformParticleAffectorBase::shallowCopy(void) const 
 { 
-    RadialParticleAffectorPtr returnValue; 
+    UniformParticleAffectorPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const RadialParticleAffector *>(this)); 
+    newPtr(returnValue, dynamic_cast<const UniformParticleAffector *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 RadialParticleAffectorBase::getContainerSize(void) const 
+UInt32 UniformParticleAffectorBase::getContainerSize(void) const 
 { 
-    return sizeof(RadialParticleAffector); 
+    return sizeof(UniformParticleAffector); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void RadialParticleAffectorBase::executeSync(      FieldContainer &other,
+void UniformParticleAffectorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((RadialParticleAffectorBase *) &other, whichField);
+    this->executeSyncImpl((UniformParticleAffectorBase *) &other, whichField);
 }
 #else
-void RadialParticleAffectorBase::executeSync(      FieldContainer &other,
+void UniformParticleAffectorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((RadialParticleAffectorBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((UniformParticleAffectorBase *) &other, whichField, sInfo);
 }
-void RadialParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
+void UniformParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void RadialParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void UniformParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -194,11 +216,13 @@ void RadialParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-RadialParticleAffectorBase::RadialParticleAffectorBase(void) :
-    _sfMagnitude              (Real32(9.800)), 
-    _sfAttenuation            (Real32(1.0)), 
+UniformParticleAffectorBase::UniformParticleAffectorBase(void) :
+    _sfMagnitude              (Real32(5.00)), 
+    _sfDirection              (Vec3f(1.0, 0.0, 0.0)), 
+    _sfAttenuation            (Real32(2.0)), 
     _sfMaxDistance            (Real32(-1.0)), 
     _sfBeacon                 (NodePtr(NullFC)), 
+    _sfParticleMass           (Real32(1.0)), 
     Inherited() 
 {
 }
@@ -207,30 +231,37 @@ RadialParticleAffectorBase::RadialParticleAffectorBase(void) :
 #pragma warning (default : 383)
 #endif
 
-RadialParticleAffectorBase::RadialParticleAffectorBase(const RadialParticleAffectorBase &source) :
+UniformParticleAffectorBase::UniformParticleAffectorBase(const UniformParticleAffectorBase &source) :
     _sfMagnitude              (source._sfMagnitude              ), 
+    _sfDirection              (source._sfDirection              ), 
     _sfAttenuation            (source._sfAttenuation            ), 
     _sfMaxDistance            (source._sfMaxDistance            ), 
     _sfBeacon                 (source._sfBeacon                 ), 
+    _sfParticleMass           (source._sfParticleMass           ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-RadialParticleAffectorBase::~RadialParticleAffectorBase(void)
+UniformParticleAffectorBase::~UniformParticleAffectorBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 RadialParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 UniformParticleAffectorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
     if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
     {
         returnValue += _sfMagnitude.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+    {
+        returnValue += _sfDirection.getBinSize();
     }
 
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
@@ -248,11 +279,16 @@ UInt32 RadialParticleAffectorBase::getBinSize(const BitVector &whichField)
         returnValue += _sfBeacon.getBinSize();
     }
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+    {
+        returnValue += _sfParticleMass.getBinSize();
+    }
+
 
     return returnValue;
 }
 
-void RadialParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
+void UniformParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -260,6 +296,11 @@ void RadialParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
     {
         _sfMagnitude.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+    {
+        _sfDirection.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
@@ -277,10 +318,15 @@ void RadialParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
         _sfBeacon.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+    {
+        _sfParticleMass.copyToBin(pMem);
+    }
+
 
 }
 
-void RadialParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
+void UniformParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -288,6 +334,11 @@ void RadialParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
     {
         _sfMagnitude.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+    {
+        _sfDirection.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
@@ -305,11 +356,16 @@ void RadialParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfBeacon.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+    {
+        _sfParticleMass.copyFromBin(pMem);
+    }
+
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBase *pOther,
+void UniformParticleAffectorBase::executeSyncImpl(      UniformParticleAffectorBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -317,6 +373,9 @@ void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBas
 
     if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
         _sfMagnitude.syncWith(pOther->_sfMagnitude);
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+        _sfDirection.syncWith(pOther->_sfDirection);
 
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
         _sfAttenuation.syncWith(pOther->_sfAttenuation);
@@ -327,10 +386,13 @@ void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBas
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+        _sfParticleMass.syncWith(pOther->_sfParticleMass);
+
 
 }
 #else
-void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBase *pOther,
+void UniformParticleAffectorBase::executeSyncImpl(      UniformParticleAffectorBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -340,6 +402,9 @@ void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBas
     if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
         _sfMagnitude.syncWith(pOther->_sfMagnitude);
 
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+        _sfDirection.syncWith(pOther->_sfDirection);
+
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
         _sfAttenuation.syncWith(pOther->_sfAttenuation);
 
@@ -349,11 +414,14 @@ void RadialParticleAffectorBase::executeSyncImpl(      RadialParticleAffectorBas
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
 
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+        _sfParticleMass.syncWith(pOther->_sfParticleMass);
+
 
 
 }
 
-void RadialParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
+void UniformParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -372,11 +440,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RadialParticleAffectorPtr>::_type("RadialParticleAffectorPtr", "ParticleAffectorPtr");
+DataType FieldDataTraits<UniformParticleAffectorPtr>::_type("UniformParticleAffectorPtr", "ParticleAffectorPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(RadialParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RadialParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(UniformParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(UniformParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -393,10 +461,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(RadialParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTM
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGRADIALPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRADIALPARTICLEAFFECTORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGUNIFORMPARTICLEAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGUNIFORMPARTICLEAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGRADIALPARTICLEAFFECTORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGUNIFORMPARTICLEAFFECTORFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

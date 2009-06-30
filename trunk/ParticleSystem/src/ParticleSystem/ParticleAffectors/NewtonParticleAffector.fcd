@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="RadialParticleAffector"
+	name="NewtonParticleAffector"
 	parent="ParticleAffector"
 	library="ParticleSystem"
 	pointerfieldtypes="both"
@@ -17,7 +17,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="9.800"
+		defaultValue="5.000"
 	>
 	</Field>
 	<Field
@@ -26,7 +26,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="1.0"
+		defaultValue="2.0"
 	>
 	</Field>
 	<Field
@@ -45,6 +45,15 @@
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="ParticleMass"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
 	>
 	</Field>
 </FieldContainer>

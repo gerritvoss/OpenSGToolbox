@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class RadialParticleAffector!
+ **     class NewtonParticleAffector!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &RadialParticleAffectorBase::getClassType(void)
+OSG::FieldContainerType &NewtonParticleAffectorBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 RadialParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 NewtonParticleAffectorBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-RadialParticleAffectorPtr RadialParticleAffectorBase::create(void) 
+NewtonParticleAffectorPtr NewtonParticleAffectorBase::create(void) 
 {
-    RadialParticleAffectorPtr fc; 
+    NewtonParticleAffectorPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = RadialParticleAffectorPtr::dcast(
+        fc = NewtonParticleAffectorPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ RadialParticleAffectorPtr RadialParticleAffectorBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-RadialParticleAffectorPtr RadialParticleAffectorBase::createEmpty(void) 
+NewtonParticleAffectorPtr NewtonParticleAffectorBase::createEmpty(void) 
 { 
-    RadialParticleAffectorPtr returnValue; 
+    NewtonParticleAffectorPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,121 +96,149 @@ RadialParticleAffectorPtr RadialParticleAffectorBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the RadialParticleAffector::_sfMagnitude field.
+//! Get the NewtonParticleAffector::_sfMagnitude field.
 inline
-SFReal32 *RadialParticleAffectorBase::getSFMagnitude(void)
+SFReal32 *NewtonParticleAffectorBase::getSFMagnitude(void)
 {
     return &_sfMagnitude;
 }
 
-//! Get the RadialParticleAffector::_sfAttenuation field.
+//! Get the NewtonParticleAffector::_sfAttenuation field.
 inline
-SFReal32 *RadialParticleAffectorBase::getSFAttenuation(void)
+SFReal32 *NewtonParticleAffectorBase::getSFAttenuation(void)
 {
     return &_sfAttenuation;
 }
 
-//! Get the RadialParticleAffector::_sfMaxDistance field.
+//! Get the NewtonParticleAffector::_sfMaxDistance field.
 inline
-SFReal32 *RadialParticleAffectorBase::getSFMaxDistance(void)
+SFReal32 *NewtonParticleAffectorBase::getSFMaxDistance(void)
 {
     return &_sfMaxDistance;
 }
 
-//! Get the RadialParticleAffector::_sfBeacon field.
+//! Get the NewtonParticleAffector::_sfBeacon field.
 inline
-SFNodePtr *RadialParticleAffectorBase::getSFBeacon(void)
+SFNodePtr *NewtonParticleAffectorBase::getSFBeacon(void)
 {
     return &_sfBeacon;
 }
 
-
-//! Get the value of the RadialParticleAffector::_sfMagnitude field.
+//! Get the NewtonParticleAffector::_sfParticleMass field.
 inline
-Real32 &RadialParticleAffectorBase::getMagnitude(void)
+SFReal32 *NewtonParticleAffectorBase::getSFParticleMass(void)
+{
+    return &_sfParticleMass;
+}
+
+
+//! Get the value of the NewtonParticleAffector::_sfMagnitude field.
+inline
+Real32 &NewtonParticleAffectorBase::getMagnitude(void)
 {
     return _sfMagnitude.getValue();
 }
 
-//! Get the value of the RadialParticleAffector::_sfMagnitude field.
+//! Get the value of the NewtonParticleAffector::_sfMagnitude field.
 inline
-const Real32 &RadialParticleAffectorBase::getMagnitude(void) const
+const Real32 &NewtonParticleAffectorBase::getMagnitude(void) const
 {
     return _sfMagnitude.getValue();
 }
 
-//! Set the value of the RadialParticleAffector::_sfMagnitude field.
+//! Set the value of the NewtonParticleAffector::_sfMagnitude field.
 inline
-void RadialParticleAffectorBase::setMagnitude(const Real32 &value)
+void NewtonParticleAffectorBase::setMagnitude(const Real32 &value)
 {
     _sfMagnitude.setValue(value);
 }
 
-//! Get the value of the RadialParticleAffector::_sfAttenuation field.
+//! Get the value of the NewtonParticleAffector::_sfAttenuation field.
 inline
-Real32 &RadialParticleAffectorBase::getAttenuation(void)
+Real32 &NewtonParticleAffectorBase::getAttenuation(void)
 {
     return _sfAttenuation.getValue();
 }
 
-//! Get the value of the RadialParticleAffector::_sfAttenuation field.
+//! Get the value of the NewtonParticleAffector::_sfAttenuation field.
 inline
-const Real32 &RadialParticleAffectorBase::getAttenuation(void) const
+const Real32 &NewtonParticleAffectorBase::getAttenuation(void) const
 {
     return _sfAttenuation.getValue();
 }
 
-//! Set the value of the RadialParticleAffector::_sfAttenuation field.
+//! Set the value of the NewtonParticleAffector::_sfAttenuation field.
 inline
-void RadialParticleAffectorBase::setAttenuation(const Real32 &value)
+void NewtonParticleAffectorBase::setAttenuation(const Real32 &value)
 {
     _sfAttenuation.setValue(value);
 }
 
-//! Get the value of the RadialParticleAffector::_sfMaxDistance field.
+//! Get the value of the NewtonParticleAffector::_sfMaxDistance field.
 inline
-Real32 &RadialParticleAffectorBase::getMaxDistance(void)
+Real32 &NewtonParticleAffectorBase::getMaxDistance(void)
 {
     return _sfMaxDistance.getValue();
 }
 
-//! Get the value of the RadialParticleAffector::_sfMaxDistance field.
+//! Get the value of the NewtonParticleAffector::_sfMaxDistance field.
 inline
-const Real32 &RadialParticleAffectorBase::getMaxDistance(void) const
+const Real32 &NewtonParticleAffectorBase::getMaxDistance(void) const
 {
     return _sfMaxDistance.getValue();
 }
 
-//! Set the value of the RadialParticleAffector::_sfMaxDistance field.
+//! Set the value of the NewtonParticleAffector::_sfMaxDistance field.
 inline
-void RadialParticleAffectorBase::setMaxDistance(const Real32 &value)
+void NewtonParticleAffectorBase::setMaxDistance(const Real32 &value)
 {
     _sfMaxDistance.setValue(value);
 }
 
-//! Get the value of the RadialParticleAffector::_sfBeacon field.
+//! Get the value of the NewtonParticleAffector::_sfBeacon field.
 inline
-NodePtr &RadialParticleAffectorBase::getBeacon(void)
+NodePtr &NewtonParticleAffectorBase::getBeacon(void)
 {
     return _sfBeacon.getValue();
 }
 
-//! Get the value of the RadialParticleAffector::_sfBeacon field.
+//! Get the value of the NewtonParticleAffector::_sfBeacon field.
 inline
-const NodePtr &RadialParticleAffectorBase::getBeacon(void) const
+const NodePtr &NewtonParticleAffectorBase::getBeacon(void) const
 {
     return _sfBeacon.getValue();
 }
 
-//! Set the value of the RadialParticleAffector::_sfBeacon field.
+//! Set the value of the NewtonParticleAffector::_sfBeacon field.
 inline
-void RadialParticleAffectorBase::setBeacon(const NodePtr &value)
+void NewtonParticleAffectorBase::setBeacon(const NodePtr &value)
 {
     _sfBeacon.setValue(value);
+}
+
+//! Get the value of the NewtonParticleAffector::_sfParticleMass field.
+inline
+Real32 &NewtonParticleAffectorBase::getParticleMass(void)
+{
+    return _sfParticleMass.getValue();
+}
+
+//! Get the value of the NewtonParticleAffector::_sfParticleMass field.
+inline
+const Real32 &NewtonParticleAffectorBase::getParticleMass(void) const
+{
+    return _sfParticleMass.getValue();
+}
+
+//! Set the value of the NewtonParticleAffector::_sfParticleMass field.
+inline
+void NewtonParticleAffectorBase::setParticleMass(const Real32 &value)
+{
+    _sfParticleMass.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGRADIALPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGNEWTONPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
