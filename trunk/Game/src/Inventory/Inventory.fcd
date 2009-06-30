@@ -21,5 +21,31 @@ A Inventory.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="RootInventory"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="InventoryClasses"
+		type="InventoryPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="InventoryClassName"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+
 	
 </FieldContainer>

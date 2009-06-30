@@ -103,6 +103,69 @@ MFInventoryItemPtr *InventoryBase::getMFInventoryItems(void)
     return &_mfInventoryItems;
 }
 
+//! Get the Inventory::_sfRootInventory field.
+inline
+SFBool *InventoryBase::getSFRootInventory(void)
+{
+    return &_sfRootInventory;
+}
+
+//! Get the Inventory::_mfInventoryClasses field.
+inline
+MFInventoryPtr *InventoryBase::getMFInventoryClasses(void)
+{
+    return &_mfInventoryClasses;
+}
+
+//! Get the Inventory::_sfInventoryClassName field.
+inline
+SFString *InventoryBase::getSFInventoryClassName(void)
+{
+    return &_sfInventoryClassName;
+}
+
+
+//! Get the value of the Inventory::_sfRootInventory field.
+inline
+bool &InventoryBase::getRootInventory(void)
+{
+    return _sfRootInventory.getValue();
+}
+
+//! Get the value of the Inventory::_sfRootInventory field.
+inline
+const bool &InventoryBase::getRootInventory(void) const
+{
+    return _sfRootInventory.getValue();
+}
+
+//! Set the value of the Inventory::_sfRootInventory field.
+inline
+void InventoryBase::setRootInventory(const bool &value)
+{
+    _sfRootInventory.setValue(value);
+}
+
+//! Get the value of the Inventory::_sfInventoryClassName field.
+inline
+std::string &InventoryBase::getInventoryClassName(void)
+{
+    return _sfInventoryClassName.getValue();
+}
+
+//! Get the value of the Inventory::_sfInventoryClassName field.
+inline
+const std::string &InventoryBase::getInventoryClassName(void) const
+{
+    return _sfInventoryClassName.getValue();
+}
+
+//! Set the value of the Inventory::_sfInventoryClassName field.
+inline
+void InventoryBase::setInventoryClassName(const std::string &value)
+{
+    _sfInventoryClassName.setValue(value);
+}
 
 
 //! Get the value of the \a index element the Inventory::_mfInventoryItems field.
@@ -124,6 +187,27 @@ inline
 const MFInventoryItemPtr &InventoryBase::getInventoryItems(void) const
 {
     return _mfInventoryItems;
+}
+
+//! Get the value of the \a index element the Inventory::_mfInventoryClasses field.
+inline
+InventoryPtr &InventoryBase::getInventoryClasses(const UInt32 index)
+{
+    return _mfInventoryClasses[index];
+}
+
+//! Get the Inventory::_mfInventoryClasses field.
+inline
+MFInventoryPtr &InventoryBase::getInventoryClasses(void)
+{
+    return _mfInventoryClasses;
+}
+
+//! Get the Inventory::_mfInventoryClasses field.
+inline
+const MFInventoryPtr &InventoryBase::getInventoryClasses(void) const
+{
+    return _mfInventoryClasses;
 }
 
 OSG_END_NAMESPACE

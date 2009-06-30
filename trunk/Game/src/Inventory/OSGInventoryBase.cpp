@@ -67,6 +67,15 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  InventoryBase::InventoryItemsFieldMask = 
     (TypeTraits<BitVector>::One << InventoryBase::InventoryItemsFieldId);
 
+const OSG::BitVector  InventoryBase::RootInventoryFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryBase::RootInventoryFieldId);
+
+const OSG::BitVector  InventoryBase::InventoryClassesFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryBase::InventoryClassesFieldId);
+
+const OSG::BitVector  InventoryBase::InventoryClassNameFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryBase::InventoryClassNameFieldId);
+
 const OSG::BitVector InventoryBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +84,15 @@ const OSG::BitVector InventoryBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var InventoryItemPtr InventoryBase::_mfInventoryItems
+    
+*/
+/*! \var bool            InventoryBase::_sfRootInventory
+    
+*/
+/*! \var InventoryPtr    InventoryBase::_mfInventoryClasses
+    
+*/
+/*! \var std::string     InventoryBase::_sfInventoryClassName
     
 */
 
@@ -86,7 +104,22 @@ FieldDescription *InventoryBase::_desc[] =
                      "InventoryItems", 
                      InventoryItemsFieldId, InventoryItemsFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryBase::getMFInventoryItems)
+                     (FieldAccessMethod) &InventoryBase::getMFInventoryItems),
+    new FieldDescription(SFBool::getClassType(), 
+                     "RootInventory", 
+                     RootInventoryFieldId, RootInventoryFieldMask,
+                     false,
+                     (FieldAccessMethod) &InventoryBase::getSFRootInventory),
+    new FieldDescription(MFInventoryPtr::getClassType(), 
+                     "InventoryClasses", 
+                     InventoryClassesFieldId, InventoryClassesFieldMask,
+                     false,
+                     (FieldAccessMethod) &InventoryBase::getMFInventoryClasses),
+    new FieldDescription(SFString::getClassType(), 
+                     "InventoryClassName", 
+                     InventoryClassNameFieldId, InventoryClassNameFieldMask,
+                     false,
+                     (FieldAccessMethod) &InventoryBase::getSFInventoryClassName)
 };
 
 
@@ -153,6 +186,7 @@ void InventoryBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     Inherited::onDestroyAspect(uiId, uiAspect);
 
     _mfInventoryItems.terminateShare(uiAspect, this->getContainerSize());
+    _mfInventoryClasses.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -164,6 +198,9 @@ void InventoryBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 InventoryBase::InventoryBase(void) :
     _mfInventoryItems         (), 
+    _sfRootInventory          (), 
+    _mfInventoryClasses       (), 
+    _sfInventoryClassName     (), 
     Inherited() 
 {
 }
@@ -174,6 +211,9 @@ InventoryBase::InventoryBase(void) :
 
 InventoryBase::InventoryBase(const InventoryBase &source) :
     _mfInventoryItems         (source._mfInventoryItems         ), 
+    _sfRootInventory          (source._sfRootInventory          ), 
+    _mfInventoryClasses       (source._mfInventoryClasses       ), 
+    _sfInventoryClassName     (source._sfInventoryClassName     ), 
     Inherited                 (source)
 {
 }
@@ -195,6 +235,21 @@ UInt32 InventoryBase::getBinSize(const BitVector &whichField)
         returnValue += _mfInventoryItems.getBinSize();
     }
 
+    if(FieldBits::NoField != (RootInventoryFieldMask & whichField))
+    {
+        returnValue += _sfRootInventory.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InventoryClassesFieldMask & whichField))
+    {
+        returnValue += _mfInventoryClasses.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InventoryClassNameFieldMask & whichField))
+    {
+        returnValue += _sfInventoryClassName.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +262,21 @@ void InventoryBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (InventoryItemsFieldMask & whichField))
     {
         _mfInventoryItems.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RootInventoryFieldMask & whichField))
+    {
+        _sfRootInventory.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InventoryClassesFieldMask & whichField))
+    {
+        _mfInventoryClasses.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InventoryClassNameFieldMask & whichField))
+    {
+        _sfInventoryClassName.copyToBin(pMem);
     }
 
 
@@ -222,6 +292,21 @@ void InventoryBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfInventoryItems.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (RootInventoryFieldMask & whichField))
+    {
+        _sfRootInventory.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InventoryClassesFieldMask & whichField))
+    {
+        _mfInventoryClasses.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InventoryClassNameFieldMask & whichField))
+    {
+        _sfInventoryClassName.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -235,6 +320,15 @@ void InventoryBase::executeSyncImpl(      InventoryBase *pOther,
     if(FieldBits::NoField != (InventoryItemsFieldMask & whichField))
         _mfInventoryItems.syncWith(pOther->_mfInventoryItems);
 
+    if(FieldBits::NoField != (RootInventoryFieldMask & whichField))
+        _sfRootInventory.syncWith(pOther->_sfRootInventory);
+
+    if(FieldBits::NoField != (InventoryClassesFieldMask & whichField))
+        _mfInventoryClasses.syncWith(pOther->_mfInventoryClasses);
+
+    if(FieldBits::NoField != (InventoryClassNameFieldMask & whichField))
+        _sfInventoryClassName.syncWith(pOther->_sfInventoryClassName);
+
 
 }
 #else
@@ -245,9 +339,18 @@ void InventoryBase::executeSyncImpl(      InventoryBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (RootInventoryFieldMask & whichField))
+        _sfRootInventory.syncWith(pOther->_sfRootInventory);
+
+    if(FieldBits::NoField != (InventoryClassNameFieldMask & whichField))
+        _sfInventoryClassName.syncWith(pOther->_sfInventoryClassName);
+
 
     if(FieldBits::NoField != (InventoryItemsFieldMask & whichField))
         _mfInventoryItems.syncWith(pOther->_mfInventoryItems, sInfo);
+
+    if(FieldBits::NoField != (InventoryClassesFieldMask & whichField))
+        _mfInventoryClasses.syncWith(pOther->_mfInventoryClasses, sInfo);
 
 
 }
@@ -260,6 +363,9 @@ void InventoryBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (InventoryItemsFieldMask & whichField))
         _mfInventoryItems.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (InventoryClassesFieldMask & whichField))
+        _mfInventoryClasses.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

@@ -61,6 +61,10 @@ class OSG_GAMELIB_DLLMAPPING Inventory : public InventoryBase
     /*==========================  PUBLIC  =================================*/
   public:
 
+	void addItem(InventoryItemPtr Item);
+	void sortInventory();
+
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -86,6 +90,7 @@ class OSG_GAMELIB_DLLMAPPING Inventory : public InventoryBase
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
+	void setupAsRoot();
     Inventory(void);
     Inventory(const Inventory &source);
 

@@ -68,6 +68,9 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include "OSGInventoryItemFields.h" // InventoryItems type
+#include <OpenSG/OSGBoolFields.h> // RootInventory type
+#include "OSGInventoryFields.h" // InventoryClasses type
+#include <OpenSG/OSGStringFields.h> // InventoryClassName type
 
 #include "OSGInventoryFields.h"
 
@@ -91,11 +94,17 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
 
     enum
     {
-        InventoryItemsFieldId = Inherited::NextFieldId,
-        NextFieldId           = InventoryItemsFieldId + 1
+        InventoryItemsFieldId     = Inherited::NextFieldId,
+        RootInventoryFieldId      = InventoryItemsFieldId     + 1,
+        InventoryClassesFieldId   = RootInventoryFieldId      + 1,
+        InventoryClassNameFieldId = InventoryClassesFieldId   + 1,
+        NextFieldId               = InventoryClassNameFieldId + 1
     };
 
     static const OSG::BitVector InventoryItemsFieldMask;
+    static const OSG::BitVector RootInventoryFieldMask;
+    static const OSG::BitVector InventoryClassesFieldMask;
+    static const OSG::BitVector InventoryClassNameFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,16 +132,28 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
     /*! \{                                                                 */
 
            MFInventoryItemPtr  *getMFInventoryItems (void);
+           SFBool              *getSFRootInventory  (void);
+           MFInventoryPtr      *getMFInventoryClasses(void);
+           SFString            *getSFInventoryClassName(void);
 
+           bool                &getRootInventory  (void);
+     const bool                &getRootInventory  (void) const;
+           std::string         &getInventoryClassName(void);
+     const std::string         &getInventoryClassName(void) const;
            InventoryItemPtr    &getInventoryItems (const UInt32 index);
            MFInventoryItemPtr  &getInventoryItems (void);
      const MFInventoryItemPtr  &getInventoryItems (void) const;
+           InventoryPtr        &getInventoryClasses(const UInt32 index);
+           MFInventoryPtr      &getInventoryClasses(void);
+     const MFInventoryPtr      &getInventoryClasses(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setRootInventory  ( const bool &value );
+     void setInventoryClassName( const std::string &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +197,9 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
     /*! \{                                                                 */
 
     MFInventoryItemPtr   _mfInventoryItems;
+    SFBool              _sfRootInventory;
+    MFInventoryPtr      _mfInventoryClasses;
+    SFString            _sfInventoryClassName;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

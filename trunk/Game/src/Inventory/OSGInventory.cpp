@@ -76,20 +76,39 @@ void Inventory::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Inventory::addItem(InventoryItemPtr Item)
+{
+
+}
+void Inventory::sortInventory()
+{
+
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
+void Inventory::setupAsRoot()
+{
+	beginEditCP(InventoryPtr(this), Inventory::RootInventoryFieldMask | Inventory::InventoryClassNameFieldMask);
+		setInventoryClassName("Root");
+		setRootInventory(true);
+	endEditCP(InventoryPtr(this), Inventory::RootInventoryFieldMask | Inventory::InventoryClassNameFieldMask);
+}
+
 Inventory::Inventory(void) :
     Inherited()
 {
+	setupAsRoot();
 }
 
 Inventory::Inventory(const Inventory &source) :
     Inherited(source)
 {
+	setupAsRoot();
 }
 
 Inventory::~Inventory(void)
@@ -101,6 +120,13 @@ Inventory::~Inventory(void)
 void Inventory::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & InventoryClassNameFieldMask)
+    {
+	beginEditCP(InventoryPtr(this), Inventory::RootInventoryFieldMask);
+		setRootInventory(false);
+	endEditCP(InventoryPtr(this), Inventory::RootInventoryFieldMask);
+    }
 }
 
 void Inventory::dump(      UInt32    , 
