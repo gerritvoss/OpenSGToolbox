@@ -67,7 +67,7 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/OSGInventoryFields.h> // SourceInventory type
+#include "OSGInventoryFields.h" // SourceInventory type
 
 #include "OSGInventoryInterfaceFields.h"
 
