@@ -313,6 +313,16 @@ int main(int argc, char **argv)
                                         "OpenSG 21LoadXMLSceneFromMayaWindow");
 
 
+	//Print key command info
+	std::cout << "\n\nKEY COMMANDS:" << std::endl;
+	std::cout << "space   Play/Pause the animation" << std::endl;
+	std::cout << "G       Show/Hide the grid" << std::endl;
+	std::cout << "A       Show/Hide the axes" << std::endl;
+	std::cout << "B       Show/Hide the bind pose skeleton" << std::endl;
+	std::cout << "SHIFT-B Show/Hide the bind pose mesh" << std::endl;
+	std::cout << "P       Show/Hide the current pose skeleton" << std::endl;
+	std::cout << "SHIFT-P Show/Hide the current pose mesh" << std::endl;
+	std::cout << "CTRL-Q  Exit\n\n" << std::endl;
 
 
 
@@ -917,9 +927,10 @@ int main(int argc, char **argv)
 	for (int i(0); i < GeometryPtrs.size(); ++i)
 	{
 		NodePtr UnboundGeometry = Node::create();
-		beginEditCP(UnboundGeometry, Node::CoreFieldMask);
+		beginEditCP(UnboundGeometry, Node::CoreFieldMask | Node::TravMaskFieldMask);
 			UnboundGeometry->setCore(GeometryPtrs[i]);
-		endEditCP(UnboundGeometry, Node::CoreFieldMask);
+			UnboundGeometry->setTravMask(0);
+		endEditCP(UnboundGeometry, Node::CoreFieldMask | Node::TravMaskFieldMask);
 
 		UnboundGeometries.push_back(UnboundGeometry);
 	}
@@ -935,7 +946,7 @@ int main(int argc, char **argv)
 			ExampleSkeletonDrawable->setMaterial(AxesMaterial);
 			ExampleSkeletonDrawable->setDrawPose(true);								  //By default we draw the current skeleton
 			ExampleSkeletonDrawable->setPoseColor(Color4f(1.0, 0.0, 1.0, 1.0));       //Set color of current skeleton
-			ExampleSkeletonDrawable->setDrawBindPose(true);                           //By default we draw the bind pose skeleton
+			ExampleSkeletonDrawable->setDrawBindPose(false);                          //By default we don't draw the bind pose skeleton
 			ExampleSkeletonDrawable->setBindPoseColor(Color4f(1.0, 1.0, 0.0, 1.0));   //Set color of bind pose skeleton
 		endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask  | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask);
 		

@@ -88,7 +88,7 @@ SimpleSceneManager *mgr;
 // For the skeleton
 SkeletonBlendedAnimationPtr TheSkeletonBlendedAnimation;
 SkeletonAnimationPtr TheWalkingAnimation;
-SkeletonAnimationPtr TheTouchScreenAnimation;
+SkeletonAnimationPtr TheSecondAnimation;
 Real32 BlendWalking = 1;
 Real32 BlendTouchScreen = 1;
 AnimationAdvancerPtr TheAnimationAdvancer;
@@ -97,15 +97,9 @@ std::vector<NodePtr> UnboundGeometries;
 std::vector<NodePtr> SkeletonNodes;
 std::vector<NodePtr> MeshNodes;
 
-
-////JointPtr Pelvis,LeftHip,RightHip,LeftKnee,RightKnee,LeftFoot,RightFoot,LeftToes,RightToes, Clavicle, LeftShoulder,RightShoulder,LeftElbow,RightElbow,LeftHand,RightHand,LeftFingers,RightFingers,Head; 
-//SkeletonPtr ExampleSkeleton;
-//// The pointer to the geometry core
-//GeometryPtr geo;
-
 // forward declaration so we can have the interesting stuff upfront
 ComponentPtr createGLPanel(void);
-bool animationPaused = false;
+bool animationPaused = true;
 
 bool ExitApp = false;
 
@@ -120,6 +114,7 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
+	   //Exit
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
@@ -218,6 +213,19 @@ public:
 						endEditCP(SkeletonDrawable::Ptr::dcast(SkeletonNodes[i]->getCore()), SkeletonDrawable::DrawPoseFieldMask);
 				   }
 			   }
+		   }
+	   }
+
+	   //Toggle override status on second animation
+	   if(e.getKey() == KeyEvent::KEY_O)
+	   {
+		   if(TheSkeletonBlendedAnimation->getOverrideStatus(1))
+		   {
+			   TheSkeletonBlendedAnimation->setOverrideStatus(1, false);
+		   }
+		   else
+		   {
+			   TheSkeletonBlendedAnimation->setOverrideStatus(1, true);
 		   }
 	   }
    }
@@ -401,6 +409,15 @@ int main(int argc, char **argv)
                                         "OpenSG 22SkeletonBlendedAnimation Window");
 
 
+	//Print key command info
+	std::cout << "\n\nKEY COMMANDS:" << std::endl;
+	std::cout << "space   Play/Pause the animation" << std::endl;
+	std::cout << "B       Show/Hide the bind pose skeleton" << std::endl;
+	std::cout << "SHIFT-B Show/Hide the bind pose mesh" << std::endl;
+	std::cout << "P       Show/Hide the current pose skeleton" << std::endl;
+	std::cout << "SHIFT-P Show/Hide the current pose mesh" << std::endl;
+	std::cout << "O       Toggle override status of TheSecondAnimation" << std::endl;
+	std::cout << "CTRL-Q  Exit\n\n" << std::endl;
 
 
 
@@ -462,7 +479,7 @@ int main(int argc, char **argv)
     {
 		if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
 		{
-			TheTouchScreenAnimation = (SkeletonAnimation::Ptr::dcast(*Itor));
+			TheSecondAnimation = (SkeletonAnimation::Ptr::dcast(*Itor));
 		}
     }
 
@@ -470,7 +487,7 @@ int main(int argc, char **argv)
     TheSkeletonBlendedAnimation = SkeletonBlendedAnimation::create();
     beginEditCP(TheSkeletonBlendedAnimation);
 		TheSkeletonBlendedAnimation->addAnimationBlending(TheWalkingAnimation, BlendWalking, false);
-		TheSkeletonBlendedAnimation->addAnimationBlending(TheTouchScreenAnimation, BlendTouchScreen, false);
+		TheSkeletonBlendedAnimation->addAnimationBlending(TheSecondAnimation, BlendTouchScreen, false);
     endEditCP(TheSkeletonBlendedAnimation);
 
 
@@ -479,9 +496,10 @@ int main(int argc, char **argv)
 	for (int i(0); i < GeometryPtrs.size(); ++i)
 	{
 		NodePtr UnboundGeometry = Node::create();
-		beginEditCP(UnboundGeometry, Node::CoreFieldMask);
+		beginEditCP(UnboundGeometry, Node::CoreFieldMask | Node::TravMaskFieldMask);
 			UnboundGeometry->setCore(GeometryPtrs[i]);
-		endEditCP(UnboundGeometry, Node::CoreFieldMask);
+			UnboundGeometry->setTravMask(0);  //By default, we don't show the mesh in its bind pose.
+		endEditCP(UnboundGeometry, Node::CoreFieldMask | Node::TravMaskFieldMask);
 
 		UnboundGeometries.push_back(UnboundGeometry);
 	}
@@ -497,7 +515,7 @@ int main(int argc, char **argv)
 			ExampleSkeletonDrawable->setMaterial(SkelMaterial);
 			ExampleSkeletonDrawable->setDrawPose(true);								  //By default we draw the current skeleton
 			ExampleSkeletonDrawable->setPoseColor(Color4f(1.0, 0.0, 1.0, 1.0));       //Set color of current skeleton
-			ExampleSkeletonDrawable->setDrawBindPose(true);                           //By default we draw the bind pose skeleton
+			ExampleSkeletonDrawable->setDrawBindPose(false);                          //By default we don't draw the bind pose skeleton
 			ExampleSkeletonDrawable->setBindPoseColor(Color4f(1.0, 1.0, 0.0, 1.0));   //Set color of bind pose skeleton
 		endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask  | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask);
 		

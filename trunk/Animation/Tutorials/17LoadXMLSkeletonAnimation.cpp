@@ -264,6 +264,15 @@ int main(int argc, char **argv)
 	FCFileType::FCPtrStore NewContainers;
 	NewContainers = FCFileHandler::the()->read(Path("./Data/17SkeletonAnimation.xml"));
 
+
+	//Print key command info
+	std::cout << "\n\nKEY COMMANDS:" << std::endl;
+	std::cout << "space   Play/Pause the animation" << std::endl;
+	std::cout << "B       Show/Hide the bind pose skeleton" << std::endl;
+	std::cout << "P       Show/Hide the current pose skeleton" << std::endl;
+	std::cout << "CTRL-Q  Exit\n\n" << std::endl;
+
+
 	SkeletonPtr ExampleSkeleton;
 	
 	FCFileType::FCPtrStore::iterator Itor;

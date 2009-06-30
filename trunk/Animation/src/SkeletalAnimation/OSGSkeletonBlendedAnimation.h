@@ -105,6 +105,27 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlen
 	 * @param	BlendAmount	The new blend amount. 
 	*****************************************************************************/
 	void setBlendAmount(unsigned int Index, Real32 BlendAmount);
+
+	/**************************************************************************//**
+	 * @fn	bool getOverrideStatus(unsigned int Index)
+	 * 
+	 * @brief	Gets the override status of an existing skeleton animation. 
+	 * 
+	 * @param	Index	Zero-based index of the skeleton animation. 
+	 * 
+	 * @return	The override status of the skeleton animation. 
+	*****************************************************************************/
+	bool getOverrideStatus(unsigned int Index);
+
+	/**************************************************************************//**
+	 * @fn	void setOverrideStatus(unsigned int Index, bool Override)
+	 * 
+	 * @brief	Sets the override status for an existing skeleton animation. 
+	 * 
+	 * @param	Index		Zero-based index of the override status to be set. 
+	 * @param	Override	The new override status.
+	*****************************************************************************/
+	void setOverrideStatus(unsigned int Index, bool Override);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

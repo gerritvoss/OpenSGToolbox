@@ -148,6 +148,11 @@ KeyframeRotationsSequencePtr RotationKeyframes;
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
+	//Print key command info
+	std::cout << "\n\nKEY COMMANDS:" << std::endl;
+	std::cout << "space   Play/Pause the animation" << std::endl;
+	std::cout << "ESC     Exit\n\n" << std::endl;
+
     // OSG init
     osgInit(argc,argv);
 

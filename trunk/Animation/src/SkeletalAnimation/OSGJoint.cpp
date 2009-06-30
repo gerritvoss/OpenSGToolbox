@@ -145,6 +145,8 @@ void Joint::calculateTransformations(void)
 
 void Joint::updateTransformations(bool isRecursive)
 {
+	std::cout << "Joint: UpdateTransformations" << std::endl;
+
 	calculateTransformations();
 
 	for (int i(0); i < getChildJoints().size(); ++i)
@@ -167,6 +169,14 @@ Matrix Joint::previewRelativeDifferenceTransformation(Matrix relativeTransformat
 	RelDifTrans.multLeft(relativeTransformation);
 
 	return RelDifTrans;
+}
+
+Matrix Joint::previewRelativeTransformation(Matrix relativeDifferenceTransformation)
+{
+	Matrix RelTrans = relativeDifferenceTransformation;
+	RelTrans.mult(getBindRelativeTransformation());
+
+	return RelTrans;
 }
 
 
@@ -196,11 +206,6 @@ Joint::~Joint(void)
 void Joint::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-	if(this->getParentSkeleton() != NullFC)
-	{
-		int id = this->getParentSkeleton().getFieldContainerId();
-		int stop = 0;
-	}
 	if((whichField & BindRelativeTransformationFieldMask) || (whichField & RelativeTransformationFieldMask) || (whichField & ParentJointFieldMask))
 	{
 		updateTransformations(false);

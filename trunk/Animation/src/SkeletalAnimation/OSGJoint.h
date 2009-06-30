@@ -135,6 +135,21 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
 	*****************************************************************************/
 	Matrix previewRelativeDifferenceTransformation(Matrix relativeTransformation);
 
+	/**************************************************************************//**
+	 * @fn	Matrix previewRelativeTransformation(Matrix relativeDifferenceTransform
+	 * 		ation)
+	 * 
+	 * @brief	Calculates the what the joint's new relative difference
+	 *			transformation would be if the given difference transformation
+	 *			were applied to it.
+	 * 
+	 * @param	relativeDifferenceTransformation	The relative difference
+	 * 												transformation to apply. 
+	 * 
+	 * @return	The relative transformation. 
+	*****************************************************************************/
+	Matrix previewRelativeTransformation(Matrix relativeDifferenceTransformation);
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

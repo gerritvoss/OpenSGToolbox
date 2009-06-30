@@ -3,13 +3,13 @@
 <OSGFieldContainers>
      <Transform
           fieldcontainerid="13"
-          nameAttachment="player_rig_finished:basehead_orientConstraint1_core"
+          nameAttachment="basehead_orientConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="12"
-          nameAttachment="player_rig_finished:basehead_orientConstraint1"
+          nameAttachment="basehead_orientConstraint1"
           parent="10"
           children=""
           core="13"
@@ -17,13 +17,13 @@
      </Node>
      <Transform
           fieldcontainerid="15"
-          nameAttachment="player_rig_finished:effector8_core"
+          nameAttachment="effector8_core"
           matrix="1 0 0 0 0 1 0 0.945412 0 0 1 0.192286 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="14"
-          nameAttachment="player_rig_finished:effector8"
+          nameAttachment="effector8"
           parent="9"
           children=""
           core="15"
@@ -31,13 +31,13 @@
      </Node>
      <Transform
           fieldcontainerid="42"
-          nameAttachment="player_rig_finished:left_wrist_orientConstraint1_core"
+          nameAttachment="left_wrist_orientConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="41"
-          nameAttachment="player_rig_finished:left_wrist_orientConstraint1"
+          nameAttachment="left_wrist_orientConstraint1"
           parent="20"
           children=""
           core="42"
@@ -45,13 +45,13 @@
      </Node>
      <Transform
           fieldcontainerid="44"
-          nameAttachment="player_rig_finished:effector10_core"
+          nameAttachment="effector10_core"
           matrix="1 0 0 1.28195 0 1 0 -1.00271 0 0 1 0.108671 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="43"
-          nameAttachment="player_rig_finished:effector10"
+          nameAttachment="effector10"
           parent="18"
           children=""
           core="44"
@@ -59,13 +59,13 @@
      </Node>
      <Transform
           fieldcontainerid="46"
-          nameAttachment="player_rig_finished:left_elbow_orientConstraint1_core"
+          nameAttachment="left_elbow_orientConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="45"
-          nameAttachment="player_rig_finished:left_elbow_orientConstraint1"
+          nameAttachment="left_elbow_orientConstraint1"
           parent="18"
           children=""
           core="46"
@@ -73,13 +73,13 @@
      </Node>
      <Transform
           fieldcontainerid="48"
-          nameAttachment="player_rig_finished:left_shoulder_orientConstraint1_core"
+          nameAttachment="left_shoulder_orientConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="47"
-          nameAttachment="player_rig_finished:left_shoulder_orientConstraint1"
+          nameAttachment="left_shoulder_orientConstraint1"
           parent="17"
           children=""
           core="48"
@@ -87,13 +87,13 @@
      </Node>
      <Transform
           fieldcontainerid="50"
-          nameAttachment="player_rig_finished:effector9_core"
+          nameAttachment="effector9_core"
           matrix="1 0 0 1.00271 0 1 0 -0.253851 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="49"
-          nameAttachment="player_rig_finished:effector9"
+          nameAttachment="effector9"
           parent="16"
           children=""
           core="50"
@@ -101,13 +101,13 @@
      </Node>
      <Transform
           fieldcontainerid="77"
-          nameAttachment="player_rig_finished:right_wrist_orientConstraint1_core"
+          nameAttachment="right_wrist_orientConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="76"
-          nameAttachment="player_rig_finished:right_wrist_orientConstraint1"
+          nameAttachment="right_wrist_orientConstraint1"
           parent="55"
           children=""
           core="77"
@@ -115,13 +115,13 @@
      </Node>
      <Transform
           fieldcontainerid="79"
-          nameAttachment="player_rig_finished:effector12_core"
+          nameAttachment="effector12_core"
           matrix="1 0 0 -1.55183 0 1 0 -1.22152 0 0 1 0.112533 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="78"
-          nameAttachment="player_rig_finished:effector12"
+          nameAttachment="effector12"
           parent="53"
           children=""
           core="79"
@@ -129,13 +129,13 @@
      </Node>
      <Transform
           fieldcontainerid="81"
-          nameAttachment="player_rig_finished:right_elbow_orientConstraint1_core"
+          nameAttachment="right_elbow_orientConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="80"
-          nameAttachment="player_rig_finished:right_elbow_orientConstraint1"
+          nameAttachment="right_elbow_orientConstraint1"
           parent="53"
           children=""
           core="81"
@@ -143,13 +143,13 @@
      </Node>
      <Transform
           fieldcontainerid="83"
-          nameAttachment="player_rig_finished:right_shoulder_orientConstraint1_core"
+          nameAttachment="right_shoulder_orientConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="82"
-          nameAttachment="player_rig_finished:right_shoulder_orientConstraint1"
+          nameAttachment="right_shoulder_orientConstraint1"
           parent="52"
           children=""
           core="83"
@@ -157,13 +157,13 @@
      </Node>
      <Transform
           fieldcontainerid="85"
-          nameAttachment="player_rig_finished:effector11_core"
+          nameAttachment="effector11_core"
           matrix="1 0 0 -1.07493 0 1 0 -0.189526 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="84"
-          nameAttachment="player_rig_finished:effector11"
+          nameAttachment="effector11"
           parent="51"
           children=""
           core="85"
@@ -171,13 +171,13 @@
      </Node>
      <Transform
           fieldcontainerid="87"
-          nameAttachment="player_rig_finished:effector7_core"
+          nameAttachment="effector7_core"
           matrix="1 0 0 0 0 1 0 1.94199 0 0 1 -0.253443 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="86"
-          nameAttachment="player_rig_finished:effector7"
+          nameAttachment="effector7"
           parent="7"
           children=""
           core="87"
@@ -185,13 +185,13 @@
      </Node>
      <Transform
           fieldcontainerid="94"
-          nameAttachment="player_rig_finished:effector3_core"
+          nameAttachment="effector3_core"
           matrix="1 0 0 0 0 1 0 6.245e-017 0 0 1 0.944284 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="93"
-          nameAttachment="player_rig_finished:effector3"
+          nameAttachment="effector3"
           parent="91"
           children=""
           core="94"
@@ -199,13 +199,13 @@
      </Node>
      <Transform
           fieldcontainerid="96"
-          nameAttachment="player_rig_finished:effector2_core"
+          nameAttachment="effector2_core"
           matrix="1 0 0 0 0 1 0 -1.07918 0 0 1 0.98925 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="95"
-          nameAttachment="player_rig_finished:effector2"
+          nameAttachment="effector2"
           parent="90"
           children=""
           core="96"
@@ -213,13 +213,13 @@
      </Node>
      <Transform
           fieldcontainerid="98"
-          nameAttachment="player_rig_finished:effector1_core"
+          nameAttachment="effector1_core"
           matrix="1 0 0 0 0 1 0 -4.56404 0 0 1 -0.719455 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="97"
-          nameAttachment="player_rig_finished:effector1"
+          nameAttachment="effector1"
           parent="89"
           children=""
           core="98"
@@ -227,13 +227,13 @@
      </Node>
      <Transform
           fieldcontainerid="105"
-          nameAttachment="player_rig_finished:effector4_core"
+          nameAttachment="effector4_core"
           matrix="1 0 0 0 0 1 0 1.38778e-017 0 0 1 0.944282 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="104"
-          nameAttachment="player_rig_finished:effector4"
+          nameAttachment="effector4"
           parent="102"
           children=""
           core="105"
@@ -241,13 +241,13 @@
      </Node>
      <Transform
           fieldcontainerid="107"
-          nameAttachment="player_rig_finished:effector5_core"
+          nameAttachment="effector5_core"
           matrix="1 0 0 0 0 1 0 -1.07918 0 0 1 0.98925 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="106"
-          nameAttachment="player_rig_finished:effector5"
+          nameAttachment="effector5"
           parent="101"
           children=""
           core="107"
@@ -255,13 +255,13 @@
      </Node>
      <Transform
           fieldcontainerid="109"
-          nameAttachment="player_rig_finished:effector6_core"
+          nameAttachment="effector6_core"
           matrix="1 0 0 0 0 1 0 -4.56404 0 0 1 -0.719455 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="108"
-          nameAttachment="player_rig_finished:effector6"
+          nameAttachment="effector6"
           parent="100"
           children=""
           core="109"
@@ -269,13 +269,13 @@
      </Node>
      <Transform
           fieldcontainerid="112"
-          nameAttachment="player_rig_finished:curveShape1_core"
+          nameAttachment="curveShape1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="111"
-          nameAttachment="player_rig_finished:curveShape1"
+          nameAttachment="curveShape1"
           parent="110"
           children=""
           core="112"
@@ -283,13 +283,13 @@
      </Node>
      <Transform
           fieldcontainerid="114"
-          nameAttachment="player_rig_finished:curveShape1Orig_core"
+          nameAttachment="curveShape1Orig_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="113"
-          nameAttachment="player_rig_finished:curveShape1Orig"
+          nameAttachment="curveShape1Orig"
           parent="110"
           children=""
           core="114"
@@ -297,13 +297,13 @@
      </Node>
      <Transform
           fieldcontainerid="115"
-          nameAttachment="player_rig_finished:curve1_core"
+          nameAttachment="curve1_core"
           matrix="1 0 0 0 0 1 0 -9.66277 0 0 1 0.794964 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="110"
-          nameAttachment="player_rig_finished:curve1"
+          nameAttachment="curve1"
           parent="3"
           children="111;113"
           core="115"
@@ -311,13 +311,13 @@
      </Node>
      <Transform
           fieldcontainerid="119"
-          nameAttachment="player_rig_finished:cluster_hipsShape_core"
+          nameAttachment="cluster_hipsShape_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="118"
-          nameAttachment="player_rig_finished:cluster_hipsShape"
+          nameAttachment="cluster_hipsShape"
           parent="117"
           children=""
           core="119"
@@ -325,13 +325,13 @@
      </Node>
      <Transform
           fieldcontainerid="121"
-          nameAttachment="player_rig_finished:cluster_hips_pointConstraint1_core"
+          nameAttachment="cluster_hips_pointConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="120"
-          nameAttachment="player_rig_finished:cluster_hips_pointConstraint1"
+          nameAttachment="cluster_hips_pointConstraint1"
           parent="117"
           children=""
           core="121"
@@ -339,13 +339,13 @@
      </Node>
      <Transform
           fieldcontainerid="122"
-          nameAttachment="player_rig_finished:cluster_hips_core"
+          nameAttachment="cluster_hips_core"
           matrix="1 0 0 0 0 1 0 5.32907e-015 0 0 1 -1.11022e-014 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="117"
-          nameAttachment="player_rig_finished:cluster_hips"
+          nameAttachment="cluster_hips"
           parent="116"
           children="118;120"
           core="122"
@@ -353,13 +353,13 @@
      </Node>
      <Transform
           fieldcontainerid="123"
-          nameAttachment="player_rig_finished:group5_core"
+          nameAttachment="group5_core"
           matrix="1 0 0 0 0 1 0 -9.66277 0 0 1 0.794964 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="116"
-          nameAttachment="player_rig_finished:group5"
+          nameAttachment="group5"
           parent="3"
           children="117"
           core="123"
@@ -367,13 +367,13 @@
      </Node>
      <Transform
           fieldcontainerid="127"
-          nameAttachment="player_rig_finished:cluster_absShape_core"
+          nameAttachment="cluster_absShape_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="126"
-          nameAttachment="player_rig_finished:cluster_absShape"
+          nameAttachment="cluster_absShape"
           parent="125"
           children=""
           core="127"
@@ -381,13 +381,13 @@
      </Node>
      <Transform
           fieldcontainerid="129"
-          nameAttachment="player_rig_finished:cluster_abs_pointConstraint1_core"
+          nameAttachment="cluster_abs_pointConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="128"
-          nameAttachment="player_rig_finished:cluster_abs_pointConstraint1"
+          nameAttachment="cluster_abs_pointConstraint1"
           parent="125"
           children=""
           core="129"
@@ -395,13 +395,13 @@
      </Node>
      <Transform
           fieldcontainerid="130"
-          nameAttachment="player_rig_finished:cluster_abs_core"
+          nameAttachment="cluster_abs_core"
           matrix="1 0 0 8.88178e-016 0 1 0 -0.69636 0 0 1 -0.265658 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="125"
-          nameAttachment="player_rig_finished:cluster_abs"
+          nameAttachment="cluster_abs"
           parent="124"
           children="126;128"
           core="130"
@@ -409,13 +409,13 @@
      </Node>
      <Transform
           fieldcontainerid="131"
-          nameAttachment="player_rig_finished:group6_core"
+          nameAttachment="group6_core"
           matrix="1 0 0 0 0 1 0 -9.66277 0 0 1 0.794964 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="124"
-          nameAttachment="player_rig_finished:group6"
+          nameAttachment="group6"
           parent="3"
           children="125"
           core="131"
@@ -423,13 +423,13 @@
      </Node>
      <Transform
           fieldcontainerid="135"
-          nameAttachment="player_rig_finished:cluster_chestShape_core"
+          nameAttachment="cluster_chestShape_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="134"
-          nameAttachment="player_rig_finished:cluster_chestShape"
+          nameAttachment="cluster_chestShape"
           parent="133"
           children=""
           core="135"
@@ -437,13 +437,13 @@
      </Node>
      <Transform
           fieldcontainerid="137"
-          nameAttachment="player_rig_finished:cluster_chest_pointConstraint1_core"
+          nameAttachment="cluster_chest_pointConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="136"
-          nameAttachment="player_rig_finished:cluster_chest_pointConstraint1"
+          nameAttachment="cluster_chest_pointConstraint1"
           parent="133"
           children=""
           core="137"
@@ -451,13 +451,13 @@
      </Node>
      <Transform
           fieldcontainerid="138"
-          nameAttachment="player_rig_finished:cluster_chest_core"
+          nameAttachment="cluster_chest_core"
           matrix="1 0 0 8.88178e-016 0 1 0 -0.084707 0 0 1 0.153903 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="133"
-          nameAttachment="player_rig_finished:cluster_chest"
+          nameAttachment="cluster_chest"
           parent="132"
           children="134;136"
           core="138"
@@ -465,13 +465,13 @@
      </Node>
      <Transform
           fieldcontainerid="139"
-          nameAttachment="player_rig_finished:group7_core"
+          nameAttachment="group7_core"
           matrix="1 0 0 0 0 1 0 -9.66277 0 0 1 0.794964 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="132"
-          nameAttachment="player_rig_finished:group7"
+          nameAttachment="group7"
           parent="3"
           children="133"
           core="139"
@@ -479,13 +479,13 @@
      </Node>
      <Transform
           fieldcontainerid="143"
-          nameAttachment="player_rig_finished:cluster_neckShape_core"
+          nameAttachment="cluster_neckShape_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="142"
-          nameAttachment="player_rig_finished:cluster_neckShape"
+          nameAttachment="cluster_neckShape"
           parent="141"
           children=""
           core="143"
@@ -493,13 +493,13 @@
      </Node>
      <Transform
           fieldcontainerid="145"
-          nameAttachment="player_rig_finished:cluster_neck_pointConstraint1_core"
+          nameAttachment="cluster_neck_pointConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="144"
-          nameAttachment="player_rig_finished:cluster_neck_pointConstraint1"
+          nameAttachment="cluster_neck_pointConstraint1"
           parent="141"
           children=""
           core="145"
@@ -507,13 +507,13 @@
      </Node>
      <Transform
           fieldcontainerid="146"
-          nameAttachment="player_rig_finished:cluster_neck_core"
+          nameAttachment="cluster_neck_core"
           matrix="1 0 0 -0.0293555 0 1 0 0.0214664 0 0 1 0.080649 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="141"
-          nameAttachment="player_rig_finished:cluster_neck"
+          nameAttachment="cluster_neck"
           parent="140"
           children="142;144"
           core="146"
@@ -521,13 +521,13 @@
      </Node>
      <Transform
           fieldcontainerid="147"
-          nameAttachment="player_rig_finished:group8_core"
+          nameAttachment="group8_core"
           matrix="1 0 0 0 0 1 0 -9.66277 0 0 1 0.794964 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="140"
-          nameAttachment="player_rig_finished:group8"
+          nameAttachment="group8"
           parent="3"
           children="141"
           core="147"
@@ -535,13 +535,13 @@
      </Node>
      <Transform
           fieldcontainerid="149"
-          nameAttachment="player_rig_finished:root_parentConstraint1_core"
+          nameAttachment="root_parentConstraint1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="148"
-          nameAttachment="player_rig_finished:root_parentConstraint1"
+          nameAttachment="root_parentConstraint1"
           parent="3"
           children=""
           core="149"
@@ -549,13 +549,13 @@
      </Node>
      <Transform
           fieldcontainerid="154"
-          nameAttachment="player_rig_finished:headusOBJexport_core"
+          nameAttachment="headusOBJexport_core"
           matrix="1 0 0 0 0 1 0 0.901025 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
           fieldcontainerid="150"
-          nameAttachment="player_rig_finished:headusOBJexport"
+          nameAttachment="headusOBJexport"
           parent="2"
           children=""
           core="154"
@@ -995,7 +995,7 @@
      </KeyframeAnimator>
      <FieldAnimation
           fieldcontainerid="202"
-          nameAttachment="player_rig_finished:joint37_animation"
+          nameAttachment="joint37_animation"
           Animator="201"
           InterpolationType="2"
           Cycling="1"
@@ -1836,8 +1836,8 @@
           fieldcontainerid="341"
           Cycling="-1"
           TransformationAnimators="204;206;208;210;212;214;216;218;220;222;224;226;228;230;232;234;236;238;240;242;244;246;248;250;252;254;256;258;260;262;264;266;268;270;272;274;276;278;280;282;284;286;288;290;292;294;296;298;300;302;304;306;308;310;312;314;316;318;320;322;324;326;328;330;332;334;336;338;340"
-          AnimatorJoints="player_rig_finished:root;player_rig_finished:hip;player_rig_finished:back_1;player_rig_finished:back_2;player_rig_finished:back_3;player_rig_finished:back_4;player_rig_finished:Neck;player_rig_finished:basehead;player_rig_finished:skull;player_rig_finished:leftclavicle;player_rig_finished:left_shoulder;player_rig_finished:left_elbow;player_rig_finished:left_forearm;player_rig_finished:left_wrist;player_rig_finished:joint1;player_rig_finished:joint13;player_rig_finished:joint14;player_rig_finished:joint15;player_rig_finished:joint16;player_rig_finished:joint17;player_rig_finished:joint18;player_rig_finished:joint19;player_rig_finished:joint20;player_rig_finished:joint2;player_rig_finished:joint3;player_rig_finished:joint4;player_rig_finished:joint5;player_rig_finished:joint6;player_rig_finished:joint7;player_rig_finished:joint8;player_rig_finished:joint9;player_rig_finished:joint10;player_rig_finished:joint11;player_rig_finished:joint12;player_rig_finished:right_clavicle;player_rig_finished:right_shoulder;player_rig_finished:right_elbow;player_rig_finished:right_forearm;player_rig_finished:right_wrist;player_rig_finished:joint22;player_rig_finished:joint23;player_rig_finished:joint24;player_rig_finished:joint25;player_rig_finished:joint26;player_rig_finished:joint27;player_rig_finished:joint28;player_rig_finished:joint29;player_rig_finished:joint30;player_rig_finished:joint31;player_rig_finished:joint32;player_rig_finished:joint33;player_rig_finished:joint34;player_rig_finished:joint35;player_rig_finished:joint36;player_rig_finished:joint37;player_rig_finished:joint38;player_rig_finished:joint39;player_rig_finished:joint40;player_rig_finished:joint41;player_rig_finished:leftHip;player_rig_finished:leftKnee;player_rig_finished:leftAnkle;player_rig_finished:leftFoot;player_rig_finished:leftToe;player_rig_finished:rightHip1;player_rig_finished:rightKnee;player_rig_finished:rightAnkle;player_rig_finished:rightFoot;player_rig_finished:rightToe"
-          Skeleton="skeleton_player_rig_finished:root"
+          AnimatorJoints="root;hip;back_1;back_2;back_3;back_4;Neck;basehead;skull;leftclavicle;left_shoulder;left_elbow;left_forearm;left_wrist;joint1;joint13;joint14;joint15;joint16;joint17;joint18;joint19;joint20;joint2;joint3;joint4;joint5;joint6;joint7;joint8;joint9;joint10;joint11;joint12;right_clavicle;right_shoulder;right_elbow;right_forearm;right_wrist;joint22;joint23;joint24;joint25;joint26;joint27;joint28;joint29;joint30;joint31;joint32;joint33;joint34;joint35;joint36;joint37;joint38;joint39;joint40;joint41;leftHip;leftKnee;leftAnkle;leftFoot;leftToe;rightHip1;rightKnee;rightAnkle;rightFoot;rightToe"
+          Skeleton="skeleton_root"
           InterpolationType="1"
      >
      </SkeletonAnimation>

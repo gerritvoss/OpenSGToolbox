@@ -188,6 +188,8 @@ void SkeletonBlendedGeometry::addJointBlending(const UInt32& PositionIndex, cons
 
 void SkeletonBlendedGeometry::calculatePositions(void)
 {
+	std::cout << "CALCULATING POSITIONS" << std::endl;
+
 	if(getBaseGeometry() != NullFC &&
 		getPositions() != NullFC &&
         getBaseGeometry()->getPositions() != NullFC &&
@@ -232,6 +234,7 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 	else
 	{
 		//Error
+		std::cout << "ERROR: There is a problem with the skeleton blended geometry." << std::endl;
 	}
 
 
@@ -252,11 +255,13 @@ void SkeletonBlendedGeometry::changed(const SkeletonEvent& e)
 SkeletonBlendedGeometry::SkeletonBlendedGeometry(void) :
     Inherited()
 {
+	setDlistCache(false);
 }
 
 SkeletonBlendedGeometry::SkeletonBlendedGeometry(const SkeletonBlendedGeometry &source) :
     Inherited(source)
 {
+	setDlistCache(false);
 }
 
 SkeletonBlendedGeometry::~SkeletonBlendedGeometry(void)
@@ -377,6 +382,8 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 		(whichField & PositionIndexesFieldMask) ||
 		(whichField & BlendAmountsFieldMask))
 	{
+		//std::cout << "SkeletonBlendedGeometry: changed" << std::endl;
+
 		calculatePositions();
 	}
 

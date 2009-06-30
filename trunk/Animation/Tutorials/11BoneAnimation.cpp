@@ -238,6 +238,15 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
                                         "OpenSG 11BoneAnimation Window");
+
+	//Print key command info
+	std::cout << "\n\nKEY COMMANDS:" << std::endl;
+	std::cout << "space   Play/Pause the animation" << std::endl;
+	std::cout << "B       Show/Hide the bind pose skeleton" << std::endl;
+	std::cout << "P       Show/Hide the current pose skeleton" << std::endl;
+	std::cout << "1       Play first example animation" << std::endl;
+	std::cout << "2       Play second example animation" << std::endl;
+	std::cout << "CTRL-Q  Exit\n\n" << std::endl;
 										
 
 	//SkeletonDrawer System Material

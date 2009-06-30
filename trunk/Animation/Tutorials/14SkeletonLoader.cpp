@@ -146,6 +146,11 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
                                         "OpenSG 14SkeletonLoader Window");
+
+
+	//Print key command info
+	std::cout << "\n\nKEY COMMANDS:" << std::endl;
+	std::cout << "CTRL-Q  Exit\n\n" << std::endl;
 										
 
 	//SkeletonDrawer System Material

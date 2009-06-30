@@ -115,7 +115,7 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 					{
 						//If this skeleton animation is set to override, we don't consider any other difference transformations
 						Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][iter->getFieldContainerId()]);
-						blendedRelDifTrans = osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i));
+						blendedRelDifTrans = (osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
 						break;
 					}
 					else
@@ -125,34 +125,18 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 							//Use the calculated relative difference transformation from bind pose to the transformation defined by
 							//the skeleton animation
 							Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][iter->getFieldContainerId()]);
-							blendedRelDifTrans.mult(osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
-
-
-							//std::cout << getName((*iter)) << std::endl;
-
-							if(getName((*iter)) == std::string("left_elbow"))
-							{
-								std::cout << "FIRST: " << getName((*iter)) << "\n" << blendedRelDifTrans << std::endl;
-							}
-
-
+							blendedRelDifTrans = (osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
 						}
-						else if (true)
+						else
 						{
 							//Use the difference transformation between the joint's current transformation and the transformation
 							//defined by the skeleton animation
-							Matrix relDifTrans = blendedRelDifTrans;
+							Matrix relDifTrans = (*iter)->previewRelativeTransformation(blendedRelDifTrans);
 							relDifTrans.invert();
 							relDifTrans.multLeft(relTransformations[i][iter->getFieldContainerId()]);
 
 							blendedRelDifTrans.mult(osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
-
-							if(getName((*iter)) == std::string("left_elbow"))
-							{
-								std::cout << "NOT FIRST: " << getName((*iter)) << "\n" << blendedRelDifTrans << std::endl;
-							}
 						}
-						
 					}
 					if(getBlendAmounts(i) != 0)
 					{
@@ -162,8 +146,6 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 			}
 			blendedRelDifTrans.mult((*iter)->getBindRelativeTransformation());
 			(*iter)->setRelativeTransformation(blendedRelDifTrans);
-
-			Matrix m = (*iter)->getRelativeTransformation();
 
 			(*iter)->updateTransformations(false);
 
@@ -178,9 +160,6 @@ void SkeletonBlendedAnimation::addAnimationBlending(const SkeletonAnimationPtr T
 		getBlendAmounts().push_back(BlendAmount);
 		getOverrideStatuses().push_back(Override);
 	endEditCP(SkeletonBlendedAnimationPtr(this), SkeletonAnimationsFieldMask | BlendAmountsFieldMask | OverrideStatusesFieldMask);
-
-	//Update blending information
-
 }
 
 void SkeletonBlendedAnimation::setBlendAmount(unsigned int Index, Real32 BlendAmount)
@@ -188,6 +167,18 @@ void SkeletonBlendedAnimation::setBlendAmount(unsigned int Index, Real32 BlendAm
 	beginEditCP(SkeletonBlendedAnimationPtr(this), BlendAmountsFieldMask);
 		getBlendAmounts(Index) = BlendAmount;
 	endEditCP(SkeletonBlendedAnimationPtr(this), BlendAmountsFieldMask);
+}
+
+bool SkeletonBlendedAnimation::getOverrideStatus(unsigned int Index)
+{
+	return getOverrideStatuses(Index);
+}
+
+void SkeletonBlendedAnimation::setOverrideStatus(unsigned int Index, bool Override)
+{
+	beginEditCP(SkeletonBlendedAnimationPtr(this), OverrideStatusesFieldMask);
+		getOverrideStatuses()[Index] = Override;
+	endEditCP(SkeletonBlendedAnimationPtr(this), OverrideStatusesFieldMask);
 }
 
 /*-------------------------------------------------------------------------*\

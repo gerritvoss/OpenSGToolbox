@@ -280,13 +280,22 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
                                         "OpenSG 20LoadXMLBlendedGeometryWindow");
+
+	//Print key command info
+	std::cout << "\n\nKEY COMMANDS:" << std::endl;
+	std::cout << "space   Play/Pause the animation" << std::endl;
+	std::cout << "B       Show/Hide the bind pose skeleton" << std::endl;
+	std::cout << "SHIFT-B Show/Hide the bind pose mesh" << std::endl;
+	std::cout << "P       Show/Hide the current pose skeleton" << std::endl;
+	std::cout << "SHIFT-P Show/Hide the current pose mesh" << std::endl;
+	std::cout << "CTRL-Q  Exit\n\n" << std::endl;
 	
 
 
 	//Import scene from XML
-	ChunkMaterialPtr ExampleMaterial;// = ChunkMaterial::create();
-	SkeletonPtr ExampleSkeleton;// = Skeleton::create();
-	SkeletonBlendedGeometryPtr TheNewSkeletonGeometry;// = SkeletonBlendedGeometry::create();
+	ChunkMaterialPtr ExampleMaterial;
+	SkeletonPtr ExampleSkeleton;
+	SkeletonBlendedGeometryPtr TheNewSkeletonGeometry;
 	GeometryPtr ExampleGeometry;
 
 	FCFileType::FCPtrStore NewContainers;
