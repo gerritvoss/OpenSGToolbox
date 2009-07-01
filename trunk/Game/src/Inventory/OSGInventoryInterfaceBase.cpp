@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  InventoryInterfaceBase::SourceInventoryFieldMask = 
     (TypeTraits<BitVector>::One << InventoryInterfaceBase::SourceInventoryFieldId);
 
+const OSG::BitVector  InventoryInterfaceBase::ParentContainerFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryInterfaceBase::ParentContainerFieldId);
+
 const OSG::BitVector InventoryInterfaceBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector InventoryInterfaceBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var InventoryPtr    InventoryInterfaceBase::_sfSourceInventory
+    
+*/
+/*! \var ContainerPtr    InventoryInterfaceBase::_sfParentContainer
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *InventoryInterfaceBase::_desc[] =
                      "SourceInventory", 
                      SourceInventoryFieldId, SourceInventoryFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryInterfaceBase::getSFSourceInventory)
+                     (FieldAccessMethod) &InventoryInterfaceBase::getSFSourceInventory),
+    new FieldDescription(SFContainerPtr::getClassType(), 
+                     "ParentContainer", 
+                     ParentContainerFieldId, ParentContainerFieldMask,
+                     false,
+                     (FieldAccessMethod) &InventoryInterfaceBase::getSFParentContainer)
 };
 
 
@@ -163,6 +174,7 @@ void InventoryInterfaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 InventoryInterfaceBase::InventoryInterfaceBase(void) :
     _sfSourceInventory        (), 
+    _sfParentContainer        (), 
     Inherited() 
 {
 }
@@ -173,6 +185,7 @@ InventoryInterfaceBase::InventoryInterfaceBase(void) :
 
 InventoryInterfaceBase::InventoryInterfaceBase(const InventoryInterfaceBase &source) :
     _sfSourceInventory        (source._sfSourceInventory        ), 
+    _sfParentContainer        (source._sfParentContainer        ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +207,11 @@ UInt32 InventoryInterfaceBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSourceInventory.getBinSize();
     }
 
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    {
+        returnValue += _sfParentContainer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +224,11 @@ void InventoryInterfaceBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SourceInventoryFieldMask & whichField))
     {
         _sfSourceInventory.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    {
+        _sfParentContainer.copyToBin(pMem);
     }
 
 
@@ -221,6 +244,11 @@ void InventoryInterfaceBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSourceInventory.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    {
+        _sfParentContainer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +262,9 @@ void InventoryInterfaceBase::executeSyncImpl(      InventoryInterfaceBase *pOthe
     if(FieldBits::NoField != (SourceInventoryFieldMask & whichField))
         _sfSourceInventory.syncWith(pOther->_sfSourceInventory);
 
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+        _sfParentContainer.syncWith(pOther->_sfParentContainer);
+
 
 }
 #else
@@ -246,6 +277,9 @@ void InventoryInterfaceBase::executeSyncImpl(      InventoryInterfaceBase *pOthe
 
     if(FieldBits::NoField != (SourceInventoryFieldMask & whichField))
         _sfSourceInventory.syncWith(pOther->_sfSourceInventory);
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+        _sfParentContainer.syncWith(pOther->_sfParentContainer);
 
 
 

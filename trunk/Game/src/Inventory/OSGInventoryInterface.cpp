@@ -75,6 +75,18 @@ void InventoryInterface::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+void InventoryInterface::setInventory()
+{
+}
+void InventoryInterface::InventoryInterfaceListener::itemAdded(const InventoryEvent& e)
+{
+}
+void InventoryInterface::InventoryInterfaceListener::itemRemoved(const InventoryEvent& e)
+{
+}
+void InventoryInterface::InventoryInterfaceListener::inventorySorted(const InventoryEvent& e)
+{
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -83,12 +95,14 @@ void InventoryInterface::initMethod (void)
 /*----------------------- constructors & destructors ----------------------*/
 
 InventoryInterface::InventoryInterface(void) :
-    Inherited()
+    Inherited(),
+    _InventoryInterfaceListener(InventoryInterfacePtr(this))
 {
 }
 
 InventoryInterface::InventoryInterface(const InventoryInterface &source) :
-    Inherited(source)
+    Inherited(source),
+    _InventoryInterfaceListener(InventoryInterfacePtr(this))
 {
 }
 
@@ -101,6 +115,11 @@ InventoryInterface::~InventoryInterface(void)
 void InventoryInterface::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & SourceInventoryFieldMask && getSourceInventory() != NullFC)
+    {
+        setInventory();
+    }
 }
 
 void InventoryInterface::dump(      UInt32    , 

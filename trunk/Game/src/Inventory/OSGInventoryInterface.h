@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGInventoryInterfaceBase.h"
+#include "Event/OSGInventoryListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -60,6 +61,8 @@ class OSG_GAMELIB_DLLMAPPING InventoryInterface : public InventoryInterfaceBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+
+	void setInventory();
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -88,6 +91,23 @@ class OSG_GAMELIB_DLLMAPPING InventoryInterface : public InventoryInterfaceBase
 
     InventoryInterface(void);
     InventoryInterface(const InventoryInterface &source);
+
+	class InventoryInterfaceListener : public InventoryListener
+    {
+	public :
+		InventoryInterfaceListener(InventoryInterfacePtr TheInventoryInterface);
+		
+    virtual void itemAdded(const InventoryEvent& e);
+    virtual void itemRemoved(const InventoryEvent& e);
+    virtual void inventorySorted(const InventoryEvent& e);
+
+	protected :
+
+        InventoryInterfacePtr _InventoryInterface;
+	};
+
+    
+    InventoryInterfaceListener          _InventoryInterfaceListener;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

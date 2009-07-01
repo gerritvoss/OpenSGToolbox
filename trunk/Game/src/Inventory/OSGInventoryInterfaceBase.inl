@@ -103,6 +103,13 @@ SFInventoryPtr *InventoryInterfaceBase::getSFSourceInventory(void)
     return &_sfSourceInventory;
 }
 
+//! Get the InventoryInterface::_sfParentContainer field.
+inline
+SFContainerPtr *InventoryInterfaceBase::getSFParentContainer(void)
+{
+    return &_sfParentContainer;
+}
+
 
 //! Get the value of the InventoryInterface::_sfSourceInventory field.
 inline
@@ -123,6 +130,27 @@ inline
 void InventoryInterfaceBase::setSourceInventory(const InventoryPtr &value)
 {
     _sfSourceInventory.setValue(value);
+}
+
+//! Get the value of the InventoryInterface::_sfParentContainer field.
+inline
+ContainerPtr &InventoryInterfaceBase::getParentContainer(void)
+{
+    return _sfParentContainer.getValue();
+}
+
+//! Get the value of the InventoryInterface::_sfParentContainer field.
+inline
+const ContainerPtr &InventoryInterfaceBase::getParentContainer(void) const
+{
+    return _sfParentContainer.getValue();
+}
+
+//! Set the value of the InventoryInterface::_sfParentContainer field.
+inline
+void InventoryInterfaceBase::setParentContainer(const ContainerPtr &value)
+{
+    _sfParentContainer.setValue(value);
 }
 
 

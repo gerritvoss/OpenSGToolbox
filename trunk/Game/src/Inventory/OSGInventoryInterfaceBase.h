@@ -67,7 +67,8 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include "OSGInventoryFields.h" // SourceInventory type
+#include <OpenSG/OSGInventoryFields.h> // SourceInventory type
+#include <OpenSG/UserInterface/OSGContainerFields.h> // ParentContainer type
 
 #include "OSGInventoryInterfaceFields.h"
 
@@ -92,10 +93,12 @@ class OSG_GAMELIB_DLLMAPPING InventoryInterfaceBase : public AttachmentContainer
     enum
     {
         SourceInventoryFieldId = Inherited::NextFieldId,
-        NextFieldId            = SourceInventoryFieldId + 1
+        ParentContainerFieldId = SourceInventoryFieldId + 1,
+        NextFieldId            = ParentContainerFieldId + 1
     };
 
     static const OSG::BitVector SourceInventoryFieldMask;
+    static const OSG::BitVector ParentContainerFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +126,12 @@ class OSG_GAMELIB_DLLMAPPING InventoryInterfaceBase : public AttachmentContainer
     /*! \{                                                                 */
 
            SFInventoryPtr      *getSFSourceInventory(void);
+           SFContainerPtr      *getSFParentContainer(void);
 
            InventoryPtr        &getSourceInventory(void);
      const InventoryPtr        &getSourceInventory(void) const;
+           ContainerPtr        &getParentContainer(void);
+     const ContainerPtr        &getParentContainer(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +139,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryInterfaceBase : public AttachmentContainer
     /*! \{                                                                 */
 
      void setSourceInventory( const InventoryPtr &value );
+     void setParentContainer( const ContainerPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryInterfaceBase : public AttachmentContainer
     /*! \{                                                                 */
 
     SFInventoryPtr      _sfSourceInventory;
+    SFContainerPtr      _sfParentContainer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

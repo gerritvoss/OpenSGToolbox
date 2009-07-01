@@ -1001,6 +1001,26 @@
 					RelativePath="..\..\src\Inventory\OSGInventoryItemFields.h"
 					>
 				</File>
+				<Filter
+					Name="Event"
+					>
+					<File
+						RelativePath="..\..\src\Inventory\Event\OSGInventoryEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Event\OSGInventoryEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Event\OSGInventoryEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Event\OSGInventoryListener.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

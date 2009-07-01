@@ -41,7 +41,11 @@
 #include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
-
+inline
+InventoryInterface::InventoryInterfaceListener::InventoryInterfaceListener(InventoryInterfacePtr TheInventoryInterface) :
+_InventoryInterface(TheInventoryInterface)
+{
+}
 OSG_END_NAMESPACE
 
 #define OSGINVENTORYINTERFACE_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

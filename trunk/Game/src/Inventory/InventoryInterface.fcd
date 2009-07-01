@@ -21,5 +21,16 @@ A Inventory.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="ParentContainer"
+		type="ContainerPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="OpenSG/UserInterface/OSGContainerFields.h"
+	>
+	</Field>
+	
+
 	
 </FieldContainer>
