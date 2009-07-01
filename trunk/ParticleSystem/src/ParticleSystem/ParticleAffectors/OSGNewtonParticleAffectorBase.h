@@ -70,6 +70,7 @@
 #include <OpenSG/OSGReal32Fields.h> // Magnitude type
 #include <OpenSG/OSGReal32Fields.h> // Attenuation type
 #include <OpenSG/OSGReal32Fields.h> // MaxDistance type
+#include <OpenSG/OSGReal32Fields.h> // MinDistance type
 #include <OpenSG/OSGNodeFields.h> // Beacon type
 #include <OpenSG/OSGReal32Fields.h> // ParticleMass type
 
@@ -98,7 +99,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NewtonParticleAffectorBase : public Parti
         MagnitudeFieldId    = Inherited::NextFieldId,
         AttenuationFieldId  = MagnitudeFieldId    + 1,
         MaxDistanceFieldId  = AttenuationFieldId  + 1,
-        BeaconFieldId       = MaxDistanceFieldId  + 1,
+        MinDistanceFieldId  = MaxDistanceFieldId  + 1,
+        BeaconFieldId       = MinDistanceFieldId  + 1,
         ParticleMassFieldId = BeaconFieldId       + 1,
         NextFieldId         = ParticleMassFieldId + 1
     };
@@ -106,6 +108,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NewtonParticleAffectorBase : public Parti
     static const OSG::BitVector MagnitudeFieldMask;
     static const OSG::BitVector AttenuationFieldMask;
     static const OSG::BitVector MaxDistanceFieldMask;
+    static const OSG::BitVector MinDistanceFieldMask;
     static const OSG::BitVector BeaconFieldMask;
     static const OSG::BitVector ParticleMassFieldMask;
 
@@ -137,6 +140,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NewtonParticleAffectorBase : public Parti
            SFReal32            *getSFMagnitude      (void);
            SFReal32            *getSFAttenuation    (void);
            SFReal32            *getSFMaxDistance    (void);
+           SFReal32            *getSFMinDistance    (void);
            SFNodePtr           *getSFBeacon         (void);
            SFReal32            *getSFParticleMass   (void);
 
@@ -146,6 +150,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NewtonParticleAffectorBase : public Parti
      const Real32              &getAttenuation    (void) const;
            Real32              &getMaxDistance    (void);
      const Real32              &getMaxDistance    (void) const;
+           Real32              &getMinDistance    (void);
+     const Real32              &getMinDistance    (void) const;
            NodePtr             &getBeacon         (void);
      const NodePtr             &getBeacon         (void) const;
            Real32              &getParticleMass   (void);
@@ -159,6 +165,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NewtonParticleAffectorBase : public Parti
      void setMagnitude      ( const Real32 &value );
      void setAttenuation    ( const Real32 &value );
      void setMaxDistance    ( const Real32 &value );
+     void setMinDistance    ( const Real32 &value );
      void setBeacon         ( const NodePtr &value );
      void setParticleMass   ( const Real32 &value );
 
@@ -206,6 +213,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NewtonParticleAffectorBase : public Parti
     SFReal32            _sfMagnitude;
     SFReal32            _sfAttenuation;
     SFReal32            _sfMaxDistance;
+    SFReal32            _sfMinDistance;
     SFNodePtr           _sfBeacon;
     SFReal32            _sfParticleMass;
 

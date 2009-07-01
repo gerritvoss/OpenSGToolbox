@@ -39,6 +39,15 @@
 	>
 	</Field>
 	<Field
+		name="MinDistance"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0"
+	>
+	</Field>
+	<Field
 		name="Beacon"
 		type="NodePtr"
 		cardinality="single"

@@ -117,6 +117,13 @@ SFReal32 *NewtonParticleAffectorBase::getSFMaxDistance(void)
     return &_sfMaxDistance;
 }
 
+//! Get the NewtonParticleAffector::_sfMinDistance field.
+inline
+SFReal32 *NewtonParticleAffectorBase::getSFMinDistance(void)
+{
+    return &_sfMinDistance;
+}
+
 //! Get the NewtonParticleAffector::_sfBeacon field.
 inline
 SFNodePtr *NewtonParticleAffectorBase::getSFBeacon(void)
@@ -193,6 +200,27 @@ inline
 void NewtonParticleAffectorBase::setMaxDistance(const Real32 &value)
 {
     _sfMaxDistance.setValue(value);
+}
+
+//! Get the value of the NewtonParticleAffector::_sfMinDistance field.
+inline
+Real32 &NewtonParticleAffectorBase::getMinDistance(void)
+{
+    return _sfMinDistance.getValue();
+}
+
+//! Get the value of the NewtonParticleAffector::_sfMinDistance field.
+inline
+const Real32 &NewtonParticleAffectorBase::getMinDistance(void) const
+{
+    return _sfMinDistance.getValue();
+}
+
+//! Set the value of the NewtonParticleAffector::_sfMinDistance field.
+inline
+void NewtonParticleAffectorBase::setMinDistance(const Real32 &value)
+{
+    _sfMinDistance.setValue(value);
 }
 
 //! Get the value of the NewtonParticleAffector::_sfBeacon field.

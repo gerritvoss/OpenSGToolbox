@@ -52,7 +52,6 @@
 #include "OSGNewtonParticleAffector.h"
 #include "ParticleSystem/OSGParticleSystem.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -94,13 +93,13 @@ bool NewtonParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInde
 		Pnt3f particlePos = System->getPosition(ParticleIndex);
 		Real32 distanceFromAffector = particlePos.dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
 
-		if((getMaxDistance() < 0.0) || (distanceFromAffector <= getMaxDistance())) //only affect the particle if it is in range
+		if((getMaxDistance() < 0.0) || (distanceFromAffector <= getMaxDistance() && distanceFromAffector >= getMinDistance())) //only affect the particle if it is in range
 		{	
 			// get direction from particle to the affector
 			Vec3f newtonianForce(particlePos.x() - translation.x(), particlePos.y() - translation.y(), particlePos.z() - translation.z());
 			newtonianForce.normalize();
 			// computing velocity change due to field
-			newtonianForce *= ((getMagnitude()/getParticleMass()) * elps)/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
+			newtonianForce *= ((-getMagnitude()/getParticleMass()) * elps)/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
 			// set new particle velocity
 			System->setVelocity(newtonianForce + System->getVelocity(ParticleIndex),ParticleIndex);
 		}

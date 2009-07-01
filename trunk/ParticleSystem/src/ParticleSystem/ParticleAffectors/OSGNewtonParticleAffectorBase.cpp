@@ -73,6 +73,9 @@ const OSG::BitVector  NewtonParticleAffectorBase::AttenuationFieldMask =
 const OSG::BitVector  NewtonParticleAffectorBase::MaxDistanceFieldMask = 
     (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::MaxDistanceFieldId);
 
+const OSG::BitVector  NewtonParticleAffectorBase::MinDistanceFieldMask = 
+    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::MinDistanceFieldId);
+
 const OSG::BitVector  NewtonParticleAffectorBase::BeaconFieldMask = 
     (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::BeaconFieldId);
 
@@ -93,6 +96,9 @@ const OSG::BitVector NewtonParticleAffectorBase::MTInfluenceMask =
     
 */
 /*! \var Real32          NewtonParticleAffectorBase::_sfMaxDistance
+    
+*/
+/*! \var Real32          NewtonParticleAffectorBase::_sfMinDistance
     
 */
 /*! \var NodePtr         NewtonParticleAffectorBase::_sfBeacon
@@ -121,6 +127,11 @@ FieldDescription *NewtonParticleAffectorBase::_desc[] =
                      MaxDistanceFieldId, MaxDistanceFieldMask,
                      false,
                      (FieldAccessMethod) &NewtonParticleAffectorBase::getSFMaxDistance),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "MinDistance", 
+                     MinDistanceFieldId, MinDistanceFieldMask,
+                     false,
+                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFMinDistance),
     new FieldDescription(SFNodePtr::getClassType(), 
                      "Beacon", 
                      BeaconFieldId, BeaconFieldMask,
@@ -209,6 +220,7 @@ NewtonParticleAffectorBase::NewtonParticleAffectorBase(void) :
     _sfMagnitude              (Real32(5.000)), 
     _sfAttenuation            (Real32(2.0)), 
     _sfMaxDistance            (Real32(-1.0)), 
+    _sfMinDistance            (Real32(0.0)), 
     _sfBeacon                 (NodePtr(NullFC)), 
     _sfParticleMass           (Real32(1.0)), 
     Inherited() 
@@ -223,6 +235,7 @@ NewtonParticleAffectorBase::NewtonParticleAffectorBase(const NewtonParticleAffec
     _sfMagnitude              (source._sfMagnitude              ), 
     _sfAttenuation            (source._sfAttenuation            ), 
     _sfMaxDistance            (source._sfMaxDistance            ), 
+    _sfMinDistance            (source._sfMinDistance            ), 
     _sfBeacon                 (source._sfBeacon                 ), 
     _sfParticleMass           (source._sfParticleMass           ), 
     Inherited                 (source)
@@ -254,6 +267,11 @@ UInt32 NewtonParticleAffectorBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         returnValue += _sfMaxDistance.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
+    {
+        returnValue += _sfMinDistance.getBinSize();
     }
 
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
@@ -290,6 +308,11 @@ void NewtonParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
         _sfMaxDistance.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
+    {
+        _sfMinDistance.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyToBin(pMem);
@@ -323,6 +346,11 @@ void NewtonParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMaxDistance.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
+    {
+        _sfMinDistance.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyFromBin(pMem);
@@ -352,6 +380,9 @@ void NewtonParticleAffectorBase::executeSyncImpl(      NewtonParticleAffectorBas
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
         _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
 
+    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
+        _sfMinDistance.syncWith(pOther->_sfMinDistance);
+
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
 
@@ -376,6 +407,9 @@ void NewtonParticleAffectorBase::executeSyncImpl(      NewtonParticleAffectorBas
 
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
         _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
+
+    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
+        _sfMinDistance.syncWith(pOther->_sfMinDistance);
 
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
