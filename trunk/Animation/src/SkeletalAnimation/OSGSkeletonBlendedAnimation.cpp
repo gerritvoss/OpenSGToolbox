@@ -90,7 +90,7 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 	if(getSkeletonAnimations().size() == getBlendAmounts().size())
 	{
 		//Get scaled transformations and add them together
-		std::vector<std::map<unsigned long, Matrix>> relTransformations;  //Each map in the vector contains the rel trans matrices for skeletonAnimation[i]
+		std::vector<std::map<unsigned long, Matrix> > relTransformations;  //Each map in the vector contains the rel trans matrices for skeletonAnimation[i]
 		std::set<JointPtr> animatedJoints;
 		for (int i(0); i < getSkeletonAnimations().size(); ++i)
 		{
