@@ -77,6 +77,7 @@ void InventoryInterface::initMethod (void)
 \***************************************************************************/
 void InventoryInterface::setInventory()
 {
+	getSourceInventory()->addInventoryListener(&_InventoryInterfaceListener);
 }
 void InventoryInterface::InventoryInterfaceListener::itemAdded(const InventoryEvent& e)
 {

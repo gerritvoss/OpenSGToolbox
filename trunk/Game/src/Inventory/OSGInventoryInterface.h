@@ -46,6 +46,7 @@
 
 #include "OSGInventoryInterfaceBase.h"
 #include "Event/OSGInventoryListener.h"
+#include "OSGInventory.h"
 
 OSG_BEGIN_NAMESPACE
 
