@@ -19,7 +19,7 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSG_LIB_DIR})
 ADD_LIBRARY(${LIBRARY_NAME} SHARED ${HEADERS} ${SOURCES} ${INLINES})
 
 #Configure the debug shared library
-ADD_LIBRARY(${LIBRARY_NAME}D SHARED ${HEADERS} ${SOURCES} ${INLINES})
+#ADD_LIBRARY(${LIBRARY_NAME}D SHARED ${HEADERS} ${SOURCES} ${INLINES})
 
 #Header files build
 FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include")
@@ -27,9 +27,9 @@ FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG")
 FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}")
 ADD_CUSTOM_TARGET(${LIBRARY_NAME}_headers
                   ALL
-                  COMMAND ${CMAKE_BINARY_DIR}/Builds/Common/CopyIncludes.sh
-                  ${CMAKE_BINARY_DIR}/Builds/Common/
-                  ${CMAKE_SOURCE_DIR}/${LIBRARY_SHORT_NAME}/src
+                  COMMAND ${CMAKE_SOURCE_DIR}/Builds/Common/CopyIncludes.sh
+                  ${CMAKE_SOURCE_DIR}/Builds/Common/
+                  ${CMAKE_CURRENT_SOURCE_DIR}
                   ${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}
                   DEPENDS ${HEADERS} ${INLINES})
 
@@ -41,7 +41,7 @@ SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_RELWITHDEBINFO "$
 
 #Attach all of the linker libraries
 TARGET_LINK_LIBRARIES(${LIBRARY_NAME} optimized ${OPENSG_LIBS_OPT})
-TARGET_LINK_LIBRARIES(${LIBRARY_NAME}D debug ${OPENSG_LIBS_DBG})
+#TARGET_LINK_LIBRARIES(${LIBRARY_NAME}D debug ${OPENSG_LIBS_DBG})
 
 
 #Installing instructions
@@ -49,13 +49,21 @@ INSTALL(CODE "MESSAGE(\"Installing ${LIBRARY_NAME}\")")
 
 #Install the headers
 INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/OpenSG)
+        DESTINATION include/OpenSG
+        COMPONENT headers)
 
 #install the libraries
-INSTALL(TARGETS ${LIBRARY_NAME} ${LIBRARY_NAME}D
+#INSTALL(TARGETS ${LIBRARY_NAME}D
+#        RUNTIME DESTINATION bin
+#        LIBRARY DESTINATION lib
+#        ARCHIVE DESTINATION lib
+#        COMPONENT debugLibs)
+
+INSTALL(TARGETS ${LIBRARY_NAME}
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+        ARCHIVE DESTINATION lib
+        COMPONENT optLibs)
 
 #Doxygen documentation
 # Generating documentation with doxygen
@@ -88,7 +96,8 @@ if(DOXYGEN_EXECUTABLE)
 
       #Installing the documentation
       INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html
-              DESTINATION ${CMAKE_INSTALL_PREFIX}/doc/user/${LIBRARY_SHORT_NAME})
+              DESTINATION doc/user/${LIBRARY_SHORT_NAME}
+              COMPONENT userDoc)
 
     ENDIF(ENABLE_USER_DOCUMENTATION)
     
@@ -120,7 +129,8 @@ if(DOXYGEN_EXECUTABLE)
 
       #Installing the documentation
       INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html
-              DESTINATION ${CMAKE_INSTALL_PREFIX}/doc/developer/${LIBRARY_SHORT_NAME})
+              DESTINATION doc/developer/${LIBRARY_SHORT_NAME}
+              COMPONENT devDoc)
     ENDIF(ENABLE_DEVELOPER_DOCUMENTATION)
     
 endif(DOXYGEN_EXECUTABLE)
