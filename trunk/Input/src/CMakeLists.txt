@@ -1,0 +1,128 @@
+SET(LIBRARY_SHORT_NAME Input)
+SET(LIBRARY_NAME OSG${LIBRARY_SHORT_NAME})
+
+#Get a listing of the Header, source, and inline files
+FILE(GLOB_RECURSE HEADERS *.h)
+FILE(GLOB_RECURSE SOURCES *.cpp)
+FILE(GLOB_RECURSE INLINES *.inl)
+
+#Definition required when building the library
+ADD_DEFINITIONS(-DOSG_COMPILEINPUTLIB)
+
+#Include Boost and OpenSG
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${OPENSG_INC_DIR} "./" "${OPENSG_TOOLBOX_BUILD_DIR}/include")
+
+#Link to bost and OpenSG
+LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSG_LIB_DIR} "${OPENSG_TOOLBOX_BUILD_DIR}")
+
+#Configure shared library creation
+ADD_LIBRARY(${LIBRARY_NAME} SHARED ${HEADERS} ${SOURCES} ${INLINES})
+ADD_DEPENDENCIES(${LIBRARY_NAME} OSGToolbox)
+
+#Header files build
+FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include")
+FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG")
+FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}")
+ADD_CUSTOM_TARGET(${LIBRARY_NAME}_headers
+                  ALL
+                  COMMAND ${CMAKE_SOURCE_DIR}/Builds/Common/CopyIncludes.sh
+                  ${CMAKE_SOURCE_DIR}/Builds/Common/
+                  ${CMAKE_CURRENT_SOURCE_DIR}
+                  ${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}
+                  DEPENDS ${HEADERS} ${INLINES})
+
+#Attach all of the Compile flags
+SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_DEBUG "${OPENSG_CXX_FLAGS_DBG} ${OPENSG_CXX_BUILDDLL_FLAGS}")
+SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_RELEASE "${OPENSG_CXX_FLAGS_OPT} ${OPENSG_CXX_BUILDDLL_FLAGS}")
+SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_MINSIZEREL "${OPENSG_CXX_FLAGS_OPT} ${OPENSG_CXX_BUILDDLL_FLAGS}")
+SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_RELWITHDEBINFO "${OPENSG_CXX_FLAGS_OPT} ${OPENSG_CXX_BUILDDLL_FLAGS}")
+
+#Attach all of the linker libraries
+TARGET_LINK_LIBRARIES(${LIBRARY_NAME} optimized OSGBase optimized OSGSystem optimized OSGToolbox)
+TARGET_LINK_LIBRARIES(${LIBRARY_NAME} debug OSGBase debug OSGSystem debug OSGToolboxD)
+
+
+#Installing instructions
+INSTALL(CODE "MESSAGE(\"Installing ${LIBRARY_NAME}\")")
+
+#Install the headers
+INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}
+        DESTINATION include/OpenSG
+        COMPONENT headers)
+
+#install the libraries
+INSTALL(TARGETS ${LIBRARY_NAME}
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        COMPONENT optLibs)
+
+#Doxygen documentation
+# Generating documentation with doxygen
+#
+if(DOXYGEN_EXECUTABLE)
+    
+    IF(ENABLE_USER_DOCUMENTATION)
+      # The initial rm command gets rid of everything previously built by this
+      # custom command.
+      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
+      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc/user")
+      
+      ADD_CUSTOM_COMMAND(
+      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html/index.html
+      COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html
+      COMMAND DOC_REVISION_NUMBER=${Project_WC_REVISION} DOC_OUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}/doc/user ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.user
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.user
+              ${HEADERS}
+              ${INLINES}
+              ${SOURCES}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation
+      )
+      
+      ADD_CUSTOM_TARGET(${LIBRARY_SHORT_NAME}_user_doc
+                        COMMENT "Building ${LIBRARY_SHORT_NAME} User Documentation"
+                        DEPENDS
+                        ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html/index.html)
+
+      ADD_DEPENDENCIES(user_doc ${LIBRARY_SHORT_NAME}_user_doc)
+
+      #Installing the documentation
+      INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html
+              DESTINATION doc/user/${LIBRARY_SHORT_NAME}
+              COMPONENT userDoc)
+
+    ENDIF(ENABLE_USER_DOCUMENTATION)
+    
+    # The initial rm command gets rid of everything previously built by this
+    # custom command.
+    IF(ENABLE_DEVELOPER_DOCUMENTATION)
+      # The initial rm command gets rid of everything previously built by this
+      # custom command.
+      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
+      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc/developer")
+      
+      ADD_CUSTOM_COMMAND(
+      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html/index.html
+      COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html
+      COMMAND DOC_REVISION_NUMBER=${Project_WC_REVISION} DOC_OUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}/doc/developer ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.developer
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.developer
+              ${HEADERS}
+              ${INLINES}
+              ${SOURCES}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation
+      )
+      
+      ADD_CUSTOM_TARGET(${LIBRARY_SHORT_NAME}_dev_doc
+                        COMMENT "Building ${LIBRARY_SHORT_NAME} Developer  Documentation"
+                        DEPENDS
+                        ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html/index.html)
+
+      ADD_DEPENDENCIES(dev_doc ${LIBRARY_SHORT_NAME}_dev_doc)
+
+      #Installing the documentation
+      INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html
+              DESTINATION doc/developer/${LIBRARY_SHORT_NAME}
+              COMPONENT devDoc)
+    ENDIF(ENABLE_DEVELOPER_DOCUMENTATION)
+    
+endif(DOXYGEN_EXECUTABLE)
