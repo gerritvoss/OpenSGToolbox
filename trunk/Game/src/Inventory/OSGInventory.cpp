@@ -101,6 +101,8 @@ void Inventory::addItem(InventoryItemPtr Item)
 					setInventoryClassName(Item->getClasses(i));
 					setRootInventory(false);
 				endEditCP(CInventory, Inventory::RootInventoryFieldMask | Inventory::InventoryClassNameFieldMask);
+				getInventoryClasses().push_back(CInventory);
+				CInventory->addItem(Item);
 			}
 		}
 	}
