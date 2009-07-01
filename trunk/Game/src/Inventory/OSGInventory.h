@@ -46,6 +46,11 @@
 
 #include "OSGInventoryBase.h"
 
+#include "Event/OSGInventoryListener.h"
+#include <OpenSG/Input/OSGEventConnection.h>
+
+#include <set>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief Inventory class. See \ref 
@@ -63,6 +68,10 @@ class OSG_GAMELIB_DLLMAPPING Inventory : public InventoryBase
 
 	void addItem(InventoryItemPtr Item);
 	void sortInventory();
+
+	EventConnection addInventoryListener(InventoryListenerPtr Listener);
+	bool isInventoryListenerAttached(InventoryListenerPtr Listener) const;
+    void removeInventoryListener(InventoryListenerPtr Listener);
 
 
     /*---------------------------------------------------------------------*/
@@ -83,6 +92,15 @@ class OSG_GAMELIB_DLLMAPPING Inventory : public InventoryBase
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+
+	typedef std::set<InventoryListenerPtr> InventoryListenerSet;
+    typedef InventoryListenerSet::iterator InventoryListenerSetItor;
+    typedef InventoryListenerSet::const_iterator InventoryListenerSetConstItor;
+    InventoryListenerSet       _InventoryListeners;
+
+	virtual void produceItemAdded(const InventoryEvent& e);
+	virtual void produceInventorySorted(const InventoryEvent& e);
+	virtual void produceItemRemoved(const InventoryEvent& e);
 
     // Variables should all be in InventoryBase.
 

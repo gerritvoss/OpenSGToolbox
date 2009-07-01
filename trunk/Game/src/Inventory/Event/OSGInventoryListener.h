@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                          OpenSG Toolbox Game                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Eric Langkamp                                    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,29 +26,34 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGINVENTORYLISTENER_H_
+#define _OSGINVENTORYLISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGGameDef.h"
+
+#include <OpenSG/Input/OSGEventListener.h>
+#include "OSGInventoryEvent.h"
 
 OSG_BEGIN_NAMESPACE
-inline
-bool Inventory::isInventoryListenerAttached(InventoryListenerPtr Listener) const
+
+class OSG_GAMELIB_DLLMAPPING InventoryListener : public EventListener
 {
-    return _InventoryListeners.find(Listener) != _InventoryListeners.end();
-}
+    /*=========================  PUBLIC  ===============================*/
+  public:
+  
+    virtual void itemAdded(const InventoryEvent& e) = 0;
+    virtual void inventorySorted(const InventoryEvent& e) = 0;
+    virtual void itemRemoved(const InventoryEvent& e) = 0;
+    
+};
+
+typedef InventoryListener* InventoryListenerPtr;
+
 OSG_END_NAMESPACE
 
-#define OSGINVENTORY_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-
+#endif /* _OSGINVENTORYLISTENER_H_ */

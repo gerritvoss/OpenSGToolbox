@@ -49,6 +49,7 @@
 
 #include "OSGInventory.h"
 #include "OSGInventoryItem.h"
+#include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -111,6 +112,49 @@ void Inventory::sortInventory()
 {
 
 }
+
+EventConnection Inventory::addInventoryListener(InventoryListenerPtr Listener)
+{
+   _InventoryListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&Inventory::isInventoryListenerAttached, this, Listener),
+       boost::bind(&Inventory::removeInventoryListener, this, Listener));
+}
+
+void Inventory::removeInventoryListener(InventoryListenerPtr Listener)
+{
+   InventoryListenerSetItor EraseIter(_InventoryListeners.find(Listener));
+   if(EraseIter != _InventoryListeners.end())
+   {
+      _InventoryListeners.erase(EraseIter);
+   }
+}
+
+void Inventory::produceItemAdded(const InventoryEvent& e)
+{
+	InventoryListenerSet Listeners(_InventoryListeners);
+    for(InventoryListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->itemAdded(e);
+    }
+}
+void Inventory::produceInventorySorted(const InventoryEvent& e)
+{
+	InventoryListenerSet Listeners(_InventoryListeners);
+    for(InventoryListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->inventorySorted(e);
+    }
+}
+void Inventory::produceItemRemoved(const InventoryEvent& e)
+{
+	InventoryListenerSet Listeners(_InventoryListeners);
+    for(InventoryListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->itemRemoved(e);
+    }
+}
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
