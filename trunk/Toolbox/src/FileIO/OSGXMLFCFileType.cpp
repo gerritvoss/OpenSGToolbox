@@ -107,7 +107,6 @@ std::string XMLFCFileType::getName(void) const
 
 	xmlpp::xmlcontextptr               Context( new xmlpp::xmlcontext );
 	xmlpp::xmldocument                 node( Context );
-	xmlpp::xmlnodeptr                  nP;
 	xmlpp::xmlnodelist::const_iterator nI;
 	xmlpp::xmlattributes               attr;
 	xmlpp::xmlattributes::iterator     AttributeIterator;
