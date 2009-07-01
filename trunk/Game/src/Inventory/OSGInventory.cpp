@@ -81,15 +81,26 @@ void Inventory::addItem(InventoryItemPtr Item)
 {
 	getInventoryItems().push_back(Item);
 	sortInventory();
-	if(getRootInventory())
+	if(getRootInventory() && !Item->getClasses().isEmpty())
 	{
-		if(!Item->getClasses().isEmpty())
+		for(UInt32 i = 0; i < Item->getClasses().getSize(); i++)
 		{
-			for(UInt32 i = 0; i < Item->getClasses().getSize(); i++)
+			bool classExists = false;
+			for(UInt32 c = 0; c < getInventoryClasses().getSize(); c++)
 			{
-				for(UInt32 c = 0; c < getInventoryClasses().getSize(); c++)
+				if(Item->getClasses(i) == getInventoryClasses(c)->getInventoryClassName())
 				{
+					classExists = true;
+					getInventoryClasses(c)->addItem(Item);
 				}
+			}
+			if(!classExists)
+			{
+				InventoryPtr CInventory = osg::Inventory::create();
+				beginEditCP(CInventory, Inventory::RootInventoryFieldMask | Inventory::InventoryClassNameFieldMask);
+					setInventoryClassName(Item->getClasses(i));
+					setRootInventory(false);
+				endEditCP(CInventory, Inventory::RootInventoryFieldMask | Inventory::InventoryClassNameFieldMask);
 			}
 		}
 	}
