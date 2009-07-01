@@ -114,8 +114,6 @@ void Skeleton::removeSkeletonListener(SkeletonListenerPtr Listener)
 
 void Skeleton::produceChangedEvent(void)
 {
-	std::cout << "Skeleton: produceChangedEvent" << std::endl;
-
 	SkeletonEvent TheEvent( SkeletonPtr(this), getTimeStamp(), SkeletonPtr(this));
 
 	SkeletonListenerSet ListenerSet(_SkeletonListeners);

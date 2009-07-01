@@ -99,7 +99,7 @@ std::vector<NodePtr> MeshNodes;
 
 // forward declaration so we can have the interesting stuff upfront
 ComponentPtr createGLPanel(void);
-bool animationPaused = true;
+bool animationPaused = false;
 
 bool ExitApp = false;
 

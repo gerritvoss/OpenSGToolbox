@@ -124,8 +124,6 @@ std::map<unsigned long, Matrix> SkeletonAnimation::getRelTransformations(const R
 
 void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 {
-	std::cout << "SkeletonAnimation: internalUpdate" << std::endl;
-
 	//Apply all of the Transformation Animators
 	for(UInt32 i(0) ; i<getTransformationAnimators().size() ; ++i)
 	{
@@ -152,8 +150,15 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 
     if(getSkeleton() != NullFC)
     {
+		//std::cout << "Updating Joint Transformations" << std::endl;
+		//double startTme = osg::getSystemTime();
+
         getSkeleton()->updateJointTransformations();
-        //getSkeleton()->skeletonUpdated();
+        
+		/*double endTme = osg::getSystemTime();\
+		std::cout << "  TIME (updateJointTransformations): " << endTme - startTme << std::endl;*/
+		
+		//getSkeleton()->skeletonUpdated();
     }
 }
 

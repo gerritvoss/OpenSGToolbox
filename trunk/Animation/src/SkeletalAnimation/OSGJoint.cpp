@@ -143,10 +143,8 @@ void Joint::calculateTransformations(void)
 	_RelativeDifferenceTransformation.multLeft(getRelativeTransformation());
 }
 
-void Joint::updateTransformations(bool isRecursive)
+void Joint::updateTransformations(bool isRecursive, bool tellSkeleton)
 {
-	std::cout << "Joint: UpdateTransformations" << std::endl;
-
 	calculateTransformations();
 
 	for (int i(0); i < getChildJoints().size(); ++i)
@@ -154,7 +152,7 @@ void Joint::updateTransformations(bool isRecursive)
 		getChildJoints(i)->updateTransformations(true);
 	}
 
-	if(!isRecursive && getParentSkeleton() != NullFC)
+	if(!isRecursive && getParentSkeleton() != NullFC && tellSkeleton)
 	{
 		//Tell skeleton joint has been updated
 		getParentSkeleton()->skeletonUpdated();

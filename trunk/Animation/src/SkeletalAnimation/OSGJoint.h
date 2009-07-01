@@ -120,7 +120,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
 	 * 
 	 * @param	isRecursive	-- Set to true to tell skeleton about the update.
 	*****************************************************************************/
-	void updateTransformations(bool isRecursive);
+	void updateTransformations(bool isRecursive, bool tellSkeleton = true);
 
 	/**************************************************************************//**
 	 * @fn	Matrix previewRelativeDifferenceTransformation(Matrix relativeTransform

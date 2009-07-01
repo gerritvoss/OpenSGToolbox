@@ -52,6 +52,7 @@
 #include "OSGSkeletonBlendedAnimation.h"
 #include "OSGSkeletonAnimation.h"
 #include "OSGJoint.h"
+#include "OSGSkeleton.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -147,9 +148,13 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 			blendedRelDifTrans.mult((*iter)->getBindRelativeTransformation());
 			(*iter)->setRelativeTransformation(blendedRelDifTrans);
 
-			(*iter)->updateTransformations(false);
+			//Update joint, but don't tell skeleton
+			(*iter)->updateTransformations(false, false);
 
 		}
+
+		//Tell skeleton to update
+		(*animatedJoints.begin())->getParentSkeleton()->skeletonUpdated();
 	}
 }
 

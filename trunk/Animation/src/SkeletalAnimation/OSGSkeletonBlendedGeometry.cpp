@@ -188,8 +188,6 @@ void SkeletonBlendedGeometry::addJointBlending(const UInt32& PositionIndex, cons
 
 void SkeletonBlendedGeometry::calculatePositions(void)
 {
-	std::cout << "CALCULATING POSITIONS" << std::endl;
-
 	if(getBaseGeometry() != NullFC &&
 		getPositions() != NullFC &&
         getBaseGeometry()->getPositions() != NullFC &&
@@ -198,33 +196,28 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 	{
 		Pnt3f CalculatedPoint;
 		Vec3f CalculatedNormal;
-		//Update the Positions and Normals
-		std::set<UInt32> VisitedIndicies;
 
-		//UInt32 VertexesTransformations[n];
+
+		//Set the values of all points to 0
+		for (int i(0); i < getPositions()->size(); ++i)
+		{
+			getPositions()->setValue(Pnt3f(0, 0, 0), i);
+		}
+
+		//Update the Positions and Normals
 		for(UInt32 i(0) ; i < getPositionIndexes().size() ; ++i)
 		{
+
 			Matrix temp = getJoints(i)->getAbsoluteDifferenceTransformation();
 			temp.scale(getBlendAmounts(i));
 			temp.mult(getBaseGeometry()->getPositions()->getValue(getPositionIndexes(i)), CalculatedPoint);
 			//temp.mult(getBaseGeometry()->getNormals()->getValue(getPositionIndexes(i)), CalculatedNormal);
+			
 
-
-
-			if(VisitedIndicies.find(getPositionIndexes(i)) == VisitedIndicies.end())
-			{
-				//Overwrite
-				VisitedIndicies.insert(getPositionIndexes(i));
-			}
-			else
-			{
-				//Add
-				CalculatedPoint += getPositions()->getValue(getPositionIndexes(i));
-			}
+			//Add
+			CalculatedPoint += getPositions()->getValue(getPositionIndexes(i));
 			getPositions()->setValue(CalculatedPoint, getPositionIndexes(i));
 		}
-
-
 
 		for(UInt32 i = 0; i < _parents.size(); i++)
 		{
@@ -236,8 +229,6 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 		//Error
 		std::cout << "ERROR: There is a problem with the skeleton blended geometry." << std::endl;
 	}
-
-
 }
 
 void SkeletonBlendedGeometry::changed(const SkeletonEvent& e)
