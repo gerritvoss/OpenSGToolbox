@@ -29,6 +29,7 @@
 #include <OpenSG/ParticleSystem/OSGBurstParticleGenerator.h>
 #include <OpenSG/ParticleSystem/OSGGravityParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGRadialParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGVortexParticleAffector.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGSegmentDistribution1D.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
@@ -303,11 +304,6 @@ int main(int argc, char **argv)
 
 	//NodePtr AffectorBeacon = osg::Node::create();
 
-	//beginEditCP(AffectorBeacon)
-	//	AffectorBeacon->
-	//
-	//endEditCP(AffectorBeacon);
-
 	RadialParticleAffectorPtr ExampleRadialAffector = osg::RadialParticleAffector::create();
 	beginEditCP(ExampleRadialAffector);
 		ExampleRadialAffector->setBeacon(osg::Node::create());
@@ -316,19 +312,29 @@ int main(int argc, char **argv)
 	endEditCP(ExampleRadialAffector);
 
 
+	VortexParticleAffectorPtr ExampleVortexAffector = osg::VortexParticleAffector::create();
+	beginEditCP(ExampleVortexAffector);
+		ExampleVortexAffector->setBeacon(osg::Node::create());
+		ExampleVortexAffector->setMagnitude(-9.5);
+		ExampleVortexAffector->setAttenuation(2.0);
+	endEditCP(ExampleVortexAffector);
+
+
+
+
 	//Attach the Generator to the Particle System
 	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 		//ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
 		ExampleParticleSystem->setMaxParticles(100);
 		ExampleParticleSystem->getGenerators().push_back(ExampleGeneratorTheSequel);
-		ExampleParticleSystem->getAffectors().push_back(ExampleRadialAffector);
+		ExampleParticleSystem->getAffectors().push_back(ExampleVortexAffector);
 	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 	
 	//Particle System Node
     ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExampleDiscParticleSystemDrawer);
+		ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
 		ParticleNodeCore->setSortingMode(ParticleSystemCore::FRONT_TO_BACK);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);

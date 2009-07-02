@@ -46,8 +46,11 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGMatrix.h>
+#include <OpenSG/OSGQuaternion.h>
 
 #include "OSGVortexParticleAffector.h"
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,28 +81,25 @@ void VortexParticleAffector::initMethod (void)
 
 bool VortexParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	//if(getBeacon() != NullFC)
-	//{
-	//	Matrix BeaconToWorld(getBeacon()->getToWorld());
-	//	Vec3f translation, tmp;
-	//	Quaternion tmp2;
-	//	BeaconToWorld.getTransform(translation,tmp2,tmp,tmp2);
+	if(getBeacon() != NullFC)
+	{
+		Matrix BeaconToWorld(getBeacon()->getToWorld());
+		Vec3f translation, tmp;
+		Quaternion tmp2;
+		BeaconToWorld.getTransform(translation,tmp2,tmp,tmp2);
 
-	//	distance from affector to particle
-	//	Pnt3f particlePos = System->getPosition(ParticleIndex);
-	//	Real32 distanceFromAffector = particlePos.dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
+		Pnt3f particlePos = System->getPosition(ParticleIndex);
+		Real32 distanceFromAffector = particlePos.dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
 
-	//	if((getMaxDistance() < 0.0) || (distanceFromAffector <= getMaxDistance())) //only affect the particle if it is in range
-	//	{	
-	//		 get direction from particle to the affector
-	//		Vec3f newtonianForce(particlePos.x() - translation.x(), particlePos.y() - translation.y(), particlePos.z() - translation.z());
-	//		newtonianForce.normalize();
-	//		 computing velocity change due to field
-	//		newtonianForce *= ((-getMagnitude()/getParticleMass()) * elps)/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
-	//		 set new particle velocity
-	//		System->setVelocity(newtonianForce + System->getVelocity(ParticleIndex),ParticleIndex);
-	//	}
-	//}
+		if((getMaxDistance() < 0.0) || (distanceFromAffector <= getMaxDistance())) //only affect the particle if it is in range
+		{	
+			Vec3f particleDirectionFromVortex(particlePos.x() - translation.x(), particlePos.y() - translation.y(), particlePos.z() - translation.z());
+			particleDirectionFromVortex = particleDirectionFromVortex.cross(getVortexAxis());
+			particleDirectionFromVortex.normalize();
+			particleDirectionFromVortex *= (-getMagnitude() * elps)/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
+			System->setVelocity(particleDirectionFromVortex + System->getVelocity(ParticleIndex),ParticleIndex);
+		}
+	}
 
 	return false;
 }
