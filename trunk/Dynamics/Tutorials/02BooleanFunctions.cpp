@@ -45,7 +45,7 @@ bool ExitMainLoop = false;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 
 class TutorialKeyListener : public KeyListener
@@ -266,7 +266,7 @@ void display(void)
 }
 
 // react to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

@@ -1,2 +1,0 @@
-LIBTYPE=		opt
-include ../Makefile

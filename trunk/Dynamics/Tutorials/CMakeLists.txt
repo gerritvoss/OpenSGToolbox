@@ -1,0 +1,126 @@
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
+PROJECT("Animation Tutorials")
+
+SET (CMAKE_VERBOSE_MAKEFILE TRUE)
+
+######### Revision number
+FIND_PACKAGE(Subversion)
+IF(Subversion_FOUND)
+   Subversion_WC_INFO(${CMAKE_HOME_DIRECTORY} Project)
+   MESSAGE("Current revision is ${Project_WC_REVISION}")
+ENDIF(Subversion_FOUND)
+
+######### FMod
+FIND_PATH(FMOD_BASE_DIR NAMES api/inc/fmod.h PATHS "/Developer/FMOD Programmers API")
+SET(FMOD_INC_DIR ${FMOD_BASE_DIR}/api/inc)
+SET(FMOD_LIB_DIR ${FMOD_BASE_DIR}/api/lib)
+
+
+######### OpenSG
+IF(WIN32)
+   SET(OPENSG_BASE_DIR $ENV{OPENSG}/..)
+ENDIF(WIN32)
+
+FIND_PATH(OPENSG_BASE_DIR include/OpenSG/OSGConfig.h)
+SET(OPENSG_INC_DIR ${OPENSG_BASE_DIR}/include)
+SET(OPENSG_LIB_DIR ${OPENSG_BASE_DIR}/lib)
+
+IF (UNIX)
+   FIND_PROGRAM(OSG_CONFIG osg-config ${OPENSG_BASE_DIR}/bin)
+   #IF (${OSG_CONFIG})
+     IF(APPLE)
+	    SET(OPENSG_CXX_FLAGS "`${OSG_CONFIG} --cflags Base System Carbon`")
+	    SET(OPENSG_LD_FLAGS "`${OSG_CONFIG} --lflags Base System Carbon`")
+	    SET(OPENSG_LIBS "`${OSG_CONFIG} --llibs Base System Carbon`")
+     ELSE(APPLE)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --dbg --cflags Base System X OUTPUT_VARIABLE OPENSG_CXX_FLAGS_DBG)
+       STRING(STRIP ${OPENSG_CXX_FLAGS_DBG}  OPENSG_CXX_FLAGS_DBG)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --opt --cflags Base System X OUTPUT_VARIABLE OPENSG_CXX_FLAGS_OPT)
+       STRING(STRIP ${OPENSG_CXX_FLAGS_OPT}  OPENSG_CXX_FLAGS_OPT)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --dbg --lflags Base System X OUTPUT_VARIABLE OPENSG_LD_FLAGS_DBG)
+       STRING(STRIP ${OPENSG_LD_FLAGS_DBG}  OPENSG_LD_FLAGS_DBG)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --opt --lflags Base System X OUTPUT_VARIABLE OPENSG_LD_FLAGS_OPT)
+       STRING(STRIP ${OPENSG_LD_FLAGS_OPT}  OPENSG_LD_FLAGS_OPT)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --opt --libs Base System X OUTPUT_VARIABLE OPENSG_LIBS_OPT)
+       STRING(STRIP ${OPENSG_LIBS_OPT}  OPENSG_LIBS_OPT)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --dbg --libs Base System X OUTPUT_VARIABLE OPENSG_LIBS_DBG)
+       STRING(STRIP ${OPENSG_CXX_FLAGS_OPT}  OPENSG_LIBS_DBG)
+     ENDIF(APPLE)
+     #ELSE(${OSG_CONFIG})
+     #   MESSAGE("osg-config not found")
+     #ENDIF (${OSG_CONFIG})
+ENDIF(UNIX)
+
+IF(WIN32)
+   SET(OPENSG_CXX_FLAGS_DBG "-D_WIN32_WINNT=0x0400 -D_OSG_HAVE_CONFIGURED_H_ -DOSG_WITH_GLUT -DOSG_WITH_GIF -DOSG_WITH_TIF -DOSG_WITH_JPG -D_DEBUG /MP")
+   SET(OPENSG_CXX_FLAGS_OPT "-D_WIN32_WINNT=0x0400 -D_OSG_HAVE_CONFIGURED_H_ -DOSG_WITH_GLUT -DOSG_WITH_GIF -DOSG_WITH_TIF -DOSG_WITH_JPG /MP")
+   SET(OPENSG_LD_FLAGS_DBG "")
+   SET(OPENSG_LD_FLAGS_OPT "")
+   SET(OPENSG_LIBS_DBG OSGBaseD OSGSystemD)
+   SET(OPENSG_LIBS_OPT OSGBase OSGSystem)
+   SET(OPENSG_WINDOW_LIBS debug OSGWindowWIN32D optimized OSGWindowWIN32)                
+ENDIF(WIN32)
+
+######## BOOST
+FIND_PACKAGE(Boost REQUIRED COMPONENTS system filesystem)
+
+######### ODE
+
+######### OpenSGToolbox
+FIND_PATH(OPENSGTOOLBOX_BASE_DIR include/OpenSG/Toolbox/OSGToolboxdef.h)
+SET(OPENSGTOOLBOX_INC_DIR ${OPENSGTOOLBOX_BASE_DIR}/include)
+SET(OPENSGTOOLBOX_LIB_DIR ${OPENSGTOOLBOX_BASE_DIR}/lib)
+INCLUDE(${OPENSGTOOLBOX_BASE_DIR}/lib/export/OpenSGToolboxExport.cmake
+   OPTIONAL
+   RESULT_VARIABLE FOUND_OPENSGTOOLBOX_EXPORTS)
+
+IF(${FOUND_OPENSGTOOLBOX_EXPORTS} STREQUAL NOTFOUND)
+   MESSAGE("Did NOT find OpenSG Toolbox Exports: ${FOUND_OPENSGTOOLBOX_EXPORTS}")
+ELSE(${FOUND_OPENSGTOOLBOX_EXPORTS} STREQUAL NOTFOUND)
+   MESSAGE("FOUND OpenSG Toolbox Exports")
+ENDIF(${FOUND_OPENSGTOOLBOX_EXPORTS} STREQUAL NOTFOUND)
+
+#Include Boost and OpenSG
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${OPENSG_INC_DIR} ${OPENSGTOOLBOX_INC_DIR})
+
+#Link to bost and OpenSG
+LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSGTOOLBOX_LIB_DIR})
+
+######## Tutorial executables
+SET(TUTORIAL_LIST 01RandomDistributions 02BooleanFunctions 10UserInterface 11FunctionComponentPanel)
+FOREACH(TUTORIAL ${TUTORIAL_LIST})
+   MESSAGE("Configurint Tutorial: ${TUTORIAL}")
+
+   ADD_EXECUTABLE(${TUTORIAL} ${TUTORIAL}.cpp)
+   
+   #Attach all of the Compile flags
+   SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES COMPILE_FLAGS_DEBUG "${OPENSG_CXX_FLAGS_DBG}")
+   SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES COMPILE_FLAGS_RELEASE "${OPENSG_CXX_FLAGS_OPT}")
+   SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES COMPILE_FLAGS_MINSIZEREL "${OPENSG_CXX_FLAGS_OPT}")
+   SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES COMPILE_FLAGS_RELWITHDEBINFO "${OPENSG_CXX_FLAGS_OPT}")
+
+   SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES LINK_FLAGS_DEBUG "${OPENSG_LIBS_DBG}")
+   SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES LINK_FLAGS ${OPENSG_LIBS_OPT})
+   SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES LINK_FLAGS_MINSIZEREL "${OPENSG_LIBS_OPT}")
+   SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "${OPENSG_LIBS_OPT}")
+ENDFOREACH(TUTORIAL ${TUTORIAL_LIST})
+
+#Attach all of the linker libraries
+TARGET_LINK_LIBRARIES(01RandomDistributions optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
+                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
+                                     ${Boost_LIBRARIES})
+TARGET_LINK_LIBRARIES(02BooleanFunctions optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics
+                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD
+                                     ${Boost_LIBRARIES})
+TARGET_LINK_LIBRARIES(10UserInterface optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGUserInterface
+                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGUserInterfaceD
+                                     ${Boost_LIBRARIES})
+TARGET_LINK_LIBRARIES(11FunctionComponentPanel optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGUserInterface
+                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGUserInterfaceD
+                                     ${Boost_LIBRARIES})
+
+
+
+
+

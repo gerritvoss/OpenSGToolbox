@@ -31,9 +31,24 @@ OPTION(ENABLE_USER_DOCUMENTATION "Generate user level documentation." ON)
 OPTION(ENABLE_DEVELOPER_DOCUMENTATION "Generate developer level documentation." OFF)
 
 ######### FMod
-FIND_PATH(FMOD_BASE_DIR NAMES api/inc/fmod.h PATHS "/Developer/FMOD Programmers API")
-SET(FMOD_INC_DIR ${FMOD_BASE_DIR}/api/inc)
-SET(FMOD_LIB_DIR ${FMOD_BASE_DIR}/api/lib)
+OPTION(ENABLE_FMOD "Enable Fmod support in sound library." ON)
+IF(ENABLE_FMOD)
+   MESSAGE("Fmod Enabled")
+   FIND_PATH(FMOD_BASE_DIR NAMES api/inc/fmod.h PATHS "/Developer/FMOD Programmers API")
+   IF(NOT EXISTS ${FMOD_BASE_DIR})
+      MESSAGE(SEND_ERROR "The supplied Fmod Base dir: ${FMOD_BASE_DIR} does not exists")
+   ENDIF(NOT EXISTS ${FMOD_BASE_DIR})
+   IF(NOT EXISTS ${FMOD_BASE_DIR}/api/inc)
+      MESSAGE(SEND_ERROR "The Fmod Include dir: ${FMOD_BASE_DIR}/api/inc does not exists")
+   ENDIF(NOT EXISTS ${FMOD_BASE_DIR}/api/inc)
+   IF(NOT EXISTS ${FMOD_BASE_DIR}/api/lib)
+      MESSAGE(SEND_ERROR "The Fmod Include dir: ${FMOD_BASE_DIR}/api/lib does not exists")
+   ENDIF(NOT EXISTS ${FMOD_BASE_DIR}/api/lib)
+
+   SET(FMOD_INC_DIR ${FMOD_BASE_DIR}/api/inc)
+   SET(FMOD_LIB_DIR ${FMOD_BASE_DIR}/api/lib)
+   SET(FMOD_LIBRARIES fmodex64)
+ENDIF(ENABLE_FMOD)
 
 
 ######### OpenSG
@@ -85,6 +100,24 @@ FIND_PACKAGE(Boost REQUIRED)
 
 
 ######### ODE
+OPTION(ENABLE_PHYSICS "Enable the physics library." ON)
+IF(ENABLE_PHYSICS)
+   MESSAGE("Physics Enabled")
+   FIND_PATH(ODE_BASE_DIR include/ode/ode.h)
+   IF(NOT EXISTS ${ODE_BASE_DIR})
+      MESSAGE(SEND_ERROR "The supplied ODE Base dir: ${ODE_BASE_DIR} does not exists")
+   ENDIF(NOT EXISTS ${ODE_BASE_DIR})
+   IF(NOT EXISTS ${ODE_BASE_DIR}/include)
+      MESSAGE(SEND_ERROR "The ODE Include dir: ${ODE_BASE_DIR}/include does not exists")
+   ENDIF(NOT EXISTS ${ODE_BASE_DIR}/include)
+   IF(NOT EXISTS ${ODE_BASE_DIR}/lib)
+      MESSAGE(SEND_ERROR "The ODE Include dir: ${ODE_BASE_DIR}/lib does not exists")
+   ENDIF(NOT EXISTS ${ODE_BASE_DIR}/lib)
+
+   SET(ODE_INC_DIR ${ODE_BASE_DIR}/include)
+   SET(ODE_LIB_DIR ${ODE_BASE_DIR}/lib)
+   SET(ODE_LIBRARIES ode)
+ENDIF(ENABLE_PHYSICS)
 
 ######### Documentation
 ADD_CUSTOM_TARGET(documentation ALL COMMENT "Building Documentation")
@@ -108,6 +141,24 @@ SET(OPENSG_INPUT_BUILD_DIR "${CMAKE_BINARY_DIR}/Input")
 ADD_SUBDIRECTORY(Input/src "Input")
 SET(OPENSG_ANIMATION_BUILD_DIR "${CMAKE_BINARY_DIR}/Animation")
 ADD_SUBDIRECTORY(Animation/src "Animation")
+SET(OPENSG_DYNAMICS_BUILD_DIR "${CMAKE_BINARY_DIR}/Dynamics")
+ADD_SUBDIRECTORY(Dynamics/src "Dynamics")
+SET(OPENSG_PARTICLESYSTEM_BUILD_DIR "${CMAKE_BINARY_DIR}/ParticleSystem")
+ADD_SUBDIRECTORY(ParticleSystem/src "ParticleSystem")
+SET(OPENSG_SOUND_BUILD_DIR "${CMAKE_BINARY_DIR}/Sound")
+ADD_SUBDIRECTORY(Sound/src "Sound")
+SET(OPENSG_METABOLIC_BUILD_DIR "${CMAKE_BINARY_DIR}/Metabolic")
+ADD_SUBDIRECTORY(Metabolic/src "Metabolic")
+SET(OPENSG_USERINTERFACE_BUILD_DIR "${CMAKE_BINARY_DIR}/UserInterface")
+ADD_SUBDIRECTORY(UserInterface/src "UserInterface")
+SET(OPENSG_GAME_BUILD_DIR "${CMAKE_BINARY_DIR}/Game")
+ADD_SUBDIRECTORY(Game/src "Game")
+
+
+IF(ENABLE_PHYSICS)
+   SET(OPENSG_PHYSICS_BUILD_DIR "${CMAKE_BINARY_DIR}/Physics")
+   ADD_SUBDIRECTORY(Physics/src "Physics")
+ENDIF(ENABLE_PHYSICS)
 
 INSTALL(EXPORT ${OPENSGTOOLBOX_EXPORT_NAME}
         NAMESPACE ""

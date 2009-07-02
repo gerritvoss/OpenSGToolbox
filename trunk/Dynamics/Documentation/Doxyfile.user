@@ -1,0 +1,21 @@
+# Doxyfile 1.5.4
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+@INCLUDE               = ../../Builds/Common/Doxyfile.default.user
+
+# The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
+# by quotes) that should identify the project.
+
+PROJECT_NAME           = OSGDynamics
+
+# If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then 
+# this tag can be used to specify a list of macro names that should be expanded. 
+# The macro definition that is found in the sources will be used. 
+# Use the PREDEFINED tag if you want to use a different macro definition.
+
+EXPAND_AS_DEFINED      = \
+    OSG_DYNAMICSLIB_DLLMAPPING                                       
+ 

@@ -1,4 +1,4 @@
-SET(LIBRARY_SHORT_NAME Sound)
+SET(LIBRARY_SHORT_NAME UserInterface)
 SET(LIBRARY_NAME OSG${LIBRARY_SHORT_NAME})
 
 #Get a listing of the Header, source, and inline files
@@ -7,20 +7,20 @@ FILE(GLOB_RECURSE SOURCES *.cpp)
 FILE(GLOB_RECURSE INLINES *.inl)
 
 #Definition required when building the library
-ADD_DEFINITIONS(-DOSG_COMPILESOUNDLIB)
+ADD_DEFINITIONS(-DOSG_COMPILEUSERINTERFACELIB)
 
 #Include Boost and OpenSG
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${OPENSG_INC_DIR} "./"
    "${OPENSG_TOOLBOX_BUILD_DIR}/include" "${OPENSG_INPUT_BUILD_DIR}/include"
-   "${FMOD_INC_DIR}")
+   "${OPENSG_DYNAMICS_BUILD_DIR}/include")
 
 #Link to bost and OpenSG
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSG_LIB_DIR}
-   "${OPENSG_TOOLBOX_BUILD_DIR}" "${OPENSG_INPUT_BUILD_DIR}" "${FMOD_LIB_DIR}")
+   "${OPENSG_TOOLBOX_BUILD_DIR}" "${OPENSG_INPUT_BUILD_DIR}" "${OPENSG_DYNAMICS_BUILD_DIR}")
 
 #Configure shared library creation
 ADD_LIBRARY(${LIBRARY_NAME} SHARED ${HEADERS} ${SOURCES} ${INLINES})
-ADD_DEPENDENCIES(${LIBRARY_NAME} OSGToolbox OSGInput)
+ADD_DEPENDENCIES(${LIBRARY_NAME} OSGToolbox OSGInput OSGDynamics)
 
 #Header files build
 FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include")
@@ -42,8 +42,9 @@ SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS_RELWITHDEBINFO "$
 
 #Attach all of the linker libraries
 TARGET_LINK_LIBRARIES(${LIBRARY_NAME} optimized OSGBase optimized OSGSystem
-   optimized OSGToolbox optimized OSGInput debug OSGBase debug
-   OSGSystem debug OSGToolboxD debug OSGInputD general ${FMOD_LIBRARIES})
+   optimized OSGToolbox optimized OSGInput optimized OSGDynamics
+   debug OSGBase debug OSGSystem debug OSGToolboxD debug OSGInputD debug
+   OSGDynamicsD)
 
 
 #Installing instructions
