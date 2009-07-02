@@ -51,12 +51,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02MiniMap", "02MiniMap.vcpr
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03MiniMapMultipleIndicators", "03 MiniMapMultipleIndicators.vcproj", "{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGSound", "..\..\Sound\Builds\Windows\OSGSound.vcproj", "{63064F35-1605-4FEC-895E-D27E9448F7EF}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
@@ -123,6 +117,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08XMLDialog", "08XMLDialog.
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03MiniMapMultipleIndicators", "03MiniMapMultipleIndicators.vcproj", "{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -157,10 +153,6 @@ Global
 		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Debug|Win32.Build.0 = Debug|Win32
 		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Release|Win32.ActiveCfg = Release|Win32
 		{3BF16424-AB24-4672-83B6-00BBA7A35301}.Release|Win32.Build.0 = Release|Win32
-		{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}.Debug|Win32.Build.0 = Debug|Win32
-		{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}.Release|Win32.ActiveCfg = Release|Win32
-		{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}.Release|Win32.Build.0 = Release|Win32
 		{63064F35-1605-4FEC-895E-D27E9448F7EF}.Debug|Win32.ActiveCfg = Debug|Win32
 		{63064F35-1605-4FEC-895E-D27E9448F7EF}.Debug|Win32.Build.0 = Debug|Win32
 		{63064F35-1605-4FEC-895E-D27E9448F7EF}.Release|Win32.ActiveCfg = Release|Win32
@@ -205,6 +197,10 @@ Global
 		{4EFFC521-DCDD-4006-8A9A-FABEC8FF740C}.Debug|Win32.Build.0 = Debug|Win32
 		{4EFFC521-DCDD-4006-8A9A-FABEC8FF740C}.Release|Win32.ActiveCfg = Release|Win32
 		{4EFFC521-DCDD-4006-8A9A-FABEC8FF740C}.Release|Win32.Build.0 = Release|Win32
+		{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}.Debug|Win32.Build.0 = Debug|Win32
+		{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}.Release|Win32.ActiveCfg = Release|Win32
+		{7F2435CF-3503-4B0D-A6BC-C1CFB004F0AC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
