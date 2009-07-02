@@ -50,8 +50,8 @@
 #include "OSGDialog.h"
 #include "OSGDialogInterface.h"
 #include <OpenSG/Toolbox/OSGStringUtils.h>
-#include "OpenSG/UserInterface/OSGLabel.h"
-#include "OpenSG/UserInterface/OSGComponent.h"
+#include <OpenSG/UserInterface/OSGLabel.h>
+#include <OpenSG/UserInterface/OSGComponent.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 
 OSG_BEGIN_NAMESPACE

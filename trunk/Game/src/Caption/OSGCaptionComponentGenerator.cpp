@@ -49,7 +49,7 @@
 
 #include "OSGCaption.h"
 #include "OSGCaptionComponentGenerator.h"
-#include "OpenSG/UserInterface/OSGComponent.h"
+#include <OpenSG/UserInterface/OSGComponent.h>
 #include "OSGDefaultCaptionComponentGenerator.h"
 
 OSG_BEGIN_NAMESPACE
