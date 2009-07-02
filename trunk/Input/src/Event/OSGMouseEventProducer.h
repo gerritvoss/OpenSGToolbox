@@ -67,3 +67,5 @@ OSG_END_NAMESPACE
 #include "OSGMouseEventProducer.inl"
 
 #endif /* _OSGMOUSEVENTPRODUCER_H_ */
+
+

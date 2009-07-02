@@ -258,3 +258,5 @@ osg::QuaternionBase<ValueTypeT> slerp(const osg::QuaternionBase<ValueTypeT>& lVa
 OSG_END_NAMESPACE
 
 #endif
+
+

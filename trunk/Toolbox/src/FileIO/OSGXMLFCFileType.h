@@ -118,3 +118,5 @@ OSG_END_NAMESPACE
 #include "OSGXMLFCFileType.inl"
 
 #endif /* _OSGXMLFCFILETYPE_H_ */
+
+

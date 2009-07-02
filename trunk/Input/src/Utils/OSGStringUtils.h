@@ -51,3 +51,5 @@ bool OSG_INPUTLIB_DLLMAPPING isWhitespaceChar(UChar8 c);
 OSG_END_NAMESPACE
 
 #endif
+
+

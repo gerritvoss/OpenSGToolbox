@@ -45,3 +45,5 @@ AnimationEvent::AnimationEvent(FieldContainerPtr Source, Time TimeStamp,
 }
 
 OSG_END_NAMESPACE
+
+

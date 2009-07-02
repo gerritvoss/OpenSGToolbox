@@ -164,3 +164,4 @@ OSG_END_NAMESPACE
 #include "OSGKeyframeFCPtrsSequence.inl"
 
 #endif /* _OSGKEYFRAME_FCPTRS_SEQUENCE_H_ */
+

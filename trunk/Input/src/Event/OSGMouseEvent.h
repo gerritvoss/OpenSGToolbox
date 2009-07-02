@@ -80,3 +80,5 @@ OSG_END_NAMESPACE
 #include "OSGMouseEvent.inl"
 
 #endif /* _OSGEVENT_H_ */
+
+

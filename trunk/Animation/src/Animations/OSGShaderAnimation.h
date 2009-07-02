@@ -121,3 +121,5 @@ OSG_END_NAMESPACE
 #define OSGSHADERANIMATION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSHADERANIMATION_H_ */
+
+

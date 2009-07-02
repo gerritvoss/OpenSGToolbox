@@ -164,7 +164,7 @@ void HeightmapGeometry::createHeightMapGeometry(void)
 			setLengths( GeoPLengthsUI32::create() );
 		}
 		getLengths()->clear();
-		getLengths()->addValue(2.0 * 3.0 * osgfloor(getSegments().x()) * osgfloor(getSegments().y()));
+		getLengths()->addValue(2 * 3 * static_cast<UInt32>(osgfloor(getSegments().x())) *static_cast<UInt32>( osgfloor(getSegments().y())));
 
 		if(getPositions() == NullFC)
 		{

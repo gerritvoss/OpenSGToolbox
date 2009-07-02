@@ -76,3 +76,5 @@ OSG_END_NAMESPACE
 #include "OSGInputEvent.inl"
 
 #endif /* _OSGEVENT_H_ */
+
+

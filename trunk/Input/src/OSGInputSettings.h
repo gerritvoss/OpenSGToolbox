@@ -68,3 +68,5 @@ OSG_END_NAMESPACE
 #include "OSGInputSettings.inl"
 
 #endif /* _OSGINPUTSETTINGS_H_ */
+
+

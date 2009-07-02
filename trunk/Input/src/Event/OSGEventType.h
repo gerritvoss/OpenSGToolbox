@@ -82,3 +82,5 @@ OSG_END_NAMESPACE
 #include "OSGEventType.inl"
 
 #endif /* _OSGEVENT_TYPE_H_ */
+
+

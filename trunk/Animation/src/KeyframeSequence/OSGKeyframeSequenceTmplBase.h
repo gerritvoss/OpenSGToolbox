@@ -336,3 +336,5 @@ OSG_END_NAMESPACE
 #include "OSGKeyframeSequenceTmplBase.inl"
 
 #endif /* _OSGKEYFRAMESEQUENCETMPL_H_ */
+
+

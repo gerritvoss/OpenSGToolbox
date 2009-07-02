@@ -41,3 +41,5 @@ OSG_ANIMATIONLIB_DLLMAPPING osg::Field* getField(osg::GeoTexCoordsPtr Coords);
 OSG_END_NAMESPACE
 
 #endif
+
+

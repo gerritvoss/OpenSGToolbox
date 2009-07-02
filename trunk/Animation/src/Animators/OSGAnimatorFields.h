@@ -129,3 +129,5 @@ OSG_END_NAMESPACE
 #define OSGANIMATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGANIMATORFIELDS_H_ */
+
+

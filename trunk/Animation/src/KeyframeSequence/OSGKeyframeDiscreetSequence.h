@@ -147,3 +147,4 @@ OSG_END_NAMESPACE
 #include "OSGKeyframeDiscreetSequence.inl"
 
 #endif /* _OSGKEYFRAME_DISCREETS_SEQUENCE_H_ */
+

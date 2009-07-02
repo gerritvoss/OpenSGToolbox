@@ -46,3 +46,5 @@ IntrusivePtrImplBase::~IntrusivePtrImplBase(void)
 }
 
 OSG_END_NAMESPACE
+
+

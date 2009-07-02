@@ -151,3 +151,5 @@ FieldContainerPtr getFieldContainer(const std::string &namestring)
 }
 
 OSG_END_NAMESPACE
+
+

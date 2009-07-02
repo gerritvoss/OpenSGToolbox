@@ -69,3 +69,5 @@ OSG_END_NAMESPACE
 
 #include "OSGIntrusivePtrImplBase.inl"
 #endif /* _OSG_INTRUSIVE_PTR_IMPL_BASE_H_ */
+
+

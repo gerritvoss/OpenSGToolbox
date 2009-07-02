@@ -24,3 +24,5 @@ void MouseAdapter::mouseReleased(const MouseEvent& e)
 }
 
 OSG_END_NAMESPACE
+
+

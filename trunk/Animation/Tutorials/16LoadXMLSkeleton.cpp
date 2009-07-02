@@ -19,7 +19,6 @@
 #include <OpenSG/OSGMaterialChunk.h>
 
 //Animation
-#include <OpenSG/Animation/OSGBone.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
 #include <OpenSG/Animation/OSGSkeletonDrawable.h>
 

@@ -218,3 +218,5 @@ namespace
     static Char8 cvsid_cpp[] = "@(#)$Id: $";
     static Char8 cvsid_hpp[] = OSGTYPEFACTORY_HEADER_CVSID;
 }
+
+

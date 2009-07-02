@@ -386,3 +386,5 @@ osg::Field* osg::getField(osg::GeoTexCoordsPtr Coords)
       return NULL;
    }
 }
+
+

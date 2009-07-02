@@ -78,3 +78,5 @@ OSG_ABSTR_KEYFRAMEPROP_DLLEXPORT_DEF(AbstractKeyframeSequenceTmpl,
                                 OSG_ANIMATIONLIB_DLLMAPPING);
 
 OSG_END_NAMESPACE
+
+

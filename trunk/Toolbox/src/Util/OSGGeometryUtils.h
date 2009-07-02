@@ -39,3 +39,5 @@ void OSG_TOOLBOXLIB_DLLMAPPING addColorToGeometry(GeometryPtr TheGeometry, const
 OSG_END_NAMESPACE
 
 #endif
+
+

@@ -26,3 +26,4 @@
 #include "OSGKeyframeSequencePtrs.h"
 
 #endif /* _OSGKEYFRAMESEQUENCES_H_ */
+

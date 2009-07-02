@@ -101,3 +101,4 @@ OSG_END_NAMESPACE
 #include "OSGKeyframeTransformationsSequence.inl"
 
 #endif /* _OSGKEYFRAME_TRANSFORMATIONS_SEQUENCE_H_ */
+

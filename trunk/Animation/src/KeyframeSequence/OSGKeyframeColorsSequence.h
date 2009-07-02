@@ -234,3 +234,4 @@ OSG_END_NAMESPACE
 #include "OSGKeyframeColorsSequence.inl"
 
 #endif /* _OSGKEYFRAME_COLORS_SEQUENCE_H_ */
+

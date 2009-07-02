@@ -70,3 +70,5 @@ Real64 RandomPoolManager::getRandomReal64(UInt32 RandomPool, Real64 Min, Real64 
     boost::uniform_real<Real64> Distribution(Min,Max);
     return Distribution(_RandomPoolGenerators[RandomPool]);
 }
+
+

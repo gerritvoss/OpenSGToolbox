@@ -54,3 +54,5 @@ typedef UpdateListener* UpdateListenerPtr;
 OSG_END_NAMESPACE
 
 #endif /* _OSGUPDATELISTENER_H_ */
+
+

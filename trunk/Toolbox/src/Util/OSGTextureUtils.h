@@ -40,3 +40,5 @@ TextureChunkPtr OSG_TOOLBOXLIB_DLLMAPPING createTexture(ImagePtr Image);
 OSG_END_NAMESPACE
 
 #endif
+
+

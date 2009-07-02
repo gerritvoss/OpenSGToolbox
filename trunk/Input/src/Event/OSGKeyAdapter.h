@@ -56,3 +56,5 @@ typedef KeyAdapter* KeyAdapterPtr;
 OSG_END_NAMESPACE
 
 #endif /* _OSGKEYADAPTER_H_ */
+
+

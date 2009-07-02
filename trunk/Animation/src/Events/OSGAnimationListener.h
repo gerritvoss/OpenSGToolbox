@@ -60,3 +60,5 @@ typedef AnimationListener* AnimationListenerPtr;
 OSG_END_NAMESPACE
 
 #endif /* _OSGANIMATIONLISTENER_H_ */
+
+

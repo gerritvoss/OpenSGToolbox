@@ -134,3 +134,5 @@ OSG_END_NAMESPACE
 #include "OSGBinFCFileType.inl"
 
 #endif /* _OSGBINFCFILETYPE_H_ */
+
+

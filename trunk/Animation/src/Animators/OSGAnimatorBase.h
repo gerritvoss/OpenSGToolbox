@@ -206,3 +206,5 @@ OSG_END_NAMESPACE
 #define OSGANIMATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGANIMATORBASE_H_ */
+
+

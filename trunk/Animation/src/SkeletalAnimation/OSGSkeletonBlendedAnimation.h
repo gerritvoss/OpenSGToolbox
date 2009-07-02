@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGSkeletonBlendedAnimationBase.h"
 
@@ -173,3 +174,5 @@ OSG_END_NAMESPACE
 #define OSGSKELETONBLENDEDANIMATION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSKELETONBLENDEDANIMATION_H_ */
+
+

@@ -498,3 +498,4 @@ OSG_END_NAMESPACE
 #include "OSGKeyframeNumbersSequence.inl"
 
 #endif /* _OSGKEYFRAME_NUMBERS_SEQUENCE_H_ */
+

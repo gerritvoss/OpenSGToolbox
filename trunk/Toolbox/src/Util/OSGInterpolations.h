@@ -54,7 +54,7 @@ template <class FieldTypeT>
 inline FieldTypeT lerp( const FieldTypeT& From, const FieldTypeT& To, const osg::Real32& t)
 {
    //Return the linearly interpolated value
-   return ( From + ( (To - From) * t ) );
+   return ( From + ( (To - From) *  t) );
 }
 
 //Generic Normal Lerp
@@ -320,3 +320,5 @@ inline void spline( const std::vector<osg::TransformationMatrix<ValueTypeT> >& V
 OSG_END_NAMESPACE
 
 #endif
+
+

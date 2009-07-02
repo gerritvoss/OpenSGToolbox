@@ -10,3 +10,5 @@ const EventType &MouseEvent::getType(void) const
 }
 
 OSG_END_NAMESPACE
+
+

@@ -454,3 +454,4 @@ OSG_END_NAMESPACE
 #include "OSGKeyframeVectorsSequence.inl"
 
 #endif /* _OSGKEYFRAME_VECTORS_SEQUENCE_H_ */
+

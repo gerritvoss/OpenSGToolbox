@@ -127,3 +127,5 @@ OSG_KEYFRAMEPROP_DLLEXPORT_DEF (KeyframeSequenceTmpl        ,
                            OSG_ANIMATIONLIB_DLLMAPPING);
 
 OSG_END_NAMESPACE
+
+

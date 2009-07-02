@@ -75,3 +75,5 @@ bool EventType::operator !=(const EventType &other) const
 {
     return ! (*this == other);
 }
+
+

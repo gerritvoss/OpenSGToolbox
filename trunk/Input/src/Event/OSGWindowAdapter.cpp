@@ -69,3 +69,5 @@ void WindowAdapter::windowExited(const WindowEvent& e)
 
 
 OSG_END_NAMESPACE
+
+

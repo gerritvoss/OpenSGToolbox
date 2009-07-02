@@ -38,3 +38,5 @@ const EventType &WindowEvent::getType(void) const
 }
 
 OSG_END_NAMESPACE
+
+

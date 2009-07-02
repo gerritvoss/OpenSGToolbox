@@ -67,3 +67,5 @@ OSG_END_NAMESPACE
 #include "OSGWindowEvent.inl"
 
 #endif /* _OSGWINDOWEVENT_H_ */
+
+

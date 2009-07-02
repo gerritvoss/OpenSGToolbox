@@ -248,3 +248,5 @@ OSG_END_NAMESPACE
 #endif
 
 #endif /* _OSGXWINDOWEVENTPRODUCER_H_ */
+
+

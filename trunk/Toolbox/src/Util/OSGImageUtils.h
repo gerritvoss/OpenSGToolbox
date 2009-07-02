@@ -39,3 +39,5 @@ Real32 OSG_TOOLBOXLIB_DLLMAPPING getPixelIntensity(const Vec2f& coord, ImagePtr 
 OSG_END_NAMESPACE
 
 #endif
+
+

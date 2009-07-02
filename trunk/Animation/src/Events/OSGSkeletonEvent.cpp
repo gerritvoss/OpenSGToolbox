@@ -52,3 +52,5 @@ SkeletonPtr SkeletonEvent::getSkeleton(void) const
 	return _Skeleton;
 }
 OSG_END_NAMESPACE
+
+

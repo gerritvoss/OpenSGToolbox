@@ -453,3 +453,4 @@ OSG_END_NAMESPACE
 #include "OSGKeyframePositionsSequence.inl"
 
 #endif /* _OSGKEYFRAME_POSITIONS_SEQUENCE_H_ */
+

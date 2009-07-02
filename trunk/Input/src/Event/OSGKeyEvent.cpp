@@ -576,3 +576,5 @@ UChar8 KeyEvent::getNonLetterKey(Key k, UInt32 Modifier)
 }
 
 OSG_END_NAMESPACE
+
+

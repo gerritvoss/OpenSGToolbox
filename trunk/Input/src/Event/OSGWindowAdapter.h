@@ -61,3 +61,5 @@ typedef WindowAdapter* WindowAdapterPtr;
 OSG_END_NAMESPACE
 
 #endif /* _OSGWINDOWADAPTER_H_ */
+
+

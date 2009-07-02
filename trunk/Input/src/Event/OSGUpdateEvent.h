@@ -66,3 +66,5 @@ OSG_END_NAMESPACE
 #include "OSGUpdateEvent.inl"
 
 #endif /* _OSGUPDATEEVENT_H_ */
+
+

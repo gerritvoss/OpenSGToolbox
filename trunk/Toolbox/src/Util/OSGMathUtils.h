@@ -177,3 +177,5 @@ void OSG_TOOLBOXLIB_DLLMAPPING setViewMatEyePos(Matrix& Result,const Pnt3f& P);
 OSG_END_NAMESPACE
 
 #endif
+
+

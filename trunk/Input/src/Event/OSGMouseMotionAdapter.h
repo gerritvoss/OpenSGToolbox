@@ -53,3 +53,5 @@ typedef MouseMotionAdapter* MouseMotionAdapterPtr;
 OSG_END_NAMESPACE
 
 #endif /* _OSGMOUSEMOTIONADAPTER_H_ */
+
+

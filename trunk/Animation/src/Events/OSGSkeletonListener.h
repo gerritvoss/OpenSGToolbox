@@ -55,3 +55,5 @@ typedef SkeletonListener* SkeletonListenerPtr;
 OSG_END_NAMESPACE
 
 #endif /* _OSGSKELETONLISTENER_H_ */
+
+

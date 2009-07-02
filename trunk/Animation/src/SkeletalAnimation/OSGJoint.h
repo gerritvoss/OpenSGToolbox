@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGJointBase.h"
 
@@ -214,3 +215,5 @@ OSG_END_NAMESPACE
 #define OSGJOINT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGJOINT_H_ */
+
+

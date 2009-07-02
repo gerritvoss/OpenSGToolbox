@@ -18,10 +18,6 @@
 #include <OpenSG/OSGChunkMaterial.h>
 #include <OpenSG/OSGMaterialChunk.h>
 
-//Animation
-#include <OpenSG/Animation/OSGJoint.h>
-#include <OpenSG/Animation/OSGSkeleton.h>
-#include <OpenSG/Animation/OSGSkeletonDrawable.h>
 
 #include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
@@ -34,7 +30,8 @@
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/Animation/OSGSkeletonAnimation.h>
 #include <OpenSG/Animation/OSGSkeleton.h>
-#include <OpenSG/Animation/OSGBone.h>
+#include <OpenSG/Animation/OSGSkeletonDrawable.h>
+
 
 #include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/Animation/OSGSkeletonBlendedGeometry.h>

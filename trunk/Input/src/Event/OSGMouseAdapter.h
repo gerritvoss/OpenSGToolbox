@@ -55,3 +55,5 @@ typedef MouseAdapter* MouseAdapterPtr;
 OSG_END_NAMESPACE
 
 #endif /* _OSGMOUSEADAPTER_H_ */
+
+

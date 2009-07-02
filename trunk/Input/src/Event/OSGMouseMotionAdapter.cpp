@@ -40,3 +40,5 @@ void MouseMotionAdapter::mouseDragged(const MouseEvent& e)
 }
 
 OSG_END_NAMESPACE
+
+

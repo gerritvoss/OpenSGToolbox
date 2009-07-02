@@ -44,3 +44,5 @@ void MouseEventProducer::produceMouseReleased(const MouseEvent& e)
 }
 
 OSG_END_NAMESPACE
+
+

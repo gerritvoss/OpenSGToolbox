@@ -47,3 +47,5 @@ WindowEventProducerPtr OSG_INPUTLIB_DLLMAPPING createWindowEventProducer(const F
 OSG_END_NAMESPACE
 
 #endif
+
+

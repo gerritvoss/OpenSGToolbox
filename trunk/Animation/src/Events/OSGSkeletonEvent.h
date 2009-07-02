@@ -63,3 +63,5 @@ OSG_END_NAMESPACE
 #include "OSGSkeletonEvent.inl"
 
 #endif /* _OSGSKELETONEVENT_H_ */
+
+
