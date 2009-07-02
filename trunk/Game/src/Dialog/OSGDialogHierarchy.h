@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGGameDef.h"
 
 #include "OSGDialogHierarchyBase.h"
 #include "OSGDialog.h"
