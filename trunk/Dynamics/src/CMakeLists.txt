@@ -136,3 +136,40 @@ if(DOXYGEN_EXECUTABLE)
     ENDIF(ENABLE_DEVELOPER_DOCUMENTATION)
     
 endif(DOXYGEN_EXECUTABLE)
+IF(CONFIGURE_TUTORIALS)
+   #Configure the cmake build of the tutorials
+   MESSAGE("Configuring ${LIBRARY_SHORT_NAME} Tutorials for build type ${CMAKE_BUILD_TYPE}")
+   EXECUTE_PROCESS(COMMAND 
+                   cmake 
+                   -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
+                   -D BOOST_ROOT=${BOOST_ROOT} 
+                   -D OPENSG_BASE_DIR=${OPENSG_BASE_DIR}
+                   -D OPENSGTOOLBOX_BASE_DIR=${CMAKE_INSTALL_PREFIX}
+                   .
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Tutorials)
+
+   #Add a custom target for making and cleaning these tutorials
+   ADD_CUSTOM_TARGET(${LIBRARY_SHORT_NAME}_tutorials
+                        COMMENT "Building ${LIBRARY_SHORT_NAME} Tutorials"
+                        DEPENDS
+                        )
+   ADD_CUSTOM_COMMAND(
+      TARGET ${LIBRARY_SHORT_NAME}_tutorials
+      COMMAND make -i 
+      DEPENDS 
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Tutorials
+      )
+   ADD_DEPENDENCIES(tutorials ${LIBRARY_SHORT_NAME}_tutorials)
+
+   #cleaning tutorials
+   ADD_CUSTOM_TARGET(clean_${LIBRARY_SHORT_NAME}_tutorials
+                        COMMENT "Cleaning ${LIBRARY_SHORT_NAME} Tutorials"
+                        )  
+   ADD_CUSTOM_COMMAND(
+      TARGET clean_${LIBRARY_SHORT_NAME}_tutorials
+      COMMAND make -i clean
+      DEPENDS 
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Tutorials
+      )
+   ADD_DEPENDENCIES(clean_tutorials clean_${LIBRARY_SHORT_NAME}_tutorials)
+ENDIF(CONFIGURE_TUTORIALS)
