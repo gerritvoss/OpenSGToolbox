@@ -100,15 +100,33 @@ bool DragParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex,
 				projection.projectTo(getDirection());
 				if(particleVelocity.length() < getSpeedAttenuation() && getSpeedAttenuation() > 0.0f)
 				{
-					particleVelocity -= projection * osgSgn(particleVelocity.dot(getDirection())) * (elps * getMagnitude() 
+					/*particleVelocity -= projection * osgSgn(particleVelocity.dot(getDirection())) * (elps * getMagnitude() 
 										* std::pow(particleVelocity.length()/getSpeedAttenuation(), 2)
-										/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
+										/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));*/
+
+					double scaleDragEffect = (elps * getMagnitude() * std::pow(particleVelocity.length()/getSpeedAttenuation(), 2))
+											/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
+
+					for(int i(0); i < 3; i++)
+					{
+						double tmp3 = getDirection()[i] * scaleDragEffect * particleVelocity[i];
+						particleVelocity[i] -= getDirection()[i] * scaleDragEffect * particleVelocity[i];
+					}
 
 				}
 				else
 				{
-					particleVelocity -= projection * osgSgn(particleVelocity.dot(getDirection())) * (elps * getMagnitude()
-										/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
+			/*		particleVelocity -= projection * osgSgn(particleVelocity.dot(getDirection())) * (elps * getMagnitude()
+										osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));*/
+
+					double scaleDragEffect = (elps * getMagnitude())
+											/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
+
+					for(int i(0); i < 3; i++)
+					{
+						double tmp3 = getDirection()[i] * scaleDragEffect * particleVelocity[i];
+						particleVelocity[i] -= getDirection()[i] * scaleDragEffect * particleVelocity[i];
+					}
 
 				}
 				System->setVelocity(particleVelocity,ParticleIndex);
