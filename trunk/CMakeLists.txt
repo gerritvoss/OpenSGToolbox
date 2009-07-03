@@ -33,6 +33,13 @@ OPTION(BUILD_VIDEO "Build the Video Library." ON)
 OPTION(BUILD_PHYSICS "Build the Physics Library." ON)
 OPTION(BUILD_SOUND "Build the Sound Library." ON)
 
+OPTION(CONFIGURE_TUTORIALS "If set to ON, all of the tutorials for the build libraries will be configured with the settings used for this build." OFF)
+#Tutorial Configuration
+IF(CONFIGURE_TUTORIALS)
+   ADD_CUSTOM_TARGET(tutorials COMMENT "Building Tutorials")
+   ADD_CUSTOM_TARGET(clean_tutorials COMMENT "Cleaning Tutorials")
+ENDIF(CONFIGURE_TUTORIALS)
+
 ######### FMod
 OPTION(ENABLE_FMOD "Enable Fmod support in sound library." ON)
 IF(ENABLE_FMOD AND BUILD_SOUND)
@@ -220,6 +227,8 @@ IF(BUILD_VIDEO)
    #SET(OPENSG_VIDEO_BUILD_DIR "${CMAKE_BINARY_DIR}/Video")
    #ADD_SUBDIRECTORY(Video/src "Video")
 ENDIF(BUILD_VIDEO)
+
+
 
 #Install a cmake file for the libraries
 INSTALL(EXPORT ${OPENSGTOOLBOX_EXPORT_NAME}

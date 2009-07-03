@@ -11,23 +11,32 @@ IF(Subversion_FOUND)
    MESSAGE("Current revision is ${Project_WC_REVISION}")
 ENDIF(Subversion_FOUND)
 
-######### FMod
-FIND_PATH(FMOD_BASE_DIR NAMES api/inc/fmod.h PATHS "/Developer/FMOD Programmers API")
-SET(FMOD_INC_DIR ${FMOD_BASE_DIR}/api/inc)
-SET(FMOD_LIB_DIR ${FMOD_BASE_DIR}/api/lib)
-
-
 ######### OpenSG
 IF(WIN32)
    SET(OPENSG_BASE_DIR $ENV{OPENSG}/..)
 ENDIF(WIN32)
 
 FIND_PATH(OPENSG_BASE_DIR include/OpenSG/OSGConfig.h)
+
 SET(OPENSG_INC_DIR ${OPENSG_BASE_DIR}/include)
 SET(OPENSG_LIB_DIR ${OPENSG_BASE_DIR}/lib)
 
+#Check that the files exist
+IF(NOT EXISTS ${OPENSG_BASE_DIR})
+   MESSAGE(SEND_ERROR "The supplied OpenSG Base dir: ${OPENSG_BASE_DIR} does not exist")
+ENDIF(NOT EXISTS ${OPENSG_BASE_DIR})
+IF(NOT EXISTS ${OPENSG_INC_DIR})
+   MESSAGE(SEND_ERROR "The supplied OpenSG include dir: ${OPENSG_INC_DIR} does not exist")
+ENDIF(NOT EXISTS ${OPENSG_INC_DIR})
+IF(NOT EXISTS ${OPENSG_LIB_DIR})
+   MESSAGE(SEND_ERROR "The supplied OpenSG Base dir: ${OPENSG_LIB_DIR} does not exist")
+ENDIF(NOT EXISTS ${OPENSG_LIB_DIR})
+
 IF (UNIX)
-   FIND_PROGRAM(OSG_CONFIG osg-config ${OPENSG_BASE_DIR}/bin)
+   SET(OSG_CONFIG ${OPENSG_BASE_DIR}/bin/osg-config)
+   IF(NOT EXISTS ${OSG_CONFIG})
+      MESSAGE(SEND_ERROR "Could not find the OpenSG build script osg-config at location: ${OSG_CONFIG}")
+   ENDIF(NOT EXISTS ${OSG_CONFIG})
    #IF (${OSG_CONFIG})
      IF(APPLE)
        EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --dbg --cflags Base System Carbon OUTPUT_VARIABLE OPENSG_CXX_FLAGS_DBG)
@@ -70,8 +79,6 @@ ENDIF(WIN32)
 
 ######## BOOST
 FIND_PACKAGE(Boost REQUIRED COMPONENTS system filesystem)
-
-######### ODE
 
 ######### OpenSGToolbox
 FIND_PATH(OPENSGTOOLBOX_BASE_DIR include/OpenSG/Toolbox/OSGToolboxdef.h)
