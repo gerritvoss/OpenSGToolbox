@@ -114,8 +114,11 @@ ENDFOREACH(TUTORIAL ${TUTORIAL_LIST})
 TARGET_LINK_LIBRARIES(01Animation optimized OSGToolbox  optimized OSGInput  optimized OSGAnimation
                                   debug     OSGToolboxD debug     OSGInputD debug     OSGAnimationD
                                      ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(02BlendGeometry optimized OSGToolbox  optimized OSGInput  optimized OSGAnimation
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGAnimationD
+TARGET_LINK_LIBRARIES(02BlendGeometry optimized OSGToolbox  optimized OSGInput
+   optimized OSGAnimation optimized OSGDynamics optimized OSGUserInterface
+                                  debug     OSGToolboxD debug     OSGInputD
+                                  debug     OSGAnimationD debug OSGDynamicsD
+                                  debug OSGUserInterfaceD
                                      ${Boost_LIBRARIES})
 TARGET_LINK_LIBRARIES(03MFieldAnimation optimized OSGToolbox  optimized OSGInput  optimized OSGAnimation
                                   debug     OSGToolboxD debug     OSGInputD debug     OSGAnimationD
@@ -156,11 +159,17 @@ TARGET_LINK_LIBRARIES(20LoadXMLBlendedGeometry optimized OSGToolbox  optimized O
 TARGET_LINK_LIBRARIES(21LoadXMLSceneFromMaya optimized OSGToolbox  optimized OSGInput  optimized OSGAnimation
                                   debug     OSGToolboxD debug     OSGInputD debug     OSGAnimationD
                                      ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(22SkeletonBlendedAnimation optimized OSGToolbox  optimized OSGInput  optimized OSGAnimation
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGAnimationD
+TARGET_LINK_LIBRARIES(22SkeletonBlendedAnimation optimized OSGToolbox
+   optimized OSGInput  optimized OSGAnimation optimized OSGDynamics optimized OSGUserInterface
+                                  debug     OSGToolboxD debug     OSGInputD
+                                  debug     OSGAnimationD debug OSGDynamicsD
+                                  debug OSGUserInterfaceD
                                      ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(23BlendXMLAnimations optimized OSGToolbox  optimized OSGInput  optimized OSGAnimation
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGAnimationD
+TARGET_LINK_LIBRARIES(23BlendXMLAnimations optimized OSGToolbox
+   optimized OSGInput  optimized OSGAnimation optimized OSGDynamics optimized OSGUserInterface
+                                  debug     OSGToolboxD debug     OSGInputD
+                                  debug     OSGAnimationD debug OSGDynamicsD
+                                  debug OSGUserInterfaceD
                                      ${Boost_LIBRARIES})
 
 

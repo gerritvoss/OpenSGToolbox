@@ -30,9 +30,18 @@ IF (UNIX)
    FIND_PROGRAM(OSG_CONFIG osg-config ${OPENSG_BASE_DIR}/bin)
    #IF (${OSG_CONFIG})
      IF(APPLE)
-	    SET(OPENSG_CXX_FLAGS "`${OSG_CONFIG} --cflags Base System Carbon`")
-	    SET(OPENSG_LD_FLAGS "`${OSG_CONFIG} --lflags Base System Carbon`")
-	    SET(OPENSG_LIBS "`${OSG_CONFIG} --llibs Base System Carbon`")
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --dbg --cflags Base System Carbon OUTPUT_VARIABLE OPENSG_CXX_FLAGS_DBG)
+       STRING(STRIP ${OPENSG_CXX_FLAGS_DBG}  OPENSG_CXX_FLAGS_DBG)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --opt --cflags Base System Carbon OUTPUT_VARIABLE OPENSG_CXX_FLAGS_OPT)
+       STRING(STRIP ${OPENSG_CXX_FLAGS_OPT}  OPENSG_CXX_FLAGS_OPT)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --dbg --lflags Base System Carbon OUTPUT_VARIABLE OPENSG_LD_FLAGS_DBG)
+       STRING(STRIP ${OPENSG_LD_FLAGS_DBG}  OPENSG_LD_FLAGS_DBG)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --opt --lflags Base System Carbon OUTPUT_VARIABLE OPENSG_LD_FLAGS_OPT)
+       STRING(STRIP ${OPENSG_LD_FLAGS_OPT}  OPENSG_LD_FLAGS_OPT)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --opt --libs Base System Carbon OUTPUT_VARIABLE OPENSG_LIBS_OPT)
+       STRING(STRIP ${OPENSG_LIBS_OPT}  OPENSG_LIBS_OPT)
+       EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --dbg --libs Base System Carbon OUTPUT_VARIABLE OPENSG_LIBS_DBG)
+       STRING(STRIP ${OPENSG_CXX_FLAGS_OPT}  OPENSG_LIBS_DBG)
      ELSE(APPLE)
        EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --dbg --cflags Base System X OUTPUT_VARIABLE OPENSG_CXX_FLAGS_DBG)
        STRING(STRIP ${OPENSG_CXX_FLAGS_DBG}  OPENSG_CXX_FLAGS_DBG)
@@ -47,9 +56,6 @@ IF (UNIX)
        EXECUTE_PROCESS(COMMAND ${OSG_CONFIG} --dbg --libs Base System X OUTPUT_VARIABLE OPENSG_LIBS_DBG)
        STRING(STRIP ${OPENSG_CXX_FLAGS_OPT}  OPENSG_LIBS_DBG)
      ENDIF(APPLE)
-     #ELSE(${OSG_CONFIG})
-     #   MESSAGE("osg-config not found")
-     #ENDIF (${OSG_CONFIG})
 ENDIF(UNIX)
 
 IF(WIN32)
@@ -110,14 +116,16 @@ ENDFOREACH(TUTORIAL ${TUTORIAL_LIST})
 TARGET_LINK_LIBRARIES(02FCFileTypeIO optimized OSGToolbox
                                      debug     OSGToolboxD
                                      ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(03XMLSceneLoader optimized OSGToolbox
-                                     debug     OSGToolboxD
+TARGET_LINK_LIBRARIES(03XMLSceneLoader optimized OSGToolbox optimized OSGInput
+                                     debug     OSGToolboxD debug OSGInputD
                                      ${Boost_LIBRARIES})
 TARGET_LINK_LIBRARIES(04Xml2Osb optimized OSGToolbox
                                      debug     OSGToolboxD
                                      ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(05AdvancedXMLSceneLoader optimized OSGToolbox
-                                     debug     OSGToolboxD
+TARGET_LINK_LIBRARIES(05AdvancedXMLSceneLoader optimized OSGToolbox optimized
+   OSGInput optimized OSGDynamics optimized OSGParticleSystem optimized
+   OSGAnimation debug OSGToolboxD debug OSGInputD debug OSGDynamicsD debug
+                                     OSGParticleSystemD debug OSGAnimationD
                                      ${Boost_LIBRARIES})
 TARGET_LINK_LIBRARIES(06Heightmap optimized OSGToolbox  optimized OSGInput
                                   debug     OSGToolboxD debug     OSGInputD
