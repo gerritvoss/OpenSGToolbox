@@ -72,108 +72,17 @@ INSTALL(TARGETS ${LIBRARY_NAME}
 
 #Doxygen documentation
 # Generating documentation with doxygen
-#
 if(DOXYGEN_EXECUTABLE)
-    
-    IF(ENABLE_USER_DOCUMENTATION)
-      # The initial rm command gets rid of everything previously built by this
-      # custom command.
-      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
-      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc/user")
-      
-      ADD_CUSTOM_COMMAND(
-      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html/index.html
-      COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html
-      COMMAND DOC_REVISION_NUMBER=${Project_WC_REVISION} DOC_OUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}/doc/user ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.user
-      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.user
-              ${HEADERS}
-              ${INLINES}
-              ${SOURCES}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation
-      )
-      
-      ADD_CUSTOM_TARGET(${LIBRARY_SHORT_NAME}_user_doc
-                        COMMENT "Building ${LIBRARY_SHORT_NAME} User Documentation"
-                        DEPENDS
-                        ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html/index.html)
-
-      ADD_DEPENDENCIES(user_doc ${LIBRARY_SHORT_NAME}_user_doc)
-
-      #Installing the documentation
-      INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html
-              DESTINATION doc/user/${LIBRARY_SHORT_NAME}
-              COMPONENT userDoc)
-
-    ENDIF(ENABLE_USER_DOCUMENTATION)
-    
-    # The initial rm command gets rid of everything previously built by this
-    # custom command.
-    IF(ENABLE_DEVELOPER_DOCUMENTATION)
-      # The initial rm command gets rid of everything previously built by this
-      # custom command.
-      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
-      FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc/developer")
-      
-      ADD_CUSTOM_COMMAND(
-      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html/index.html
-      COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html
-      COMMAND DOC_REVISION_NUMBER=${Project_WC_REVISION} DOC_OUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}/doc/developer ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.developer
-      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation/Doxyfile.developer
-              ${HEADERS}
-              ${INLINES}
-              ${SOURCES}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Documentation
-      )
-      
-      ADD_CUSTOM_TARGET(${LIBRARY_SHORT_NAME}_dev_doc
-                        COMMENT "Building ${LIBRARY_SHORT_NAME} Developer  Documentation"
-                        DEPENDS
-                        ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html/index.html)
-
-      ADD_DEPENDENCIES(dev_doc ${LIBRARY_SHORT_NAME}_dev_doc)
-
-      #Installing the documentation
-      INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html
-              DESTINATION doc/developer/${LIBRARY_SHORT_NAME}
-              COMPONENT devDoc)
-    ENDIF(ENABLE_DEVELOPER_DOCUMENTATION)
-    
+    TOOLBOX_LIBRARY_DOCUMENTATION(${DOXYGEN_EXECUTABLE} ${Project_WC_REVISION}
+       ${LIBRARY_SHORT_NAME} ${ENABLE_USER_DOCUMENTATION} ${ENABLE_DEVELOPER_DOCUMENTATION} ${HEADERS} ${INLINES} ${SOURCES})
 endif(DOXYGEN_EXECUTABLE)
+
 
 IF(CONFIGURE_TUTORIALS)
    #Configure the cmake build of the tutorials
-   MESSAGE("Configuring ${LIBRARY_SHORT_NAME} Tutorials for build type ${CMAKE_BUILD_TYPE}")
-   EXECUTE_PROCESS(COMMAND 
-                   cmake 
-                   -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
-                   -D BOOST_ROOT=${BOOST_ROOT} 
-                   -D OPENSG_BASE_DIR=${OPENSG_BASE_DIR}
-                   -D OPENSGTOOLBOX_BASE_DIR=${CMAKE_INSTALL_PREFIX}
-                   .
-                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Tutorials)
+   TOOLBOX_TUTORIAL_CONFIG("${CMAKE_CURRENT_SOURCE_DIR}/../Tutorials" "${LIBRARY_SHORT_NAME}")
 
-   #Add a custom target for making and cleaning these tutorials
-   ADD_CUSTOM_TARGET(${LIBRARY_SHORT_NAME}_tutorials
-                        COMMENT "Building ${LIBRARY_SHORT_NAME} Tutorials"
-                        DEPENDS
-                        )
-   ADD_CUSTOM_COMMAND(
-      TARGET ${LIBRARY_SHORT_NAME}_tutorials
-      COMMAND make -i 
-      DEPENDS 
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Tutorials
-      )
-   ADD_DEPENDENCIES(tutorials ${LIBRARY_SHORT_NAME}_tutorials)
-
-   #cleaning tutorials
-   ADD_CUSTOM_TARGET(clean_${LIBRARY_SHORT_NAME}_tutorials
-                        COMMENT "Cleaning ${LIBRARY_SHORT_NAME} Tutorials"
-                        )  
-   ADD_CUSTOM_COMMAND(
-      TARGET clean_${LIBRARY_SHORT_NAME}_tutorials
-      COMMAND make -i clean
-      DEPENDS 
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Tutorials
-      )
-   ADD_DEPENDENCIES(clean_tutorials clean_${LIBRARY_SHORT_NAME}_tutorials)
+   #Configure some tests to ensure that the tutorials built
+   TOOLBOX_TUTORIALS_TESTS("${CMAKE_CURRENT_SOURCE_DIR}/../Tutorials" "${LIBRARY_SHORT_NAME}")
+   
 ENDIF(CONFIGURE_TUTORIALS)
