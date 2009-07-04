@@ -103,7 +103,7 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSGTOOLBOX_LIB_DIR})
 ######## Tutorial executables
 SET(TUTORIAL_LIST 02FCFileTypeIO 03XMLSceneLoader 04Xml2Osb 05AdvancedXMLSceneLoader 06Heightmap)
 FOREACH(TUTORIAL ${TUTORIAL_LIST})
-   MESSAGE("Configurint Tutorial: ${TUTORIAL}")
+   MESSAGE("Configuring Tutorial: ${TUTORIAL}")
 
    ADD_EXECUTABLE(${TUTORIAL} ${TUTORIAL}.cpp)
    
