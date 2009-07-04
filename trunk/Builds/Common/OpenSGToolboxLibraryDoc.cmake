@@ -28,7 +28,7 @@ MACRO(TOOLBOX_LIBRARY_DOCUMENTATION THE_DOXYTEN_EXECUTABLE
 
       #Installing the documentation
       INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/user/html
-              DESTINATION doc/user/${LIBRARY_NAME}
+              DESTINATION share/OpenSGToolbox/doc/user/${LIBRARY_NAME}
               COMPONENT userDoc)
 
    ENDIF(${ENABLE_USER_DOC} STREQUAL "ON")
@@ -63,7 +63,7 @@ MACRO(TOOLBOX_LIBRARY_DOCUMENTATION THE_DOXYTEN_EXECUTABLE
 
       #Installing the documentation
       INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/developer/html
-              DESTINATION doc/developer/${LIBRARY_NAME}
+              DESTINATION share/OpenSGToolbox/doc/developer/${LIBRARY_NAME}
               COMPONENT devDoc)
     ENDIF(${ENABLE_DEV_DOC} STREQUAL "ON")
 ENDMACRO(TOOLBOX_LIBRARY_DOCUMENTATION THE_DOXYTEN_EXECUTABLE
