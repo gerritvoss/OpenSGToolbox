@@ -6,7 +6,7 @@ Today=`date +%F`
 RemoveOldRepository=1
 MakeSourceZip=1
 CheckoutRepository=1
-MakeLinuxBuild=0
+MakeLinuxBuild=1
 MakeDoxygenBuild=1
 
 if test $# -gt 0
@@ -36,15 +36,13 @@ fi
 
 #set up envitonment variables
 BOOST_BASE_DIR="/home/users/dkabala/tools/boost_1_38_0/Linux_INSTALL"
-export BOOST_BASE_DIR
 OPENSG_BASE_DIR="/home/users/dkabala/tools/OpenSG/OpenSG-1.8-rh5"
-export OPENSG_BASE_DIR
-OPENSG_TOOLBOX_DIR="/home/users/dkabala/OpenSGToolbox/trunk/Builds/Linux"
-export OPENSG_TOOLBOX_DIR
-FMOD_BASE_DIR="/home/users/dkabala/tools/fmodapi42406linux64/api"
-export FMOD_BASE_DIR
-ODE_BASE_DIR="/home/users/dkabala/tools/ode/Linux_INSTALL"
-export ODE_BASE_DIR
+FMOD_BASE_DIR="/home/users/dkabala/tools/fmodapi42406linux64"
+ODE_BASE_DIR="/home/users/dkabala/tools/ode-0.11.1/Linux_INSTALL/"
+DOXYGEN_EXECUTABLE="/home/users/dkabala/bin/doxygen-1.5.9"
+CMAKE_EXECUTABLE="/home/users/dkabala/bin/cmake"
+CTEST_EXECUTABLE="/home/users/dkabala/bin/ctest"
+CPACK_EXECUTABLE="/home/users/dkabala/bin/cpack"
 
 #Make a source zip
 if test $MakeSourceZip -ne 0
@@ -62,11 +60,35 @@ fi
 pushd .
 cd Builds
 
+mkdir Debug
+mkdir Release
+
+#Run cmake to make the builds
+pushd .
+cd Debug
+$CMAKE_EXECUTABLE -D CMAKE_BUILD_TYPE=Debug -D CMAKE_INSTALL_PREFIX=../Linux -D FMOD_BASE_DIR=$FMOD_BASE_DIR -D OPENSG_BASE_DIR=$OPENSG_BASE_DIR -D BOOST_ROOT=$BOOST_BASE_DIR -D ODE_BASE_DIR=$ODE_BASE_DIR -D BUILD_DYNAMICS=ON -D BUILD_PARTICLE_SYSTEMS=ON -D BUILD_ANIMATION=ON -D BUILD_INPUT=ON -D BUILD_METABOLIC=ON -D BUILD_USERINTERFACE=ON -D BUILD_GAME=ON -D BUILD_VIDEO=ON -D BUILD_PHYSICS=ON -D BUILD_SOUND=ON -D CONFIGURE_TUTORIALS=ON -D ENABLE_USER_DOCUMENTATION=ON -D ENABLE_DEVELOPER_DOCUMENTATION=ON ../..
+popd
+
+pushd .
+cd Release
+$CMAKE_EXECUTABLE -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=../Linux -D FMOD_BASE_DIR=$FMOD_BASE_DIR -D OPENSG_BASE_DIR=$OPENSG_BASE_DIR -D BOOST_ROOT=$BOOST_BASE_DIR -D ODE_BASE_DIR=$ODE_BASE_DIR -D BUILD_DYNAMICS=ON -D BUILD_PARTICLE_SYSTEMS=ON -D BUILD_ANIMATION=ON -D BUILD_INPUT=ON -D BUILD_METABOLIC=ON -D BUILD_USERINTERFACE=ON -D BUILD_GAME=ON -D BUILD_VIDEO=ON -D BUILD_PHYSICS=ON -D BUILD_SOUND=ON -D CONFIGURE_TUTORIALS=ON -D ENABLE_USER_DOCUMENTATION=ON -D ENABLE_DEVELOPER_DOCUMENTATION=ON ../..
+popd
+
 #make all
 if test $MakeLinuxBuild -ne 0
 then
-   make > OpenSGToolbox-rhe5-64bit-$Today.log
-   mv OpenSGToolbox-rhe5-64bit-$Today.log ../../
+   pushd .
+   cd Debug
+   make install -j4
+   popd
+
+   pushd .
+   cd Release
+   make install -j4
+   popd
+
+   #make > OpenSGToolbox-rhe5-64bit-$Today.log
+   #mv OpenSGToolbox-rhe5-64bit-$Today.log ../../
 fi
 
 #make the documentation
@@ -76,7 +98,7 @@ then
    mv OpenSGToolbox-doxygen-doc-$Today.log ../../
 fi
 
-if test $MakeLinuxBuild-ne 0
+if test $MakeLinuxBuild -ne 0
 then
    #Move to the Installed Directory
    pushd .
@@ -85,9 +107,9 @@ then
    mkdir OpenSGToolbox
    mv include OpenSGToolbox
    mv lib OpenSGToolbox
-   tar -cf OpenSGToolbox.tar OpenSGToolbox
-   gzip OpenSGToolbox.tar
-   mv OpenSGToolbox.tar.gz ../../../
+   tar -cf OpenSGToolbox-rhe5-64bit-$Today.tar OpenSGToolbox
+   gzip OpenSGToolbox-rhe5-64bit-$Today.tar
+   mv OpenSGToolbox-rhe5-64bit-$Today.tar.gz ../../../
 
    popd
 fi
