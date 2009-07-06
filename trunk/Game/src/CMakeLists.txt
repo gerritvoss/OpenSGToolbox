@@ -39,8 +39,8 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSG_LIB_DIR}
 
 #Configure shared library creation
 ADD_LIBRARY(${LIBRARY_NAME} SHARED ${HEADERS} ${SOURCES} ${INLINES})
-ADD_DEPENDENCIES(${LIBRARY_NAME} OSGToolbox OSGInput OSGUserInterface
-   OSGSound)
+ADD_DEPENDENCIES(${LIBRARY_NAME} OSGToolbox OSGToolbox_headers OSGInput OSGInput_headers OSGUserInterface OSGUserInterface_headers
+   OSGSound OSGSound_headers)
 
 #Header files build
 FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include")

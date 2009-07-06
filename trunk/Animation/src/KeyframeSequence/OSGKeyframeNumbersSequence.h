@@ -49,6 +49,7 @@
 #include "OSGKeyframeSequenceTmplFields.h"
 #include <OpenSG/OSGMFSysTypes.h>
 #include <OpenSG/OSGSFSysTypes.h>
+#include <OpenSG/OSGGL.h>
 
 OSG_BEGIN_NAMESPACE
 

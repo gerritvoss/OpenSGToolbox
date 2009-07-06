@@ -112,12 +112,14 @@ bool KeyframeSequenceTmpl<KeyframeDiscreetSequenceStringDesc>::insertKeyframe(co
     }
 }
 
-//std::string
+//std::strin
+/*
 template<> inline 
 std::string KeyframeSequenceTmpl<KeyframeDiscreetSequenceGLenumDesc>::getKeyValue(const UInt32 index)
 {
     return toString(_field[index]);
 }
+
 
 template<> inline 
 std::string KeyframeSequenceTmpl<KeyframeDiscreetSequenceGLenumDesc>::getKeyValue( 
@@ -181,7 +183,7 @@ bool KeyframeSequenceTmpl<KeyframeDiscreetSequenceGLenumDesc>::insertKeyframe(co
         return true;
     }
 }
-
+*/
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 OSG_END_NAMESPACE

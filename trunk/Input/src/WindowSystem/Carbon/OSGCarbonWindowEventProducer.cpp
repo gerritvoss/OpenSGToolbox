@@ -331,17 +331,18 @@ osg::Vec2f CarbonWindowEventProducer::getDesktopSize() const
 std::vector<osg::Path, std::allocator<osg::Path> > CarbonWindowEventProducer::openFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, bool)
 {
 	//TODO: implement
-	return NullFC;
+	std::vector<osg::Path, std::allocator<osg::Path> > temp;
+	return temp;
 }
 osg::Path CarbonWindowEventProducer::saveFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, const osg::Path&, bool)
 {
 	//TODO: implement
-	return NullFC;
+	return osg::Path();
 }
 osg::KeyEvent::KeyState CarbonWindowEventProducer::getKeyState(osg::KeyEvent::Key) const
 {
 	//TODO: implement
-	return NullFC;
+	return osg::KeyEvent::KeyState();
 }
 
 
@@ -415,10 +416,11 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
 
 
     // Get the location of the mouse pointer
-    Point location;
+    ::Point location;
     err = GetEventParameter(event, kEventParamMouseLocation, typeQDPoint, 0, sizeof(location), 0, &location);
     if (err != noErr)
-        return err;
+        //std::vector<osg::Path, std::allocator<osg::Path> >;
+	return err;
 
     // The location of the mouse pointer is in screen coordinates, so
     // we have to transform it into the local coordinate system of the

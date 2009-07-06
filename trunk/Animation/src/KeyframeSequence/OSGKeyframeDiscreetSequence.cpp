@@ -57,7 +57,7 @@ FieldDescription *KeyframeDiscreetSequenceStringDesc::_desc[] =
 #endif
 };
 
-
+/*
 FieldDescription *KeyframeDiscreetSequenceGLenumDesc::_desc[] =
 {
     new FieldDescription(
@@ -73,6 +73,7 @@ FieldDescription *KeyframeDiscreetSequenceGLenumDesc::_desc[] =
                                 KeyframeDiscreetSequenceGLenumDesc>::getFieldPtr)
 #endif
 };
+*/
 
 OSG_GEO_PROP_TYPE_TMPL_DEF(KeyframeSequenceTmpl, KeyframeSequenceDesc, PtrType)
 
@@ -83,9 +84,12 @@ OSG_KEYFRAMEPROP_DLLEXPORT_DEF (KeyframeSequenceTmpl        ,
                            KeyframeDiscreetSequenceStringDesc, 
                            OSG_ANIMATIONLIB_DLLMAPPING);
 
+/*
 OSG_KEYFRAMEPROP_DLLEXPORT_DEF (KeyframeSequenceTmpl        , 
                            KeyframeDiscreetSequenceGLenumDesc, 
                            OSG_ANIMATIONLIB_DLLMAPPING);
+*/
+
 
 OSG_END_NAMESPACE
 

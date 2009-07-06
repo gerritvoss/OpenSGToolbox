@@ -49,6 +49,7 @@
 #include "OSGKeyframeSequenceTmplFields.h"
 #include <OpenSG/OSGMFBaseTypes.h>
 #include <OpenSG/OSGSFBaseTypes.h>
+#include <OpenSG/OSGGL.h>
 #include <OpenSG/Toolbox/OSGGLenumUtils.h>
 
 OSG_BEGIN_NAMESPACE
@@ -97,44 +98,43 @@ OSG_FC_DLLEXPORT_DECL(KeyframeSequenceTmpl,
                       OSG_ANIMATIONLIB_DLLMAPPING)
 #endif
 
-                      
-struct KeyframeDiscreetSequenceGLenumDesc : public KeyframeDiscreetSequenceDesc
-{
-    static FieldDescription *_desc[];
+
+//struct KeyframeDiscreetSequenceGLenumDesc : public KeyframeDiscreetSequenceDesc
+//{
+//    static FieldDescription *_desc[];
+    /*---------------------------------------------------------------------*/
+//    static const Char8 *getTypeName (void) { return "KeyframeDiscreetSequenceGLenum";         }
+//    static const Char8 *getClassName(void) { return "KeyframeDiscreetSequenceGLenumProperty"; }
+//    static const Char8 *getFieldName(void) { return "values";              }
+//    static const Char8 *getGroupName(void) { return "KeyframeDiscreetSequence";           }
+//    static InitContainerF     getInitMethod(void) { return NULL; }
+
+//    static FieldDescription **getDesc      (void) { return _desc;           }
+
 
     /*---------------------------------------------------------------------*/
-    static const Char8 *getTypeName (void) { return "KeyframeDiscreetSequenceGLenum";         }
-    static const Char8 *getClassName(void) { return "KeyframeDiscreetSequenceGLenumProperty"; }
-    static const Char8 *getFieldName(void) { return "values";              }
-    static const Char8 *getGroupName(void) { return "KeyframeDiscreetSequence";           }
-    static InitContainerF     getInitMethod(void) { return NULL; }
+//    typedef KeyframeDiscreetSequence               Inherited;
+//    typedef KeyframeDiscreetSequence::PtrType      InheritedPtr;
 
-    static FieldDescription **getDesc      (void) { return _desc;           }
+//    typedef KeyframeDiscreetSequenceDesc   InheritedDesc;
 
-
-    /*---------------------------------------------------------------------*/
-    typedef KeyframeDiscreetSequence               Inherited;
-    typedef KeyframeDiscreetSequence::PtrType      InheritedPtr;
-
-    typedef KeyframeDiscreetSequenceDesc   InheritedDesc;
-
-    typedef MFGLenum                    StoredFieldType;
-    typedef SFGLenum                    SingleFieldType;
-    typedef InheritedDesc::GenericType GenericType;
+//    typedef MFGLenum                    StoredFieldType;
+//    typedef SFGLenum                    SingleFieldType;
+//    typedef InheritedDesc::GenericType GenericType;
     
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+//    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
 
     /*---------------------------------------------------------------------*/
      
-    static ConcreteInterpFunction getStepConcreteInterpFuncion(void) {return stepKeyframeSequence<StoredFieldType,SingleFieldType>;}
-    static ConcreteInterpFunction getLinearConcreteInterpFuncion(void) {return NULL;}
-    static ConcreteInterpFunction getCubicConcreteInterpFuncion(void) {return NULL;}
-    static ConcreteInterpFunction getLinearNormalConcreteInterpFuncion(void) {return NULL;}
-};
+//    static ConcreteInterpFunction getStepConcreteInterpFuncion(void) {return stepKeyframeSequence<StoredFieldType,SingleFieldType>;}
+//    static ConcreteInterpFunction getLinearConcreteInterpFuncion(void) {return NULL;}
+//    static ConcreteInterpFunction getCubicConcreteInterpFuncion(void) {return NULL;}
+//    static ConcreteInterpFunction getLinearNormalConcreteInterpFuncion(void) {return NULL;}
+//};
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-typedef KeyframeSequenceTmpl<KeyframeDiscreetSequenceGLenumDesc> KeyframeDiscreetSequenceGLenum;
-#endif
+//#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//typedef KeyframeSequenceTmpl<KeyframeDiscreetSequenceGLenumDesc> KeyframeDiscreetSequenceGLenum;
+//#endif
 
 #if !defined(OSG_COMPILEKEYFRAMEDISCREETSEQUENCEINST) && !defined(OSG_DO_DOC)
 OSG_FC_DLLEXPORT_DECL(KeyframeSequenceTmpl,

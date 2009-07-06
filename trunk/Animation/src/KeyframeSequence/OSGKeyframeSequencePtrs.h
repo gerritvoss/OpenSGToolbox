@@ -106,7 +106,7 @@ typedef KeyframeNumbersSequenceReal64::PtrType  KeyframeNumbersSequenceReal64Ptr
 
 //Discreet
 typedef KeyframeDiscreetSequenceString::PtrType  KeyframeDiscreetSequenceStringPtr;
-typedef KeyframeDiscreetSequenceGLenum::PtrType  KeyframeDiscreetSequenceGLenumPtr;
+//typedef KeyframeDiscreetSequenceGLenum::PtrType  KeyframeDiscreetSequenceGLenumPtr;
 
 //FCPtrs
 typedef KeyframeFCPtrsSequenceTextureChunk::PtrType  KeyframeFCPtrsSequenceTextureChunkPtr;
