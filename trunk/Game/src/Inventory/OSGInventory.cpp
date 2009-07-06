@@ -82,35 +82,29 @@ void Inventory::addItem(InventoryItemPtr Item)
 {
 	getInventoryItems().push_back(Item);
 	sortInventory();
-	if(getRootInventory() && !Item->getClasses().isEmpty())
-	{
-		for(UInt32 i = 0; i < Item->getClasses().getSize(); i++)
-		{
-			bool classExists = false;
-			for(UInt32 c = 0; c < getInventoryClasses().getSize(); c++)
-			{
-				if(Item->getClasses(i) == getInventoryClasses(c)->getInventoryClassName())
-				{
-					classExists = true;
-					getInventoryClasses(c)->addItem(Item);
-				}
-			}
-			if(!classExists)
-			{
-				InventoryPtr CInventory = osg::Inventory::create();
-				beginEditCP(CInventory, Inventory::RootInventoryFieldMask | Inventory::InventoryClassNameFieldMask);
-					setInventoryClassName(Item->getClasses(i));
-					setRootInventory(false);
-				endEditCP(CInventory, Inventory::RootInventoryFieldMask | Inventory::InventoryClassNameFieldMask);
-				getInventoryClasses().push_back(CInventory);
-				CInventory->addItem(Item);
-			}
-		}
-	}
 }
 void Inventory::sortInventory()
 {
+}
 
+std::vector<InventoryItemPtr> Inventory::getItemsOfClass(std::string className)
+{
+	std::vector<InventoryItemPtr> items;
+
+	for(UInt32 i = 0; i < getInventoryItems().getSize(); ++i)
+	{
+		if(!getInventoryItems(i)->getClasses().isEmpty())
+		{
+			for(UInt32 c = 0; c < getInventoryItems(i)->getClasses().getSize(); ++i)
+			{
+				if(getInventoryItems(i)->getClasses(c) == className)
+				{
+					items.push_back(getInventoryItems(i));
+				}
+			}
+		}
+	}
+	return items;
 }
 
 EventConnection Inventory::addInventoryListener(InventoryListenerPtr Listener)

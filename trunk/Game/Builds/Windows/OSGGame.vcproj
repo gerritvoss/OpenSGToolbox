@@ -946,34 +946,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Inventory\OSGInventoryInterface.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Inventory\OSGInventoryInterface.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Inventory\OSGInventoryInterface.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Inventory\OSGInventoryInterfaceBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Inventory\OSGInventoryInterfaceBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Inventory\OSGInventoryInterfaceBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Inventory\OSGInventoryInterfaceFields.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Inventory\OSGInventoryItem.cpp"
 					>
 				</File>

@@ -68,6 +68,7 @@ class OSG_GAMELIB_DLLMAPPING Inventory : public InventoryBase
 
 	void addItem(InventoryItemPtr Item);
 	void sortInventory();
+	std::vector<InventoryItemPtr> getItemsOfClass(std::string className);
 
 	EventConnection addInventoryListener(InventoryListenerPtr Listener);
 	bool isInventoryListenerAttached(InventoryListenerPtr Listener) const;
