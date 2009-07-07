@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -80,6 +80,7 @@
 #include <OpenSG/OSGUInt64Fields.h> // InternalProperties type
 #include <OpenSG/OSGUInt32Fields.h> // MaxParticles type
 #include <OpenSG/OSGBoolFields.h> // Dynamic type
+#include <OpenSG/OSGBoolFields.h> // UpdateSecAttribs type
 #include <OpenSG/OSGTimeFields.h> // LastElapsedTime type
 #include "ParticleSystem/ParticleGenerators/OSGParticleGeneratorFields.h" // Generators type
 #include "ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h" // Affectors type
@@ -120,7 +121,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
         InternalPropertiesFieldId    = InternalAccelerationsFieldId + 1,
         MaxParticlesFieldId          = InternalPropertiesFieldId    + 1,
         DynamicFieldId               = MaxParticlesFieldId          + 1,
-        LastElapsedTimeFieldId       = DynamicFieldId               + 1,
+        UpdateSecAttribsFieldId      = DynamicFieldId               + 1,
+        LastElapsedTimeFieldId       = UpdateSecAttribsFieldId      + 1,
         GeneratorsFieldId            = LastElapsedTimeFieldId       + 1,
         AffectorsFieldId             = GeneratorsFieldId            + 1,
         SystemAffectorsFieldId       = AffectorsFieldId             + 1,
@@ -140,6 +142,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     static const OSG::BitVector InternalPropertiesFieldMask;
     static const OSG::BitVector MaxParticlesFieldMask;
     static const OSG::BitVector DynamicFieldMask;
+    static const OSG::BitVector UpdateSecAttribsFieldMask;
     static const OSG::BitVector LastElapsedTimeFieldMask;
     static const OSG::BitVector GeneratorsFieldMask;
     static const OSG::BitVector AffectorsFieldMask;
@@ -172,6 +175,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
 
            SFUInt32            *getSFMaxParticles   (void);
            SFBool              *getSFDynamic        (void);
+           SFBool              *getSFUpdateSecAttribs(void);
            SFTime              *getSFLastElapsedTime(void);
            MFParticleGeneratorPtr *getMFGenerators     (void);
            MFParticleAffectorPtr *getMFAffectors      (void);
@@ -181,6 +185,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
      const UInt32              &getMaxParticles   (void) const;
            bool                &getDynamic        (void);
      const bool                &getDynamic        (void) const;
+           bool                &getUpdateSecAttribs(void);
+     const bool                &getUpdateSecAttribs(void) const;
            Time                &getLastElapsedTime(void);
      const Time                &getLastElapsedTime(void) const;
            ParticleGeneratorPtr &getGenerators     (const UInt32 index);
@@ -200,6 +206,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
 
      void setMaxParticles   ( const UInt32 &value );
      void setDynamic        ( const bool &value );
+     void setUpdateSecAttribs( const bool &value );
      void setLastElapsedTime( const Time &value );
 
     /*! \}                                                                 */
@@ -256,6 +263,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     MFUInt64            _mfInternalProperties;
     SFUInt32            _sfMaxParticles;
     SFBool              _sfDynamic;
+    SFBool              _sfUpdateSecAttribs;
     SFTime              _sfLastElapsedTime;
     MFParticleGeneratorPtr   _mfGenerators;
     MFParticleAffectorPtr   _mfAffectors;

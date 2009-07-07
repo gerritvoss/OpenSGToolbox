@@ -149,6 +149,16 @@
         not. Is used to speed up sorting.
 	</Field>
 	<Field
+		name="UpdateSecAttribs"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+   If true then the secondary position, and velocity will be updated every frame to
+   the previous value of position and velocity respectively.
+	</Field>
+	<Field
 		name="LastElapsedTime"
 		type="Time"
 		cardinality="single"

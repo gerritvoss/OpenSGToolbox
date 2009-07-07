@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -187,6 +187,13 @@ SFBool *ParticleSystemBase::getSFDynamic(void)
     return &_sfDynamic;
 }
 
+//! Get the ParticleSystem::_sfUpdateSecAttribs field.
+inline
+SFBool *ParticleSystemBase::getSFUpdateSecAttribs(void)
+{
+    return &_sfUpdateSecAttribs;
+}
+
 //! Get the ParticleSystem::_sfLastElapsedTime field.
 inline
 SFTime *ParticleSystemBase::getSFLastElapsedTime(void)
@@ -256,6 +263,27 @@ inline
 void ParticleSystemBase::setDynamic(const bool &value)
 {
     _sfDynamic.setValue(value);
+}
+
+//! Get the value of the ParticleSystem::_sfUpdateSecAttribs field.
+inline
+bool &ParticleSystemBase::getUpdateSecAttribs(void)
+{
+    return _sfUpdateSecAttribs.getValue();
+}
+
+//! Get the value of the ParticleSystem::_sfUpdateSecAttribs field.
+inline
+const bool &ParticleSystemBase::getUpdateSecAttribs(void) const
+{
+    return _sfUpdateSecAttribs.getValue();
+}
+
+//! Set the value of the ParticleSystem::_sfUpdateSecAttribs field.
+inline
+void ParticleSystemBase::setUpdateSecAttribs(const bool &value)
+{
+    _sfUpdateSecAttribs.setValue(value);
 }
 
 //! Get the value of the ParticleSystem::_sfLastElapsedTime field.

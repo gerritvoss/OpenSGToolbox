@@ -1038,9 +1038,12 @@ void ParticleSystem::update(const Time& elps)
 		}
 
 
-		//Remember the Old Postions and velocities
-		setSecPosition(getPosition(i),i);
-		setSecVelocity(getVelocity(i),i);
+		if(getUpdateSecAttribs())
+		{
+			//Remember the Old Postions and velocities
+			setSecPosition(getPosition(i),i);
+			setSecVelocity(getVelocity(i),i);
+		}
 
 
 		//Apply Acceleration and Velocity

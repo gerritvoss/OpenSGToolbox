@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -103,6 +103,9 @@ const OSG::BitVector  ParticleSystemBase::MaxParticlesFieldMask =
 const OSG::BitVector  ParticleSystemBase::DynamicFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::DynamicFieldId);
 
+const OSG::BitVector  ParticleSystemBase::UpdateSecAttribsFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::UpdateSecAttribsFieldId);
+
 const OSG::BitVector  ParticleSystemBase::LastElapsedTimeFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::LastElapsedTimeFieldId);
 
@@ -160,6 +163,9 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 */
 /*! \var bool            ParticleSystemBase::_sfDynamic
     Hint to tell the system whether particles are expected to change position or         not. Is used to speed up sorting.
+*/
+/*! \var bool            ParticleSystemBase::_sfUpdateSecAttribs
+    If true then the secondary position, and velocity will be updated every frame to    the previous value of position and velocity respectively.
 */
 /*! \var Time            ParticleSystemBase::_sfLastElapsedTime
     This value holds the value of the last elapsed time.
@@ -243,6 +249,11 @@ FieldDescription *ParticleSystemBase::_desc[] =
                      DynamicFieldId, DynamicFieldMask,
                      false,
                      (FieldAccessMethod) &ParticleSystemBase::getSFDynamic),
+    new FieldDescription(SFBool::getClassType(), 
+                     "UpdateSecAttribs", 
+                     UpdateSecAttribsFieldId, UpdateSecAttribsFieldMask,
+                     false,
+                     (FieldAccessMethod) &ParticleSystemBase::getSFUpdateSecAttribs),
     new FieldDescription(SFTime::getClassType(), 
                      "LastElapsedTime", 
                      LastElapsedTimeFieldId, LastElapsedTimeFieldMask,
@@ -365,6 +376,7 @@ ParticleSystemBase::ParticleSystemBase(void) :
     _mfInternalProperties     (), 
     _sfMaxParticles           (UInt32(4294967295)), 
     _sfDynamic                (bool(true)), 
+    _sfUpdateSecAttribs       (), 
     _sfLastElapsedTime        (Time(0.0)), 
     _mfGenerators             (), 
     _mfAffectors              (), 
@@ -391,6 +403,7 @@ ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _mfInternalProperties     (source._mfInternalProperties     ), 
     _sfMaxParticles           (source._sfMaxParticles           ), 
     _sfDynamic                (source._sfDynamic                ), 
+    _sfUpdateSecAttribs       (source._sfUpdateSecAttribs       ), 
     _sfLastElapsedTime        (source._sfLastElapsedTime        ), 
     _mfGenerators             (source._mfGenerators             ), 
     _mfAffectors              (source._mfAffectors              ), 
@@ -474,6 +487,11 @@ UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
     {
         returnValue += _sfDynamic.getBinSize();
+    }
+
+    if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
+    {
+        returnValue += _sfUpdateSecAttribs.getBinSize();
     }
 
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
@@ -570,6 +588,11 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
         _sfDynamic.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
+    {
+        _sfUpdateSecAttribs.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
     {
         _sfLastElapsedTime.copyToBin(pMem);
@@ -663,6 +686,11 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDynamic.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
+    {
+        _sfUpdateSecAttribs.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
     {
         _sfLastElapsedTime.copyFromBin(pMem);
@@ -732,6 +760,9 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
         _sfDynamic.syncWith(pOther->_sfDynamic);
 
+    if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
+        _sfUpdateSecAttribs.syncWith(pOther->_sfUpdateSecAttribs);
+
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
         _sfLastElapsedTime.syncWith(pOther->_sfLastElapsedTime);
 
@@ -759,6 +790,9 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
 
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
         _sfDynamic.syncWith(pOther->_sfDynamic);
+
+    if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
+        _sfUpdateSecAttribs.syncWith(pOther->_sfUpdateSecAttribs);
 
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
         _sfLastElapsedTime.syncWith(pOther->_sfLastElapsedTime);
