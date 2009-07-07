@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PerlinNoiseDistribution1D"
+	parent="Function"
+	library="Dynamics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+An SegmentSetDistribution1D.
+	<Field
+		name="Frequency"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1"
+	>
+	</Field>
+	<Field
+		name="Persistance"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.25"
+	>
+	</Field>
+	<Field
+		name="Octaves"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="4"
+	>
+	</Field>
+</FieldContainer>

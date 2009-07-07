@@ -439,6 +439,34 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Distributions\1D\OSGPerlinNoiseDistribution1D.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\1D\OSGPerlinNoiseDistribution1D.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\1D\OSGPerlinNoiseDistribution1D.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\1D\OSGPerlinNoiseDistribution1DBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\1D\OSGPerlinNoiseDistribution1DBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\1D\OSGPerlinNoiseDistribution1DBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\1D\OSGPerlinNoiseDistribution1DFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.cpp"
 							>
 						</File>
