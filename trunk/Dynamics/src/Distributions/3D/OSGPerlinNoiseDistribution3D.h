@@ -36,43 +36,42 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGPERLINNOISEDISTRIBUTION1D_H_
-#define _OSGPERLINNOISEDISTRIBUTION1D_H_
+#ifndef _OSGPERLINNOISEDISTRIBUTION3D_H_
+#define _OSGPERLINNOISEDISTRIBUTION3D_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGPerlinNoiseDistribution1DBase.h"
+#include "OSGPerlinNoiseDistribution3DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief PerlinNoiseDistribution1D class. See \ref 
-           PageDynamicsPerlinNoiseDistribution1D for a description.
+/*! \brief PerlinNoiseDistribution3D class. See \ref 
+           PageDynamicsPerlinNoiseDistribution3D for a description.
 */
 
-#define OSG_PERLINNOISE_DIST_OUTPUTPARAMETERS (1, \
+#define OSG_PERLINNOISE3D_DIST_OUTPUTPARAMETERS (1, \
     (\
       ("RandomValue", Real32) \
     ))
 
 
-#define OSG_PERLINNOISE_DIST_INPUTPARAMETERS (1, \
+#define OSG_PERLINNOISE3D_DIST_INPUTPARAMETERS (1, \
     (\
-      ("Parameter", Real32) \
+      ("Parameter", Pnt3f) \
     ))
 
-class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1D : public PerlinNoiseDistribution1DBase
+class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3D : public PerlinNoiseDistribution3DBase
 {
   private:
 
-    typedef PerlinNoiseDistribution1DBase Inherited;
+    typedef PerlinNoiseDistribution3DBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  enum InterpolationType {COSINE,LINEAR};	
-
+	enum InterpolationType {COSINE,LINEAR};	
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -88,7 +87,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1D : public PerlinNoiseD
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    /*! \} */
+    /*! \}                                                                 */
+
 
 	virtual FunctionIOTypeVector getOutputTypes(FunctionIOTypeVector& InputTypes) const;
     virtual FunctionIOTypeVector getInputTypes(FunctionIOTypeVector& OutputTypes) const;
@@ -97,50 +97,46 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1D : public PerlinNoiseD
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in PerlinNoiseDistribution1DBase.
+    // Variables should all be in PerlinNoiseDistribution3DBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    PerlinNoiseDistribution1D(void);
-    PerlinNoiseDistribution1D(const PerlinNoiseDistribution1D &source);
+    PerlinNoiseDistribution3D(void);
+    PerlinNoiseDistribution3D(const PerlinNoiseDistribution3D &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PerlinNoiseDistribution1D(void); 
+    virtual ~PerlinNoiseDistribution3D(void); 
 
-    /*! \}                                                                 */
+    /*! \}																   */
 
-	Real32 generate(Real32 t) const;
-	Real32 interpolatedNoise(Real32 t, UInt32 & octave) const;
-	Real32 interpolateLinear(Real32 a, Real32 b, Real32 t) const;
-	Real32 interpolateCosine(Real32 a, Real32 b, Real32 t) const;
-	Real32 getNoise(Int32 t, UInt32 & octave) const;
-
+	Real32 generate(Pnt3f t) const;
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class PerlinNoiseDistribution1DBase;
+    friend class PerlinNoiseDistribution3DBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const PerlinNoiseDistribution1D &source);
+    void operator =(const PerlinNoiseDistribution3D &source);
 };
 
-typedef PerlinNoiseDistribution1D *PerlinNoiseDistribution1DP;
+typedef PerlinNoiseDistribution3D *PerlinNoiseDistribution3DP;
 
 OSG_END_NAMESPACE
 
-#include "OSGPerlinNoiseDistribution1DBase.inl"
-#include "OSGPerlinNoiseDistribution1D.inl"
+#include "OSGPerlinNoiseDistribution3DBase.inl"
+#include "OSGPerlinNoiseDistribution3D.inl"
 
-#define OSGPERLINNOISEDISTRIBUTION1D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGPERLINNOISEDISTRIBUTION3D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGPERLINNOISEDISTRIBUTION1D_H_ */
+#endif /* _OSGPERLINNOISEDISTRIBUTION3D_H_ */

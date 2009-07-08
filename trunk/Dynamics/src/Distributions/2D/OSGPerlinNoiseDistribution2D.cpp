@@ -113,7 +113,7 @@ Real32 PerlinNoiseDistribution2D::generate(Pnt2f t) const
 {
 
 		
-	Real32 total(0.0f), amplitude(getPersistance());
+	Real32 total(0.0f), amplitude(getAmplitude());
 	UInt32 frequency(getFrequency());
 
 	for(unsigned int i(0); i < getOctaves(); ++i)
@@ -136,11 +136,23 @@ Real32 PerlinNoiseDistribution2D::interpolatedNoise(Pnt2f t, UInt32 & octave) co
 	Real32 fractionX = t[0] - intX;
 	Real32 fractionY = t[1] - intX;
 
-	Real32 i1 = interpolate(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
-	intY += 1.0f;
-	Real32 i2 = interpolate(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
+	Real32 i1(0.0f), i2(0.0f), returnValue(0.0f);
+	if(getInterpolationType() == PerlinNoiseDistribution2D::COSINE)
+	{
+		i1 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
+		intY += 1.0f;
+		i2 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
+		returnValue = interpolateCosine(i1 , i2 , fractionY);
+	}
+	else if (getInterpolationType() == PerlinNoiseDistribution2D::LINEAR)
+	{
+		i1 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
+		intY += 1.0f;
+		i2 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
+		returnValue = interpolateLinear(i1 , i2 , fractionY);
+	}
 
-	return interpolate(i1 , i2 , fractionY);
+	return returnValue;
 }
 
 Real32 PerlinNoiseDistribution2D::smoothNoise(Real32 x, Real32 y, UInt32 & octave) const
@@ -152,10 +164,15 @@ Real32 PerlinNoiseDistribution2D::smoothNoise(Real32 x, Real32 y, UInt32 & octav
 	return corners + sides + center;
 }
 
-Real32 PerlinNoiseDistribution2D::interpolate(Real32 a, Real32 b, Real32 t) const
+Real32 PerlinNoiseDistribution2D::interpolateCosine(Real32 a, Real32 b, Real32 t) const
 {	// returns cosine interpolation of t between a and b
 	Real32 f = (1 - std::cos(t * 3.1415927)) * .5;
 	return  a*(1-f) + b*f;
+}
+
+Real32 PerlinNoiseDistribution2D::interpolateLinear(Real32 a, Real32 b, Real32 t) const
+{
+	return  a*(1-t) + b*t;
 }
 
 

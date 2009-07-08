@@ -73,6 +73,12 @@ const OSG::BitVector  PerlinNoiseDistribution2DBase::PersistanceFieldMask =
 const OSG::BitVector  PerlinNoiseDistribution2DBase::OctavesFieldMask = 
     (TypeTraits<BitVector>::One << PerlinNoiseDistribution2DBase::OctavesFieldId);
 
+const OSG::BitVector  PerlinNoiseDistribution2DBase::AmplitudeFieldMask = 
+    (TypeTraits<BitVector>::One << PerlinNoiseDistribution2DBase::AmplitudeFieldId);
+
+const OSG::BitVector  PerlinNoiseDistribution2DBase::InterpolationTypeFieldMask = 
+    (TypeTraits<BitVector>::One << PerlinNoiseDistribution2DBase::InterpolationTypeFieldId);
+
 const OSG::BitVector PerlinNoiseDistribution2DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -88,6 +94,12 @@ const OSG::BitVector PerlinNoiseDistribution2DBase::MTInfluenceMask =
 */
 /*! \var UInt32          PerlinNoiseDistribution2DBase::_sfOctaves
     
+*/
+/*! \var Real32          PerlinNoiseDistribution2DBase::_sfAmplitude
+    
+*/
+/*! \var UInt32          PerlinNoiseDistribution2DBase::_sfInterpolationType
+    This enum is used to determine the interpolation method used for the distribution 	COSINE uses cosine interpolation 	LINEAR uses linear interpolation
 */
 
 //! PerlinNoiseDistribution2D description
@@ -108,7 +120,17 @@ FieldDescription *PerlinNoiseDistribution2DBase::_desc[] =
                      "Octaves", 
                      OctavesFieldId, OctavesFieldMask,
                      false,
-                     (FieldAccessMethod) &PerlinNoiseDistribution2DBase::getSFOctaves)
+                     (FieldAccessMethod) &PerlinNoiseDistribution2DBase::getSFOctaves),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Amplitude", 
+                     AmplitudeFieldId, AmplitudeFieldMask,
+                     false,
+                     (FieldAccessMethod) &PerlinNoiseDistribution2DBase::getSFAmplitude),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "InterpolationType", 
+                     InterpolationTypeFieldId, InterpolationTypeFieldMask,
+                     false,
+                     (FieldAccessMethod) &PerlinNoiseDistribution2DBase::getSFInterpolationType)
 };
 
 
@@ -187,6 +209,8 @@ PerlinNoiseDistribution2DBase::PerlinNoiseDistribution2DBase(void) :
     _sfFrequency              (UInt32(1)), 
     _sfPersistance            (Real32(0.25)), 
     _sfOctaves                (UInt32(4)), 
+    _sfAmplitude              (Real32(1.0)), 
+    _sfInterpolationType      (UInt32(PerlinNoiseDistribution2D::COSINE)), 
     Inherited() 
 {
 }
@@ -199,6 +223,8 @@ PerlinNoiseDistribution2DBase::PerlinNoiseDistribution2DBase(const PerlinNoiseDi
     _sfFrequency              (source._sfFrequency              ), 
     _sfPersistance            (source._sfPersistance            ), 
     _sfOctaves                (source._sfOctaves                ), 
+    _sfAmplitude              (source._sfAmplitude              ), 
+    _sfInterpolationType      (source._sfInterpolationType      ), 
     Inherited                 (source)
 {
 }
@@ -230,6 +256,16 @@ UInt32 PerlinNoiseDistribution2DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfOctaves.getBinSize();
     }
 
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
+    {
+        returnValue += _sfAmplitude.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+    {
+        returnValue += _sfInterpolationType.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -252,6 +288,16 @@ void PerlinNoiseDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (OctavesFieldMask & whichField))
     {
         _sfOctaves.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
+    {
+        _sfAmplitude.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+    {
+        _sfInterpolationType.copyToBin(pMem);
     }
 
 
@@ -277,6 +323,16 @@ void PerlinNoiseDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfOctaves.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
+    {
+        _sfAmplitude.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+    {
+        _sfInterpolationType.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -296,6 +352,12 @@ void PerlinNoiseDistribution2DBase::executeSyncImpl(      PerlinNoiseDistributio
     if(FieldBits::NoField != (OctavesFieldMask & whichField))
         _sfOctaves.syncWith(pOther->_sfOctaves);
 
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
+        _sfAmplitude.syncWith(pOther->_sfAmplitude);
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
+
 
 }
 #else
@@ -314,6 +376,12 @@ void PerlinNoiseDistribution2DBase::executeSyncImpl(      PerlinNoiseDistributio
 
     if(FieldBits::NoField != (OctavesFieldMask & whichField))
         _sfOctaves.syncWith(pOther->_sfOctaves);
+
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
+        _sfAmplitude.syncWith(pOther->_sfAmplitude);
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
 
 
 

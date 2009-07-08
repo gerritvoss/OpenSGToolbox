@@ -751,6 +751,34 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Distributions\3D\OSGPerlinNoiseDistribution3D.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\3D\OSGPerlinNoiseDistribution3D.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\3D\OSGPerlinNoiseDistribution3D.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\3D\OSGPerlinNoiseDistribution3DBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\3D\OSGPerlinNoiseDistribution3DBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\3D\OSGPerlinNoiseDistribution3DBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\3D\OSGPerlinNoiseDistribution3DFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3D.cpp"
 							>
 						</File>

@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PerlinNoiseDistribution1D!
+ **     class PerlinNoiseDistribution3D!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &PerlinNoiseDistribution1DBase::getClassType(void)
+OSG::FieldContainerType &PerlinNoiseDistribution3DBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 PerlinNoiseDistribution1DBase::getClassTypeId(void) 
+OSG::UInt32 PerlinNoiseDistribution3DBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-PerlinNoiseDistribution1DPtr PerlinNoiseDistribution1DBase::create(void) 
+PerlinNoiseDistribution3DPtr PerlinNoiseDistribution3DBase::create(void) 
 {
-    PerlinNoiseDistribution1DPtr fc; 
+    PerlinNoiseDistribution3DPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = PerlinNoiseDistribution1DPtr::dcast(
+        fc = PerlinNoiseDistribution3DPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ PerlinNoiseDistribution1DPtr PerlinNoiseDistribution1DBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-PerlinNoiseDistribution1DPtr PerlinNoiseDistribution1DBase::createEmpty(void) 
+PerlinNoiseDistribution3DPtr PerlinNoiseDistribution3DBase::createEmpty(void) 
 { 
-    PerlinNoiseDistribution1DPtr returnValue; 
+    PerlinNoiseDistribution3DPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,143 +96,143 @@ PerlinNoiseDistribution1DPtr PerlinNoiseDistribution1DBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PerlinNoiseDistribution1D::_sfFrequency field.
+//! Get the PerlinNoiseDistribution3D::_sfFrequency field.
 inline
-SFUInt32 *PerlinNoiseDistribution1DBase::getSFFrequency(void)
+SFUInt32 *PerlinNoiseDistribution3DBase::getSFFrequency(void)
 {
     return &_sfFrequency;
 }
 
-//! Get the PerlinNoiseDistribution1D::_sfPersistance field.
+//! Get the PerlinNoiseDistribution3D::_sfPersistance field.
 inline
-SFReal32 *PerlinNoiseDistribution1DBase::getSFPersistance(void)
+SFReal32 *PerlinNoiseDistribution3DBase::getSFPersistance(void)
 {
     return &_sfPersistance;
 }
 
-//! Get the PerlinNoiseDistribution1D::_sfOctaves field.
+//! Get the PerlinNoiseDistribution3D::_sfOctaves field.
 inline
-SFUInt32 *PerlinNoiseDistribution1DBase::getSFOctaves(void)
+SFUInt32 *PerlinNoiseDistribution3DBase::getSFOctaves(void)
 {
     return &_sfOctaves;
 }
 
-//! Get the PerlinNoiseDistribution1D::_sfAmplitude field.
+//! Get the PerlinNoiseDistribution3D::_sfAmplitude field.
 inline
-SFReal32 *PerlinNoiseDistribution1DBase::getSFAmplitude(void)
+SFReal32 *PerlinNoiseDistribution3DBase::getSFAmplitude(void)
 {
     return &_sfAmplitude;
 }
 
-//! Get the PerlinNoiseDistribution1D::_sfInterpolationType field.
+//! Get the PerlinNoiseDistribution3D::_sfInterpolationType field.
 inline
-SFUInt32 *PerlinNoiseDistribution1DBase::getSFInterpolationType(void)
+SFUInt32 *PerlinNoiseDistribution3DBase::getSFInterpolationType(void)
 {
     return &_sfInterpolationType;
 }
 
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfFrequency field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfFrequency field.
 inline
-UInt32 &PerlinNoiseDistribution1DBase::getFrequency(void)
+UInt32 &PerlinNoiseDistribution3DBase::getFrequency(void)
 {
     return _sfFrequency.getValue();
 }
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfFrequency field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfFrequency field.
 inline
-const UInt32 &PerlinNoiseDistribution1DBase::getFrequency(void) const
+const UInt32 &PerlinNoiseDistribution3DBase::getFrequency(void) const
 {
     return _sfFrequency.getValue();
 }
 
-//! Set the value of the PerlinNoiseDistribution1D::_sfFrequency field.
+//! Set the value of the PerlinNoiseDistribution3D::_sfFrequency field.
 inline
-void PerlinNoiseDistribution1DBase::setFrequency(const UInt32 &value)
+void PerlinNoiseDistribution3DBase::setFrequency(const UInt32 &value)
 {
     _sfFrequency.setValue(value);
 }
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfPersistance field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfPersistance field.
 inline
-Real32 &PerlinNoiseDistribution1DBase::getPersistance(void)
+Real32 &PerlinNoiseDistribution3DBase::getPersistance(void)
 {
     return _sfPersistance.getValue();
 }
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfPersistance field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfPersistance field.
 inline
-const Real32 &PerlinNoiseDistribution1DBase::getPersistance(void) const
+const Real32 &PerlinNoiseDistribution3DBase::getPersistance(void) const
 {
     return _sfPersistance.getValue();
 }
 
-//! Set the value of the PerlinNoiseDistribution1D::_sfPersistance field.
+//! Set the value of the PerlinNoiseDistribution3D::_sfPersistance field.
 inline
-void PerlinNoiseDistribution1DBase::setPersistance(const Real32 &value)
+void PerlinNoiseDistribution3DBase::setPersistance(const Real32 &value)
 {
     _sfPersistance.setValue(value);
 }
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfOctaves field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfOctaves field.
 inline
-UInt32 &PerlinNoiseDistribution1DBase::getOctaves(void)
+UInt32 &PerlinNoiseDistribution3DBase::getOctaves(void)
 {
     return _sfOctaves.getValue();
 }
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfOctaves field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfOctaves field.
 inline
-const UInt32 &PerlinNoiseDistribution1DBase::getOctaves(void) const
+const UInt32 &PerlinNoiseDistribution3DBase::getOctaves(void) const
 {
     return _sfOctaves.getValue();
 }
 
-//! Set the value of the PerlinNoiseDistribution1D::_sfOctaves field.
+//! Set the value of the PerlinNoiseDistribution3D::_sfOctaves field.
 inline
-void PerlinNoiseDistribution1DBase::setOctaves(const UInt32 &value)
+void PerlinNoiseDistribution3DBase::setOctaves(const UInt32 &value)
 {
     _sfOctaves.setValue(value);
 }
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfAmplitude field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfAmplitude field.
 inline
-Real32 &PerlinNoiseDistribution1DBase::getAmplitude(void)
+Real32 &PerlinNoiseDistribution3DBase::getAmplitude(void)
 {
     return _sfAmplitude.getValue();
 }
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfAmplitude field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfAmplitude field.
 inline
-const Real32 &PerlinNoiseDistribution1DBase::getAmplitude(void) const
+const Real32 &PerlinNoiseDistribution3DBase::getAmplitude(void) const
 {
     return _sfAmplitude.getValue();
 }
 
-//! Set the value of the PerlinNoiseDistribution1D::_sfAmplitude field.
+//! Set the value of the PerlinNoiseDistribution3D::_sfAmplitude field.
 inline
-void PerlinNoiseDistribution1DBase::setAmplitude(const Real32 &value)
+void PerlinNoiseDistribution3DBase::setAmplitude(const Real32 &value)
 {
     _sfAmplitude.setValue(value);
 }
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfInterpolationType field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfInterpolationType field.
 inline
-UInt32 &PerlinNoiseDistribution1DBase::getInterpolationType(void)
+UInt32 &PerlinNoiseDistribution3DBase::getInterpolationType(void)
 {
     return _sfInterpolationType.getValue();
 }
 
-//! Get the value of the PerlinNoiseDistribution1D::_sfInterpolationType field.
+//! Get the value of the PerlinNoiseDistribution3D::_sfInterpolationType field.
 inline
-const UInt32 &PerlinNoiseDistribution1DBase::getInterpolationType(void) const
+const UInt32 &PerlinNoiseDistribution3DBase::getInterpolationType(void) const
 {
     return _sfInterpolationType.getValue();
 }
 
-//! Set the value of the PerlinNoiseDistribution1D::_sfInterpolationType field.
+//! Set the value of the PerlinNoiseDistribution3D::_sfInterpolationType field.
 inline
-void PerlinNoiseDistribution1DBase::setInterpolationType(const UInt32 &value)
+void PerlinNoiseDistribution3DBase::setInterpolationType(const UInt32 &value)
 {
     _sfInterpolationType.setValue(value);
 }
@@ -240,5 +240,5 @@ void PerlinNoiseDistribution1DBase::setInterpolationType(const UInt32 &value)
 
 OSG_END_NAMESPACE
 
-#define OSGPERLINNOISEDISTRIBUTION1DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGPERLINNOISEDISTRIBUTION3DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

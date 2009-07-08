@@ -117,6 +117,20 @@ SFUInt32 *PerlinNoiseDistribution2DBase::getSFOctaves(void)
     return &_sfOctaves;
 }
 
+//! Get the PerlinNoiseDistribution2D::_sfAmplitude field.
+inline
+SFReal32 *PerlinNoiseDistribution2DBase::getSFAmplitude(void)
+{
+    return &_sfAmplitude;
+}
+
+//! Get the PerlinNoiseDistribution2D::_sfInterpolationType field.
+inline
+SFUInt32 *PerlinNoiseDistribution2DBase::getSFInterpolationType(void)
+{
+    return &_sfInterpolationType;
+}
+
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfFrequency field.
 inline
@@ -179,6 +193,48 @@ inline
 void PerlinNoiseDistribution2DBase::setOctaves(const UInt32 &value)
 {
     _sfOctaves.setValue(value);
+}
+
+//! Get the value of the PerlinNoiseDistribution2D::_sfAmplitude field.
+inline
+Real32 &PerlinNoiseDistribution2DBase::getAmplitude(void)
+{
+    return _sfAmplitude.getValue();
+}
+
+//! Get the value of the PerlinNoiseDistribution2D::_sfAmplitude field.
+inline
+const Real32 &PerlinNoiseDistribution2DBase::getAmplitude(void) const
+{
+    return _sfAmplitude.getValue();
+}
+
+//! Set the value of the PerlinNoiseDistribution2D::_sfAmplitude field.
+inline
+void PerlinNoiseDistribution2DBase::setAmplitude(const Real32 &value)
+{
+    _sfAmplitude.setValue(value);
+}
+
+//! Get the value of the PerlinNoiseDistribution2D::_sfInterpolationType field.
+inline
+UInt32 &PerlinNoiseDistribution2DBase::getInterpolationType(void)
+{
+    return _sfInterpolationType.getValue();
+}
+
+//! Get the value of the PerlinNoiseDistribution2D::_sfInterpolationType field.
+inline
+const UInt32 &PerlinNoiseDistribution2DBase::getInterpolationType(void) const
+{
+    return _sfInterpolationType.getValue();
+}
+
+//! Set the value of the PerlinNoiseDistribution2D::_sfInterpolationType field.
+inline
+void PerlinNoiseDistribution2DBase::setInterpolationType(const UInt32 &value)
+{
+    _sfInterpolationType.setValue(value);
 }
 
 

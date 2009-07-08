@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PerlinNoiseDistribution1D
+ **     class PerlinNoiseDistribution3D
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPERLINNOISEDISTRIBUTION1DBASE_H_
-#define _OSGPERLINNOISEDISTRIBUTION1DBASE_H_
+#ifndef _OSGPERLINNOISEDISTRIBUTION3DBASE_H_
+#define _OSGPERLINNOISEDISTRIBUTION3DBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -73,16 +73,16 @@
 #include <OpenSG/OSGReal32Fields.h> // Amplitude type
 #include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
 
-#include "OSGPerlinNoiseDistribution1DFields.h"
+#include "OSGPerlinNoiseDistribution3DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class PerlinNoiseDistribution1D;
+class PerlinNoiseDistribution3D;
 class BinaryDataHandler;
 
-//! \brief PerlinNoiseDistribution1D Base Class.
+//! \brief PerlinNoiseDistribution3D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
+class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3DBase : public Function
 {
   private:
 
@@ -91,7 +91,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PerlinNoiseDistribution1DPtr  Ptr;
+    typedef PerlinNoiseDistribution3DPtr  Ptr;
 
     enum
     {
@@ -184,8 +184,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PerlinNoiseDistribution1DPtr      create          (void); 
-    static  PerlinNoiseDistribution1DPtr      createEmpty     (void); 
+    static  PerlinNoiseDistribution3DPtr      create          (void); 
+    static  PerlinNoiseDistribution3DPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -214,15 +214,15 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    PerlinNoiseDistribution1DBase(void);
-    PerlinNoiseDistribution1DBase(const PerlinNoiseDistribution1DBase &source);
+    PerlinNoiseDistribution3DBase(void);
+    PerlinNoiseDistribution3DBase(const PerlinNoiseDistribution3DBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PerlinNoiseDistribution1DBase(void); 
+    virtual ~PerlinNoiseDistribution3DBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,13 +230,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PerlinNoiseDistribution1DBase *pOther,
+    void executeSyncImpl(      PerlinNoiseDistribution3DBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      PerlinNoiseDistribution1DBase *pOther,
+    void executeSyncImpl(      PerlinNoiseDistribution3DBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -266,7 +266,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const PerlinNoiseDistribution1DBase &source);
+    void operator =(const PerlinNoiseDistribution3DBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -274,17 +274,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
 //---------------------------------------------------------------------------
 
 
-typedef PerlinNoiseDistribution1DBase *PerlinNoiseDistribution1DBaseP;
+typedef PerlinNoiseDistribution3DBase *PerlinNoiseDistribution3DBaseP;
 
-typedef osgIF<PerlinNoiseDistribution1DBase::isNodeCore,
-              CoredNodePtr<PerlinNoiseDistribution1D>,
+typedef osgIF<PerlinNoiseDistribution3DBase::isNodeCore,
+              CoredNodePtr<PerlinNoiseDistribution3D>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PerlinNoiseDistribution1DNodePtr;
+              >::_IRet PerlinNoiseDistribution3DNodePtr;
 
-typedef RefPtr<PerlinNoiseDistribution1DPtr> PerlinNoiseDistribution1DRefPtr;
+typedef RefPtr<PerlinNoiseDistribution3DPtr> PerlinNoiseDistribution3DRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPERLINNOISEDISTRIBUTION1DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGPERLINNOISEDISTRIBUTION3DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGPERLINNOISEDISTRIBUTION1DBASE_H_ */
+#endif /* _OSGPERLINNOISEDISTRIBUTION3DBASE_H_ */

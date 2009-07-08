@@ -39,4 +39,27 @@ A PerlinNoiseDistribution1D.
 		defaultValue="4"
 	>
 	</Field>
+	<Field
+		name="Amplitude"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
+	>
+	</Field>
+	<Field
+		name="InterpolationType"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="PerlinNoiseDistribution1D::COSINE"
+		access="public"
+	>
+	This enum is used to determine the interpolation method used for the distribution
+	COSINE uses cosine interpolation
+	LINEAR uses linear interpolation	
+	</Field>
+
+
 </FieldContainer>

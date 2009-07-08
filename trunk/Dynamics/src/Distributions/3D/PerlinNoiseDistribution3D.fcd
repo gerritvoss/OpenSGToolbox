@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PerlinNoiseDistribution2D"
+	name="PerlinNoiseDistribution3D"
 	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
@@ -11,7 +11,7 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A PerlinNoiseDistribution2D.
+A PerlinNoiseDistribution3D.
 	<Field
 		name="Frequency"
 		type="UInt32"
@@ -53,7 +53,7 @@ A PerlinNoiseDistribution2D.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="PerlinNoiseDistribution2D::COSINE"
+		defaultValue="PerlinNoiseDistribution3D::COSINE"
 		access="public"
 	>
 	This enum is used to determine the interpolation method used for the distribution
@@ -61,4 +61,3 @@ A PerlinNoiseDistribution2D.
 	LINEAR uses linear interpolation	
 	</Field>
 </FieldContainer>
-

@@ -45,154 +45,154 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PerlinNoiseDistribution1D!
+ **     class PerlinNoiseDistribution3D!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEPERLINNOISEDISTRIBUTION1DINST
+#define OSG_COMPILEPERLINNOISEDISTRIBUTION3DINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGPerlinNoiseDistribution1DBase.h"
-#include "OSGPerlinNoiseDistribution1D.h"
+#include "OSGPerlinNoiseDistribution3DBase.h"
+#include "OSGPerlinNoiseDistribution3D.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PerlinNoiseDistribution1DBase::FrequencyFieldMask = 
-    (TypeTraits<BitVector>::One << PerlinNoiseDistribution1DBase::FrequencyFieldId);
+const OSG::BitVector  PerlinNoiseDistribution3DBase::FrequencyFieldMask = 
+    (TypeTraits<BitVector>::One << PerlinNoiseDistribution3DBase::FrequencyFieldId);
 
-const OSG::BitVector  PerlinNoiseDistribution1DBase::PersistanceFieldMask = 
-    (TypeTraits<BitVector>::One << PerlinNoiseDistribution1DBase::PersistanceFieldId);
+const OSG::BitVector  PerlinNoiseDistribution3DBase::PersistanceFieldMask = 
+    (TypeTraits<BitVector>::One << PerlinNoiseDistribution3DBase::PersistanceFieldId);
 
-const OSG::BitVector  PerlinNoiseDistribution1DBase::OctavesFieldMask = 
-    (TypeTraits<BitVector>::One << PerlinNoiseDistribution1DBase::OctavesFieldId);
+const OSG::BitVector  PerlinNoiseDistribution3DBase::OctavesFieldMask = 
+    (TypeTraits<BitVector>::One << PerlinNoiseDistribution3DBase::OctavesFieldId);
 
-const OSG::BitVector  PerlinNoiseDistribution1DBase::AmplitudeFieldMask = 
-    (TypeTraits<BitVector>::One << PerlinNoiseDistribution1DBase::AmplitudeFieldId);
+const OSG::BitVector  PerlinNoiseDistribution3DBase::AmplitudeFieldMask = 
+    (TypeTraits<BitVector>::One << PerlinNoiseDistribution3DBase::AmplitudeFieldId);
 
-const OSG::BitVector  PerlinNoiseDistribution1DBase::InterpolationTypeFieldMask = 
-    (TypeTraits<BitVector>::One << PerlinNoiseDistribution1DBase::InterpolationTypeFieldId);
+const OSG::BitVector  PerlinNoiseDistribution3DBase::InterpolationTypeFieldMask = 
+    (TypeTraits<BitVector>::One << PerlinNoiseDistribution3DBase::InterpolationTypeFieldId);
 
-const OSG::BitVector PerlinNoiseDistribution1DBase::MTInfluenceMask = 
+const OSG::BitVector PerlinNoiseDistribution3DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var UInt32          PerlinNoiseDistribution1DBase::_sfFrequency
+/*! \var UInt32          PerlinNoiseDistribution3DBase::_sfFrequency
     
 */
-/*! \var Real32          PerlinNoiseDistribution1DBase::_sfPersistance
+/*! \var Real32          PerlinNoiseDistribution3DBase::_sfPersistance
     
 */
-/*! \var UInt32          PerlinNoiseDistribution1DBase::_sfOctaves
+/*! \var UInt32          PerlinNoiseDistribution3DBase::_sfOctaves
     
 */
-/*! \var Real32          PerlinNoiseDistribution1DBase::_sfAmplitude
+/*! \var Real32          PerlinNoiseDistribution3DBase::_sfAmplitude
     
 */
-/*! \var UInt32          PerlinNoiseDistribution1DBase::_sfInterpolationType
+/*! \var UInt32          PerlinNoiseDistribution3DBase::_sfInterpolationType
     This enum is used to determine the interpolation method used for the distribution 	COSINE uses cosine interpolation 	LINEAR uses linear interpolation
 */
 
-//! PerlinNoiseDistribution1D description
+//! PerlinNoiseDistribution3D description
 
-FieldDescription *PerlinNoiseDistribution1DBase::_desc[] = 
+FieldDescription *PerlinNoiseDistribution3DBase::_desc[] = 
 {
     new FieldDescription(SFUInt32::getClassType(), 
                      "Frequency", 
                      FrequencyFieldId, FrequencyFieldMask,
                      false,
-                     (FieldAccessMethod) &PerlinNoiseDistribution1DBase::getSFFrequency),
+                     (FieldAccessMethod) &PerlinNoiseDistribution3DBase::getSFFrequency),
     new FieldDescription(SFReal32::getClassType(), 
                      "Persistance", 
                      PersistanceFieldId, PersistanceFieldMask,
                      false,
-                     (FieldAccessMethod) &PerlinNoiseDistribution1DBase::getSFPersistance),
+                     (FieldAccessMethod) &PerlinNoiseDistribution3DBase::getSFPersistance),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Octaves", 
                      OctavesFieldId, OctavesFieldMask,
                      false,
-                     (FieldAccessMethod) &PerlinNoiseDistribution1DBase::getSFOctaves),
+                     (FieldAccessMethod) &PerlinNoiseDistribution3DBase::getSFOctaves),
     new FieldDescription(SFReal32::getClassType(), 
                      "Amplitude", 
                      AmplitudeFieldId, AmplitudeFieldMask,
                      false,
-                     (FieldAccessMethod) &PerlinNoiseDistribution1DBase::getSFAmplitude),
+                     (FieldAccessMethod) &PerlinNoiseDistribution3DBase::getSFAmplitude),
     new FieldDescription(SFUInt32::getClassType(), 
                      "InterpolationType", 
                      InterpolationTypeFieldId, InterpolationTypeFieldMask,
                      false,
-                     (FieldAccessMethod) &PerlinNoiseDistribution1DBase::getSFInterpolationType)
+                     (FieldAccessMethod) &PerlinNoiseDistribution3DBase::getSFInterpolationType)
 };
 
 
-FieldContainerType PerlinNoiseDistribution1DBase::_type(
-    "PerlinNoiseDistribution1D",
+FieldContainerType PerlinNoiseDistribution3DBase::_type(
+    "PerlinNoiseDistribution3D",
     "Function",
     NULL,
-    (PrototypeCreateF) &PerlinNoiseDistribution1DBase::createEmpty,
-    PerlinNoiseDistribution1D::initMethod,
+    (PrototypeCreateF) &PerlinNoiseDistribution3DBase::createEmpty,
+    PerlinNoiseDistribution3D::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(PerlinNoiseDistribution1DBase, PerlinNoiseDistribution1DPtr)
+//OSG_FIELD_CONTAINER_DEF(PerlinNoiseDistribution3DBase, PerlinNoiseDistribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PerlinNoiseDistribution1DBase::getType(void) 
+FieldContainerType &PerlinNoiseDistribution3DBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &PerlinNoiseDistribution1DBase::getType(void) const 
+const FieldContainerType &PerlinNoiseDistribution3DBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr PerlinNoiseDistribution1DBase::shallowCopy(void) const 
+FieldContainerPtr PerlinNoiseDistribution3DBase::shallowCopy(void) const 
 { 
-    PerlinNoiseDistribution1DPtr returnValue; 
+    PerlinNoiseDistribution3DPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const PerlinNoiseDistribution1D *>(this)); 
+    newPtr(returnValue, dynamic_cast<const PerlinNoiseDistribution3D *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 PerlinNoiseDistribution1DBase::getContainerSize(void) const 
+UInt32 PerlinNoiseDistribution3DBase::getContainerSize(void) const 
 { 
-    return sizeof(PerlinNoiseDistribution1D); 
+    return sizeof(PerlinNoiseDistribution3D); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void PerlinNoiseDistribution1DBase::executeSync(      FieldContainer &other,
+void PerlinNoiseDistribution3DBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((PerlinNoiseDistribution1DBase *) &other, whichField);
+    this->executeSyncImpl((PerlinNoiseDistribution3DBase *) &other, whichField);
 }
 #else
-void PerlinNoiseDistribution1DBase::executeSync(      FieldContainer &other,
+void PerlinNoiseDistribution3DBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((PerlinNoiseDistribution1DBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((PerlinNoiseDistribution3DBase *) &other, whichField, sInfo);
 }
-void PerlinNoiseDistribution1DBase::execBeginEdit(const BitVector &whichField, 
+void PerlinNoiseDistribution3DBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void PerlinNoiseDistribution1DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void PerlinNoiseDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -205,12 +205,12 @@ void PerlinNoiseDistribution1DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect
 #pragma warning (disable : 383)
 #endif
 
-PerlinNoiseDistribution1DBase::PerlinNoiseDistribution1DBase(void) :
+PerlinNoiseDistribution3DBase::PerlinNoiseDistribution3DBase(void) :
     _sfFrequency              (UInt32(1)), 
     _sfPersistance            (Real32(0.25)), 
     _sfOctaves                (UInt32(4)), 
     _sfAmplitude              (Real32(1.0)), 
-    _sfInterpolationType      (UInt32(PerlinNoiseDistribution1D::COSINE)), 
+    _sfInterpolationType      (UInt32(PerlinNoiseDistribution3D::COSINE)), 
     Inherited() 
 {
 }
@@ -219,7 +219,7 @@ PerlinNoiseDistribution1DBase::PerlinNoiseDistribution1DBase(void) :
 #pragma warning (default : 383)
 #endif
 
-PerlinNoiseDistribution1DBase::PerlinNoiseDistribution1DBase(const PerlinNoiseDistribution1DBase &source) :
+PerlinNoiseDistribution3DBase::PerlinNoiseDistribution3DBase(const PerlinNoiseDistribution3DBase &source) :
     _sfFrequency              (source._sfFrequency              ), 
     _sfPersistance            (source._sfPersistance            ), 
     _sfOctaves                (source._sfOctaves                ), 
@@ -231,13 +231,13 @@ PerlinNoiseDistribution1DBase::PerlinNoiseDistribution1DBase(const PerlinNoiseDi
 
 /*-------------------------- destructors ----------------------------------*/
 
-PerlinNoiseDistribution1DBase::~PerlinNoiseDistribution1DBase(void)
+PerlinNoiseDistribution3DBase::~PerlinNoiseDistribution3DBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PerlinNoiseDistribution1DBase::getBinSize(const BitVector &whichField)
+UInt32 PerlinNoiseDistribution3DBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -270,7 +270,7 @@ UInt32 PerlinNoiseDistribution1DBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void PerlinNoiseDistribution1DBase::copyToBin(      BinaryDataHandler &pMem,
+void PerlinNoiseDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -303,7 +303,7 @@ void PerlinNoiseDistribution1DBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void PerlinNoiseDistribution1DBase::copyFromBin(      BinaryDataHandler &pMem,
+void PerlinNoiseDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -337,7 +337,7 @@ void PerlinNoiseDistribution1DBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void PerlinNoiseDistribution1DBase::executeSyncImpl(      PerlinNoiseDistribution1DBase *pOther,
+void PerlinNoiseDistribution3DBase::executeSyncImpl(      PerlinNoiseDistribution3DBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -361,7 +361,7 @@ void PerlinNoiseDistribution1DBase::executeSyncImpl(      PerlinNoiseDistributio
 
 }
 #else
-void PerlinNoiseDistribution1DBase::executeSyncImpl(      PerlinNoiseDistribution1DBase *pOther,
+void PerlinNoiseDistribution3DBase::executeSyncImpl(      PerlinNoiseDistribution3DBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -387,7 +387,7 @@ void PerlinNoiseDistribution1DBase::executeSyncImpl(      PerlinNoiseDistributio
 
 }
 
-void PerlinNoiseDistribution1DBase::execBeginEditImpl (const BitVector &whichField, 
+void PerlinNoiseDistribution3DBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -406,11 +406,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PerlinNoiseDistribution1DPtr>::_type("PerlinNoiseDistribution1DPtr", "FunctionPtr");
+DataType FieldDataTraits<PerlinNoiseDistribution3DPtr>::_type("PerlinNoiseDistribution3DPtr", "FunctionPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(PerlinNoiseDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PerlinNoiseDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(PerlinNoiseDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(PerlinNoiseDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -427,10 +427,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(PerlinNoiseDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLM
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPERLINNOISEDISTRIBUTION1DBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPERLINNOISEDISTRIBUTION1DBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGPERLINNOISEDISTRIBUTION3DBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGPERLINNOISEDISTRIBUTION3DBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPERLINNOISEDISTRIBUTION1DFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGPERLINNOISEDISTRIBUTION3DFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

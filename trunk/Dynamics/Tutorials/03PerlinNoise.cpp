@@ -154,15 +154,17 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
                                         Vec2f(1400,1200),
-                                        "OpenSG 01ParticleSystemDrawer Window");
+                                        "2D Perlin Noise Demo");
 										
 
     //Make The Distribution
 	PerlinNoiseDistribution2DPtr PerlinNoise = PerlinNoiseDistribution2D::create();
 	beginEditCP(PerlinNoise);
-		PerlinNoise->setFrequency(3);
-		PerlinNoise->setOctaves(9);
-		PerlinNoise->setPersistance(0.625);
+		PerlinNoise->setFrequency(1);
+		PerlinNoise->setOctaves(6);
+		PerlinNoise->setPersistance(0.25);
+		PerlinNoise->setAmplitude(10);
+		PerlinNoise->setInterpolationType(PerlinNoiseDistribution2D::COSINE);
 	endEditCP(PerlinNoise);
 
 	//Particle System Material
@@ -197,9 +199,9 @@ int main(int argc, char **argv)
 	Vec3f SizeReturnValue;
 	Pnt3f PositionReturnValue;
     FunctionIOParameterVector input;
-    for(Real32 i(0) ; i < 10 ; i += 0.15f)
+    for(Real32 i(0) ; i < 40 ; i += 0.25f)
     {
-       for(Real32 j(0) ; j < 10 ; j += 0.15f)
+       for(Real32 j(0) ; j < 40 ; j += 0.25f)
 	   {	
 			input.clear();
 			input.push_back(FunctionIOParameter(std::string("Value"), new FunctionIOData<Pnt2f>(Pnt2f(i,j))));
