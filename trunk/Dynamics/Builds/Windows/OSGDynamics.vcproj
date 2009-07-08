@@ -895,6 +895,34 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Distributions\2D\OSGPerlinNoiseDistribution2D.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\2D\OSGPerlinNoiseDistribution2D.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\2D\OSGPerlinNoiseDistribution2D.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\2D\OSGPerlinNoiseDistribution2DBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\2D\OSGPerlinNoiseDistribution2DBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\2D\OSGPerlinNoiseDistribution2DBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Distributions\2D\OSGPerlinNoiseDistribution2DFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.cpp"
 							>
 						</File>

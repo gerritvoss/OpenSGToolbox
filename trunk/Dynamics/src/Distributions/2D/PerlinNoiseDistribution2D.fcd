@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PerlinNoiseDistribution1D"
+	name="PerlinNoiseDistribution2D"
 	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
@@ -11,7 +11,7 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A PerlinNoiseDistribution1D.
+A PerlinNoiseDistribution2D.
 	<Field
 		name="Frequency"
 		type="UInt32"
@@ -40,3 +40,4 @@ A PerlinNoiseDistribution1D.
 	>
 	</Field>
 </FieldContainer>
+

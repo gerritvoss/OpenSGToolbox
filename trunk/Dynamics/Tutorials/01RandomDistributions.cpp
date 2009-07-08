@@ -152,7 +152,7 @@ int main(int argc, char **argv)
     mgr->setWindow(MainWindow);
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
+                                        Vec2f(800,800),
                                         "OpenSG 01ParticleSystemDrawer Window");
 										
 
@@ -328,7 +328,13 @@ int main(int argc, char **argv)
             TheSizeDistribution->evaluate(EmptyParameters).front().getDataPtr()
             )->getData();
 
-		ExampleParticleSystem->addParticle(PositionReturnValue,Vec3f(0.0,0.0f,1.0f),Color4f(ColorReturnValue.red(),ColorReturnValue.green(),ColorReturnValue.blue(), 1.0), SizeReturnValue, -1.0f, Vec3f(0.0f,0.0f,0.0f),Vec3f(0.0f,0.0f,0.0f),0);
+		ExampleParticleSystem->addParticle(PositionReturnValue,
+			Vec3f(0.0,0.0f,1.0f),
+			Color4f(ColorReturnValue.red(),ColorReturnValue.green(),ColorReturnValue.blue(), 1.0), 
+			SizeReturnValue, 
+			-1.0f, 
+			Vec3f(0.0f,0.0f,0.0f),
+			Vec3f(0.0f,0.0f,0.0f),0);
 	
     }
 

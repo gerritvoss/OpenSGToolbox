@@ -53,6 +53,7 @@
 #include <boost/preprocessor/array/elem.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <OpenSG/OSGTypeFactory.h>
+#include <OpenSG/OSGVecFieldDataType.h>
 
 #define OSG_FUNC_IOPARAMETERARRAY_SIZE(parameterArray) BOOST_PP_ARRAY_SIZE(parameterArray)
 
