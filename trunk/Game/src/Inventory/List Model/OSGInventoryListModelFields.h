@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGGENERICINVENTORYITEMFIELDS_H_
-#define _OSGGENERICINVENTORYITEMFIELDS_H_
+#ifndef _OSGINVENTORYLISTMODELFIELDS_H_
+#define _OSGINVENTORYLISTMODELFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGGameDef.h"
 
-#include "OSGInventoryItemFields.h"
+#include <OpenSG/UserInterface/OSGAbstractListModelFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class GenericInventoryItem;
+class InventoryListModel;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GenericInventoryItemPtr
+//! InventoryListModelPtr
 
-typedef FCPtr<InventoryItemPtr, GenericInventoryItem> GenericInventoryItemPtr;
+typedef FCPtr<AbstractListModelPtr, InventoryListModel> InventoryListModelPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<InventoryItemPtr, GenericInventoryItem> GenericInventoryItemPtr;
 #endif
 
 template <>
-struct FieldDataTraits<GenericInventoryItemPtr> : 
-    public FieldTraitsRecurseMapper<GenericInventoryItemPtr, true>
+struct FieldDataTraits<InventoryListModelPtr> : 
+    public FieldTraitsRecurseMapper<InventoryListModelPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<GenericInventoryItemPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFGenericInventoryItemPtr"; }
-    static const char *getMName(void) { return "MFGenericInventoryItemPtr"; }
+    static const char *getSName(void) { return "SFInventoryListModelPtr"; }
+    static const char *getMName(void) { return "MFInventoryListModelPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GenericInventoryItemPtr, true>
+/*! \class  FieldTraitsRecurseMapper<InventoryListModelPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<GenericInventoryItemPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldSingle */
 
-typedef SField<GenericInventoryItemPtr> SFGenericInventoryItemPtr;
+typedef SField<InventoryListModelPtr> SFInventoryListModelPtr;
 #endif
 
-#ifndef OSG_COMPILEGENERICINVENTORYITEMINST
-OSG_DLLEXPORT_DECL1(SField, GenericInventoryItemPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEINVENTORYLISTMODELINST
+OSG_DLLEXPORT_DECL1(SField, InventoryListModelPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldMulti */
 
-typedef MField<GenericInventoryItemPtr> MFGenericInventoryItemPtr;
+typedef MField<InventoryListModelPtr> MFInventoryListModelPtr;
 #endif
 
-#ifndef OSG_COMPILEGENERICINVENTORYITEMINST
-OSG_DLLEXPORT_DECL1(MField, GenericInventoryItemPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEINVENTORYLISTMODELINST
+OSG_DLLEXPORT_DECL1(MField, InventoryListModelPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGGENERICINVENTORYITEMFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGINVENTORYLISTMODELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGGENERICINVENTORYITEMFIELDS_H_ */
+#endif /* _OSGINVENTORYLISTMODELFIELDS_H_ */

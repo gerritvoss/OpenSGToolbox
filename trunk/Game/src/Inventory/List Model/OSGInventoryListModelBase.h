@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class GenericInventoryItem
+ **     class InventoryListModel
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGGENERICINVENTORYITEMBASE_H_
-#define _OSGGENERICINVENTORYITEMBASE_H_
+#ifndef _OSGINVENTORYLISTMODELBASE_H_
+#define _OSGINVENTORYLISTMODELBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,28 +65,28 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGInventoryItem.h" // Parent
+#include <OpenSG/UserInterface/OSGAbstractListModel.h> // Parent
 
 
-#include "OSGGenericInventoryItemFields.h"
+#include "OSGInventoryListModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class GenericInventoryItem;
+class InventoryListModel;
 class BinaryDataHandler;
 
-//! \brief GenericInventoryItem Base Class.
+//! \brief InventoryListModel Base Class.
 
-class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
+class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
 {
   private:
 
-    typedef InventoryItem    Inherited;
+    typedef AbstractListModel    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef GenericInventoryItemPtr  Ptr;
+    typedef InventoryListModelPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -130,8 +130,8 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  GenericInventoryItemPtr      create          (void); 
-    static  GenericInventoryItemPtr      createEmpty     (void); 
+    static  InventoryListModelPtr      create          (void); 
+    static  InventoryListModelPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -149,15 +149,15 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    GenericInventoryItemBase(void);
-    GenericInventoryItemBase(const GenericInventoryItemBase &source);
+    InventoryListModelBase(void);
+    InventoryListModelBase(const InventoryListModelBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GenericInventoryItemBase(void); 
+    virtual ~InventoryListModelBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -165,13 +165,13 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      GenericInventoryItemBase *pOther,
+    void executeSyncImpl(      InventoryListModelBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      GenericInventoryItemBase *pOther,
+    void executeSyncImpl(      InventoryListModelBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -200,7 +200,7 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const GenericInventoryItemBase &source);
+    void operator =(const InventoryListModelBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -208,17 +208,17 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
 //---------------------------------------------------------------------------
 
 
-typedef GenericInventoryItemBase *GenericInventoryItemBaseP;
+typedef InventoryListModelBase *InventoryListModelBaseP;
 
-typedef osgIF<GenericInventoryItemBase::isNodeCore,
-              CoredNodePtr<GenericInventoryItem>,
+typedef osgIF<InventoryListModelBase::isNodeCore,
+              CoredNodePtr<InventoryListModel>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet GenericInventoryItemNodePtr;
+              >::_IRet InventoryListModelNodePtr;
 
-typedef RefPtr<GenericInventoryItemPtr> GenericInventoryItemRefPtr;
+typedef RefPtr<InventoryListModelPtr> InventoryListModelRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGGENERICINVENTORYITEMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGINVENTORYLISTMODELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGGENERICINVENTORYITEMBASE_H_ */
+#endif /* _OSGINVENTORYLISTMODELBASE_H_ */

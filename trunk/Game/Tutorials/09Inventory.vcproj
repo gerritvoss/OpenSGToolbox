@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="17Label_Font"
+	Name="09Inventory"
 	ProjectGUID="{E4289413-B11F-4480-B87F-E6AF81FACD12}"
 	RootNamespace="17Label"
 	Keyword="Win32Proj"
@@ -207,7 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\17Label_Font.cpp"
+				RelativePath=".\09Inventory.cpp"
 				>
 			</File>
 		</Filter>

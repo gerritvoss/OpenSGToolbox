@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -44,88 +42,63 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class InventoryListModel!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGGENERICINVENTORYITEMFIELDS_H_
-#define _OSGGENERICINVENTORYITEMFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGGameDef.h"
-
-#include "OSGInventoryItemFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class GenericInventoryItem;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GenericInventoryItemPtr
-
-typedef FCPtr<InventoryItemPtr, GenericInventoryItem> GenericInventoryItemPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpGameFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<GenericInventoryItemPtr> : 
-    public FieldTraitsRecurseMapper<GenericInventoryItemPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &InventoryListModelBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+//! access the numerical type of the class
+inline
+OSG::UInt32 InventoryListModelBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
-    static DataType   &getType (void) { return _type;        }
+//! create a new instance of the class
+inline
+InventoryListModelPtr InventoryListModelBase::create(void) 
+{
+    InventoryListModelPtr fc; 
 
-    static const char *getSName(void) { return "SFGenericInventoryItemPtr"; }
-    static const char *getMName(void) { return "MFGenericInventoryItemPtr"; }
-};
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = InventoryListModelPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GenericInventoryItemPtr, true>
-    \hideinhierarchy
- */
-#endif
+//! create an empty new instance of the class, do not copy the prototype
+inline
+InventoryListModelPtr InventoryListModelBase::createEmpty(void) 
+{ 
+    InventoryListModelPtr returnValue; 
+    
+    newPtr(returnValue); 
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+    return returnValue; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpGameFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<GenericInventoryItemPtr> SFGenericInventoryItemPtr;
-#endif
 
-#ifndef OSG_COMPILEGENERICINVENTORYITEMINST
-OSG_DLLEXPORT_DECL1(SField, GenericInventoryItemPtr, OSG_GAMELIB_DLLTMPLMAPPING)
-#endif
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpGameFieldMulti */
-
-typedef MField<GenericInventoryItemPtr> MFGenericInventoryItemPtr;
-#endif
-
-#ifndef OSG_COMPILEGENERICINVENTORYITEMINST
-OSG_DLLEXPORT_DECL1(MField, GenericInventoryItemPtr, OSG_GAMELIB_DLLTMPLMAPPING)
-#endif
 
 OSG_END_NAMESPACE
 
-#define OSGGENERICINVENTORYITEMFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGINVENTORYLISTMODELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
-#endif /* _OSGGENERICINVENTORYITEMFIELDS_H_ */

@@ -918,6 +918,34 @@
 				Name="Inventory"
 				>
 				<File
+					RelativePath="..\..\src\Inventory\OSGGenericInventoryItem.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Inventory\OSGGenericInventoryItem.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Inventory\OSGGenericInventoryItem.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Inventory\OSGGenericInventoryItemBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Inventory\OSGGenericInventoryItemBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Inventory\OSGGenericInventoryItemBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Inventory\OSGGenericInventoryItemFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Inventory\OSGInventory.cpp"
 					>
 				</File>
@@ -990,6 +1018,38 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Inventory\Event\OSGInventoryListener.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="List Model"
+					>
+					<File
+						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModel.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModelBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModelBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModelBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModelFields.h"
 						>
 					</File>
 				</Filter>
