@@ -86,7 +86,7 @@ const OSG::BitVector PerlinNoiseDistribution2DBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          PerlinNoiseDistribution2DBase::_sfFrequency
+/*! \var Real32          PerlinNoiseDistribution2DBase::_sfFrequency
     
 */
 /*! \var Real32          PerlinNoiseDistribution2DBase::_sfPersistance
@@ -106,7 +106,7 @@ const OSG::BitVector PerlinNoiseDistribution2DBase::MTInfluenceMask =
 
 FieldDescription *PerlinNoiseDistribution2DBase::_desc[] = 
 {
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Frequency", 
                      FrequencyFieldId, FrequencyFieldMask,
                      false,
@@ -206,7 +206,7 @@ void PerlinNoiseDistribution2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect
 #endif
 
 PerlinNoiseDistribution2DBase::PerlinNoiseDistribution2DBase(void) :
-    _sfFrequency              (UInt32(1)), 
+    _sfFrequency              (Real32(1.0f)), 
     _sfPersistance            (Real32(0.25)), 
     _sfOctaves                (UInt32(4)), 
     _sfAmplitude              (Real32(1.0)), 

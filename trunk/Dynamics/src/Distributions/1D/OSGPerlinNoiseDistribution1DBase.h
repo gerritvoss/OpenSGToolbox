@@ -67,7 +67,7 @@
 
 #include "Function/OSGFunction.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Frequency type
+#include <OpenSG/OSGReal32Fields.h> // Frequency type
 #include <OpenSG/OSGReal32Fields.h> // Persistance type
 #include <OpenSG/OSGUInt32Fields.h> // Octaves type
 #include <OpenSG/OSGReal32Fields.h> // Amplitude type
@@ -134,14 +134,14 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFFrequency      (void);
+           SFReal32            *getSFFrequency      (void);
            SFReal32            *getSFPersistance    (void);
            SFUInt32            *getSFOctaves        (void);
            SFReal32            *getSFAmplitude      (void);
            SFUInt32            *getSFInterpolationType(void);
 
-           UInt32              &getFrequency      (void);
-     const UInt32              &getFrequency      (void) const;
+           Real32              &getFrequency      (void);
+     const Real32              &getFrequency      (void) const;
            Real32              &getPersistance    (void);
      const Real32              &getPersistance    (void) const;
            UInt32              &getOctaves        (void);
@@ -156,7 +156,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFrequency      ( const UInt32 &value );
+     void setFrequency      ( const Real32 &value );
      void setPersistance    ( const Real32 &value );
      void setOctaves        ( const UInt32 &value );
      void setAmplitude      ( const Real32 &value );
@@ -203,7 +203,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfFrequency;
+    SFReal32            _sfFrequency;
     SFReal32            _sfPersistance;
     SFUInt32            _sfOctaves;
     SFReal32            _sfAmplitude;

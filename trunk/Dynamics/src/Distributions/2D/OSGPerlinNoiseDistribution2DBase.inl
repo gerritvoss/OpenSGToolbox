@@ -98,7 +98,7 @@ PerlinNoiseDistribution2DPtr PerlinNoiseDistribution2DBase::createEmpty(void)
 
 //! Get the PerlinNoiseDistribution2D::_sfFrequency field.
 inline
-SFUInt32 *PerlinNoiseDistribution2DBase::getSFFrequency(void)
+SFReal32 *PerlinNoiseDistribution2DBase::getSFFrequency(void)
 {
     return &_sfFrequency;
 }
@@ -134,23 +134,23 @@ SFUInt32 *PerlinNoiseDistribution2DBase::getSFInterpolationType(void)
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfFrequency field.
 inline
-UInt32 &PerlinNoiseDistribution2DBase::getFrequency(void)
+Real32 &PerlinNoiseDistribution2DBase::getFrequency(void)
 {
     return _sfFrequency.getValue();
 }
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfFrequency field.
 inline
-const UInt32 &PerlinNoiseDistribution2DBase::getFrequency(void) const
+const Real32 &PerlinNoiseDistribution2DBase::getFrequency(void) const
 {
     return _sfFrequency.getValue();
 }
 
 //! Set the value of the PerlinNoiseDistribution2D::_sfFrequency field.
 inline
-void PerlinNoiseDistribution2DBase::setFrequency(const UInt32 &value)
+void PerlinNoiseDistribution2DBase::setFrequency(const Real32 &value)
 {
-    _sfFrequency.setValue(value);
+	_sfFrequency.setValue(std::abs(value));
 }
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfPersistance field.

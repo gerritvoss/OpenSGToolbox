@@ -111,8 +111,7 @@ FunctionIOParameterVector PerlinNoiseDistribution2D::evaluate(FunctionIOParamete
 
 Real32 PerlinNoiseDistribution2D::generate(Pnt2f t) const
 {	
-	Real32 total(0.0f), amplitude(getAmplitude());
-	UInt32 frequency(getFrequency());
+	Real32 total(0.0f), amplitude(getAmplitude()), frequency(getFrequency());
 
 	for(unsigned int i(0); i < getOctaves(); ++i)
 	{

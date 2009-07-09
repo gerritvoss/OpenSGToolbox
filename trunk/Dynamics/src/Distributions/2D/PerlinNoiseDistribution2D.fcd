@@ -14,11 +14,11 @@
 A PerlinNoiseDistribution2D.
 	<Field
 		name="Frequency"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="1"
+		defaultValue="1.0f"
 	>
 	</Field>
 	<Field

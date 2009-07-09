@@ -112,8 +112,7 @@ FunctionIOParameterVector PerlinNoiseDistribution3D::evaluate(FunctionIOParamete
 Real32 PerlinNoiseDistribution3D::generate(Pnt3f t) const
 {
 	
-	Real32 total(0.0f), amplitude(getAmplitude());
-	UInt32 frequency(getFrequency());
+	Real32 total(0.0f), amplitude(getAmplitude()), frequency(getFrequency());
 
 	for(unsigned int i(0); i < getOctaves(); ++i)
 	{
