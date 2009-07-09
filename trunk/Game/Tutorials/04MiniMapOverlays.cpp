@@ -478,7 +478,7 @@ int main(int argc, char **argv)
     mgr->setWindow(MainWindow);
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(700,850),
+                                        Vec2f(1280,1024),
                                         "OpenSG 04MiniMapOverlays");
 										
     // Make Torus Node (creates Torus in background of scene)

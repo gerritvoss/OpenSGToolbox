@@ -386,7 +386,7 @@ int main(int argc, char **argv)
     mgr->setWindow(MainWindow);
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
+                                        Vec2f(1280,1024),
                                         "OpenSG 02RubberBandCamera Window");
 										
     // Make Torus Node (creates Torus in background of scene)

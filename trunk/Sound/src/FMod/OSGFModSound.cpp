@@ -639,7 +639,11 @@ void FModSound::changed(BitVector whichField, UInt32 origin)
     Inherited::changed(whichField, origin);
     if(whichField & FileFieldMask)
     {
-        if(boost::filesystem::exists(getFile()))
+        if(!boost::filesystem::exists(getFile()))
+		{
+			SWARNING << "FModSound: error loading sound from file: " << getFile().string() << " This file does not exist." << std::endl;
+		}
+		else
         {
             FMOD_RESULT      result;
             FMOD_MODE soundMode(FMOD_DEFAULT);
