@@ -111,8 +111,141 @@ FunctionIOParameterVector PerlinNoiseDistribution3D::evaluate(FunctionIOParamete
 
 Real32 PerlinNoiseDistribution3D::generate(Pnt3f t) const
 {
-	//TODO: implement
-	return 0.0f;
+	
+	Real32 total(0.0f), amplitude(getAmplitude());
+	UInt32 frequency(getFrequency());
+
+	for(unsigned int i(0); i < getOctaves(); ++i)
+	{
+		if(i > 0)
+		{
+		  frequency *= 2;
+		  amplitude *= getPersistance();
+		}
+
+		total += interpolatedNoise(t * frequency, i) * amplitude;
+	}
+
+	return total;
+}
+
+Real32 PerlinNoiseDistribution3D::interpolatedNoise(Pnt3f t, UInt32 & octave) const
+{
+	Real32 intX(osgfloor(t[0])), intY(osgfloor(t[1])), intZ(osgfloor(t[2]));
+	Real32 fractionX = t[0] - intX;
+	Real32 fractionY = t[1] - intY;
+	Real32 fractionZ = t[2] - intZ;
+
+	Real32 v1,v2,v3,v4,v5,v6,v7,v8,i1,i2,i3,i4, returnValue(0.0f);
+
+	v1 = smoothNoise(intX,intY,intZ,octave);
+	v2 = smoothNoise(intX + 1.0f,intY,intZ,octave);
+	v3 = smoothNoise(intX,intY + 1.0f,intZ,octave);
+	v4 = smoothNoise(intX + 1.0f,intY + 1.0f,intZ,octave);
+	v5 = smoothNoise(intX,intY,intZ + 1.0f,octave);
+	v6 = smoothNoise(intX + 1.0f,intY,intZ + 1.0f,octave);
+	v7 = smoothNoise(intX,intY + 1.0f,intZ + 1.0f,octave);
+	v8 = smoothNoise(intX + 1.0f,intY + 1.0f,intZ + 1.0f,octave);
+
+	if(getInterpolationType() == PerlinNoiseDistribution3D::COSINE)
+	{
+		i1 = interpolateCosine(v1,v2,fractionX);
+		i2 = interpolateCosine(v3,v4,fractionX);
+		i3 = interpolateCosine(v5,v6,fractionX);
+		i4 = interpolateCosine(v7,v8,fractionX);
+
+		i1 = interpolateCosine(i1,i2,fractionY);
+		i2 = interpolateCosine(i3,i4,fractionY);
+
+		returnValue = interpolateCosine(i1,i2,fractionZ);
+
+	} else if (getInterpolationType() == PerlinNoiseDistribution3D::LINEAR)
+	{
+		i1 = interpolateLinear(v1,v2,fractionX);
+		i2 = interpolateLinear(v3,v4,fractionX);
+		i3 = interpolateLinear(v5,v6,fractionX);
+		i4 = interpolateLinear(v7,v8,fractionX);
+
+		i1 = interpolateLinear(i1,i2,fractionY);
+		i2 = interpolateLinear(i3,i4,fractionY);
+
+		returnValue = interpolateLinear(i1,i2,fractionZ);
+
+	}
+
+	return returnValue;
+}
+
+Real32 PerlinNoiseDistribution3D::interpolateCosine(Real32 a, Real32 b, Real32 t) const
+{	
+	Real32 f = (1 - std::cos(t * 3.1415927)) * .5;
+	return  a*(1-f) + b*f;
+}
+
+Real32 PerlinNoiseDistribution3D::interpolateLinear(Real32 a, Real32 b, Real32 t) const
+{
+	return  a*(1-t) + b*t;
+}
+
+Real32 PerlinNoiseDistribution3D::smoothNoise(Real32 x, Real32 y, Real32 z, UInt32 & octave) const
+{	// averages out the values from the corners, center of the sides, and the center of a 1x1 cube, centered @ (x,y,z)
+	// where each side weighs 1/24, each corner weighs 1/16, and the center weighs 1/4.
+	Real32 center = getNoise(x,y,z,octave)/4;
+	
+	Real32 corners = (getNoise(x+1,y-1,z-1,octave) + getNoise(x-1,y-1,z-1,octave) + getNoise(x+1,y+1,z-1,octave) + getNoise(x-1,y+1,z-1,octave) 
+					+ getNoise(x+1,y-1,z+1,octave) + getNoise(x-1,y-1,z+1,octave) + getNoise(x+1,y+1,z+1,octave) + getNoise(x-1,y+1,z+1,octave))/16;
+	
+	Real32 sides = (getNoise(x+1,y,z,octave) + getNoise(x-1,y,z,octave) + getNoise(x,y+1,z,octave) 
+					+ getNoise(x,y-1,z,octave) + getNoise(x,y,z+1,octave) + getNoise(x,y,z-1,octave))/24;
+		
+	return center + corners + sides;
+}
+
+Real32 PerlinNoiseDistribution3D::getNoise(Int32 t1, Int32 t2, Int32 t3, UInt32 & octave) const
+{
+		Real32 noiseVal(0.0f);
+	Int32 n(0);
+	switch(octave%6)
+	{
+		case 0:
+			n = t1*23 + t2*53 + t3*31;
+			n = (n<<13) ^ n;
+			noiseVal = ( 1.0 - ( (n * (n * n * 15731 + 789221) + 1376312579) & 0x7fffffff) / 1073741824.0); 
+			break;
+
+		case 1:
+			n = t1*71 + t2*53 + t3*3;
+			n = (n<<11) ^ n;
+			noiseVal = ( 1.0 - ( (n * (n * n * 15683 + 789017) + 1376311273) & 0x7fffffff) / 1073741824.0); 
+			break;
+
+		case 2:
+			n = t1 + t2*47 - t3*17;
+			n = (n<<15) ^ n;
+			noiseVal = ( 1.0 - ( (n * (n * n * 15733 + 789121) + 1376313067) & 0x7fffffff) / 1073741824.0); 
+			break;
+
+		case 3:
+			n = t1*29 + t2*67 - t3*61;
+			n = (n<<17) ^ n;
+			noiseVal = ( 1.0 - ( (n * (n * n * 15761 + 789673) + 1376318989) & 0x7fffffff) / 1073741824.0); 
+			break;
+
+		case 4:
+			n = t1 + t2*43 + t3*11;
+			n = (n<<13) ^ n;
+			noiseVal = ( 1.0 - ( (n * (n * n * 15787 + 789251) + 1376312689) & 0x7fffffff) / 1073741824.0); 
+			break;
+
+		case 5:
+			n = t1*17 + t2*59 + t3;
+			n = (n<<7) ^ n;
+			noiseVal = ( 1.0 - ( (n * (n * n * 15667 + 789323) + 1376313793) & 0x7fffffff) / 1073741824.0); 
+			break;
+
+	}
+
+	return noiseVal;
 }
 
 

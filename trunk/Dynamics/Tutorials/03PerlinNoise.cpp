@@ -30,7 +30,9 @@
 #include <OpenSG/Dynamics/OSGTriDistribution3D.h>
 #include <OpenSG/Dynamics/OSGGeoSurfaceDistribution3D.h>
 #include <OpenSG/Dynamics/OSGGeoVolumeDistribution3D.h>
+#include <OpenSG/Dynamics/OSGPerlinNoiseDistribution1D.h>
 #include <OpenSG/Dynamics/OSGPerlinNoiseDistribution2D.h>
+#include <OpenSG/Dynamics/OSGPerlinNoiseDistribution3D.h>
 
 #include <OpenSG/Dynamics/OSGDataSplitter.h>
 #include <OpenSG/Dynamics/OSGDataCombiner.h>
@@ -154,18 +156,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
                                         Vec2f(1400,1200),
-                                        "2D Perlin Noise Demo");
-										
-
-    //Make The Distribution
-	PerlinNoiseDistribution2DPtr PerlinNoise = PerlinNoiseDistribution2D::create();
-	beginEditCP(PerlinNoise);
-		PerlinNoise->setFrequency(1);
-		PerlinNoise->setOctaves(6);
-		PerlinNoise->setPersistance(0.25);
-		PerlinNoise->setAmplitude(10);
-		PerlinNoise->setInterpolationType(PerlinNoiseDistribution2D::COSINE);
-	endEditCP(PerlinNoise);
+                                        "Perlin Noise Demo");
 
 	//Particle System Material
 	PointChunkPtr PSPointChunk = PointChunk::create();
@@ -199,24 +190,90 @@ int main(int argc, char **argv)
 	Vec3f SizeReturnValue;
 	Pnt3f PositionReturnValue;
     FunctionIOParameterVector input;
-    for(Real32 i(0) ; i < 40 ; i += 0.25f)
+
+	//Make The Distribution
+	PerlinNoiseDistribution3DPtr PerlinNoise3D = PerlinNoiseDistribution3D::create();
+	beginEditCP(PerlinNoise3D);
+		PerlinNoise3D->setFrequency(1);
+		PerlinNoise3D->setOctaves(6);
+		PerlinNoise3D->setPersistance(0.25);
+		PerlinNoise3D->setAmplitude(1);
+		PerlinNoise3D->setInterpolationType(PerlinNoiseDistribution2D::LINEAR);
+	endEditCP(PerlinNoise3D);
+
+    for(Real32 i(0) ; i < 2.0f ; i += 0.1f)
     {
-       for(Real32 j(0) ; j < 40 ; j += 0.25f)
+       for(Real32 j(0) ; j < 2.0f ; j += 0.1f)
 	   {	
-			input.clear();
-			input.push_back(FunctionIOParameter(std::string("Value"), new FunctionIOData<Pnt2f>(Pnt2f(i,j))));
-			Real32 tmp = FunctionIOData<Real32>::dcast(PerlinNoise->evaluate(input).front().getDataPtr())->getData();
-			
-			ExampleParticleSystem->addParticle(Pnt3f(i,tmp,j), // pos
-				Vec3f(0.0,0.0f,1.0f), // normal
-				Color4f(0.6f,1.0f,0.3f, 1.0), // color
-				Vec3f(1.0,1.0,1.0), 
-				-1.0f, 
-				Vec3f(0.0f,0.0f,0.0f),
-				Vec3f(0.0f,0.0f,0.0f),0);
+			for(Real32 k(0); k < 2.0f ; k += 0.1f)
+			{
+				input.clear();
+				input.push_back(FunctionIOParameter(std::string("Value"), new FunctionIOData<Pnt3f>(Pnt3f(i,j,k))));
+				Real32 tmp = FunctionIOData<Real32>::dcast(PerlinNoise3D->evaluate(input).front().getDataPtr())->getData();
+				tmp = osg::osgClamp<Real32>(0.0f,std::abs(tmp),1.0f);
+				ExampleParticleSystem->addParticle(Pnt3f(i,j,k), // pos
+					Vec3f(0.0,0.0f,1.0f), // normal
+					Color4f(0.3,1.0,0.0, tmp), // color
+					Vec3f(1.0,1.0,1.0), 
+					-1.0f, 
+					Vec3f(0.0f,0.0f,0.0f),
+					Vec3f(0.0f,0.0f,0.0f),0);
+			}
 	   }
 	
     }
+	
+		//PerlinNoiseDistribution2DPtr PerlinNoise2D = PerlinNoiseDistribution2D::create();
+	//beginEditCP(PerlinNoise2D);
+	//	PerlinNoise2D->setFrequency(1);
+	//	PerlinNoise2D->setOctaves(6);
+	//	PerlinNoise2D->setPersistance(0.25);
+	//	PerlinNoise2D->setAmplitude(4);
+	//	PerlinNoise2D->setInterpolationType(PerlinNoiseDistribution2D::LINEAR);
+	//endEditCP(PerlinNoise2D);
+
+ //   for(Real32 i(0) ; i < 40 ; i += 0.25f)
+ //   {
+ //      for(Real32 j(0) ; j < 40 ; j += 0.25f)
+	//   {	
+	//		input.clear();
+	//		input.push_back(FunctionIOParameter(std::string("Value"), new FunctionIOData<Pnt2f>(Pnt2f(i,j))));
+	//		Real32 tmp = FunctionIOData<Real32>::dcast(PerlinNoise2D->evaluate(input).front().getDataPtr())->getData();
+	//		
+	//		ExampleParticleSystem->addParticle(Pnt3f(i,tmp,j), // pos
+	//			Vec3f(0.0,0.0f,1.0f), // normal
+	//			Color4f(0.6f,1.0f,0.3f, 1.0), // color
+	//			Vec3f(1.0,1.0,1.0), 
+	//			-1.0f, 
+	//			Vec3f(0.0f,0.0f,0.0f),
+	//			Vec3f(0.0f,0.0f,0.0f),0);
+	//   }
+	//
+ //   }
+
+	//PerlinNoiseDistribution1DPtr PerlinNoise1D = PerlinNoiseDistribution1D::create();
+	//beginEditCP(PerlinNoise1D);
+	//	PerlinNoise1D->setFrequency(1);
+	//	PerlinNoise1D->setOctaves(6);
+	//	PerlinNoise1D->setPersistance(0.25);
+	//	PerlinNoise1D->setAmplitude(4);
+	//	PerlinNoise1D->setInterpolationType(PerlinNoiseDistribution2D::COSINE);
+	//endEditCP(PerlinNoise1D);
+
+ //  for(Real32 j(0) ; j < 40 ; j += 0.05f)
+ //  {	
+	//	input.clear();
+	//	input.push_back(FunctionIOParameter(std::string("Value"), new FunctionIOData<Real32>(j)));
+	//	Real32 tmp = FunctionIOData<Real32>::dcast(PerlinNoise1D->evaluate(input).front().getDataPtr())->getData();
+	//	
+	//	ExampleParticleSystem->addParticle(Pnt3f(j,tmp,0), // pos
+	//		Vec3f(0.0,0.0f,1.0f), // normal
+	//		Color4f(0.6f,1.0f,0.3f, 1.0), // color
+	//		Vec3f(1.0,1.0,1.0), 
+	//		-1.0f, 
+	//		Vec3f(0.0f,0.0f,0.0f),
+	//		Vec3f(0.0f,0.0f,0.0f),0);
+ //  }
 
 	//Particle System Drawer
 	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
@@ -255,35 +312,6 @@ int main(int argc, char **argv)
     }
     osgExit();
 
-    return 0;
-
-	/*std::ofstream output_file;
-	output_file.open("PerlinNoiseOutput.txt");
-	bool exit(false);
-	while(!exit){
-		std::vector<std::pair<Real32,Real32>> values;
-		Real32 NumSteps(500.0);
-		for(Real32 i(0.0f); i < 2.0f; i +=(1.0/NumSteps))
-		{
-			FunctionIOParameterVector input;
-			input.push_back(FunctionIOParameter(std::string("Value"), new FunctionIOData<Real32>(i)));
-			Real32 tmp = FunctionIOData<Real32>::dcast(PerlinNoise->evaluate(input).front().getDataPtr())->getData();
-			values.push_back(std::pair<Real32,Real32>(i,tmp));
-
-		}
-
-		for(unsigned int i(0); i < values.size(); i++)
-		{
-			output_file << values[i].first << "\t" << values[i].second << std::endl;
-		}
-	
-		int chk(0);
-		
-		std::cout << "Finsihed. Enter a number to exit." << std::endl;
-		std::cin >> chk;
-		if(chk != 3219) exit = true;
-	}
-	output_file.close();*/
     return 0;
 }
 

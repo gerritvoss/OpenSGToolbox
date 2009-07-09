@@ -110,9 +110,7 @@ FunctionIOParameterVector PerlinNoiseDistribution2D::evaluate(FunctionIOParamete
 \*-------------------------------------------------------------------------*/
 
 Real32 PerlinNoiseDistribution2D::generate(Pnt2f t) const
-{
-
-		
+{	
 	Real32 total(0.0f), amplitude(getAmplitude());
 	UInt32 frequency(getFrequency());
 
@@ -134,21 +132,21 @@ Real32 PerlinNoiseDistribution2D::interpolatedNoise(Pnt2f t, UInt32 & octave) co
 {
 	Real32 intX(osgfloor(t[0])), intY(osgfloor(t[1]));
 	Real32 fractionX = t[0] - intX;
-	Real32 fractionY = t[1] - intX;
+	Real32 fractionY = t[1] - intY;
 
 	Real32 i1(0.0f), i2(0.0f), returnValue(0.0f);
 	if(getInterpolationType() == PerlinNoiseDistribution2D::COSINE)
 	{
-		i1 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
+		i1 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
 		intY += 1.0f;
-		i2 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
+		i2 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
 		returnValue = interpolateCosine(i1 , i2 , fractionY);
 	}
 	else if (getInterpolationType() == PerlinNoiseDistribution2D::LINEAR)
 	{
-		i1 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
+		i1 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
 		intY += 1.0f;
-		i2 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1, intY, octave), fractionX);
+		i2 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
 		returnValue = interpolateLinear(i1 , i2 , fractionY);
 	}
 
@@ -158,10 +156,10 @@ Real32 PerlinNoiseDistribution2D::interpolatedNoise(Pnt2f t, UInt32 & octave) co
 Real32 PerlinNoiseDistribution2D::smoothNoise(Real32 x, Real32 y, UInt32 & octave) const
 {
 	Real32 corners = (getNoise(x-1, y-1, octave) + getNoise(x+1, y-1, octave) + getNoise(x-1, y+1, octave) + getNoise(x+1, y+1, octave)) / 16;
-	Real32 sides   = (getNoise(x-1, y, octave) + getNoise(x+1, y, octave) + getNoise(x, y-1, octave) + getNoise(x, y+1, octave)) / 8;
+	Real32 edges   = (getNoise(x-1, y, octave) + getNoise(x+1, y, octave) + getNoise(x, y-1, octave) + getNoise(x, y+1, octave)) / 8;
 	Real32 center  =  getNoise(x, y, octave) / 4;
 
-	return corners + sides + center;
+	return corners + edges + center;
 }
 
 Real32 PerlinNoiseDistribution2D::interpolateCosine(Real32 a, Real32 b, Real32 t) const
