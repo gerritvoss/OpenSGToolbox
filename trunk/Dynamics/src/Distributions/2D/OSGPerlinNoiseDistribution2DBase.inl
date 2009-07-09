@@ -131,6 +131,20 @@ SFUInt32 *PerlinNoiseDistribution2DBase::getSFInterpolationType(void)
     return &_sfInterpolationType;
 }
 
+//! Get the PerlinNoiseDistribution2D::_sfPhase field.
+inline
+SFVec2f *PerlinNoiseDistribution2DBase::getSFPhase(void)
+{
+    return &_sfPhase;
+}
+
+//! Get the PerlinNoiseDistribution2D::_sfUseSmoothing field.
+inline
+SFBool *PerlinNoiseDistribution2DBase::getSFUseSmoothing(void)
+{
+    return &_sfUseSmoothing;
+}
+
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfFrequency field.
 inline
@@ -150,7 +164,7 @@ const Real32 &PerlinNoiseDistribution2DBase::getFrequency(void) const
 inline
 void PerlinNoiseDistribution2DBase::setFrequency(const Real32 &value)
 {
-	_sfFrequency.setValue(std::abs(value));
+    _sfFrequency.setValue(value);
 }
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfPersistance field.
@@ -235,6 +249,48 @@ inline
 void PerlinNoiseDistribution2DBase::setInterpolationType(const UInt32 &value)
 {
     _sfInterpolationType.setValue(value);
+}
+
+//! Get the value of the PerlinNoiseDistribution2D::_sfPhase field.
+inline
+Vec2f &PerlinNoiseDistribution2DBase::getPhase(void)
+{
+    return _sfPhase.getValue();
+}
+
+//! Get the value of the PerlinNoiseDistribution2D::_sfPhase field.
+inline
+const Vec2f &PerlinNoiseDistribution2DBase::getPhase(void) const
+{
+    return _sfPhase.getValue();
+}
+
+//! Set the value of the PerlinNoiseDistribution2D::_sfPhase field.
+inline
+void PerlinNoiseDistribution2DBase::setPhase(const Vec2f &value)
+{
+    _sfPhase.setValue(value);
+}
+
+//! Get the value of the PerlinNoiseDistribution2D::_sfUseSmoothing field.
+inline
+bool &PerlinNoiseDistribution2DBase::getUseSmoothing(void)
+{
+    return _sfUseSmoothing.getValue();
+}
+
+//! Get the value of the PerlinNoiseDistribution2D::_sfUseSmoothing field.
+inline
+const bool &PerlinNoiseDistribution2DBase::getUseSmoothing(void) const
+{
+    return _sfUseSmoothing.getValue();
+}
+
+//! Set the value of the PerlinNoiseDistribution2D::_sfUseSmoothing field.
+inline
+void PerlinNoiseDistribution2DBase::setUseSmoothing(const bool &value)
+{
+    _sfUseSmoothing.setValue(value);
 }
 
 

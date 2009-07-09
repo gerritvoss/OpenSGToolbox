@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -45,75 +45,84 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PerlinNoiseDistribution1D
+ **     class TurbulenceParticleAffector
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPERLINNOISEDISTRIBUTION1DBASE_H_
-#define _OSGPERLINNOISEDISTRIBUTION1DBASE_H_
+#ifndef _OSGTURBULENCEPARTICLEAFFECTORBASE_H_
+#define _OSGTURBULENCEPARTICLEAFFECTORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGDynamicsDef.h"
+#include "OSGParticleSystemDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Function/OSGFunction.h" // Parent
+#include "OSGParticleAffector.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Frequency type
-#include <OpenSG/OSGReal32Fields.h> // Persistance type
-#include <OpenSG/OSGUInt32Fields.h> // Octaves type
+#include <OpenSG/Dynamics/OSGPerlinNoiseDistribution1D.h> // PerlinDistribution type
 #include <OpenSG/OSGReal32Fields.h> // Amplitude type
 #include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
-#include <OpenSG/OSGReal32Fields.h> // Phase type
-#include <OpenSG/OSGBoolFields.h> // UseSmoothing type
+#include <OpenSG/OSGVec3fFields.h> // Phase type
+#include <OpenSG/OSGReal32Fields.h> // Persistance type
+#include <OpenSG/OSGReal32Fields.h> // Frequency type
+#include <OpenSG/OSGUInt32Fields.h> // Octaves type
+#include <OpenSG/OSGNodeFields.h> // Beacon type
+#include <OpenSG/OSGReal32Fields.h> // Attenuation type
+#include <OpenSG/OSGReal32Fields.h> // MaxDistance type
 
-#include "OSGPerlinNoiseDistribution1DFields.h"
+#include "OSGTurbulenceParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class PerlinNoiseDistribution1D;
+class TurbulenceParticleAffector;
 class BinaryDataHandler;
 
-//! \brief PerlinNoiseDistribution1D Base Class.
+//! \brief TurbulenceParticleAffector Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING TurbulenceParticleAffectorBase : public ParticleAffector
 {
   private:
 
-    typedef Function    Inherited;
+    typedef ParticleAffector    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PerlinNoiseDistribution1DPtr  Ptr;
+    typedef TurbulenceParticleAffectorPtr  Ptr;
 
     enum
     {
-        FrequencyFieldId         = Inherited::NextFieldId,
-        PersistanceFieldId       = FrequencyFieldId         + 1,
-        OctavesFieldId           = PersistanceFieldId       + 1,
-        AmplitudeFieldId         = OctavesFieldId           + 1,
-        InterpolationTypeFieldId = AmplitudeFieldId         + 1,
-        PhaseFieldId             = InterpolationTypeFieldId + 1,
-        UseSmoothingFieldId      = PhaseFieldId             + 1,
-        NextFieldId              = UseSmoothingFieldId      + 1
+        PerlinDistributionFieldId = Inherited::NextFieldId,
+        AmplitudeFieldId          = PerlinDistributionFieldId + 1,
+        InterpolationTypeFieldId  = AmplitudeFieldId          + 1,
+        PhaseFieldId              = InterpolationTypeFieldId  + 1,
+        PersistanceFieldId        = PhaseFieldId              + 1,
+        FrequencyFieldId          = PersistanceFieldId        + 1,
+        OctavesFieldId            = FrequencyFieldId          + 1,
+        BeaconFieldId             = OctavesFieldId            + 1,
+        AttenuationFieldId        = BeaconFieldId             + 1,
+        MaxDistanceFieldId        = AttenuationFieldId        + 1,
+        NextFieldId               = MaxDistanceFieldId        + 1
     };
 
-    static const OSG::BitVector FrequencyFieldMask;
-    static const OSG::BitVector PersistanceFieldMask;
-    static const OSG::BitVector OctavesFieldMask;
+    static const OSG::BitVector PerlinDistributionFieldMask;
     static const OSG::BitVector AmplitudeFieldMask;
     static const OSG::BitVector InterpolationTypeFieldMask;
     static const OSG::BitVector PhaseFieldMask;
-    static const OSG::BitVector UseSmoothingFieldMask;
+    static const OSG::BitVector PersistanceFieldMask;
+    static const OSG::BitVector FrequencyFieldMask;
+    static const OSG::BitVector OctavesFieldMask;
+    static const OSG::BitVector BeaconFieldMask;
+    static const OSG::BitVector AttenuationFieldMask;
+    static const OSG::BitVector MaxDistanceFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -140,41 +149,53 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFFrequency      (void);
-           SFReal32            *getSFPersistance    (void);
-           SFUInt32            *getSFOctaves        (void);
+           SFPerlinNoiseDistribution1DPtr *getSFPerlinDistribution(void);
            SFReal32            *getSFAmplitude      (void);
            SFUInt32            *getSFInterpolationType(void);
-           SFReal32            *getSFPhase          (void);
-           SFBool              *getSFUseSmoothing   (void);
+           SFVec3f             *getSFPhase          (void);
+           SFReal32            *getSFPersistance    (void);
+           SFReal32            *getSFFrequency      (void);
+           SFUInt32            *getSFOctaves        (void);
+           SFNodePtr           *getSFBeacon         (void);
+           SFReal32            *getSFAttenuation    (void);
+           SFReal32            *getSFMaxDistance    (void);
 
-           Real32              &getFrequency      (void);
-     const Real32              &getFrequency      (void) const;
-           Real32              &getPersistance    (void);
-     const Real32              &getPersistance    (void) const;
-           UInt32              &getOctaves        (void);
-     const UInt32              &getOctaves        (void) const;
+           PerlinNoiseDistribution1DPtr &getPerlinDistribution(void);
+     const PerlinNoiseDistribution1DPtr &getPerlinDistribution(void) const;
            Real32              &getAmplitude      (void);
      const Real32              &getAmplitude      (void) const;
            UInt32              &getInterpolationType(void);
      const UInt32              &getInterpolationType(void) const;
-           Real32              &getPhase          (void);
-     const Real32              &getPhase          (void) const;
-           bool                &getUseSmoothing   (void);
-     const bool                &getUseSmoothing   (void) const;
+           Vec3f               &getPhase          (void);
+     const Vec3f               &getPhase          (void) const;
+           Real32              &getPersistance    (void);
+     const Real32              &getPersistance    (void) const;
+           Real32              &getFrequency      (void);
+     const Real32              &getFrequency      (void) const;
+           UInt32              &getOctaves        (void);
+     const UInt32              &getOctaves        (void) const;
+           NodePtr             &getBeacon         (void);
+     const NodePtr             &getBeacon         (void) const;
+           Real32              &getAttenuation    (void);
+     const Real32              &getAttenuation    (void) const;
+           Real32              &getMaxDistance    (void);
+     const Real32              &getMaxDistance    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFrequency      ( const Real32 &value );
-     void setPersistance    ( const Real32 &value );
-     void setOctaves        ( const UInt32 &value );
+     void setPerlinDistribution( const PerlinNoiseDistribution1DPtr &value );
      void setAmplitude      ( const Real32 &value );
      void setInterpolationType( const UInt32 &value );
-     void setPhase          ( const Real32 &value );
-     void setUseSmoothing   ( const bool &value );
+     void setPhase          ( const Vec3f &value );
+     void setPersistance    ( const Real32 &value );
+     void setFrequency      ( const Real32 &value );
+     void setOctaves        ( const UInt32 &value );
+     void setBeacon         ( const NodePtr &value );
+     void setAttenuation    ( const Real32 &value );
+     void setMaxDistance    ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,8 +219,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PerlinNoiseDistribution1DPtr      create          (void); 
-    static  PerlinNoiseDistribution1DPtr      createEmpty     (void); 
+    static  TurbulenceParticleAffectorPtr      create          (void); 
+    static  TurbulenceParticleAffectorPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -217,28 +238,31 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfFrequency;
-    SFReal32            _sfPersistance;
-    SFUInt32            _sfOctaves;
+    SFPerlinNoiseDistribution1DPtr   _sfPerlinDistribution;
     SFReal32            _sfAmplitude;
     SFUInt32            _sfInterpolationType;
-    SFReal32            _sfPhase;
-    SFBool              _sfUseSmoothing;
+    SFVec3f             _sfPhase;
+    SFReal32            _sfPersistance;
+    SFReal32            _sfFrequency;
+    SFUInt32            _sfOctaves;
+    SFNodePtr           _sfBeacon;
+    SFReal32            _sfAttenuation;
+    SFReal32            _sfMaxDistance;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    PerlinNoiseDistribution1DBase(void);
-    PerlinNoiseDistribution1DBase(const PerlinNoiseDistribution1DBase &source);
+    TurbulenceParticleAffectorBase(void);
+    TurbulenceParticleAffectorBase(const TurbulenceParticleAffectorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PerlinNoiseDistribution1DBase(void); 
+    virtual ~TurbulenceParticleAffectorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -246,13 +270,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PerlinNoiseDistribution1DBase *pOther,
+    void executeSyncImpl(      TurbulenceParticleAffectorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      PerlinNoiseDistribution1DBase *pOther,
+    void executeSyncImpl(      TurbulenceParticleAffectorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -282,7 +306,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const PerlinNoiseDistribution1DBase &source);
+    void operator =(const TurbulenceParticleAffectorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -290,17 +314,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1DBase : public Function
 //---------------------------------------------------------------------------
 
 
-typedef PerlinNoiseDistribution1DBase *PerlinNoiseDistribution1DBaseP;
+typedef TurbulenceParticleAffectorBase *TurbulenceParticleAffectorBaseP;
 
-typedef osgIF<PerlinNoiseDistribution1DBase::isNodeCore,
-              CoredNodePtr<PerlinNoiseDistribution1D>,
+typedef osgIF<TurbulenceParticleAffectorBase::isNodeCore,
+              CoredNodePtr<TurbulenceParticleAffector>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PerlinNoiseDistribution1DNodePtr;
+              >::_IRet TurbulenceParticleAffectorNodePtr;
 
-typedef RefPtr<PerlinNoiseDistribution1DPtr> PerlinNoiseDistribution1DRefPtr;
+typedef RefPtr<TurbulenceParticleAffectorPtr> TurbulenceParticleAffectorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGPERLINNOISEDISTRIBUTION1DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGTURBULENCEPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGPERLINNOISEDISTRIBUTION1DBASE_H_ */
+#endif /* _OSGTURBULENCEPARTICLEAFFECTORBASE_H_ */

@@ -113,7 +113,7 @@ Real32 PerlinNoiseDistribution3D::generate(Pnt3f t) const
 {
 	
 	Real32 total(0.0f), amplitude(getAmplitude()), frequency(getFrequency());
-
+	Pnt3f pos(t + getPhase());
 	for(unsigned int i(0); i < getOctaves(); ++i)
 	{
 		if(i > 0)
@@ -122,7 +122,7 @@ Real32 PerlinNoiseDistribution3D::generate(Pnt3f t) const
 		  amplitude *= getPersistance();
 		}
 
-		total += interpolatedNoise(t * frequency, i) * amplitude;
+		total += interpolatedNoise(pos * frequency, i) * amplitude;
 	}
 
 	return total;
@@ -136,40 +136,78 @@ Real32 PerlinNoiseDistribution3D::interpolatedNoise(Pnt3f t, UInt32 & octave) co
 	Real32 fractionZ = t[2] - intZ;
 
 	Real32 v1,v2,v3,v4,v5,v6,v7,v8,i1,i2,i3,i4, returnValue(0.0f);
-
-	v1 = smoothNoise(intX,intY,intZ,octave);
-	v2 = smoothNoise(intX + 1.0f,intY,intZ,octave);
-	v3 = smoothNoise(intX,intY + 1.0f,intZ,octave);
-	v4 = smoothNoise(intX + 1.0f,intY + 1.0f,intZ,octave);
-	v5 = smoothNoise(intX,intY,intZ + 1.0f,octave);
-	v6 = smoothNoise(intX + 1.0f,intY,intZ + 1.0f,octave);
-	v7 = smoothNoise(intX,intY + 1.0f,intZ + 1.0f,octave);
-	v8 = smoothNoise(intX + 1.0f,intY + 1.0f,intZ + 1.0f,octave);
-
-	if(getInterpolationType() == PerlinNoiseDistribution3D::COSINE)
+	
+	if(getUseSmoothing())
 	{
-		i1 = interpolateCosine(v1,v2,fractionX);
-		i2 = interpolateCosine(v3,v4,fractionX);
-		i3 = interpolateCosine(v5,v6,fractionX);
-		i4 = interpolateCosine(v7,v8,fractionX);
+		v1 = smoothNoise(intX,intY,intZ,octave);
+		v2 = smoothNoise(intX + 1.0f,intY,intZ,octave);
+		v3 = smoothNoise(intX,intY + 1.0f,intZ,octave);
+		v4 = smoothNoise(intX + 1.0f,intY + 1.0f,intZ,octave);
+		v5 = smoothNoise(intX,intY,intZ + 1.0f,octave);
+		v6 = smoothNoise(intX + 1.0f,intY,intZ + 1.0f,octave);
+		v7 = smoothNoise(intX,intY + 1.0f,intZ + 1.0f,octave);
+		v8 = smoothNoise(intX + 1.0f,intY + 1.0f,intZ + 1.0f,octave);
 
-		i1 = interpolateCosine(i1,i2,fractionY);
-		i2 = interpolateCosine(i3,i4,fractionY);
+		if(getInterpolationType() == PerlinNoiseDistribution3D::COSINE)
+		{
+			i1 = interpolateCosine(v1,v2,fractionX);
+			i2 = interpolateCosine(v3,v4,fractionX);
+			i3 = interpolateCosine(v5,v6,fractionX);
+			i4 = interpolateCosine(v7,v8,fractionX);
 
-		returnValue = interpolateCosine(i1,i2,fractionZ);
+			i1 = interpolateCosine(i1,i2,fractionY);
+			i2 = interpolateCosine(i3,i4,fractionY);
 
-	} else if (getInterpolationType() == PerlinNoiseDistribution3D::LINEAR)
+			returnValue = interpolateCosine(i1,i2,fractionZ);
+
+		} else if (getInterpolationType() == PerlinNoiseDistribution3D::LINEAR)
+		{
+			i1 = interpolateLinear(v1,v2,fractionX);
+			i2 = interpolateLinear(v3,v4,fractionX);
+			i3 = interpolateLinear(v5,v6,fractionX);
+			i4 = interpolateLinear(v7,v8,fractionX);
+
+			i1 = interpolateLinear(i1,i2,fractionY);
+			i2 = interpolateLinear(i3,i4,fractionY);
+
+			returnValue = interpolateLinear(i1,i2,fractionZ);
+
+		}
+	} else
 	{
-		i1 = interpolateLinear(v1,v2,fractionX);
-		i2 = interpolateLinear(v3,v4,fractionX);
-		i3 = interpolateLinear(v5,v6,fractionX);
-		i4 = interpolateLinear(v7,v8,fractionX);
+		v1 = getNoise(intX,intY,intZ,octave);
+		v2 = getNoise(intX + 1.0f,intY,intZ,octave);
+		v3 = getNoise(intX,intY + 1.0f,intZ,octave);
+		v4 = getNoise(intX + 1.0f,intY + 1.0f,intZ,octave);
+		v5 = getNoise(intX,intY,intZ + 1.0f,octave);
+		v6 = getNoise(intX + 1.0f,intY,intZ + 1.0f,octave);
+		v7 = getNoise(intX,intY + 1.0f,intZ + 1.0f,octave);
+		v8 = getNoise(intX + 1.0f,intY + 1.0f,intZ + 1.0f,octave);
 
-		i1 = interpolateLinear(i1,i2,fractionY);
-		i2 = interpolateLinear(i3,i4,fractionY);
+		if(getInterpolationType() == PerlinNoiseDistribution3D::COSINE)
+		{
+			i1 = interpolateCosine(v1,v2,fractionX);
+			i2 = interpolateCosine(v3,v4,fractionX);
+			i3 = interpolateCosine(v5,v6,fractionX);
+			i4 = interpolateCosine(v7,v8,fractionX);
 
-		returnValue = interpolateLinear(i1,i2,fractionZ);
+			i1 = interpolateCosine(i1,i2,fractionY);
+			i2 = interpolateCosine(i3,i4,fractionY);
 
+			returnValue = interpolateCosine(i1,i2,fractionZ);
+
+		} else if (getInterpolationType() == PerlinNoiseDistribution3D::LINEAR)
+		{
+			i1 = interpolateLinear(v1,v2,fractionX);
+			i2 = interpolateLinear(v3,v4,fractionX);
+			i3 = interpolateLinear(v5,v6,fractionX);
+			i4 = interpolateLinear(v7,v8,fractionX);
+
+			i1 = interpolateLinear(i1,i2,fractionY);
+			i2 = interpolateLinear(i3,i4,fractionY);
+
+			returnValue = interpolateLinear(i1,i2,fractionZ);
+		}
 	}
 
 	return returnValue;

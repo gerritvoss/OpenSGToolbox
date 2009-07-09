@@ -60,6 +60,23 @@ A PerlinNoiseDistribution1D.
 	COSINE uses cosine interpolation
 	LINEAR uses linear interpolation	
 	</Field>
-
+	<Field
+		name="Phase"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f"
+	>
+	</Field>
+	<Field
+		name="UseSmoothing"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
 
 </FieldContainer>

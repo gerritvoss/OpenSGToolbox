@@ -60,5 +60,23 @@ A PerlinNoiseDistribution2D.
 	COSINE uses cosine interpolation
 	LINEAR uses linear interpolation	
 	</Field>
+	<Field
+		name="Phase"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f,0.0f"
+	>
+	</Field>
+	<Field
+		name="UseSmoothing"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
 </FieldContainer>
 

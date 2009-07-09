@@ -1128,6 +1128,34 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGTurbulenceParticleAffector.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGTurbulenceParticleAffector.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGTurbulenceParticleAffector.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGTurbulenceParticleAffectorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGTurbulenceParticleAffectorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGTurbulenceParticleAffectorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGTurbulenceParticleAffectorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGUniformParticleAffector.cpp"
 						>
 					</File>

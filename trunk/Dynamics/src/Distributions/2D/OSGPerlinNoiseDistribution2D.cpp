@@ -112,7 +112,7 @@ FunctionIOParameterVector PerlinNoiseDistribution2D::evaluate(FunctionIOParamete
 Real32 PerlinNoiseDistribution2D::generate(Pnt2f t) const
 {	
 	Real32 total(0.0f), amplitude(getAmplitude()), frequency(getFrequency());
-
+	Pnt2f pos(t + getPhase());
 	for(unsigned int i(0); i < getOctaves(); ++i)
 	{
 		if(i > 0)
@@ -121,7 +121,7 @@ Real32 PerlinNoiseDistribution2D::generate(Pnt2f t) const
 		  amplitude *= getPersistance();
 		}
 
-		total += interpolatedNoise(t * frequency, i) * amplitude;
+		total += interpolatedNoise(pos * frequency, i) * amplitude;
 	}
 
 	return total;
@@ -134,19 +134,38 @@ Real32 PerlinNoiseDistribution2D::interpolatedNoise(Pnt2f t, UInt32 & octave) co
 	Real32 fractionY = t[1] - intY;
 
 	Real32 i1(0.0f), i2(0.0f), returnValue(0.0f);
-	if(getInterpolationType() == PerlinNoiseDistribution2D::COSINE)
+	if(getUseSmoothing())
 	{
-		i1 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
-		intY += 1.0f;
-		i2 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
-		returnValue = interpolateCosine(i1 , i2 , fractionY);
-	}
-	else if (getInterpolationType() == PerlinNoiseDistribution2D::LINEAR)
+		if(getInterpolationType() == PerlinNoiseDistribution2D::COSINE)
+		{
+			i1 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
+			intY += 1.0f;
+			i2 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
+			returnValue = interpolateCosine(i1 , i2 , fractionY);
+		}
+		else if (getInterpolationType() == PerlinNoiseDistribution2D::LINEAR)
+		{
+			i1 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
+			intY += 1.0f;
+			i2 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
+			returnValue = interpolateLinear(i1 , i2 , fractionY);
+		}
+	} else
 	{
-		i1 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
-		intY += 1.0f;
-		i2 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
-		returnValue = interpolateLinear(i1 , i2 , fractionY);
+		if(getInterpolationType() == PerlinNoiseDistribution2D::COSINE)
+		{
+			i1 = interpolateCosine(getNoise(intX, intY, octave),getNoise(intX + 1.0f, intY, octave), fractionX);
+			intY += 1.0f;
+			i2 = interpolateCosine(getNoise(intX, intY, octave),getNoise(intX + 1.0f, intY, octave), fractionX);
+			returnValue = interpolateCosine(i1 , i2 , fractionY);
+		}
+		else if (getInterpolationType() == PerlinNoiseDistribution2D::LINEAR)
+		{
+			i1 = interpolateLinear(getNoise(intX, intY, octave),getNoise(intX + 1.0f, intY, octave), fractionX);
+			intY += 1.0f;
+			i2 = interpolateLinear(getNoise(intX, intY, octave),getNoise(intX + 1.0f, intY, octave), fractionX);
+			returnValue = interpolateLinear(i1 , i2 , fractionY);
+		}
 	}
 
 	return returnValue;

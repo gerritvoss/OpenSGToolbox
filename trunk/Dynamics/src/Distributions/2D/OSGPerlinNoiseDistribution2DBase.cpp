@@ -79,6 +79,12 @@ const OSG::BitVector  PerlinNoiseDistribution2DBase::AmplitudeFieldMask =
 const OSG::BitVector  PerlinNoiseDistribution2DBase::InterpolationTypeFieldMask = 
     (TypeTraits<BitVector>::One << PerlinNoiseDistribution2DBase::InterpolationTypeFieldId);
 
+const OSG::BitVector  PerlinNoiseDistribution2DBase::PhaseFieldMask = 
+    (TypeTraits<BitVector>::One << PerlinNoiseDistribution2DBase::PhaseFieldId);
+
+const OSG::BitVector  PerlinNoiseDistribution2DBase::UseSmoothingFieldMask = 
+    (TypeTraits<BitVector>::One << PerlinNoiseDistribution2DBase::UseSmoothingFieldId);
+
 const OSG::BitVector PerlinNoiseDistribution2DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -100,6 +106,12 @@ const OSG::BitVector PerlinNoiseDistribution2DBase::MTInfluenceMask =
 */
 /*! \var UInt32          PerlinNoiseDistribution2DBase::_sfInterpolationType
     This enum is used to determine the interpolation method used for the distribution 	COSINE uses cosine interpolation 	LINEAR uses linear interpolation
+*/
+/*! \var Vec2f           PerlinNoiseDistribution2DBase::_sfPhase
+    
+*/
+/*! \var bool            PerlinNoiseDistribution2DBase::_sfUseSmoothing
+    
 */
 
 //! PerlinNoiseDistribution2D description
@@ -130,7 +142,17 @@ FieldDescription *PerlinNoiseDistribution2DBase::_desc[] =
                      "InterpolationType", 
                      InterpolationTypeFieldId, InterpolationTypeFieldMask,
                      false,
-                     (FieldAccessMethod) &PerlinNoiseDistribution2DBase::getSFInterpolationType)
+                     (FieldAccessMethod) &PerlinNoiseDistribution2DBase::getSFInterpolationType),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "Phase", 
+                     PhaseFieldId, PhaseFieldMask,
+                     false,
+                     (FieldAccessMethod) &PerlinNoiseDistribution2DBase::getSFPhase),
+    new FieldDescription(SFBool::getClassType(), 
+                     "UseSmoothing", 
+                     UseSmoothingFieldId, UseSmoothingFieldMask,
+                     false,
+                     (FieldAccessMethod) &PerlinNoiseDistribution2DBase::getSFUseSmoothing)
 };
 
 
@@ -211,6 +233,8 @@ PerlinNoiseDistribution2DBase::PerlinNoiseDistribution2DBase(void) :
     _sfOctaves                (UInt32(4)), 
     _sfAmplitude              (Real32(1.0)), 
     _sfInterpolationType      (UInt32(PerlinNoiseDistribution2D::COSINE)), 
+    _sfPhase                  (Vec2f(0.0f,0.0f)), 
+    _sfUseSmoothing           (bool(true)), 
     Inherited() 
 {
 }
@@ -225,6 +249,8 @@ PerlinNoiseDistribution2DBase::PerlinNoiseDistribution2DBase(const PerlinNoiseDi
     _sfOctaves                (source._sfOctaves                ), 
     _sfAmplitude              (source._sfAmplitude              ), 
     _sfInterpolationType      (source._sfInterpolationType      ), 
+    _sfPhase                  (source._sfPhase                  ), 
+    _sfUseSmoothing           (source._sfUseSmoothing           ), 
     Inherited                 (source)
 {
 }
@@ -266,6 +292,16 @@ UInt32 PerlinNoiseDistribution2DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInterpolationType.getBinSize();
     }
 
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+    {
+        returnValue += _sfPhase.getBinSize();
+    }
+
+    if(FieldBits::NoField != (UseSmoothingFieldMask & whichField))
+    {
+        returnValue += _sfUseSmoothing.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -298,6 +334,16 @@ void PerlinNoiseDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         _sfInterpolationType.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+    {
+        _sfPhase.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UseSmoothingFieldMask & whichField))
+    {
+        _sfUseSmoothing.copyToBin(pMem);
     }
 
 
@@ -333,6 +379,16 @@ void PerlinNoiseDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfInterpolationType.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+    {
+        _sfPhase.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UseSmoothingFieldMask & whichField))
+    {
+        _sfUseSmoothing.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -358,6 +414,12 @@ void PerlinNoiseDistribution2DBase::executeSyncImpl(      PerlinNoiseDistributio
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
         _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
 
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+        _sfPhase.syncWith(pOther->_sfPhase);
+
+    if(FieldBits::NoField != (UseSmoothingFieldMask & whichField))
+        _sfUseSmoothing.syncWith(pOther->_sfUseSmoothing);
+
 
 }
 #else
@@ -382,6 +444,12 @@ void PerlinNoiseDistribution2DBase::executeSyncImpl(      PerlinNoiseDistributio
 
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
         _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
+
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+        _sfPhase.syncWith(pOther->_sfPhase);
+
+    if(FieldBits::NoField != (UseSmoothingFieldMask & whichField))
+        _sfUseSmoothing.syncWith(pOther->_sfUseSmoothing);
 
 
 

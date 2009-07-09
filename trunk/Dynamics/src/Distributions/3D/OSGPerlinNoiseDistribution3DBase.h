@@ -72,6 +72,8 @@
 #include <OpenSG/OSGUInt32Fields.h> // Octaves type
 #include <OpenSG/OSGReal32Fields.h> // Amplitude type
 #include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
+#include <OpenSG/OSGVec3fFields.h> // Phase type
+#include <OpenSG/OSGBoolFields.h> // UseSmoothing type
 
 #include "OSGPerlinNoiseDistribution3DFields.h"
 
@@ -100,7 +102,9 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3DBase : public Function
         OctavesFieldId           = PersistanceFieldId       + 1,
         AmplitudeFieldId         = OctavesFieldId           + 1,
         InterpolationTypeFieldId = AmplitudeFieldId         + 1,
-        NextFieldId              = InterpolationTypeFieldId + 1
+        PhaseFieldId             = InterpolationTypeFieldId + 1,
+        UseSmoothingFieldId      = PhaseFieldId             + 1,
+        NextFieldId              = UseSmoothingFieldId      + 1
     };
 
     static const OSG::BitVector FrequencyFieldMask;
@@ -108,6 +112,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3DBase : public Function
     static const OSG::BitVector OctavesFieldMask;
     static const OSG::BitVector AmplitudeFieldMask;
     static const OSG::BitVector InterpolationTypeFieldMask;
+    static const OSG::BitVector PhaseFieldMask;
+    static const OSG::BitVector UseSmoothingFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,6 +145,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3DBase : public Function
            SFUInt32            *getSFOctaves        (void);
            SFReal32            *getSFAmplitude      (void);
            SFUInt32            *getSFInterpolationType(void);
+           SFVec3f             *getSFPhase          (void);
+           SFBool              *getSFUseSmoothing   (void);
 
            Real32              &getFrequency      (void);
      const Real32              &getFrequency      (void) const;
@@ -150,6 +158,10 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3DBase : public Function
      const Real32              &getAmplitude      (void) const;
            UInt32              &getInterpolationType(void);
      const UInt32              &getInterpolationType(void) const;
+           Vec3f               &getPhase          (void);
+     const Vec3f               &getPhase          (void) const;
+           bool                &getUseSmoothing   (void);
+     const bool                &getUseSmoothing   (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -161,6 +173,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3DBase : public Function
      void setOctaves        ( const UInt32 &value );
      void setAmplitude      ( const Real32 &value );
      void setInterpolationType( const UInt32 &value );
+     void setPhase          ( const Vec3f &value );
+     void setUseSmoothing   ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -208,6 +222,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3DBase : public Function
     SFUInt32            _sfOctaves;
     SFReal32            _sfAmplitude;
     SFUInt32            _sfInterpolationType;
+    SFVec3f             _sfPhase;
+    SFBool              _sfUseSmoothing;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

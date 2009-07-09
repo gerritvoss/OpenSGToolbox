@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -43,11 +43,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEDYNAMICSLIB
+#define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGMatrix.h>
+#include <OpenSG/OSGQuaternion.h>
 
-#include "OSGPerlinNoiseDistribution1D.h"
+#include "OSGTurbulenceParticleAffector.h"
+#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +58,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::PerlinNoiseDistribution1D
-An SegmentSetDistribution1D. 	
+/*! \class osg::TurbulenceParticleAffector
+
 */
 
 /***************************************************************************\
@@ -67,7 +70,7 @@ An SegmentSetDistribution1D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PerlinNoiseDistribution1D::initMethod (void)
+void TurbulenceParticleAffector::initMethod (void)
 {
 }
 
@@ -76,161 +79,80 @@ void PerlinNoiseDistribution1D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-FunctionIOTypeVector PerlinNoiseDistribution1D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+bool TurbulenceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
-    FunctionIOTypeVector OutputTypes;
-    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_PERLINNOISE_DIST_OUTPUTPARAMETERS));
-    return OutputTypes;
-}
+	//TODO: implement
 
-FunctionIOTypeVector PerlinNoiseDistribution1D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
-{
-    FunctionIOTypeVector InputTypes;
-    InputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_PERLINNOISE_DIST_INPUTPARAMETERS));
-    return InputTypes;
-}
-
-FunctionIOParameterVector PerlinNoiseDistribution1D::evaluate(FunctionIOParameterVector& InputParameters)
-{
-    //The Input Paremeters must be the correct number
-    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_PERLINNOISE_DIST_INPUTPARAMETERS))
-    {
-        throw FunctionInputException();
-    }
-    FunctionIOParameterVector ResultVector;
-    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_PERLINNOISE_DIST_OUTPUTPARAMETERS));
-    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_PERLINNOISE_DIST_OUTPUTPARAMETERS, generate(dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[0].getDataPtr())->getData())));
-
-    return ResultVector;
+	return false;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
-Real32 PerlinNoiseDistribution1D::generate(Real32 t) const
-{
-	Real32 total(0.0f), amplitude(getAmplitude()), frequency(getFrequency()), pos(t + getPhase());
-	
-	for(unsigned int i(0); i < getOctaves(); ++i)
-	{
-		if(i > 0)
-		{
-		  frequency *= 2;
-		  amplitude *= getPersistance();
-		}
-
-		total += interpolatedNoise(pos * frequency, i) * amplitude;
-	}
-
-	return total;
-}
-
-
-Real32 PerlinNoiseDistribution1D::interpolateCosine(Real32 a, Real32 b, Real32 t) const
-{	// returns cosine interpolation of t between a and b
-	Real32 f = (1 - std::cos(t * 3.1415927)) * .5;
-	return  a*(1-f) + b*f;
-}
-
-Real32 PerlinNoiseDistribution1D::interpolateLinear(Real32 a, Real32 b, Real32 t) const
-{
-	return  a*(1-t) + b*t;
-}
-
-Real32 PerlinNoiseDistribution1D::interpolatedNoise(Real32 t, UInt32 & octave) const
-{
-	Real32 intT(osgfloor(t));
-	Real32 fractionT = t - intT;
-	Real32 v1,v2;
-	if(getUseSmoothing())
-	{
-		v1 = getNoise(intT,octave)/2.0f + getNoise(intT - 1.0f, octave)/4.0f + getNoise(intT + 1.0f, octave)/4.0f;
-		intT += 1.0f;
-		v2 = getNoise(intT,octave)/2.0f + getNoise(intT - 1.0f, octave)/4.0f + getNoise(intT + 1.0f, octave)/4.0f;
-	} else
-	{
-		v1 = getNoise(intT,octave);
-		v2 = getNoise(intT + 1.0f,octave);
-	}
-
-	Real32 returnValue(0.0);
-	if(getInterpolationType() == PerlinNoiseDistribution1D::COSINE) returnValue = interpolateCosine(v1 , v2 , fractionT);
-	else if(getInterpolationType() == PerlinNoiseDistribution1D::LINEAR) returnValue = interpolateLinear(v1 , v2 , fractionT);
-	
-	return returnValue;
-}
-
-Real32 PerlinNoiseDistribution1D::getNoise(Int32 t, UInt32 & octave) const
-{
-	Real32 noiseVal(0.0f);
-	switch(octave%6)
-	{
-		case 0:
-			t = (t<<13) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15731 + 789221) + 1376312579) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 1:
-			t = (t<<11) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15683 + 789017) + 1376311273) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 2:
-			t = (t<<15) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15733 + 789121) + 1376313067) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 3:
-			t = (t<<17) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15761 + 789673) + 1376318989) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 4:
-			t = (t<<13) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15787 + 789251) + 1376312689) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 5:
-			t = (t<<7) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15667 + 789323) + 1376313793) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-	}
-
-	return noiseVal;
-}
-
-
-
-
 
 /*----------------------- constructors & destructors ----------------------*/
 
-PerlinNoiseDistribution1D::PerlinNoiseDistribution1D(void) :
+TurbulenceParticleAffector::TurbulenceParticleAffector(void) :
     Inherited()
 {
 }
 
-PerlinNoiseDistribution1D::PerlinNoiseDistribution1D(const PerlinNoiseDistribution1D &source) :
+TurbulenceParticleAffector::TurbulenceParticleAffector(const TurbulenceParticleAffector &source) :
     Inherited(source)
 {
 }
 
-PerlinNoiseDistribution1D::~PerlinNoiseDistribution1D(void)
+TurbulenceParticleAffector::~TurbulenceParticleAffector(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void PerlinNoiseDistribution1D::changed(BitVector whichField, UInt32 origin)
+void TurbulenceParticleAffector::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & PersistanceFieldMask)
+	{
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PersistanceFieldMask);
+			getPerlinDistribution()->setPersistance(getPersistance());
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PersistanceFieldMask);
+	} 
+	else if (whichField & FrequencyFieldMask)
+	{
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::FrequencyFieldMask);
+			getPerlinDistribution()->setFrequency(getFrequency());
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::FrequencyFieldMask);
+	} 
+	else if (whichField & InterpolationTypeFieldMask)
+	{
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::InterpolationTypeFieldMask);
+			getPerlinDistribution()->setInterpolationType(getInterpolationType());
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::InterpolationTypeFieldMask);
+	} 
+	else if (whichField & OctavesFieldMask)
+	{
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::OctavesFieldMask);
+			getPerlinDistribution()->setOctaves(getOctaves());
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::OctavesFieldMask);
+	} 
+	else if (whichField & AmplitudeFieldMask )
+	{
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
+			getPerlinDistribution()->setAmplitude(getAmplitude());
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
+	}
+	else if (whichField & PhaseFieldMask )
+	{
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
+			getPerlinDistribution()->setPhase(getPhase()[0]);
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
+	}
 }
 
-void PerlinNoiseDistribution1D::dump(      UInt32    , 
+void TurbulenceParticleAffector::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump PerlinNoiseDistribution1D NI" << std::endl;
+    SLOG << "Dump TurbulenceParticleAffector NI" << std::endl;
 }
 
 
@@ -248,10 +170,10 @@ void PerlinNoiseDistribution1D::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPERLINNOISEDISTRIBUTION1DBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPERLINNOISEDISTRIBUTION1DBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGTURBULENCEPARTICLEAFFECTORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTURBULENCEPARTICLEAFFECTORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGPERLINNOISEDISTRIBUTION1DFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGTURBULENCEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi
