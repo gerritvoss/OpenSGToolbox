@@ -48,6 +48,7 @@
 
 #include "OSGXWindowEventProducerBase.h"
 #include <OpenSG/OSGXWindow.h>
+#include <OpenSG/OSGThreadManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -66,6 +67,8 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     static KeyEvent::Key determineKey(const KeySym& XKeySym);
     
     static UInt32 determineKeyModifiers(const unsigned int state);
+	
+	Lock *_UpdateDrawSyncLock;
     /*==========================  PUBLIC  =================================*/
   public:
 
@@ -162,6 +165,8 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
                        const std::string& WindowName);
     
     virtual void closeWindow(void);
+	
+	virtual WindowPtr initWindow(void);
     
     virtual void draw(void);
     virtual void update(void);

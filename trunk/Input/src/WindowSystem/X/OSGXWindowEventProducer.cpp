@@ -199,7 +199,11 @@ void XWindowEventProducer::WindowEventLoopThread(void* args)
         
         if(EventProducer->_IsDrawPending)
         {
+			//Lock the Update
+			EventProducer->_UpdateDrawSyncLock->aquire();
             EventProducer->internalDraw();
+			//Lock the Update
+			EventProducer->_UpdateDrawSyncLock->release();
             EventProducer->_IsDrawPending = false;
         }
         else
@@ -506,6 +510,15 @@ KeyEvent::Key XWindowEventProducer::determineKey(const KeySym& XKeySym)
  *                           Instance methods                              *
 \***************************************************************************/
 
+WindowPtr XWindowEventProducer::initWindow(void)
+{
+	WindowPtr MyWindow = Inherited::initWindow();
+	
+    std::string UpdateDrawLockName = WindowName + " Update Draw Lock";
+	_UpdateDrawSyncLock =  Lock::get(UpdateDrawLockName.c_str());
+	
+    return MyWindow;
+}
 void XWindowEventProducer::setPosition(Pnt2f Pos)
 {
     XMoveWindow(XWindow::Ptr::dcast(getWindow())->getDisplay(),XWindow::Ptr::dcast(getWindow())->getWindow(),Pos.x(), Pos.y());
@@ -687,6 +700,9 @@ bool XWindowEventProducer::getShowCursor(void) const
 
 void XWindowEventProducer::update(void)
 {
+	//Lock the Draw
+	_UpdateDrawSyncLock->aquire();
+
    //Updating
    Time Now(getSystemTime());
    Time ElapsedTime(Now - getLastUpdateTime());
@@ -697,6 +713,9 @@ void XWindowEventProducer::update(void)
    beginEditCP(XWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
 	   setLastUpdateTime(Now);
    endEditCP(XWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+
+	//Release the Draw
+	_UpdateDrawSyncLock->release();
 }
 
 WindowPtr XWindowEventProducer::createWindow(void)
