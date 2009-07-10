@@ -51,6 +51,7 @@
 #include <OpenSG/OSGCarbonWindow.h>
 #include <AGL/agl.h>
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGThreadManager.h>
 
 #include <map>
 
@@ -100,6 +101,7 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	friend struct WindowEventLoopThreadArguments;
 	
 	Barrier *_MainThreadSyncBarrier;
+	Lock *_UpdateDrawSyncLock;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -240,6 +242,8 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	
 	static KeyEvent::Key determineKey(::UInt32 key);
 	static UInt32 determineKeyModifiers(::UInt32 keyModifiers);
+
+
     
     /*==========================  PRIVATE  ================================*/
   private:
