@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  GenericInventoryItemBase::DetailsFieldMask = 
+    (TypeTraits<BitVector>::One << GenericInventoryItemBase::DetailsFieldId);
+
 const OSG::BitVector GenericInventoryItemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var std::string     GenericInventoryItemBase::_sfDetails
+    
+*/
+
+//! GenericInventoryItem description
+
+FieldDescription *GenericInventoryItemBase::_desc[] = 
+{
+    new FieldDescription(SFString::getClassType(), 
+                     "Details", 
+                     DetailsFieldId, DetailsFieldMask,
+                     false,
+                     (FieldAccessMethod) &GenericInventoryItemBase::getSFDetails)
+};
 
 
 FieldContainerType GenericInventoryItemBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType GenericInventoryItemBase::_type(
     NULL,
     (PrototypeCreateF) &GenericInventoryItemBase::createEmpty,
     GenericInventoryItem::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(GenericInventoryItemBase, GenericInventoryItemPtr)
 
@@ -142,6 +162,7 @@ void GenericInventoryItemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 GenericInventoryItemBase::GenericInventoryItemBase(void) :
+    _sfDetails                (), 
     Inherited() 
 {
 }
@@ -151,6 +172,7 @@ GenericInventoryItemBase::GenericInventoryItemBase(void) :
 #endif
 
 GenericInventoryItemBase::GenericInventoryItemBase(const GenericInventoryItemBase &source) :
+    _sfDetails                (source._sfDetails                ), 
     Inherited                 (source)
 {
 }
@@ -167,6 +189,11 @@ UInt32 GenericInventoryItemBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (DetailsFieldMask & whichField))
+    {
+        returnValue += _sfDetails.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -176,6 +203,11 @@ void GenericInventoryItemBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (DetailsFieldMask & whichField))
+    {
+        _sfDetails.copyToBin(pMem);
+    }
+
 
 }
 
@@ -183,6 +215,11 @@ void GenericInventoryItemBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (DetailsFieldMask & whichField))
+    {
+        _sfDetails.copyFromBin(pMem);
+    }
 
 
 }
@@ -194,6 +231,9 @@ void GenericInventoryItemBase::executeSyncImpl(      GenericInventoryItemBase *p
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (DetailsFieldMask & whichField))
+        _sfDetails.syncWith(pOther->_sfDetails);
+
 
 }
 #else
@@ -203,6 +243,9 @@ void GenericInventoryItemBase::executeSyncImpl(      GenericInventoryItemBase *p
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (DetailsFieldMask & whichField))
+        _sfDetails.syncWith(pOther->_sfDetails);
 
 
 

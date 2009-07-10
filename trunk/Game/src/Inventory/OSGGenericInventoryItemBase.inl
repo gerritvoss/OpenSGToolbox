@@ -96,6 +96,34 @@ GenericInventoryItemPtr GenericInventoryItemBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the GenericInventoryItem::_sfDetails field.
+inline
+SFString *GenericInventoryItemBase::getSFDetails(void)
+{
+    return &_sfDetails;
+}
+
+
+//! Get the value of the GenericInventoryItem::_sfDetails field.
+inline
+std::string &GenericInventoryItemBase::getDetails(void)
+{
+    return _sfDetails.getValue();
+}
+
+//! Get the value of the GenericInventoryItem::_sfDetails field.
+inline
+const std::string &GenericInventoryItemBase::getDetails(void) const
+{
+    return _sfDetails.getValue();
+}
+
+//! Set the value of the GenericInventoryItem::_sfDetails field.
+inline
+void GenericInventoryItemBase::setDetails(const std::string &value)
+{
+    _sfDetails.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

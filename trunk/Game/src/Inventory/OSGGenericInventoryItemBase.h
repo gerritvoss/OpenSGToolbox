@@ -67,6 +67,7 @@
 
 #include "OSGInventoryItem.h" // Parent
 
+#include <OpenSG/OSGStringFields.h> // Details type
 
 #include "OSGGenericInventoryItemFields.h"
 
@@ -88,6 +89,14 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
 
     typedef GenericInventoryItemPtr  Ptr;
 
+    enum
+    {
+        DetailsFieldId = Inherited::NextFieldId,
+        NextFieldId    = DetailsFieldId + 1
+    };
+
+    static const OSG::BitVector DetailsFieldMask;
+
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -107,6 +116,23 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFString            *getSFDetails        (void);
+
+           std::string         &getDetails        (void);
+     const std::string         &getDetails        (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setDetails        ( const std::string &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,6 +171,13 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFString            _sfDetails;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -196,6 +229,7 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

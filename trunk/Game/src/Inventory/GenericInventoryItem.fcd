@@ -12,5 +12,14 @@
 	useLocalIncludes="true"
 >
 A GenericInventoryItem.
+
+	<Field
+		name="Details"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 	
 </FieldContainer>

@@ -36,6 +36,7 @@
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGTextArea.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -61,6 +62,7 @@ void reshape(Vec2f Size);
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
+#include <OpenSG/UserInterface/OSGListSelectionListener.h>
 
 
 
@@ -101,14 +103,31 @@ public:
 };
 
 
-
 // Declare the SelectionModel up front to allow for
 // the ActionListeners
 ListSelectionModelPtr ExampleListSelectionModel(new DefaultListSelectionModel());
 
+TextAreaPtr DetailsWindow;
+
 // Create ListModel   
 ListPtr ExampleList;
 InventoryListModelPtr ExampleListModel;
+InventoryPtr ExampleInventory;
+
+class InventoryListListener: public ListSelectionListener
+{
+  public:
+    virtual void selectionChanged(const ListSelectionEvent& e)
+    {
+		if(ExampleList->getSelectionModel()->getMinSelectionIndex() != -1)
+		{	
+			beginEditCP(DetailsWindow, TextArea::TextFieldMask);
+				DetailsWindow->setText(GenericInventoryItem::Ptr::dcast(ExampleInventory->getInventoryItems(ExampleList->getSelectionModel()->getMinSelectionIndex()))->getDetails());
+			endEditCP(DetailsWindow, TextArea::TextFieldMask);
+		}
+	}
+};
+
 
 class AddItemButtonSelectedListener : public ActionListener
 {
@@ -169,26 +188,31 @@ int main(int argc, char **argv)
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
 	//Create InventoryItems
-	InventoryPtr ExampleInventory = Inventory::create();
+	ExampleInventory = Inventory::create();
 	GenericInventoryItemPtr ExampleItem1 = GenericInventoryItem::create();
 	GenericInventoryItemPtr ExampleItem2 = GenericInventoryItem::create(); 
 	GenericInventoryItemPtr ExampleItem3 = GenericInventoryItem::create(); 
 
-	beginEditCP(ExampleItem1, InventoryItem::NameFieldMask);
-		ExampleItem1->setName(std::string("Mike"));
-	endEditCP(ExampleItem1, InventoryItem::NameFieldMask);
+	beginEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+		ExampleItem1->setName(std::string("David K"));
+		ExampleItem1->setDetails(std::string("Major: Human Computer Interaction \nDegree: PhD \nDepartment: Computer Science \nCollege: LAS"));
+	endEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
 
-	beginEditCP(ExampleItem2, InventoryItem::NameFieldMask);
-		ExampleItem2->setName(std::string("Carl"));
-	endEditCP(ExampleItem2, InventoryItem::NameFieldMask);
-	
-	beginEditCP(ExampleItem3, InventoryItem::NameFieldMask);
-		ExampleItem3->setName(std::string("Steve"));
-	endEditCP(ExampleItem3, InventoryItem::NameFieldMask);
+	beginEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+		ExampleItem2->setName(std::string("Eve W"));
+		ExampleItem2->setDetails(std::string("Department: Genetics Development and Cell Biology\n College: Agriculture"));
+	endEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+
+	beginEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+		ExampleItem3->setName(std::string("Will S"));
+		ExampleItem3->setDetails(std::string("Major: Art And Design\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
+	endEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
 
 	ExampleInventory->addItem(ExampleItem1);
 	ExampleInventory->addItem(ExampleItem2);
 	ExampleInventory->addItem(ExampleItem3);
+
+
 
     /******************************************************
 
@@ -260,6 +284,8 @@ int main(int argc, char **argv)
     endEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 
     ExampleList->setSelectionModel(ExampleListSelectionModel);
+	InventoryListListener TheInventoryListListener;
+    ExampleList->getSelectionModel()->addListSelectionListener(&TheInventoryListListener);
 
 
     /******************************************************
@@ -307,9 +333,15 @@ int main(int argc, char **argv)
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
     endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
+	DetailsWindow = osg::TextArea::create();
+	beginEditCP(DetailsWindow, TextArea::PreferredSizeFieldMask);
+		DetailsWindow->setPreferredSize(Pnt2f(200,100));
+    endEditCP(DetailsWindow, TextArea::PreferredSizeFieldMask);
+
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
+       MainInternalWindow->getChildren().push_back(DetailsWindow);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
