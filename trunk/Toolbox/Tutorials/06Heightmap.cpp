@@ -44,6 +44,7 @@ void reshape(Vec2f Size);
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+bool statFlag(false);
 
 bool ExitApp = false;
 
@@ -58,6 +59,14 @@ public:
        {
            ExitApp = true;
        }
+
+	   switch(e.getKey())
+	   {
+	   case KeyEvent::KEY_S:
+		   statFlag = !statFlag;
+		   mgr->setStatistics(statFlag);
+		   break;
+	   }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -157,9 +166,6 @@ int main(int argc, char **argv)
 
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
-    
-    //Make Torus Node
-    NodePtr TorusNode = makeTorus(.5, 2, 32, 32);
 
 
 	//Load in the Heightmap Image
@@ -170,10 +176,10 @@ int main(int argc, char **argv)
 	beginEditCP(TutorialHeightmapGeo, HeightmapGeometry::HeightImageFieldMask | HeightmapGeometry::DimensionsFieldMask | HeightmapGeometry::SegmentsFieldMask | HeightmapGeometry::ScaleFieldMask | HeightmapGeometry::OffsetFieldMask | HeightmapGeometry::MaterialFieldMask);
 		TutorialHeightmapGeo->setHeightImage(HeightMapImage);
 		TutorialHeightmapGeo->setDimensions(Vec2f(200.0,200.0));
-		TutorialHeightmapGeo->setSegments(Vec2f(100.0,100.0));
+		TutorialHeightmapGeo->setSegments(Vec2f(150.0,150.0));
 		TutorialHeightmapGeo->setScale(7.0);
 		TutorialHeightmapGeo->setOffset(0.0);
-		TutorialHeightmapGeo->setMaterial( SimpleMaterial::create() );
+		TutorialHeightmapGeo->setMaterial( getDefaultMaterial() );
 	endEditCP(TutorialHeightmapGeo, HeightmapGeometry::HeightImageFieldMask | HeightmapGeometry::DimensionsFieldMask | HeightmapGeometry::SegmentsFieldMask | HeightmapGeometry::ScaleFieldMask | HeightmapGeometry::OffsetFieldMask | HeightmapGeometry::MaterialFieldMask);
 
     //Make the Heightmap Node
@@ -188,7 +194,6 @@ int main(int argc, char **argv)
 		scene->setCore(Group::create());
  
         // add the torus as a child
-        scene->addChild(TorusNode);
         scene->addChild(TutorialHeightmapNode);
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 

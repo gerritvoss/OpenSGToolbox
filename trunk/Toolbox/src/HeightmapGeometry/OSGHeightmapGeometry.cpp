@@ -186,11 +186,10 @@ void HeightmapGeometry::createHeightMapGeometry(void)
 		Vec3f n1,n2,n3,n4;
 		Vec2f t1,t2,t3,t4;
 
-		Vec3f Offset(0.0f,getOffset(), 0.0f);
+		Vec3f Offset(-0.5f*getDimensions().x(),getOffset(), -0.5f*getDimensions().y());
 		Real32 height;
 
 		
-
 		for(UInt32 i(0) ; i<getSegments().x(); ++i)
 		{
 			for(UInt32 j(0) ; j<getSegments().y(); ++j)
@@ -254,7 +253,8 @@ void HeightmapGeometry::createHeightMapGeometry(void)
 	endEditCP(HeightmapGeometryPtr(this), PositionsFieldMask | TypesFieldMask | LengthsFieldMask | NormalsFieldMask | TexCoordsFieldMask);
 
 	_InternallyCalculatingNormals = true;
-	calcVertexNormals(GeometryPtr(this));
+		createSharedIndex(GeometryPtr(this));
+		calcVertexNormals(GeometryPtr(this));
 	_InternallyCalculatingNormals = false;
 
 }

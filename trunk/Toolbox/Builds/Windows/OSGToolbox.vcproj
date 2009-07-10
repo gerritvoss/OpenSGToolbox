@@ -286,6 +286,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Util\OSGPerlinNoise.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGPerlinNoise.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Util\OSGQuatOperations.h"
 					>
 				</File>
