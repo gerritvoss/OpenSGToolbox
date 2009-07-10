@@ -93,6 +93,14 @@ boost::any InventoryListModel::getElementAt(UInt32 index) const
         return boost::any();
 	}
 }
+
+void InventoryListModel::addInventory(InventoryPtr inven)
+{
+	for(UInt32 i = 0; i < inven->getInventoryItems().getSize(); ++i)
+	{
+		_FieldList.push_back(inven->getInventoryItems(i));
+	}
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
