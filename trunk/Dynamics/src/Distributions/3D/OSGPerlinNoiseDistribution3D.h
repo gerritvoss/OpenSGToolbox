@@ -94,6 +94,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3D : public PerlinNoiseD
     virtual FunctionIOTypeVector getInputTypes(FunctionIOTypeVector& OutputTypes) const;
     virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
 
+	Real32 generate(Pnt3f t) const;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -115,7 +117,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3D : public PerlinNoiseD
 
     /*! \}																   */
 
-	Real32 generate(Pnt3f t) const;
+	
 	Real32 interpolatedNoise(Pnt3f t, UInt32 & octave) const;
 	Real32 interpolateCosine(Real32 a, Real32 b, Real32 t) const;
 	Real32 interpolateLinear(Real32 a, Real32 b, Real32 t) const;
