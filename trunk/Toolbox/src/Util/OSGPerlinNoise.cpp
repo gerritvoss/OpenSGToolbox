@@ -405,5 +405,144 @@ Real32 getNoise(Int32 t1, Int32 t2, Int32 t3, UInt32 octave)
 	return noiseVal;
 }
 
+ImagePtr createPerlinImage(const Vec2s& Size, const Vec2f& Range, Real32 Amplitude, Real32 Frequency, Real32 Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing, Image::PixelFormat pixelformat, Image::Type  type)
+{
+	ImagePtr PerlinImage = Image::create();
+
+	std::vector<Real32> ImageData(Size.x() * Size.y());
+
+	bool shouldTranslate(false);
+	
+	switch(type)
+	{
+	case Image::OSG_UINT8_IMAGEDATA:
+	case Image::OSG_UINT16_IMAGEDATA:
+	case Image::OSG_UINT32_IMAGEDATA:
+		shouldTranslate = true;
+		break;
+	default:
+		shouldTranslate = false;
+		break;
+	}
+
+	for(UInt32 i(0) ; i<Size.x() ; ++i)
+	{
+		for(UInt32 j(0) ; j<Size.y() ; ++j)
+		{
+			ImageData[i*Size.x()+j] = osgClamp(-0.5f, calcPerlinNoise(Pnt2f(Range.x()*static_cast<Real32>(i)/static_cast<Real32>(Size.x()), Range.y()*static_cast<Real32>(j)/static_cast<Real32>(Size.y())),
+				Amplitude,
+				Frequency,
+				Phase,
+				Persistance,
+				Octaves,
+				InterpolationType,
+				Smoothing),0.5f);
+
+			if(shouldTranslate)
+			{
+				ImageData[i*Size.x()+j] += 0.5f;
+
+			}
+		}
+	}
+
+	if(PerlinImage->set(Image::OSG_I_PF, Size.x(), Size.y(),1,1,1,0.0f,reinterpret_cast<UInt8*>(&ImageData[0]),Image::OSG_FLOAT32_IMAGEDATA))
+	{
+		if(type != Image::OSG_FLOAT32_IMAGEDATA)
+		{
+			if(!PerlinImage->convertDataTypeTo(type))
+			{
+				return NullFC;
+			}
+		}
+
+		if(pixelformat != Image::OSG_I_PF)
+		{
+			if(!PerlinImage->reformat(pixelformat))
+			{
+				return NullFC;
+			}
+		}
+
+		return PerlinImage;
+	}
+	else
+	{
+		return NullFC;
+	}
+}
+
+
+ImagePtr createPerlinImage(const Vec3s& Size, const Vec3f& Range, Real32 Amplitude, Real32 Frequency, Real32 Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing, Image::PixelFormat pixelformat, Image::Type  type)
+{
+	ImagePtr PerlinImage = Image::create();
+
+	std::vector<Real32> ImageData(Size.x() * Size.y() * Size.z());
+
+	bool shouldTranslate(false);
+	
+	switch(type)
+	{
+	case Image::OSG_UINT8_IMAGEDATA:
+	case Image::OSG_UINT16_IMAGEDATA:
+	case Image::OSG_UINT32_IMAGEDATA:
+		shouldTranslate = true;
+		break;
+	default:
+		shouldTranslate = false;
+		break;
+	}
+
+	for(UInt32 i(0) ; i<Size.x() ; ++i)
+	{
+		for(UInt32 j(0) ; j<Size.y() ; ++j)
+		{
+			for(UInt32 k(0) ; k<Size.z() ; ++k)
+			{
+				ImageData[i*Size.x()*Size.y()+j*Size.y()+k] = osgClamp(-0.5f, 
+					calcPerlinNoise(Pnt2f(Range.x()*static_cast<Real32>(i)/static_cast<Real32>(Size.x()), Range.y()*static_cast<Real32>(j)/static_cast<Real32>(Size.y()), Range.z()*static_cast<Real32>(k)/static_cast<Real32>(Size.z())),
+						Amplitude,
+						Frequency,
+						Phase,
+						Persistance,
+						Octaves,
+						InterpolationType,
+						Smoothing),
+					0.5f);
+
+				if(shouldTranslate)
+				{
+					ImageData[i*Size.x()*Size.y()+j*Size.y()+k] += 0.5f;
+
+				}
+			}
+		}
+	}
+
+	if(PerlinImage->set(Image::OSG_I_PF, Size.x(), Size.y(),1,1,1,0.0f,reinterpret_cast<UInt8*>(&ImageData[0]),Image::OSG_FLOAT32_IMAGEDATA))
+	{
+		if(type != Image::OSG_FLOAT32_IMAGEDATA)
+		{
+			if(!PerlinImage->convertDataTypeTo(type))
+			{
+				return NullFC;
+			}
+		}
+
+		if(pixelformat != Image::OSG_I_PF)
+		{
+			if(!PerlinImage->reformat(pixelformat))
+			{
+				return NullFC;
+			}
+		}
+
+		return PerlinImage;
+	}
+	else
+	{
+		return NullFC;
+	}
+}
 OSG_END_NAMESPACE
 

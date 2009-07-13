@@ -85,13 +85,13 @@ Real32 getPixelIntensity(const Vec2f& coord, ImagePtr TheImage)
 	case Image::OSG_FLOAT32_IMAGEDATA:
 		{
 			Real32 Value( *reinterpret_cast<Real32*>(&(TheImage->getPixel(Index))));
-			Result = Value * TypeTraits<Real32>::getMax();
+			Result = Value;
 		}
 		break;
 	case Image::OSG_FLOAT16_IMAGEDATA:
 		{
 			Real16 Value( *reinterpret_cast<Real16*>(&(TheImage->getPixel(Index))));
-			Result = static_cast<Real32>(Value)/static_cast<Real32>(TypeTraits<Real16>::getMax() );
+			Result = static_cast<Real32>(Value);
 		}
 		break;
 	case Image::OSG_INT16_IMAGEDATA:

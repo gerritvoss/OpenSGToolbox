@@ -31,6 +31,7 @@
 
 //Heightmap Geometry
 #include <OpenSG/Toolbox/OSGHeightmapGeometry.h>
+#include <OpenSG/Toolbox/OSGPerlinNoise.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -169,15 +170,15 @@ int main(int argc, char **argv)
 
 
 	//Load in the Heightmap Image
-	ImagePtr HeightMapImage = ImageFileHandler::the().read("./Data/ExampleHeightMap.png");
+	ImagePtr PerlinNoiseImage = createPerlinImage(Vec2s(256,256), Vec2f(10.0f,10.0f),0.5f,1.0f,0.0f,0.25f,6,PERLIN_INTERPOLATE_COSINE,false,Image::OSG_L_PF, Image::OSG_UINT8_IMAGEDATA);
 
 	//Make the Heightmap Geometry
 	HeightmapGeometryPtr TutorialHeightmapGeo = HeightmapGeometry::create();
 	beginEditCP(TutorialHeightmapGeo, HeightmapGeometry::HeightImageFieldMask | HeightmapGeometry::DimensionsFieldMask | HeightmapGeometry::SegmentsFieldMask | HeightmapGeometry::ScaleFieldMask | HeightmapGeometry::OffsetFieldMask | HeightmapGeometry::MaterialFieldMask);
-		TutorialHeightmapGeo->setHeightImage(HeightMapImage);
+		TutorialHeightmapGeo->setHeightImage(PerlinNoiseImage);
 		TutorialHeightmapGeo->setDimensions(Vec2f(200.0,200.0));
 		TutorialHeightmapGeo->setSegments(Vec2f(150.0,150.0));
-		TutorialHeightmapGeo->setScale(7.0);
+		TutorialHeightmapGeo->setScale(20.0);
 		TutorialHeightmapGeo->setOffset(0.0);
 		TutorialHeightmapGeo->setMaterial( getDefaultMaterial() );
 	endEditCP(TutorialHeightmapGeo, HeightmapGeometry::HeightImageFieldMask | HeightmapGeometry::DimensionsFieldMask | HeightmapGeometry::SegmentsFieldMask | HeightmapGeometry::ScaleFieldMask | HeightmapGeometry::OffsetFieldMask | HeightmapGeometry::MaterialFieldMask);
