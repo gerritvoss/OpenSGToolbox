@@ -298,10 +298,10 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
             ReleaseEvent(theEvent);
         }
 		//Lock the Update
-		Arguments->_UpdateDrawSyncLock->aquire();
+		Arguments->_EventProducer->_UpdateDrawSyncLock->aquire();
         Arguments->_EventProducer->internalDraw();
 		//Release the Update
-		Arguments->_UpdateDrawSyncLock->release();
+		Arguments->_EventProducer->_UpdateDrawSyncLock->release();
     }
     
     aglDestroyContext(context);
@@ -1309,7 +1309,6 @@ CarbonWindowEventProducer::CarbonWindowEventProducer(void) :
 CarbonWindowEventProducer::CarbonWindowEventProducer(const CarbonWindowEventProducer &source) :
     Inherited(source)
 {
-	syncBarrier = Barrier::get(NULL);
 }
 
 CarbonWindowEventProducer::~CarbonWindowEventProducer(void)
