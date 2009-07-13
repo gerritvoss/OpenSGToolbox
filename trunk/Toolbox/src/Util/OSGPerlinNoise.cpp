@@ -122,7 +122,7 @@ Real32 getNoise(Int32 t, UInt32 octave)
 	return noiseVal;
 }
 
-Real32 calcPerlinNoise(const Pnt2f& t, Real32 Amplitude, Real32 Frequency, Real32 Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing)
+Real32 calcPerlinNoise(const Pnt2f& t, Real32 Amplitude, Real32 Frequency, const Vec2f& Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing)
 {	
 	Real32 total(0.0f), amplitude(Amplitude), frequency(Frequency);
 	Pnt2f pos(t + Phase);
@@ -240,7 +240,7 @@ Real32 getNoise(Int32 t1, Int32 t2, UInt32 & octave)
 	return noiseVal;
 }
 
-Real32 calcPerlinNoise(const Pnt3f& t, Real32 Amplitude, Real32 Frequency, Real32 Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing)
+Real32 calcPerlinNoise(const Pnt3f& t, Real32 Amplitude, Real32 Frequency, const Vec3f& Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing)
 {
 	
 	Real32 total(0.0f), amplitude(Amplitude), frequency(Frequency);
@@ -405,7 +405,7 @@ Real32 getNoise(Int32 t1, Int32 t2, Int32 t3, UInt32 octave)
 	return noiseVal;
 }
 
-ImagePtr createPerlinImage(const Vec2s& Size, const Vec2f& Range, Real32 Amplitude, Real32 Frequency, Real32 Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing, Image::PixelFormat pixelformat, Image::Type  type)
+ImagePtr createPerlinImage(const Vec2s& Size, const Vec2f& Range, Real32 Amplitude, Real32 Frequency, const Vec2f& Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing, Image::PixelFormat pixelformat, Image::Type  type)
 {
 	ImagePtr PerlinImage = Image::create();
 

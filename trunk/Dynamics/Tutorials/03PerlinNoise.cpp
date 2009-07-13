@@ -230,35 +230,35 @@ int main(int argc, char **argv)
 	
 	// 2-dimensional: Let's make the mountain!
 
-	//PerlinNoiseDistribution2DPtr PerlinNoise2D = PerlinNoiseDistribution2D::create();
-	//beginEditCP(PerlinNoise2D);
-	//	PerlinNoise2D->setFrequency(0.2);
-	//	PerlinNoise2D->setOctaves(4);
-	//	PerlinNoise2D->setPersistance(0.15);
-	//	PerlinNoise2D->setAmplitude(15.0);
-	//	PerlinNoise2D->setInterpolationType(PerlinNoiseDistribution2D::COSINE);
-	//	PerlinNoise2D->setUseSmoothing(true);
-	//	PerlinNoise2D->setPhase(Vec2f(15.0,-26.3));
-	//endEditCP(PerlinNoise2D);
+	PerlinNoiseDistribution2DPtr PerlinNoise2D = PerlinNoiseDistribution2D::create();
+	beginEditCP(PerlinNoise2D);
+		PerlinNoise2D->setFrequency(0.2);
+		PerlinNoise2D->setOctaves(4);
+		PerlinNoise2D->setPersistance(0.15);
+		PerlinNoise2D->setAmplitude(15.0);
+		PerlinNoise2D->setInterpolationType(PerlinNoiseDistribution2D::COSINE);
+		PerlinNoise2D->setUseSmoothing(true);
+		PerlinNoise2D->setPhase(Vec2f(15.0,-26.3));
+	endEditCP(PerlinNoise2D);
 
- //   for(Real32 i(0) ; i < 40 ; i += 0.25f)
- //   {
- //      for(Real32 j(0) ; j < 40 ; j += 0.25f)
-	//   {	
-	//		input.clear();
-	//		input.push_back(FunctionIOParameter(std::string("Value"), new FunctionIOData<Pnt2f>(Pnt2f(i,j))));
-	//		Real32 tmp = FunctionIOData<Real32>::dcast(PerlinNoise2D->evaluate(input).front().getDataPtr())->getData();
-	//		
-	//		ExampleParticleSystem->addParticle(Pnt3f(i,tmp,j), // pos
-	//			Vec3f(0.0,0.0f,1.0f), // normal
-	//			Color4f(0.6f,1.0f,0.3f, 1.0), // color
-	//			Vec3f(1.0,1.0,1.0), 
-	//			-1.0f, 
-	//			Vec3f(0.0f,0.0f,0.0f),
-	//			Vec3f(0.0f,0.0f,0.0f),0);
-	//   }
-	//
- //   }
+    for(Real32 i(0) ; i < 40 ; i += 0.25f)
+    {
+       for(Real32 j(0) ; j < 40 ; j += 0.25f)
+	   {	
+			input.clear();
+			input.push_back(FunctionIOParameter(std::string("Value"), new FunctionIOData<Pnt2f>(Pnt2f(i,j))));
+			Real32 tmp = FunctionIOData<Real32>::dcast(PerlinNoise2D->evaluate(input).front().getDataPtr())->getData();
+			
+			ExampleParticleSystem->addParticle(Pnt3f(i,tmp,j), // pos
+				Vec3f(0.0,0.0f,1.0f), // normal
+				Color4f(0.6f,1.0f,0.3f, 1.0), // color
+				Vec3f(1.0,1.0,1.0), 
+				-1.0f, 
+				Vec3f(0.0f,0.0f,0.0f),
+				Vec3f(0.0f,0.0f,0.0f),0);
+	   }
+	
+    }
 
 	// 1 dimensional:  The stock market.
 		

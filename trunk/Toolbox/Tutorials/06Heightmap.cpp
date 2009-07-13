@@ -170,7 +170,7 @@ int main(int argc, char **argv)
 
 
 	//Load in the Heightmap Image
-	ImagePtr PerlinNoiseImage = createPerlinImage(Vec2s(256,256), Vec2f(10.0f,10.0f),0.5f,1.0f,0.0f,0.25f,6,PERLIN_INTERPOLATE_COSINE,false,Image::OSG_L_PF, Image::OSG_UINT8_IMAGEDATA);
+	ImagePtr PerlinNoiseImage = createPerlinImage(Vec2s(256,256), Vec2f(10.0f,10.0f),0.5f,1.0f,Vec2f(0.0f,0.0f),0.25f,6,PERLIN_INTERPOLATE_COSINE,false,Image::OSG_L_PF, Image::OSG_UINT8_IMAGEDATA);
 
 	//Make the Heightmap Geometry
 	HeightmapGeometryPtr TutorialHeightmapGeo = HeightmapGeometry::create();

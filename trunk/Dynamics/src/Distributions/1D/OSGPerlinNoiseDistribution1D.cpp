@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGPerlinNoiseDistribution1D.h"
+#include <OpenSG/Toolbox/OSGPerlinNoise.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -109,100 +110,8 @@ FunctionIOParameterVector PerlinNoiseDistribution1D::evaluate(FunctionIOParamete
 \*-------------------------------------------------------------------------*/
 Real32 PerlinNoiseDistribution1D::generate(Real32 t) const
 {
-	Real32 total(0.0f), amplitude(getAmplitude()), frequency(getFrequency()), pos(t + getPhase());
-	
-	for(unsigned int i(0); i < getOctaves(); ++i)
-	{
-		if(i > 0)
-		{
-		  frequency *= 2;
-		  amplitude *= getPersistance();
-		}
-
-		total += interpolatedNoise(pos * frequency, i) * amplitude;
-	}
-
-	return total;
+	return calcPerlinNoise(t,getAmplitude(),getFrequency(),getPhase(),getPersistance(),getOctaves(),getInterpolationType(),getUseSmoothing());
 }
-
-
-Real32 PerlinNoiseDistribution1D::interpolateCosine(Real32 a, Real32 b, Real32 t) const
-{	// returns cosine interpolation of t between a and b
-	Real32 f = (1 - std::cos(t * 3.1415927)) * .5;
-	return  a*(1-f) + b*f;
-}
-
-Real32 PerlinNoiseDistribution1D::interpolateLinear(Real32 a, Real32 b, Real32 t) const
-{
-	return  a*(1-t) + b*t;
-}
-
-Real32 PerlinNoiseDistribution1D::interpolatedNoise(Real32 t, UInt32 & octave) const
-{
-	Real32 intT(osgfloor(t));
-	Real32 fractionT = t - intT;
-	Real32 v1,v2;
-	if(getUseSmoothing())
-	{
-		v1 = getNoise(intT,octave)/2.0f + getNoise(intT - 1.0f, octave)/4.0f + getNoise(intT + 1.0f, octave)/4.0f;
-		intT += 1.0f;
-		v2 = getNoise(intT,octave)/2.0f + getNoise(intT - 1.0f, octave)/4.0f + getNoise(intT + 1.0f, octave)/4.0f;
-	} else
-	{
-		v1 = getNoise(intT,octave);
-		v2 = getNoise(intT + 1.0f,octave);
-	}
-
-	Real32 returnValue(0.0);
-	if(getInterpolationType() == PerlinNoiseDistribution1D::COSINE) returnValue = interpolateCosine(v1 , v2 , fractionT);
-	else if(getInterpolationType() == PerlinNoiseDistribution1D::LINEAR) returnValue = interpolateLinear(v1 , v2 , fractionT);
-	
-	return returnValue;
-}
-
-Real32 PerlinNoiseDistribution1D::getNoise(Int32 t, UInt32 & octave) const
-{
-	Real32 noiseVal(0.0f);
-	switch(octave%6)
-	{
-		case 0:
-			t = (t<<13) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15731 + 789221) + 1376312579) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 1:
-			t = (t<<11) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15683 + 789017) + 1376311273) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 2:
-			t = (t<<15) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15733 + 789121) + 1376313067) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 3:
-			t = (t<<17) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15761 + 789673) + 1376318989) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 4:
-			t = (t<<13) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15787 + 789251) + 1376312689) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-		case 5:
-			t = (t<<7) ^ t;
-			noiseVal = ( 1.0 - ( (t * (t * t * 15667 + 789323) + 1376313793) & 0x7fffffff) / 1073741824.0); 
-			break;
-
-	}
-
-	return noiseVal;
-}
-
-
-
-
 
 /*----------------------- constructors & destructors ----------------------*/
 

@@ -117,12 +117,6 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution1D : public PerlinNoiseD
 
     /*! \}                                                                 */
 
-	
-	Real32 interpolatedNoise(Real32 t, UInt32 & octave) const;
-	Real32 interpolateLinear(Real32 a, Real32 b, Real32 t) const;
-	Real32 interpolateCosine(Real32 a, Real32 b, Real32 t) const;
-	Real32 getNoise(Int32 t, UInt32 & octave) const;
-
     /*==========================  PRIVATE  ================================*/
   private:
 
