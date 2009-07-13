@@ -67,8 +67,6 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     static KeyEvent::Key determineKey(const KeySym& XKeySym);
     
     static UInt32 determineKeyModifiers(const unsigned int state);
-	
-	Lock *_UpdateDrawSyncLock;
     /*==========================  PUBLIC  =================================*/
   public:
 

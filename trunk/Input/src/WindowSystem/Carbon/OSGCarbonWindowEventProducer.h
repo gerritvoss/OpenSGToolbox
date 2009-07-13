@@ -101,7 +101,6 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	friend struct WindowEventLoopThreadArguments;
 	
 	Barrier *_MainThreadSyncBarrier;
-	Lock *_UpdateDrawSyncLock;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -213,6 +212,8 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	virtual WindowPtr initWindow(void);
 	
 	
+    bool _IsDrawPending;
+	bool _ShouldUpdate;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -256,8 +257,6 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const CarbonWindowEventProducer &source);
-
-	bool _ShouldUpdate;
 };
 
 typedef CarbonWindowEventProducer *CarbonWindowEventProducerP;

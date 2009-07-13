@@ -297,11 +297,28 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
             SendEventToEventTarget (theEvent, theTarget);        
             ReleaseEvent(theEvent);
         }
-		//Lock the Update
-		Arguments->_EventProducer->_UpdateDrawSyncLock->aquire();
-        Arguments->_EventProducer->internalDraw();
-		//Release the Update
-		Arguments->_EventProducer->_UpdateDrawSyncLock->release();
+		
+		if(Arguments->EventProducer->_ShouldUpdate)
+		{
+
+		   //Updating
+		   Time Now(getSystemTime());
+		   Time ElapsedTime(Now - Arguments->EventProducer->getLastUpdateTime());
+		   if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
+		   {
+			   Arguments->EventProducer->produceUpdate(ElapsedTime);
+		   }
+		   beginEditCP(XWindowEventProducerPtr(Arguments->EventProducer), LastUpdateTimeFieldMask);
+			   Arguments->EventProducer->setLastUpdateTime(Now);
+		   endEditCP(XWindowEventProducerPtr(Arguments->EventProducer), LastUpdateTimeFieldMask);
+
+            Arguments->EventProducer->_ShouldUpdate = false;
+		}
+        if(Arguments->EventProducer->_IsDrawPending)
+        {
+            Arguments->EventProducer->internalDraw();
+            Arguments->EventProducer->_IsDrawPending = false;
+        }
     }
     
     aglDestroyContext(context);
@@ -378,9 +395,6 @@ WindowPtr CarbonWindowEventProducer::initWindow(void)
     std::string BarrierName = WindowName + " Event Loop Barrier";
 	_MainThreadSyncBarrier =  Barrier::get(BarrierName.c_str());
     _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
-	
-    std::string UpdateDrawLockName = WindowName + " Update Draw Lock";
-	_UpdateDrawSyncLock =  Lock::get(UpdateDrawLockName.c_str());
 	
     return MyWindow;
 }
@@ -1163,6 +1177,7 @@ bool CarbonWindowEventProducer::getDrawBorder(void)
 
 void CarbonWindowEventProducer::draw(void)
 {
+	_IsDrawPending = true;
     //TODO: Implement
     /*EventRef DrawEvent;
     if( CreateEvent(NULL,kEventClassWindow, kEventWindowDrawContent,0, 0, &DrawEvent) == noErr )
@@ -1174,22 +1189,8 @@ void CarbonWindowEventProducer::draw(void)
 
 void CarbonWindowEventProducer::update(void)
 {
-	//Lock the Draw
-	_UpdateDrawSyncLock->aquire();
+	_ShouldUpdate = true;
 
-    //Updating
-    Time Now(getSystemTime());
-    Time ElapsedTime(Now - getLastUpdateTime());
-    if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
-    {
-        produceUpdate(ElapsedTime);
-    }
-    beginEditCP(CarbonWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
-	   setLastUpdateTime(Now);
-    endEditCP(CarbonWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
-
-	//Release the lock on Draw
-	_UpdateDrawSyncLock->release();
 }
 
 bool CarbonWindowEventProducer::attachWindow(void)
@@ -1302,12 +1303,16 @@ WindowPtr CarbonWindowEventProducer::createWindow(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 CarbonWindowEventProducer::CarbonWindowEventProducer(void) :
-    Inherited()
+    Inherited(),
+        _IsDrawPending(false),
+		_ShouldUpdate(false)
 {
 }
 
 CarbonWindowEventProducer::CarbonWindowEventProducer(const CarbonWindowEventProducer &source) :
-    Inherited(source)
+    Inherited(source),
+        _IsDrawPending(false),
+		_ShouldUpdate(false)
 {
 }
 
