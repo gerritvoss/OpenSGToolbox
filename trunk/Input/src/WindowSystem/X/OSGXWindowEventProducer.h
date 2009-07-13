@@ -226,6 +226,8 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     unsigned int _LastKeyboardMouseButtonMask;
     Pnt2f _LastMousePosition;
     bool _IsDrawPending;
+
+	bool _ShouldUpdate;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

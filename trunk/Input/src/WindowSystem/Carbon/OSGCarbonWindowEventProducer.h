@@ -256,6 +256,8 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const CarbonWindowEventProducer &source);
+
+	bool _ShouldUpdate;
 };
 
 typedef CarbonWindowEventProducer *CarbonWindowEventProducerP;

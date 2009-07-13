@@ -197,13 +197,34 @@ void XWindowEventProducer::WindowEventLoopThread(void* args)
             EventProducer->handleEvent(event);
         }  
         
+		if(EventProducer->_ShouldUpdate)
+		{
+			//Lock the Draw
+			//_UpdateDrawSyncLock->aquire();
+
+		   //Updating
+		   Time Now(getSystemTime());
+		   Time ElapsedTime(Now - EventProducer->getLastUpdateTime());
+		   if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
+		   {
+			   EventProducer->produceUpdate(ElapsedTime);
+		   }
+		   beginEditCP(XWindowEventProducerPtr(EventProducer), LastUpdateTimeFieldMask);
+			   EventProducer->setLastUpdateTime(Now);
+		   endEditCP(XWindowEventProducerPtr(EventProducer), LastUpdateTimeFieldMask);
+
+			//Release the Draw
+			//_UpdateDrawSyncLock->release();
+            EventProducer->_ShouldUpdate = false;
+		}
+
         if(EventProducer->_IsDrawPending)
         {
 			//Lock the Update
-			EventProducer->_UpdateDrawSyncLock->aquire();
+			//EventProducer->_UpdateDrawSyncLock->aquire();
             EventProducer->internalDraw();
 			//Lock the Update
-			EventProducer->_UpdateDrawSyncLock->release();
+			//EventProducer->_UpdateDrawSyncLock->release();
             EventProducer->_IsDrawPending = false;
         }
         else
@@ -700,22 +721,7 @@ bool XWindowEventProducer::getShowCursor(void) const
 
 void XWindowEventProducer::update(void)
 {
-	//Lock the Draw
-	_UpdateDrawSyncLock->aquire();
-
-   //Updating
-   Time Now(getSystemTime());
-   Time ElapsedTime(Now - getLastUpdateTime());
-   if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
-   {
-	   produceUpdate(ElapsedTime);
-   }
-   beginEditCP(XWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
-	   setLastUpdateTime(Now);
-   endEditCP(XWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
-
-	//Release the Draw
-	_UpdateDrawSyncLock->release();
+	_ShouldUpdate = true;
 }
 
 WindowPtr XWindowEventProducer::createWindow(void)
@@ -1018,7 +1024,8 @@ XWindowEventProducer::XWindowEventProducer(void) :
     Inherited(),
         _LastKeyboardMouseButtonMask(0),
         _LastMousePosition(0,0),
-        _IsDrawPending(false)
+        _IsDrawPending(false),
+		_ShouldUpdate(false)
 {
 }
 
@@ -1026,7 +1033,8 @@ XWindowEventProducer::XWindowEventProducer(const XWindowEventProducer &source) :
     Inherited(source),
         _LastKeyboardMouseButtonMask(0),
         _LastMousePosition(0,0),
-        _IsDrawPending(false)
+        _IsDrawPending(false),
+		_ShouldUpdate(false)
 {
 }
 
