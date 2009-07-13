@@ -66,34 +66,7 @@
 	>
 	</Field>
 	<Field
-		name="InheritRotation"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="false"
-	>
-	</Field>
-	<Field
-		name="InheritVelocity"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="0.0"
-	>
-	</Field>
-	<Field
 		name="UseSpread"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="false"
-	>
-	</Field>
-	<Field
-		name="ComponentOnly"
 		type="bool"
 		cardinality="single"
 		visibility="external"
@@ -108,15 +81,6 @@
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-	>
-	</Field>
-	<Field
-		name="LastPosition"
-		type="Pnt3f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="0.0, 0.0, 0.0"
 	>
 	</Field>
 </FieldContainer>

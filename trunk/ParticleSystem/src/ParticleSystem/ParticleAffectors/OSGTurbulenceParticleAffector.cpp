@@ -104,7 +104,7 @@ bool TurbulenceParticleAffector::affect(ParticleSystemPtr System, Int32 Particle
 			Zparam = getPerlinDistribution()->generate(pos[2]);
 
 			Vec3f fieldAffect(Vec3f(Xparam, Yparam, Zparam));
-			fieldAffect *= elps/(osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
+			fieldAffect *= getAmplitude()* (elps/(osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax())));
 
 			System->setVelocity(System->getVelocity(ParticleIndex) + fieldAffect, ParticleIndex);
 
@@ -116,6 +116,19 @@ bool TurbulenceParticleAffector::affect(ParticleSystemPtr System, Int32 Particle
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+bool TurbulenceParticleAffector::distributionIsNotInitialized()
+{
+	PerlinNoiseDistribution1DPtr dist(getPerlinDistribution());
+	
+	if(1.0f != getAmplitude() ||
+		dist->getPersistance() != getPersistance() ||
+		dist->getOctaves() != getOctaves() ||
+		dist->getInterpolationType() != getInterpolationType() ||
+		dist->getFrequency() != getFrequency()) return true;
+
+	return false;
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -139,14 +152,14 @@ void TurbulenceParticleAffector::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-	if(getPerlinDistribution() == NullFC)
+	if(getPerlinDistribution() == NullFC || distributionIsNotInitialized())
 	{
 		setPerlinDistribution(osg::PerlinNoiseDistribution1D::create());
 		beginEditCP(getPerlinDistribution());
 			getPerlinDistribution()->setFrequency(getFrequency());
 			getPerlinDistribution()->setPersistance(getPersistance());
 			getPerlinDistribution()->setOctaves(getOctaves());
-			getPerlinDistribution()->setAmplitude(getAmplitude());
+			getPerlinDistribution()->setAmplitude(1.0f);
 			getPerlinDistribution()->setInterpolationType(getInterpolationType());
 			getPerlinDistribution()->setPhase(getPhase()[0]);
 			getPerlinDistribution()->setUseSmoothing(true);
@@ -179,7 +192,7 @@ void TurbulenceParticleAffector::changed(BitVector whichField, UInt32 origin)
 	else if (whichField & AmplitudeFieldMask )
 	{
 		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
-			getPerlinDistribution()->setAmplitude(getAmplitude());
+			getPerlinDistribution()->setAmplitude(1.0f);
 		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
 	}
 	else if (whichField & PhaseFieldMask )

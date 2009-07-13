@@ -85,6 +85,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING TurbulenceParticleAffector : public Turbu
 
     // Variables should all be in TurbulenceParticleAffectorBase.
 
+	bool distributionIsNotInitialized();
+
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */

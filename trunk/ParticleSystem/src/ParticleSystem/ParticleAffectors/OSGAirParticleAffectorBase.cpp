@@ -82,23 +82,11 @@ const OSG::BitVector  AirParticleAffectorBase::SpreadFieldMask =
 const OSG::BitVector  AirParticleAffectorBase::MaxDistanceFieldMask = 
     (TypeTraits<BitVector>::One << AirParticleAffectorBase::MaxDistanceFieldId);
 
-const OSG::BitVector  AirParticleAffectorBase::InheritRotationFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::InheritRotationFieldId);
-
-const OSG::BitVector  AirParticleAffectorBase::InheritVelocityFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::InheritVelocityFieldId);
-
 const OSG::BitVector  AirParticleAffectorBase::UseSpreadFieldMask = 
     (TypeTraits<BitVector>::One << AirParticleAffectorBase::UseSpreadFieldId);
 
-const OSG::BitVector  AirParticleAffectorBase::ComponentOnlyFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::ComponentOnlyFieldId);
-
 const OSG::BitVector  AirParticleAffectorBase::BeaconFieldMask = 
     (TypeTraits<BitVector>::One << AirParticleAffectorBase::BeaconFieldId);
-
-const OSG::BitVector  AirParticleAffectorBase::LastPositionFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::LastPositionFieldId);
 
 const OSG::BitVector AirParticleAffectorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -125,22 +113,10 @@ const OSG::BitVector AirParticleAffectorBase::MTInfluenceMask =
 /*! \var Real32          AirParticleAffectorBase::_sfMaxDistance
     
 */
-/*! \var bool            AirParticleAffectorBase::_sfInheritRotation
-    
-*/
-/*! \var Real32          AirParticleAffectorBase::_sfInheritVelocity
-    
-*/
 /*! \var bool            AirParticleAffectorBase::_sfUseSpread
     
 */
-/*! \var bool            AirParticleAffectorBase::_sfComponentOnly
-    
-*/
 /*! \var NodePtr         AirParticleAffectorBase::_sfBeacon
-    
-*/
-/*! \var Pnt3f           AirParticleAffectorBase::_sfLastPosition
     
 */
 
@@ -179,35 +155,15 @@ FieldDescription *AirParticleAffectorBase::_desc[] =
                      false,
                      (FieldAccessMethod) &AirParticleAffectorBase::getSFMaxDistance),
     new FieldDescription(SFBool::getClassType(), 
-                     "InheritRotation", 
-                     InheritRotationFieldId, InheritRotationFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFInheritRotation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "InheritVelocity", 
-                     InheritVelocityFieldId, InheritVelocityFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFInheritVelocity),
-    new FieldDescription(SFBool::getClassType(), 
                      "UseSpread", 
                      UseSpreadFieldId, UseSpreadFieldMask,
                      false,
                      (FieldAccessMethod) &AirParticleAffectorBase::getSFUseSpread),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ComponentOnly", 
-                     ComponentOnlyFieldId, ComponentOnlyFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFComponentOnly),
     new FieldDescription(SFNodePtr::getClassType(), 
                      "Beacon", 
                      BeaconFieldId, BeaconFieldMask,
                      false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFBeacon),
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "LastPosition", 
-                     LastPositionFieldId, LastPositionFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFLastPosition)
+                     (FieldAccessMethod) &AirParticleAffectorBase::getSFBeacon)
 };
 
 
@@ -289,12 +245,8 @@ AirParticleAffectorBase::AirParticleAffectorBase(void) :
     _sfSpeed                  (Real32(1.0)), 
     _sfSpread                 (Real32(0.5)), 
     _sfMaxDistance            (Real32(-1.0)), 
-    _sfInheritRotation        (bool(false)), 
-    _sfInheritVelocity        (Real32(0.0)), 
     _sfUseSpread              (bool(false)), 
-    _sfComponentOnly          (bool(false)), 
     _sfBeacon                 (NodePtr(NullFC)), 
-    _sfLastPosition           (Pnt3f(0.0, 0.0, 0.0)), 
     Inherited() 
 {
 }
@@ -310,12 +262,8 @@ AirParticleAffectorBase::AirParticleAffectorBase(const AirParticleAffectorBase &
     _sfSpeed                  (source._sfSpeed                  ), 
     _sfSpread                 (source._sfSpread                 ), 
     _sfMaxDistance            (source._sfMaxDistance            ), 
-    _sfInheritRotation        (source._sfInheritRotation        ), 
-    _sfInheritVelocity        (source._sfInheritVelocity        ), 
     _sfUseSpread              (source._sfUseSpread              ), 
-    _sfComponentOnly          (source._sfComponentOnly          ), 
     _sfBeacon                 (source._sfBeacon                 ), 
-    _sfLastPosition           (source._sfLastPosition           ), 
     Inherited                 (source)
 {
 }
@@ -362,34 +310,14 @@ UInt32 AirParticleAffectorBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMaxDistance.getBinSize();
     }
 
-    if(FieldBits::NoField != (InheritRotationFieldMask & whichField))
-    {
-        returnValue += _sfInheritRotation.getBinSize();
-    }
-
-    if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
-    {
-        returnValue += _sfInheritVelocity.getBinSize();
-    }
-
     if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
     {
         returnValue += _sfUseSpread.getBinSize();
     }
 
-    if(FieldBits::NoField != (ComponentOnlyFieldMask & whichField))
-    {
-        returnValue += _sfComponentOnly.getBinSize();
-    }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         returnValue += _sfBeacon.getBinSize();
-    }
-
-    if(FieldBits::NoField != (LastPositionFieldMask & whichField))
-    {
-        returnValue += _sfLastPosition.getBinSize();
     }
 
 
@@ -431,34 +359,14 @@ void AirParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
         _sfMaxDistance.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (InheritRotationFieldMask & whichField))
-    {
-        _sfInheritRotation.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
-    {
-        _sfInheritVelocity.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
     {
         _sfUseSpread.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ComponentOnlyFieldMask & whichField))
-    {
-        _sfComponentOnly.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LastPositionFieldMask & whichField))
-    {
-        _sfLastPosition.copyToBin(pMem);
     }
 
 
@@ -499,34 +407,14 @@ void AirParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMaxDistance.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (InheritRotationFieldMask & whichField))
-    {
-        _sfInheritRotation.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
-    {
-        _sfInheritVelocity.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
     {
         _sfUseSpread.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ComponentOnlyFieldMask & whichField))
-    {
-        _sfComponentOnly.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LastPositionFieldMask & whichField))
-    {
-        _sfLastPosition.copyFromBin(pMem);
     }
 
 
@@ -557,23 +445,11 @@ void AirParticleAffectorBase::executeSyncImpl(      AirParticleAffectorBase *pOt
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
         _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
 
-    if(FieldBits::NoField != (InheritRotationFieldMask & whichField))
-        _sfInheritRotation.syncWith(pOther->_sfInheritRotation);
-
-    if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
-        _sfInheritVelocity.syncWith(pOther->_sfInheritVelocity);
-
     if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
         _sfUseSpread.syncWith(pOther->_sfUseSpread);
 
-    if(FieldBits::NoField != (ComponentOnlyFieldMask & whichField))
-        _sfComponentOnly.syncWith(pOther->_sfComponentOnly);
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
-
-    if(FieldBits::NoField != (LastPositionFieldMask & whichField))
-        _sfLastPosition.syncWith(pOther->_sfLastPosition);
 
 
 }
@@ -603,23 +479,11 @@ void AirParticleAffectorBase::executeSyncImpl(      AirParticleAffectorBase *pOt
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
         _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
 
-    if(FieldBits::NoField != (InheritRotationFieldMask & whichField))
-        _sfInheritRotation.syncWith(pOther->_sfInheritRotation);
-
-    if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
-        _sfInheritVelocity.syncWith(pOther->_sfInheritVelocity);
-
     if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
         _sfUseSpread.syncWith(pOther->_sfUseSpread);
 
-    if(FieldBits::NoField != (ComponentOnlyFieldMask & whichField))
-        _sfComponentOnly.syncWith(pOther->_sfComponentOnly);
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
-
-    if(FieldBits::NoField != (LastPositionFieldMask & whichField))
-        _sfLastPosition.syncWith(pOther->_sfLastPosition);
 
 
 

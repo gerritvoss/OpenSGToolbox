@@ -138,20 +138,6 @@ SFReal32 *AirParticleAffectorBase::getSFMaxDistance(void)
     return &_sfMaxDistance;
 }
 
-//! Get the AirParticleAffector::_sfInheritRotation field.
-inline
-SFBool *AirParticleAffectorBase::getSFInheritRotation(void)
-{
-    return &_sfInheritRotation;
-}
-
-//! Get the AirParticleAffector::_sfInheritVelocity field.
-inline
-SFReal32 *AirParticleAffectorBase::getSFInheritVelocity(void)
-{
-    return &_sfInheritVelocity;
-}
-
 //! Get the AirParticleAffector::_sfUseSpread field.
 inline
 SFBool *AirParticleAffectorBase::getSFUseSpread(void)
@@ -159,25 +145,11 @@ SFBool *AirParticleAffectorBase::getSFUseSpread(void)
     return &_sfUseSpread;
 }
 
-//! Get the AirParticleAffector::_sfComponentOnly field.
-inline
-SFBool *AirParticleAffectorBase::getSFComponentOnly(void)
-{
-    return &_sfComponentOnly;
-}
-
 //! Get the AirParticleAffector::_sfBeacon field.
 inline
 SFNodePtr *AirParticleAffectorBase::getSFBeacon(void)
 {
     return &_sfBeacon;
-}
-
-//! Get the AirParticleAffector::_sfLastPosition field.
-inline
-SFPnt3f *AirParticleAffectorBase::getSFLastPosition(void)
-{
-    return &_sfLastPosition;
 }
 
 
@@ -307,48 +279,6 @@ void AirParticleAffectorBase::setMaxDistance(const Real32 &value)
     _sfMaxDistance.setValue(value);
 }
 
-//! Get the value of the AirParticleAffector::_sfInheritRotation field.
-inline
-bool &AirParticleAffectorBase::getInheritRotation(void)
-{
-    return _sfInheritRotation.getValue();
-}
-
-//! Get the value of the AirParticleAffector::_sfInheritRotation field.
-inline
-const bool &AirParticleAffectorBase::getInheritRotation(void) const
-{
-    return _sfInheritRotation.getValue();
-}
-
-//! Set the value of the AirParticleAffector::_sfInheritRotation field.
-inline
-void AirParticleAffectorBase::setInheritRotation(const bool &value)
-{
-    _sfInheritRotation.setValue(value);
-}
-
-//! Get the value of the AirParticleAffector::_sfInheritVelocity field.
-inline
-Real32 &AirParticleAffectorBase::getInheritVelocity(void)
-{
-    return _sfInheritVelocity.getValue();
-}
-
-//! Get the value of the AirParticleAffector::_sfInheritVelocity field.
-inline
-const Real32 &AirParticleAffectorBase::getInheritVelocity(void) const
-{
-    return _sfInheritVelocity.getValue();
-}
-
-//! Set the value of the AirParticleAffector::_sfInheritVelocity field.
-inline
-void AirParticleAffectorBase::setInheritVelocity(const Real32 &value)
-{
-    _sfInheritVelocity.setValue(value);
-}
-
 //! Get the value of the AirParticleAffector::_sfUseSpread field.
 inline
 bool &AirParticleAffectorBase::getUseSpread(void)
@@ -370,27 +300,6 @@ void AirParticleAffectorBase::setUseSpread(const bool &value)
     _sfUseSpread.setValue(value);
 }
 
-//! Get the value of the AirParticleAffector::_sfComponentOnly field.
-inline
-bool &AirParticleAffectorBase::getComponentOnly(void)
-{
-    return _sfComponentOnly.getValue();
-}
-
-//! Get the value of the AirParticleAffector::_sfComponentOnly field.
-inline
-const bool &AirParticleAffectorBase::getComponentOnly(void) const
-{
-    return _sfComponentOnly.getValue();
-}
-
-//! Set the value of the AirParticleAffector::_sfComponentOnly field.
-inline
-void AirParticleAffectorBase::setComponentOnly(const bool &value)
-{
-    _sfComponentOnly.setValue(value);
-}
-
 //! Get the value of the AirParticleAffector::_sfBeacon field.
 inline
 NodePtr &AirParticleAffectorBase::getBeacon(void)
@@ -410,27 +319,6 @@ inline
 void AirParticleAffectorBase::setBeacon(const NodePtr &value)
 {
     _sfBeacon.setValue(value);
-}
-
-//! Get the value of the AirParticleAffector::_sfLastPosition field.
-inline
-Pnt3f &AirParticleAffectorBase::getLastPosition(void)
-{
-    return _sfLastPosition.getValue();
-}
-
-//! Get the value of the AirParticleAffector::_sfLastPosition field.
-inline
-const Pnt3f &AirParticleAffectorBase::getLastPosition(void) const
-{
-    return _sfLastPosition.getValue();
-}
-
-//! Set the value of the AirParticleAffector::_sfLastPosition field.
-inline
-void AirParticleAffectorBase::setLastPosition(const Pnt3f &value)
-{
-    _sfLastPosition.setValue(value);
 }
 
 

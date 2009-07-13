@@ -73,12 +73,8 @@
 #include <OpenSG/OSGReal32Fields.h> // Speed type
 #include <OpenSG/OSGReal32Fields.h> // Spread type
 #include <OpenSG/OSGReal32Fields.h> // MaxDistance type
-#include <OpenSG/OSGBoolFields.h> // InheritRotation type
-#include <OpenSG/OSGReal32Fields.h> // InheritVelocity type
 #include <OpenSG/OSGBoolFields.h> // UseSpread type
-#include <OpenSG/OSGBoolFields.h> // ComponentOnly type
 #include <OpenSG/OSGNodeFields.h> // Beacon type
-#include <OpenSG/OSGPnt3fFields.h> // LastPosition type
 
 #include "OSGAirParticleAffectorFields.h"
 
@@ -102,19 +98,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public Particle
 
     enum
     {
-        MagnitudeFieldId       = Inherited::NextFieldId,
-        DirectionFieldId       = MagnitudeFieldId       + 1,
-        AttenuationFieldId     = DirectionFieldId       + 1,
-        SpeedFieldId           = AttenuationFieldId     + 1,
-        SpreadFieldId          = SpeedFieldId           + 1,
-        MaxDistanceFieldId     = SpreadFieldId          + 1,
-        InheritRotationFieldId = MaxDistanceFieldId     + 1,
-        InheritVelocityFieldId = InheritRotationFieldId + 1,
-        UseSpreadFieldId       = InheritVelocityFieldId + 1,
-        ComponentOnlyFieldId   = UseSpreadFieldId       + 1,
-        BeaconFieldId          = ComponentOnlyFieldId   + 1,
-        LastPositionFieldId    = BeaconFieldId          + 1,
-        NextFieldId            = LastPositionFieldId    + 1
+        MagnitudeFieldId   = Inherited::NextFieldId,
+        DirectionFieldId   = MagnitudeFieldId   + 1,
+        AttenuationFieldId = DirectionFieldId   + 1,
+        SpeedFieldId       = AttenuationFieldId + 1,
+        SpreadFieldId      = SpeedFieldId       + 1,
+        MaxDistanceFieldId = SpreadFieldId      + 1,
+        UseSpreadFieldId   = MaxDistanceFieldId + 1,
+        BeaconFieldId      = UseSpreadFieldId   + 1,
+        NextFieldId        = BeaconFieldId      + 1
     };
 
     static const OSG::BitVector MagnitudeFieldMask;
@@ -123,12 +115,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public Particle
     static const OSG::BitVector SpeedFieldMask;
     static const OSG::BitVector SpreadFieldMask;
     static const OSG::BitVector MaxDistanceFieldMask;
-    static const OSG::BitVector InheritRotationFieldMask;
-    static const OSG::BitVector InheritVelocityFieldMask;
     static const OSG::BitVector UseSpreadFieldMask;
-    static const OSG::BitVector ComponentOnlyFieldMask;
     static const OSG::BitVector BeaconFieldMask;
-    static const OSG::BitVector LastPositionFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -161,12 +149,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public Particle
            SFReal32            *getSFSpeed          (void);
            SFReal32            *getSFSpread         (void);
            SFReal32            *getSFMaxDistance    (void);
-           SFBool              *getSFInheritRotation(void);
-           SFReal32            *getSFInheritVelocity(void);
            SFBool              *getSFUseSpread      (void);
-           SFBool              *getSFComponentOnly  (void);
            SFNodePtr           *getSFBeacon         (void);
-           SFPnt3f             *getSFLastPosition   (void);
 
            Real32              &getMagnitude      (void);
      const Real32              &getMagnitude      (void) const;
@@ -180,18 +164,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public Particle
      const Real32              &getSpread         (void) const;
            Real32              &getMaxDistance    (void);
      const Real32              &getMaxDistance    (void) const;
-           bool                &getInheritRotation(void);
-     const bool                &getInheritRotation(void) const;
-           Real32              &getInheritVelocity(void);
-     const Real32              &getInheritVelocity(void) const;
            bool                &getUseSpread      (void);
      const bool                &getUseSpread      (void) const;
-           bool                &getComponentOnly  (void);
-     const bool                &getComponentOnly  (void) const;
            NodePtr             &getBeacon         (void);
      const NodePtr             &getBeacon         (void) const;
-           Pnt3f               &getLastPosition   (void);
-     const Pnt3f               &getLastPosition   (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -204,12 +180,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public Particle
      void setSpeed          ( const Real32 &value );
      void setSpread         ( const Real32 &value );
      void setMaxDistance    ( const Real32 &value );
-     void setInheritRotation( const bool &value );
-     void setInheritVelocity( const Real32 &value );
      void setUseSpread      ( const bool &value );
-     void setComponentOnly  ( const bool &value );
      void setBeacon         ( const NodePtr &value );
-     void setLastPosition   ( const Pnt3f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -258,12 +230,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public Particle
     SFReal32            _sfSpeed;
     SFReal32            _sfSpread;
     SFReal32            _sfMaxDistance;
-    SFBool              _sfInheritRotation;
-    SFReal32            _sfInheritVelocity;
     SFBool              _sfUseSpread;
-    SFBool              _sfComponentOnly;
     SFNodePtr           _sfBeacon;
-    SFPnt3f             _sfLastPosition;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
