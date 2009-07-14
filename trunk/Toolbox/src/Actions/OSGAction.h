@@ -48,7 +48,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING Action
 {
     /*=========================  PUBLIC  ===============================*/
   public:
-    virtual triggerAction(void) = 0;
+    virtual void triggerAction(void) = 0;
     
     virtual const ActionType &getType(void) const = 0;
     
