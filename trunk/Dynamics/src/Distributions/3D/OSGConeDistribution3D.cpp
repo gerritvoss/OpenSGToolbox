@@ -106,21 +106,6 @@ FunctionIOParameterVector ConeDistribution3D::evaluate(FunctionIOParameterVector
 
 Pnt3f ConeDistribution3D:: generate(void)
 {
-	/*
-	
-           Pnt3f               &getPosition       (void);
-     const Pnt3f               &getPosition       (void) const;
-           Vec3f               &getDirection      (void);
-     const Vec3f               &getDirection      (void) const;
-           Real32              &getSpread         (void);
-     const Real32              &getSpread         (void) const;
-           Real32              &getMin            (void);
-     const Real32              &getMin            (void) const;
-           Real32              &getMax            (void);
-     const Real32              &getMax            (void) const;
-           UInt32              &getSurfaceOrVolume(void);
-     const UInt32              &getSurfaceOrVolume(void) const;
-	*/
 	
 	Pnt3f Result = getPosition();
 	Real32 radius = 0.0;

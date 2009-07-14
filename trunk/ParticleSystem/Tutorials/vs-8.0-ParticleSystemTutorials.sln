@@ -62,6 +62,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "25AirFieldParticleAffector"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "26DragParticleAffector", "26DragParticleAffector.vcproj", "{A12DF650-3515-459E-8A87-F5AB1512B07A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27TurbulenceParticleAffector", "27TurbulenceParticleAffector.vcproj", "{A5DA13DC-A992-42DB-902B-579A82673022}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "28ConserveVelocityParticleAffector", "28ConserveVelocityParticleAffector.vcproj", "{0C4EE0BC-5861-4011-ABC0-C596192DD052}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -192,6 +196,14 @@ Global
 		{A12DF650-3515-459E-8A87-F5AB1512B07A}.Debug|Win32.Build.0 = Debug|Win32
 		{A12DF650-3515-459E-8A87-F5AB1512B07A}.Release|Win32.ActiveCfg = Release|Win32
 		{A12DF650-3515-459E-8A87-F5AB1512B07A}.Release|Win32.Build.0 = Release|Win32
+		{A5DA13DC-A992-42DB-902B-579A82673022}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A5DA13DC-A992-42DB-902B-579A82673022}.Debug|Win32.Build.0 = Debug|Win32
+		{A5DA13DC-A992-42DB-902B-579A82673022}.Release|Win32.ActiveCfg = Release|Win32
+		{A5DA13DC-A992-42DB-902B-579A82673022}.Release|Win32.Build.0 = Release|Win32
+		{0C4EE0BC-5861-4011-ABC0-C596192DD052}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0C4EE0BC-5861-4011-ABC0-C596192DD052}.Debug|Win32.Build.0 = Debug|Win32
+		{0C4EE0BC-5861-4011-ABC0-C596192DD052}.Release|Win32.ActiveCfg = Release|Win32
+		{0C4EE0BC-5861-4011-ABC0-C596192DD052}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

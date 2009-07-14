@@ -23,7 +23,7 @@
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
 #include <OpenSG/Dynamics/OSGConeDistribution3D.h>
 #include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
-#include <OpenSG/ParticleSystem/OSGDragParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGTurbulenceParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGConserveVelocityParticleAffector.h>
 
 #include <OpenSG/Dynamics/OSGDataConverter.h>
@@ -46,7 +46,6 @@ void reshape(Vec2f Size);
 
 FunctionPtr createPositionDistribution(void);
 FunctionPtr createLifespanDistribution(void);
-FunctionPtr createVelocityDistribution(void);
 
 //Particle System
 ParticleSystemCorePtr ParticleNodeCore;
@@ -176,7 +175,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 22DragAffector Window");
+                                        "OpenSG 27TurbulenceAffector Window");
 										
 
 	//Particle System Material
@@ -209,7 +208,7 @@ int main(int argc, char **argv)
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-		ExampleParticleSystem->addParticle(Pnt3f(0,-50,0),
+		ExampleParticleSystem->addParticle(Pnt3f(0,-15,0),
 			Vec3f(0.0,0.0f,1.0f),
 			Color4f(1.0,1.0,1.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
@@ -217,7 +216,7 @@ int main(int argc, char **argv)
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)
 			,0);
-		ExampleParticleSystem->addParticle(Pnt3f(0,30,0),
+		ExampleParticleSystem->addParticle(Pnt3f(0,15,0),
 			Vec3f(0.0,0.0f,1.0f),
 			Color4f(1.0,1.0,1.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
@@ -246,27 +245,28 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 		ExampleGenerator->setPositionFunction(createPositionDistribution());
 		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
-		ExampleGenerator->setGenerationRate(60.0);
-		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
+		ExampleGenerator->setGenerationRate(60.0f);
 	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
 
-	DragParticleAffectorPtr ExampleDragAffector = osg::DragParticleAffector::create();
-	beginEditCP(ExampleDragAffector);
-		ExampleDragAffector->setMagnitude(5.0); 
-		ExampleDragAffector->setDirection(Vec3f(0.0,5.0,5.0));
-		ExampleDragAffector->setBeacon(osg::Node::create()); // set to 'emulate' from (0,0,0)
-		ExampleDragAffector->setMaxDistance(-1.0); // particles affected regardless of distance
-		ExampleDragAffector->setAttenuation(1.5); // strength of uniform field dimishes by a factor of dist^attenuation
-		ExampleDragAffector->setSpeedAttenuation(2.0); // particle w/ velocity < speedAttenuation are not affected as much
-	endEditCP(ExampleDragAffector);
-
+	TurbulenceParticleAffectorPtr ExampleTurbulenceAffector = osg::TurbulenceParticleAffector::create();
+	beginEditCP(ExampleTurbulenceAffector);
+		ExampleTurbulenceAffector->setAmplitude(12.0f);
+		ExampleTurbulenceAffector->setInterpolationType(PerlinNoiseDistribution1D::COSINE);
+		ExampleTurbulenceAffector->setBeacon(osg::Node::create()); // set to 'emulate' from (0,0,0)
+		ExampleTurbulenceAffector->setMaxDistance(10.0f); // particles affected if within this distance from affector
+		ExampleTurbulenceAffector->setAttenuation(0.0f); // strength of uniform field dimishes by a factor of dist^attenuation
+		ExampleTurbulenceAffector->setPersistance(0.85f); //amplitude reduced by .75 each octave
+		ExampleTurbulenceAffector->setFrequency(5.0f);	// frequency of turbulent motion (higher freq. = more irregularities)
+		ExampleTurbulenceAffector->setOctaves(3);
+		ExampleTurbulenceAffector->setPhase(Vec3f(0.0f,0.0f,0.0f));
+	endEditCP(ExampleTurbulenceAffector);
 
 	//Attach the Generator and Affector to the Particle System
 	beginEditCP(ExampleParticleSystem);
 		ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
-		ExampleParticleSystem->getAffectors().push_back(ExampleDragAffector);
-		ExampleParticleSystem->setMaxParticles(800);
+		ExampleParticleSystem->getAffectors().push_back(ExampleTurbulenceAffector);
+		ExampleParticleSystem->setMaxParticles(300);
 	endEditCP(ExampleParticleSystem);
 
 
@@ -326,51 +326,30 @@ void reshape(Vec2f Size)
 
 FunctionPtr createPositionDistribution(void)
 {
- ConeDistribution3DPtr TheConeDistribution = ConeDistribution3D::create();
-    beginEditCP(TheConeDistribution);
-      	TheConeDistribution->setPosition(Pnt3f(0.0,-40.0,0.0));
-		TheConeDistribution->setDirection(Vec3f(0.0,1.0,0.0));
-		TheConeDistribution->setSpread(0.4);
-		TheConeDistribution->setSurfaceOrVolume(ConeDistribution3D::VOLUME);
-    endEditCP(TheConeDistribution);
+	 //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(0.0f);
+      TheSphereDistribution->setOuterRadius(10.0f);
+      TheSphereDistribution->setMinTheta(-3.141950);
+      TheSphereDistribution->setMaxTheta(3.141950);
+      TheSphereDistribution->setMinZ(0.0);
+      TheSphereDistribution->setMaxZ(1.0);
+	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
+    endEditCP(TheSphereDistribution);
 
-
-    return TheConeDistribution;
+    return TheSphereDistribution;
 }
 
 FunctionPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setMean(15.0f);
-      TheLifespanDistribution->setStandardDeviation(3.0);
+      TheLifespanDistribution->setMean(8.0f);
+      TheLifespanDistribution->setStandardDeviation(3.0f);
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;
 }
 
-FunctionPtr createVelocityDistribution(void)
-{
-	 ConeDistribution3DPtr TheConeDistribution = ConeDistribution3D::create();
-    beginEditCP(TheConeDistribution);
-      	TheConeDistribution->setPosition(Pnt3f(0.0,0.0,0.0));
-		TheConeDistribution->setMax(10.0);
-		TheConeDistribution->setMin(6.0);
-		TheConeDistribution->setDirection(Vec3f(0.0,1.0,0.0));
-		TheConeDistribution->setSpread(0.6);
-		TheConeDistribution->setSurfaceOrVolume(ConeDistribution3D::VOLUME);
-    endEditCP(TheConeDistribution);
-
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheConeDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
-}
