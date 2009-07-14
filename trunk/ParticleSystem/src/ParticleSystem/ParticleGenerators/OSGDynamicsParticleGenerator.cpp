@@ -83,7 +83,8 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32
 	Pnt3f PositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
 	Pnt3f SecPositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
 	Vec3f NormalReturnValue = Vec3f(0.0,0.0f,1.0f);
-	Color4f ColorReturnValue = Color4f(0.0,0.0f,0.0f, 1.0f);
+	Pnt3f ColorReturnValue = Pnt3f(0.0,0.0f,0.0f);
+	Real32 TransparencyReturnValue(1.0f);
 	Vec3f SizeReturnValue = Vec3f(1.0,1.0f,1.0f);
 	Time LifespanReturnValue = -1;
 	Time AgeReturnValue = 0;
@@ -120,12 +121,22 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32
 	if(getColorFunction() != NullFC)
 	{
 		ColorReturnValue = 
-			FunctionIOData<Color4f>::dcast(
+			FunctionIOData<Pnt3f>::dcast(
 			getColorFunction()->evaluate(EmptyParameters).front().getDataPtr()
 			)->getData();
 	}
 
+	if(getTransparencyFunction() != NullFC)
+	{
+		TransparencyReturnValue = 
+			FunctionIOData<Real32>::dcast(
+			getColorFunction()->evaluate(EmptyParameters).front().getDataPtr()
+			)->getData();
+
+	}
 	
+	Color4f FinalColorValue(ColorReturnValue[0],ColorReturnValue[1],ColorReturnValue[2],TransparencyReturnValue);
+
 	if(getSizeFunction() != NullFC)
 	{
 		SizeReturnValue = 
@@ -175,7 +186,7 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32
 		PositionReturnValue, 
 		SecPositionReturnValue, 
 		NormalReturnValue,
-		ColorReturnValue,
+		FinalColorValue,
 		SizeReturnValue,
 		LifespanReturnValue,
 		AgeReturnValue,

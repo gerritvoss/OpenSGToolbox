@@ -46,6 +46,8 @@ FunctionPtr createPositionDistribution(void);
 FunctionPtr createLifespanDistribution(void);
 FunctionPtr createVelocityDistribution(void);
 
+NewtonParticleAffectorPtr ExampleNewtonAffector;
+
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
@@ -57,6 +59,22 @@ public:
        {
            ExitApp = true;
        }
+	   if(e.getKey() == KeyEvent::KEY_3)
+	   {
+			beginEditCP(ExampleNewtonAffector);
+				ExampleNewtonAffector->setParticleMass(
+					osg::osgClamp<Real32>(1.0f,ExampleNewtonAffector->getParticleMass() * 0.8,TypeTraits<Real32>::getMax()));
+			endEditCP(ExampleNewtonAffector);
+
+	   }
+	    if(e.getKey() == KeyEvent::KEY_3)
+	   {
+			beginEditCP(ExampleNewtonAffector);
+				ExampleNewtonAffector->setParticleMass(
+					osg::osgClamp<Real32>(1.0f,ExampleNewtonAffector->getParticleMass() * 1.2,TypeTraits<Real32>::getMax()));
+			endEditCP(ExampleNewtonAffector);
+	   }
+
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -171,10 +189,10 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSMaterialChunkChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
 		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
-		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+		PSMaterialChunkChunk->setColorMaterial(GL_NONE);
 	endEditCP(PSMaterialChunkChunk);
 
 	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
@@ -219,7 +237,7 @@ int main(int argc, char **argv)
 		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
 	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
-	NewtonParticleAffectorPtr ExampleNewtonAffector = osg::NewtonParticleAffector::create();
+	ExampleNewtonAffector = osg::NewtonParticleAffector::create();
 	beginEditCP(ExampleNewtonAffector);
 		ExampleNewtonAffector->setMagnitude(50.0); // force which the field exerts on particles
 		ExampleNewtonAffector->setBeacon(osg::Node::create()); // set to 'emulate' from (0,0,0)
@@ -265,6 +283,11 @@ int main(int argc, char **argv)
     mgr->showAll();
 	
 	mgr->getCamera()->setFar(1000.0);
+
+	std::cout << "Newton Particle Affector Tutorial Controls:\n"
+		<< "3: Decrease Particle Mass\n"
+		<< "4: Increase Particle Mass\n"
+		<< "Ctrl + Q: Exit Tutorial";
 
     while(!ExitApp)
     {

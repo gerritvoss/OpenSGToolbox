@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -71,6 +71,7 @@
 #include <OpenSG/Dynamics/OSGFunctionFields.h> // SecPositionFunction type
 #include <OpenSG/Dynamics/OSGFunctionFields.h> // NormalFunction type
 #include <OpenSG/Dynamics/OSGFunctionFields.h> // ColorFunction type
+#include <OpenSG/Dynamics/OSGFunctionFields.h> // TransparencyFunction type
 #include <OpenSG/Dynamics/OSGFunctionFields.h> // SizeFunction type
 #include <OpenSG/Dynamics/OSGFunctionFields.h> // LifespanFunction type
 #include <OpenSG/Dynamics/OSGFunctionFields.h> // AgeFunction type
@@ -105,7 +106,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
         SecPositionFunctionFieldId  = PositionFunctionFieldId     + 1,
         NormalFunctionFieldId       = SecPositionFunctionFieldId  + 1,
         ColorFunctionFieldId        = NormalFunctionFieldId       + 1,
-        SizeFunctionFieldId         = ColorFunctionFieldId        + 1,
+        TransparencyFunctionFieldId = ColorFunctionFieldId        + 1,
+        SizeFunctionFieldId         = TransparencyFunctionFieldId + 1,
         LifespanFunctionFieldId     = SizeFunctionFieldId         + 1,
         AgeFunctionFieldId          = LifespanFunctionFieldId     + 1,
         VelocityFunctionFieldId     = AgeFunctionFieldId          + 1,
@@ -119,6 +121,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
     static const OSG::BitVector SecPositionFunctionFieldMask;
     static const OSG::BitVector NormalFunctionFieldMask;
     static const OSG::BitVector ColorFunctionFieldMask;
+    static const OSG::BitVector TransparencyFunctionFieldMask;
     static const OSG::BitVector SizeFunctionFieldMask;
     static const OSG::BitVector LifespanFunctionFieldMask;
     static const OSG::BitVector AgeFunctionFieldMask;
@@ -156,6 +159,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
            SFFunctionPtr       *getSFSecPositionFunction(void);
            SFFunctionPtr       *getSFNormalFunction (void);
            SFFunctionPtr       *getSFColorFunction  (void);
+           SFFunctionPtr       *getSFTransparencyFunction(void);
            SFFunctionPtr       *getSFSizeFunction   (void);
            SFFunctionPtr       *getSFLifespanFunction(void);
            SFFunctionPtr       *getSFAgeFunction    (void);
@@ -172,6 +176,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
      const FunctionPtr         &getNormalFunction (void) const;
            FunctionPtr         &getColorFunction  (void);
      const FunctionPtr         &getColorFunction  (void) const;
+           FunctionPtr         &getTransparencyFunction(void);
+     const FunctionPtr         &getTransparencyFunction(void) const;
            FunctionPtr         &getSizeFunction   (void);
      const FunctionPtr         &getSizeFunction   (void) const;
            FunctionPtr         &getLifespanFunction(void);
@@ -196,6 +202,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
      void setSecPositionFunction( const FunctionPtr &value );
      void setNormalFunction ( const FunctionPtr &value );
      void setColorFunction  ( const FunctionPtr &value );
+     void setTransparencyFunction( const FunctionPtr &value );
      void setSizeFunction   ( const FunctionPtr &value );
      void setLifespanFunction( const FunctionPtr &value );
      void setAgeFunction    ( const FunctionPtr &value );
@@ -233,6 +240,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
     SFFunctionPtr       _sfSecPositionFunction;
     SFFunctionPtr       _sfNormalFunction;
     SFFunctionPtr       _sfColorFunction;
+    SFFunctionPtr       _sfTransparencyFunction;
     SFFunctionPtr       _sfSizeFunction;
     SFFunctionPtr       _sfLifespanFunction;
     SFFunctionPtr       _sfAgeFunction;

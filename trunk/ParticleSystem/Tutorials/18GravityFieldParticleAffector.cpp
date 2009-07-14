@@ -19,6 +19,7 @@
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
+#include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
 #include <OpenSG/Dynamics/OSGConeDistribution3D.h>
 #include <OpenSG/ParticleSystem/OSGGravityParticleAffector.h>
@@ -45,6 +46,14 @@ FunctionPtr createPositionDistribution(void);
 FunctionPtr createLifespanDistribution(void);
 FunctionPtr createVelocityDistribution(void);
 
+GravityParticleAffectorPtr ExampleGravityAffector;
+
+PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
+LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
+
+ParticleSystemCorePtr ParticleNodeCore;
+
+
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
@@ -52,6 +61,32 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
+	   if(e.getKey()== KeyEvent::KEY_1) // Use the Point Drawer
+		{
+			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
+				ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
+			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
+		}
+
+		if(e.getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
+		{
+			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
+				ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
+			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
+		}
+		if(e.getKey()== KeyEvent::KEY_3)// decrease gravity
+		{
+			beginEditCP(ExampleGravityAffector);
+				ExampleGravityAffector->setMagnitude(osg::osgClamp<Real32>(1.0f,ExampleGravityAffector->getMagnitude() * 0.8,TypeTraits<Real32>::getMax())); 
+			endEditCP(ExampleGravityAffector);
+		}
+		if(e.getKey()== KeyEvent::KEY_4) // increase gravity
+		{
+			beginEditCP(ExampleGravityAffector);
+			ExampleGravityAffector->setMagnitude(osg::osgClamp<Real32>(1.0f,ExampleGravityAffector->getMagnitude() * 1.2,TypeTraits<Real32>::getMax())); 
+			endEditCP(ExampleGravityAffector);
+
+		}
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
@@ -167,7 +202,7 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSMaterialChunkChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
 		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
 		PSMaterialChunkChunk->setColorMaterial(GL_NONE);
@@ -201,7 +236,16 @@ int main(int argc, char **argv)
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer (Point)
-	PointParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+	PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+
+		//Particle System Drawer (line)
+	ExampleLineParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
+	beginEditCP(ExampleLineParticleSystemDrawer);
+		ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_VELOCITY);
+		ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
+		ExampleLineParticleSystemDrawer->setLineLength(0.5f);
+		ExampleLineParticleSystemDrawer->setEndPointFading(Vec2f(0.0f,1.0f));
+	endEditCP(ExampleLineParticleSystemDrawer);
 
 
 	//Create a Rate Particle Generator
@@ -215,7 +259,7 @@ int main(int argc, char **argv)
 		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
 	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
-	GravityParticleAffectorPtr ExampleGravityAffector = osg::GravityParticleAffector::create();
+	ExampleGravityAffector = osg::GravityParticleAffector::create();
 	beginEditCP(ExampleGravityAffector);
 		ExampleGravityAffector->setMagnitude(9.8); // Earth's gravitational pull
 		ExampleGravityAffector->setDirection(Vec3f(0.0,-1.0,0.0)); // field pulls in downward direction
@@ -235,10 +279,10 @@ int main(int argc, char **argv)
 
 
 	//Particle System Node
-    ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
+    ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExampleParticleSystemDrawer);
+		ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
     
@@ -261,6 +305,13 @@ int main(int argc, char **argv)
     mgr->showAll();
 	
 	mgr->getCamera()->setFar(1000.0);
+
+	std::cout << "Gravity Particle Affector Tutorial Controls:\n"
+		<< "1: Use point drawer\n"
+		<< "2: Use line drawer\n"
+		<< "3: Decrease gravitational pull\n"
+		<< "4: Increase gravitational pull\n"
+		<< "Ctrl + Q: Exit Tutorial";
 
     while(!ExitApp)
     {

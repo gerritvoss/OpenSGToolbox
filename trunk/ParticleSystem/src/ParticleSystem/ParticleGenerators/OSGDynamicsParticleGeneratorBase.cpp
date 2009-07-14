@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -76,6 +76,9 @@ const OSG::BitVector  DynamicsParticleGeneratorBase::NormalFunctionFieldMask =
 const OSG::BitVector  DynamicsParticleGeneratorBase::ColorFunctionFieldMask = 
     (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::ColorFunctionFieldId);
 
+const OSG::BitVector  DynamicsParticleGeneratorBase::TransparencyFunctionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::TransparencyFunctionFieldId);
+
 const OSG::BitVector  DynamicsParticleGeneratorBase::SizeFunctionFieldMask = 
     (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SizeFunctionFieldId);
 
@@ -114,6 +117,9 @@ const OSG::BitVector DynamicsParticleGeneratorBase::MTInfluenceMask =
     
 */
 /*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfColorFunction
+    
+*/
+/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfTransparencyFunction
     
 */
 /*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfSizeFunction
@@ -162,6 +168,11 @@ FieldDescription *DynamicsParticleGeneratorBase::_desc[] =
                      ColorFunctionFieldId, ColorFunctionFieldMask,
                      false,
                      (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFColorFunction),
+    new FieldDescription(SFFunctionPtr::getClassType(), 
+                     "TransparencyFunction", 
+                     TransparencyFunctionFieldId, TransparencyFunctionFieldMask,
+                     false,
+                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFTransparencyFunction),
     new FieldDescription(SFFunctionPtr::getClassType(), 
                      "SizeFunction", 
                      SizeFunctionFieldId, SizeFunctionFieldMask,
@@ -267,6 +278,7 @@ DynamicsParticleGeneratorBase::DynamicsParticleGeneratorBase(void) :
     _sfSecPositionFunction    (FunctionPtr(NullFC)), 
     _sfNormalFunction         (FunctionPtr(NullFC)), 
     _sfColorFunction          (FunctionPtr(NullFC)), 
+    _sfTransparencyFunction   (FunctionPtr(NullFC)), 
     _sfSizeFunction           (FunctionPtr(NullFC)), 
     _sfLifespanFunction       (FunctionPtr(NullFC)), 
     _sfAgeFunction            (FunctionPtr(NullFC)), 
@@ -287,6 +299,7 @@ DynamicsParticleGeneratorBase::DynamicsParticleGeneratorBase(const DynamicsParti
     _sfSecPositionFunction    (source._sfSecPositionFunction    ), 
     _sfNormalFunction         (source._sfNormalFunction         ), 
     _sfColorFunction          (source._sfColorFunction          ), 
+    _sfTransparencyFunction   (source._sfTransparencyFunction   ), 
     _sfSizeFunction           (source._sfSizeFunction           ), 
     _sfLifespanFunction       (source._sfLifespanFunction       ), 
     _sfAgeFunction            (source._sfAgeFunction            ), 
@@ -328,6 +341,11 @@ UInt32 DynamicsParticleGeneratorBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (ColorFunctionFieldMask & whichField))
     {
         returnValue += _sfColorFunction.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
+    {
+        returnValue += _sfTransparencyFunction.getBinSize();
     }
 
     if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
@@ -394,6 +412,11 @@ void DynamicsParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
         _sfColorFunction.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
+    {
+        _sfTransparencyFunction.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
     {
         _sfSizeFunction.copyToBin(pMem);
@@ -457,6 +480,11 @@ void DynamicsParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfColorFunction.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
+    {
+        _sfTransparencyFunction.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
     {
         _sfSizeFunction.copyFromBin(pMem);
@@ -514,6 +542,9 @@ void DynamicsParticleGeneratorBase::executeSyncImpl(      DynamicsParticleGenera
     if(FieldBits::NoField != (ColorFunctionFieldMask & whichField))
         _sfColorFunction.syncWith(pOther->_sfColorFunction);
 
+    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
+        _sfTransparencyFunction.syncWith(pOther->_sfTransparencyFunction);
+
     if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
         _sfSizeFunction.syncWith(pOther->_sfSizeFunction);
 
@@ -556,6 +587,9 @@ void DynamicsParticleGeneratorBase::executeSyncImpl(      DynamicsParticleGenera
 
     if(FieldBits::NoField != (ColorFunctionFieldMask & whichField))
         _sfColorFunction.syncWith(pOther->_sfColorFunction);
+
+    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
+        _sfTransparencyFunction.syncWith(pOther->_sfTransparencyFunction);
 
     if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
         _sfSizeFunction.syncWith(pOther->_sfSizeFunction);

@@ -52,6 +52,16 @@
 	>
 	</Field>
 	<Field
+		name="TransparencyFunction"
+		type="FunctionPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+		header="OpenSG/Dynamics/OSGFunctionFields.h"
+	>
+	</Field>
+	<Field
 		name="SizeFunction"
 		type="FunctionPtr"
 		cardinality="single"

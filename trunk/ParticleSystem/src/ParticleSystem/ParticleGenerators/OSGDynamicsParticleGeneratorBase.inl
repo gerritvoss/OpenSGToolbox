@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,6 +96,13 @@ inline
 SFFunctionPtr *DynamicsParticleGeneratorBase::getSFColorFunction(void)
 {
     return &_sfColorFunction;
+}
+
+//! Get the DynamicsParticleGenerator::_sfTransparencyFunction field.
+inline
+SFFunctionPtr *DynamicsParticleGeneratorBase::getSFTransparencyFunction(void)
+{
+    return &_sfTransparencyFunction;
 }
 
 //! Get the DynamicsParticleGenerator::_sfSizeFunction field.
@@ -230,6 +237,27 @@ inline
 void DynamicsParticleGeneratorBase::setColorFunction(const FunctionPtr &value)
 {
     _sfColorFunction.setValue(value);
+}
+
+//! Get the value of the DynamicsParticleGenerator::_sfTransparencyFunction field.
+inline
+FunctionPtr &DynamicsParticleGeneratorBase::getTransparencyFunction(void)
+{
+    return _sfTransparencyFunction.getValue();
+}
+
+//! Get the value of the DynamicsParticleGenerator::_sfTransparencyFunction field.
+inline
+const FunctionPtr &DynamicsParticleGeneratorBase::getTransparencyFunction(void) const
+{
+    return _sfTransparencyFunction.getValue();
+}
+
+//! Set the value of the DynamicsParticleGenerator::_sfTransparencyFunction field.
+inline
+void DynamicsParticleGeneratorBase::setTransparencyFunction(const FunctionPtr &value)
+{
+    _sfTransparencyFunction.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfSizeFunction field.

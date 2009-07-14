@@ -215,7 +215,7 @@ int main(int argc, char **argv)
 	
     TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
                                         Vec2f(1280,1024),
-                                        "OpenSG 25UniformFieldAffector Window");
+                                        "OpenSG 19UniformFieldAffector Window");
 										
 
 	//Particle System Material
@@ -233,10 +233,10 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSMaterialChunkChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
 		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
-		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+		PSMaterialChunkChunk->setColorMaterial(GL_NONE);
 	endEditCP(PSMaterialChunkChunk);
 
 	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
@@ -335,6 +335,12 @@ int main(int argc, char **argv)
     mgr->showAll();
 	
 	mgr->getCamera()->setFar(1000.0);
+
+		std::cout << "Uniform Particle Affector Tutorial Controls:\n"
+		<< "1: Use point drawer\n"
+		<< "2: Use line drawer\n"
+		<< "W,A,S,D: Change direction of field\n"
+		<< "Ctrl + Q: Exit Tutorial";
 
     while(!ExitApp)
     {

@@ -55,6 +55,9 @@ ParticleSystemCorePtr ParticleNodeCore;
 PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
 LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
 
+// Vortex Affector
+VortexParticleAffectorPtr ExampleVortexAffector;
+
 
 // Create a class to allow for the use of the Ctrl+q and changing of drawers
 class TutorialKeyListener : public KeyListener
@@ -76,6 +79,18 @@ public:
 				ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
 	   }
+	   if(e.getKey()== KeyEvent::KEY_3)
+	   {
+		   beginEditCP(ExampleVortexAffector);
+				ExampleVortexAffector->setMagnitude(osg::osgClamp<Real32>(1.0f,ExampleVortexAffector->getMagnitude() * 0.8,TypeTraits<Real32>::getMax()));
+			endEditCP(ExampleVortexAffector);
+	   }
+	   if(e.getKey()== KeyEvent::KEY_4)
+		  {
+			beginEditCP(ExampleVortexAffector);
+				ExampleVortexAffector->setMagnitude(osg::osgClamp<Real32>(1.0f,ExampleVortexAffector->getMagnitude() * 1.2,TypeTraits<Real32>::getMax()));
+			endEditCP(ExampleVortexAffector);
+		  }
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
@@ -194,7 +209,7 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSMaterialChunkChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
 		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
 		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
@@ -250,7 +265,7 @@ int main(int argc, char **argv)
 		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
 	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
-	VortexParticleAffectorPtr ExampleVortexAffector = osg::VortexParticleAffector::create();
+	ExampleVortexAffector = osg::VortexParticleAffector::create();
 	beginEditCP(ExampleVortexAffector);
 		ExampleVortexAffector->setMagnitude(20.0); 
 		ExampleVortexAffector->setVortexAxis(Vec3f(0.0,0.0,1.0)); // field rotates around z axis
@@ -295,6 +310,13 @@ int main(int argc, char **argv)
     mgr->showAll();
 	
 	mgr->getCamera()->setFar(1000.0);
+
+	std::cout << "Vortex Particle Affector Tutorial Controls:\n"
+		<< "1: Use point drawer\n"
+		<< "2: Use line drawer\n"
+		<< "3: Decrease vortex magnitude\n"
+		<< "4: Increase vortex magnitude\n"
+		<< "Ctrl + Q: Exit Tutorial";
 
     while(!ExitApp)
     {

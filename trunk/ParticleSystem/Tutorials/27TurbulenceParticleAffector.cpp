@@ -54,6 +54,7 @@ ParticleSystemCorePtr ParticleNodeCore;
 PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
 LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
 
+TurbulenceParticleAffectorPtr ExampleTurbulenceAffector;
 
 // Create a class to allow for the use of the Ctrl+q and changing of drawers
 class TutorialKeyListener : public KeyListener
@@ -71,9 +72,34 @@ public:
 
 	   if(e.getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
 	   {
-			 beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
+			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
 				ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
+	   }
+	   if(e.getKey() == KeyEvent::KEY_3)
+	   {
+			 beginEditCP(ExampleTurbulenceAffector);
+				ExampleTurbulenceAffector->setAmplitude(ExampleTurbulenceAffector->getAmplitude() * 0.8);
+			endEditCP(ExampleTurbulenceAffector);
+
+	   }
+	   if(e.getKey() == KeyEvent::KEY_4)
+	   {
+			beginEditCP(ExampleTurbulenceAffector);
+				ExampleTurbulenceAffector->setAmplitude(ExampleTurbulenceAffector->getAmplitude() * 1.2 + 0.1);
+			endEditCP(ExampleTurbulenceAffector);
+	   }
+	   if(e.getKey() == KeyEvent::KEY_5)
+	   {
+			beginEditCP(ExampleTurbulenceAffector);
+				ExampleTurbulenceAffector->setFrequency(osg::osgClamp<Real32>(0.0f,ExampleTurbulenceAffector->getFrequency() - 1.0, 10000.0f));
+			endEditCP(ExampleTurbulenceAffector);
+	   }
+	   if(e.getKey() == KeyEvent::KEY_6)
+	   {
+		   beginEditCP(ExampleTurbulenceAffector);
+				ExampleTurbulenceAffector->setFrequency(osg::osgClamp<Real32>(0.0f,ExampleTurbulenceAffector->getFrequency() + 1.0, 10000.0f));
+			endEditCP(ExampleTurbulenceAffector);
 	   }
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
@@ -193,10 +219,10 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSMaterialChunkChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
 		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
-		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+		PSMaterialChunkChunk->setColorMaterial(GL_NONE);
 	endEditCP(PSMaterialChunkChunk);
 
 	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
@@ -249,14 +275,14 @@ int main(int argc, char **argv)
 	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
 
-	TurbulenceParticleAffectorPtr ExampleTurbulenceAffector = osg::TurbulenceParticleAffector::create();
+	ExampleTurbulenceAffector = osg::TurbulenceParticleAffector::create();
 	beginEditCP(ExampleTurbulenceAffector);
 		ExampleTurbulenceAffector->setAmplitude(12.0f);
 		ExampleTurbulenceAffector->setInterpolationType(PerlinNoiseDistribution1D::COSINE);
 		ExampleTurbulenceAffector->setBeacon(osg::Node::create()); // set to 'emulate' from (0,0,0)
-		ExampleTurbulenceAffector->setMaxDistance(10.0f); // particles affected if within this distance from affector
-		ExampleTurbulenceAffector->setAttenuation(0.0f); // strength of uniform field dimishes by a factor of dist^attenuation
-		ExampleTurbulenceAffector->setPersistance(0.85f); //amplitude reduced by .75 each octave
+		ExampleTurbulenceAffector->setMaxDistance(-1.0f); // particles affected regardless of distance from affector
+		ExampleTurbulenceAffector->setAttenuation(1.0f); // strength of uniform field dimishes by a factor of dist^attenuation
+		ExampleTurbulenceAffector->setPersistance(0.75f); //amplitude reduced by .75 each octave
 		ExampleTurbulenceAffector->setFrequency(5.0f);	// frequency of turbulent motion (higher freq. = more irregularities)
 		ExampleTurbulenceAffector->setOctaves(3);
 		ExampleTurbulenceAffector->setPhase(Vec3f(0.0f,0.0f,0.0f));
@@ -297,6 +323,16 @@ int main(int argc, char **argv)
     mgr->showAll();
 	
 	mgr->getCamera()->setFar(1000.0);
+
+	std::cout << "Turbulence Particle Affector Tutorial Controls:\n"
+		<< "1: Use point drawer\n"
+		<< "2: Use line drawer\n"
+		<< "3: Decrease amplitude of turbulence.\n"
+		<< "4: Increase amplitude of turbulence.\n"
+		<< "5: Decrease frequency of turbulence.\n"
+		<< "6: Increase frequency of turbulence.\n"
+		<< "Ctrl + Q: Exit Tutorial";
+
 
     while(!ExitApp)
     {

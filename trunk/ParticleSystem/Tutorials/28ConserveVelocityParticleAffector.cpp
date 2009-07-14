@@ -210,7 +210,7 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSMaterialChunkChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
 		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
 		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
@@ -308,6 +308,13 @@ int main(int argc, char **argv)
     mgr->showAll();
 	
 	mgr->getCamera()->setFar(1000.0);
+
+	std::cout << "Conserve Velocity Particle Affector Tutorial Controls:\n"
+		<< "1: Use point drawer\n"
+		<< "2: Use line drawer\n"
+		<< "3: Decrease velocity conserved.\n"
+		<< "4: Increase velocity conserved.\n"
+		<< "Ctrl + Q: Exit Tutorial";
 
     while(!ExitApp)
     {

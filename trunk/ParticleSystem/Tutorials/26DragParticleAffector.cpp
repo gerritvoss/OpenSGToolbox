@@ -55,6 +55,8 @@ ParticleSystemCorePtr ParticleNodeCore;
 PointParticleSystemDrawerPtr ExamplePointParticleSystemDrawer;
 LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
 
+DragParticleAffectorPtr ExampleDragAffector;
+
 
 // Create a class to allow for the use of the Ctrl+q and changing of drawers
 class TutorialKeyListener : public KeyListener
@@ -76,6 +78,19 @@ public:
 				ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
 	   }
+	   if(e.getKey() == KeyEvent::KEY_3) // decrease radius of field
+	   {
+			beginEditCP(ExampleDragAffector);
+				ExampleDragAffector->setMagnitude(osg::osgClamp<Real32>(1.0f, ExampleDragAffector->getMagnitude() * 0.8, 1000.0f));
+			endEditCP(ExampleDragAffector);
+	   }
+	   if(e.getKey() == KeyEvent::KEY_4) // increase radius of field
+	   {
+			beginEditCP(ExampleDragAffector);
+				ExampleDragAffector->setMagnitude(osg::osgClamp<Real32>(1.0f, ExampleDragAffector->getMagnitude() * 1.2, 1000.0f));
+			endEditCP(ExampleDragAffector);
+	   }
+
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
@@ -194,10 +209,10 @@ int main(int argc, char **argv)
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+		PSMaterialChunkChunk->setAmbient(Color4f(1.0f,1.0f,1.0f,1.0f));
 		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
-		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+		PSMaterialChunkChunk->setColorMaterial(GL_NONE);
 	endEditCP(PSMaterialChunkChunk);
 
 	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
@@ -251,7 +266,7 @@ int main(int argc, char **argv)
 	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
 
-	DragParticleAffectorPtr ExampleDragAffector = osg::DragParticleAffector::create();
+	ExampleDragAffector = osg::DragParticleAffector::create();
 	beginEditCP(ExampleDragAffector);
 		ExampleDragAffector->setMagnitude(5.0); 
 		ExampleDragAffector->setDirection(Vec3f(0.0,5.0,5.0));
@@ -297,6 +312,13 @@ int main(int argc, char **argv)
     mgr->showAll();
 	
 	mgr->getCamera()->setFar(1000.0);
+
+		std::cout << "Drag Particle Affector Tutorial Controls:\n"
+		<< "1: Use point drawer\n"
+		<< "2: Use line drawer\n"
+		<< "3: Decrease magnitude of drag.\n"
+		<< "4: Increase magnitude of drag.\n"
+		<< "Ctrl + Q: Exit Tutorial";
 
     while(!ExitApp)
     {
