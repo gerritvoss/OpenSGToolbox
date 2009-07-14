@@ -4,9 +4,9 @@ SET(LIBRARY_NAME OSG${LIBRARY_SHORT_NAME})
 MESSAGE("Configuring ${LIBRARY_SHORT_NAME} Library")
 
 #Get a listing of the Header, source, and inline files
-FILE(GLOB_RECURSE HEADERS *.h)
-FILE(GLOB_RECURSE SOURCES *.cpp)
-FILE(GLOB_RECURSE INLINES *.inl)
+FILE(GLOB_RECURSE HEADERS [^~]*.h)
+FILE(GLOB_RECURSE SOURCES [^~]*.cpp)
+FILE(GLOB_RECURSE INLINES [^~]*.inl)
 
 #Definition required when building the library
 ADD_DEFINITIONS(-DOSG_COMPILEINPUTLIB)
