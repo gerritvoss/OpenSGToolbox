@@ -81,6 +81,7 @@ void LineParticleSystemDrawer::initMethod (void)
 Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
 {
 	UInt32 NumParticles(System->getNumParticles());
+	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
 
 	bool areEndpointsFadeSame(getEndPointFading().x() == getEndPointFading().y());
 	Color4f Color;

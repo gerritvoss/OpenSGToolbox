@@ -82,6 +82,7 @@ Action::ResultE DiscParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 {
 	bool isSorted(Sort.getSize() > 0);
 	UInt32 NumParticles;
+	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
 	Color4f Color;
 	bool areFadesSame(getCenterAlpha() == getEdgeAlpha());
 

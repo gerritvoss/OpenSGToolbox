@@ -47,6 +47,7 @@
 
 #include "OSGParticleSystemCoreBase.h"
 #include "ParticleSystem/Events/OSGParticleSystemListener.h"
+#include <OpenSG/OSGStatElemTypes.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -104,6 +105,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 		bool operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight);
 	};
 	static ParticleSortByViewPosition TheSorter;
+
+    static StatElemDesc<StatTimeElem    > statParticleSortTime;
 	
     /*=========================  PROTECTED  ===============================*/
   protected:

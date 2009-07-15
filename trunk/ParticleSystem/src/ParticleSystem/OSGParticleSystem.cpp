@@ -81,6 +81,10 @@ const OSG::BitVector  ParticleSystem::InternalParticlesFieldMask =
     (TypeTraits<BitVector>::One << ParticleSystem::InternalAccelerationsFieldId) ||
     (TypeTraits<BitVector>::One << ParticleSystem::InternalPropertiesFieldId);
 
+StatElemDesc<StatIntElem> ParticleSystem::statNParticles("NParticles", 
+                                                      "number of particles");
+StatElemDesc<StatTimeElem> ParticleSystem::statParticleSystemUpdate("ParticleUpdateTime", 
+                                                      "time for particle system updates");
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/

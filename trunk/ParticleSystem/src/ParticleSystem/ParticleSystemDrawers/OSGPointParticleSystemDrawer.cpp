@@ -91,6 +91,7 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, Particle
 	{
 		NumParticles = System->getNumParticles();
 	}
+	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
 	if(NumParticles != 0)
 	{
 

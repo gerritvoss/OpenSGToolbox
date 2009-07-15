@@ -46,6 +46,7 @@
 #include "OSGParticleSystemDef.h"
 
 #include "OSGParticleSystemBase.h"
+#include <OpenSG/OSGStatElemTypes.h>
 #include <OpenSG/Input/OSGUpdateListener.h>
 #include <OpenSG/Input/OSGWindowEventProducerFields.h>
 
@@ -158,6 +159,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 
     bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
     void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
+	
+    static StatElemDesc<StatIntElem    > statNParticles;
+    static StatElemDesc<StatTimeElem    > statParticleSystemUpdate;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

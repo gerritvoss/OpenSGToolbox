@@ -76,6 +76,8 @@ OSG_BEGIN_NAMESPACE
 
 ParticleSystemCore::ParticleSortByViewPosition ParticleSystemCore::TheSorter = ParticleSystemCore::ParticleSortByViewPosition();
 
+StatElemDesc<StatTimeElem> ParticleSystemCore::statParticleSortTime("ParticleSortTime", 
+                                                      "time for particles to be sorted");
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -108,6 +110,7 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
 		
 		checkAndInitializeSort();
 		sortParticles(action);
+
 		getDrawer()->draw(action, getSystem(), getSort());
     }
     else

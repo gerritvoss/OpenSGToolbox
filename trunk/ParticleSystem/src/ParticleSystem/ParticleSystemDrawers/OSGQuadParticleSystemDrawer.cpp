@@ -90,6 +90,7 @@ Action::ResultE QuadParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 	{
 		NumParticles = System->getNumParticles();
 	}
+	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
 	Pnt3f P1,P2,P3,P4;
 	UInt32 Index;
 
