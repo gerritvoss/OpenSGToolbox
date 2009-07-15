@@ -33,8 +33,13 @@
 OSG_USING_NAMESPACE
 
 void AnimationAction::triggerAction(){
-  
-  
+  if (animation == NULL) return;
+  switch (type){
+  case AnimationAction::PAUSE: animation->pause(); break;
+  case AnimationAction::PAUSETOGGLE: animation->pauseToggle(); break;
+  case AnimationAction::UNPAUSE: animation->unpause(); break;
+  case AnimationAction::STOP: animation->stop(); break;
+  };
 }
 
 const ActionType& AnimationAction::getType(){
@@ -42,3 +47,20 @@ const ActionType& AnimationAction::getType(){
   return type;
 }
 
+
+void AnimationAction::setAnimation(AnimationPtr animation){
+  this->animation = animation;
+}
+    
+AnimationPtr AnimationAction::getAnimation(void){
+  return animation;
+}
+
+
+void AnimationAction::setActionType(AnimationAction::Type type){
+  this->type = type;
+}
+    
+AnimationAction::Type AnimationAction::getActionType(void){
+  return type;
+}

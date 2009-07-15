@@ -41,21 +41,69 @@
 #include <OpenSG/Toolbox/OSGAction.h>
 
 #include <OpenSG/Toolbox/OSGActionType.h>
+#include <Animations/OSGAnimation.h>
 
 #include <boost/shared_ptr.hpp>
 
 OSG_BEGIN_NAMESPACE
 
+/**
+ * This class interface Aniamtion through Action. This single class is responsible for different action
+ * for the animation which is set by the type. See getActionType() and setActionType() for more details
+ */
 class OSG_ANIMATIONLIB_DLLMAPPING AnimationAction : public Action 
 {
-    /*=========================  PUBLIC  ===============================*/
+/*=========================  PUBLIC  ===============================*/
   public:
-    virtual void triggerAction(void);
-    
-    virtual const ActionType &getType(void);
-    
-  protected:
-    AnimationAction(void);
+  /**
+   * Triggering this animation, behavior debpends on the action type and animation
+   */
+  virtual void triggerAction(void);
+  
+  /**
+   *@return actionType discribing the current action
+   *
+   */
+  virtual const ActionType &getType(void);
+  
+  /**
+   *@param the animation associated with this action
+   *
+   */
+  void setAnimation(AnimationPtr animation);
+  
+  /**
+   *
+   *@return animation associated with this action
+   */
+  AnimationPtr getAnimation(void);
+  
+  /**
+   * Switch between different anmation action type, direct mapping from Animation
+   */
+  enum Type{
+    PAUSE,
+    UNPAUSE,
+    PAUSETOGGLE,
+    STOP
+  };
+  
+  /**
+   *@param type behavior of the action
+   */
+  void setActionType(Type type);
+  
+  /**
+   *@return type behavior of the action
+   */
+  Type getActionType(void);
+  
+ protected:
+  AnimationAction(void);
+  
+  AnimationPtr animation;
+  
+  Type type;
 };
 
 typedef boost::shared_ptr<AnimationAction> AnimationActionPtr;
