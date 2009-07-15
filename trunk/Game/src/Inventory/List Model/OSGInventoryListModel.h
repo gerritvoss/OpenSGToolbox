@@ -46,7 +46,7 @@
 #include "OSGGameDef.h"
 
 #include "OSGInventoryListModelBase.h"
-#include <OpenSG/Game/OSGInventory.h>
+#include "Inventory/OSGInventory.h"
 
 #include <deque>
 

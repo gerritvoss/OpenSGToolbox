@@ -48,7 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGInventoryListModel.h"
-#include <OpenSG/Game/OSGInventoryItem.h>
+#include "Inventory/OSGInventoryItem.h"
 
 OSG_BEGIN_NAMESPACE
 

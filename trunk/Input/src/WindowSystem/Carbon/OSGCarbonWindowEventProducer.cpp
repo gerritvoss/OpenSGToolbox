@@ -298,26 +298,26 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
             ReleaseEvent(theEvent);
         }
 		
-		if(Arguments->EventProducer->_ShouldUpdate)
+		if(Arguments->_EventProducer->_ShouldUpdate)
 		{
 
 		   //Updating
 		   Time Now(getSystemTime());
-		   Time ElapsedTime(Now - Arguments->EventProducer->getLastUpdateTime());
+		   Time ElapsedTime(Now - Arguments->_EventProducer->getLastUpdateTime());
 		   if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
 		   {
-			   Arguments->EventProducer->produceUpdate(ElapsedTime);
+			   Arguments->_EventProducer->produceUpdate(ElapsedTime);
 		   }
-		   beginEditCP(XWindowEventProducerPtr(Arguments->EventProducer), LastUpdateTimeFieldMask);
-			   Arguments->EventProducer->setLastUpdateTime(Now);
-		   endEditCP(XWindowEventProducerPtr(Arguments->EventProducer), LastUpdateTimeFieldMask);
+		   beginEditCP(CarbonWindowEventProducerPtr(Arguments->_EventProducer), LastUpdateTimeFieldMask);
+			   Arguments->_EventProducer->setLastUpdateTime(Now);
+		   endEditCP(CarbonWindowEventProducerPtr(Arguments->_EventProducer), LastUpdateTimeFieldMask);
 
-            Arguments->EventProducer->_ShouldUpdate = false;
+            Arguments->_EventProducer->_ShouldUpdate = false;
 		}
-        if(Arguments->EventProducer->_IsDrawPending)
+        if(Arguments->_EventProducer->_IsDrawPending)
         {
-            Arguments->EventProducer->internalDraw();
-            Arguments->EventProducer->_IsDrawPending = false;
+            Arguments->_EventProducer->internalDraw();
+            Arguments->_EventProducer->_IsDrawPending = false;
         }
     }
     
@@ -373,28 +373,6 @@ osg::KeyEvent::KeyState CarbonWindowEventProducer::getKeyState(osg::KeyEvent::Ke
 WindowPtr CarbonWindowEventProducer::initWindow(void)
 {
 	WindowPtr MyWindow = Inherited::initWindow();
-	std::string WindowName("Carbon");
-
-    if(_WindowEventLoopThread == NULL)
-    {
-        std::string ThreadName = WindowName + " Event Loop";
-        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
-    }
-    else
-    {
-    }
-    
-    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(  
-                    Pnt2f(0.0,0.0),
-                    Vec2f(600.0,600.0),
-                    WindowName,
-                    CarbonWindow::Ptr::dcast(getWindow()),
-                    CarbonWindowEventProducerPtr(this)  );
-    
-    //ChangeList::setReadWriteDefault();
-    std::string BarrierName = WindowName + " Event Loop Barrier";
-	_MainThreadSyncBarrier =  Barrier::get(BarrierName.c_str());
-    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
 	
     return MyWindow;
 }
@@ -1242,6 +1220,29 @@ void CarbonWindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
 				   const Vec2f& Size,
 				   const std::string& WindowName)
 {
+      //std::string WindowName("Carbon");
+
+    if(_WindowEventLoopThread == NULL)
+    {
+        std::string ThreadName = WindowName + " Event Loop";
+        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
+    }
+    else
+    {
+    }
+
+    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(
+                    Pnt2f(0.0,0.0),
+                    Vec2f(600.0,600.0),
+                    WindowName,
+                    CarbonWindow::Ptr::dcast(getWindow()),
+                    CarbonWindowEventProducerPtr(this)  );
+
+    //ChangeList::setReadWriteDefault();
+    std::string BarrierName = WindowName + " Event Loop Barrier";
+   _MainThreadSyncBarrier =  Barrier::get(BarrierName.c_str());
+    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
+
 	//Unblock the main
 	_MainThreadSyncBarrier->enter(2);
 }

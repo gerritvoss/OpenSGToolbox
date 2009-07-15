@@ -92,7 +92,7 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${OPENSG_INC_DIR} ${OPENSGTOOLBOX_INC_
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSGTOOLBOX_LIB_DIR})
 
 ######## Tutorial executables
-SET(TUTORIAL_LIST 01ParticleSystemDrawers 02AgeFadeAffector 02DynamicDistributions 03RateParticleGenerator 04BurstParticleGenerator 05QuadParticleDrawer 06Explosion 07AgeSizeParticleAffector 08DistanceFadeAffector 09DistanceKillParticleAffector 10GravityParticleSystemAffector 11DistanceAttractRepelParticleAffector 12NodeParticleDrawer 13GeometryCollision 14ParticleSorting 15FCFileTypeIO 16FullTest 20RocketLauncher 21Fireworks)
+SET(TUTORIAL_LIST 01ParticleSystemDrawers 02AgeFadeAffector 02DynamicDistributions 03RateParticleGenerator 04BurstParticleGenerator 05QuadParticleDrawer 06Explosion 07AgeSizeParticleAffector 08DistanceFadeAffector 09DistanceKillParticleAffector 10GravityParticleSystemAffector 11DistanceAttractRepelParticleAffector 12NodeParticleDrawer 13GeometryCollision 14ParticleSorting 15FCFileTypeIO 16FullTest 17RandomMovement 18GravityFieldParticleAffector 19UniformFieldParticleAffector 20RocketLauncher 21Fireworks 22VortexParticleAffector 23RadialFieldParticleAffector 24NewtonFieldParticleAffector 25AirFieldParticleAffector 26DragParticleAffector)
 FOREACH(TUTORIAL ${TUTORIAL_LIST})
    MESSAGE("Configurint Tutorial: ${TUTORIAL}")
 
@@ -108,78 +108,11 @@ FOREACH(TUTORIAL ${TUTORIAL_LIST})
    SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES LINK_FLAGS ${OPENSG_LIBS_OPT})
    SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES LINK_FLAGS_MINSIZEREL "${OPENSG_LIBS_OPT}")
    SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "${OPENSG_LIBS_OPT}")
+   
+   #Attach all of the linker libraries
+   TARGET_LINK_LIBRARIES(${TUTORIAL} optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
+                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
+                                     ${Boost_LIBRARIES})
+
 ENDFOREACH(TUTORIAL ${TUTORIAL_LIST})
-
-#Attach all of the linker libraries
-TARGET_LINK_LIBRARIES(01ParticleSystemDrawers optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(02AgeFadeAffector optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(02DynamicDistributions optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(03RateParticleGenerator optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(04BurstParticleGenerator optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(05QuadParticleDrawer optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(06Explosion optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(07AgeSizeParticleAffector optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(08DistanceFadeAffector optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(09DistanceKillParticleAffector optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(10GravityParticleSystemAffector optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(11DistanceAttractRepelParticleAffector optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(12NodeParticleDrawer optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(13GeometryCollision optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(14ParticleSorting optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(15FCFileTypeIO optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(16FullTest optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(20RocketLauncher optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(21Fireworks optimized OSGToolbox  optimized OSGInput  optimized OSGDynamics optimized OSGParticleSystem
-                                  debug     OSGToolboxD debug     OSGInputD debug     OSGDynamicsD debug OSGParticleSystemD
-                                     ${Boost_LIBRARIES})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
