@@ -368,9 +368,9 @@ FunctionPtr createPositionDistribution(void)
       TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
       TheSphereDistribution->setInnerRadius(0.0f);
       TheSphereDistribution->setOuterRadius(10.0f);
-      TheSphereDistribution->setMinTheta(-3.141950);
-      TheSphereDistribution->setMaxTheta(3.141950);
-      TheSphereDistribution->setMinZ(0.0);
+      TheSphereDistribution->setMinTheta(-3.141592);
+      TheSphereDistribution->setMaxTheta(3.141592);
+      TheSphereDistribution->setMinZ(-1.0);
       TheSphereDistribution->setMaxZ(1.0);
 	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
     endEditCP(TheSphereDistribution);
