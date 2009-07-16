@@ -5,11 +5,12 @@ PROJECT("Animation Tutorials")
 SET (CMAKE_VERBOSE_MAKEFILE TRUE)
 
 ######### Revision number
+Option(UseSVN "check if svn should be used")
 FIND_PACKAGE(Subversion)
-IF(Subversion_FOUND)
+IF(Subversion_FOUND AND UseSVN)
    Subversion_WC_INFO(${CMAKE_HOME_DIRECTORY} Project)
    MESSAGE("Current revision is ${Project_WC_REVISION}")
-ENDIF(Subversion_FOUND)
+ENDIF(Subversion_FOUND AND UseSVN)
 
 ######### FMod
 FIND_PATH(FMOD_BASE_DIR NAMES api/inc/fmod.h PATHS "/Developer/FMOD Programmers API")
@@ -103,7 +104,7 @@ SET(TUTORIAL_LIST 01Animation 02BlendGeometry 03MFieldAnimation
    04ShaderAnimation 05TextureAnimation 10SkeletonDrawer 11BoneAnimation
    12SkeletonAnimation 13MeshBlending 14SkeletonLoader 15LoadXMLAnimation
    16LoadXMLSkeleton 17LoadXMLSkeletonAnimation 20LoadXMLBlendedGeometry
-   21LoadXMLSceneFromMaya 22SkeletonBlendedAnimation 23BlendXMLAnimations)
+   21LoadXMLSceneFromMaya 22SkeletonBlendedAnimation 23BlendXMLAnimations 24AnimationAction)
 FOREACH(TUTORIAL ${TUTORIAL_LIST})
    MESSAGE("Configurint Tutorial: ${TUTORIAL}")
 
@@ -121,7 +122,7 @@ FOREACH(TUTORIAL ${TUTORIAL_LIST})
    SET_TARGET_PROPERTIES(${TUTORIAL} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "${OPENSG_LIBS_OPT}")
 ENDFOREACH(TUTORIAL ${TUTORIAL_LIST})
 
-#Attach all of the linker libraries
+#Attach all of the linker librarie
 TARGET_LINK_LIBRARIES(01Animation optimized OSGToolbox  optimized OSGInput  optimized OSGAnimation
                                   debug     OSGToolboxD debug     OSGInputD debug     OSGAnimationD
                                      ${Boost_LIBRARIES})
@@ -184,3 +185,6 @@ TARGET_LINK_LIBRARIES(23BlendXMLAnimations optimized OSGToolbox
                                      ${Boost_LIBRARIES})
 
 
+TARGET_LINK_LIBRARIES(24AnimationAction optimized OSGToolbox  optimized OSGInput  optimized OSGAnimation optimized OSGUserInterface optimized OSGDynamics
+                                  debug     OSGToolboxD debug     OSGInputD debug     OSGAnimationD debug OSGUserInterfaceD debug OSGDynamicsD
+                                     ${Boost_LIBRARIES})
