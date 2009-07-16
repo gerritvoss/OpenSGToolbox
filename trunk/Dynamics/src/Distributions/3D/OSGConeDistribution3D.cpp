@@ -133,7 +133,7 @@ Pnt3f ConeDistribution3D:: generate(void)
 
 	Vec3f SpherePoint( osgcos(phi)*osgsin(theta)*radius, osgsin(theta)*osgsin(phi)*radius, osgcos(theta)*radius );
 
-	Quaternion DirectionRotation(Vec3f(0.0f,0.0f,1.0f), normal);;
+	Quaternion DirectionRotation(Vec3f(0.0f,0.0f,1.0f), normal);
 	DirectionRotation.multVec(SpherePoint, SpherePoint);
 
 	Result += SpherePoint;
