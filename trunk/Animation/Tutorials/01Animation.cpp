@@ -110,6 +110,23 @@ public:
        {
            ExitApp = true;
        }
+
+       switch(e.getKey())
+       {
+       case KeyEvent::KEY_SPACE:
+           TheAnimationAdvancer->pauseToggle();
+           break;
+       case KeyEvent::KEY_ENTER:
+           if(!TheAnimationAdvancer->isRunning())
+           {
+                TheAnimationAdvancer->start();
+           }
+           else
+           {
+                TheAnimationAdvancer->stop();
+           }
+           break;
+       }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -275,7 +292,7 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    TheAnimation->start();
+    TheAnimationAdvancer->start();
     
     while(!ExitApp)
     {

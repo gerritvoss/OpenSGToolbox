@@ -77,6 +77,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationAdvancer : public AnimationAdvancerBa
 
     virtual osg::Real32 getValue(void) const = 0;
     virtual osg::Real32 getPrevValue(void) const = 0;
+
+    virtual void start(void);
+
+    virtual void pause(void);
+    virtual void unpause(void);
+    virtual void pauseToggle(void);
+    virtual bool isPaused(void);
+    virtual bool isRunning(void);
+    
+    virtual void stop(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -97,6 +107,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationAdvancer : public AnimationAdvancerBa
     virtual ~AnimationAdvancer(void); 
 
     /*! \}                                                                 */
+
+   bool _IsPaused;
+   bool _IsRunning;
     
     /*==========================  PRIVATE  ================================*/
   private:

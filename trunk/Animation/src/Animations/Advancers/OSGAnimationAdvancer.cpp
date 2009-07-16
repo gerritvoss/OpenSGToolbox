@@ -74,6 +74,68 @@ void AnimationAdvancer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+
+void AnimationAdvancer::start(void)
+{   
+    if(!_IsRunning)
+    {
+        _IsRunning = true;
+        //produceAnimationStarted();
+    }
+}
+
+void AnimationAdvancer::stop(void)
+{
+    if(!_IsRunning)
+    {
+        _IsRunning = false;
+        //produceAnimationStopped();
+    }
+    //beginEditCP(AnimationPtr(this), CyclesFieldMask);
+    //    setCycles( 0 );
+    //endEditCP(AnimationPtr(this), CyclesFieldMask);
+}
+
+void AnimationAdvancer::pause(void)
+{
+    if(!_IsPaused)
+    {
+        _IsPaused = true;
+        //produceAnimationPaused();
+    }
+}
+
+void AnimationAdvancer::unpause(void)
+{
+    if(_IsPaused)
+    {
+        _IsPaused = false;
+        //produceAnimationUnpaused();
+    }
+}
+
+void AnimationAdvancer::pauseToggle(void)
+{
+    if(_IsPaused)
+    {
+        unpause();
+    }
+    else
+    {
+        pause();
+    }
+}
+
+bool AnimationAdvancer::isPaused(void)
+{
+    return _IsPaused;
+}
+
+bool AnimationAdvancer::isRunning(void)
+{
+    return _IsRunning;
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -81,12 +143,12 @@ void AnimationAdvancer::initMethod (void)
 /*----------------------- constructors & destructors ----------------------*/
 
 AnimationAdvancer::AnimationAdvancer(void) :
-    Inherited()
+    Inherited(), _IsPaused(false),_IsRunning(false)
 {
 }
 
 AnimationAdvancer::AnimationAdvancer(const AnimationAdvancer &source) :
-    Inherited(source)
+    Inherited(source), _IsPaused(false),_IsRunning(false)
 {
 }
 

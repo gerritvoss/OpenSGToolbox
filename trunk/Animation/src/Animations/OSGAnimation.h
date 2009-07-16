@@ -83,16 +83,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
 
     /*! \}                                                                 */
     
-    virtual void start(void);
-
-    virtual void pause(void);
-    virtual void unpause(void);
-    virtual void pauseToggle(void);
-    virtual bool isPaused(void);
-    virtual bool isRunning(void);
-    
-    virtual void stop(void);
-    
     virtual bool update(const AnimationAdvancerPtr& advancer);
 
     EventConnection addAnimationListener(AnimationListenerPtr Listener);
@@ -129,9 +119,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
    void produceAnimationUnpaused(void);
    void produceAnimationEnded(void);
    void produceAnimationCycled(void);
-
-   bool _IsPaused;
-   bool _IsRunning;
 
     virtual void internalUpdate(const Real32& t, const Real32 prev_t)=0;
 

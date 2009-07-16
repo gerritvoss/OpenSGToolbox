@@ -81,22 +81,35 @@ osg::Real32 ElapsedTimeAnimationAdvancer::getPrevValue(void) const
 
 void ElapsedTimeAnimationAdvancer::start(void)
 {
-   setElpsTime( getStartTime() );
+    if(!_IsRunning)
+    {
+       setElpsTime( getStartTime() );
+    }
+    Inherited::start();
 }
 
 void ElapsedTimeAnimationAdvancer::reset(void)
 {
-   setElpsTime( getStartTime() );
+    stop();
+
+    start();
 }
 
 void ElapsedTimeAnimationAdvancer::stop(void)
 {
-   setElpsTime( 0.0 );
+    if(_IsRunning)
+    {
+        setElpsTime( getStartTime() );
+    }
+    Inherited::stop();
 }
 
 void ElapsedTimeAnimationAdvancer::update(const Real32& elps)
 {
-   setElpsTime(getElpsTime() + elps);
+    if(_IsRunning && !_IsPaused)
+    {
+        setElpsTime(getElpsTime() + elps);
+    }
 }
 /***************************************************************************\
  *                           Instance methods                              *

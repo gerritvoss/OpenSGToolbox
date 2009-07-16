@@ -84,27 +84,6 @@ EventConnection Animation::addAnimationListener(AnimationListenerPtr Listener)
        boost::bind(&Animation::removeAnimationListener, this, Listener));
 }
 
-void Animation::start(void)
-{   
-    if(!_IsRunning)
-    {
-        _IsRunning = true;
-        produceAnimationStarted();
-    }
-}
-
-void Animation::stop(void)
-{
-    if(!_IsRunning)
-    {
-        _IsRunning = false;
-        produceAnimationStopped();
-    }
-    beginEditCP(AnimationPtr(this), CyclesFieldMask);
-        setCycles( 0 );
-    endEditCP(AnimationPtr(this), CyclesFieldMask);
-}
-
 bool Animation::update(const AnimationAdvancerPtr& advancer)
 {
 	UInt32 PreUpdateCycleCount(getCycles());
@@ -142,40 +121,6 @@ bool Animation::update(const AnimationAdvancerPtr& advancer)
 	//Return true if the animation has completed its number of cycles, false otherwise
 	return (getCycling() > 0 && getCycles() >= getCycling());
 
-}
-
-void Animation::pause(void)
-{
-    _IsPaused = true;
-    produceAnimationPaused();
-}
-
-void Animation::unpause(void)
-{
-    _IsPaused = false;
-    produceAnimationUnpaused();
-}
-
-void Animation::pauseToggle(void)
-{
-    if(_IsPaused)
-    {
-        unpause();
-    }
-    else
-    {
-        pause();
-    }
-}
-
-bool Animation::isPaused(void)
-{
-    return _IsPaused;
-}
-
-bool Animation::isRunning(void)
-{
-    return _IsRunning;
 }
 
 void Animation::removeAnimationListener(AnimationListenerPtr Listener)
@@ -255,12 +200,12 @@ void Animation::produceAnimationCycled(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 Animation::Animation(void) :
-    Inherited(), _IsPaused(false),_IsRunning(false)
+    Inherited()
 {
 }
 
 Animation::Animation(const Animation &source) :
-    Inherited(source), _IsPaused(false),_IsRunning(false)
+    Inherited(source)
 {
 }
 
