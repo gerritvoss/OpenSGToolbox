@@ -1022,34 +1022,34 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="List Model"
+					Name="Models"
 					>
 					<File
-						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModel.cpp"
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModel.h"
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModel.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModel.inl"
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModel.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModelBase.cpp"
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModelBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModelBase.h"
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModelBase.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModelBase.inl"
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModelBase.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Inventory\List Model\OSGInventoryListModelFields.h"
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModelFields.h"
 						>
 					</File>
 				</Filter>
