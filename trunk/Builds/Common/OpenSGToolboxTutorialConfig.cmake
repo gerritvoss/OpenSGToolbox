@@ -1,7 +1,7 @@
 MACRO(TOOLBOX_TUTORIAL_CONFIG TUTORIAL_DIR LIBRARY_NAME)
    #Configure the cmake build of the tutorials
    MESSAGE("Configuring ${LIBRARY_NAME} Tutorials for build type ${CMAKE_BUILD_TYPE}")
-   EXECUTE_PROCESS(COMMAND 
+   EXECUTE_PROCESS(COMMAND
                    cmake 
                    -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
                    -D BOOST_ROOT=${BOOST_ROOT}
@@ -10,7 +10,10 @@ MACRO(TOOLBOX_TUTORIAL_CONFIG TUTORIAL_DIR LIBRARY_NAME)
                    -D OPENSG_BASE_DIR=${OPENSG_BASE_DIR}
                    -D OPENSGTOOLBOX_BASE_DIR=${CMAKE_INSTALL_PREFIX}
                    .
-                   WORKING_DIRECTORY ${TUTORIAL_DIR})
+                   WORKING_DIRECTORY ${TUTORIAL_DIR}
+		             OUTPUT_VARIABLE CONFIG_OUTPUT
+						 OUTPUT_QUIET
+						 ERROR_QUIET)
 
    #Add a custom target for making and cleaning these tutorials
    ADD_CUSTOM_TARGET(${LIBRARY_NAME}_tutorials

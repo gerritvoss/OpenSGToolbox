@@ -8,7 +8,11 @@ ENABLE_TESTING()
 #SET (CMAKE_VERBOSE_MAKEFILE TRUE)
 
 ######## Default Build Type
-SET(CMAKE_BUILD_TYPE "Debug")
+IF(NOT CMAKE_BUILD_TYPE)
+	SET(CMAKE_BUILD_TYPE "Debug")
+ENDIF(NOT CMAKE_BUILD_TYPE)
+
+MESSAGE("Configuring for build Type: ${CMAKE_BUILD_TYPE}")
 
 ######### Revision number
 FIND_PACKAGE(Subversion)

@@ -122,8 +122,7 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 
     /*! \}                                                                 */
 	
-	//TODO: IMPLEMENT
-	virtual void setShowCursor(bool);
+	virtual void setShowCursor(bool show);
 	virtual bool getShowCursor() const;
 	virtual osg::Vec2f getDesktopSize() const;
 	virtual std::vector<osg::Path, std::allocator<osg::Path> > openFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, bool);
@@ -214,7 +213,7 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	
     bool _IsDrawPending;
 	bool _ShouldUpdate;
-    /*=========================  PROTECTED  ===============================*/
+	/*=========================  PROTECTED  ===============================*/
   protected:
 
     // Variables should all be in CarbonWindowEventProducerBase.
@@ -239,6 +238,7 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
     virtual WindowPtr createWindow(void);
 	OSStatus handleMouseEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
 	OSStatus handleWindowEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
+	OSStatus handleAppEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
 	OSStatus handleKeyEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
 	
 	static KeyEvent::Key determineKey(::UInt32 key);

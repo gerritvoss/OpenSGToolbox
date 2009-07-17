@@ -230,6 +230,7 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
     
     CreateNewWindow(kDocumentWindowClass, windowAttrs, &contentRect, &window);
     SetWindowTitleWithCFString(window, CFStringCreateWithCString(NULL, Arguments->_WindowName.c_str(), Arguments->_WindowName.size()));
+	 Arguments->_EventProducer->_MainThreadSyncBarrier->enter(2);
 
     // Install event handler
     EventHandlerUPP eventHandlerUPP = NewEventHandlerUPP(eventHandler);
@@ -246,9 +247,14 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
         { kEventClassMouse, kEventMouseWheelMoved },
         //{ kEventClassWindow, kEventWindowActivate },
         //{ kEventClassWindow, kEventWindowDeactivate },
+        { kEventClassWindow, kEventWindowCollapsed },
+        { kEventClassWindow, kEventWindowExpanded },
         { kEventClassWindow, kEventWindowClose },
+        { kEventClassWindow, kEventWindowClosed },
         { kEventClassWindow, kEventWindowDrawContent },
-        { kEventClassWindow, kEventWindowBoundsChanged }
+        { kEventClassWindow, kEventWindowBoundsChanged },
+        { kEventClassWindow, kEventAppActivated },
+        { kEventClassWindow, kEventAppDeactivated },
     };
     
 	Arguments->_EventProducer->_WindowRef = window;
@@ -266,7 +272,7 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
     aglDestroyPixelFormat(pixelFormat);
     if (context == 0)
         std::cerr << "Cannot create context" << std::endl;
-    aglSetDrawable(context, GetWindowPort(window));
+    aglSetWindowRef(context,window);
     
     //Attach Window
     beginEditCP(CarbonWindow::Ptr::dcast(Arguments->_EventProducer->getWindow()), CarbonWindow::ContextFieldMask);
@@ -275,7 +281,6 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
 
         
     //Arguments->_EventProducer->getWindow()->resize( Arguments->_Size.x(), Arguments->_Size.y() );
-	Arguments->_EventProducer->_MainThreadSyncBarrier->enter(2);
     Arguments->_EventProducer->setSize( Vec2f(Arguments->_Size.x(), Arguments->_Size.y()) );
     Arguments->_EventProducer->getWindow()->init();
     Arguments->_EventProducer->getWindow()->deactivate();
@@ -283,9 +288,11 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
     // Show window
     RepositionWindow(window, 0, kWindowCascadeOnMainScreen);
     ShowWindow(window);
+	 Arguments->_EventProducer->produceWindowOpened();
 	
+    Arguments->_EventProducer->internalReshape(Arguments->_EventProducer->getSize());
     
-    // Main loop ( event dispatching )
+	 // Main loop ( event dispatching )
     EventRef theEvent;    
     EventTargetRef theTarget;    
     theTarget = GetEventDispatcherTarget(); 
@@ -336,13 +343,23 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
 \***************************************************************************/
 
 //TODO: IMPLEMENT
-void CarbonWindowEventProducer::setShowCursor(bool)
+void CarbonWindowEventProducer::setShowCursor(bool show)
 {
-	//TODO: implement
+	//if(show)
+	//{
+	//	ShowCursor();
+	//}
+	//else
+	//{
+   //   Rect WindowSize;
+	//	::Point WindowTopLeft;
+
+	//	ShieldCursor(&WindowSize, WindowTopLeft);
+	//}
 }
 bool CarbonWindowEventProducer::getShowCursor() const
 {
-	//TODO: implement
+	return true;//_CursorShown;
 }
 osg::Vec2f CarbonWindowEventProducer::getDesktopSize() const
 {
@@ -374,6 +391,28 @@ WindowPtr CarbonWindowEventProducer::initWindow(void)
 {
 	WindowPtr MyWindow = Inherited::initWindow();
 	
+    std::string WindowName("Carbon");
+
+    if(_WindowEventLoopThread == NULL)
+    {
+        std::string ThreadName = WindowName + " Event Loop";
+        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
+    }
+    else
+    {
+    }
+
+    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(
+                    Pnt2f(0.0,0.0),
+                    Vec2f(600.0,600.0),
+                    WindowName,
+                    CarbonWindow::Ptr::dcast(getWindow()),
+                    CarbonWindowEventProducerPtr(this)  );
+
+    //ChangeList::setReadWriteDefault();
+    std::string BarrierName = WindowName + " Event Loop Barrier";
+   _MainThreadSyncBarrier =  Barrier::get(BarrierName.c_str());
+    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
     return MyWindow;
 }
 
@@ -396,6 +435,10 @@ OSStatus CarbonWindowEventProducer::internalEventHandler(EventHandlerCallRef nex
     case kEventClassWindow:
 		return handleWindowEvent(nextHandler, event, userData);
 
+    //App events
+    case kEventClassApplication:
+		return handleAppEvent(nextHandler, event, userData);
+
     default:
         return eventNotHandledErr;
     }   
@@ -413,19 +456,25 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
     if (err != noErr)
         return err;
 
-
-    // Get the location of the mouse pointer
-    ::Point location;
-    err = GetEventParameter(event, kEventParamMouseLocation, typeQDPoint, 0, sizeof(location), 0, &location);
+    SetPortWindowPort(window);
+    
+	 // Get the location of the mouse pointer
+    ::HIPoint location;
+    err = GetEventParameter(event, kEventParamWindowMouseLocation, typeHIPoint, 0, sizeof(location), 0, &location);
     if (err != noErr)
         //std::vector<osg::Path, std::allocator<osg::Path> >;
-	return err;
+        return err;
+    location.y -= 22.0f;
 
-    // The location of the mouse pointer is in screen coordinates, so
-    // we have to transform it into the local coordinate system of the
-    // window content area.
-    SetPortWindowPort(window);
-    GlobalToLocal(&location);
+	 //Check that the mouse is withing the content area
+	 WindowPartCode part;
+	 GetEventParameter (event, kEventParamWindowPartCode, typeWindowPartCode,
+			             NULL, sizeof(part), NULL, &part);
+	              
+	 if(part != inContent)
+	 {
+		 return eventNotHandledErr;
+	 }
 
     // Handle the different kinds of events
     ::UInt32 eventKind = GetEventKind(event);
@@ -485,23 +534,23 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
     {
     // mouse button pressed
     case kEventMouseDown:
-		produceMousePressed(TheMouseButton, Pnt2f(location.h, location.v));
+		produceMousePressed(TheMouseButton, Pnt2f(location.x, location.y));
         break;
 
 	
     // mouse button released
     case kEventMouseUp:
-		produceMouseReleased(TheMouseButton, Pnt2f(location.h, location.v));
+		produceMouseReleased(TheMouseButton, Pnt2f(location.x, location.y));
         break;
 
 	//Mouse Moved
 	case kEventMouseMoved:
-		produceMouseMoved(Pnt2f(location.h, location.v));
+		produceMouseMoved(Pnt2f(location.x, location.y));
         break;
 		
     // mouse moved while a button is pressed
     case kEventMouseDragged:
-		produceMouseDragged(TheMouseButton, Pnt2f(location.h, location.v));
+		produceMouseDragged(TheMouseButton, Pnt2f(location.x, location.y));
         break;
 		
 	// mouse wheel moved
@@ -522,7 +571,7 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
 
             if ( axis == kEventMouseWheelAxisY )
             {
-				produceMouseWheelMoved(delta, Pnt2f(location.h, location.v));
+				produceMouseWheelMoved(delta, Pnt2f(location.x, location.y));
             }
 		}
 		break;
@@ -553,9 +602,30 @@ OSStatus CarbonWindowEventProducer::handleWindowEvent(EventHandlerCallRef nextHa
     switch (eventKind)
     {
     // Quit the application when the user closes the window
-    case kEventWindowClose:
+    case kEventWindowClosed:
+		  produceWindowClosing();
+		  produceWindowClosed();
         //QuitApplicationEventLoop();
         return noErr;
+		  break;
+    
+	 // Quit the application when the user closes the window
+    case kEventWindowClose:
+		  produceWindowClosing();
+		  produceWindowClosed();
+        //QuitApplicationEventLoop();
+        return noErr;
+		  break;
+
+    case kEventWindowCollapsed:
+		  produceWindowIconified();
+        return noErr;
+		  break;
+
+    case kEventWindowExpanded:
+		  produceWindowDeiconified();
+        return noErr;
+		  break;
 
     // Draw the contents of the window
     case kEventWindowDrawContent:
@@ -592,6 +662,31 @@ OSStatus CarbonWindowEventProducer::handleWindowEvent(EventHandlerCallRef nextHa
     }
 }
 
+OSStatus CarbonWindowEventProducer::handleAppEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData)
+{
+    OSStatus err;
+
+    // Get the window
+    WindowRef window;
+    err = GetEventParameter(event, kEventParamDirectObject, typeWindowRef, 0, sizeof(window), 0, &window);
+    if (err != noErr)
+        return err;
+
+    // Handle the different kinds of events
+    ::UInt32 eventKind = GetEventKind(event);
+    switch (eventKind)
+    {
+    case kEventAppActivated:
+		  produceWindowActivated();
+        return noErr;
+		  break;
+
+    case kEventAppDeactivated:
+		  produceWindowDeactivated();
+        return noErr;
+		  break;
+	 }
+}
 OSStatus CarbonWindowEventProducer::handleKeyEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData)
 {
     OSStatus err;
@@ -1195,11 +1290,9 @@ Pnt2f CarbonWindowEventProducer::getMousePosition(void) const
 	::Point MousePositioon;
 	GetGlobalMouse(&MousePositioon);
 	
-    // Get the window
-    SetPortWindowPort(_WindowRef);
-    GlobalToLocal(&MousePositioon);
-	
-    return Pnt2f(MousePositioon.v, MousePositioon.h);
+	//SetPortWindowPort(window);
+
+    return Pnt2f(MousePositioon.h, MousePositioon.v-22.0f) - Vec2f(getPosition());
 }
 
 
@@ -1220,28 +1313,6 @@ void CarbonWindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
 				   const Vec2f& Size,
 				   const std::string& WindowName)
 {
-      //std::string WindowName("Carbon");
-
-    if(_WindowEventLoopThread == NULL)
-    {
-        std::string ThreadName = WindowName + " Event Loop";
-        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
-    }
-    else
-    {
-    }
-
-    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(
-                    Pnt2f(0.0,0.0),
-                    Vec2f(600.0,600.0),
-                    WindowName,
-                    CarbonWindow::Ptr::dcast(getWindow()),
-                    CarbonWindowEventProducerPtr(this)  );
-
-    //ChangeList::setReadWriteDefault();
-    std::string BarrierName = WindowName + " Event Loop Barrier";
-   _MainThreadSyncBarrier =  Barrier::get(BarrierName.c_str());
-    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
 
 	//Unblock the main
 	_MainThreadSyncBarrier->enter(2);

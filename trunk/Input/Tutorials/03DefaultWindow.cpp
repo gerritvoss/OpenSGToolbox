@@ -138,8 +138,11 @@ public:
             case KeyEvent::KEY_L:
                 TheWindowEventProducer->setFocused(false);
                 break;
+            case KeyEvent::KEY_C:
+                TheWindowEventProducer->setShowCursor(!TheWindowEventProducer->getShowCursor());
+                break;
             case KeyEvent::KEY_M:
-                MouseEventConnection.disconnect();
+                std::cout << TheWindowEventProducer->getMousePosition() << std::endl;
                 break;
             default:
                 break;

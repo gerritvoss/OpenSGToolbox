@@ -34,12 +34,12 @@ OSG_USING_NAMESPACE
 
 void AnimationAction::triggerAction(){
   if (animation == NULL) return;
-  switch (type){
-  case AnimationAction::PAUSE: animation->pause(); break;
-  case AnimationAction::PAUSETOGGLE: animation->pauseToggle(); break;
-  case AnimationAction::UNPAUSE: animation->unpause(); break;
-  case AnimationAction::STOP: animation->stop(); break;
-  };
+  //switch (type){
+  //case AnimationAction::PAUSE: animation->pause(); break;
+  //case AnimationAction::PAUSETOGGLE: animation->pauseToggle(); break;
+  //case AnimationAction::UNPAUSE: animation->unpause(); break;
+  //case AnimationAction::STOP: animation->stop(); break;
+  //};
 }
 
 const ActionType& AnimationAction::getType(){
