@@ -136,7 +136,15 @@ void MenuItem::mouseReleased(const MouseEvent& e)
        endEditCP(MenuItemPtr(this), SelectedFieldMask);
     }
     
-    Button::mouseReleased(e);
+	if(getEnabled())
+	{
+		if(e.getButton() == MouseEvent::BUTTON1 && _Armed)
+		{
+			ButtonPtr(this)->setActive(false);
+			_Armed = false;
+		}
+	}
+	Component::mouseReleased(e);
 }
 
 MenuPtr MenuItem::getTopLevelMenu(void) const

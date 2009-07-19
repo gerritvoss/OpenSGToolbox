@@ -1,3 +1,8 @@
+INCLUDE(${CMAKE_SOURCE_DIR}/Builds/Common/OpenSGToolboxTutorialsTest.cmake)
+INCLUDE(${CMAKE_SOURCE_DIR}/Builds/Common/OpenSGToolboxLibraryDoc.cmake)
+INCLUDE(${CMAKE_SOURCE_DIR}/Builds/Common/OpenSGToolboxTutorialConfig.cmake)
+INCLUDE(${CMAKE_SOURCE_DIR}/Builds/Common/OpenSGToolboxSourceGroupFunc.cmake)
+
 SET(LIBRARY_SHORT_NAME ParticleSystem)
 SET(LIBRARY_NAME OSG${LIBRARY_SHORT_NAME})
 
@@ -15,6 +20,9 @@ ENDIF(BUILD_INPUT AND BUILD_DYNAMICS)
 FILE(GLOB_RECURSE HEADERS [^~]*.h)
 FILE(GLOB_RECURSE SOURCES [^~]*.cpp)
 FILE(GLOB_RECURSE INLINES [^~]*.inl)
+
+#Make all of the source groups for the cpp sources
+RECURSIVE_DIRECTORY_FIND(${CMAKE_CURRENT_SOURCE_DIR}  "/.svn" ${CMAKE_CURRENT_SOURCE_DIR})
 
 #Definition required when building the library
 ADD_DEFINITIONS(-DOSG_COMPILEPARTICLESYSTEMLIB)
