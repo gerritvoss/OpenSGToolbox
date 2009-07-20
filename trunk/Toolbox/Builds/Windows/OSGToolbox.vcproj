@@ -325,6 +325,14 @@
 					RelativePath="..\..\src\Util\OSGTextureUtils.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGTextUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGTextUtils.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="FileIO"
@@ -378,6 +386,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Types\OSGInt32ToStringMapType.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Types\OSGInt32ToStringMapType.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Types\OSGPathType.cpp"
 					>
 				</File>
@@ -386,11 +402,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Types\OSGStringMapType.cpp"
+					RelativePath="..\..\src\Types\OSGStringToUInt32MapType.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Types\OSGStringMapType.h"
+					RelativePath="..\..\src\Types\OSGStringToUInt32MapType.h"
 					>
 				</File>
 			</Filter>

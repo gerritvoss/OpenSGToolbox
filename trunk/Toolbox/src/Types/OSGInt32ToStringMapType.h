@@ -24,8 +24,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_TOOLBOX_STRING_MAP_TYPE_H_
-#define _OSG_TOOLBOX_STRING_MAP_TYPE_H_
+#ifndef _OSG_TOOLBOX_INT32_TO_STRING_MAP_TYPE_H_
+#define _OSG_TOOLBOX_INT32_TO_STRING_MAP_TYPE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -48,14 +48,14 @@
 
 OSG_BEGIN_NAMESPACE
 
-typedef std::map<Int32, std::string> StringMap;
+typedef std::map<Int32, std::string> Int32ToStringMap;
 
 // The FieldDataTraits class contains the methods needed to implement
 // the features a Field data element needs to have
 
 template <>
-struct FieldDataTraits<StringMap> : 
-    public FieldTraitsRecurseBase<StringMap>
+struct FieldDataTraits<Int32ToStringMap> : 
+    public FieldTraitsRecurseBase<Int32ToStringMap>
 {
     // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
     static DataType       _type;
@@ -69,11 +69,11 @@ struct FieldDataTraits<StringMap> :
     static DataType       &getType      (void) { return _type;          }
 
     // Access to the names of the actual Fields
-    static Char8          *getSName     (void) { return "SFStringMap"; }
-    static Char8          *getMName     (void) { return "MFStringMap"; }
+    static Char8          *getSName     (void) { return "SFInt32ToStringMap"; }
+    static Char8          *getMName     (void) { return "MFInt32ToStringMap"; }
 
     // Create a default instance of the class, needed for Field creation
-    static StringMap       getDefault   (void) { return StringMap();   }
+    static Int32ToStringMap       getDefault   (void) { return Int32ToStringMap();   }
 
     
     // This is where it gets interesting: the conversion functions
@@ -85,22 +85,22 @@ struct FieldDataTraits<StringMap> :
     // Our recommendation is to output as a string, 
     // i.e. start and stop with ", as this simplifies integration into the
     // OSG Loader.
-    static void putToString(const StringMap   &inVal,
+    static void putToString(const Int32ToStringMap   &inVal,
                                   std::string &outVal)
     {
 		//Put the Size of the map
         outVal.append(TypeTraits<UInt32>::putToString(static_cast<UInt32>(inVal.size())));
 
 		//Loop through all of the map elelments
-        StringMap::const_iterator Itor(inVal.begin());
+        Int32ToStringMap::const_iterator Itor(inVal.begin());
         std::string tempOut;
         for(; Itor != inVal.end(); ++Itor)
         {
             outVal.append(";");
-            outVal.append(TypeTraits<StringMap::key_type>::putToString( Itor->first ));
+            outVal.append(TypeTraits<Int32ToStringMap::key_type>::putToString( Itor->first ));
 
             outVal.append(";");
-			FieldDataTraits<StringMap::mapped_type>::putToString( Itor->second, tempOut );
+			FieldDataTraits<Int32ToStringMap::mapped_type>::putToString( Itor->second, tempOut );
             outVal.append(tempOut);
         }
     }
@@ -108,7 +108,7 @@ struct FieldDataTraits<StringMap> :
     // Setup outVal from the contents of inVal
     // For complicated classes it makes sense to implement this function
     // as a class method and just call that from here  
-    static bool getFromString(      StringMap  &outVal,
+    static bool getFromString(      Int32ToStringMap  &outVal,
                               const Char8     *&inVal)
     {
 		//Get Size of the map
@@ -136,7 +136,7 @@ struct FieldDataTraits<StringMap> :
 			}
 
 			//Get the key value
-			Key = TypeTraits<StringMap::key_type>::getFromString( curInString );
+			Key = TypeTraits<Int32ToStringMap::key_type>::getFromString( curInString );
 			
 			//Move past the ; seperator
             curInString = strchr(curInString, ';');
@@ -177,13 +177,13 @@ struct FieldDataTraits<StringMap> :
     // Return the size of the binary version in byte   
     // There are two versions of this function, one for a single object, 
     // one for an array of objects
-    static UInt32 getBinSize(const StringMap & obj)
+    static UInt32 getBinSize(const Int32ToStringMap & obj)
     {
         //Size:
         //Size of a Int32 -> number of items in the Map
         //Sum of all the sizes of the strings
 		UInt32 StringSizeSum(0);
-		StringMap::const_iterator Itor(obj.begin());
+		Int32ToStringMap::const_iterator Itor(obj.begin());
 		for( ; Itor != obj.end() ; ++Itor)
 		{
 			StringSizeSum += FieldDataTraits<std::string>::getBinSize(Itor->second);
@@ -192,7 +192,7 @@ struct FieldDataTraits<StringMap> :
         return sizeof(UInt32) + obj.size()*sizeof(Int32) + StringSizeSum;
     }
 
-    static UInt32 getBinSize (const StringMap *obj, UInt32 num)
+    static UInt32 getBinSize (const Int32ToStringMap *obj, UInt32 num)
     {
         //Size:
 		//Sum of all the objs
@@ -210,23 +210,23 @@ struct FieldDataTraits<StringMap> :
     // Again there are two versions, one for a single object, one for an 
     // array of objects
     static void copyToBin(      BinaryDataHandler &bdh, 
-                          const StringMap         &obj)
+                          const Int32ToStringMap         &obj)
     {
         //Number of items in the map
         bdh.putValue(static_cast<UInt32>(obj.size()));
 
 		//Loop through all of the map elelments
-        StringMap::const_iterator Itor(obj.begin());
+        Int32ToStringMap::const_iterator Itor(obj.begin());
         for(; Itor != obj.end(); ++Itor)
         {
-			bdh.putValue(static_cast<StringMap::key_type>(Itor->first));
+			bdh.putValue(static_cast<Int32ToStringMap::key_type>(Itor->first));
 
-			bdh.putValue(static_cast<StringMap::mapped_type>(Itor->second));
+			bdh.putValue(static_cast<Int32ToStringMap::mapped_type>(Itor->second));
         }
     }
 
     static void copyToBin(      BinaryDataHandler &bdh,
-                          const StringMap         *objs,
+                          const Int32ToStringMap         *objs,
                                 UInt32             num)
     {
     	for(UInt32 i = 0; i < num; ++i)
@@ -242,7 +242,7 @@ struct FieldDataTraits<StringMap> :
     // Again there are two versions, one for a single object, one for an 
     // array of objects
     static void copyFromBin(BinaryDataHandler &bdh, 
-                            StringMap         &obj)
+                            Int32ToStringMap         &obj)
     {
         //Number of items in the list
         UInt32 Size(0);
@@ -258,13 +258,13 @@ struct FieldDataTraits<StringMap> :
         for(UInt32 i(0) ; i<Size ; ++i)
         {
 			bdh.getValue(Key);
-            FieldDataTraits<StringMap::mapped_type>::copyFromBin( bdh, Value );
+            FieldDataTraits<Int32ToStringMap::mapped_type>::copyFromBin( bdh, Value );
 
 			obj[Key] = Value;
         }
     }
     static void copyFromBin(BinaryDataHandler &bdh,
-                            StringMap         *objs,
+                            Int32ToStringMap         *objs,
                             UInt32             num)
     {
     	for(UInt32 i = 0; i < num; ++i)
@@ -277,8 +277,8 @@ struct FieldDataTraits<StringMap> :
 // Here the actual Field types are declared
 // You don't always have to have both, either is fine
 
-typedef SField<StringMap> SFStringMap;
-typedef MField<StringMap> MFStringMap;
+typedef SField<Int32ToStringMap> SFInt32ToStringMap;
+typedef MField<Int32ToStringMap> MFInt32ToStringMap;
 
 
 // Windows makes everything a lot more complicated than it needs to be,
@@ -289,18 +289,16 @@ typedef MField<StringMap> MFStringMap;
 
 // The define makes sure that the code is only included when the corresponding
 // source is not compiled
-#ifndef OSG_COMPILESTRINGMAPTYPEINST
-OSG_DLLEXPORT_DECL1(SField, StringMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEINT32TOSTRINGMAPTYPEINST
+OSG_DLLEXPORT_DECL1(SField, Int32ToStringMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
 #endif
 
-#ifndef OSG_COMPILESTRINGMAPTYPEINST
-OSG_DLLEXPORT_DECL1(MField, StringMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEINT32TOSTRINGMAPTYPEINST
+OSG_DLLEXPORT_DECL1(MField, Int32ToStringMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
 #endif
 
 
 OSG_END_NAMESPACE
-
-#define OSG_TOOLBOX_STRING_MAP_TYPE_HEADER_CVSID "@(#)$Id: $"
 
 #endif /* _OSG_TOOLBOX_STRING_MAP_TYPE_H_ */
 
