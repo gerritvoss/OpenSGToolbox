@@ -128,6 +128,15 @@
 	>
 	</Field>
 	<Field
+		name="InternalAttributes"
+		type="StringToUInt32Map"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+		header="OpenSG/Toolbox/OSGStringToUInt32Type.h"
+	>
+	</Field>
+	<Field
 		name="MaxParticles"
 		type="UInt32"
 		cardinality="single"
