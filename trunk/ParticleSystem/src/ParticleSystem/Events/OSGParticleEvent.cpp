@@ -22,7 +22,7 @@ ParticleEvent::ParticleEvent(FieldContainerPtr Source, Time TimeStamp,
 	 const Vec3f& Velocity,
 	 const Vec3f& SecVelocity,
 	 const Vec3f& Acceleration,
-	 UInt64 Properties) :
+	 const StringToUInt32Map& Attributes) :
    Event(Source, TimeStamp),
 	 _ParticleIndex(Index),
 	 _System(System),
@@ -36,7 +36,7 @@ ParticleEvent::ParticleEvent(FieldContainerPtr Source, Time TimeStamp,
 	 _ParticleVelocity(Velocity),
 	 _ParticleSecVelocity(SecVelocity),
 	 _ParticleAcceleration(Acceleration),
-	 _ParticleProperties(Properties)
+	 _ParticleAttributes(Attributes)
 {
 }
 

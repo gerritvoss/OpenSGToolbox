@@ -77,7 +77,7 @@
 #include <OpenSG/OSGVec3fFields.h> // InternalVelocities type
 #include <OpenSG/OSGVec3fFields.h> // InternalSecVelocities type
 #include <OpenSG/OSGVec3fFields.h> // InternalAccelerations type
-#include <OpenSG/OSGUInt64Fields.h> // InternalProperties type
+#include <OpenSG/Toolbox/OSGStringToUInt32MapType.h> // InternalAttributes type
 #include <OpenSG/OSGUInt32Fields.h> // MaxParticles type
 #include <OpenSG/OSGBoolFields.h> // Dynamic type
 #include <OpenSG/OSGBoolFields.h> // UpdateSecAttribs type
@@ -118,8 +118,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
         InternalVelocitiesFieldId    = InternalAgesFieldId          + 1,
         InternalSecVelocitiesFieldId = InternalVelocitiesFieldId    + 1,
         InternalAccelerationsFieldId = InternalSecVelocitiesFieldId + 1,
-        InternalPropertiesFieldId    = InternalAccelerationsFieldId + 1,
-        MaxParticlesFieldId          = InternalPropertiesFieldId    + 1,
+        InternalAttributesFieldId    = InternalAccelerationsFieldId + 1,
+        MaxParticlesFieldId          = InternalAttributesFieldId    + 1,
         DynamicFieldId               = MaxParticlesFieldId          + 1,
         UpdateSecAttribsFieldId      = DynamicFieldId               + 1,
         LastElapsedTimeFieldId       = UpdateSecAttribsFieldId      + 1,
@@ -139,7 +139,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     static const OSG::BitVector InternalVelocitiesFieldMask;
     static const OSG::BitVector InternalSecVelocitiesFieldMask;
     static const OSG::BitVector InternalAccelerationsFieldMask;
-    static const OSG::BitVector InternalPropertiesFieldMask;
+    static const OSG::BitVector InternalAttributesFieldMask;
     static const OSG::BitVector MaxParticlesFieldMask;
     static const OSG::BitVector DynamicFieldMask;
     static const OSG::BitVector UpdateSecAttribsFieldMask;
@@ -260,7 +260,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     MFVec3f             _mfInternalVelocities;
     MFVec3f             _mfInternalSecVelocities;
     MFVec3f             _mfInternalAccelerations;
-    MFUInt64            _mfInternalProperties;
+    MFStringToUInt32Map   _mfInternalAttributes;
     SFUInt32            _sfMaxParticles;
     SFBool              _sfDynamic;
     SFBool              _sfUpdateSecAttribs;
@@ -299,7 +299,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            MFVec3f             *getMFInternalVelocities(void);
            MFVec3f             *getMFInternalSecVelocities(void);
            MFVec3f             *getMFInternalAccelerations(void);
-           MFUInt64            *getMFInternalProperties(void);
+           MFStringToUInt32Map *getMFInternalAttributes(void);
 
            Pnt3f               &getInternalPositions(UInt32 index);
            MFPnt3f             &getInternalPositions(void);
@@ -331,9 +331,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            Vec3f               &getInternalAccelerations(UInt32 index);
            MFVec3f             &getInternalAccelerations(void);
      const MFVec3f             &getInternalAccelerations(void) const;
-           UInt64              &getInternalProperties(UInt32 index);
-           MFUInt64            &getInternalProperties(void);
-     const MFUInt64            &getInternalProperties(void) const;
+           StringToUInt32Map   &getInternalAttributes(UInt32 index);
+           MFStringToUInt32Map &getInternalAttributes(void);
+     const MFStringToUInt32Map &getInternalAttributes(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

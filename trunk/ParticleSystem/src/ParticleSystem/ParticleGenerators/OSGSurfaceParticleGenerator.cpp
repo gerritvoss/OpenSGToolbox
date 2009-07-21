@@ -91,7 +91,7 @@ bool SurfaceParticleGenerator::generate(ParticleSystemPtr System, const Time& el
 	Vec3f TangentReturnValue = Vec3f(0.0f,0.0f,1.0f);
 	Real32 SpeedReturnValue = 0.0;
 	Vec3f AccelerationReturnValue = Vec3f(0.0f,0.0f,0.0f);
-	UInt64 PropertyReturnValue = 0;
+	StringToUInt32Map AttributesReturnValue;
 
 	FunctionIOParameterVector EmptyParameters;
 	FunctionIOParameterVector PositionVelocityVector;
@@ -168,7 +168,7 @@ bool SurfaceParticleGenerator::generate(ParticleSystemPtr System, const Time& el
 		VelocityReturnValue,
 		SecVelocityReturnValue,
 		AccelerationReturnValue,
-		PropertyReturnValue);
+		AttributesReturnValue);
 
 
 	

@@ -166,11 +166,11 @@ MFVec3f *ParticleSystemBase::getMFInternalAccelerations(void)
     return &_mfInternalAccelerations;
 }
 
-//! Get the ParticleSystem::_mfInternalProperties field.
+//! Get the ParticleSystem::_mfInternalAttributes field.
 inline
-MFUInt64 *ParticleSystemBase::getMFInternalProperties(void)
+MFStringToUInt32Map *ParticleSystemBase::getMFInternalAttributes(void)
 {
-    return &_mfInternalProperties;
+    return &_mfInternalAttributes;
 }
 
 //! Get the ParticleSystem::_sfMaxParticles field.
@@ -518,25 +518,25 @@ const MFVec3f &ParticleSystemBase::getInternalAccelerations(void) const
     return _mfInternalAccelerations;
 }
 
-//! Get the value of the \a index element the ParticleSystem::_mfInternalProperties field.
+//! Get the value of the \a index element the ParticleSystem::_mfInternalAttributes field.
 inline
-UInt64 &ParticleSystemBase::getInternalProperties(const UInt32 index)
+StringToUInt32Map &ParticleSystemBase::getInternalAttributes(const UInt32 index)
 {
-    return _mfInternalProperties[index];
+    return _mfInternalAttributes[index];
 }
 
-//! Get the ParticleSystem::_mfInternalProperties field.
+//! Get the ParticleSystem::_mfInternalAttributes field.
 inline
-MFUInt64 &ParticleSystemBase::getInternalProperties(void)
+MFStringToUInt32Map &ParticleSystemBase::getInternalAttributes(void)
 {
-    return _mfInternalProperties;
+    return _mfInternalAttributes;
 }
 
-//! Get the ParticleSystem::_mfInternalProperties field.
+//! Get the ParticleSystem::_mfInternalAttributes field.
 inline
-const MFUInt64 &ParticleSystemBase::getInternalProperties(void) const
+const MFStringToUInt32Map &ParticleSystemBase::getInternalAttributes(void) const
 {
-    return _mfInternalProperties;
+    return _mfInternalAttributes;
 }
 
 //! Get the value of the \a index element the ParticleSystem::_mfGenerators field.

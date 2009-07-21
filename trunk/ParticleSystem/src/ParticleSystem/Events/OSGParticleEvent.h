@@ -37,6 +37,7 @@
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGVector.h>
+#include <OpenSG/Toolbox/OSGStringToUInt32MapType.h>
 
 #include "ParticleSystem/OSGParticleSystemFields.h"
 
@@ -60,7 +61,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEvent : public Event
 	 const Vec3f& Velocity,
 	 const Vec3f& SecVelocity,
 	 const Vec3f& Acceleration,
-	 UInt64 Properties);
+	 const StringToUInt32Map& Attributes);
 
     virtual const EventType &getType(void) const;
 
@@ -76,7 +77,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEvent : public Event
     const Vec3f &getVelocity(void) const;
     const Vec3f &getSecVelocity(void) const;
     const Vec3f &getAcceleration(void) const;
-    const UInt64 &getProperties(void) const;
+    const StringToUInt32Map &getAttributes(void) const;
     
     static const EventType &getClassType(void);
   private:
@@ -95,7 +96,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEvent : public Event
 	 Vec3f _ParticleVelocity;
 	 Vec3f _ParticleSecVelocity;
 	 Vec3f _ParticleAcceleration;
-	 UInt64 _ParticleProperties;
+	 StringToUInt32Map _ParticleAttributes;
 };
 
 OSG_END_NAMESPACE

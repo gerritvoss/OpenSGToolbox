@@ -103,7 +103,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	const Vec3f& getSecVelocity(const UInt32& Index) const;
 	const Vec3f getVelocityChange(const UInt32& Index) const;
 	const Vec3f& getAcceleration(const UInt32& Index) const;
-	UInt64 getProperty(const UInt32& Index) const;
+    UInt32 getAttribute(const UInt32& Index, const std::string& AttributeKey) const;
+    const StringToUInt32Map& getAttributes(const UInt32& Index) const;
 
     
 	void setPosition(const Pnt3f& Pos, const UInt32& Index);
@@ -116,7 +117,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	void setVelocity(const Vec3f& Velocity, const UInt32& Index);
 	void setSecVelocity(const Vec3f& SecVelocity, const UInt32& Index);
 	void setAcceleration(const Vec3f& Acceleration, const UInt32& Index);
-	void setProperty(const UInt64& Property, const UInt32& Index);
+    void setAttribute(const std::string& AttributeKey, UInt32 AttributeValue, const UInt32& Index);
+    void setAttributes(const StringToUInt32Map& Attributes, const UInt32& Index);
 
 	
 	UInt32 getNumSecPositions(void) const;
@@ -128,7 +130,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	UInt32 getNumVelocities(void) const;
 	UInt32 getNumSecVelocities(void) const;
 	UInt32 getNumAccelerations(void) const;
-	UInt32 getNumProperties(void) const;
+	UInt32 getNumAttributes(void) const;
     
     void addParticleSystemListener(ParticleSystemListenerPtr Listener);
     void removeParticleSystemListener(ParticleSystemListenerPtr Listener);
@@ -143,7 +145,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 					 const Vec3f& Velocity,
 					 const Vec3f& SecVelocity,
 					 const Vec3f& Acceleration,
-					 UInt64 Properties);
+                     const StringToUInt32Map& Attributes);
 
 	bool addParticle(const Pnt3f& Position,
 					 const Vec3f& Normal,
@@ -151,8 +153,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 					 const Vec3f& Size,
 					 Real32 Lifespan,
 					 const Vec3f& Velocity,
-					 const Vec3f& Acceleration,
-					 UInt64 Properties);
+					 const Vec3f& Acceleration);
 
     
 	bool killParticle(UInt32 Index);
@@ -202,7 +203,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	 const Vec3f& Velocity,
 	 const Vec3f& SecVelocity,
 	 const Vec3f& Acceleration,
-	 UInt64 Properties);
+     const StringToUInt32Map& Attributes);
 
     void produceParticleKilled(
 	 Int32 Index,
@@ -216,7 +217,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	 const Vec3f& Velocity,
 	 const Vec3f& SecVelocity,
 	 const Vec3f& Acceleration,
-	 UInt64 Properties);
+     const StringToUInt32Map& Attributes);
 
     void produceParticleStolen(
 	 Int32 Index,
@@ -230,7 +231,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	 const Vec3f& Velocity,
 	 const Vec3f& SecVelocity,
 	 const Vec3f& Acceleration,
-	 UInt64 Properties);
+     const StringToUInt32Map& Attributes);
 
 	class SystemUpdateListener : public UpdateListener
 	{
@@ -256,7 +257,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	void addAndExpandVelocities(const Vec3f& Velocity);
 	void addAndExpandSecVelocities(const Vec3f& SecVelocity);
 	void addAndExpandAccelerations(const Vec3f& Acceleration);
-	void addAndExpandProperties(UInt64 Properties);
+	void addAndExpandAttributes(const StringToUInt32Map& AttributeMap);
 
 	void removePosition(UInt32 Index);
 	void removeSecPosition(UInt32 Index);
@@ -268,7 +269,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	void removeVelocity(UInt32 Index);
 	void removeSecVelocity(UInt32 Index);
 	void removeAcceleration(UInt32 Index);
-	void removeProperty(UInt32 Index);
+	void removeAttributes(UInt32 Index);
 
 	bool internalKillParticle(UInt32 Index);
 	void internalKillParticles();

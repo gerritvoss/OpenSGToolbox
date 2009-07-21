@@ -79,7 +79,7 @@ const OSG::BitVector  ParticleSystem::InternalParticlesFieldMask =
     (TypeTraits<BitVector>::One << ParticleSystem::InternalVelocitiesFieldId) ||
     (TypeTraits<BitVector>::One << ParticleSystem::InternalSecVelocitiesFieldId) ||
     (TypeTraits<BitVector>::One << ParticleSystem::InternalAccelerationsFieldId) ||
-    (TypeTraits<BitVector>::One << ParticleSystem::InternalPropertiesFieldId);
+    (TypeTraits<BitVector>::One << ParticleSystem::InternalAttributesFieldId);
 
 StatElemDesc<StatIntElem> ParticleSystem::statNParticles("NParticles", 
                                                       "number of particles");
@@ -323,28 +323,28 @@ void ParticleSystem::addAndExpandAccelerations(const Vec3f& Acceleration)
 	}
 }
 
-void ParticleSystem::addAndExpandProperties(UInt64 Properties)
+void ParticleSystem::addAndExpandAttributes(const StringToUInt32Map& AttributeMap)
 {
-	if(getInternalProperties().size() == 0)
+	if(getInternalAttributes().size() == 0)
 	{
-		getInternalProperties().push_back(Properties);
+		getInternalAttributes().push_back(AttributeMap);
 	}
-	else if(getInternalProperties().size() == 1)
+	else if(getInternalAttributes().size() == 1)
 	{
-		if(getInternalProperties()[0] != Properties)
+		if(getInternalAttributes()[0] != AttributeMap)
 		{
 			//Expand to Positions size-1
 			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
 			{
-				getInternalProperties().push_back(getInternalProperties()[0]);
+				getInternalAttributes().push_back(getInternalAttributes()[0]);
 			}
 
-			getInternalProperties().push_back(Properties);
+			getInternalAttributes().push_back(AttributeMap);
 		}
 	}
 	else
 	{
-		getInternalProperties().push_back(Properties);
+		getInternalAttributes().push_back(AttributeMap);
 	}
 }
 
@@ -365,7 +365,7 @@ bool ParticleSystem::internalKillParticle(UInt32 Index)
 	Vec3f Velocity(getVelocity(Index));
 	Vec3f SecVelocity(getSecVelocity(Index));
 	Vec3f Acceleration(getAcceleration(Index));
-	UInt64 Properties(getProperty(Index));
+	StringToUInt32Map Attributes(getAttributes(Index));
 
     removePosition(Index);
     removeSecPosition(Index);
@@ -377,9 +377,9 @@ bool ParticleSystem::internalKillParticle(UInt32 Index)
     removeVelocity(Index);
     removeSecVelocity(Index);
     removeAcceleration(Index);
-    removeProperty(Index);
+    removeAttributes(Index);
 
-    produceParticleKilled(Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties);
+    produceParticleKilled(Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes);
 
     return true;
 }
@@ -520,16 +520,16 @@ void ParticleSystem::removeAcceleration(UInt32 Index)
     }
 }
 
-void ParticleSystem::removeProperty(UInt32 Index)
+void ParticleSystem::removeAttributes(UInt32 Index)
 {
-    if(getNumProperties() > 1)
+    if(getNumAttributes() > 1)
     {
-        getInternalProperties()[Index] = getInternalProperties().back();
-        getInternalProperties().erase(--getInternalProperties().end());
+        getInternalAttributes()[Index] = getInternalAttributes().back();
+        getInternalAttributes().erase(--getInternalAttributes().end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalProperties().clear();
+        getInternalAttributes().clear();
     }
 }
 
@@ -544,7 +544,7 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 					 const Vec3f& Velocity,
 					 const Vec3f& SecVelocity,
 					 const Vec3f& Acceleration,
-					 UInt64 Properties)
+                     const StringToUInt32Map& Attributes)
 {
 	if(getNumParticles() >= getMaxParticles())
 	{
@@ -562,12 +562,12 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 		addAndExpandVelocities(Velocity);
 		addAndExpandSecVelocities(SecVelocity);
 		addAndExpandAccelerations(Acceleration);
-		addAndExpandProperties(Properties);
+		addAndExpandAttributes(Attributes);
 
 		getInternalPositions().push_back(Position);
 	endEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
 
-    produceParticleGenerated(getInternalPositions().size()-1, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties);
+    produceParticleGenerated(getInternalPositions().size()-1, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes);
 
 	return true;
 }
@@ -578,9 +578,10 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 					 const Vec3f& Size,
 					 Real32 Lifespan,
 					 const Vec3f& Velocity,
-					 const Vec3f& Acceleration,
-					 UInt64 Properties)
+					 const Vec3f& Acceleration)
 {
+    StringToUInt32Map EmptyAttributes;
+
 	return addParticle(Position,
 	             Position,
 				 Normal,
@@ -591,7 +592,7 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 				 Velocity,
 				 Velocity,
 				 Acceleration,
-				 Properties);
+				 EmptyAttributes);
 }
 
 const Vec3f ParticleSystem::getPositionChange(const UInt32& Index) const
@@ -712,17 +713,30 @@ const Vec3f& ParticleSystem::getAcceleration(const UInt32& Index) const
 	}
 }
 
-UInt64 ParticleSystem::getProperty(const UInt32& Index) const
+const StringToUInt32Map& ParticleSystem::getAttributes(const UInt32& Index) const
 {
-	if(Index < getInternalProperties().getSize())
+	if(Index < getInternalAttributes().getSize())
 	{
-		return getInternalProperties()[Index];
+		return getInternalAttributes()[Index];
 	}
 	else
 	{
-		return getInternalProperties()[0];
+		return getInternalAttributes()[0];
 	}
 }
+
+UInt32 ParticleSystem::getAttribute(const UInt32& Index, const std::string& AttributeKey) const
+{
+	if(Index < getInternalAttributes().getSize())
+	{
+		return getInternalAttributes()[Index].find(AttributeKey)->second;
+	}
+	else
+	{
+		return getInternalAttributes()[0].find(AttributeKey)->second;
+	}
+}
+
 void ParticleSystem::setSecPosition(const Pnt3f& SecPosition, const UInt32& Index)
 {
 	if(getNumSecPositions() > 1)
@@ -964,29 +978,30 @@ void ParticleSystem::setAcceleration(const Vec3f& Acceleration, const UInt32& In
 		}
 	}
 }
-void ParticleSystem::setProperty(const UInt64& Property, const UInt32& Index)
+
+void ParticleSystem::setAttributes(const StringToUInt32Map& Attributes, const UInt32& Index)
 {
-	if(getNumProperties() > 1)
+	if(getNumAttributes() > 1)
 	{
-		getInternalProperties()[Index] = Property;
+		getInternalAttributes()[Index] = Attributes;
 	}
-	else if(getNumProperties() == 1)
+	else if(getNumAttributes() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalProperties()[0] != Property)
+			if(getInternalAttributes()[0] != Attributes)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalProperties().push_back(getInternalProperties()[0]);
+					getInternalAttributes().push_back(getInternalAttributes()[0]);
 				}
-				getInternalProperties()[Index] = Property;
+				getInternalAttributes()[Index] = Attributes;
 			}
 		}
 		else
 		{
-			getInternalProperties()[Index] = Property;
+			getInternalAttributes()[Index] = Attributes;
 		}
 	}
 }
@@ -1092,9 +1107,9 @@ void ParticleSystem::produceParticleGenerated(Int32 Index,
 										 const Vec3f& Velocity,
 										 const Vec3f& SecVelocity,
 										 const Vec3f& Acceleration,
-										 UInt64 Properties)
+                                         const StringToUInt32Map& Attributes)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties );
+   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1116,9 +1131,9 @@ void ParticleSystem::produceParticleKilled(Int32 Index,
 										 const Vec3f& Velocity,
 										 const Vec3f& SecVelocity,
 										 const Vec3f& Acceleration,
-										 UInt64 Properties)
+                                         const StringToUInt32Map& Attributes)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties );
+   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1140,9 +1155,9 @@ void ParticleSystem::produceParticleStolen(Int32 Index,
 										 const Vec3f& Velocity,
 										 const Vec3f& SecVelocity,
 										 const Vec3f& Acceleration,
-										 UInt64 Properties)
+                                         const StringToUInt32Map& Attributes)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Properties );
+   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
 
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)

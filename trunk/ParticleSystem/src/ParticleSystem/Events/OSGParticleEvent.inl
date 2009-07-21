@@ -81,9 +81,9 @@ const Vec3f &ParticleEvent::getAcceleration(void) const
 }
 
 inline
-const UInt64 &ParticleEvent::getProperties(void) const
+const StringToUInt32Map &ParticleEvent::getAttributes(void) const
 {
-    return _ParticleProperties;
+    return _ParticleAttributes;
 }
 
 

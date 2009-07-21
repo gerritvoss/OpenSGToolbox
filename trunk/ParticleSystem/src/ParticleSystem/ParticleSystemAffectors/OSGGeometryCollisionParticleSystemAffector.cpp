@@ -102,7 +102,7 @@ void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemPtr
 		, System->getVelocity(ParticleIndex)
 		, System->getSecVelocity(ParticleIndex)
 		, System->getAcceleration(ParticleIndex)
-		, System->getProperty(ParticleIndex));
+		, System->getAttributes(ParticleIndex));
    CollisionEvent TheCollisionEvent( GeometryCollisionParticleSystemAffectorPtr(this), getSystemTime(),Action->getHitT(), Action->getHitObject(), Action->getHitTriangle(), Action->getHitNormal(), Action->getHitPoint() );
    ParticleCollisionListenerSetItor NextItor;
    for(ParticleCollisionListenerSetItor SetItor(_ParticleCollisionListeners.begin()) ; SetItor != _ParticleCollisionListeners.end() ;)

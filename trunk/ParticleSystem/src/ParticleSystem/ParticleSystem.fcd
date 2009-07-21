@@ -120,21 +120,14 @@
         If no accelerations are present, then the position will not be updated regarding acceleration.
 	</Field>
 	<Field
-		name="InternalProperties"
-		type="UInt64"
-		cardinality="multi"
-		visibility="external"
-		access="protected"
-	>
-	</Field>
-	<Field
 		name="InternalAttributes"
 		type="StringToUInt32Map"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="OpenSG/Toolbox/OSGStringToUInt32Type.h"
+		header="OpenSG/Toolbox/OSGStringToUInt32MapType.h"
 	>
+   A per-particle attribute map.  Used for storing user-defined data to particles.
 	</Field>
 	<Field
 		name="MaxParticles"

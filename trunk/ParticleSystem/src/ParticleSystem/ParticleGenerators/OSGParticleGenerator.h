@@ -47,6 +47,7 @@
 
 #include "OSGParticleGeneratorBase.h"
 #include "ParticleSystem/OSGParticleSystemFields.h"
+#include <OpenSG/Toolbox/OSGStringToUInt32MapType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -113,7 +114,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGenerator : public ParticleGenera
 		Vec3f& VelocityReturnValue,
 		Vec3f& SecVelocityReturnValue,
 		Vec3f& AccelerationReturnValue,
-		UInt64& PropertyReturnValue) const;
+        StringToUInt32Map& AttributeReturnValue) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -94,8 +94,8 @@ const OSG::BitVector  ParticleSystemBase::InternalSecVelocitiesFieldMask =
 const OSG::BitVector  ParticleSystemBase::InternalAccelerationsFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::InternalAccelerationsFieldId);
 
-const OSG::BitVector  ParticleSystemBase::InternalPropertiesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalPropertiesFieldId);
+const OSG::BitVector  ParticleSystemBase::InternalAttributesFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalAttributesFieldId);
 
 const OSG::BitVector  ParticleSystemBase::MaxParticlesFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::MaxParticlesFieldId);
@@ -155,8 +155,8 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 /*! \var Vec3f           ParticleSystemBase::_mfInternalAccelerations
     The particle accelerations If not set (0,0,0) will be used, if only one entry         is set, it will be used for all particles. If the number of accelerations is         equal to the number of positions every particle will get its own acceleration.         If no accelerations are present, then the position will not be updated regarding acceleration.
 */
-/*! \var UInt64          ParticleSystemBase::_mfInternalProperties
-    
+/*! \var StringToUInt32Map ParticleSystemBase::_mfInternalAttributes
+    A per-particle attribute map.  Used for storing user-defined data to particles.
 */
 /*! \var UInt32          ParticleSystemBase::_sfMaxParticles
     
@@ -234,11 +234,11 @@ FieldDescription *ParticleSystemBase::_desc[] =
                      InternalAccelerationsFieldId, InternalAccelerationsFieldMask,
                      false,
                      (FieldAccessMethod) &ParticleSystemBase::getMFInternalAccelerations),
-    new FieldDescription(MFUInt64::getClassType(), 
-                     "InternalProperties", 
-                     InternalPropertiesFieldId, InternalPropertiesFieldMask,
+    new FieldDescription(MFStringToUInt32Map::getClassType(), 
+                     "InternalAttributes", 
+                     InternalAttributesFieldId, InternalAttributesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalProperties),
+                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalAttributes),
     new FieldDescription(SFUInt32::getClassType(), 
                      "MaxParticles", 
                      MaxParticlesFieldId, MaxParticlesFieldMask,
@@ -349,7 +349,7 @@ void ParticleSystemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     _mfInternalVelocities.terminateShare(uiAspect, this->getContainerSize());
     _mfInternalSecVelocities.terminateShare(uiAspect, this->getContainerSize());
     _mfInternalAccelerations.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalProperties.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalAttributes.terminateShare(uiAspect, this->getContainerSize());
     _mfGenerators.terminateShare(uiAspect, this->getContainerSize());
     _mfAffectors.terminateShare(uiAspect, this->getContainerSize());
     _mfSystemAffectors.terminateShare(uiAspect, this->getContainerSize());
@@ -373,7 +373,7 @@ ParticleSystemBase::ParticleSystemBase(void) :
     _mfInternalVelocities     (), 
     _mfInternalSecVelocities  (), 
     _mfInternalAccelerations  (), 
-    _mfInternalProperties     (), 
+    _mfInternalAttributes     (), 
     _sfMaxParticles           (UInt32(4294967295)), 
     _sfDynamic                (bool(true)), 
     _sfUpdateSecAttribs       (), 
@@ -400,7 +400,7 @@ ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _mfInternalVelocities     (source._mfInternalVelocities     ), 
     _mfInternalSecVelocities  (source._mfInternalSecVelocities  ), 
     _mfInternalAccelerations  (source._mfInternalAccelerations  ), 
-    _mfInternalProperties     (source._mfInternalProperties     ), 
+    _mfInternalAttributes     (source._mfInternalAttributes     ), 
     _sfMaxParticles           (source._sfMaxParticles           ), 
     _sfDynamic                (source._sfDynamic                ), 
     _sfUpdateSecAttribs       (source._sfUpdateSecAttribs       ), 
@@ -474,9 +474,9 @@ UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
         returnValue += _mfInternalAccelerations.getBinSize();
     }
 
-    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
     {
-        returnValue += _mfInternalProperties.getBinSize();
+        returnValue += _mfInternalAttributes.getBinSize();
     }
 
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
@@ -573,9 +573,9 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
         _mfInternalAccelerations.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
     {
-        _mfInternalProperties.copyToBin(pMem);
+        _mfInternalAttributes.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
@@ -671,9 +671,9 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfInternalAccelerations.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
     {
-        _mfInternalProperties.copyFromBin(pMem);
+        _mfInternalAttributes.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
@@ -751,8 +751,8 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
     if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
         _mfInternalAccelerations.syncWith(pOther->_mfInternalAccelerations);
 
-    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
-        _mfInternalProperties.syncWith(pOther->_mfInternalProperties);
+    if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
+        _mfInternalAttributes.syncWith(pOther->_mfInternalAttributes);
 
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
         _sfMaxParticles.syncWith(pOther->_sfMaxParticles);
@@ -828,8 +828,8 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
     if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
         _mfInternalAccelerations.syncWith(pOther->_mfInternalAccelerations, sInfo);
 
-    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
-        _mfInternalProperties.syncWith(pOther->_mfInternalProperties, sInfo);
+    if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
+        _mfInternalAttributes.syncWith(pOther->_mfInternalAttributes, sInfo);
 
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
         _mfGenerators.syncWith(pOther->_mfGenerators, sInfo);
@@ -879,8 +879,8 @@ void ParticleSystemBase::execBeginEditImpl (const BitVector &whichField,
     if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
         _mfInternalAccelerations.beginEdit(uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (InternalPropertiesFieldMask & whichField))
-        _mfInternalProperties.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
+        _mfInternalAttributes.beginEdit(uiAspect, uiContainerSize);
 
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
         _mfGenerators.beginEdit(uiAspect, uiContainerSize);

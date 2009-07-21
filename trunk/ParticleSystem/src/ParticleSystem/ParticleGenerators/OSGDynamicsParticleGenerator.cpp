@@ -91,7 +91,7 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32
 	Vec3f VelocityReturnValue = Vec3f(0.0,0.0f,0.0f);
 	Vec3f SecVelocityReturnValue = Vec3f(0.0,0.0f,0.0f);
 	Vec3f AccelerationReturnValue = Vec3f(0.0,0.0f,0.0f);
-	UInt64 PropertyReturnValue = 0;
+	StringToUInt32Map AttributesReturnValue;
 
 
     FunctionIOParameterVector EmptyParameters;
@@ -193,7 +193,7 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32
 		VelocityReturnValue,
 		SecVelocityReturnValue,
 		AccelerationReturnValue,
-		PropertyReturnValue);
+		AttributesReturnValue);
 }
 
 /*-------------------------------------------------------------------------*\

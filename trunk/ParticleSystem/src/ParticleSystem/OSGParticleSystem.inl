@@ -121,9 +121,9 @@ UInt32 ParticleSystem::getNumAccelerations(void) const
 }
 
 inline
-UInt32 ParticleSystem::getNumProperties(void) const
+UInt32 ParticleSystem::getNumAttributes(void) const
 {
-	return getInternalProperties().getSize();
+	return getInternalAttributes().getSize();
 }
 
 inline

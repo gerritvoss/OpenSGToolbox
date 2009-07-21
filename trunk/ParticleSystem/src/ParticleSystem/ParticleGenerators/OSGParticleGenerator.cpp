@@ -89,7 +89,7 @@ void ParticleGenerator::generate(ParticleSystemPtr System,
 		Vec3f& VelocityReturnValue,
 		Vec3f& SecVelocityReturnValue,
 		Vec3f& AccelerationReturnValue,
-		UInt64& PropertyReturnValue) const
+        StringToUInt32Map& AttributeReturnValue) const
 {
 	if(System != NullFC)
 	{
@@ -105,7 +105,7 @@ void ParticleGenerator::generate(ParticleSystemPtr System,
 				VelocityReturnValue,
 				SecVelocityReturnValue,
 				AccelerationReturnValue,
-				PropertyReturnValue);
+				AttributeReturnValue);
 		}
 		else
 		{
@@ -129,7 +129,7 @@ void ParticleGenerator::generate(ParticleSystemPtr System,
 				VelocityReturnValue,
 				SecVelocityReturnValue,
 				AccelerationReturnValue,
-				PropertyReturnValue);
+				AttributeReturnValue);
 
 		}
 	}
