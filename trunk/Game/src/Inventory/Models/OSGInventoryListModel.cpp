@@ -78,15 +78,14 @@ void InventoryListModel::initMethod (void)
 \***************************************************************************/
 UInt32 InventoryListModel::getSize(void) const
 {
-	return _FieldList.size();
+	return _InventoryItems.size();
 }
 
 boost::any InventoryListModel::getElementAt(UInt32 index) const
 {
-	if(index < _FieldList.size())
+	if(index < _InventoryItems.size())
 	{
-		std::string name = boost::any_cast<InventoryItemPtr>(*(_FieldList.begin() + index))->getName();
-		return boost::any_cast<std::string>(name);
+		return _InventoryItems.at(index)->getName();
 	}
 	else
 	{
@@ -98,7 +97,7 @@ void InventoryListModel::addInventory(InventoryPtr inven)
 {
 	for(UInt32 i = 0; i < inven->getInventoryItems().getSize(); ++i)
 	{
-		_FieldList.push_back(inven->getInventoryItems(i));
+		_InventoryItems.push_back(inven->getInventoryItems(i));
 	}
 }
 /*-------------------------------------------------------------------------*\

@@ -192,6 +192,10 @@ int main(int argc, char **argv)
 	GenericInventoryItemPtr ExampleItem1 = GenericInventoryItem::create();
 	GenericInventoryItemPtr ExampleItem2 = GenericInventoryItem::create(); 
 	GenericInventoryItemPtr ExampleItem3 = GenericInventoryItem::create(); 
+	GenericInventoryItemPtr ExampleItem4 = GenericInventoryItem::create();
+	GenericInventoryItemPtr ExampleItem5 = GenericInventoryItem::create();
+	GenericInventoryItemPtr ExampleItem6 = GenericInventoryItem::create();
+	GenericInventoryItemPtr ExampleItem7 = GenericInventoryItem::create();
 
 	beginEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
 		ExampleItem1->setName(std::string("David K"));
@@ -200,7 +204,7 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
 		ExampleItem2->setName(std::string("Eve W"));
-		ExampleItem2->setDetails(std::string("Department: Genetics Development and Cell Biology\n College: Agriculture"));
+		ExampleItem2->setDetails(std::string("Department: Genetics Development and Cell Biology\n\nCollege: Agriculture"));
 	endEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
 
 	beginEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
@@ -208,9 +212,33 @@ int main(int argc, char **argv)
 		ExampleItem3->setDetails(std::string("Major: Art And Design\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
 	endEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
 
+	beginEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+		ExampleItem4->setName(std::string("Eric L"));
+		ExampleItem4->setDetails(std::string("Major: Software Engineering\nDegree: BS\nDepartment: Software Engineering\nCollege: Engineering"));
+	endEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+
+	beginEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+		ExampleItem5->setName(std::string("Jeffery F"));
+		ExampleItem5->setDetails(std::string("Major: Integrated Studio Arts\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
+	endEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+
+	beginEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+		ExampleItem6->setName(std::string("Tao L"));
+		ExampleItem6->setDetails(std::string("Major: Computer Engineering\nDegree: PhD\nDepartment: Computer Engineering\nCollege: Engineering"));
+	endEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+
+	beginEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+		ExampleItem7->setName(std::string("Daniel G"));
+		ExampleItem7->setDetails(std::string("Major: Computer Engineering\nDegree: BS\nDepartment: Computer Engineering\nCollege: Engineering"));
+	endEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask);
+
 	ExampleInventory->addItem(ExampleItem1);
 	ExampleInventory->addItem(ExampleItem2);
 	ExampleInventory->addItem(ExampleItem3);
+	ExampleInventory->addItem(ExampleItem4);
+	ExampleInventory->addItem(ExampleItem5);
+	ExampleInventory->addItem(ExampleItem6);
+	ExampleInventory->addItem(ExampleItem7);
 
 
 
@@ -288,6 +316,13 @@ int main(int argc, char **argv)
     ExampleList->getSelectionModel()->addListSelectionListener(&TheInventoryListListener);
 
 
+	// Create The Main InternalWindow
+    // Create Background to be used with the Main InternalWindow
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+
     /******************************************************
 
             Determine the SelectionModel
@@ -311,31 +346,28 @@ int main(int argc, char **argv)
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
     ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
-    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
+	beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | ScrollPanel::BackgroundFieldMask);
+        ExampleScrollPanel->setPreferredSize(Vec2f(200,100));
+		ExampleScrollPanel->setBackgrounds(MainInternalWindowBackground);
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | ScrollPanel::BackgroundFieldMask);
     ExampleScrollPanel->setViewComponent(ExampleList);
 
     // Create MainFramelayout
     FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
     beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-        MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+	MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
         MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
         MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
     endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
     
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    
 
 	DetailsWindow = osg::TextArea::create();
 	beginEditCP(DetailsWindow, TextArea::PreferredSizeFieldMask);
 		DetailsWindow->setPreferredSize(Pnt2f(200,100));
+		DetailsWindow->setMinSize(Vec2f(200,100));
     endEditCP(DetailsWindow, TextArea::PreferredSizeFieldMask);
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();

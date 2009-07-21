@@ -99,7 +99,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModel : public InventoryListModelBase
     InventoryListModel(void);
     InventoryListModel(const InventoryListModel &source);
 
-	FieldList _FieldList;
+	std::vector<InventoryItemPtr> _InventoryItems;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
