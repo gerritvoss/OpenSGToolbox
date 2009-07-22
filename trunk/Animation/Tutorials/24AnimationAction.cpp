@@ -40,6 +40,7 @@
 #include <OpenSG/Animation/OSGKeyframeAnimator.h>
 #include <OpenSG/Animation/OSGFieldAnimation.h>
 #include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
+//#include <OpenSG/Animation/OSGAnimationAdvancerAction.h>
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
@@ -113,6 +114,7 @@ KeyframeColorsSequencePtr ColorKeyframes;
 KeyframeVectorsSequencePtr VectorKeyframes;
 KeyframeRotationsSequencePtr RotationKeyframes;
 
+//SoundActionPtr SoundAction;
 bool ExitApp = false;
 
 // Create a class to allow for the use of the Ctrl+q
@@ -200,7 +202,7 @@ class TutorialUpdateListener : public UpdateListener
     virtual void update(const UpdateEvent& e)
     {
 		ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
-		if (animated)
+		//if (animated)
 		 TheAnimation->update(TheAnimationAdvancer);
     }
 };
@@ -211,8 +213,8 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        std::cout << "Button 1 Action" << std::endl;
-	animated ^= 1;
+        
+	TheAnimationAdvancer->pauseToggle();
     }
 };
 
@@ -281,9 +283,9 @@ int main(int argc, char **argv)
             ExampleButton->setMinSize(Vec2f(50, 25));
             ExampleButton->setMaxSize(Vec2f(200, 100));
             ExampleButton->setPreferredSize(Vec2f(100, 50));
-            ExampleButton->setToolTipText("Button 1 ToolTip");
+            ExampleButton->setToolTipText("Click to start/pause");
 
-            ExampleButton->setText("Button 1");
+            ExampleButton->setText("start/pause");
             ExampleButton->setFont(ExampleFont);
             ExampleButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
             ExampleButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
@@ -392,7 +394,7 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    TheAnimation->start();
+    TheAnimationAdvancer->start();
     
     while(!ExitApp)
     {

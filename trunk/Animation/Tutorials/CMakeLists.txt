@@ -2,7 +2,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
 PROJECT("Animation Tutorials")
 
-SET (CMAKE_VERBOSE_MAKEFILE TRUE)
+#SET (CMAKE_VERBOSE_MAKEFILE TRUE)
 
 ######### Revision number
 Option(UseSVN "check if svn should be used")
