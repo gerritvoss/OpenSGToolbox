@@ -1,0 +1,4 @@
+Welcome to the OpenSGToolbox Installer. This installer will install OpenSGToolbox, the dependencies required to use it, and tutorials demonstrating its use.
+
+For more information, visit:
+www.vrac.iastate.edu/~dkabala/OpenSGToolbox
