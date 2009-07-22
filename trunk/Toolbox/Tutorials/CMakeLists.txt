@@ -127,6 +127,7 @@ TARGET_LINK_LIBRARIES(02FCFileTypeIO optimized OSGToolbox
                                      ${Boost_LIBRARIES})
 TARGET_LINK_LIBRARIES(03XMLSceneLoader optimized OSGToolbox optimized OSGInput
                                      debug     OSGToolboxD debug OSGInputD
+                                     OSGWindowGLUT
                                      ${Boost_LIBRARIES})
 TARGET_LINK_LIBRARIES(04Xml2Osb optimized OSGToolbox
                                      debug     OSGToolboxD
