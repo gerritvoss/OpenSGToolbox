@@ -173,6 +173,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING Joint : public JointBase
 	  Matrix _BindAbsoluteTransformation;
 	  Matrix _AbsoluteDifferenceTransformation;
 	  Matrix _RelativeDifferenceTransformation;
+	  
+	  //TODO: DELETE
+	  Matrix _lastRootTrans;
 
     // Variables should all be in JointBase.
 

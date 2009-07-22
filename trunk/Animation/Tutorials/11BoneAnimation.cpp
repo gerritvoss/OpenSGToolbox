@@ -381,18 +381,20 @@ void setupAnimation(JointPtr TheJoint, JointPtr TheChildJoint)
 
 	KeyframeTransformationsSequencePtr TheJointTranformationKeyframes = KeyframeTransformationsSequence44f::create();
 	
+	transform.setTranslate(1.2, 2.3, 3.4);
 	TheJointTranformationKeyframes->addKeyframe(transform, 0.0f);
 
-	transform.setTranslate(5.0, 0.0, 0.0);
+	transform.setTranslate(1.2, 2.3, 3.4);
 	TheJointTranformationKeyframes->addKeyframe(transform, 2.0f);
 
-	transform.setTranslate(0.0, 5.0, 0.0);
+	transform.setTranslate(1.2, 2.3, 3.4);
 	TheJointTranformationKeyframes->addKeyframe(transform, 4.0f);
 
-	transform.setTranslate(0.0, 0.0, 5.0);
+	transform.setTranslate(1.2, 2.3, 3.4);
 	TheJointTranformationKeyframes->addKeyframe(transform, 6.0f);
 
 	transform = TheJoint->getRelativeTransformation();
+	transform.setTranslate(1.2, 2.3, 3.4);
 	TheJointTranformationKeyframes->addKeyframe(transform, 8.0f);
 
 	//TheJoint Animator

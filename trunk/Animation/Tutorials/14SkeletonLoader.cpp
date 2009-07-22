@@ -205,8 +205,7 @@ int main(int argc, char **argv)
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
 	
-	//Particle System Node
-    
+	//Skeleton Node 
 	NodePtr SkeletonNode = osg::Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);

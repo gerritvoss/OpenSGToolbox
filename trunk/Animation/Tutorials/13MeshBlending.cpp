@@ -950,17 +950,6 @@ int main(int argc, char **argv)
     mgr->showAll();
 
 
-
-	FCFileType::FCPtrStore Containers;
-	Containers.insert(MeshNode);
-	Containers.insert(TheSkeletonAnimation);
-
-	FCFileType::FCTypeVector IgnoreTypes;
-	//IgnoreTypes.push_back(Node::getClassType().getId());
-	//Save the Field Containers to a xml file
-	FCFileHandler::the()->write(Containers,Path("./Data/20BlendedGeometry.xml"),IgnoreTypes);
-
-
     while(!ExitApp)
     {
         TutorialWindowEventProducer->update();

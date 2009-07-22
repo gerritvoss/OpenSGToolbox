@@ -87,6 +87,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
     Action::ResultE intersect( Action* action );
     /*=========================  PROTECTED  ===============================*/
   protected:
+	Pnt3f _lastEndPoint;
+	Pnt3f _lastStartPoint;
+	Matrix _lastAbsTrans;
 
     // Variables should all be in SkeletonDrawableBase.
 

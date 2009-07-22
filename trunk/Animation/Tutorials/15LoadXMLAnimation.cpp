@@ -1,28 +1,20 @@
-// OpenSG Tutorial Example: Hello World
-//
-// Minimalistic OpenSG program
-// 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
-//
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
-//
-
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
 
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
-
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
+#include <OpenSG/OSGNode.h>
+#include <OpenSG/OSGGroup.h>
+#include <OpenSG/OSGViewport.h>
+#include <OpenSG/Input/OSGWindowUtils.h>
+
+// Input
+#include <OpenSG/Input/OSGKeyListener.h>
+#include <OpenSG/Input/OSGWindowAdapter.h>
+
 
 #include <OpenSG/OSGSimpleMaterial.h>
 
@@ -49,14 +41,23 @@
 // with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
-bool animationPaused = false;
+// The SimpleSceneManager to manage simple applications
+SimpleSceneManager *mgr;
 
+AnimationPtr TheAnimation;
+AnimationAdvancerPtr TheAnimationAdvancer;
+MaterialPtr TheTorusMaterial;
+GeometryPtr TorusGeometry;
+
+bool animationPaused = false;
+bool ExitApp = false;
 
 // forward declaration so we can have the interesting stuff upfront
-int setupGLUT( int *argc, char *argv[] );
 void setupAnimation(void);
 void display(void);
+void reshape(Vec2f Size);
 
+/*
 class NamedNodeFinder
 {
   public:
@@ -97,8 +98,8 @@ class NamedNodeFinder
  
     NodePtr  _found;
     std::string  *_name;
-};
-
+};*/
+/*
 class TutorialAnimationListener : public AnimationListener
 {
 public:
@@ -127,17 +128,105 @@ public:
        std::cout << "Animation Cycled.  Cycle Count: " << e.getAnimation()->getCycles() << std::endl;
    }
 
+};*/
+
+
+// Create a class to allow for the use of the Ctrl+q
+class TutorialKeyListener : public KeyListener
+{
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+   {
+	   //Exit
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+           ExitApp = true;
+       }
+
+	   //Toggle animation
+	   if(e.getKey() == KeyEvent::KEY_SPACE)
+	   {
+		   if(animationPaused)
+			   animationPaused = false;
+		   else
+			   animationPaused = true;
+	   }
+   }
+
+   virtual void keyReleased(const KeyEvent& e)
+   {
+   }
+
+   virtual void keyTyped(const KeyEvent& e)
+   {
+   }
 };
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
+class TutorialWindowListener : public WindowAdapter
+{
+public:
+    virtual void windowClosing(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
 
-Time TimeLastIdle;
-AnimationPtr TheAnimation;
-TutorialAnimationListener TheAnimationListener;
-AnimationAdvancerPtr TheAnimationAdvancer;
-MaterialPtr TheTorusMaterial;
-GeometryPtr TorusGeometry;
+    virtual void windowClosed(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+};
+
+class TutorialMouseListener : public MouseListener
+{
+  public:
+    virtual void mouseClicked(const MouseEvent& e)
+    {
+    }
+    virtual void mouseEntered(const MouseEvent& e)
+    {
+    }
+    virtual void mouseExited(const MouseEvent& e)
+    {
+    }
+    virtual void mousePressed(const MouseEvent& e)
+    {
+            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+    }
+    virtual void mouseReleased(const MouseEvent& e)
+    {
+           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+    }
+};
+
+class TutorialMouseMotionListener : public MouseMotionListener
+{
+  public:
+    virtual void mouseMoved(const MouseEvent& e)
+    {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+    }
+
+    virtual void mouseDragged(const MouseEvent& e)
+    {
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+    }
+};
+
+class TutorialUpdateListener : public UpdateListener
+{
+  public:
+    virtual void update(const UpdateEvent& e)
+    {
+		if(!animationPaused)
+		{
+			ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+
+			TheAnimation->update(TheAnimationAdvancer);
+		}
+    }
+};
+
 
 KeyframeAnimatorPtr TheAnimator;
 KeyframeTransformationsSequencePtr TransformationKeyframes;
@@ -145,26 +234,53 @@ KeyframeColorsSequencePtr ColorKeyframes;
 KeyframeVectorsSequencePtr VectorKeyframes;
 KeyframeRotationsSequencePtr RotationKeyframes;
 
-// Initialize GLUT & OpenSG and set up the scene
+// Initialize OpenSG and set up the scene
 int main(int argc, char **argv)
 {
 	//Print key command info
 	std::cout << "\n\nKEY COMMANDS:" << std::endl;
 	std::cout << "space   Play/Pause the animation" << std::endl;
-	std::cout << "ESC     Exit\n\n" << std::endl;
+	std::cout << "CTRL-Q  Exit\n\n" << std::endl;
 
     // OSG init
     osgInit(argc,argv);
 
 
-    // GLUT init
-    int winid = setupGLUT(&argc, argv);
+    // Set up Window
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
 
-    // the connection between GLUT and OpenSG
-    GLUTWindowPtr gwin= GLUTWindow::create();
-    gwin->setId(winid);
-    gwin->init();
+	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
+		TutorialWindowEventProducer->setUseCallbackForDraw(true);
+		TutorialWindowEventProducer->setUseCallbackForReshape(true);
+	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
+    TutorialUpdateListener TheTutorialUpdateListener;  
+
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
+
+    //Add Window Listener
+    TutorialWindowListener TheTutorialWindowListener;
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialMouseListener TheTutorialMouseListener;
+    TutorialMouseMotionListener TheTutorialMouseMotionListener;
+    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
+
+    // Create the SimpleSceneManager helper
+    mgr = new SimpleSceneManager;
+
+    // Tell the Manager what to manage
+    mgr->setWindow(MainWindow);
+
+    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
+                                        Vec2f(1280,1024),
+                                        "OpenSG 15LoadXMLAnimation Window");
+   
     //Torus Geometry
     TorusGeometry = makeTorusGeo(.5, 2, 16, 16);
     
@@ -186,12 +302,12 @@ int main(int argc, char **argv)
 
     //Make Main Scene Node
     NodePtr scene = Node::create();
-    ComponentTransformPtr Trans;
-    Trans = ComponentTransform::create();
-    setName(Trans, std::string("MainTransformationCore"));
+    //ComponentTransformPtr Trans;
+    //Trans = ComponentTransform::create();
+    //setName(Trans, std::string("MainTransformationCore"));
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     {
-        scene->setCore(Trans);
+        scene->setCore(Group::create());
  
         // add the torus as a child
         scene->addChild(TorusNode);
@@ -200,118 +316,36 @@ int main(int argc, char **argv)
 
 
 	setupAnimation();
-
-
-    // create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-    // tell the manager what to manage
-    mgr->setWindow(gwin );
     mgr->setRoot  (scene);
 
     // show the whole scene
     mgr->showAll();
 
-    TimeLastIdle = getSystemTime();
-    TheAnimation->start();
-    
 
-    // GLUT main loop
-    glutMainLoop();
+    //TimeLastIdle = getSystemTime();
+
+
+    while(!ExitApp)
+    {
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
+    }
+    osgExit();
+
 
     return 0;
 }
 
-//
-// GLUT callback functions
-//
-
-void idle(void)
-{
-   Time Now = getSystemTime();
-   Time Elps(Now - TimeLastIdle);
-   TimeLastIdle = Now;
-   
-   if(!animationPaused)
-   {
-	   ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(Elps);
-
-	   TheAnimation->update(TheAnimationAdvancer);
-   }
-
-   glutPostRedisplay();
-}
-
-// redraw the window
+// Redraw the window
 void display(void)
 {
     mgr->redraw();
 }
 
-// react to size changes
-void reshape(int w, int h)
+// React to size changes
+void reshape(Vec2f Size)
 {
-    mgr->resize(w, h);
-    glutPostRedisplay();
-}
-
-// react to mouse button presses
-void mouse(int button, int state, int x, int y)
-{
-    if (state)
-        mgr->mouseButtonRelease(button, x, y);
-    else
-        mgr->mouseButtonPress(button, x, y);
-        
-    glutPostRedisplay();
-}
-
-// react to mouse motions with pressed buttons
-void motion(int x, int y)
-{
-    mgr->mouseMove(x, y);
-    glutPostRedisplay();
-}
-
-// react to keys
-void keyboard(unsigned char k, int x, int y)
-{
-    switch(k)
-    {
-        case 27:        
-        {
-            OSG::osgExit();
-            exit(0);
-        }
-        break;
-
-		case ' ':
-		{
-			if(animationPaused)
-			   animationPaused = false;
-		   else
-			   animationPaused = true;
-		}
-		break;
-    }
-}
-
-// setup the GLUT library which handles the windows for us
-int setupGLUT(int *argc, char *argv[])
-{
-    glutInit(argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-    
-    int winid = glutCreateWindow("OpenSG ");
-    
-    glutReshapeFunc(reshape);
-    glutDisplayFunc(display);
-    glutMouseFunc(mouse);
-    glutMotionFunc(motion);
-    glutKeyboardFunc(keyboard);
-    glutIdleFunc(idle);
-
-    return winid;
+    mgr->resize(Size.x(), Size.y());
 }
 
 void setupAnimation(void)
