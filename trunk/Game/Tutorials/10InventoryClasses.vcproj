@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="08XMLDialog"
-	ProjectGUID="{4EFFC521-DCDD-4006-8A9A-FABEC8FF740C}"
-	RootNamespace="02RubberBandCamera"
+	Name="10InventoryClasses"
+	ProjectGUID="{632791C3-2FC0-41FB-B304-95EA1B102117}"
+	RootNamespace="17Label"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(OPENSG)\..\include&quot;;..\..\Builds\Windows\include"
+				AdditionalIncludeDirectories="$(BOOST_BASE_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\Builds\Windows\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGUserInterfaceD.lib OSGInputD.lib OSGToolboxD.lib OSGGameD.lib OSGSoundD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGUserInterfaceD.lib OSGInputD.lib opengl32.lib glu32.lib OSGGameD.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName)D.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -159,7 +159,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGUserInterface.lib OSGInput.lib OSGToolbox.lib OSGGame.lib OSGSound.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib OSGUserInterface.lib OSGInput.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib OSGGame.lib"
 				OutputFile="$(ProjectName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -207,7 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\08XMLDialog.cpp"
+				RelativePath=".\10InventoryClasses.cpp"
 				>
 			</File>
 		</Filter>

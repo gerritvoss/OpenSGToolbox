@@ -121,6 +121,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03MiniMapMultipleIndicators
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09Inventory", "09Inventory.vcproj", "{E4289413-B11F-4480-B87F-E6AF81FACD12}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10InventoryClasses", "10InventoryClasses.vcproj", "{632791C3-2FC0-41FB-B304-95EA1B102117}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -207,6 +209,10 @@ Global
 		{E4289413-B11F-4480-B87F-E6AF81FACD12}.Debug|Win32.Build.0 = Debug|Win32
 		{E4289413-B11F-4480-B87F-E6AF81FACD12}.Release|Win32.ActiveCfg = Release|Win32
 		{E4289413-B11F-4480-B87F-E6AF81FACD12}.Release|Win32.Build.0 = Release|Win32
+		{632791C3-2FC0-41FB-B304-95EA1B102117}.Debug|Win32.ActiveCfg = Debug|Win32
+		{632791C3-2FC0-41FB-B304-95EA1B102117}.Debug|Win32.Build.0 = Debug|Win32
+		{632791C3-2FC0-41FB-B304-95EA1B102117}.Release|Win32.ActiveCfg = Release|Win32
+		{632791C3-2FC0-41FB-B304-95EA1B102117}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
