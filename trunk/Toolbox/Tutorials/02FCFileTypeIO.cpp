@@ -61,10 +61,6 @@ int main(int argc, char **argv)
 	NewContainers = FCFileHandler::the()->read(Path("./TestFieldContainers.xml"));
 
 	FCFileHandler::the()->write(NewContainers,Path("./TestFieldContainers2.xml"),IgnoreTypes);
-
-
-	
-	NewContainers = FCFileHandler::the()->read(Path("./TestNameReference.xml"));
     
 	// OSG exit
     osgExit();

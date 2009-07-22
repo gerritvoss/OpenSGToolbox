@@ -36,18 +36,23 @@
 #include "OSGFCFileType.h"
 #include "OSGFCFileHandler.h"
 
-//This is needed so that the Shared Ptr included in the OSG library is not used
+//This is needed so that the Shared Ptr inclded in the OSG library is not used
 //because it is already defined in the boost library
 #define BOOST_SMART_PTR_HPP
 #include <OpenSG/OSGXmlpp.h>
+#include <boost/function.hpp>
 
 OSG_BEGIN_NAMESPACE
+
+typedef boost::function<bool ( xmlpp::xmlnodeptr , const FieldContainerMapper& )> OpenSGToolboxXMLHandler;
 
 class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
 {
      /*==========================  PUBLIC  =================================*/
    public:
 
+     typedef std::map<std::string, OpenSGToolboxXMLHandler> XMLHandlerMap;
+     
      static std::string NameAttachmentXMLToken;
      static std::string FileAttachmentXMLToken;
      static std::string FieldContainerIDXMLToken;
@@ -67,7 +72,9 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
      /*---------------------------------------------------------------------*/
      virtual bool write(const FCPtrStore &Containers, std::ostream &os,
                         const std::string& FileNameOrExtension, const FCTypeVector& IgnoreTypes) const;
- 
+
+     bool registerHandler(std::string HandlerName, OpenSGToolboxXMLHandler TheHandler);
+     bool unregisterHandler(std::string HandlerName);
      /*=========================  PROTECTED  ===============================*/
    protected:
 	 struct FCIdMapper;
@@ -94,6 +101,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
 
 	 typedef FCFileType Inherited;
 	 static       XMLFCFileType*  _the;
+     XMLHandlerMap  _HandlerMap;
+
 
 	 IDLookupMap createFieldContainers(xmlpp::xmlnodelist::iterator Begin, xmlpp::xmlnodelist::iterator End, xmlpp::xmlcontextptr Context,
 	                     const std::string& FileNameOrExtension) const;

@@ -45,8 +45,8 @@
 
 
 #include <OpenSG/OSGField.h>
-#include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGFieldContainerFactory.h>
+#include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGSFFieldContainerPtr.h>
 #include <OpenSG/OSGMFFieldContainerPtr.h>
 #include <OpenSG/OSGAttachmentContainer.h>
@@ -123,6 +123,8 @@ std::string XMLFCFileType::getName(void) const
 		IDLookupMap::iterator FCInfoIter;
 		UInt32 CurrentFieldContainerOldId;
 		xmlpp::xmlattributes::const_iterator SearchItor;
+
+        XMLHandlerMap::const_iterator HandlerSearchItor;
 		//while(true)
 		//{
 			node.get_attrmap().clear();
@@ -135,7 +137,19 @@ std::string XMLFCFileType::getName(void) const
 
 			for(xmlpp::xmlnodelist::iterator NodeListItor(node.get_nodelist().begin()) ; NodeListItor!=node.get_nodelist().end() ; ++NodeListItor)
 			{
-				attr.clear();
+				//Check if the Token is registerd by a handler
+                HandlerSearchItor = _HandlerMap.find((*NodeListItor)->get_name());
+                if(HandlerSearchItor != _HandlerMap.end() )
+                {
+                    if(!HandlerSearchItor->second(*NodeListItor, TheFCIdMapper))
+                    {
+                        SWARNING << "XMLFCFileType: read() failed to handle node with xml token: "<<  (*NodeListItor)->get_name() << std::endl;
+                    }
+
+                    continue;
+                }
+
+                attr.clear();
 				attr = (*NodeListItor)->get_attrmap();
 				
 				SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FieldContainerIDXMLToken));
@@ -639,6 +653,39 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 
 	return true;
 }
+
+bool XMLFCFileType::registerHandler(std::string XMLNodeToken, OpenSGToolboxXMLHandler TheHandler)
+{
+    if(_HandlerMap.find(XMLNodeToken) == _HandlerMap.end())
+    {
+        SWARNING << "XMLFCFileType: Could not register XML Handler for XML token " << XMLNodeToken << " because a handler for that token is already registered."  << std::endl;
+        return false;
+    }
+    else if(FieldContainerFactory::the()->findType(XMLNodeToken.c_str()) == NULL)
+    {
+        SWARNING << "XMLFCFileType: Could not register XML Handler for XML token " << XMLNodeToken << " because that token is already used for reading Field Containers with the same type."  << std::endl;
+        return false;
+    }
+    else
+    {
+        _HandlerMap[XMLNodeToken] = TheHandler;
+        return true;
+    }
+}
+     
+bool XMLFCFileType::unregisterHandler(std::string HandlerName)
+{
+    if(_HandlerMap.find(HandlerName) != _HandlerMap.end())
+    {
+        _HandlerMap.erase(_HandlerMap.find(HandlerName));
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
