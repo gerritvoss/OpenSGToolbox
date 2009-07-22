@@ -33,6 +33,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGToolboxDef.h"
 
+#include <boost/function.hpp>
 #include "OSGFCFileType.h"
 #include "OSGFCFileHandler.h"
 
@@ -40,7 +41,6 @@
 //because it is already defined in the boost library
 #define BOOST_SMART_PTR_HPP
 #include <OpenSG/OSGXmlpp.h>
-#include <boost/function.hpp>
 
 OSG_BEGIN_NAMESPACE
 
