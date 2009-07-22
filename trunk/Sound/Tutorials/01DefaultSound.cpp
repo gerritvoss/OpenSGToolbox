@@ -231,7 +231,7 @@ int main(int argc, char **argv)
         ZapSound->setFile(Path("./Data/zap.wav"));
         ZapSound->setVolume(1.0);
         ZapSound->setStreaming(false);
-        ZapSound->setLooping(1);
+        ZapSound->setLooping(10);
     endEditCP(ZapSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
 
     MusicSound = SoundManager::the()->createSound();

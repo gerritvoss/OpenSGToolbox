@@ -131,7 +131,7 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${OPENSG_INC_DIR}
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSGTOOLBOX_LIB_DIR} ${FMOD_LIB_DIR})
 
 ######## Tutorial executables
-SET(TUTORIAL_LIST 01DefaultSound 02Sound3D 03SoundGroup)
+SET(TUTORIAL_LIST 01DefaultSound 02Sound3D 03SoundGroup 04SoundAction)
 
 FOREACH(TUTORIAL ${TUTORIAL_LIST})
    MESSAGE("Configurint Tutorial: ${TUTORIAL}")
@@ -160,3 +160,7 @@ TARGET_LINK_LIBRARIES(02Sound3D optimized OSGToolbox  optimized OSGInput
 TARGET_LINK_LIBRARIES(03SoundGroup optimized OSGToolbox  optimized OSGInput
    optimized OSGSound debug     OSGToolboxD debug     OSGInputD debug
    OSGSoundD ${Boost_LIBRARIES} ${FMOD_LIBRARIES})
+TARGET_LINK_LIBRARIES(04SoundAction optimized OSGToolbox  optimized OSGInput
+   optimized OSGSound debug     OSGToolboxD debug     OSGInputD debug OSGSoundD
+   optimized OSGUserInterface debug OSGUserInterfaceD
+   ${Boost_LIBRARIES} ${FMOD_LIBRARIES})
