@@ -268,8 +268,8 @@ int main(int argc, char **argv)
 			SizeReturnValue,
 			LifespanReturnValue,
 			VelocityReturnValue,
-			AccelerationReturnValue,
-			0);
+			AccelerationReturnValue
+			);
 	
     }
 

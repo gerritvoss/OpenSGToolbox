@@ -211,7 +211,7 @@ int main(int argc, char **argv)
 			LifespanReturnValue, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)	//acceleration
-			,0);
+										   );
 	}
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 

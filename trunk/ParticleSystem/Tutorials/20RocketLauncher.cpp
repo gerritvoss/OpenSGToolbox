@@ -190,7 +190,7 @@ class TutorialMouseListener : public MouseListener
 			10, 
 			Vec3f(TheRay.getDirection()*50), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)
-			,0);
+											  );
 		}
     }
     virtual void mouseReleased(const MouseEvent& e)

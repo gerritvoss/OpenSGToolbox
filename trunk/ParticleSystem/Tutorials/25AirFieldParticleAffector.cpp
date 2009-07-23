@@ -235,7 +235,7 @@ int main(int argc, char **argv)
 			0.1, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)
-			,0);
+										   );
 		ExampleParticleSystem->addParticle(Pnt3f(0,-25,0),
 			Vec3f(0.0,0.0f,1.0f),
 			Color4f(1.0,1.0,1.0,1.0), 
@@ -243,7 +243,7 @@ int main(int argc, char **argv)
 			0.1, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)
-			,0);
+										   );
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer (Point)

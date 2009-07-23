@@ -255,7 +255,7 @@ int main(int argc, char **argv)
 				Vec3f(1.0,1.0,1.0), 
 				-1.0f, 
 				Vec3f(0.0f,0.0f,0.0f),
-				Vec3f(0.0f,0.0f,0.0f),0);
+				Vec3f(0.0f,0.0f,0.0f));
 	   }
 	
     }
