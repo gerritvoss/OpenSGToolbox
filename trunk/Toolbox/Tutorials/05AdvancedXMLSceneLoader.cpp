@@ -343,7 +343,7 @@ int main(int argc, char **argv)
 		if(GlobalRootNodes.size() < 1)
 		{
 			std::cout << "There are no root nodes defined." << std::endl;
-			return 0;
+			return 1;
 		}
     }
 

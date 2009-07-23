@@ -263,8 +263,20 @@ std::string XMLFCFileType::getName(void) const
 											    std::endl;
                                         }
 									}
+                                    //Check if the type of the FieldContainer Pointed to is derived from the type
+                                    //expected for this field
+                                    //if(TheFC->getType().isDerivedFrom(TheField->getContentType()))
+                                    //{
 
-								    static_cast<SFFieldContainerPtr *>(TheField)->setValue(TheFC);
+								        static_cast<SFFieldContainerPtr *>(TheField)->setValue(TheFC);
+                                    //}
+                                    //else
+                                    //{
+									//    SWARNING <<
+                                    //        "ERROR in XMLFCFileType::read(): Attempting to assign a FieldContainerPtr to a field of different types. Type of field: " << TheField->getContentType().getCName() << ". Type of Field container with id: " << FieldValue.c_str() << " attemped to assign: " << TheFC->getType().getCName()  <<
+									//	    std::endl;
+								    //    static_cast<SFFieldContainerPtr *>(TheField)->setValue(NullFC);
+                                    //}
 								}
 								else if(TheField->getCardinality() == FieldType::MULTI_FIELD &&
 									!FieldValue.empty())
@@ -304,8 +316,18 @@ std::string XMLFCFileType::getName(void) const
 											        std::endl;
                                             }
 									    }
-
-										static_cast<MFFieldContainerPtr *>(TheField)->push_back(TheFC);
+                                        //Check if the type of the FieldContainer Pointed to is derived from the type
+                                        //expected for this field
+                                        //if(TheFC->getType().isDerivedFrom(TheField->getContentType()))
+                                        //{
+                                            static_cast<MFFieldContainerPtr *>(TheField)->push_back(TheFC);
+                                        //}
+                                        //else
+                                        //{
+									    //    SWARNING <<
+                                        //        "ERROR in XMLFCFileType::read(): Attempting to assign a FieldContainerPtr to a field of different types. Type of field: " << TheField->getContentType().getCName() << ". Type of Field container with id: " << FieldValue.c_str() << " attemped to assign: " << TheFC->getType().getCName()  <<
+										//        std::endl;
+                                        //}
 									    
 									}
 								}
@@ -429,16 +451,27 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(xmlpp::xmlnodeli
                         }
 
 
-						FilePathAttachment::setFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),TheFilePath);
+                        if(boost::filesystem::exists(TheFilePath))
+                        {
+						    FilePathAttachment::setFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),TheFilePath);
 
-						if(!FilePathAttachment::loadFromFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr)))
-						{
-							SWARNING <<
-								"ERROR in XMLFCFileType::read():" <<
-								"could not load type: " << NewFCInfo._Ptr->getType().getCName() <<
-								" from file " <<FilePathAttachment::getFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr)) <<
-								std::endl;
-						}
+						    if(!FilePathAttachment::loadFromFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr)))
+						    {
+							    SWARNING <<
+								    "ERROR in XMLFCFileType::read():" <<
+								    "could not load type: " << NewFCInfo._Ptr->getType().getCName() <<
+								    " from file " <<TheFilePath.string() <<
+								    std::endl;
+						    }
+                        }
+                        else
+                        {
+						    SWARNING <<
+							    "ERROR in XMLFCFileType::read():" <<
+							    "could not load type: " << NewFCInfo._Ptr->getType().getCName() <<
+							    " from file " <<TheFilePath.string() << " because that file does not exist." <<
+							    std::endl;
+                        }
 					}
                 }
 			}
