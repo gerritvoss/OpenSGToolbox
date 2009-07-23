@@ -3,7 +3,7 @@ SET(TOOLBOX_BASE_DIR "/Users/dtnaylor/Documents/Work/opensgtoolbox")
 SET(OPENSG_BASE_DIR "/Users/dtnaylor/Documents/Work/OpenSGInstall")
 SET(BOOST_BASE_DIR "/Users/dtnaylor/Documents/Work/Boost")
 SET(ODE_BASE_DIR "/Users/dtnaylor/Documents/Work/ode-0.11.1/Apple_INSTALL")
-SET(INSTALLER_BASE_DIR "/Users/dtnaylor/Documents/Work/opensgtoolbox/trunk/Release/Installer_Full")
+SET(INSTALLER_BASE_DIR "/Users/dtnaylor/Documents/Work/opensgtoolbox/trunk/Release/Installer_Dependencies")
 
 # Check directory paths
 IF(NOT EXISTS ${TOOLBOX_BASE_DIR})
@@ -67,28 +67,15 @@ SET(CPACK_RESOURCE_FILE_WELCOME "${INSTALLER_BASE_DIR}/WELCOME.txt")
 SET(INCLUDE_INSTALL_FILES_DIR "${INSTALLER_BASE_DIR}/Install_Files/include")
 SET(LIB_INSTALL_FILES_DIR "${INSTALLER_BASE_DIR}/Install_Files/lib")
 
-IF(EXISTS ${INSTALLER_BASE_DIR}/Install_Files)
-	SET(CPACK_INSTALL_COMMANDS "rm -r ${INSTALLER_BASE_DIR}/Install_Files" "mkdir ${INSTALLER_BASE_DIR}/Install_Files")
-ELSE(EXISTS ${INSTALLER_BASE_DIR}/Install_Files)
-	SET(CPACK_INSTALL_COMMANDS "mkdir ${INSTALLER_BASE_DIR}/Install_Files")
-ENDIF(EXISTS ${INSTALLER_BASE_DIR}/Install_Files)
-
-SET(CPACK_INSTALL_COMMANDS ${CPACK_INSTALL_COMMANDS} "mkdir ${INCLUDE_INSTALL_FILES_DIR}" "mkdir ${LIB_INSTALL_FILES_DIR}")
-
-
-# Save revision number
-SET(CPACK_INSTALL_COMMANDS ${CPACK_INSTALL_COMMANDS} "touch ${INCLUDE_INSTALL_FILES_DIR}/Revision${Project_WC_REVISION}" "touch ${LIB_INSTALL_FILES_DIR}/Revision${Project_WC_REVISION}")
-
 
 # Process files to install
 MACRO(PROCESS_LIBRARY LIBRARY_DIR)
 
 	MESSAGE("Processing files for: ${LIBRARY_DIR}")
 
-	SET(CPACK_INSTALL_COMMANDS ${CPACK_INSTALL_COMMANDS} "cp -r ${LIBRARY_DIR}/include/ ${INCLUDE_INSTALL_FILES_DIR}" "cp -r ${LIBRARY_DIR}/lib/ ${LIB_INSTALL_FILES_DIR}")
+	SET(INSTALL_DIRS ${INSTALL_DIRS};${LIBRARY_DIR}/include;/include;${LIBRARY_DIR}/lib;/lib)
 
 ENDMACRO(PROCESS_LIBRARY)
-
 
 
 # Tell CPack where to look for library files
@@ -100,8 +87,9 @@ PROCESS_LIBRARY(${ODE_BASE_DIR})
 
 
 SET(CPACK_GENERATOR "PackageMaker")
+SET(CPACK_SOURCE_IGNORE_FILES "/\\.svn/")
 SET(CPACK_PACKAGING_INSTALL_PREFIX "/")
 SET(CPACK_PACKAGE_DEFAULT_LOCATION "/usr/local")
-SET(CPACK_INSTALLED_DIRECTORIES ${INSTALLER_BASE_DIR}/Install_Files;.)
+SET(CPACK_INSTALLED_DIRECTORIES ${INSTALL_DIRS})
 SET(CPACK_PACKAGE_RELOCATABLE "true")
 #SET(CPACK_INSTALL_DIRECTORY "/usr/local")
