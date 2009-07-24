@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,13 +43,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEUSERINTERFACELIB
+#define OSG_COMPILEGAMELIB
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDefaultListComponentGenerator.h"
-#include "Component/OSGComponent.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OSGDefaultInventoryListComponentGenerator.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultListComponentGenerator
-A UI Default List ComponentGenerator. 	
+/*! \class osg::DefaultInventoryListComponentGenerator
+A UI Default Inventory List ComponentGenerator. 
 */
 
 /***************************************************************************\
@@ -69,7 +67,7 @@ A UI Default List ComponentGenerator.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultListComponentGenerator::initMethod (void)
+void DefaultInventoryListComponentGenerator::initMethod (void)
 {
 }
 
@@ -78,108 +76,9 @@ void DefaultListComponentGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
-	if(Value.empty()){
-		return NullFC;
-	}
-
-	std::string ValueString;
-    try
-    {
-        ValueString = lexical_cast(Value);
-    }
-    catch (boost::bad_lexical_cast &)
-    {
-        //Could not convert to string
-    }
-	return getListComponent(Parent, ValueString, Index, IsSelected, HasFocus);
-}
-
-ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
-{
-	ComponentPtr TheComponent = Component::Ptr::dcast(getDrawObjectPrototype()->shallowCopy());
-
-	if(TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
-	{
-		beginEditCP(TheComponent, TextComponent::TextFieldMask);
-			TextComponent::Ptr::dcast(TheComponent)->setText(Value);
-		endEditCP(TheComponent, TextComponent::TextFieldMask);
-
-        applyTextColor(TextComponent::Ptr::dcast(TheComponent), Parent, Value, Index, IsSelected, HasFocus);
-	}
-
-    applyBordersAndBackground(TheComponent, Parent, Value, Index, IsSelected, HasFocus);
-
-	return TheComponent;
-}
-	
-void DefaultListComponentGenerator::applyBordersAndBackground(ComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
-{
-	if(IsSelected && HasFocus)
-	{
-		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
-			if(getFocusedBorderHasPriority())
-			{
-				TheComponent->setBorders(getFocusedBorder());
-			}
-			else
-			{
-				TheComponent->setBorders(getSelectedBorder());
-			}
-			if(getFocusedBackgroundHasPriority())
-			{
-				TheComponent->setBackgrounds(getFocusedBackground());
-			}
-			else
-			{
-				TheComponent->setBackgrounds(getSelectedBackground());
-			}
-		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
-	}
-	else if(IsSelected)
-	{
-		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
-			TheComponent->setBorders(getSelectedBorder());
-			TheComponent->setBackgrounds(getSelectedBackground());
-		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
-	}
-	else if(HasFocus)
-	{
-		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
-			TheComponent->setBorders(getFocusedBorder());
-			TheComponent->setBackgrounds(getFocusedBackground());
-		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask);
-	}
-}
-
-void DefaultListComponentGenerator::applyTextColor(TextComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
-{
-    if(IsSelected && HasFocus)
-    {
-	    beginEditCP(TheComponent, TextComponent::TextColorsFieldMask);
-	    if(getFocusedTextColorHasPriority())
-	    {
-		    TheComponent->setTextColors(getFocusedTextColor());
-	    }
-	    else
-	    {
-		    TheComponent->setTextColors(getSelectedTextColor());
-	    }
-	    endEditCP(TheComponent, TextComponent::TextColorsFieldMask);
-    }
-    else if(IsSelected)
-    {
-	    beginEditCP(TheComponent, TextComponent::TextColorsFieldMask);
-		    TheComponent->setTextColors(getSelectedTextColor());
-	    endEditCP(TheComponent, TextComponent::TextColorsFieldMask);
-    }
-    else if(HasFocus)
-    {
-	    beginEditCP(TheComponent, TextComponent::TextColorsFieldMask);
-		    TheComponent->setTextColors(getFocusedTextColor());
-	    endEditCP(TheComponent, TextComponent::TextColorsFieldMask);
-    }
+    return Inherited::getListComponent(Parent,Value,Index,IsSelected,HasFocus);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -188,31 +87,31 @@ void DefaultListComponentGenerator::applyTextColor(TextComponentPtr TheComponent
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultListComponentGenerator::DefaultListComponentGenerator(void) :
+DefaultInventoryListComponentGenerator::DefaultInventoryListComponentGenerator(void) :
     Inherited()
 {
 }
 
-DefaultListComponentGenerator::DefaultListComponentGenerator(const DefaultListComponentGenerator &source) :
+DefaultInventoryListComponentGenerator::DefaultInventoryListComponentGenerator(const DefaultInventoryListComponentGenerator &source) :
     Inherited(source)
 {
 }
 
-DefaultListComponentGenerator::~DefaultListComponentGenerator(void)
+DefaultInventoryListComponentGenerator::~DefaultInventoryListComponentGenerator(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultListComponentGenerator::changed(BitVector whichField, UInt32 origin)
+void DefaultInventoryListComponentGenerator::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void DefaultListComponentGenerator::dump(      UInt32    , 
+void DefaultInventoryListComponentGenerator::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump DefaultListComponentGenerator NI" << std::endl;
+    SLOG << "Dump DefaultInventoryListComponentGenerator NI" << std::endl;
 }
 
 
@@ -230,10 +129,10 @@ void DefaultListComponentGenerator::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTLISTCOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTLISTCOMPONENTGENERATORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDEFAULTINVENTORYLISTCOMPONENTGENERATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDEFAULTINVENTORYLISTCOMPONENTGENERATORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTLISTCOMPONENTGENERATORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDEFAULTINVENTORYLISTCOMPONENTGENERATORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

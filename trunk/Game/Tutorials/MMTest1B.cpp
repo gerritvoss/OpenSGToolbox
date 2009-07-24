@@ -30,6 +30,7 @@ moving objects is there.
 #include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/Toolbox/OSGCameraUtils.h>
 #include <OpenSG/OSGImageForeground.h>
+#include <OpenSG/OSGSimpleStatisticsForeground.h>
 
 
 // The general scene file loading handler
@@ -78,6 +79,7 @@ moving objects is there.
 
 #include <boost/lexical_cast.hpp>
 
+#include <Windowsx.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -157,6 +159,7 @@ protected:
 	RenderAction * 	_ownAction;
 	TransformPtr 	_cart;
 	CameraPtr 	_camera;
+    SimpleStatisticsForegroundPtr RenderStatForeground;
     
 
     bool _IsUpKeyDown;
@@ -333,6 +336,33 @@ public:
 				_win->addPort(vp);
 			endEditCP(_win);
 		}
+        
+        RenderStatForeground = SimpleStatisticsForeground::create();
+        beginEditCP(RenderStatForeground);
+            RenderStatForeground->setSize(25);
+            RenderStatForeground->setVerticalAlign(SimpleStatisticsForeground::Bottom);
+            RenderStatForeground->setColor(Color4f(0,1,0,0.7));
+            RenderStatForeground->addElement(RenderAction::statDrawTime, "Draw FPS: %r.3f");
+            RenderStatForeground->addElement(RenderAction::statNGeometries, "%d Nodes drawn");
+            RenderStatForeground->addElement(DrawActionBase::statTravTime, "TravTime: %.3f s");
+            RenderStatForeground->addElement(RenderAction::statDrawTime, "DrawTime: %.3f s");
+            RenderStatForeground->addElement(DrawActionBase::statCullTestedNodes, "%d Nodes culltested");
+            RenderStatForeground->addElement(DrawActionBase::statCulledNodes, "%d Nodes culled");
+            RenderStatForeground->addElement(RenderAction::statNMaterials, "%d material changes");
+            RenderStatForeground->addElement(RenderAction::statNMatrices, "%d matrix changes");
+            RenderStatForeground->addElement(RenderAction::statNGeometries, "%d Nodes drawn");
+            RenderStatForeground->addElement(RenderAction::statNTransGeometries, "%d transparent Nodes drawn");
+            RenderStatForeground->addElement(Drawable::statNTriangles, "%d triangles drawn");
+            RenderStatForeground->addElement(Drawable::statNLines, "%d lines drawn");
+            RenderStatForeground->addElement(Drawable::statNPoints, "%d points drawn");
+            RenderStatForeground->addElement(Drawable::statNPrimitives,"%d primitive groups drawn");
+            RenderStatForeground->addElement(Drawable::statNVertices, "%d vertices transformed");
+            RenderStatForeground->addElement(Drawable::statNGeoBytes, "%d bytes of geometry used");
+            RenderStatForeground->addElement(RenderAction::statNTextures, "%d textures used");
+            RenderStatForeground->addElement(RenderAction::statNTexBytes, "%d bytes of texture used");
+        endEditCP(RenderStatForeground);
+
+        _action->setStatistics(&RenderStatForeground->getCollector());
 
 	}
    void keyPressed(const KeyEvent& e)
@@ -400,6 +430,18 @@ public:
 		   break;
 	   case KeyEvent::KEY_W:
            _IsWKeyDown = false;
+		   break;
+	   case KeyEvent::KEY_0:
+            beginEditCP(_win->getPort(0), Viewport::ForegroundsFieldMask);
+                if(_win->getPort(0)->getForegrounds().find(RenderStatForeground) == _win->getPort(0)->getForegrounds().end())
+                {
+                    _win->getPort(0)->getForegrounds().push_back(RenderStatForeground);
+                }
+                else
+                {
+                    _win->getPort(0)->getForegrounds().erase(_win->getPort(0)->getForegrounds().find(RenderStatForeground));
+                }
+            endEditCP(_win->getPort(0), Viewport::ForegroundsFieldMask);
 		   break;
 	   default:
 		   break;
@@ -665,15 +707,15 @@ public:
             ViewpointTransform->getMatrix().multMatrixVec(CameraAcceleration, CameraAcceleration);
             CameraAcceleration += (CameraVelocityDamping * -CameraVelocity);
 
-			checkCameraIntersection(static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration, e.getElapsedTime());
+			//checkCameraIntersection(static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration, e.getElapsedTime());
 			
-			/*CameraPosition = CameraPosition + static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration;
+			CameraPosition = CameraPosition + static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration;
             CameraVelocity = CameraVelocity + static_cast<Real32>(e.getElapsedTime())*CameraAcceleration;
             if(CameraVelocity.length() > CameraMaxVelocity)
             {
                 CameraVelocity.normalize();
                 CameraVelocity = CameraMaxVelocity * CameraVelocity;
-            }*/
+            }
             updateTransform = true;
         }
         if(updateTransform)
@@ -791,10 +833,13 @@ public:
     }
 };
 
-int main(int argc, char **argv)
+int APIENTRY WinMain(HINSTANCE hInstance,
+                     HINSTANCE hPrevInstance,
+                     LPTSTR    lpCmdLine,
+                     int       nCmdShow)
 {
     // OSG init
-    osgInit(argc,argv);
+    osgInit(0,NULL);
 
     // Set up Window
     WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
@@ -829,7 +874,7 @@ int main(int argc, char **argv)
     // Make Cell Node (creates Cell in background of scene)
     
     
-    CellGeometryNode = SceneFileHandler::the().read("cell.osb");
+    CellGeometryNode = SceneFileHandler::the().read("Data/Cell.osb");
     if(CellGeometryNode == NullFC)
     {
         CellGeometryNode = Node::create();

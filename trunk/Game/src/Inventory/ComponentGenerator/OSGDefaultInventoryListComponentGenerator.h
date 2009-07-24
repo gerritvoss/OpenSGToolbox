@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,29 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDEFAULTLISTCOMPONENTGENERATOR_H_
-#define _OSGDEFAULTLISTCOMPONENTGENERATOR_H_
+#ifndef _OSGDEFAULTINVENTORYLISTCOMPONENTGENERATOR_H_
+#define _OSGDEFAULTINVENTORYLISTCOMPONENTGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGDefaultListComponentGeneratorBase.h"
-#include "Component/Text/OSGTextComponent.h"
+#include "OSGDefaultInventoryListComponentGeneratorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultListComponentGenerator class. See \ref 
-           PageUserInterfaceDefaultListComponentGenerator for a description.
+/*! \brief DefaultInventoryListComponentGenerator class. See \ref 
+           PageGameDefaultInventoryListComponentGenerator for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGenerator : public DefaultListComponentGeneratorBase
+class OSG_GAMELIB_DLLMAPPING DefaultInventoryListComponentGenerator : public DefaultInventoryListComponentGeneratorBase
 {
   private:
 
-    typedef DefaultListComponentGeneratorBase Inherited;
+    typedef DefaultInventoryListComponentGeneratorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -79,53 +77,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGenerator : public Def
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	
-	virtual ComponentPtr getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus);
-	virtual ComponentPtr getListComponent(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus);
-
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in DefaultListComponentGeneratorBase.
+    // Variables should all be in DefaultInventoryListComponentGeneratorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DefaultListComponentGenerator(void);
-    DefaultListComponentGenerator(const DefaultListComponentGenerator &source);
+    DefaultInventoryListComponentGenerator(void);
+    DefaultInventoryListComponentGenerator(const DefaultInventoryListComponentGenerator &source);
+
+	virtual ComponentPtr getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultListComponentGenerator(void); 
+    virtual ~DefaultInventoryListComponentGenerator(void); 
 
     /*! \}                                                                 */
-	virtual void applyBordersAndBackground(ComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
-	virtual void applyTextColor(TextComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
-
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class DefaultListComponentGeneratorBase;
+    friend class DefaultInventoryListComponentGeneratorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const DefaultListComponentGenerator &source);
+    void operator =(const DefaultInventoryListComponentGenerator &source);
 };
 
-typedef DefaultListComponentGenerator *DefaultListComponentGeneratorP;
+typedef DefaultInventoryListComponentGenerator *DefaultInventoryListComponentGeneratorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDefaultListComponentGeneratorBase.inl"
-#include "OSGDefaultListComponentGenerator.inl"
+#include "OSGDefaultInventoryListComponentGeneratorBase.inl"
+#include "OSGDefaultInventoryListComponentGenerator.inl"
 
-#define OSGDEFAULTLISTCOMPONENTGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDEFAULTINVENTORYLISTCOMPONENTGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDEFAULTLISTCOMPONENTGENERATOR_H_ */
+#endif /* _OSGDEFAULTINVENTORYLISTCOMPONENTGENERATOR_H_ */

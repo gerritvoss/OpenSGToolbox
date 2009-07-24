@@ -1053,6 +1053,38 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="ComponentGenerators"
+					>
+					<File
+						RelativePath="..\..\src\Inventory\ComponentGenerator\OSGDefaultInventoryListComponentGenerator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\ComponentGenerator\OSGDefaultInventoryListComponentGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\ComponentGenerator\OSGDefaultInventoryListComponentGenerator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\ComponentGenerator\OSGDefaultInventoryListComponentGeneratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\ComponentGenerator\OSGDefaultInventoryListComponentGeneratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\ComponentGenerator\OSGDefaultInventoryListComponentGeneratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\ComponentGenerator\OSGDefaultInventoryListComponentGeneratorFields.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

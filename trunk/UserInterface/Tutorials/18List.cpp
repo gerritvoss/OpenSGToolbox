@@ -60,6 +60,18 @@ void reshape(Vec2f Size);
 
 
 
+// Declare the SelectionModel up front to allow for
+// the ActionListeners
+ListSelectionModelPtr ExampleListSelectionModel(new DefaultListSelectionModel());
+ToggleButtonPtr SingleSelectionButton;
+ToggleButtonPtr SingleIntervalSelectionButton;
+ToggleButtonPtr MultipleIntervalSelectionButton;
+
+// Create ListModel   
+ListPtr ExampleList;
+DefaultListModelPtr ExampleListModel;
+DefaultListModelPtr ExampleListModel2;
+
 class TutorialWindowListener : public WindowAdapter
 {
 public:
@@ -85,6 +97,22 @@ public:
        {
            ExitApp = true;
        }
+
+       switch(e.getKey())
+       {
+       case KeyEvent::KEY_S:
+	        beginEditCP(ExampleList, List::ModelFieldMask);
+                if(ExampleList->getModel() == ExampleListModel)
+                {
+		            ExampleList->setModel(ExampleListModel2);
+                }
+                else
+                {
+		            ExampleList->setModel(ExampleListModel);
+                }
+            endEditCP(ExampleList, List::ModelFieldMask);
+           break;
+       }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -97,13 +125,6 @@ public:
 };
 
 
-
-// Declare the SelectionModel up front to allow for
-// the ActionListeners
-ListSelectionModelPtr ExampleListSelectionModel(new DefaultListSelectionModel());
-ToggleButtonPtr SingleSelectionButton;
-ToggleButtonPtr SingleIntervalSelectionButton;
-ToggleButtonPtr MultipleIntervalSelectionButton;
 
 class SingleSelectionButtonSelectedListener : public ButtonSelectedListener
 {
@@ -174,10 +195,6 @@ public:
    }
 
 };
-
-// Create ListModel   
-ListPtr ExampleList;
-DefaultListModelPtr ExampleListModel;
 
 class AddItemButtonSelectedListener : public ActionListener
 {
@@ -338,6 +355,22 @@ int main(int argc, char **argv)
     ExampleListModel->pushBack(boost::any(std::string("Violet")));
     ExampleListModel->pushBack(boost::any(std::string("Mauve")));
     ExampleListModel->pushBack(boost::any(std::string("Peach")));
+    
+	ExampleListModel2 = DefaultListModel::create();
+    ExampleListModel2->pushBack(boost::any(std::string("One")));
+    ExampleListModel2->pushBack(boost::any(std::string("Two")));
+    ExampleListModel2->pushBack(boost::any(std::string("Three")));
+    ExampleListModel2->pushBack(boost::any(std::string("Four")));
+    ExampleListModel2->pushBack(boost::any(std::string("Five")));
+    ExampleListModel2->pushBack(boost::any(std::string("Six")));
+    ExampleListModel2->pushBack(boost::any(std::string("Seven")));
+    ExampleListModel2->pushBack(boost::any(std::string("Eight")));
+    ExampleListModel2->pushBack(boost::any(std::string("Nine")));
+    ExampleListModel2->pushBack(boost::any(std::string("Ten")));
+    ExampleListModel2->pushBack(boost::any(std::string("Eleven")));
+    ExampleListModel2->pushBack(boost::any(std::string("Twelve")));
+    ExampleListModel2->pushBack(boost::any(std::string("Thirteen")));
+    ExampleListModel2->pushBack(boost::any(std::string("Fourteen")));
 
     /******************************************************
 

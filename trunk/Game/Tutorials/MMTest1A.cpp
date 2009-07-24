@@ -783,10 +783,14 @@ public:
     }
 };
 
-int main(int argc, char **argv)
+
+int APIENTRY WinMain(HINSTANCE hInstance,
+                     HINSTANCE hPrevInstance,
+                     LPTSTR    lpCmdLine,
+                     int       nCmdShow)
 {
     // OSG init
-    osgInit(argc,argv);
+    osgInit(0,NULL);
 
     // Set up Window
     WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
@@ -821,7 +825,7 @@ int main(int argc, char **argv)
     // Make Cell Node (creates Cell in background of scene)
     
     
-    CellGeometryNode = SceneFileHandler::the().read("cell.osb");
+    CellGeometryNode = SceneFileHandler::the().read("Data/Cell.osb");
     if(CellGeometryNode == NullFC)
     {
         CellGeometryNode = Node::create();
