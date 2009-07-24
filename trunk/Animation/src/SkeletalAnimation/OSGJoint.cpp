@@ -146,7 +146,7 @@ void Joint::calculateTransformations(void)
 		_AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
 		if (_AbsoluteTransformation == Matrix().identity())//translate == Vec3f(0, 0, 0))
 		{
-			std::cout << "\Setting Absolute Transformation:\nTranslation: " << translate << "\n" << _AbsoluteTransformation << "\n[3][0]: " << _AbsoluteTransformation[3][0] << "\n" << std::endl;
+			std::cout << "Setting Absolute Transformation:\nTranslation: " << translate << "\n" << _AbsoluteTransformation << "\n[3][0]: " << _AbsoluteTransformation[3][0] << "\n" << std::endl;
 		}
 		
 	}
