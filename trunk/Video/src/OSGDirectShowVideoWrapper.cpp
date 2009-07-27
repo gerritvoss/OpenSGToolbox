@@ -468,7 +468,8 @@ bool DirectShowVideoWrapper::updateImage(void)
             // The Sample Grabber requires an arbitrary buffer
             // That we only know at runtime.
             // (width * height * 3) bytes will not work.
-            sampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
+            HRESULT result;
+            result = sampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
             if(bufferSize<=0)
             {
                 std::cout << "bufferSize<=0" << std::endl;
@@ -550,7 +551,10 @@ void DirectShowVideoWrapper::uninitVideo() {
         graphBuilder->Release();
     }
 
-    delete[] frameBuffer;
+    if(frameBuffer != NULL)
+    {
+        delete[] frameBuffer;
+    }
     frameBuffer = NULL;
 }
 
@@ -643,10 +647,7 @@ DirectShowVideoWrapper::DirectShowVideoWrapper(const DirectShowVideoWrapper &sou
 
 DirectShowVideoWrapper::~DirectShowVideoWrapper(void)
 {
-    if(frameBuffer != NULL)
-    {
-        delete [] frameBuffer;
-    }
+    uninitVideo();
     CoUninitialize();
 }
 

@@ -67,6 +67,7 @@ VideoWrapperPtr TheVideo;
 SimpleSceneManager *mgr;
 SwitchPtr GeometryNodeSwitch;
 NodePtr SwitchNode;
+bool UpdateImage(true);
 
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
@@ -143,7 +144,7 @@ void grabImage(ImagePtr img)
 		}
 		else
 		{
-			tex->imageContentChanged();
+			//tex->imageContentChanged();
 		}
     }
 }
@@ -152,16 +153,35 @@ void grabImage(ImagePtr img)
 // redraw the window
 void display( void )
 {   
-    // update the image
-    grabImage(image);
-    
     // redraw the screen
     mgr->redraw();
 }
 
 void update(void)
 {
-	TheVideo->updateImage();
+    if(UpdateImage)
+    {
+	    TheVideo->updateImage();
+        ImagePtr TheImage = TheVideo->getImage();
+
+        if(TheImage != NullFC)
+        {
+		    if(!hasNPOT)
+		    {
+			    TheImage->scaleNextPower2(TheImage);
+		    }
+		    if(tex->getImage() != TheImage)
+		    {
+			    beginEditCP(tex, TextureChunk::ImageFieldMask);
+				    tex->setImage(TheImage);
+			    endEditCP(tex, TextureChunk::ImageFieldMask);
+		    }
+		    else
+		    {
+			    //tex->imageContentChanged();
+		    }
+        }
+    }
 	glutPostRedisplay();
 }
 
@@ -346,7 +366,7 @@ void keyboard(unsigned char k, int x, int y)
     {
         case 27:  
         {
-            OSG::osgExit();
+	        OSG::osgExit();
             exit(0);
         }
         break;
@@ -367,6 +387,9 @@ void keyboard(unsigned char k, int x, int y)
             break;
         case 'v':
             TheVideo->jump(-JumpAmount);
+            break;
+        case 'u':
+            UpdateImage = !UpdateImage;
             break;
         case 'w':
             beginEditCP(GeometryNodeSwitch, Switch::ChoiceFieldMask);
