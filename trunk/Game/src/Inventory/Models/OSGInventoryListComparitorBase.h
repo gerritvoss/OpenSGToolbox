@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class InventoryListModel
+ **     class InventoryListComparitor
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGINVENTORYLISTMODELBASE_H_
-#define _OSGINVENTORYLISTMODELBASE_H_
+#ifndef _OSGINVENTORYLISTCOMPARITORBASE_H_
+#define _OSGINVENTORYLISTCOMPARITORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,28 +65,40 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OpenSG/UserInterface/OSGAbstractListModel.h" // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+#include <OpenSG/OSGStringFields.h> // ClassToDisplay type
+#include <OpenSG/OSGBoolFields.h> // Ascending type
 
-#include "OSGInventoryListModelFields.h"
+#include "OSGInventoryListComparitorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class InventoryListModel;
+class InventoryListComparitor;
 class BinaryDataHandler;
 
-//! \brief InventoryListModel Base Class.
+//! \brief InventoryListComparitor Base Class.
 
-class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
+class OSG_GAMELIB_DLLMAPPING InventoryListComparitorBase : public AttachmentContainer
 {
   private:
 
-    typedef AbstractListModel    Inherited;
+    typedef AttachmentContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef InventoryListModelPtr  Ptr;
+    typedef InventoryListComparitorPtr  Ptr;
+
+    enum
+    {
+        ClassToDisplayFieldId = Inherited::NextFieldId,
+        AscendingFieldId      = ClassToDisplayFieldId + 1,
+        NextFieldId           = AscendingFieldId      + 1
+    };
+
+    static const OSG::BitVector ClassToDisplayFieldMask;
+    static const OSG::BitVector AscendingFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +122,27 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           MFString            *getMFClassToDisplay (void);
+           SFBool              *getSFAscending      (void);
+
+           bool                &getAscending      (void);
+     const bool                &getAscending      (void) const;
+           std::string         &getClassToDisplay (const UInt32 index);
+           MFString            &getClassToDisplay (void);
+     const MFString            &getClassToDisplay (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setAscending      ( const bool &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -130,8 +163,8 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  InventoryListModelPtr      create          (void); 
-    static  InventoryListModelPtr      createEmpty     (void); 
+    static  InventoryListComparitorPtr      create          (void); 
+    static  InventoryListComparitorPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -146,18 +179,26 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
   protected:
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    MFString            _mfClassToDisplay;
+    SFBool              _sfAscending;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    InventoryListModelBase(void);
-    InventoryListModelBase(const InventoryListModelBase &source);
+    InventoryListComparitorBase(void);
+    InventoryListComparitorBase(const InventoryListComparitorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~InventoryListModelBase(void); 
+    virtual ~InventoryListComparitorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -165,13 +206,13 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      InventoryListModelBase *pOther,
+    void executeSyncImpl(      InventoryListComparitorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      InventoryListModelBase *pOther,
+    void executeSyncImpl(      InventoryListComparitorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -196,11 +237,12 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const InventoryListModelBase &source);
+    void operator =(const InventoryListComparitorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -208,17 +250,17 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
 //---------------------------------------------------------------------------
 
 
-typedef InventoryListModelBase *InventoryListModelBaseP;
+typedef InventoryListComparitorBase *InventoryListComparitorBaseP;
 
-typedef osgIF<InventoryListModelBase::isNodeCore,
-              CoredNodePtr<InventoryListModel>,
+typedef osgIF<InventoryListComparitorBase::isNodeCore,
+              CoredNodePtr<InventoryListComparitor>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet InventoryListModelNodePtr;
+              >::_IRet InventoryListComparitorNodePtr;
 
-typedef RefPtr<InventoryListModelPtr> InventoryListModelRefPtr;
+typedef RefPtr<InventoryListComparitorPtr> InventoryListComparitorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGINVENTORYLISTMODELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGINVENTORYLISTCOMPARITORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGINVENTORYLISTMODELBASE_H_ */
+#endif /* _OSGINVENTORYLISTCOMPARITORBASE_H_ */

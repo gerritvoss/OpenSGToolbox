@@ -64,6 +64,8 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 #include <OpenSG/UserInterface/OSGListSelectionListener.h>
 
+#include <algorithm>
+
 
 
 class TutorialWindowListener : public WindowAdapter
@@ -112,6 +114,9 @@ TextAreaPtr DetailsWindow;
 // Create ListModel   
 ListPtr ExampleList;
 InventoryListModelPtr ExampleListModel;
+InventoryListModelPtr ExampleAdminsListModel;
+InventoryListModelPtr ExampleDevelopersListModel;
+InventoryListModelPtr ExampleGraphicsListModel;
 InventoryPtr ExampleInventory;
 
 class InventoryListListener: public ListSelectionListener
@@ -129,7 +134,7 @@ class InventoryListListener: public ListSelectionListener
 };
 
 
-class AddItemButtonSelectedListener : public ActionListener
+class ClassSelectionListener : public ActionListener
 {
 public:
 
@@ -137,23 +142,36 @@ public:
     {
 		if(ButtonPtr::dcast(e.getSource())->getText() == "Main")
 		{
-
+			std::cout<<"Main"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
 		}
 		if(ButtonPtr::dcast(e.getSource())->getText() == "Admins")
 		{
-
+			std::cout<<"Admins"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleAdminsListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
 		}
 		if(ButtonPtr::dcast(e.getSource())->getText() == "Developers")
 		{
-
+			std::cout<<"Developers"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleDevelopersListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
 		}
 		if(ButtonPtr::dcast(e.getSource())->getText() == "Graphics")
 		{
-
+			std::cout<<"Graphics"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleGraphicsListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
 		}
     }
-
 };
+
+
 
 int main(int argc, char **argv)
 {
@@ -205,43 +223,43 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem1->setName(std::string("David K"));
-		ExampleItem1->getClasses().push_back("Developer");
+		ExampleItem1->getClasses().push_back("Developers");
 		ExampleItem1->setDetails(std::string("Major: Human Computer Interaction \nDegree: PhD \nDepartment: Computer Science \nCollege: LAS"));
 	endEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem2->setName(std::string("Eve W"));
-		ExampleItem2->getClasses().push_back("Administrator");
+		ExampleItem2->getClasses().push_back("Admins");
 		ExampleItem2->setDetails(std::string("Department: Genetics Development and Cell Biology\n\nCollege: Agriculture"));
 	endEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem3->setName(std::string("Will S"));
-		ExampleItem3->getClasses().push_back("Graphics Designer");
+		ExampleItem3->getClasses().push_back("Graphics");
 		ExampleItem3->setDetails(std::string("Major: Art And Design\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
 	endEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem4->setName(std::string("Eric L"));
-		ExampleItem4->getClasses().push_back("Developer");
+		ExampleItem4->getClasses().push_back("Developers");
 		ExampleItem4->setDetails(std::string("Major: Software Engineering\nDegree: BS\nDepartment: Software Engineering\nCollege: Engineering"));
 	endEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem5->setName(std::string("Jeffery F"));
-		ExampleItem5->getClasses().push_back("Graphics Designer");
+		ExampleItem5->getClasses().push_back("Graphics");
 		ExampleItem5->setDetails(std::string("Major: Integrated Studio Arts\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
 	endEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem6->setName(std::string("Tao L"));
-		ExampleItem6->getClasses().push_back("Developer");
+		ExampleItem6->getClasses().push_back("Developers");
 		ExampleItem6->setDetails(std::string("Major: Computer Engineering\nDegree: PhD\nDepartment: Computer Engineering\nCollege: Engineering"));
 	endEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem7->setName(std::string("Daniel G"));
-		ExampleItem7->getClasses().push_back("Developer");
+		ExampleItem7->getClasses().push_back("Developers");
 		ExampleItem7->setDetails(std::string("Major: Computer Engineering\nDegree: BS\nDepartment: Computer Engineering\nCollege: Engineering"));
 	endEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
@@ -252,7 +270,6 @@ int main(int argc, char **argv)
 	ExampleInventory->addItem(ExampleItem5);
 	ExampleInventory->addItem(ExampleItem6);
 	ExampleInventory->addItem(ExampleItem7);
-
 
 
     /******************************************************
@@ -290,6 +307,113 @@ int main(int argc, char **argv)
     // Add data to it
 	ExampleListModel = InventoryListModel::create();
 	ExampleListModel->addInventory(ExampleInventory);
+	
+	//False inventory info!!! 
+	InventoryPtr ExampleAdminsInventory = Inventory::create();
+	InventoryPtr ExampleDevelopersInventory = Inventory::create();
+	InventoryPtr ExampleGraphicsInventory = Inventory::create();
+	ExampleAdminsListModel = InventoryListModel::create();
+	ExampleDevelopersListModel = InventoryListModel::create();
+	ExampleGraphicsListModel = InventoryListModel::create();
+	
+	ExampleAdminsInventory->addItem(ExampleItem2);
+
+	ExampleAdminsListModel->addInventory(ExampleAdminsInventory);
+	
+	ExampleDevelopersInventory->addItem(ExampleItem1);
+	ExampleDevelopersInventory->addItem(ExampleItem4);
+	ExampleDevelopersInventory->addItem(ExampleItem6);
+	ExampleDevelopersInventory->addItem(ExampleItem7);
+
+	ExampleDevelopersListModel->addInventory(ExampleDevelopersInventory);
+	
+	ExampleGraphicsInventory->addItem(ExampleItem3);
+	ExampleGraphicsInventory->addItem(ExampleItem5);
+
+	ExampleGraphicsListModel->addInventory(ExampleGraphicsInventory);
+
+	// Add buttons 
+    
+    ButtonPtr MainButton = osg::Button::create();
+    ButtonPtr AdminsButton = osg::Button::create();
+    ButtonPtr DevelopersButton = osg::Button::create();
+    ButtonPtr GraphicsButton = osg::Button::create();
+
+	UIFontPtr ButtonFont = osg::UIFont::create();
+
+    beginEditCP(ButtonFont, UIFont::SizeFieldMask);
+        ButtonFont->setSize(16);
+    endEditCP(ButtonFont, UIFont::SizeFieldMask);
+
+	beginEditCP(MainButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            MainButton->setMinSize(Vec2f(50, 25));
+            MainButton->setMaxSize(Vec2f(200, 100));
+            MainButton->setPreferredSize(Vec2f(100, 50));
+            MainButton->setToolTipText("This will start playing the caption!");
+
+            MainButton->setText("Main");
+            MainButton->setFont(ButtonFont);
+            MainButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            MainButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            MainButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            MainButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(MainButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+	beginEditCP(AdminsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            AdminsButton->setMinSize(Vec2f(50, 25));
+            AdminsButton->setMaxSize(Vec2f(200, 100));
+            AdminsButton->setPreferredSize(Vec2f(100, 50));
+            AdminsButton->setToolTipText("This will start playing the caption!");
+
+            AdminsButton->setText("Admins");
+            AdminsButton->setFont(ButtonFont);
+            AdminsButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            AdminsButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            AdminsButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            AdminsButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(AdminsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+	beginEditCP(DevelopersButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            DevelopersButton->setMinSize(Vec2f(50, 25));
+            DevelopersButton->setMaxSize(Vec2f(200, 100));
+            DevelopersButton->setPreferredSize(Vec2f(100, 50));
+            DevelopersButton->setToolTipText("This will start playing the caption!");
+
+            DevelopersButton->setText("Developers");
+            DevelopersButton->setFont(ButtonFont);
+            DevelopersButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            DevelopersButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            DevelopersButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            DevelopersButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(DevelopersButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+	beginEditCP(GraphicsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            GraphicsButton->setMinSize(Vec2f(50, 25));
+            GraphicsButton->setMaxSize(Vec2f(200, 100));
+            GraphicsButton->setPreferredSize(Vec2f(100, 50));
+            GraphicsButton->setToolTipText("This will start playing the caption!");
+
+            GraphicsButton->setText("Graphics");
+            GraphicsButton->setFont(ButtonFont);
+            GraphicsButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            GraphicsButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            GraphicsButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            GraphicsButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(GraphicsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+    ClassSelectionListener TheClassSelectionListener;
+    MainButton->addActionListener(&TheClassSelectionListener);
+    AdminsButton->addActionListener(&TheClassSelectionListener);
+    DevelopersButton->addActionListener(&TheClassSelectionListener);
+    GraphicsButton->addActionListener(&TheClassSelectionListener);
     
 
     /******************************************************
@@ -383,7 +507,11 @@ int main(int argc, char **argv)
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
+       MainInternalWindow->getChildren().push_back(MainButton);
+       MainInternalWindow->getChildren().push_back(AdminsButton);
+       MainInternalWindow->getChildren().push_back(DevelopersButton);
+       MainInternalWindow->getChildren().push_back(GraphicsButton);
+	   MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
        MainInternalWindow->getChildren().push_back(DetailsWindow);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);

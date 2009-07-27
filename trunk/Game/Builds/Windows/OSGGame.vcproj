@@ -1025,6 +1025,34 @@
 					Name="Models"
 					>
 					<File
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitor.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitor.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModel.cpp"
 						>
 					</File>

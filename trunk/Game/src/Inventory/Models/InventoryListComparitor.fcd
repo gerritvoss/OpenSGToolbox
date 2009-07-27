@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="InventoryListComparitor"
+	parent="AttachmentContainer"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A InventoryListModel.
+
+	<Field
+		name="ClassToDisplay"
+		type="std::string"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+	<Field
+		name="Ascending"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+	</Field>
+
+</FieldContainer>

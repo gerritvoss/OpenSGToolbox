@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGINVENTORYLISTMODELFIELDS_H_
-#define _OSGINVENTORYLISTMODELFIELDS_H_
+#ifndef _OSGINVENTORYLISTCOMPARITORFIELDS_H_
+#define _OSGINVENTORYLISTCOMPARITORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGGameDef.h"
 
-#include "OpenSG/UserInterface/OSGAbstractListModelFields.h"
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class InventoryListModel;
+class InventoryListComparitor;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! InventoryListModelPtr
+//! InventoryListComparitorPtr
 
-typedef FCPtr<AbstractListModelPtr, InventoryListModel> InventoryListModelPtr;
+typedef FCPtr<AttachmentContainerPtr, InventoryListComparitor> InventoryListComparitorPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<AbstractListModelPtr, InventoryListModel> InventoryListModelPtr;
 #endif
 
 template <>
-struct FieldDataTraits<InventoryListModelPtr> : 
-    public FieldTraitsRecurseMapper<InventoryListModelPtr, true>
+struct FieldDataTraits<InventoryListComparitorPtr> : 
+    public FieldTraitsRecurseMapper<InventoryListComparitorPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<InventoryListModelPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFInventoryListModelPtr"; }
-    static const char *getMName(void) { return "MFInventoryListModelPtr"; }
+    static const char *getSName(void) { return "SFInventoryListComparitorPtr"; }
+    static const char *getMName(void) { return "MFInventoryListComparitorPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<InventoryListModelPtr, true>
+/*! \class  FieldTraitsRecurseMapper<InventoryListComparitorPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<InventoryListModelPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldSingle */
 
-typedef SField<InventoryListModelPtr> SFInventoryListModelPtr;
+typedef SField<InventoryListComparitorPtr> SFInventoryListComparitorPtr;
 #endif
 
-#ifndef OSG_COMPILEINVENTORYLISTMODELINST
-OSG_DLLEXPORT_DECL1(SField, InventoryListModelPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEINVENTORYLISTCOMPARITORINST
+OSG_DLLEXPORT_DECL1(SField, InventoryListComparitorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpGameFieldMulti */
 
-typedef MField<InventoryListModelPtr> MFInventoryListModelPtr;
+typedef MField<InventoryListComparitorPtr> MFInventoryListComparitorPtr;
 #endif
 
-#ifndef OSG_COMPILEINVENTORYLISTMODELINST
-OSG_DLLEXPORT_DECL1(MField, InventoryListModelPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEINVENTORYLISTCOMPARITORINST
+OSG_DLLEXPORT_DECL1(MField, InventoryListComparitorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGINVENTORYLISTMODELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGINVENTORYLISTCOMPARITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGINVENTORYLISTMODELFIELDS_H_ */
+#endif /* _OSGINVENTORYLISTCOMPARITORFIELDS_H_ */

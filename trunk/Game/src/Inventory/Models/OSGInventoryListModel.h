@@ -101,6 +101,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModel : public InventoryListModelBase
 
 	std::vector<InventoryItemPtr> _InventoryItems;
 
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */

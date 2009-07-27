@@ -81,6 +81,7 @@ UInt32 InventoryListModel::getSize(void) const
 	return _InventoryItems.size();
 }
 
+
 boost::any InventoryListModel::getElementAt(UInt32 index) const
 {
 	if(index < _InventoryItems.size())
