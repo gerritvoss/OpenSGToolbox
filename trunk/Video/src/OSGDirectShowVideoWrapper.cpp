@@ -324,7 +324,8 @@ Real32 DirectShowVideoWrapper::getRate(void) const
 
 bool DirectShowVideoWrapper::jump(Int64 Amount)
 {
-    if(isInitialized())
+    return seek(osgClamp<Int64>(0,getPosition()+Amount,getDuration()));
+    /*if(isInitialized())
     {
 		REFERENCE_TIME Position = (getDuration() *100) / 95;
 		HRESULT hr;
@@ -332,13 +333,15 @@ bool DirectShowVideoWrapper::jump(Int64 Amount)
 		IMediaSeeking* mediaSeeking;
 		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
 
-		//if (SUCCEEDED(mediaSeeking->SetPositions(&Position, AM_SEEKING_AbsolutePositioning, NULL, AM_SEEKING_NoPositioning))) {
-		//	return true;
-		//} else {
-		//	return false;
-		//}
+		if (SUCCEEDED(mediaSeeking->SetPositions(&Amount, AM_SEEKING_RelativePositioning, NULL, AM_SEEKING_NoPositioning))) {
+            reachEndOnce = false;
+			produceSeeked();
+			return true;
+		} else {
+			return false;
+		}
 	}
-	return false;
+	return false;*/
 }
 
 bool DirectShowVideoWrapper::seek(Int64 SeekPos)
@@ -351,6 +354,7 @@ bool DirectShowVideoWrapper::seek(Int64 SeekPos)
 		hr = filterGraph->QueryInterface(IID_IMediaSeeking,(void**)&mediaSeeking);
 
 		if (SUCCEEDED(mediaSeeking->SetPositions(&SeekPos, AM_SEEKING_AbsolutePositioning, NULL, AM_SEEKING_NoPositioning))) {
+            reachEndOnce = false;
 			produceSeeked();
 			return true;
 		} else {
@@ -441,6 +445,7 @@ bool DirectShowVideoWrapper::stop(void)
 
         if (SUCCEEDED(mediaControl->Stop())) {
 			produceStopped();
+            reachEndOnce = false;
             return true;
         }
     }
@@ -451,6 +456,7 @@ bool DirectShowVideoWrapper::close(void)
 {
     uninitVideo();
 	produceClosed();
+    reachEndOnce = false;
     return true;
 }
 
@@ -490,6 +496,11 @@ bool DirectShowVideoWrapper::updateImage(void)
 		{
             _VideoImage->setData(reinterpret_cast<const UInt8*>(frameBuffer));		
 		}
+        if(!reachEndOnce && getPosition() == getDuration())
+        {
+            reachEndOnce = true;
+            produceReachedEnd();
+        }
 
         return true;
     }
@@ -511,6 +522,7 @@ ImagePtr DirectShowVideoWrapper::getCurrentFrame(void)
                 return NullFC;
             }
             frameBuffer = new long[bufferSize];
+
         }
         
         sampleGrabber->GetCurrentBuffer(&bufferSize, (long*)frameBuffer);
@@ -602,7 +614,8 @@ void DirectShowVideoWrapper::FindPin(IBaseFilter* baseFilter,
 DirectShowVideoWrapper::DirectShowVideoWrapper(void) :
     Inherited(),
         videoInitialized(false),
-        frameBuffer(NULL)
+        frameBuffer(NULL),
+        reachEndOnce(false)
 {
     HRESULT hr;
     hr = CoInitialize(NULL);
@@ -616,7 +629,8 @@ DirectShowVideoWrapper::DirectShowVideoWrapper(void) :
 DirectShowVideoWrapper::DirectShowVideoWrapper(const DirectShowVideoWrapper &source) :
     Inherited(source),
         videoInitialized(false),
-        frameBuffer(NULL)
+        frameBuffer(NULL),
+        reachEndOnce(false)
 {
     HRESULT hr;
     hr = CoInitialize(NULL);

@@ -18,6 +18,7 @@
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGBaseFunctions.h>
 #include <OpenSG/OSGTransform.h>
+#include <OpenSG/OSGSwitch.h>
 
 // new headers: 
 
@@ -64,6 +65,8 @@ VideoWrapperPtr TheVideo;
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+SwitchPtr GeometryNodeSwitch;
+NodePtr SwitchNode;
 
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
@@ -106,6 +109,9 @@ class TutorialVideoListener : public VideoListener
     virtual void reachedEnd(const VideoEvent& e)
 	{
 		std::cout << "Reached End" << std::endl;
+		TheVideo->pause();
+		TheVideo->seek(0);
+		TheVideo->unpause();
 	}
 
     virtual void seeked(const VideoEvent& e)
@@ -171,7 +177,7 @@ int main(int argc, char **argv)
 	TutorialVideoListener TheVideoListener;
 	TheVideo->addVideoListener(&TheVideoListener);
     
-    TheVideo->open(Path("./Data/flame.avi"));
+    TheVideo->open(Path("./Data/ExampleVideo.avi"));
 	TheVideo->pause();
 
 
@@ -188,22 +194,75 @@ int main(int argc, char **argv)
 	TheVideo->updateImage();
     Real32 AspectRatio(static_cast<Real32>(TheVideo->getImage()->getWidth())/static_cast<Real32>(TheVideo->getImage()->getHeight()));
 
-	GeometryPtr SceneGeometry = makePlaneGeo(10.0*AspectRatio,10.0,10,10);
-	beginEditCP(SceneGeometry, Geometry::MaterialFieldMask);
-		SceneGeometry->setMaterial(createVideoMaterial());
-	endEditCP(SceneGeometry, Geometry::MaterialFieldMask);
+    MaterialPtr VideoMaterial = createVideoMaterial();
+
+    //Plane Geometry
+	GeometryPtr PlaneGeometry = makePlaneGeo(10.0*AspectRatio,10.0,10,10);
+	beginEditCP(PlaneGeometry, Geometry::MaterialFieldMask);
+		PlaneGeometry->setMaterial(VideoMaterial);
+	endEditCP(PlaneGeometry, Geometry::MaterialFieldMask);
 	
-    NodePtr SceneGeometryNode = Node::create();
-	beginEditCP(SceneGeometryNode, Node::CoreFieldMask);
-        SceneGeometryNode->setCore(SceneGeometry);
-	endEditCP(SceneGeometryNode, Node::CoreFieldMask);
+    NodePtr PlaneGeometryNode = Node::create();
+	beginEditCP(PlaneGeometryNode, Node::CoreFieldMask);
+        PlaneGeometryNode->setCore(PlaneGeometry);
+	endEditCP(PlaneGeometryNode, Node::CoreFieldMask);
+
+    //Box Geometry
+	GeometryPtr BoxGeometry = makeBoxGeo(10.0*AspectRatio,10.0,10.0,2,2,2);
+	beginEditCP(BoxGeometry, Geometry::MaterialFieldMask);
+		BoxGeometry->setMaterial(VideoMaterial);
+	endEditCP(BoxGeometry, Geometry::MaterialFieldMask);
+	
+    NodePtr BoxGeometryNode = Node::create();
+	beginEditCP(BoxGeometryNode, Node::CoreFieldMask);
+        BoxGeometryNode->setCore(BoxGeometry);
+	endEditCP(BoxGeometryNode, Node::CoreFieldMask);
+
+    //Sphere Geometry
+	GeometryPtr SphereGeometry = makeSphereGeo(2,5.0);
+	beginEditCP(SphereGeometry, Geometry::MaterialFieldMask);
+		SphereGeometry->setMaterial(VideoMaterial);
+	endEditCP(SphereGeometry, Geometry::MaterialFieldMask);
+	
+    NodePtr SphereGeometryNode = Node::create();
+	beginEditCP(SphereGeometryNode, Node::CoreFieldMask);
+        SphereGeometryNode->setCore(SphereGeometry);
+	endEditCP(SphereGeometryNode, Node::CoreFieldMask);
+    
+
+    //Torus Geometry
+	GeometryPtr TorusGeometry = makeTorusGeo(2.0,5.0,32,32);
+	beginEditCP(TorusGeometry, Geometry::MaterialFieldMask);
+		TorusGeometry->setMaterial(VideoMaterial);
+	endEditCP(TorusGeometry, Geometry::MaterialFieldMask);
+	
+    NodePtr TorusGeometryNode = Node::create();
+	beginEditCP(TorusGeometryNode, Node::CoreFieldMask);
+        TorusGeometryNode->setCore(TorusGeometry);
+	endEditCP(TorusGeometryNode, Node::CoreFieldMask);
+
+    //Switch Node
+    GeometryNodeSwitch = Switch::create();
+    beginEditCP(GeometryNodeSwitch, Switch::ChoiceFieldMask);
+        GeometryNodeSwitch->setChoice(0);
+    endEditCP(GeometryNodeSwitch, Switch::ChoiceFieldMask);
+
+    SwitchNode = Node::create();
+    beginEditCP(SwitchNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        SwitchNode->setCore(GeometryNodeSwitch);
+        SwitchNode->addChild(PlaneGeometryNode);
+        SwitchNode->addChild(BoxGeometryNode);
+        SwitchNode->addChild(SphereGeometryNode);
+        SwitchNode->addChild(TorusGeometryNode);
+	endEditCP(SwitchNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
 
     NodePtr scene = Node::create();
     trans = Transform::create();
 	beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     {
         scene->setCore(trans);
-		scene->addChild(SceneGeometryNode);
+		scene->addChild(SwitchNode);
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     
@@ -236,6 +295,9 @@ int main(int argc, char **argv)
     
     // show the whole scene
     mgr->showAll();
+
+    //Start playing video
+	TheVideo->play();
 
     // GLUT main loop
     glutMainLoop();
@@ -279,6 +341,7 @@ void motion(int x, int y)
 // react to keys
 void keyboard(unsigned char k, int x, int y)
 {
+    Int64 JumpAmount(50000000);
     switch(k)
     {
         case 27:  
@@ -297,7 +360,19 @@ void keyboard(unsigned char k, int x, int y)
 		case 'r':
 			TheVideo->stop();
 			TheVideo->seek(0);
+			TheVideo->pause();
 			break;
+        case 'f':
+            TheVideo->jump(JumpAmount);
+            break;
+        case 'v':
+            TheVideo->jump(-JumpAmount);
+            break;
+        case 'w':
+            beginEditCP(GeometryNodeSwitch, Switch::ChoiceFieldMask);
+                GeometryNodeSwitch->setChoice((GeometryNodeSwitch->getChoice() + 1) % SwitchNode->getNChildren());
+            endEditCP(GeometryNodeSwitch, Switch::ChoiceFieldMask);
+            break;
     }
 }
 
@@ -350,8 +425,10 @@ MaterialPtr createVideoMaterial(void)
         // Set filtering modes. LINEAR is cheap and good if the image size
         // changes very little (i.e. the window is about the same size as 
         // the images).
-        tex->setMinFilter(GL_LINEAR);
-        tex->setMagFilter(GL_LINEAR);        
+        //tex->setMinFilter(GL_LINEAR);
+        //tex->setMagFilter(GL_LINEAR);
+        tex->setMinFilter(GL_NEAREST);
+        tex->setMagFilter(GL_NEAREST);        
         
         // Set the wrapping modes. We don't need repetition, it might actually
         // introduce artifactes at the borders, so switch it off.

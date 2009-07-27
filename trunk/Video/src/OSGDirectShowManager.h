@@ -37,7 +37,6 @@
 #include "OSGVideoManager.h"
 #include <string>
 
-#include <Dshow.h>
 
 OSG_BEGIN_NAMESPACE
 

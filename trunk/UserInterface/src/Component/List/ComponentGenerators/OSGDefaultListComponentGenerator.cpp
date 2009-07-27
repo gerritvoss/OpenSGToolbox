@@ -84,16 +84,7 @@ ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, con
 		return NullFC;
 	}
 
-	std::string ValueString;
-    try
-    {
-        ValueString = lexical_cast(Value);
-    }
-    catch (boost::bad_lexical_cast &)
-    {
-        //Could not convert to string
-    }
-	return getListComponent(Parent, ValueString, Index, IsSelected, HasFocus);
+	return getListComponent(Parent, getText(Parent, Value, Index, IsSelected, HasFocus), Index, IsSelected, HasFocus);
 }
 
 ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
@@ -112,6 +103,24 @@ ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, std
     applyBordersAndBackground(TheComponent, Parent, Value, Index, IsSelected, HasFocus);
 
 	return TheComponent;
+}
+
+std::string DefaultListComponentGenerator::getText(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
+{
+	if(Value.empty()){
+		return std::string("");
+	}
+
+	std::string ValueString;
+    try
+    {
+        ValueString = lexical_cast(Value);
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        //Could not convert to string
+    }
+    return ValueString;
 }
 	
 void DefaultListComponentGenerator::applyBordersAndBackground(ComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const

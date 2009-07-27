@@ -105,6 +105,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGenerator : public Def
     /*! \}                                                                 */
 	virtual void applyBordersAndBackground(ComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
 	virtual void applyTextColor(TextComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
+    virtual std::string getText(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
 
     /*==========================  PRIVATE  ================================*/
   private:

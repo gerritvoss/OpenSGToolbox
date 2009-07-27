@@ -29,6 +29,8 @@
 #include "OSGDirectShowManager.h"
 #include "OSGDirectShowVideoWrapper.h"
 
+#include <Dshow.h>
+
 OSG_BEGIN_NAMESPACE
 
 DirectShowManager *DirectShowManager::_the = NULL;
