@@ -81,10 +81,6 @@ void Inventory::initMethod (void)
 void Inventory::addItem(InventoryItemPtr Item)
 {
 	getInventoryItems().push_back(Item);
-	sortInventory();
-}
-void Inventory::sortInventory()
-{
 }
 
 std::vector<InventoryItemPtr> Inventory::getItemsOfClass(std::string className)

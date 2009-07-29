@@ -45,113 +45,127 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class InventoryListModel!
+ **     class InventoryListComparitor!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEINVENTORYLISTMODELINST
+#define OSG_COMPILEINVENTORYLISTCOMPARITORINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGInventoryListModelBase.h"
-#include "OSGInventoryListModel.h"
+#include "OSGInventoryListComparitorBase.h"
+#include "OSGInventoryListComparitor.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  InventoryListModelBase::ComparitorFieldMask = 
-    (TypeTraits<BitVector>::One << InventoryListModelBase::ComparitorFieldId);
+const OSG::BitVector  InventoryListComparitorBase::ClassToDisplayFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryListComparitorBase::ClassToDisplayFieldId);
 
-const OSG::BitVector InventoryListModelBase::MTInfluenceMask = 
+const OSG::BitVector  InventoryListComparitorBase::CurrentInventoryFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryListComparitorBase::CurrentInventoryFieldId);
+
+const OSG::BitVector  InventoryListComparitorBase::AscendingFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryListComparitorBase::AscendingFieldId);
+
+const OSG::BitVector InventoryListComparitorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var InventoryListComparitorPtr InventoryListModelBase::_sfComparitor
+/*! \var std::string     InventoryListComparitorBase::_mfClassToDisplay
+    
+*/
+/*! \var InventoryPtr    InventoryListComparitorBase::_sfCurrentInventory
+    
+*/
+/*! \var bool            InventoryListComparitorBase::_sfAscending
     
 */
 
-//! InventoryListModel description
+//! InventoryListComparitor description
 
-FieldDescription *InventoryListModelBase::_desc[] = 
+FieldDescription *InventoryListComparitorBase::_desc[] = 
 {
-    new FieldDescription(SFInventoryListComparitorPtr::getClassType(), 
-                     "Comparitor", 
-                     ComparitorFieldId, ComparitorFieldMask,
+    new FieldDescription(MFString::getClassType(), 
+                     "ClassToDisplay", 
+                     ClassToDisplayFieldId, ClassToDisplayFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryListModelBase::getSFComparitor)
+                     (FieldAccessMethod) &InventoryListComparitorBase::getMFClassToDisplay),
+    new FieldDescription(SFInventoryPtr::getClassType(), 
+                     "CurrentInventory", 
+                     CurrentInventoryFieldId, CurrentInventoryFieldMask,
+                     true,
+                     (FieldAccessMethod) &InventoryListComparitorBase::getSFCurrentInventory),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Ascending", 
+                     AscendingFieldId, AscendingFieldMask,
+                     false,
+                     (FieldAccessMethod) &InventoryListComparitorBase::getSFAscending)
 };
 
 
-FieldContainerType InventoryListModelBase::_type(
-    "InventoryListModel",
-    "AbstractListModel",
+FieldContainerType InventoryListComparitorBase::_type(
+    "InventoryListComparitor",
+    "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &InventoryListModelBase::createEmpty,
-    InventoryListModel::initMethod,
+    NULL, 
+    InventoryListComparitor::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(InventoryListModelBase, InventoryListModelPtr)
+//OSG_FIELD_CONTAINER_DEF(InventoryListComparitorBase, InventoryListComparitorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &InventoryListModelBase::getType(void) 
+FieldContainerType &InventoryListComparitorBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &InventoryListModelBase::getType(void) const 
+const FieldContainerType &InventoryListComparitorBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr InventoryListModelBase::shallowCopy(void) const 
+UInt32 InventoryListComparitorBase::getContainerSize(void) const 
 { 
-    InventoryListModelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const InventoryListModel *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 InventoryListModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(InventoryListModel); 
+    return sizeof(InventoryListComparitor); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void InventoryListModelBase::executeSync(      FieldContainer &other,
+void InventoryListComparitorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((InventoryListModelBase *) &other, whichField);
+    this->executeSyncImpl((InventoryListComparitorBase *) &other, whichField);
 }
 #else
-void InventoryListModelBase::executeSync(      FieldContainer &other,
+void InventoryListComparitorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((InventoryListModelBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((InventoryListComparitorBase *) &other, whichField, sInfo);
 }
-void InventoryListModelBase::execBeginEdit(const BitVector &whichField, 
+void InventoryListComparitorBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void InventoryListModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void InventoryListComparitorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfClassToDisplay.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -161,8 +175,10 @@ void InventoryListModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-InventoryListModelBase::InventoryListModelBase(void) :
-    _sfComparitor             (), 
+InventoryListComparitorBase::InventoryListComparitorBase(void) :
+    _mfClassToDisplay         (), 
+    _sfCurrentInventory       (), 
+    _sfAscending              (bool(false)), 
     Inherited() 
 {
 }
@@ -171,91 +187,138 @@ InventoryListModelBase::InventoryListModelBase(void) :
 #pragma warning (default : 383)
 #endif
 
-InventoryListModelBase::InventoryListModelBase(const InventoryListModelBase &source) :
-    _sfComparitor             (source._sfComparitor             ), 
+InventoryListComparitorBase::InventoryListComparitorBase(const InventoryListComparitorBase &source) :
+    _mfClassToDisplay         (source._mfClassToDisplay         ), 
+    _sfCurrentInventory       (source._sfCurrentInventory       ), 
+    _sfAscending              (source._sfAscending              ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-InventoryListModelBase::~InventoryListModelBase(void)
+InventoryListComparitorBase::~InventoryListComparitorBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 InventoryListModelBase::getBinSize(const BitVector &whichField)
+UInt32 InventoryListComparitorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ComparitorFieldMask & whichField))
+    if(FieldBits::NoField != (ClassToDisplayFieldMask & whichField))
     {
-        returnValue += _sfComparitor.getBinSize();
+        returnValue += _mfClassToDisplay.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+    {
+        returnValue += _sfCurrentInventory.getBinSize();
+    }
+
+    if(FieldBits::NoField != (AscendingFieldMask & whichField))
+    {
+        returnValue += _sfAscending.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void InventoryListModelBase::copyToBin(      BinaryDataHandler &pMem,
+void InventoryListComparitorBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ComparitorFieldMask & whichField))
+    if(FieldBits::NoField != (ClassToDisplayFieldMask & whichField))
     {
-        _sfComparitor.copyToBin(pMem);
+        _mfClassToDisplay.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+    {
+        _sfCurrentInventory.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AscendingFieldMask & whichField))
+    {
+        _sfAscending.copyToBin(pMem);
     }
 
 
 }
 
-void InventoryListModelBase::copyFromBin(      BinaryDataHandler &pMem,
+void InventoryListComparitorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ComparitorFieldMask & whichField))
+    if(FieldBits::NoField != (ClassToDisplayFieldMask & whichField))
     {
-        _sfComparitor.copyFromBin(pMem);
+        _mfClassToDisplay.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+    {
+        _sfCurrentInventory.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AscendingFieldMask & whichField))
+    {
+        _sfAscending.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void InventoryListModelBase::executeSyncImpl(      InventoryListModelBase *pOther,
+void InventoryListComparitorBase::executeSyncImpl(      InventoryListComparitorBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ComparitorFieldMask & whichField))
-        _sfComparitor.syncWith(pOther->_sfComparitor);
+    if(FieldBits::NoField != (ClassToDisplayFieldMask & whichField))
+        _mfClassToDisplay.syncWith(pOther->_mfClassToDisplay);
+
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+        _sfCurrentInventory.syncWith(pOther->_sfCurrentInventory);
+
+    if(FieldBits::NoField != (AscendingFieldMask & whichField))
+        _sfAscending.syncWith(pOther->_sfAscending);
 
 
 }
 #else
-void InventoryListModelBase::executeSyncImpl(      InventoryListModelBase *pOther,
+void InventoryListComparitorBase::executeSyncImpl(      InventoryListComparitorBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ComparitorFieldMask & whichField))
-        _sfComparitor.syncWith(pOther->_sfComparitor);
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+        _sfCurrentInventory.syncWith(pOther->_sfCurrentInventory);
 
+    if(FieldBits::NoField != (AscendingFieldMask & whichField))
+        _sfAscending.syncWith(pOther->_sfAscending);
+
+
+    if(FieldBits::NoField != (ClassToDisplayFieldMask & whichField))
+        _mfClassToDisplay.syncWith(pOther->_mfClassToDisplay, sInfo);
 
 
 }
 
-void InventoryListModelBase::execBeginEditImpl (const BitVector &whichField, 
+void InventoryListComparitorBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (ClassToDisplayFieldMask & whichField))
+        _mfClassToDisplay.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -270,11 +333,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<InventoryListModelPtr>::_type("InventoryListModelPtr", "AbstractListModelPtr");
+DataType FieldDataTraits<InventoryListComparitorPtr>::_type("InventoryListComparitorPtr", "AttachmentContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(InventoryListModelPtr, OSG_GAMELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(InventoryListModelPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(InventoryListComparitorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(InventoryListComparitorPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -291,10 +354,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(InventoryListModelPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGINVENTORYLISTMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINVENTORYLISTMODELBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGINVENTORYLISTCOMPARITORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGINVENTORYLISTCOMPARITORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGINVENTORYLISTMODELFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGINVENTORYLISTCOMPARITORFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

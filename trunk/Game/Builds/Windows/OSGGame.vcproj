@@ -1025,34 +1025,6 @@
 					Name="Models"
 					>
 					<File
-						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitor.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitor.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitor.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitorBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitorBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitorBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Inventory\Models\OSGInventoryListComparitorFields.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModel.cpp"
 						>
 					</File>
@@ -1080,6 +1052,66 @@
 						RelativePath="..\..\src\Inventory\Models\OSGInventoryListModelFields.h"
 						>
 					</File>
+					<Filter
+						Name="Comparitors"
+						>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGDefaultInventoryListComparitor.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGDefaultInventoryListComparitor.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGDefaultInventoryListComparitor.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGDefaultInventoryListComparitorBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGDefaultInventoryListComparitorBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGDefaultInventoryListComparitorBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGDefaultInventoryListComparitorFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGInventoryListComparitor.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGInventoryListComparitor.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGInventoryListComparitor.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGInventoryListComparitorBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGInventoryListComparitorBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGInventoryListComparitorBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\Comparitors\OSGInventoryListComparitorFields.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="ComponentGenerators"

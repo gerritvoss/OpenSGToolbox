@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class InventoryListModel!
+ **     class InventoryListComparitor!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,78 +55,108 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &InventoryListModelBase::getClassType(void)
+OSG::FieldContainerType &InventoryListComparitorBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 InventoryListModelBase::getClassTypeId(void) 
+OSG::UInt32 InventoryListComparitorBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
-//! create a new instance of the class
-inline
-InventoryListModelPtr InventoryListModelBase::create(void) 
-{
-    InventoryListModelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = InventoryListModelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-InventoryListModelPtr InventoryListModelBase::createEmpty(void) 
-{ 
-    InventoryListModelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the InventoryListModel::_sfComparitor field.
+//! Get the InventoryListComparitor::_mfClassToDisplay field.
 inline
-SFInventoryListComparitorPtr *InventoryListModelBase::getSFComparitor(void)
+MFString *InventoryListComparitorBase::getMFClassToDisplay(void)
 {
-    return &_sfComparitor;
+    return &_mfClassToDisplay;
+}
+
+//! Get the InventoryListComparitor::_sfCurrentInventory field.
+inline
+SFInventoryPtr *InventoryListComparitorBase::getSFCurrentInventory(void)
+{
+    return &_sfCurrentInventory;
+}
+
+//! Get the InventoryListComparitor::_sfAscending field.
+inline
+SFBool *InventoryListComparitorBase::getSFAscending(void)
+{
+    return &_sfAscending;
 }
 
 
-//! Get the value of the InventoryListModel::_sfComparitor field.
+//! Get the value of the InventoryListComparitor::_sfCurrentInventory field.
 inline
-InventoryListComparitorPtr &InventoryListModelBase::getComparitor(void)
+InventoryPtr &InventoryListComparitorBase::getCurrentInventory(void)
 {
-    return _sfComparitor.getValue();
+    return _sfCurrentInventory.getValue();
 }
 
-//! Get the value of the InventoryListModel::_sfComparitor field.
+//! Get the value of the InventoryListComparitor::_sfCurrentInventory field.
 inline
-const InventoryListComparitorPtr &InventoryListModelBase::getComparitor(void) const
+const InventoryPtr &InventoryListComparitorBase::getCurrentInventory(void) const
 {
-    return _sfComparitor.getValue();
+    return _sfCurrentInventory.getValue();
 }
 
-//! Set the value of the InventoryListModel::_sfComparitor field.
+//! Set the value of the InventoryListComparitor::_sfCurrentInventory field.
 inline
-void InventoryListModelBase::setComparitor(const InventoryListComparitorPtr &value)
+void InventoryListComparitorBase::setCurrentInventory(const InventoryPtr &value)
 {
-    _sfComparitor.setValue(value);
+    _sfCurrentInventory.setValue(value);
 }
 
+//! Get the value of the InventoryListComparitor::_sfAscending field.
+inline
+bool &InventoryListComparitorBase::getAscending(void)
+{
+    return _sfAscending.getValue();
+}
+
+//! Get the value of the InventoryListComparitor::_sfAscending field.
+inline
+const bool &InventoryListComparitorBase::getAscending(void) const
+{
+    return _sfAscending.getValue();
+}
+
+//! Set the value of the InventoryListComparitor::_sfAscending field.
+inline
+void InventoryListComparitorBase::setAscending(const bool &value)
+{
+    _sfAscending.setValue(value);
+}
+
+
+//! Get the value of the \a index element the InventoryListComparitor::_mfClassToDisplay field.
+inline
+std::string &InventoryListComparitorBase::getClassToDisplay(const UInt32 index)
+{
+    return _mfClassToDisplay[index];
+}
+
+//! Get the InventoryListComparitor::_mfClassToDisplay field.
+inline
+MFString &InventoryListComparitorBase::getClassToDisplay(void)
+{
+    return _mfClassToDisplay;
+}
+
+//! Get the InventoryListComparitor::_mfClassToDisplay field.
+inline
+const MFString &InventoryListComparitorBase::getClassToDisplay(void) const
+{
+    return _mfClassToDisplay;
+}
 
 OSG_END_NAMESPACE
 
-#define OSGINVENTORYLISTMODELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGINVENTORYLISTCOMPARITORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

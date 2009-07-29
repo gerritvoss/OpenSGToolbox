@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -42,91 +44,88 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
- **     Do not change this file, changes should be done in the derived      **
- **     class InventoryListModel!
- **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
+
+#ifndef _OSGINVENTORYLISTCOMPARITORFIELDS_H_
+#define _OSGINVENTORYLISTCOMPARITORFIELDS_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGGameDef.h"
+
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
+class InventoryListComparitor;
 
-//! access the type of the class
-inline
-OSG::FieldContainerType &InventoryListModelBase::getClassType(void)
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//! InventoryListComparitorPtr
+
+typedef FCPtr<AttachmentContainerPtr, InventoryListComparitor> InventoryListComparitorPtr;
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpGameFieldTraits
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldDataTraits<InventoryListComparitorPtr> : 
+    public FieldTraitsRecurseMapper<InventoryListComparitorPtr, true>
 {
-    return _type; 
-} 
+    static DataType             _type;                       
 
-//! access the numerical type of the class
-inline
-OSG::UInt32 InventoryListModelBase::getClassTypeId(void) 
-{
-    return _type.getId(); 
-} 
+    enum                        { StringConvertable = 0x00 };
+    enum                        { bHasParent        = 0x01 };
 
-//! create a new instance of the class
-inline
-InventoryListModelPtr InventoryListModelBase::create(void) 
-{
-    InventoryListModelPtr fc; 
+    static DataType   &getType (void) { return _type;        }
 
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = InventoryListModelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
+    static const char *getSName(void) { return "SFInventoryListComparitorPtr"; }
+    static const char *getMName(void) { return "MFInventoryListComparitorPtr"; }
+};
 
-//! create an empty new instance of the class, do not copy the prototype
-inline
-InventoryListModelPtr InventoryListModelBase::createEmpty(void) 
-{ 
-    InventoryListModelPtr returnValue; 
-    
-    newPtr(returnValue); 
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \class  FieldTraitsRecurseMapper<InventoryListComparitorPtr, true>
+    \hideinhierarchy
+ */
+#endif
 
-    return returnValue; 
-}
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 
-/*------------------------------ get -----------------------------------*/
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpGameFieldSingle */
 
-//! Get the InventoryListModel::_sfComparitor field.
-inline
-SFInventoryListComparitorPtr *InventoryListModelBase::getSFComparitor(void)
-{
-    return &_sfComparitor;
-}
+typedef SField<InventoryListComparitorPtr> SFInventoryListComparitorPtr;
+#endif
 
+#ifndef OSG_COMPILEINVENTORYLISTCOMPARITORINST
+OSG_DLLEXPORT_DECL1(SField, InventoryListComparitorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#endif
 
-//! Get the value of the InventoryListModel::_sfComparitor field.
-inline
-InventoryListComparitorPtr &InventoryListModelBase::getComparitor(void)
-{
-    return _sfComparitor.getValue();
-}
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpGameFieldMulti */
 
-//! Get the value of the InventoryListModel::_sfComparitor field.
-inline
-const InventoryListComparitorPtr &InventoryListModelBase::getComparitor(void) const
-{
-    return _sfComparitor.getValue();
-}
+typedef MField<InventoryListComparitorPtr> MFInventoryListComparitorPtr;
+#endif
 
-//! Set the value of the InventoryListModel::_sfComparitor field.
-inline
-void InventoryListModelBase::setComparitor(const InventoryListComparitorPtr &value)
-{
-    _sfComparitor.setValue(value);
-}
-
+#ifndef OSG_COMPILEINVENTORYLISTCOMPARITORINST
+OSG_DLLEXPORT_DECL1(MField, InventoryListComparitorPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#endif
 
 OSG_END_NAMESPACE
 
-#define OSGINVENTORYLISTMODELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGINVENTORYLISTCOMPARITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
+#endif /* _OSGINVENTORYLISTCOMPARITORFIELDS_H_ */

@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class InventoryListModel!
+ **     class DefaultInventoryListComparitor!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &InventoryListModelBase::getClassType(void)
+OSG::FieldContainerType &DefaultInventoryListComparitorBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 InventoryListModelBase::getClassTypeId(void) 
+OSG::UInt32 DefaultInventoryListComparitorBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-InventoryListModelPtr InventoryListModelBase::create(void) 
+DefaultInventoryListComparitorPtr DefaultInventoryListComparitorBase::create(void) 
 {
-    InventoryListModelPtr fc; 
+    DefaultInventoryListComparitorPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = InventoryListModelPtr::dcast(
+        fc = DefaultInventoryListComparitorPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ InventoryListModelPtr InventoryListModelBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-InventoryListModelPtr InventoryListModelBase::createEmpty(void) 
+DefaultInventoryListComparitorPtr DefaultInventoryListComparitorBase::createEmpty(void) 
 { 
-    InventoryListModelPtr returnValue; 
+    DefaultInventoryListComparitorPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,37 +96,9 @@ InventoryListModelPtr InventoryListModelBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the InventoryListModel::_sfComparitor field.
-inline
-SFInventoryListComparitorPtr *InventoryListModelBase::getSFComparitor(void)
-{
-    return &_sfComparitor;
-}
-
-
-//! Get the value of the InventoryListModel::_sfComparitor field.
-inline
-InventoryListComparitorPtr &InventoryListModelBase::getComparitor(void)
-{
-    return _sfComparitor.getValue();
-}
-
-//! Get the value of the InventoryListModel::_sfComparitor field.
-inline
-const InventoryListComparitorPtr &InventoryListModelBase::getComparitor(void) const
-{
-    return _sfComparitor.getValue();
-}
-
-//! Set the value of the InventoryListModel::_sfComparitor field.
-inline
-void InventoryListModelBase::setComparitor(const InventoryListComparitorPtr &value)
-{
-    _sfComparitor.setValue(value);
-}
 
 
 OSG_END_NAMESPACE
 
-#define OSGINVENTORYLISTMODELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGDEFAULTINVENTORYLISTCOMPARITORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

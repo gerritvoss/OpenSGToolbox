@@ -47,8 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGInventoryListModel.h"
-#include "Inventory/OSGInventoryItem.h"
+#include "OSGDefaultInventoryListComparitor.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::InventoryListModel
-A InventoryListModel. 
+/*! \class osg::DefaultInventoryListComparitor
+A DefaultInventoryListModel.   
 */
 
 /***************************************************************************\
@@ -68,7 +67,7 @@ A InventoryListModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void InventoryListModel::initMethod (void)
+void DefaultInventoryListComparitor::initMethod (void)
 {
 }
 
@@ -76,61 +75,38 @@ void InventoryListModel::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-UInt32 InventoryListModel::getSize(void) const
-{
-	return _InventoryItems.size();
-}
 
-boost::any InventoryListModel::getElementAt(UInt32 index) const
-{
-	if(index < _InventoryItems.size())
-	{
-		return _InventoryItems.at(index)->getName();
-	}
-	else
-	{
-        return boost::any();
-	}
-}
-
-void InventoryListModel::addInventory(InventoryPtr inven)
-{
-	for(UInt32 i = 0; i < inven->getInventoryItems().getSize(); ++i)
-	{
-		_InventoryItems.push_back(inven->getInventoryItems(i));
-	}
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-InventoryListModel::InventoryListModel(void) :
+DefaultInventoryListComparitor::DefaultInventoryListComparitor(void) :
     Inherited()
 {
 }
 
-InventoryListModel::InventoryListModel(const InventoryListModel &source) :
+DefaultInventoryListComparitor::DefaultInventoryListComparitor(const DefaultInventoryListComparitor &source) :
     Inherited(source)
 {
 }
 
-InventoryListModel::~InventoryListModel(void)
+DefaultInventoryListComparitor::~DefaultInventoryListComparitor(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void InventoryListModel::changed(BitVector whichField, UInt32 origin)
+void DefaultInventoryListComparitor::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void InventoryListModel::dump(      UInt32    , 
+void DefaultInventoryListComparitor::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump InventoryListModel NI" << std::endl;
+    SLOG << "Dump DefaultInventoryListComparitor NI" << std::endl;
 }
 
 
@@ -148,10 +124,10 @@ void InventoryListModel::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGINVENTORYLISTMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINVENTORYLISTMODELBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDEFAULTINVENTORYLISTCOMPARITORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDEFAULTINVENTORYLISTCOMPARITORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGINVENTORYLISTMODELFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDEFAULTINVENTORYLISTCOMPARITORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

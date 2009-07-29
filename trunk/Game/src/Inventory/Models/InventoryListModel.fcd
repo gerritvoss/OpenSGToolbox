@@ -13,5 +13,13 @@
 >
 A InventoryListModel.
 
+	<Field
+		name="Comparitor"
+		type="InventoryListComparitorPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 
 </FieldContainer>

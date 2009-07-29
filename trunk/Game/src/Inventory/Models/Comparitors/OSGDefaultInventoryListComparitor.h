@@ -36,43 +36,30 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGINVENTORY_H_
-#define _OSGINVENTORY_H_
+#ifndef _OSGDEFAULTINVENTORYLISTCOMPARITOR_H_
+#define _OSGDEFAULTINVENTORYLISTCOMPARITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGInventoryBase.h"
-
-#include "Event/OSGInventoryListener.h"
-#include <OpenSG/Input/OSGEventConnection.h>
-
-#include <set>
+#include "OSGDefaultInventoryListComparitorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Inventory class. See \ref 
-           PageGameInventory for a description.
+/*! \brief DefaultInventoryListComparitor class. See \ref 
+           PageGameDefaultInventoryListComparitor for a description.
 */
 
-class OSG_GAMELIB_DLLMAPPING Inventory : public InventoryBase
+class OSG_GAMELIB_DLLMAPPING DefaultInventoryListComparitor : public DefaultInventoryListComparitorBase
 {
   private:
 
-    typedef InventoryBase Inherited;
+    typedef DefaultInventoryListComparitorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-
-	void addItem(InventoryItemPtr Item);
-	std::vector<InventoryItemPtr> getItemsOfClass(std::string className);
-
-	EventConnection addInventoryListener(InventoryListenerPtr Listener);
-	bool isInventoryListenerAttached(InventoryListenerPtr Listener) const;
-    void removeInventoryListener(InventoryListenerPtr Listener);
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -93,31 +80,21 @@ class OSG_GAMELIB_DLLMAPPING Inventory : public InventoryBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-	typedef std::set<InventoryListenerPtr> InventoryListenerSet;
-    typedef InventoryListenerSet::iterator InventoryListenerSetItor;
-    typedef InventoryListenerSet::const_iterator InventoryListenerSetConstItor;
-    InventoryListenerSet       _InventoryListeners;
-
-	virtual void produceItemAdded(const InventoryEvent& e);
-	virtual void produceInventorySorted(const InventoryEvent& e);
-	virtual void produceItemRemoved(const InventoryEvent& e);
-
-    // Variables should all be in InventoryBase.
+    // Variables should all be in DefaultInventoryListComparitorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-	void setupAsRoot();
-    Inventory(void);
-    Inventory(const Inventory &source);
+    DefaultInventoryListComparitor(void);
+    DefaultInventoryListComparitor(const DefaultInventoryListComparitor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Inventory(void); 
+    virtual ~DefaultInventoryListComparitor(void); 
 
     /*! \}                                                                 */
     
@@ -125,22 +102,22 @@ class OSG_GAMELIB_DLLMAPPING Inventory : public InventoryBase
   private:
 
     friend class FieldContainer;
-    friend class InventoryBase;
+    friend class DefaultInventoryListComparitorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Inventory &source);
+    void operator =(const DefaultInventoryListComparitor &source);
 };
 
-typedef Inventory *InventoryP;
+typedef DefaultInventoryListComparitor *DefaultInventoryListComparitorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGInventoryBase.inl"
-#include "OSGInventory.inl"
+#include "OSGDefaultInventoryListComparitorBase.inl"
+#include "OSGDefaultInventoryListComparitor.inl"
 
-#define OSGINVENTORY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDEFAULTINVENTORYLISTCOMPARITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGINVENTORY_H_ */
+#endif /* _OSGDEFAULTINVENTORYLISTCOMPARITOR_H_ */

@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGGameDef.h"
 
-#include "OpenSG/UserInterface/OSGAbstractListModelFields.h"
+#include <OpenSG/UserInterface/OSGAbstractListModelFields.h>
 
 OSG_BEGIN_NAMESPACE
 
