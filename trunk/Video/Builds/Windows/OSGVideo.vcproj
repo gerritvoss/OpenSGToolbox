@@ -214,46 +214,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\..\src\OSGDirectShowManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OSGDirectShowManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OSGDirectShowManager.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OSGDirectShowVideoWrapper.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OSGDirectShowVideoWrapper.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OSGDirectShowVideoWrapper.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OSGDirectShowVideoWrapperBase.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OSGDirectShowVideoWrapperBase.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OSGDirectShowVideoWrapperBase.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OSGDirectShowVideoWrapperFields.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\OSGVideoDef.h"
 				>
 			</File>
@@ -310,6 +270,50 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Events\OSGVideoListener.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="DirectShow"
+				>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowManager.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapper.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapper.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapper.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapperBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapperBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapperBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapperFields.h"
 					>
 				</File>
 			</Filter>

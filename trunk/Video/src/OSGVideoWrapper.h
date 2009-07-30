@@ -169,6 +169,4 @@ OSG_END_NAMESPACE
 #include "OSGVideoWrapperBase.inl"
 #include "OSGVideoWrapper.inl"
 
-#define OSGVIDEOWRAPPER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGVIDEOWRAPPER_H_ */

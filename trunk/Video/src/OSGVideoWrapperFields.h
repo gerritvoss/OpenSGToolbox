@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Video                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
-                           Authors: David Kabala                            
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -125,7 +125,5 @@ OSG_DLLEXPORT_DECL1(MField, VideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
-
-#define OSGVIDEOWRAPPERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGVIDEOWRAPPERFIELDS_H_ */

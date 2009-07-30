@@ -174,6 +174,4 @@ OSG_END_NAMESPACE
 #include "OSGDirectShowVideoWrapperBase.inl"
 #include "OSGDirectShowVideoWrapper.inl"
 
-#define OSGDIRECTSHOWVIDEOWRAPPER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGDIRECTSHOWVIDEOWRAPPER_H_ */

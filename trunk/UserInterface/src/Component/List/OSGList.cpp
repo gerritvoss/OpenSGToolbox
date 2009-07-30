@@ -382,7 +382,8 @@ void List::updateIndiciesDrawnFromModel(void)
 
 void List::contentsChanged(ListDataEvent e)
 {
-	if(getModel() != NULL)
+    updateIndiciesDrawnFromModel();
+	/*if(getModel() != NULL)
 	{
 		if(_BottomDrawnIndex >= 0)
 		{
@@ -391,7 +392,7 @@ void List::contentsChanged(ListDataEvent e)
 				updateItem(i);
 			}
 		}
-	}
+	}*/
 }
 
 void List::intervalAdded(ListDataEvent e)

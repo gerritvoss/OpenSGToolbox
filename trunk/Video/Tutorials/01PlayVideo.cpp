@@ -366,7 +366,7 @@ void keyboard(unsigned char k, int x, int y)
     {
         case 27:  
         {
-	        OSG::osgExit();
+            OSG::osgExit();
             exit(0);
         }
         break;

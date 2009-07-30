@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Video                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
-                           Authors: David Kabala                            
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -74,7 +74,7 @@ FieldContainerType DirectShowVideoWrapperBase::_type(
     "DirectShowVideoWrapper",
     "VideoWrapper",
     NULL,
-    (PrototypeCreateF) &DirectShowVideoWrapperBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&DirectShowVideoWrapperBase::createEmpty),
     DirectShowVideoWrapper::initMethod,
     NULL,
     0);
@@ -113,7 +113,8 @@ UInt32 DirectShowVideoWrapperBase::getContainerSize(void) const
 void DirectShowVideoWrapperBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((DirectShowVideoWrapperBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<DirectShowVideoWrapperBase *>(&other),
+                          whichField);
 }
 #else
 void DirectShowVideoWrapperBase::executeSync(      FieldContainer &other,
@@ -233,26 +234,6 @@ DataType FieldDataTraits<DirectShowVideoWrapperPtr>::_type("DirectShowVideoWrapp
 OSG_DLLEXPORT_SFIELD_DEF1(DirectShowVideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(DirectShowVideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDIRECTSHOWVIDEOWRAPPERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDIRECTSHOWVIDEOWRAPPERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDIRECTSHOWVIDEOWRAPPERFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

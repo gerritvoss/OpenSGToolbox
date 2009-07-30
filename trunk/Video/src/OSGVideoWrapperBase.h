@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Video                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
-                           Authors: David Kabala                            
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -202,7 +202,5 @@ typedef osgIF<VideoWrapperBase::isNodeCore,
 typedef RefPtr<VideoWrapperPtr> VideoWrapperRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGVIDEOWRAPPERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGVIDEOWRAPPERBASE_H_ */

@@ -84,10 +84,10 @@ ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, con
 		return NullFC;
 	}
 
-	return getListComponent(Parent, getText(Parent, Value, Index, IsSelected, HasFocus), Index, IsSelected, HasFocus);
+	return getListComponentFromString(Parent, getText(Parent, Value, Index, IsSelected, HasFocus), Index, IsSelected, HasFocus);
 }
 
-ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentPtr DefaultListComponentGenerator::getListComponentFromString(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
 	ComponentPtr TheComponent = Component::Ptr::dcast(getDrawObjectPrototype()->shallowCopy());
 

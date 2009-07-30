@@ -33,7 +33,7 @@
 #endif
 
 #ifdef WIN32
-#include "OSGDirectShowManager.h"
+#include "DirectShow/OSGDirectShowManager.h"
 #endif
 
 #ifdef __linux

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Video                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
-                           Authors: David Kabala                            
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,4 @@ OSG::UInt32 VideoWrapperBase::getClassTypeId(void)
 
 
 OSG_END_NAMESPACE
-
-#define OSGVIDEOWRAPPERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
