@@ -150,6 +150,25 @@ FieldContainerPtr getFieldContainer(const std::string &namestring)
    return NullFC;
 }
 
+bool isFieldConentDerivedFrom(const Field* TheField, const FieldContainerType* TheFCType)
+{
+	if(TheField != NULL &&
+       isFieldAFieldContainerPtr(TheField))
+	{
+		std::string FieldPtrTypeName(TheField->getType().getCName());
+        FieldPtrTypeName = FieldPtrTypeName.substr(2,FieldPtrTypeName.size()-5);
+        const FieldContainerType* PtrContentType = FieldContainerFactory::the()->findType(FieldPtrTypeName.c_str());
+        
+		return TheFCType->isDerivedFrom(*PtrContentType);
+	}
+	else
+	{
+		return false;
+	}
+    return false;
+}
+
+
 OSG_END_NAMESPACE
 
 

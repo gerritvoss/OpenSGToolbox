@@ -263,20 +263,23 @@ std::string XMLFCFileType::getName(void) const
 											    std::endl;
                                         }
 									}
-                                    //Check if the type of the FieldContainer Pointed to is derived from the type
-                                    //expected for this field
-                                    //if(TheFC->getType().isDerivedFrom(TheField->getContentType()))
-                                    //{
+                                    if(TheFC != NullFC)
+                                    {
+                                        //Check if the type of the FieldContainer Pointed to is derived from the type
+                                        //expected for this field
+                                        if(isFieldConentDerivedFrom( TheField,&(TheFC->getType())))
+                                        {
 
-								        static_cast<SFFieldContainerPtr *>(TheField)->setValue(TheFC);
-                                    //}
-                                    //else
-                                    //{
-									//    SWARNING <<
-                                    //        "ERROR in XMLFCFileType::read(): Attempting to assign a FieldContainerPtr to a field of different types. Type of field: " << TheField->getContentType().getCName() << ". Type of Field container with id: " << FieldValue.c_str() << " attemped to assign: " << TheFC->getType().getCName()  <<
-									//	    std::endl;
-								    //    static_cast<SFFieldContainerPtr *>(TheField)->setValue(NullFC);
-                                    //}
+								            static_cast<SFFieldContainerPtr *>(TheField)->setValue(TheFC);
+                                        }
+                                        else
+                                        {
+									        SWARNING <<
+                                                "ERROR in XMLFCFileType::read(): Attempting to assign a FieldContainerPtr to a field of different types. Type of field: " << TheField->getContentType().getCName() << ". Type of Field container with id: " << FieldValue.c_str() << " attemped to assign: " << TheFC->getType().getCName()  <<
+										       std::endl;
+								            static_cast<SFFieldContainerPtr *>(TheField)->setValue(NullFC);
+                                        }
+                                    }
 								}
 								else if(TheField->getCardinality() == FieldType::MULTI_FIELD &&
 									!FieldValue.empty())
@@ -316,18 +319,21 @@ std::string XMLFCFileType::getName(void) const
 											        std::endl;
                                             }
 									    }
-                                        //Check if the type of the FieldContainer Pointed to is derived from the type
-                                        //expected for this field
-                                        //if(TheFC->getType().isDerivedFrom(TheField->getContentType()))
-                                        //{
-                                            static_cast<MFFieldContainerPtr *>(TheField)->push_back(TheFC);
-                                        //}
-                                        //else
-                                        //{
-									    //    SWARNING <<
-                                        //        "ERROR in XMLFCFileType::read(): Attempting to assign a FieldContainerPtr to a field of different types. Type of field: " << TheField->getContentType().getCName() << ". Type of Field container with id: " << FieldValue.c_str() << " attemped to assign: " << TheFC->getType().getCName()  <<
-										//        std::endl;
-                                        //}
+                                        if(TheFC != NullFC)
+                                        {
+                                            //Check if the type of the FieldContainer Pointed to is derived from the type
+                                            //expected for this field
+                                            if(isFieldConentDerivedFrom( TheField,&(TheFC->getType())))
+                                            {
+                                                static_cast<MFFieldContainerPtr *>(TheField)->push_back(TheFC);
+                                            }
+                                            else
+                                            {
+									            SWARNING <<
+                                                    "ERROR in XMLFCFileType::read(): Attempting to assign a FieldContainerPtr to a field of different types. Type of field: " << TheField->getContentType().getCName() << ". Type of Field container with id: " << FieldValue.c_str() << " attemped to assign: " << TheFC->getType().getCName()  <<
+										            std::endl;
+                                            }
+                                        }
 									    
 									}
 								}
