@@ -123,6 +123,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09Inventory", "09Inventory.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10InventoryClasses", "10InventoryClasses.vcproj", "{632791C3-2FC0-41FB-B304-95EA1B102117}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11InventoryMultiClasses", "11InventoryMultiClasses.vcproj", "{EDCA6F24-FC59-47A8-9156-43A84DE58AE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -213,6 +215,10 @@ Global
 		{632791C3-2FC0-41FB-B304-95EA1B102117}.Debug|Win32.Build.0 = Debug|Win32
 		{632791C3-2FC0-41FB-B304-95EA1B102117}.Release|Win32.ActiveCfg = Release|Win32
 		{632791C3-2FC0-41FB-B304-95EA1B102117}.Release|Win32.Build.0 = Release|Win32
+		{EDCA6F24-FC59-47A8-9156-43A84DE58AE0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EDCA6F24-FC59-47A8-9156-43A84DE58AE0}.Debug|Win32.Build.0 = Debug|Win32
+		{EDCA6F24-FC59-47A8-9156-43A84DE58AE0}.Release|Win32.ActiveCfg = Release|Win32
+		{EDCA6F24-FC59-47A8-9156-43A84DE58AE0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

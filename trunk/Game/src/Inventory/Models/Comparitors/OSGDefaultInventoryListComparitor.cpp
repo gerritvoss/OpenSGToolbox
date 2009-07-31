@@ -84,8 +84,15 @@ bool DefaultInventoryListComparitor::operator()(const UInt32& LeftIndex, const U
 {
 	bool ret;
 
-	ret = getModel()->getCurrentInventory()->getInventoryItems(LeftIndex)->getName().compare(getModel()->getCurrentInventory()->getInventoryItems(RightIndex)->getName()) < 0;
-
+	if(getModel()->Ascending)
+	{
+		ret = getModel()->getCurrentInventory()->getInventoryItems(LeftIndex)->getName().compare(getModel()->getCurrentInventory()->getInventoryItems(RightIndex)->getName()) > 0;
+	}
+	else
+	{
+		ret = getModel()->getCurrentInventory()->getInventoryItems(LeftIndex)->getName().compare(getModel()->getCurrentInventory()->getInventoryItems(RightIndex)->getName()) < 0;
+	}
+	
 	return ret;
 }
 

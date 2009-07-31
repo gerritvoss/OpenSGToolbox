@@ -127,12 +127,14 @@ void InventoryListModel::setupComparitor()
 /*----------------------- constructors & destructors ----------------------*/
 
 InventoryListModel::InventoryListModel(void) :
-    Inherited()
+    Inherited(),
+		Ascending(false)
 {
 }
 
 InventoryListModel::InventoryListModel(const InventoryListModel &source) :
-    Inherited(source)
+    Inherited(source),
+		Ascending(false)
 {
 }
 

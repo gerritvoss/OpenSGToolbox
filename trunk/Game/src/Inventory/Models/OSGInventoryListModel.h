@@ -71,6 +71,10 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModel : public InventoryListModelBase
 	
 	void setupInventoryItems();
 	void setupComparitor();
+	
+	std::vector<UInt32> _InventoryItems;
+
+	bool Ascending;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -100,7 +104,6 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModel : public InventoryListModelBase
     InventoryListModel(void);
     InventoryListModel(const InventoryListModel &source);
 
-	std::vector<UInt32> _InventoryItems;
 
 
     /*! \}                                                                 */

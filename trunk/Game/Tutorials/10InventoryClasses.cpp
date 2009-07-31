@@ -128,7 +128,7 @@ class InventoryListListener: public ListSelectionListener
 		if(ExampleList->getSelectionModel()->getMinSelectionIndex() != -1)
 		{	
 			beginEditCP(DetailsWindow, TextArea::TextFieldMask);
-				DetailsWindow->setText(GenericInventoryItem::Ptr::dcast(ExampleInventory->getInventoryItems(ExampleList->getSelectionModel()->getMinSelectionIndex()))->getDetails());
+			DetailsWindow->setText(GenericInventoryItem::Ptr::dcast(InventoryListModelPtr::dcast(ExampleList->getModel())->getCurrentInventory()->getInventoryItems(InventoryListModelPtr::dcast(ExampleList->getModel())->_InventoryItems.at(ExampleList->getSelectionModel()->getMinSelectionIndex())))->getDetails());
 			endEditCP(DetailsWindow, TextArea::TextFieldMask);
 		}
 	}
@@ -273,6 +273,10 @@ int main(int argc, char **argv)
 	ExampleInventory->addItem(ExampleItem7);
 
 
+	
+	bool Ascend = false;
+
+
     /******************************************************
 
             Create a List.  A List has several 
@@ -320,6 +324,11 @@ int main(int argc, char **argv)
 	ExampleAdminsListModel = InventoryListModel::create();
 	ExampleDevelopersListModel = InventoryListModel::create();
 	ExampleGraphicsListModel = InventoryListModel::create();
+
+	ExampleListModel->Ascending = Ascend;
+	ExampleAdminsListModel->Ascending = Ascend;
+	ExampleDevelopersListModel->Ascending = Ascend;
+	ExampleGraphicsListModel->Ascending = Ascend;
 	
 	beginEditCP(ExampleComparitor , DefaultInventoryListComparitor::ModelFieldMask);
 		ExampleComparitor->setModel(ExampleListModel);
