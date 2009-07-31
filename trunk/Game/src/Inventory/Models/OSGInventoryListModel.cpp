@@ -49,6 +49,9 @@
 
 #include "OSGInventoryListModel.h"
 #include "Inventory/OSGInventoryItem.h"
+#include "Inventory/Models/Comparitors/OSGInventoryListComparitor.h"
+#include "Inventory/Models/Comparitors/OSGDefaultInventoryListComparitor.h"
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,9 +86,9 @@ UInt32 InventoryListModel::getSize(void) const
 
 boost::any InventoryListModel::getElementAt(UInt32 index) const
 {
-	if(index < _InventoryItems.size())
+	if(index < getSize())
 	{
-		return _InventoryItems.at(index)->getName();
+		return getCurrentInventory()->getInventoryItems(_InventoryItems.at(index))->getName();
 	}
 	else
 	{
@@ -93,13 +96,30 @@ boost::any InventoryListModel::getElementAt(UInt32 index) const
 	}
 }
 
-void InventoryListModel::addInventory(InventoryPtr inven)
+void InventoryListModel::setupInventoryItems()
 {
-	for(UInt32 i = 0; i < inven->getInventoryItems().getSize(); ++i)
+	for(UInt32 i = 0; getCurrentInventory()->getInventoryItems().getSize() > i; ++i)
 	{
-		_InventoryItems.push_back(inven->getInventoryItems(i));
+		_InventoryItems.push_back(i);
+	}
+	if(getCurrentInventory() != NullFC)
+	{
+		std::sort(_InventoryItems.begin(),_InventoryItems.end(),getComparitor()->getComparitorFunc());
 	}
 }
+
+void InventoryListModel::setupComparitor()
+{
+	DefaultInventoryListComparitorPtr DefaultComparitor = DefaultInventoryListComparitor::create();
+	beginEditCP(getComparitor() , DefaultInventoryListComparitor::ModelFieldMask);
+		DefaultComparitor->setModel(InventoryListModelPtr(this));
+	endEditCP(getComparitor() , DefaultInventoryListComparitor::ModelFieldMask);
+
+	beginEditCP(InventoryListModelPtr(this), InventoryListModel::ComparitorFieldMask);
+		setComparitor(DefaultComparitor);
+	endEditCP(InventoryListModelPtr(this), InventoryListModel::ComparitorFieldMask);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -125,6 +145,12 @@ InventoryListModel::~InventoryListModel(void)
 void InventoryListModel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	
+    if(whichField & CurrentInventoryFieldMask)
+	{
+		setupInventoryItems();
+	}
+
 }
 
 void InventoryListModel::dump(      UInt32    , 

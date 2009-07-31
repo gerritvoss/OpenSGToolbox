@@ -23,10 +23,10 @@ A InventoryListModel.
 	</Field>
 
 	<Field
-		name="CurrentInventory"
-		type="InventoryPtr"
+		name="Model"
+		type="InventoryListModelPtr"
 		cardinality="single"
-		visibility="internal"
+		visibility="external"
 		access="public"
 	>
 	</Field>

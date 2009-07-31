@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  InventoryListModelBase::ComparitorFieldMask = 
     (TypeTraits<BitVector>::One << InventoryListModelBase::ComparitorFieldId);
 
+const OSG::BitVector  InventoryListModelBase::CurrentInventoryFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryListModelBase::CurrentInventoryFieldId);
+
 const OSG::BitVector InventoryListModelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector InventoryListModelBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var InventoryListComparitorPtr InventoryListModelBase::_sfComparitor
+    
+*/
+/*! \var InventoryPtr    InventoryListModelBase::_sfCurrentInventory
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *InventoryListModelBase::_desc[] =
                      "Comparitor", 
                      ComparitorFieldId, ComparitorFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryListModelBase::getSFComparitor)
+                     (FieldAccessMethod) &InventoryListModelBase::getSFComparitor),
+    new FieldDescription(SFInventoryPtr::getClassType(), 
+                     "CurrentInventory", 
+                     CurrentInventoryFieldId, CurrentInventoryFieldMask,
+                     false,
+                     (FieldAccessMethod) &InventoryListModelBase::getSFCurrentInventory)
 };
 
 
@@ -163,6 +174,7 @@ void InventoryListModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 InventoryListModelBase::InventoryListModelBase(void) :
     _sfComparitor             (), 
+    _sfCurrentInventory       (), 
     Inherited() 
 {
 }
@@ -173,6 +185,7 @@ InventoryListModelBase::InventoryListModelBase(void) :
 
 InventoryListModelBase::InventoryListModelBase(const InventoryListModelBase &source) :
     _sfComparitor             (source._sfComparitor             ), 
+    _sfCurrentInventory       (source._sfCurrentInventory       ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +207,11 @@ UInt32 InventoryListModelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfComparitor.getBinSize();
     }
 
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+    {
+        returnValue += _sfCurrentInventory.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +224,11 @@ void InventoryListModelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ComparitorFieldMask & whichField))
     {
         _sfComparitor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+    {
+        _sfCurrentInventory.copyToBin(pMem);
     }
 
 
@@ -221,6 +244,11 @@ void InventoryListModelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfComparitor.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+    {
+        _sfCurrentInventory.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +262,9 @@ void InventoryListModelBase::executeSyncImpl(      InventoryListModelBase *pOthe
     if(FieldBits::NoField != (ComparitorFieldMask & whichField))
         _sfComparitor.syncWith(pOther->_sfComparitor);
 
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+        _sfCurrentInventory.syncWith(pOther->_sfCurrentInventory);
+
 
 }
 #else
@@ -246,6 +277,9 @@ void InventoryListModelBase::executeSyncImpl(      InventoryListModelBase *pOthe
 
     if(FieldBits::NoField != (ComparitorFieldMask & whichField))
         _sfComparitor.syncWith(pOther->_sfComparitor);
+
+    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+        _sfCurrentInventory.syncWith(pOther->_sfCurrentInventory);
 
 
 

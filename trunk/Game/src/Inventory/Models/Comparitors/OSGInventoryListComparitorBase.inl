@@ -77,11 +77,11 @@ MFString *InventoryListComparitorBase::getMFClassToDisplay(void)
     return &_mfClassToDisplay;
 }
 
-//! Get the InventoryListComparitor::_sfCurrentInventory field.
+//! Get the InventoryListComparitor::_sfModel field.
 inline
-SFInventoryPtr *InventoryListComparitorBase::getSFCurrentInventory(void)
+SFInventoryListModelPtr *InventoryListComparitorBase::getSFModel(void)
 {
-    return &_sfCurrentInventory;
+    return &_sfModel;
 }
 
 //! Get the InventoryListComparitor::_sfAscending field.
@@ -92,25 +92,25 @@ SFBool *InventoryListComparitorBase::getSFAscending(void)
 }
 
 
-//! Get the value of the InventoryListComparitor::_sfCurrentInventory field.
+//! Get the value of the InventoryListComparitor::_sfModel field.
 inline
-InventoryPtr &InventoryListComparitorBase::getCurrentInventory(void)
+InventoryListModelPtr &InventoryListComparitorBase::getModel(void)
 {
-    return _sfCurrentInventory.getValue();
+    return _sfModel.getValue();
 }
 
-//! Get the value of the InventoryListComparitor::_sfCurrentInventory field.
+//! Get the value of the InventoryListComparitor::_sfModel field.
 inline
-const InventoryPtr &InventoryListComparitorBase::getCurrentInventory(void) const
+const InventoryListModelPtr &InventoryListComparitorBase::getModel(void) const
 {
-    return _sfCurrentInventory.getValue();
+    return _sfModel.getValue();
 }
 
-//! Set the value of the InventoryListComparitor::_sfCurrentInventory field.
+//! Set the value of the InventoryListComparitor::_sfModel field.
 inline
-void InventoryListComparitorBase::setCurrentInventory(const InventoryPtr &value)
+void InventoryListComparitorBase::setModel(const InventoryListModelPtr &value)
 {
-    _sfCurrentInventory.setValue(value);
+    _sfModel.setValue(value);
 }
 
 //! Get the value of the InventoryListComparitor::_sfAscending field.

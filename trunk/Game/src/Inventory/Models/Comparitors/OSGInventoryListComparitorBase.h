@@ -68,7 +68,7 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGStringFields.h> // ClassToDisplay type
-#include <OpenSG/Game/OSGInventoryFields.h> // CurrentInventory type
+#include <OpenSG/Game/OSGInventoryListModelFields.h> // Model type
 #include <OpenSG/OSGBoolFields.h> // Ascending type
 
 #include "OSGInventoryListComparitorFields.h"
@@ -93,14 +93,14 @@ class OSG_GAMELIB_DLLMAPPING InventoryListComparitorBase : public AttachmentCont
 
     enum
     {
-        ClassToDisplayFieldId   = Inherited::NextFieldId,
-        CurrentInventoryFieldId = ClassToDisplayFieldId   + 1,
-        AscendingFieldId        = CurrentInventoryFieldId + 1,
-        NextFieldId             = AscendingFieldId        + 1
+        ClassToDisplayFieldId = Inherited::NextFieldId,
+        ModelFieldId          = ClassToDisplayFieldId + 1,
+        AscendingFieldId      = ModelFieldId          + 1,
+        NextFieldId           = AscendingFieldId      + 1
     };
 
     static const OSG::BitVector ClassToDisplayFieldMask;
-    static const OSG::BitVector CurrentInventoryFieldMask;
+    static const OSG::BitVector ModelFieldMask;
     static const OSG::BitVector AscendingFieldMask;
 
 
@@ -129,11 +129,11 @@ class OSG_GAMELIB_DLLMAPPING InventoryListComparitorBase : public AttachmentCont
     /*! \{                                                                 */
 
            MFString            *getMFClassToDisplay (void);
-           SFInventoryPtr      *getSFCurrentInventory(void);
+           SFInventoryListModelPtr *getSFModel          (void);
            SFBool              *getSFAscending      (void);
 
-           InventoryPtr        &getCurrentInventory(void);
-     const InventoryPtr        &getCurrentInventory(void) const;
+           InventoryListModelPtr &getModel          (void);
+     const InventoryListModelPtr &getModel          (void) const;
            bool                &getAscending      (void);
      const bool                &getAscending      (void) const;
            std::string         &getClassToDisplay (const UInt32 index);
@@ -145,7 +145,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListComparitorBase : public AttachmentCont
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCurrentInventory( const InventoryPtr &value );
+     void setModel          ( const InventoryListModelPtr &value );
      void setAscending      ( const bool &value );
 
     /*! \}                                                                 */
@@ -174,7 +174,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListComparitorBase : public AttachmentCont
     /*! \{                                                                 */
 
     MFString            _mfClassToDisplay;
-    SFInventoryPtr      _sfCurrentInventory;
+    SFInventoryListModelPtr   _sfModel;
     SFBool              _sfAscending;
 
     /*! \}                                                                 */

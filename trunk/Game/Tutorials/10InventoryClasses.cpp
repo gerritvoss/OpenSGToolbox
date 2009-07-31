@@ -63,6 +63,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 #include <OpenSG/UserInterface/OSGListSelectionListener.h>
+#include <OpenSG/Game/OSGDefaultInventoryListComparitor.h>
 
 #include <algorithm>
 
@@ -304,9 +305,13 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
+	DefaultInventoryListComparitorPtr ExampleComparitor = DefaultInventoryListComparitor::create();
+	DefaultInventoryListComparitorPtr ExampleAdminsComparitor = DefaultInventoryListComparitor::create();
+	DefaultInventoryListComparitorPtr ExampleDevelopersComparitor = DefaultInventoryListComparitor::create();
+	DefaultInventoryListComparitorPtr ExampleGraphicsComparitor = DefaultInventoryListComparitor::create();
+	
     // Add data to it
 	ExampleListModel = InventoryListModel::create();
-	ExampleListModel->addInventory(ExampleInventory);
 	
 	//False inventory info!!! 
 	InventoryPtr ExampleAdminsInventory = Inventory::create();
@@ -316,21 +321,52 @@ int main(int argc, char **argv)
 	ExampleDevelopersListModel = InventoryListModel::create();
 	ExampleGraphicsListModel = InventoryListModel::create();
 	
+	beginEditCP(ExampleComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleComparitor->setModel(ExampleListModel);
+	endEditCP(ExampleComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+
+	beginEditCP(ExampleAdminsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleAdminsComparitor->setModel(ExampleAdminsListModel);
+	endEditCP(ExampleAdminsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+
+	beginEditCP(ExampleDevelopersComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleDevelopersComparitor->setModel(ExampleDevelopersListModel);
+	endEditCP(ExampleDevelopersComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+
+	beginEditCP(ExampleGraphicsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleGraphicsComparitor->setModel(ExampleGraphicsListModel);
+	endEditCP(ExampleGraphicsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+
+
+	beginEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleListModel->setComparitor(ExampleComparitor);
+		ExampleListModel->setCurrentInventory(ExampleInventory);
+	endEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+
 	ExampleAdminsInventory->addItem(ExampleItem2);
 
-	ExampleAdminsListModel->addInventory(ExampleAdminsInventory);
+	beginEditCP(ExampleAdminsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleAdminsListModel->setComparitor(ExampleAdminsComparitor);
+		ExampleAdminsListModel->setCurrentInventory(ExampleAdminsInventory);
+	endEditCP(ExampleAdminsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
 	
 	ExampleDevelopersInventory->addItem(ExampleItem1);
 	ExampleDevelopersInventory->addItem(ExampleItem4);
 	ExampleDevelopersInventory->addItem(ExampleItem6);
 	ExampleDevelopersInventory->addItem(ExampleItem7);
 
-	ExampleDevelopersListModel->addInventory(ExampleDevelopersInventory);
+	beginEditCP(ExampleDevelopersListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleDevelopersListModel->setComparitor(ExampleDevelopersComparitor);
+		ExampleDevelopersListModel->setCurrentInventory(ExampleDevelopersInventory);
+	endEditCP(ExampleDevelopersListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
 	
 	ExampleGraphicsInventory->addItem(ExampleItem3);
 	ExampleGraphicsInventory->addItem(ExampleItem5);
 
-	ExampleGraphicsListModel->addInventory(ExampleGraphicsInventory);
+	beginEditCP(ExampleGraphicsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleGraphicsListModel->setComparitor(ExampleGraphicsComparitor);
+		ExampleGraphicsListModel->setCurrentInventory(ExampleGraphicsInventory);
+	endEditCP(ExampleGraphicsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
 
 	// Add buttons 
     

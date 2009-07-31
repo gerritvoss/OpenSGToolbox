@@ -22,4 +22,13 @@ A InventoryListModel.
 	>
 	</Field>
 
+	<Field
+		name="CurrentInventory"
+		type="InventoryPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
 </FieldContainer>

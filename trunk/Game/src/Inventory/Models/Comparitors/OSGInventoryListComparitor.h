@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGInventoryListComparitorBase.h"
+#include <boost/function.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -61,7 +62,10 @@ class OSG_GAMELIB_DLLMAPPING InventoryListComparitor : public InventoryListCompa
     /*==========================  PUBLIC  =================================*/
   public:
 
-    bool operator()(UInt32 LeftIndex, UInt32 RightIndex);
+    typedef boost::function<bool (const UInt32&,const UInt32&)> ComparitorFunc;
+
+    virtual bool operator()(const UInt32& LeftIndex, const UInt32& RightIndex) = 0;
+	virtual ComparitorFunc getComparitorFunc(void) const = 0;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

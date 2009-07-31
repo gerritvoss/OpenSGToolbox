@@ -49,6 +49,10 @@
 
 #include "OSGDefaultInventoryListComparitor.h"
 
+#include "Inventory/Models/OSGInventoryListModel.h"
+#include "Inventory/OSGInventoryItem.h"
+#include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -75,6 +79,20 @@ void DefaultInventoryListComparitor::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+bool DefaultInventoryListComparitor::operator()(const UInt32& LeftIndex, const UInt32& RightIndex)
+{
+	bool ret;
+
+	ret = getModel()->getCurrentInventory()->getInventoryItems(LeftIndex)->getName().compare(getModel()->getCurrentInventory()->getInventoryItems(RightIndex)->getName()) < 0;
+
+	return ret;
+}
+
+DefaultInventoryListComparitor::ComparitorFunc DefaultInventoryListComparitor::getComparitorFunc(void) const
+{
+	return boost::bind(&DefaultInventoryListComparitor::operator(), const_cast<DefaultInventoryListComparitor*>(this),_1, _2);
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -47,6 +47,7 @@
 
 #include "OSGInventoryListModelBase.h"
 #include "Inventory/OSGInventory.h"
+#include <algorithm>
 
 #include <deque>
 
@@ -67,10 +68,10 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModel : public InventoryListModelBase
 
     virtual UInt32 getSize(void) const;
     virtual boost::any getElementAt(UInt32 index) const;
-
-	void addInventory(InventoryPtr inven);
 	
-    typedef std::deque<boost::any> FieldList;
+	void setupInventoryItems();
+	void setupComparitor();
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -99,7 +100,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModel : public InventoryListModelBase
     InventoryListModel(void);
     InventoryListModel(const InventoryListModel &source);
 
-	std::vector<InventoryItemPtr> _InventoryItems;
+	std::vector<UInt32> _InventoryItems;
 
 
     /*! \}                                                                 */

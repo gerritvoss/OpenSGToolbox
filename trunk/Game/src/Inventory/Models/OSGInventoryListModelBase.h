@@ -68,6 +68,7 @@
 #include <OpenSG/UserInterface/OSGAbstractListModel.h> // Parent
 
 #include <OpenSG/Game/OSGInventoryListComparitorFields.h> // Comparitor type
+#include <OpenSG/Game/OSGInventoryFields.h> // CurrentInventory type
 
 #include "OSGInventoryListModelFields.h"
 
@@ -91,11 +92,13 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
 
     enum
     {
-        ComparitorFieldId = Inherited::NextFieldId,
-        NextFieldId       = ComparitorFieldId + 1
+        ComparitorFieldId       = Inherited::NextFieldId,
+        CurrentInventoryFieldId = ComparitorFieldId       + 1,
+        NextFieldId             = CurrentInventoryFieldId + 1
     };
 
     static const OSG::BitVector ComparitorFieldMask;
+    static const OSG::BitVector CurrentInventoryFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +126,12 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
     /*! \{                                                                 */
 
            SFInventoryListComparitorPtr *getSFComparitor     (void);
+           SFInventoryPtr      *getSFCurrentInventory(void);
 
            InventoryListComparitorPtr &getComparitor     (void);
      const InventoryListComparitorPtr &getComparitor     (void) const;
+           InventoryPtr        &getCurrentInventory(void);
+     const InventoryPtr        &getCurrentInventory(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +139,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
     /*! \{                                                                 */
 
      void setComparitor     ( const InventoryListComparitorPtr &value );
+     void setCurrentInventory( const InventoryPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
     /*! \{                                                                 */
 
     SFInventoryListComparitorPtr   _sfComparitor;
+    SFInventoryPtr      _sfCurrentInventory;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

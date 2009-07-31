@@ -80,15 +80,6 @@ void InventoryListComparitor::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool InventoryListComparitor::operator()(UInt32 LeftIndex, UInt32 RightIndex)
-{
-	bool ret;
-
-	ret = getCurrentInventory()->getInventoryItems(LeftIndex)->getName().compare(getCurrentInventory()->getInventoryItems(RightIndex)->getName()) < 0;
-
-	return ret;
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

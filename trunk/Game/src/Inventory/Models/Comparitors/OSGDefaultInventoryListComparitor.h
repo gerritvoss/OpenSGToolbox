@@ -61,6 +61,10 @@ class OSG_GAMELIB_DLLMAPPING DefaultInventoryListComparitor : public DefaultInve
     /*==========================  PUBLIC  =================================*/
   public:
 
+    virtual bool operator()(const UInt32& LeftIndex, const UInt32& RightIndex);
+	virtual ComparitorFunc getComparitorFunc(void) const;
+
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

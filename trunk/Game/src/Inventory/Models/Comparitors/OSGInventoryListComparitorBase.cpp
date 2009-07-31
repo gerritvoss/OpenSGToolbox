@@ -67,8 +67,8 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  InventoryListComparitorBase::ClassToDisplayFieldMask = 
     (TypeTraits<BitVector>::One << InventoryListComparitorBase::ClassToDisplayFieldId);
 
-const OSG::BitVector  InventoryListComparitorBase::CurrentInventoryFieldMask = 
-    (TypeTraits<BitVector>::One << InventoryListComparitorBase::CurrentInventoryFieldId);
+const OSG::BitVector  InventoryListComparitorBase::ModelFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryListComparitorBase::ModelFieldId);
 
 const OSG::BitVector  InventoryListComparitorBase::AscendingFieldMask = 
     (TypeTraits<BitVector>::One << InventoryListComparitorBase::AscendingFieldId);
@@ -83,7 +83,7 @@ const OSG::BitVector InventoryListComparitorBase::MTInfluenceMask =
 /*! \var std::string     InventoryListComparitorBase::_mfClassToDisplay
     
 */
-/*! \var InventoryPtr    InventoryListComparitorBase::_sfCurrentInventory
+/*! \var InventoryListModelPtr InventoryListComparitorBase::_sfModel
     
 */
 /*! \var bool            InventoryListComparitorBase::_sfAscending
@@ -99,11 +99,11 @@ FieldDescription *InventoryListComparitorBase::_desc[] =
                      ClassToDisplayFieldId, ClassToDisplayFieldMask,
                      false,
                      (FieldAccessMethod) &InventoryListComparitorBase::getMFClassToDisplay),
-    new FieldDescription(SFInventoryPtr::getClassType(), 
-                     "CurrentInventory", 
-                     CurrentInventoryFieldId, CurrentInventoryFieldMask,
-                     true,
-                     (FieldAccessMethod) &InventoryListComparitorBase::getSFCurrentInventory),
+    new FieldDescription(SFInventoryListModelPtr::getClassType(), 
+                     "Model", 
+                     ModelFieldId, ModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &InventoryListComparitorBase::getSFModel),
     new FieldDescription(SFBool::getClassType(), 
                      "Ascending", 
                      AscendingFieldId, AscendingFieldMask,
@@ -177,7 +177,7 @@ void InventoryListComparitorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 InventoryListComparitorBase::InventoryListComparitorBase(void) :
     _mfClassToDisplay         (), 
-    _sfCurrentInventory       (), 
+    _sfModel                  (), 
     _sfAscending              (bool(false)), 
     Inherited() 
 {
@@ -189,7 +189,7 @@ InventoryListComparitorBase::InventoryListComparitorBase(void) :
 
 InventoryListComparitorBase::InventoryListComparitorBase(const InventoryListComparitorBase &source) :
     _mfClassToDisplay         (source._mfClassToDisplay         ), 
-    _sfCurrentInventory       (source._sfCurrentInventory       ), 
+    _sfModel                  (source._sfModel                  ), 
     _sfAscending              (source._sfAscending              ), 
     Inherited                 (source)
 {
@@ -212,9 +212,9 @@ UInt32 InventoryListComparitorBase::getBinSize(const BitVector &whichField)
         returnValue += _mfClassToDisplay.getBinSize();
     }
 
-    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
-        returnValue += _sfCurrentInventory.getBinSize();
+        returnValue += _sfModel.getBinSize();
     }
 
     if(FieldBits::NoField != (AscendingFieldMask & whichField))
@@ -236,9 +236,9 @@ void InventoryListComparitorBase::copyToBin(      BinaryDataHandler &pMem,
         _mfClassToDisplay.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
-        _sfCurrentInventory.copyToBin(pMem);
+        _sfModel.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (AscendingFieldMask & whichField))
@@ -259,9 +259,9 @@ void InventoryListComparitorBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfClassToDisplay.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
-        _sfCurrentInventory.copyFromBin(pMem);
+        _sfModel.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (AscendingFieldMask & whichField))
@@ -282,8 +282,8 @@ void InventoryListComparitorBase::executeSyncImpl(      InventoryListComparitorB
     if(FieldBits::NoField != (ClassToDisplayFieldMask & whichField))
         _mfClassToDisplay.syncWith(pOther->_mfClassToDisplay);
 
-    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
-        _sfCurrentInventory.syncWith(pOther->_sfCurrentInventory);
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
 
     if(FieldBits::NoField != (AscendingFieldMask & whichField))
         _sfAscending.syncWith(pOther->_sfAscending);
@@ -298,8 +298,8 @@ void InventoryListComparitorBase::executeSyncImpl(      InventoryListComparitorB
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
-        _sfCurrentInventory.syncWith(pOther->_sfCurrentInventory);
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
 
     if(FieldBits::NoField != (AscendingFieldMask & whichField))
         _sfAscending.syncWith(pOther->_sfAscending);

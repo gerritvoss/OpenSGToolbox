@@ -103,6 +103,13 @@ SFInventoryListComparitorPtr *InventoryListModelBase::getSFComparitor(void)
     return &_sfComparitor;
 }
 
+//! Get the InventoryListModel::_sfCurrentInventory field.
+inline
+SFInventoryPtr *InventoryListModelBase::getSFCurrentInventory(void)
+{
+    return &_sfCurrentInventory;
+}
+
 
 //! Get the value of the InventoryListModel::_sfComparitor field.
 inline
@@ -123,6 +130,27 @@ inline
 void InventoryListModelBase::setComparitor(const InventoryListComparitorPtr &value)
 {
     _sfComparitor.setValue(value);
+}
+
+//! Get the value of the InventoryListModel::_sfCurrentInventory field.
+inline
+InventoryPtr &InventoryListModelBase::getCurrentInventory(void)
+{
+    return _sfCurrentInventory.getValue();
+}
+
+//! Get the value of the InventoryListModel::_sfCurrentInventory field.
+inline
+const InventoryPtr &InventoryListModelBase::getCurrentInventory(void) const
+{
+    return _sfCurrentInventory.getValue();
+}
+
+//! Set the value of the InventoryListModel::_sfCurrentInventory field.
+inline
+void InventoryListModelBase::setCurrentInventory(const InventoryPtr &value)
+{
+    _sfCurrentInventory.setValue(value);
 }
 
 
