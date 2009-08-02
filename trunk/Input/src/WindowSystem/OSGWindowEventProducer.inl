@@ -77,7 +77,7 @@ void WindowEventProducer::setRenderAction(RenderAction *action)
 inline
 void WindowEventProducer::internalDraw(void)
 {
-	if(getUseCallbackForDraw())
+	if(_DisplayCallbackFunc)
 	{
 		_DisplayCallbackFunc();
 	}
@@ -90,7 +90,7 @@ void WindowEventProducer::internalDraw(void)
 inline
 void WindowEventProducer::internalReshape(Vec2f size)
 {
-	if(getUseCallbackForReshape())
+	if(_ReshapeCallbackFunc)
 	{
 		_ReshapeCallbackFunc(size);
 	}

@@ -227,7 +227,7 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 	else
 	{
 		//Error
-		std::cout << "ERROR: There is a problem with the skeleton blended geometry." << std::endl;
+		SWARNING << "SkeletonBlendedGeometry::calculatePosition()s: There is a problem with the skeleton blended geometry." << std::endl;
 	}
 }
 
@@ -373,8 +373,6 @@ void SkeletonBlendedGeometry::changed(BitVector whichField, UInt32 origin)
 		(whichField & PositionIndexesFieldMask) ||
 		(whichField & BlendAmountsFieldMask))
 	{
-		//std::cout << "SkeletonBlendedGeometry: changed" << std::endl;
-
 		calculatePositions();
 	}
 

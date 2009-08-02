@@ -81,9 +81,6 @@ void AgeSizeParticleAffector::initMethod (void)
 
 bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	//TODO: Implement
-	
-	
 	if(getAges().size()!=getSizes().size())
 	{
 		return false;
@@ -98,12 +95,7 @@ bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInd
 			
 		}
 
-		if(i == 0)
-		{
-			System->setSize(getSizes().front(),ParticleIndex);
-		}
-
-		else if(i == getAges().size())
+		if(i == getAges().size())
 		{
 			System->setSize(getSizes().back(),ParticleIndex);
 		}

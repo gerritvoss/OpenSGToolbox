@@ -77,8 +77,6 @@ void Win32WindowEventProducer::initMethod (void)
 
 void Win32WindowEventProducer::WindowEventLoopThread(void* args)
 {
-    WindowEventLoopThreadArguments* Arguments(static_cast<WindowEventLoopThreadArguments*>(args));
-
     //Create the Win32 Window
     WNDCLASS  wndClass;
     HWND           hwnd;
@@ -203,21 +201,6 @@ void Win32WindowEventProducer::WindowEventLoopThread(void* args)
         Arguments->_EventProducer->internalReshape(Vec2f(WindowRect.right-WindowRect.left, WindowRect.bottom-WindowRect.top));
     }
 
-    MSG msg;
-	// main loop 
-    while ( GetMessage(&msg, NULL, 0, 0) > 0 )
-    {
-        DispatchMessage(&msg);
-        WaitMessage();
-    }
-
-    if (fullscreen)								// Are We In Fullscreen Mode?
-	{
-		ChangeDisplaySettings(NULL,0);					// If So Switch Back To The Desktop
-		ShowCursor(TRUE);						// Show Mouse Pointer
-	}
-
-    Arguments->_EventProducer->produceWindowClosed();
     
     //Delete my arguments, to avoid memory leak
     delete Arguments;
@@ -272,6 +255,33 @@ LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd, UINT uMsg,
    }
    return 0;
 
+}
+
+void  Win32WindowEventProducer::mainLoop(void)
+{
+	// Main loop ( event dispatching )
+    MSG msg;
+	// main loop 
+    while ( GetMessage(&msg, NULL, 0, 0) > 0 )
+    {
+        DispatchMessage(&msg);
+        WaitMessage();
+        for( MapItor = _CarbonWindowToProducerMap.begin(); MapItor != _CarbonWindowToProducerMap.end(); ++MapItor)
+        {
+            MapItor->second->update();
+            MapItor->second->draw();
+        }
+        if(_CarbonWindowToProducerMap.size() == 0)
+        {
+            break;
+        }
+    }
+
+    if (getFullscreen())								// Are We In Fullscreen Mode?
+	{
+		ChangeDisplaySettings(NULL,0);					// If So Switch Back To The Desktop
+		ShowCursor(TRUE);						// Show Mouse Pointer
+	}
 }
 
 std::string Win32WindowEventProducer::getClipboard(void) const
@@ -1096,7 +1106,7 @@ KeyEvent::Key Win32WindowEventProducer::determineKey(WPARAM key)
 
 Path Win32WindowEventProducer::saveFileDialog(const std::string& DialogTitle,
                 const std::vector<FileDialogFilter>& Filters,
-                const Path& InitialFile,
+                const std::string& InitialFile,
                 const Path& InitialDirectory,
                 bool PromptForOverwrite
                 )
@@ -1171,6 +1181,10 @@ std::vector<Path> Win32WindowEventProducer::openFileDialog(const std::string& Wi
             ++FilterSize;
         }
         FilterString[FilterSize] = '\0';
+        ++FilterSize;
+        FilterString[FilterSize] = '*';
+        ++FilterSize;
+        FilterString[FilterSize] = '.';
         ++FilterSize;
         for(UInt32 i(0) ; i<Itor->getFilter().size(); ++i)
         {

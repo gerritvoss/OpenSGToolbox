@@ -138,27 +138,17 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 				   prev_t,
 				   *getAnimatorJoints(i)->getField( Joint::RelativeTransformationFieldId )) )
 	   {
-		   //std::cout << "Change " << i << std::endl;
 		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
 	   }
 	   else
 	   {
-		   //std::cout << "No Change" << i << std::endl;
 		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
 	   }
 	}
 
     if(getSkeleton() != NullFC)
     {
-		//std::cout << "Updating Joint Transformations" << std::endl;
-		//double startTme = osg::getSystemTime();
-
         getSkeleton()->updateJointTransformations();
-        
-		/*double endTme = osg::getSystemTime();\
-		std::cout << "  TIME (updateJointTransformations): " << endTme - startTme << std::endl;*/
-		
-		//getSkeleton()->skeletonUpdated();
     }
 }
 

@@ -1,14 +1,3 @@
-// OpenSG Tutorial Example: Hello World
-//
-// Minimalistic OpenSG program
-// 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
-//
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
-//
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -32,7 +21,6 @@
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 #include <OpenSG/Input/OSGWindowUtils.h>
 
 //Animation
@@ -84,6 +72,7 @@ public:
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 Time TimeLastIdle;
 FieldAnimationPtr TheAnimation;
@@ -97,8 +86,6 @@ KeyframeColorsSequencePtr ColorKeyframes;
 KeyframeVectorsSequencePtr VectorKeyframes;
 KeyframeRotationsSequencePtr RotationKeyframes;
 
-bool ExitApp = false;
-
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
@@ -108,7 +95,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+           TutorialWindowEventProducer->closeWindow();
        }
 
        switch(e.getKey())
@@ -126,6 +113,36 @@ public:
                 TheAnimationAdvancer->stop();
            }
            break;
+       case KeyEvent::KEY_0:
+            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(STEP_INTERPOLATION);
+            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+           break;
+       case KeyEvent::KEY_1:
+            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
+            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+           break;
+       case KeyEvent::KEY_2:
+            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
+            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+           break;
+		//case '1':
+			//beginEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+				//TheAnimator->setKeyframeSequence(ColorKeyframes);
+			//endEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+			
+			//TheAnimation->setAnimatedField(TheTorusMaterial, std::string("diffuse"));
+			
+			//break;
+		//case '2':
+			//beginEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+				//TheAnimator->setKeyframeSequence(TransformationKeyframes);
+			//endEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+
+			//TheAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
+            //break;
        }
    }
 
@@ -136,20 +153,6 @@ public:
    virtual void keyTyped(const KeyEvent& e)
    {
    }
-};
-
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
 };
 
 class TutorialMouseListener : public MouseListener
@@ -206,20 +209,13 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
     TutorialMouseListener TheTutorialMouseListener;
@@ -233,10 +229,6 @@ int main(int argc, char **argv)
     mgr = new SimpleSceneManager;
 
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(1280,1024),
-                                        "OpenSG 01Animation Window");
-
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
 
@@ -294,11 +286,14 @@ int main(int argc, char **argv)
 
     TheAnimationAdvancer->start();
     
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "OpenSG 01Animation Window");
+
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
 
     osgExit();
 
@@ -315,55 +310,6 @@ void display(void)
 void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
-}
-
-// react to keys
-void keyboard(unsigned char k, int x, int y)
-{
-    /*switch(k)
-    {
-        case 27:        
-        {
-            OSG::osgExit();
-            exit(0);
-        }
-        break;
-        case 's':
-            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(STEP_INTERPOLATION);
-            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-            break;
-        case 'l':
-            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
-            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-            break;
-        case 'c':
-            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
-            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-            break;
-        case 'n':
-            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_NORMAL_INTERPOLATION);
-            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-            break;
-		case '1':
-			beginEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
-				TheAnimator->setKeyframeSequence(ColorKeyframes);
-			endEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
-			
-			TheAnimation->setAnimatedField(TheTorusMaterial, std::string("diffuse"));
-			
-			break;
-		case '2':
-			beginEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
-				TheAnimator->setKeyframeSequence(TransformationKeyframes);
-			endEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
-
-			TheAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
-            break;
-    }*/
 }
 
 void setupAnimation(void)
@@ -395,15 +341,15 @@ void setupAnimation(void)
     TransformationKeyframes = KeyframeTransformationsSequence44f::create();
 	Matrix TempMat;
 	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
+    TransformationKeyframes->addKeyframe(TempMat,0.0f);
+	TempMat.setTransform(Vec3f(0.0f,1.0f,0.0f), Quaternion(Vec2f(0.0f,1.0f,0.0f), 3.14159f*0.5));
     TransformationKeyframes->addKeyframe(TempMat,1.0f);
-	TempMat.setTransform(Vec3f(0.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5));
-    TransformationKeyframes->addKeyframe(TempMat,2.0f);
 	TempMat.setTransform(Vec3f(1.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0));
-    TransformationKeyframes->addKeyframe(TempMat,3.0f);
+    TransformationKeyframes->addKeyframe(TempMat,2.0f);
 	TempMat.setTransform(Vec3f(1.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5));
-    TransformationKeyframes->addKeyframe(TempMat,4.0f);
+    TransformationKeyframes->addKeyframe(TempMat,3.0f);
 	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
-    TransformationKeyframes->addKeyframe(TempMat,5.0f);
+    TransformationKeyframes->addKeyframe(TempMat,4.0f);
     
     //Animator
     TheAnimator = KeyframeAnimator::create();
@@ -429,3 +375,4 @@ void setupAnimation(void)
     ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
     beginEditCP(TheAnimationAdvancer);
 }
+

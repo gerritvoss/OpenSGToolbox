@@ -2,8 +2,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
 PROJECT("Toolbox Tutorials")
 
-SET (CMAKE_VERBOSE_MAKEFILE TRUE)
-
 ######### Revision number
 FIND_PACKAGE(Subversion)
 IF(Subversion_FOUND)

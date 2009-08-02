@@ -38,8 +38,6 @@ SimpleSceneManager *mgr;
 WindowEventProducerPtr TheWindowEventProducer;
 EventConnection MouseEventConnection;
 
-bool ExitMainLoop = false;
-
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
@@ -102,16 +100,17 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
     {
-        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar()<< " Pressed" << std::endl;
+        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar()<< " Pressed. Modifiers: " << e.getModifiers() << std::endl;
         switch(e.getKey()){
             case KeyEvent::KEY_ESCAPE:
                 TheWindowEventProducer->closeWindow();
                 break;
             case KeyEvent::KEY_P:
-                TheWindowEventProducer->setPosition(Pnt2s(50,50));
+                //Center
+                TheWindowEventProducer->setPosition((TheWindowEventProducer->getDesktopSize() - TheWindowEventProducer->getSize()) *0.5);
                 break;
             case KeyEvent::KEY_R:
-                TheWindowEventProducer->setSize(Vec2us(300,300));
+                TheWindowEventProducer->setSize(TheWindowEventProducer->getDesktopSize() * 0.85f);
                 break;
             case KeyEvent::KEY_F:
                 TheWindowEventProducer->setFullscreen(!TheWindowEventProducer->getFullscreen());
@@ -141,6 +140,12 @@ public:
             case KeyEvent::KEY_C:
                 TheWindowEventProducer->setShowCursor(!TheWindowEventProducer->getShowCursor());
                 break;
+            case KeyEvent::KEY_1:
+                TheWindowEventProducer->putClipboard(std::string("From OpenSGToolbox"));
+                break;
+            case KeyEvent::KEY_2:
+                std::cout << TheWindowEventProducer->getClipboard() << std::endl;
+                break;
             case KeyEvent::KEY_M:
                 std::cout << TheWindowEventProducer->getMousePosition() << std::endl;
                 break;
@@ -151,14 +156,14 @@ public:
 			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
             std::vector<WindowEventProducer::FileDialogFilter> Filters;
-            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","*.CPP"));
-            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*.*"));
+            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
+            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
 			std::vector<Path> FilesToOpen;
 			FilesToOpen = WindowEventProducer::Ptr::dcast(e.getSource())->openFileDialog("Open A File, Yo?",
 				Filters,
 				Path(".."),
-				false);
+				true);
 
             std::cout << "Files to Open: "<< std::endl;
             for(std::vector<Path>::iterator Itor(FilesToOpen.begin()) ; Itor != FilesToOpen.end(); ++Itor)
@@ -170,12 +175,12 @@ public:
 			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
 			std::vector<WindowEventProducer::FileDialogFilter> Filters;
-            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","*.CPP"));
-            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*.*"));
+            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
+            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
 			Path SavePath = WindowEventProducer::Ptr::dcast(e.getSource())->saveFileDialog("Save A File, Yo?",
 				Filters,
-				Path(),
+				std::string("NewCodeFile.cpp"),
 				Path(".."),
 				true);
             
@@ -184,11 +189,11 @@ public:
     }
     virtual void keyReleased(const KeyEvent& e)
     {
-        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar() << " Released" << std::endl;
+        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar() << " Released. Modifiers: " << e.getModifiers()  << std::endl;
     }
     virtual void keyTyped(const KeyEvent& e)
     {
-        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar() << " Typed" << std::endl;
+        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar() << " Typed. Modifiers: " << e.getModifiers() << std::endl;
     }
 };
 
@@ -210,7 +215,6 @@ class TutorialWindowListener : public WindowListener
     virtual void windowClosed(const WindowEvent& e)
     {
        std::cout << "Window Closed" << std::endl;
-	   ExitMainLoop = true;
     }
 
     virtual void windowIconified(const WindowEvent& e)
@@ -250,10 +254,13 @@ int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
-    
-    TheWindowEventProducer = createDefaultWindowEventProducer();
-    TheWindowEventProducer->initWindow();
 
+    // create the scene
+    NodePtr scene = makeTorus(.5, 2, 16, 16);
+
+    //Create a Window object
+    TheWindowEventProducer = createDefaultWindowEventProducer();
+    //Apply window settings
 	beginEditCP(TheWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 		TheWindowEventProducer->setUseCallbackForDraw(true);
 		TheWindowEventProducer->setUseCallbackForReshape(true);
@@ -262,7 +269,7 @@ int main(int argc, char **argv)
     
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
-
+    
     //Attach Mouse Listener
     TutorialMouseListener TheTutorialMouseListener;
     MouseEventConnection = TheWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
@@ -279,10 +286,9 @@ int main(int argc, char **argv)
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
     TheWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
     
-
-    // create the scene
-    NodePtr scene = makeTorus(.5, 2, 16, 16);
-
+    //Initialize Window
+    TheWindowEventProducer->initWindow();
+    
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
@@ -293,16 +299,16 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(0,0),
-                        Vec2s(1280,1024),
-                        //Vec2f(1920,1200),
-                        "Default Window");
 
-    while(!ExitMainLoop)
-    {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
-    }
+    //Open Window
+    Vec2f WinSize(TheWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TheWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TheWindowEventProducer->openWindow(WinPos,
+                        WinSize,
+                        "03 Default Window");
+
+    //Enter main loop
+    TheWindowEventProducer->mainLoop();
 
     osgExit();
     return 0;

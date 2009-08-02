@@ -43,7 +43,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-bool ExitApp(false);
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 int SelectedRootNode;
 int SelectedCamera;
@@ -98,7 +98,7 @@ public:
    {
         if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
         {
-            ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
         }
         switch(e.getKey())
         {
@@ -205,20 +205,6 @@ public:
    }
 };
 
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
-
 class TutorialMouseListener : public MouseListener
 {
   public:
@@ -282,20 +268,13 @@ int main(int argc, char **argv)
     printCommands();
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
     TutorialMouseListener TheTutorialMouseListener;
@@ -307,6 +286,7 @@ int main(int argc, char **argv)
 
 
     // load the scene
+    std::string WindowFileTitle;
     if(argc < 2)
     {
         FWARNING(("No file given!\n"));
@@ -322,22 +302,22 @@ int main(int argc, char **argv)
             FWARNING(("%s\n", *it));
         }
 
-        std::vector<std::string> suffixesVec;
-        suffixesVec = FCFileHandler::the()->getSuffixList();
+        //std::vector<std::string> suffixesVec;
+        //suffixesVec = FCFileHandler::the()->getSuffixList();
         
-        for(std::vector<std::string>::iterator it  = suffixesVec.begin();
-                                             it != suffixesVec.end();
-                                           ++it)
-        {
-            FWARNING(("%s\n", *it));
-        }
+        //for(std::vector<std::string>::iterator it  = suffixesVec.begin();
+                                             //it != suffixesVec.end();
+                                           //++it)
+        //{
+            //FWARNING(("%s\n", *it));
+        //}
 
         GlobalRootNodes.push_back( makeTorus(.5, 2, 16, 16) );
-        TutorialWindowEventProducer->setTitle("No file Loaded");
+        WindowFileTitle = "No file Loaded";
     }
     else
     {
-        TutorialWindowEventProducer->setTitle(argv[1]);
+        WindowFileTitle = argv[1];
         Load(std::string(argv[1]), GlobalRootNodes, GlobalCameras, GlobalAnimations, GlobalParticleSystems, GlobalBackgrounds, GlobalForegrounds);
 
 		if(GlobalRootNodes.size() < 1)
@@ -413,10 +393,6 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
     
-    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(1280,1024),
-                                        "Advanced XML Scene Viewer");
-
     // tell the manager what to manage
     mgr->setRoot  (GlobalRootNodes[SelectedRootNode]);
     mgr->turnHeadlightOff();
@@ -442,11 +418,15 @@ int main(int argc, char **argv)
     mgr->showAll();
 
 
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    //Open Window
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+                        WinSize,
+                                        std::string("Advanced XML Scene Viewer - ") + WindowFileTitle);
+
+    //Main Loop
+    TutorialWindowEventProducer->mainLoop();
 
     osgExit();
 

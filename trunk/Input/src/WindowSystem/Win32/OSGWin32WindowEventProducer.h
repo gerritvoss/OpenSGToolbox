@@ -66,8 +66,6 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     LRESULT WndProc(HWND hwnd, UINT uMsg,
                            WPARAM wParam, LPARAM lParam);
 
-    static void WindowEventLoopThread(void* args);
-    
     static KeyEvent::Key determineKey(WPARAM key);
     /*==========================  PUBLIC  =================================*/
   public:
@@ -75,6 +73,7 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     static LRESULT CALLBACK staticWndProc(HWND hwnd, UINT uMsg,
                            WPARAM wParam, LPARAM lParam);
     virtual bool attachWindow(void);
+    virtual void mainLoop(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -179,7 +178,7 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 
     virtual Path saveFileDialog(const std::string& DialogTitle,
                     const std::vector<FileDialogFilter>& Filters,
-                    const Path& InitialFile,
+                    const std::string& InitialFile,
                     const Path& InitialDirectory,
                     bool PromptForOverwrite
                     );
@@ -207,20 +206,6 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 	virtual void setCursor(void);
     
     virtual WindowPtr createWindow(void);
-    struct WindowEventLoopThreadArguments
-    {
-        WindowEventLoopThreadArguments(const Pnt2f& ScreenPosition,
-                       const Vec2f& Size,
-                       const std::string& WindowName,
-                       WIN32WindowPtr TheWindow,
-                       Win32WindowEventProducerPtr TheEventProducer);
-
-        Pnt2f _ScreenPosition;
-        Vec2f _Size;
-        std::string _WindowName;
-        WIN32WindowPtr _Window;
-        Win32WindowEventProducerPtr _EventProducer;
-    };
 
     bool _MouseOverWindow;
 

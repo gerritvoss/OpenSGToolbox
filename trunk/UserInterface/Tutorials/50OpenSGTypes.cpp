@@ -22,7 +22,6 @@
 
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 #include <OpenSG/Input/OSGMouseAdapter.h>
 
 // UserInterface Headers
@@ -66,28 +65,13 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-bool ExitApp = false;
-std::map<std::string, UIFontPtr> FontMap;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 // Declare upfront so they can be referenced
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -98,7 +82,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
        }
    }
 
@@ -623,17 +607,14 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
-    TheWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
 
     // Make Torus Node
@@ -709,7 +690,7 @@ int main(int argc, char **argv)
 	UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
 	beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		TutorialDrawingSurface->setGraphics(graphics);
-	    TutorialDrawingSurface->setEventProducer(TheWindowEventProducer);
+	    TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
     endEditCP  (TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask|UIDrawingSurface::EventProducerFieldMask);
 	
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
@@ -737,16 +718,17 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(1700,1000),
-                                        "OpenSG 50OpenSGTypes Window");
 
-    //Main Event Loop
-    while(!ExitApp)
-    {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
-    }
+    //Open Window
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "01RubberBandCamera");
+
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
+
     osgExit();
 
     return 0;

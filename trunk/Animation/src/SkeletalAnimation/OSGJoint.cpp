@@ -79,27 +79,14 @@ void Joint::initMethod (void)
 
 Matrix Joint::getAbsoluteTransformation(void) const
 {
-	//if(_AbsoluteTransformation == Matrix().identity())
-//	{
-//		std::cout << "\nGetting Absolute Transformation:\n" << _AbsoluteTransformation << "\n" << std::endl;
-//	}
 
 		Vec3f translate;
 		Vec3f dummy1;
 		Quaternion dummy2;
 		Quaternion dummy3;
 		_AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
-		if (_AbsoluteTransformation == Matrix().identity())//translate == Vec3f(0, 0, 0))
-		{
-			std::cout << "\nGetting Absolute Transformation:\nTranslation: " << translate << "\n" << _AbsoluteTransformation << "\n[3][0]: " << _AbsoluteTransformation[3][0] << "\n" << std::endl;
-		}
 
 		_AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
-		if (_AbsoluteTransformation == Matrix().identity())//translate == Vec3f(0, 0, 0))
-		{
-			std::cout << "\nGetting Absolute Transformation2:\nTranslation: " << translate << "\n" << _AbsoluteTransformation << "\n[3][0]: " << _AbsoluteTransformation[3][0] << "\n" << std::endl;
-		}
-	
 	
 	return _AbsoluteTransformation;
 	
@@ -133,7 +120,6 @@ void Joint::calculateTransformations(void)
 		if(!getUseParentTranslation())
 		{
 			_AbsoluteTransformation.setTranslate(0.0, 0.0, 0.0);
-			std::cout << "Don't use parent translation!!!" << std::endl;
 		}
 		
 		
@@ -144,11 +130,6 @@ void Joint::calculateTransformations(void)
 		Quaternion dummy2;
 		Quaternion dummy3;
 		_AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
-		if (_AbsoluteTransformation == Matrix().identity())//translate == Vec3f(0, 0, 0))
-		{
-			std::cout << "Setting Absolute Transformation:\nTranslation: " << translate << "\n" << _AbsoluteTransformation << "\n[3][0]: " << _AbsoluteTransformation[3][0] << "\n" << std::endl;
-		}
-		
 	}
 	else
 	{
@@ -183,38 +164,6 @@ void Joint::calculateTransformations(void)
 	_RelativeDifferenceTransformation.invert();
 	_RelativeDifferenceTransformation.multLeft(getRelativeTransformation());
 	
-	if (_RelativeDifferenceTransformation != Matrix().identity())
-	{
-		//std::cout << _RelativeDifferenceTransformation << std::endl;
-	}
-	
-	if (!rootJoint && _AbsoluteTransformation == Matrix().identity()) 
-	{
-		std::cout << "AbsTrans is 0!!!" << std::endl;
-	}
-	
-	//_RelativeDifferenceTransformation.setTranslate(0, 0, 0);
-	//if(rootJoint)// && _RelativeDifferenceTransformation != Matrix().identity())
-//	{
-//		Vec3f dummy1;
-//		Quaternion dummy2;
-//		Quaternion dummy3;
-//	
-//		Vec3f lastTranslate;
-//		_lastRootTrans.getTransform(lastTranslate, dummy2, dummy1, dummy3);
-//		Vec3f currentTranslate;
-//		_RelativeDifferenceTransformation.getTransform(currentTranslate,dummy2, dummy1, dummy3);
-//		Vec3f diff = currentTranslate - lastTranslate;
-//		
-//		double tolerance = .1;
-//		if(diff.x() > tolerance || diff.x() < -1*tolerance || diff.y() > tolerance || diff.y() < -1*tolerance || diff.z() > tolerance || diff.z() < -1*tolerance)
-//		{
-//			std::cout << "Previous:\n" << _lastRootTrans << std::endl;
-//			std::cout << "Current:\n" << _RelativeDifferenceTransformation << std::endl;
-//		}
-//		
-//		_lastRootTrans = _RelativeDifferenceTransformation;
-//	}
 }
 
 void Joint::updateTransformations(bool isRecursive, bool tellSkeleton)

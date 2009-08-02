@@ -77,31 +77,11 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	OSStatus internalEventHandler(EventHandlerCallRef nextHandler, EventRef event, void *userData);
 	
 	UInt32 _WindowId;
-	WindowRef _WindowRef;
-	
+	EventHandlerUPP _EventHandlerUPP;
+    WindowRef _WindowRef;
+	AGLContext _Context;
 	static UInt32 getUndefinedWindowId(void);
 	
-    static void WindowEventLoopThread(void* args);
-	
-    struct WindowEventLoopThreadArguments
-    {
-        WindowEventLoopThreadArguments(const Pnt2f& ScreenPosition,
-                       const Vec2f& Size,
-                       const std::string& WindowName,
-                       CarbonWindowPtr TheWindow,
-                       CarbonWindowEventProducerPtr TheEventProducer);
-
-        Pnt2f _ScreenPosition;
-        Vec2f _Size;
-        std::string _WindowName;
-        CarbonWindowPtr _Window;
-        CarbonWindowEventProducerPtr _EventProducer;
-    };
-	
-	friend struct WindowEventLoopThreadArguments;
-	
-	Barrier *_MainThreadSyncBarrier;
-
     /*==========================  PUBLIC  =================================*/
   public:
 
@@ -126,11 +106,21 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	virtual bool getShowCursor() const;
 	virtual osg::Vec2f getDesktopSize() const;
 	virtual std::vector<osg::Path, std::allocator<osg::Path> > openFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, bool);
-	virtual osg::Path saveFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, const osg::Path&, bool);
+	virtual osg::Path saveFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const std::string&, const osg::Path&, bool);
 	virtual osg::KeyEvent::KeyState getKeyState(osg::KeyEvent::Key) const;
 	
 	//Store state of modifier keys
 	UInt32 _modifierKeyState;
+	
+    virtual void openWindow(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
+                       const std::string& WindowName);
+    
+    virtual void closeWindow(void);
+    
+    virtual void mainLoop(void);
+	
+	virtual WindowPtr initWindow(void);
 	
     //Set the Window Position
     virtual void setPosition(Pnt2f Pos);
@@ -202,17 +192,7 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 
 	virtual void putClipboard(const std::string Value);
 	
-    virtual void openWindow(const Pnt2f& ScreenPosition,
-                       const Vec2f& Size,
-                       const std::string& WindowName);
-    
-    virtual void closeWindow(void);
 	
-	virtual WindowPtr initWindow(void);
-	
-	
-    bool _IsDrawPending;
-	bool _ShouldUpdate;
 	/*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -240,11 +220,12 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	OSStatus handleWindowEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
 	OSStatus handleAppEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
 	OSStatus handleKeyEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
+    void disposeWindow(void);
 	
 	static KeyEvent::Key determineKey(::UInt32 key);
 	static UInt32 determineKeyModifiers(::UInt32 keyModifiers);
 
-
+    static CGKeyCode getKeyCode(osg::KeyEvent::Key TheKey);
     
     /*==========================  PRIVATE  ================================*/
   private:

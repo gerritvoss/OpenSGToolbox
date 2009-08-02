@@ -224,6 +224,15 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     void detatchAllListeners(void);
 
+    virtual WindowPtr initWindow(void);
+
+    virtual void openWindow(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
+                       const std::string& WindowName) = 0;
+    virtual void closeWindow(void) = 0;
+    
+    virtual void mainLoop(void) = 0;
+
     //Set the Window Position
     virtual void setPosition(Pnt2f Pos) = 0;
     //Set the Window Position
@@ -298,7 +307,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     virtual Path saveFileDialog(const std::string& DialogTitle,
                     const std::vector<FileDialogFilter>& Filters,
-                    const Path& InitialFile,
+                    const std::string& InitialFile,
                     const Path& InitialDirectory,
                     bool PromptForOverwrite
                     ) = 0;
@@ -319,14 +328,6 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 	virtual std::string getClipboard(void) const = 0;
 
 	virtual void putClipboard(const std::string Value) = 0;
-
-    virtual WindowPtr initWindow(void);
-
-    virtual void openWindow(const Pnt2f& ScreenPosition,
-                       const Vec2f& Size,
-                       const std::string& WindowName) = 0;
-    
-    virtual void closeWindow(void) = 0;
 
 	UInt32 getCursorType(void) const;
 	void setCursorType(UInt32 Type); 

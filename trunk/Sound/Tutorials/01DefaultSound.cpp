@@ -26,10 +26,10 @@
 
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 //Sound
 #include <OpenSG/Sound/OSGSoundManager.h>
+#include <OpenSG/Sound/OSGFModSoundManager.h>
 #include <OpenSG/Sound/OSGSound.h>
 
 // Activate the OpenSG namespace
@@ -43,7 +43,6 @@ SimpleSceneManager *mgr;
 WindowEventProducerPtr TheWindowEventProducer;
 EventConnection MouseEventConnection;
 
-bool ExitMainLoop = false;
 SoundPtr ZapSound;
 SoundPtr MusicSound;
 
@@ -122,7 +121,7 @@ class TutorialKeyListener : public KeyListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+    virtual void keyPressed(const KeyEvent& e)
     {
     }
     virtual void keyReleased(const KeyEvent& e)
@@ -130,52 +129,36 @@ public:
     }
     virtual void keyTyped(const KeyEvent& e)
     {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-           ExitMainLoop = true;
-       }
+        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            TheWindowEventProducer->closeWindow();
+        }
 
-       switch(e.getKey())
-       {
-       case KeyEvent::KEY_M:
-           _MusicChannelID = MusicSound->play();
-           break;
-       case KeyEvent::KEY_P:
-           _ZapChannelID = ZapSound->play();
-           break;
-       case KeyEvent::KEY_SPACE:
-           ZapSound->pauseToggle(_ZapChannelID);
-           MusicSound->pauseToggle(_MusicChannelID);
-           break;
-       case KeyEvent::KEY_S:
-           ZapSound->stop(_ZapChannelID);
-           MusicSound->stop(_MusicChannelID);
-           break;
-       case KeyEvent::KEY_T:
-           std::cout << "Zap Time: " << ZapSound->getTime(_ZapChannelID) << std::endl;
-           std::cout << "Music Time: " << MusicSound->getTime(_MusicChannelID) << std::endl;
-           break;
-       }
+        switch(e.getKey())
+        {
+            case KeyEvent::KEY_M:
+                _MusicChannelID = MusicSound->play();
+                break;
+            case KeyEvent::KEY_P:
+                _ZapChannelID = ZapSound->play();
+                break;
+            case KeyEvent::KEY_SPACE:
+                ZapSound->pauseToggle(_ZapChannelID);
+                MusicSound->pauseToggle(_MusicChannelID);
+                break;
+            case KeyEvent::KEY_S:
+                ZapSound->stop(_ZapChannelID);
+                MusicSound->stop(_MusicChannelID);
+                break;
+            case KeyEvent::KEY_T:
+                std::cout << "Zap Time: " << ZapSound->getTime(_ZapChannelID) << std::endl;
+                std::cout << "Music Time: " << MusicSound->getTime(_MusicChannelID) << std::endl;
+                break;
+        }
     }
 protected:
     UInt32 _ZapChannelID;
     UInt32 _MusicChannelID;
-};
-
-class TutorialWindowListener : public WindowAdapter
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-
-    virtual void windowClosing(const WindowEvent& e)
-    {
-	   ExitMainLoop = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-	   ExitMainLoop = true;
-    }
 };
 
 // Initialize WIN32 & OpenSG and set up the scene
@@ -187,10 +170,6 @@ int main(int argc, char **argv)
     TheWindowEventProducer = createDefaultWindowEventProducer();
     TheWindowEventProducer->initWindow();
     
-	beginEditCP(TheWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TheWindowEventProducer->setUseCallbackForDraw(true);
-		TheWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TheWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
 
@@ -200,9 +179,6 @@ int main(int argc, char **argv)
     //Attach Key Listener
     TutorialKeyListener TheTutorialKeyListener;
     TheWindowEventProducer->addKeyListener(&TheTutorialKeyListener);
-    //Attach Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     //Attach MouseMotion Listener
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
     TheWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
@@ -223,6 +199,7 @@ int main(int argc, char **argv)
 
 
     //Initialize the Sound Manager
+    FModSoundManager::init();
     SoundManager::the()->attachUpdateProducer(TheWindowEventProducer);
     SoundManager::the()->setCamera(mgr->getCamera());
 
@@ -231,7 +208,7 @@ int main(int argc, char **argv)
         ZapSound->setFile(Path("./Data/zap.wav"));
         ZapSound->setVolume(1.0);
         ZapSound->setStreaming(false);
-        ZapSound->setLooping(10);
+        ZapSound->setLooping(1);
     endEditCP(ZapSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
 
     MusicSound = SoundManager::the()->createSound();
@@ -247,15 +224,14 @@ int main(int argc, char **argv)
     MusicSound->addSoundListener(&TheSoundListerner);
 
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                        Vec2s(500,500),
-                        "01 DefaultSound Window");
+    Vec2f WinSize(TheWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TheWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TheWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "01 DefaultSound Window");
 
-    while(!ExitMainLoop)
-    {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
-    }
+    //Enter main loop
+    TheWindowEventProducer->mainLoop();
 
     osgExit();
     return 0;

@@ -13,7 +13,6 @@
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 
 #include <OpenSG/OSGSimpleMaterial.h>
@@ -43,6 +42,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 AnimationPtr TheAnimation;
 AnimationAdvancerPtr TheAnimationAdvancer;
@@ -50,7 +50,6 @@ MaterialPtr TheTorusMaterial;
 GeometryPtr TorusGeometry;
 
 bool animationPaused = false;
-bool ExitApp = false;
 
 // forward declaration so we can have the interesting stuff upfront
 void setupAnimation(void);
@@ -141,7 +140,7 @@ public:
 	   //Exit
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+           TutorialWindowEventProducer->closeWindow();
        }
 
 	   //Toggle animation
@@ -161,20 +160,6 @@ public:
    virtual void keyTyped(const KeyEvent& e)
    {
    }
-};
-
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
 };
 
 class TutorialMouseListener : public MouseListener
@@ -247,13 +232,8 @@ int main(int argc, char **argv)
 
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialUpdateListener TheTutorialUpdateListener;  
 
@@ -262,8 +242,6 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
 
     //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
     TutorialMouseListener TheTutorialMouseListener;
@@ -277,10 +255,6 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 
-    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(1280,1024),
-                                        "OpenSG 15LoadXMLAnimation Window");
-   
     //Torus Geometry
     TorusGeometry = makeTorusGeo(.5, 2, 16, 16);
     
@@ -320,16 +294,18 @@ int main(int argc, char **argv)
 
     // show the whole scene
     mgr->showAll();
+    TheAnimationAdvancer->start();
 
 
-    //TimeLastIdle = getSystemTime();
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+                        WinSize,
+                                        "15LoadXMLAnimation");
 
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
 
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
     osgExit();
 
 

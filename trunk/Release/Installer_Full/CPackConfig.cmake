@@ -1,10 +1,10 @@
 # Set directory paths
-SET(TOOLBOX_BASE_DIR "/Users/dtnaylor/Documents/Work/opensgtoolbox")
-SET(TOOLBOX_INSTALL_DIR "/Users/dtnaylor/Documents/Work/opensgtoolbox/trunk/Builds/Apple")
-SET(OPENSG_BASE_DIR "/Users/dtnaylor/Documents/Work/OpenSGInstall")
-SET(BOOST_BASE_DIR "/Users/dtnaylor/Documents/Work/Boost")
-SET(ODE_BASE_DIR "/Users/dtnaylor/Documents/Work/ode-0.11.1/Apple_INSTALL")
-SET(INSTALLER_BASE_DIR "/Users/dtnaylor/Documents/Work/opensgtoolbox/trunk/Release/Installer_Full")
+SET(TOOLBOX_BASE_DIR "/Users/davidkabala/Documents/Work/OpenSGToolbox")
+SET(OPENSG_BASE_DIR "/Users/davidkabala/Documents/Work/OpenSG/OpenSG/AppleInstall")
+SET(BOOST_BASE_DIR "/Users/davidkabala/Documents/Work/boost_1_39_0/AppleInstall")
+SET(ODE_BASE_DIR "/Users/davidkabala/Documents/Work/ode-0.11.1/AppleInstall")
+SET(INSTALLER_BASE_DIR "/Users/davidkabala/Documents/Work/OpenSGToolbox/trunk/Release/Installer_Dependencies")
+SET(TOOLBOX_INSTALL_DIR "/Users/davidkabala/Documents/Work/OpenSGToolbox/trunk/Builds/Apple")
 SET(JPG_LIB_DIR "/sw/lib")
 
 # Check directory paths

@@ -11,7 +11,6 @@
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
 #include <OpenSG/Input/OSGUpdateListener.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 #include <OpenSG/OSGLineChunk.h>
 #include <OpenSG/OSGBlendChunk.h>
@@ -45,6 +44,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 Time TimeLastIdle;
 NodePtr SkeletonNode;
@@ -53,9 +53,6 @@ NodePtr UnboundGeometry;
 AnimationPtr TheSkeletonAnimation;
 AnimationAdvancerPtr TheAnimationAdvancer;
 bool animationPaused = false;
-
-bool ExitApp = false;
-
 
 // The pointer to the transformation
 TransformPtr trans;
@@ -81,7 +78,7 @@ public:
 	   //Exit
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+           TutorialWindowEventProducer->closeWindow();
        }
 
 	   //Toggle animation
@@ -101,6 +98,7 @@ public:
 			   //Toggle mesh
 			   if(UnboundGeometry->getTravMask() == 0)
 			   {
+
 				   beginEditCP(UnboundGeometry, Node::TravMaskFieldMask);
 						UnboundGeometry->setTravMask(1);
 					endEditCP(UnboundGeometry, Node::TravMaskFieldMask);
@@ -177,20 +175,6 @@ public:
    }
 };
 
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
-
 class TutorialMouseListener : public MouseListener
 {
   public:
@@ -247,23 +231,16 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-	TutorialUpdateListener TheTutorialUpdateListener;
+    TutorialUpdateListener TheTutorialUpdateListener;
     TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
 
     //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
     TutorialMouseListener TheTutorialMouseListener;
@@ -276,13 +253,9 @@ int main(int argc, char **argv)
 
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
-	
-    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(1280,1024),
-                                        "OpenSG 20LoadXMLBlendedGeometryWindow");
 
-	//Print key command info
-	std::cout << "\n\nKEY COMMANDS:" << std::endl;
+    //Print key command info
+    std::cout << "\n\nKEY COMMANDS:" << std::endl;
 	std::cout << "space   Play/Pause the animation" << std::endl;
 	std::cout << "B       Show/Hide the bind pose skeleton" << std::endl;
 	std::cout << "SHIFT-B Show/Hide the bind pose mesh" << std::endl;
@@ -292,38 +265,38 @@ int main(int argc, char **argv)
 	
 
 
-	//Import scene from XML
-	ChunkMaterialPtr ExampleMaterial;
-	SkeletonPtr ExampleSkeleton;
-	SkeletonBlendedGeometryPtr TheNewSkeletonGeometry;
-	GeometryPtr ExampleGeometry;
+    //Import scene from XML
+    ChunkMaterialPtr ExampleMaterial;
+    SkeletonPtr ExampleSkeleton;
+    SkeletonBlendedGeometryPtr TheNewSkeletonGeometry;
+    GeometryPtr ExampleGeometry;
 
-	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/20BlendedGeometry.xml"));
+    FCFileType::FCPtrStore NewContainers;
+    NewContainers = FCFileHandler::the()->read(Path("./Data/20BlendedGeometry.xml"));
 
-	FCFileType::FCPtrStore::iterator Itor;
+    FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
-		if( (*Itor)->getType() == (ChunkMaterial::getClassType()))
-		{
-			ExampleMaterial = (ChunkMaterial::Ptr::dcast(*Itor));
-		}
-		if( (*Itor)->getType() == (Skeleton::getClassType()))
-		{
-			ExampleSkeleton = (Skeleton::Ptr::dcast(*Itor));
-		}
-		if( (*Itor)->getType() == (Geometry::getClassType()))
-		{
-			ExampleGeometry = (Geometry::Ptr::dcast(*Itor));
-		}
-		if( (*Itor)->getType() == (SkeletonBlendedGeometry::getClassType()))
-		{
-			TheNewSkeletonGeometry = (SkeletonBlendedGeometry::Ptr::dcast(*Itor));
-		}
-		if( (*Itor)->getType().isDerivedFrom(Animation::getClassType()))
-		{
-			TheSkeletonAnimation = (Animation::Ptr::dcast(*Itor));
-		}
+        if( (*Itor)->getType() == (ChunkMaterial::getClassType()))
+        {
+            ExampleMaterial = (ChunkMaterial::Ptr::dcast(*Itor));
+        }
+        if( (*Itor)->getType() == (Skeleton::getClassType()))
+        {
+            ExampleSkeleton = (Skeleton::Ptr::dcast(*Itor));
+        }
+        if( (*Itor)->getType() == (Geometry::getClassType()))
+        {
+            ExampleGeometry = (Geometry::Ptr::dcast(*Itor));
+        }
+        if( (*Itor)->getType() == (SkeletonBlendedGeometry::getClassType()))
+        {
+            TheNewSkeletonGeometry = (SkeletonBlendedGeometry::Ptr::dcast(*Itor));
+        }
+        if( (*Itor)->getType().isDerivedFrom(Animation::getClassType()))
+        {
+            TheSkeletonAnimation = (Animation::Ptr::dcast(*Itor));
+        }
     }
 
 	//UnboundGeometry
@@ -377,17 +350,16 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
+    TheAnimationAdvancer->start();
 
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "20LoadXMLBlendedGeometry");
 
-
-
-
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
-
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
 
     osgExit();
 

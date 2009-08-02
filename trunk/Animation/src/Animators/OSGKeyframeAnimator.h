@@ -86,7 +86,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
     
     bool animate(const osg::InterpolationType& InterpType,
                  const osg::ValueReplacementPolicy& ReplacementPolicy,
-                 const osg::UInt32& Cycling,
+                 bool Cycling,
                  const osg::Real32& time,
                  const osg::Real32& prevTime,
                  osg::Field& Result,

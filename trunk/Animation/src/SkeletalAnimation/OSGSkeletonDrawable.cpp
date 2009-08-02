@@ -129,30 +129,6 @@ void SkeletonDrawable::drawJointHierarchy(JointPtr TheJoint, DrawActionBase *act
 				glColor4fv(getPoseColor().getValuesRGBA());
 				glVertex3fv(BoneStart.getValues());
 				glVertex3fv(BoneEnd.getValues());
-				
-				
-				//if (TheJoint->getParentJoint()->getParentJoint() == NullFC)
-//				{
-//					if(TheJoint->getAbsoluteTransformation() != _lastAbsTrans)
-//					{
-//						std::cout << "\nLast:\n" << _lastAbsTrans << std::endl;
-//						std::cout << "Current:\n" << TheJoint->getAbsoluteTransformation() << std::endl;
-//					}
-//					
-//					_lastAbsTrans = TheJoint->getAbsoluteTransformation();
-//				
-//					//if(BoneStart != _lastStartPoint || BoneEnd != _lastEndPoint)
-////					{
-////						std::cout << "BoneStart: " << BoneStart << "   lastStart: " << _lastStartPoint << std::endl;
-////						std::cout << "BoneEnd:   " << BoneEnd << "   lastEnd: " << _lastEndPoint << "\n" << std::endl;
-////					}
-////					
-////					_lastEndPoint = BoneEnd;
-////					_lastStartPoint = BoneStart;
-//				}
-				
-				
-				
 			}
 			if(getDrawBindPose())
 			{

@@ -27,7 +27,8 @@ A InventoryListModel.
 		type="InventoryListModelPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
+        access="public"
+        header="Inventory/Models/OSGInventoryListModelFields.h"
 	>
 	</Field>
 

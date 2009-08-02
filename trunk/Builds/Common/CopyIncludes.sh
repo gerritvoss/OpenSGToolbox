@@ -8,7 +8,7 @@
 copy_includes()
 {
    rm -f $3/$2
-   sed -f $1/SedConvertIncludes $4 > $3/$2
+   sed -f $1 $4 > $3/$2
    chmod 444 $3/$2
 }
 
@@ -24,9 +24,9 @@ for headerFile in `find $2 -type f -name '*.h'`
 do
    file=`echo $headerFile | sed 's/\(.*\)\/\(.*\)/\2/'`
    if [ ! -e "$3/$file" ] ; then
-      copy_includes $1 $file $3 $headerFile
+      copy_includes $SedConvertFile $file $3 $headerFile
    elif [ -n "`find $headerFile -cnewer $3/$file`" ] ; then
-      copy_includes $1 $file $3 $headerFile
+      copy_includes $SedConvertFile $file $3 $headerFile
    fi
 done
 
@@ -35,10 +35,11 @@ for inlineFile in `find $2 -type f -name '*.inl'`
 do
    file=`echo $inlineFile | sed 's/\(.*\)\/\(.*\)/\2/'`
    if [ ! -e "$3/$file" ] ; then
-      copy_includes $1 $file $3 $inlineFile
+      copy_includes $SedConvertFile $file $3 $inlineFile
    elif [ -n "`find $inlineFile -cnewer $3/$file`" ] ; then
-      copy_includes $1 $file $3 $inlineFile
+      copy_includes $SedConvertFile $file $3 $inlineFile
    fi
 done
 
-rm $SedConvertFile
+#rm $SedConvertFile
+

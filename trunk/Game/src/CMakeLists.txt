@@ -60,6 +60,7 @@ ADD_CUSTOM_TARGET(${LIBRARY_NAME}_headers
                   ${CMAKE_SOURCE_DIR}/Builds/Common/
                   ${CMAKE_CURRENT_SOURCE_DIR}
                   ${CMAKE_CURRENT_BINARY_DIR}/include/OpenSG/${LIBRARY_SHORT_NAME}
+                  ${LIBRARY_SHORT_NAME}
                   DEPENDS ${HEADERS} ${INLINES})
 
 #Attach all of the Compile flags

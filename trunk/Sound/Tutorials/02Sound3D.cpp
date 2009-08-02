@@ -26,7 +26,6 @@
 
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 //Sound
 #include <OpenSG/Sound/OSGSoundManager.h>
@@ -45,7 +44,6 @@ WindowEventProducerPtr TheWindowEventProducer;
 EventConnection MouseEventConnection;
 TransformPtr TheSphereTransform;
 
-bool ExitMainLoop = false;
 SoundPtr PopSound;
 SoundEmitterPtr TheEmitter;
 
@@ -134,7 +132,7 @@ public:
     {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitMainLoop = true;
+           TheWindowEventProducer->closeWindow();
        }
 
        switch(e.getKey())
@@ -146,22 +144,6 @@ public:
     }
 protected:
     UInt32 _PopChannelID;
-};
-
-class TutorialWindowListener : public WindowAdapter
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-
-    virtual void windowClosing(const WindowEvent& e)
-    {
-	   ExitMainLoop = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-	   ExitMainLoop = true;
-    }
 };
 
 class TutorialUpdateListener : public UpdateListener
@@ -200,10 +182,6 @@ int main(int argc, char **argv)
     TheWindowEventProducer = createDefaultWindowEventProducer();
     TheWindowEventProducer->initWindow();
     
-	beginEditCP(TheWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TheWindowEventProducer->setUseCallbackForDraw(true);
-		TheWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TheWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
 
@@ -213,9 +191,6 @@ int main(int argc, char **argv)
     //Attach Key Listener
     TutorialKeyListener TheTutorialKeyListener;
     TheWindowEventProducer->addKeyListener(&TheTutorialKeyListener);
-    //Attach Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     //Attach MouseMotion Listener
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
     TheWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
@@ -298,15 +273,15 @@ int main(int argc, char **argv)
     
 
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                        Vec2s(500,500),
-                        "02 Sound3D Window");
+    Vec2f WinSize(TheWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TheWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TheWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "02 Sound3D Window");
 
-    while(!ExitMainLoop)
-    {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
-    }
+
+    //Enter main loop
+    TheWindowEventProducer->mainLoop();
 
     osgExit();
     return 0;

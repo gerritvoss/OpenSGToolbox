@@ -946,7 +946,7 @@ std::vector<Path> XWindowEventProducer::openFileDialog(const std::string& Window
 
 Path XWindowEventProducer::saveFileDialog(const std::string& DialogTitle,
                 const std::vector<FileDialogFilter>& Filters,
-                const Path& InitialFile,
+                const std::string& InitialFile,
                 const Path& InitialDirectory,
                 bool PromptForOverwrite
                 )

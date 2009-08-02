@@ -42,6 +42,8 @@ IF(${USE_FMOD} EQUAL 1)
    ELSE(HAVE_64_BIT)
       SET(FMOD_LIBRARIES fmodex)
    ENDIF(HAVE_64_BIT)
+   #Definition required when building the library
+   ADD_DEFINITIONS(-D_OSG_TOOLBOX_USE_FMOD_)
 ENDIF(${USE_FMOD} EQUAL 1)
 
 

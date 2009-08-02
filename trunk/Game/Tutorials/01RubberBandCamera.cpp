@@ -14,7 +14,6 @@
 #include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGSolidBackground.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 #include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/Toolbox/OSGCameraUtils.h>
 
@@ -31,6 +30,7 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
+WindowEventProducerPtr TutorialWindowEventProducer;
 class SceneManager
 {
 protected:
@@ -201,13 +201,12 @@ public:
 
 // The SimpleSceneManager to manage simple applications
 SceneManager *mgr;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 //Camera Beacon
 TransformPtr CameraBeaconTransform;
 TransformPtr BoxTransform;
 RubberBandCameraPtr RubberCamera;
-
-bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -222,7 +221,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
        }
 
 	   float TranslateAmount(0.05f);
@@ -339,40 +338,18 @@ public:
 	}
 };
 
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
-
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 	TutorialUpdateListener TheUpdateListener;
@@ -385,9 +362,6 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(1280,1024),
-                                        "OpenSG 02RubberBandCamera Window");
 										
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -456,12 +430,16 @@ int main(int argc, char **argv)
     // Show the whole Scene
     //mgr->showAll();
 
+    //Open Window
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "01RubberBandCamera");
 
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
+
     osgExit();
 
     return 0;

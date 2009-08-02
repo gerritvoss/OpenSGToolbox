@@ -26,7 +26,6 @@
 
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 
 #include <OpenSG/Dynamics/OSGBooleanFunction.h>
@@ -41,8 +40,6 @@ SimpleSceneManager *mgr;
 
 WindowEventProducerPtr TheWindowEventProducer;
 
-bool ExitMainLoop = false;
-
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
@@ -55,13 +52,10 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
     {
-        switch(e.getKey()){
-            case KeyEvent::KEY_ESCAPE:
-                TheWindowEventProducer->closeWindow();
-                break;
-            default:
-                break;
-        }
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+           TheWindowEventProducer->closeWindow();
+       }
     }
     virtual void keyReleased(const KeyEvent& e)
     {
@@ -69,18 +63,6 @@ public:
     virtual void keyTyped(const KeyEvent& e)
     {
     }
-};
-
-class TutorialWindowListener : public WindowAdapter
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-       ExitMainLoop = true;
-    }
-
 };
 
 // Initialize WIN32 & OpenSG and set up the scene
@@ -98,9 +80,6 @@ int main(int argc, char **argv)
     //Attach Key Listener
     TutorialKeyListener TheTutorialKeyListener;
     TheWindowEventProducer->addKeyListener(&TheTutorialKeyListener);
-    //Attach Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     
     // create the scene
     NodePtr scene = makeTorus(.5, 2, 16, 16);
@@ -115,9 +94,12 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                        Vec2s(250,250),
-                        "02BooleanFunctions Tutorial");
+    //Open Window
+    Vec2f WinSize(TheWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TheWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TheWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "02BooleanFunctions Tutorial");
 
 	BooleanFunctionPtr BooleanAndFunction = BooleanFunction::create();
 	beginEditCP(BooleanAndFunction);
@@ -245,11 +227,9 @@ int main(int argc, char **argv)
 		std::cout << dynamic_cast<const FunctionIOData<bool>* >(ManyParameters[i].getDataPtr())->getData()
 			<< " " << Operation << " " << dynamic_cast<const FunctionIOData<bool>* >(Result[i].getDataPtr())->getData() << std::endl;
 	}
-    while(!ExitMainLoop)
-    {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
-    }
+
+    //Main Loop
+    TheWindowEventProducer->mainLoop();
 
     osgExit();
     return 0;

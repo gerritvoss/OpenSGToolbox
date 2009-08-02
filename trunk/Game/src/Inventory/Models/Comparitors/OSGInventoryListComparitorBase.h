@@ -68,8 +68,9 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGStringFields.h> // ClassToDisplay type
-#include <OpenSG/Game/OSGInventoryListModelFields.h> // Model type
+#include "Inventory/OSGInventoryFields.h" // CurrentInventory type
 #include <OpenSG/OSGBoolFields.h> // Ascending type
+#include "Inventory/Models/OSGInventoryListModelFields.h"
 
 #include "OSGInventoryListComparitorFields.h"
 

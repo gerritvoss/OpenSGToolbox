@@ -25,7 +25,6 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 // The general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
@@ -50,8 +49,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-
-bool ExitApp = false;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -62,20 +60,6 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
-
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
@@ -85,7 +69,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+           TutorialWindowEventProducer->closeWindow();
        }
    }
 
@@ -103,7 +87,7 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
     
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
 
 	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
@@ -114,9 +98,6 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
@@ -222,16 +203,15 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
-                                        "OpenSG 10UserInterface Window");
+    Vec2f WinSize(TheWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TheWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TheWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "OpenSG 10UserInterface Window");
 
-    //Main Event Loop
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    //Main Loop
+    TutorialWindowEventProducer->mainLoop();
+
     osgExit();
 
     return 0;

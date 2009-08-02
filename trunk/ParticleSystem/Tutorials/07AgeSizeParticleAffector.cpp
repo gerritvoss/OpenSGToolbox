@@ -11,7 +11,6 @@
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 #include <OpenSG/OSGBlendChunk.h>
 #include <OpenSG/OSGTextureChunk.h>
@@ -40,8 +39,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-
-bool ExitApp = false;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -71,7 +69,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
        }
 
 	   if(e.getKey() == KeyEvent::KEY_B)//generate particles when clicked
@@ -146,20 +144,6 @@ void ClickToGenerate(const MouseEvent& e)
 
 }
 
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
-
 class TutorialMouseListener : public MouseListener
 {
   public:
@@ -212,20 +196,12 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
     TutorialMouseListener TheTutorialMouseListener;
@@ -239,11 +215,6 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(1280,1024),
-                                        "OpenSG 05QuadParticleDrawer Window");
-										
-
 	//Particle System Material
 	TextureChunkPtr QuadTextureChunk = TextureChunk::create();
     ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");    
@@ -271,20 +242,22 @@ int main(int argc, char **argv)
 	ExampleAgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
 	beginEditCP(ExampleAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
 			//ages
+			ExampleAgeSizeParticleAffector->getAges().push_back(0.0);
 			ExampleAgeSizeParticleAffector->getAges().push_back(0.05);
 			ExampleAgeSizeParticleAffector->getAges().push_back(0.2);
 			ExampleAgeSizeParticleAffector->getAges().push_back(0.36);
 			ExampleAgeSizeParticleAffector->getAges().push_back(0.7);
 			ExampleAgeSizeParticleAffector->getAges().push_back(0.8);
-			ExampleAgeSizeParticleAffector->getAges().push_back(1.1);
+			ExampleAgeSizeParticleAffector->getAges().push_back(1.0);
 
 			//sizes
 			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,0.5,1.0));
-			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,0.5,3.0));
+			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,0.5,1.0));
+			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(20.0,0.5,30.0));
 			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(3.0,3.0,3.0));
-			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.0,6.0,6.0));
+			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(6.0,60.0,6.0));
 			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(2.0,3.0,1.0));
-			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(1.0,1.0,1.0));
+			ExampleAgeSizeParticleAffector->getSizes().push_back(Vec3f(10.0,1.0,10.0));
 	endEditCP(ExampleAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
 
 	//Particle System
@@ -357,11 +330,16 @@ int main(int argc, char **argv)
     mgr->showAll();
 
 
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    //Open Window
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "07AgeSizeParticleAffector");
+
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
+    
     osgExit();
 
     return 0;
@@ -440,8 +418,8 @@ FunctionPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setMean(30.0f);
-      TheLifespanDistribution->setStandardDeviation(5.0);
+      TheLifespanDistribution->setMean(10.0f);
+      TheLifespanDistribution->setStandardDeviation(2.0);
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;

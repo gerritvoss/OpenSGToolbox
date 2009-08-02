@@ -133,7 +133,7 @@ void FieldAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
    if( osg::KeyframeAnimatorPtr::dcast( getAnimator() )->animate(
                static_cast<osg::InterpolationType>(getInterpolationType()), 
                static_cast<osg::ValueReplacementPolicy>(getReplacementPolicy()),
-               getCycling(), 
+               (getCycling() < 0) || (getCycling() > getCycles()), 
                t,
                prev_t,
                TheField,

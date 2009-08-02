@@ -12,7 +12,6 @@
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 #include <OpenSG/OSGBlendChunk.h>
 #include <OpenSG/OSGPointChunk.h>
@@ -46,8 +45,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-
-bool ExitApp = false;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -80,7 +78,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
        }
    }
 
@@ -131,20 +129,6 @@ public:
    }
 };
 
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
-
 class TutorialMouseListener : public MouseListener
 {
   public:
@@ -187,20 +171,12 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 	//Add Key Listener
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
@@ -216,11 +192,6 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(1280,1024),
-                                        "Particle System Tester");
-										
-
 	//Particle System Material
 	PointChunkPtr PSPointChunk = PointChunk::create();
 	beginEditCP(PSPointChunk);
@@ -366,11 +337,16 @@ int main(int argc, char **argv)
 	//Save the Field Containers to a xml file
 	FCFileHandler::the()->write(Containers,Path("./Data/TestFieldContainers.xml"),IgnoreTypes);
 
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    //Open Window
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "16FullTest");
+
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
+    
     osgExit();
 
     return 0;

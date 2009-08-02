@@ -212,28 +212,813 @@ UInt32 CarbonWindowEventProducer::getUndefinedWindowId(void)
     return i;
 }
 
-void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
+void  CarbonWindowEventProducer::mainLoop(void)
 {
-    
-    WindowEventLoopThreadArguments* Arguments(static_cast<WindowEventLoopThreadArguments*>(args));
-    
-    // Carbon init
+	// Main loop ( event dispatching )
+    EventRef theEvent;    
+    EventTargetRef theTarget;    
+    theTarget = GetEventDispatcherTarget(); 
+    while (true)
+    {
+        while  ( ReceiveNextEvent(0, NULL,0 /*kEventDurationForever*/ ,true,
+                                 &theEvent)== noErr)
+        {
+            SendEventToEventTarget (theEvent, theTarget);        
+            ReleaseEvent(theEvent);
+            
+        }
+	
+        CarbonWindowToProducerMap::iterator MapItor;
+        for( MapItor = _CarbonWindowToProducerMap.begin(); MapItor != _CarbonWindowToProducerMap.end(); ++MapItor)
+        {
+            MapItor->second->update();
+            MapItor->second->draw();
+        }
+        if(_CarbonWindowToProducerMap.size() == 0)
+        {
+            break;
+        }
 
-    // Create window
-    WindowRef window;
-    WindowAttributes windowAttrs =
-        kWindowStandardDocumentAttributes |
-        kWindowLiveResizeAttribute |
-        kWindowStandardHandlerAttribute;
-    Rect contentRect;
-    SetRect(&contentRect, Arguments->_ScreenPosition.x(),  Arguments->_ScreenPosition.y(), Arguments->_Size.x() + Arguments->_ScreenPosition.x(), Arguments->_Size.y() + Arguments->_ScreenPosition.y());
-    
-    CreateNewWindow(kDocumentWindowClass, windowAttrs, &contentRect, &window);
-    SetWindowTitleWithCFString(window, CFStringCreateWithCString(NULL, Arguments->_WindowName.c_str(), Arguments->_WindowName.size()));
-	 Arguments->_EventProducer->_MainThreadSyncBarrier->enter(2);
+    }
+}
 
-    // Install event handler
-    EventHandlerUPP eventHandlerUPP = NewEventHandlerUPP(eventHandler);
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+//TODO: IMPLEMENT
+void CarbonWindowEventProducer::setShowCursor(bool show)
+{
+	//if(show)
+	//{
+	//	ShowCursor();
+	//}
+	//else
+	//{
+   //   Rect WindowSize;
+	//	::Point WindowTopLeft;
+
+	//	ShieldCursor(&WindowSize, WindowTopLeft);
+	//}
+}
+
+bool CarbonWindowEventProducer::getShowCursor() const
+{
+	return true;//_CursorShown;
+}
+
+osg::Vec2f CarbonWindowEventProducer::getDesktopSize() const
+{
+
+    HIRect DesktopRect;
+    OSStatus status = HIWindowGetAvailablePositioningBounds(kCGNullDirectDisplay, kHICoordSpaceScreenPixel, &DesktopRect);
+    if(status == noErr)
+    {
+        return Vec2f(DesktopRect.size.width, DesktopRect.size.height);
+    }
+    else
+    {
+        SWARNING << "CarbonWindowEventProducer::getDesktopSize: Error" << std::endl;
+        return Vec2f();
+    }
+}
+
+// TRY TO CONVERT AN AEDesc TO AN FSSpec
+//     As per Apple Technical Q&A QA1274
+//     eg: http://developer.apple.com/qa/qa2001/qa1274.html
+//     Returns 'noErr' if OK,
+//             or an 'OSX result code' on error.
+//
+int AEDescToFSSpec(const AEDesc* desc, FSSpec* fsspec) {
+    OSStatus err = noErr;
+    AEDesc coerceDesc;
+    // If AEDesc isn't already an FSSpec, convert it to one
+    if ( desc->descriptorType != typeFSS ) {
+        if ( ( err = AECoerceDesc(desc, typeFSS, &coerceDesc) ) == noErr ) {
+        // Get FSSpec out of AEDesc
+            err = AEGetDescData(&coerceDesc, fsspec, sizeof(FSSpec));
+            AEDisposeDesc(&coerceDesc);
+        }
+    } else {
+        err = AEGetDescData(desc, fsspec, sizeof(FSSpec));
+    }
+    return( err );
+}
+
+// CONVERT REGULAR PATH -> FSSpec
+//     If file does not exist, expect fnfErr.
+//     Returns 'noErr' if OK,
+//             or an 'OSX result code' on error.
+//
+static OSStatus PathToFSSpec(const char *path, FSSpec &spec) {
+    OSStatus err;
+    FSRef ref;
+    if ((err = FSPathMakeRef((const UInt8*)path, &ref, NULL)) != noErr) {
+    return(err);
+    }
+    // FSRef -> FSSpec
+    if ((err = FSGetCatalogInfo(&ref, kFSCatInfoNone, NULL, NULL, &spec,
+                                     NULL)) != noErr) {
+    return(err);
+    }
+    return(noErr);
+}
+
+std::vector<Path> CarbonWindowEventProducer::openFileDialog(const std::string& WindowTitle,
+		const std::vector<FileDialogFilter>& Filters,
+		const Path& InitialDir,
+		bool AllowMultiSelect)
+{
+	std::vector<osg::Path, std::allocator<osg::Path> > FilesToOpen;
+    OSStatus status;
+    NavDialogRef OpenFileDialog;
+
+    NavDialogCreationOptions dialogOptions;
+
+    //Default options for dialog
+    status = NavGetDefaultDialogCreationOptions(&dialogOptions);
+    if(status != noErr)
+    {
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: NavGetDefaultDialogCreationOptions Error: "<< status << std::endl;
+	    return FilesToOpen;
+    }
+
+   // Make the window app-wide modal
+   dialogOptions.modality = kWindowModalityAppModal;
+   dialogOptions.parentWindow = _WindowRef;
+   dialogOptions.windowTitle = CFStringCreateWithCString(NULL, WindowTitle.c_str(), WindowTitle.size());
+   if(AllowMultiSelect)
+   {
+       dialogOptions.optionFlags = dialogOptions.optionFlags | kNavAllowMultipleFiles;
+   }
+   else
+   {
+       dialogOptions.optionFlags = dialogOptions.optionFlags ^ kNavAllowMultipleFiles;
+   }
+   
+   status = NavCreateGetFileDialog (
+       &dialogOptions,
+       NULL,
+       NULL,//_EventHandlerUPP,
+       NULL,
+       NULL,//NavObjectFilterUPP inFilterProc,
+       NULL,//void *inClientData,
+       &OpenFileDialog);
+    
+    if(status != noErr)
+    {
+        NavDialogDispose(OpenFileDialog);
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: NavCreateGetFileDialog Error: "<< status << std::endl;
+	    return FilesToOpen;
+    }
+    
+    // Image Browser can open files with the ".imagebrowser" extension
+    CFMutableArrayRef identifiers = CFArrayCreateMutable( kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks );
+    if(identifiers == NULL)
+    {
+        NavDialogDispose(OpenFileDialog);
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: CFArrayCreateMutable Error: NULL " <<  std::endl;
+	    return FilesToOpen;
+    }
+
+    //Initial directory 
+    FSSpec spec;
+    status = PathToFSSpec(InitialDir.string().c_str(), spec);
+    if(status != noErr)
+    {
+        NavDialogDispose(OpenFileDialog);
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: PathToFSSpec Error: "<< status << std::endl;
+	    return FilesToOpen;
+    }
+
+    AEDesc DefaultLocationAEDesc;
+    status = AECreateDesc(typeFSS, &spec, sizeof(FSSpec), &DefaultLocationAEDesc);
+    if(status != noErr)
+    {
+        NavDialogDispose(OpenFileDialog);
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: AECreateDesc Error: "<< status << std::endl;
+	    return FilesToOpen;
+    }
+    status = NavCustomControl( OpenFileDialog, kNavCtlSetLocation, &DefaultLocationAEDesc );
+    if(status != noErr)
+    {
+        NavDialogDispose(OpenFileDialog);
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: NavCustomControl Error: "<< status << std::endl;
+	    return FilesToOpen;
+    }
+    AEDisposeDesc(&DefaultLocationAEDesc);
+
+    //Filters
+    for(std::vector<FileDialogFilter>::const_iterator Itor(Filters.begin()) ; Itor != Filters.end(); ++Itor)
+    {
+        if(Itor->getFilter().compare("*") != 0)
+        {
+            // create the image browser UTI conforming to "public.data" because it's a data file rather than a bundle 
+            CFStringRef FilterCFString = UTTypeCreatePreferredIdentifierForTag( kUTTagClassFilenameExtension, CFStringCreateWithCString(NULL, Itor->getFilter().c_str(), Itor->getFilter().size()),kUTTypeData );
+
+            if(FilterCFString == NULL)
+            {
+                NavDialogDispose(OpenFileDialog);
+                SWARNING << "CarbonWindowEventProducer::openFileDialog: UTTypeCreatePreferredIdentifierForTag Error: NULL " <<  std::endl;
+                return FilesToOpen;
+            }
+            //Itor->getName();
+            CFArrayAppendValue( identifiers, FilterCFString );
+        }
+    }
+    
+    // filter by image browser UTI
+    status = NavDialogSetFilterTypeIdentifiers( OpenFileDialog, identifiers );
+    if(status != noErr)
+    {
+        NavDialogDispose(OpenFileDialog);
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: NavDialogRun Error: "<< status << std::endl;
+        return FilesToOpen;
+    }
+ 
+    //Open the dialog
+    status = NavDialogRun(OpenFileDialog);
+    if(status != noErr)
+    {
+        NavDialogDispose(OpenFileDialog);
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: NavDialogRun Error: "<< status << std::endl;
+        return FilesToOpen;
+    }
+
+    //Get Reply
+    NavReplyRecord replyRecord;
+    status = NavDialogGetReply(OpenFileDialog, &replyRecord);
+    NavDialogDispose(OpenFileDialog);
+    //If user canceled then return empty
+    if (!replyRecord.validRecord ||  status == userCanceledErr )
+    {
+        NavDisposeReply(&replyRecord);
+        return FilesToOpen;
+    }
+    
+    //Other Errors
+    if(status != noErr)
+    {
+        NavDisposeReply(&replyRecord);
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: NavDialogGetReply Error: "<< status << std::endl;
+        return FilesToOpen;
+    }
+    // How many items selected?
+    long count = 0;
+    if ( AECountItems(&replyRecord.selection, &count) != noErr ) 
+    {
+        NavDisposeReply(&replyRecord);
+        SWARNING << "CarbonWindowEventProducer::openFileDialog: AECountItems Error: "<< status << std::endl;
+        return FilesToOpen;
+    }
+
+    // Walk list of pathnames selected
+    for (unsigned int index=1; index<=count; index++)
+    {
+        FSRef parentDirectory;
+        if (AEGetNthPtr(&(replyRecord.selection), index, typeFSRef, NULL, NULL, &parentDirectory, sizeof(FSRef), NULL)== noErr)
+        {
+            UInt8 FilePath[2048];
+            if( FSRefMakePath (&parentDirectory, FilePath, sizeof(FilePath)) == noErr)
+            {
+                FilesToOpen.push_back(Path(reinterpret_cast<Char8*>(FilePath)));
+            }
+        }
+    }
+    NavDisposeReply(&replyRecord);
+    
+    return FilesToOpen;
+}
+
+Path CarbonWindowEventProducer::saveFileDialog(const std::string& DialogTitle,
+                const std::vector<FileDialogFilter>& Filters,
+                const std::string& InitialFile,
+                const Path& InitialDirectory,
+                bool PromptForOverwrite
+                )
+{
+	Path FileToSave;
+    OSStatus status;
+    NavDialogRef SaveFileDialog;
+
+    NavDialogCreationOptions dialogOptions;
+
+    //Default options for dialog
+    status = NavGetDefaultDialogCreationOptions(&dialogOptions);
+    if(status != noErr)
+    {
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: NavGetDefaultDialogCreationOptions Error: "<< status << std::endl;
+	    return FileToSave;
+    }
+
+   // Make the window app-wide modal
+   dialogOptions.modality = kWindowModalityAppModal;
+   dialogOptions.parentWindow = _WindowRef;
+   dialogOptions.optionFlags = kNavDefaultNavDlogOptions;
+   dialogOptions.windowTitle = CFStringCreateWithCString(NULL, DialogTitle.c_str(), DialogTitle.size());
+   if(PromptForOverwrite)
+   {
+       dialogOptions.optionFlags = dialogOptions.optionFlags ^ kNavDontConfirmReplacement;
+   }
+   else
+   {
+       dialogOptions.optionFlags = dialogOptions.optionFlags | kNavDontConfirmReplacement;
+   }
+   
+   status = NavCreatePutFileDialog (
+       &dialogOptions,
+       kUnknownType,
+       kUnknownType,
+       NULL,
+       NULL,
+       &SaveFileDialog);
+    
+    if(status != noErr)
+    {
+        NavDialogDispose(SaveFileDialog);
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: NavCreateGetFileDialog Error: "<< status << std::endl;
+	    return FileToSave;
+    }
+    
+    // Image Browser can open files with the ".imagebrowser" extension
+    CFMutableArrayRef identifiers = CFArrayCreateMutable( kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks );
+    if(identifiers == NULL)
+    {
+        NavDialogDispose(SaveFileDialog);
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: CFArrayCreateMutable Error: NULL " <<  std::endl;
+	    return FileToSave;
+    }
+
+    //Initial directory 
+    FSSpec spec;
+    status = PathToFSSpec(InitialDirectory.string().c_str(), spec);
+    if(status != noErr)
+    {
+        NavDialogDispose(SaveFileDialog);
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: PathToFSSpec Error: "<< status << std::endl;
+	    return FileToSave;
+    }
+    AEDesc DefaultLocationAEDesc;
+    status = AECreateDesc(typeFSS, &spec, sizeof(FSSpec), &DefaultLocationAEDesc);
+    if(status != noErr)
+    {
+        NavDialogDispose(SaveFileDialog);
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: AECreateDesc Error: "<< status << std::endl;
+	    return FileToSave;
+    }
+    status = NavCustomControl( SaveFileDialog, kNavCtlSetLocation, &DefaultLocationAEDesc );
+    if(status != noErr)
+    {
+        NavDialogDispose(SaveFileDialog);
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: NavCustomControl Error: "<< status << std::endl;
+	    return FileToSave;
+    }
+    AEDisposeDesc(&DefaultLocationAEDesc);
+    
+    //Initial filename
+    status = NavDialogSetSaveFileName(SaveFileDialog,CFStringCreateWithCString(NULL, InitialFile.c_str(), InitialFile.size()));
+    if(status != noErr)
+    {
+        NavDialogDispose(SaveFileDialog);
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: NavDialogSetSaveFileName Error: "<< status << std::endl;
+	    return FileToSave;
+    }
+
+
+    //Filters
+    for(std::vector<FileDialogFilter>::const_iterator Itor(Filters.begin()) ; Itor != Filters.end(); ++Itor)
+    {
+        // create the image browser UTI conforming to "public.data" because it's a data file rather than a bundle 
+        if(Itor->getFilter().compare("*") != 0)
+        {
+            CFStringRef FilterCFString = UTTypeCreatePreferredIdentifierForTag( kUTTagClassFilenameExtension, CFStringCreateWithCString(NULL, Itor->getFilter().c_str(), Itor->getFilter().size()),kUTTypeData );
+
+            if(FilterCFString == NULL)
+            {
+                NavDialogDispose(SaveFileDialog);
+                SWARNING << "CarbonWindowEventProducer::saveFileDialog: UTTypeCreatePreferredIdentifierForTag Error: NULL " <<  std::endl;
+                return FileToSave;
+            }
+            //Itor->getName();
+            CFArrayAppendValue( identifiers, FilterCFString );
+        }
+    }
+    
+    // filter by UTI
+    //status = NavDialogSetFilterTypeIdentifiers( SaveFileDialog, identifiers );
+    //if(status != noErr)
+    //{
+        //NavDialogDispose(SaveFileDialog);
+        //SWARNING << "CarbonWindowEventProducer::saveFileDialog: NavDialogRun Error: "<< status << std::endl;
+        //return FileToSave;
+    //}
+ 
+    //Open the dialog
+    status = NavDialogRun(SaveFileDialog);
+    if(status != noErr)
+    {
+        NavDialogDispose(SaveFileDialog);
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: NavDialogRun Error: "<< status << std::endl;
+        return FileToSave;
+    }
+
+    //Get Reply
+    NavReplyRecord replyRecord;
+    status = NavDialogGetReply(SaveFileDialog, &replyRecord);
+    NavDialogDispose(SaveFileDialog);
+    //If user canceled then return empty
+    if (!replyRecord.validRecord ||  status == userCanceledErr )
+    {
+        NavDisposeReply(&replyRecord);
+        return FileToSave;
+    }
+    
+    //Other Errors
+    if(status != noErr)
+    {
+        NavDisposeReply(&replyRecord);
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: NavDialogGetReply Error: "<< status << std::endl;
+        return FileToSave;
+    }
+
+    //Path to save file to
+    long count = 0;
+    if ( AECountItems(&replyRecord.selection, &count) != noErr ) 
+    {
+        NavDisposeReply(&replyRecord);
+        SWARNING << "CarbonWindowEventProducer::saveFileDialog: AECountItems Error: "<< status << std::endl;
+        return FileToSave;
+    }
+
+    // Get Path
+    if (count==1)
+    {
+        FSRef parentDirectory;
+        if (AEGetNthPtr(&(replyRecord.selection), 1, typeFSRef, NULL, NULL, &parentDirectory, sizeof(FSRef), NULL)== noErr)
+        {
+            UInt8 FilePath[2048];
+            if( FSRefMakePath (&parentDirectory, FilePath, sizeof(FilePath)) == noErr)
+            {
+                FileToSave = Path(reinterpret_cast<Char8*>(FilePath));
+            }
+        }
+    }
+    NavDisposeReply(&replyRecord);
+
+    //Filename
+    CFStringRef SaveFileCFString = NavDialogGetSaveFileName(SaveFileDialog);
+	char FileName[1024];
+	CFStringGetCString(SaveFileCFString, FileName, sizeof(FileName), 0);
+    FileToSave                   = FileToSave / Path(FileName);
+
+    return FileToSave;
+}
+
+CGKeyCode CarbonWindowEventProducer::getKeyCode(osg::KeyEvent::Key TheKey)
+{
+    switch(TheKey)
+    {
+	////Alphabet
+    case KeyEvent::KEY_A:
+      return KeyA;
+      break;
+    case KeyEvent::KEY_B:
+      return KeyB;
+      break;
+    case KeyEvent::KEY_C:
+      return KeyC;
+      break;
+    case KeyEvent::KEY_D:
+      return KeyD;
+      break;
+    case KeyEvent::KEY_E:
+      return KeyE;
+      break;
+    case KeyEvent::KEY_F:
+      return KeyF;
+      break;
+    case KeyEvent::KEY_G:
+      return KeyG;
+      break;
+    case KeyEvent::KEY_H:
+      return KeyH;
+      break;
+    case KeyEvent::KEY_I:
+      return KeyI;
+      break;
+    case KeyEvent::KEY_J:
+      return KeyJ;
+      break;
+    case KeyEvent::KEY_K:
+      return KeyK;
+      break;
+    case KeyEvent::KEY_L:
+      return KeyL;
+      break;
+    case KeyEvent::KEY_M:
+      return KeyM;
+      break;
+    case KeyEvent::KEY_N:
+      return KeyN;
+      break;
+    case KeyEvent::KEY_O:
+      return KeyO;
+      break;
+    case KeyEvent::KEY_P:
+      return KeyP;
+      break;
+    case KeyEvent::KEY_Q:
+      return KeyQ;
+      break;
+    case KeyEvent::KEY_R:
+      return KeyR;
+      break;
+    case KeyEvent::KEY_S:
+      return KeyS;
+      break;
+    case KeyEvent::KEY_T:
+      return KeyT;
+      break;
+    case KeyEvent::KEY_U:
+      return KeyU;
+      break;
+    case KeyEvent::KEY_V:
+      return KeyV;
+      break;
+    case KeyEvent::KEY_W:
+      return KeyW;
+      break;
+    case KeyEvent::KEY_X:
+      return KeyX;
+      break;
+    case KeyEvent::KEY_Y:
+      return KeyY;
+      break;
+    case KeyEvent::KEY_Z:
+      return KeyZ;
+      break;
+    //Numbers
+    case KeyEvent::KEY_0:
+      return Key0;
+      break;
+    case KeyEvent::KEY_1:
+      return Key1;
+      break;
+    case KeyEvent::KEY_2:
+      return Key2;
+      break;
+    case KeyEvent::KEY_3:
+      return Key3;
+      break;
+    case KeyEvent::KEY_4:
+      return Key4;
+      break;
+    case KeyEvent::KEY_5:
+      return Key5;
+      break;
+    case KeyEvent::KEY_6:
+      return Key6;
+      break;
+    case KeyEvent::KEY_7:
+      return Key7;
+      break;
+    case KeyEvent::KEY_8:
+      return Key8;
+      break;
+    case KeyEvent::KEY_9:
+      return Key9;
+      break;
+
+    //Other
+    case KeyEvent::KEY_MINUS:
+      return KeyMinus;
+      break;
+    case KeyEvent::KEY_EQUALS:
+      return KeyEquals;
+      break;
+    case KeyEvent::KEY_BACK_QUOTE:
+      return KeyBackquote;
+      break;
+    case KeyEvent::KEY_TAB:
+      return KeyTab;
+      break;
+    case KeyEvent::KEY_SPACE:
+      return KeySpacebar;
+      break;
+    case KeyEvent::KEY_OPEN_BRACKET:
+      return KeyLeftBracket;
+      break;
+    case KeyEvent::KEY_CLOSE_BRACKET:
+      return KeyRightBracket;
+      break;
+    case KeyEvent::KEY_SEMICOLON:
+      return KeySemicolon;
+      break;
+    case KeyEvent::KEY_COMMA:
+      return KeyComma;
+      break;
+    case KeyEvent::KEY_PERIOD:
+      return KeyPeriod;
+      break;
+    case KeyEvent::KEY_BACK_SLASH:
+      return KeyBackslash;
+      break;
+    case KeyEvent::KEY_APOSTROPHE:
+      return KeyApostrophe;
+      break;
+    case KeyEvent::KEY_SLASH:
+      return KeySlash;
+      break;
+
+    //Non-visible
+    case KeyEvent::KEY_ESCAPE:
+      return KeyEscape;
+      break;
+    case KeyEvent::KEY_SHIFT:
+      return KeyShift;
+      break;
+    case KeyEvent::KEY_CONTROL:
+      return KeyControl;
+      break;
+    case KeyEvent::KEY_META:
+      return KeyMacCommand;
+      break;
+    case KeyEvent::KEY_ALT:
+      return KeyMenu;
+      break;
+    case KeyEvent::KEY_ENTER:
+      return KeyReturn;
+      break;
+    //case KeyEvent::KEY_CANCEL:
+      //return KeyCancel;
+    //  break;
+    case KeyEvent::KEY_CLEAR:
+      return KeyClear;
+      break;
+    //case KeyEvent::KEY_PAUSE:
+      //return KeyPause;
+    //  break;
+    case KeyEvent::KEY_CAPS_LOCK:
+      return KeyCapsLock;
+      break;
+    case KeyEvent::KEY_END:
+      return KeyEnd;
+      break;
+    case KeyEvent::KEY_HOME:
+      return KeyHome;
+      break;
+    case KeyEvent::KEY_PAGE_UP:
+      return KeyPageUp;
+      break;
+    case KeyEvent::KEY_PAGE_DOWN:
+      return KeyPageDown;
+      break;
+    case KeyEvent::KEY_UP:
+      return KeyUp;
+      break;
+    case KeyEvent::KEY_DOWN:
+      return KeyDown;
+      break;
+    case KeyEvent::KEY_LEFT:
+      return KeyLeft;
+      break;
+    case KeyEvent::KEY_RIGHT:
+      return KeyRight;
+      break;
+    //case KeyEvent::KEY_PRINTSCREEN:
+      //return KeySNAPSHOT;
+    //  break;
+    //case KeyEvent::KEY_INSERT:
+      //return KeyInsert;
+    //  break;
+    case KeyEvent::KEY_DELETE:
+      return KeyDelete;
+      break;
+    case KeyEvent::KEY_HELP:
+      return KeyHelp;
+      break;
+    //case KeyEvent::KEY_NUM_LOCK:
+      //return KeyNUMLOCK;
+    //  break;
+    //case KeyEvent::KEY_SCROLL_LOCK:
+      //return KeySCROLL;
+    //  break;
+    case KeyEvent::KEY_BACK_SPACE:
+      return KeyBackspace;
+      break;
+
+    //Function Keys
+    case KeyEvent::KEY_F1:
+      return KeyF1;
+      break;
+    case KeyEvent::KEY_F2:
+      return KeyF2;
+      break;
+    case KeyEvent::KEY_F3:
+      return KeyF3;
+      break;
+    case KeyEvent::KEY_F4:
+      return KeyF4;
+      break;
+    case KeyEvent::KEY_F5:
+      return KeyF5;
+      break;
+    case KeyEvent::KEY_F6:
+      return KeyF6;
+      break;
+    case KeyEvent::KEY_F7:
+      return KeyF7;
+      break;
+    case KeyEvent::KEY_F8:
+      return KeyF8;
+      break;
+    case KeyEvent::KEY_F9:
+      return KeyF9;
+      break;
+    case KeyEvent::KEY_F10:
+      return KeyF10;
+      break;
+    case KeyEvent::KEY_F11:
+      return KeyF11;
+      break;
+    case KeyEvent::KEY_F12:
+      return KeyF12;
+      break;
+      
+    //Numpad Keys
+    case KeyEvent::KEY_NUMPAD_0:
+      return KeyNum0;
+      break;
+    case KeyEvent::KEY_NUMPAD_1:
+      return KeyNum1;
+      break;
+    case KeyEvent::KEY_NUMPAD_2:
+      return KeyNum2;
+      break;
+    case KeyEvent::KEY_NUMPAD_3:
+      return KeyNum3;
+      break;
+    case KeyEvent::KEY_NUMPAD_4:
+      return KeyNum4;
+      break;
+    case KeyEvent::KEY_NUMPAD_5:
+      return KeyNum5;
+      break;
+    case KeyEvent::KEY_NUMPAD_6:
+      return KeyNum6;
+      break;
+    case KeyEvent::KEY_NUMPAD_7:
+      return KeyNum7;
+      break;
+    case KeyEvent::KEY_NUMPAD_8:
+      return KeyNum8;
+      break;
+    case KeyEvent::KEY_NUMPAD_9:
+      return KeyNum9;
+      break;
+    case KeyEvent::KEY_MULTIPLY:
+      return KeyMultiply;
+      break;
+    case KeyEvent::KEY_ADD:
+      return KeyAdd;
+      break;
+    case KeyEvent::KEY_SUBTRACT:
+      return KeySubtract;
+      break;
+    case KeyEvent::KEY_DIVIDE:
+      return KeyDivide;
+      break;
+    case KeyEvent::KEY_DECIMAL:
+      return KeyDecimal;
+      break;
+    case KeyEvent::KEY_NUMPAD_EQUALS:
+      return KeyNumEqual;
+      break;
+	
+    case KeyEvent::KEY_UNKNOWN:
+	default:
+	  return 0;
+	}
+}
+
+osg::KeyEvent::KeyState CarbonWindowEventProducer::getKeyState(osg::KeyEvent::Key TheKey) const
+{
+    if(CGEventSourceKeyState(kCGEventSourceStateCombinedSessionState,getKeyCode(TheKey)))
+	{
+        return KeyEvent::KEY_STATE_DOWN;
+	}
+	else
+	{
+		return KeyEvent::KEY_STATE_UP;
+	}
+}
+
+WindowPtr CarbonWindowEventProducer::initWindow(void)
+{
+	WindowPtr MyWindow = Inherited::initWindow();
+    
+    attachWindow();
+    
     EventTypeSpec eventList[] =
     {
 		{ kEventClassKeyboard, kEventRawKeyDown},
@@ -256,170 +1041,30 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
         { kEventClassWindow, kEventAppActivated },
         { kEventClassWindow, kEventAppDeactivated },
     };
-    
-	Arguments->_EventProducer->_WindowRef = window;
-    Arguments->_EventProducer->_WindowId = getUndefinedWindowId();
-    Arguments->_EventProducer->attachWindow();
-    
-    InstallWindowEventHandler(window, eventHandlerUPP, GetEventTypeCount(eventList), eventList, &(Arguments->_EventProducer->_WindowId), 0);
+    InstallWindowEventHandler(_WindowRef, _EventHandlerUPP, GetEventTypeCount(eventList), eventList, &(_WindowId), 0);
 
     // Initialize OpenGL
-    GLint attribs[] = { AGL_RGBA, AGL_DOUBLEBUFFER, AGL_DEPTH_SIZE, 16, AGL_STENCIL_SIZE, 8, AGL_NONE };
+    GLint attribs[] = { AGL_RGBA, AGL_DOUBLEBUFFER, AGL_DEPTH_SIZE, 16, AGL_STENCIL_SIZE, 8, AGL_ACCELERATED, AGL_NO_RECOVERY, AGL_NONE };
     AGLPixelFormat pixelFormat = aglChoosePixelFormat(0, 0, attribs);
     if (pixelFormat == 0)
         std::cerr << "Cannot choose pixel format" << std::endl;
-    AGLContext context = aglCreateContext(pixelFormat, 0);
+    _Context = aglCreateContext(pixelFormat, 0);
     aglDestroyPixelFormat(pixelFormat);
-    if (context == 0)
+    if (_Context == 0)
         std::cerr << "Cannot create context" << std::endl;
-    aglSetWindowRef(context,window);
+    aglSetWindowRef(_Context,_WindowRef);
     
     //Attach Window
-    beginEditCP(CarbonWindow::Ptr::dcast(Arguments->_EventProducer->getWindow()), CarbonWindow::ContextFieldMask);
-        CarbonWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->setContext(context);
-    endEditCP(CarbonWindow::Ptr::dcast(Arguments->_EventProducer->getWindow()), CarbonWindow::ContextFieldMask);
-
-        
-    //Arguments->_EventProducer->getWindow()->resize( Arguments->_Size.x(), Arguments->_Size.y() );
-    Arguments->_EventProducer->setSize( Vec2f(Arguments->_Size.x(), Arguments->_Size.y()) );
-    Arguments->_EventProducer->getWindow()->init();
-    Arguments->_EventProducer->getWindow()->deactivate();
-    
-    // Show window
-    RepositionWindow(window, 0, kWindowCascadeOnMainScreen);
-    ShowWindow(window);
-	 Arguments->_EventProducer->produceWindowOpened();
+    beginEditCP(CarbonWindow::Ptr::dcast(getWindow()), CarbonWindow::ContextFieldMask);
+        CarbonWindow::Ptr::dcast(getWindow())->setContext(_Context);
+    endEditCP(CarbonWindow::Ptr::dcast(getWindow()), CarbonWindow::ContextFieldMask);
 	
-    Arguments->_EventProducer->internalReshape(Arguments->_EventProducer->getSize());
-    
-	 // Main loop ( event dispatching )
-    EventRef theEvent;    
-    EventTargetRef theTarget;    
-    theTarget = GetEventDispatcherTarget(); 
-    while (true)
-    {
-        while  (ReceiveNextEvent(0, NULL,0,true,                             
-                                 &theEvent)== noErr)        
-        {
-            SendEventToEventTarget (theEvent, theTarget);        
-            ReleaseEvent(theEvent);
-        }
-		
-		if(Arguments->_EventProducer->_ShouldUpdate)
-		{
-
-		   //Updating
-		   Time Now(getSystemTime());
-		   Time ElapsedTime(Now - Arguments->_EventProducer->getLastUpdateTime());
-		   if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
-		   {
-			   Arguments->_EventProducer->produceUpdate(ElapsedTime);
-		   }
-		   beginEditCP(CarbonWindowEventProducerPtr(Arguments->_EventProducer), LastUpdateTimeFieldMask);
-			   Arguments->_EventProducer->setLastUpdateTime(Now);
-		   endEditCP(CarbonWindowEventProducerPtr(Arguments->_EventProducer), LastUpdateTimeFieldMask);
-
-            Arguments->_EventProducer->_ShouldUpdate = false;
-		}
-        if(Arguments->_EventProducer->_IsDrawPending)
-        {
-            Arguments->_EventProducer->internalDraw();
-            Arguments->_EventProducer->_IsDrawPending = false;
-        }
-    }
-    
-    aglDestroyContext(context);
-    DisposeWindow(window);
-    DisposeEventHandlerUPP(eventHandlerUPP);
-    
-    Arguments->_EventProducer->produceWindowClosed();
-    
-    //Delete my arguments, to avoid memory leak
-    delete Arguments;
-}
-
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
-//TODO: IMPLEMENT
-void CarbonWindowEventProducer::setShowCursor(bool show)
-{
-	//if(show)
-	//{
-	//	ShowCursor();
-	//}
-	//else
-	//{
-   //   Rect WindowSize;
-	//	::Point WindowTopLeft;
-
-	//	ShieldCursor(&WindowSize, WindowTopLeft);
-	//}
-}
-bool CarbonWindowEventProducer::getShowCursor() const
-{
-	return true;//_CursorShown;
-}
-osg::Vec2f CarbonWindowEventProducer::getDesktopSize() const
-{
-	//TODO: implement
-	return Vec2f();
-}
-std::vector<osg::Path, std::allocator<osg::Path> > CarbonWindowEventProducer::openFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, bool)
-{
-	//TODO: implement
-	std::vector<osg::Path, std::allocator<osg::Path> > temp;
-	return temp;
-}
-osg::Path CarbonWindowEventProducer::saveFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, const osg::Path&, bool)
-{
-	//TODO: implement
-	return osg::Path();
-}
-osg::KeyEvent::KeyState CarbonWindowEventProducer::getKeyState(osg::KeyEvent::Key) const
-{
-	//TODO: implement
-	return osg::KeyEvent::KeyState();
-}
-
-
-
-
-
-WindowPtr CarbonWindowEventProducer::initWindow(void)
-{
-	WindowPtr MyWindow = Inherited::initWindow();
-	
-    std::string WindowName("Carbon");
-
-    if(_WindowEventLoopThread == NULL)
-    {
-        std::string ThreadName = WindowName + " Event Loop";
-        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
-    }
-    else
-    {
-    }
-
-    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(
-                    Pnt2f(0.0,0.0),
-                    Vec2f(600.0,600.0),
-                    WindowName,
-                    CarbonWindow::Ptr::dcast(getWindow()),
-                    CarbonWindowEventProducerPtr(this)  );
-
-    //ChangeList::setReadWriteDefault();
-    std::string BarrierName = WindowName + " Event Loop Barrier";
-   _MainThreadSyncBarrier =  Barrier::get(BarrierName.c_str());
-    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
     return MyWindow;
 }
 
 
 OSStatus CarbonWindowEventProducer::internalEventHandler(EventHandlerCallRef nextHandler, EventRef event, void *userData)
 {
-    
     ::UInt32 eventClass = GetEventClass(event);
     switch (eventClass)
     {
@@ -603,17 +1248,17 @@ OSStatus CarbonWindowEventProducer::handleWindowEvent(EventHandlerCallRef nextHa
     {
     // Quit the application when the user closes the window
     case kEventWindowClosed:
-		  produceWindowClosing();
-		  produceWindowClosed();
-        //QuitApplicationEventLoop();
-        return noErr;
+            aglDestroyContext(_Context);
+            produceWindowClosing();
+            DisposeEventHandlerUPP(_EventHandlerUPP);
+            _CarbonWindowToProducerMap.erase(_CarbonWindowToProducerMap.find(_WindowId));
+            produceWindowClosed();
+            return noErr;
 		  break;
     
 	 // Quit the application when the user closes the window
     case kEventWindowClose:
-		  produceWindowClosing();
-		  produceWindowClosed();
-        //QuitApplicationEventLoop();
+          disposeWindow();
         return noErr;
 		  break;
 
@@ -715,7 +1360,30 @@ OSStatus CarbonWindowEventProducer::handleKeyEvent(EventHandlerCallRef nextHandl
 			produceKeyPressed(determineKey(key),determineKeyModifiers(keyModifiers));
 			break;
 		case kEventRawKeyModifiersChanged:
-		    //std::cout << "kEventRawKeyModifiersChanged " << determineKeyModifiers(keyModifiers) << std::endl;
+			if((determineKeyModifiers(keyModifiers) & KeyEvent::KEY_MODIFIER_META) &&
+			   !(_modifierKeyState & KeyEvent::KEY_MODIFIER_META))
+			{
+				//Meta key pressed
+				produceKeyPressed(KeyEvent::KEY_META, determineKeyModifiers(keyModifiers));
+			}
+			if(!(determineKeyModifiers(keyModifiers) & KeyEvent::KEY_MODIFIER_META) &&
+			   (_modifierKeyState & KeyEvent::KEY_MODIFIER_META))
+			{
+				//Meta key released
+				produceKeyReleased(KeyEvent::KEY_META, determineKeyModifiers(keyModifiers));
+			}
+			if((determineKeyModifiers(keyModifiers) & KeyEvent::KEY_MODIFIER_ALT) &&
+			   !(_modifierKeyState & KeyEvent::KEY_MODIFIER_ALT))
+			{
+				//Alt key pressed
+				produceKeyPressed(KeyEvent::KEY_ALT, determineKeyModifiers(keyModifiers));
+			}
+			if(!(determineKeyModifiers(keyModifiers) & KeyEvent::KEY_MODIFIER_ALT) &&
+			   (_modifierKeyState & KeyEvent::KEY_MODIFIER_ALT))
+			{
+				//Alt key released
+				produceKeyReleased(KeyEvent::KEY_ALT, determineKeyModifiers(keyModifiers));
+			}
 			if((determineKeyModifiers(keyModifiers) & KeyEvent::KEY_MODIFIER_CONTROL) &&
 			   !(_modifierKeyState & KeyEvent::KEY_MODIFIER_CONTROL))
 			{
@@ -756,6 +1424,10 @@ UInt32 CarbonWindowEventProducer::determineKeyModifiers(::UInt32 keyModifiers)
    if(keyModifiers & alphaLock)
    {
       Modifiers |= KeyEvent::KEY_MODIFIER_CAPS_LOCK;
+   }
+   if(keyModifiers & cmdKey)
+   {
+      Modifiers |= KeyEvent::KEY_MODIFIER_META;
    }
    //if(GetKeyState(VK_NUMLOCK)>0)
    //{
@@ -1205,7 +1877,7 @@ std::string CarbonWindowEventProducer::getTitle(void)
 {
 	CFStringRef AppleString;
 	CopyWindowTitleAsCFString(_WindowRef, &AppleString);
-	char value[512];
+	char value[1024];
 	CFStringGetCString(AppleString, value, sizeof(value), 0);
 	CFRelease(AppleString);
 	
@@ -1250,20 +1922,22 @@ bool CarbonWindowEventProducer::getDrawBorder(void)
 
 void CarbonWindowEventProducer::draw(void)
 {
-	_IsDrawPending = true;
-    //TODO: Implement
-    /*EventRef DrawEvent;
-    if( CreateEvent(NULL,kEventClassWindow, kEventWindowDrawContent,0, 0, &DrawEvent) == noErr )
-    {
-        SetEventParameter(DrawEvent,  kEventParamDirectObject, typeWindowRef, sizeof(_WindowRef), &_WindowRef);
-        SendEventToWindow(DrawEvent, _WindowRef);
-    }*/
+    internalDraw();
 }
 
 void CarbonWindowEventProducer::update(void)
 {
-	_ShouldUpdate = true;
+    //Updating
+    Time Now(getSystemTime());
+    Time ElapsedTime(Now - getLastUpdateTime());
+    if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
+    {
+        produceUpdate(ElapsedTime);
+    }
 
+    beginEditCP(CarbonWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+        setLastUpdateTime(Now);
+    endEditCP(CarbonWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
 }
 
 bool CarbonWindowEventProducer::attachWindow(void)
@@ -1290,7 +1964,7 @@ Pnt2f CarbonWindowEventProducer::getMousePosition(void) const
 	::Point MousePositioon;
 	GetGlobalMouse(&MousePositioon);
 	
-	//SetPortWindowPort(window);
+	//SetPortWindowPort(_WindowRef);
 
     return Pnt2f(MousePositioon.h, MousePositioon.v-22.0f) - Vec2f(getPosition());
 }
@@ -1298,27 +1972,186 @@ Pnt2f CarbonWindowEventProducer::getMousePosition(void) const
 
 std::string CarbonWindowEventProducer::getClipboard(void) const
 {
-    //TODO: Implement
-    assert(false && "Not Implemented");
-    return std::string("");
+    OSStatus            err = noErr;
+    std::string Result("");
+    
+    //Create clipboard reference
+    PasteboardRef theClipboard;
+    err = PasteboardCreate( kPasteboardClipboard, &theClipboard );
+    if(err != noErr)
+    {
+        SWARNING << "CarbonWindowEventProducer::getClipboard: PasteboardCreate Error: "<< err << std::endl;
+        return Result;
+    }
+
+    PasteboardSyncFlags syncFlags;
+    ItemCount           itemCount;
+
+    syncFlags = PasteboardSynchronize( theClipboard );// 1
+    if(syncFlags&kPasteboardModified)
+    {
+        SWARNING << "CarbonWindowEventProducer::getClipboard: PasteboardSynchronize Error: badPasteboardSyncErr "<< badPasteboardSyncErr << std::endl;
+        CFRelease (theClipboard);
+        return Result;
+    }
+
+    err = PasteboardGetItemCount( theClipboard, &itemCount );// 2
+    if(err != noErr)
+    {
+        SWARNING << "CarbonWindowEventProducer::getClipboard: PasteboardGetItemCount Error: "<< err << std::endl;
+        CFRelease (theClipboard);
+        return Result;
+    }
+
+    for( UInt32 itemIndex = 1; itemIndex <= itemCount; itemIndex++ )
+    {
+        PasteboardItemID    itemID;
+        CFArrayRef          flavorTypeArray;
+        CFIndex             flavorCount;
+
+        err = PasteboardGetItemIdentifier( theClipboard, itemIndex, &itemID );// 3
+        if(err != noErr)
+        {
+            SWARNING << "carbonwindoweventproducer::getclipboard: PasteboardGetItemIdentifier error: "<< err << std::endl;
+            CFRelease (theClipboard);
+            return Result;
+        }
+
+        err = PasteboardCopyItemFlavors( theClipboard, itemID, &flavorTypeArray );// 4
+        if(err != noErr)
+        {
+            SWARNING << "carbonwindoweventproducer::getclipboard: PasteboardCopyItemFlavors error: "<< err << std::endl;
+            CFRelease (theClipboard);
+            return Result;
+        }
+
+        flavorCount = CFArrayGetCount( flavorTypeArray );// 5
+
+        for( CFIndex flavorIndex = 0; flavorIndex < flavorCount; flavorIndex++ )
+        {
+            CFStringRef             flavorType;
+            CFDataRef               flavorData;
+            CFIndex                 flavorDataSize;
+
+            flavorType = (CFStringRef)CFArrayGetValueAtIndex( flavorTypeArray,// 6
+                                                                 flavorIndex );
+ 
+
+            if (UTTypeConformsTo(flavorType, CFSTR("public.utf8-plain-text")))// 7
+            {
+                err = PasteboardCopyItemFlavorData( theClipboard, itemID, // 8
+                                                    flavorType, &flavorData );
+                if(err != noErr)
+                {
+                    SWARNING << "CarbonWindowEventProducer::getClipboard: PasteboardCopyItemFlavorData Error: "<< err << std::endl;
+                    CFRelease (flavorTypeArray);
+                    CFRelease (theClipboard);
+                    return Result;
+                }
+                
+                flavorDataSize = CFDataGetLength( flavorData );
+
+                for( short dataIndex = 0; dataIndex <= flavorDataSize; dataIndex++ )
+                {
+                    Result += *(CFDataGetBytePtr( flavorData ) + dataIndex);
+                }
+                
+                CFRelease (flavorData);
+            }
+        }
+        CFRelease (flavorTypeArray);
+    }
+    CFRelease (theClipboard);
+    return Result;
 }
 
 void CarbonWindowEventProducer::putClipboard(const std::string Value)
 {
-    //TODO: Implement
-    assert(false && "Not Implemented");
+    OSStatus err = noErr;
+
+    //Create clipboard reference
+    PasteboardRef theClipboard;
+    err = PasteboardCreate( kPasteboardClipboard, &theClipboard );
+    if(err != noErr)
+    {
+        SWARNING << "CarbonWindowEventProducer::putClipboard: PasteboardCreate Error: "<< err << std::endl;
+        return;
+    }
+
+    //Add text to clipboard
+    PasteboardSyncFlags syncFlags;
+    TXNOffset           start, end;
+    Handle              dataHandle;
+    CFDataRef           textData = NULL;
+     
+
+    //Clear clipboard
+    err = PasteboardClear( theClipboard );
+    if(err != noErr)
+    {
+        SWARNING << "CarbonWindowEventProducer::putClipboard: PasteboardClear Error: "<< err << std::endl;
+        CFRelease (theClipboard);
+        return;
+    }
+
+    syncFlags = PasteboardSynchronize( theClipboard );
+    //if(!(syncFlags&kPasteboardModified))
+    //{
+        //SWARNING << "CarbonWindowEventProducer::putClipboard: PasteboardSynchronize Error: kPasteboardModified "<< badPasteboardSyncErr << std::endl;
+        //return;
+    //}
+    if(!(syncFlags&kPasteboardClientIsOwner))
+    {
+        SWARNING << "CarbonWindowEventProducer::putClipboard: PasteboardSynchronize Error: kPasteboardClientIsOwner "<< notPasteboardOwnerErr << std::endl;
+        CFRelease (theClipboard);
+        return;
+    }
+
+    textData = CFDataCreate( NULL, reinterpret_cast<const UInt8*>(Value.c_str()), Value.size() );
+
+    err = PasteboardPutItemFlavor( theClipboard, (PasteboardItemID)1,
+                        CFSTR("public.utf8-plain-text"),
+                        textData, 0 );
+    if(err != noErr)
+    {
+        SWARNING << "CarbonWindowEventProducer::putClipboard: PasteboardPutItemFlavor Error: "<< err << std::endl;
+        CFRelease (theClipboard);
+        return;
+    }
+
+    CFRelease(theClipboard);
 }
 
 void CarbonWindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
 				   const Vec2f& Size,
 				   const std::string& WindowName)
 {
+    SetWindowTitleWithCFString(_WindowRef, CFStringCreateWithCString(NULL, WindowName.c_str(),WindowName.size()));
+   
+    getWindow()->init();
+    getWindow()->deactivate();
+    
+    // Show window
+    RepositionWindow(_WindowRef, 0, kWindowCascadeOnMainScreen);
+    setPosition(ScreenPosition);
 
-	//Unblock the main
-	_MainThreadSyncBarrier->enter(2);
+    //For some reason the Viewport is not set up right unless I force the window to resize
+    //there must be a better way of doing this
+    setSize(Size+Vec2f(-1.0,0.0));
+    setSize(Size);
+    
+    ShowWindow(_WindowRef);
+	produceWindowOpened();
+    _modifierKeyState = getKeyModifiers();
+	
 }
 
 void CarbonWindowEventProducer::closeWindow(void)
+{
+    disposeWindow();
+}
+
+void CarbonWindowEventProducer::disposeWindow(void)
 {
     DisposeWindow(_WindowRef);
 }
@@ -1365,7 +2198,24 @@ void CarbonWindowEventProducer::setCursor(void)
 
 WindowPtr CarbonWindowEventProducer::createWindow(void)
 {
-    return CarbonWindow::create();
+    WindowPtr TheCarbonWindow = CarbonWindow::create();
+    // Create window
+    WindowRef window;
+    WindowAttributes windowAttrs =
+        kWindowStandardDocumentAttributes |
+        kWindowLiveResizeAttribute |
+        kWindowStandardHandlerAttribute;
+    Rect contentRect;
+    SetRect(&contentRect, 0, 0, 400, 400);
+    
+    CreateNewWindow(kDocumentWindowClass, windowAttrs, &contentRect, &window);
+    
+    // Install event handler
+    _EventHandlerUPP = NewEventHandlerUPP(eventHandler);
+    
+	_WindowRef = window;
+    _WindowId = getUndefinedWindowId();
+    return TheCarbonWindow;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -1375,16 +2225,11 @@ WindowPtr CarbonWindowEventProducer::createWindow(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 CarbonWindowEventProducer::CarbonWindowEventProducer(void) :
-    Inherited(),
-        _IsDrawPending(false),
-		_ShouldUpdate(false)
-{
+    Inherited(){
 }
 
 CarbonWindowEventProducer::CarbonWindowEventProducer(const CarbonWindowEventProducer &source) :
-    Inherited(source),
-        _IsDrawPending(false),
-		_ShouldUpdate(false)
+    Inherited(source)
 {
 }
 
@@ -1404,44 +2249,6 @@ void CarbonWindowEventProducer::dump(      UInt32    ,
 {
     SLOG << "Dump CarbonWindowEventProducer NI" << std::endl;
 }
-
-CarbonWindowEventProducer::WindowEventLoopThreadArguments::WindowEventLoopThreadArguments(
-                       const Pnt2f& ScreenPosition,
-                       const Vec2f& Size,
-                       const std::string& WindowName,
-                       CarbonWindowPtr TheWindow,
-                       CarbonWindowEventProducerPtr TheEventProducer) :
-        _ScreenPosition(ScreenPosition),
-        _Size(Size),
-        _WindowName(WindowName),
-        _Window(TheWindow),
-        _EventProducer(TheEventProducer)
-{
-}
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCARBONWINDOWEVENTPRODUCERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCARBONWINDOWEVENTPRODUCERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCARBONWINDOWEVENTPRODUCERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

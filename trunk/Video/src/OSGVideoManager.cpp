@@ -28,8 +28,8 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGVideoManager.h"
 
-#ifdef darwin
-#include "WindowSystem/Carbon/OSGCarbonWindowEventProducer.h"
+#ifdef __APPLE__
+//#include "WindowSystem/Carbon/OSGCarbonWindowEventProducer.h"
 #endif
 
 #ifdef WIN32
@@ -37,16 +37,16 @@
 #endif
 
 #ifdef __linux
-#include <OpenSG/OSGXWindow.h>
-#include "WindowSystem/X/OSGXWindowEventProducer.h"
-#include <GL/glx.h>
+//#include <OpenSG/OSGXWindow.h>
+//#include "WindowSystem/X/OSGXWindowEventProducer.h"
+//#include <GL/glx.h>
 #endif
 
 OSG_BEGIN_NAMESPACE
 
 VideoManagerPtr getDefaultVideoManager(void)
 {
-#ifdef darwin
+#ifdef __APPLE__
     return NULL;
 #elif defined(WIN32)
     return DirectShowManager::the();

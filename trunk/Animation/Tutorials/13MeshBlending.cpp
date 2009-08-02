@@ -11,7 +11,6 @@
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
 #include <OpenSG/Input/OSGUpdateListener.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 #include <OpenSG/OSGLineChunk.h>
 #include <OpenSG/OSGBlendChunk.h>
@@ -43,6 +42,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 Time TimeLastIdle;
 NodePtr SkeletonNode;
@@ -54,8 +54,6 @@ bool animationPaused = false;
 
 JointPtr Pelvis,LeftHip,RightHip,LeftKnee,RightKnee,LeftFoot,RightFoot,LeftToes,RightToes, Clavicle, LeftShoulder,RightShoulder,LeftElbow,RightElbow,LeftHand,RightHand,LeftFingers,RightFingers,Head; 
 SkeletonPtr ExampleSkeleton;
-bool ExitApp = false;
-
 
 // The pointer to the transformation
 TransformPtr trans;
@@ -82,7 +80,7 @@ public:
 	   //Exit
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
        }
 
 	   //Toggle animation
@@ -178,20 +176,6 @@ public:
    }
 };
 
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
-
 class TutorialMouseListener : public MouseListener
 {
   public:
@@ -248,13 +232,8 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
@@ -263,8 +242,6 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
 
     //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
     TutorialMouseListener TheTutorialMouseListener;
@@ -278,10 +255,6 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(1280,1024),
-                                        "OpenSG 13MeshBlending Window");
-
 	//Print key command info
 	std::cout << "\n\nKEY COMMANDS:" << std::endl;
 	std::cout << "space   Play/Pause the animation" << std::endl;
@@ -948,13 +921,18 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
+    TheAnimationAdvancer->start();
 
 
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    //Open Window
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+                        WinSize,
+                                        "13MeshBlending");
+
+    //Main Loop
+    TutorialWindowEventProducer->mainLoop();
 
 
     osgExit();

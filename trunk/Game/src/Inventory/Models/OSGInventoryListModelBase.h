@@ -67,8 +67,8 @@
 
 #include <OpenSG/UserInterface/OSGAbstractListModel.h> // Parent
 
-#include <OpenSG/Game/OSGInventoryListComparitorFields.h> // Comparitor type
-#include <OpenSG/Game/OSGInventoryFields.h> // CurrentInventory type
+#include "Inventory/Models/Comparitors/OSGInventoryListComparitorFields.h" // Comparitor type
+#include "Inventory/OSGInventoryFields.h" // CurrentInventory type
 
 #include "OSGInventoryListModelFields.h"
 

@@ -84,10 +84,11 @@ ComponentPtr DefaultListComponentGenerator::getListComponent(ListPtr Parent, con
 		return NullFC;
 	}
 
-	return getListComponentFromString(Parent, getText(Parent, Value, Index, IsSelected, HasFocus), Index, IsSelected, HasFocus);
+    std::string Text(getText(Parent, Value, Index, IsSelected, HasFocus));
+	return getListComponentFromString(Parent, Text, Index, IsSelected, HasFocus);
 }
 
-ComponentPtr DefaultListComponentGenerator::getListComponentFromString(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentPtr DefaultListComponentGenerator::getListComponentFromString(ListPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
 	ComponentPtr TheComponent = Component::Ptr::dcast(getDrawObjectPrototype()->shallowCopy());
 
@@ -123,7 +124,7 @@ std::string DefaultListComponentGenerator::getText(ListPtr Parent, const boost::
     return ValueString;
 }
 	
-void DefaultListComponentGenerator::applyBordersAndBackground(ComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
+void DefaultListComponentGenerator::applyBordersAndBackground(ComponentPtr TheComponent, ListPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
 {
 	if(IsSelected && HasFocus)
 	{
@@ -162,7 +163,7 @@ void DefaultListComponentGenerator::applyBordersAndBackground(ComponentPtr TheCo
 	}
 }
 
-void DefaultListComponentGenerator::applyTextColor(TextComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
+void DefaultListComponentGenerator::applyTextColor(TextComponentPtr TheComponent, ListPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
 {
     if(IsSelected && HasFocus)
     {

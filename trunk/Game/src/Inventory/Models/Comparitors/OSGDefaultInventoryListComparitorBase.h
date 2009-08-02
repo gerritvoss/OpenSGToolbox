@@ -67,7 +67,6 @@
 
 #include "OSGInventoryListComparitor.h" // Parent
 
-
 #include "OSGDefaultInventoryListComparitorFields.h"
 
 OSG_BEGIN_NAMESPACE

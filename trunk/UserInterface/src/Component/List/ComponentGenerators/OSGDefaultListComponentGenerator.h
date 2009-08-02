@@ -81,7 +81,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGenerator : public Def
     /*! \}                                                                 */
 	
 	virtual ComponentPtr getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus);
-	virtual ComponentPtr getListComponentFromString(ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus);
+	virtual ComponentPtr getListComponentFromString(ListPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -103,8 +103,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListComponentGenerator : public Def
     virtual ~DefaultListComponentGenerator(void); 
 
     /*! \}                                                                 */
-	virtual void applyBordersAndBackground(ComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
-	virtual void applyTextColor(TextComponentPtr TheComponent, ListPtr Parent, std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
+	virtual void applyBordersAndBackground(ComponentPtr TheComponent, ListPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
+	virtual void applyTextColor(TextComponentPtr TheComponent, ListPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
     virtual std::string getText(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
 
     /*==========================  PRIVATE  ================================*/

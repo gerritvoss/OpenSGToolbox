@@ -471,26 +471,5 @@ DataType FieldDataTraits<WindowEventProducerPtr>::_type("WindowEventProducerPtr"
 OSG_DLLEXPORT_SFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGWINDOWEVENTPRODUCERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGWINDOWEVENTPRODUCERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGWINDOWEVENTPRODUCERFIELDS_HEADER_CVSID;
-}
-
 OSG_END_NAMESPACE
 

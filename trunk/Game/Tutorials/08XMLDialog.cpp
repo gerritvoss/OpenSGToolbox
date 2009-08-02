@@ -35,7 +35,6 @@ listens for:
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 // The general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
@@ -79,6 +78,7 @@ listens for:
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
+WindowEventProducerPtr TutorialWindowEventProducer;
 DialogHierarchyPtr TutorialDialog;
 InternalWindowPtr MainInternalWindow;
 NodePtr scene;
@@ -112,7 +112,6 @@ std::map<ButtonPtr, DialogPtr> _ButtonToResponseMap;
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
-bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -138,7 +137,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
        }
    }
 
@@ -149,20 +148,6 @@ public:
    virtual void keyTyped(const KeyEvent& e)
    {
    }
-};
-
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
 };
 
 class ResponseButtonActionListener : public ActionListener
@@ -241,7 +226,7 @@ public:
         }
         if(DialogPtr::dcast(e.getSource())->getResponse() == "End")
         {
-            ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
         }
         if(DialogPtr::dcast(e.getSource())->getResponse() == "Restart")
         {
@@ -288,20 +273,12 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
     TutorialUpdateListener TheTutorialUpdateListener;
@@ -314,10 +291,6 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
-                                        "OpenSG 08 XML Dialog Window");
-										
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
@@ -513,11 +486,15 @@ int main(int argc, char **argv)
 
     ExampleDialogHierarchy->start();
 
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "08XMLDialog");
+
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
+
     osgExit();
 
     return 0;

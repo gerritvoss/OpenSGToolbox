@@ -32,7 +32,6 @@
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 #include <OpenSG/Input/OSGWindowUtils.h>
 
 //Physics
@@ -53,6 +52,7 @@ void makeExplosion(Pnt3f Location, Real32 Force);
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 PhysicsHandlerPtr physHandler;
 PhysicsWorldPtr physicsWorld;
@@ -64,8 +64,6 @@ std::vector<PhysicsBodyPtr> allPhysicsBodies;
 
 NodePtr rootNode;
 
-bool ExitApp = false;
-
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
@@ -75,7 +73,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+           TutorialWindowEventProducer->closeWindow();
        }
        switch(e.getKey())
        {
@@ -120,20 +118,6 @@ public:
    virtual void keyTyped(const KeyEvent& e)
    {
    }
-};
-
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
 };
 
 class TutorialMouseListener : public MouseListener
@@ -196,20 +180,12 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
     TutorialMouseListener TheTutorialMouseListener;
@@ -221,10 +197,6 @@ int main(int argc, char **argv)
     mgr = new SimpleSceneManager;
 
 	
-    TutorialWindowEventProducer->openWindow(Pnt2f(0,0),
-                                        Vec2f(1280,1024),
-                                        "OpenSG 05Explosion Window");
-
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
 
@@ -379,11 +351,14 @@ int main(int argc, char **argv)
     // show the whole rootNode
     mgr->showAll();
     
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "05Explosion");
+
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
 
     osgExit();
 

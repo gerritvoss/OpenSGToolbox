@@ -9,17 +9,11 @@
 // the Button causes it to appear pressed
 
 
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -33,7 +27,6 @@
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
 
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 //UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
@@ -54,8 +47,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-
-bool ExitApp = false;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -71,7 +63,7 @@ public:
    {
 	   if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
        }
    }
 
@@ -84,20 +76,6 @@ public:
    }
 };
 
-class TutorialWindowListener : public WindowAdapter
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-};
-
 
 // Initialize WIN32 & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -106,17 +84,14 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
-    TheWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -214,7 +189,7 @@ int main(int argc, char **argv)
 	UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
 	beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		TutorialDrawingSurface->setGraphics(graphics);
-	    TutorialDrawingSurface->setEventProducer(TheWindowEventProducer);
+	    TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
     endEditCP  (TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
@@ -242,15 +217,17 @@ int main(int argc, char **argv)
 
     // Show the whole scene
     mgr->showAll();
-    TheWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(750,750),
-                                        "OpenSG 42FieldContainerComboBox Window");
 
-    while(!ExitApp)
-    {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
-    }
+    //Open Window
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "01RubberBandCamera");
+
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
+
     osgExit();
 
     return 0;

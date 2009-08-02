@@ -19,7 +19,6 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
 
 // The general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
@@ -47,8 +46,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-
-bool ExitApp = false;
+WindowEventProducerPtr TutorialWindowEventProducer;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -99,9 +97,6 @@ ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel());
 #include <OpenSG/UserInterface/OSGCheckboxButton.h>
 #include <OpenSG/UserInterface/OSGRadioButton.h>
 
-
-// Create the WindowEvent 
-WindowEventProducerPtr TutorialWindowEventProducer;
 
 // Global Spinner Models that will be affected by button listeners
 Int32SpinnerModelPtr TheModel1(new Int32SpinnerModel());
@@ -362,7 +357,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           ExitApp = true;
+            TutorialWindowEventProducer->closeWindow();
        }
    }
 
@@ -373,20 +368,6 @@ public:
    virtual void keyTyped(const KeyEvent& e)
    {
    }
-};
-
-class TutorialWindowListener : public WindowAdapter // Window Listener to exit the application if the window is closed
-{
-public:
-    virtual void windowClosing(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
-
-    virtual void windowClosed(const WindowEvent& e)
-    {
-        ExitApp = true;
-    }
 };
 
 class TutorialMouseListener : public MouseListener // Mouse Listener to change the actions taken when receiving input via the mouse buttons
@@ -526,11 +507,6 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
 
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-    
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
@@ -541,9 +517,6 @@ int main(int argc, char **argv)
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 	// Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(90, 270, 16, 16);
@@ -1308,16 +1281,17 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(950,750),
-                                        "OpenSG 35Graphics3DExtrude Window");
 
-    //Main Event Loop
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    //Open Window
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "01RubberBandCamera");
+
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
+
     osgExit();
 
     return 0;

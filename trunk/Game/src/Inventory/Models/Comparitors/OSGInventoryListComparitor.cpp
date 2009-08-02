@@ -47,8 +47,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include <OpenSG/Game/OSGInventory.h>
-#include <OpenSG/Game/OSGInventoryItem.h>
+#include "Inventory/OSGInventory.h"
+#include "Inventory/OSGInventoryItem.h"
 #include <string>
 
 #include "OSGInventoryListComparitor.h"
