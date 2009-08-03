@@ -73,6 +73,7 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     static LRESULT CALLBACK staticWndProc(HWND hwnd, UINT uMsg,
                            WPARAM wParam, LPARAM lParam);
     virtual bool attachWindow(void);
+    virtual WindowPtr initWindow(void);
     virtual void mainLoop(void);
 
     /*---------------------------------------------------------------------*/

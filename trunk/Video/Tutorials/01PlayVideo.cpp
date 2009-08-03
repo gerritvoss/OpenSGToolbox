@@ -22,9 +22,6 @@
 
 // new headers: 
 
-// For the access to OpenGL extensions
-#include <OpenSG/OSGGLEXT.h>
-
 // For the image(s) to display
 #include <OpenSG/OSGImage.h>
 

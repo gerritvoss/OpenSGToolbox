@@ -75,137 +75,6 @@ void Win32WindowEventProducer::initMethod (void)
 {
 }
 
-void Win32WindowEventProducer::WindowEventLoopThread(void* args)
-{
-    //Create the Win32 Window
-    WNDCLASS  wndClass;
-    HWND           hwnd;
-
-    // Win32 Init
-    memset(&wndClass, 0, sizeof(wndClass));
-    
-    wndClass.style		= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;		// Redraw On Move, And Own DC For Window
-	wndClass.lpfnWndProc		= (WNDPROC) Win32WindowEventProducer::staticWndProc;				// WndProc Handles Messages
-	wndClass.cbClsExtra		= 0;						// No Extra Window Data
-	wndClass.cbWndExtra		= 0;						// No Extra Window Data
-	wndClass.hInstance		= GetModuleHandle(NULL);					// Set The Instance
-	wndClass.hIcon		= LoadIcon(NULL, IDI_WINLOGO);			// Load The Default Icon
-	//wndClass.hCursor		= LoadCursor(NULL, IDC_ARROW);			// Load The Arrow Pointer
-	wndClass.hbrBackground	= NULL;						// No Background Required For GL
-	wndClass.lpszMenuName		= NULL;						// We Don't Want A Menu
-	wndClass.lpszClassName	= Arguments->_WindowName.c_str();
-
-    if (!RegisterClass(&wndClass)) 
-    {
-        MessageBox(NULL,"Failed To Register The Window Class.","ERROR",MB_OK|MB_ICONEXCLAMATION);
-        return;
-    }
-
-
-    RECT WindowRect;							// Grabs Rectangle Upper Left / Lower Right Values
-	WindowRect.left=(long)Arguments->_ScreenPosition.x();						// Set Left Value To 0
-	WindowRect.right=(long)Arguments->_Size.x();						// Set Right Value To Requested Width
-	WindowRect.top=(long)Arguments->_ScreenPosition.x();							// Set Top Value To 0
-	WindowRect.bottom=(long)Arguments->_Size.y();						// Set Bottom Value To Requested Height
-
-    //Fullscreen
-    bool fullscreen(Arguments->_EventProducer->getFullscreen());
-    if(fullscreen)
-    {
-        DEVMODE dmScreenSettings;					// Device Mode
-		memset(&dmScreenSettings,0,sizeof(dmScreenSettings));		// Makes Sure Memory's Cleared
-		dmScreenSettings.dmSize=sizeof(dmScreenSettings);		// Size Of The Devmode Structure
-		dmScreenSettings.dmPelsWidth	= Arguments->_Size.x();			// Selected Screen Width
-		dmScreenSettings.dmPelsHeight	= Arguments->_Size.y();			// Selected Screen Height
-		dmScreenSettings.dmBitsPerPel	= 32;				// Selected Bits Per Pixel
-		dmScreenSettings.dmFields=DM_BITSPERPEL|DM_PELSWIDTH|DM_PELSHEIGHT;
-
-        // Try To Set Selected Mode And Get Results.  NOTE: CDS_FULLSCREEN Gets Rid Of Start Bar.
-		if (ChangeDisplaySettings(&dmScreenSettings,CDS_FULLSCREEN)!=DISP_CHANGE_SUCCESSFUL)
-		{
-            // If The Mode Fails, Offer Two Options.  Quit Or Run In A Window.
-			if (MessageBox(NULL,"The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?","NeHe GL",MB_YESNO|MB_ICONEXCLAMATION)==IDYES)
-			{
-                	fullscreen=FALSE;				// Select Windowed Mode (Fullscreen=FALSE)
-			}
-			else
-			{
-                // Pop Up A Message Box Letting User Know The Program Is Closing.
-				MessageBox(NULL,"Program Will Now Close.","ERROR",MB_OK|MB_ICONSTOP);
-				return;					// Exit And Return FALSE
-			}
-		}
-	}
-
-    DWORD		dwExStyle;						// Window Extended Style
-	DWORD		dwStyle;						// Window Style
-
-    if (fullscreen)								// Are We Still In Fullscreen Mode?
-	{
-	    WindowRect.left=(long)0;						// Set Left Value To 0
-	    WindowRect.top=(long)0;						// Set Top Value To 0
-        dwExStyle=WS_EX_APPWINDOW;					// Window Extended Style
-		dwStyle=WS_POPUP;						// Windows Style
-        AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);		// Adjust Window To True Requested Size
-	}
-	else
-	{
-        dwExStyle=WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;			// Window Extended Style
-		dwStyle=WS_OVERLAPPEDWINDOW;					// Windows Style
-	}
-    
-    ShowCursor(Arguments->_EventProducer->getShowCursor());						// Show/Hide Mouse Pointer
-
-
-
-    // Create a Window
-    hwnd = CreateWindowEx(	dwExStyle,				// Extended Style For The Window
-				Arguments->_WindowName.c_str(),				// Class Name
-				Arguments->_WindowName.c_str(),					// Window Title
-				WS_CLIPSIBLINGS |			// Required Window Style
-				WS_CLIPCHILDREN |			// Required Window Style
-				dwStyle,				// Selected Window Style
-				WindowRect.left, WindowRect.top,					// Window Position
-				WindowRect.right-WindowRect.left,	// Calculate Adjusted Window Width
-				WindowRect.bottom-WindowRect.top,	// Calculate Adjusted Window Height
-				NULL,					// No Parent Window
-				NULL,					// No Menu
-				wndClass.hInstance,				// Instance
-				NULL);					// Don't Pass Anything To WM_CREATE
-
-    if(!hwnd)
-    {
-        MessageBox(NULL,"Window Creation Error.","ERROR",MB_OK|MB_ICONEXCLAMATION);
-        return;
-    }
-
-    //Attach Window
-    beginEditCP(Arguments->_Window, WIN32Window::HwndFieldMask);
-        Arguments->_Window->setHwnd(hwnd);
-    endEditCP(Arguments->_Window, WIN32Window::HwndFieldMask);
-
-    Arguments->_EventProducer->attachWindow();
-        
-    Arguments->_Window->init();
-    Arguments->_Window->deactivate();
-
-    
-    //Open the Window and enter the main event loop
-	ShowWindow( hwnd, SW_SHOWNORMAL );
-    SetForegroundWindow(hwnd);
-    SetFocus(hwnd);
-	//SetActiveWindow( hwnd );
-	
-    if(fullscreen)
-    {
-        Arguments->_EventProducer->internalReshape(Vec2f(WindowRect.right-WindowRect.left, WindowRect.bottom-WindowRect.top));
-    }
-
-    
-    //Delete my arguments, to avoid memory leak
-    delete Arguments;
-}
-
 LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd, UINT uMsg,
                          WPARAM wParam, LPARAM lParam)
 {
@@ -262,18 +131,19 @@ void  Win32WindowEventProducer::mainLoop(void)
 	// Main loop ( event dispatching )
     MSG msg;
 	// main loop 
-    while ( GetMessage(&msg, NULL, 0, 0) > 0 )
+    WIN32HWNDToProducerMap::iterator MapItor;
+    //while ( GetMessage(&msg, NULL, 0, 0) > 0 )
+    while (_WIN32HWNDToProducerMap.size() != 0  )
     {
-        DispatchMessage(&msg);
-        WaitMessage();
-        for( MapItor = _CarbonWindowToProducerMap.begin(); MapItor != _CarbonWindowToProducerMap.end(); ++MapItor)
+        if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
+        {
+            DispatchMessage(&msg);
+        }
+        //WaitMessage();
+        for( MapItor = _WIN32HWNDToProducerMap.begin(); MapItor != _WIN32HWNDToProducerMap.end(); ++MapItor)
         {
             MapItor->second->update();
             MapItor->second->draw();
-        }
-        if(_CarbonWindowToProducerMap.size() == 0)
-        {
-            break;
         }
     }
 
@@ -1274,27 +1144,145 @@ WindowPtr Win32WindowEventProducer::createWindow(void)
     return WIN32Window::create();
 }
 
+WindowPtr Win32WindowEventProducer::initWindow(void)
+{
+	WindowPtr MyWindow = Inherited::initWindow();
+    //Create the Win32 Window
+    WNDCLASS  wndClass;
+    HWND           hwnd;
+
+    // Win32 Init
+    memset(&wndClass, 0, sizeof(wndClass));
+    
+    std::string ClassName("OpenSG Window");
+    wndClass.style		= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;		// Redraw On Move, And Own DC For Window
+	wndClass.lpfnWndProc		= (WNDPROC) Win32WindowEventProducer::staticWndProc;				// WndProc Handles Messages
+	wndClass.cbClsExtra		= 0;						// No Extra Window Data
+	wndClass.cbWndExtra		= 0;						// No Extra Window Data
+	wndClass.hInstance		= GetModuleHandle(NULL);					// Set The Instance
+	wndClass.hIcon		= LoadIcon(NULL, IDI_WINLOGO);			// Load The Default Icon
+	//wndClass.hCursor		= LoadCursor(NULL, IDC_ARROW);			// Load The Arrow Pointer
+	wndClass.hbrBackground	= NULL;						// No Background Required For GL
+	wndClass.lpszMenuName		= NULL;						// We Don't Want A Menu
+	wndClass.lpszClassName	= ClassName.c_str();
+
+    if (!RegisterClass(&wndClass)) 
+    {
+        MessageBox(NULL,"Failed To Register The Window Class.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+        return NullFC;
+    }
+
+
+    RECT WindowRect;							// Grabs Rectangle Upper Left / Lower Right Values
+	WindowRect.left=0;						// Set Left Value To 0
+	WindowRect.right=10;						// Set Right Value To Requested Width
+	WindowRect.top=0;							// Set Top Value To 0
+	WindowRect.bottom=20;						// Set Bottom Value To Requested Height
+
+    //Fullscreen
+    //bool fullscreen(_IsFullscreen);
+    bool fullscreen(false);
+    if(fullscreen)
+    {
+        DEVMODE dmScreenSettings;					// Device Mode
+		memset(&dmScreenSettings,0,sizeof(dmScreenSettings));		// Makes Sure Memory's Cleared
+		dmScreenSettings.dmSize=sizeof(dmScreenSettings);		// Size Of The Devmode Structure
+		//dmScreenSettings.dmPelsWidth	= _Size.x();			// Selected Screen Width
+		//dmScreenSettings.dmPelsHeight	= _Size.y();			// Selected Screen Height
+		dmScreenSettings.dmBitsPerPel	= 32;				// Selected Bits Per Pixel
+		dmScreenSettings.dmFields=DM_BITSPERPEL|DM_PELSWIDTH|DM_PELSHEIGHT;
+
+        // Try To Set Selected Mode And Get Results.  NOTE: CDS_FULLSCREEN Gets Rid Of Start Bar.
+		if (ChangeDisplaySettings(&dmScreenSettings,CDS_FULLSCREEN)!=DISP_CHANGE_SUCCESSFUL)
+		{
+            // If The Mode Fails, Offer Two Options.  Quit Or Run In A Window.
+			if (MessageBox(NULL,"The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?","NeHe GL",MB_YESNO|MB_ICONEXCLAMATION)==IDYES)
+			{
+                	fullscreen=FALSE;				// Select Windowed Mode (Fullscreen=FALSE)
+			}
+			else
+			{
+                // Pop Up A Message Box Letting User Know The Program Is Closing.
+				MessageBox(NULL,"Program Will Now Close.","ERROR",MB_OK|MB_ICONSTOP);
+				return NullFC;					// Exit And Return FALSE
+			}
+		}
+	}
+
+    DWORD		dwExStyle;						// Window Extended Style
+	DWORD		dwStyle;						// Window Style
+
+    if (fullscreen)								// Are We Still In Fullscreen Mode?
+	{
+	    WindowRect.left=(long)0;						// Set Left Value To 0
+	    WindowRect.top=(long)0;						// Set Top Value To 0
+        dwExStyle=WS_EX_APPWINDOW;					// Window Extended Style
+		dwStyle=WS_POPUP;						// Windows Style
+        AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);		// Adjust Window To True Requested Size
+	}
+	else
+	{
+        dwExStyle=WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;			// Window Extended Style
+		dwStyle=WS_OVERLAPPEDWINDOW;					// Windows Style
+	}
+    
+    ShowCursor(getShowCursor());						// Show/Hide Mouse Pointer
+
+    // Create a Window
+    hwnd = CreateWindowEx(	dwExStyle,				// Extended Style For The Window
+				ClassName.c_str(),				// Class Name
+				"Temp",					// Window Title
+				WS_CLIPSIBLINGS |			// Required Window Style
+				WS_CLIPCHILDREN |			// Required Window Style
+				dwStyle,				// Selected Window Style
+				WindowRect.left, WindowRect.top,					// Window Position
+				WindowRect.right-WindowRect.left,	// Calculate Adjusted Window Width
+				WindowRect.bottom-WindowRect.top,	// Calculate Adjusted Window Height
+				NULL,					// No Parent Window
+				NULL,					// No Menu
+				wndClass.hInstance,				// Instance
+				NULL);					// Don't Pass Anything To WM_CREATE
+
+    if(!hwnd)
+    {
+        DWORD LastError = GetLastError();
+        MessageBox(NULL,"Window Creation Error.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+        return NullFC;
+    }
+
+    //Attach Window
+    beginEditCP(getWindow(), WIN32Window::HwndFieldMask);
+        WIN32Window::Ptr::dcast(getWindow())->setHwnd(hwnd);
+    endEditCP(getWindow(), WIN32Window::HwndFieldMask);
+
+    _IsFullscreen = fullscreen;
+
+    return MyWindow;
+}
 void Win32WindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
                     const Vec2f& Size,
                     const std::string& WindowName)
 {
-    if(_WindowEventLoopThread == NULL)
+
+    attachWindow();
+	
+    if(_IsFullscreen)
     {
-        std::string ThreadName = WindowName + " Event Loop";
-        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
+        //internalReshape(Vec2f(WindowRect.right-WindowRect.left, WindowRect.bottom-WindowRect.top));
     }
-    else
-    {
-    }
-    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(  
-                    ScreenPosition,
-                    Size,
-                    WindowName,
-                    WIN32Window::Ptr::dcast(getWindow()),
-                    Win32WindowEventProducerPtr(this)  );
+
+    getWindow()->init();
+    getWindow()->deactivate();
+
     
-    //ChangeList::setReadWriteDefault();
-    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
+    //Open the Window and enter the main event loop
+    setPosition(ScreenPosition);
+    setSize(Size);
+    setTitle(WindowName);
+	ShowWindow( WIN32Window::Ptr::dcast(getWindow())->getHwnd(), SW_SHOWNORMAL );
+    SetForegroundWindow(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
+    SetFocus(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
+	//SetActiveWindow( WIN32Window::Ptr::dcast(getWindow())->getHwnd() );
 }
 
 bool Win32WindowEventProducer::attachWindow(void)
@@ -1470,6 +1458,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
         case WM_DESTROY:
             produceWindowClosing();
             PostQuitMessage(0);
+            _WIN32HWNDToProducerMap.erase(_WIN32HWNDToProducerMap.find(WIN32Window::Ptr::dcast(getWindow())->getHwnd()));
             break;
 
 		case WM_SETCURSOR:
@@ -1688,20 +1677,6 @@ Win32WindowEventProducer::~Win32WindowEventProducer(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-Win32WindowEventProducer::WindowEventLoopThreadArguments::WindowEventLoopThreadArguments(
-                       const Pnt2f& ScreenPosition,
-                       const Vec2f& Size,
-                       const std::string& WindowName,
-                       WIN32WindowPtr TheWindow,
-                       Win32WindowEventProducerPtr TheEventProducer) :
-        _ScreenPosition(ScreenPosition),
-        _Size(Size),
-        _WindowName(WindowName),
-        _Window(TheWindow),
-        _EventProducer(TheEventProducer)
-{
-}
 
 void Win32WindowEventProducer::changed(BitVector whichField, UInt32 origin)
 {

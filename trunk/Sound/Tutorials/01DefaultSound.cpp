@@ -199,7 +199,6 @@ int main(int argc, char **argv)
 
 
     //Initialize the Sound Manager
-    FModSoundManager::init();
     SoundManager::the()->attachUpdateProducer(TheWindowEventProducer);
     SoundManager::the()->setCamera(mgr->getCamera());
 
