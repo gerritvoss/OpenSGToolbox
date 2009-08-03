@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                          OpenSG Toolbox Input                             *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala                                                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -62,7 +62,6 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
 
     typedef XWindowEventProducerBase Inherited;
 
-    static void WindowEventLoopThread(void* args);
     static int wait_for_map_notify(Display *, XEvent *event, char *arg);
     static KeyEvent::Key determineKey(const KeySym& XKeySym);
     
@@ -84,6 +83,18 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
 
     virtual void dump(      UInt32     uiIndent, 
                       const BitVector  bvFlags ) const;
+    
+	virtual WindowPtr initWindow(void);
+
+    virtual bool attachWindow(void);
+
+    virtual void openWindow(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
+                       const std::string& WindowName);
+    
+    virtual void closeWindow(void);
+	
+    virtual void mainLoop(void);
 
     //Set the Window Position
     virtual void setPosition(Pnt2f Pos);
@@ -156,15 +167,6 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     
     void handleEvent(XEvent& Event);
     
-    virtual bool attachWindow(void);
-
-    virtual void openWindow(const Pnt2f& ScreenPosition,
-                       const Vec2f& Size,
-                       const std::string& WindowName);
-    
-    virtual void closeWindow(void);
-	
-	virtual WindowPtr initWindow(void);
     
     virtual void draw(void);
     virtual void update(void);
@@ -206,26 +208,8 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     
     virtual WindowPtr createWindow(void);
     
-    struct WindowEventLoopThreadArguments
-    {
-        WindowEventLoopThreadArguments(const Pnt2f& ScreenPosition,
-                       const Vec2f& Size,
-                       const std::string& WindowName,
-                       XWindowPtr TheWindow,
-                       XWindowEventProducerPtr TheEventProducer);
-
-        Pnt2f _ScreenPosition;
-        Vec2f _Size;
-        std::string _WindowName;
-        XWindowPtr _Window;
-        XWindowEventProducerPtr _EventProducer;
-    };
-    
     unsigned int _LastKeyboardMouseButtonMask;
     Pnt2f _LastMousePosition;
-    bool _IsDrawPending;
-
-	bool _ShouldUpdate;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

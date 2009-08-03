@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                          OpenSG Toolbox Input                             *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala                                                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,157 +79,23 @@ int XWindowEventProducer::wait_for_map_notify(Display *, XEvent *event, char *ar
     return( event->type == MapNotify && event->xmap.window == (::Window)arg );
 }
 
-void XWindowEventProducer::WindowEventLoopThread(void* args)
+void XWindowEventProducer::mainLoop(void)
 {
-    WindowEventLoopThreadArguments* Arguments(static_cast<WindowEventLoopThreadArguments*>(args));
-    DisplayP      dpy;
-    X11Window     hwin;
 
-    XVisualInfo   *vi;
-    Colormap      cmap;
-    XSetWindowAttributes swa;
-
-    int dummy;
-
-    dpy = XOpenDisplay(NULL);
-    if (dpy == NULL) 
-    {
-        std::cerr << "Error: Could not open display!" << std::endl;
-    }
-
-    if( ! glXQueryExtension( dpy, &dummy, &dummy ) )
-    {
-        std::cerr << "Error: X server has no OpenGL GLX extension" << std::endl;
-    }
-
-    //int VisualAttributes[] = {GLX_RGBA, GLX_DEPTH_SIZE, 32, GLX_DOUBLEBUFFER, None};
-    int VisualAttributes[] = {GLX_RGBA, 
-                              GLX_DEPTH_SIZE, 16,
-                              GLX_DOUBLEBUFFER,
-                              GLX_STENCIL_SIZE, 8,
-                              None};
-    
-    vi = glXChooseVisual( dpy, DefaultScreen(dpy), VisualAttributes );
-    if ( vi == NULL ) 
-    {
-        FFATAL(("Could not set Visual Attributes"));
-    }
-    if (vi->c_class != TrueColor)
-    {
-        FFATAL(("TrueColor visual required for this program"));
-    }
-
-    cmap = XCreateColormap( dpy, 
-                            RootWindow(dpy, vi->screen), 
-                            vi->visual, 
-                            AllocNone );
-    swa.colormap = cmap;
-    swa.border_pixel = 0;
-    swa.event_mask = ExposureMask | 
-                     ButtonPressMask | 
-                     ButtonReleaseMask |
-                     KeyPressMask |
-                     KeyReleaseMask |
-                     PointerMotionMask |
-                     StructureNotifyMask |
-                     EnterWindowMask |
-                     LeaveWindowMask |
-                     FocusChangeMask |
-                     SubstructureNotifyMask;
-
-    // Create Window
-
-    // Create a Window and connect it to the main display dpy
-    hwin = XCreateWindow( dpy, 
-                          RootWindow(dpy, vi->screen), 
-                          Arguments->_ScreenPosition.x(), 
-                          Arguments->_ScreenPosition.y(), 
-                          Arguments->_Size.x(), 
-                          Arguments->_Size.y(),
-                          0, 
-                          vi->depth,
-                          InputOutput, 
-                          vi->visual, 
-                          CWBorderPixel | CWColormap | CWEventMask, 
-                          &swa );
-                          
-    XFree(vi);
-
-    int argc(1);
-    char **argv = new char*[1];
-    (*argv)= "Bla";
-     XSetStandardProperties(dpy, hwin, Arguments->_WindowName.c_str(), Arguments->_WindowName.c_str(), None, argv, argc, NULL);
-
-    beginEditCP(XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow()), XWindow::DisplayFieldMask | XWindow::WindowFieldMask);
-        XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->setDisplay ( dpy );
-        XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->setWindow ( hwin );
-    endEditCP(XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow()), XWindow::DisplayFieldMask | XWindow::WindowFieldMask);
-    
-
-    Arguments->_EventProducer->attachWindow();
-    
-
-    Arguments->_EventProducer->getWindow()->init();
-    
-    XMapWindow(XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->getDisplay(),
-            XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->getWindow());
     XEvent event;
-    XIfEvent(XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->getDisplay(), &event, wait_for_map_notify, (char *)(XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->getWindow()));
-    Arguments->_EventProducer->produceWindowOpened();
-    
-    Arguments->_EventProducer->getWindow()->activate();
-    
-    Arguments->_EventProducer->setPosition(Arguments->_ScreenPosition);
-    
-    bool stopIt = false;
-    XWindowEventProducerPtr EventProducer(Arguments->_EventProducer);
-    
-    //Set things up to capture the delete window event
-    Atom wm_delete_window=XInternAtom(XWindow::Ptr::dcast(EventProducer->getWindow())->getDisplay(), "WM_DELETE_WINDOW", False);
-    XSetWMProtocols(XWindow::Ptr::dcast(EventProducer->getWindow())->getDisplay(), XWindow::Ptr::dcast(EventProducer->getWindow())->getWindow(), &wm_delete_window, 1);
-    Atom wm_protocols=XInternAtom(XWindow::Ptr::dcast(EventProducer->getWindow())->getDisplay(), "WM_PROTOCOLS", False); 
-  
-    while ( event.type != DestroyNotify ) 
+    while (event.type != DestroyNotify ) 
+    //while (_WIN32HWNDToProducerMap.size() != 0) 
     {
-        while ( XPending(XWindow::Ptr::dcast(EventProducer->getWindow())->getDisplay()) )
+        while ( XPending(XWindow::Ptr::dcast(getWindow())->getDisplay()) )
         {
-            XNextEvent(XWindow::Ptr::dcast(EventProducer->getWindow())->getDisplay(), &event);
-            EventProducer->handleEvent(event);
+            XNextEvent(XWindow::Ptr::dcast(getWindow())->getDisplay(), &event);
+            handleEvent(event);
         }  
         
-		if(EventProducer->_ShouldUpdate)
-		{
-
-		   //Updating
-		   Time Now(getSystemTime());
-		   Time ElapsedTime(Now - EventProducer->getLastUpdateTime());
-		   if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
-		   {
-			   EventProducer->produceUpdate(ElapsedTime);
-		   }
-		   beginEditCP(XWindowEventProducerPtr(EventProducer), LastUpdateTimeFieldMask);
-			   EventProducer->setLastUpdateTime(Now);
-		   endEditCP(XWindowEventProducerPtr(EventProducer), LastUpdateTimeFieldMask);
-
-            EventProducer->_ShouldUpdate = false;
-		}
-
-        if(EventProducer->_IsDrawPending)
-        {
-            EventProducer->internalDraw();
-            EventProducer->_IsDrawPending = false;
-        }
-        else
-        {
-            //Block untill next event or draw event
-            //yeild controll
-        }
+        update();
+        draw();
     }
     
-    EventProducer->produceWindowClosed();
-    
-    //Delete my arguments, to avoid memory leak
-    delete Arguments;
 }
 
 UInt32 XWindowEventProducer::determineKeyModifiers(const unsigned int state)
@@ -527,6 +393,84 @@ WindowPtr XWindowEventProducer::initWindow(void)
 {
 	WindowPtr MyWindow = Inherited::initWindow();
 	
+    DisplayP      dpy;
+    X11Window     hwin;
+
+    XVisualInfo   *vi;
+    Colormap      cmap;
+    XSetWindowAttributes swa;
+
+    int dummy;
+
+    dpy = XOpenDisplay(NULL);
+    if (dpy == NULL) 
+    {
+        std::cerr << "Error: Could not open display!" << std::endl;
+    }
+
+    if( ! glXQueryExtension( dpy, &dummy, &dummy ) )
+    {
+        std::cerr << "Error: X server has no OpenGL GLX extension" << std::endl;
+    }
+
+    //int VisualAttributes[] = {GLX_RGBA, GLX_DEPTH_SIZE, 32, GLX_DOUBLEBUFFER, None};
+    int VisualAttributes[] = {GLX_RGBA, 
+                              GLX_DEPTH_SIZE, 16,
+                              GLX_DOUBLEBUFFER,
+                              GLX_STENCIL_SIZE, 8,
+                              None};
+    
+    vi = glXChooseVisual( dpy, DefaultScreen(dpy), VisualAttributes );
+    if ( vi == NULL ) 
+    {
+        FFATAL(("Could not set Visual Attributes"));
+    }
+    if (vi->c_class != TrueColor)
+    {
+        FFATAL(("TrueColor visual required for this program"));
+    }
+
+    cmap = XCreateColormap( dpy, 
+                            RootWindow(dpy, vi->screen), 
+                            vi->visual, 
+                            AllocNone );
+    swa.colormap = cmap;
+    swa.border_pixel = 0;
+    swa.event_mask = ExposureMask | 
+                     ButtonPressMask | 
+                     ButtonReleaseMask |
+                     KeyPressMask |
+                     KeyReleaseMask |
+                     PointerMotionMask |
+                     StructureNotifyMask |
+                     EnterWindowMask |
+                     LeaveWindowMask |
+                     FocusChangeMask |
+                     SubstructureNotifyMask;
+
+    // Create Window
+
+    // Create a Window and connect it to the main display dpy
+    hwin = XCreateWindow( dpy, 
+                          RootWindow(dpy, vi->screen), 
+                          0, 
+                          0, 
+                          10, 
+                          10,
+                          0, 
+                          vi->depth,
+                          InputOutput, 
+                          vi->visual, 
+                          CWBorderPixel | CWColormap | CWEventMask, 
+                          &swa );
+                          
+    XFree(vi);
+
+    beginEditCP(XWindow::Ptr::dcast(getWindow()), XWindow::DisplayFieldMask | XWindow::WindowFieldMask);
+        XWindow::Ptr::dcast(getWindow())->setDisplay ( dpy );
+        XWindow::Ptr::dcast(getWindow())->setWindow ( hwin );
+    endEditCP(XWindow::Ptr::dcast(getWindow()), XWindow::DisplayFieldMask | XWindow::WindowFieldMask);
+    
     return MyWindow;
 }
 void XWindowEventProducer::setPosition(Pnt2f Pos)
@@ -659,7 +603,7 @@ void XWindowEventProducer::closeWindow(void)
 
 void XWindowEventProducer::draw(void)
 {
-    _IsDrawPending = true;
+    internalDraw();
 }
 
 
@@ -710,7 +654,16 @@ bool XWindowEventProducer::getShowCursor(void) const
 
 void XWindowEventProducer::update(void)
 {
-	_ShouldUpdate = true;
+    //Updating
+    Time Now(getSystemTime());
+    Time ElapsedTime(Now - getLastUpdateTime());
+    if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
+    {
+        produceUpdate(ElapsedTime);
+    }
+    beginEditCP(XWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+        setLastUpdateTime(Now);
+    endEditCP(XWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
 }
 
 WindowPtr XWindowEventProducer::createWindow(void)
@@ -722,23 +675,30 @@ void XWindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
                     const Vec2f& Size,
                     const std::string& WindowName)
 {
-    if(_WindowEventLoopThread == NULL)
-    {
-        std::string ThreadName = WindowName + " Event Loop";
-        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
-    }
-    else
-    {
-    }
-    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(  
-                    ScreenPosition,
-                    Size,
-                    WindowName,
-                    XWindow::Ptr::dcast(getWindow()),
-                    XWindowEventProducerPtr(this)  );
+
+    int argc(1);
+    char **argv = new char*[1];
+    (*argv)= "Bla";
+     XSetStandardProperties(XWindow::Ptr::dcast(getWindow())->getDisplay(), XWindow::Ptr::dcast(getWindow())->getWindow(), WindowName.c_str(), WindowName.c_str(), None, argv, argc, NULL);
+    attachWindow();
     
-    //ChangeList::setReadWriteDefault();
-    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
+
+    getWindow()->init();
+    
+    XMapWindow(XWindow::Ptr::dcast(getWindow())->getDisplay(),
+            XWindow::Ptr::dcast(getWindow())->getWindow());
+    XEvent event;
+    XIfEvent(XWindow::Ptr::dcast(getWindow())->getDisplay(), &event, wait_for_map_notify, (char *)(XWindow::Ptr::dcast(getWindow())->getWindow()));
+    produceWindowOpened();
+    
+    getWindow()->activate();
+    
+    setPosition(Arguments->_ScreenPosition);
+    
+    //Set things up to capture the delete window event
+    Atom wm_delete_window=XInternAtom(XWindow::Ptr::dcast(getWindow())->getDisplay(), "WM_DELETE_WINDOW", False);
+    XSetWMProtocols(XWindow::Ptr::dcast(getWindow())->getDisplay(), XWindow::Ptr::dcast(getWindow())->getWindow(), &wm_delete_window, 1);
+    Atom wm_protocols=XInternAtom(XWindow::Ptr::dcast(getWindow())->getDisplay(), "WM_PROTOCOLS", False); 
 }
 
 bool XWindowEventProducer::attachWindow(void)
@@ -888,6 +848,7 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
             
          case DestroyNotify:
             produceWindowClosing();
+            produceWindowClosed();
             break;
          case EnterNotify:
             produceWindowEntered();
@@ -1012,18 +973,14 @@ void XWindowEventProducer::setCursor(void)
 XWindowEventProducer::XWindowEventProducer(void) :
     Inherited(),
         _LastKeyboardMouseButtonMask(0),
-        _LastMousePosition(0,0),
-        _IsDrawPending(false),
-		_ShouldUpdate(false)
+        _LastMousePosition(0,0)
 {
 }
 
 XWindowEventProducer::XWindowEventProducer(const XWindowEventProducer &source) :
     Inherited(source),
         _LastKeyboardMouseButtonMask(0),
-        _LastMousePosition(0,0),
-        _IsDrawPending(false),
-		_ShouldUpdate(false)
+        _LastMousePosition(0,0)
 {
 }
 
@@ -1032,20 +989,6 @@ XWindowEventProducer::~XWindowEventProducer(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-XWindowEventProducer::WindowEventLoopThreadArguments::WindowEventLoopThreadArguments(
-                       const Pnt2f& ScreenPosition,
-                       const Vec2f& Size,
-                       const std::string& WindowName,
-                       XWindowPtr TheWindow,
-                       XWindowEventProducerPtr TheEventProducer) :
-        _ScreenPosition(ScreenPosition),
-        _Size(Size),
-        _WindowName(WindowName),
-        _Window(TheWindow),
-        _EventProducer(TheEventProducer)
-{
-}
 
 void XWindowEventProducer::changed(BitVector whichField, UInt32 origin)
 {
