@@ -693,7 +693,8 @@ void XWindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
     
     getWindow()->activate();
     
-    setPosition(Arguments->_ScreenPosition);
+    setPosition(ScreenPosition);
+	 setSize(Size);
     
     //Set things up to capture the delete window event
     Atom wm_delete_window=XInternAtom(XWindow::Ptr::dcast(getWindow())->getDisplay(), "WM_DELETE_WINDOW", False);
@@ -892,7 +893,7 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
 Vec2f XWindowEventProducer::getDesktopSize(void) const
 {
     //TODO: Implement
-    return Vec2f(0.0f,0.0f);
+    return Vec2f(XDisplayWidth(XWindow::Ptr::dcast(getWindow())->getDisplay(), 0), XDisplayHeight(XWindow::Ptr::dcast(getWindow())->getDisplay(), 0));
 }
 
 std::vector<Path> XWindowEventProducer::openFileDialog(const std::string& WindowTitle,
