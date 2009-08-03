@@ -1,0 +1,15 @@
+Activities
+	Activity
+		SoundActivity
+		SoundGroupActivity
+
+		AnimationActivity
+
+		SceneActivity
+			reset
+
+		ProjectActivity
+			enter/exit Debug
+			enterScene
+			exit
+			
