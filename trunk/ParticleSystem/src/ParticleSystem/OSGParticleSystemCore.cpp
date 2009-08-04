@@ -339,11 +339,18 @@ void ParticleSystemCore::changed(BitVector whichField, UInt32 origin)
 
 	if((whichField & SystemFieldMask) || (whichField & SortFieldMask))
 	{
-		getSort().resize(getSystem()->getNumParticles());
-		//initialize _mfSort
-		for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
+		if(getSystem() != NullFC)
 		{
-			getSort()[i] = i;
+			getSort().resize(getSystem()->getNumParticles());
+			//initialize _mfSort
+			for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
+			{
+				getSort()[i] = i;
+			}
+		}
+		else
+		{
+			getSort().clear();
 		}
 	}
 }
