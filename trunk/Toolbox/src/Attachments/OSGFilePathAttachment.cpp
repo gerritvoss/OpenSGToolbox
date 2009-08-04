@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGImageFileHandler.h>
 #include <OpenSG/OSGSceneFileHandler.h>
+#include "FileIO/OSGFCFileHandler.h"
 
 #include "OSGFilePathAttachment.h"
 #include <boost/filesystem/operations.hpp>
@@ -139,45 +140,50 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container,
     endEditCP(PathAttachment, FilePathAttachment::PathFieldMask);
 }
 
-bool FilePathAttachment::loadFromFilePath(AttachmentContainerPtr  container)
+FieldContainerPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const FieldContainerType &FCType)
 {
-	const Path* LoadFilePath = FilePathAttachment::getFilePath(container);
+	//const Path* LoadFilePath = FilePathAttachment::getFilePath(container);
+    FieldContainerPtr Result(NullFC);
 	try
 	{
-		if(LoadFilePath != NULL && boost::filesystem::exists(*LoadFilePath))
+		if(boost::filesystem::exists(LoadFilePath))
 		{
-			if(container->getType().isDerivedFrom(Image::getClassType()))
+            //Image
+			if(FCType.isDerivedFrom(Image::getClassType()))
 			{
-			  ImagePtr TheImage = Image::Ptr::dcast(container);
-				ImageFileHandler::the().read(TheImage,LoadFilePath->string().c_str());
-                                container = TheImage;
+			    ImagePtr TheImage = ImageFileHandler::the().read(LoadFilePath.string().c_str());
+                Result = TheImage;
 			}
-			else if(container->getType().isDerivedFrom(Node::getClassType()))
+            //Model Node
+			else if(FCType.isDerivedFrom(Node::getClassType()))
 			{
-				NodePtr TheNode = SceneFileHandler::the().read(LoadFilePath->string().c_str());
+				NodePtr TheNode = SceneFileHandler::the().read(LoadFilePath.string().c_str());
+                Result = TheNode;
+			}
+            else  //Other
+            {
+	            FCFileType::FCPtrStore NewContainers;
+	            NewContainers = FCFileHandler::the()->read(LoadFilePath);
+                
+                FCFileType::FCPtrStore::iterator Itor;
+                for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
+                {
 
-				beginEditCP(container);
-					Node::Ptr::dcast(container)->setCore(TheNode->getCore());
-					while(TheNode->getNChildren() > 0)
-					{
-						NodePtr ChildNode(TheNode->getChild(TheNode->getNChildren()-1));
-						Node::Ptr::dcast(container)->addChild(ChildNode);
-						//TheNode->subChild(TheNode->getNChildren()-1);
-					}
-				endEditCP(container);
-				
-			}
-			return true;
-		}
-		else
-		{
-			return false;
+                    if( (*Itor)->getType() == FCType)
+                    {
+                        Result = (*Itor);
+                        break;
+                    }
+                }
+            }
 		}
 	}
 	catch(boost::filesystem::basic_filesystem_error<Path> &)
 	{
-		return false;
+        return NullFC;
 	}
+
+    return Result;
 }
 
 /***************************************************************************\

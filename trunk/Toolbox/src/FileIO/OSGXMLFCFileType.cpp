@@ -113,6 +113,7 @@ std::string XMLFCFileType::getName(void) const
 
 	IDLookupMap TheIDLookupMap;
 	FCIdMapper TheFCIdMapper(&TheIDLookupMap);
+    Path RootPath = FCFileHandler::the()->getRootFilePath();
 
 	try
 	{
@@ -193,10 +194,11 @@ std::string XMLFCFileType::getName(void) const
 				NewFieldContainer = FCInfoIter->second._Ptr;
 				if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()))
 				{
-					//Search for File
+					//Search for File attachment
 					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
 					if(SearchItor != (*NodeListItor)->get_attrmap().end())
 					{
+                        Result.insert(NewFieldContainer);
                         continue;
 					}
 				}
@@ -280,6 +282,10 @@ std::string XMLFCFileType::getName(void) const
 								            static_cast<SFFieldContainerPtr *>(TheField)->setValue(NullFC);
                                         }
                                     }
+                                    else
+                                    {
+                                        static_cast<SFFieldContainerPtr *>(TheField)->setValue(NullFC);
+                                    }
 								}
 								else if(TheField->getCardinality() == FieldType::MULTI_FIELD &&
 									!FieldValue.empty())
@@ -348,7 +354,7 @@ std::string XMLFCFileType::getName(void) const
 										Path TheFilePath(FieldValue.c_str());
 										if(!TheFilePath.has_root_path())
 										{
-											TheFilePath = FCFileHandler::the()->getRootFilePath() / TheFilePath;
+											TheFilePath = RootPath / TheFilePath;
 										}
 										static_cast<SFPath*>(TheField)->setValue(TheFilePath);
 									}
@@ -370,7 +376,7 @@ std::string XMLFCFileType::getName(void) const
 											Path TheFilePath(SplitVec[SplitIndex].c_str());
 											if(!TheFilePath.has_root_path())
 											{
-												TheFilePath = FCFileHandler::the()->getRootFilePath() / TheFilePath;
+												TheFilePath = RootPath / TheFilePath;
 											}
 											static_cast<MFPath*>(TheField)->push_back(TheFilePath);
 										}
@@ -411,76 +417,93 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(xmlpp::xmlnodeli
 	FCInfoStruct NewFCInfo;
 	UInt32 OldFCId;
 	IDLookupMap OldToNewFCLookupMap;
+    xmlpp::xmlattributes::const_iterator SearchItor;
+    const FieldContainerType *FCType;
+    Path RootPath = FCFileHandler::the()->getRootFilePath();
 	//Create all of the Fields
 	try
 	{
 		for(xmlpp::xmlnodelist::iterator NodeListItor(Begin) ; NodeListItor!=End ; ++NodeListItor)
 		{
-			NewFCInfo._Ptr = FieldContainerFactory::the()->createFieldContainer((*NodeListItor)->get_name().c_str());
-			if(NewFCInfo._Ptr == NullFC)
-			{
-				SFATAL << FileNameOrExtension << ": Couldn't create unknown FieldContainer with type '" << (*NodeListItor)->get_name() << "'!" << std::endl;
-			}
-			else
-			{
-				xmlpp::xmlattributes::const_iterator SearchItor((*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FieldContainerIDXMLToken)));
-				if(SearchItor == (*NodeListItor)->get_attrmap().end())
-				{
-					SFATAL << FileNameOrExtension << ": Couldn't find "+FieldContainerIDXMLToken+" attribute for '" << (*NodeListItor)->get_name() << "'!" << std::endl;
-				}
-				OldFCId = TypeTraits<UInt32>::getFromString(SearchItor->second.c_str());
-				NewFCInfo._NewId = NewFCInfo._Ptr.getFieldContainerId();
-				if(OldToNewFCLookupMap.insert(std::make_pair(OldFCId, NewFCInfo)).second == false)
-				{
-					SFATAL << FileNameOrExtension << ": ERROR in XMLFCFileType::createFieldContainers()" <<
-						std::endl;
-				}
-                
-
-                if(NewFCInfo._Ptr->getType().isDerivedFrom(AttachmentContainer::getClassType()))
-                {
-					//Search for name
-					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(NameAttachmentXMLToken));
-					if(SearchItor != (*NodeListItor)->get_attrmap().end())
-					{
-						setName(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),SearchItor->second.c_str());
-					}
-
-                    //Search for File
-					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
-					if(SearchItor != (*NodeListItor)->get_attrmap().end())
-					{
-                        Path TheFilePath(SearchItor->second.c_str());
-                        if(!TheFilePath.has_root_path())
-                        {
-                            TheFilePath = FCFileHandler::the()->getRootFilePath() / TheFilePath;
-                        }
+            NewFCInfo._Ptr = NullFC;
+            FCType = FieldContainerFactory::the()->findType((*NodeListItor)->get_name().c_str());
+            //If it is a Attachment Container Type
+            if(FCType->isDerivedFrom(AttachmentContainer::getClassType()))
+            {
+                //Check if there is a File attachment
+			    SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
+                //If there is a file attachment then attempt to load this contianer from that file
+			    if(SearchItor != (*NodeListItor)->get_attrmap().end())
+			    {
+                    Path TheFilePath(SearchItor->second.c_str());
+                    if(!TheFilePath.has_root_path())
+                    {
+                        TheFilePath = RootPath / TheFilePath;
+                    }
 
 
-                        if(boost::filesystem::exists(TheFilePath))
-                        {
-						    FilePathAttachment::setFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),TheFilePath);
+                    if(boost::filesystem::exists(TheFilePath))
+                    {
 
-						    if(!FilePathAttachment::loadFromFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr)))
-						    {
-							    SWARNING <<
-								    "ERROR in XMLFCFileType::read():" <<
-								    "could not load type: " << NewFCInfo._Ptr->getType().getCName() <<
-								    " from file " <<TheFilePath.string() <<
-								    std::endl;
-						    }
-                        }
+                        NewFCInfo._Ptr = FilePathAttachment::loadFromFilePath(TheFilePath, *FCType);
+				        if(NewFCInfo._Ptr == NullFC)
+				        {
+					        SWARNING <<
+						        "ERROR in XMLFCFileType::read():" <<
+						        "could not load type: " << NewFCInfo._Ptr->getType().getCName() <<
+						        " from file " <<TheFilePath.string() <<
+						        std::endl;
+				        }
                         else
                         {
-						    SWARNING <<
-							    "ERROR in XMLFCFileType::read():" <<
-							    "could not load type: " << NewFCInfo._Ptr->getType().getCName() <<
-							    " from file " <<TheFilePath.string() << " because that file does not exist." <<
-							    std::endl;
+				            FilePathAttachment::setFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),TheFilePath);
                         }
-					}
-                }
+                    }
+                    else
+                    {
+				        SWARNING <<
+					        "ERROR in XMLFCFileType::read():" <<
+					        "could not load type: " << FCType->getCName() <<
+					        " from file " <<TheFilePath.string() << " because that file does not exist." <<
+					        std::endl;
+                    }
+			    }
+            }
+            if(NewFCInfo._Ptr == NullFC)
+            {
+			    NewFCInfo._Ptr = FieldContainerFactory::the()->createFieldContainer((*NodeListItor)->get_name().c_str());
+			    if(NewFCInfo._Ptr == NullFC)
+			    {
+				    SFATAL << FileNameOrExtension << ": Couldn't create unknown FieldContainer with type '" << (*NodeListItor)->get_name() << "'!" << std::endl;
+			    }
+            }
+
+            //If there is a name attachment, than attach a name to this container
+            if(NewFCInfo._Ptr->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+            {
+				//Search for name attachment xml token
+				SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(NameAttachmentXMLToken));
+				if(SearchItor != (*NodeListItor)->get_attrmap().end())
+				{
+					setName(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),SearchItor->second.c_str());
+				}
+            }
+
+
+            //Attach the FieldID mapping to this container
+			SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FieldContainerIDXMLToken));
+			if(SearchItor == (*NodeListItor)->get_attrmap().end())
+			{
+				SFATAL << FileNameOrExtension << ": Couldn't find "+FieldContainerIDXMLToken+" attribute for '" << (*NodeListItor)->get_name() << "'!" << std::endl;
 			}
+			OldFCId = TypeTraits<UInt32>::getFromString(SearchItor->second.c_str());
+			NewFCInfo._NewId = NewFCInfo._Ptr.getFieldContainerId();
+			if(OldToNewFCLookupMap.insert(std::make_pair(OldFCId, NewFCInfo)).second == false)
+			{
+				SFATAL << FileNameOrExtension << ": ERROR in XMLFCFileType::createFieldContainers()" <<
+					std::endl;
+			}
+
 		}
 	}
 	catch(xmlpp::xmlerror& e)
@@ -536,6 +559,7 @@ void XMLFCFileType::printXMLError(const xmlpp::xmlerror& Error, xmlpp::xmlcontex
 bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStream,
                     const std::string& FileNameOrExtension, const FCTypeVector& IgnoreTypes) const
 {
+    Path RootPath = FCFileHandler::the()->getRootFilePath();
 
 	FCPtrStore AllContainers(getAllDependantFCs(Containers, FCPtrStore(), IgnoreTypes));
 	OutputStream << "<?xml version=\"1.0\"?>" << std::endl << std::endl;
@@ -631,7 +655,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 			else if(TheField->getType() == SFPath::getClassType())
 			{
 				FieldValue.clear();
-				Path RootPath = boost::filesystem::system_complete(FCFileHandler::the()->getRootFilePath());
+				Path RootPath = boost::filesystem::system_complete(RootPath);
 				Path FilePath = boost::filesystem::system_complete(static_cast<SFPath*>(TheField)->getValue());
 				Path RelativePath = makeRelative(RootPath, FilePath);
 				FieldValue = RelativePath.string();//TheField->getValueByStr(FieldValue);
@@ -640,7 +664,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 			else if(TheField->getType() == MFPath::getClassType())
 			{
 				OutputStream << "\t\t" << Desc->getCName() << "=\"" ;
-				Path RootPath = boost::filesystem::system_complete(FCFileHandler::the()->getRootFilePath());
+				Path RootPath = boost::filesystem::system_complete(RootPath);
 				Path FilePath;
 				Path RelativePath;
 				for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
