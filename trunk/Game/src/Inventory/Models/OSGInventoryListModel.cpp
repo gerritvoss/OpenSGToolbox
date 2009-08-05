@@ -102,7 +102,7 @@ void InventoryListModel::setupInventoryItems()
 	{
 		_InventoryItems.push_back(i);
 	}
-	if(getCurrentInventory() != NullFC)
+	if(getCurrentInventory() != NullFC && getComparitor() != NullFC)
 	{
 		std::sort(_InventoryItems.begin(),_InventoryItems.end(),getComparitor()->getComparitorFunc());
 	}

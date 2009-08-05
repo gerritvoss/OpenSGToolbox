@@ -252,7 +252,9 @@ int main(int argc, char **argv)
 
     // Add data to it
 	ExampleListModel = InventoryListModel::create();
-	//ExampleListModel->addInventory(ExampleInventory);
+    beginEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask);
+	    ExampleListModel->setCurrentInventory(ExampleInventory);
+    endEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask);
     
 
     /******************************************************
