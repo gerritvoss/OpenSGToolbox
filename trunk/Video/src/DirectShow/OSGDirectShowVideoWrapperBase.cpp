@@ -56,6 +56,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef WIN32
+
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDirectShowVideoWrapperBase.h"
@@ -236,4 +238,6 @@ OSG_DLLEXPORT_MFIELD_DEF1(DirectShowVideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPING
 
 
 OSG_END_NAMESPACE
+
+#endif
 

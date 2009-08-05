@@ -20,6 +20,7 @@ Activities
 		ConcurrentActivity
 		SequentialActivity
 		RepeatActivity
+        ActivityGroup
 		
 		FieldActivity
 			setFieldValue

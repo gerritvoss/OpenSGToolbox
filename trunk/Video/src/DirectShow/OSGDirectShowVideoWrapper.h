@@ -47,6 +47,8 @@
 
 #include "OSGDirectShowVideoWrapperBase.h"
 
+#ifdef WIN32
+
 #include <windows.h>
 #include <dshow.h>
 
@@ -173,5 +175,7 @@ OSG_END_NAMESPACE
 
 #include "OSGDirectShowVideoWrapperBase.inl"
 #include "OSGDirectShowVideoWrapper.inl"
+
+#endif
 
 #endif /* _OSGDIRECTSHOWVIDEOWRAPPER_H_ */

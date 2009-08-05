@@ -43,6 +43,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef WIN32
+
 #define OSG_COMPILEVIDEOLIB
 
 #include <OpenSG/OSGConfig.h>
@@ -666,4 +668,6 @@ void DirectShowVideoWrapper::dump(      UInt32    ,
 
 
 OSG_END_NAMESPACE
+
+#endif
 

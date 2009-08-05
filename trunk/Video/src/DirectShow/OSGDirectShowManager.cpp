@@ -29,6 +29,8 @@
 #include "OSGDirectShowManager.h"
 #include "OSGDirectShowVideoWrapper.h"
 
+#ifdef WIN32
+
 #include <Dshow.h>
 
 OSG_BEGIN_NAMESPACE
@@ -79,3 +81,6 @@ DirectShowManager::~DirectShowManager(void)
 }
 
 OSG_END_NAMESPACE
+
+#endif
+
