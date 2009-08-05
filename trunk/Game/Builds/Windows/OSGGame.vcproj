@@ -1112,6 +1112,66 @@
 							>
 						</File>
 					</Filter>
+					<Filter
+						Name="InventorySubsets"
+						>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGDefaultInventorySubset.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGDefaultInventorySubset.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGDefaultInventorySubset.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGDefaultInventorySubsetBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGDefaultInventorySubsetBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGDefaultInventorySubsetBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGDefaultInventorySubsetFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGInventorySubset.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGInventorySubset.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGInventorySubset.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGInventorySubsetBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGInventorySubsetBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGInventorySubsetBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Inventory\Models\InventorySubsets\OSGInventorySubsetFields.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="ComponentGenerators"

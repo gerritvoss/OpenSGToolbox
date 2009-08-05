@@ -1,0 +1,761 @@
+// OpenSG Tutorial Example: Creating a List
+//
+// This tutorial explains how to create a List 
+// via the  OSG User Interface library.
+// 
+// Includes: placing multiple buttons using Flow Layout
+
+
+// General OpenSG configuration, needed everywhere
+#include <OpenSG/OSGConfig.h>
+
+// Methods to create simple geometry: boxes, spheres, tori etc.
+#include <OpenSG/OSGSimpleGeometry.h>
+
+// A little helper to simplify scene management and interaction
+#include <OpenSG/OSGSimpleSceneManager.h>
+#include <OpenSG/OSGNode.h>
+#include <OpenSG/OSGGroup.h>
+#include <OpenSG/OSGViewport.h>
+#include <OpenSG/Input/OSGWindowAdapter.h>
+
+// Inventory header files
+#include <OpenSG/Game/OSGInventoryListModel.h>
+#include <OpenSG/Game/OSGInventory.h>
+#include <OpenSG/Game/OSGGenericInventoryItem.h>
+
+// The general scene file loading handler
+#include <OpenSG/OSGSceneFileHandler.h>
+
+// Input
+#include <OpenSG/Input/OSGWindowUtils.h>
+
+// UserInterface Headers
+#include <OpenSG/UserInterface/OSGUIForeground.h>
+#include <OpenSG/UserInterface/OSGInternalWindow.h>
+#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
+#include <OpenSG/UserInterface/OSGGraphics2D.h>
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGTextArea.h>
+
+// Activate the OpenSG namespace
+OSG_USING_NAMESPACE
+
+// The SimpleSceneManager to manage simple applications
+SimpleSceneManager *mgr;
+
+bool ExitApp = false;
+
+// Forward declaration so we can have the interesting stuff upfront
+void display(void);
+void reshape(Vec2f Size);
+
+// 18List Headers
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGColorLayer.h>
+#include <OpenSG/UserInterface/OSGBevelBorder.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGToggleButton.h>
+#include <OpenSG/UserInterface/OSGScrollPanel.h>
+
+// List header files
+#include <OpenSG/UserInterface/OSGList.h>
+#include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
+#include <OpenSG/UserInterface/OSGListSelectionListener.h>
+#include <OpenSG/Game/OSGDefaultInventoryListComparitor.h>
+
+#include <algorithm>
+
+
+
+class TutorialWindowListener : public WindowAdapter
+{
+public:
+    virtual void windowClosing(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+};
+
+// Create a class to allow for the use of the Ctrl+q
+class TutorialKeyListener : public KeyListener
+{
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+   {
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+           ExitApp = true;
+       }
+   }
+
+   virtual void keyReleased(const KeyEvent& e)
+   {
+   }
+
+   virtual void keyTyped(const KeyEvent& e)
+   {
+   }
+};
+
+
+// Declare the SelectionModel up front to allow for
+// the ActionListeners
+ListSelectionModelPtr ExampleListSelectionModel(new DefaultListSelectionModel());
+
+TextAreaPtr DetailsWindow;
+
+// Create ListModel   
+ListPtr ExampleList;
+InventoryListModelPtr ExampleListModel;
+InventoryListModelPtr ExampleAdminsListModel;
+InventoryListModelPtr ExampleDevelopersListModel;
+InventoryListModelPtr ExampleGraphicsListModel;
+InventoryListModelPtr ExampleUnderGradListModel;
+InventoryListModelPtr ExampleGradListModel;
+InventoryListModelPtr ExampleProListModel;
+InventoryPtr ExampleInventory;
+
+class InventoryListListener: public ListSelectionListener
+{
+  public:
+    virtual void selectionChanged(const ListSelectionEvent& e)
+    {
+		if(ExampleList->getSelectionModel()->getMinSelectionIndex() != -1)
+		{	
+			beginEditCP(DetailsWindow, TextArea::TextFieldMask);
+			DetailsWindow->setText(GenericInventoryItem::Ptr::dcast(InventoryListModelPtr::dcast(ExampleList->getModel())->getCurrentInventory()->getInventoryItems(InventoryListModelPtr::dcast(ExampleList->getModel())->_InventoryItems.at(ExampleList->getSelectionModel()->getMinSelectionIndex())))->getDetails());
+			endEditCP(DetailsWindow, TextArea::TextFieldMask);
+		}
+	}
+};
+
+
+class ClassSelectionListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+		if(ButtonPtr::dcast(e.getSource())->getText() == "Main")
+		{
+			std::cout<<"Main"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
+		}
+		if(ButtonPtr::dcast(e.getSource())->getText() == "Admins")
+		{
+			std::cout<<"Admins"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleAdminsListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
+		}
+		if(ButtonPtr::dcast(e.getSource())->getText() == "Developers")
+		{
+			std::cout<<"Developers"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleDevelopersListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
+		}
+		if(ButtonPtr::dcast(e.getSource())->getText() == "Graphics")
+		{
+			std::cout<<"Graphics"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleGraphicsListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
+		}
+		if(ButtonPtr::dcast(e.getSource())->getText() == "Undergrad")
+		{
+			std::cout<<"Undergrad"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleUnderGradListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
+		}
+		if(ButtonPtr::dcast(e.getSource())->getText() == "Graduate")
+		{
+			std::cout<<"Graduate"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleGradListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
+		}
+		if(ButtonPtr::dcast(e.getSource())->getText() == "Professor")
+		{
+			std::cout<<"Professor"<<std::endl;
+			beginEditCP(ExampleList, List::ModelFieldMask);
+				ExampleList->setModel(ExampleProListModel);
+			endEditCP(ExampleList, List::ModelFieldMask);
+		}
+    }
+};
+
+
+
+int main(int argc, char **argv)
+{
+    // OSG init
+    osgInit(argc,argv);
+
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+
+	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
+		TutorialWindowEventProducer->setUseCallbackForDraw(true);
+		TutorialWindowEventProducer->setUseCallbackForReshape(true);
+	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
+    
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
+
+    //Add Window Listener
+    TutorialWindowListener TheTutorialWindowListener;
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+
+    // Make Torus Node (creates Torus in background of scene)
+    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+
+    // Make Main Scene Node and add the Torus
+    NodePtr scene = osg::Node::create();
+    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        scene->setCore(osg::Group::create());
+        scene->addChild(TorusGeometryNode);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
+
+	//Create InventoryItems
+	ExampleInventory = Inventory::create();
+	GenericInventoryItemPtr ExampleItem1 = GenericInventoryItem::create();
+	GenericInventoryItemPtr ExampleItem2 = GenericInventoryItem::create(); 
+	GenericInventoryItemPtr ExampleItem3 = GenericInventoryItem::create(); 
+	GenericInventoryItemPtr ExampleItem4 = GenericInventoryItem::create();
+	GenericInventoryItemPtr ExampleItem5 = GenericInventoryItem::create();
+	GenericInventoryItemPtr ExampleItem6 = GenericInventoryItem::create();
+	GenericInventoryItemPtr ExampleItem7 = GenericInventoryItem::create();
+
+	beginEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+		ExampleItem1->setName(std::string("David K"));
+		ExampleItem1->getClasses().push_back("Developers");
+		ExampleItem1->setDetails(std::string("Major: Human Computer Interaction \nDegree: PhD \nDepartment: Computer Science \nCollege: LAS"));
+	endEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+
+	beginEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+		ExampleItem2->setName(std::string("Eve W"));
+		ExampleItem2->getClasses().push_back("Admins");
+		ExampleItem2->setDetails(std::string("Department: Genetics Development and Cell Biology\n\nCollege: Agriculture"));
+	endEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+
+	beginEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+		ExampleItem3->setName(std::string("Will S"));
+		ExampleItem3->getClasses().push_back("Graphics");
+		ExampleItem3->setDetails(std::string("Major: Art And Design\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
+	endEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+
+	beginEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+		ExampleItem4->setName(std::string("Eric L"));
+		ExampleItem4->getClasses().push_back("Developers");
+		ExampleItem4->setDetails(std::string("Major: Software Engineering\nDegree: BS\nDepartment: Software Engineering\nCollege: Engineering"));
+	endEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+
+	beginEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+		ExampleItem5->setName(std::string("Jeffery F"));
+		ExampleItem5->getClasses().push_back("Graphics");
+		ExampleItem5->setDetails(std::string("Major: Integrated Studio Arts\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
+	endEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+
+	beginEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+		ExampleItem6->setName(std::string("Tao L"));
+		ExampleItem6->getClasses().push_back("Developers");
+		ExampleItem6->setDetails(std::string("Major: Computer Engineering\nDegree: PhD\nDepartment: Computer Engineering\nCollege: Engineering"));
+	endEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+
+	beginEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+		ExampleItem7->setName(std::string("Daniel G"));
+		ExampleItem7->getClasses().push_back("Developers");
+		ExampleItem7->setDetails(std::string("Major: Computer Engineering\nDegree: BS\nDepartment: Computer Engineering\nCollege: Engineering"));
+	endEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
+
+	ExampleInventory->addItem(ExampleItem1);
+	ExampleInventory->addItem(ExampleItem2);
+	ExampleInventory->addItem(ExampleItem3);
+	ExampleInventory->addItem(ExampleItem4);
+	ExampleInventory->addItem(ExampleItem5);
+	ExampleInventory->addItem(ExampleItem6);
+	ExampleInventory->addItem(ExampleItem7);
+
+
+	
+	bool Ascend = true;
+
+
+    /******************************************************
+
+            Create a List.  A List has several 
+			parts to it:
+			-ListModel: Contains the data which is to be
+			    displayed in the List.  Data is added
+				as shown below
+			-ListCellRenderer: Creates the Components to
+				be used within the List (the default
+				setting is to create Labels using 
+				the desired text).
+			-ListSelectionModel: Determines how
+				the List may be selected.
+
+			To add values to the list:
+            
+            First, create SFStrings and use the 
+            .setValue("Value") function to set their
+            values.  Then, use the .pushBack(&SFStringName)
+            to add them to the List.
+
+            Next, create the CellRenderer and ListSelectionModel
+            defaults.
+
+            Finally, actually create the List.  Set
+            its Model, CellRenderer, and SelectionModel
+            as shown below.  Finally, choose the
+            type of display for the List (choices outlined
+            below).
+
+    ******************************************************/
+
+	DefaultInventoryListComparitorPtr ExampleComparitor = DefaultInventoryListComparitor::create();
+	DefaultInventoryListComparitorPtr ExampleAdminsComparitor = DefaultInventoryListComparitor::create();
+	DefaultInventoryListComparitorPtr ExampleDevelopersComparitor = DefaultInventoryListComparitor::create();
+	DefaultInventoryListComparitorPtr ExampleGraphicsComparitor = DefaultInventoryListComparitor::create();
+
+	DefaultInventoryListComparitorPtr ExampleUnderGradComparitor = DefaultInventoryListComparitor::create();
+	DefaultInventoryListComparitorPtr ExampleGradComparitor = DefaultInventoryListComparitor::create();
+	DefaultInventoryListComparitorPtr ExampleProComparitor = DefaultInventoryListComparitor::create();
+	
+    // Add data to it
+	ExampleListModel = InventoryListModel::create();
+	
+	//False inventory info!!! 
+	InventoryPtr ExampleAdminsInventory = Inventory::create();
+	InventoryPtr ExampleDevelopersInventory = Inventory::create();
+	InventoryPtr ExampleGraphicsInventory = Inventory::create();
+	ExampleAdminsListModel = InventoryListModel::create();
+	ExampleDevelopersListModel = InventoryListModel::create();
+	ExampleGraphicsListModel = InventoryListModel::create();
+
+	InventoryPtr ExampleUnderGradInventory = Inventory::create();
+	InventoryPtr ExampleGradInventory = Inventory::create();
+	InventoryPtr ExampleProInventory = Inventory::create();
+	ExampleUnderGradListModel = InventoryListModel::create();
+	ExampleGradListModel = InventoryListModel::create();
+	ExampleProListModel = InventoryListModel::create();
+
+	ExampleListModel->Ascending = Ascend;
+	ExampleAdminsListModel->Ascending = Ascend;
+	ExampleDevelopersListModel->Ascending = Ascend;
+	ExampleGraphicsListModel->Ascending = Ascend;
+	ExampleUnderGradListModel->Ascending = Ascend;
+	ExampleGradListModel->Ascending = Ascend;
+	ExampleProListModel->Ascending = Ascend;
+		
+	beginEditCP(ExampleUnderGradComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleUnderGradComparitor->setModel(ExampleUnderGradListModel);
+	endEditCP(ExampleUnderGradComparitor , DefaultInventoryListComparitor::ModelFieldMask);	
+
+	beginEditCP(ExampleGradComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleGradComparitor->setModel(ExampleGradListModel);
+	endEditCP(ExampleGradComparitor , DefaultInventoryListComparitor::ModelFieldMask);	
+
+	beginEditCP(ExampleProComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleProComparitor->setModel(ExampleProListModel);
+	endEditCP(ExampleProComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+
+	beginEditCP(ExampleComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleComparitor->setModel(ExampleListModel);
+	endEditCP(ExampleComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+
+	beginEditCP(ExampleAdminsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleAdminsComparitor->setModel(ExampleAdminsListModel);
+	endEditCP(ExampleAdminsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+
+	beginEditCP(ExampleDevelopersComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleDevelopersComparitor->setModel(ExampleDevelopersListModel);
+	endEditCP(ExampleDevelopersComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+
+	beginEditCP(ExampleGraphicsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+		ExampleGraphicsComparitor->setModel(ExampleGraphicsListModel);
+	endEditCP(ExampleGraphicsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
+
+	ExampleUnderGradInventory->addItem(ExampleItem3);
+	ExampleUnderGradInventory->addItem(ExampleItem4);
+	ExampleUnderGradInventory->addItem(ExampleItem5);
+	ExampleUnderGradInventory->addItem(ExampleItem7);
+
+	beginEditCP(ExampleUnderGradListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleUnderGradListModel->setComparitor(ExampleUnderGradComparitor);
+		ExampleUnderGradListModel->setCurrentInventory(ExampleUnderGradInventory);
+	endEditCP(ExampleUnderGradListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+
+	ExampleGradInventory->addItem(ExampleItem1);
+	ExampleGradInventory->addItem(ExampleItem6);
+
+	beginEditCP(ExampleGradListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleGradListModel->setComparitor(ExampleGradComparitor);
+		ExampleGradListModel->setCurrentInventory(ExampleGradInventory);
+	endEditCP(ExampleGradListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+
+	ExampleProInventory->addItem(ExampleItem2);
+
+	beginEditCP(ExampleProListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleProListModel->setComparitor(ExampleProComparitor);
+		ExampleProListModel->setCurrentInventory(ExampleProInventory);
+	endEditCP(ExampleProListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+
+
+	beginEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleListModel->setComparitor(ExampleComparitor);
+		ExampleListModel->setCurrentInventory(ExampleInventory);
+	endEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+
+	ExampleAdminsInventory->addItem(ExampleItem2);
+
+	beginEditCP(ExampleAdminsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleAdminsListModel->setComparitor(ExampleAdminsComparitor);
+		ExampleAdminsListModel->setCurrentInventory(ExampleAdminsInventory);
+	endEditCP(ExampleAdminsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+	
+	ExampleDevelopersInventory->addItem(ExampleItem1);
+	ExampleDevelopersInventory->addItem(ExampleItem4);
+	ExampleDevelopersInventory->addItem(ExampleItem6);
+	ExampleDevelopersInventory->addItem(ExampleItem7);
+
+	beginEditCP(ExampleDevelopersListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleDevelopersListModel->setComparitor(ExampleDevelopersComparitor);
+		ExampleDevelopersListModel->setCurrentInventory(ExampleDevelopersInventory);
+	endEditCP(ExampleDevelopersListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+	
+	ExampleGraphicsInventory->addItem(ExampleItem3);
+	ExampleGraphicsInventory->addItem(ExampleItem5);
+
+	beginEditCP(ExampleGraphicsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+		ExampleGraphicsListModel->setComparitor(ExampleGraphicsComparitor);
+		ExampleGraphicsListModel->setCurrentInventory(ExampleGraphicsInventory);
+	endEditCP(ExampleGraphicsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
+
+	// Add buttons 
+    
+    ButtonPtr MainButton = osg::Button::create();
+    ButtonPtr AdminsButton = osg::Button::create();
+    ButtonPtr DevelopersButton = osg::Button::create();
+    ButtonPtr GraphicsButton = osg::Button::create();
+	
+    ButtonPtr UnderGradButton = osg::Button::create();
+    ButtonPtr GradButton = osg::Button::create();
+    ButtonPtr ProButton = osg::Button::create();
+
+	UIFontPtr ButtonFont = osg::UIFont::create();
+
+    beginEditCP(ButtonFont, UIFont::SizeFieldMask);
+        ButtonFont->setSize(16);
+    endEditCP(ButtonFont, UIFont::SizeFieldMask);
+
+beginEditCP(UnderGradButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            UnderGradButton->setMinSize(Vec2f(50, 25));
+            UnderGradButton->setMaxSize(Vec2f(200, 100));
+            UnderGradButton->setPreferredSize(Vec2f(100, 50));
+            UnderGradButton->setToolTipText("This will start playing the caption!");
+
+            UnderGradButton->setText("Undergrad");
+            UnderGradButton->setFont(ButtonFont);
+            UnderGradButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            UnderGradButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            UnderGradButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            UnderGradButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(UnderGradButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+	beginEditCP(GradButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            GradButton->setMinSize(Vec2f(50, 25));
+            GradButton->setMaxSize(Vec2f(200, 100));
+            GradButton->setPreferredSize(Vec2f(100, 50));
+            GradButton->setToolTipText("This will start playing the caption!");
+
+            GradButton->setText("Graduate");
+            GradButton->setFont(ButtonFont);
+            GradButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            GradButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            GradButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            GradButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(GradButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+	beginEditCP(ProButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            ProButton->setMinSize(Vec2f(50, 25));
+            ProButton->setMaxSize(Vec2f(200, 100));
+            ProButton->setPreferredSize(Vec2f(100, 50));
+            ProButton->setToolTipText("This will start playing the caption!");
+
+            ProButton->setText("Professor");
+            ProButton->setFont(ButtonFont);
+            ProButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            ProButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            ProButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            ProButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(ProButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+	beginEditCP(MainButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            MainButton->setMinSize(Vec2f(50, 25));
+            MainButton->setMaxSize(Vec2f(200, 100));
+            MainButton->setPreferredSize(Vec2f(100, 50));
+            MainButton->setToolTipText("This will start playing the caption!");
+
+            MainButton->setText("Main");
+            MainButton->setFont(ButtonFont);
+            MainButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            MainButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            MainButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            MainButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(MainButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+	beginEditCP(AdminsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            AdminsButton->setMinSize(Vec2f(50, 25));
+            AdminsButton->setMaxSize(Vec2f(200, 100));
+            AdminsButton->setPreferredSize(Vec2f(100, 50));
+            AdminsButton->setToolTipText("This will start playing the caption!");
+
+            AdminsButton->setText("Admins");
+            AdminsButton->setFont(ButtonFont);
+            AdminsButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            AdminsButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            AdminsButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            AdminsButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(AdminsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+	beginEditCP(DevelopersButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            DevelopersButton->setMinSize(Vec2f(50, 25));
+            DevelopersButton->setMaxSize(Vec2f(200, 100));
+            DevelopersButton->setPreferredSize(Vec2f(100, 50));
+            DevelopersButton->setToolTipText("This will start playing the caption!");
+
+            DevelopersButton->setText("Developers");
+            DevelopersButton->setFont(ButtonFont);
+            DevelopersButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            DevelopersButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            DevelopersButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            DevelopersButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(DevelopersButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+	beginEditCP(GraphicsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+            GraphicsButton->setMinSize(Vec2f(50, 25));
+            GraphicsButton->setMaxSize(Vec2f(200, 100));
+            GraphicsButton->setPreferredSize(Vec2f(100, 50));
+            GraphicsButton->setToolTipText("This will start playing the caption!");
+
+            GraphicsButton->setText("Graphics");
+            GraphicsButton->setFont(ButtonFont);
+            GraphicsButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            GraphicsButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            GraphicsButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            GraphicsButton->setAlignment(Vec2f(0.5,0.5));
+    endEditCP(GraphicsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
+
+    ClassSelectionListener TheClassSelectionListener;
+    MainButton->addActionListener(&TheClassSelectionListener);
+    AdminsButton->addActionListener(&TheClassSelectionListener);
+    DevelopersButton->addActionListener(&TheClassSelectionListener);
+    GraphicsButton->addActionListener(&TheClassSelectionListener);
+    
+    UnderGradButton->addActionListener(&TheClassSelectionListener);
+    GradButton->addActionListener(&TheClassSelectionListener);
+    ProButton->addActionListener(&TheClassSelectionListener);
+
+    /******************************************************
+
+            Create ListCellRenderer and 
+			ListSelectionModel.  Most 
+			often the defauls will be used.
+			
+			Note: the ListSelectionModel was
+			created above and is referenced
+			by the ActionListeners.
+
+    ******************************************************/    
+
+
+    /******************************************************
+
+            Create List itself and assign its 
+			Model, CellRenderer, and SelectionModel
+			to it.
+			-setOrientation(ENUM): Determine the
+				Layout of the cells (Horizontal
+				or Vertical).  Takes List::VERTICAL_ORIENTATION
+				and List::HORIZONTAL_ORIENTATION arguments.
+
+    ******************************************************/    
+    ExampleList = List::create();
+	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
+        ExampleList->setPreferredSize(Vec2f(200, 300));
+        ExampleList->setOrientation(List::VERTICAL_ORIENTATION);
+        //ExampleList->setOrientation(List::HORIZONTAL_ORIENTATION);
+		ExampleList->setModel(ExampleListModel);
+    endEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
+
+    ExampleList->setSelectionModel(ExampleListSelectionModel);
+	InventoryListListener TheInventoryListListener;
+    ExampleList->getSelectionModel()->addListSelectionListener(&TheInventoryListListener);
+
+
+	// Create The Main InternalWindow
+    // Create Background to be used with the Main InternalWindow
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+
+    /******************************************************
+
+            Determine the SelectionModel
+            -SINGLE_SELECTION lets you select ONE item
+                via a single mouse click
+            -SINGLE_INTERVAL_SELECTION lets you select
+                one interval via mouse and SHIFT key
+            -MULTIPLE_INTERVAL_SELECTION lets you select
+                via mouse, and SHIFT and CONTRL keys
+
+            Note: this tutorial is currently set up
+            to allow for this to be changed via 
+			TogggleButtons with ActionListeners attached 
+            to them so this code is commented out.
+
+    ******************************************************/
+
+    //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
+    //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+    //SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+
+    // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
+    ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
+	beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | ScrollPanel::BackgroundFieldMask);
+        ExampleScrollPanel->setPreferredSize(Vec2f(200,100));
+		ExampleScrollPanel->setBackgrounds(MainInternalWindowBackground);
+        ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | ScrollPanel::BackgroundFieldMask);
+    ExampleScrollPanel->setViewComponent(ExampleList);
+
+    // Create MainFramelayout
+    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+	MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
+        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+    endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+
+	DetailsWindow = osg::TextArea::create();
+	beginEditCP(DetailsWindow, TextArea::PreferredSizeFieldMask);
+		DetailsWindow->setPreferredSize(Pnt2f(200,100));
+		DetailsWindow->setMinSize(Vec2f(200,100));
+    endEditCP(DetailsWindow, TextArea::PreferredSizeFieldMask);
+
+    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
+	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+       MainInternalWindow->getChildren().push_back(MainButton);
+       MainInternalWindow->getChildren().push_back(AdminsButton);
+       MainInternalWindow->getChildren().push_back(DevelopersButton);
+       MainInternalWindow->getChildren().push_back(GraphicsButton);
+       MainInternalWindow->getChildren().push_back(UnderGradButton);
+       MainInternalWindow->getChildren().push_back(GradButton);
+       MainInternalWindow->getChildren().push_back(ProButton);
+	   MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
+       MainInternalWindow->getChildren().push_back(DetailsWindow);
+       MainInternalWindow->setLayout(MainInternalWindowLayout);
+       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
+	   MainInternalWindow->setDrawTitlebar(false);
+	   MainInternalWindow->setResizable(false);
+    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+	TutorialDrawingSurface->openWindow(MainInternalWindow);
+
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+
+    // Create the SimpleSceneManager helper
+    mgr = new SimpleSceneManager;
+
+    // Tell the Manager what to manage
+    mgr->setWindow(MainWindow);
+    mgr->setRoot(scene);
+
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+
+    // Show the whole Scene
+    mgr->showAll();
+
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
+                                        "OpenSG 18List Window");
+
+    //Main Event Loop
+    while(!ExitApp)
+    {
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
+    }
+    osgExit();
+
+    return 0;
+}
+// Callback functions
+
+
+// Redraw the window
+void display(void)
+{
+    mgr->redraw();
+}
+
+// React to size changes
+void reshape(Vec2f Size)
+{
+    mgr->resize(Size.x(), Size.y());
+}

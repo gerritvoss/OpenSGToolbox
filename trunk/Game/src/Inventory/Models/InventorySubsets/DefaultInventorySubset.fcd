@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultInventorySubset"
+	parent="InventorySubset"
+	library="Game"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A DefaultInventorySubset.
+
+	<Field
+		name="ClassDefinition"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+</FieldContainer>
