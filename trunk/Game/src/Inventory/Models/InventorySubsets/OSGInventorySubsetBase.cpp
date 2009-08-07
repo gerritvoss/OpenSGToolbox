@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  InventorySubsetBase::ModelFieldMask = 
+    (TypeTraits<BitVector>::One << InventorySubsetBase::ModelFieldId);
+
 const OSG::BitVector InventorySubsetBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var InventoryListModelPtr InventorySubsetBase::_sfModel
+    
+*/
+
+//! InventorySubset description
+
+FieldDescription *InventorySubsetBase::_desc[] = 
+{
+    new FieldDescription(SFInventoryListModelPtr::getClassType(), 
+                     "Model", 
+                     ModelFieldId, ModelFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&InventorySubsetBase::editSFModel))
+};
 
 
 FieldContainerType InventorySubsetBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType InventorySubsetBase::_type(
     NULL,
     NULL, 
     InventorySubset::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(InventorySubsetBase, InventorySubsetPtr)
 
@@ -134,6 +154,7 @@ void InventorySubsetBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 InventorySubsetBase::InventorySubsetBase(void) :
+    _sfModel                  (), 
     Inherited() 
 {
 }
@@ -143,6 +164,7 @@ InventorySubsetBase::InventorySubsetBase(void) :
 #endif
 
 InventorySubsetBase::InventorySubsetBase(const InventorySubsetBase &source) :
+    _sfModel                  (source._sfModel                  ), 
     Inherited                 (source)
 {
 }
@@ -159,6 +181,11 @@ UInt32 InventorySubsetBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        returnValue += _sfModel.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -168,6 +195,11 @@ void InventorySubsetBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        _sfModel.copyToBin(pMem);
+    }
+
 
 }
 
@@ -175,6 +207,11 @@ void InventorySubsetBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        _sfModel.copyFromBin(pMem);
+    }
 
 
 }
@@ -186,6 +223,9 @@ void InventorySubsetBase::executeSyncImpl(      InventorySubsetBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
+
 
 }
 #else
@@ -195,6 +235,9 @@ void InventorySubsetBase::executeSyncImpl(      InventorySubsetBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
 
 
 

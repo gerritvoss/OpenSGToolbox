@@ -61,6 +61,7 @@ class OSG_GAMELIB_DLLMAPPING InventorySubset : public InventorySubsetBase
     /*==========================  PUBLIC  =================================*/
   public:
 
+	virtual std::vector<UInt32> GetSubset() = 0;
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

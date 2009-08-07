@@ -31,4 +31,13 @@ A InventoryListModel.
 	>
 	</Field>
 
+	<Field
+		name="CurrentSubset"
+		type="InventorySubsetPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
 </FieldContainer>

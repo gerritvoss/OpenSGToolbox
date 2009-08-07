@@ -13,5 +13,13 @@
 >
 A InventorySubset.
 
+	<Field
+		name="Model"
+		type="InventoryListModelPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 
 </FieldContainer>

@@ -219,66 +219,6 @@
 				>
 			</File>
 			<Filter
-				Name="Cameras"
-				>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraFields.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="MiniMap"
 				>
 				<File
@@ -726,6 +666,66 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Caption\OSGCaptionListener.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Cameras"
+					>
+					<File
+						RelativePath="..\..\src\Cameras\OSGAirplaneCamera.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGAirplaneCamera.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGAirplaneCamera.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGAirplaneCameraFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGRubberBandCamera.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGRubberBandCamera.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGRubberBandCamera.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Cameras\OSGRubberBandCameraFields.h"
 						>
 					</File>
 				</Filter>

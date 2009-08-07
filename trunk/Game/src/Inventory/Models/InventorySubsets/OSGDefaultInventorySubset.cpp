@@ -76,6 +76,13 @@ void DefaultInventorySubset::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+std::vector<UInt32> DefaultInventorySubset::GetSubset()
+{
+	std::vector<UInt32> ret;
+
+	return ret;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -101,6 +108,7 @@ DefaultInventorySubset::~DefaultInventorySubset(void)
 void DefaultInventorySubset::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
 }
 
 void DefaultInventorySubset::dump(      UInt32    , 

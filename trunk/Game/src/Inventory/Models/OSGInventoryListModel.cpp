@@ -51,6 +51,7 @@
 #include "Inventory/OSGInventoryItem.h"
 #include "Inventory/Models/Comparitors/OSGInventoryListComparitor.h"
 #include "Inventory/Models/Comparitors/OSGDefaultInventoryListComparitor.h"
+#include <OpenSG/Game/OSGInventorySubset.h>
 
 
 OSG_BEGIN_NAMESPACE
@@ -120,6 +121,11 @@ void InventoryListModel::setupComparitor()
 	endEditCP(InventoryListModelPtr(this), InventoryListModel::ComparitorFieldMask);
 }
 
+void InventoryListModel::setupSubset()
+{
+	getCurrentSubset()->setModel(InventoryListModelPtr(this));
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -153,6 +159,11 @@ void InventoryListModel::changed(BitVector whichField, UInt32 origin)
 		setupInventoryItems();
 	}
 
+    if(whichField & CurrentSubsetFieldMask)
+	{
+		setupSubset();
+	}
+
 }
 
 void InventoryListModel::dump(      UInt32    , 
@@ -160,31 +171,6 @@ void InventoryListModel::dump(      UInt32    ,
 {
     SLOG << "Dump InventoryListModel NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGINVENTORYLISTMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINVENTORYLISTMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGINVENTORYLISTMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

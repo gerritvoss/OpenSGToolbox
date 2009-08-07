@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,7 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+#include <OpenSG/Game/OSGInventoryListModelFields.h> // Model type
 
 #include "OSGInventorySubsetFields.h"
 
@@ -87,6 +88,14 @@ class OSG_GAMELIB_DLLMAPPING InventorySubsetBase : public AttachmentContainer
   public:
 
     typedef InventorySubsetPtr  Ptr;
+
+    enum
+    {
+        ModelFieldId = Inherited::NextFieldId,
+        NextFieldId  = ModelFieldId + 1
+    };
+
+    static const OSG::BitVector ModelFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +119,32 @@ class OSG_GAMELIB_DLLMAPPING InventorySubsetBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+
+           SFInventoryListModelPtr *editSFModel          (void);
+     const SFInventoryListModelPtr *getSFModel          (void) const;
+#ifndef OSG_2_PREP
+           SFInventoryListModelPtr *getSFModel          (void);
+#endif
+
+
+           InventoryListModelPtr &editModel          (void);
+     const InventoryListModelPtr &getModel          (void) const;
+#ifndef OSG_2_PREP
+           InventoryListModelPtr &getModel          (void);
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setModel          ( const InventoryListModelPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -129,6 +164,13 @@ class OSG_GAMELIB_DLLMAPPING InventorySubsetBase : public AttachmentContainer
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFInventoryListModelPtr   _sfModel;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -180,6 +222,7 @@ class OSG_GAMELIB_DLLMAPPING InventorySubsetBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

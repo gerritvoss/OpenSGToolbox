@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,6 +69,7 @@
 
 #include "Inventory/Models/Comparitors/OSGInventoryListComparitorFields.h" // Comparitor type
 #include "Inventory/OSGInventoryFields.h" // CurrentInventory type
+#include "Inventory/Models/InventorySubsets/OSGInventorySubsetFields.h" // CurrentSubset type
 
 #include "OSGInventoryListModelFields.h"
 
@@ -94,11 +95,13 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
     {
         ComparitorFieldId       = Inherited::NextFieldId,
         CurrentInventoryFieldId = ComparitorFieldId       + 1,
-        NextFieldId             = CurrentInventoryFieldId + 1
+        CurrentSubsetFieldId    = CurrentInventoryFieldId + 1,
+        NextFieldId             = CurrentSubsetFieldId    + 1
     };
 
     static const OSG::BitVector ComparitorFieldMask;
     static const OSG::BitVector CurrentInventoryFieldMask;
+    static const OSG::BitVector CurrentSubsetFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,13 +128,43 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFInventoryListComparitorPtr *getSFComparitor     (void);
-           SFInventoryPtr      *getSFCurrentInventory(void);
 
-           InventoryListComparitorPtr &getComparitor     (void);
+           SFInventoryListComparitorPtr *editSFComparitor     (void);
+     const SFInventoryListComparitorPtr *getSFComparitor     (void) const;
+#ifndef OSG_2_PREP
+           SFInventoryListComparitorPtr *getSFComparitor     (void);
+#endif
+
+           SFInventoryPtr      *editSFCurrentInventory(void);
+     const SFInventoryPtr      *getSFCurrentInventory(void) const;
+#ifndef OSG_2_PREP
+           SFInventoryPtr      *getSFCurrentInventory(void);
+#endif
+
+           SFInventorySubsetPtr *editSFCurrentSubset  (void);
+     const SFInventorySubsetPtr *getSFCurrentSubset  (void) const;
+#ifndef OSG_2_PREP
+           SFInventorySubsetPtr *getSFCurrentSubset  (void);
+#endif
+
+
+           InventoryListComparitorPtr &editComparitor     (void);
      const InventoryListComparitorPtr &getComparitor     (void) const;
-           InventoryPtr        &getCurrentInventory(void);
+#ifndef OSG_2_PREP
+           InventoryListComparitorPtr &getComparitor     (void);
+#endif
+
+           InventoryPtr        &editCurrentInventory(void);
      const InventoryPtr        &getCurrentInventory(void) const;
+#ifndef OSG_2_PREP
+           InventoryPtr        &getCurrentInventory(void);
+#endif
+
+           InventorySubsetPtr  &editCurrentSubset  (void);
+     const InventorySubsetPtr  &getCurrentSubset  (void) const;
+#ifndef OSG_2_PREP
+           InventorySubsetPtr  &getCurrentSubset  (void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,6 +173,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
 
      void setComparitor     ( const InventoryListComparitorPtr &value );
      void setCurrentInventory( const InventoryPtr &value );
+     void setCurrentSubset  ( const InventorySubsetPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,6 +218,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModelBase : public AbstractListModel
 
     SFInventoryListComparitorPtr   _sfComparitor;
     SFInventoryPtr      _sfCurrentInventory;
+    SFInventorySubsetPtr   _sfCurrentSubset;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -260,7 +295,5 @@ typedef osgIF<InventoryListModelBase::isNodeCore,
 typedef RefPtr<InventoryListModelPtr> InventoryListModelRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGINVENTORYLISTMODELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGINVENTORYLISTMODELBASE_H_ */

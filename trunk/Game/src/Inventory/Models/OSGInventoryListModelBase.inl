@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,22 +98,77 @@ InventoryListModelPtr InventoryListModelBase::createEmpty(void)
 
 //! Get the InventoryListModel::_sfComparitor field.
 inline
-SFInventoryListComparitorPtr *InventoryListModelBase::getSFComparitor(void)
+const SFInventoryListComparitorPtr *InventoryListModelBase::getSFComparitor(void) const
 {
     return &_sfComparitor;
 }
 
+//! Get the InventoryListModel::_sfComparitor field.
+inline
+SFInventoryListComparitorPtr *InventoryListModelBase::editSFComparitor(void)
+{
+    return &_sfComparitor;
+}
+
+#ifndef OSG_2_PREP
+//! Get the InventoryListModel::_sfComparitor field.
+inline
+SFInventoryListComparitorPtr *InventoryListModelBase::getSFComparitor(void)
+{
+    return &_sfComparitor;
+}
+#endif
+
+//! Get the InventoryListModel::_sfCurrentInventory field.
+inline
+const SFInventoryPtr *InventoryListModelBase::getSFCurrentInventory(void) const
+{
+    return &_sfCurrentInventory;
+}
+
+//! Get the InventoryListModel::_sfCurrentInventory field.
+inline
+SFInventoryPtr *InventoryListModelBase::editSFCurrentInventory(void)
+{
+    return &_sfCurrentInventory;
+}
+
+#ifndef OSG_2_PREP
 //! Get the InventoryListModel::_sfCurrentInventory field.
 inline
 SFInventoryPtr *InventoryListModelBase::getSFCurrentInventory(void)
 {
     return &_sfCurrentInventory;
 }
+#endif
+
+//! Get the InventoryListModel::_sfCurrentSubset field.
+inline
+const SFInventorySubsetPtr *InventoryListModelBase::getSFCurrentSubset(void) const
+{
+    return &_sfCurrentSubset;
+}
+
+//! Get the InventoryListModel::_sfCurrentSubset field.
+inline
+SFInventorySubsetPtr *InventoryListModelBase::editSFCurrentSubset(void)
+{
+    return &_sfCurrentSubset;
+}
+
+#ifndef OSG_2_PREP
+//! Get the InventoryListModel::_sfCurrentSubset field.
+inline
+SFInventorySubsetPtr *InventoryListModelBase::getSFCurrentSubset(void)
+{
+    return &_sfCurrentSubset;
+}
+#endif
 
 
 //! Get the value of the InventoryListModel::_sfComparitor field.
 inline
-InventoryListComparitorPtr &InventoryListModelBase::getComparitor(void)
+InventoryListComparitorPtr &InventoryListModelBase::editComparitor(void)
 {
     return _sfComparitor.getValue();
 }
@@ -125,6 +180,15 @@ const InventoryListComparitorPtr &InventoryListModelBase::getComparitor(void) co
     return _sfComparitor.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the InventoryListModel::_sfComparitor field.
+inline
+InventoryListComparitorPtr &InventoryListModelBase::getComparitor(void)
+{
+    return _sfComparitor.getValue();
+}
+#endif
+
 //! Set the value of the InventoryListModel::_sfComparitor field.
 inline
 void InventoryListModelBase::setComparitor(const InventoryListComparitorPtr &value)
@@ -134,7 +198,7 @@ void InventoryListModelBase::setComparitor(const InventoryListComparitorPtr &val
 
 //! Get the value of the InventoryListModel::_sfCurrentInventory field.
 inline
-InventoryPtr &InventoryListModelBase::getCurrentInventory(void)
+InventoryPtr &InventoryListModelBase::editCurrentInventory(void)
 {
     return _sfCurrentInventory.getValue();
 }
@@ -146,6 +210,15 @@ const InventoryPtr &InventoryListModelBase::getCurrentInventory(void) const
     return _sfCurrentInventory.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the InventoryListModel::_sfCurrentInventory field.
+inline
+InventoryPtr &InventoryListModelBase::getCurrentInventory(void)
+{
+    return _sfCurrentInventory.getValue();
+}
+#endif
+
 //! Set the value of the InventoryListModel::_sfCurrentInventory field.
 inline
 void InventoryListModelBase::setCurrentInventory(const InventoryPtr &value)
@@ -153,8 +226,36 @@ void InventoryListModelBase::setCurrentInventory(const InventoryPtr &value)
     _sfCurrentInventory.setValue(value);
 }
 
+//! Get the value of the InventoryListModel::_sfCurrentSubset field.
+inline
+InventorySubsetPtr &InventoryListModelBase::editCurrentSubset(void)
+{
+    return _sfCurrentSubset.getValue();
+}
+
+//! Get the value of the InventoryListModel::_sfCurrentSubset field.
+inline
+const InventorySubsetPtr &InventoryListModelBase::getCurrentSubset(void) const
+{
+    return _sfCurrentSubset.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the InventoryListModel::_sfCurrentSubset field.
+inline
+InventorySubsetPtr &InventoryListModelBase::getCurrentSubset(void)
+{
+    return _sfCurrentSubset.getValue();
+}
+#endif
+
+//! Set the value of the InventoryListModel::_sfCurrentSubset field.
+inline
+void InventoryListModelBase::setCurrentSubset(const InventorySubsetPtr &value)
+{
+    _sfCurrentSubset.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
-
-#define OSGINVENTORYLISTMODELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

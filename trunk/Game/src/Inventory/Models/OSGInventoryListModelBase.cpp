@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,9 @@ const OSG::BitVector  InventoryListModelBase::ComparitorFieldMask =
 const OSG::BitVector  InventoryListModelBase::CurrentInventoryFieldMask = 
     (TypeTraits<BitVector>::One << InventoryListModelBase::CurrentInventoryFieldId);
 
+const OSG::BitVector  InventoryListModelBase::CurrentSubsetFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryListModelBase::CurrentSubsetFieldId);
+
 const OSG::BitVector InventoryListModelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -83,6 +86,9 @@ const OSG::BitVector InventoryListModelBase::MTInfluenceMask =
 /*! \var InventoryPtr    InventoryListModelBase::_sfCurrentInventory
     
 */
+/*! \var InventorySubsetPtr InventoryListModelBase::_sfCurrentSubset
+    
+*/
 
 //! InventoryListModel description
 
@@ -92,12 +98,17 @@ FieldDescription *InventoryListModelBase::_desc[] =
                      "Comparitor", 
                      ComparitorFieldId, ComparitorFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryListModelBase::getSFComparitor),
+                     reinterpret_cast<FieldAccessMethod>(&InventoryListModelBase::editSFComparitor)),
     new FieldDescription(SFInventoryPtr::getClassType(), 
                      "CurrentInventory", 
                      CurrentInventoryFieldId, CurrentInventoryFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryListModelBase::getSFCurrentInventory)
+                     reinterpret_cast<FieldAccessMethod>(&InventoryListModelBase::editSFCurrentInventory)),
+    new FieldDescription(SFInventorySubsetPtr::getClassType(), 
+                     "CurrentSubset", 
+                     CurrentSubsetFieldId, CurrentSubsetFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&InventoryListModelBase::editSFCurrentSubset))
 };
 
 
@@ -105,7 +116,7 @@ FieldContainerType InventoryListModelBase::_type(
     "InventoryListModel",
     "AbstractListModel",
     NULL,
-    (PrototypeCreateF) &InventoryListModelBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&InventoryListModelBase::createEmpty),
     InventoryListModel::initMethod,
     _desc,
     sizeof(_desc));
@@ -144,7 +155,8 @@ UInt32 InventoryListModelBase::getContainerSize(void) const
 void InventoryListModelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((InventoryListModelBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<InventoryListModelBase *>(&other),
+                          whichField);
 }
 #else
 void InventoryListModelBase::executeSync(      FieldContainer &other,
@@ -175,6 +187,7 @@ void InventoryListModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 InventoryListModelBase::InventoryListModelBase(void) :
     _sfComparitor             (), 
     _sfCurrentInventory       (), 
+    _sfCurrentSubset          (), 
     Inherited() 
 {
 }
@@ -186,6 +199,7 @@ InventoryListModelBase::InventoryListModelBase(void) :
 InventoryListModelBase::InventoryListModelBase(const InventoryListModelBase &source) :
     _sfComparitor             (source._sfComparitor             ), 
     _sfCurrentInventory       (source._sfCurrentInventory       ), 
+    _sfCurrentSubset          (source._sfCurrentSubset          ), 
     Inherited                 (source)
 {
 }
@@ -212,6 +226,11 @@ UInt32 InventoryListModelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfCurrentInventory.getBinSize();
     }
 
+    if(FieldBits::NoField != (CurrentSubsetFieldMask & whichField))
+    {
+        returnValue += _sfCurrentSubset.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -229,6 +248,11 @@ void InventoryListModelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
     {
         _sfCurrentInventory.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CurrentSubsetFieldMask & whichField))
+    {
+        _sfCurrentSubset.copyToBin(pMem);
     }
 
 
@@ -249,6 +273,11 @@ void InventoryListModelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCurrentInventory.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (CurrentSubsetFieldMask & whichField))
+    {
+        _sfCurrentSubset.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -265,6 +294,9 @@ void InventoryListModelBase::executeSyncImpl(      InventoryListModelBase *pOthe
     if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
         _sfCurrentInventory.syncWith(pOther->_sfCurrentInventory);
 
+    if(FieldBits::NoField != (CurrentSubsetFieldMask & whichField))
+        _sfCurrentSubset.syncWith(pOther->_sfCurrentSubset);
+
 
 }
 #else
@@ -280,6 +312,9 @@ void InventoryListModelBase::executeSyncImpl(      InventoryListModelBase *pOthe
 
     if(FieldBits::NoField != (CurrentInventoryFieldMask & whichField))
         _sfCurrentInventory.syncWith(pOther->_sfCurrentInventory);
+
+    if(FieldBits::NoField != (CurrentSubsetFieldMask & whichField))
+        _sfCurrentSubset.syncWith(pOther->_sfCurrentSubset);
 
 
 
@@ -310,26 +345,6 @@ DataType FieldDataTraits<InventoryListModelPtr>::_type("InventoryListModelPtr", 
 OSG_DLLEXPORT_SFIELD_DEF1(InventoryListModelPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(InventoryListModelPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGINVENTORYLISTMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINVENTORYLISTMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGINVENTORYLISTMODELFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

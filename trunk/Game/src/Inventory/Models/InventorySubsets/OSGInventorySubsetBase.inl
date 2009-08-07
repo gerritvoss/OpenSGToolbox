@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,59 @@ OSG::UInt32 InventorySubsetBase::getClassTypeId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the InventorySubset::_sfModel field.
+inline
+const SFInventoryListModelPtr *InventorySubsetBase::getSFModel(void) const
+{
+    return &_sfModel;
+}
+
+//! Get the InventorySubset::_sfModel field.
+inline
+SFInventoryListModelPtr *InventorySubsetBase::editSFModel(void)
+{
+    return &_sfModel;
+}
+
+#ifndef OSG_2_PREP
+//! Get the InventorySubset::_sfModel field.
+inline
+SFInventoryListModelPtr *InventorySubsetBase::getSFModel(void)
+{
+    return &_sfModel;
+}
+#endif
+
+
+//! Get the value of the InventorySubset::_sfModel field.
+inline
+InventoryListModelPtr &InventorySubsetBase::editModel(void)
+{
+    return _sfModel.getValue();
+}
+
+//! Get the value of the InventorySubset::_sfModel field.
+inline
+const InventoryListModelPtr &InventorySubsetBase::getModel(void) const
+{
+    return _sfModel.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the InventorySubset::_sfModel field.
+inline
+InventoryListModelPtr &InventorySubsetBase::getModel(void)
+{
+    return _sfModel.getValue();
+}
+#endif
+
+//! Set the value of the InventorySubset::_sfModel field.
+inline
+void InventorySubsetBase::setModel(const InventoryListModelPtr &value)
+{
+    _sfModel.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

@@ -71,6 +71,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryListModel : public InventoryListModelBase
 	
 	void setupInventoryItems();
 	void setupComparitor();
+	void setupSubset();
 	
 	std::vector<UInt32> _InventoryItems;
 
