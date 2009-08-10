@@ -1,3 +1,11 @@
+// 
+// OpenSGToolbox Tutorial: 21LoadXMLSceneFromMaya 
+//
+// Loads a scene (skeletons, geometries, and animations)
+// exported from Maya to an XML file.
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -67,7 +75,7 @@ bool TutorialStat(false);
 void display(void);
 void reshape(Vec2f Size);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -321,7 +329,7 @@ int main(int argc, char **argv)
 		gridMaterial->addChunk(AxesLineChunk);
 	endEditCP(gridMaterial, ChunkMaterial::ChunksFieldMask);
 
-	//Axes type
+	//Axes should render as lines
 	GeoPTypesPtr axesType = GeoPTypesUI8::create();        
     beginEditCP(axesType, GeoPTypesUI8::GeoPropDataFieldMask);
     {
@@ -660,12 +668,15 @@ int main(int argc, char **argv)
 	//Axes colors
 	GeoColors3fPtr axesColors = GeoColors3f::create();
     beginEditCP(axesColors, GeoColors3f::GeoPropDataFieldMask);
-        axesColors->addValue(Color3f( 1.0,0.0,0.0));
+        //X-Axis = Red
+	 	  axesColors->addValue(Color3f( 1.0,0.0,0.0));
         axesColors->addValue(Color3f( 1.0,0.0,0.0));
         
+		  //Y-Axis = Green
 		axesColors->addValue(Color3f( 0.0,1.0,0.0));
         axesColors->addValue(Color3f( 0.0,1.0,0.0));
 
+		  //Z-Axis = Blue
         axesColors->addValue(Color3f( 0.0,0.0,1.0));
         axesColors->addValue(Color3f( 0.0,0.0,1.0));
     endEditCP(axesColors, GeoColors3f::GeoPropDataFieldMask);
@@ -865,7 +876,7 @@ int main(int argc, char **argv)
 	endEditCP(Grid, Node::CoreFieldMask);
 
 
-	//Import scene from XML
+	//Import scene from an XML file
 	ChunkMaterialPtr ExampleMaterial;
 	std::vector<SkeletonPtr> SkeletonPtrs;
 	std::vector<SkeletonBlendedGeometryPtr> SkeletonBlendedGeometryPtrs;
@@ -878,22 +889,27 @@ int main(int argc, char **argv)
     {
 		if( (*Itor)->getType() == (ChunkMaterial::getClassType()))
 		{
+			//Set ExampleMaterial to the ChunkMaterial we just read in
 			ExampleMaterial = (ChunkMaterial::Ptr::dcast(*Itor));
 		}
 		if( (*Itor)->getType() == (Skeleton::getClassType()))
 		{
+			//Add the skeleton we just read in to SkeletonPtrs
 			SkeletonPtrs.push_back(Skeleton::Ptr::dcast(*Itor));
 		}
 		if( (*Itor)->getType() == (SkeletonBlendedGeometry::getClassType()))
 		{
+			//Add the SkeletonBlendedGeometry we just read in to SkeletonBlendedGeometryPtrs
 			SkeletonBlendedGeometryPtrs.push_back(SkeletonBlendedGeometry::Ptr::dcast(*Itor));
 		}
 		if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
 		{
+			//Set TheSkeletonAnimation to the Animation we just read in
 			TheSkeletonAnimation = (Animation::Ptr::dcast(*Itor));
 		}
 		if( (*Itor)->getType() == (Geometry::getClassType()))
 		{
+			//Add the Geometry we just read in to GeometryPtrs
 			GeometryPtrs.push_back(Geometry::Ptr::dcast(*Itor));
 		}
     }
@@ -963,16 +979,19 @@ int main(int argc, char **argv)
 		scene->addChild(Axes);
 		scene->addChild(Grid);
 
+		//Add all imported skeletons to scene
 		for (int i(0); i < SkeletonNodes.size(); ++i)
 		{
 			scene->addChild(SkeletonNodes[i]);
 		}
 
+		//Add all imported geometries to scene
 		for (int i(0); i < UnboundGeometries.size(); ++i)
 		{
 			scene->addChild(UnboundGeometries[i]);
 		}
 
+		//Add all imported SkeletonBlendedGeometries to scene
 		for (int i(0); i < MeshNodes.size(); ++i)
 		{
 			scene->addChild(MeshNodes[i]);
@@ -989,6 +1008,7 @@ int main(int argc, char **argv)
     mgr->showAll();
     TheAnimationAdvancer->start();
 
+	 //Show window
     Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,

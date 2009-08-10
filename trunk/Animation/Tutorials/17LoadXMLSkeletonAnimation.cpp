@@ -1,3 +1,11 @@
+// 
+// OpenSGToolbox Tutorial: 17LoadXMLSkeletonAnimation 
+//
+// Loads a skeleton and a skeleton animation from an
+// XML file.
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -56,7 +64,7 @@ void display(void);
 void reshape(Vec2f Size);
 
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -233,11 +241,6 @@ int main(int argc, char **argv)
 
 
 
-	//Import skeleton and animation from XML file
-	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/17SkeletonAnimation.xml"));
-
-
 	//Print key command info
 	std::cout << "\n\nKEY COMMANDS:" << std::endl;
 	std::cout << "space   Play/Pause the animation" << std::endl;
@@ -246,18 +249,24 @@ int main(int argc, char **argv)
 	std::cout << "CTRL-Q  Exit\n\n" << std::endl;
 
 
+	//Import skeleton and animation from XML file
+	FCFileType::FCPtrStore NewContainers;
+	NewContainers = FCFileHandler::the()->read(Path("./Data/17SkeletonAnimation.xml"));
+
 	SkeletonPtr ExampleSkeleton;
 	
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
+		//Only import skeleton and skeletonAnimation data; ignore anything else saved in the XML file
 		if( (*Itor)->getType() == (Skeleton::getClassType()))
 		{
-			//Set the Skeleton to the one we just read in
+			//Set ExampleSkeleton to the skeleton we just read in
 			ExampleSkeleton = (Skeleton::Ptr::dcast(*Itor));
 		}
 		if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
 		{
+			//Set TheSkeletonAnimation to the animation we just read in
 			TheSkeletonAnimation = (SkeletonAnimation::Ptr::dcast(*Itor));
 		}
     }
@@ -267,10 +276,10 @@ int main(int argc, char **argv)
     beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-		ExampleSkeletonDrawable->setDrawBindPose(false);
-		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
-		ExampleSkeletonDrawable->setDrawPose(true);
-		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		ExampleSkeletonDrawable->setDrawBindPose(false);  //By default, we don't draw the skeleton's bind pose
+		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));  //When drawn, the skeleton's bind pose renders in green
+		ExampleSkeletonDrawable->setDrawPose(true);  //By default, we do draw the skeletons current pose
+		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));  //The skeleton's current pose renders in blue
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
 	//Skeleton Node
@@ -299,6 +308,7 @@ int main(int argc, char **argv)
     mgr->showAll();
     TheAnimationAdvancer->start();
 
+	 //Show window
     Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,

@@ -1,3 +1,10 @@
+// 
+// OpenSGToolbox Tutorial: 10SkeletonDrawer 
+//
+// Demonstrates creating a simple skeleton. 
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -36,7 +43,7 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 void display(void);
 void reshape(Vec2f Size);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -153,30 +160,33 @@ int main(int argc, char **argv)
 	TempRootJoint = ExampleRootJoint;
 	Matrix TempMat;
 
+	//Create a set of randomly placed child joints
 	for (Real32 i = 1.0f; i < 9.0f; i++)
 	{
 		JointPtr ExampleChildJoint;
 
 		TempMat.setTranslate(RandomPoolManager::getRandomReal32(0.0, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f));
-		ExampleChildJoint = Joint::create(); //create a bone called ExampleChildbone
+		ExampleChildJoint = Joint::create(); //create a joint called ExampleChildJoint
+		
+		//Set bind and current transformations to TempMat (calculated above)
 		beginEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);//use the field masks
 			ExampleChildJoint->setRelativeTransformation(TempMat);
 			ExampleChildJoint->setBindRelativeTransformation(TempMat);
 		endEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 
-	
+		//Add ExampleChildJoint as a child to the previous joint	
 		beginEditCP(TempRootJoint, Joint::ChildJointsFieldMask);
-			TempRootJoint->getChildJoints().push_back(ExampleChildJoint);//add a Child to the root bone
+			TempRootJoint->getChildJoints().push_back(ExampleChildJoint);//add a Child to the root joint
 		endEditCP(TempRootJoint, Joint::ChildJointsFieldMask);
-		
 
+		//ExampleChildJoint will be the next parent joint
 		TempRootJoint = TempRootJoint->getChildJoints(0);
 	}
 
     //Skeleton
     SkeletonPtr ExampleSkeleton = Skeleton::create();
 	beginEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
-		ExampleSkeleton->getRootJoints().push_back(ExampleRootJoint);
+		ExampleSkeleton->getRootJoints().push_back(ExampleRootJoint); //Set the skeleton's root joint
 	endEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
 
     //SkeletonDrawer
@@ -186,8 +196,7 @@ int main(int argc, char **argv)
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
 	
-	//Particle System Node
-    
+	//Skeleton Particle System Node
 	NodePtr SkeletonNode = osg::Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);

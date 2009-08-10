@@ -1,12 +1,8 @@
-// OpenSG Tutorial Example: Hello World
-//
-// Minimalistic OpenSG program
 // 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
+// OpenSGToolbox Tutorial: 22SkeletonBlendedAnimation 
 //
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
+// Demonstrates using a SkeletonBlendedAnimation to control
+// the blending of two separate skeleton animations.
 //
 
 // General OpenSG configuration, needed everywhere
@@ -108,7 +104,7 @@ void setupAnimation(void);
 void display(void);
 void reshape(Vec2f Size);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -265,6 +261,7 @@ class TutorialUpdateListener : public UpdateListener
     }
 };
 
+//Create a listener so that the blend amount sliders can update the SkeletonBlendedAnimation
 class BlendAmountSliderChangeListener : public ChangeListener
 {
   public:
@@ -396,11 +393,12 @@ int main(int argc, char **argv)
     UpperAnimationSliderRangeModel->setValue(BlendUpper * 100);
     UpperAnimationSliderRangeModel->setExtent(0);
     
-    //Create the upper animation slider
+    //Create the upper animation blend amount slider
     LabelPtr TempLabel;
     SliderPtr UpperAnimationSlider = Slider::create();
     beginEditCP(UpperAnimationSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
 
+	 //Label the slider
 		TempLabel = Label::Ptr::dcast(UpperAnimationSlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("0.0"); endEditCP(TempLabel, Label::TextFieldMask);
         UpperAnimationSlider->getLabelMap()[0] = TempLabel;
@@ -409,7 +407,7 @@ int main(int argc, char **argv)
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("1.0"); endEditCP(TempLabel, Label::TextFieldMask);
         UpperAnimationSlider->getLabelMap()[100] = TempLabel;
 
-
+		//Customize the slider
         UpperAnimationSlider->setPreferredSize(Vec2f(100, 300));
         UpperAnimationSlider->setSnapToTicks(false);
         UpperAnimationSlider->setMajorTickSpacing(10);
@@ -426,10 +424,11 @@ int main(int argc, char **argv)
     LowerAnimationSliderRangeModel->setValue(BlendLower * 100);
     LowerAnimationSliderRangeModel->setExtent(0);
     
-    //Create the lower animation slider
+    //Create the lower animation blend amount `slider
     SliderPtr LowerAnimationSlider = Slider::create();
     beginEditCP(LowerAnimationSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
 
+	 //Label the slider
         TempLabel = Label::Ptr::dcast(LowerAnimationSlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("0.0"); endEditCP(TempLabel, Label::TextFieldMask);
         LowerAnimationSlider->getLabelMap()[0] = TempLabel;
@@ -438,7 +437,7 @@ int main(int argc, char **argv)
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("1.0"); endEditCP(TempLabel, Label::TextFieldMask);
         LowerAnimationSlider->getLabelMap()[100] = TempLabel;
 
-
+		//Customize the slider
         LowerAnimationSlider->setPreferredSize(Vec2f(100, 300));
         LowerAnimationSlider->setSnapToTicks(false);
         LowerAnimationSlider->setMajorTickSpacing(10);
@@ -507,6 +506,7 @@ int main(int argc, char **argv)
     BlendAmountSliderChangeListener LowerAnimationSliderListener(TheSkeletonBlendedAnimation, 1, LowerAnimationSlider);
     LowerAnimationSlider->addChangeListener(&LowerAnimationSliderListener);
 
+
 	//Animation Advancer
     TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();
     beginEditCP(TheAnimationAdvancer);
@@ -517,6 +517,7 @@ int main(int argc, char **argv)
     mgr->showAll();
     TheAnimationAdvancer->start();
 
+	 //Show window
     Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,
@@ -572,12 +573,13 @@ void createSkeleton(void)
 		ExampleMaterial->addChunk(ExampleBlendChunk);
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
+
 	//===========================================Joints==================================================================
 	Matrix TempMat;
 
 	/*================================================================================================*/
 	/*                                       Left Fingers                                                 */
-	LeftFingers = Joint::create(); //create a bone called ExampleChildbone
+	LeftFingers = Joint::create(); //create a joint called LeftFingers 
 	TempMat.setTranslate(1.0,0.0,0.0);
 	beginEditCP(LeftFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 		LeftFingers->setRelativeTransformation(TempMat);
@@ -586,7 +588,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Right Fingers                                                 */
-	RightFingers = Joint::create(); //create a bone called ExampleChildbone
+	RightFingers = Joint::create(); //create a joint called RightFingers 
 	TempMat.setTranslate(-1.0,0.0,0.0);
 	beginEditCP(RightFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 		RightFingers->setRelativeTransformation(TempMat);
@@ -594,7 +596,7 @@ void createSkeleton(void)
 	endEditCP(RightFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Hand                                                 */
-	LeftHand = Joint::create(); //create a bone called ExampleChildbone
+	LeftHand = Joint::create(); //create a joint called LeftHand 
 	TempMat.setTranslate(2.0,0.0,0.0);
 	beginEditCP(LeftHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftHand->setRelativeTransformation(TempMat);
@@ -604,7 +606,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Right Hand                                                 */
-	RightHand = Joint::create(); //create a bone called ExampleChildbone
+	RightHand = Joint::create(); //create a joint called RightHand 
 	TempMat.setTranslate(-2.0,0.0,0.0);
 	beginEditCP(RightHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightHand->setRelativeTransformation(TempMat);
@@ -613,7 +615,7 @@ void createSkeleton(void)
 	endEditCP(RightHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Elbow                                                 */
-	LeftElbow = Joint::create(); //create a bone called ExampleChildbone
+	LeftElbow = Joint::create(); //create a joint called LeftElbow 
 	TempMat.setTranslate(2.0,0.0,0.0);
 	beginEditCP(LeftElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftElbow->setRelativeTransformation(TempMat);
@@ -623,7 +625,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Right Elbow                                                 */
-	RightElbow = Joint::create(); //create a bone called ExampleChildbone
+	RightElbow = Joint::create(); //create a joint called RightElbow 
 	TempMat.setTranslate(-2.0,0.0,0.0);
 	beginEditCP(RightElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightElbow->setRelativeTransformation(TempMat);
@@ -632,7 +634,7 @@ void createSkeleton(void)
 	endEditCP(RightElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Shoulder                                                 */
-	LeftShoulder = Joint::create(); //create a bone called ExampleChildbone
+	LeftShoulder = Joint::create(); //create a joint called LeftShoulder 
 	TempMat.setTranslate(1.0,-0.5,0.0);
 	beginEditCP(LeftShoulder, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftShoulder->setRelativeTransformation(TempMat);
@@ -642,7 +644,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Right Shoulder                                                 */
-	RightShoulder = Joint::create(); //create a bone called ExampleChildbone
+	RightShoulder = Joint::create(); //create a joint called RightShoulder 
 	TempMat.setTranslate(-1.0,-0.5,0.0);
 	beginEditCP(RightShoulder, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightShoulder->setRelativeTransformation(TempMat);
@@ -652,7 +654,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Head                                                 */
-	Head = Joint::create(); //create a bone called ExampleChildbone
+	Head = Joint::create(); //create a joint called Head 
 	TempMat.setTranslate(0.0,1.0,0.0);
 	beginEditCP(Head, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 		Head->setRelativeTransformation(TempMat);
@@ -661,7 +663,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Clavicle                                                   */
-	Clavicle = Joint::create(); //create a bone called ExampleChildbone
+	Clavicle = Joint::create(); //create a joint called Clavicle 
 	TempMat.setTranslate(0.0,5.0,0.0);
 	beginEditCP(Clavicle, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		Clavicle->setRelativeTransformation(TempMat);
@@ -682,7 +684,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Right Toes                                                 */
-	RightToes = Joint::create(); //create a bone called ExampleChildbone
+	RightToes = Joint::create(); //create a joint called RightToes 
 	TempMat.setTranslate(0.0,0.0,1.0);
 	beginEditCP(RightToes, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 		RightToes->setRelativeTransformation(TempMat);
@@ -690,7 +692,7 @@ void createSkeleton(void)
 	endEditCP(RightToes, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Foot                                                 */
-	LeftFoot = Joint::create(); //create a bone called ExampleChildbone
+	LeftFoot = Joint::create(); //create a joint called LeftFoot 
 	TempMat.setTranslate(0.0,-3.0,0.0);
 	beginEditCP(LeftFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftFoot->setRelativeTransformation(TempMat);
@@ -700,7 +702,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Right Foot                                                 */
-	RightFoot = Joint::create(); //create a bone called ExampleChildbone
+	RightFoot = Joint::create(); //create a joint called RightFoot 
 	TempMat.setTranslate(0.0,-3.0,0.0);
 	beginEditCP(RightFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightFoot->setRelativeTransformation(TempMat);
@@ -709,7 +711,7 @@ void createSkeleton(void)
 	endEditCP(RightFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Knee                                                 */
-	LeftKnee = Joint::create(); //create a bone called ExampleChildbone
+	LeftKnee = Joint::create(); //create a joint called LeftKnee 
 	TempMat.setTranslate(0.0,-3.0,0.0);
 	beginEditCP(LeftKnee, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftKnee->setRelativeTransformation(TempMat);
@@ -719,7 +721,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Right Knee                                                 */
-	RightKnee = Joint::create(); //create a bone called ExampleChildbone
+	RightKnee = Joint::create(); //create a joint called RightKnee 
 	TempMat.setTranslate(0.0,-3.0,0.0);
 	beginEditCP(RightKnee, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightKnee->setRelativeTransformation(TempMat);
@@ -729,7 +731,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Left Hip                                                 */
-	LeftHip = Joint::create(); //create a bone called ExampleChildbone
+	LeftHip = Joint::create(); //create a joint called LeftHip 
 	TempMat.setTranslate(1.0,-1.0,0.0);
 	beginEditCP(LeftHip, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftHip->setRelativeTransformation(TempMat);
@@ -739,7 +741,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Right Hip                                                 */
-	RightHip = Joint::create(); //create a bone called ExampleChildbone
+	RightHip = Joint::create(); //create a joint called RightHip 
 	TempMat.setTranslate(-1.0,-1.0,0.0);
 	beginEditCP(RightHip, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightHip->setRelativeTransformation(TempMat);
@@ -749,7 +751,7 @@ void createSkeleton(void)
 
 	/*================================================================================================*/
 	/*                                       Pelvis                                                   */
-	Pelvis = Joint::create(); //create a bone called ExampleChildbone
+	Pelvis = Joint::create(); //create a joint called Pelvis 
 	TempMat.setTranslate(0.0,7.0,0.0);
 	beginEditCP(Pelvis, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		Pelvis->setRelativeTransformation(TempMat);
@@ -758,6 +760,8 @@ void createSkeleton(void)
 		Pelvis->getChildJoints().push_back(RightHip);
 		Pelvis->getChildJoints().push_back(Clavicle);
 	endEditCP(Pelvis, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
+	
+
 	
     //Skeleton
     ExampleSkeleton = Skeleton::create();
@@ -771,10 +775,10 @@ void createSkeleton(void)
     beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-		ExampleSkeletonDrawable->setDrawBindPose(false);
-		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
-		ExampleSkeletonDrawable->setDrawPose(true);
-		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		ExampleSkeletonDrawable->setDrawBindPose(false);  //By default, we don't draw the skeleton's bind pose
+		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));  //When drawn, the skeleton's bind pose renders in green
+		ExampleSkeletonDrawable->setDrawPose(true);  //By default, we do draw the skeleton's current pose
+		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));  //The skeleton's current pose renders in blue
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
 	//Skeleton Node
@@ -786,6 +790,7 @@ void createSkeleton(void)
 
 void createMesh(void)
 {
+	//Create a "skin" for the skeleton
 	GeoPTypesPtr type = GeoPTypesUI8::create();        
     beginEditCP(type, GeoPTypesUI8::GeoPropDataFieldMask);
     {
@@ -1054,7 +1059,7 @@ void createMesh(void)
 
 
 	// Skeleton Blended Geometry
-
+	// Here we attach the skin mesh to the skeleton so that the skin moves with the skeleton as it is animated
 	SkeletonBlendedGeometryPtr TheNewSkeletonGeometry = SkeletonBlendedGeometry::create();
 	beginEditCP(TheNewSkeletonGeometry);
 		TheNewSkeletonGeometry->addSkeleton(ExampleSkeleton);
@@ -1347,7 +1352,7 @@ void setupAnimation(void)
 
 ComponentPtr createGLPanel(void)
 {
-	//Create the nessicary parts for a viewport
+	//Create the necessary parts for a viewport
 
     //Camera Beacon
 	Matrix TransformMatrix;

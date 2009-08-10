@@ -1,3 +1,11 @@
+// 
+// OpenSGToolbox Tutorial: 20LoadXMLBlendedGeometry 
+//
+// Loads a skeleton and an attached geometry from an
+// XML file.
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -68,7 +76,7 @@ GeometryPtr geo;
 void display(void);
 void reshape(Vec2f Size);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortucts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -279,22 +287,27 @@ int main(int argc, char **argv)
     {
         if( (*Itor)->getType() == (ChunkMaterial::getClassType()))
         {
+			  //Set ExampleMaterial to the ChunkMaterial we just read in
             ExampleMaterial = (ChunkMaterial::Ptr::dcast(*Itor));
         }
         if( (*Itor)->getType() == (Skeleton::getClassType()))
         {
+			  //Set ExampleSkeleton to the Skeleton we just read in
             ExampleSkeleton = (Skeleton::Ptr::dcast(*Itor));
         }
         if( (*Itor)->getType() == (Geometry::getClassType()))
         {
+			  //Set ExampleGeometry to the geometry we just read in
             ExampleGeometry = (Geometry::Ptr::dcast(*Itor));
         }
         if( (*Itor)->getType() == (SkeletonBlendedGeometry::getClassType()))
         {
+			  //Set TheNewSkeletonGeometry to the SkeletonBlendedGeometry we just read in
             TheNewSkeletonGeometry = (SkeletonBlendedGeometry::Ptr::dcast(*Itor));
         }
         if( (*Itor)->getType().isDerivedFrom(Animation::getClassType()))
         {
+			  //Set TheSkeletonAnimation to the Animation we just read in
             TheSkeletonAnimation = (Animation::Ptr::dcast(*Itor));
         }
     }
@@ -311,10 +324,10 @@ int main(int argc, char **argv)
     beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-		ExampleSkeletonDrawable->setDrawBindPose(false);
-		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
-		ExampleSkeletonDrawable->setDrawPose(true);
-		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		ExampleSkeletonDrawable->setDrawBindPose(false);  //By default, we don't draw the skeleton's bind pose
+		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));  //When drawn, the skeleton's bind pose renders in green
+		ExampleSkeletonDrawable->setDrawPose(true);  //By default, we do draw the skeleton's current pose
+		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));  //The skeleton's current pose renders in blue
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
 	//Skeleton Node
@@ -352,6 +365,7 @@ int main(int argc, char **argv)
     mgr->showAll();
     TheAnimationAdvancer->start();
 
+	 //Show window
     Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,

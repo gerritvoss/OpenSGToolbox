@@ -1,3 +1,9 @@
+// 
+// OpenSGToolbox Tutorial: 04ShaderAnimation 
+//
+// Demonstrates a simple animation. 
+//
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -47,7 +53,7 @@ std::string createSHLFragProg(void);
 void initAnimations(FieldContainerPtr AnimatedObject, std::string AnimatedField);
 AnimationPtr createColorAnimation(FieldContainerPtr AnimatedObject, std::string AnimatedField);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:

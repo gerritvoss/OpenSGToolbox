@@ -1,3 +1,10 @@
+// 
+// OpenSGToolbox Tutorial: 11BoneAnimation 
+//
+// Creates a simple skeleton and animates a bone using transformation keyframes. 
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -55,7 +62,7 @@ void display(void);
 void reshape(Vec2f Size);
 void setupAnimation(JointPtr TheJoint, JointPtr TheChildJoint);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -255,24 +262,27 @@ int main(int argc, char **argv)
 	TempRootJoint = ExampleRootJoint;
 	Matrix TempMat;
 
+	//Create a set of randomly placed joints
 	for (Real32 i = 1.0f; i < 9.0f; i++)
 	{
 		JointPtr ExampleChildJoint;
 
 		TempMat.setTranslate(RandomPoolManager::getRandomReal32(0.0, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f));
-		ExampleChildJoint = Joint::create(); //create a bone called ExampleChildbone
+		ExampleChildJoint = Joint::create(); //create a joint called ExampleChildJoint
+
+		//Set ExampleChildJoint's current and bind transformations to TempMat (calculated above)
 		beginEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::UseParentTranslationFieldMask);//use the field masks
 			ExampleChildJoint->setRelativeTransformation(TempMat);
 			ExampleChildJoint->setBindRelativeTransformation(TempMat);
 			ExampleChildJoint->setUseParentTranslation(true);
 		endEditCP(ExampleChildJoint, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::UseParentTranslationFieldMask);
 
-	
+		//Add ExampleChildJoint as a child to the previously created joint
 		beginEditCP(TempRootJoint, Joint::ChildJointsFieldMask);
-			TempRootJoint->getChildJoints().push_back(ExampleChildJoint);//add a Child to the root bone
+			TempRootJoint->getChildJoints().push_back(ExampleChildJoint);//add a Child to the previous joint
 		endEditCP(TempRootJoint, Joint::ChildJointsFieldMask);
 		
-
+		//ExampleChildJoint will be the next parent joint
 		TempRootJoint = TempRootJoint->getChildJoints(0);
 	}
 
@@ -289,10 +299,10 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-		ExampleSkeletonDrawable->setDrawBindPose(false);
-		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
-		ExampleSkeletonDrawable->setDrawPose(true);
-		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		ExampleSkeletonDrawable->setDrawBindPose(false);  //By default, we won't draw the skeleton's bind pose
+		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));  //When the skeleton's bind pose is rendered, it will be green
+		ExampleSkeletonDrawable->setDrawPose(true);  //By default, we do draw the skeleton's current pose
+		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));  //The skeleton's current pose is rendered in blue
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
 	//Skeleton Node
@@ -313,7 +323,7 @@ int main(int argc, char **argv)
 	//Setup the Animation
 	setupAnimation(ExampleRootJoint, ExampleRootJoint->getChildJoints(0));
 
-	//Set the currently playing animation to TheJointAnimation
+	//Set the currently playing animation to TheJointAnimation (can be switched at runtime via a key command)
 	TheCurrentAnimation = TheJointAnimation;
 
 
@@ -355,7 +365,8 @@ void reshape(Vec2f Size)
 
 void setupAnimation(JointPtr TheJoint, JointPtr TheChildJoint)
 {
-	//TheJoint Transformation keyframes (setting translation)
+	//Create an animation for TheJoint
+	//TheJoint Transformation keyframes (we'll animate TheJoint's translation)
 	Matrix transform = TheJoint->getRelativeTransformation();
 
 	KeyframeTransformationsSequencePtr TheJointTranformationKeyframes = KeyframeTransformationsSequence44f::create();
@@ -393,7 +404,9 @@ void setupAnimation(JointPtr TheJoint, JointPtr TheChildJoint)
 	
 
 
-	//TheChildJoint Transformation keyframes (setting rotation)
+
+	//Create an animation for TheChildJoint
+	//TheChildJoint Transformation keyframes (we'll animate TheChildJoint's rotation)
 	transform = TheChildJoint->getRelativeTransformation();
 
 	KeyframeTransformationsSequencePtr TheChildJointTransformationKeyframes = KeyframeTransformationsSequence44f::create();
@@ -428,6 +441,8 @@ void setupAnimation(JointPtr TheJoint, JointPtr TheChildJoint)
     FieldAnimationPtr::dcast(TheChildJointAnimation)->setAnimatedField(TheChildJoint, std::string("RelativeTransformation"));
 	
 	
+
+
     //Animation Advancer
     TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();
 	beginEditCP(TheAnimationAdvancer);

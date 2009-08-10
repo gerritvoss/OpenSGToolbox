@@ -1,3 +1,10 @@
+// 
+// OpenSGToolbox Tutorial: 16LoadXMLSkeleton 
+//
+// Loads and displays a skeleton defined in an XML file. 
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -38,7 +45,7 @@ void reshape(Vec2f Size);
 
 NodePtr createAxisGeo(Real32 Length);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -149,9 +156,6 @@ int main(int argc, char **argv)
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
 
-	//Store bones and skeleton for XML export
-	FCFileType::FCPtrStore Containers;
-
 	//Read skeleton from XML file
 	FCFileType::FCPtrStore NewContainers;
 	NewContainers = FCFileHandler::the()->read(Path("./Data/16Skeleton.xml"));
@@ -161,6 +165,7 @@ int main(int argc, char **argv)
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
+		 //Only import skeleton data; we ignore anything else saved in the XML file
 		if( (*Itor)->getType() == (Skeleton::getClassType()))
 		{
 			//Set the Skeleton to the one we just read in
@@ -175,8 +180,7 @@ int main(int argc, char **argv)
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask);
 	
-	//Particle System Node
-    
+	//Skeleton Particle System Node
 	NodePtr SkeletonNode = osg::Node::create();
     beginEditCP(SkeletonNode, Node::CoreFieldMask);
         SkeletonNode->setCore(ExampleSkeletonDrawable);
@@ -217,12 +221,13 @@ int main(int argc, char **argv)
     return 0;
 }
 
+//Create a set of coordinate axes
 NodePtr createAxisGeo(Real32 Length)
 {
 	GeoPTypesPtr type = GeoPTypesUI8::create();        
     beginEditCP(type, GeoPTypesUI8::GeoPropDataFieldMask);
     {
-        type->addValue(GL_LINES);
+        type->addValue(GL_LINES);  //Render the axes as lines
     }
     endEditCP  (type, GeoPTypesUI8::GeoPropDataFieldMask);
 
@@ -251,12 +256,15 @@ NodePtr createAxisGeo(Real32 Length)
     //Colors
     GeoColors3fPtr colors = GeoColors3f::create();
     beginEditCP(colors, GeoColors3f::GeoPropDataFieldMask);
+	 	  //X-Axis = Red
         colors->addValue(Color3f( 1.0,0.0,0.0));
         colors->addValue(Color3f( 1.0,0.0,0.0));
 
+		  //Y-Axis = Green
         colors->addValue(Color3f( 0.0,1.0,0.0));
         colors->addValue(Color3f( 0.0,1.0,0.0));
 
+		  //Z-Axis = Blue
         colors->addValue(Color3f( 0.0,0.0,1.0));
         colors->addValue(Color3f( 0.0,0.0,1.0));
     endEditCP(colors, GeoColors3f::GeoPropDataFieldMask);

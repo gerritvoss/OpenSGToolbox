@@ -1,3 +1,10 @@
+// 
+// OpenSGToolbox Tutorial: 14SkeletonLoader 
+//
+// Loads and displays a skeleton defined in an XML file. 
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -35,7 +42,7 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 void display(void);
 void reshape(Vec2f Size);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -153,16 +160,17 @@ int main(int argc, char **argv)
 		ExampleMaterial->addChunk(ExampleBlendChunk);
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
-    //Skeleton
+    //Create a new skeleton
     SkeletonPtr ExampleSkeleton = Skeleton::create();
 
-	//Load skeleton from XML
+	//Load skeleton from an XML file
 	FCFileType::FCPtrStore NewContainers;
 	NewContainers = FCFileHandler::the()->read(Path("./Data/14Skeleton.xml"));
 
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
+		 //We only want the skeleton; ignore anything else saved in the XML file
 		if( (*Itor)->getType() == (Skeleton::getClassType()))
 		{
 			ExampleSkeleton = (Skeleton::Ptr::dcast(*Itor));

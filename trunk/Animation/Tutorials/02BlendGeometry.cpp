@@ -1,12 +1,7 @@
-// OpenSG Tutorial Example: Hello World
-//
-// Minimalistic OpenSG program
 // 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
+// OpenSGToolbox Tutorial: 02BlendGeometry 
 //
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
+// Demonstrates the use of blended geometries. 
 //
 
 // General OpenSG configuration, needed everywhere
@@ -72,7 +67,7 @@ ComponentPtr createGLPanel(void);
 void display(void);
 void reshape(Vec2f Size);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:

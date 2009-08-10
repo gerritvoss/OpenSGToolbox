@@ -1,12 +1,7 @@
-// OpenSG Tutorial Example: Hello World
-//
-// Minimalistic OpenSG program
 // 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
+// OpenSGToolbox Tutorial: 05TextureAnimation 
 //
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
+// Demonstrates a texture animation. 
 //
 
 // General OpenSG configuration, needed everywhere
@@ -96,7 +91,7 @@ AnimationAdvancerPtr TutorialTextureAnimationAdvancer;
 
 KeyframeAnimatorPtr TutorialTextureAnimator;
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:

@@ -1,3 +1,11 @@
+// 
+// OpenSGToolbox Tutorial: 15LoadXMLAnimation 
+//
+// Loads a skeleton and a skeleton animation from an
+// XML file.
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -130,7 +138,7 @@ public:
 };*/
 
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:

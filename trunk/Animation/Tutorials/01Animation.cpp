@@ -1,3 +1,10 @@
+// 
+// OpenSGToolbox Tutorial: 01Animation
+//
+// Demonstrates a simple animation using transformation keyframes. 
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -86,7 +93,7 @@ KeyframeColorsSequencePtr ColorKeyframes;
 KeyframeVectorsSequencePtr VectorKeyframes;
 KeyframeRotationsSequencePtr RotationKeyframes;
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortucts 
 class TutorialKeyListener : public KeyListener
 {
 public:

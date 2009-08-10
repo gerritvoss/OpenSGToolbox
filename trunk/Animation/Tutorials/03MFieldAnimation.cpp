@@ -1,12 +1,7 @@
-// OpenSG Tutorial Example: Hello World
-//
-// Minimalistic OpenSG program
 // 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
+// OpenSGToolbox Tutorial: 03FieldAnimation 
 //
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
+// Demonstrates the use of a field animation.
 //
 
 // General OpenSG configuration, needed everywhere
@@ -91,7 +86,7 @@ FieldAnimationPtr TheAnimation;
 TutorialAnimationListener TheAnimationListener;
 AnimationAdvancerPtr TheAnimationAdvancer;
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:

@@ -1,12 +1,8 @@
-// OpenSG Tutorial Example: Hello World
-//
-// Minimalistic OpenSG program
 // 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
+// OpenSGToolbox Tutorial: 23BlendXMLAnimations 
 //
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
+// Creates a SkeletonBlendedAnimation from skeleton
+// animations stored in two XML files.
 //
 
 // General OpenSG configuration, needed everywhere
@@ -105,7 +101,7 @@ bool animationPaused = false;
 void display(void);
 void reshape(Vec2f Size);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -287,6 +283,7 @@ class TutorialUpdateListener : public UpdateListener
     }
 };
 
+//Create a listener to let us change the SkeletonBlendedAnimation's blend amounts at runtime
 class BlendAmountSliderChangeListener : public ChangeListener
 {
   public:
@@ -393,12 +390,6 @@ int main(int argc, char **argv)
 	std::cout << "CTRL-Q  Exit\n\n" << std::endl;
 
 
-
-
-
-
-
-
 	
 	//Import scene from XML
 	ChunkMaterialPtr ExampleMaterial;
@@ -426,22 +417,27 @@ int main(int argc, char **argv)
     {
 		if( (*Itor)->getType() == (ChunkMaterial::getClassType()))
 		{
+			//Set ExampleMaterial to the ChunkMaterial we just read in
 			ExampleMaterial = (ChunkMaterial::Ptr::dcast(*Itor));
 		}
 		if( (*Itor)->getType() == (Skeleton::getClassType()))
 		{
+			//Add the Skeleton we just read in to SkeletonPtrs
 			SkeletonPtrs.push_back(Skeleton::Ptr::dcast(*Itor));
 		}
 		if( (*Itor)->getType() == (SkeletonBlendedGeometry::getClassType()))
 		{
+			//Add the SkeletonBlendedGeometry we just read in to SkeletonBlendedGeometryPtrs
 			SkeletonBlendedGeometryPtrs.push_back(SkeletonBlendedGeometry::Ptr::dcast(*Itor));
 		}
 		if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
 		{
+			//Set TheWalkingAnimation to the SkeletonAnimation we just read in
 			TheWalkingAnimation = (SkeletonAnimation::Ptr::dcast(*Itor));
 		}
 		if( (*Itor)->getType() == (Geometry::getClassType()))
 		{
+			//Add the Geometry we just read in to GeometryPtrs
 			GeometryPtrs.push_back(Geometry::Ptr::dcast(*Itor));
 		}
     }
@@ -450,6 +446,7 @@ int main(int argc, char **argv)
 	NewContainers = FCFileHandler::the()->read(Path("./Data/23SamAnimation.xml"));
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
+		 //Import only the skeletonAnimation from the second XML file; we've already imported the skeleton and the geometry
 		if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
 		{
 			TheSecondAnimation = (SkeletonAnimation::Ptr::dcast(*Itor));
@@ -541,11 +538,12 @@ int main(int argc, char **argv)
     UpperAnimationSliderRangeModel->setValue(BlendWalking * 100);
     UpperAnimationSliderRangeModel->setExtent(0);
     
-    //Create the upper animation slider
+    //Create the upper animation blend amount slider
     LabelPtr TempLabel;
     SliderPtr UpperAnimationSlider = Slider::create();
     beginEditCP(UpperAnimationSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
 
+	 //Label the slider
 		TempLabel = Label::Ptr::dcast(UpperAnimationSlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("0.0"); endEditCP(TempLabel, Label::TextFieldMask);
         UpperAnimationSlider->getLabelMap()[0] = TempLabel;
@@ -554,7 +552,7 @@ int main(int argc, char **argv)
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("1.0"); endEditCP(TempLabel, Label::TextFieldMask);
         UpperAnimationSlider->getLabelMap()[100] = TempLabel;
 
-
+		//Customize the slider
         UpperAnimationSlider->setPreferredSize(Vec2f(100, 300));
         UpperAnimationSlider->setSnapToTicks(false);
         UpperAnimationSlider->setMajorTickSpacing(10);
@@ -571,10 +569,11 @@ int main(int argc, char **argv)
     LowerAnimationSliderRangeModel->setValue(BlendTouchScreen * 100);
     LowerAnimationSliderRangeModel->setExtent(0);
     
-    //Create the lower animation slider
+    //Create the lower animation blend amount slider
     SliderPtr LowerAnimationSlider = Slider::create();
     beginEditCP(LowerAnimationSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
 
+	 //Label the slider
         TempLabel = Label::Ptr::dcast(LowerAnimationSlider->getLabelPrototype()->shallowCopy());
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("0.0"); endEditCP(TempLabel, Label::TextFieldMask);
         LowerAnimationSlider->getLabelMap()[0] = TempLabel;
@@ -583,7 +582,7 @@ int main(int argc, char **argv)
         beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("1.0"); endEditCP(TempLabel, Label::TextFieldMask);
         LowerAnimationSlider->getLabelMap()[100] = TempLabel;
 
-
+		//Customize the slider
         LowerAnimationSlider->setPreferredSize(Vec2f(100, 300));
         LowerAnimationSlider->setSnapToTicks(false);
         LowerAnimationSlider->setMajorTickSpacing(10);
@@ -664,6 +663,7 @@ int main(int argc, char **argv)
     mgr->showAll();
     TheAnimationAdvancer->start();
 
+	 //Show window
     Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,

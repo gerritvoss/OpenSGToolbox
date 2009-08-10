@@ -1,3 +1,11 @@
+// 
+// OpenSGToolbox Tutorial: 13MeshBlending 
+//
+// Creates a skeleton and a "skin" geometry and binds them together
+// using a skeleton blended geometry.
+//
+
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -70,7 +78,7 @@ void display(void);
 void reshape(Vec2f Size);
 void setupAnimation(void);
 
-// Create a class to allow for the use of the Ctrl+q
+// Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -292,12 +300,13 @@ int main(int argc, char **argv)
 		ExampleMaterial->addChunk(ExampleBlendChunk);
 	endEditCP(ExampleMaterial, ChunkMaterial::ChunksFieldMask);
 
+
 	//===========================================Joints==================================================================
 	Matrix TempMat;
 
 	/*================================================================================================*/
 	/*                                       Left Fingers                                                 */
-	LeftFingers = Joint::create(); //create a bone called ExampleChildbone
+	LeftFingers = Joint::create(); //create a joint called LeftFingers 
 	TempMat.setTranslate(1.0,0.0,0.0);
 	beginEditCP(LeftFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 		LeftFingers->setRelativeTransformation(TempMat);
@@ -306,7 +315,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Right Fingers                                                 */
-	RightFingers = Joint::create(); //create a bone called ExampleChildbone
+	RightFingers = Joint::create(); //create a joint called RightFingers 
 	TempMat.setTranslate(-1.0,0.0,0.0);
 	beginEditCP(RightFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 		RightFingers->setRelativeTransformation(TempMat);
@@ -314,7 +323,7 @@ int main(int argc, char **argv)
 	endEditCP(RightFingers, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Hand                                                 */
-	LeftHand = Joint::create(); //create a bone called ExampleChildbone
+	LeftHand = Joint::create(); //create a joint called LeftHand 
 	TempMat.setTranslate(2.0,0.0,0.0);
 	beginEditCP(LeftHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftHand->setRelativeTransformation(TempMat);
@@ -324,7 +333,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Right Hand                                                 */
-	RightHand = Joint::create(); //create a bone called ExampleChildbone
+	RightHand = Joint::create(); //create a joint called RightHand 
 	TempMat.setTranslate(-2.0,0.0,0.0);
 	beginEditCP(RightHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightHand->setRelativeTransformation(TempMat);
@@ -333,7 +342,7 @@ int main(int argc, char **argv)
 	endEditCP(RightHand, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Elbow                                                 */
-	LeftElbow = Joint::create(); //create a bone called ExampleChildbone
+	LeftElbow = Joint::create(); //create a joint called LeftElbow 
 	TempMat.setTranslate(2.0,0.0,0.0);
 	beginEditCP(LeftElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftElbow->setRelativeTransformation(TempMat);
@@ -343,7 +352,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Right Elbow                                                 */
-	RightElbow = Joint::create(); //create a bone called ExampleChildbone
+	RightElbow = Joint::create(); //create a joint called RightElbow 
 	TempMat.setTranslate(-2.0,0.0,0.0);
 	beginEditCP(RightElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightElbow->setRelativeTransformation(TempMat);
@@ -352,7 +361,7 @@ int main(int argc, char **argv)
 	endEditCP(RightElbow, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Shoulder                                                 */
-	LeftShoulder = Joint::create(); //create a bone called ExampleChildbone
+	LeftShoulder = Joint::create(); //create a joint called LeftShoulder 
 	TempMat.setTranslate(1.0,-0.5,0.0);
 	beginEditCP(LeftShoulder, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftShoulder->setRelativeTransformation(TempMat);
@@ -362,7 +371,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Right Shoulder                                                 */
-	RightShoulder = Joint::create(); //create a bone called ExampleChildbone
+	RightShoulder = Joint::create(); //create a joint called RightShoulder 
 	TempMat.setTranslate(-1.0,-0.5,0.0);
 	beginEditCP(RightShoulder, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightShoulder->setRelativeTransformation(TempMat);
@@ -372,7 +381,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Head                                                 */
-	Head = Joint::create(); //create a bone called ExampleChildbone
+	Head = Joint::create(); //create a joint called Head 
 	TempMat.setTranslate(0.0,1.0,0.0);
 	beginEditCP(Head, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 		Head->setRelativeTransformation(TempMat);
@@ -381,7 +390,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Clavicle                                                   */
-	Clavicle = Joint::create(); //create a bone called ExampleChildbone
+	Clavicle = Joint::create(); //create a joint called Clavicle 
 	TempMat.setTranslate(0.0,5.0,0.0);
 	beginEditCP(Clavicle, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		Clavicle->setRelativeTransformation(TempMat);
@@ -402,7 +411,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Right Toes                                                 */
-	RightToes = Joint::create(); //create a bone called ExampleChildbone
+	RightToes = Joint::create(); //create a joint called RightToes 
 	TempMat.setTranslate(0.0,0.0,1.0);
 	beginEditCP(RightToes, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 		RightToes->setRelativeTransformation(TempMat);
@@ -410,7 +419,7 @@ int main(int argc, char **argv)
 	endEditCP(RightToes, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Foot                                                 */
-	LeftFoot = Joint::create(); //create a bone called ExampleChildbone
+	LeftFoot = Joint::create(); //create a joint called LeftFoot 
 	TempMat.setTranslate(0.0,-3.0,0.0);
 	beginEditCP(LeftFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftFoot->setRelativeTransformation(TempMat);
@@ -420,7 +429,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Right Foot                                                 */
-	RightFoot = Joint::create(); //create a bone called ExampleChildbone
+	RightFoot = Joint::create(); //create a joint called RightFoot 
 	TempMat.setTranslate(0.0,-3.0,0.0);
 	beginEditCP(RightFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightFoot->setRelativeTransformation(TempMat);
@@ -429,7 +438,7 @@ int main(int argc, char **argv)
 	endEditCP(RightFoot, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 	/*================================================================================================*/
 	/*                                       Left Knee                                                 */
-	LeftKnee = Joint::create(); //create a bone called ExampleChildbone
+	LeftKnee = Joint::create(); //create a joint called LeftKnee 
 	TempMat.setTranslate(0.0,-3.0,0.0);
 	beginEditCP(LeftKnee, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftKnee->setRelativeTransformation(TempMat);
@@ -439,7 +448,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Right Knee                                                 */
-	RightKnee = Joint::create(); //create a bone called ExampleChildbone
+	RightKnee = Joint::create(); //create a joint called RightKnee 
 	TempMat.setTranslate(0.0,-3.0,0.0);
 	beginEditCP(RightKnee, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightKnee->setRelativeTransformation(TempMat);
@@ -449,7 +458,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Left Hip                                                 */
-	LeftHip = Joint::create(); //create a bone called ExampleChildbone
+	LeftHip = Joint::create(); //create a joint called LeftHip 
 	TempMat.setTranslate(1.0,-1.0,0.0);
 	beginEditCP(LeftHip, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		LeftHip->setRelativeTransformation(TempMat);
@@ -459,7 +468,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Right Hip                                                 */
-	RightHip = Joint::create(); //create a bone called ExampleChildbone
+	RightHip = Joint::create(); //create a joint called RightHip 
 	TempMat.setTranslate(-1.0,-1.0,0.0);
 	beginEditCP(RightHip, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		RightHip->setRelativeTransformation(TempMat);
@@ -469,7 +478,7 @@ int main(int argc, char **argv)
 
 	/*================================================================================================*/
 	/*                                       Pelvis                                                   */
-	Pelvis = Joint::create(); //create a bone called ExampleChildbone
+	Pelvis = Joint::create(); //create a joint called Pelvis 
 	TempMat.setTranslate(0.0,7.0,0.0);
 	beginEditCP(Pelvis, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
 		Pelvis->setRelativeTransformation(TempMat);
@@ -478,15 +487,17 @@ int main(int argc, char **argv)
 		Pelvis->getChildJoints().push_back(RightHip);
 		Pelvis->getChildJoints().push_back(Clavicle);
 	endEditCP(Pelvis, Joint::RelativeTransformationFieldMask | Joint::BindRelativeTransformationFieldMask | Joint::ChildJointsFieldMask);
-	
+
 
 
     //Skeleton
     ExampleSkeleton = Skeleton::create();
 	beginEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
 		ExampleSkeleton->getRootJoints().push_back(Pelvis);
-	endEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);
+	endEditCP(ExampleSkeleton, Skeleton::RootJointsFieldMask);  //Set Pelvis as skeleton's root joint
 
+
+	//Create a geometry to attach to the skeleton (i.e. skin)
 	GeoPTypesPtr type = GeoPTypesUI8::create();        
     beginEditCP(type, GeoPTypesUI8::GeoPropDataFieldMask);
     {
@@ -724,6 +735,7 @@ int main(int argc, char **argv)
     endEditCP(norms, GeoNormals3f::GeoPropDataFieldMask);
 
 
+	 //Tell the geometry (geo) to use the points and normals we just defined
     beginEditCP(geo, Geometry::TypesFieldMask     |
                      Geometry::LengthsFieldMask   |
                      Geometry::PositionsFieldMask |
@@ -760,10 +772,10 @@ int main(int argc, char **argv)
     beginEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 		ExampleSkeletonDrawable->setSkeleton(ExampleSkeleton);
 		ExampleSkeletonDrawable->setMaterial(ExampleMaterial);
-		ExampleSkeletonDrawable->setDrawBindPose(false);
-		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));
-		ExampleSkeletonDrawable->setDrawPose(true);
-		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		ExampleSkeletonDrawable->setDrawBindPose(false);  //By default, we don't draw the skeleton's bind pose
+		ExampleSkeletonDrawable->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));  //When drawn, the skeleton's bind pose renders green
+		ExampleSkeletonDrawable->setDrawPose(true);  //By default, we do draw the skeleton's current pose
+		ExampleSkeletonDrawable->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));  //The skeleton's current pose renders blue
     endEditCP(ExampleSkeletonDrawable, SkeletonDrawable::SkeletonFieldMask | SkeletonDrawable::MaterialFieldMask | SkeletonDrawable::DrawBindPoseFieldMask | SkeletonDrawable::BindPoseColorFieldMask | SkeletonDrawable::DrawPoseFieldMask | SkeletonDrawable::PoseColorFieldMask);
 	
 	//Skeleton Node
@@ -776,7 +788,7 @@ int main(int argc, char **argv)
 
 
 	// Skeleton Blended Geometry
-
+	// Here we are attaching the "skin" to the skeleton so that when the skeleton is animated, the skin moves with it
 	SkeletonBlendedGeometryPtr TheNewSkeletonGeometry = SkeletonBlendedGeometry::create();
 	beginEditCP(TheNewSkeletonGeometry);
 		TheNewSkeletonGeometry->addSkeleton(ExampleSkeleton);
@@ -904,7 +916,7 @@ int main(int argc, char **argv)
    beginEditCP(TheAnimationAdvancer);
 
 
-    
+   //Create scene node 
     NodePtr scene = Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(Group::create());
@@ -959,12 +971,14 @@ void setupAnimation(void)
 {
 	Matrix TempMat;
 
+	//We create an animation and an animator for each joint we wish to animate
+
 	//Left Elbow
 	KeyframeTransformationsSequencePtr LeftElbowKeyframes = KeyframeTransformationsSequence44f::create();
-
+	//Make keyframes
 	TempMat.setTransform(Vec3f(2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	LeftElbowKeyframes->addKeyframe(TempMat,0.0f);
-	TempMat.setTransform(Vec3f(2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),1.1));
+	TempMat.setTransform(Vec3f(2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),1.57));
 	LeftElbowKeyframes->addKeyframe(TempMat,3.0f);
 	TempMat.setTransform(Vec3f(2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	LeftElbowKeyframes->addKeyframe(TempMat,6.0f);
@@ -977,10 +991,10 @@ void setupAnimation(void)
 
 	//Right Elbow
 	KeyframeTransformationsSequencePtr RightElbowKeyframes = KeyframeTransformationsSequence44f::create();
-
+	//Make keyframes
 	TempMat.setTransform(Vec3f(-2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	RightElbowKeyframes->addKeyframe(TempMat,0.0f);
-	TempMat.setTransform(Vec3f(-2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),-1.1));
+	TempMat.setTransform(Vec3f(-2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),-1.57));
 	RightElbowKeyframes->addKeyframe(TempMat,3.0f);
 	TempMat.setTransform(Vec3f(-2.0,0.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	RightElbowKeyframes->addKeyframe(TempMat,6.0f);
@@ -993,10 +1007,10 @@ void setupAnimation(void)
 	
 	//Left Shoulder
 	KeyframeTransformationsSequencePtr LeftShoulderKeyframes = KeyframeTransformationsSequence44f::create();
-
+	//Make keyframes
 	TempMat.setTransform(Vec3f(1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	LeftShoulderKeyframes->addKeyframe(TempMat,0.0f);
-	TempMat.setTransform(Vec3f(1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.6));
+	TempMat.setTransform(Vec3f(1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.4));
 	LeftShoulderKeyframes->addKeyframe(TempMat,3.0f);
 	TempMat.setTransform(Vec3f(1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	LeftShoulderKeyframes->addKeyframe(TempMat,6.0f);
@@ -1009,10 +1023,10 @@ void setupAnimation(void)
 	
 	//Right Shoulder
 	KeyframeTransformationsSequencePtr RightShoulderKeyframes = KeyframeTransformationsSequence44f::create();
-
+	//Make keyframes
 	TempMat.setTransform(Vec3f(-1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	RightShoulderKeyframes->addKeyframe(TempMat,0.0f);
-	TempMat.setTransform(Vec3f(-1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),-0.6));
+	TempMat.setTransform(Vec3f(-1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),-0.4));
 	RightShoulderKeyframes->addKeyframe(TempMat,3.0f);
 	TempMat.setTransform(Vec3f(-1.0,-0.5,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	RightShoulderKeyframes->addKeyframe(TempMat,6.0f);
@@ -1025,7 +1039,7 @@ void setupAnimation(void)
 	
 	//Left Hip
 	KeyframeTransformationsSequencePtr LeftHipKeyframes = KeyframeTransformationsSequence44f::create();
-
+	//Make keyframes
 	TempMat.setTransform(Vec3f(1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	LeftHipKeyframes->addKeyframe(TempMat,0.0f);
 	TempMat.setTransform(Vec3f(1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.4));
@@ -1041,7 +1055,7 @@ void setupAnimation(void)
 
 	//Right Hip
 	KeyframeTransformationsSequencePtr RightHipKeyframes = KeyframeTransformationsSequence44f::create();
-
+	//Make keyframes
 	TempMat.setTransform(Vec3f(-1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),0.0));
 	RightHipKeyframes->addKeyframe(TempMat,0.0f);
 	TempMat.setTransform(Vec3f(-1.0,-1.0,0.0),Quaternion(Vec3f(0.0,0.0,1.0),-0.4));
@@ -1058,7 +1072,7 @@ void setupAnimation(void)
 
 	//Clavicle
 	KeyframeTransformationsSequencePtr ClavicleKeyframes = KeyframeTransformationsSequence44f::create();
-
+	//Make keyframes
 	TempMat.setTransform(Vec3f(0.0,5.0,0.0));
 	ClavicleKeyframes->addKeyframe(TempMat,0.0f);
 	TempMat.setTransform(Vec3f(0.0,3.0,0.0));
@@ -1074,10 +1088,11 @@ void setupAnimation(void)
        ClavicleAnimator->setKeyframeSequence(ClavicleKeyframes);
     endEditCP(ClavicleAnimator);
 
-//  Skeleton Animation
+	//Skeleton Animation
    TheSkeletonAnimation = SkeletonAnimation::create();
+	//Add the animators we just made to the skeleton animation
    beginEditCP(TheSkeletonAnimation);
-		TheSkeletonAnimation->addTransformationAnimator(LeftElbowAnimator, LeftElbow);
+		TheSkeletonAnimation->addTransformationAnimator(LeftElbowAnimator, LeftElbow);  //Here we tell the skeleton animation the it should use the animator LeftElbowAnimator to animate the joint LeftElbow
 		TheSkeletonAnimation->addTransformationAnimator(RightElbowAnimator, RightElbow);
 		TheSkeletonAnimation->addTransformationAnimator(LeftShoulderAnimator, LeftShoulder);
 		TheSkeletonAnimation->addTransformationAnimator(RightShoulderAnimator, RightShoulder);
@@ -1086,6 +1101,4 @@ void setupAnimation(void)
 		TheSkeletonAnimation->addTransformationAnimator(ClavicleAnimator, Clavicle);
 		TheSkeletonAnimation->setSkeleton(ExampleSkeleton);
    endEditCP(TheSkeletonAnimation);
-
-
 }
