@@ -81,9 +81,48 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    /**************************************************************************//**
+     * @fn Action::ResultE drawPrimitives (DrawActionBase *action)
+     * 
+     * @brief Draws a bone between each parent-child joint pair. 
+	  *
+	  * @param action
+     * 
+	  * @return  Result
+    *****************************************************************************/
     Action::ResultE drawPrimitives (DrawActionBase *action);
+    
+	 /**************************************************************************//**
+     * @fn Action::ResultE drawActionHandler( Action* action )
+     * 
+     * @brief  
+     * 
+	  * @param action
+	  *
+	  * @return  Result
+    *****************************************************************************/
     Action::ResultE drawActionHandler( Action* action );
+	 
+	 /**************************************************************************//**
+     * @fn Action::ResultE renderActionHandler( Action* action )
+     * 
+     * @brief  
+	  *
+	  * @param action
+     * 
+	  * @return  Result
+    *****************************************************************************/
     Action::ResultE renderActionHandler( Action* action );
+	 
+	 /**************************************************************************//**
+     * @fn Action::ResultE intersect( Action* action )
+     * 
+     * @brief  
+	  *
+	  * @param action
+     * 
+	  * @return  Result
+    *****************************************************************************/
     Action::ResultE intersect( Action* action );
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -109,8 +148,41 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
     virtual ~SkeletonDrawable(void); 
 
     /*! \}                                                                 */
+	 
+	 /**************************************************************************//**
+     * @fn void    adjustVolume(Volume & volume)
+     * 
+     * @brief  
+	  *
+	  * @param volume
+     * 
+	  * @return  Result
+    *****************************************************************************/
     void    adjustVolume(Volume & volume);
+	 
+	 /**************************************************************************//**
+     * @fn void drawJointHierarchy (JointPtr TheJoint, DrawActionBase *action)
+     * 
+     * @brief Draws a bone between each parent-child joint pair located beneath
+	  * 		  TheJoint in the joint hierarchy.
+	  *
+	  * @param TheJoint The joint in the hierarchy from which drawing should begin.
+	  * @param action
+     * 
+	  * @return  Result
+    *****************************************************************************/
     void drawJointHierarchy (JointPtr TheJoint, DrawActionBase *action);
+	 
+	 /**************************************************************************//**
+     * @fn void expandVolumeByJoint (JointPtr TheJoint, Volume &volume)
+     * 
+     * @brief  
+	  *
+	  * @param TheJoint
+	  * @param volume
+     * 
+	  * @return  Result
+    *****************************************************************************/
     void expandVolumeByJoint (JointPtr TheJoint, Volume &volume);
     
     /*==========================  PRIVATE  ================================*/

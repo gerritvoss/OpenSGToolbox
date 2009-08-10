@@ -77,8 +77,23 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    /**************************************************************************//**
+     * @fn	virtual Real32 getLength(void) const
+     * 
+     * @brief Returns the length of the animation.	
+     * 
+	  * @return  The length of the animation.
+    *****************************************************************************/
     virtual Real32 getLength(void) const;
 
+    /**************************************************************************//**
+     * @fn	void addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint);
+     * 
+	  * @brief Adds the supplied animator to the specified joint in the skeleton. 
+	  * 
+	  * @param  TheAnimator The animator to attach.
+	  * @param	TheJoint	The joint to be animated by TheAnimator
+    *****************************************************************************/
 	void addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint);
 
     /*=========================  PROTECTED  ===============================*/
@@ -111,7 +126,22 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
      * @param	prev_t	 
     *****************************************************************************/
     virtual void internalUpdate(const Real32& t, const Real32 prev_t);
-	std::map<unsigned long, Matrix> getRelTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints);
+    
+	 /**************************************************************************//**
+     * @fn	std::map<unsigned long, Matrix> getRelTransformations
+	  * (const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints);
+     * 
+     * @brief Retrieves the relative transformation for each joint that is animated
+	  * 		  in this step of the animation.
+     * 
+     * @param	t		
+     * @param	prev_t	 
+	  * @param  AnimatedJoints  A set of all joints animated at this time in the
+	  * 								 animation.
+	  *
+	  * @return  A map from joint field container IDs to relative trans matrices 
+    *****************************************************************************/
+	 std::map<unsigned long, Matrix> getRelTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints);
     
     /*==========================  PRIVATE  ================================*/
   private:

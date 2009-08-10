@@ -72,7 +72,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
      * 
      * @param	Listener	The listener to add. 
      * 
-     * @return	
+     * @return	EventConnection
     *****************************************************************************/
     EventConnection addSkeletonListener(SkeletonListenerPtr Listener);
 
@@ -90,9 +90,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
     /**************************************************************************//**
      * @fn	void removeSkeletonListener(SkeletonListenerPtr Listener)
      * 
-     * @brief	Removes the skeleton listener described by Listener. 
+     * @brief	Removes the skeleton listener 'Listener'. 
      * 
-     * @param	Listener	The listener to remove. 
+     * @param	Listener	 The listener to remove. 
     *****************************************************************************/
     void removeSkeletonListener(SkeletonListenerPtr Listener);
 
@@ -102,10 +102,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
 	 * @brief	Sets a TheJoint's parent skeleton to this instance and recursively
 	 *			does the same for all of TheJoint's descendants.
 	 * 
-	 * @param	The joint to update.
+	 * @param TheJoint The joint to update.
 	*****************************************************************************/
 	void setJointParentSkeleton(JointPtr TheJoint);
-	//void updateBlendedGeometry();
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -165,6 +164,11 @@ class OSG_ANIMATIONLIB_DLLMAPPING Skeleton : public SkeletonBase
 	
     SkeletonListenerSet       _SkeletonListeners;
 
+    /**************************************************************************//**
+     * @fn	void produceChangedEvent(void)
+     * 
+     * @brief	Tells all of the skeleton's listeners that an event has occurred. 
+    *****************************************************************************/
 	void produceChangedEvent(void);
     
     /*==========================  PRIVATE  ================================*/

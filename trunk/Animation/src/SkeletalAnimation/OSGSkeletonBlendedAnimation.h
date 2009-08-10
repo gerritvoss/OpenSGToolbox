@@ -79,6 +79,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlen
 
     /*! \}                                                                 */
 
+    /**************************************************************************//**
+     * @fn	virtual Real32 getLength(void) const
+     * 
+     * @brief Returns the length of the animation.	
+     * 
+	  * @return  The length of the animation.
+    *****************************************************************************/
 	virtual Real32 getLength(void) const;
 
 	/**************************************************************************//**

@@ -1,1 +1,10 @@
-This is the description of OpenSGToolbox Dependency Installer.
+This installer will install the following:
+
+DEPENDENCIES:
+OpenSG
+Boost
+ODE
+
+
+By default, header files will be placed in /usr/local/include
+and libraries will be placed in /usr/local/lib
