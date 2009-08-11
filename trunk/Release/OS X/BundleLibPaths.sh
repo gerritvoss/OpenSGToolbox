@@ -4,8 +4,8 @@
 
 ExecutableDir=/usr/local
 File=$1
-LibBundlePath=@executable_path/../Libraries/
-#LibBundlePath=$2
+#LibBundlePath=@executable_path/../Libraries/
+LibBundlePath=$2
 
 #===================================================================
 rename_libs()    
