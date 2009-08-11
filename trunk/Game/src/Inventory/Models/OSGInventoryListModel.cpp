@@ -51,7 +51,7 @@
 #include "Inventory/OSGInventoryItem.h"
 #include "Inventory/Models/Comparitors/OSGInventoryListComparitor.h"
 #include "Inventory/Models/Comparitors/OSGDefaultInventoryListComparitor.h"
-#include <OpenSG/Game/OSGInventorySubset.h>
+#include "Inventory/Models/InventorySubsets/OSGInventorySubset.h"
 
 
 OSG_BEGIN_NAMESPACE

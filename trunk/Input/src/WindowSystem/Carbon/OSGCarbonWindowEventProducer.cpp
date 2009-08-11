@@ -1045,6 +1045,7 @@ WindowPtr CarbonWindowEventProducer::initWindow(void)
 
     // Initialize OpenGL
     GLint attribs[] = { AGL_RGBA, AGL_DOUBLEBUFFER, AGL_DEPTH_SIZE, 16, AGL_STENCIL_SIZE, 8, AGL_ACCELERATED, AGL_NO_RECOVERY, AGL_NONE };
+    //GLint attribs[] = { AGL_RGBA, AGL_DOUBLEBUFFER, AGL_DEPTH_SIZE, 16, AGL_STENCIL_SIZE, 8,  AGL_NONE };
     AGLPixelFormat pixelFormat = aglChoosePixelFormat(0, 0, attribs);
     if (pixelFormat == 0)
         std::cerr << "Cannot choose pixel format" << std::endl;

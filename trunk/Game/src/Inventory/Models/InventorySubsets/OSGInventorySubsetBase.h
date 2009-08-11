@@ -67,7 +67,7 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/Game/OSGInventoryListModelFields.h> // Model type
+#include "Inventory/Models/OSGInventoryListModelFields.h" // Model type
 
 #include "OSGInventorySubsetFields.h"
 

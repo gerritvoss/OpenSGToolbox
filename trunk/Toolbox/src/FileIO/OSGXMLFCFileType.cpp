@@ -655,24 +655,24 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 			else if(TheField->getType() == SFPath::getClassType())
 			{
 				FieldValue.clear();
-				Path RootPath = boost::filesystem::system_complete(RootPath);
+				//Path RootPath = boost::filesystem::system_complete(RootPath);
 				Path FilePath = boost::filesystem::system_complete(static_cast<SFPath*>(TheField)->getValue());
-				Path RelativePath = makeRelative(RootPath, FilePath);
-				FieldValue = RelativePath.string();//TheField->getValueByStr(FieldValue);
-				OutputStream << "\t\t" << Desc->getCName() << "=\"" << FieldValue << "\"" << std::endl;
+				//Path RelativePath = makeRelative(RootPath, FilePath);
+				//FieldValue = RelativePath.string();//TheField->getValueByStr(FieldValue);
+				OutputStream << "\t\t" << Desc->getCName() << "=\"" << FilePath  << "\"" << std::endl;
 			}
 			else if(TheField->getType() == MFPath::getClassType())
 			{
 				OutputStream << "\t\t" << Desc->getCName() << "=\"" ;
-				Path RootPath = boost::filesystem::system_complete(RootPath);
+				//Path RootPath = boost::filesystem::system_complete(RootPath);
 				Path FilePath;
-				Path RelativePath;
+				//Path RelativePath;
 				for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
 				{
 					FieldValue.clear();
 					FilePath = boost::filesystem::system_complete((*static_cast<MFPath*>(TheField))[Index]);
-					RelativePath = makeRelative(RootPath, FilePath);
-					FieldValue = RelativePath.string();
+					//RelativePath = makeRelative(RootPath, FilePath);
+					FieldValue = FilePath.string();
 					if(Index!=0)
 					{
 						OutputStream << ";";

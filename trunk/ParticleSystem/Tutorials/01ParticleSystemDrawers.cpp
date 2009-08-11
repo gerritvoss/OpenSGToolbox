@@ -153,6 +153,13 @@ int main(int argc, char **argv)
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
+    GeoTexCoords1fPtr tex = GeoTexCoords1f::create();
+    
+    tex->getField().push_back(1.0f);
+
+    GeoColors4fPtr colors = GeoColors4f::create();
+
+    colors->getField().push_back(Color4f(1.0,1.0,1.0,1.0));
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
