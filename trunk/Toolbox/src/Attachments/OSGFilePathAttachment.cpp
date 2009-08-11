@@ -52,6 +52,7 @@
 
 #include "OSGFilePathAttachment.h"
 #include <boost/filesystem/operations.hpp>
+#include "FileIO/OSGFCFileHandler.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -140,6 +141,33 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container,
     endEditCP(PathAttachment, FilePathAttachment::PathFieldMask);
 }
 
+NodePtr  LoadXML(std::string FilePath)
+{
+	FCFileType::FCPtrStore NewContainers;
+	NewContainers = FCFileHandler::the()->read(Path(FilePath));
+
+    FCFileType::FCPtrStore::iterator Itor;
+    for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
+    {
+
+        if( (*Itor)->getType() == Node::getClassType() &&
+            Node::Ptr::dcast(*Itor)->getParent() == NullFC)
+        {
+            return Node::Ptr::dcast(*Itor);
+        }
+    }
+    return NullFC;
+}
+
+bool isFileXML(std::string FilePath)
+{
+    std::string::size_type LastDotPos = FilePath.find_last_of(".");
+    ++LastDotPos;
+    std::string Extension(FilePath.substr(LastDotPos, FilePath.length() - LastDotPos));
+
+    return Extension.compare("xml") == 0;
+}
+
 FieldContainerPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const FieldContainerType &FCType)
 {
 	//const Path* LoadFilePath = FilePathAttachment::getFilePath(container);
@@ -157,10 +185,19 @@ FieldContainerPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const
             //Model Node
 			else if(FCType.isDerivedFrom(Node::getClassType()))
 			{
-				NodePtr TheNode = SceneFileHandler::the().read(LoadFilePath.string().c_str());
+                NodePtr TheNode;
+                if(isFileXML(LoadFilePath.string()))
+                {
+                    TheNode = LoadXML(LoadFilePath.string());
+                }
+                else
+                {
+                    TheNode = SceneFileHandler::the().read(LoadFilePath.string().c_str());
+                }
+
                 Result = TheNode;
 			}
-            else  //Other
+            if(Result == NullFC)  //Other
             {
 	            FCFileType::FCPtrStore NewContainers;
 	            NewContainers = FCFileHandler::the()->read(LoadFilePath);
