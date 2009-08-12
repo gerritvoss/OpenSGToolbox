@@ -54,7 +54,7 @@ set dd=%date:~-10,2%
 
 set BuildFileNameInfix=-vs2005-%mm%-%dd%-%yy%
 
-move OpenSGToolbox.exe "%~d0%~p0\OpenSGToolbox%BuildFileNameInfix%.exe"
+move OpenSGToolbox*.exe "%~d0%~p0\OpenSGToolbox%BuildFileNameInfix%.exe"
 
 popd
 
