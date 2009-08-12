@@ -53,6 +53,8 @@
 #include "Inventory/Models/Comparitors/OSGDefaultInventoryListComparitor.h"
 #include "Inventory/Models/InventorySubsets/OSGInventorySubset.h"
 
+#include <algorithm>
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -113,17 +115,19 @@ void InventoryListModel::setupComparitor()
 {
 	DefaultInventoryListComparitorPtr DefaultComparitor = DefaultInventoryListComparitor::create();
 	beginEditCP(getComparitor() , DefaultInventoryListComparitor::ModelFieldMask);
-		DefaultComparitor->setModel(InventoryListModelPtr(this));
+		getComparitor()->setModel(InventoryListModelPtr(this));
 	endEditCP(getComparitor() , DefaultInventoryListComparitor::ModelFieldMask);
-
-	beginEditCP(InventoryListModelPtr(this), InventoryListModel::ComparitorFieldMask);
-		setComparitor(DefaultComparitor);
-	endEditCP(InventoryListModelPtr(this), InventoryListModel::ComparitorFieldMask);
 }
 
 void InventoryListModel::setupSubset()
 {
+	if(getCurrentInventory()->getInventoryItems().getSize() != _InventoryItems.size())
+	{
+		setupInventoryItems();
+	}
 	getCurrentSubset()->setModel(InventoryListModelPtr(this));
+	std::vector<UInt32> subset = getCurrentSubset()->GetSubset();
+	_InventoryItems.assign(subset.begin(),subset.end());
 }
 
 /*-------------------------------------------------------------------------*\
@@ -153,17 +157,30 @@ InventoryListModel::~InventoryListModel(void)
 void InventoryListModel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-	
-    if(whichField & CurrentInventoryFieldMask)
-	{
-		setupInventoryItems();
-	}
 
-    if(whichField & CurrentSubsetFieldMask)
+	if(whichField & ComparitorFieldMask)
 	{
-		setupSubset();
+		setupComparitor();
+		std::sort(_InventoryItems.begin(),_InventoryItems.end(),getComparitor()->getComparitorFunc());
 	}
+    if(whichField & CurrentSubsetFieldMask || whichField & CurrentInventoryFieldMask)
+	{
+		_InventoryItems.clear();
 
+		if(getCurrentInventory() == NullFC)
+		{
+			setupInventoryItems();
+		}
+		if(getCurrentSubset() != NullFC)
+		{
+			setupSubset();
+		}
+		else
+		{
+			setupInventoryItems();
+		}
+		produceListDataContentsChanged(InventoryListModelPtr(this), 0, _InventoryItems.size());
+	}
 }
 
 void InventoryListModel::dump(      UInt32    , 

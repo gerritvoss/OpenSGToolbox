@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDefaultInventorySubset.h"
+#include "Inventory/Models/OSGInventoryListModel.h"
+#include "Inventory/OSGInventoryItem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,6 +81,19 @@ void DefaultInventorySubset::initMethod (void)
 std::vector<UInt32> DefaultInventorySubset::GetSubset()
 {
 	std::vector<UInt32> ret;
+	if(!getClassDefinition().empty())
+	{
+		for(UInt32 i = 0; getModel()->getCurrentInventory()->getInventoryItems().getSize() > i; ++i)
+		{
+			for(UInt32 c = 0; getModel()->getCurrentInventory()->getInventoryItems(getModel()->_InventoryItems.at(i))->getClasses().getSize() > c; ++c)
+			{
+				if(getModel()->getCurrentInventory()->getInventoryItems(getModel()->_InventoryItems.at(i))->getClasses(c) == getClassDefinition())
+				{
+					ret.push_back(getModel()->_InventoryItems.at(i));
+				}
+			}
+		}
+	}
 
 	return ret;
 }

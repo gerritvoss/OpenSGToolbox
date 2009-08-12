@@ -52,7 +52,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorLayer.h>
 #include <OpenSG/UserInterface/OSGBevelBorder.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGBoxLayout.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
@@ -61,9 +61,9 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 #include <OpenSG/UserInterface/OSGListSelectionListener.h>
-#include <OpenSG/Game/OSGDefaultInventoryListComparitor.h>
 
-#include <algorithm>
+#include <OpenSG/Game/OSGDefaultInventoryListComparitor.h>
+#include <OpenSG/Game/OSGDefaultInventorySubset.h>
 
 
 
@@ -99,10 +99,14 @@ TextAreaPtr DetailsWindow;
 // Create ListModel   
 ListPtr ExampleList;
 InventoryListModelPtr ExampleListModel;
-InventoryListModelPtr ExampleAdminsListModel;
-InventoryListModelPtr ExampleDevelopersListModel;
-InventoryListModelPtr ExampleGraphicsListModel;
 InventoryPtr ExampleInventory;
+
+ButtonPtr MainButton;
+ButtonPtr AdminButton;
+ButtonPtr DeveloperButton;
+ButtonPtr GraphicButton;
+
+DefaultInventorySubsetPtr ExampleSubset;
 
 class InventoryListListener: public ListSelectionListener
 {
@@ -112,7 +116,7 @@ class InventoryListListener: public ListSelectionListener
 		if(ExampleList->getSelectionModel()->getMinSelectionIndex() != -1)
 		{	
 			beginEditCP(DetailsWindow, TextArea::TextFieldMask);
-			DetailsWindow->setText(GenericInventoryItem::Ptr::dcast(InventoryListModelPtr::dcast(ExampleList->getModel())->getCurrentInventory()->getInventoryItems(InventoryListModelPtr::dcast(ExampleList->getModel())->_InventoryItems.at(ExampleList->getSelectionModel()->getMinSelectionIndex())))->getDetails());
+				DetailsWindow->setText(GenericInventoryItem::Ptr::dcast(ExampleInventory->getInventoryItems(ExampleList->getSelectionModel()->getMinSelectionIndex()))->getDetails());
 			endEditCP(DetailsWindow, TextArea::TextFieldMask);
 		}
 	}
@@ -125,38 +129,45 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-		if(ButtonPtr::dcast(e.getSource())->getText() == "Main")
+		if(ButtonPtr::dcast(e.getSource()) == MainButton)
 		{
-			std::cout<<"Main"<<std::endl;
-			beginEditCP(ExampleList, List::ModelFieldMask);
-				ExampleList->setModel(ExampleListModel);
-			endEditCP(ExampleList, List::ModelFieldMask);
+		    beginEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
+				ExampleListModel->setCurrentSubset(NullFC);
+			endEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
 		}
-		if(ButtonPtr::dcast(e.getSource())->getText() == "Admins")
+		if(ButtonPtr::dcast(e.getSource()) == AdminButton)
 		{
-			std::cout<<"Admins"<<std::endl;
-			beginEditCP(ExampleList, List::ModelFieldMask);
-				ExampleList->setModel(ExampleAdminsListModel);
-			endEditCP(ExampleList, List::ModelFieldMask);
+			beginEditCP(ExampleSubset, DefaultInventorySubset::ClassDefinitionFieldMask);
+				ExampleSubset->setClassDefinition("Admin");
+			endEditCP(ExampleSubset, DefaultInventorySubset::ClassDefinitionFieldMask);
+
+			beginEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
+				ExampleListModel->setCurrentSubset(ExampleSubset);
+			endEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
 		}
-		if(ButtonPtr::dcast(e.getSource())->getText() == "Developers")
+		if(ButtonPtr::dcast(e.getSource()) == DeveloperButton)
 		{
-			std::cout<<"Developers"<<std::endl;
-			beginEditCP(ExampleList, List::ModelFieldMask);
-				ExampleList->setModel(ExampleDevelopersListModel);
-			endEditCP(ExampleList, List::ModelFieldMask);
+			beginEditCP(ExampleSubset, DefaultInventorySubset::ClassDefinitionFieldMask);
+				ExampleSubset->setClassDefinition("Developer");
+			endEditCP(ExampleSubset, DefaultInventorySubset::ClassDefinitionFieldMask);
+
+			beginEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
+				ExampleListModel->setCurrentSubset(ExampleSubset);
+			endEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
 		}
-		if(ButtonPtr::dcast(e.getSource())->getText() == "Graphics")
+		if(ButtonPtr::dcast(e.getSource()) == GraphicButton)
 		{
-			std::cout<<"Graphics"<<std::endl;
-			beginEditCP(ExampleList, List::ModelFieldMask);
-				ExampleList->setModel(ExampleGraphicsListModel);
-			endEditCP(ExampleList, List::ModelFieldMask);
+			beginEditCP(ExampleSubset, DefaultInventorySubset::ClassDefinitionFieldMask);
+				ExampleSubset->setClassDefinition("Graphic");
+			endEditCP(ExampleSubset, DefaultInventorySubset::ClassDefinitionFieldMask);
+
+			beginEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
+				ExampleListModel->setCurrentSubset(ExampleSubset);
+			endEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
 		}
     }
+
 };
-
-
 
 int main(int argc, char **argv)
 {
@@ -200,43 +211,43 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem1->setName(std::string("David K"));
-		ExampleItem1->getClasses().push_back("Developers");
+		ExampleItem1->getClasses().push_back("Developer");
 		ExampleItem1->setDetails(std::string("Major: Human Computer Interaction \nDegree: PhD \nDepartment: Computer Science \nCollege: LAS"));
 	endEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem2->setName(std::string("Eve W"));
-		ExampleItem2->getClasses().push_back("Admins");
+		ExampleItem2->getClasses().push_back("Admin");
 		ExampleItem2->setDetails(std::string("Department: Genetics Development and Cell Biology\n\nCollege: Agriculture"));
 	endEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem3->setName(std::string("Will S"));
-		ExampleItem3->getClasses().push_back("Graphics");
+		ExampleItem3->getClasses().push_back("Graphic");
 		ExampleItem3->setDetails(std::string("Major: Art And Design\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
 	endEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem4->setName(std::string("Eric L"));
-		ExampleItem4->getClasses().push_back("Developers");
+		ExampleItem4->getClasses().push_back("Developer");
 		ExampleItem4->setDetails(std::string("Major: Software Engineering\nDegree: BS\nDepartment: Software Engineering\nCollege: Engineering"));
 	endEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem5->setName(std::string("Jeffery F"));
-		ExampleItem5->getClasses().push_back("Graphics");
+		ExampleItem5->getClasses().push_back("Graphic");
 		ExampleItem5->setDetails(std::string("Major: Integrated Studio Arts\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
 	endEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem6->setName(std::string("Tao L"));
-		ExampleItem6->getClasses().push_back("Developers");
+		ExampleItem6->getClasses().push_back("Developer");
 		ExampleItem6->setDetails(std::string("Major: Computer Engineering\nDegree: PhD\nDepartment: Computer Engineering\nCollege: Engineering"));
 	endEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
 	beginEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 		ExampleItem7->setName(std::string("Daniel G"));
-		ExampleItem7->getClasses().push_back("Developers");
+		ExampleItem7->getClasses().push_back("Developer");
 		ExampleItem7->setDetails(std::string("Major: Computer Engineering\nDegree: BS\nDepartment: Computer Engineering\nCollege: Engineering"));
 	endEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask);
 
@@ -248,9 +259,6 @@ int main(int argc, char **argv)
 	ExampleInventory->addItem(ExampleItem6);
 	ExampleInventory->addItem(ExampleItem7);
 
-
-	
-	bool Ascend = false;
 
 
     /******************************************************
@@ -286,155 +294,16 @@ int main(int argc, char **argv)
     ******************************************************/
 
 	DefaultInventoryListComparitorPtr ExampleComparitor = DefaultInventoryListComparitor::create();
-	DefaultInventoryListComparitorPtr ExampleAdminsComparitor = DefaultInventoryListComparitor::create();
-	DefaultInventoryListComparitorPtr ExampleDevelopersComparitor = DefaultInventoryListComparitor::create();
-	DefaultInventoryListComparitorPtr ExampleGraphicsComparitor = DefaultInventoryListComparitor::create();
-	
+
     // Add data to it
 	ExampleListModel = InventoryListModel::create();
+    beginEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask);
+	    ExampleListModel->setCurrentInventory(ExampleInventory);
+    endEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask);
 	
-	//False inventory info!!! 
-	InventoryPtr ExampleAdminsInventory = Inventory::create();
-	InventoryPtr ExampleDevelopersInventory = Inventory::create();
-	InventoryPtr ExampleGraphicsInventory = Inventory::create();
-	ExampleAdminsListModel = InventoryListModel::create();
-	ExampleDevelopersListModel = InventoryListModel::create();
-	ExampleGraphicsListModel = InventoryListModel::create();
-
-	ExampleListModel->Ascending = Ascend;
-	ExampleAdminsListModel->Ascending = Ascend;
-	ExampleDevelopersListModel->Ascending = Ascend;
-	ExampleGraphicsListModel->Ascending = Ascend;
-	
-	beginEditCP(ExampleComparitor , DefaultInventoryListComparitor::ModelFieldMask);
-		ExampleComparitor->setModel(ExampleListModel);
-	endEditCP(ExampleComparitor , DefaultInventoryListComparitor::ModelFieldMask);
-
-	beginEditCP(ExampleAdminsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
-		ExampleAdminsComparitor->setModel(ExampleAdminsListModel);
-	endEditCP(ExampleAdminsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
-
-	beginEditCP(ExampleDevelopersComparitor , DefaultInventoryListComparitor::ModelFieldMask);
-		ExampleDevelopersComparitor->setModel(ExampleDevelopersListModel);
-	endEditCP(ExampleDevelopersComparitor , DefaultInventoryListComparitor::ModelFieldMask);
-
-	beginEditCP(ExampleGraphicsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
-		ExampleGraphicsComparitor->setModel(ExampleGraphicsListModel);
-	endEditCP(ExampleGraphicsComparitor , DefaultInventoryListComparitor::ModelFieldMask);
-
-
-	beginEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
-		ExampleListModel->setComparitor(ExampleComparitor);
-		ExampleListModel->setCurrentInventory(ExampleInventory);
-	endEditCP(ExampleListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
-
-	ExampleAdminsInventory->addItem(ExampleItem2);
-
-	beginEditCP(ExampleAdminsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
-		ExampleAdminsListModel->setComparitor(ExampleAdminsComparitor);
-		ExampleAdminsListModel->setCurrentInventory(ExampleAdminsInventory);
-	endEditCP(ExampleAdminsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
-	
-	ExampleDevelopersInventory->addItem(ExampleItem1);
-	ExampleDevelopersInventory->addItem(ExampleItem4);
-	ExampleDevelopersInventory->addItem(ExampleItem6);
-	ExampleDevelopersInventory->addItem(ExampleItem7);
-
-	beginEditCP(ExampleDevelopersListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
-		ExampleDevelopersListModel->setComparitor(ExampleDevelopersComparitor);
-		ExampleDevelopersListModel->setCurrentInventory(ExampleDevelopersInventory);
-	endEditCP(ExampleDevelopersListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
-	
-	ExampleGraphicsInventory->addItem(ExampleItem3);
-	ExampleGraphicsInventory->addItem(ExampleItem5);
-
-	beginEditCP(ExampleGraphicsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
-		ExampleGraphicsListModel->setComparitor(ExampleGraphicsComparitor);
-		ExampleGraphicsListModel->setCurrentInventory(ExampleGraphicsInventory);
-	endEditCP(ExampleGraphicsListModel, InventoryListModel::CurrentInventoryFieldMask | InventoryListModel::ComparitorFieldMask);
-
-	// Add buttons 
-    
-    ButtonPtr MainButton = osg::Button::create();
-    ButtonPtr AdminsButton = osg::Button::create();
-    ButtonPtr DevelopersButton = osg::Button::create();
-    ButtonPtr GraphicsButton = osg::Button::create();
-
-	UIFontPtr ButtonFont = osg::UIFont::create();
-
-    beginEditCP(ButtonFont, UIFont::SizeFieldMask);
-        ButtonFont->setSize(16);
-    endEditCP(ButtonFont, UIFont::SizeFieldMask);
-
-	beginEditCP(MainButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
-            MainButton->setMinSize(Vec2f(50, 25));
-            MainButton->setMaxSize(Vec2f(200, 100));
-            MainButton->setPreferredSize(Vec2f(100, 50));
-            MainButton->setToolTipText("This will start playing the caption!");
-
-            MainButton->setText("Main");
-            MainButton->setFont(ButtonFont);
-            MainButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            MainButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
-            MainButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            MainButton->setAlignment(Vec2f(0.5,0.5));
-    endEditCP(MainButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
-
-	beginEditCP(AdminsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
-            AdminsButton->setMinSize(Vec2f(50, 25));
-            AdminsButton->setMaxSize(Vec2f(200, 100));
-            AdminsButton->setPreferredSize(Vec2f(100, 50));
-            AdminsButton->setToolTipText("This will start playing the caption!");
-
-            AdminsButton->setText("Admins");
-            AdminsButton->setFont(ButtonFont);
-            AdminsButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            AdminsButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
-            AdminsButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            AdminsButton->setAlignment(Vec2f(0.5,0.5));
-    endEditCP(AdminsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
-
-	beginEditCP(DevelopersButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
-            DevelopersButton->setMinSize(Vec2f(50, 25));
-            DevelopersButton->setMaxSize(Vec2f(200, 100));
-            DevelopersButton->setPreferredSize(Vec2f(100, 50));
-            DevelopersButton->setToolTipText("This will start playing the caption!");
-
-            DevelopersButton->setText("Developers");
-            DevelopersButton->setFont(ButtonFont);
-            DevelopersButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            DevelopersButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
-            DevelopersButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            DevelopersButton->setAlignment(Vec2f(0.5,0.5));
-    endEditCP(DevelopersButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
-
-	beginEditCP(GraphicsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
-            GraphicsButton->setMinSize(Vec2f(50, 25));
-            GraphicsButton->setMaxSize(Vec2f(200, 100));
-            GraphicsButton->setPreferredSize(Vec2f(100, 50));
-            GraphicsButton->setToolTipText("This will start playing the caption!");
-
-            GraphicsButton->setText("Graphics");
-            GraphicsButton->setFont(ButtonFont);
-            GraphicsButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            GraphicsButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
-            GraphicsButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            GraphicsButton->setAlignment(Vec2f(0.5,0.5));
-    endEditCP(GraphicsButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::AlignmentFieldMask);
-
-    ClassSelectionListener TheClassSelectionListener;
-    MainButton->addActionListener(&TheClassSelectionListener);
-    AdminsButton->addActionListener(&TheClassSelectionListener);
-    DevelopersButton->addActionListener(&TheClassSelectionListener);
-    GraphicsButton->addActionListener(&TheClassSelectionListener);
+    beginEditCP(ExampleListModel, InventoryListModel::ComparitorFieldMask);
+	    ExampleListModel->setComparitor(ExampleComparitor);
+    endEditCP(ExampleListModel, InventoryListModel::ComparitorFieldMask);
     
 
     /******************************************************
@@ -513,12 +382,92 @@ int main(int argc, char **argv)
     ExampleScrollPanel->setViewComponent(ExampleList);
 
     // Create MainFramelayout
-    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-    beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-	MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+    BoxLayoutPtr MainInternalWindowLayout = osg::BoxLayout::create();
+    beginEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask | BoxLayout::MajorAxisAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
+		MainInternalWindowLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
         MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
         MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
-    endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+    endEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask | BoxLayout::MajorAxisAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
+    
+	UIFontPtr ButtonFont = osg::UIFont::create();
+
+    beginEditCP(ButtonFont, UIFont::SizeFieldMask);
+        ButtonFont->setSize(16);
+    endEditCP(ButtonFont, UIFont::SizeFieldMask);
+
+	ExampleSubset = DefaultInventorySubset::create();
+
+	MainButton = osg::Button::create();
+    beginEditCP(MainButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+            MainButton->setMinSize(Vec2f(50, 25));
+            MainButton->setMaxSize(Vec2f(200, 100));
+            MainButton->setPreferredSize(Vec2f(100, 50));
+            MainButton->setToolTipText("These buttons are for selecting a response!");
+
+            MainButton->setText("Main");
+            MainButton->setFont(ButtonFont);
+            MainButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            MainButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            MainButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+    endEditCP(MainButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+
+
+    AdminButton = osg::Button::create();
+    beginEditCP(AdminButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+            AdminButton->setMinSize(Vec2f(50, 25));
+            AdminButton->setMaxSize(Vec2f(200, 100));
+            AdminButton->setPreferredSize(Vec2f(100, 50));
+            AdminButton->setToolTipText("These buttons are for selecting a response!");
+
+            AdminButton->setText("Admins");
+            AdminButton->setFont(ButtonFont);
+            AdminButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            AdminButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            AdminButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+    endEditCP(AdminButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+
+	DeveloperButton = osg::Button::create();
+    beginEditCP(DeveloperButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+            DeveloperButton->setMinSize(Vec2f(50, 25));
+            DeveloperButton->setMaxSize(Vec2f(200, 100));
+            DeveloperButton->setPreferredSize(Vec2f(100, 50));
+            DeveloperButton->setToolTipText("These buttons are for selecting a response!");
+
+            DeveloperButton->setText("Developers");
+            DeveloperButton->setFont(ButtonFont);
+            DeveloperButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            DeveloperButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            DeveloperButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+    endEditCP(DeveloperButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+
+	GraphicButton = osg::Button::create();
+    beginEditCP(GraphicButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+            GraphicButton->setMinSize(Vec2f(50, 25));
+            GraphicButton->setMaxSize(Vec2f(200, 100));
+            GraphicButton->setPreferredSize(Vec2f(100, 50));
+            GraphicButton->setToolTipText("These buttons are for selecting a response!");
+
+            GraphicButton->setText("Graphics");
+            GraphicButton->setFont(ButtonFont);
+            GraphicButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            GraphicButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            GraphicButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+    endEditCP(GraphicButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask );
+
+	ClassSelectionListener ExampleListener;
+
+	MainButton->addActionListener(&ExampleListener);
+	AdminButton->addActionListener(&ExampleListener);
+	DeveloperButton->addActionListener(&ExampleListener);
+	GraphicButton->addActionListener(&ExampleListener);
 
 	DetailsWindow = osg::TextArea::create();
 	beginEditCP(DetailsWindow, TextArea::PreferredSizeFieldMask);
@@ -529,10 +478,10 @@ int main(int argc, char **argv)
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(MainButton);
-       MainInternalWindow->getChildren().push_back(AdminsButton);
-       MainInternalWindow->getChildren().push_back(DevelopersButton);
-       MainInternalWindow->getChildren().push_back(GraphicsButton);
-	   MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
+       MainInternalWindow->getChildren().push_back(AdminButton);
+       MainInternalWindow->getChildren().push_back(DeveloperButton);
+       MainInternalWindow->getChildren().push_back(GraphicButton);
+       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
        MainInternalWindow->getChildren().push_back(DetailsWindow);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
@@ -578,10 +527,11 @@ int main(int argc, char **argv)
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,
             WinSize,
-            "10InventoryClasses");
+            "09Inventory");
 
     //Enter main Loop
     TutorialWindowEventProducer->mainLoop();
+
 
     osgExit();
 

@@ -383,6 +383,11 @@ void List::updateIndiciesDrawnFromModel(void)
 void List::contentsChanged(ListDataEvent e)
 {
     updateIndiciesDrawnFromModel();
+
+	if(getSelectionModel() != NULL)
+	{
+		getSelectionModel()->clearSelection();
+	}
 	/*if(getModel() != NULL)
 	{
 		if(_BottomDrawnIndex >= 0)
