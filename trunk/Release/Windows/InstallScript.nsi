@@ -4,7 +4,6 @@
 # name the installer
 !define ProjectName "OpenSGToolbox"
 !define SMPROGRAMSFolder $SMPROGRAMS\${ProjectName}
-!define OutFileName ${ProjectName}.exe
 !define InstallDirName ${ProjectName}
 !define ProjectRootDirName "..\.."
 !define InputDirName "..\..\Builds\Windows"
@@ -12,18 +11,30 @@
 !define BoostDepDir "C:\Program Files\boost\boost_1_36_0"
 !define ODEDepDir "C:\Documents and Settings\David\My Documents\Work\ode-0.11.1"
 !define OpenSGDepDir "C:\Program Files\OpenSG"
+!define Version "0.8.0.0"
+!define OutFileName "${ProjectName}-Windows-${Version}-Revision.exe"
 
 outFile "${OutFileName}"
+
+VIProductVersion "${Version}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${ProjectName}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "..."
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${Version}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName" "${OutFileName}"
 
 icon "${ProjectRootDirName}\Data\OpenSGToolbox-Icon-32x32.ico"
 
 #Version Information
-!define _VERSION "0.8.0.0"
-VIProductVersion "${_VERSION}"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${ProjectName}"
-#VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "..."
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${_VERSION}"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName" "${OutFileName}"
+#Function InitVersion
+#    ClearErrors
+#    FileOpen $0 "${ProjectRootDirName}\VERSION" r
+#    IfErrors done
+#    FileRead $0 $Version
+#    DetailPrint $Version
+#    FileClose $0
+#    done:
+#FunctionEnd
+
 
 !macro IsUserAdmin RESULT
  !define Index "Line${__LINE__}"
@@ -51,7 +62,7 @@ installDir $PROGRAMFILES\${InstallDirName}
 
 Page license
    LicenseText "GNU Lesser Library General Public License v. 3"
-   LicenseData "${ProjectRootDirName}\LICENSE"
+   LicenseData "${ProjectRootDirName}\LICENSE.txt"
    LicenseForceSelection checkbox
    
 Page components
@@ -114,6 +125,10 @@ FunctionEnd
 Function InstallGameTutorialLinks
    createShortCut "${SMPROGRAMSFolder}\Tutorials\Game\$R3.lnk" "$R4"
 	Push "Continue"
+FunctionEnd
+
+Function .onInit
+  #call InitVersion
 FunctionEnd
 
 # default section start; every NSIS script has at least one section.
