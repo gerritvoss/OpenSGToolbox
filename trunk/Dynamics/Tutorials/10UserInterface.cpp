@@ -1,24 +1,10 @@
-// OpenSG Tutorial Example: Creating a Checkbox Button Component
-//
-// This tutorial explains how to edit the basic features of
-// a Checkbox Button created in the OSG User Interface library.
-// 
-// Includes: 
-//
-//Checkbox buttons are special buttons that can are toggled between active and inactive when they are selected
-
-
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
+// OpenSG Tutorial Example:
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -89,11 +75,6 @@ int main(int argc, char **argv)
     
     TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
     
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
@@ -203,9 +184,9 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    Vec2f WinSize(TheWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TheWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TheWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
             WinSize,
             "OpenSG 10UserInterface Window");
 

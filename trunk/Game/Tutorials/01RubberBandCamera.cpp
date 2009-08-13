@@ -30,7 +30,16 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
+class SceneManager;
+
+// The SceneManager to manage simple applications
+SceneManager *mgr;
 WindowEventProducerPtr TutorialWindowEventProducer;
+
+//Camera Beacon
+TransformPtr CameraBeaconTransform;
+TransformPtr BoxTransform;
+RubberBandCameraPtr RubberCamera;
 class SceneManager
 {
 protected:
@@ -198,15 +207,6 @@ public:
 
 
 };
-
-// The SimpleSceneManager to manage simple applications
-SceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
-
-//Camera Beacon
-TransformPtr CameraBeaconTransform;
-TransformPtr BoxTransform;
-RubberBandCameraPtr RubberCamera;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
