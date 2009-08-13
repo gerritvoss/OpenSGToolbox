@@ -477,34 +477,6 @@
 			<Filter
 				Name="Actions"
 				>
-				<File
-					RelativePath="..\..\src\Actions\OSGAction.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actions\OSGAction.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actions\OSGActionFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actions\OSGActionFactory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actions\OSGActionType.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actions\OSGActionType.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actions\OSGActionType.inl"
-					>
-				</File>
 			</Filter>
 		</Filter>
 	</Files>

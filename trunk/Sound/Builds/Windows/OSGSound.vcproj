@@ -429,14 +429,6 @@
 			<Filter
 				Name="Actions"
 				>
-				<File
-					RelativePath="..\..\src\Actions\OSGSoundAction.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Actions\OSGSoundAction.h"
-					>
-				</File>
 			</Filter>
 		</Filter>
 	</Files>
