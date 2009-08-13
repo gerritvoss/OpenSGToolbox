@@ -136,11 +136,11 @@ OSG_FC_DLLEXPORT_DECL(KeyframeSequenceTmpl,
 //typedef KeyframeSequenceTmpl<KeyframeDiscreetSequenceGLenumDesc> KeyframeDiscreetSequenceGLenum;
 //#endif
 
-#if !defined(OSG_COMPILEKEYFRAMEDISCREETSEQUENCEINST) && !defined(OSG_DO_DOC)
-OSG_FC_DLLEXPORT_DECL(KeyframeSequenceTmpl,
-                      KeyframeDiscreetSequenceGLenumDesc,
-                      OSG_ANIMATIONLIB_DLLMAPPING)
-#endif
+//#if !defined(OSG_COMPILEKEYFRAMEDISCREETSEQUENCEINST) && !defined(OSG_DO_DOC)
+//OSG_FC_DLLEXPORT_DECL(KeyframeSequenceTmpl,
+//                      KeyframeDiscreetSequenceGLenumDesc,
+//                      OSG_ANIMATIONLIB_DLLMAPPING)
+//#endif
 
 OSG_END_NAMESPACE
 

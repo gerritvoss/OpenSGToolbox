@@ -123,7 +123,7 @@ struct KeyframeFCPtrsSequenceStateChunkDesc : public KeyframeFCPtrsSequenceDesc
     /*---------------------------------------------------------------------*/
     static const Char8 *getTypeName (void) { return "KeyframeFCPtrsSequenceStateChunk";         }
     static const Char8 *getClassName(void) { return "KeyframeFCPtrsSequenceStateChunkProperty"; }
-    static const Char8 *getFieldName(void) { return "textures";              }
+    static const Char8 *getFieldName(void) { return "chunks";              }
     static const Char8 *getGroupName(void) { return "KeyframeFCPtrsSequence";           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
