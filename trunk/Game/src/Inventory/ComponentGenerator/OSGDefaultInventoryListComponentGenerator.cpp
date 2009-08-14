@@ -57,7 +57,7 @@
 
 #include "OpenSG/Game/OSGInventoryItem.h"
 #include <boost/any.hpp>
-#include "OpenSG/UserInterface/OSGFlowLayoutConstraints.h"
+#include "OpenSG/UserInterface/OSGFlowLayout.h"
 
 
 
@@ -105,25 +105,23 @@ ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Pa
 
 	ImageComponentPtr Icon = ImageComponent::create();
 
-	/*beginEditCP(Icon , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
+	beginEditCP(Icon , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
             Icon->setTexture(Item->getIcon());
             Icon->setRolloverTexture(Item->getIcon());
             Icon->setDisabledTexture(Item->getIcon());
             Icon->setFocusedTexture(Item->getIcon());
     endEditCP(Icon , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
-	*/
+	
 	LabelPtr ItemName = Label::create();
 
 	beginEditCP(ItemName , Label::TextFieldMask);
 		ItemName->setText(Item->getName());
 	endEditCP(ItemName , Label::TextFieldMask);
 
-	FlowLayoutConstraintsPtr Constraints = FlowLayoutConstraints::create();
-
 	beginEditCP(ListItem , Panel::ChildrenFieldMask | Panel::ConstraintsFieldMask);
-		//ListItem->getChildren().push_back(Icon);
+		ListItem->getChildren().push_back(Icon);
 		ListItem->getChildren().push_back(ItemName);
-		ListItem->setConstraints(Constraints);
+		ListItem->setLayout(FlowLayout::create());
 	endEditCP(ListItem , Panel::ChildrenFieldMask | Panel::ConstraintsFieldMask);
 
     return ListItem;

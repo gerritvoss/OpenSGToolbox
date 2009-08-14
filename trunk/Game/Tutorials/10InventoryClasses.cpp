@@ -118,7 +118,28 @@ class InventoryListListener: public ListSelectionListener
 		if(ExampleList->getSelectionModel()->getMinSelectionIndex() != -1)
 		{	
 			beginEditCP(DetailsWindow, TextArea::TextFieldMask);
-				DetailsWindow->setText(GenericInventoryItem::Ptr::dcast(ExampleInventory->getInventoryItems(ExampleList->getSelectionModel()->getMinSelectionIndex()))->getDetails());
+
+			if(ExampleList->getSelectionModel()->isSelectionEmpty())
+			{
+				DetailsWindow->setText("");
+			}
+			else
+			{
+				InventoryItemPtr Item;
+				try
+				{
+					Item = boost::any_cast<InventoryItemPtr>(ExampleList->getModel()->getElementAt(ExampleList->getSelectionModel()->getMinSelectionIndex()));
+				}
+				catch(boost::bad_any_cast&)
+				{
+					DetailsWindow->setText("bad any_cast");
+				}
+
+				if(Item != NULL)
+				{
+					DetailsWindow->setText(GenericInventoryItemPtr::dcast(Item)->getDetails());
+				}
+			}
 			endEditCP(DetailsWindow, TextArea::TextFieldMask);
 		}
 	}
