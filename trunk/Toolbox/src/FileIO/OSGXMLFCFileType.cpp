@@ -407,6 +407,7 @@ std::string XMLFCFileType::getName(void) const
 	}
 
 	FieldContainerFactory::the()->setMapper(NULL);
+    FCPtrStore Temp = Result;
 	return Result;
 }
 
