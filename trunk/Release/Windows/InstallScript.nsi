@@ -1,5 +1,8 @@
+
 !include FindFile.nsh
 !include ModifyPath.nsh
+!include LogicLib.nsh
+
 
 # name the installer
 !define ProjectName "OpenSGToolbox"
@@ -8,7 +11,7 @@
 !define ProjectRootDirName "..\.."
 !define InputDirName "..\..\Builds\Windows"
 !define UninstallFileName "Uninstall ${ProjectName}.exe"
-!define BoostDepDir "C:\Program Files\boost\boost_1_39_0"
+!define BoostDepDir "C:\Program Files\boost\boost_1_38_0"
 !define ODEDepDir "C:\Documents and Settings\David\My Documents\Work\ode-0.11.1"
 !define OpenSGDepDir "C:\Program Files\OpenSG"
 !define Version "0.8.0.0"
@@ -23,6 +26,8 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${Version}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName" "${OutFileName}"
 
 icon "${ProjectRootDirName}\Data\OpenSGToolbox-Icon-32x32.ico"
+
+Var AddLibsToPATH
 
 #Version Information
 #Function InitVersion
@@ -67,10 +72,31 @@ Page license
    
 Page components
 Page Directory
+Page custom OptionsPage OptionsPageLeave ": Install Options page"
 Page instfiles
 
 UninstPage uninstConfirm
 UninstPage instfiles
+
+#Define Install Options page
+Function OptionsPage
+   ReserveFile "InstallOptionsFile.ini"
+
+  # If you need to skip the page depending on a condition, call Abort.
+  #!insertmacro MUI_INSTALLOPTIONS_EXTRACT "InstallOptionsFile.ini"
+  #!insertmacro MUI_INSTALLOPTIONS_DISPLAY "InstallOptionsFile.ini"
+FunctionEnd
+ 
+Function OptionsPageLeave
+  # Form validation here. Call Abort to go back to the page.
+  # Use !insertmacro MUI_INSTALLOPTIONS_READ $Var "InstallOptionsFile.ini" ...
+  # to get values.
+  
+  # Get control window handle.
+  #!insertmacro MUI_INSTALLOPTIONS_READ $R0 "InstallOptionsFile.ini" "Field 1" "HWND"
+
+  #s!insertmacro MUI_INSTALLOPTIONS_READ $AddLibsToPATH "InstallOptionsFile.ini" "Field 1" "State"
+FunctionEnd
 
 Function InstallToolboxTutorialLinks
    createShortCut "${SMPROGRAMSFolder}\Tutorials\Toolbox\$R3.lnk" "$R4"
@@ -133,25 +159,11 @@ FunctionEnd
 
 # default section start; every NSIS script has at least one section.
 section
-	#IntCmp IsUserAdmin 0 is0 lessthan0 morethan0
-	#is0:
-	#  messageBox MB_OK "Adminsitrator"
-	#  Goto done
-	#lessthan0:
-	#  messageBox MB_OK "Error"
-	#  Goto done
-	#morethan0:
-	#  messageBox MB_OK "Not Administrator"
-	#  Goto done
-	#done:
    # define the output path for this file
    setOutPath $INSTDIR
    
    #Create the Install Directory
    CreateDirectory $INSTDIR
-   
-   # define what to install and place it in the output path
-   #file test.txt
    
    # define uninstaller name
    writeUninstaller "$INSTDIR\${UninstallFileName}"
@@ -164,12 +176,19 @@ section
    createShortCut "${SMPROGRAMSFolder}\${ProjectName} Directory.lnk" "$INSTDIR"
    createShortCut "${SMPROGRAMSFolder}\Uninstall ${ProjectName}.lnk" "$INSTDIR\${UninstallFileName}"
    
-   #Create the Registry keys for the Add/Remove program control panel
-   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenSGToolbox" \
-                 "DisplayName" "OpenSG Toolbox"
-   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenSGToolbox" \
-                 "UninstallString" "$INSTDIR\${UninstallFileName}"
+    #Create the Registry keys for the Add/Remove program control panel
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenSGToolbox" \
+                     "DisplayName" "OpenSG Toolbox"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenSGToolbox" \
+                     "UninstallString" "$INSTDIR\${UninstallFileName}"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenSGToolbox" \
+                     "QuietUninstallString" "$\"$INSTDIR\${UninstallFileName}$\" /S"
 
+    ${If} $AddLibsToPATH == 1
+        #Set up the Path
+        Push $INSTDIR\lib
+        Call AddToPath
+    ${EndIf}
 # default section end
 sectionEnd
 
@@ -470,10 +489,7 @@ SectionGroup "Release"
 		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
 		Call SearchFile
         
-        #Set up the Path
-        Push $INSTDIR\lib
-        Call AddToPath
-      
+
    sectionEnd
 SectionGroupEnd
 
@@ -513,7 +529,16 @@ SectionGroup "Dependencies"
 			CreateDirectory $INSTDIR\lib
 			
 			#Create the Dependencies Install Directory
-			CreateDirectory $INSTDIR\include
+			CreateDirectory $INSTDIR\Dependencies
+            setOutPath $INSTDIR\Dependencies
+             File "..\OpenSG-LICENSE.txt"
+             
+			CreateDirectory $INSTDIR\Dependencies\include
+			
+            setOutPath $INSTDIR\Dependencies\include
+         
+             #Include Directory
+             File /r "${OpenSGDepDir}\include\*"
 		sectionEnd
 	SectionGroupEnd
 	SectionGroup "boost"
@@ -536,11 +561,19 @@ SectionGroup "Dependencies"
 			# define the output path for this file
 			setOutPath $INSTDIR
 			
-			#Create the Dependencies Install Directory
+			#Create the Dependencies include Directory
 			CreateDirectory $INSTDIR\Dependencies
+            setOutPath $INSTDIR\Dependencies
+             File "..\Boost-LICENSE.txt"
+            
+            
+			CreateDirectory $INSTDIR\Dependencies\include
+			CreateDirectory $INSTDIR\Dependencies\include\boost
 			
-			#Create the Dependencies Install Directory
-			CreateDirectory $INSTDIR\Include
+            setOutPath $INSTDIR\Dependencies\include\boost
+         
+             #Include Directory
+             File /r "${BoostDepDir}\boost\*"
 		sectionEnd
 	SectionGroupEnd
 	SectionGroup "ODE"
@@ -565,9 +598,15 @@ SectionGroup "Dependencies"
 			
 			#Create the Dependencies Install Directory
 			CreateDirectory $INSTDIR\Dependencies
+            setOutPath $INSTDIR\Dependencies
+             File "..\ODE-LICENSE.txt"
+             
+			CreateDirectory $INSTDIR\Dependencies\include
 			
-			#Create the Dependencies Install Directory
-			CreateDirectory $INSTDIR\Include
+            setOutPath $INSTDIR\Dependencies\include
+         
+             #Include Directory
+             File /r "${ODEDepDir}\include\*"
 		sectionEnd
 	SectionGroupEnd
 SectionGroupEnd
@@ -582,9 +621,6 @@ section "un.Uninstall ${ProjectName}"
     
    #Remove the Install Directory
    RMDir /r $INSTDIR
-   
-   # now delete installed file
-   #delete $INSTDIR\test.txt
    
    # second, remove the link from the start menu
    RMDir /r "${SMPROGRAMSFolder}"
