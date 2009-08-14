@@ -30,5 +30,14 @@ A InventoryItem.
 		access="public"
 	>
 	</Field>
+
+	<Field
+		name="Icon"
+		type="TextureChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 	
 </FieldContainer>

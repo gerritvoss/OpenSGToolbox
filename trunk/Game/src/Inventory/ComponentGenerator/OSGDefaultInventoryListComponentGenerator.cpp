@@ -47,7 +47,19 @@
 
 #include <OpenSG/OSGConfig.h>
 
+#include "OpenSG/UserInterface/OSGComponent.h"
+#include "OpenSG/UserInterface/OSGPanel.h"
+
 #include "OSGDefaultInventoryListComponentGenerator.h"
+
+#include "OpenSG/UserInterface/OSGImageComponent.h"
+#include "OpenSG/UserInterface/OSGLabel.h"
+
+#include "OpenSG/Game/OSGInventoryItem.h"
+#include <boost/any.hpp>
+#include "OpenSG/UserInterface/OSGFlowLayoutConstraints.h"
+
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,7 +90,43 @@ void DefaultInventoryListComponentGenerator::initMethod (void)
 
 ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
-    return Inherited::getListComponent(Parent,Value,Index,IsSelected,HasFocus);
+	PanelPtr ListItem = Panel::create();
+	InventoryItemPtr Item;
+	
+	try
+	{
+		Item = boost::any_cast<InventoryItemPtr>(Value);
+	}
+	catch(boost::bad_any_cast&)
+    {
+        Item = NullFC;
+		return ListItem;
+    }
+
+	ImageComponentPtr Icon = ImageComponent::create();
+
+	/*beginEditCP(Icon , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
+            Icon->setTexture(Item->getIcon());
+            Icon->setRolloverTexture(Item->getIcon());
+            Icon->setDisabledTexture(Item->getIcon());
+            Icon->setFocusedTexture(Item->getIcon());
+    endEditCP(Icon , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
+	*/
+	LabelPtr ItemName = Label::create();
+
+	beginEditCP(ItemName , Label::TextFieldMask);
+		ItemName->setText(Item->getName());
+	endEditCP(ItemName , Label::TextFieldMask);
+
+	FlowLayoutConstraintsPtr Constraints = FlowLayoutConstraints::create();
+
+	beginEditCP(ListItem , Panel::ChildrenFieldMask | Panel::ConstraintsFieldMask);
+		//ListItem->getChildren().push_back(Icon);
+		ListItem->getChildren().push_back(ItemName);
+		ListItem->setConstraints(Constraints);
+	endEditCP(ListItem , Panel::ChildrenFieldMask | Panel::ConstraintsFieldMask);
+
+    return ListItem;
 }
 
 /*-------------------------------------------------------------------------*\

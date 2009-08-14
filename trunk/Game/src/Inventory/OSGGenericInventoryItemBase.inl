@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,15 +98,31 @@ GenericInventoryItemPtr GenericInventoryItemBase::createEmpty(void)
 
 //! Get the GenericInventoryItem::_sfDetails field.
 inline
-SFString *GenericInventoryItemBase::getSFDetails(void)
+const SFString *GenericInventoryItemBase::getSFDetails(void) const
 {
     return &_sfDetails;
 }
 
+//! Get the GenericInventoryItem::_sfDetails field.
+inline
+SFString *GenericInventoryItemBase::editSFDetails(void)
+{
+    return &_sfDetails;
+}
+
+#ifndef OSG_2_PREP
+//! Get the GenericInventoryItem::_sfDetails field.
+inline
+SFString *GenericInventoryItemBase::getSFDetails(void)
+{
+    return &_sfDetails;
+}
+#endif
+
 
 //! Get the value of the GenericInventoryItem::_sfDetails field.
 inline
-std::string &GenericInventoryItemBase::getDetails(void)
+std::string &GenericInventoryItemBase::editDetails(void)
 {
     return _sfDetails.getValue();
 }
@@ -118,6 +134,15 @@ const std::string &GenericInventoryItemBase::getDetails(void) const
     return _sfDetails.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the GenericInventoryItem::_sfDetails field.
+inline
+std::string &GenericInventoryItemBase::getDetails(void)
+{
+    return _sfDetails.getValue();
+}
+#endif
+
 //! Set the value of the GenericInventoryItem::_sfDetails field.
 inline
 void GenericInventoryItemBase::setDetails(const std::string &value)
@@ -127,6 +152,4 @@ void GenericInventoryItemBase::setDetails(const std::string &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGGENERICINVENTORYITEMBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

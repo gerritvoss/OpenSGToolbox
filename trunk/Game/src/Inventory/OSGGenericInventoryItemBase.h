@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -122,10 +122,19 @@ class OSG_GAMELIB_DLLMAPPING GenericInventoryItemBase : public InventoryItem
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFString            *getSFDetails        (void);
 
-           std::string         &getDetails        (void);
+           SFString            *editSFDetails        (void);
+     const SFString            *getSFDetails        (void) const;
+#ifndef OSG_2_PREP
+           SFString            *getSFDetails        (void);
+#endif
+
+
+           std::string         &editDetails        (void);
      const std::string         &getDetails        (void) const;
+#ifndef OSG_2_PREP
+           std::string         &getDetails        (void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -252,7 +261,5 @@ typedef osgIF<GenericInventoryItemBase::isNodeCore,
 typedef RefPtr<GenericInventoryItemPtr> GenericInventoryItemRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGGENERICINVENTORYITEMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGGENERICINVENTORYITEMBASE_H_ */

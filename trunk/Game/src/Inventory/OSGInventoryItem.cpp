@@ -121,15 +121,6 @@ void InventoryItem::dump(      UInt32    ,
 #pragma warning( disable : 177 )
 #endif
 
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGINVENTORYITEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINVENTORYITEMBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGINVENTORYITEMFIELDS_HEADER_CVSID;
-}
-
 #ifdef __sgi
 #pragma reset woff 1174
 #endif

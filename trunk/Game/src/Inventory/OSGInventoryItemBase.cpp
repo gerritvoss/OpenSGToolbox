@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,9 @@ const OSG::BitVector  InventoryItemBase::NameFieldMask =
 const OSG::BitVector  InventoryItemBase::ClassesFieldMask = 
     (TypeTraits<BitVector>::One << InventoryItemBase::ClassesFieldId);
 
+const OSG::BitVector  InventoryItemBase::IconFieldMask = 
+    (TypeTraits<BitVector>::One << InventoryItemBase::IconFieldId);
+
 const OSG::BitVector InventoryItemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -83,6 +86,9 @@ const OSG::BitVector InventoryItemBase::MTInfluenceMask =
 /*! \var std::string     InventoryItemBase::_mfClasses
     
 */
+/*! \var TextureChunkPtr InventoryItemBase::_sfIcon
+    
+*/
 
 //! InventoryItem description
 
@@ -92,12 +98,17 @@ FieldDescription *InventoryItemBase::_desc[] =
                      "Name", 
                      NameFieldId, NameFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryItemBase::getSFName),
+                     reinterpret_cast<FieldAccessMethod>(&InventoryItemBase::editSFName)),
     new FieldDescription(MFString::getClassType(), 
                      "Classes", 
                      ClassesFieldId, ClassesFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryItemBase::getMFClasses)
+                     reinterpret_cast<FieldAccessMethod>(&InventoryItemBase::editMFClasses)),
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "Icon", 
+                     IconFieldId, IconFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&InventoryItemBase::editSFIcon))
 };
 
 
@@ -135,7 +146,8 @@ UInt32 InventoryItemBase::getContainerSize(void) const
 void InventoryItemBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((InventoryItemBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<InventoryItemBase *>(&other),
+                          whichField);
 }
 #else
 void InventoryItemBase::executeSync(      FieldContainer &other,
@@ -167,6 +179,7 @@ void InventoryItemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 InventoryItemBase::InventoryItemBase(void) :
     _sfName                   (), 
     _mfClasses                (), 
+    _sfIcon                   (), 
     Inherited() 
 {
 }
@@ -178,6 +191,7 @@ InventoryItemBase::InventoryItemBase(void) :
 InventoryItemBase::InventoryItemBase(const InventoryItemBase &source) :
     _sfName                   (source._sfName                   ), 
     _mfClasses                (source._mfClasses                ), 
+    _sfIcon                   (source._sfIcon                   ), 
     Inherited                 (source)
 {
 }
@@ -204,6 +218,11 @@ UInt32 InventoryItemBase::getBinSize(const BitVector &whichField)
         returnValue += _mfClasses.getBinSize();
     }
 
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+    {
+        returnValue += _sfIcon.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -221,6 +240,11 @@ void InventoryItemBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ClassesFieldMask & whichField))
     {
         _mfClasses.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+    {
+        _sfIcon.copyToBin(pMem);
     }
 
 
@@ -241,6 +265,11 @@ void InventoryItemBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfClasses.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+    {
+        _sfIcon.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -257,6 +286,9 @@ void InventoryItemBase::executeSyncImpl(      InventoryItemBase *pOther,
     if(FieldBits::NoField != (ClassesFieldMask & whichField))
         _mfClasses.syncWith(pOther->_mfClasses);
 
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+        _sfIcon.syncWith(pOther->_sfIcon);
+
 
 }
 #else
@@ -269,6 +301,9 @@ void InventoryItemBase::executeSyncImpl(      InventoryItemBase *pOther,
 
     if(FieldBits::NoField != (NameFieldMask & whichField))
         _sfName.syncWith(pOther->_sfName);
+
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+        _sfIcon.syncWith(pOther->_sfIcon);
 
 
     if(FieldBits::NoField != (ClassesFieldMask & whichField))
@@ -305,26 +340,6 @@ DataType FieldDataTraits<InventoryItemPtr>::_type("InventoryItemPtr", "Attachmen
 OSG_DLLEXPORT_SFIELD_DEF1(InventoryItemPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(InventoryItemPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGINVENTORYITEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINVENTORYITEMBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGINVENTORYITEMFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

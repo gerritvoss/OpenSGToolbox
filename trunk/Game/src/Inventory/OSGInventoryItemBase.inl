@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -72,22 +72,77 @@ OSG::UInt32 InventoryItemBase::getClassTypeId(void)
 
 //! Get the InventoryItem::_sfName field.
 inline
-SFString *InventoryItemBase::getSFName(void)
+const SFString *InventoryItemBase::getSFName(void) const
 {
     return &_sfName;
 }
 
+//! Get the InventoryItem::_sfName field.
+inline
+SFString *InventoryItemBase::editSFName(void)
+{
+    return &_sfName;
+}
+
+#ifndef OSG_2_PREP
+//! Get the InventoryItem::_sfName field.
+inline
+SFString *InventoryItemBase::getSFName(void)
+{
+    return &_sfName;
+}
+#endif
+
+//! Get the InventoryItem::_mfClasses field.
+inline
+const MFString *InventoryItemBase::getMFClasses(void) const
+{
+    return &_mfClasses;
+}
+
+//! Get the InventoryItem::_mfClasses field.
+inline
+MFString *InventoryItemBase::editMFClasses(void)
+{
+    return &_mfClasses;
+}
+
+#ifndef OSG_2_PREP
 //! Get the InventoryItem::_mfClasses field.
 inline
 MFString *InventoryItemBase::getMFClasses(void)
 {
     return &_mfClasses;
 }
+#endif
+
+//! Get the InventoryItem::_sfIcon field.
+inline
+const SFTextureChunkPtr *InventoryItemBase::getSFIcon(void) const
+{
+    return &_sfIcon;
+}
+
+//! Get the InventoryItem::_sfIcon field.
+inline
+SFTextureChunkPtr *InventoryItemBase::editSFIcon(void)
+{
+    return &_sfIcon;
+}
+
+#ifndef OSG_2_PREP
+//! Get the InventoryItem::_sfIcon field.
+inline
+SFTextureChunkPtr *InventoryItemBase::getSFIcon(void)
+{
+    return &_sfIcon;
+}
+#endif
 
 
 //! Get the value of the InventoryItem::_sfName field.
 inline
-std::string &InventoryItemBase::getName(void)
+std::string &InventoryItemBase::editName(void)
 {
     return _sfName.getValue();
 }
@@ -99,6 +154,15 @@ const std::string &InventoryItemBase::getName(void) const
     return _sfName.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the InventoryItem::_sfName field.
+inline
+std::string &InventoryItemBase::getName(void)
+{
+    return _sfName.getValue();
+}
+#endif
+
 //! Set the value of the InventoryItem::_sfName field.
 inline
 void InventoryItemBase::setName(const std::string &value)
@@ -106,7 +170,52 @@ void InventoryItemBase::setName(const std::string &value)
     _sfName.setValue(value);
 }
 
+//! Get the value of the InventoryItem::_sfIcon field.
+inline
+TextureChunkPtr &InventoryItemBase::editIcon(void)
+{
+    return _sfIcon.getValue();
+}
 
+//! Get the value of the InventoryItem::_sfIcon field.
+inline
+const TextureChunkPtr &InventoryItemBase::getIcon(void) const
+{
+    return _sfIcon.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the InventoryItem::_sfIcon field.
+inline
+TextureChunkPtr &InventoryItemBase::getIcon(void)
+{
+    return _sfIcon.getValue();
+}
+#endif
+
+//! Set the value of the InventoryItem::_sfIcon field.
+inline
+void InventoryItemBase::setIcon(const TextureChunkPtr &value)
+{
+    _sfIcon.setValue(value);
+}
+
+
+//! Get the value of the \a index element the InventoryItem::_mfClasses field.
+inline
+std::string &InventoryItemBase::editClasses(const UInt32 index)
+{
+    return _mfClasses[index];
+}
+
+//! Get the value of the \a index element the InventoryItem::_mfClasses field.
+inline
+const std::string &InventoryItemBase::getClasses(const UInt32 index) const
+{
+    return _mfClasses[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the value of the \a index element the InventoryItem::_mfClasses field.
 inline
 std::string &InventoryItemBase::getClasses(const UInt32 index)
@@ -128,7 +237,7 @@ const MFString &InventoryItemBase::getClasses(void) const
     return _mfClasses;
 }
 
-OSG_END_NAMESPACE
+#endif
 
-#define OSGINVENTORYITEMBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+OSG_END_NAMESPACE
 

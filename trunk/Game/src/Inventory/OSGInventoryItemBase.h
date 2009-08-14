@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,6 +69,7 @@
 
 #include <OpenSG/OSGStringFields.h> // Name type
 #include <OpenSG/OSGStringFields.h> // Classes type
+#include <OpenSG/OSGTextureChunkFields.h> // Icon type
 
 #include "OSGInventoryItemFields.h"
 
@@ -94,11 +95,13 @@ class OSG_GAMELIB_DLLMAPPING InventoryItemBase : public AttachmentContainer
     {
         NameFieldId    = Inherited::NextFieldId,
         ClassesFieldId = NameFieldId    + 1,
-        NextFieldId    = ClassesFieldId + 1
+        IconFieldId    = ClassesFieldId + 1,
+        NextFieldId    = IconFieldId    + 1
     };
 
     static const OSG::BitVector NameFieldMask;
     static const OSG::BitVector ClassesFieldMask;
+    static const OSG::BitVector IconFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,14 +128,45 @@ class OSG_GAMELIB_DLLMAPPING InventoryItemBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFString            *getSFName           (void);
-           MFString            *getMFClasses        (void);
 
-           std::string         &getName           (void);
+           SFString            *editSFName           (void);
+     const SFString            *getSFName           (void) const;
+#ifndef OSG_2_PREP
+           SFString            *getSFName           (void);
+#endif
+
+           MFString            *editMFClasses        (void);
+     const MFString            *getMFClasses        (void) const;
+#ifndef OSG_2_PREP
+           MFString            *getMFClasses        (void);
+#endif
+
+           SFTextureChunkPtr   *editSFIcon           (void);
+     const SFTextureChunkPtr   *getSFIcon           (void) const;
+#ifndef OSG_2_PREP
+           SFTextureChunkPtr   *getSFIcon           (void);
+#endif
+
+
+           std::string         &editName           (void);
      const std::string         &getName           (void) const;
+#ifndef OSG_2_PREP
+           std::string         &getName           (void);
+#endif
+
+           TextureChunkPtr     &editIcon           (void);
+     const TextureChunkPtr     &getIcon           (void) const;
+#ifndef OSG_2_PREP
+           TextureChunkPtr     &getIcon           (void);
+#endif
+
+           std::string         &editClasses        (const UInt32 index);
+     const std::string         &getClasses        (const UInt32 index) const;
+#ifndef OSG_2_PREP
            std::string         &getClasses        (const UInt32 index);
            MFString            &getClasses        (void);
      const MFString            &getClasses        (void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,6 +174,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryItemBase : public AttachmentContainer
     /*! \{                                                                 */
 
      void setName           ( const std::string &value );
+     void setIcon           ( const TextureChunkPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -168,6 +203,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryItemBase : public AttachmentContainer
 
     SFString            _sfName;
     MFString            _mfClasses;
+    SFTextureChunkPtr   _sfIcon;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -244,7 +280,5 @@ typedef osgIF<InventoryItemBase::isNodeCore,
 typedef RefPtr<InventoryItemPtr> InventoryItemRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGINVENTORYITEMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGINVENTORYITEMBASE_H_ */

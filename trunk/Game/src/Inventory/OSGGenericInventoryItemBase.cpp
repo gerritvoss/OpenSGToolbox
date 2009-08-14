@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -86,7 +86,7 @@ FieldDescription *GenericInventoryItemBase::_desc[] =
                      "Details", 
                      DetailsFieldId, DetailsFieldMask,
                      false,
-                     (FieldAccessMethod) &GenericInventoryItemBase::getSFDetails)
+                     reinterpret_cast<FieldAccessMethod>(&GenericInventoryItemBase::editSFDetails))
 };
 
 
@@ -94,7 +94,7 @@ FieldContainerType GenericInventoryItemBase::_type(
     "GenericInventoryItem",
     "InventoryItem",
     NULL,
-    (PrototypeCreateF) &GenericInventoryItemBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&GenericInventoryItemBase::createEmpty),
     GenericInventoryItem::initMethod,
     _desc,
     sizeof(_desc));
@@ -133,7 +133,8 @@ UInt32 GenericInventoryItemBase::getContainerSize(void) const
 void GenericInventoryItemBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((GenericInventoryItemBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<GenericInventoryItemBase *>(&other),
+                          whichField);
 }
 #else
 void GenericInventoryItemBase::executeSync(      FieldContainer &other,
@@ -276,26 +277,6 @@ DataType FieldDataTraits<GenericInventoryItemPtr>::_type("GenericInventoryItemPt
 OSG_DLLEXPORT_SFIELD_DEF1(GenericInventoryItemPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(GenericInventoryItemPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGGENERICINVENTORYITEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGENERICINVENTORYITEMBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGENERICINVENTORYITEMFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

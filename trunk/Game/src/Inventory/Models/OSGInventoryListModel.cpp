@@ -91,7 +91,7 @@ boost::any InventoryListModel::getElementAt(UInt32 index) const
 {
 	if(index < getSize())
 	{
-		return getCurrentInventory()->getInventoryItems(_InventoryItems.at(index))->getName();
+		return getCurrentInventory()->getInventoryItems(_InventoryItems.at(index));
 	}
 	else
 	{
