@@ -20,6 +20,7 @@
 #include <OpenSG/OSGSHLChunk.h>
 #include <OpenSG/OSGSHLParameterChunk.h>
 #include <OpenSG/OSGShaderParameterVec4f.h>
+#include <OpenSG/OSGShaderParameterReal.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -44,17 +45,14 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 WindowEventProducerPtr TutorialWindowEventProducer;
 
-ElapsedTimeAnimationAdvancerPtr TheAnimationAdvancer;
-AnimationPtr TheAnimation;
-
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-std::string createSHLVertexProg(void);
-std::string createSHLFragProg(void);
+std::string createSHLVertexProgGooch(void);
+std::string createSHLFragProgGooch(void);
 
-void initAnimations(FieldContainerPtr AnimatedObject, std::string AnimatedField);
-AnimationPtr createColorAnimation(FieldContainerPtr AnimatedObject, std::string AnimatedField);
+std::string createSHLVertexProgBlack(void);
+std::string createSHKFragProgBlack(void);
 
 // Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
@@ -119,9 +117,7 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
-		ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
 
-		TheAnimation->update(TheAnimationAdvancer);
     }
 };
 
@@ -172,29 +168,49 @@ int main(int argc, char **argv)
 	//Shader Chunk
 	SHLChunkPtr TheSHLChunk = SHLChunk::create();
 	beginEditCP(TheSHLChunk);
-		TheSHLChunk->setVertexProgram(createSHLVertexProg());
-		TheSHLChunk->setFragmentProgram(createSHLFragProg());
+		TheSHLChunk->setVertexProgram(createSHLVertexProgGooch());
+		TheSHLChunk->setFragmentProgram(createSHLFragProgGooch());
 	endEditCP(TheSHLChunk);
 
 	//Color Parameter
-	ShaderParameterVec4fPtr Color1Parameter = ShaderParameterVec4f::create();
-	beginEditCP(Color1Parameter);
-		Color1Parameter->setName("Color1");
-		Color1Parameter->setValue(Vec4f(0.0f,1.0f,0.0f,1.0f));
-	endEditCP(Color1Parameter);
+	ShaderParameterVec4fPtr WarmColorParameter = ShaderParameterVec4f::create();
+	beginEditCP(WarmColorParameter);
+		WarmColorParameter->setName("WarmColor");
+		WarmColorParameter->setValue(Vec4f(0.6f,0.6f,0.0f,1.0f));
+	endEditCP(WarmColorParameter);
 	
-	ShaderParameterVec4fPtr Color2Parameter = ShaderParameterVec4f::create();
-	beginEditCP(Color2Parameter);
-		Color2Parameter->setName("Color2");
-		Color2Parameter->setValue(Vec4f(1.0f,1.0f,1.0f,1.0f));
-	endEditCP(Color2Parameter);
+	ShaderParameterVec4fPtr CoolColorParameter = ShaderParameterVec4f::create();
+	beginEditCP(CoolColorParameter);
+		CoolColorParameter->setName("CoolColor");
+		CoolColorParameter->setValue(Vec4f(0.0f,0.0f,0.6f,1.0f));
+	endEditCP(CoolColorParameter);
 
+	ShaderParameterVec4fPtr SurfaceColorParameter = ShaderParameterVec4f::create();
+	beginEditCP(SurfaceColorParameter);
+		SurfaceColorParameter->setName("SurfaceColor");
+		SurfaceColorParameter->setValue(Vec4f(0.75f,0.75f,0.75f,1.0f));
+	endEditCP(SurfaceColorParameter);
+
+	ShaderParameterRealPtr DiffuseWarmParameter = ShaderParameterReal::create();
+	beginEditCP(DiffuseWarmParameter);
+		DiffuseWarmParameter->setName("DiffuseWarm");
+		DiffuseWarmParameter->setValue(0.45);
+	endEditCP(DiffuseWarmParameter);
+
+	ShaderParameterRealPtr DiffuseCoolParameter = ShaderParameterReal::create();
+	beginEditCP(DiffuseCoolParameter);
+		DiffuseCoolParameter->setName("DiffuseCool");
+		DiffuseCoolParameter->setValue(0.45);
+	endEditCP(DiffuseCoolParameter);
 
 	//Shader Parameter Chunk
 	SHLParameterChunkPtr SHLParameters = SHLParameterChunk::create();
 	beginEditCP(SHLParameters);
-		SHLParameters->getParameters().push_back(Color1Parameter);
-		SHLParameters->getParameters().push_back(Color2Parameter);
+		SHLParameters->getParameters().push_back(WarmColorParameter);
+		SHLParameters->getParameters().push_back(CoolColorParameter);
+		SHLParameters->getParameters().push_back(SurfaceColorParameter);
+		SHLParameters->getParameters().push_back(DiffuseWarmParameter);
+		SHLParameters->getParameters().push_back(DiffuseCoolParameter);
 		SHLParameters->setSHLChunk(TheSHLChunk);
 	endEditCP(SHLParameters);
 
@@ -207,6 +223,11 @@ int main(int argc, char **argv)
 
 	//Torus Node
 	GeometryPtr TorusGeometry = makeTorusGeo(5.0f,20.0f, 32,32);
+	GeometryPtr SphereGeometry = makeCylinderGeo(10.0f,5.0f,32,true,true,true);
+
+	beginEditCP(SphereGeometry, Geometry::MaterialFieldMask);
+		SphereGeometry->setMaterial(ShaderMaterial);
+	endEditCP(SphereGeometry, Geometry::MaterialFieldMask);
 
 	beginEditCP(TorusGeometry, Geometry::MaterialFieldMask);
 		TorusGeometry->setMaterial(ShaderMaterial);
@@ -214,7 +235,8 @@ int main(int argc, char **argv)
 
 	NodePtr TorusNode = Node::create();
     beginEditCP(TorusNode, Node::CoreFieldMask);
-        TorusNode->setCore(TorusGeometry);
+        //TorusNode->setCore(TorusGeometry);
+		TorusNode->setCore(SphereGeometry);
     endEditCP(TorusNode, Node::CoreFieldMask);
 
 
@@ -225,29 +247,22 @@ int main(int argc, char **argv)
 		scene->addChild(TorusNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	FCFileType::FCPtrStore Containers;
-	Containers.insert(scene);
+	//FCFileType::FCPtrStore Containers;
+	//Containers.insert(scene);
 
-	FCFileType::FCTypeVector IgnoreTypes;
-	//Save the Field Containers to a xml file
-	FCFileHandler::the()->write(Containers,Path("./Data/TestOutput.xml"),IgnoreTypes);
+	//FCFileType::FCTypeVector IgnoreTypes;
+	////Save the Field Containers to a xml file
+	//FCFileHandler::the()->write(Containers,Path("./Data/TestOutput.xml"),IgnoreTypes);
 
     mgr->setRoot(scene);
 
     // Show the whole Scene
     mgr->showAll();
 
-
-	//Create the Animations
-	initAnimations(Color1Parameter, "value");
-    TheAnimationAdvancer->start();
-
     //Open Window
     Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
-                        WinSize,
-                                        "04ShaderAnimation");
+    TutorialWindowEventProducer->openWindow(WinPos,WinSize, "06GoochShader");
 
     //Main Loop
     TutorialWindowEventProducer->mainLoop();
@@ -273,66 +288,65 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-std::string createSHLVertexProg(void)
+std::string createSHLVertexProgGooch(void)
 {
-	std::string Result("");
+	std::ostringstream VertexFragStream;
+	VertexFragStream
+	<< "uniform vec4 view_position;\n"
+	<< "uniform vec3 light_position;\n"
 
-	return Result;
+	<< "varying out vec3 ReflectVec;\n"
+	<< "varying out vec3 ViewVec;\n"
+	<< "varying out float NdotL;\n"
+
+	<< "void main(void)\n"
+	<< "{ \n"
+	<< "  vec3 ecPos = vec3(gl_ModelViewMatrix * gl_Vertex);\n"
+	<< "   vec3 tnorm = normalize(gl_NormalMatrix * gl_Normal);\n"
+	<< "  vec3 lightVec = normalize(gl_LightSource[0].position - ecPos);\n"
+	<< "   ReflectVec = normalize(reflect(-lightVec, tnorm));\n"
+	<< "   ViewVec = normalize(-ecPos);\n"
+	<< "   NdotL = dot(lightVec, tnorm) * 0.5 + 0.5;\n"
+	<< "   gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n" 
+	<< "}\n" ;
+
+	return  VertexFragStream.str();
 }
 
-std::string createSHLFragProg(void)
+std::string createSHLFragProgGooch(void)
 {
 	std::ostringstream FragCodeStream;
 
 	FragCodeStream
-	<< "//Fragment Shader\n"
-	<< "uniform vec4 Color1;\n"
-	<< "uniform vec4 Color2;\n"
+	<< "uniform vec4 SurfaceColor;\n" 
+	<< "uniform vec4 WarmColor;\n" 
+	<< "uniform vec4 CoolColor;\n" 
+	<< "uniform float DiffuseWarm;\n" 
+	<< "uniform float DiffuseCool;\n" 
+	<< "in float NdotL;\n" 
+	<< "in vec3 ReflectVec;\n" 
+	<< "in vec3 ViewVec;\n" 
+	<< "void main(void)\n" 
+	<< "{\n" 
+	<< "   vec3 kcool = min(CoolColor.xyz + DiffuseCool * SurfaceColor.xyz, 1.0);\n" 
+	<< "   vec3 kwarm = min(WarmColor.xyz + DiffuseWarm * SurfaceColor.xyz, 1.0);\n" 
+	<< "   vec3 kfinal = mix(kcool,kwarm,NdotL);\n" 
+	<< "   vec3 nreflect = normalize(ReflectVec);\n" 
+	<< "   vec3 nview = normalize(ViewVec); \n" 
+	<< "   float spec = max(dot(nreflect, nview), 0.0);\n" 
+ 	<< "   spec = pow(spec, 32.0);\n" 
+	<< "   gl_FragColor = vec4(min(kfinal + spec, 1.0), 1.0);\n" 
+	<< "}\n" ;
 
-	<< "void main()\n"
-	<< "{\n"
-	<< "    gl_FragColor = mix(Color1,Color2,1.0-(0.3*gl_Color.r + 0.59*gl_Color.g + 0.11*gl_Color.b));\n"
-	<< "}\n";
-
-
-	return FragCodeStream.str();
+	return  FragCodeStream.str();
 }
 
-AnimationPtr createColorAnimation(FieldContainerPtr AnimatedObject, std::string AnimatedField)
+std::string createSHLVertexProgBlack(void)
 {
-    //Color Keyframe Sequence
-    KeyframeVectorsSequencePtr ColorKeyframes = KeyframeVectorsSequence4f::create();
-    ColorKeyframes->addKeyframe(Vec4f(1.0f,0.0f,0.0f,1.0f),0.0f);
-    ColorKeyframes->addKeyframe(Vec4f(0.0f,1.0f,0.0f,1.0f),2.0f);
-    ColorKeyframes->addKeyframe(Vec4f(0.0f,0.0f,1.0f,1.0f),4.0f);
-    ColorKeyframes->addKeyframe(Vec4f(1.0f,0.0f,0.0f,1.0f),6.0f);
-
-    //Animator
-    AnimatorPtr Animator = KeyframeAnimator::create();
-    beginEditCP(KeyframeAnimatorPtr::dcast(Animator), KeyframeAnimator::KeyframeSequenceFieldMask);
-        KeyframeAnimatorPtr::dcast(Animator)->setKeyframeSequence(ColorKeyframes);
-    endEditCP(KeyframeAnimatorPtr::dcast(Animator), KeyframeAnimator::KeyframeSequenceFieldMask);
-    
-    //Animation
-    FieldAnimationPtr ColorAnimation = FieldAnimation::create();
-    beginEditCP(ColorAnimation);
-        FieldAnimationPtr::dcast(ColorAnimation)->setAnimator(Animator);
-        FieldAnimationPtr::dcast(ColorAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
-        FieldAnimationPtr::dcast(ColorAnimation)->setCycling(-1);
-    endEditCP(ColorAnimation);
-	ColorAnimation->setAnimatedField(AnimatedObject, AnimatedField);
-
-	return ColorAnimation;
+	return "";
 }
-
-void initAnimations(FieldContainerPtr AnimatedObject, std::string AnimatedField)
+std::string createSHKFragProgBlack(void)
 {
-	//Main Animation
-	TheAnimation = createColorAnimation(AnimatedObject, AnimatedField);
-	
-	//Animation Advancer
-	TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();
-	beginEditCP(TheAnimationAdvancer);
-		TheAnimationAdvancer->setStartTime( 0.0 );
-	beginEditCP(TheAnimationAdvancer);
+	return "";
 }
+
