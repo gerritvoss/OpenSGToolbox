@@ -8,7 +8,7 @@
 !define ProjectRootDirName "..\.."
 !define InputDirName "..\..\Builds\Windows"
 !define UninstallFileName "Uninstall ${ProjectName}.exe"
-!define BoostDepDir "C:\Program Files\boost\boost_1_36_0"
+!define BoostDepDir "C:\Program Files\boost\boost_1_39_0"
 !define ODEDepDir "C:\Documents and Settings\David\My Documents\Work\ode-0.11.1"
 !define OpenSGDepDir "C:\Program Files\OpenSG"
 !define Version "0.8.0.0"
