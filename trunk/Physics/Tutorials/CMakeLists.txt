@@ -1,6 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
 
-INCLUDE(${CMAKE_SOURCE_DIR}/../../Builds/Common/OpenSGToolboxTutorialMacro.cmake)
+FIND_PATH(TUTORIAL_MACRO_FILE OpenSGToolboxTutorialMacro.cmake "${CMAKE_SOURCE_DIR}/../../Builds/Common" "${CMAKE_SOURCE_DIR}/../build")
+
+INCLUDE("${TUTORIAL_MACRO_FILE}/OpenSGToolboxTutorialMacro.cmake")
 
 PROJECT("Physics Tutorials")
 
