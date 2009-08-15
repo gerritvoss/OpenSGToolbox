@@ -1,5 +1,5 @@
 # Set directory paths
-SET(TOOLBOX_BASE_DIR "/Users/davidkabala/Documents/Work/OpenSGToolbox")
+SET(TOOLBOX_BASE_DIR "/Users/davidkabala/Documents/Work/OpenSGToolbox/trunk")
 SET(OPENSG_BASE_DIR "/Users/davidkabala/Documents/Work/OpenSG/OpenSG/AppleInstall")
 SET(BOOST_BASE_DIR "/Users/davidkabala/Documents/Work/boost_1_39_0/AppleInstall")
 SET(ODE_BASE_DIR "/Users/davidkabala/Documents/Work/ode-0.11.1/AppleInstall")
@@ -39,7 +39,7 @@ ENDIF(NOT EXISTS ${INSTALLER_BASE_DIR})
 # Get revision number
 FIND_PACKAGE(Subversion)
 IF(Subversion_FOUND)
-   Subversion_WC_INFO(${TOOLBOX_BASE_DIR}/trunk Project)
+   Subversion_WC_INFO(${TOOLBOX_BASE_DIR} Project)
    MESSAGE("Current revision is ${Project_WC_REVISION}")
 ENDIF(Subversion_FOUND)
 
@@ -61,7 +61,7 @@ SET(CPACK_PACKAGE_DEFAULT_LOCATION "/usr/local")
 SET(CPACK_PACKAGE_RELOCATABLE "true")
 
 # Name and version
-FILE(STRINGS ${TOOLBOX_BASE_DIR}/trunk/VERSION VersionFile)
+FILE(STRINGS ${TOOLBOX_BASE_DIR}/VERSION VersionFile)
 STRING(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" VersionMatch ${VersionFile})
 SET(CPACK_PACKAGE_VERSION ${CMAKE_MATCH_0})
 SET(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1})
@@ -72,8 +72,6 @@ SET(CPACK_PACKAGE_FILE_NAME "OpenSGToolbox-${CPACK_PACKAGE_VERSION}-${Project_WC
 SET(CPACK_PACKAGE_NAME "OpenSGToolbox")
 SET(CPACK_PACKAGE_VENDOR "VRAC")
 
-
-
 # Resource files
 SET(CPACK_RESOURCE_FILE_LICENSE "${INSTALLER_BASE_DIR}/LICENSE-Dependencies.txt")
 SET(CPACK_RESOURCE_FILE_README "${INSTALLER_BASE_DIR}/README-Dependencies.txt")
@@ -81,7 +79,6 @@ SET(CPACK_PACKAGE_DESCRIPTION_FILE "${INSTALLER_BASE_DIR}/DESCRIPTION-Dependenci
 SET(CPACK_RESOURCE_FILE_WELCOME "${INSTALLER_BASE_DIR}/WELCOME-Dependencies.txt")
 
 # Process files to install
-
 IF(APPLE)
 	IF(EXISTS ${INSTALLER_BASE_DIR}/TEMP_INSTALL_FILES)
 		SET(CPACK_INSTALL_COMMANDS ${CPACK_INSTALL_COMMANDS} "rm -r ${INSTALLER_BASE_DIR}/TEMP_INSTALL_FILES")

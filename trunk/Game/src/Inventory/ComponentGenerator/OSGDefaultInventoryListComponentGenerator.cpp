@@ -55,7 +55,7 @@
 #include "OpenSG/UserInterface/OSGImageComponent.h"
 #include "OpenSG/UserInterface/OSGLabel.h"
 
-#include "OpenSG/Game/OSGInventoryItem.h"
+#include "Inventory/OSGInventoryItem.h"
 #include <boost/any.hpp>
 #include "OpenSG/UserInterface/OSGFlowLayout.h"
 
