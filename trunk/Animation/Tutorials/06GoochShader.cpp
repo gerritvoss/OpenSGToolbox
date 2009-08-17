@@ -17,10 +17,13 @@
 #include <OpenSG/OSGBlendChunk.h>
 #include <OpenSG/OSGChunkMaterial.h>
 #include <OpenSG/OSGMaterialChunk.h>
+#include <OpenSG/OSGPolygonChunk.h>
 #include <OpenSG/OSGSHLChunk.h>
 #include <OpenSG/OSGSHLParameterChunk.h>
 #include <OpenSG/OSGShaderParameterVec4f.h>
 #include <OpenSG/OSGShaderParameterReal.h>
+#include <OpenSG/OSGMultiPassMaterial.h>
+#include <OpenSG/OSGDepthChunk.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -150,7 +153,11 @@ int main(int argc, char **argv)
     mgr->setWindow(MainWindow);
 	
 
-	//Shader Material
+	/*	 Shader Material
+		Creating the materials used by OpenSG to implement a shader
+
+
+	*/
 	BlendChunkPtr ExampleBlendChunk = BlendChunk::create();
 	beginEditCP(ExampleBlendChunk);
 	    ExampleBlendChunk->setSrcFactor(GL_SRC_ALPHA);
@@ -165,6 +172,19 @@ int main(int argc, char **argv)
 		ShaderMaterialChunk->setSpecular(Color4f(1.0f,1.0f,1.0f,1.0f));
 	endEditCP(ShaderMaterialChunk);
 
+	PolygonChunkPtr GoochShaderPolyChunk = PolygonChunk::create();
+	beginEditCP(GoochShaderPolyChunk);
+		GoochShaderPolyChunk->setCullFace(GL_BACK);
+		GoochShaderPolyChunk->setBackMode(GL_FILL);
+		GoochShaderPolyChunk->setFrontMode(GL_FILL);
+	beginEditCP(GoochShaderPolyChunk);
+
+	DepthChunkPtr GoochDepthChunk = DepthChunk::create();
+	beginEditCP(GoochDepthChunk);		
+		GoochDepthChunk->setFunc(GL_LESS);
+	endEditCP(GoochDepthChunk);
+
+
 	//Shader Chunk
 	SHLChunkPtr TheSHLChunk = SHLChunk::create();
 	beginEditCP(TheSHLChunk);
@@ -172,7 +192,7 @@ int main(int argc, char **argv)
 		TheSHLChunk->setFragmentProgram(createSHLFragProgGooch());
 	endEditCP(TheSHLChunk);
 
-	//Color Parameter
+	//Shader Parameters
 	ShaderParameterVec4fPtr WarmColorParameter = ShaderParameterVec4f::create();
 	beginEditCP(WarmColorParameter);
 		WarmColorParameter->setName("WarmColor");
@@ -213,13 +233,61 @@ int main(int argc, char **argv)
 		SHLParameters->getParameters().push_back(DiffuseCoolParameter);
 		SHLParameters->setSHLChunk(TheSHLChunk);
 	endEditCP(SHLParameters);
+	// adding all materials
+	ChunkMaterialPtr GoochMaterial = ChunkMaterial::create();
+	beginEditCP(GoochMaterial, ChunkMaterial::ChunksFieldMask);
+		GoochMaterial->addChunk(ShaderMaterialChunk);
+		GoochMaterial->addChunk(TheSHLChunk);
+		GoochMaterial->addChunk(SHLParameters);
+		GoochMaterial->addChunk(GoochShaderPolyChunk);
+		GoochMaterial->addChunk(GoochDepthChunk);
+	endEditCP(GoochMaterial, ChunkMaterial::ChunksFieldMask);
 
-	ChunkMaterialPtr ShaderMaterial = ChunkMaterial::create();
-	beginEditCP(ShaderMaterial, ChunkMaterial::ChunksFieldMask);
-		ShaderMaterial->addChunk(ShaderMaterialChunk);
-		ShaderMaterial->addChunk(TheSHLChunk);
-		ShaderMaterial->addChunk(SHLParameters);
-	endEditCP(ShaderMaterial, ChunkMaterial::ChunksFieldMask);
+	//Black outline shading materials
+	SHLChunkPtr TheBlackSHLChunk = SHLChunk::create();
+	beginEditCP(TheBlackSHLChunk);
+		TheBlackSHLChunk->setVertexProgram(createSHLVertexProgBlack());
+		TheBlackSHLChunk->setFragmentProgram(createSHKFragProgBlack());
+	endEditCP(TheBlackSHLChunk);
+
+	// line chunk for setting width of outline
+	LineChunkPtr BlackShaderLineChunk = LineChunk::create();
+	beginEditCP(BlackShaderLineChunk);
+		BlackShaderLineChunk->setWidth(3.5);
+		BlackShaderLineChunk->setSmooth(false);
+	endEditCP(BlackShaderLineChunk);
+
+	// only drawing back-facing polygons
+	PolygonChunkPtr BlackShaderPolyChunk = PolygonChunk::create();
+	beginEditCP(BlackShaderPolyChunk);
+		BlackShaderPolyChunk->setCullFace(GL_FRONT);
+		BlackShaderPolyChunk->setBackMode(GL_LINE);
+	beginEditCP(BlackShaderPolyChunk);
+
+	// depth chunk for black outlining
+	DepthChunkPtr BlackDepthChunk = DepthChunk::create();
+	beginEditCP(BlackDepthChunk);		
+		BlackDepthChunk->setFunc(GL_LEQUAL);
+	endEditCP(BlackDepthChunk);
+
+
+	ChunkMaterialPtr BlackFragmentMaterial = ChunkMaterial::create();
+	beginEditCP(BlackFragmentMaterial, ChunkMaterial::ChunksFieldMask);
+		BlackFragmentMaterial->addChunk(ShaderMaterialChunk);
+		BlackFragmentMaterial->addChunk(TheBlackSHLChunk);
+		BlackFragmentMaterial->addChunk(BlackShaderPolyChunk);
+		BlackFragmentMaterial->addChunk(BlackShaderLineChunk);
+		BlackFragmentMaterial->addChunk(BlackDepthChunk);
+	endEditCP(BlackFragmentMaterial, ChunkMaterial::ChunksFieldMask);
+
+
+	// Mulit-Pass material to comine gooch and black outline shading
+	MultiPassMaterialPtr ShaderMaterial = MultiPassMaterial::create();
+	beginEditCP(ShaderMaterial);
+		ShaderMaterial->addMaterial(GoochMaterial);
+		ShaderMaterial->addMaterial(BlackFragmentMaterial);
+	endEditCP(ShaderMaterial);
+
 
 	//Torus Node
 	GeometryPtr TorusGeometry = makeTorusGeo(5.0f,20.0f, 32,32);
@@ -235,9 +303,14 @@ int main(int argc, char **argv)
 
 	NodePtr TorusNode = Node::create();
     beginEditCP(TorusNode, Node::CoreFieldMask);
-        //TorusNode->setCore(TorusGeometry);
-		TorusNode->setCore(SphereGeometry);
+        TorusNode->setCore(TorusGeometry);
     endEditCP(TorusNode, Node::CoreFieldMask);
+
+	NodePtr SphereNode = Node::create();
+    beginEditCP(SphereNode, Node::CoreFieldMask);
+		SphereNode->setCore(SphereGeometry);
+    endEditCP(SphereNode, Node::CoreFieldMask);
+
 
 
     // Make Main Scene Node
@@ -245,6 +318,7 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(Group::create());
 		scene->addChild(TorusNode);
+		scene->addChild(SphereNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	//FCFileType::FCPtrStore Containers;
@@ -290,8 +364,8 @@ void reshape(Vec2f Size)
 
 std::string createSHLVertexProgGooch(void)
 {
-	std::ostringstream VertexFragStream;
-	VertexFragStream
+	std::ostringstream VertexProgStream;
+	VertexProgStream
 	<< "uniform vec4 view_position;\n"
 	<< "uniform vec3 light_position;\n"
 
@@ -310,14 +384,14 @@ std::string createSHLVertexProgGooch(void)
 	<< "   gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n" 
 	<< "}\n" ;
 
-	return  VertexFragStream.str();
+	return  VertexProgStream.str();
 }
 
 std::string createSHLFragProgGooch(void)
 {
-	std::ostringstream FragCodeStream;
+	std::ostringstream FragProgStream;
 
-	FragCodeStream
+	FragProgStream
 	<< "uniform vec4 SurfaceColor;\n" 
 	<< "uniform vec4 WarmColor;\n" 
 	<< "uniform vec4 CoolColor;\n" 
@@ -338,7 +412,7 @@ std::string createSHLFragProgGooch(void)
 	<< "   gl_FragColor = vec4(min(kfinal + spec, 1.0), 1.0);\n" 
 	<< "}\n" ;
 
-	return  FragCodeStream.str();
+	return  FragProgStream.str();
 }
 
 std::string createSHLVertexProgBlack(void)
@@ -347,6 +421,14 @@ std::string createSHLVertexProgBlack(void)
 }
 std::string createSHKFragProgBlack(void)
 {
-	return "";
+	std::ostringstream FragProgStream;
+
+	FragProgStream
+	<< "void main(void)\n"
+	<< "{\n"
+    << "\tgl_FragColor = vec4( 0.0, 0.0, 0.0, 1.0 );\n"
+	<< "}\n";
+
+	return FragProgStream.str();
 }
 
