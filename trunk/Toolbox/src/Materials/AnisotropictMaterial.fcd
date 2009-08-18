@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AnisotropicMaterial"
+	parent="ChunkMaterial"
+	library="Toolbox"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="HeightImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	The Image to create the heightfield from.
+	</Field>
+    <!-- Color Color3f -->
+    <!-- Transparency Color3f -->
+    <!-- AmbientColor Color3f -->
+    <!-- Incandescence Color3f -->
+    <!-- Normal Map Color3f -->
+    <!-- Bump Depth Vec3f -->
+    <!-- Diffuse Real32 -->
+    <!-- Transleucence Real32 -->
+    <!-- Transleucence Depth Real32 -->
+    <!-- Transleucence Focus Real32 -->
+    
+    <!-- Specular Angle Real32 -->
+    <!-- Specular SpreadX Real32 -->
+    <!-- Specular SpreadY Real32 -->
+    <!-- Specular Roughness Real32 -->
+    <!-- Specular Fresnel Index Real32 -->
+    <!-- Specular Roughness Real32 -->
+    <!-- Specular Color Color3f -->
+</FieldContainer>
