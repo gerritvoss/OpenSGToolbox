@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGImageFileHandler.h>
 #include <OpenSG/OSGSceneFileHandler.h>
+#include <OpenSG/OSGProxyGroup.h>
 #include "FileIO/OSGFCFileHandler.h"
 
 #include "OSGFilePathAttachment.h"
@@ -192,10 +193,22 @@ FieldContainerPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const
                 }
                 else
                 {
-                    TheNode = SceneFileHandler::the().read(LoadFilePath.string().c_str());
+                    TheNode = SceneFileHandler::the().read(LoadFilePath.string().c_str(),NULL);
                 }
 
                 Result = TheNode;
+			}
+            //ProxyGourp Core
+			else if(FCType.isDerivedFrom(ProxyGroup::getClassType()))
+			{
+                ProxyGroupPtr TheProxyGroup = ProxyGroup::create();
+                beginEditCP(TheProxyGroup, ProxyGroup::UrlFieldMask | ProxyGroup::EnabledFieldMask | ProxyGroup::ConcurrentLoadFieldMask);
+                    TheProxyGroup->setUrl(LoadFilePath.string().c_str());
+                    TheProxyGroup->setEnabled(true);
+                    TheProxyGroup->setConcurrentLoad(true);
+                endEditCP(TheProxyGroup, ProxyGroup::UrlFieldMask | ProxyGroup::EnabledFieldMask | ProxyGroup::ConcurrentLoadFieldMask);
+
+                Result = TheProxyGroup;
 			}
             if(Result == NullFC)  //Other
             {

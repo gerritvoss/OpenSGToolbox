@@ -1,16 +1,9 @@
-// OpenSG Tutorial Example: Loading
-//
-// This example shows how to load a scene file using OpenSG.
-// The supported formats right now are VRML97, OBJ, OFF and RAW, so just
-// calling this program with a scene file as a parameter should load the scene
-// file.
-//
-
 // Headers
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGAction.h>
+#include <OpenSG/OSGProxyGroup.h>
 #include <OpenSG/OSGTime.h>
 #include <OpenSG/OSGSimpleStatisticsForeground.h>
 #include <OpenSG/OSGBackground.h>
@@ -201,6 +194,10 @@ public:
                 //Pause Particle Systems and Animations
                 IsPaused = !IsPaused;
                 break;
+            case KeyEvent::KEY_V:
+                //Show All in the scene
+                mgr->showAll();
+                break;
         }
    }
 };
@@ -246,6 +243,7 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEvent& e)
     {
+        static bool WasEmpty(true);
         if(!IsPaused)
         {
             //Update Animations
@@ -254,6 +252,16 @@ class TutorialUpdateListener : public UpdateListener
             for(std::vector<AnimationPtr>::iterator Itor(GlobalAnimations.begin()) ; Itor != GlobalAnimations.end(); ++Itor)
             {
                 (*Itor)->update(GlobalAnimationAdvancer);
+            }
+        }
+        if(WasEmpty)
+        {
+            Pnt3f Min,Max;
+            mgr->getRoot()->getVolume().getBounds(Min,Max);
+            if(Max-Min != Vec3f(0.0f,0.0f,0.0f))
+            {
+                WasEmpty = false;
+                mgr->showAll();
             }
         }
         mgr->idle();
@@ -469,7 +477,18 @@ void Load(std::string FilePath, std::vector<NodePtr>& RootNodes,
     }
     else
     {
-		RootNodes.push_back(SceneFileHandler::the().read(FilePath.c_str()));
+        NodePtr TheNode = Node::create();
+        ProxyGroupPtr TheProxyGroup = ProxyGroup::create();
+        beginEditCP(TheProxyGroup, ProxyGroup::UrlFieldMask | ProxyGroup::EnabledFieldMask | ProxyGroup::ConcurrentLoadFieldMask);
+            TheProxyGroup->setUrl(FilePath.c_str());
+            TheProxyGroup->setEnabled(true);
+            TheProxyGroup->setConcurrentLoad(true);
+        endEditCP(TheProxyGroup, ProxyGroup::UrlFieldMask | ProxyGroup::EnabledFieldMask | ProxyGroup::ConcurrentLoadFieldMask);
+		
+        TheNode->setCore(TheProxyGroup);
+
+        RootNodes.push_back(TheNode);
+		//RootNodes.push_back(SceneFileHandler::the().read(FilePath.c_str(),NULL));
     }
     
     Time end = getSystemTime();
