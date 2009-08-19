@@ -482,6 +482,62 @@
 				Name="Materials"
 				>
 				<File
+					RelativePath="..\..\src\Materials\OSGAnisotropicMaterial.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGAnisotropicMaterial.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGAnisotropicMaterial.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGAnisotropicMaterialBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGAnisotropicMaterialBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGAnisotropicMaterialBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGAnisotropicMaterialFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGBlinnMaterial.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGBlinnMaterial.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGBlinnMaterial.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGBlinnMaterialBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGBlinnMaterialBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGBlinnMaterialBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGBlinnMaterialFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Materials\OSGLambertMaterial.cpp"
 					>
 				</File>
@@ -507,6 +563,34 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Materials\OSGLambertMaterialFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGPhongMaterial.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGPhongMaterial.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGPhongMaterial.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGPhongMaterialBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGPhongMaterialBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGPhongMaterialBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGPhongMaterialFields.h"
 					>
 				</File>
 			</Filter>

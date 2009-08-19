@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="AnisotropicMaterial"
+	name="PhongMaterial"
 	parent="ChunkMaterial"
 	library="Toolbox"
 	pointerfieldtypes="both"
@@ -11,16 +11,6 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-	<Field
-		name="HeightImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="NullFC"
-	>
-	The Image to create the heightfield from.
-	</Field>
     <!-- Color Color3f -->
 	<Field
 		name="Color"
@@ -194,9 +184,9 @@
 	>
 	</Field>
     
-    <!-- Specular Angle Real32 -->
+    <!-- Specular Cosine Power Real32 -->
 	<Field
-		name="SpecularAngle"
+		name="SpecularCosinePower"
 		type="Real32"
 		cardinality="single"
 		visibility="external"
@@ -204,79 +194,7 @@
 	>
 	</Field>
 	<Field
-		name="SpecularAngleImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Specular SpreadX Real32 -->
-	<Field
-		name="SpecularSpreadX"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="SpecularSpreadXImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Specular SpreadY Real32 -->
-	<Field
-		name="SpecularSpreadY"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="SpecularSpreadYmage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Specular Roughness Real32 -->
-	<Field
-		name="TransleucenceFocus"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="TransleucenceFocusImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Specular Fresnel Index Real32 -->
-	<Field
-		name="SpecularFresnelIndex"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="SpecularFresnelIndexImage"
+		name="SpecularCosinePowerImage"
 		type="ImagePtr"
 		cardinality="single"
 		visibility="external"
