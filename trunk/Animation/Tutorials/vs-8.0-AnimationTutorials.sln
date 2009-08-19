@@ -44,6 +44,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "23BlendXMLAnimations", "23B
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06GoochShader", "06GoochShader.vcproj", "{BB185D38-0F6B-4320-BCB3-E27F253B8437}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07MaterialLibraryTest", "07MaterialLibraryTest.vcproj", "{EA1F01D7-23D2-4C91-ACCA-201F0F8D8EBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -138,6 +140,10 @@ Global
 		{BB185D38-0F6B-4320-BCB3-E27F253B8437}.Debug|Win32.Build.0 = Debug|Win32
 		{BB185D38-0F6B-4320-BCB3-E27F253B8437}.Release|Win32.ActiveCfg = Release|Win32
 		{BB185D38-0F6B-4320-BCB3-E27F253B8437}.Release|Win32.Build.0 = Release|Win32
+		{EA1F01D7-23D2-4C91-ACCA-201F0F8D8EBD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EA1F01D7-23D2-4C91-ACCA-201F0F8D8EBD}.Debug|Win32.Build.0 = Debug|Win32
+		{EA1F01D7-23D2-4C91-ACCA-201F0F8D8EBD}.Release|Win32.ActiveCfg = Release|Win32
+		{EA1F01D7-23D2-4C91-ACCA-201F0F8D8EBD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

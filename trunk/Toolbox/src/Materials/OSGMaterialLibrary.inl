@@ -1,12 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG Toolbox Toolbox                            *
+ *                        OpenSG ToolBox Toolbox                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                Authors: David Kabala, Daniel Guilliams                    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,29 +24,49 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSGTOOLBOXDEF_H_
-#define _OSGTOOLBOXDEF_H_
-#ifdef __sgi
-#pragma once
-#endif
 
-//---------------------------------------------------------------------------
-//  Defines
-//---------------------------------------------------------------------------
+#include <OpenSG/OSGConfig.h>
 
-#if defined(WIN32) && defined(OSG_BUILD_DLL)
-#   ifdef OSG_COMPILETOOLBOXLIB
-#       define OSG_TOOLBOXLIB_DLLMAPPING     __declspec(dllexport)
-#       define OSG_TOOLBOXLIB_DLLTMPLMAPPING __declspec(dllexport)
-#   else
-#       define OSG_TOOLBOXLIB_DLLMAPPING     __declspec(dllimport)
-#       define OSG_TOOLBOXLIB_DLLTMPLMAPPING __declspec(dllimport)
-#   endif
-#else
-#define OSG_TOOLBOXLIB_DLLMAPPING
-#define OSG_TOOLBOXLIB_DLLTMPLMAPPING
-#endif
+OSG_BEGIN_NAMESPACE
 
-#endif /* _OSGTOOLBOXDEF_H_ */
+
+inline
+UInt32 MaterialLibrary::getNumMaterials(void) const
+{
+	return _Materials.size();
+}
+
+inline
+UInt32 MaterialLibrary::getNumFuncMaterials(void) const
+{
+	return _MaterialFuncs.size();
+}
+
+inline
+MaterialLibrary::MaterialMapConstItor MaterialLibrary::getMaterialBeginItor(void) const
+{
+	return _Materials.begin();
+}
+
+inline
+MaterialLibrary::MaterialMapConstItor MaterialLibrary::getMaterialEndItor(void) const
+{
+	return _Materials.end();
+}
+
+inline
+MaterialLibrary::MaterialFunctionMapConstItor MaterialLibrary::getMaterialFunctionBeginItor(void) const
+{
+	return _MaterialFuncs.begin();
+}
+
+inline
+MaterialLibrary::MaterialFunctionMapConstItor MaterialLibrary::getMaterialFunctionEndItor(void) const
+{
+	return _MaterialFuncs.end();
+}
+
+OSG_END_NAMESPACE
+
 
 
