@@ -561,6 +561,8 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 		bool isPositionDifferent(false);
 		for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
 		{
+			isSizeDifferent = false;
+			isPositionDifferent = false;
 
 			if(getInternalWindows()[i]->isScalableInDrawingSurface())
 			{
