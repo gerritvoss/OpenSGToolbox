@@ -478,6 +478,38 @@
 				Name="Actions"
 				>
 			</Filter>
+			<Filter
+				Name="Materials"
+				>
+				<File
+					RelativePath="..\..\src\Materials\OSGLambertMaterial.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGLambertMaterial.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGLambertMaterial.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGLambertMaterialBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGLambertMaterialBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGLambertMaterialBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGLambertMaterialFields.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

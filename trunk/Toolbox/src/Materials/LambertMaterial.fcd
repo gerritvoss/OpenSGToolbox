@@ -11,24 +11,176 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
+    <!-- Color Color3f -->
 	<Field
-		name="HeightImage"
+		name="Color"
+		type="Color3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ColorImage"
 		type="ImagePtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+        defaultValue="NullFC"
 	>
-	The Image to create the heightfield from.
 	</Field>
-    <!-- Color Color3f -->
     <!-- Transparency Color3f -->
+	<Field
+		name="Transparency"
+		type="Color3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TransparencyImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
     <!-- AmbientColor Color3f -->
+	<Field
+		name="AmbientColor"
+		type="Color3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="AmbientColorImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
     <!-- Incandescence Color3f -->
-    <!-- Normal Map Color3f -->
-    <!-- Bump Depth Vec3f -->
+	<Field
+		name="Incandescence"
+		type="Color3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="IncandescenceImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
+    <!-- Normal -->
+	<Field
+		name="NormalMapImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
+    <!-- Bump Depth Real32 -->
+	<Field
+		name="BumpDepth"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="BumpDepthImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
     <!-- Diffuse Real32 -->
+	<Field
+		name="Diffuse"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DiffuseImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
     <!-- Transleucence Real32 -->
+	<Field
+		name="Transleucence"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TransleucenceImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
     <!-- Transleucence Depth Real32 -->
+	<Field
+		name="TransleucenceDepth"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TransleucenceDepthImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
     <!-- Transleucence Focus Real32 -->
+	<Field
+		name="TransleucenceFocus"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TransleucenceFocusImage"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>
