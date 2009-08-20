@@ -1,7 +1,8 @@
 
 !include FindFile.nsh
-!include ModifyPath.nsh
 !include LogicLib.nsh
+!include EnvVarUpdate.nsh
+!include MUI.nsh
 
 
 # name the installer
@@ -59,9 +60,6 @@ Var AddLibsToPATH
  !undef Index
 !macroend
 
-# define the directory to install to, the desktop in this case as specified  
-# by the predefined $DESKTOP variable
-
 installDir $PROGRAMFILES\${InstallDirName}
 
 
@@ -83,8 +81,8 @@ Function OptionsPage
    ReserveFile "InstallOptionsFile.ini"
 
   # If you need to skip the page depending on a condition, call Abort.
-  #!insertmacro MUI_INSTALLOPTIONS_EXTRACT "InstallOptionsFile.ini"
-  #!insertmacro MUI_INSTALLOPTIONS_DISPLAY "InstallOptionsFile.ini"
+  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "InstallOptionsFile.ini"
+  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "InstallOptionsFile.ini"
 FunctionEnd
  
 Function OptionsPageLeave
@@ -93,9 +91,9 @@ Function OptionsPageLeave
   # to get values.
   
   # Get control window handle.
-  #!insertmacro MUI_INSTALLOPTIONS_READ $R0 "InstallOptionsFile.ini" "Field 1" "HWND"
+  !insertmacro MUI_INSTALLOPTIONS_READ $R0 "InstallOptionsFile.ini" "Field 1" "HWND"
 
-  #s!insertmacro MUI_INSTALLOPTIONS_READ $AddLibsToPATH "InstallOptionsFile.ini" "Field 1" "State"
+  !insertmacro MUI_INSTALLOPTIONS_READ $AddLibsToPATH "InstallOptionsFile.ini" "Field 1" "State"
 FunctionEnd
 
 Function InstallToolboxTutorialLinks
@@ -186,8 +184,7 @@ section
 
     ${If} $AddLibsToPATH == 1
         #Set up the Path
-        Push $INSTDIR\lib
-        Call AddToPath
+        ${EnvVarUpdate} $0 "PATH" "A" "HKCU" "$INSTDIR\lib"
     ${EndIf}
 # default section end
 sectionEnd
@@ -629,8 +626,7 @@ section "un.Uninstall ${ProjectName}"
    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenSGToolbox"
    
    #Remove from path
-   Push $INSTDIR\lib
-   Call un.RemoveFromPath
+   ${un.EnvVarUpdate} $0 "PATH" "R" "HKCU" "$INSTDIR\lib"
  
 sectionEnd
 
