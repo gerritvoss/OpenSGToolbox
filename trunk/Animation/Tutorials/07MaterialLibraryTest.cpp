@@ -22,6 +22,7 @@
 #include <OpenSG/OSGSHLParameterChunk.h>
 #include <OpenSG/OSGShaderParameterVec4f.h>
 #include <OpenSG/OSGShaderParameterReal.h>
+#include <OpenSG/OSGShaderParameterBool.h>
 #include <OpenSG/OSGMultiPassMaterial.h>
 #include <OpenSG/OSGDepthChunk.h>
 #include <OpenSG/OSGCubeTextureChunk.h>
@@ -57,14 +58,17 @@ void reshape(Vec2f Size);
 
 MaterialPtr createGoochMaterial(void);
 MaterialPtr createSimpleGlassMaterial(void);
+MaterialPtr createComplexGlassMaterial(void);
 
 std::string createSHLVertexProgGooch(void);
 std::string createSHLFragProgGooch(void);
 std::string createSHLVertexProgBlack(void);
 std::string createSHKFragProgBlack(void);
-
 std::string createGlassVertexProg(void);
 std::string createGlassFragProg(void);
+std::string createComplexGlassVertexProg(void);
+std::string createComplexGlassFragProg(void);
+
 
 BackgroundPtr createBackground(void);
 
@@ -143,11 +147,29 @@ struct GoochMat {
 	}
 };
 
+struct SimpleGlassMat {
+	MaterialPtr operator()(void)const
+	{
+		return createSimpleGlassMaterial();
+	}
+};
+
+struct ComplexGlassMat {
+	MaterialPtr operator()(void)const
+	{
+		return createComplexGlassMaterial();
+	}
+};
+
 struct InitGoochMat{
 	InitGoochMat()
 	{
 		MaterialLibrary::MaterialFunction f = GoochMat();
 		MaterialLibrary::the()->addMaterialFunction("Gooch", f);
+		f = SimpleGlassMat();
+		MaterialLibrary::the()->addMaterialFunction("SimpleGlass", f);
+		f = ComplexGlassMat();
+		MaterialLibrary::the()->addMaterialFunction("ComplexGlass", f);
 	}
 } MyInitGoochMat;
 
@@ -180,17 +202,23 @@ int main(int argc, char **argv)
     mgr->setWindow(MainWindow);
 
 	//Torus Node
-	GeometryPtr TorusGeometry = makeTorusGeo(3.0f,20.0f, 32,32);
-	GeometryPtr CylinderGeometry = makeCylinderGeo(15.0f,7.0f,32,true,true,true);
+	GeometryPtr TorusGeometry = makeTorusGeo(3.0f,15.0f, 32,32);
+	GeometryPtr CylinderGeometry = makeCylinderGeo(10.0f,10.0f,32,true,true,true);
+	GeometryPtr SphereGeometry = makeSphereGeo(3,5.0f);
 
 	beginEditCP(CylinderGeometry, Geometry::MaterialFieldMask);
 		//CylinderGeometry->setMaterial(MaterialLibrary::the()->createMaterial("Gooch"));
-		CylinderGeometry->setMaterial(createSimpleGlassMaterial());
+		CylinderGeometry->setMaterial(MaterialLibrary::the()->createMaterial("SimpleGlass"));
 	endEditCP(CylinderGeometry, Geometry::MaterialFieldMask);
 
 	beginEditCP(TorusGeometry, Geometry::MaterialFieldMask);
-		TorusGeometry->setMaterial(createSimpleGlassMaterial());
+		TorusGeometry->setMaterial(MaterialLibrary::the()->createMaterial("SimpleGlass"));
 	endEditCP(TorusGeometry, Geometry::MaterialFieldMask);
+
+	beginEditCP(SphereGeometry, Geometry::MaterialFieldMask);
+		SphereGeometry->setMaterial(MaterialLibrary::the()->createMaterial("ComplexGlass"));
+	endEditCP(SphereGeometry, Geometry::MaterialFieldMask);
+
 
 	NodePtr TorusNode = Node::create();
     beginEditCP(TorusNode, Node::CoreFieldMask);
@@ -199,15 +227,21 @@ int main(int argc, char **argv)
 
 	NodePtr SphereNode = Node::create();
     beginEditCP(SphereNode, Node::CoreFieldMask);
-		SphereNode->setCore(CylinderGeometry);
+		SphereNode->setCore(SphereGeometry);
     endEditCP(SphereNode, Node::CoreFieldMask);
+
+	NodePtr CylinderNode = Node::create();
+    beginEditCP(CylinderNode, Node::CoreFieldMask);
+		CylinderNode->setCore(CylinderGeometry);
+    endEditCP(CylinderNode, Node::CoreFieldMask);
 
     // Make Main Scene Node
     NodePtr scene = Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(Group::create());
-		scene->addChild(TorusNode);
+		//scene->addChild(TorusNode);
 		scene->addChild(SphereNode);
+		//scene->addChild(CylinderNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
@@ -389,9 +423,6 @@ std::string createSHLVertexProgGooch(void)
 {
 	std::ostringstream VertexProgStream;
 	VertexProgStream
-	<< "uniform vec4 view_position;\n"
-	<< "uniform vec3 light_position;\n"
-
 	<< "varying out vec3 ReflectVec;\n"
 	<< "varying out vec3 ViewVec;\n"
 	<< "varying out float NdotL;\n"
@@ -464,13 +495,10 @@ MaterialPtr createSimpleGlassMaterial(void)
 	    ExampleBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
 	endEditCP(ExampleBlendChunk);
 
-		//Depth Chunk 
+	//Depth Chunk, default parameters used 
 	DepthChunkPtr GlassDepthChunk = DepthChunk::create();
-	beginEditCP(GlassDepthChunk);		
-		//GlassDepthChunk->setFunc(GL_LESS);
-	endEditCP(GlassDepthChunk);
-
-		// only drawing back-facing polygons
+	
+	// culling back-facing polygons
 	PolygonChunkPtr GlassShaderPolyChunk = PolygonChunk::create();
 	beginEditCP(GlassShaderPolyChunk);
 		GlassShaderPolyChunk->setCullFace(GL_BACK);
@@ -484,19 +512,20 @@ MaterialPtr createSimpleGlassMaterial(void)
 		ShaderMaterialChunk->setSpecular(Color4f(1.0f,1.0f,1.0f,1.0f));
 	endEditCP(ShaderMaterialChunk);
 
+	// creating actual shader programs
 	SHLChunkPtr TheSHLChunk = SHLChunk::create();
 	beginEditCP(TheSHLChunk);
 		TheSHLChunk->setVertexProgram(createGlassVertexProg());
 		TheSHLChunk->setFragmentProgram(createGlassFragProg());
 	endEditCP(TheSHLChunk);
 
+	// for background reflections off of material
 	ImagePtr CubeTextureFront = ImageFileHandler::the().read("Data/cell_front.jpg");
 	ImagePtr CubeTextureBack = ImageFileHandler::the().read("Data/cell_back.jpg");
 	ImagePtr CubeTextureLeft = ImageFileHandler::the().read("Data/cell_left.jpg");
 	ImagePtr CubeTextureRight = ImageFileHandler::the().read("Data/cell_right.jpg");
 	ImagePtr CubeTextureTop = ImageFileHandler::the().read("Data/cell_top.jpg");
 	ImagePtr CubeTextureBottom = ImageFileHandler::the().read("Data/cell_bottom.jpg");
-
 	CubeTextureChunkPtr CubeTexture = CubeTextureChunk::create();
 	beginEditCP(CubeTexture);
 		CubeTexture->setNegXImage(CubeTextureLeft);
@@ -506,19 +535,18 @@ MaterialPtr createSimpleGlassMaterial(void)
 		CubeTexture->setPosYImage(CubeTextureTop);
 		CubeTexture->setPosZImage(CubeTextureBack);
 	endEditCP(CubeTexture);
-
+	// intensity of diffraction off of 'glass'
 	ShaderParameterRealPtr RainbowParameter = ShaderParameterReal::create();
 	beginEditCP(RainbowParameter);
 		RainbowParameter->setName("rainbowiness");
-		RainbowParameter->setValue(0.5);
+		RainbowParameter->setValue(0.4);
 	endEditCP(RainbowParameter);
-
 	SHLParameterChunkPtr SHLParameters = SHLParameterChunk::create();
 	beginEditCP(SHLParameters);
 		SHLParameters->getParameters().push_back(RainbowParameter);
 		SHLParameters->setSHLChunk(TheSHLChunk);
 	endEditCP(SHLParameters);
-
+	// assembling material
 	ChunkMaterialPtr SimpleGlassMaterial = ChunkMaterial::create();
 	beginEditCP(SimpleGlassMaterial, ChunkMaterial::ChunksFieldMask);
 		SimpleGlassMaterial->addChunk(ShaderMaterialChunk);
@@ -613,6 +641,218 @@ std::string createGlassFragProg(void)
 	<< "}\n";
 
 	return FragProgStream.str();
+
+	//gl_FragColor = vec4 (color, 1.0 - v);
+}
+
+MaterialPtr createComplexGlassMaterial(void)
+{	
+	BlendChunkPtr ExampleBlendChunk = BlendChunk::create();
+	beginEditCP(ExampleBlendChunk);
+	    ExampleBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+	    ExampleBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+	endEditCP(ExampleBlendChunk);
+
+	//Depth Chunk, default parameters used 
+	DepthChunkPtr GlassDepthChunk = DepthChunk::create();
+	
+	// culling back-facing polygons
+	PolygonChunkPtr GlassShaderPolyChunk = PolygonChunk::create();
+	beginEditCP(GlassShaderPolyChunk);
+		GlassShaderPolyChunk->setCullFace(GL_BACK);
+	beginEditCP(GlassShaderPolyChunk);
+
+	//Material Chunk
+	MaterialChunkPtr ShaderMaterialChunk = MaterialChunk::create();
+	beginEditCP(ShaderMaterialChunk);
+		ShaderMaterialChunk->setAmbient(Color4f(0.4f,0.4f,0.4f,1.0f));
+		ShaderMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
+		ShaderMaterialChunk->setSpecular(Color4f(1.0f,1.0f,1.0f,1.0f));
+	endEditCP(ShaderMaterialChunk);
+
+	// creating actual shader programs
+	SHLChunkPtr TheSHLChunk = SHLChunk::create();
+	beginEditCP(TheSHLChunk);
+		TheSHLChunk->setVertexProgram(createComplexGlassVertexProg());
+		TheSHLChunk->setFragmentProgram(createComplexGlassFragProg());
+	endEditCP(TheSHLChunk);
+
+	// for refractions/reflections off of material
+	ImagePtr CubeTextureFront = ImageFileHandler::the().read("Data/cell_front.jpg");
+	ImagePtr CubeTextureBack = ImageFileHandler::the().read("Data/cell_back.jpg");
+	ImagePtr CubeTextureLeft = ImageFileHandler::the().read("Data/cell_left.jpg");
+	ImagePtr CubeTextureRight = ImageFileHandler::the().read("Data/cell_right.jpg");
+	ImagePtr CubeTextureTop = ImageFileHandler::the().read("Data/cell_top.jpg");
+	ImagePtr CubeTextureBottom = ImageFileHandler::the().read("Data/cell_bottom.jpg");
+	CubeTextureChunkPtr CubeTexture = CubeTextureChunk::create();
+	beginEditCP(CubeTexture);
+		CubeTexture->setNegXImage(CubeTextureLeft);
+		CubeTexture->setNegYImage(CubeTextureBottom);
+		CubeTexture->setImage(CubeTextureBack); // negative Z
+		CubeTexture->setPosXImage(CubeTextureRight);
+		CubeTexture->setPosYImage(CubeTextureTop);
+		CubeTexture->setPosZImage(CubeTextureFront);
+	endEditCP(CubeTexture);
+
+	// parameters for diffraction off of 'glass'
+	ShaderParameterRealPtr IdxOfRefractionRed = ShaderParameterReal::create();
+	beginEditCP(IdxOfRefractionRed);
+		IdxOfRefractionRed->setName("EtaR");
+		IdxOfRefractionRed->setValue(0.65);
+	endEditCP(IdxOfRefractionRed);
+
+	ShaderParameterRealPtr IdxOfRefractionGreen = ShaderParameterReal::create();
+	beginEditCP(IdxOfRefractionGreen);
+		IdxOfRefractionGreen->setName("EtaG");
+		IdxOfRefractionGreen->setValue(0.67);
+	endEditCP(IdxOfRefractionGreen);
+
+	ShaderParameterRealPtr IdxOfRefractionBlue = ShaderParameterReal::create();
+	beginEditCP(IdxOfRefractionRed);
+		IdxOfRefractionRed->setName("EtaB");
+		IdxOfRefractionRed->setValue(0.69);
+	endEditCP(IdxOfRefractionRed);
+
+	ShaderParameterRealPtr FresnelPower = ShaderParameterReal::create();
+	beginEditCP(FresnelPower);
+		FresnelPower->setName("FresnelPower");
+		FresnelPower->setValue(5.0);
+	endEditCP(FresnelPower);
+
+	ShaderParameterBoolPtr UseChromaticAbberation = ShaderParameterBool::create();
+	beginEditCP(UseChromaticAbberation);
+		UseChromaticAbberation->setName("ChromaticAbberation");
+		UseChromaticAbberation->setValue(true);
+	endEditCP(UseChromaticAbberation);
+
+	SHLParameterChunkPtr SHLParameters = SHLParameterChunk::create();
+	beginEditCP(SHLParameters);
+		SHLParameters->getParameters().push_back(UseChromaticAbberation);
+		SHLParameters->getParameters().push_back(IdxOfRefractionRed);
+		SHLParameters->getParameters().push_back(IdxOfRefractionGreen);
+		SHLParameters->getParameters().push_back(IdxOfRefractionBlue);
+		SHLParameters->getParameters().push_back(FresnelPower);
+		SHLParameters->setSHLChunk(TheSHLChunk);
+	endEditCP(SHLParameters);
+
+	// assembling material
+	ChunkMaterialPtr ComplexGlassMaterial = ChunkMaterial::create();
+	beginEditCP(ComplexGlassMaterial, ChunkMaterial::ChunksFieldMask);
+		ComplexGlassMaterial->addChunk(ShaderMaterialChunk);
+		ComplexGlassMaterial->addChunk(SHLParameters);
+		ComplexGlassMaterial->addChunk(TheSHLChunk);
+		ComplexGlassMaterial->addChunk(ExampleBlendChunk);
+		ComplexGlassMaterial->addChunk(CubeTexture);
+		ComplexGlassMaterial->addChunk(GlassDepthChunk);
+		ComplexGlassMaterial->addChunk(GlassShaderPolyChunk);
+	endEditCP(ComplexGlassMaterial, ChunkMaterial::ChunksFieldMask);
+
+	return ComplexGlassMaterial;
+	
+
+}
+
+std::string createComplexGlassVertexProg(void)
+{
+	std::ostringstream VertexProgStream;
+
+	VertexProgStream
+	<< "uniform bool ChromaticAbberation;\n"
+
+	<< "uniform float EtaR;\n"
+	<< "uniform float EtaG;\n"
+	<< "uniform float EtaB;\n"
+
+	<< "uniform float FresnelPower;\n"
+
+	<< "varying out vec3 Reflect;\n"
+	<< "varying out vec3 RefractR;\n"
+	<< "varying out vec3 RefractG;\n"
+	<< "varying out vec3 RefractB;\n"
+	<< "varying out float Ratio;\n"
+	<< "varying out vec3 i;\n"
+	<< "varying out vec3 n;\n"
+
+	<< "void main(void)\n"
+	<< "{\n"
+	<< "   vec4 ecPosition = gl_Vertex;\n"
+	//<< "   vec4 ecPosition = gl_ModelViewMatrix * gl_Vertex;\n"
+	<< "   vec3 ecPosition3 = ecPosition.xyz ;// ecPosition.w;\n"
+	   
+	<< "  i = normalize(ecPosition3);\n"
+	<< "  n = normalize(gl_Normal);\n"
+	//<< "  n = normalize(gl_NormalMatrix * gl_Normal);\n"
+	   
+	<< "   float F = ((1.0-EtaG) * (1.0-EtaG))/((1.0+EtaG) * (1.0+EtaG));\n"
+	<< "   Ratio = F + (1.0 - F) * pow((1.0 - dot(-i,n)), FresnelPower);\n"
+	   
+	<< "   if(ChromaticAbberation)\n"
+	<< "   {\n"
+	<< "	  RefractR = refract(i,n,EtaR);\n"
+	<< "	  RefractR = vec3(gl_TextureMatrix[0] * vec4(RefractR,1.0));\n"
+	      
+	<< "	  RefractG = refract(i,n,EtaG);\n"
+	<< "	  RefractG = vec3(gl_TextureMatrix[0] * vec4(RefractG,1.0));\n"
+	      
+	<< "	  RefractB = refract(i,n,EtaB);\n"
+	<< "	  RefractB = vec3(gl_TextureMatrix[0] * vec4(RefractB,1.0));\n"
+	<< "   } \n"
+	<< "   else\n"
+	<< "  {\n"
+	<< "	  RefractR = refract(i,n, ((EtaR + EtaB + EtaG)/3.0));\n"
+	<< "	  RefractR = vec3(gl_TextureMatrix[0] * vec4(RefractR,1.0));\n"
+	<< "   }\n"
+	   
+	<< "   Reflect = ( vec4(reflect(i,n),1.0)).xyz;\n"
+	<< "  Reflect = vec3(gl_TextureMatrix[0] * vec4(Reflect,1.0));\n"
+	   
+	<< "   gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+	<< "}\n";
+
+	return VertexProgStream.str();
+
+}
+
+std::string createComplexGlassFragProg(void)
+{
+	std::ostringstream FragProgStream;
+
+	FragProgStream
+	<< "uniform samplerCube Environment;\n"
+	<< "uniform bool ChromaticAbberation;\n"
+
+	<< "varying in vec3 Reflect;\n"
+	<< "varying in vec3 RefractR;\n"
+	<< "varying in vec3 RefractG;\n"
+	<< "varying in vec3 RefractB;\n"
+	<< "varying in float Ratio;\n"
+	<< "varying in vec3 i;\n"
+	<< "varying in vec3 n;\n"
+
+	<< "void main(void)\n"
+	<< "{\n"
+	<< "   vec3 refractColor, reflectColor;\n"
+	   
+	<< "   if(ChromaticAbberation)\n"
+	<< "   {\n"
+	<< "	  refractColor.x = vec3(texture(Environment, RefractR)).x;\n"
+	<< "	  refractColor.y = vec3(texture(Environment, RefractG)).y;\n"
+	<< "	  refractColor.z = vec3(texture(Environment, RefractB)).z;\n"
+	<< "   }\n"
+	<< "   else\n"
+	<< "   {\n"
+	<< "	  refractColor = vec3(texture(Environment,RefractR));\n"
+	<< "   }\n"
+	   
+	<< "   reflectColor = vec3(texture(Environment, Reflect));\n"
+	   
+	<< "   vec3 color = mix(refractColor, reflectColor, Ratio);\n"
+	//<< "   vec3 ReflectT = vec3((Reflect + vec3(1.0))*0.5);\n"  
+	<< "   gl_FragColor = vec4(color, 1.0);\n"
+	  
+	<< "}\n";
+
+	return FragProgStream.str();
 }
 
 BackgroundPtr createBackground(void)
@@ -633,6 +873,7 @@ BackgroundPtr createBackground(void)
 
 	beginEditCP(BGTop);
 		BGTop->setImage(CubeTextureTop);
+
 	endEditCP(BGTop);
 	beginEditCP(BGBottom);
 		BGBottom->setImage(CubeTextureBottom);
@@ -652,12 +893,13 @@ BackgroundPtr createBackground(void)
 
 	SkyBackgroundPtr TheBackground = SkyBackground::create();
 	beginEditCP(TheBackground);
-		TheBackground->setBackTexture(BGBack);
-		TheBackground->setFrontTexture(BGFront);
+		TheBackground->setBackTexture(BGFront);
+		TheBackground->setFrontTexture(BGBack);
 		TheBackground->setBottomTexture(BGBottom);
-		TheBackground->setLeftTexture(BGRight);
-		TheBackground->setRightTexture(BGLeft);
+		TheBackground->setLeftTexture(BGLeft);
+		TheBackground->setRightTexture(BGRight);
 		TheBackground->setTopTexture(BGTop);
+		TheBackground->setBoxInside(true);
 	endEditCP(TheBackground);
 
 	return TheBackground;
