@@ -27,7 +27,6 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-
 #ifndef _OSGMATERIAL_LIBRARY_H_
 #define _OSGMATERIAL_LIBRARY_H_
 #ifdef __sgi

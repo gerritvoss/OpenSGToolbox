@@ -28,13 +28,9 @@
 \*---------------------------------------------------------------------------*/
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGSimpleMaterial.h>
-
 #include "OSGMaterialLibrary.h"
 
 OSG_USING_NAMESPACE
-
-
 
 MaterialLibrary *MaterialLibrary::_the = NULL;
 
@@ -89,7 +85,7 @@ bool MaterialLibrary::removeMaterial(const std::string& MaterialName)
 	return removed;
 }
 
-// TODO: rework this function
+
 MaterialPtr MaterialLibrary::getMaterial(const std::string& MaterialName) const
 {
 	MaterialMapConstItor MatItor = _Materials.find(MaterialName);
@@ -156,7 +152,6 @@ MaterialPtr MaterialLibrary::createMaterial(const std::string& MaterialName) con
 	return NullFC; 
 }
 
-
 bool MaterialLibrary::isDefined(const std::string& MaterialName) const
 { // check if material is defined in either map
 	bool defined(false);
@@ -177,4 +172,5 @@ bool MaterialLibrary::isDefined(const std::string& MaterialName) const
 
 	return defined; 
 }
+
 

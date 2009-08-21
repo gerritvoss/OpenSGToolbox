@@ -566,6 +566,26 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Materials\OSGMaterialLibrary.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGMaterialLibrary.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGMaterialLibrary.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGMaterials.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGMaterials.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Materials\OSGPhongMaterial.cpp"
 					>
 				</File>
