@@ -16,6 +16,11 @@
 
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 #include <OpenSG/OSGSceneFileHandler.h>
+#include <OpenSG/OSGGraphOpSeq.h>
+#include <OpenSG/OSGVerifyGeoGraphOp.h>
+#include <OpenSG/OSGStripeGraphOp.h>
+#include <OpenSG/OSGMaterialMergeGraphOp.h>
+#include <OpenSG/OSGSharePtrGraphOp.h>
 
 #include <boost/filesystem/operations.hpp>
 
@@ -68,6 +73,22 @@ int main(int argc, char **argv)
         std::cout << "Failed to load a scene from: "<< FilePath.string() << "." << std::endl;
         return -1;
     }
+
+    //Run Graph optimizations
+    GraphOpSeq *graphop = new GraphOpSeq;
+    graphop->addGraphOp(new VerifyGeoGraphOp);
+    graphop->addGraphOp(new StripeGraphOp);
+    //graphop->addGraphOp(new MaterialMergeGraphOp);
+    //graphop->addGraphOp(new SharePtrGraphOp);
+
+    if(graphop != NULL)
+    {
+        graphop->run(TheScene);
+    }
+
+
+
+    //Export the Scene to an osb file
 
     std::string ExportFileName(FilePath.string().substr(0,FilePath.string().size()-3) + "osb");
     

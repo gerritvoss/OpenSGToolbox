@@ -428,8 +428,9 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(xmlpp::xmlnodeli
 		{
             NewFCInfo._Ptr = NullFC;
             FCType = FieldContainerFactory::the()->findType((*NodeListItor)->get_name().c_str());
+
             //If it is a Attachment Container Type
-            if(FCType->isDerivedFrom(AttachmentContainer::getClassType()))
+            if(FCType != NULL && FCType->isDerivedFrom(AttachmentContainer::getClassType()))
             {
                 //Check if there is a File attachment
 			    SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
@@ -443,68 +444,80 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(xmlpp::xmlnodeli
                     }
 
 
-                    if(boost::filesystem::exists(TheFilePath))
-                    {
+                    try{
+                        if(boost::filesystem::exists(TheFilePath))
+                        {
 
-                        NewFCInfo._Ptr = FilePathAttachment::loadFromFilePath(TheFilePath, *FCType);
-				        if(NewFCInfo._Ptr == NullFC)
-				        {
-					        SWARNING <<
-						        "ERROR in XMLFCFileType::read():" <<
-						        "could not load type: " << NewFCInfo._Ptr->getType().getCName() <<
-						        " from file " <<TheFilePath.string() <<
-						        std::endl;
-				        }
+                            NewFCInfo._Ptr = FilePathAttachment::loadFromFilePath(TheFilePath, *FCType);
+				            if(NewFCInfo._Ptr == NullFC)
+				            {
+					            SWARNING <<
+						            "ERROR in XMLFCFileType::read():" <<
+						            "could not load type: " << NewFCInfo._Ptr->getType().getCName() <<
+						            " from file " <<TheFilePath.string() <<
+						            std::endl;
+				            }
+                            else
+                            {
+				                FilePathAttachment::setFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),TheFilePath);
+                            }
+                        }
                         else
                         {
-				            FilePathAttachment::setFilePath(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),TheFilePath);
+				            SWARNING <<
+					            "ERROR in XMLFCFileType::read():" <<
+					            "could not load type: " << FCType->getCName() <<
+					            " from file " <<TheFilePath.string() << " because that file does not exist." <<
+					            std::endl;
                         }
                     }
-                    else
+                    catch(boost::filesystem::basic_filesystem_error<Path>& e)
                     {
-				        SWARNING <<
+			            SWARNING <<
 					        "ERROR in XMLFCFileType::read():" <<
 					        "could not load type: " << FCType->getCName() <<
-					        " from file " <<TheFilePath.string() << " because that file does not exist." <<
-					        std::endl;
+					        " from file " <<TheFilePath.string() << " because that file does not exist." << ". Error: " << e.what() <<
+				            std::endl;
                     }
 			    }
             }
             if(NewFCInfo._Ptr == NullFC)
             {
 			    NewFCInfo._Ptr = FieldContainerFactory::the()->createFieldContainer((*NodeListItor)->get_name().c_str());
-			    if(NewFCInfo._Ptr == NullFC)
+            }
+
+		    if(NewFCInfo._Ptr == NullFC)
+		    {
+			    SWARNING << FileNameOrExtension << ": Couldn't create unknown FieldContainer with type '" << (*NodeListItor)->get_name() << "'!" << std::endl;
+		    }
+            else
+            {
+                //If there is a name attachment, than attach a name to this container
+                if(NewFCInfo._Ptr->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+                {
+				    //Search for name attachment xml token
+				    SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(NameAttachmentXMLToken));
+				    if(SearchItor != (*NodeListItor)->get_attrmap().end())
+				    {
+					    setName(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),SearchItor->second.c_str());
+				    }
+                }
+
+
+                //Attach the FieldID mapping to this container
+			    SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FieldContainerIDXMLToken));
+			    if(SearchItor == (*NodeListItor)->get_attrmap().end())
 			    {
-				    SFATAL << FileNameOrExtension << ": Couldn't create unknown FieldContainer with type '" << (*NodeListItor)->get_name() << "'!" << std::endl;
+				    SFATAL << FileNameOrExtension << ": Couldn't find "+FieldContainerIDXMLToken+" attribute for '" << (*NodeListItor)->get_name() << "'!" << std::endl;
+			    }
+			    OldFCId = TypeTraits<UInt32>::getFromString(SearchItor->second.c_str());
+			    NewFCInfo._NewId = NewFCInfo._Ptr.getFieldContainerId();
+			    if(OldToNewFCLookupMap.insert(std::make_pair(OldFCId, NewFCInfo)).second == false)
+			    {
+				    SFATAL << FileNameOrExtension << ": ERROR in XMLFCFileType::createFieldContainers()" <<
+					    std::endl;
 			    }
             }
-
-            //If there is a name attachment, than attach a name to this container
-            if(NewFCInfo._Ptr->getType().isDerivedFrom(AttachmentContainer::getClassType()))
-            {
-				//Search for name attachment xml token
-				SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(NameAttachmentXMLToken));
-				if(SearchItor != (*NodeListItor)->get_attrmap().end())
-				{
-					setName(AttachmentContainerPtr::dcast(NewFCInfo._Ptr),SearchItor->second.c_str());
-				}
-            }
-
-
-            //Attach the FieldID mapping to this container
-			SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FieldContainerIDXMLToken));
-			if(SearchItor == (*NodeListItor)->get_attrmap().end())
-			{
-				SFATAL << FileNameOrExtension << ": Couldn't find "+FieldContainerIDXMLToken+" attribute for '" << (*NodeListItor)->get_name() << "'!" << std::endl;
-			}
-			OldFCId = TypeTraits<UInt32>::getFromString(SearchItor->second.c_str());
-			NewFCInfo._NewId = NewFCInfo._Ptr.getFieldContainerId();
-			if(OldToNewFCLookupMap.insert(std::make_pair(OldFCId, NewFCInfo)).second == false)
-			{
-				SFATAL << FileNameOrExtension << ": ERROR in XMLFCFileType::createFieldContainers()" <<
-					std::endl;
-			}
-
 		}
 	}
 	catch(xmlpp::xmlerror& e)
