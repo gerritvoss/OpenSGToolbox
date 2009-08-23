@@ -291,6 +291,10 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     virtual void setShowCursor(bool showCursor) = 0;
 
     virtual bool getShowCursor(void) const = 0;
+    
+    virtual void setAttachMouseToCursor(bool attach) = 0;
+    
+    virtual bool getAttachMouseToCursor(void) const = 0;
 
     //Set Display Callback Function
     virtual void setDisplayCallback(DisplayCallbackFunc Callback);
@@ -374,8 +378,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     void produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEvent::ScrollType& TheScrollType = MouseWheelEvent::UNIT_SCROLL);
 
-    void produceMouseMoved(const Pnt2f& Location);
-    void produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
+    void produceMouseMoved(const Pnt2f& Location, const Vec2f& Delta);
+    void produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location, const Vec2f& Delta);
 
     void produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
     void produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers);

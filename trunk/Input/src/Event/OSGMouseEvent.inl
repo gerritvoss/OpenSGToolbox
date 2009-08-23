@@ -36,6 +36,12 @@ Pnt2f MouseEvent::getLocation(void) const
    return _Location; 
 }
 
+inline
+const Vec2f& MouseEvent::getDelta(void) const
+{
+   return _Delta; 
+}
+
 
 inline
 Real32 MouseEvent::getX(void) const
@@ -70,9 +76,9 @@ ViewportPtr MouseEvent::getViewport(void) const
 }
 
 inline
-MouseEvent::MouseEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport) 
+MouseEvent::MouseEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport, Vec2f Delta) 
 : InputEvent(Source, TimeStamp,Producer), _Button(Button), _ClickCount(ClickCount), _Location(Location),
-   _Viewport(TheViewport)
+   _Viewport(TheViewport), _Delta(Delta)
 {}
 
     

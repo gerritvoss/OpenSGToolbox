@@ -104,6 +104,8 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	
 	virtual void setShowCursor(bool show);
 	virtual bool getShowCursor() const;
+    virtual void setAttachMouseToCursor(bool attach);
+    virtual bool getAttachMouseToCursor(void) const;
 	virtual osg::Vec2f getDesktopSize() const;
 	virtual std::vector<osg::Path, std::allocator<osg::Path> > openFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const osg::Path&, bool);
 	virtual osg::Path saveFileDialog(const std::string&, const std::vector<osg::WindowEventProducer::FileDialogFilter, std::allocator<osg::WindowEventProducer::FileDialogFilter> >&, const std::string&, const osg::Path&, bool);

@@ -153,6 +153,10 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 
     virtual bool getShowCursor(void) const;
 	
+    virtual void setAttachMouseToCursor(bool attach);
+    
+    virtual bool getAttachMouseToCursor(void) const;
+
 	virtual UInt32 getKeyModifiers(void) const;
 	virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const;
 	virtual Pnt2f getMousePosition(void) const;

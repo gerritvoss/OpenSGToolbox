@@ -1482,6 +1482,17 @@ bool Win32WindowEventProducer::getShowCursor(void) const
     return _IsCursorShown;
 }
 
+void Win32WindowEventProducer::setAttachMouseToCursor(bool showCursor)
+{
+   //TODO:Implement
+}
+
+bool Win32WindowEventProducer::getAttachMouseToCursor(void) const
+{
+   //TODO:Implement
+    return true;
+}
+
 //Set the Window Position
 void Win32WindowEventProducer::setPosition(Pnt2f Pos)
 {

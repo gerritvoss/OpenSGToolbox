@@ -51,6 +51,7 @@ class OSG_INPUTLIB_DLLMAPPING MouseEvent : public InputEvent
     
     Pnt2f getLocationOnScreen(void) const;
     Pnt2f getLocation(void) const;
+    const Vec2f& getDelta(void) const;
     
     Real32 getX(void) const;
     Real32 getXOnScreen(void) const;
@@ -58,7 +59,7 @@ class OSG_INPUTLIB_DLLMAPPING MouseEvent : public InputEvent
     Real32 getYOnScreen(void) const;
     ViewportPtr getViewport(void) const;
     
-    MouseEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport);
+    MouseEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport, Vec2f Delta = Vec2f(0.0f,0.0f));
     
     virtual const EventType &getType(void) const;
     
@@ -68,6 +69,7 @@ class OSG_INPUTLIB_DLLMAPPING MouseEvent : public InputEvent
     MouseButton _Button;
     UInt16      _ClickCount;
     Pnt2f       _Location;
+    Vec2f       _Delta;
     ViewportPtr _Viewport;
     
   private:

@@ -485,14 +485,14 @@ void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, con
    }
 }
 
-void WindowEventProducer::produceMouseMoved(const Pnt2f& Location)
+void WindowEventProducer::produceMouseMoved(const Pnt2f& Location, const Vec2f& Delta)
 {
    Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport, Delta);
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
 		   if(!TheEvent.isConsumed())
@@ -503,14 +503,14 @@ void WindowEventProducer::produceMouseMoved(const Pnt2f& Location)
    }
 }
 
-void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
+void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location, const Vec2f& Delta)
 {
    Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), Button, 0, ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), Button, 0, ViewportLocation, ResultViewport, Delta);
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
 		   if(!TheEvent.isConsumed())

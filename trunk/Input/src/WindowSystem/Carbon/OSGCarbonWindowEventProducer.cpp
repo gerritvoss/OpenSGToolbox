@@ -246,26 +246,35 @@ void  CarbonWindowEventProducer::mainLoop(void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-//TODO: IMPLEMENT
 void CarbonWindowEventProducer::setShowCursor(bool show)
 {
-	//if(show)
-	//{
-	//	ShowCursor();
-	//}
-	//else
-	//{
-   //   Rect WindowSize;
-	//	::Point WindowTopLeft;
-
-	//	ShieldCursor(&WindowSize, WindowTopLeft);
-	//}
+    if(show)
+    {
+        ShowCursor();
+    }
+    else
+	{
+        HideCursor();
+	}
 }
 
 bool CarbonWindowEventProducer::getShowCursor() const
 {
+    //TODO:Implement
 	return true;//_CursorShown;
 }
+
+void CarbonWindowEventProducer::setAttachMouseToCursor(bool attach)
+{
+    CGAssociateMouseAndMouseCursorPosition(attach);
+}
+
+bool CarbonWindowEventProducer::getAttachMouseToCursor(void) const
+{
+    //TODO:Implement
+	return true;//_CursorShown;
+}
+
 
 osg::Vec2f CarbonWindowEventProducer::getDesktopSize() const
 {
@@ -1103,8 +1112,8 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
         return err;
 
     SetPortWindowPort(window);
-    
-	 // Get the location of the mouse pointer
+
+    // Get the location of the cursor
     ::HIPoint location;
     err = GetEventParameter(event, kEventParamWindowMouseLocation, typeHIPoint, 0, sizeof(location), 0, &location);
     if (err != noErr)
@@ -1112,120 +1121,137 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
         return err;
     location.y -= 22.0f;
 
-	 //Check that the mouse is withing the content area
-	 WindowPartCode part;
-	 GetEventParameter (event, kEventParamWindowPartCode, typeWindowPartCode,
-			             NULL, sizeof(part), NULL, &part);
-	              
-	 if(part != inContent)
-	 {
-		 return eventNotHandledErr;
-	 }
+    //Check that the mouse is withing the content area
+    WindowPartCode part;
+    GetEventParameter (event, kEventParamWindowPartCode, typeWindowPartCode,
+            NULL, sizeof(part), NULL, &part);
+
+    if(part != inContent)
+    {
+        return eventNotHandledErr;
+    }
 
     // Handle the different kinds of events
     ::UInt32 eventKind = GetEventKind(event);
+    //Get Mouse Delta
+    Vec2f MouseDelta;
+    switch(eventKind)
+    {
+        case kEventMouseMoved:
+        case kEventMouseDragged:
+            {
+                ::HIPoint delta;
+                err = GetEventParameter(event, kEventParamMouseDelta, typeHIPoint, 0, sizeof(delta), 0, &delta);
+                if (err != noErr)
+                    return err;
+                MouseDelta.setValues(delta.x,delta.y);
+            }
+            break;
+    }
+
+    //Get Mouse Button
     MouseEvent::MouseButton TheMouseButton;
     switch(eventKind)
     {
         case kEventMouseDown:
         case kEventMouseUp:
         case kEventMouseDragged:
-        {
-            // Get the mouse button
-            EventMouseButton mouseButton;
-            err = GetEventParameter(event, kEventParamMouseButton, typeMouseButton, 0, sizeof(mouseButton), 0, &mouseButton);
-            if (err != noErr)
-                return err;
-            
-            switch (mouseButton)
             {
-                case kEventMouseButtonPrimary: // left button
-                    TheMouseButton = MouseEvent::BUTTON1;
-                    break;
-                case kEventMouseButtonSecondary: // right button
-                    TheMouseButton = MouseEvent::BUTTON3;
-                    break;
-                case kEventMouseButtonTertiary: // middle button
-                    TheMouseButton = MouseEvent::BUTTON2;
-                    break;
-                case 4:
-                    TheMouseButton = MouseEvent::BUTTON4;
-                    break;
-                case 5:
-                    TheMouseButton = MouseEvent::BUTTON5;
-                    break;
-                case 6:
-                    TheMouseButton = MouseEvent::BUTTON6;
-                    break;
-                case 7:
-                    TheMouseButton = MouseEvent::BUTTON7;
-                    break;
-                case 8:
-                    TheMouseButton = MouseEvent::BUTTON8;
-                    break;
-                case 9:
-                    TheMouseButton = MouseEvent::BUTTON9;
-                    break;
-                case 10:
-                    TheMouseButton = MouseEvent::BUTTON10;
-                    break;
-                default:
-                    TheMouseButton = MouseEvent::NO_BUTTON;
-                    break;
+                // Get the mouse button
+                EventMouseButton mouseButton;
+                err = GetEventParameter(event, kEventParamMouseButton, typeMouseButton, 0, sizeof(mouseButton), 0, &mouseButton);
+                if (err != noErr)
+                    return err;
+
+                switch (mouseButton)
+                {
+                    case kEventMouseButtonPrimary: // left button
+                        TheMouseButton = MouseEvent::BUTTON1;
+                        break;
+                    case kEventMouseButtonSecondary: // right button
+                        TheMouseButton = MouseEvent::BUTTON3;
+                        break;
+                    case kEventMouseButtonTertiary: // middle button
+                        TheMouseButton = MouseEvent::BUTTON2;
+                        break;
+                    case 4:
+                        TheMouseButton = MouseEvent::BUTTON4;
+                        break;
+                    case 5:
+                        TheMouseButton = MouseEvent::BUTTON5;
+                        break;
+                    case 6:
+                        TheMouseButton = MouseEvent::BUTTON6;
+                        break;
+                    case 7:
+                        TheMouseButton = MouseEvent::BUTTON7;
+                        break;
+                    case 8:
+                        TheMouseButton = MouseEvent::BUTTON8;
+                        break;
+                    case 9:
+                        TheMouseButton = MouseEvent::BUTTON9;
+                        break;
+                    case 10:
+                        TheMouseButton = MouseEvent::BUTTON10;
+                        break;
+                    default:
+                        TheMouseButton = MouseEvent::NO_BUTTON;
+                        break;
+                }
+                break;
             }
-            break;
-        }
     }
     switch (eventKind)
     {
-    // mouse button pressed
-    case kEventMouseDown:
-		produceMousePressed(TheMouseButton, Pnt2f(location.x, location.y));
-        break;
+        // mouse button pressed
+        case kEventMouseDown:
+            produceMousePressed(TheMouseButton, Pnt2f(location.x, location.y));
+            break;
 
-	
-    // mouse button released
-    case kEventMouseUp:
-		produceMouseReleased(TheMouseButton, Pnt2f(location.x, location.y));
-        break;
 
-	//Mouse Moved
-	case kEventMouseMoved:
-		produceMouseMoved(Pnt2f(location.x, location.y));
-        break;
-		
-    // mouse moved while a button is pressed
-    case kEventMouseDragged:
-		produceMouseDragged(TheMouseButton, Pnt2f(location.x, location.y));
-        break;
-		
-	// mouse wheel moved
-	case kEventMouseWheelMoved:
-		{
-			EventMouseWheelAxis axis;
-            SInt32 delta;
-			
-			err = GetEventParameter( event, kEventParamMouseWheelAxis, 
-                    typeMouseWheelAxis, NULL, sizeof(axis), NULL, &axis );
-			if (err != noErr)
-				return err;
+            // mouse button released
+        case kEventMouseUp:
+            produceMouseReleased(TheMouseButton, Pnt2f(location.x, location.y));
+            break;
 
-            err = GetEventParameter( event, kEventParamMouseWheelDelta, 
-                    typeLongInteger, NULL, sizeof(delta), NULL, &delta );
-			if (err != noErr)
-				return err;
+            //Mouse Moved
+        case kEventMouseMoved:
+            produceMouseMoved(Pnt2f(location.x, location.y), MouseDelta);
+            break;
 
-            if ( axis == kEventMouseWheelAxisY )
+            // mouse moved while a button is pressed
+        case kEventMouseDragged:
+            produceMouseDragged(TheMouseButton, Pnt2f(location.x, location.y), MouseDelta);
+            break;
+
+            // mouse wheel moved
+        case kEventMouseWheelMoved:
             {
-				produceMouseWheelMoved(delta, Pnt2f(location.x, location.y));
+                EventMouseWheelAxis axis;
+                SInt32 delta;
+
+                err = GetEventParameter( event, kEventParamMouseWheelAxis, 
+                        typeMouseWheelAxis, NULL, sizeof(axis), NULL, &axis );
+                if (err != noErr)
+                    return err;
+
+                err = GetEventParameter( event, kEventParamMouseWheelDelta, 
+                        typeLongInteger, NULL, sizeof(delta), NULL, &delta );
+                if (err != noErr)
+                    return err;
+
+                if ( axis == kEventMouseWheelAxisY )
+                {
+                    produceMouseWheelMoved(delta, Pnt2f(location.x, location.y));
+                }
             }
-		}
-		break;
-		
-	default:
-        std::cerr << "handleMouseEvent event not handled" << std::endl;
-		break;
-		
+            break;
+
+        default:
+            std::cerr << "handleMouseEvent event not handled" << std::endl;
+            break;
+
     }
 
     // We have to return eventNotHandledErr, otherwise the system is

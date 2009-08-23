@@ -652,6 +652,17 @@ bool XWindowEventProducer::getShowCursor(void) const
     return true;
 }
 
+void XWindowEventProducer::setAttachMouseToCursor(bool showCursor)
+{
+   //TODO:Implement
+}
+
+bool XWindowEventProducer::getAttachMouseToCursor(void) const
+{
+   //TODO:Implement
+    return true;
+}
+
 void XWindowEventProducer::update(void)
 {
     //Updating

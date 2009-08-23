@@ -57,12 +57,12 @@ class TutorialMouseMotionListener : public osg::MouseMotionListener
 {
     virtual void mouseMoved(const MouseEvent& e)
     {
-        std::cout << "Mouse Move: " << e.getLocation().x() << ", " << e.getLocation().y() << std::endl;
+        std::cout << "Mouse Move: " << e.getLocation().x() << ", " << e.getLocation().y() << "; delta: " << e.getDelta().x() << ", " << e.getDelta().y() << std::endl;
     }
 
     virtual void mouseDragged(const MouseEvent& e)
     {
-        std::cout << "Mouse Drag Button " << e.getButton() << ": " << e.getLocation().x() << ", " << e.getLocation().y() << std::endl;    
+        std::cout << "Mouse Drag Button " << e.getButton() << ": " << e.getLocation().x() << ", " << e.getLocation().y()  << "; delta: " << e.getDelta().x() << ", " << e.getDelta().y() << std::endl;    
     }
 };
 
@@ -151,6 +151,18 @@ public:
                 break;
             default:
                 break;
+        }
+		if(e.getKey() == KeyEvent::KEY_L &&
+			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		{
+            TheWindowEventProducer->setShowCursor(false);
+            TheWindowEventProducer->setAttachMouseToCursor(false);
+        }
+		if(e.getKey() == KeyEvent::KEY_U &&
+			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		{
+            TheWindowEventProducer->setShowCursor(true);
+            TheWindowEventProducer->setAttachMouseToCursor(true);
         }
 		if(e.getKey() == KeyEvent::KEY_O &&
 			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)

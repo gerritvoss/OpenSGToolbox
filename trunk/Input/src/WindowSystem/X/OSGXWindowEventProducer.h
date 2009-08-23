@@ -136,6 +136,10 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     virtual void setShowCursor(bool showCursor);
 
     virtual bool getShowCursor(void) const;
+	
+    virtual void setAttachMouseToCursor(bool attach);
+    
+    virtual bool getAttachMouseToCursor(void) const;
 
     //Set the text on the Title bar of the window
     virtual void setTitle(const std::string& TitleText);
