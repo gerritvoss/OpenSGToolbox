@@ -1226,7 +1226,7 @@ WindowPtr Win32WindowEventProducer::initWindow(void)
 		dwStyle=WS_OVERLAPPEDWINDOW;					// Windows Style
 	}
     
-    ShowCursor(getShowCursor());						// Show/Hide Mouse Pointer
+    //ShowCursor(true);						// Show/Hide Mouse Pointer
 
     // Create a Window
     hwnd = CreateWindowEx(	dwExStyle,				// Extended Style For The Window
@@ -1346,19 +1346,42 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
 
         case WM_MOUSEMOVE:
             {
+
+                Pnt2f Position(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                Vec2f MouseDelta(0.0f,0.0f);
+                if(_PreviousCursorPos != Pnt2f(-1.0f,-1.0f))
+                {
+                    MouseDelta = Position - _PreviousCursorPos;
+                }
+                _PreviousCursorPos = Position;
+
+                if(!_HandleNextMouseMove)
+                {
+                    _HandleNextMouseMove = true;
+                    return 0;
+                }
 			    if(wParam & MK_LBUTTON)
 			    {
-				    produceMouseDragged(MouseEvent::BUTTON1,Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+				    produceMouseDragged(MouseEvent::BUTTON1,Position, MouseDelta);
 			    }
 			    if(wParam & MK_MBUTTON)
 			    {
-				    produceMouseDragged(MouseEvent::BUTTON2,Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+				    produceMouseDragged(MouseEvent::BUTTON2,Position, MouseDelta);
 			    }
 			    if(wParam & MK_RBUTTON)
 			    {
-				    produceMouseDragged(MouseEvent::BUTTON3,Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+				    produceMouseDragged(MouseEvent::BUTTON3,Position, MouseDelta);
 			    }
-			    produceMouseMoved(Pnt2f(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+			    produceMouseMoved(Position, MouseDelta);
+
+
+                //If the Mouse has been disassociated from the cursor
+                //then recenter the cursor in the window
+                if(!_IsMouseCursorAssociated)
+                {
+                    _HandleNextMouseMove = false;
+                    setCursorPos(getPosition() + (0.5f * getSize()));
+                }
                 
                 /*POINT point;
                 RECT rect;
@@ -1473,24 +1496,40 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
 
 void Win32WindowEventProducer::setShowCursor(bool showCursor)
 {
-    _IsCursorShown = showCursor;
-    ShowCursor(_IsCursorShown);
+    while(getShowCursor() != showCursor)
+    {
+        ShowCursor(showCursor);
+    }
 }
 
 bool Win32WindowEventProducer::getShowCursor(void) const
 {
-    return _IsCursorShown;
+    CURSORINFO TheCursorInfo;
+    TheCursorInfo.cbSize = sizeof(CURSORINFO);
+
+    if(!GetCursorInfo(&TheCursorInfo))
+    {
+        SWARNING << "Win32WindowEventProducer::getShowCursor: Failed to get cursor info " << GetLastError() << std::endl;
+    }
+    return TheCursorInfo.flags == CURSOR_SHOWING;
 }
 
-void Win32WindowEventProducer::setAttachMouseToCursor(bool showCursor)
+void Win32WindowEventProducer::setAttachMouseToCursor(bool attachCursor)
 {
-   //TODO:Implement
+    _IsMouseCursorAssociated = attachCursor;
 }
 
 bool Win32WindowEventProducer::getAttachMouseToCursor(void) const
 {
-   //TODO:Implement
-    return true;
+    return _IsMouseCursorAssociated;
+}
+
+void Win32WindowEventProducer::setCursorPos(Vec2f Pos)
+{
+    if(!SetCursorPos(static_cast<int>(Pos.x()), static_cast<int>(Pos.y())))
+    {
+        SWARNING << "Win32WindowEventProducer::setCursorPos: Failed to set cursor position" << std::endl;
+    }
 }
 
 //Set the Window Position
@@ -1671,7 +1710,9 @@ Win32WindowEventProducer::Win32WindowEventProducer(void) :
     Inherited(),
         _MouseOverWindow(false),
         _IsFullscreen(false),
-        _IsCursorShown(true)
+        _IsMouseCursorAssociated(true),
+        _HandleNextMouseMove(true),
+        _PreviousCursorPos(-1.0,-1.0)
 {
 }
 
@@ -1679,7 +1720,9 @@ Win32WindowEventProducer::Win32WindowEventProducer(const Win32WindowEventProduce
     Inherited(source),
         _MouseOverWindow(false),
         _IsFullscreen(false),
-        _IsCursorShown(true)
+        _IsMouseCursorAssociated(true),
+        _HandleNextMouseMove(true),
+        _PreviousCursorPos(-1.0,-1.0)
 {
 }
 

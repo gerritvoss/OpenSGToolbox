@@ -134,7 +134,7 @@ public:
             case KeyEvent::KEY_K:
                 TheWindowEventProducer->setFocused(true);
                 break;
-            case KeyEvent::KEY_L:
+            case KeyEvent::KEY_J:
                 TheWindowEventProducer->setFocused(false);
                 break;
             case KeyEvent::KEY_C:

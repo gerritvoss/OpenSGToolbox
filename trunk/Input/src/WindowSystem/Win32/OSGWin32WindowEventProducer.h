@@ -157,6 +157,9 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     
     virtual bool getAttachMouseToCursor(void) const;
 
+    
+    virtual void setCursorPos(Vec2f Pos);
+
 	virtual UInt32 getKeyModifiers(void) const;
 	virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const;
 	virtual Pnt2f getMousePosition(void) const;
@@ -220,7 +223,10 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     Pnt2f _PreviousWindowPosition;
     Vec2f _PreviousWindowSize;
     bool _IsFullscreen;
-    bool _IsCursorShown;
+
+    bool _IsMouseCursorAssociated;
+    bool _HandleNextMouseMove;
+    Pnt2f _PreviousCursorPos;
     /*==========================  PRIVATE  ================================*/
   private:
 
