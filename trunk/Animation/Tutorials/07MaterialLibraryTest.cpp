@@ -17,6 +17,7 @@
 #include <OpenSG/OSGImageFileHandler.h>
 #include <OpenSG/OSGSkyBackground.h>
 #include <OpenSG/Toolbox/OSGMaterialLibrary.h>
+#include <OpenSG/Toolbox/OSGMaterials.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -132,14 +133,16 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 
+	MaterialPtr ComplexGlass = createComplexGlassMaterial( 0.65, Vec3f(-0.02f,0.0f,0.02f), 1.0f, false, createCubeTextureChunk());
+
 	//Torus Node
 	GeometryPtr TorusGeometry = makeTorusGeo(3.0f,15.0f, 64,64);
 	GeometryPtr CylinderGeometry = makeCylinderGeo(10.0f,10.0f,32,true,true,true);
 	GeometryPtr SphereGeometry = makeSphereGeo(3,5.0f);
+	GeometryPtr BoxGeometry = makeBoxGeo(5.0,5.0,5.0,4,4,4);
 
 	beginEditCP(CylinderGeometry, Geometry::MaterialFieldMask);
-		CylinderGeometry->setMaterial(MaterialLibrary::the()->createMaterial("Gooch"));
-	//	CylinderGeometry->setMaterial(MaterialLibrary::the()->createMaterial("ComplexGlass"));
+		CylinderGeometry->setMaterial(MaterialLibrary::the()->createMaterial("ComplexGlass"));
 	endEditCP(CylinderGeometry, Geometry::MaterialFieldMask);
 
 	beginEditCP(TorusGeometry, Geometry::MaterialFieldMask);
@@ -147,8 +150,12 @@ int main(int argc, char **argv)
 	endEditCP(TorusGeometry, Geometry::MaterialFieldMask);
 
 	beginEditCP(SphereGeometry, Geometry::MaterialFieldMask);
-		SphereGeometry->setMaterial(MaterialLibrary::the()->createMaterial("Gooch"));
+		SphereGeometry->setMaterial(MaterialLibrary::the()->createMaterial("ComplexGlass"));
 	endEditCP(SphereGeometry, Geometry::MaterialFieldMask);
+
+	beginEditCP(BoxGeometry, Geometry::MaterialFieldMask);
+		BoxGeometry->setMaterial(MaterialLibrary::the()->createMaterial("ComplexGlass"));
+	endEditCP(BoxGeometry, Geometry::MaterialFieldMask);
 
 
 	NodePtr TorusNode = Node::create();
@@ -166,13 +173,19 @@ int main(int argc, char **argv)
 		CylinderNode->setCore(CylinderGeometry);
     endEditCP(CylinderNode, Node::CoreFieldMask);
 
+	NodePtr BoxNode = Node::create();
+    beginEditCP(BoxNode, Node::CoreFieldMask);
+		BoxNode->setCore(BoxGeometry);
+    endEditCP(BoxNode, Node::CoreFieldMask);
+
     // Make Main Scene Node
     NodePtr scene = Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(Group::create());
-		//scene->addChild(TorusNode);
-		scene->addChild(SphereNode);
-		//scene->addChild(CylinderNode);
+		scene->addChild(TorusNode);
+		//scene->addChild(SphereNode);
+		scene->addChild(CylinderNode);
+		//scene->addChild(BoxNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);

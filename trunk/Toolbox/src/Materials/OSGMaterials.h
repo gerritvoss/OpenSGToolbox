@@ -35,7 +35,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-CubeTextureChunkPtr createCubeTextureChunk(void);
+CubeTextureChunkPtr OSG_TOOLBOXLIB_DLLMAPPING createCubeTextureChunk(void);
 
 // Gooch shader material
 MaterialPtr OSG_TOOLBOXLIB_DLLMAPPING createGoochMaterial(Vec4f WarmColor = Vec3f(0.6f,0.6f,0.0f,1.0f), 
@@ -45,29 +45,29 @@ MaterialPtr OSG_TOOLBOXLIB_DLLMAPPING createGoochMaterial(Vec4f WarmColor = Vec3
 													      Real32 DiffuseCool = 0.45f, 
 														  Real32 OutlineWidth = 3.5f);
 
-std::string createSHLVertexProgGooch(void);
-std::string createSHLFragProgGooch(void);
+std::string OSG_TOOLBOXLIB_DLLMAPPING createSHLVertexProgGooch(void);
+std::string OSG_TOOLBOXLIB_DLLMAPPING createSHLFragProgGooch(void);
 
 // Black outlining material
 MaterialPtr OSG_TOOLBOXLIB_DLLMAPPING createBlackOutlineMaterial(Real32 OutlineWidth = 3.5f);
-std::string createSHLVertexProgBlack(void); 
-std::string createSHKFragProgBlack(void);
+std::string OSG_TOOLBOXLIB_DLLMAPPING createSHLVertexProgBlack(void); 
+std::string OSG_TOOLBOXLIB_DLLMAPPING createSHKFragProgBlack(void);
 
 // Simple Glass material (No refraction, only reflection)
 MaterialPtr OSG_TOOLBOXLIB_DLLMAPPING createSimpleGlassMaterial(Real32 Rainbowiness = 0.5f, 
 																CubeTextureChunkPtr Environment = createCubeTextureChunk());
-std::string createSimpleGlassVertexProg(void);
-std::string createSimpleGlassFragProg(void);
+std::string OSG_TOOLBOXLIB_DLLMAPPING createSimpleGlassVertexProg(void);
+std::string OSG_TOOLBOXLIB_DLLMAPPING createSimpleGlassFragProg(void);
 
 // Complex Glass material (Reflection, refraction, and chromatic abberation)
 MaterialPtr OSG_TOOLBOXLIB_DLLMAPPING createComplexGlassMaterial(Real32 IndexOfRefractionRatio = 0.65, 
 															     Vec3f IORDisplacements = Vec3f(-0.02f,0.0f,0.02f), 
-															     Real32 FresnelPower = 5.0f, 
+															     Real32 FresnelPower = 1.5f, 
 															     bool ChromaticAbberation = true,
 															     CubeTextureChunkPtr Environment = createCubeTextureChunk());
 
-std::string createComplexGlassVertexProg(void);
-std::string createComplexGlassFragProg(void);
+std::string OSG_TOOLBOXLIB_DLLMAPPING createComplexGlassVertexProg(void);
+std::string OSG_TOOLBOXLIB_DLLMAPPING createComplexGlassFragProg(void);
 
 OSG_END_NAMESPACE
 

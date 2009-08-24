@@ -93,10 +93,12 @@ CubeTextureChunkPtr createCubeTextureChunk(void)
 	CubeTextureChunkPtr CubeTexture = CubeTextureChunk::create();
 	beginEditCP(CubeTexture);
 		CubeTexture->setNegXImage(CubeTextureLeft);
-		CubeTexture->setNegYImage(CubeTextureBottom);
-		CubeTexture->setImage(CubeTextureFront); // negative Z
 		CubeTexture->setPosXImage(CubeTextureRight);
-		CubeTexture->setPosYImage(CubeTextureTop);
+
+		CubeTexture->setNegYImage(CubeTextureTop);
+		CubeTexture->setPosYImage(CubeTextureBottom);
+
+		CubeTexture->setImage(CubeTextureFront); // negative Z
 		CubeTexture->setPosZImage(CubeTextureBack);
 	endEditCP(CubeTexture);
 
@@ -238,9 +240,9 @@ std::string createSHLFragProgGooch(void)
 	<< "uniform vec4 CoolColor;\n" 
 	<< "uniform float DiffuseWarm;\n" 
 	<< "uniform float DiffuseCool;\n" 
-	<< "float NdotL;\n" 
-	<< "vec3 ReflectVec;\n" 
-	<< "vec3 ViewVec;\n" 
+	<< "varying float NdotL;\n" 
+	<< "varying vec3 ReflectVec;\n" 
+	<< "varying vec3 ViewVec;\n" 
 	<< "void main(void)\n" 
 	<< "{\n" 
 	<< "   vec3 kcool = min(CoolColor.xyz + DiffuseCool * SurfaceColor.xyz,1.0);\n" 
