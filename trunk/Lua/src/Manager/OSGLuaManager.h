@@ -65,7 +65,7 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 
     void runScript(const std::string& Script);
 
-    static void LuaManager::report_errors(lua_State *L, int status);
+    static void report_errors(lua_State *L, int status);
 
 	static bool init(void);
 	static bool uninit(void);

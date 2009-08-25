@@ -34,13 +34,29 @@ std::string genFactorialScript(void)
 
 }
 
+std::string genOpenSGScript(void)
+{
+    std::string Script(
+"    -- call OpenSG's osgrand function\n"
+    
+"    print(\"random number:\")\n"
+"    print(osgbase.osgrand())\n"
+"    print(osgbase.osgrand())\n"
+"    print(osgbase.osgrand())\n");
+
+    return Script;
+
+}
+
 int main(int argc, char **argv)
 {
     osgInit(argc, argv);
 
     LuaManager::the()->runScript(genHelloWorldScript());
 
-    LuaManager::the()->runScript(genFactorialScript());
+    //LuaManager::the()->runScript(genFactorialScript());
+
+    LuaManager::the()->runScript(genOpenSGScript());
 
     osgExit();
     return 0;

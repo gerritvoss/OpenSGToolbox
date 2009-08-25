@@ -738,26 +738,26 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
                 _LastMousePosition.setValues(Event.xbutton.x, Event.xbutton.y);
                 if(Event.xmotion.state & Button1MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON1,Pnt2f(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON1,Pnt2f(Event.xmotion.x, Event.xmotion.y), Vec2f(0.0f,0.0f));
                 }
                 if(Event.xmotion.state & Button2MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON2,Pnt2f(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON2,Pnt2f(Event.xmotion.x, Event.xmotion.y), Vec2f(0.0f,0.0f));
                 }
                 if(Event.xmotion.state & Button3MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON3,Pnt2f(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON3,Pnt2f(Event.xmotion.x, Event.xmotion.y), Vec2f(0.0f,0.0f));
                 }
                 if(Event.xmotion.state & Button4MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON4,Pnt2f(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON4,Pnt2f(Event.xmotion.x, Event.xmotion.y), Vec2f(0.0f,0.0f));
                 }
                 if(Event.xmotion.state & Button5MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON5,Pnt2f(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON5,Pnt2f(Event.xmotion.x, Event.xmotion.y), Vec2f(0.0f,0.0f));
                 }
                 
-                produceMouseMoved(Pnt2f(Event.xmotion.x, Event.xmotion.y));
+                produceMouseMoved(Pnt2f(Event.xmotion.x, Event.xmotion.y), Vec2f(0.0f,0.0f));
                 break;
             }
          case ButtonPress:
