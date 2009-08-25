@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                          OpenSG Toolbox Lua                               *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.LisenerPosition                                 *
  *                                                                           *
- *   contact: dirk@opensg.LisenerPosition, gerrit.voss@vossg.LisenerPosition, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala                                                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,11 +46,10 @@
 #define OSG_COMPILELUALIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGBaseFunctions.h>
 #include <OpenSG/OSGLog.h>
 
 #include "OSGLuaManager.h"
-
-
 
 OSG_BEGIN_NAMESPACE
 
@@ -62,11 +61,21 @@ OSG_BEGIN_NAMESPACE
 A FMod SoundManager Interface. 
 */
 
+struct AddLuaInitFuncs
+{
+    AddLuaInitFuncs()
+    {
+        addInitFunction(&LuaManager::init);
+        addSystemExitFunction(&LuaManager::uninit);
+    }
+} AddLuaInitFuncsInstantiation;
+
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
 LuaManager *LuaManager::_the = NULL;
+lua_State *LuaManager::_State = NULL;
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -96,13 +105,7 @@ bool LuaManager::init(void)
 
     _State = lua_open();
 
-    luaopen_io(_State); // provides io.*
-    luaopen_base(_State);
-    luaopen_table(_State);
-    luaopen_string(_State);
-    luaopen_math(_State);
-    //luaopen_loadlib(_State);
-
+    luaL_openlibs(_State); // provides io.*
 
 
     SLOG << "LuaManager Successfully Initialized." << std::endl;
@@ -125,7 +128,8 @@ bool LuaManager::uninit(void)
 
 void LuaManager::runScript(const std::string& Script)
 {
-    int s;// = luaL_loadfile(_State, file);
+    int s = luaL_loadstring(_State, Script.c_str());
+    report_errors(_State, s);
 
     // execute Lua program
     s = lua_pcall(_State, 0, LUA_MULTRET, 0);
@@ -144,6 +148,7 @@ LuaManager::LuaManager(void)
 
 LuaManager::LuaManager(const LuaManager &source)
 {
+    assert(false && "Sould NOT CALL LuaManager copy constructor");
 }
 
 LuaManager::~LuaManager(void)

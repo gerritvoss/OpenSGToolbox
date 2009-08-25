@@ -56,6 +56,7 @@ OPTION(BUILD_GAME "Build the Game Library." ON)
 OPTION(BUILD_VIDEO "Build the Video Library." ON)
 OPTION(BUILD_PHYSICS "Build the Physics Library." ON)
 OPTION(BUILD_SOUND "Build the Sound Library." ON)
+OPTION(BUILD_LUA_SUPPORT "Build the Lua Library." ON)
 
 OPTION(CONFIGURE_TUTORIALS "If set to ON, all of the tutorials for the build libraries will be configured with the settings used for this build." OFF)
 #Tutorial Configuration
@@ -185,6 +186,31 @@ IF(BUILD_PHYSICS)
    SET(ODE_LIBRARIES ode)
 ENDIF(BUILD_PHYSICS)
 
+######### Lua
+IF(BUILD_LUA_SUPPORT)
+   MESSAGE("Lua Enabled")
+   FIND_PATH(LUA_BASE_DIR include/lua.hpp PATHS /usr /usr/local)
+   IF(NOT EXISTS ${LUA_BASE_DIR})
+      MESSAGE(SEND_ERROR "The supplied Lua Base dir: ${LUA_BASE_DIR} does not exists")
+   ENDIF(NOT EXISTS ${LUA_BASE_DIR})
+   IF(NOT EXISTS ${LUA_BASE_DIR}/include)
+      MESSAGE(SEND_ERROR "The Lua Include dir: ${LUA_BASE_DIR}/include does not exists")
+   ENDIF(NOT EXISTS ${LUA_BASE_DIR}/include)
+   IF(NOT EXISTS ${LUA_BASE_DIR}/lib)
+      MESSAGE(SEND_ERROR "The Lua Include dir: ${LUA_BASE_DIR}/lib does not exists")
+   ENDIF(NOT EXISTS ${LUA_BASE_DIR}/lib)
+
+   SET(LUA_INC_DIR ${LUA_BASE_DIR}/include)
+   SET(LUA_LIB_DIR ${LUA_BASE_DIR}/lib)
+   SET(LUA_LIBRARIES liblua5.1)
+   SET(LUA_STATIC_LIBRARY_LOCATION ${LUA_LIB_DIR}/liblua5.1.a)
+
+    ADD_LIBRARY(lua_lib_static STATIC IMPORTED)
+    SET_PROPERTY(TARGET lua_lib_static  PROPERTY
+    IMPORTED_LOCATION ${LUA_STATIC_LIBRARY_LOCATION})
+   SET(LUA_STATIC_LIBRARY lua_lib_static)
+ENDIF(BUILD_LUA_SUPPORT)
+
 ######### Documentation
 OPTION(ENABLE_USER_DOCUMENTATION "Generate user level documentation." ON)
 OPTION(ENABLE_DEVELOPER_DOCUMENTATION "Generate developer level documentation." OFF)
@@ -263,6 +289,10 @@ IF(BUILD_VIDEO)
    ADD_SUBDIRECTORY(Video/src "Video")
 ENDIF(BUILD_VIDEO)
 
+IF(BUILD_LUA_SUPPORT)
+   SET(OPENSG_LUA_BUILD_DIR "${CMAKE_BINARY_DIR}/Lua")
+   ADD_SUBDIRECTORY(Lua/src "Lua")
+ENDIF(BUILD_LUA_SUPPORT)
 
 
 #Install a cmake file for the libraries

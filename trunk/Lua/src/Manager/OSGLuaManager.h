@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                          OpenSG Toolbox Input                             *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala                                                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -28,9 +28,9 @@
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
  *                                Changes                                    *
- *   This class is a wrapper for FMOD::EventSystem class, it provides basic  *
- *   Operation such as loading an an FMod event data base, and loading evnets*
- *   in the database provided.                                               *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -45,12 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGLuaDef.h"
 
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-
-}
+#include "lua.hpp"
 
 OSG_BEGIN_NAMESPACE
 
@@ -67,16 +62,17 @@ class OSG_LUALIB_DLLMAPPING LuaManager
       
     static LuaManager* the(void);
 
-	static bool init(void);
-	static bool uninit(void);
 
     void runScript(const std::string& Script);
 
     static void LuaManager::report_errors(lua_State *L, int status);
 
+	static bool init(void);
+	static bool uninit(void);
     /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+    /*==========================  PRIVATE  ================================*/
+  private:
+
     static LuaManager* _the;
 
     // Variables should all be in StubSoundManagerBase.
@@ -87,6 +83,7 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 
     LuaManager(void);
     LuaManager(const LuaManager &source);
+    LuaManager& operator=(const LuaManager &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -97,13 +94,6 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 
     /*! \}                                                                 */
     
-
-    /*==========================  PRIVATE  ================================*/
-  private:
-
-    // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const LuaManager &source);
 
     static lua_State *_State;
     
