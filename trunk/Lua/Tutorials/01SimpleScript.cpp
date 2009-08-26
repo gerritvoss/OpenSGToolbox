@@ -39,10 +39,23 @@ std::string genOpenSGScript(void)
     std::string Script(
 "    -- call OpenSG's osgrand function\n"
     
+"    vec1 = OSGBase.Vec3f(0.0,1.0,0.0)\n"
+"    pnt1 = OSGBase.Pnt3f(0.0,1.0,0.0)\n"
+"    pnt2 = OSGBase.Pnt3f(1.0,0.0,0.0)\n"
+"    print(pnt1:dist(pnt2))\n"
+"    print(pnt1:isZero())\n"
+
+"    color1 = OSGBase.Color3f(0.0, 1.0, 0.0)\n"
+"    color2 = OSGBase.Color3f(1.0, 0.0, 0.0)\n"
+"    color3 = color1 + color2\n"
+"    print(color3:red())\n"
+"    print(color3:green())\n"
+"    print(color3:blue())\n"
+
 "    print(\"random number:\")\n"
-"    print(osgbase.osgrand())\n"
-"    print(osgbase.osgrand())\n"
-"    print(osgbase.osgrand())\n");
+"    print(OSGBase.osgrand())\n"
+"    print(OSGBase.osgrand())\n"
+"    print(OSGBase.osgrand())\n");
 
     return Script;
 
