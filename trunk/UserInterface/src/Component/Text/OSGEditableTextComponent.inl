@@ -42,6 +42,24 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+void EditableTextComponent::write(const std::string& Text)
+{
+    overwriteSelection(Text);
+}
+
+inline
+bool EditableTextComponent::hasSelection(void) const
+{
+    return _TextSelectionEnd > _TextSelectionStart;
+}
+
+inline
+void EditableTextComponent::selectAll(void)
+{
+    selectRange(0, getText().size());
+}
+
 OSG_END_NAMESPACE
 
 #define OSGEDITABLETEXTCOMPONENT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

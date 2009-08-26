@@ -115,10 +115,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
     virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 
 	virtual Int32 getCaretLine(void) const;
+	virtual UInt32 numLines(void) const;
 
 	virtual bool isLineVisible(const UInt32& line) const;
+    virtual UInt32 numVisibleLines(void) const;
 
 	virtual void scrollToLine(const UInt32& line);
+
+    
+    virtual void moveCursorToEndOfLine(void);
+    virtual void moveCursorToBeginOfLine(void);
+    
+    void moveCursorLine(Int32 delta);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

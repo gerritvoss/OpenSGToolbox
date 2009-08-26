@@ -155,7 +155,7 @@ Int32 TextArea::getCaretLine(void) const
 {
 	for(Int32 i = 0; i < _LineContents.size(); i++)//draw each line seperately
 	{
-		if((getCaretPosition() > _LineContents[i]._StartPosition && getCaretPosition() <= _LineContents[i]._EndPosition) ||
+		if((getCaretPosition() >= _LineContents[i]._StartPosition && getCaretPosition() <= _LineContents[i]._EndPosition) ||
 			(i == _LineContents.size()-1 && getCaretPosition() == getText().size()))
 		{
 			return i;
@@ -240,83 +240,155 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 		}
 	}
 
-	if(e.getKey() == e.KEY_UP || e.getKey() == e.KEY_KEYPAD_UP)
-	{		
-		Int32 OriginalPosition = getCaretPosition();
-		Int32 LineSelector = 0;
-		for(Int32 i = 0; i < _LineContents.size(); i++)
-		{
-			if(getCaretPosition() <= _LineContents[i]._EndPosition && getCaretPosition() > _LineContents[i]._StartPosition)
-			{
-				LineSelector = i;
-				break;
-			}
-		}
-		if(LineSelector > 0)
-		{
-			Pnt2f TempTopLeft, TempBottomRight;
-			getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0, getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
-			beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
-				setCaretPosition(findTextPosition(Pnt2f(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector-1]._VerticalOffset)));
-			endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
-		}
-		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
-			&& getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-		{
-			if(OriginalPosition == _TextSelectionEnd && OriginalPosition != _TextSelectionStart)
-			{
-				_TextSelectionEnd = getCaretPosition();
-			}
-			else
-			{
-				_TextSelectionStart = getCaretPosition();
-			}
-		}
-		else
-		{
-			_TextSelectionStart = getCaretPosition();
-			_TextSelectionEnd = getCaretPosition();
-		}
-	}
-	if(e.getKey() == e.KEY_DOWN || e.getKey() == e.KEY_KEYPAD_DOWN)
-	{
-		Int32 OriginalPosition = getCaretPosition();
-		Int32 LineSelector = _LineContents.size();
-		for(Int32 i = 0; i < _LineContents.size(); i++)
-		{
-			if(getCaretPosition() <= _LineContents[i]._EndPosition && getCaretPosition() > _LineContents[i]._StartPosition)
-			{
-				LineSelector = i;
-				break;
-			}
-		}
-		if(LineSelector < _LineContents.size()-1)
-		{
-			Pnt2f TempTopLeft, TempBottomRight;
-			getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0,getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
-			beginEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
-				setCaretPosition(findTextPosition(Pnt2f(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+1]._VerticalOffset)));
-			endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
-		}
-		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
-			&& getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-		{
-			if(OriginalPosition == _TextSelectionEnd)
-			{
-				_TextSelectionEnd = getCaretPosition();
-			}
-			else
-			{
-				_TextSelectionStart = getCaretPosition();
-			}
-		}
-		else
-		{
-			_TextSelectionStart = getCaretPosition();
-			_TextSelectionEnd = getCaretPosition();
-		}
+    switch(e.getKey())
+    {
+    case KeyEvent::KEY_HOME:
+        moveCursorToBeginOfLine();
+        break;
+    case KeyEvent::KEY_END:
+        moveCursorToEndOfLine();
+        break;
+    case KeyEvent::KEY_UP:
+    case KeyEvent::KEY_KEYPAD_UP:
+        moveCursorLine(-1);
+        break;
+    case KeyEvent::KEY_DOWN:
+    case KeyEvent::KEY_KEYPAD_DOWN:
+        moveCursorLine(1);
+        break;
+    case KeyEvent::KEY_PAGE_UP:
+        moveCursorLine(-static_cast<Int32>(numVisibleLines()));
+        break;
+    case KeyEvent::KEY_PAGE_DOWN:
+        moveCursorLine(numVisibleLines());
+        break;
 	}
 	Inherited::keyTyped(e);
+}
+
+void TextArea::moveCursorLine(Int32 delta)
+{
+    if(delta>0)
+    {
+	    Int32 OriginalPosition = getCaretPosition();
+	    Int32 LineSelector = _LineContents.size();
+	    for(Int32 i = 0; i < _LineContents.size(); i++)
+	    {
+		    if(getCaretPosition() <= _LineContents[i]._EndPosition && getCaretPosition() > _LineContents[i]._StartPosition)
+		    {
+			    LineSelector = i;
+			    break;
+		    }
+	    }
+	    if(LineSelector < _LineContents.size()-1)
+	    {
+		    Pnt2f TempTopLeft, TempBottomRight;
+		    getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0,getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
+		    beginEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
+			    setCaretPosition(findTextPosition(Pnt2f(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+delta]._VerticalOffset)));
+		    endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
+	    }
+	    if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
+		    && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+	    {
+		    if(OriginalPosition == _TextSelectionEnd)
+		    {
+			    _TextSelectionEnd = getCaretPosition();
+		    }
+		    else
+		    {
+			    _TextSelectionStart = getCaretPosition();
+		    }
+	    }
+	    else
+	    {
+		    _TextSelectionStart = getCaretPosition();
+		    _TextSelectionEnd = getCaretPosition();
+	    }
+    }
+    else if(delta<0)
+    {
+	    Int32 OriginalPosition = getCaretPosition();
+	    Int32 LineSelector = 0;
+	    for(Int32 i = 0; i < _LineContents.size(); i++)
+	    {
+		    if(getCaretPosition() <= _LineContents[i]._EndPosition && getCaretPosition() > _LineContents[i]._StartPosition)
+		    {
+			    LineSelector = i;
+			    break;
+		    }
+	    }
+	    if(LineSelector > 0)
+	    {
+		    Pnt2f TempTopLeft, TempBottomRight;
+		    getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0, getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
+		    beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+			    setCaretPosition(findTextPosition(Pnt2f(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+delta]._VerticalOffset)));
+		    endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
+	    }
+	    if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
+		    && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+	    {
+		    if(OriginalPosition == _TextSelectionEnd && OriginalPosition != _TextSelectionStart)
+		    {
+			    _TextSelectionEnd = getCaretPosition();
+		    }
+		    else
+		    {
+			    _TextSelectionStart = getCaretPosition();
+		    }
+	    }
+	    else
+	    {
+		    _TextSelectionStart = getCaretPosition();
+		    _TextSelectionEnd = getCaretPosition();
+	    }
+    }
+}
+
+UInt32 TextArea::numVisibleLines(void) const
+{
+	
+    Pnt2f ClipTopLeft, ClipBottomRight;
+	getClipBounds(ClipTopLeft, ClipBottomRight);
+    
+    Pnt2f TopLeft, BottomRight;
+	getFont()->getBounds("A", TopLeft, BottomRight);
+
+    return static_cast<Int32>(ClipBottomRight.y() - ClipTopLeft.y())/static_cast<Int32>(BottomRight.y() - TopLeft.y());
+}
+
+void TextArea::moveCursorToEndOfLine(void)
+{
+	//Move the caret to the end of the line
+    Int32 CaretLine(getCaretLine());
+	if(CaretLine >= 0 && 
+        CaretLine < numLines() && 
+        getCaretPosition() != _LineContents[CaretLine]._EndPosition)
+	{
+		beginEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
+			setCaretPosition(_LineContents[CaretLine]._EndPosition);
+		endEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
+	}
+}
+
+void TextArea::moveCursorToBeginOfLine(void)
+{
+	//Move the caret to the beginning of the line
+    Int32 CaretLine(getCaretLine());
+	if(CaretLine >= 0 && 
+        CaretLine < numLines() && 
+        getCaretPosition() != _LineContents[CaretLine]._StartPosition)
+	{
+		beginEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
+			setCaretPosition(_LineContents[CaretLine]._StartPosition);
+		endEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
+	}
+}
+
+UInt32 TextArea::numLines(void) const
+{
+    return _LineContents.size();
 }
 
 void TextArea::mouseClicked(const MouseEvent& e)
