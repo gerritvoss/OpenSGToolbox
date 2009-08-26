@@ -45,353 +45,353 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PhongMaterial!
+ **     class Phong2Material!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEPHONGMATERIALINST
+#define OSG_COMPILEPHONG2MATERIALINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGPhongMaterialBase.h"
-#include "OSGPhongMaterial.h"
+#include "OSGPhong2MaterialBase.h"
+#include "OSGPhong2Material.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PhongMaterialBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::ColorFieldId);
+const OSG::BitVector  Phong2MaterialBase::ColorFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::ColorFieldId);
 
-const OSG::BitVector  PhongMaterialBase::ColorImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::ColorImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::ColorImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::ColorImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::TransparencyFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::TransparencyFieldId);
+const OSG::BitVector  Phong2MaterialBase::TransparencyFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::TransparencyFieldId);
 
-const OSG::BitVector  PhongMaterialBase::TransparencyImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::TransparencyImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::TransparencyImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::TransparencyImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::AmbientColorFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::AmbientColorFieldId);
+const OSG::BitVector  Phong2MaterialBase::AmbientColorFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::AmbientColorFieldId);
 
-const OSG::BitVector  PhongMaterialBase::AmbientColorImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::AmbientColorImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::AmbientColorImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::AmbientColorImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::IncandescenceFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::IncandescenceFieldId);
+const OSG::BitVector  Phong2MaterialBase::IncandescenceFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::IncandescenceFieldId);
 
-const OSG::BitVector  PhongMaterialBase::IncandescenceImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::IncandescenceImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::IncandescenceImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::IncandescenceImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::NormalMapImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::NormalMapImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::NormalMapImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::NormalMapImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::BumpDepthFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::BumpDepthFieldId);
+const OSG::BitVector  Phong2MaterialBase::BumpDepthFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::BumpDepthFieldId);
 
-const OSG::BitVector  PhongMaterialBase::BumpDepthImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::BumpDepthImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::BumpDepthImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::BumpDepthImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::DiffuseFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::DiffuseFieldId);
+const OSG::BitVector  Phong2MaterialBase::DiffuseFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::DiffuseFieldId);
 
-const OSG::BitVector  PhongMaterialBase::DiffuseImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::DiffuseImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::DiffuseImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::DiffuseImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::TransleucenceFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::TransleucenceFieldId);
+const OSG::BitVector  Phong2MaterialBase::TransleucenceFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::TransleucenceFieldId);
 
-const OSG::BitVector  PhongMaterialBase::TransleucenceImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::TransleucenceImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::TransleucenceImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::TransleucenceImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::TransleucenceDepthFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::TransleucenceDepthFieldId);
+const OSG::BitVector  Phong2MaterialBase::TransleucenceDepthFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::TransleucenceDepthFieldId);
 
-const OSG::BitVector  PhongMaterialBase::TransleucenceDepthImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::TransleucenceDepthImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::TransleucenceDepthImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::TransleucenceDepthImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::TransleucenceFocusFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::TransleucenceFocusFieldId);
+const OSG::BitVector  Phong2MaterialBase::TransleucenceFocusFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::TransleucenceFocusFieldId);
 
-const OSG::BitVector  PhongMaterialBase::TransleucenceFocusImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::TransleucenceFocusImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::TransleucenceFocusImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::TransleucenceFocusImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::SpecularCosinePowerFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::SpecularCosinePowerFieldId);
+const OSG::BitVector  Phong2MaterialBase::SpecularCosinePowerFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::SpecularCosinePowerFieldId);
 
-const OSG::BitVector  PhongMaterialBase::SpecularCosinePowerImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::SpecularCosinePowerImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::SpecularCosinePowerImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::SpecularCosinePowerImageFieldId);
 
-const OSG::BitVector  PhongMaterialBase::SpecularColorFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::SpecularColorFieldId);
+const OSG::BitVector  Phong2MaterialBase::SpecularColorFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::SpecularColorFieldId);
 
-const OSG::BitVector  PhongMaterialBase::SpecularColorImageFieldMask = 
-    (TypeTraits<BitVector>::One << PhongMaterialBase::SpecularColorImageFieldId);
+const OSG::BitVector  Phong2MaterialBase::SpecularColorImageFieldMask = 
+    (TypeTraits<BitVector>::One << Phong2MaterialBase::SpecularColorImageFieldId);
 
-const OSG::BitVector PhongMaterialBase::MTInfluenceMask = 
+const OSG::BitVector Phong2MaterialBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var Color3f         PhongMaterialBase::_sfColor
+/*! \var Color3f         Phong2MaterialBase::_sfColor
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfColorImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfColorImage
     
 */
-/*! \var Color3f         PhongMaterialBase::_sfTransparency
+/*! \var Color3f         Phong2MaterialBase::_sfTransparency
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfTransparencyImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfTransparencyImage
     
 */
-/*! \var Color3f         PhongMaterialBase::_sfAmbientColor
+/*! \var Color3f         Phong2MaterialBase::_sfAmbientColor
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfAmbientColorImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfAmbientColorImage
     
 */
-/*! \var Color3f         PhongMaterialBase::_sfIncandescence
+/*! \var Color3f         Phong2MaterialBase::_sfIncandescence
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfIncandescenceImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfIncandescenceImage
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfNormalMapImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfNormalMapImage
     
 */
-/*! \var Real32          PhongMaterialBase::_sfBumpDepth
+/*! \var Real32          Phong2MaterialBase::_sfBumpDepth
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfBumpDepthImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfBumpDepthImage
     
 */
-/*! \var Real32          PhongMaterialBase::_sfDiffuse
+/*! \var Real32          Phong2MaterialBase::_sfDiffuse
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfDiffuseImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfDiffuseImage
     
 */
-/*! \var Real32          PhongMaterialBase::_sfTransleucence
+/*! \var Real32          Phong2MaterialBase::_sfTransleucence
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfTransleucenceImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfTransleucenceImage
     
 */
-/*! \var Real32          PhongMaterialBase::_sfTransleucenceDepth
+/*! \var Real32          Phong2MaterialBase::_sfTransleucenceDepth
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfTransleucenceDepthImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfTransleucenceDepthImage
     
 */
-/*! \var Real32          PhongMaterialBase::_sfTransleucenceFocus
+/*! \var Real32          Phong2MaterialBase::_sfTransleucenceFocus
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfTransleucenceFocusImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfTransleucenceFocusImage
     
 */
-/*! \var Real32          PhongMaterialBase::_sfSpecularCosinePower
+/*! \var Real32          Phong2MaterialBase::_sfSpecularCosinePower
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfSpecularCosinePowerImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfSpecularCosinePowerImage
     
 */
-/*! \var Color3f         PhongMaterialBase::_sfSpecularColor
+/*! \var Color3f         Phong2MaterialBase::_sfSpecularColor
     
 */
-/*! \var ImagePtr        PhongMaterialBase::_sfSpecularColorImage
+/*! \var ImagePtr        Phong2MaterialBase::_sfSpecularColorImage
     
 */
 
-//! PhongMaterial description
+//! Phong2Material description
 
-FieldDescription *PhongMaterialBase::_desc[] = 
+FieldDescription *Phong2MaterialBase::_desc[] = 
 {
     new FieldDescription(SFColor3f::getClassType(), 
                      "Color", 
                      ColorFieldId, ColorFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFColor)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFColor)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "ColorImage", 
                      ColorImageFieldId, ColorImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFColorImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFColorImage)),
     new FieldDescription(SFColor3f::getClassType(), 
                      "Transparency", 
                      TransparencyFieldId, TransparencyFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFTransparency)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFTransparency)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "TransparencyImage", 
                      TransparencyImageFieldId, TransparencyImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFTransparencyImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFTransparencyImage)),
     new FieldDescription(SFColor3f::getClassType(), 
                      "AmbientColor", 
                      AmbientColorFieldId, AmbientColorFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFAmbientColor)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFAmbientColor)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "AmbientColorImage", 
                      AmbientColorImageFieldId, AmbientColorImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFAmbientColorImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFAmbientColorImage)),
     new FieldDescription(SFColor3f::getClassType(), 
                      "Incandescence", 
                      IncandescenceFieldId, IncandescenceFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFIncandescence)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFIncandescence)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "IncandescenceImage", 
                      IncandescenceImageFieldId, IncandescenceImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFIncandescenceImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFIncandescenceImage)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "NormalMapImage", 
                      NormalMapImageFieldId, NormalMapImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFNormalMapImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFNormalMapImage)),
     new FieldDescription(SFReal32::getClassType(), 
                      "BumpDepth", 
                      BumpDepthFieldId, BumpDepthFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFBumpDepth)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFBumpDepth)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "BumpDepthImage", 
                      BumpDepthImageFieldId, BumpDepthImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFBumpDepthImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFBumpDepthImage)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Diffuse", 
                      DiffuseFieldId, DiffuseFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFDiffuse)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFDiffuse)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "DiffuseImage", 
                      DiffuseImageFieldId, DiffuseImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFDiffuseImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFDiffuseImage)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Transleucence", 
                      TransleucenceFieldId, TransleucenceFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFTransleucence)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFTransleucence)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "TransleucenceImage", 
                      TransleucenceImageFieldId, TransleucenceImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFTransleucenceImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFTransleucenceImage)),
     new FieldDescription(SFReal32::getClassType(), 
                      "TransleucenceDepth", 
                      TransleucenceDepthFieldId, TransleucenceDepthFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFTransleucenceDepth)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFTransleucenceDepth)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "TransleucenceDepthImage", 
                      TransleucenceDepthImageFieldId, TransleucenceDepthImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFTransleucenceDepthImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFTransleucenceDepthImage)),
     new FieldDescription(SFReal32::getClassType(), 
                      "TransleucenceFocus", 
                      TransleucenceFocusFieldId, TransleucenceFocusFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFTransleucenceFocus)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFTransleucenceFocus)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "TransleucenceFocusImage", 
                      TransleucenceFocusImageFieldId, TransleucenceFocusImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFTransleucenceFocusImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFTransleucenceFocusImage)),
     new FieldDescription(SFReal32::getClassType(), 
                      "SpecularCosinePower", 
                      SpecularCosinePowerFieldId, SpecularCosinePowerFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFSpecularCosinePower)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFSpecularCosinePower)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "SpecularCosinePowerImage", 
                      SpecularCosinePowerImageFieldId, SpecularCosinePowerImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFSpecularCosinePowerImage)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFSpecularCosinePowerImage)),
     new FieldDescription(SFColor3f::getClassType(), 
                      "SpecularColor", 
                      SpecularColorFieldId, SpecularColorFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFSpecularColor)),
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFSpecularColor)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "SpecularColorImage", 
                      SpecularColorImageFieldId, SpecularColorImageFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&PhongMaterialBase::editSFSpecularColorImage))
+                     reinterpret_cast<FieldAccessMethod>(&Phong2MaterialBase::editSFSpecularColorImage))
 };
 
 
-FieldContainerType PhongMaterialBase::_type(
-    "PhongMaterial",
+FieldContainerType Phong2MaterialBase::_type(
+    "Phong2Material",
     "ChunkMaterial",
     NULL,
-    reinterpret_cast<PrototypeCreateF>(&PhongMaterialBase::createEmpty),
-    PhongMaterial::initMethod,
+    reinterpret_cast<PrototypeCreateF>(&Phong2MaterialBase::createEmpty),
+    Phong2Material::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(PhongMaterialBase, PhongMaterialPtr)
+//OSG_FIELD_CONTAINER_DEF(Phong2MaterialBase, Phong2MaterialPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PhongMaterialBase::getType(void) 
+FieldContainerType &Phong2MaterialBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &PhongMaterialBase::getType(void) const 
+const FieldContainerType &Phong2MaterialBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr PhongMaterialBase::shallowCopy(void) const 
+FieldContainerPtr Phong2MaterialBase::shallowCopy(void) const 
 { 
-    PhongMaterialPtr returnValue; 
+    Phong2MaterialPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const PhongMaterial *>(this)); 
+    newPtr(returnValue, dynamic_cast<const Phong2Material *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 PhongMaterialBase::getContainerSize(void) const 
+UInt32 Phong2MaterialBase::getContainerSize(void) const 
 { 
-    return sizeof(PhongMaterial); 
+    return sizeof(Phong2Material); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void PhongMaterialBase::executeSync(      FieldContainer &other,
+void Phong2MaterialBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl(static_cast<PhongMaterialBase *>(&other),
+    this->executeSyncImpl(static_cast<Phong2MaterialBase *>(&other),
                           whichField);
 }
 #else
-void PhongMaterialBase::executeSync(      FieldContainer &other,
+void Phong2MaterialBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((PhongMaterialBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((Phong2MaterialBase *) &other, whichField, sInfo);
 }
-void PhongMaterialBase::execBeginEdit(const BitVector &whichField, 
+void Phong2MaterialBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void PhongMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void Phong2MaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -404,7 +404,7 @@ void PhongMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-PhongMaterialBase::PhongMaterialBase(void) :
+Phong2MaterialBase::Phong2MaterialBase(void) :
     _sfColor                  (), 
     _sfColorImage             (ImagePtr(NullFC)), 
     _sfTransparency           (), 
@@ -436,7 +436,7 @@ PhongMaterialBase::PhongMaterialBase(void) :
 #pragma warning (default : 383)
 #endif
 
-PhongMaterialBase::PhongMaterialBase(const PhongMaterialBase &source) :
+Phong2MaterialBase::Phong2MaterialBase(const Phong2MaterialBase &source) :
     _sfColor                  (source._sfColor                  ), 
     _sfColorImage             (source._sfColorImage             ), 
     _sfTransparency           (source._sfTransparency           ), 
@@ -466,13 +466,13 @@ PhongMaterialBase::PhongMaterialBase(const PhongMaterialBase &source) :
 
 /*-------------------------- destructors ----------------------------------*/
 
-PhongMaterialBase::~PhongMaterialBase(void)
+Phong2MaterialBase::~Phong2MaterialBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PhongMaterialBase::getBinSize(const BitVector &whichField)
+UInt32 Phong2MaterialBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -595,7 +595,7 @@ UInt32 PhongMaterialBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void PhongMaterialBase::copyToBin(      BinaryDataHandler &pMem,
+void Phong2MaterialBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -718,7 +718,7 @@ void PhongMaterialBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void PhongMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
+void Phong2MaterialBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -842,7 +842,7 @@ void PhongMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void PhongMaterialBase::executeSyncImpl(      PhongMaterialBase *pOther,
+void Phong2MaterialBase::executeSyncImpl(      Phong2MaterialBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -920,7 +920,7 @@ void PhongMaterialBase::executeSyncImpl(      PhongMaterialBase *pOther,
 
 }
 #else
-void PhongMaterialBase::executeSyncImpl(      PhongMaterialBase *pOther,
+void Phong2MaterialBase::executeSyncImpl(      Phong2MaterialBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -1000,7 +1000,7 @@ void PhongMaterialBase::executeSyncImpl(      PhongMaterialBase *pOther,
 
 }
 
-void PhongMaterialBase::execBeginEditImpl (const BitVector &whichField, 
+void Phong2MaterialBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -1019,11 +1019,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PhongMaterialPtr>::_type("PhongMaterialPtr", "ChunkMaterialPtr");
+DataType FieldDataTraits<Phong2MaterialPtr>::_type("Phong2MaterialPtr", "ChunkMaterialPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(PhongMaterialPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PhongMaterialPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(Phong2MaterialPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(Phong2MaterialPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
 
 
 OSG_END_NAMESPACE

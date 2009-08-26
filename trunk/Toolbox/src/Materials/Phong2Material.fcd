@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PhongMaterial"
+	name="Phong2Material"
 	parent="ChunkMaterial"
 	library="Toolbox"
 	pointerfieldtypes="both"

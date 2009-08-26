@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PhongMaterial
+ **     class Phong2Material
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPHONGMATERIALBASE_H_
-#define _OSGPHONGMATERIALBASE_H_
+#ifndef _OSGPHONG2MATERIALBASE_H_
+#define _OSGPHONG2MATERIALBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -91,16 +91,16 @@
 #include <OpenSG/OSGColor3fFields.h> // SpecularColor type
 #include <OpenSG/OSGImageFields.h> // SpecularColorImage type
 
-#include "OSGPhongMaterialFields.h"
+#include "OSGPhong2MaterialFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class PhongMaterial;
+class Phong2Material;
 class BinaryDataHandler;
 
-//! \brief PhongMaterial Base Class.
+//! \brief Phong2Material Base Class.
 
-class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterialBase : public ChunkMaterial
+class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public ChunkMaterial
 {
   private:
 
@@ -109,7 +109,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterialBase : public ChunkMaterial
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PhongMaterialPtr  Ptr;
+    typedef Phong2MaterialPtr  Ptr;
 
     enum
     {
@@ -517,8 +517,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterialBase : public ChunkMaterial
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PhongMaterialPtr      create          (void); 
-    static  PhongMaterialPtr      createEmpty     (void); 
+    static  Phong2MaterialPtr      create          (void); 
+    static  Phong2MaterialPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -565,15 +565,15 @@ class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterialBase : public ChunkMaterial
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    PhongMaterialBase(void);
-    PhongMaterialBase(const PhongMaterialBase &source);
+    Phong2MaterialBase(void);
+    Phong2MaterialBase(const Phong2MaterialBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PhongMaterialBase(void); 
+    virtual ~Phong2MaterialBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -581,13 +581,13 @@ class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterialBase : public ChunkMaterial
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PhongMaterialBase *pOther,
+    void executeSyncImpl(      Phong2MaterialBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      PhongMaterialBase *pOther,
+    void executeSyncImpl(      Phong2MaterialBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -617,7 +617,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterialBase : public ChunkMaterial
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const PhongMaterialBase &source);
+    void operator =(const Phong2MaterialBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -625,15 +625,15 @@ class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterialBase : public ChunkMaterial
 //---------------------------------------------------------------------------
 
 
-typedef PhongMaterialBase *PhongMaterialBaseP;
+typedef Phong2MaterialBase *Phong2MaterialBaseP;
 
-typedef osgIF<PhongMaterialBase::isNodeCore,
-              CoredNodePtr<PhongMaterial>,
+typedef osgIF<Phong2MaterialBase::isNodeCore,
+              CoredNodePtr<Phong2Material>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PhongMaterialNodePtr;
+              >::_IRet Phong2MaterialNodePtr;
 
-typedef RefPtr<PhongMaterialPtr> PhongMaterialRefPtr;
+typedef RefPtr<Phong2MaterialPtr> Phong2MaterialRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGPHONGMATERIALBASE_H_ */
+#endif /* _OSGPHONG2MATERIALBASE_H_ */

@@ -36,27 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGPHONGMATERIAL_H_
-#define _OSGPHONGMATERIAL_H_
+#ifndef _OSGPHONG2MATERIAL_H_
+#define _OSGPHONG2MATERIAL_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGPhongMaterialBase.h"
+#include "OSGPhong2MaterialBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief PhongMaterial class. See \ref 
-           PageToolboxPhongMaterial for a description.
+/*! \brief Phong2Material class. See \ref 
+           PageToolboxPhong2Material for a description.
 */
 
-class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterial : public PhongMaterialBase
+class OSG_TOOLBOXLIB_DLLMAPPING Phong2Material : public Phong2MaterialBase
 {
   private:
 
-    typedef PhongMaterialBase Inherited;
+    typedef Phong2MaterialBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -80,21 +80,21 @@ class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterial : public PhongMaterialBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in PhongMaterialBase.
+    // Variables should all be in Phong2MaterialBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    PhongMaterial(void);
-    PhongMaterial(const PhongMaterial &source);
+    Phong2Material(void);
+    Phong2Material(const Phong2Material &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PhongMaterial(void); 
+    virtual ~Phong2Material(void); 
 
     /*! \}                                                                 */
     
@@ -102,20 +102,20 @@ class OSG_TOOLBOXLIB_DLLMAPPING PhongMaterial : public PhongMaterialBase
   private:
 
     friend class FieldContainer;
-    friend class PhongMaterialBase;
+    friend class Phong2MaterialBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const PhongMaterial &source);
+    void operator =(const Phong2Material &source);
 };
 
-typedef PhongMaterial *PhongMaterialP;
+typedef Phong2Material *Phong2MaterialP;
 
 OSG_END_NAMESPACE
 
-#include "OSGPhongMaterialBase.inl"
-#include "OSGPhongMaterial.inl"
+#include "OSGPhong2MaterialBase.inl"
+#include "OSGPhong2Material.inl"
 
-#endif /* _OSGPHONGMATERIAL_H_ */
+#endif /* _OSGPHONG2MATERIAL_H_ */
