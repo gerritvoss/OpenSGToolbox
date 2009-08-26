@@ -3,6 +3,8 @@
 #include <OpenSG/OSGBaseFunctions.h>
 #include <OpenSG/OSGColor.h>
 #include <OpenSG/OSGVector.h>
+#include <OpenSG/OSGMatrix.h>
+#include <OpenSG/OSGQuaternion.h>
 %}
 
 namespace osg {
@@ -270,5 +272,362 @@ namespace osg {
     %template(Vec4f) Vector<Real32,4>;
     %template(Vec3f) Vector<Real32,3>;
     %template(Vec2f) Vector<Real32,2>;
+    /******************************************************/
+    /*              Matricies                             */
+    /******************************************************/
+    template<class ValueTypeT>
+    class TransformationMatrix
+    {
+      public:
+
+        typedef                 ValueTypeT                ValueType;
+        typedef Vector         <ValueTypeT, 4           > VectorType;
+
+        typedef QuaternionBase <ValueType>                QuaternionType;
+
+        typedef Vector         <ValueTypeT, 3           > VectorType3f;
+        typedef Point          <ValueTypeT, 4           > PointType;
+        typedef Point          <ValueTypeT, 3           > PointType3f;
+                               
+        /*---------------------------------------------------------------------*/
+        static const TransformationMatrix &identity(void);
+
+        /*---------------------------------------------------------------------*/
+        TransformationMatrix(void);
+        TransformationMatrix(const TransformationMatrix &source );
+
+        TransformationMatrix(const VectorType3f         &vector1,
+                             const VectorType3f         &vector2,
+                             const VectorType3f         &vector3);    
+
+        TransformationMatrix(const VectorType3f         &vector1,
+                             const VectorType3f         &vector2,
+                             const VectorType3f         &vector3,
+                             const VectorType3f         &vector4);    
+
+        TransformationMatrix(const ValueTypeT            rVal00,
+                             const ValueTypeT            rVal10,
+                             const ValueTypeT            rVal20,
+                             const ValueTypeT            rVal30,
+                             
+                             const ValueTypeT            rVal01,
+                             const ValueTypeT            rVal11,
+                             const ValueTypeT            rVal21,
+                             const ValueTypeT            rVal31,
+                             
+                             const ValueTypeT            rVal02,
+                             const ValueTypeT            rVal12,
+                             const ValueTypeT            rVal22,
+                             const ValueTypeT            rVal32,
+                             
+                             const ValueTypeT            rVal03,
+                             const ValueTypeT            rVal13,
+                             const ValueTypeT            rVal23,
+                             const ValueTypeT            rVal33);
+     
+        /*---------------------------------------------------------------------*/
+        ~TransformationMatrix(void); 
+
+        /*---------------------------------------------------------------------*/
+        void setIdentity       (void                                           );
+
+        void setValue          (const TransformationMatrix &mat                );
+
+        void setValue          (const VectorType3f         &vector1,
+                                const VectorType3f         &vector2,
+                                const VectorType3f         &vector3            );
+
+        void setValue          (const VectorType3f         &vector1,
+                                const VectorType3f         &vector2,
+                                const VectorType3f         &vector3,
+                                const VectorType3f         &vector4            );
+
+        void setValue          (const ValueTypeT            rVal00,
+                                const ValueTypeT            rVal10,
+                                const ValueTypeT            rVal20,
+                                const ValueTypeT            rVal30,
+                                
+                                const ValueTypeT            rVal01,
+                                const ValueTypeT            rVal11,
+                                const ValueTypeT            rVal21,
+                                const ValueTypeT            rVal31,
+                                
+                                const ValueTypeT            rVal02,
+                                const ValueTypeT            rVal12,
+                                const ValueTypeT            rVal22,
+                                const ValueTypeT            rVal32,
+                                
+                                const ValueTypeT            rVal03,
+                                const ValueTypeT            rVal13,
+                                const ValueTypeT            rVal23,
+                                const ValueTypeT            rVal33             );
+
+        void setValueTransposed(const ValueTypeT            rVal00,
+                                const ValueTypeT            rVal01,
+                                const ValueTypeT            rVal02,
+                                const ValueTypeT            rVal03,
+                                
+                                const ValueTypeT            rVal10,
+                                const ValueTypeT            rVal11,
+                                const ValueTypeT            rVal12,
+                                const ValueTypeT            rVal13,
+                                
+                                const ValueTypeT            rVal20,
+                                const ValueTypeT            rVal21,
+                                const ValueTypeT            rVal22,
+                                const ValueTypeT            rVal23,
+                                
+                                const ValueTypeT            rVal30,
+                                const ValueTypeT            rVal31,
+                                const ValueTypeT            rVal32,
+                                const ValueTypeT            rVal33             );
+
+        void setValue          (const ValueTypeT           *pMat,
+                                      bool                  bTransposed = true );
+
+        void setValue          (const VectorType           *pMat               );
+
+        void setValue           (const Char8               *string,
+                                       bool                 bTransposed = true );
+
+        /*---------------------------------------------------------------------*/
+              ValueTypeT *getValues(void);
+        
+        /*---------------------------------------------------------------------*/
+        void setScale    (const ValueTypeT      s               );
+
+        void setScale    (const ValueTypeT      sx,
+                          const ValueTypeT      sy, 
+                          const ValueTypeT      sz              );
+
+        void setScale    (const VectorType3f   &s               );
+
+
+        void setTranslate(const ValueTypeT      tx,
+                          const ValueTypeT      ty,
+                          const ValueTypeT      tz              );
+
+        void setTranslate(const VectorType3f   &t               );
+
+        void setTranslate(const PointType3f    &t               );
+
+
+        void setRotate   (const QuaternionType &q               );
+
+
+        void setTransform(const VectorType3f   &t               );
+
+        void setTransform(const QuaternionType &r               );
+
+        void setTransform(const VectorType3f   &t, 
+                          const QuaternionType &r               );
+
+        void setTransform(const VectorType3f   &t, 
+                          const QuaternionType &r,
+                          const VectorType3f   &s               );
+
+        void setTransform(const VectorType3f   &t, 
+                          const QuaternionType &r,
+                          const VectorType3f   &s, 
+                          const QuaternionType &so              );
+
+        void setTransform(const VectorType3f   &translation,
+                          const QuaternionType &rotation,
+                          const VectorType3f   &scaleFactor,
+                          const QuaternionType &scaleOrientation,
+                          const VectorType3f   &center          );
+
+        void getTransform(      VectorType3f         &translation, 
+                                QuaternionType       &rotation,
+                                VectorType3f         &scaleFactor, 
+                                QuaternionType       &scaleOrientation,
+                          const VectorType3f         &center) const;
+
+        void getTransform(      VectorType3f         &translation, 
+                                QuaternionType       &rotation,
+                                VectorType3f         &scaleFactor, 
+                                QuaternionType       &scaleOrientation) const;
+
+        bool factor      (      TransformationMatrix &r, 
+                                VectorType3f         &s, 
+                                TransformationMatrix &u,
+                                VectorType3f         &t, 
+                                TransformationMatrix &proj) const;
+        
+        void mult    (const PointType    &pntIn, PointType    &pntOut) const;
+        void multFull(const PointType3f  &pntIn, PointType3f  &pntOut) const;
+        void mult    (const PointType3f  &pntIn, PointType3f  &pntOut) const;
+        
+        void mult    (const VectorType   &vecIn, VectorType   &vecOut) const;
+        void multFull(const VectorType3f &vecIn, VectorType3f &vecOut) const;
+        void mult    (const VectorType3f &vecIn, VectorType3f &vecOut) const;
+        
+        void mult3x3 (const PointType3f  &pntIn, PointType3f  &pntOut) const;
+        void mult3x3 (const VectorType3f &vecIn, VectorType3f &vecOut) const;
+        
+        PointType    operator *(const PointType    &pntIn) const;
+        PointType3f  operator *(const PointType3f  &pntIn) const;
+                 
+        VectorType   operator *(const VectorType   &vecIn) const;
+        VectorType3f operator *(const VectorType3f &vecIn) const;
+
+        
+        bool       equals       (const TransformationMatrix &matrix, 
+                                 const ValueType             tol   ) const;
+
+        ValueTypeT det3         (      void                        ) const;
+        ValueTypeT det          (      void                        ) const;
+
+        bool       inverse      (      TransformationMatrix &result) const;
+        bool       invert       (      void                        );
+        bool       invertFrom   (const TransformationMatrix &matrix);
+
+        bool       inverse3     (      TransformationMatrix &result) const;
+        bool       invert3      (      void                        );
+        bool       invertFrom3  (const TransformationMatrix &matrix);
+
+        bool       transposed   (      TransformationMatrix &result) const;
+        bool       transpose    (      void                        );
+        bool       transposeFrom(const TransformationMatrix &matrix);
+
+        void       mult         (const TransformationMatrix &matrix);
+        void       multLeft     (const TransformationMatrix &matrix);
+        
+        void       add          (const TransformationMatrix &matrix);
+        void       scale        (      ValueTypeT            s     );
+        void       addScaled    (const TransformationMatrix &matrix, 
+                                       ValueTypeT            s     );
+        void       negate       (      void                        );
+        
+        ValueTypeT norm1        (      void                        ) const;
+        ValueTypeT norm2        (      void                        ) const;
+        ValueTypeT normInfinity (      void                        ) const;
+        
+        bool       sqrt         (      TransformationMatrix &result) const;
+        bool       sqrtOf       (const TransformationMatrix &matrix);
+        bool       sqrt         (      void                        );
+        
+        bool       log          (      TransformationMatrix &result) const;
+        bool       logOf        (const TransformationMatrix &matrix);
+        
+        bool       exp          (      TransformationMatrix &result) const;
+        bool       expOf        (const TransformationMatrix &matrix);
+
+
+        bool operator == (const TransformationMatrix &other) const;
+
+    };
+
+    %template(Matrix) TransformationMatrix<Real32>;
+    /******************************************************/
+    /*              Quaternion                            */
+    /******************************************************/
+    template <class ValueTypeT>
+    class QuaternionBase
+    {
+      public:
+        typedef Vector              <ValueTypeT, 3> VectorType;
+        typedef TransformationMatrix<ValueTypeT   > MatrixType;
+        static const QuaternionBase &identity(void                          );
+
+        static       QuaternionBase slerp    (const QuaternionBase &rot0,
+                                              const QuaternionBase &rot1,
+                                              const ValueTypeT      t       );
+                    QuaternionBase(      void                               );
+                    QuaternionBase(const QuaternionBase &source             );
+        explicit    QuaternionBase(const MatrixType     &matrix             );
+                    QuaternionBase(const VectorType     &axis,
+                                   const ValueTypeT      angle              );
+                    QuaternionBase(const VectorType     &rotateFrom,
+                                   const VectorType     &rotateTo           );
+        virtual ~QuaternionBase(void);
+        void setIdentity      (       void                  );
+
+        void setValueAsAxisRad(const  ValueTypeT *valsP     );
+        void setValueAsAxisDeg(const  ValueTypeT *valsP     );
+        void setValueAsQuat   (const  ValueTypeT *valsP     );
+
+        void setValueAsAxisRad(const  ValueTypeT  x,
+                               const  ValueTypeT  y,
+                               const  ValueTypeT  z,
+                               const  ValueTypeT  w         );
+        void setValueAsAxisDeg(const  ValueTypeT  x,
+                               const  ValueTypeT  y,
+                               const  ValueTypeT  z,
+                               const  ValueTypeT  w         );
+        void setValueAsQuat   (const  ValueTypeT  x,
+                               const  ValueTypeT  y,
+                               const  ValueTypeT  z,
+                               const  ValueTypeT  w         );
+
+        void setValue         (const  MatrixType &matrix    );
+
+        void setValueAsAxisRad(const  VectorType &axis,    
+                                      ValueTypeT  angle     );
+        void setValueAsAxisDeg(const  VectorType &axis,
+                                      ValueTypeT  angle     );
+
+        void setValue         (const  VectorType &rotateFrom,
+                               const  VectorType &rotateTo  );
+
+        void setValueAsAxisRad(const  Char8       *str      );
+        void setValueAsAxisDeg(const  Char8       *str      );
+        void setValueAsQuat   (const  Char8       *str      );
+
+        void setValue         (const  ValueTypeT alpha,
+                               const  ValueTypeT beta,
+                               const  ValueTypeT gamma      );
+        const ValueTypeT *getValues        (void               ) const;
+
+              void        getValueAsAxisDeg(ValueTypeT &x,
+                                            ValueTypeT &y,
+                                            ValueTypeT &z,
+                                            ValueTypeT &w      ) const;
+              void        getValueAsAxisRad(ValueTypeT &x,
+                                            ValueTypeT &y,
+                                            ValueTypeT &z,
+                                            ValueTypeT &w      ) const;
+              void        getValueAsQuat   (ValueTypeT &x,
+                                            ValueTypeT &y,
+                                            ValueTypeT &z,
+                                            ValueTypeT &w      ) const;
+
+              void       getValueAsAxisRad (VectorType &axis, 
+                                            ValueTypeT &radians) const;
+              void       getValueAsAxisDeg (VectorType &axis, 
+                                            ValueTypeT &degrees) const;
+              void       getValue          (MatrixType &matrix ) const;
+              void       getValuesOnly     (MatrixType &matrix ) const;
+
+              ValueTypeT x                 (void               ) const;
+              ValueTypeT y                 (void               ) const;
+              ValueTypeT z                 (void               ) const;
+              ValueTypeT w                 (void               ) const;
+              ValueTypeT      length    (void                        ) const;
+              void            normalize (void                        );
+
+              void            invert    (void                        );
+        const QuaternionBase  inverse   (void                        ) const;
+
+              void            multVec   (const VectorType &src,
+                                               VectorType &dst       ) const;
+
+              void            scaleAngle(      ValueTypeT scaleFactor);
+
+              void            slerpThis (const QuaternionBase &rot0,
+                                         const QuaternionBase &rot1,
+                                         const ValueTypeT      t     );
+
+              void            mult      (const QuaternionBase &other );
+              void            multLeft  (const QuaternionBase &other );
+
+              bool            equals    (const QuaternionBase &rot,
+                                         const ValueTypeT tolerance  ) const;
+
+        bool operator == (const QuaternionBase &other) const;
+
+    };
+
+    %template(Quaternion) QuaternionBase<Real32>;
 }
 

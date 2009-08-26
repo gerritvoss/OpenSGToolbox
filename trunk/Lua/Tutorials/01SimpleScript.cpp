@@ -39,6 +39,11 @@ std::string genOpenSGScript(void)
     std::string Script(
 "    -- call OpenSG's osgrand function\n"
     
+
+"    quat1 = OSGBase.Quaternion()\n"
+"    print( quat1:length())\n"
+"    mat1 = OSGBase.Matrix(2.0,0.0,0.0,0.0, 0.0,1.0,0.0,0.0, 0.0,0.0,1.0,0.0, 0.0,0.0,0.0,1.0)\n"
+"    print( mat1:det())\n"
 "    vec1 = OSGBase.Vec3f(0.0,1.0,0.0)\n"
 "    pnt1 = OSGBase.Pnt3f(0.0,1.0,0.0)\n"
 "    pnt2 = OSGBase.Pnt3f(1.0,0.0,0.0)\n"
