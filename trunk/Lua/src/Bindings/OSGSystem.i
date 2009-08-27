@@ -3,14 +3,23 @@
 %{
 #include <OpenSG/OSGFieldContainerType.h>
 #include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGFieldContainer.h>
 #include <OpenSG/OSGFieldDescription.h>
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGAttachment.h>
+#include <OpenSG/OSGAttachmentPtr.h>
+#include <OpenSG/OSGAttachmentContainer.h>
 #include <OpenSG/OSGNode.h>
+#include <OpenSG/OSGNodePtr.h>
+#include <OpenSG/OSGMatrix.h>
 %}
 
 namespace osg {
 
+    class FieldContainer;
+    class FieldDescription;
+    class FieldContainerPtr;
+    class FieldContainerType;
     /******************************************************/
     /*              FieldDescription                    */
     /******************************************************/
@@ -27,8 +36,8 @@ namespace osg {
 
               UInt32     getTypeId      (void                ) const;  
 
-              /*BitVector  getFieldMask   (void                ) const;*/
-              /*void       setFieldMask   (BitVector vFieldMask);*/
+              BitVector  getFieldMask   (void                ) const;
+              void       setFieldMask   (BitVector vFieldMask);
 
               UInt32     getFieldId     (void                ) const;
               void       setFieldId     (UInt32 uiFieldId    );
@@ -44,6 +53,39 @@ namespace osg {
     };
 
     /******************************************************/
+    /*              FieldContainer                        */
+    /******************************************************/
+    class FieldContainer 
+    {
+      public:
+        virtual       FieldContainerType &getType    (void);
+
+        virtual const FieldContainerType &getType    (void) const;
+
+                      UInt32              getTypeId  (void) const;
+
+                      UInt16              getGroupId (void) const;
+
+                const Char8              *getTypeName(void) const;
+
+        virtual UInt32  getContainerSize(void) const = 0;
+
+
+                Field  *getField        (      UInt32 fieldId  );
+
+                Field  *getField        (const Char8 *fieldName);
+
+        virtual FieldContainerPtr shallowCopy(void) const = 0;
+
+      protected:
+        FieldContainer(void);
+
+        FieldContainer(const FieldContainer &obj);
+
+        virtual ~FieldContainer (void);
+
+    };
+    /******************************************************/
     /*              FieldContainerPtr                    */
     /******************************************************/
     class FieldContainerPtr
@@ -58,6 +100,7 @@ namespace osg {
         FieldContainerPtr(      void                         );
         /*FieldContainerPtr(const NullFieldContainerPtr &      );*/
         FieldContainerPtr(const FieldContainerPtr     &source);
+        FieldContainer *operator->(void);
 
         ~FieldContainerPtr(void); 
 
@@ -112,40 +155,7 @@ namespace osg {
     };
 
     /******************************************************/
-    /*              FieldContainer                        */
-    /******************************************************/
-    class FieldContainer 
-    {
-      public:
-        virtual       FieldContainerType &getType    (void);
-
-        virtual const FieldContainerType &getType    (void) const;
-
-                      UInt32              getTypeId  (void) const;
-
-                      UInt16              getGroupId (void) const;
-
-                const Char8              *getTypeName(void) const;
-
-        virtual UInt32  getContainerSize(void) const = 0;
-
-
-                Field  *getField        (      UInt32 fieldId  );
-
-                Field  *getField        (const Char8 *fieldName);
-
-        virtual FieldContainerPtr shallowCopy(void) const = 0;
-
-      protected:
-        FieldContainer(void);
-
-        FieldContainer(const FieldContainer &obj);
-
-        virtual ~FieldContainer (void);
-
-    };
-    /******************************************************/
-    /*              FieldContainer                        */
+    /*              FieldContainerFactory                 */
     /******************************************************/
     class FieldContainerFactory
     {
@@ -175,5 +185,112 @@ namespace osg {
 
         virtual ~FieldContainerFactory(void); 
     };
+
+    /******************************************************/
+    /*              Attachment                            */
+    /******************************************************/
+    class Attachment : public FieldContainer 
+    {
+      public:
+              void                 addParent   (FieldContainerPtr parent);
+              void                 subParent   (FieldContainerPtr parent);
+              Int32                findParent  (FieldContainerPtr parent);
+              
+              /*SFBool &getInternal  (void     );*/
+
+              void    setInternal  (bool bVal);
+
+      protected:
+        Attachment(      void           );
+        Attachment(const Attachment &obj);
+        virtual ~Attachment(void);
+    };
+
+    /******************************************************/
+    /*              AttachmentContainer                   */
+    /******************************************************/
+    /*class AttachmentContainer : public FieldContainer */
+    /*{*/
+      /*public:*/
+        /*void          addAttachment (const AttachmentPtr &fieldContainerP, */
+                                           /*UInt16         binding        = 0);*/
+
+        /*void          subAttachment (const AttachmentPtr &fieldContainerP,*/
+                                           /*UInt16         binding        = 0);*/
+
+        /*AttachmentPtr findAttachment(      UInt32         groupId,*/
+                                           /*UInt16         binding        = 0);*/
+
+        /*AttachmentPtr findAttachment(const FieldContainerType &type,*/
+                                           /*UInt16              binding   = 0);*/
+
+
+      /*protected:*/
+        /*AttachmentContainer(void);*/
+        /*AttachmentContainer(const AttachmentContainer &source);*/
+        /*virtual ~AttachmentContainer (void);*/
+    /*};*/
+
+    /******************************************************/
+    /*                             Node                   */
+    /******************************************************/
+    /*class Node : public AttachmentContainer */
+    /*{*/
+      /*public:*/
+        /*NodeCorePtr getCore(      void             );*/
+        /*NodeCorePtr getCore(      void             ) const;*/
+
+        /*void        setCore(const NodeCorePtr &core);*/
+
+        /*NodePtr getParent(void);*/
+
+        /*UInt32  getNChildren  (void                     ) const;*/
+        
+        /*void    addChild      (const NodePtr &childP    );*/
+
+        /*void    insertChild   (      UInt32   childIndex, */
+                               /*const NodePtr &childP    );*/
+
+        /*void    replaceChild  (      UInt32   childIndex,    */
+                               /*const NodePtr &childP    );*/
+
+        /*bool    replaceChildBy(const NodePtr &childP, */
+                               /*const NodePtr &newChildP );*/
+
+        /*Int32   findChild     (const NodePtr &childP    ) const;*/
+
+        /*void    subChild      (const NodePtr &childP    );*/
+        /*void    subChild      (      UInt32   childIndex);*/
+
+        /*NodePtr getChild      (      UInt32   childIndex);*/
+
+        /*bool   getActive  (void      ) const;*/
+
+        /*void   setActive  (bool   val);*/
+
+        /*void   setTravMask(UInt32 val);*/
+        /*UInt32 getTravMask(void      ) const;*/
+
+        /*void   setOcclusionMask(UInt8 val);*/
+        /*UInt8  getOcclusionMask(void      ) const;*/
+        
+        /*NodePtr clone(void);*/
+
+        /*Matrix getToWorld(void          );*/
+        
+        /*void   getToWorld(Matrix &result);*/
+               /*BoxVolume     &editVolume      (bool update          );*/
+        /*const  BoxVolume     &getVolume       (void                 ) const;*/
+               /*void           getWorldVolume  (BoxVolume     &result);*/
+        
+               /*void           updateVolume    (void                 );*/
+
+               /*void           invalidateVolume(void                 );*/
+
+      /*protected:*/
+        /*Node(void);*/
+        /*Node(const Node &source);*/
+        /*virtual ~Node (void);*/
+    /*};*/
 }
 

@@ -1,4 +1,5 @@
 %module OSG
+%native(version) int OSGVersion(lua_State*L);  // registers native_function() with SWIG
 %{
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGBaseFunctions.h>
@@ -12,6 +13,21 @@
 #include <OpenSG/OSGFieldType.h>
 #include <OpenSG/OSGField.h>
 #include <OpenSG/OSGFieldFactory.h>
+    int OSGVersion(lua_State*L) // my native code
+    {
+      int SWIG_arg = 0;
+      std::string result(OSG_VERSION_STRING);
+      SWIG_check_num_args("version",0,0);
+      
+      lua_pushstring(L,result.c_str()); SWIG_arg++;
+      return SWIG_arg;
+      
+      if(0) SWIG_fail;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
 %}
 
 namespace osg {
@@ -30,6 +46,7 @@ namespace osg {
     typedef float      Real32;
     typedef double     Real64;
     typedef long double Real128;
+
 
 
     /******************************************************/
