@@ -82,9 +82,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTex
 	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
 
-    void moveCursor(Int32 delta);
-    void moveCursorToEnd(void);
-    void moveCursorToBegin(void);
+    void moveCaret(Int32 delta);
+    void moveCaretToEnd(void);
+    void moveCaretToBegin(void);
 
     void write(const std::string& Text);
     void overwriteSelection(const std::string& Text);

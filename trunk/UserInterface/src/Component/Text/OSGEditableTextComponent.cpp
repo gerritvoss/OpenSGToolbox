@@ -98,10 +98,9 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
 			if(hasSelection())
 			{
                 deleteSelectedText();
-				setCaretPosition(_TextSelectionStart+1);
+				setCaretPosition(_TextSelectionStart);
 			}
             insert(std::string( 1,e.getKeyChar() ), _TextSelectionStart);
-            moveCursor(1);
 			_TextSelectionStart = getCaretPosition();
 			_TextSelectionEnd = _TextSelectionStart;
 		}
@@ -114,8 +113,9 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
 			else
 			{	
                 //erase at the current caret position
-                deleteRange(getCaretPosition()-1, getCaretPosition());
-                moveCursor(-1);
+                Int32 DeleteIndex(getCaretPosition());
+                moveCaret(-1);
+                deleteRange(DeleteIndex-1, DeleteIndex);
 			}
 		}
 		if(e.getKey()== e.KEY_DELETE)
@@ -138,11 +138,11 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
     {
     case KeyEvent::KEY_RIGHT:
     case KeyEvent::KEY_KEYPAD_RIGHT:
-        moveCursor(1);
+        moveCaret(1);
         break;
     case KeyEvent::KEY_LEFT:
     case KeyEvent::KEY_KEYPAD_LEFT:
-        moveCursor(-1);
+        moveCaret(-1);
         break;
     case KeyEvent::KEY_V:
         if(e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
@@ -221,7 +221,7 @@ void EditableTextComponent::setupCursor(void)
     }
 }
 
-void EditableTextComponent::moveCursor(Int32 delta)
+void EditableTextComponent::moveCaret(Int32 delta)
 {
     
 	UInt32 NewCaretPosition(getCaretPosition());
@@ -307,7 +307,7 @@ void EditableTextComponent::moveCursor(Int32 delta)
 	}
 }
 
-void EditableTextComponent::moveCursorToEnd(void)
+void EditableTextComponent::moveCaretToEnd(void)
 {
 	//Move the caret to the end
 	if(getText().size() != getCaretPosition())
@@ -318,7 +318,7 @@ void EditableTextComponent::moveCursorToEnd(void)
 	}
 }
 
-void EditableTextComponent::moveCursorToBegin(void)
+void EditableTextComponent::moveCaretToBegin(void)
 {
 	//Move the caret to the begining
 	if(0 != getCaretPosition())
@@ -334,7 +334,7 @@ void EditableTextComponent::overwriteSelection(const std::string& Text)
     //Delete selected text
     deleteSelectedText();
 
-    //Write to Cursor position
+    //Write to Caret position
     insert(Text, getCaretPosition());
 }
 
@@ -367,6 +367,7 @@ void EditableTextComponent::insert(const std::string& Text, UInt32 Position)
     beginEditCP(TextComponentPtr(this), EditableTextComponent::TextFieldMask);
 	    setText(getText().insert(Position, Text));
     endEditCP(TextComponentPtr(this), EditableTextComponent::TextFieldMask);
+    moveCaret(Text.size());
 }
 
 std::string EditableTextComponent::getSelection(void) const

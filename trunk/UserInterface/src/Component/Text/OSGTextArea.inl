@@ -53,6 +53,19 @@ TextArea::MouseDownListener::MouseDownListener(TextAreaPtr TheTextArea) :
 _TextArea(TheTextArea)
 {
 }
+
+inline
+std::string TextArea::getLine(UInt32 line) const
+{
+    return getText().substr(_LineContents[line]._StartPosition, _LineContents[line]._EndPosition-_LineContents[line]._StartPosition);
+}
+
+inline
+std::string TextArea::getWrappedLine(UInt32 line) const
+{
+    return getText().substr(_LineContents[line]._StartPosition, _LineContents[line]._EndPosition-_LineContents[line]._StartPosition+1);
+}
+
 OSG_END_NAMESPACE
 
 #define OSGTEXTAREA_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

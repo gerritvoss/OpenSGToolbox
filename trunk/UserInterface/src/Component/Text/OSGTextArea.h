@@ -87,12 +87,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 
     /*! \}                                                                 */
 	struct TextLine{
-		Int32 _StartPosition;
-		Int32 _EndPosition;
+		UInt32 _StartPosition;
+		UInt32 _EndPosition;
 		Real32 _VerticalOffset;
 		Real32 _LeftHorizontalOffset;
 		Real32 _RightHorizontalOffset;
-		std::string _Contents;
 	};
 
 	virtual void keyTyped(const KeyEvent& e);
@@ -116,6 +115,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 
 	virtual Int32 getCaretLine(void) const;
 	virtual UInt32 numLines(void) const;
+	virtual std::string getLine(UInt32 line) const;
+	virtual std::string getWrappedLine(UInt32 line) const;
 
 	virtual bool isLineVisible(const UInt32& line) const;
     virtual UInt32 numVisibleLines(void) const;
@@ -123,10 +124,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 	virtual void scrollToLine(const UInt32& line);
 
     
-    virtual void moveCursorToEndOfLine(void);
-    virtual void moveCursorToBeginOfLine(void);
+    virtual void moveCaretToEndOfLine(void);
+    virtual void moveCaretToBeginOfLine(void);
     
-    void moveCursorLine(Int32 delta);
+    void moveCaretLine(Int32 delta);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

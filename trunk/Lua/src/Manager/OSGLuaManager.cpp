@@ -53,7 +53,7 @@
 #include "OSGLuaManager.h"
 
 //This is the OSGBase wrapped module in Bindings/OSGBase_wrap.cpp
-extern "C" int luaopen_OSGBase(lua_State* L); // declare the wrapped module
+extern "C" int luaopen_OSG(lua_State* L); // declare the wrapped module
 
 OSG_BEGIN_NAMESPACE
 
@@ -98,7 +98,7 @@ LuaManager *LuaManager::the(void)
 void LuaManager::report_errors(lua_State *L, int status)
 {
   if ( status!=0 ) {
-    std::cerr << "-- " << lua_tostring(L, -1) << std::endl;
+    SWARNING << " Lua Error: " << lua_tostring(L, -1) << std::endl;
     lua_pop(L, 1); // remove error message
   }
 }
@@ -112,7 +112,7 @@ bool LuaManager::init(void)
     luaL_openlibs(_State); 
 
     //Load the OpenSG Bindings
-    luaopen_OSGBase(_State);
+    luaopen_OSG(_State);
 
     SLOG << "LuaManager Successfully Initialized." << std::endl;
     return true;

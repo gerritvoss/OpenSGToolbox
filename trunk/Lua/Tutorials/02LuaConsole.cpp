@@ -66,12 +66,6 @@ public:
        {
            LuaManager::the()->runScript(ExampleTextArea->getText());
        }
-       if(e.getKey() == KeyEvent::KEY_V && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-            beginEditCP(ExampleTextArea, TextArea::TextFieldMask);
-                ExampleTextArea->setText(TutorialWindowEventProducer->getClipboard());
-            endEditCP(ExampleTextArea, TextArea::TextFieldMask);
-       }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -129,7 +123,7 @@ int main(int argc, char **argv)
     ExampleTextArea = osg::TextArea::create();
 
     beginEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask);
-        ExampleTextArea->setPreferredSize(Vec2f(300, 200));
+        ExampleTextArea->setPreferredSize(Vec2f(600, 400));
         ExampleTextArea->setText("print(\"Hello World\")");
         ExampleTextArea->setMinSize(Vec2f(300, 200));
     endEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask);
@@ -168,7 +162,7 @@ int main(int argc, char **argv)
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);

@@ -1,10 +1,17 @@
-%module OSGBase
+%module OSG
 %{
+#include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGBaseFunctions.h>
 #include <OpenSG/OSGColor.h>
 #include <OpenSG/OSGVector.h>
 #include <OpenSG/OSGMatrix.h>
 #include <OpenSG/OSGQuaternion.h>
+#include <OpenSG/OSGTypeBase.h>
+#include <OpenSG/OSGDataType.h>
+#include <OpenSG/OSGTypeFactory.h>
+#include <OpenSG/OSGFieldType.h>
+#include <OpenSG/OSGField.h>
+#include <OpenSG/OSGFieldFactory.h>
 %}
 
 namespace osg {
@@ -19,13 +26,10 @@ namespace osg {
     typedef unsigned int  UInt32;
     typedef long    Int64;
     typedef unsigned long  UInt64;
+    typedef unsigned long  BitVector;
     typedef float      Real32;
     typedef double     Real64;
     typedef long double Real128;
-
-    Real32 osgrand(void);
-
-    void osgGetHostname(char *szBuffer, UInt32 uiSize);
 
 
     /******************************************************/
@@ -629,5 +633,149 @@ namespace osg {
     };
 
     %template(Quaternion) QuaternionBase<Real32>;
+    /******************************************************/
+    /*              TypeBase                              */
+    /******************************************************/
+    class TypeBase
+    {
+      public :
+        TypeBase(const Char8  *szName, 
+                 const Char8  *szParentName,
+                 const UInt32  uiNameSpace = 0);
+        virtual ~TypeBase(void);
+
+              UInt32    getId         (void) const;
+
+        const Char8    *getCName      (void) const;
+
+        const Char8    *getCParentName(void) const;
+
+              UInt32    getNameSpace  (void) const;
+
+        virtual bool isDerivedFrom(const TypeBase &other) const;
+
+        bool operator ==(const TypeBase &other) const;
+    };
+    /******************************************************/
+    /*              DataType                              */
+    /******************************************************/
+    class DataType : public TypeBase
+    {
+      public :
+        DataType(const Char8  *szName, 
+                 const Char8  *szParentName,
+                 const UInt32  uiNameSpace = 0);
+        virtual ~DataType(void);
+
+        bool operator ==(const DataType &other) const;
+    };
+    /******************************************************/
+    /*              TypeFactory                           */
+    /******************************************************/
+    class TypeFactory
+    {
+      public :
+        static TypeFactory *the(void);
+
+        UInt32    registerType  (      TypeBase *pType          );
+
+        UInt32    findTypeId    (const Char8    *szName,
+                                 const UInt32    uiNameSpace = 0);
+
+        TypeBase *findType      (      UInt32    uiTypeId       );
+        TypeBase *findType      (const Char8    *szName  ,
+                                 const UInt32    uiNameSpace = 0);
+
+
+        UInt32    getNumTypes   (      void                     );
+
+        void      writeTypeGraph(const Char8    *szFilename     );
+    protected:
+        TypeFactory(void);
+
+        virtual ~TypeFactory(void);
+
+    };
+    /******************************************************/
+    /*              Volumes                               */
+    /******************************************************/
+    /******************************************************/
+    /*              FieldType                             */
+    /******************************************************/
+    class FieldType : public DataType
+    {
+      public:
+        enum Cardinality 
+        { 
+            SINGLE_FIELD, 
+            MULTI_FIELD 
+        };
+
+
+        virtual ~FieldType(void);
+
+        const DataType    &getContentType(void) const;
+              Cardinality  getCardinality(void) const;
+
+              UInt32       getScanTypeId (void) const;
+    };
+    /******************************************************/
+    /*              Field                                 */
+    /******************************************************/
+    class Field
+    {
+      public:
+        virtual ~Field(void); 
+
+        virtual const FieldType              &getType       (void) const = 0;
+                const DataType               &getContentType(void) const;
+
+                      FieldType::Cardinality  getCardinality(void) const;
+
+        virtual       bool                    isEmpty       (void) const = 0;
+
+        virtual       UInt32                  getSize       (void) const = 0;
+
+        virtual void          pushValueByStr(const Char8       *str  )       = 0;
+        virtual std::string  &getValueByStr (      std::string &str  ) const = 0;
+
+        /*virtual std::string  &getValueByStr (      std::string &str,*/
+                                                   /*UInt32       index) const = 0;*/
+
+        virtual void setAbstrValue(const Field &obj) = 0;
+        virtual void dump(void) const = 0;
+
+
+      protected:
+
+        Field(void);
+        Field(const Field &source);
+    };
+    /******************************************************/
+    /*              FieldFactory                          */
+    /******************************************************/
+    class FieldFactory 
+    {
+      public:
+        virtual ~FieldFactory (void);
+
+        Field *createField(      UInt32  typeId);
+        Field *createField(const Char8  *szName);
+
+        static UInt32     getNFieldTypes  (void                );
+        
+        static FieldType *getFieldType    (      UInt32  typeId);
+        static FieldType *getFieldType    (const Char8  *szName);
+
+        const  Char8     *getFieldTypeName(UInt32 typeId       );
+
+        static FieldFactory &the(void);
+
+      protected:
+
+        FieldFactory (void);
+      private:
+        FieldFactory(const FieldFactory &source);
+    };
 }
 

@@ -97,14 +97,14 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 		    if(_LineContents[i]._StartPosition >= _TextSelectionEnd || _LineContents[i]._EndPosition <= _TextSelectionStart || _TextSelectionStart >= _TextSelectionEnd)
 		    {
 
-			    TheGraphics->drawText(Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset), _LineContents[i]._Contents, getFont(), TextColor, getOpacity());
+			    TheGraphics->drawText(Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset), getWrappedLine(i), getFont(), TextColor, getOpacity());
 		    }
 
 
 		    else if(_TextSelectionStart < _TextSelectionEnd) //if text is only on this line
 		    {
 			    Int32 StartSelection = 0;
-			    Int32 EndSelection = _LineContents[i]._Contents.size();
+			    Int32 EndSelection = getWrappedLine(i).size();
 			    if(_TextSelectionStart > _LineContents[i]._StartPosition)
 			    {
 				    StartSelection = _TextSelectionStart-_LineContents[i]._StartPosition;
@@ -120,7 +120,7 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 					    EndSelection = 0;
 				    }
 			    }
-			    std::string drawnText = _LineContents[i]._Contents;
+			    std::string drawnText = getWrappedLine(i);
 			    Pnt2f offset = Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
 			    TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), TextColor, getOpacity());//draw before selection text
 			    TheGraphics->drawRect(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selection rect
@@ -134,12 +134,12 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
         }
 
 		//draw Caret
-		if(getEnabled() && getEditable() && ((getCaretPosition() > _LineContents[i]._StartPosition && getCaretPosition() <= _LineContents[i]._EndPosition )||( getCaretPosition() == 0 && i == 0)) && _TextSelectionStart >= _TextSelectionEnd &&
+		if(getEnabled() && getEditable() && (getCaretPosition() >= _LineContents[i]._StartPosition && getCaretPosition() <= _LineContents[i]._EndPosition ) && _TextSelectionStart >= _TextSelectionEnd &&
 			 _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate() &&
 			 getFocused())
 		{
 			Pnt2f TempTopLeft, TempBottomRight;
-			getFont()->getBounds(_LineContents[i]._Contents.substr(0, getCaretPosition()-_LineContents[i]._StartPosition), TempTopLeft, TempBottomRight);
+			getFont()->getBounds(getWrappedLine(i).substr(0, getCaretPosition()-_LineContents[i]._StartPosition), TempTopLeft, TempBottomRight);
 			TheGraphics->drawLine(Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset),
 				Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset+TempBottomRight.y()),
 				.5, TextColor, getOpacity());
@@ -170,7 +170,7 @@ bool TextArea::isLineVisible(const UInt32& line) const
 	//Get the bounds of this line
 	Pnt2f TempTopLeft, TempBottomRight;
 	Vec2f Offset = Pnt2f(_LineContents[line]._LeftHorizontalOffset, _LineContents[line]._VerticalOffset);
-	getFont()->getBounds(_LineContents[line]._Contents, TempTopLeft, TempBottomRight);
+	getFont()->getBounds(getWrappedLine(line), TempTopLeft, TempBottomRight);
 
 	TempTopLeft = TempTopLeft + Offset;
 	TempBottomRight = TempBottomRight + Offset;
@@ -191,7 +191,7 @@ void TextArea::scrollToLine(const UInt32& line)
 		//Get the bounds of this line
 		Pnt2f TempTopLeft, TempBottomRight;
 		Vec2f Offset = Pnt2f(_LineContents[line]._LeftHorizontalOffset, _LineContents[line]._VerticalOffset);
-		getFont()->getBounds(_LineContents[line]._Contents, TempTopLeft, TempBottomRight);
+		getFont()->getBounds(getWrappedLine(line), TempTopLeft, TempBottomRight);
 
 		TempTopLeft = TempTopLeft + Offset;
 		TempBottomRight = TempBottomRight + Offset;
@@ -228,121 +228,82 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 	{
 		if(e.getKey() == e.KEY_ENTER)
 		{
-			beginEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
-				if(_TextSelectionStart < _TextSelectionEnd)
-				{
-					setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
-				}
-				setText(getText().insert(getCaretPosition(),"\n"));
-				setCaretPosition(getCaretPosition()+1);
-			endEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
-
+            if(hasSelection())
+            {
+                deleteSelectedText();
+                setCaretPosition(_TextSelectionStart+1);
+            }
+            insert(std::string( 1,'\n' ), _TextSelectionStart);
+            moveCaret(1);
+            _TextSelectionStart = getCaretPosition();
+            _TextSelectionEnd = _TextSelectionStart;
 		}
 	}
 
     switch(e.getKey())
     {
     case KeyEvent::KEY_HOME:
-        moveCursorToBeginOfLine();
+        moveCaretToBeginOfLine();
         break;
     case KeyEvent::KEY_END:
-        moveCursorToEndOfLine();
+        moveCaretToEndOfLine();
         break;
     case KeyEvent::KEY_UP:
     case KeyEvent::KEY_KEYPAD_UP:
-        moveCursorLine(-1);
+        moveCaretLine(-1);
         break;
     case KeyEvent::KEY_DOWN:
     case KeyEvent::KEY_KEYPAD_DOWN:
-        moveCursorLine(1);
+        moveCaretLine(1);
         break;
     case KeyEvent::KEY_PAGE_UP:
-        moveCursorLine(-static_cast<Int32>(numVisibleLines()));
+        moveCaretLine(-static_cast<Int32>(numVisibleLines()));
         break;
     case KeyEvent::KEY_PAGE_DOWN:
-        moveCursorLine(numVisibleLines());
+        moveCaretLine(numVisibleLines());
         break;
 	}
 	Inherited::keyTyped(e);
 }
 
-void TextArea::moveCursorLine(Int32 delta)
+void TextArea::moveCaretLine(Int32 delta)
 {
-    if(delta>0)
+    if(delta!=0)
     {
 	    Int32 OriginalPosition = getCaretPosition();
-	    Int32 LineSelector = _LineContents.size();
-	    for(Int32 i = 0; i < _LineContents.size(); i++)
-	    {
-		    if(getCaretPosition() <= _LineContents[i]._EndPosition && getCaretPosition() > _LineContents[i]._StartPosition)
-		    {
-			    LineSelector = i;
-			    break;
-		    }
-	    }
-	    if(LineSelector < _LineContents.size()-1)
-	    {
-		    Pnt2f TempTopLeft, TempBottomRight;
-		    getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0,getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
-		    beginEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
-			    setCaretPosition(findTextPosition(Pnt2f(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+delta]._VerticalOffset)));
-		    endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
-	    }
-	    if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
-		    && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-	    {
-		    if(OriginalPosition == _TextSelectionEnd)
-		    {
-			    _TextSelectionEnd = getCaretPosition();
-		    }
-		    else
-		    {
-			    _TextSelectionStart = getCaretPosition();
-		    }
-	    }
-	    else
-	    {
-		    _TextSelectionStart = getCaretPosition();
-		    _TextSelectionEnd = getCaretPosition();
-	    }
-    }
-    else if(delta<0)
-    {
-	    Int32 OriginalPosition = getCaretPosition();
-	    Int32 LineSelector = 0;
-	    for(Int32 i = 0; i < _LineContents.size(); i++)
-	    {
-		    if(getCaretPosition() <= _LineContents[i]._EndPosition && getCaretPosition() > _LineContents[i]._StartPosition)
-		    {
-			    LineSelector = i;
-			    break;
-		    }
-	    }
-	    if(LineSelector > 0)
-	    {
-		    Pnt2f TempTopLeft, TempBottomRight;
-		    getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0, getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
-		    beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
-			    setCaretPosition(findTextPosition(Pnt2f(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+delta]._VerticalOffset)));
-		    endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
-	    }
-	    if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
-		    && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-	    {
-		    if(OriginalPosition == _TextSelectionEnd && OriginalPosition != _TextSelectionStart)
-		    {
-			    _TextSelectionEnd = getCaretPosition();
-		    }
-		    else
-		    {
-			    _TextSelectionStart = getCaretPosition();
-		    }
-	    }
-	    else
-	    {
-		    _TextSelectionStart = getCaretPosition();
-		    _TextSelectionEnd = getCaretPosition();
-	    }
+	    Int32 OriginalLine = getCaretLine();
+
+	    Int32 NewLine = osgClamp<Int32>(0,OriginalLine+delta,numLines()-1);
+        
+        if(OriginalLine != NewLine)
+        {
+            Pnt2f TempTopLeft, TempBottomRight;
+            getFont()->getBounds(getWrappedLine(OriginalLine).substr(0,getCaretPosition()-_LineContents[OriginalLine]._StartPosition),TempTopLeft, TempBottomRight);
+            Int32 NewPosition(findTextPosition(Pnt2f(_LineContents[NewLine]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[NewLine]._VerticalOffset)));
+            if(OriginalPosition != NewPosition)
+            {
+                beginEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
+                    setCaretPosition(NewPosition);
+                endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
+            }
+            if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
+                && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+            {
+                if(OriginalPosition == _TextSelectionEnd)
+                {
+                    _TextSelectionEnd = getCaretPosition();
+                }
+                else
+                {
+                    _TextSelectionStart = getCaretPosition();
+                }
+            }
+            else
+            {
+                _TextSelectionStart = getCaretPosition();
+                _TextSelectionEnd = getCaretPosition();
+            }
+        }
     }
 }
 
@@ -358,7 +319,7 @@ UInt32 TextArea::numVisibleLines(void) const
     return static_cast<Int32>(ClipBottomRight.y() - ClipTopLeft.y())/static_cast<Int32>(BottomRight.y() - TopLeft.y());
 }
 
-void TextArea::moveCursorToEndOfLine(void)
+void TextArea::moveCaretToEndOfLine(void)
 {
 	//Move the caret to the end of the line
     Int32 CaretLine(getCaretLine());
@@ -372,7 +333,7 @@ void TextArea::moveCursorToEndOfLine(void)
 	}
 }
 
-void TextArea::moveCursorToBeginOfLine(void)
+void TextArea::moveCaretToBeginOfLine(void)
 {
 	//Move the caret to the beginning of the line
     Int32 CaretLine(getCaretLine());
@@ -498,36 +459,34 @@ void TextArea::mouseDraggedAfterArming(const MouseEvent& e)
 
 Int32 TextArea::findTextPosition(osg::Pnt2f Input)
 {
-	Int32 output = 0;
-	Int32 row = 0;
-	Int32 column = 0;
-	Pnt2f TempTopLeft,  TempBottomRight, TempTopLeft1,  TempBottomRight1;
-	Pnt2f offset;
 	//find row it belongs in
+	Int32 row(0);
 	for(Int32 i = 0; i < _LineContents.size(); ++i)
 	{
-		getFont()->getBounds(_LineContents[i]._Contents, TempTopLeft, TempBottomRight);
-		offset = Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
-		if(Input.y() >= offset.y())
+		if(Input.y() >= _LineContents[i]._VerticalOffset)
 		{
 			row = i;
 		}
 	}
 	//find column it belongs in
-	offset = Pnt2f(_LineContents[row]._LeftHorizontalOffset, _LineContents[row]._VerticalOffset);
-	for(Int32 i = 1; i <= _LineContents[row]._Contents.size(); ++i)
+	Int32 column(0);
+	Pnt2f TempTopLeft,  TempBottomRight, TempTopLeft1,  TempBottomRight1;
+    std::string Line(getWrappedLine(row));
+	for(Int32 i = 1; i <= Line.size(); ++i)
 	{
-		getFont()->getBounds(_LineContents[row]._Contents.substr(0, i), TempTopLeft, TempBottomRight);
-		getFont()->getBounds(_LineContents[row]._Contents.substr(0, i-1), TempTopLeft1, TempBottomRight1);
-		if(Input.x()> (TempBottomRight.x()-TempBottomRight1.x())/2.0+.5+TempBottomRight1.x()+offset.x())
+		getFont()->getBounds(Line.substr(0, i), TempTopLeft, TempBottomRight);
+		getFont()->getBounds(Line.substr(0, i-1), TempTopLeft1, TempBottomRight1);
+		if(Input.x()> (TempBottomRight.x()-TempBottomRight1.x())/2.0+.5+TempBottomRight1.x()+_LineContents[row]._LeftHorizontalOffset &&
+           Line[i-1] != '\n')
 		{
 			column = i;
 		}
 	}
 
+	Int32 output(0);
 	for(Int32 i = 0; i < row; ++i)
 	{
-		output+=_LineContents[i]._Contents.size();
+		output+=getWrappedLine(i).size();
 	}
 	output+=column;
 	return output;
@@ -630,118 +589,95 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
        whichField & SizeFieldMask) &&
 	   getFont() != NullFC)
     {
- 	    while( _LineContents.size()>0)
-	    {
-		    _LineContents.pop_back();
-	    }
+        _LineContents.clear();
 	    Pnt2f TopLeft, BottomRight, TempPos;
 	    Pnt2f TempTopLeft, TempBottomRight;
 	    Vec2f FullTextSize;
 	    getInsideBorderBounds(TopLeft, BottomRight);
-	    std::string temptext;
 	    Int32 XPosition = 0;
 	    Int32 YPosition = 0;
 	    Int32 Backtrack = 0;
 	    bool brokeAtWord = false;
 
 	    //take care of tabs
-	    temptext = getText();
-	    for(Int32 i = 0; i < temptext.size() ; i++)
-	    {
-		    if(temptext[i] == '\t')
-		    {
-				temptext[i] = ' ';
-			    //for(Int32 j = 0; j < getTabSize()-1; j++)
-			    //{
-				//    temptext.insert(i, " ");
-				//    i++;
-			    //}
-		    }
-	    }
 	    //Set the contents of the lines (assuming letter by letter go down right now (which is wrong))
 	    _LineContents.push_back(TextLine());
 	    _LineContents[0]._StartPosition = 0;
-	    for(Int32 i = 0; i < temptext.size(); ++i)
+	    for(Int32 i = 0; i < getText().size(); ++i)
 	    {
 
-		    while(temptext[i] == ' ')
-		    {
-			    i++;
-		    }
-		    getFont()->getBounds(getText().substr(XPosition, i-XPosition+1), TempTopLeft, TempBottomRight);
-		    if(temptext[i] == '\n')
+			//while(getText() == ' ')
+			//{
+				//i++;
+			//}
+			//getFont()->getBounds(getText().substr(XPosition, i-XPosition+1), TempTopLeft, TempBottomRight);
+		    if(getText()[i] == '\n')
 		    {
 			    XPosition = i;
 			    _LineContents[YPosition]._EndPosition = i;
-			    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
 			    _LineContents.push_back(TextLine());
 			    ++YPosition;
-			    _LineContents[YPosition]._StartPosition = i;
-
+			    _LineContents[YPosition]._StartPosition = _LineContents[YPosition-1]._EndPosition+1;
 		    }
-		    if(TempBottomRight.x() > BottomRight.x())
-		    {
-			    if(!getWrapStyleWord())
-			    {
-				    XPosition = i;
-				    _LineContents[YPosition]._EndPosition = i;
-				    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
-				    _LineContents.push_back(TextLine());
-				    ++YPosition;
-				    _LineContents[YPosition]._StartPosition = i;
-			    }
-			    else
-			    {
-				    Int32 j;
-				    brokeAtWord = false; 
-				    for(j = i; j > _LineContents[YPosition]._StartPosition; --j)
-				    {
-					    if(!isWordChar(getText()[j])&& !isPunctuationChar(getText()[j]))
-					    {
-						    brokeAtWord = true;
-						    break;
-					    }
-				    }
-				    if(!brokeAtWord)
-				    {
-					    XPosition = i;
-					    _LineContents[YPosition]._EndPosition = i;
-					    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
-					    _LineContents.push_back(TextLine());
-					    ++YPosition;
-					    _LineContents[YPosition]._StartPosition = i;
-				    }
-				    else
-				    {
-					    i = j;		
-					    while(temptext[i] == ' ')
-					    {
-						    i++;
-					    }
-					    XPosition = i;
-					    _LineContents[YPosition]._EndPosition = i;
-					    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
-					    _LineContents.push_back(TextLine());
-					    ++YPosition;
-					    _LineContents[YPosition]._StartPosition = i;
-				    }
-			    }
+			//if(TempBottomRight.x() > BottomRight.x())
+			//{
+				//if(!getWrapStyleWord())
+				//{
+					//XPosition = i;
+					//_LineContents[YPosition]._EndPosition = i;
+					//_LineContents.push_back(TextLine());
+					//++YPosition;
+					//_LineContents[YPosition]._StartPosition = i;
+				//}
+				//else
+				//{
+					//Int32 j;
+					//brokeAtWord = false; 
+					//for(j = i; j > _LineContents[YPosition]._StartPosition; --j)
+					//{
+						//if(!isWordChar(getText()[j])&& !isPunctuationChar(getText()[j]))
+						//{
+							//brokeAtWord = true;
+							//break;
+						//}
+					//}
+					//if(!brokeAtWord)
+					//{
+						//XPosition = i;
+						//_LineContents[YPosition]._EndPosition = i;
+						//_LineContents.push_back(TextLine());
+						//++YPosition;
+						//_LineContents[YPosition]._StartPosition = i;
+					//}
+					//else
+					//{
+						//i = j;		
+						//while(getText[i] == ' ')
+						//{
+							//i++;
+						//}
+						//XPosition = i;
+						//_LineContents[YPosition]._EndPosition = i;
+						//_LineContents.push_back(TextLine());
+						//++YPosition;
+						//_LineContents[YPosition]._StartPosition = i;
+					//}
+				//}
 
-		    }
+			//}
 	    }
-	    _LineContents[YPosition]._EndPosition = temptext.size();
-	    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+	    _LineContents[YPosition]._EndPosition = getText().size();
 
 	    //calculate offsets
 	    //begin with first line
-	    getFont()->getBounds(_LineContents[0]._Contents, TempTopLeft, TempBottomRight);
+	    getFont()->getBounds(getWrappedLine(0), TempTopLeft, TempBottomRight);
 	    FullTextSize.setValues(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
 	    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
 	    _LineContents[0]._LeftHorizontalOffset = TempPos.x();
 	    _LineContents[0]._VerticalOffset = TempPos.y();
 	    for(Int32 i = 1; i < _LineContents.size(); i++)
 	    {						
-		    getFont()->getBounds(_LineContents[i]._Contents, TempTopLeft, TempBottomRight);
+		    getFont()->getBounds(getWrappedLine(i), TempTopLeft, TempBottomRight);
 		    FullTextSize.setValues(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
 		    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
 		    _LineContents[i]._LeftHorizontalOffset = TempPos.x();
@@ -750,7 +686,7 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
         
         //Update my PreferredSize based on text
         Vec2f PreferredSize;
-		getFont()->getBounds(_LineContents.back()._Contents, TempTopLeft, TempBottomRight);
+		getFont()->getBounds(getWrappedLine(_LineContents.size()-1), TempTopLeft, TempBottomRight);
         PreferredSize[0] = getPreferredSize().x();
         PreferredSize[1] = osgMax<UInt32>(getMinSize().y(), _LineContents.back()._VerticalOffset + TempBottomRight.y());
         if(getPreferredSize() != PreferredSize)
