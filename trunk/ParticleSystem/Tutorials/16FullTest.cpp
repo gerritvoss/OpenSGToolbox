@@ -16,6 +16,8 @@
 #include <OpenSG/OSGBlendChunk.h>
 #include <OpenSG/OSGPointChunk.h>
 #include <OpenSG/OSGDepthChunk.h>
+#include <OpenSG/OSGLineChunk.h>
+#include <OpenSG/OSGPolygonChunk.h>
 #include <OpenSG/OSGChunkMaterial.h>
 #include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
@@ -224,6 +226,15 @@ int main(int argc, char **argv)
 		PSMaterial->addChunk(PSDepthChunk);
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
+	LineChunkPtr PSLineChunk = LineChunk::create();
+	ChunkMaterialPtr TestMaterial = ChunkMaterial::create();
+	beginEditCP(TestMaterial);
+		TestMaterial->addChunk(PointChunk::create());
+		TestMaterial->addChunk(LineChunk::create());
+		TestMaterial->addChunk(PolygonChunk::create());
+		TestMaterial->addChunk(BlendChunk::create());
+	endEditCP(TestMaterial);
+
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
 
@@ -306,7 +317,7 @@ int main(int argc, char **argv)
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
 		ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
-		ParticleNodeCore->setMaterial(PSMaterial);
+		ParticleNodeCore->setMaterial(TestMaterial);
 		ParticleNodeCore->setSortingMode(ParticleSystemCore::FRONT_TO_BACK);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 
