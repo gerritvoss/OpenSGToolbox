@@ -586,31 +586,31 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Materials\OSGPhongMaterial.cpp"
+					RelativePath="..\..\src\Materials\OSGPhong2Material.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Materials\OSGPhongMaterial.h"
+					RelativePath="..\..\src\Materials\OSGPhong2Material.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Materials\OSGPhongMaterial.inl"
+					RelativePath="..\..\src\Materials\OSGPhong2Material.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Materials\OSGPhongMaterialBase.cpp"
+					RelativePath="..\..\src\Materials\OSGPhong2MaterialBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Materials\OSGPhongMaterialBase.h"
+					RelativePath="..\..\src\Materials\OSGPhong2MaterialBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Materials\OSGPhongMaterialBase.inl"
+					RelativePath="..\..\src\Materials\OSGPhong2MaterialBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Materials\OSGPhongMaterialFields.h"
+					RelativePath="..\..\src\Materials\OSGPhong2MaterialFields.h"
 					>
 				</File>
 			</Filter>
