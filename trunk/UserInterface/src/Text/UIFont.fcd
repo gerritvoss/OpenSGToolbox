@@ -68,6 +68,15 @@ UI Font.
 	>
 	</Field>
 	<Field
+		name="AntiAliasing"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="Texture"
 		type="TextureChunkPtr"
 		cardinality="single"

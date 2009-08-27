@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,7 @@
 #include <OpenSG/OSGUInt32Fields.h> // Gap type
 #include <OpenSG/OSGUInt32Fields.h> // TextureWidth type
 #include <OpenSG/OSGUInt32Fields.h> // Style type
+#include <OpenSG/OSGBoolFields.h> // AntiAliasing type
 #include <OpenSG/OSGTextureChunkFields.h> // Texture type
 
 #include "OSGUIFontFields.h"
@@ -103,7 +104,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public FieldContainer
         GapFieldId            = SizeFieldId           + 1,
         TextureWidthFieldId   = GapFieldId            + 1,
         StyleFieldId          = TextureWidthFieldId   + 1,
-        TextureFieldId        = StyleFieldId          + 1,
+        AntiAliasingFieldId   = StyleFieldId          + 1,
+        TextureFieldId        = AntiAliasingFieldId   + 1,
         NextFieldId           = TextureFieldId        + 1
     };
 
@@ -113,6 +115,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public FieldContainer
     static const OSG::BitVector GapFieldMask;
     static const OSG::BitVector TextureWidthFieldMask;
     static const OSG::BitVector StyleFieldMask;
+    static const OSG::BitVector AntiAliasingFieldMask;
     static const OSG::BitVector TextureFieldMask;
 
 
@@ -140,28 +143,103 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public FieldContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFString            *getSFFamily         (void);
-           SFUInt32            *getSFGlyphPixelSize (void);
-           SFUInt32            *getSFSize           (void);
-           SFUInt32            *getSFGap            (void);
-           SFUInt32            *getSFTextureWidth   (void);
-           SFUInt32            *getSFStyle          (void);
-           SFTextureChunkPtr   *getSFTexture        (void);
 
-           std::string         &getFamily         (void);
+           SFString            *editSFFamily         (void);
+     const SFString            *getSFFamily         (void) const;
+#ifndef OSG_2_PREP
+           SFString            *getSFFamily         (void);
+#endif
+
+           SFUInt32            *editSFGlyphPixelSize (void);
+     const SFUInt32            *getSFGlyphPixelSize (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFGlyphPixelSize (void);
+#endif
+
+           SFUInt32            *editSFSize           (void);
+     const SFUInt32            *getSFSize           (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFSize           (void);
+#endif
+
+           SFUInt32            *editSFGap            (void);
+     const SFUInt32            *getSFGap            (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFGap            (void);
+#endif
+
+           SFUInt32            *editSFTextureWidth   (void);
+     const SFUInt32            *getSFTextureWidth   (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFTextureWidth   (void);
+#endif
+
+           SFUInt32            *editSFStyle          (void);
+     const SFUInt32            *getSFStyle          (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFStyle          (void);
+#endif
+
+           SFBool              *editSFAntiAliasing   (void);
+     const SFBool              *getSFAntiAliasing   (void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFAntiAliasing   (void);
+#endif
+
+           SFTextureChunkPtr   *editSFTexture        (void);
+     const SFTextureChunkPtr   *getSFTexture        (void) const;
+#ifndef OSG_2_PREP
+           SFTextureChunkPtr   *getSFTexture        (void);
+#endif
+
+
+           std::string         &editFamily         (void);
      const std::string         &getFamily         (void) const;
-           UInt32              &getGlyphPixelSize (void);
+#ifndef OSG_2_PREP
+           std::string         &getFamily         (void);
+#endif
+
+           UInt32              &editGlyphPixelSize (void);
      const UInt32              &getGlyphPixelSize (void) const;
-           UInt32              &getSize           (void);
+#ifndef OSG_2_PREP
+           UInt32              &getGlyphPixelSize (void);
+#endif
+
+           UInt32              &editSize           (void);
      const UInt32              &getSize           (void) const;
-           UInt32              &getGap            (void);
+#ifndef OSG_2_PREP
+           UInt32              &getSize           (void);
+#endif
+
+           UInt32              &editGap            (void);
      const UInt32              &getGap            (void) const;
-           UInt32              &getTextureWidth   (void);
+#ifndef OSG_2_PREP
+           UInt32              &getGap            (void);
+#endif
+
+           UInt32              &editTextureWidth   (void);
      const UInt32              &getTextureWidth   (void) const;
-           UInt32              &getStyle          (void);
+#ifndef OSG_2_PREP
+           UInt32              &getTextureWidth   (void);
+#endif
+
+           UInt32              &editStyle          (void);
      const UInt32              &getStyle          (void) const;
-           TextureChunkPtr     &getTexture        (void);
+#ifndef OSG_2_PREP
+           UInt32              &getStyle          (void);
+#endif
+
+           bool                &editAntiAliasing   (void);
+     const bool                &getAntiAliasing   (void) const;
+#ifndef OSG_2_PREP
+           bool                &getAntiAliasing   (void);
+#endif
+
+           TextureChunkPtr     &editTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
+#ifndef OSG_2_PREP
+           TextureChunkPtr     &getTexture        (void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -174,6 +252,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public FieldContainer
      void setGap            ( const UInt32 &value );
      void setTextureWidth   ( const UInt32 &value );
      void setStyle          ( const UInt32 &value );
+     void setAntiAliasing   ( const bool &value );
      void setTexture        ( const TextureChunkPtr &value );
 
     /*! \}                                                                 */
@@ -223,6 +302,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public FieldContainer
     SFUInt32            _sfGap;
     SFUInt32            _sfTextureWidth;
     SFUInt32            _sfStyle;
+    SFBool              _sfAntiAliasing;
     SFTextureChunkPtr   _sfTexture;
 
     /*! \}                                                                 */
@@ -300,7 +380,5 @@ typedef osgIF<UIFontBase::isNodeCore,
 typedef RefPtr<UIFontPtr> UIFontRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGUIFONTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGUIFONTBASE_H_ */

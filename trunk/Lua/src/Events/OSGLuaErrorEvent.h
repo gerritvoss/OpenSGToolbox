@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                          OpenSG Toolbox Physics                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala                                                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,24 +26,54 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGCOLLISIONEVENT_H_
+#define _OSGCOLLISIONEVENT_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGPhysicsDef.h"
+
+#include <OpenSG/Input/OSGEvent.h>
+
+#include "ODE/Geom/OSGPhysicsGeomFields.h"
 
 OSG_BEGIN_NAMESPACE
 
+class OSG_PHYSICSLIB_DLLMAPPING CollisionEvent : public Event
+{
+    /*=========================  PUBLIC  ===============================*/
+  public:
+      
+    CollisionEvent(FieldContainerPtr Source, Time TimeStamp, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+
+    const Pnt3f& getPosition(void) const;
+    const Vec3f& getNormal(void) const;
+    const Vec3f& getVelocity1(void) const;
+    const Vec3f& getVelocity2(void) const;
+    PhysicsGeomPtr getGeom1(void) const;
+    PhysicsGeomPtr getGeom2(void) const;
+    
+  protected:
+
+    Pnt3f _Position;
+    Vec3f _Normal;
+    PhysicsGeomPtr _Geom1, _Geom2;
+    Vec3f _Velocity1, _Velocity2;
+  
+  private:
+     static EventType _Type;
+    
+};
+
 OSG_END_NAMESPACE
 
+#include "OSGCollisionEvent.inl"
 
+#endif /* _OSGCOLLISIONEVENT_H_ */

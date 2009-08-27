@@ -221,114 +221,6 @@ void EditableTextComponent::setupCursor(void)
     }
 }
 
-void EditableTextComponent::moveCaret(Int32 delta)
-{
-    
-	UInt32 NewCaretPosition(getCaretPosition());
-    if(delta > 0)
-    {
-	    if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
-		    && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-	    {
-		    if(_TextSelectionEnd > _TextSelectionStart && _TextSelectionEnd < getText().size() && getCaretPosition()>_TextSelectionStart)
-		    {
-			    NewCaretPosition = getCaretPosition()+delta;
-			    _TextSelectionEnd=NewCaretPosition;
-		    }
-		    else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition() < getText().size())
-		    {
-			    NewCaretPosition = getCaretPosition()+delta;
-			    _TextSelectionStart = NewCaretPosition;
-		    }
-		    else if(getCaretPosition()< getText().size() && _TextSelectionEnd <=_TextSelectionStart )
-		    {
-			    _TextSelectionStart = NewCaretPosition;
-			    NewCaretPosition = getCaretPosition()+delta;
-			    _TextSelectionEnd = NewCaretPosition;
-		    }
-	    }
-	    else if(_TextSelectionEnd > _TextSelectionStart)
-	    {
-		    //Caret is now the end of the selection
-		    NewCaretPosition = _TextSelectionEnd;
-		    _TextSelectionStart = NewCaretPosition;
-	    }
-	    else if(getCaretPosition() < getText().size())
-	    {
-		    //increment the caret position
-		    NewCaretPosition = getCaretPosition()+delta;
-		    _TextSelectionStart = NewCaretPosition;
-		    _TextSelectionEnd = NewCaretPosition;
-	    }
-    }
-    else if(delta < 0)
-    {
-	    if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC
-		    && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-	    {
-		    if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size() && getCaretPosition()>_TextSelectionStart && getCaretPosition()>0)
-		    {
-			    NewCaretPosition = getCaretPosition()+delta;
-			    _TextSelectionEnd=NewCaretPosition;
-		    }
-		    else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition()>0)
-		    {
-			    NewCaretPosition = getCaretPosition()+delta;
-			    _TextSelectionStart = NewCaretPosition;
-		    }
-		    else if(_TextSelectionEnd <=_TextSelectionStart && getCaretPosition()>0 )
-		    {
-			    _TextSelectionEnd = NewCaretPosition;
-			    NewCaretPosition = getCaretPosition()+delta;
-			    _TextSelectionStart = NewCaretPosition;
-		    }
-	    }
-	    else if(_TextSelectionEnd > _TextSelectionStart)
-	    {
-		    //Caret is now the start of the selection
-		    NewCaretPosition = _TextSelectionStart;
-		    _TextSelectionEnd = NewCaretPosition;
-	    }
-	    else if(getCaretPosition() > 0)
-	    {
-		    //decrement the caret position
-		    NewCaretPosition = getCaretPosition()+delta;
-		    _TextSelectionStart = NewCaretPosition;
-		    _TextSelectionEnd = _TextSelectionStart;
-	    }
-    }
-    
-	
-	if(NewCaretPosition != getCaretPosition())
-	{
-		beginEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
-			setCaretPosition(NewCaretPosition);
-		endEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
-	}
-}
-
-void EditableTextComponent::moveCaretToEnd(void)
-{
-	//Move the caret to the end
-	if(getText().size() != getCaretPosition())
-	{
-		beginEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
-			setCaretPosition(getText().size());
-		endEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
-	}
-}
-
-void EditableTextComponent::moveCaretToBegin(void)
-{
-	//Move the caret to the begining
-	if(0 != getCaretPosition())
-	{
-		beginEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
-			setCaretPosition(0);
-		endEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
-	}
-}
-
 void EditableTextComponent::overwriteSelection(const std::string& Text)
 {
     //Delete selected text
@@ -338,62 +230,10 @@ void EditableTextComponent::overwriteSelection(const std::string& Text)
     insert(Text, getCaretPosition());
 }
 
-void EditableTextComponent::deleteSelectedText(void)
-{
-    if(hasSelection())
-    {
-	    //erase the selected portions
-	    setCaretPosition(_TextSelectionStart);
-        deleteRange(_TextSelectionStart, _TextSelectionEnd);
-	    _TextSelectionStart = getCaretPosition();
-	    _TextSelectionEnd = _TextSelectionStart;
-    }
-}
-
-void EditableTextComponent::deleteRange(UInt32 Start, UInt32 End)
-{
-    UInt32 ClampedStart = osgClamp<UInt32>(0, Start, osgMin<UInt32>(End,getText().size()));
-    UInt32 ClampedEnd = osgClamp<UInt32>(osgMax<UInt32>(Start,0), End, getText().size());
-    if(ClampedEnd-ClampedStart > 0)
-    {
-        beginEditCP(TextComponentPtr(this), EditableTextComponent::TextFieldMask);
-            setText(getText().erase(ClampedStart, ClampedEnd-ClampedStart));
-        endEditCP(TextComponentPtr(this), EditableTextComponent::TextFieldMask);
-    }
-}
-
-void EditableTextComponent::insert(const std::string& Text, UInt32 Position)
-{
-    beginEditCP(TextComponentPtr(this), EditableTextComponent::TextFieldMask);
-	    setText(getText().insert(Position, Text));
-    endEditCP(TextComponentPtr(this), EditableTextComponent::TextFieldMask);
-    moveCaret(Text.size());
-}
-
-std::string EditableTextComponent::getSelection(void) const
-{
-    std::string Result;
-    if(hasSelection())
-    {
-        Result = getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart);
-    }
-    return Result;
-}
-
 void EditableTextComponent::cut(void)
 {
     copy();
     deleteSelectedText();
-}
-
-void EditableTextComponent::copy(void) const
-{
-    if(getParentWindow() != NullFC && 
-        getParentWindow()->getDrawingSurface() != NullFC &&
-        getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
-    {
-        getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard(getSelection());
-    }
 }
 
 void EditableTextComponent::paste(void)
@@ -404,14 +244,6 @@ void EditableTextComponent::paste(void)
     {
         write(getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard());
     }
-}
-
-void EditableTextComponent::selectRange(UInt32 Start, UInt32 End)
-{
-    UInt32 ClampedStart = osgClamp<UInt32>(0, Start, osgMin<UInt32>(End,getText().size()));
-    UInt32 ClampedEnd = osgClamp<UInt32>(osgMax<UInt32>(Start,0), End, getText().size());
-    _TextSelectionStart = ClampedStart;
-    _TextSelectionEnd = ClampedEnd;
 }
 
 /*-------------------------------------------------------------------------*\

@@ -98,7 +98,7 @@ LuaManager *LuaManager::the(void)
 void LuaManager::report_errors(lua_State *L, int status)
 {
   if ( status!=0 ) {
-    SWARNING << " Lua Error: " << lua_tostring(L, -1) << std::endl;
+    SWARNING << "Lua Script Error: " << lua_tostring(L, -1) << std::endl;
     lua_pop(L, 1); // remove error message
   }
 }
@@ -108,10 +108,16 @@ bool LuaManager::init(void)
     SLOG << "LuaManager Initializing." << std::endl;
 
     _State = lua_open();
+    if(_State == NULL)
+    {
+        SWARNING << "Failed to create lua state." << std::endl;
+        return false;
+    }
 
     luaL_openlibs(_State); 
 
     //Load the OpenSG Bindings
+    SLOG << "LuaManager Loading OpenSG Bindings." << std::endl;
     luaopen_OSG(_State);
 
     SLOG << "LuaManager Successfully Initialized." << std::endl;
@@ -120,12 +126,20 @@ bool LuaManager::init(void)
 
 bool LuaManager::uninit(void)
 {
-    SLOG << "LuaManager Uninitializing." << std::endl;
+    if(_State != NULL)
+    {
+        SLOG << "LuaManager Uninitializing." << std::endl;
 
-    lua_close(_State);
+        lua_close(_State);
+        _State = NULL;
 
-    SLOG << "LuaManager Successfully Uninitialized." << std::endl;
-    return true;
+        SLOG << "LuaManager Successfully Uninitialized." << std::endl;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /***************************************************************************\

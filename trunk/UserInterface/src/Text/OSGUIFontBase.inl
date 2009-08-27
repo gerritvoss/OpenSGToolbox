@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,57 +98,192 @@ UIFontPtr UIFontBase::createEmpty(void)
 
 //! Get the UIFont::_sfFamily field.
 inline
-SFString *UIFontBase::getSFFamily(void)
+const SFString *UIFontBase::getSFFamily(void) const
 {
     return &_sfFamily;
 }
 
+//! Get the UIFont::_sfFamily field.
+inline
+SFString *UIFontBase::editSFFamily(void)
+{
+    return &_sfFamily;
+}
+
+#ifndef OSG_2_PREP
+//! Get the UIFont::_sfFamily field.
+inline
+SFString *UIFontBase::getSFFamily(void)
+{
+    return &_sfFamily;
+}
+#endif
+
+//! Get the UIFont::_sfGlyphPixelSize field.
+inline
+const SFUInt32 *UIFontBase::getSFGlyphPixelSize(void) const
+{
+    return &_sfGlyphPixelSize;
+}
+
+//! Get the UIFont::_sfGlyphPixelSize field.
+inline
+SFUInt32 *UIFontBase::editSFGlyphPixelSize(void)
+{
+    return &_sfGlyphPixelSize;
+}
+
+#ifndef OSG_2_PREP
 //! Get the UIFont::_sfGlyphPixelSize field.
 inline
 SFUInt32 *UIFontBase::getSFGlyphPixelSize(void)
 {
     return &_sfGlyphPixelSize;
 }
+#endif
 
+//! Get the UIFont::_sfSize field.
+inline
+const SFUInt32 *UIFontBase::getSFSize(void) const
+{
+    return &_sfSize;
+}
+
+//! Get the UIFont::_sfSize field.
+inline
+SFUInt32 *UIFontBase::editSFSize(void)
+{
+    return &_sfSize;
+}
+
+#ifndef OSG_2_PREP
 //! Get the UIFont::_sfSize field.
 inline
 SFUInt32 *UIFontBase::getSFSize(void)
 {
     return &_sfSize;
 }
+#endif
 
+//! Get the UIFont::_sfGap field.
+inline
+const SFUInt32 *UIFontBase::getSFGap(void) const
+{
+    return &_sfGap;
+}
+
+//! Get the UIFont::_sfGap field.
+inline
+SFUInt32 *UIFontBase::editSFGap(void)
+{
+    return &_sfGap;
+}
+
+#ifndef OSG_2_PREP
 //! Get the UIFont::_sfGap field.
 inline
 SFUInt32 *UIFontBase::getSFGap(void)
 {
     return &_sfGap;
 }
+#endif
 
+//! Get the UIFont::_sfTextureWidth field.
+inline
+const SFUInt32 *UIFontBase::getSFTextureWidth(void) const
+{
+    return &_sfTextureWidth;
+}
+
+//! Get the UIFont::_sfTextureWidth field.
+inline
+SFUInt32 *UIFontBase::editSFTextureWidth(void)
+{
+    return &_sfTextureWidth;
+}
+
+#ifndef OSG_2_PREP
 //! Get the UIFont::_sfTextureWidth field.
 inline
 SFUInt32 *UIFontBase::getSFTextureWidth(void)
 {
     return &_sfTextureWidth;
 }
+#endif
 
+//! Get the UIFont::_sfStyle field.
+inline
+const SFUInt32 *UIFontBase::getSFStyle(void) const
+{
+    return &_sfStyle;
+}
+
+//! Get the UIFont::_sfStyle field.
+inline
+SFUInt32 *UIFontBase::editSFStyle(void)
+{
+    return &_sfStyle;
+}
+
+#ifndef OSG_2_PREP
 //! Get the UIFont::_sfStyle field.
 inline
 SFUInt32 *UIFontBase::getSFStyle(void)
 {
     return &_sfStyle;
 }
+#endif
 
+//! Get the UIFont::_sfAntiAliasing field.
+inline
+const SFBool *UIFontBase::getSFAntiAliasing(void) const
+{
+    return &_sfAntiAliasing;
+}
+
+//! Get the UIFont::_sfAntiAliasing field.
+inline
+SFBool *UIFontBase::editSFAntiAliasing(void)
+{
+    return &_sfAntiAliasing;
+}
+
+#ifndef OSG_2_PREP
+//! Get the UIFont::_sfAntiAliasing field.
+inline
+SFBool *UIFontBase::getSFAntiAliasing(void)
+{
+    return &_sfAntiAliasing;
+}
+#endif
+
+//! Get the UIFont::_sfTexture field.
+inline
+const SFTextureChunkPtr *UIFontBase::getSFTexture(void) const
+{
+    return &_sfTexture;
+}
+
+//! Get the UIFont::_sfTexture field.
+inline
+SFTextureChunkPtr *UIFontBase::editSFTexture(void)
+{
+    return &_sfTexture;
+}
+
+#ifndef OSG_2_PREP
 //! Get the UIFont::_sfTexture field.
 inline
 SFTextureChunkPtr *UIFontBase::getSFTexture(void)
 {
     return &_sfTexture;
 }
+#endif
 
 
 //! Get the value of the UIFont::_sfFamily field.
 inline
-std::string &UIFontBase::getFamily(void)
+std::string &UIFontBase::editFamily(void)
 {
     return _sfFamily.getValue();
 }
@@ -160,6 +295,15 @@ const std::string &UIFontBase::getFamily(void) const
     return _sfFamily.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the UIFont::_sfFamily field.
+inline
+std::string &UIFontBase::getFamily(void)
+{
+    return _sfFamily.getValue();
+}
+#endif
+
 //! Set the value of the UIFont::_sfFamily field.
 inline
 void UIFontBase::setFamily(const std::string &value)
@@ -169,7 +313,7 @@ void UIFontBase::setFamily(const std::string &value)
 
 //! Get the value of the UIFont::_sfGlyphPixelSize field.
 inline
-UInt32 &UIFontBase::getGlyphPixelSize(void)
+UInt32 &UIFontBase::editGlyphPixelSize(void)
 {
     return _sfGlyphPixelSize.getValue();
 }
@@ -181,6 +325,15 @@ const UInt32 &UIFontBase::getGlyphPixelSize(void) const
     return _sfGlyphPixelSize.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the UIFont::_sfGlyphPixelSize field.
+inline
+UInt32 &UIFontBase::getGlyphPixelSize(void)
+{
+    return _sfGlyphPixelSize.getValue();
+}
+#endif
+
 //! Set the value of the UIFont::_sfGlyphPixelSize field.
 inline
 void UIFontBase::setGlyphPixelSize(const UInt32 &value)
@@ -190,7 +343,7 @@ void UIFontBase::setGlyphPixelSize(const UInt32 &value)
 
 //! Get the value of the UIFont::_sfSize field.
 inline
-UInt32 &UIFontBase::getSize(void)
+UInt32 &UIFontBase::editSize(void)
 {
     return _sfSize.getValue();
 }
@@ -202,6 +355,15 @@ const UInt32 &UIFontBase::getSize(void) const
     return _sfSize.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the UIFont::_sfSize field.
+inline
+UInt32 &UIFontBase::getSize(void)
+{
+    return _sfSize.getValue();
+}
+#endif
+
 //! Set the value of the UIFont::_sfSize field.
 inline
 void UIFontBase::setSize(const UInt32 &value)
@@ -211,7 +373,7 @@ void UIFontBase::setSize(const UInt32 &value)
 
 //! Get the value of the UIFont::_sfGap field.
 inline
-UInt32 &UIFontBase::getGap(void)
+UInt32 &UIFontBase::editGap(void)
 {
     return _sfGap.getValue();
 }
@@ -223,6 +385,15 @@ const UInt32 &UIFontBase::getGap(void) const
     return _sfGap.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the UIFont::_sfGap field.
+inline
+UInt32 &UIFontBase::getGap(void)
+{
+    return _sfGap.getValue();
+}
+#endif
+
 //! Set the value of the UIFont::_sfGap field.
 inline
 void UIFontBase::setGap(const UInt32 &value)
@@ -232,7 +403,7 @@ void UIFontBase::setGap(const UInt32 &value)
 
 //! Get the value of the UIFont::_sfTextureWidth field.
 inline
-UInt32 &UIFontBase::getTextureWidth(void)
+UInt32 &UIFontBase::editTextureWidth(void)
 {
     return _sfTextureWidth.getValue();
 }
@@ -244,6 +415,15 @@ const UInt32 &UIFontBase::getTextureWidth(void) const
     return _sfTextureWidth.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the UIFont::_sfTextureWidth field.
+inline
+UInt32 &UIFontBase::getTextureWidth(void)
+{
+    return _sfTextureWidth.getValue();
+}
+#endif
+
 //! Set the value of the UIFont::_sfTextureWidth field.
 inline
 void UIFontBase::setTextureWidth(const UInt32 &value)
@@ -253,7 +433,7 @@ void UIFontBase::setTextureWidth(const UInt32 &value)
 
 //! Get the value of the UIFont::_sfStyle field.
 inline
-UInt32 &UIFontBase::getStyle(void)
+UInt32 &UIFontBase::editStyle(void)
 {
     return _sfStyle.getValue();
 }
@@ -265,6 +445,15 @@ const UInt32 &UIFontBase::getStyle(void) const
     return _sfStyle.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the UIFont::_sfStyle field.
+inline
+UInt32 &UIFontBase::getStyle(void)
+{
+    return _sfStyle.getValue();
+}
+#endif
+
 //! Set the value of the UIFont::_sfStyle field.
 inline
 void UIFontBase::setStyle(const UInt32 &value)
@@ -272,9 +461,39 @@ void UIFontBase::setStyle(const UInt32 &value)
     _sfStyle.setValue(value);
 }
 
+//! Get the value of the UIFont::_sfAntiAliasing field.
+inline
+bool &UIFontBase::editAntiAliasing(void)
+{
+    return _sfAntiAliasing.getValue();
+}
+
+//! Get the value of the UIFont::_sfAntiAliasing field.
+inline
+const bool &UIFontBase::getAntiAliasing(void) const
+{
+    return _sfAntiAliasing.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the UIFont::_sfAntiAliasing field.
+inline
+bool &UIFontBase::getAntiAliasing(void)
+{
+    return _sfAntiAliasing.getValue();
+}
+#endif
+
+//! Set the value of the UIFont::_sfAntiAliasing field.
+inline
+void UIFontBase::setAntiAliasing(const bool &value)
+{
+    _sfAntiAliasing.setValue(value);
+}
+
 //! Get the value of the UIFont::_sfTexture field.
 inline
-TextureChunkPtr &UIFontBase::getTexture(void)
+TextureChunkPtr &UIFontBase::editTexture(void)
 {
     return _sfTexture.getValue();
 }
@@ -286,6 +505,15 @@ const TextureChunkPtr &UIFontBase::getTexture(void) const
     return _sfTexture.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the UIFont::_sfTexture field.
+inline
+TextureChunkPtr &UIFontBase::getTexture(void)
+{
+    return _sfTexture.getValue();
+}
+#endif
+
 //! Set the value of the UIFont::_sfTexture field.
 inline
 void UIFontBase::setTexture(const TextureChunkPtr &value)
@@ -295,6 +523,4 @@ void UIFontBase::setTexture(const TextureChunkPtr &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGUIFONTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -37,6 +37,9 @@
 //Lua Manager
 #include <OpenSG/Lua/OSGLuaManager.h>
 
+#include <boost/filesystem.hpp>
+#include <sstream>
+
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -87,6 +90,81 @@ public:
    }
 };
 
+
+class ClearScriptButtonAction : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+   {
+       ExampleTextArea->selectAll();
+       ExampleTextArea->deleteSelectedText();
+   }
+};
+
+
+class SaveScriptButtonAction : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+   {
+		std::vector<WindowEventProducer::FileDialogFilter> Filters;
+        Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","lua"));
+        Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
+
+		Path SavePath = TutorialWindowEventProducer->saveFileDialog("Save Lua Script to?",
+			Filters,
+			std::string("LuaScript.lua"),
+			Path("."),
+			true);
+        
+        //Try to write the file
+        std::ofstream OutFile(SavePath.string().c_str());
+        if(OutFile)
+        {
+            OutFile << ExampleTextArea->getText();
+            OutFile.close();
+        }
+   }
+};
+
+
+class OpenScriptButtonAction : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+   {
+        //Get a file using the open file dialog
+        std::vector<WindowEventProducer::FileDialogFilter> Filters;
+        Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
+
+		std::vector<Path> FilesToOpen;
+		FilesToOpen = TutorialWindowEventProducer->openFileDialog("Open Lua Script File.",
+			Filters,
+			Path("."),
+			false);
+
+        //Try to open the file
+        if(FilesToOpen.size() > 0 &&
+            boost::filesystem::exists(FilesToOpen.front()))
+        {
+            std::ifstream InFile(FilesToOpen.front().string().c_str());
+            if(InFile)
+            {
+                std::ostringstream InStrStream;
+                InStrStream << InFile.rdbuf();
+                InFile.close();
+                //Set the Text of the TextArea to the text of the file
+                beginEditCP(ExampleTextArea, TextArea::TextFieldMask);
+                    ExampleTextArea->setText(InStrStream.str());
+                endEditCP(ExampleTextArea, TextArea::TextFieldMask);
+            }
+        }
+   }
+};
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -119,14 +197,23 @@ int main(int argc, char **argv)
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
+    //Create the default font
+    UIFontPtr CodeFont = osg::UIFont::create();
+    beginEditCP(CodeFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::AntiAliasingFieldMask);
+        CodeFont->setFamily("Courier New");
+        CodeFont->setSize(18);
+        CodeFont->setAntiAliasing(true);
+    endEditCP(CodeFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::AntiAliasingFieldMask);
+
     // Create a TextArea component
     ExampleTextArea = osg::TextArea::create();
 
-    beginEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask);
-        ExampleTextArea->setPreferredSize(Vec2f(600, 400));
+    beginEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+        ExampleTextArea->setPreferredSize(Vec2f(800, 600));
         ExampleTextArea->setText("print(\"Hello World\")");
         ExampleTextArea->setMinSize(Vec2f(300, 200));
-    endEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask);
+        ExampleTextArea->setFont(CodeFont);
+    endEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
         
     // Create a ScrollPanel
     ScrollPanelPtr TextAreaScrollPanel = ScrollPanel::create();
@@ -152,6 +239,27 @@ int main(int argc, char **argv)
     endEditCP(ExecuteButton);
     ExecuteScriptButtonAction TheExecuteScriptButtonAction;
     ExecuteButton->addActionListener(&TheExecuteScriptButtonAction);
+    
+    ButtonPtr OpenButton = Button::create();
+    beginEditCP(OpenButton);
+        OpenButton->setText("Open");
+    endEditCP(OpenButton);
+    OpenScriptButtonAction TheOpenScriptButtonAction;
+    OpenButton->addActionListener(&TheOpenScriptButtonAction);
+    
+    ButtonPtr SaveButton = Button::create();
+    beginEditCP(SaveButton);
+        SaveButton->setText("Save");
+    endEditCP(SaveButton);
+    SaveScriptButtonAction TheSaveScriptButtonAction;
+    SaveButton->addActionListener(&TheSaveScriptButtonAction);
+    
+    ButtonPtr ClearButton = Button::create();
+    beginEditCP(ClearButton);
+        ClearButton->setText("Clear");
+    endEditCP(ClearButton);
+    ClearScriptButtonAction TheClearScriptButtonAction;
+    ClearButton->addActionListener(&TheClearScriptButtonAction);
 
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 
@@ -159,6 +267,9 @@ int main(int argc, char **argv)
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(TextAreaScrollPanel);
        MainInternalWindow->getChildren().push_back(ExecuteButton);
+       MainInternalWindow->getChildren().push_back(OpenButton);
+       MainInternalWindow->getChildren().push_back(SaveButton);
+       MainInternalWindow->getChildren().push_back(ClearButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));

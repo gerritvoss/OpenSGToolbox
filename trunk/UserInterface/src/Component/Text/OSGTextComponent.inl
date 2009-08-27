@@ -57,6 +57,31 @@ void TextComponent::removeTextListener(TextListenerPtr Listener)
       _TextListeners.erase(EraseIter);
    }
 }
+
+inline
+bool TextComponent::hasSelection(void) const
+{
+    return _TextSelectionEnd > _TextSelectionStart;
+}
+
+inline
+void TextComponent::selectAll(void)
+{
+    select(0, getText().size());
+}
+
+inline
+void TextComponent::setSelectionStart(const UInt32& index)
+{
+    select(index,_TextSelectionEnd);
+}
+
+inline
+void TextComponent::setSelectionEnd(const UInt32& index)
+{
+    select(_TextSelectionStart,index);
+}
+
 OSG_END_NAMESPACE
 
 #define OSGTEXTCOMPONENT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

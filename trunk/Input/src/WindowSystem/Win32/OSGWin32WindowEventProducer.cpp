@@ -156,13 +156,32 @@ void  Win32WindowEventProducer::mainLoop(void)
 
 std::string Win32WindowEventProducer::getClipboard(void) const
 {
-	//TODO:Implement
-	return std::string("");
+	if(OpenClipboard(WIN32Window::Ptr::dcast(getWindow())->getHwnd()))
+	{
+        // Try to open the clipboard
+        std::string Content;
+		if(IsClipboardFormatAvailable(CF_TEXT))
+		{
+            HANDLE h = GetClipboardData(CF_TEXT);
+             if (h)
+             {
+                const char * buf = (const char *)::GlobalLock(h);
+                Content = buf;
+                if (!Content.empty())
+                   ::GlobalUnlock(h);
+             }
+		}
+		CloseClipboard();
+	    return Content;
+	}
+    else
+    {
+	    return std::string("");
+    }
 }
 
 void Win32WindowEventProducer::putClipboard(const std::string Value)
 {
-	//TODO:Implement
 	if(OpenClipboard(WIN32Window::Ptr::dcast(getWindow())->getHwnd()))
 	{
 		if(EmptyClipboard())

@@ -87,15 +87,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
 	
 	virtual void keyTyped(const KeyEvent& e);
 
-	virtual void select(const UInt32& index1,
-						const UInt32& index2);
+    bool hasSelection(void) const;
+	virtual void select(const UInt32& Start,
+						const UInt32& End);
 	virtual void selectAll(void);
 	virtual void setSelectionStart(const UInt32& index);
 	virtual void setSelectionEnd(const UInt32& index);
 	virtual std::string getSelectedText(void)const;
+    
+    void clear(void);
+    void deleteSelectedText(void);
+    void deleteRange(UInt32 Start, UInt32 End);
+    void insert(const std::string& Text, UInt32 Position);
+    
+
+    void moveCaret(Int32 delta);
+    void moveCaretToEnd(void);
+    void moveCaretToBegin(void);
 
     static const OSG::BitVector TextColorsFieldMask;
 	virtual void setTextColors(const Color4f& TheColor);
+    
+
+    void copy(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

@@ -234,7 +234,7 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
                 setCaretPosition(_TextSelectionStart+1);
             }
             insert(std::string( 1,'\n' ), _TextSelectionStart);
-            moveCaret(1);
+            //moveCaret(1);
             _TextSelectionStart = getCaretPosition();
             _TextSelectionEnd = _TextSelectionStart;
 		}

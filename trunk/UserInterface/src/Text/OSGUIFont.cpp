@@ -102,10 +102,16 @@ void UIFont::initText(void)
             getTexture()->setImage(image);
             getTexture()->setWrapS(GL_CLAMP);
             getTexture()->setWrapT(GL_CLAMP);
-            getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
-            getTexture()->setMagFilter(GL_LINEAR);
-            //getTexture()->setMinFilter(GL_NEAREST);
-            //getTexture()->setMagFilter(GL_NEAREST);
+            if(getAntiAliasing())
+            {
+                getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+                getTexture()->setMagFilter(GL_LINEAR);
+            }
+            else
+            {
+                getTexture()->setMinFilter(GL_NEAREST);
+                getTexture()->setMagFilter(GL_NEAREST);
+            }
             getTexture()->setEnvMode(GL_MODULATE);
       }
       endEditCP(getTexture());
@@ -221,6 +227,22 @@ void UIFont::changed(BitVector whichField, UInt32 origin)
     {
         initText();
     }
+    if((whichField & AntiAliasingFieldMask) &&
+        getTexture() != NullFC)
+    {
+        beginEditCP(getTexture(), TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask);
+            if(getAntiAliasing())
+            {
+                getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+                getTexture()->setMagFilter(GL_LINEAR);
+            }
+            else
+            {
+                getTexture()->setMinFilter(GL_NEAREST);
+                getTexture()->setMagFilter(GL_NEAREST);
+            }
+        endEditCP(getTexture(), TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask);
+    }
 }
 
 void UIFont::dump(      UInt32    , 
@@ -228,31 +250,6 @@ void UIFont::dump(      UInt32    ,
 {
     SLOG << "Dump UIFont NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIFONTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIFONTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIFONTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

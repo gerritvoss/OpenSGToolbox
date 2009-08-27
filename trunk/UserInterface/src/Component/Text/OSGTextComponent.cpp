@@ -152,6 +152,185 @@ Color4f TextComponent::getDrawnTextColor(void) const
         return getDisabledTextColor();
     }
 }
+
+void TextComponent::deleteSelectedText(void)
+{
+    if(hasSelection())
+    {
+	    //erase the selected portions
+	    setCaretPosition(_TextSelectionStart);
+        deleteRange(_TextSelectionStart, _TextSelectionEnd);
+	    _TextSelectionStart = getCaretPosition();
+	    _TextSelectionEnd = _TextSelectionStart;
+    }
+}
+
+void TextComponent::deleteRange(UInt32 Start, UInt32 End)
+{
+    UInt32 ClampedStart = osgClamp<UInt32>(0, Start, osgMin<UInt32>(End,getText().size()));
+    UInt32 ClampedEnd = osgClamp<UInt32>(osgMax<UInt32>(Start,0), End, getText().size());
+    if(ClampedEnd-ClampedStart > 0)
+    {
+        beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
+            setText(getText().erase(ClampedStart, ClampedEnd-ClampedStart));
+        endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
+    }
+}
+
+void TextComponent::clear(void)
+{
+    beginEditCP(TextComponentPtr(this),TextFieldMask);
+        setText("");
+    endEditCP(TextComponentPtr(this),TextFieldMask);
+}
+
+void TextComponent::insert(const std::string& Text, UInt32 Position)
+{
+    beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
+	    setText(getText().insert(Position, Text));
+    endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
+    moveCaret(Text.size());
+}
+
+void TextComponent::moveCaret(Int32 delta)
+{
+    
+	UInt32 NewCaretPosition(getCaretPosition());
+    if(delta > 0)
+    {
+	    if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
+		    && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+	    {
+		    if(_TextSelectionEnd > _TextSelectionStart && _TextSelectionEnd < getText().size() && getCaretPosition()>_TextSelectionStart)
+		    {
+			    NewCaretPosition = getCaretPosition()+delta;
+			    _TextSelectionEnd=NewCaretPosition;
+		    }
+		    else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition() < getText().size())
+		    {
+			    NewCaretPosition = getCaretPosition()+delta;
+			    _TextSelectionStart = NewCaretPosition;
+		    }
+		    else if(getCaretPosition()< getText().size() && _TextSelectionEnd <=_TextSelectionStart )
+		    {
+			    _TextSelectionStart = NewCaretPosition;
+			    NewCaretPosition = getCaretPosition()+delta;
+			    _TextSelectionEnd = NewCaretPosition;
+		    }
+	    }
+	    else if(_TextSelectionEnd > _TextSelectionStart)
+	    {
+		    //Caret is now the end of the selection
+		    NewCaretPosition = _TextSelectionEnd;
+		    _TextSelectionStart = NewCaretPosition;
+	    }
+	    else if(getCaretPosition() < getText().size())
+	    {
+		    //increment the caret position
+		    NewCaretPosition = getCaretPosition()+delta;
+		    _TextSelectionStart = NewCaretPosition;
+		    _TextSelectionEnd = NewCaretPosition;
+	    }
+    }
+    else if(delta < 0)
+    {
+	    if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC
+		    && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+	    {
+		    if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size() && getCaretPosition()>_TextSelectionStart && getCaretPosition()>0)
+		    {
+			    NewCaretPosition = getCaretPosition()+delta;
+			    _TextSelectionEnd=NewCaretPosition;
+		    }
+		    else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition()>0)
+		    {
+			    NewCaretPosition = getCaretPosition()+delta;
+			    _TextSelectionStart = NewCaretPosition;
+		    }
+		    else if(_TextSelectionEnd <=_TextSelectionStart && getCaretPosition()>0 )
+		    {
+			    _TextSelectionEnd = NewCaretPosition;
+			    NewCaretPosition = getCaretPosition()+delta;
+			    _TextSelectionStart = NewCaretPosition;
+		    }
+	    }
+	    else if(_TextSelectionEnd > _TextSelectionStart)
+	    {
+		    //Caret is now the start of the selection
+		    NewCaretPosition = _TextSelectionStart;
+		    _TextSelectionEnd = NewCaretPosition;
+	    }
+	    else if(getCaretPosition() > 0)
+	    {
+		    //decrement the caret position
+		    NewCaretPosition = getCaretPosition()+delta;
+		    _TextSelectionStart = NewCaretPosition;
+		    _TextSelectionEnd = _TextSelectionStart;
+	    }
+    }
+    
+	
+	if(NewCaretPosition != getCaretPosition())
+	{
+		beginEditCP(TextComponentPtr(this), CaretPositionFieldMask);
+			setCaretPosition(NewCaretPosition);
+		endEditCP(TextComponentPtr(this), CaretPositionFieldMask);
+	}
+}
+
+void TextComponent::moveCaretToEnd(void)
+{
+	//Move the caret to the end
+	if(getText().size() != getCaretPosition())
+	{
+		beginEditCP(TextComponentPtr(this), CaretPositionFieldMask);
+			setCaretPosition(getText().size());
+		endEditCP(TextComponentPtr(this), CaretPositionFieldMask);
+	}
+}
+
+void TextComponent::moveCaretToBegin(void)
+{
+	//Move the caret to the begining
+	if(0 != getCaretPosition())
+	{
+		beginEditCP(TextComponentPtr(this), CaretPositionFieldMask);
+			setCaretPosition(0);
+		endEditCP(TextComponentPtr(this), CaretPositionFieldMask);
+	}
+}
+
+void TextComponent::copy(void) const
+{
+    if(getParentWindow() != NullFC && 
+        getParentWindow()->getDrawingSurface() != NullFC &&
+        getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+        getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard(getSelectedText());
+    }
+}
+
+void TextComponent::select(const UInt32& Start,
+						const UInt32& End)
+{
+    UInt32 ClampedStart = osgClamp<UInt32>(0, Start, osgMin<UInt32>(End,getText().size()));
+    UInt32 ClampedEnd = osgClamp<UInt32>(osgMax<UInt32>(Start,0), End, getText().size());
+    _TextSelectionStart = ClampedStart;
+    _TextSelectionEnd = ClampedEnd;
+}
+
+std::string TextComponent::getSelectedText(void) const
+{
+    if(hasSelection())
+    {
+        return getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart);
+    }
+    else
+    {
+        return std::string("");
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -213,53 +392,6 @@ void TextComponent::dump(      UInt32    ,
 {
     SLOG << "Dump TextComponent NI" << std::endl;
 }
-
-void TextComponent::select(const UInt32& index1,
-						const UInt32& index2)
-{
-}
-
-void TextComponent::selectAll(void)
-{
-	_TextSelectionStart = 0;
-	_TextSelectionEnd = getText().size();
-}
-
-void TextComponent::setSelectionStart(const UInt32& index)
-{
-	if(index < getText().size())
-	{
-		_TextSelectionStart = index;
-	}
-	else
-	{
-		_TextSelectionStart = getText().size();
-	}
-}
-void TextComponent::setSelectionEnd(const UInt32& index)
-{
-	if(index < getText().size())
-	{
-		_TextSelectionEnd = index;
-	}
-	else
-	{
-		_TextSelectionEnd = getText().size();
-	}
-}
-
-std::string TextComponent::getSelectedText(void) const
-{
-	if(_TextSelectionEnd<getText().size())
-	{
-		return getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart);
-	}
-	else
-	{
-		return getText().substr(_TextSelectionStart);
-	}
-}
-
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

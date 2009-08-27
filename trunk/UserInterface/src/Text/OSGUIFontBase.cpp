@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -83,6 +83,9 @@ const OSG::BitVector  UIFontBase::TextureWidthFieldMask =
 const OSG::BitVector  UIFontBase::StyleFieldMask = 
     (TypeTraits<BitVector>::One << UIFontBase::StyleFieldId);
 
+const OSG::BitVector  UIFontBase::AntiAliasingFieldMask = 
+    (TypeTraits<BitVector>::One << UIFontBase::AntiAliasingFieldId);
+
 const OSG::BitVector  UIFontBase::TextureFieldMask = 
     (TypeTraits<BitVector>::One << UIFontBase::TextureFieldId);
 
@@ -111,6 +114,9 @@ const OSG::BitVector UIFontBase::MTInfluenceMask =
 /*! \var UInt32          UIFontBase::_sfStyle
     
 */
+/*! \var bool            UIFontBase::_sfAntiAliasing
+    
+*/
 /*! \var TextureChunkPtr UIFontBase::_sfTexture
     
 */
@@ -123,37 +129,42 @@ FieldDescription *UIFontBase::_desc[] =
                      "Family", 
                      FamilyFieldId, FamilyFieldMask,
                      false,
-                     (FieldAccessMethod) &UIFontBase::getSFFamily),
+                     reinterpret_cast<FieldAccessMethod>(&UIFontBase::editSFFamily)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "GlyphPixelSize", 
                      GlyphPixelSizeFieldId, GlyphPixelSizeFieldMask,
                      false,
-                     (FieldAccessMethod) &UIFontBase::getSFGlyphPixelSize),
+                     reinterpret_cast<FieldAccessMethod>(&UIFontBase::editSFGlyphPixelSize)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Size", 
                      SizeFieldId, SizeFieldMask,
                      false,
-                     (FieldAccessMethod) &UIFontBase::getSFSize),
+                     reinterpret_cast<FieldAccessMethod>(&UIFontBase::editSFSize)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Gap", 
                      GapFieldId, GapFieldMask,
                      false,
-                     (FieldAccessMethod) &UIFontBase::getSFGap),
+                     reinterpret_cast<FieldAccessMethod>(&UIFontBase::editSFGap)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "TextureWidth", 
                      TextureWidthFieldId, TextureWidthFieldMask,
                      false,
-                     (FieldAccessMethod) &UIFontBase::getSFTextureWidth),
+                     reinterpret_cast<FieldAccessMethod>(&UIFontBase::editSFTextureWidth)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Style", 
                      StyleFieldId, StyleFieldMask,
                      false,
-                     (FieldAccessMethod) &UIFontBase::getSFStyle),
+                     reinterpret_cast<FieldAccessMethod>(&UIFontBase::editSFStyle)),
+    new FieldDescription(SFBool::getClassType(), 
+                     "AntiAliasing", 
+                     AntiAliasingFieldId, AntiAliasingFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&UIFontBase::editSFAntiAliasing)),
     new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "Texture", 
                      TextureFieldId, TextureFieldMask,
                      false,
-                     (FieldAccessMethod) &UIFontBase::getSFTexture)
+                     reinterpret_cast<FieldAccessMethod>(&UIFontBase::editSFTexture))
 };
 
 
@@ -161,7 +172,7 @@ FieldContainerType UIFontBase::_type(
     "UIFont",
     "FieldContainer",
     NULL,
-    (PrototypeCreateF) &UIFontBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&UIFontBase::createEmpty),
     UIFont::initMethod,
     _desc,
     sizeof(_desc));
@@ -200,7 +211,8 @@ UInt32 UIFontBase::getContainerSize(void) const
 void UIFontBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((UIFontBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<UIFontBase *>(&other),
+                          whichField);
 }
 #else
 void UIFontBase::executeSync(      FieldContainer &other,
@@ -232,9 +244,10 @@ UIFontBase::UIFontBase(void) :
     _sfFamily                 (std::string("SANS")), 
     _sfGlyphPixelSize         (UInt32(46)), 
     _sfSize                   (UInt32(12)), 
-    _sfGap                    (UInt32(3)),
+    _sfGap                    (UInt32(3)), 
     _sfTextureWidth           (UInt32(0)), 
     _sfStyle                  (UInt32(TextFace::STYLE_PLAIN)), 
+    _sfAntiAliasing           (bool(true)), 
     _sfTexture                (), 
     Inherited() 
 {
@@ -251,6 +264,7 @@ UIFontBase::UIFontBase(const UIFontBase &source) :
     _sfGap                    (source._sfGap                    ), 
     _sfTextureWidth           (source._sfTextureWidth           ), 
     _sfStyle                  (source._sfStyle                  ), 
+    _sfAntiAliasing           (source._sfAntiAliasing           ), 
     _sfTexture                (source._sfTexture                ), 
     Inherited                 (source)
 {
@@ -298,6 +312,11 @@ UInt32 UIFontBase::getBinSize(const BitVector &whichField)
         returnValue += _sfStyle.getBinSize();
     }
 
+    if(FieldBits::NoField != (AntiAliasingFieldMask & whichField))
+    {
+        returnValue += _sfAntiAliasing.getBinSize();
+    }
+
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         returnValue += _sfTexture.getBinSize();
@@ -340,6 +359,11 @@ void UIFontBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (StyleFieldMask & whichField))
     {
         _sfStyle.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AntiAliasingFieldMask & whichField))
+    {
+        _sfAntiAliasing.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (TextureFieldMask & whichField))
@@ -385,6 +409,11 @@ void UIFontBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfStyle.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (AntiAliasingFieldMask & whichField))
+    {
+        _sfAntiAliasing.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         _sfTexture.copyFromBin(pMem);
@@ -418,6 +447,9 @@ void UIFontBase::executeSyncImpl(      UIFontBase *pOther,
     if(FieldBits::NoField != (StyleFieldMask & whichField))
         _sfStyle.syncWith(pOther->_sfStyle);
 
+    if(FieldBits::NoField != (AntiAliasingFieldMask & whichField))
+        _sfAntiAliasing.syncWith(pOther->_sfAntiAliasing);
+
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
 
@@ -448,6 +480,9 @@ void UIFontBase::executeSyncImpl(      UIFontBase *pOther,
 
     if(FieldBits::NoField != (StyleFieldMask & whichField))
         _sfStyle.syncWith(pOther->_sfStyle);
+
+    if(FieldBits::NoField != (AntiAliasingFieldMask & whichField))
+        _sfAntiAliasing.syncWith(pOther->_sfAntiAliasing);
 
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
@@ -481,26 +516,6 @@ DataType FieldDataTraits<UIFontPtr>::_type("UIFontPtr", "FieldContainerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(UIFontPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(UIFontPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIFONTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIFONTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIFONTFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 
