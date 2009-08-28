@@ -245,6 +245,22 @@
 			<Filter
 				Name="Events"
 				>
+				<File
+					RelativePath="..\..\src\Events\OSGLuaErrorEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGLuaErrorEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGLuaErrorEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGLuaListener.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

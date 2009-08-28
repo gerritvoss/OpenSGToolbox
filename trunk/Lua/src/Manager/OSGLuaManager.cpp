@@ -172,11 +172,35 @@ void LuaManager::removeLuaListener(LuaListenerPtr Listener)
 
 void LuaManager::checkError(int Status) const
 {
-    if ( Status!=0 )
+    switch(Status)
     {
-        SWARNING << "Lua Script Error: " << lua_tostring(_State, -1) << std::endl;
+    case 0:
+        //No Error
+        break;
+    case LUA_ERRSYNTAX:
+        //Syntax Error
+        SWARNING << "Lua Syntax Error: " << lua_tostring(_State, -1) << std::endl;
         produceError(Status);
         lua_pop(_State, 1); // remove error message
+        break;
+    case LUA_ERRMEM:
+        //Memory Allocation Error
+        SWARNING << "Lua Memory Allocation Error: " << lua_tostring(_State, -1) << std::endl;
+        produceError(Status);
+        lua_pop(_State, 1); // remove error message
+        break;
+    case LUA_ERRRUN:
+        //Memory Allocation Error
+        SWARNING << "Lua Runtime Error: " << lua_tostring(_State, -1) << std::endl;
+        produceError(Status);
+        lua_pop(_State, 1); // remove error message
+        break;
+    case LUA_ERRERR:
+        //Memory Allocation Error
+        SWARNING << "Lua Error in Error Handler: " << lua_tostring(_State, -1) << std::endl;
+        produceError(Status);
+        lua_pop(_State, 1); // remove error message
+        break;
     }
 }
 

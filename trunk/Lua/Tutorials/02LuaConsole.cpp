@@ -12,6 +12,7 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGSimpleAttachments.h>
 
 // The general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
@@ -124,7 +125,7 @@ public:
    virtual void actionPerformed(const ActionEvent& e)
    {
 		std::vector<WindowEventProducer::FileDialogFilter> Filters;
-        Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","lua"));
+        Filters.push_back(WindowEventProducer::FileDialogFilter("Lua File Type","lua"));
         Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
 		Path SavePath = TutorialWindowEventProducer->saveFileDialog("Save Lua Script to?",
@@ -186,12 +187,36 @@ public:
 
     virtual void error(const LuaErrorEvent& e)
     {
+        std::string ErrorType("");
+        switch(e.getStatus())
+        {
+        case LUA_ERRSYNTAX:
+            //Syntax Error
+            ErrorType = "Lua Syntax Error";
+            break;
+        case LUA_ERRMEM:
+            //Memory Allocation Error
+            ErrorType = "Lua Memory Allocation Error";
+            break;
+        case LUA_ERRRUN:
+            //Memory Allocation Error
+            ErrorType = "Lua Runtime Error";
+            break;
+        case LUA_ERRERR:
+            //Memory Allocation Error
+            ErrorType = "Lua Error in Error Handler";
+            break;
+        default:
+            //Unknown
+            ErrorType = "Lua Unknown Error";
+            break;
+        }
         ErrorTextArea->moveCaretToEnd();
         if(ErrorTextArea->getText().size() != 0)
         {
             ErrorTextArea->write("\n");
         }
-        ErrorTextArea->write(e.getErrorString());
+        ErrorTextArea->write(ErrorType + ":\n    " + e.getErrorString());
     }
 };
 
@@ -296,6 +321,7 @@ int main(int argc, char **argv)
     beginEditCP(ExecuteButton);
         ExecuteButton->setText("Execute");
     endEditCP(ExecuteButton);
+    setName(ExecuteButton,"Execute Button");
     ExecuteScriptButtonAction TheExecuteScriptButtonAction;
     ExecuteButton->addActionListener(&TheExecuteScriptButtonAction);
     
@@ -303,6 +329,7 @@ int main(int argc, char **argv)
     beginEditCP(OpenButton);
         OpenButton->setText("Open");
     endEditCP(OpenButton);
+    setName(OpenButton,"Open Button");
     OpenScriptButtonAction TheOpenScriptButtonAction;
     OpenButton->addActionListener(&TheOpenScriptButtonAction);
     
@@ -310,6 +337,7 @@ int main(int argc, char **argv)
     beginEditCP(SaveButton);
         SaveButton->setText("Save");
     endEditCP(SaveButton);
+    setName(SaveButton,"Save Button");
     SaveScriptButtonAction TheSaveScriptButtonAction;
     SaveButton->addActionListener(&TheSaveScriptButtonAction);
     
@@ -317,6 +345,7 @@ int main(int argc, char **argv)
     beginEditCP(ClearButton);
         ClearButton->setText("Clear");
     endEditCP(ClearButton);
+    setName(ClearButton,"Clear Button");
     ClearScriptButtonAction TheClearScriptButtonAction;
     ClearButton->addActionListener(&TheClearScriptButtonAction);
 

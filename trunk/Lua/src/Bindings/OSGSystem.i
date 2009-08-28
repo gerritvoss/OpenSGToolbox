@@ -1,4 +1,6 @@
 %include <OSGBase.i>
+%native(getFieldValue) int getFieldValue(lua_State*L);  // registers native_function() with SWIG
+%native(pushFieldValue) int pushFieldValue(lua_State*L);  // registers native_function() with SWIG
 %module OSG
 %{
 #include <OpenSG/OSGFieldContainerType.h>
@@ -7,9 +9,109 @@
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGAttachment.h>
 #include <OpenSG/OSGAttachmentContainer.h>
+#include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/OSGAttachmentContainerPtr.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGNodeCore.h>
+#include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
+    int getFieldValue(lua_State*L) // my native code
+    {
+        int argc = lua_gettop(L);
+        int SWIG_arg = 0;
+        if (argc == 2) {
+          osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+          osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+          std::string result;
+          
+          SWIG_check_num_args("getFieldValue",2,2)
+          if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getFieldValue",1,"osg::FieldContainerPtr *");
+          if(!lua_isstring(L,2)) SWIG_fail_arg("getFieldValue",2,"osg::Char8 const *");
+              
+          if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+            SWIG_fail_ptr("getFieldValue",1,SWIGTYPE_p_osg__FieldContainerPtr);
+          }
+          arg2 = (osg::Char8 *)lua_tostring(L, 2);
+          
+          const osg::Field* TheField((*arg1)->getField(arg2));
+          if(TheField == NULL)
+          {
+              lua_pushfstring(L,"Error in getFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
+              goto fail;
+          }
+          TheField->getValueByStr(result);
+          lua_pushstring(L,result.c_str()); SWIG_arg++;
+          return SWIG_arg;
+          
+          if(0) SWIG_fail;
+        }
+        else if (argc == 3) {
+          osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+          osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+          osg::UInt32 arg3 ;
+          std::string result;
+          
+          SWIG_check_num_args("getFieldValue",3,3)
+          if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getFieldValue",1,"osg::FieldContainerPtr *");
+          if(!lua_isstring(L,2)) SWIG_fail_arg("getFieldValue",2,"osg::Char8 const *");
+          if(!lua_isnumber(L,3)) SWIG_fail_arg("getFieldValue",3,"osg::UInt32");
+              
+          if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+            SWIG_fail_ptr("getFieldValue",1,SWIGTYPE_p_osg__FieldContainerPtr);
+          }
+          arg2 = (osg::Char8 *)lua_tostring(L, 2);
+          arg3 = (osg::UInt32)lua_tonumber(L, 3);
+          
+          const osg::Field* TheField((*arg1)->getField(arg2));
+          if(TheField == NULL)
+          {
+              lua_pushfstring(L,"Error in getFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
+              goto fail;
+          }
+          TheField->getValueByStr(result, arg3);
+          lua_pushstring(L,result.c_str()); SWIG_arg++;
+          return SWIG_arg;
+          
+          if(0) SWIG_fail;
+        }
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    
+    int pushFieldValue(lua_State*L) // my native code
+    {
+        int SWIG_arg = 0;
+          osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+          osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+          osg::Char8 *arg3 = (osg::Char8 *) 0 ;
+          
+          SWIG_check_num_args("pushFieldValue",3,3)
+          if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pushFieldValue",1,"osg::FieldContainerPtr *");
+          if(!lua_isstring(L,2)) SWIG_fail_arg("pushFieldValue",2,"osg::Char8 const *");
+          if(!lua_isstring(L,3)) SWIG_fail_arg("pushFieldValue",3,"osg::Char8 const *");
+              
+          if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+            SWIG_fail_ptr("pushFieldValue",1,SWIGTYPE_p_osg__FieldContainerPtr);
+          }
+          arg2 = (osg::Char8 *)lua_tostring(L, 2);
+          arg3 = (osg::Char8 *)lua_tostring(L, 3);
+          
+          osg::Field* TheField((*arg1)->getField(arg2));
+          if(TheField == NULL)
+          {
+              lua_pushfstring(L,"Error in pushFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
+              goto fail;
+          }
+          TheField->pushValueByStr(arg3);
+          return SWIG_arg;
+          
+          if(0) SWIG_fail;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
 %}
 
 namespace osg {
@@ -197,19 +299,19 @@ namespace osg {
     /******************************************************/
     /*                    AttachmentContainerPtr          */
     /******************************************************/
-    /*class AttachmentContainerPtr : */
-        /*public FieldContainerPtr*/
-    /*{*/
-      /*public:*/
+    class AttachmentContainerPtr : 
+        public FieldContainerPtr
+    {
+      public:
 
-        /*AttachmentContainerPtr(      void                          );*/
-        /*AttachmentContainerPtr(const AttachmentContainerPtr &source);*/
-        /*[>AttachmentContainerPtr(const NullFieldContainerPtr  &source);<]*/
-        /*~AttachmentContainerPtr(void); */
+        AttachmentContainerPtr(      void                          );
+        AttachmentContainerPtr(const AttachmentContainerPtr &source);
+        /*AttachmentContainerPtr(const NullFieldContainerPtr  &source);*/
+        ~AttachmentContainerPtr(void);
 
-        /*AttachmentContainer *operator->(void);*/
-      /*protected:*/
-    /*};*/
+        AttachmentContainer *operator->(void);
+      protected:
+    };
 
     /******************************************************/
     /*                    AttachmentContainer             */
@@ -233,6 +335,12 @@ namespace osg {
         AttachmentContainer(const AttachmentContainer &source);
         ~AttachmentContainer(void);
     };
+
+    const Char8 *getName(      AttachmentContainerPtr  container);
+    
+          void   setName(      AttachmentContainerPtr  container, 
+                         const Char8                  *name     );
+
     /******************************************************/
     /*                    NodeCore                        */
     /******************************************************/
@@ -323,5 +431,8 @@ namespace osg {
         Node(const Node &source);
         virtual ~Node (void);
     };
+    
+    
+    FieldContainerPtr getFieldContainer(const std::string &namestring);
 }
 

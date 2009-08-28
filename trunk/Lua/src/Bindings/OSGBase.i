@@ -1,5 +1,7 @@
+%include <lua/std_string.i>
 %module OSG
 %native(version) int OSGVersion(lua_State*L);  // registers native_function() with SWIG
+%native(getValue) int getValue(lua_State*L);  // registers native_function() with SWIG
 %{
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGBaseFunctions.h>
@@ -19,6 +21,30 @@
       std::string result(OSG_VERSION_STRING);
       SWIG_check_num_args("version",0,0);
       
+      lua_pushstring(L,result.c_str()); SWIG_arg++;
+      return SWIG_arg;
+      
+      if(0) SWIG_fail;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    
+    int getValue(lua_State*L) // my native code
+    {
+      int SWIG_arg = 0;
+      osg::Field *arg1 = (osg::Field *) 0 ;
+      std::string result;
+      
+      SWIG_check_num_args("getValue",1,1)
+      if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getValue",1,"osg::Field const *");
+      
+      if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Field,0))){
+        SWIG_fail_ptr("getValue",1,SWIGTYPE_p_osg__Field);
+      }
+      
+      ((osg::Field const *)arg1)->getValueByStr(result);
       lua_pushstring(L,result.c_str()); SWIG_arg++;
       return SWIG_arg;
       
@@ -231,7 +257,7 @@ namespace osg {
     %template(Pnt3f) Point<Real32,3>;
     %template(Pnt2f) Point<Real32,2>;
     /******************************************************/
-    /*              Pnts                                  */
+    /*              Vector                                  */
     /******************************************************/
     template<class ValueTypeT, UInt32 SizeI>
     class Vector : public Point<ValueTypeT, SizeI>
@@ -752,15 +778,6 @@ namespace osg {
         virtual       bool                    isEmpty       (void) const = 0;
 
         virtual       UInt32                  getSize       (void) const = 0;
-
-        virtual void          pushValueByStr(const Char8       *str  )       = 0;
-        virtual std::string  &getValueByStr (      std::string &str  ) const = 0;
-
-        /*virtual std::string  &getValueByStr (      std::string &str,*/
-                                                   /*UInt32       index) const = 0;*/
-
-        virtual void setAbstrValue(const Field &obj) = 0;
-        virtual void dump(void) const = 0;
 
 
       protected:
