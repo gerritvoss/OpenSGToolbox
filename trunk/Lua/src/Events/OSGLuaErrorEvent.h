@@ -27,45 +27,40 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCOLLISIONEVENT_H_
-#define _OSGCOLLISIONEVENT_H_
+#ifndef _OSGLUAERROREVENT_H_
+#define _OSGLUAERROREVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
+#include "OSGLuaDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
 
-#include "ODE/Geom/OSGPhysicsGeomFields.h"
+#include "lua.hpp"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_PHYSICSLIB_DLLMAPPING CollisionEvent : public Event
+class OSG_LUALIB_DLLMAPPING LuaErrorEvent : public Event
 {
     /*=========================  PUBLIC  ===============================*/
   public:
       
-    CollisionEvent(FieldContainerPtr Source, Time TimeStamp, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2);
+    LuaErrorEvent(FieldContainerPtr Source, Time TimeStamp, lua_State* State, int LuaStatus);
     
     virtual const EventType &getType(void) const;
     
     static const EventType &getClassType(void);
 
-    const Pnt3f& getPosition(void) const;
-    const Vec3f& getNormal(void) const;
-    const Vec3f& getVelocity1(void) const;
-    const Vec3f& getVelocity2(void) const;
-    PhysicsGeomPtr getGeom1(void) const;
-    PhysicsGeomPtr getGeom2(void) const;
+    const lua_State* getLuaState(void) const;
+    int              getStatus(void) const;
+    std::string      getErrorString(void) const;
     
   protected:
 
-    Pnt3f _Position;
-    Vec3f _Normal;
-    PhysicsGeomPtr _Geom1, _Geom2;
-    Vec3f _Velocity1, _Velocity2;
+    lua_State *_State;
+    int        _LuaStatus;
   
   private:
      static EventType _Type;
@@ -74,6 +69,6 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEvent : public Event
 
 OSG_END_NAMESPACE
 
-#include "OSGCollisionEvent.inl"
+#include "OSGLuaErrorEvent.inl"
 
-#endif /* _OSGCOLLISIONEVENT_H_ */
+#endif /* _OSGLUAERROREVENT_H_ */

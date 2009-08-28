@@ -31,56 +31,30 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-const Pnt3f& CollisionEvent::getPosition(void) const
+const lua_State* LuaErrorEvent::getLuaState(void) const
 {
-    return _Position;
+    return _State;
 }
 
 inline
-const Vec3f& CollisionEvent::getNormal(void) const
+int LuaErrorEvent::getStatus(void) const
 {
-    return _Normal;
+    return _LuaStatus;
 }
 
 inline
-const Vec3f& CollisionEvent::getVelocity1(void) const
+std::string LuaErrorEvent::getErrorString(void) const
 {
-    return _Velocity1;
+    return lua_tostring(_State, -1);
 }
 
 inline
-const Vec3f& CollisionEvent::getVelocity2(void) const
-{
-    return _Velocity2;
-}
-
-inline
-PhysicsGeomPtr CollisionEvent::getGeom1(void) const
-{
-    return _Geom1;
-}
-
-inline
-PhysicsGeomPtr CollisionEvent::getGeom2(void) const
-{
-    return _Geom2;
-}
-
-
-inline
-const EventType &CollisionEvent::getClassType(void)
-{
-    return _Type;
-}
-
-inline
-CollisionEvent::    CollisionEvent(FieldContainerPtr Source, Time TimeStamp, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2) :
+LuaErrorEvent::LuaErrorEvent(FieldContainerPtr Source, Time TimeStamp, lua_State* State, int LuaStatus) :
    Event(Source, TimeStamp),
-    _Position(Position),
-    _Normal(Normal),
-    _Geom1(Geom1), _Geom2(Geom2),
-    _Velocity1(Velocity1), _Velocity2(Velocity2)
+    _State(State),
+    _LuaStatus(LuaStatus)
 {
 }
 
 OSG_END_NAMESPACE
+

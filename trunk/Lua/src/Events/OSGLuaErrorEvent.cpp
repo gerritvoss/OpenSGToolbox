@@ -26,13 +26,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include "OSGCollisionEvent.h"
+#include "OSGLuaErrorEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType CollisionEvent::_Type("CollisionEvent", "EventType");
+EventType LuaErrorEvent::_Type("LuaErrorEvent", "EventType");
 
-const EventType &CollisionEvent::getType(void) const
+const EventType &LuaErrorEvent::getType(void) const
 {
     return _Type;
 }

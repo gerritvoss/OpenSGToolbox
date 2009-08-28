@@ -42,7 +42,11 @@
 
 OSG_BEGIN_NAMESPACE
 
-OSG_END_NAMESPACE
+inline
+bool LuaManager::isLuaListenerAttached(LuaListenerPtr Listener) const
+{
+    return _LuaListeners.find(Listener) != _LuaListeners.end();
+}
 
-#define OSGLUAMANAGER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+OSG_END_NAMESPACE
 

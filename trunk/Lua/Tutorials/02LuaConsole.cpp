@@ -28,8 +28,11 @@
 
 #include <OpenSG/UserInterface/OSGLayers.h>
 #include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGBorderLayout.h>
+#include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
 #include <OpenSG/UserInterface/OSGTextArea.h>
@@ -46,13 +49,21 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 WindowEventProducerPtr TutorialWindowEventProducer;
-TextAreaPtr ExampleTextArea;
+TextAreaPtr CodeTextArea;
+TextAreaPtr ErrorTextArea;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 
+
+void clearError(void)
+{
+    beginEditCP(ErrorTextArea, TextArea::TextFieldMask);
+        ErrorTextArea->setText("");
+    endEditCP(ErrorTextArea, TextArea::TextFieldMask);
+}
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -67,7 +78,8 @@ public:
        }
        if(e.getKey() == KeyEvent::KEY_E && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           LuaManager::the()->runScript(ExampleTextArea->getText());
+           clearError();
+           LuaManager::the()->runScript(CodeTextArea->getText());
        }
    }
 
@@ -86,7 +98,8 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
    {
-       LuaManager::the()->runScript(ExampleTextArea->getText());
+       clearError();
+       LuaManager::the()->runScript(CodeTextArea->getText());
    }
 };
 
@@ -97,8 +110,9 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
    {
-       ExampleTextArea->selectAll();
-       ExampleTextArea->deleteSelectedText();
+       CodeTextArea->selectAll();
+       CodeTextArea->deleteSelectedText();
+       clearError();
    }
 };
 
@@ -123,7 +137,7 @@ public:
         std::ofstream OutFile(SavePath.string().c_str());
         if(OutFile)
         {
-            OutFile << ExampleTextArea->getText();
+            OutFile << CodeTextArea->getText();
             OutFile.close();
         }
    }
@@ -157,12 +171,28 @@ public:
                 InStrStream << InFile.rdbuf();
                 InFile.close();
                 //Set the Text of the TextArea to the text of the file
-                beginEditCP(ExampleTextArea, TextArea::TextFieldMask);
-                    ExampleTextArea->setText(InStrStream.str());
-                endEditCP(ExampleTextArea, TextArea::TextFieldMask);
+                beginEditCP(CodeTextArea, TextArea::TextFieldMask);
+                    CodeTextArea->setText(InStrStream.str());
+                endEditCP(CodeTextArea, TextArea::TextFieldMask);
+               clearError();
             }
         }
    }
+};
+
+class LuaErrorListener : public LuaListener
+{
+public:
+
+    virtual void error(const LuaErrorEvent& e)
+    {
+        ErrorTextArea->moveCaretToEnd();
+        if(ErrorTextArea->getText().size() != 0)
+        {
+            ErrorTextArea->write("\n");
+        }
+        ErrorTextArea->write(e.getErrorString());
+    }
 };
 
 int main(int argc, char **argv)
@@ -206,31 +236,60 @@ int main(int argc, char **argv)
     endEditCP(CodeFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::AntiAliasingFieldMask);
 
     // Create a TextArea component
-    ExampleTextArea = osg::TextArea::create();
+    CodeTextArea = osg::TextArea::create();
 
-    beginEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
-        ExampleTextArea->setPreferredSize(Vec2f(800, 600));
-        ExampleTextArea->setText("print(\"Hello World\")");
-        ExampleTextArea->setMinSize(Vec2f(300, 200));
-        ExampleTextArea->setFont(CodeFont);
-    endEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+    beginEditCP(CodeTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+        CodeTextArea->setPreferredSize(Vec2f(600, 600));
+        CodeTextArea->setText("print(\"Hello World\")");
+        CodeTextArea->setMinSize(Vec2f(300, 600));
+        CodeTextArea->setFont(CodeFont);
+    endEditCP(CodeTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
         
     // Create a ScrollPanel
+    BorderLayoutConstraintsPtr CodeTextConstraints = BorderLayoutConstraints::create();
+	beginEditCP(CodeTextConstraints);
+        CodeTextConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	endEditCP(CodeTextConstraints);
+
     ScrollPanelPtr TextAreaScrollPanel = ScrollPanel::create();
     beginEditCP(TextAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        TextAreaScrollPanel->setPreferredSize(Vec2f(200,200));
+        TextAreaScrollPanel->setPreferredSize(Vec2f(200,600));
         TextAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        TextAreaScrollPanel->setConstraints(CodeTextConstraints);
     endEditCP(TextAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     // Add the TextArea to the ScrollPanel so it is displayed
-	TextAreaScrollPanel->setViewComponent(ExampleTextArea);
+	TextAreaScrollPanel->setViewComponent(CodeTextArea);
+    
+    //Create the Error Text Area
+    ErrorTextArea = osg::TextArea::create();
+
+    beginEditCP(ErrorTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+        ErrorTextArea->setPreferredSize(Vec2f(600, 150));
+        ErrorTextArea->setText("");
+        ErrorTextArea->setMinSize(Vec2f(300, 150));
+        ErrorTextArea->setFont(CodeFont);
+        ErrorTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
+    endEditCP(ErrorTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+        
+    // Create a ScrollPanel
+    BorderLayoutConstraintsPtr ErrorAreaConstraints = BorderLayoutConstraints::create();
+	beginEditCP(ErrorAreaConstraints);
+        ErrorAreaConstraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
+	endEditCP(ErrorAreaConstraints);
+    LuaErrorListener  TheLuaErrorListener;
+    LuaManager::the()->addLuaListener(&TheLuaErrorListener);
+
+    ScrollPanelPtr ErrorAreaScrollPanel = ScrollPanel::create();
+    beginEditCP(ErrorAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+        ErrorAreaScrollPanel->setPreferredSize(Vec2f(200,150));
+        ErrorAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        ErrorAreaScrollPanel->setConstraints(ErrorAreaConstraints);
+    endEditCP(ErrorAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    // Add the TextArea to the ScrollPanel so it is displayed
+	ErrorAreaScrollPanel->setViewComponent(ErrorTextArea);
 
     
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+
 
     //Execute Script Button
     ButtonPtr ExecuteButton = Button::create();
@@ -261,15 +320,41 @@ int main(int argc, char **argv)
     ClearScriptButtonAction TheClearScriptButtonAction;
     ClearButton->addActionListener(&TheClearScriptButtonAction);
 
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    //Make the Button Panel
+    FlowLayoutPtr ButtonPanelLayout = osg::FlowLayout::create();
+	beginEditCP(ButtonPanelLayout);
+        ButtonPanelLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+	endEditCP(ButtonPanelLayout);
+
+    BorderLayoutConstraintsPtr ButtonPanelConstraints = BorderLayoutConstraints::create();
+	beginEditCP(ButtonPanelConstraints);
+        ButtonPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
+	endEditCP(ButtonPanelConstraints);
+    PanelPtr ButtonPanel = Panel::createEmpty();
+	beginEditCP(ButtonPanel);
+       ButtonPanel->setPreferredSize(Vec2f(400.0f, 50.0f));
+       ButtonPanel->getChildren().push_back(ExecuteButton);
+       ButtonPanel->getChildren().push_back(OpenButton);
+       ButtonPanel->getChildren().push_back(SaveButton);
+       ButtonPanel->getChildren().push_back(ClearButton);
+       ButtonPanel->setLayout(ButtonPanelLayout);
+       ButtonPanel->setConstraints(ButtonPanelConstraints);
+	endEditCP(ButtonPanel);
+
+    // Create The Main InternalWindow
+    // Create Background to be used with the Main InternalWindow
+    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
+    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+
+    BorderLayoutPtr MainInternalWindowLayout = BorderLayout::create();
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+       MainInternalWindow->getChildren().push_back(ButtonPanel);
        MainInternalWindow->getChildren().push_back(TextAreaScrollPanel);
-       MainInternalWindow->getChildren().push_back(ExecuteButton);
-       MainInternalWindow->getChildren().push_back(OpenButton);
-       MainInternalWindow->getChildren().push_back(SaveButton);
-       MainInternalWindow->getChildren().push_back(ClearButton);
+       MainInternalWindow->getChildren().push_back(ErrorAreaScrollPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));

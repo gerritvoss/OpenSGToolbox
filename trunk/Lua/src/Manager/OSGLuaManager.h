@@ -46,6 +46,9 @@
 #include "OSGLuaDef.h"
 
 #include "lua.hpp"
+#include <set>
+#include "Events/OSGLuaListener.h"
+#include <OpenSG/Input/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,6 +72,10 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 
 	static bool init(void);
 	static bool uninit(void);
+
+    EventConnection addLuaListener(LuaListenerPtr Listener);
+    bool isLuaListenerAttached(LuaListenerPtr Listener) const;
+    void removeLuaListener(LuaListenerPtr Listener);
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
   private:
@@ -97,6 +104,13 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 
     static lua_State *_State;
     
+	typedef std::set<LuaListenerPtr> LuaListenerSet;
+    typedef LuaListenerSet::iterator LuaListenerSetItor;
+    typedef LuaListenerSet::const_iterator LuaListenerSetConstItor;
+    LuaListenerSet       _LuaListeners;
+        
+    void checkError(int Status) const;
+    void produceError(int Status) const;
 };
 
 typedef LuaManager *LuaManagerP;

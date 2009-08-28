@@ -51,8 +51,9 @@
 #include <OpenSG/OSGLog.h>
 
 #include "OSGLuaManager.h"
+#include <boost/bind.hpp>
 
-//This is the OSGBase wrapped module in Bindings/OSGBase_wrap.cpp
+//This is the OSGBase wrapped module in Bindings/OSG_wrap.cpp
 extern "C" int luaopen_OSG(lua_State* L); // declare the wrapped module
 
 OSG_BEGIN_NAMESPACE
@@ -97,10 +98,6 @@ LuaManager *LuaManager::the(void)
 
 void LuaManager::report_errors(lua_State *L, int status)
 {
-  if ( status!=0 ) {
-    SWARNING << "Lua Script Error: " << lua_tostring(L, -1) << std::endl;
-    lua_pop(L, 1); // remove error message
-  }
 }
 
 bool LuaManager::init(void)
@@ -149,12 +146,50 @@ bool LuaManager::uninit(void)
 void LuaManager::runScript(const std::string& Script)
 {
     int s = luaL_loadstring(_State, Script.c_str());
-    report_errors(_State, s);
+    checkError(s);
 
     // execute Lua program
     s = lua_pcall(_State, 0, LUA_MULTRET, 0);
-    report_errors(_State, s);
+    checkError(s);
 }
+EventConnection LuaManager::addLuaListener(LuaListenerPtr Listener)
+{
+   _LuaListeners.insert(Listener);
+   
+   return EventConnection(
+       boost::bind(&LuaManager::isLuaListenerAttached, this, Listener),
+       boost::bind(&LuaManager::removeLuaListener, this, Listener));
+}
+
+void LuaManager::removeLuaListener(LuaListenerPtr Listener)
+{
+    LuaListenerSetItor EraseIter(_LuaListeners.find(Listener));
+    if(EraseIter != _LuaListeners.end())
+    {
+        _LuaListeners.erase(EraseIter);
+    }
+}
+
+void LuaManager::checkError(int Status) const
+{
+    if ( Status!=0 )
+    {
+        SWARNING << "Lua Script Error: " << lua_tostring(_State, -1) << std::endl;
+        produceError(Status);
+        lua_pop(_State, 1); // remove error message
+    }
+}
+
+void LuaManager::produceError(int Status) const
+{
+    LuaErrorEvent TheEvent( NullFC, getSystemTime(), _State, Status);
+    LuaListenerSet ListenerSet(_LuaListeners);
+    for(LuaListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->error(TheEvent);
+    }
+}
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

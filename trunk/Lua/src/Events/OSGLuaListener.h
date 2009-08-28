@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Physics                             *
+ *                          OpenSG Toolbox Lua                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -27,30 +27,30 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCOLLISIONLISTENER_H_
-#define _OSGCOLLISIONLISTENER_H_
+#ifndef _OSGLUALISTENER_H_
+#define _OSGLUALISTENER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
+#include "OSGLuaDef.h"
 
 #include <OpenSG/Input/OSGEventListener.h>
-#include "OSGCollisionEvent.h"
+#include "OSGLuaErrorEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_PHYSICSLIB_DLLMAPPING CollisionListener : public EventListener
+class OSG_LUALIB_DLLMAPPING LuaListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void collision(const CollisionEvent& e) = 0;
+    virtual void error(const LuaErrorEvent& e) = 0;
 };
 
-typedef CollisionListener* CollisionListenerPtr;
+typedef LuaListener* LuaListenerPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGCOLLISIONLISTENER_H_ */
+#endif /* _OSGLUALISTENER_H_ */
