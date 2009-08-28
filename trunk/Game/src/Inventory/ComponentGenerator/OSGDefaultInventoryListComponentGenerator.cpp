@@ -59,6 +59,8 @@
 #include <boost/any.hpp>
 #include "OpenSG/UserInterface/OSGFlowLayout.h"
 
+#include <OpenSG/UserInterface/OSGColorLayer.h>
+
 
 
 OSG_BEGIN_NAMESPACE
@@ -92,7 +94,20 @@ ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Pa
 {
 	PanelPtr ListItem = Panel::create();
 	InventoryItemPtr Item;
-	
+
+	ColorLayerPtr BackgroundLayer = osg::ColorLayer::create();
+
+	if(IsSelected)
+	{
+		beginEditCP(BackgroundLayer, ColorLayer::ColorFieldMask);
+			BackgroundLayer->setColor(Color4f(0,0,100,1));
+		endEditCP(BackgroundLayer, ColorLayer::ColorFieldMask);
+
+		beginEditCP(ListItem, Panel::BackgroundsFieldMask);
+			ListItem->setBackgrounds(BackgroundLayer);
+		endEditCP(ListItem, Panel::BackgroundsFieldMask);
+	}
+
 	try
 	{
 		Item = boost::any_cast<InventoryItemPtr>(Value);
