@@ -44,8 +44,8 @@ namespace osg {
 
               UInt32     getTypeId      (void                ) const;  
 
-              /*BitVector  getFieldMask   (void                ) const;*/
-              /*void       setFieldMask   (BitVector vFieldMask);*/
+              BitVector  getFieldMask   (void                ) const;
+              void       setFieldMask   (BitVector vFieldMask);
 
               UInt32     getFieldId     (void                ) const;
               void       setFieldId     (UInt32 uiFieldId    );
@@ -123,8 +123,8 @@ namespace osg {
 
         FieldContainerPtr createFieldContainer(void) const;
         NodePtr           createNode          (void) const;
-        /*NodeCorePtr       createNodeCore      (void) const;*/
-        /*AttachmentPtr     createAttachment    (void) const;*/
+        NodeCorePtr       createNodeCore      (void) const;
+        AttachmentPtr     createAttachment    (void) const;
 
         virtual void dump(      UInt32    uiIndent = 0, 
                           const BitVector bvFlags  = 0) const;
@@ -186,8 +186,8 @@ namespace osg {
 
         FieldContainerPtr createFieldContainer(const Char8 *name) const;
         NodePtr           createNode          (const Char8 *name) const;
-        /*NodeCorePtr       createNodeCore      (const Char8 *name) const;*/
-        /*AttachmentPtr     createAttachment    (const Char8 *name) const;*/
+        NodeCorePtr       createNodeCore      (const Char8 *name) const;
+        AttachmentPtr     createAttachment    (const Char8 *name) const;
 
       protected:
         FieldContainerFactory(void);
@@ -240,8 +240,6 @@ namespace osg {
     {
       public:
         virtual void invalidateVolume(void);
-
-        virtual void accumulateMatrix(Matrix &result);
 
       protected:
         NodeCore(void);
